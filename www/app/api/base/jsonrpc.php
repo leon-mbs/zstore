@@ -56,24 +56,27 @@ abstract class JsonRPC
 
             $decoded = \Firebase\JWT\JWT::decode($jwt, $key, array('HS256'));
             if ($decoded->exp < time()) {
-                throw new \Exception(\App\Helper::l('apitokenexpired'), -1002);
+                
+                return self::error(null, -1002, \App\Helper::l('apitokenexpired'));                
             }
             $user = \App\Entity\User::load($decoded->user_id);
         }
         //Basic
         if ($api['atype'] == 2) {
+         
             $user = \App\Helper::login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+            
         }
         //без  авторизации
         if ($api['atype'] == 3) {
             $user = \App\Entity\User::getByLogin('admin');
         }
-        if ($user == null) {
-            throw new \Exception(\App\Helper::l('apiusernotfound'), -1001);
+        if ($user == null || $user==false) {
+            return self::error(null, -1001, \App\Helper::l('apiusernotfound'));
         }
         \App\System::setUser($user);
-
-        return true;
+         
+         
     }
 
     /**
@@ -97,7 +100,12 @@ abstract class JsonRPC
         if (count($input) === 0) {
             return self::requestError();
         }
-        $this->checkAcess();
+        $result = $this->checkAcess();
+        if(is_array($result)) {
+            return $result;
+        }
+         
+        
         if (isset($input[0])) {
             return $this->processBatchRequests($input);
         }

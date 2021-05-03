@@ -31,4 +31,7 @@ class common extends \App\API\Base\JsonRPC
         return $jwt;
     }
 
+    public function checkapi() {
+        return "OK";
+    }
 }

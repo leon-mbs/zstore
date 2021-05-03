@@ -28,17 +28,21 @@ class Import extends \App\Pages\Base
 
         $form->add(new DropDownChoice("itype", array(), 0))->onChange($this, "onType");
 
-        $form->add(new DropDownChoice("price", Item::getPriceTypeList()));
+        
         $form->add(new DropDownChoice("store", Store::getList(), H::getDefStore()));
 
         $form->add(new \Zippy\Html\Form\File("filename"));
-        $cols = array(0 => '-', 'A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F', 'G' => 'G', 'H' => 'H', 'I' => 'I', 'J' => 'J');
+        $cols = array(0 => '-', 'A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F', 'G' => 'G', 'H' => 'H', 'I' => 'I', 'J' => 'J','K' => 'K','L' => 'L','M' => 'M',);
         $form->add(new DropDownChoice("colname", $cols));
         $form->add(new DropDownChoice("colcode", $cols));
         $form->add(new DropDownChoice("colbarcode", $cols));
         $form->add(new DropDownChoice("colgr", $cols));
         $form->add(new DropDownChoice("colqty", $cols));
-        $form->add(new DropDownChoice("colprice", $cols));
+        $form->add(new DropDownChoice("colprice1", $cols));
+        $form->add(new DropDownChoice("colprice2", $cols));
+        $form->add(new DropDownChoice("colprice3", $cols));
+        $form->add(new DropDownChoice("colprice4", $cols));
+        $form->add(new DropDownChoice("colprice5", $cols));
         $form->add(new DropDownChoice("colinprice", $cols));
         $form->add(new DropDownChoice("colmsr", $cols));
         $form->add(new DropDownChoice("colbrand", $cols));
@@ -105,10 +109,10 @@ class Import extends \App\Pages\Base
     public function onImport($sender) {
         $t = $this->iform->itype->getValue();
         $store = $this->iform->store->getValue();
-        $pt = $this->iform->price->getValue();
-
+      
         $preview = $this->iform->preview->isChecked();
-        $preview = $this->iform->preview->isChecked();
+        $passfirst = $this->iform->passfirst->isChecked();
+        
         $checkname = $this->iform->checkname->isChecked();
         $this->_tvars['preview'] = false;
 
@@ -117,7 +121,11 @@ class Import extends \App\Pages\Base
         $colbarcode = $this->iform->colbarcode->getValue();
         $colgr = $this->iform->colgr->getValue();
         $colqty = $this->iform->colqty->getValue();
-        $colprice = $this->iform->colprice->getValue();
+        $colprice1 = $this->iform->colprice1->getValue();
+        $colprice2 = $this->iform->colprice2->getValue();
+        $colprice3 = $this->iform->colprice3->getValue();
+        $colprice4 = $this->iform->colprice4->getValue();
+        $colprice5 = $this->iform->colprice5->getValue();
         $colinprice = $this->iform->colinprice->getValue();
         $colmsr = $this->iform->colmsr->getValue();
         $colbrand = $this->iform->colbrand->getValue();
@@ -171,7 +179,11 @@ class Import extends \App\Pages\Base
                     'colqty'     => $row[$colqty],
                     'colmsr'     => $row[$colmsr],
                     'colinprice' => $row[$colinprice],
-                    'colprice'   => $row[$colprice],
+                    'colprice1'   => $row[$colprice1],
+                    'colprice2'   => $row[$colprice2],
+                    'colprice3'   => $row[$colprice3],
+                    'colprice4'   => $row[$colprice4],
+                    'colprice5'   => $row[$colprice5],
                     'colbrand'   => $row[$colbrand],
                     'coldesc'    => $row[$coldesc]
                 );
@@ -211,7 +223,11 @@ class Import extends \App\Pages\Base
 
 
                 if ($item == null) {
-                    $price = str_replace(',', '.', trim($row[$colprice]));
+                    $price1 = str_replace(',', '.', trim($row[$colprice1]));
+                    $price2 = str_replace(',', '.', trim($row[$colprice2]));
+                    $price3 = str_replace(',', '.', trim($row[$colprice3]));
+                    $price4 = str_replace(',', '.', trim($row[$colprice4]));
+                    $price5 = str_replace(',', '.', trim($row[$colprice5]));
                     $inprice = str_replace(',', '.', trim($row[$colinprice]));
                     $qty = str_replace(',', '.', trim($row[$colqty]));
                     $item = new Item();
@@ -231,9 +247,22 @@ class Import extends \App\Pages\Base
                     if (strlen(trim($row[$coldesc])) > 0) {
                         $item->description = trim($row[$coldesc]);
                     }
-                    if ($price > 0) {
-                        $item->{$pt} = $price;
+                    if ($price1 > 0) {
+                        $item->price1 = $price1;
                     }
+                    if ($price2 > 0) {
+                        $item->price2 = $price2;
+                    }
+                    if ($price3 > 0) {
+                        $item->price3 = $price3;
+                    }
+                    if ($price4 > 0) {
+                        $item->price4 = $price4;
+                    }
+                    if ($price5 > 0) {
+                        $item->price5 = $price5;
+                    }
+                    
                     if ($inprice > 0) {
                         $item->price = $inprice;
                     }

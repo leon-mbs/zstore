@@ -23,11 +23,7 @@
                                 <option value="1">С оприходованием на склад</option>
                             </select>
                         </div>
-                        <div class="form-group  ">
-                            <label for="price">Тип цены</label>
-                            <select zippy="price" class="form-control  ">
-                            </select>
-                        </div>
+                      
                         <div class="form-group  ">
                             <label data-label="store" for="store">Склад</label>
                             <select zippy="store" class="form-control  ">
@@ -56,60 +52,108 @@
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="form-group  ">
+                        <div class="form-group row ">
                             <label><b>Номера столбцов Excel файла</b> </label>
 
                         </div>
-                        <div class="form-group  ">
-                            <label for="colname">Наименование</label>
-                            <select style="width:100px;" zippy="colname" class="form-control  ">
+                        <div class="form-group  row">
+                            <label  class="col-8 col-form-label" for="colname">Наименование</label>
+                            <div class="col-4">
+                            <select  zippy="colname" class="form-control  ">
+                            </select>
+                          </div>  
+                        </div>
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="colcode">Код, артикул</label>
+                            <div class="col-4">
+                            <select  zippy="colcode" class="form-control  ">
+                            </select>
+                          </div>  
+                        </div>                  
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="colbarcode">Штрих код</label>
+                            <div class="col-4">
+                            <select  zippy="colbarcode" class="form-control  ">
                             </select>
                         </div>
-                        <div class="form-group  ">
-                            <label for="colcode">Код, артикул</label>
-                            <select style="width:100px;" zippy="colcode" class="form-control  ">
+                          </div>  
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="colgr">Категория</label>
+                            <div class="col-4">
+                            <select  zippy="colgr" class="form-control  ">
                             </select>
+                          </div>  
                         </div>
-                        <div class="form-group  ">
-                            <label for="colbarcode">Штрих код</label>
-                            <select style="width:100px;" zippy="colbarcode" class="form-control  ">
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="colbrand">Бренд</label>
+                            <div class="col-4">
+                            <select  zippy="colbrand" class="form-control  ">
                             </select>
+                          </div>  
                         </div>
-                        <div class="form-group  ">
-                            <label for="colgr">Группа (категория)</label>
-                            <select style="width:100px;" zippy="colgr" class="form-control  ">
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="colmsr">Ед. измерения</label>
+                            <div class="col-4">
+                            <select  zippy="colmsr" class="form-control  ">
                             </select>
+                          </div>  
                         </div>
-                        <div class="form-group  ">
-                            <label for="colbrand">Бренд</label>
-                            <select style="width:100px;" zippy="colbrand" class="form-control  ">
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="coldesc">Описание</label>
+                            <div class="col-4">
+                            <select   zippy="coldesc" class="form-control  ">
                             </select>
-                        </div>
-                        <div class="form-group  ">
-                            <label for="colmsr">Ед. измерения</label>
-                            <select style="width:100px;" zippy="colmsr" class="form-control  ">
-                            </select>
-                        </div>
-                        <div class="form-group  ">
-                            <label for="coldesc">Описание</label>
-                            <select style="width:100px;" zippy="coldesc" class="form-control  ">
-                            </select>
+                          </div>  
                         </div>
 
-                        <div class="form-group  ">
-                            <label data-label="colqty" for="colqty">Количество</label>
-                            <select style="width:100px;" zippy="colqty" class="form-control  ">
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" data-label="colqty" for="colqty">Количество</label>
+                            <div class="col-4">
+                            <select    zippy="colqty" class="form-control  ">
                             </select>
+                          </div>  
                         </div>
                         <div class="form-group  ">
-                            <label for="colprice">Отпускная цена</label>
-                            <select style="width:100px;" zippy="colprice" class="form-control  ">
+                            <label class="col-8 col-form-label" data-label="colinprice" for="colinprice">Учетная цена</label>
+                            <div class="col-4">
+                            <select   zippy="colinprice" class="form-control  ">
                             </select>
+                          </div>  
                         </div>
-                        <div class="form-group  ">
-                            <label data-label="colinprice" for="colinprice">Учетная цена</label>
-                            <select style="width:100px;" zippy="colinprice" class="form-control  ">
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="colprice1">Отпускная цена 1</label>
+                            <div class="col-4">
+                            <select   zippy="colprice1" class="form-control  ">
                             </select>
+                          </div>  
+                        </div>
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="colprice2">Отпускная цена 2</label>
+                            <div class="col-4">
+                            <select   zippy="colprice2" class="form-control  ">
+                            </select>
+                          </div>  
+                        </div>
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label"  for="colprice3">Отпускная цена 3</label>
+                            <div class="col-4">
+                            <select   zippy="colprice3" class="form-control  ">
+                            </select>
+                          </div>  
+                        </div>
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="colprice4">Отпускная цена 4</label>
+                            <div class="col-4">
+                            <select   zippy="colprice4" class="form-control  ">
+                            </select>
+                          </div>  
+                        </div>
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="colprice5">Отпускная цена 5</label>
+                            <div class="col-4">
+                            <select   zippy="colprice5" class="form-control  ">
+                            </select>
+                          </div>  
                         </div>
 
 
@@ -119,17 +163,21 @@
                 </form>
                 {{#preview}}
                 <div class="row">
-                    <div class="col-12 col-lg-10 ">
+                    <div class="col-12 col-xl-10 ">
                         <table class="table table-sm">
                             <tr>
                                 <th>Наименование</th>
                                 <th>Код</th>
-                                <th>Группа</th>
+                                <th>Кат.</th>
                                 <th>Бренд</th>
                                 <th>Ед.</th>
                                 <th class="text-right">Кол.</th>
                                 <th class="text-right">Уч. цена</th>
-                                <th class="text-right">Отп. цена</th>
+                                <th class="text-right">Отп. цена 1</th>
+                                <th class="text-right">Отп. цена 2</th>
+                                <th class="text-right">Отп. цена 3</th>
+                                <th class="text-right">Отп. цена 4</th>
+                                <th class="text-right">Отп. цена 5</th>
                             </tr>
                             {{#list}}
                             <tr>
@@ -140,7 +188,11 @@
                                 <td>{{colmsr}}</td>
                                 <td class="text-right">{{colqty}}</td>
                                 <td class="text-right">{{colinprice}}</td>
-                                <td class="text-right">{{colprice}}</td>
+                                <td class="text-right">{{colprice1}}</td>
+                                <td class="text-right">{{colprice2}}</td>
+                                <td class="text-right">{{colprice3}}</td>
+                                <td class="text-right">{{colprice4}}</td>
+                                <td class="text-right">{{colprice5}}</td>
                             </tr>
                             {{/list}}
                         </table>
