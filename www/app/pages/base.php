@@ -39,6 +39,9 @@ class Base extends \Zippy\Html\WebPage
             $this->branch_id = System::getSession()->defbranch;
             System::setBranch($this->branch_id);
         }
+        if($this->branch_id==null) {
+            $this->branch_id =0;
+        }
 
 
         $blist = array();
