@@ -105,6 +105,7 @@ class Order extends \App\Pages\Base
         $this->add(new Form('editnewitem'))->setVisible(false);
         $this->editnewitem->add(new TextInput('editnewitemname'));
         $this->editnewitem->add(new TextInput('editnewitemcode'));
+        $this->editnewitem->add(new TextInput('editnewbrand'));
         $this->editnewitem->add(new Button('cancelnewitem'))->onClick($this, 'cancelnewitemOnClick');
         $this->editnewitem->add(new DropDownChoice('editnewcat', \App\Entity\Category::getList(), 0));
         $this->editnewitem->add(new SubmitButton('savenewitem'))->onClick($this, 'savenewitemOnClick');
@@ -155,6 +156,13 @@ class Order extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
+        
+        $this->_tvars['manlist'] = array();
+
+        foreach (Item::getManufacturers() as $man) {
+            $this->_tvars['manlist'][] = array('mitem' => $man);
+        }        
+        
     }
 
     public function detailOnRow($row) {
@@ -635,8 +643,8 @@ class Order extends \App\Pages\Base
         $this->editnewitem->setVisible(true);
         $this->editdetail->setVisible(false);
 
-        $this->editnewitem->editnewitemname->setText('');
-        $this->editnewitem->editnewitemcode->setText('');
+        $this->editnewitem->clean();
+        
     }
 
     public function savenewitemOnClick($sender) {
@@ -648,6 +656,7 @@ class Order extends \App\Pages\Base
         $item = new Item();
         $item->itemname = $itemname;
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
+        $item->manufacturer = $this->editnewitem->editnewbrand->getText();
         $item->cat_id = $this->editnewitem->editnewcat->getValue();
         $item->save();
         $this->editdetail->edittovar->setText($item->itemname);
