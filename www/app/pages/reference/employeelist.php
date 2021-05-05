@@ -135,8 +135,8 @@ class EmployeeList extends \App\Pages\Base
         $this->_employee->branch_id = $this->employeedetail->editbranch->getValue();
 
         $this->_employee->disabled = $this->employeedetail->editdisabled->isChecked() ? 1 : 0;
-
-        $this->_employee->Save();
+        if($this->_employee->disabled==1) $this->_employee->login='';
+        $this->_employee->save();
 
         $this->employeedetail->setVisible(false);
         $this->employeetable->setVisible(true);

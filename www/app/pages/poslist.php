@@ -138,23 +138,11 @@ class PosList extends \App\Pages\Base
         }
 
 
-        if ($this->_tvars['usebranch'] == true && $this->_pos->branch_id > 0) {
-            $mf = \App\Entity\MoneyFund::load($this->_pos->mf);
-            $store = \App\Entity\Store::load($this->_pos->store);
-            if ($this->_pos->branch_id != $mf->branch_id) {
-
-                $this->setError("thesamebranch");
-                return;
-            }
-            if ($this->_pos->branch_id != $store->branch_id) {
-                $this->setError("thesamebranch");
-                return;
-            }
-        }
+ 
 
         $this->_pos->comment = $this->posdetail->editcomment->getText();
 
-        $this->_pos->Save();
+        $this->_pos->save();
         $this->posdetail->setVisible(false);
         $this->postable->setVisible(true);
         $this->postable->poslist->Reload();

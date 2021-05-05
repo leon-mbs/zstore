@@ -22,6 +22,7 @@ use Zippy\Html\Link\RedirectLink;
 
 class Jobs extends \App\Pages\Base
 {
+    public $_event;
     
     public function __construct() {
         parent::__construct();
@@ -52,6 +53,15 @@ class Jobs extends \App\Pages\Base
         $this->addeventform->add(new DropDownChoice('addeventnotify', array(1 => "1 час", 2 => "2 часа", 4 => "4 часа", 8 => "8 часов", 16 => "16 часов", 24 => "24 часа"), 0));
         $this->addeventform->add(new ClickLink('cancel',$this,'onCancel'));
        
+        $this->add(new  Form('editeventform'))->setVisible(false); 
+        $this->editeventform->onSubmit($this, 'onSaveEdited');
+        $this->editeventform->add(new \ZCL\BT\DateTimePicker('editeventdate', time()));
+        $this->editeventform->add(new TextInput('editeventtitle'));
+        $this->editeventform->add(new TextArea('editeventdesc'));
+        
+        $this->editeventform->add(new ClickLink('canceledit',$this,'onCancel'));
+        $this->editeventform->add(new ClickLink('delete',$this,'onDelete'));
+       
         
         $this->listpan->nlist->Reload();       
     }   
@@ -66,6 +76,7 @@ class Jobs extends \App\Pages\Base
         $row->add(new Label("date", \App\Helper::fdt($event->eventdate)));
         $row->add(new ClickLink('toon',$this, 'onDoneClick'))->setVisible($event->isdone!=1);
         $row->add(new ClickLink('tooff',$this, 'onDoneClick'))->setVisible($event->isdone==1);
+        $row->add(new ClickLink('edit',$this, 'onEditClick'));
         $row->add(new Label("stwait"))->setVisible(false);
         $row->add(new Label("sttoday"))->setVisible(false);
         $row->add(new Label("stpast"))->setVisible(false);
@@ -144,10 +155,49 @@ class Jobs extends \App\Pages\Base
       $this->addeventform->setVisible(false) ;   
          
     }
+    public function onEditClick($sender) {
+      $this->_event = $sender->getOwner()->getDataItem();
+        $this->editeventform->editeventtitle->setText($this->_event->title);
+        $this->editeventform->editeventdesc->setText($this->_event->description);
+        $this->editeventform->editeventdate->setDate($this->_event->eventdate);
+         
+      $this->listpan->setVisible(false) ;   
+      $this->editeventform->setVisible(true) ;   
+      
+    }
+     
     public function onCancel($sender) {
            
       $this->listpan->setVisible(true) ;   
       $this->addeventform->setVisible(false) ;   
+      $this->editeventform->setVisible(false) ;   
+    }
+     public function onSaveEdited($sender) {
+        $this->_event->title = $this->editeventform->editeventtitle->getText();
+        $this->_event->description = $this->editeventform->editeventdesc->getText();
+        $this->_event->eventdate = $this->editeventform->editeventdate->getDate();
+         
+
+        if (strlen($this->_event->title) == 0) {
+            return;
+        }
+        $this->_event->save();
+          
+         
+      $this->listpan->nlist->Reload();        
+      $this->listpan->setVisible(true) ;   
+      $this->addeventform->setVisible(false) ;   
+      $this->editeventform->setVisible(false) ;   
+    }
+     
+    public function onDelete($sender) {
+      
+      Event::delete($this->_event->event_id) ;    
+         
+      $this->listpan->nlist->Reload();        
+      $this->listpan->setVisible(true) ;   
+      $this->addeventform->setVisible(false) ;   
+      $this->editeventform->setVisible(false) ;   
     }
      
     

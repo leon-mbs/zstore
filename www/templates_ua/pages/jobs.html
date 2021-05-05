@@ -37,11 +37,9 @@
                         <td >  <a zippy="customer" title="Вiдкрити карточку"></a>  </td>
                         <td > <small zippy="description"></small>   </td>
                        <td class="text-center"> <a zippy="toon"><i class="fa fa-toggle-on text-success"></i></a> 
-                       <a zippy="tooff"><i class="fa fa-toggle-off"></i></a> </td>
-                                 
-                       
-                        
-
+                         <a zippy="tooff"><i class="fa fa-toggle-off"></i></a> 
+                       </td>
+                       <td><a zippy="edit"><i class="fa fa-edit"/></a></td>
 
                     </tr>
                 </table>
@@ -71,8 +69,28 @@
                                 </select>
                             </div>
                             <a zippy="cancel" class="btn btn-outline-success  mr-4">Скасувати</a>
-                            <input class="btn btn-success  " type="submit" value="Додати">
+                            <input class="btn btn-success  " type="submit" value="Зберегти">
                         </form>
+                         
+               <form zippy="editeventform" >
+                            <div class="form-group">
+                                <label for="editeventdate">Дата, час</label>
+                                <input class="form-control" zippy="editeventdate">
+                            </div>
+                            <div class="form-group">
+                                <label for="editeventtitle">Заголовок, тип подiї</label>
+                                <input required="required" class="form-control" zippy="editeventtitle">
+                            </div>
+                            <div class="form-group">
+                                <label for="editeventdesc">Комментар</label>
+                                <textarea class="form-control" zippy="editeventdesc" style=" height:120px;"></textarea>
+                            </div>
+                            <a zippy="canceledit" class="btn btn-outline-success  mr-2">Скасувати</a> &nbsp;
+                            <input class="btn btn-success mr-4 " type="submit" value="Зберегти">
+                            <a zippy="delete" class="btn btn-danger  "    >Видалити</a>
+       
+                        </form>
+                              
                            
         </div>  
 
