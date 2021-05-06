@@ -71,6 +71,7 @@ class CustomerList extends \App\Pages\Base
         $this->add(new Form('customerdetail'))->setVisible(false);
         $this->customerdetail->add(new TextInput('editaddress'));
         $this->customerdetail->add(new TextInput('editcity'));
+        $this->customerdetail->add(new TextInput('editcountry'));
         $this->customerdetail->add(new TextInput('editcustomername'));
         $this->customerdetail->add(new TextInput('editphone'));
         $this->customerdetail->add(new TextInput('editviber'));
@@ -223,6 +224,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->editemail->setText($this->_customer->email);
         $this->customerdetail->editaddress->setText($this->_customer->address);
         $this->customerdetail->editcity->setText($this->_customer->city);
+        $this->customerdetail->editcountry->setText($this->_customer->country);
         $this->customerdetail->discount->setText($this->_customer->discount);
         $this->customerdetail->bonus->setText($this->_customer->bonus);
         $this->customerdetail->editcomment->setText($this->_customer->comment);
@@ -278,6 +280,7 @@ class CustomerList extends \App\Pages\Base
         $this->_customer->email = $this->customerdetail->editemail->getText();
         $this->_customer->address = $this->customerdetail->editaddress->getText();
         $this->_customer->city = $this->customerdetail->editcity->getText();
+        $this->_customer->country = $this->customerdetail->editcountry->getText();
         $this->_customer->discount = $this->customerdetail->discount->getText();
         $this->_customer->bonus = $this->customerdetail->bonus->getText();
         $this->_customer->comment = $this->customerdetail->editcomment->getText();
