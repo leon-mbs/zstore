@@ -703,13 +703,19 @@ class GoodsReceipt extends \App\Pages\Base
         $item->itemname = $itemname;
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
 
-        $itemname = Item::qstr($item->itemname);
-        $code = Item::qstr($item->item_code);
-        $cnt = Item::findCnt("item_id <> {$item->item_id} and itemname={$itemname} and item_code={$code} ");
-        if ($cnt > 0) {
-
-            $this->setError('itemnamecode_exists');
-            return;
+         if(strlen($item->item_code)>0) {
+            $code = Item::qstr($item->item_code);
+            $cnt = Item::findCnt("  item_code={$code} ");
+            if ($cnt > 0) {
+               $this->setError('itemcode_exists');
+               return;
+            }
+        
+        }  else {
+              if(System::getOption("common", "autoarticle") == 1)   {
+                 
+                 $item->item_code = Item::getNextArticle() ;
+              } 
         }
 
 

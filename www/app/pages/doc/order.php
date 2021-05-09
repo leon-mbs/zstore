@@ -656,6 +656,23 @@ class Order extends \App\Pages\Base
         $item = new Item();
         $item->itemname = $itemname;
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
+        
+         if(strlen($item->item_code)>0) {
+            $code = Item::qstr($item->item_code);
+            $cnt = Item::findCnt("  item_code={$code} ");
+            if ($cnt > 0) {
+               $this->setError('itemcode_exists');
+               return;
+            }
+        
+        }  else {
+              if(\App\System::getOption("common", "autoarticle") == 1)   {
+                 
+                 $item->item_code = Item::getNextArticle() ;
+              } 
+        }
+        
+        
         $item->manufacturer = $this->editnewitem->editnewbrand->getText();
         $item->cat_id = $this->editnewitem->editnewcat->getValue();
         $item->save();

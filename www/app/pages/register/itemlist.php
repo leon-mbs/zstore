@@ -48,6 +48,16 @@ class ItemList extends \App\Pages\Base
         $this->detailpanel->add(new DataView('stocklist', new DetailDataSource($this), $this, 'detailistOnRow'));
 
         $this->OnFilter(null);
+        
+        $options = \App\System::getOptions('common') ;
+        
+        $this->_tvars['hp1']  = strlen($options['price1'])>0 ? $options['price1'] : false;
+        $this->_tvars['hp2']  = strlen($options['price2'])>0 ? $options['price2'] : false;
+        $this->_tvars['hp2']  = strlen($options['price3'])>0 ? $options['price3'] : false;
+        $this->_tvars['hp4']  = strlen($options['price4'])>0 ? $options['price4'] : false;
+        $this->_tvars['hp5']  = strlen($options['price5'])>0 ? $options['price5'] : false;
+        
+        
     }
 
     public function itemlistOnRow(\Zippy\Html\DataList\DataRow $row) {
@@ -68,28 +78,13 @@ class ItemList extends \App\Pages\Base
 
         $plist = array();
 
-        $p1 = $item->getPrice('price1', $store);
-        $p2 = $item->getPrice('price2', $store);
-        $p3 = $item->getPrice('price3', $store);
-        $p4 = $item->getPrice('price4', $store);
-        $p5 = $item->getPrice('price5', $store);
-        if ($p1 > 0) {
-            $plist[] = $p1;
-        }
-        if ($p2 > 0) {
-            $plist[] = $p2;
-        }
-        if ($p3 > 0) {
-            $plist[] = $p3;
-        }
-        if ($p4 > 0) {
-            $plist[] = $p4;
-        }
-        if ($p5 > 0) {
-            $plist[] = $p5;
-        }
+ 
 
-        $row->add(new Label('iprice', implode(', ', $plist)));
+        $row->add(new Label('iprice1', H::fa($item->getPrice('price1', $store))));
+        $row->add(new Label('iprice2', H::fa($item->getPrice('price2', $store))));
+        $row->add(new Label('iprice3', H::fa($item->getPrice('price3', $store))));
+        $row->add(new Label('iprice4', H::fa($item->getPrice('price4', $store))));
+        $row->add(new Label('iprice5', H::fa($item->getPrice('price5', $store))));
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         if ($qty < 0) {
@@ -274,7 +269,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         $conn = $conn = \ZDB\DB::getConnect();
 
         $form = $this->page->filter;
-        $where = "   disabled <> 1 ";
+        $where = "   disabled <> 1 and  ( select sum(st1.qty) from store_stock st1 where st1.item_id= item_id ) >0 ";
 
         $cat = $form->searchcat->getValue();
         $store = $form->searchstore->getValue();

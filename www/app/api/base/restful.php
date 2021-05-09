@@ -28,19 +28,30 @@ abstract class RestFul
             $this->put($params);
         };
     }
-
+    /**
+    * @param array $params
+    */
     public function get($params) {
         $this->FailAnswer();
     }
 
+   /**
+    * @param array $params
+    */
     public function post($params) {
         $this->FailAnswer();
     }
 
+   /**
+    * @param array $params
+    */
     public function put($params) {
         $this->FailAnswer();
     }
 
+   /**
+    * @param array $params
+    */
     public function delete($params) {
         $this->FailAnswer();
     }

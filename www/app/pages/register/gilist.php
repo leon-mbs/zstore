@@ -107,7 +107,8 @@ class GIList extends \App\Pages\Base
 
         if ($doc > 0) {
             $this->_doc = Document::load($doc);
-            $this->npshowOnSubmit($this->statuspan->statusform->bnp);;
+            $this->showOn() ;
+           // $this->npshowOnSubmit($this->statuspan->statusform->bnp);;
         }
     }
 
@@ -303,12 +304,18 @@ class GIList extends \App\Pages\Base
     }
 
     //просмотр
+    
+    
     public function showOnClick($sender) {
-
         $this->_doc = $sender->owner->getDataItem();
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
         }
+        $this->showOn() ;
+    }
+
+    public function showOn() {
+
 
         $this->statuspan->setVisible(true);
         $this->statuspan->statusform->ship_number->setText($this->_doc->headerdata['ship_number']);

@@ -112,7 +112,7 @@ class IssueList extends \App\Pages\Base
 
         $stform->add(new DropDownChoice('ststatus', $stlist, -1));
         $stform->add(new DropDownChoice('stpr', array(Issue::PRIORITY_NORMAL => 'Нормальный', Issue::PRIORITY_HIGH => 'Высокий', Issue::PRIORITY_LOW => 'Низкий'), 0));
-        $stform->add(new DropDownChoice('stuser', User::findArray('username', '', 'username'), 0));
+        $stform->add(new DropDownChoice('stuser', array(), 0));
         $stform->onSubmit($this, "onStatus");
         $msgpan->add(new DataView('stlist', new ArrayDataSource($this, '_stlist'), $this, 'stlistOnRow'));
 
@@ -271,16 +271,7 @@ class IssueList extends \App\Pages\Base
         if ($this->_issue->priority == Issue::PRIORITY_LOW) {
             $bd = "badge-warning";
         };
-        $this->listpan->msgpan->mtitle->setText('<span class="badge ' . $bd . '">#' . $this->_issue->issue_id . '</span> ' . $this->_issue->issue_name, true);
-        $this->listpan->msgpan->mdesc->setText($this->_issue->desc, true);
-        $this->listpan->msgpan->stform->ststatus->setValue($this->_issue->status);
-        $this->listpan->msgpan->stform->stpr->setValue($this->_issue->priority);
-        $this->listpan->msgpan->stform->stuser->setValue($this->_issue->user_id);
-
-        $this->updateStList();
-        $this->updateMessages();
-
-        $this->listpan->list->Reload(false);
+        
         $user_id = System::getUser()->user_id;
         $project = Project::load($this->_issue->project_id);
         $this->listpan->msgpan->mcreate->setText('Автор ' . $this->_issue->createdbyname . ' ' . \App\Helper::fd($this->_issue->createdon) . '&nbsp;Проект&nbsp;<a href="/project/' . $project->project_id . '">' . $project->project_name . '</a> ', true);
@@ -288,7 +279,23 @@ class IssueList extends \App\Pages\Base
         $users = \App\Entity\User::findArray('username', "user_id <> {$user_id}  and user_id in (select user_id from issue_projectacc where project_id={$project->project_id} )", 'username');
         foreach ($users as $k => $v) {
             $this->listpan->msgpan->addmsgform->userlist->AddCheckBox($k, false, $v);
-        }
+        }     
+        
+        $this->listpan->msgpan->mtitle->setText('<span class="badge ' . $bd . '">#' . $this->_issue->issue_id . '</span> ' . $this->_issue->issue_name, true);
+        $this->listpan->msgpan->mdesc->setText($this->_issue->desc, true);
+        $this->listpan->msgpan->stform->ststatus->setValue($this->_issue->status);
+        $this->listpan->msgpan->stform->stpr->setValue($this->_issue->priority);
+        
+        $users = \App\Entity\User::findArray('username', "  user_id in (select user_id from issue_projectacc where project_id={$project->project_id} )", 'username');
+        
+        $this->listpan->msgpan->stform->stuser->setOptionList($users);
+        $this->listpan->msgpan->stform->stuser->setValue($this->_issue->user_id);
+
+        $this->updateStList();
+        $this->updateMessages();
+
+        $this->listpan->list->Reload(false);
+    
     }
 
     public function deleteOnClick($sender) {
@@ -458,9 +465,9 @@ class IssueList extends \App\Pages\Base
 
     public function stlistOnRow($row) {
         $item = $row->getDataItem();
-        $row->add(new Label('sttime', \App\Helper::fd($item->createdon)));
-        $row->add(new Label('stuser', $item->username));
-        $row->add(new Label('stdesc', $item->description, true));
+        $row->add(new Label('stlisttime', \App\Helper::fd($item->createdon)));
+        $row->add(new Label('stlistuser', $item->username));
+        $row->add(new Label('stlistdesc', $item->description, true));
     }
 
     public function updateStList() {

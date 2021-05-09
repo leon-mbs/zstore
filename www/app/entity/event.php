@@ -23,5 +23,13 @@ class Event extends \ZCL\DB\Entity
     protected function afterLoad() {
         $this->eventdate = strtotime($this->eventdate);
     }
+    
+    
+    public static function isNotClosedTask($user_id){
+        $conn = \ZCL\DB\DB::getConnect();
+        $cnt = Event::findCnt("isdone<>1  and user_id={$user_id} ");
+        return $cnt;
+      
+    }
 
 }

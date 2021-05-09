@@ -290,7 +290,7 @@ class ProjectList extends \App\Pages\Base
 
         $row->add(new ClickLink('delfile'))->onClick($this, 'deleteFileOnClick');
 
-        if ($this->_user->rolename == 'admins' || $this->_user->user_id == $this->_issue->createdby) {
+        if ($this->_user->rolename == 'admins' || $this->_user->user_id == $this->_project->creator_id) {
             $row->delfile->setVisible(true);
         } else {
             $row->delfile->setVisible(false);

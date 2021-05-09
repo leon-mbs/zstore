@@ -53,6 +53,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new CheckBox('usebranch'));
         $this->common->add(new CheckBox('usecattree'));
         $this->common->add(new CheckBox('usemobileprinter'));
+        $this->common->add(new CheckBox('showactiveusers'));
         $this->common->add(new CheckBox('allowminus'));
         $this->common->add(new CheckBox('noallowfiz'));
         $this->common->add(new CheckBox('capcha'));
@@ -93,7 +94,7 @@ class Options extends \App\Pages\Base
 
         $this->common->usesnumber->setChecked($common['usesnumber']);
 
-        $this->common->usemobileprinter->setChecked($common['usemobileprinter']);
+        $this->common->showactiveusers->setChecked($common['showactiveusers']);
         $this->common->usecattree->setChecked($common['usecattree']);
         $this->common->usescanner->setChecked($common['usescanner']);
         $this->common->useimages->setChecked($common['useimages']);
@@ -240,7 +241,7 @@ class Options extends \App\Pages\Base
         $common['usescanner'] = $this->common->usescanner->isChecked() ? 1 : 0;
         $common['useimages'] = $this->common->useimages->isChecked() ? 1 : 0;
 
-        $common['usemobileprinter'] = $this->common->usemobileprinter->isChecked() ? 1 : 0;
+        $common['showactiveusers'] = $this->common->showactiveusers->isChecked() ? 1 : 0;
         $common['usecattree'] = $this->common->usecattree->isChecked() ? 1 : 0;
         $common['usebranch'] = $this->common->usebranch->isChecked() ? 1 : 0;
         $common['noallowfiz'] = $this->common->noallowfiz->isChecked() ? 1 : 0;
