@@ -36,6 +36,7 @@ class ARMPos extends \App\Pages\Base
     private $_rowid    = 0;
     private $_pt       = 0;
     private $_store_id = 0;
+    private $_salesource = 0;
 
     public  $_doclist    = array();
 
@@ -50,6 +51,7 @@ class ARMPos extends \App\Pages\Base
             $filter->pos = 0;
             $filter->store = H::getDefStore();
             $filter->pricetype = H::getDefPriceType();
+            $filter->salesource = H::getDefSaleSource();
       
 
              
@@ -62,7 +64,8 @@ class ARMPos extends \App\Pages\Base
         $this->form1->add(new DropDownChoice('pos', $plist, $filter->pos));
         $this->form1->add(new DropDownChoice('store', \App\Entity\Store::getList(), $filter->store));
         $this->form1->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList(), $filter->pricetype));
-
+        $this->form1->add(new DropDownChoice('salesource', H::getSaleSources() , $filter->salesource));
+                                                                                                              
         $this->form1->add(new SubmitButton('next1'))->onClick($this, 'next1docOnClick');
 
         
@@ -208,6 +211,7 @@ class ARMPos extends \App\Pages\Base
         $this->pos = \App\Entity\Pos::load($this->form1->pos->getValue());
 
         $this->_store_id = $this->form1->store->getValue();
+        $this->_salesource = $this->form1->salesource->getValue();
         $this->_pt = $this->form1->pricetype->getValue();
 
         if ($this->pos == null) {
@@ -229,6 +233,7 @@ class ARMPos extends \App\Pages\Base
         $filter->pos = $this->form1->pos->getValue();
         $filter->store = $this->_store_id;
         $filter->pricetype = $this->_pt;
+        $filter->salesource = $this->_salesource;
 
         $this->form1->setVisible(false);
         $this->docpanel->form2->setVisible(true);
@@ -759,6 +764,7 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['pos'] = $this->pos->pos_id;
         $this->_doc->headerdata['pos_name'] = $this->pos->pos_name;
         $this->_doc->headerdata['store'] = $this->_store_id;
+        $this->_doc->headerdata['salesource'] = $this->_salesource;
         $this->_doc->headerdata['pricetype'] = $this->_pt;
 
         $this->_doc->firm_id = $this->pos->firm_id;
@@ -835,7 +841,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form3->payment->setValue(H::getDefMF());
         $this->docpanel->form3->setVisible(false);
         $this->docpanel->form4->setVisible(true);
-
+        $this->docpanel->form3->notes->setText('') ;
         $check = $this->_doc->generatePosReport();
         $this->docpanel->form4->showcheck->setText($check, true);
     }

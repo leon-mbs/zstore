@@ -133,7 +133,7 @@ class ItemList extends \App\Pages\Base
        
         $this->_tvars['hp1']  = strlen($common['price1'])>0 ? $common['price1'] : false;
         $this->_tvars['hp2']  = strlen($common['price2'])>0 ? $common['price2'] : false;
-        $this->_tvars['hp2']  = strlen($common['price3'])>0 ? $common['price3'] : false;
+        $this->_tvars['hp3']  = strlen($common['price3'])>0 ? $common['price3'] : false;
         $this->_tvars['hp4']  = strlen($common['price4'])>0 ? $common['price4'] : false;
         $this->_tvars['hp5']  = strlen($common['price5'])>0 ? $common['price5'] : false;
           

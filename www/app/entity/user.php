@@ -20,6 +20,7 @@ class User extends \ZCL\DB\Entity
         $this->user_id = 0;
         $this->defstore = 0;
         $this->defmf = 0;
+        $this->defsalesource = 0;
         $this->deffirm = 0;
         $this->hidesidebar = 0;
         $this->pagesize = 25;
@@ -87,6 +88,7 @@ class User extends \ZCL\DB\Entity
         $this->deffirm = (int)$options['deffirm'];
         $this->defstore = (int)$options['defstore'];
         $this->defmf = (int)$options['defmf'];
+        $this->defsalesource = (int)$options['defsalesource'];
         $this->pagesize = (int)$options['pagesize'];
         $this->phone = (string)$options['phone'];
         $this->viber = (string)$options['viber'];
@@ -119,6 +121,7 @@ class User extends \ZCL\DB\Entity
         $options['deffirm'] = $this->deffirm;
 
         $options['defmf'] = $this->defmf;
+        $options['defsalesource'] = $this->defsalesource;
         $options['pagesize'] = $this->pagesize;
         $options['hidesidebar'] = $this->hidesidebar;
         $options['mainpage'] = $this->mainpage;

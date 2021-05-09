@@ -47,6 +47,7 @@ class GIList extends \App\Pages\Base
         $this->listpan->filter->add(new TextInput('searchtext'));
         $this->listpan->filter->add(new DropDownChoice('status', array(0 => H::l('opened'), 1 => H::l('newed'), 2 => H::l('sended'), 4 => H::l('notpayed'), 3 => H::l('all')), 0));
         $this->listpan->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
+        $this->listpan->filter->add(new DropDownChoice('salesource', H::getSaleSources() , 0));
 
         $doclist = $this->listpan->add(new DataView('doclist', new GoodsIssueDataSource($this), $this, 'doclistOnRow'));
 
@@ -658,6 +659,11 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
         $conn = \ZDB\DB::getConnect();
 
         $where = "   meta_name  in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' ,'Warranty','TTN' ) ";
+        
+        $salesource = $this->page->listpan->filter->salesource->getValue();
+        if ($salesource > 0) {
+            $where .= " and  ExtractValue(content, '//doc/header/salesource') = ". $salesource;
+        }
 
         $status = $this->page->listpan->filter->status->getValue();
         if ($status == 0) {

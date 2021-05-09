@@ -43,7 +43,8 @@ class OrderList extends \App\Pages\Base
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
         $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 3 => 'Все'), 0));
-
+        $this->filter->add(new DropDownChoice('salesource', H::getSaleSources() , 0));
+  
         $doclist = $this->add(new DataView('doclist', new OrderDataSource($this), $this, 'doclistOnRow'));
 
         $this->add(new Paginator('pag', $doclist));
@@ -485,6 +486,11 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
 
         $where = "     meta_name  = 'Order'  ";
 
+        $salesource = $this->page->filter->salesource->getValue();
+        if ($salesource > 0) {
+            $where .= " and  ExtractValue(content, '//doc/header/salesource') = ". $salesource;
+        }
+        
         $status = $this->page->filter->status->getValue();
         if ($status == 0) {
             $where .= " and  state not in (9,17) ";

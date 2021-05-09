@@ -50,6 +50,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new Date('document_date'))->setDate(time());
 
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, true), H::getDefMF()))->onChange($this, 'OnPayment');
+        $this->docform->add(new DropDownChoice('salesource', H::getSaleSources() , H::getDefSaleSource()));
 
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new TextInput('editpaydisc'));
@@ -127,6 +128,7 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->document_date->setDate($this->_doc->document_date);
 
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+            $this->docform->salesource->setValue($this->_doc->headerdata['salesource']);
 
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
@@ -170,6 +172,7 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
+                        $this->docform->salesource->setValue($basedoc->headerdata['salesource']);
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         // $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->_orderid = $basedocid;
@@ -251,6 +254,7 @@ class GoodsIssue extends \App\Pages\Base
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
+                        $this->docform->salesource->setValue($basedoc->headerdata['salesource']);
 
                         $this->docform->firm->setValue($basedoc->firm_id);
 
@@ -541,6 +545,7 @@ class GoodsIssue extends \App\Pages\Base
             $customer = Customer::load($this->_doc->customer_id);
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
         }
+        $this->_doc->headerdata['salesource'] = $this->docform->salesource->getValue();
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
         $this->_doc->firm_id = $this->docform->firm->getValue();
         if ($this->_doc->firm_id > 0) {

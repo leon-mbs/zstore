@@ -40,7 +40,9 @@ class UserProfile extends \App\Pages\Base
         $form->add(new DropDownChoice('defstore', \App\Entity\Store::getList(), $this->user->defstore));
         $form->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList(), $this->user->defmf));
         $form->add(new DropDownChoice('pagesize', array(15 => 15, 25 => 25, 50 => 50, 100 => 100), $this->user->pagesize));
-
+       
+        $form->add(new DropDownChoice('defsalesource', H::getSaleSources() , $this->user->defsalesource));
+          
         $pages = array();
 
         foreach (\App\Entity\MetaData::find("meta_type<>1", "meta_type,description") as $m) {
@@ -103,6 +105,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->deffirm = $sender->deffirm->getValue();
         $this->user->defstore = $sender->defstore->getValue();
         $this->user->defmf = $sender->defmf->getValue();
+        $this->user->defsalesource = $sender->defsalesource->getValue();
         $this->user->pagesize = $sender->pagesize->getValue();
         $this->user->mainpage = $sender->mainpage->getValue();
 

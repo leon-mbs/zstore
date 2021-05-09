@@ -53,7 +53,7 @@ class ItemList extends \App\Pages\Base
         
         $this->_tvars['hp1']  = strlen($options['price1'])>0 ? $options['price1'] : false;
         $this->_tvars['hp2']  = strlen($options['price2'])>0 ? $options['price2'] : false;
-        $this->_tvars['hp2']  = strlen($options['price3'])>0 ? $options['price3'] : false;
+        $this->_tvars['hp3']  = strlen($options['price3'])>0 ? $options['price3'] : false;
         $this->_tvars['hp4']  = strlen($options['price4'])>0 ? $options['price4'] : false;
         $this->_tvars['hp5']  = strlen($options['price5'])>0 ? $options['price5'] : false;
         

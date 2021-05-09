@@ -184,6 +184,7 @@ class Users extends \App\Pages\Base
         $datarow->add(new \Zippy\Html\Label("userlogin", $item->userlogin));
         $datarow->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
         $datarow->add(new \Zippy\Html\Label("rolename", $item->rolename));
+        $datarow->add(new \Zippy\Html\Label("empname", $item->employee_id >0 ?$item->username:''));
 
         $datarow->add(new \Zippy\Html\Label("created", \App\Helper::fd($item->createdon)));
         $datarow->add(new \Zippy\Html\Label("email", $item->email));
