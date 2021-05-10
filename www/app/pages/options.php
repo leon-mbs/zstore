@@ -235,7 +235,10 @@ class Options extends \App\Pages\Base
     }
 
     public function saveCommonOnClick($sender) {
-        $common = array();
+         $common = System::getOptions("common");
+        if (!is_array($common)) {
+            $common = array();
+        }
 
         $common['qtydigits'] = $this->common->qtydigits->getValue();
         $common['amdigits'] = $this->common->amdigits->getValue();
