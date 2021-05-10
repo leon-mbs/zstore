@@ -84,9 +84,17 @@ class ARMFood extends \App\Pages\Base
         
         //список  заказов
         $this->add(new Panel('orderlistpan'))->setVisible(false);
+        
+        
         $this->add(new ClickLink('neworder', $this, 'onNewOrder'));
         $this->orderlistpan->add(new DataView('orderlist', new ArrayDataSource($this, '_doclist'), $this, 'onDocRow'));
 
+        $this->orderlistpan->add(new Form('searchform'))->onSubmit($this,'updateorderlist');
+        $this->orderlistpan->searchform->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');
+        $this->orderlistpan->searchform->add(new TextInput('searchnumber', $filter->searchnumber));
+      
+        
+        
         //панель статуса,  просмотр
         $this->orderlistpan->add(new Panel('statuspan'))->setVisible(false);
         
@@ -205,7 +213,7 @@ class ARMFood extends \App\Pages\Base
         
         $this->docpanel->listsform->itemlist->Reload(); 
         $this->calcTotal() ;        
-        
+        $this->orderlistpan->searchform->clean(); 
     }
 
     public function onOrderList($sender) {
@@ -218,7 +226,7 @@ class ARMFood extends \App\Pages\Base
 
         $this->orderlistpan->setVisible(true);
         $this->orderlistpan->statuspan->setVisible(true);
-        $this->updateorderlist();
+        $this->updateorderlist(null);
     }
 
     public function addnewposOnClick($sender) {
@@ -231,16 +239,34 @@ class ARMFood extends \App\Pages\Base
     public function onDocRow($row) {
         $doc = $row->getDataItem();           
         $row->add(new ClickLink('docnumber',$this,'OnDocViewClick' ))->setValue($doc->document_number);
-        $row->add(new Label('state', Document::getStateName($doc->state)));
-
+       // $row->add(new Label('state', Document::getStateName($doc->state)));
+        $row->add(new Label('docdate', H::fd($doc->document_date)));
+       $row->add(new Label('docamount', H::fa($doc->amount)));
+      $row->add(new Label('notes', $doc->notes));
+        
         if ($doc->document_id == $this->_doc->document_id) {
             $row->setAttribute('class', 'table-success');
         }    
     
     }
 
-    private function updateorderlist() {
+    public function updateorderlist($sender) {
         $where = "meta_name='OrderFood'   ";
+         if($sender  instanceof Form){
+            $text = trim($sender->searchnumber->getText()); 
+            $cust = $sender->searchcust->getKey(); 
+            if(strlen($text)>0) {
+                $where .= " and document_number=" .Document::qstr($text)  ;
+            }
+            if(strlen($text)==0 && $cust >0) {
+                $where .= " and customer_id=" . $cust  ;
+            }
+            
+            
+        }
+      
+        
+        
         $this->_doclist = Document::find($where, 'document_id desc');
         $this->orderlistpan->orderlist->Reload();
     }

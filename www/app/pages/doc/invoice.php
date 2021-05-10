@@ -344,7 +344,7 @@ class Invoice extends \App\Pages\Base
             if ($isEdited) {
                 App::RedirectBack();
             } else {
-                App::Redirect("\\App\\Pages\\Register\\GIList");
+                App::Redirect("\\App\\Pages\\Register\\GIList",$this->_doc->document_id);
             }
         } catch(\Throwable $ee) {
             global $logger;

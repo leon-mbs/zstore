@@ -374,8 +374,25 @@ class OrderCust extends \App\Pages\Base
         }
         $item = new Item();
         $item->itemname = $itemname;
+        $item->cat_id = $this->editnewitem->editnewcat->getValue();        
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
-        $item->cat_id = $this->editnewitem->editnewcat->getValue();
+        
+        if(strlen($item->item_code)>0) {
+            $code = Item::qstr($item->item_code);
+            $cnt = Item::findCnt("  item_code={$code} ");
+            if ($cnt > 0) {
+               $this->setError('itemcode_exists');
+               return;
+            }
+        
+        }  else {
+              if(System::getOption("common", "autoarticle") == 1)   {
+                 
+                 $item->item_code = Item::getNextArticle() ;
+              } 
+        }
+        
+        
         $item->save();
         $this->editdetail->edititem->setText($item->itemname);
         $this->editdetail->edititem->setKey($item->item_id);

@@ -48,7 +48,8 @@ class Order extends \App\Pages\Base
 
         $this->docform->add(new TextArea('notes'));
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, false), MoneyFund::CREDIT))->onChange($this, 'OnPayment');
-
+        $this->docform->add(new DropDownChoice('salesource', H::getSaleSources() , H::getDefSaleSource()));
+  
         $this->docform->add(new TextInput('editpaydisc'));
         $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
         $this->docform->add(new Label('paydisc', 0));
@@ -122,6 +123,7 @@ class Order extends \App\Pages\Base
             $this->OnDelivery($this->docform->delivery);
             $this->docform->production->setChecked($this->_doc->headerdata['production']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+            $this->docform->salesource->setValue($this->_doc->headerdata['salesource']);
             $this->docform->total->setText($this->_doc->amount);
 
             $this->docform->payamount->setText($this->_doc->payamount);
@@ -321,6 +323,7 @@ class Order extends \App\Pages\Base
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
 
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
+        $this->_doc->headerdata['salesource'] = $this->docform->salesource->getValue();
 
         if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID) {
             $this->_doc->headerdata['paydisc'] = 0;
@@ -656,6 +659,23 @@ class Order extends \App\Pages\Base
         $item = new Item();
         $item->itemname = $itemname;
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
+        
+         if(strlen($item->item_code)>0) {
+            $code = Item::qstr($item->item_code);
+            $cnt = Item::findCnt("  item_code={$code} ");
+            if ($cnt > 0) {
+               $this->setError('itemcode_exists');
+               return;
+            }
+        
+        }  else {
+              if(\App\System::getOption("common", "autoarticle") == 1)   {
+                 
+                 $item->item_code = Item::getNextArticle() ;
+              } 
+        }
+        
+        
         $item->manufacturer = $this->editnewitem->editnewbrand->getText();
         $item->cat_id = $this->editnewitem->editnewcat->getValue();
         $item->save();

@@ -178,6 +178,12 @@
                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                                    title="Для мобільних пристроїв, щоб друкувати відповідним додатком через меню Поділиться    "></i>
                             </div>
+                           <div class="form-check">
+                                <input zippy="showactiveusers" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="showactiveusers">Показувати  активних користувачiв </label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Користувачi, якi з  останнi 5 хвилин  змiнили  статус будь якого  документу  "></i>
+                            </div>
 
                             <div class="form-group  "><br>
                                 <label for="ts_start">Початок рабочого дня</label>
@@ -414,8 +420,28 @@
                         </form>
                     </div>
                 </div>
+              <div class="card">
+                    <div class="card-body">
+                        <h4>Джерела  продаж</h4>
+                           <form zippy="salesourcesform">
+                                    <a  zippy="addnewsalesource">Додати</a>
 
-               <div class="card">
+                                    <table class="table table-sm">
+                                        <tr zippy="salesourceslist">
+                                            <td><input style="width:100%;" zippy="salesourcename"  ></td>
+                                            <td><a zippy="delsalesource"> <i class="fa fa-trash"></i></a></td>
+                                    </table>
+                                    <input zippy="salesourcesave"  type="submit"  value="Зберегти" class="btn  btn-info">
+                                    
+                        </form>         
+                     </div>
+                </div>
+
+     
+
+            </div>
+       <div class="col-12  col-md-5 col-xl-4  ">
+                 <div class="card">
                     <div class="card-body">
                         <h4>Громадське харчування</h4>
                         
@@ -464,8 +490,7 @@
                         </form>
                     </div>
                 </div>
-
-
+     
             </div>
         </div>
 

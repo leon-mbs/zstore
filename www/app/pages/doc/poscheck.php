@@ -46,6 +46,7 @@ class POSCheck extends \App\Pages\Base
         $this->docform->add(new Date('document_date'))->setDate(time());
 
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, true), H::getDefMF()))->onChange($this, 'OnPayment');
+         $this->docform->add(new DropDownChoice('salesource', H::getSaleSources() , H::getDefSaleSource()));
 
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new TextInput('editpaydisc'));
@@ -123,6 +124,7 @@ class POSCheck extends \App\Pages\Base
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
 
+            $this->docform->salesource->setValue($this->_doc->headerdata['salesource']);
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
             $this->docform->total->setText(H::fa($this->_doc->amount));
 
@@ -170,6 +172,7 @@ class POSCheck extends \App\Pages\Base
                         $this->docform->customer->setText($basedoc->customer_name);
                         $this->OnChangeCustomer($this->docform->customer);
 
+                        $this->docform->salesource->setValue($basedoc->headerdata['salesource']);
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         //  $this->docform->pos->setValue($basedoc->headerdata['pos']);
@@ -502,6 +505,7 @@ class POSCheck extends \App\Pages\Base
 
         $this->_doc->headerdata['order'] = $this->docform->order->getText();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['salesource'] = $this->docform->salesource->getValue();
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
         $this->_doc->headerdata['pricetypename'] = $this->docform->pricetype->getValueName();
         $this->_doc->headerdata['order_id'] = $this->_order_id;
@@ -606,7 +610,7 @@ class POSCheck extends \App\Pages\Base
             if ($isEdited) {
                 App::RedirectBack();
             } else {
-                App::Redirect("\\App\\Pages\\Register\\GIList");
+                App::Redirect("\\App\\Pages\\Register\\GIList",$this->_doc->document_id);
             }
         } catch(\Throwable $ee) {
             global $logger;

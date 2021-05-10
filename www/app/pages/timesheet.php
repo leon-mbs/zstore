@@ -173,6 +173,16 @@ class TimeSheet extends \App\Pages\Base
             $this->setError($v);
             return;
         }
+        
+        if($this->_tvars["usebranch"]) {
+          if($this->branch_id ==0) {
+              $this->setError('selbranch') ;
+              return    ;
+          } 
+          $time->branch_id=$this->branch_id;    
+        }
+        
+        
         $time->save();
 
         $this->updateList();
@@ -241,8 +251,14 @@ class TimeSheet extends \App\Pages\Base
         $conn = \ZDB\DB::getConnect();
         $t_start = $conn->DBDate($this->filter->from->getDate());
         $t_end = $conn->DBDate($this->filter->to->getDate(true));
-
-        $this->_list = TimeItem::find("emp_id = {$emp_id} and  t_start>={$t_start} and   t_start<{$t_end} ", 't_start');
+        $w = "emp_id = {$emp_id} and  t_start>={$t_start} and   t_start<{$t_end} " ;
+        
+       if($this->_tvars["usebranch"] && $this->branch_id >0) {
+            $w  .=  " and branch_id=".$this->branch_id ;
+       }
+        
+        
+        $this->_list = TimeItem::find($w, 't_start');
         $this->tpanel->tagen->llist->Reload();
 
         $tn = TimeItem::getTypeTime();
@@ -270,6 +286,7 @@ class TimeSheet extends \App\Pages\Base
         $row->add(new Label('lto', date('H:i', $item->t_end)));
         $row->add(new Label('ltypename', $tl[$item->t_type]));
         $row->add(new Label('ldesc', $item->description));
+        $row->add(new Label('lbranch', $item->branch_name));
 
         $diff = $item->t_end - $item->t_start - ($item->t_break * 60);
         $diff = number_format($diff / 3600, 2, '.', '');

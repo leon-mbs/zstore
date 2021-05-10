@@ -67,6 +67,13 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["refmenu"] = Helper::generateMenu(4);
         $this->_tvars["sermenu"] = Helper::generateMenu(5);
 
+        $this->_tvars["showdocmenu"]  = count($this->_tvars["docmenu"]['groups'] )>0 || count($this->_tvars["docmenu"]['items'] )>0;
+        $this->_tvars["showrepmenu"]  = count($this->_tvars["repmenu"]['groups'] )>0 || count($this->_tvars["repmenu"]['items'] )>0;
+        $this->_tvars["showregmenu"]  = count($this->_tvars["regmenu"]['groups'] )>0 || count($this->_tvars["regmenu"]['items'] )>0;
+        $this->_tvars["showrefmenu"]  = count($this->_tvars["refmenu"]['groups'] )>0 || count($this->_tvars["refmenu"]['items'] )>0;
+        $this->_tvars["showsermenu"]  = count($this->_tvars["sermenu"]['groups'] )>0 || count($this->_tvars["sermenu"]['items'] )>0;
+        
+        
         $this->_tvars["islogined"] = $user->user_id > 0;
         $this->_tvars["isadmin"] = $user->userlogin == 'admin';
         $this->_tvars["isadmins"] = $user->rolename == 'admins';
@@ -86,6 +93,10 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["tecdoc"] = $_config['modules']['tecdoc'] == 1;
         $this->_tvars["ppo"] = $_config['modules']['ppo'] == 1;
         $this->_tvars["np"] = $_config['modules']['np'] == 1;
+        
+       
+
+        
         //доступы к  модулям
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["shop"] = false;
@@ -112,12 +123,56 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["np"] = false;
         }
 
+        if($this->_tvars["shop"] || 
+           $this->_tvars["ocstore"] || 
+           $this->_tvars["woocomerce"] || 
+           $this->_tvars["note"] || 
+           $this->_tvars["issue"] || 
+           $this->_tvars["tecdoc"] || 
+           $this->_tvars["ppo"] || 
+           $this->_tvars["np"]   
+        ) {
+           $this->_tvars["showmodmenu"]  = true;  
+        }   else {
+           $this->_tvars["showmodmenu"]  = false;  
+        }
+        
+        if($this->_tvars["isadmins"]){  //для  роли админов  видные все  разделы  меню
+            $this->_tvars["showdocmenu"]  = true;
+            $this->_tvars["showrepmenu"]  = true;
+            $this->_tvars["showregmenu"]  = true;
+            $this->_tvars["showrefmenu"]  = true;
+            $this->_tvars["showsermenu"]  = true;
+            $this->_tvars["showmodmenu"]  = true;  
+        }        
+        
+          
+        
 
         //скрыть  боковое  меню
         $this->_tvars["hidesidebar"] = $user->hidesidebar == 1 ? 'hold-transition   sidebar-collapse' : 'hold-transition sidebar-mini sidebar-collapse';
         //для скрытия блока разметки  в  шаблоне страниц                           
         $this->_tvars["hideblock"] = false;
 
+        //активные   пользователий
+        $this->_tvars["activeusers"] = false;
+        $this->_tvars["activeuserscnt"] = 0;
+        $this->_tvars["aulist"] = array();
+        if($options['showactiveusers'] == 1) {
+           $this->_tvars["activeusers"]  = true   ;
+           
+           $w = " ( user_id in(select  user_id  from docstatelog where   TIME_TO_SEC(timediff(now(),createdon)) <300 ) or user_id in (select user_id from paylist where    TIME_TO_SEC(timediff(now(),paydate)) <300 ) )";
+           $users = \App\Entity\User::findArray('username',$w,'username') ;
+           foreach($users as $u){
+              $this->_tvars["aulist"][]=array('ausername'=>$u); 
+           }    
+           
+           
+           $this->_tvars["activeuserscnt"]  = count( $this->_tvars["aulist"]);
+             
+        }
+        
+        
         $this->generateTosats();
     }
 
@@ -172,10 +227,14 @@ class Base extends \Zippy\Html\WebPage
     public function beforeRender() {
         $user = System::getUser();
         $this->_tvars['notcnt'] = \App\Entity\Notify::isNotify($user->user_id);
+        $this->_tvars['taskcnt'] = \App\Entity\Event::isNotClosedTask($user->user_id);
         $this->_tvars['alerterror'] = "";
         if (strlen(System::getErrorMsg()) > 0) {
             $this->_tvars['alerterror'] = System::getErrorMsg();
-            $this->goAnkor('');
+        
+            $this->goAnkor('topankor') ;    
+       
+            
         }
     }
 

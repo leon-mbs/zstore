@@ -33,6 +33,8 @@ class Outcome extends \App\Pages\Base
         $this->filter->add(new Date('to', time()));
         $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username', "user_id in (select user_id from documents_view  where  meta_name  in('GoodsIssue','ServiceAct','Task','Order','POSCheck','TTN')  {$br}  )", 'username'), 0));
         $this->filter->add(new DropDownChoice('cat', \App\Entity\Category::getList(), 0))->setVisible(false);
+        $this->filter->add(new DropDownChoice('salesource', H::getSaleSources() , 0))->setVisible(false);
+       
         $hlist = \App\Entity\Customer::getHoldList();
         //  $this->filter->add(new DropDownChoice('holding', $hlist, 0))->setVisible(false);
 
@@ -51,6 +53,7 @@ class Outcome extends \App\Pages\Base
         }
         $types[9] = H::l('repbybyfirm');
         $types[10] = H::l('repbybystore');
+        $types[11] = H::l('repbysalesource');
 
         $this->filter->add(new DropDownChoice('type', $types, 1))->onChange($this, "OnType");
 
@@ -68,10 +71,14 @@ class Outcome extends \App\Pages\Base
     public function OnType($sender) {
         $type = $this->filter->type->getValue();
         $this->filter->cat->setValue(0);
+        $this->filter->salesource->setValue(0);
 
         $this->filter->cat->setVisible($type == 5);
+        $this->filter->salesource->setVisible($type == 11);
         $this->filter->cust->setVisible($type == 6 || $type == 7);
         //  $this->filter->holding->setVisible($type == 7);
+        
+        
     }
 
     public function OnAutoItem($sender) {
@@ -116,6 +123,7 @@ class Outcome extends \App\Pages\Base
         $type = $this->filter->type->getValue();
         $user = $this->filter->emp->getValue();
         $cat_id = $this->filter->cat->getValue();
+        $salesource = $this->filter->salesource->getValue();
         //   $hold_id = $this->filter->holding->getValue();
         $cust_id = $this->filter->cust->getKey();
 
@@ -189,7 +197,7 @@ class Outcome extends \App\Pages\Base
         }
         if ($type == 3) {   //по датам
             $sql = "
-          select e.`document_date` as dt  ,  sum(0-e.quantity*e.partion) as summa    ,0 as navar
+          select e.`document_date` as dt  ,  sum(0-e.`amount`) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
               from `entrylist_view`  e
 
               join `items` i on e.`item_id` = i.`item_id`
@@ -298,13 +306,33 @@ class Outcome extends \App\Pages\Base
                 join `stores` sr on sr.`store_id` = st.`store_id`
                 
              join `documents_view` d on d.`document_id` = e.`document_id`
-               where d.`firm_id` >0  and e.`quantity` <>0
+               where   e.`quantity` <>0
                and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN')
                 {$br} {$u}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                 group by  sr.`storename`
                order  by sr.`storename`
+        ";
+        }
+
+       if ($type == 11) {    //по источникам
+            
+            $sql = "
+            select i.itemname,  sum(0-e.`quantity`) as qty, sum(0-e.quantity*e.partion) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
+              from `entrylist_view`  e
+
+                 join `items` i on e.`item_id` = i.`item_id`
+              
+             join `documents_view` d on d.`document_id` = e.`document_id`
+               where   e.`quantity` <>0  and ExtractValue(d.content, '//doc/header/salesource') = {$salesource}  
+               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN')
+                {$br} {$u}
+              AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
+              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+                group by   i.itemname
+                order  by   i.itemname
+               
         ";
         }
 
@@ -357,6 +385,7 @@ class Outcome extends \App\Pages\Base
         $header['_type5'] = false;
         $header['_type6'] = false;
         $header['_type7'] = false;
+        $header['_type8'] = false;
 
         if ($type == 1 || $type == 6 || strlen($cat) > 0) {
             $header['_type1'] = true;
@@ -379,6 +408,9 @@ class Outcome extends \App\Pages\Base
         }
         if ($type == 10) {
             $header['_type7'] = true;
+        }
+        if ($type == 11) {
+            $header['_type8'] = true;
         }
 
 

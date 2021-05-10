@@ -456,6 +456,45 @@ class Helper
         }
         return 0;
     }
+    
+    /**
+    * источники  продаж
+    * 
+    */
+    public static function getSaleSources() {
+        $common = System::getOptions("common");
+        if (!is_array($common)) {
+            $common = array();
+        }
+        $salesourceslist = $common['salesources'];
+        if (is_array($salesourceslist) == false) {
+            $salesourceslist = array();
+        }
+        $slist = array() ;
+        foreach($salesourceslist as $s){
+           $slist[$s->id]=$s->name;    
+        } 
+        return $slist;
+    }
+    
+   /**
+     * Возвращает источник продаж  по  умолчанию
+     *
+     */
+    public static function getDefSaleSource() {
+        $user = System::getUser();
+        if ($user->defsalesource > 0) {
+             return $user->defsalesource;
+        }
+
+        $slist = Helper::getSaleSources() ;
+      
+        if (count($slist) > 0) {
+            $keys = array_keys($slist);
+            return $keys[0];
+        }
+        return 0;
+    }
 
     /**
      * Возвращает первый тип  цен  как  по  умолчанию

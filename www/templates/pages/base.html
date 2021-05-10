@@ -52,6 +52,7 @@
                 </ul>
 
                 <ul class="navbar-nav ml-auto">
+                 
                     {{#usebranch}}
                     <li class="nav-item">
                         <form zippy="nbform" class="form-inline ">
@@ -64,7 +65,33 @@
                         </form>
                     </li>
                     {{/usebranch}}
+                 {{#activeusers}}   
+                 <li class="nav-item dropdown">
+                    <a title="Активные пользователи" class="nav-link" data-toggle="dropdown" href="#">
+                      <i class="fa fa-users"></i>
+                      <span  class="badge badge-success navbar-badge">{{activeuserscnt}}</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                          <table class="table table-sm">
+                          {{#aulist}}
+                            <tr><td>{{ausername}}</td></tr>
+                          {{/aulist}}
+                          </table>
+                     </div>
+                  </li>               
+                  {{/activeusers}}     
+                    
+                   {{#taskcnt}} 
                     <li class="nav-item  ">
+                        <a class="nav-link  " href="/index.php?p=App/Pages/Jobs">
+                            <i class="fa fa-gavel "></i>
+                            
+                            <span class="badge badge-danger  navbar-badge">{{taskcnt}}</span>
+                            
+                        </a>
+                    </li>
+                    {{/taskcnt}}
+                  <li class="nav-item  ">
                         <a class="nav-link  " href="/index.php?p=App/Pages/NotifyList">
                             <i class="fa fa-bell "></i>
                             {{#notcnt}}
@@ -152,6 +179,9 @@
                                     </p>
                                 </a>
                             </li>
+
+
+                            {{#showdocmenu}}
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fa fa-file"></i>
@@ -198,6 +228,8 @@
                                 </ul>
 
                             </li>
+                            {{/showdocmenu}}
+                            {{#showrepmenu}}
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fa fa-chart-bar"></i>
@@ -245,6 +277,8 @@
                                 </ul>
 
                             </li>
+                            {{/showrepmenu}}
+                            {{#showregmenu}}
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fa fa-list"></i>
@@ -290,6 +324,8 @@
                                 </ul>
 
                             </li>
+                            {{/showregmenu}}
+                            {{#showrefmenu}}
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fa fa-book"></i>
@@ -338,6 +374,8 @@
                                 </ul>
 
                             </li>
+                            {{/showrefmenu}}
+                            {{#showsermenu}}
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-project-diagram"></i>
@@ -385,7 +423,8 @@
                                 </ul>
 
                             </li>
-
+                            {{/showsermenu}}
+                            {{#showmodmenu}}
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fa fa-puzzle-piece"></i>
@@ -628,6 +667,8 @@
                                 </ul>
 
                             </li>
+                            {{/showmodmenu}}
+                            
                             {{#isadmins}}
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
@@ -742,7 +783,7 @@
 
 
                 <!-- Main content -->
-                <section class="content">
+                <section class="content"> <a id="topankor" />
                     <div class="row justify-content-center mt-2 mb-1">
                         <div class="col-12 col-md-10 col-lg-9 col-xl-8   ">
 

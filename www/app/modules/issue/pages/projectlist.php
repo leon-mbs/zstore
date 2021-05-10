@@ -155,8 +155,10 @@ class ProjectList extends \App\Pages\Base
         $user = System::getUser();
         $this->_project->creator_id = $user->user_id;
         $this->_project->creator = $user->username;
-
+        
         $this->updateUsers();
+        
+        $this->projectform->userlist->setAllChecked(0);
     }
 
     public function saveOnClick($sender) {
@@ -175,9 +177,11 @@ class ProjectList extends \App\Pages\Base
         if (in_array($this->_project->creator_id, $users) == false) {
             $users[] = $this->_project->creator_id;
         }
-        $this->_project->setUsers($users);
+        
 
-        $this->_project->Save();
+        $this->_project->save();
+        $this->_project->setUsers($users);        
+        
         $this->projectform->setVisible(false);
         $this->projectpanel->setVisible(true);
         $this->projectpanel->projectlist->Reload();
@@ -290,7 +294,7 @@ class ProjectList extends \App\Pages\Base
 
         $row->add(new ClickLink('delfile'))->onClick($this, 'deleteFileOnClick');
 
-        if ($this->_user->rolename == 'admins' || $this->_user->user_id == $this->_issue->createdby) {
+        if ($this->_user->rolename == 'admins' || $this->_user->user_id == $this->_project->creator_id) {
             $row->delfile->setVisible(true);
         } else {
             $row->delfile->setVisible(false);

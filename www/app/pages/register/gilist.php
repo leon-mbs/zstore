@@ -47,6 +47,7 @@ class GIList extends \App\Pages\Base
         $this->listpan->filter->add(new TextInput('searchtext'));
         $this->listpan->filter->add(new DropDownChoice('status', array(0 => H::l('opened'), 1 => H::l('newed'), 2 => H::l('sended'), 4 => H::l('notpayed'), 3 => H::l('all')), 0));
         $this->listpan->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
+        $this->listpan->filter->add(new DropDownChoice('salesource', H::getSaleSources() , 0));
 
         $doclist = $this->listpan->add(new DataView('doclist', new GoodsIssueDataSource($this), $this, 'doclistOnRow'));
 
@@ -107,7 +108,8 @@ class GIList extends \App\Pages\Base
 
         if ($doc > 0) {
             $this->_doc = Document::load($doc);
-            $this->npshowOnSubmit($this->statuspan->statusform->bnp);;
+            $this->showOn() ;
+           // $this->npshowOnSubmit($this->statuspan->statusform->bnp);;
         }
     }
 
@@ -303,12 +305,18 @@ class GIList extends \App\Pages\Base
     }
 
     //просмотр
+    
+    
     public function showOnClick($sender) {
-
         $this->_doc = $sender->owner->getDataItem();
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
         }
+        $this->showOn() ;
+    }
+
+    public function showOn() {
+
 
         $this->statuspan->setVisible(true);
         $this->statuspan->statusform->ship_number->setText($this->_doc->headerdata['ship_number']);
@@ -651,6 +659,11 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
         $conn = \ZDB\DB::getConnect();
 
         $where = "   meta_name  in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' ,'Warranty','TTN' ) ";
+        
+        $salesource = $this->page->listpan->filter->salesource->getValue();
+        if ($salesource > 0) {
+            $where .= " and  ExtractValue(content, '//doc/header/salesource') = ". $salesource;
+        }
 
         $status = $this->page->listpan->filter->status->getValue();
         if ($status == 0) {

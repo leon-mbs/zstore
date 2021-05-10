@@ -5,7 +5,10 @@ namespace App\Pages;
 use App\Application as App;
 use App\Helper as H;
 use App\System;
+use Zippy\Binding\PropertyBinding as Bind;
+use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\DataList\DataView;
+
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
@@ -14,6 +17,8 @@ use Zippy\Html\Form\TextInput;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\SubmitLink;
+
 use Zippy\Html\Panel;
 
 class Options extends \App\Pages\Base
@@ -21,6 +26,7 @@ class Options extends \App\Pages\Base
 
     private $metadatads;
     public  $pricelist = array();
+    public  $_salesourceslist = array();
 
     public function __construct() {
         parent::__construct();
@@ -53,6 +59,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new CheckBox('usebranch'));
         $this->common->add(new CheckBox('usecattree'));
         $this->common->add(new CheckBox('usemobileprinter'));
+        $this->common->add(new CheckBox('showactiveusers'));
         $this->common->add(new CheckBox('allowminus'));
         $this->common->add(new CheckBox('noallowfiz'));
         $this->common->add(new CheckBox('capcha'));
@@ -93,7 +100,7 @@ class Options extends \App\Pages\Base
 
         $this->common->usesnumber->setChecked($common['usesnumber']);
 
-        $this->common->usemobileprinter->setChecked($common['usemobileprinter']);
+        $this->common->showactiveusers->setChecked($common['showactiveusers']);
         $this->common->usecattree->setChecked($common['usecattree']);
         $this->common->usescanner->setChecked($common['usescanner']);
         $this->common->useimages->setChecked($common['useimages']);
@@ -198,6 +205,7 @@ class Options extends \App\Pages\Base
 
         $this->onSMSType($this->sms->smstype);
         
+        //общепит
         $food = System::getOptions("food");
         if (!is_array($food)) {
             $food = array( );
@@ -210,6 +218,20 @@ class Options extends \App\Pages\Base
         $this->food->add(new CheckBox('foodbar',$food['bar']));
 
         
+        //источники  продаж
+        $this->add(new Form('salesourcesform')) ;
+        $this->salesourcesform->add(new SubmitButton('salesourcesave'))->onClick($this, 'OnSaveSaleSource');
+        $this->salesourcesform->add(new SubmitLink('addnewsalesource'))->onClick($this, 'OnAddSaleSource');
+
+        $this->salesourcesform->add(new DataView('salesourceslist', new ArrayDataSource(new Bind($this, '_salesourceslist')), $this, 'salesourceListOnRow'));
+      
+        $this->_salesourceslist = $common['salesources'];
+        if (is_array($this->_salesourceslist) == false) {
+            $this->_salesourceslist = array();
+        }
+
+        $this->salesourcesform->salesourceslist->Reload();
+      
     }
 
     public function saveCommonOnClick($sender) {
@@ -240,7 +262,7 @@ class Options extends \App\Pages\Base
         $common['usescanner'] = $this->common->usescanner->isChecked() ? 1 : 0;
         $common['useimages'] = $this->common->useimages->isChecked() ? 1 : 0;
 
-        $common['usemobileprinter'] = $this->common->usemobileprinter->isChecked() ? 1 : 0;
+        $common['showactiveusers'] = $this->common->showactiveusers->isChecked() ? 1 : 0;
         $common['usecattree'] = $this->common->usecattree->isChecked() ? 1 : 0;
         $common['usebranch'] = $this->common->usebranch->isChecked() ? 1 : 0;
         $common['noallowfiz'] = $this->common->noallowfiz->isChecked() ? 1 : 0;
@@ -352,5 +374,39 @@ class Options extends \App\Pages\Base
         System::setOptions("food", $food);
         $this->setSuccess('saved');
     }
+ 
+
+    public function OnAddSaleSource($sender) {
+        $ls = new \App\DataItem();
+        $ls->name = '';
+        $ls->id = time();
+        $this->_salesourceslist[$ls->id] = $ls;
+        $this->salesourcesform->salesourceslist->Reload();
+        $this->goAnkor('salesourcesform') ;
+    }
+   
+
+    public function salesourceListOnRow(  $row) {
+        $item = $row->getDataItem();
+        $row->add(new TextInput('salesourcename', new Bind($item, 'name')));
+        $row->add(new ClickLink('delsalesource', $this, 'onDelSaleSource'));
+    }
+
+    public function onDelSaleSource($sender) {
+        $item = $sender->getOwner()->getDataItem();
+
+        $this->_salesourceslist = array_diff_key($this->_salesourceslist, array($item->id => $this->_salesourceslist[$item->id]));
+
+        $this->salesourcesform->salesourceslist->Reload();
+        $this->goAnkor('salesourcesform') ;        
+    }  
   
+     public function OnSaveSaleSource($sender) {
+
+        $options = System::getOptions('common');
+        $options['salesources'] = $this->_salesourceslist;
+        System::setOptions('common', $options);
+
+        $this->setSuccess('saved');      
+    } 
 }

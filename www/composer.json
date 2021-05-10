@@ -4,7 +4,8 @@
     "homepage": "https://zippy.com.ua/",
 
     "license": "MIT" ,
-   
+    "prefer-stable" : true,
+  
     "require": {
         "php": ">=7.2",
          
@@ -27,7 +28,7 @@
         "symfony/polyfill-mbstring": "v1.22.0",
         "symfony/polyfill-uuid": "v1.22.0",
        
-        "leon-mbs/zippy": "2.2.6"
+        "leon-mbs/zippy": "2.2.9"
 
     }
 }

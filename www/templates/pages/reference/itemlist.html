@@ -8,7 +8,7 @@
     <body>
         <div class="row">
 
-            <div class="col-12 col-md-12 col-xl-10" zippy="itemtable">
+            <div class="col-12  " zippy="itemtable">
                 <h3>Справочник номенклатуры
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-toggle="popover"
@@ -49,7 +49,11 @@
                         <th>Бренд</th>
                         <th>Ед.</th>
 
-                        <th class="text-right">Отп. цена</th>
+                        {{#hp1}}<th class="text-right  ">{{hp1}}</th>{{/hp1}}
+                        {{#hp2}}<th class="text-right  ">{{hp2}}</th>{{/hp2}}
+                        {{#hp3}}<th class="text-right  ">{{hp3}}</th>{{/hp3}}
+                        {{#hp4}}<th class="text-right  ">{{hp4}}</th>{{/hp4}}
+                        {{#hp5}}<th class="text-right  ">{{hp5}}</th>{{/hp5}}
                         <th>Ячейка</th>
 
                         {{#usesnumber}}
@@ -77,7 +81,12 @@
                         <td zippy="manufacturer"></td>
                         <td zippy="msr"></td>
 
-                        <td zippy="price" class="text-right"></td>
+                        {{#hp1}}<td zippy="price1" class="text-right  "></td>{{/hp1}}
+                        {{#hp2}}<td zippy="price2" class="text-right  "></td>{{/hp2}}
+                        {{#hp3}}<td zippy="price3" class="text-right  "></td>{{/hp3}}
+                        {{#hp4}}<td zippy="price4" class="text-right  "></td>{{/hp4}}
+                        {{#hp5}}<td zippy="price5" class="text-right  "></td>{{/hp5}}
+                   
                         <td zippy="cell"></td>
 
 
@@ -291,6 +300,13 @@
                                     <small>Например  для  меню  в  общепите (300 гр, 250 мл...)</small>
                                 </div>
                             </div>
+                            <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editlost">Отход, %.</label>
+                                <div class="col-7">
+                                    <input pattern="[0-9\.]+"  class="form-control" zippy="editlost"   />
+                                    <small>Отходы при  списании  в  производство. В основном  в  общепите  </small>
+                                </div>
+                            </div>   
 
 
                             {{#useimages}}
@@ -299,7 +315,7 @@
 
                                 <div class="col-7">
                                     <img zippy="editimage" style="height:128px"><br>
-                                    <input type="file" class="form-control" zippy="editaddfile">
+                                    <input type="file" class="form-control" zippy="editaddfile"  accept="image/jpeg,image/png,image/gif">
                                     <div class="form-check">
                                         <input zippy="editdelimage" type="checkbox" class="form-check-input">
                                         <label class="form-check-label" data-label="editdelimage" for="editdelimage">Удалить

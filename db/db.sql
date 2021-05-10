@@ -335,7 +335,7 @@ CREATE TABLE `filesdata` (
   `file_id` int(11) DEFAULT NULL,
   `filedata` longblob,
   UNIQUE KEY `file_id` (`file_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MYISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `firms`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

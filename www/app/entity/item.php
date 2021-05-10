@@ -54,6 +54,7 @@ class Item extends \ZCL\DB\Entity
         $this->weight = (string)$xml->weight[0];
         $this->maxsize = (string)$xml->maxsize[0];
         $this->volume = (string)$xml->volume[0];
+        $this->lost = (string)$xml->lost[0];
         $this->customsize = (string)$xml->customsize[0];
         $this->manufacturer = (string)$xml->manufacturer[0];
         $this->shortname = (string)$xml->shortname[0];
@@ -123,6 +124,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<weight>{$this->weight}</weight>";
         $this->detail .= "<maxsize>{$this->maxsize}</maxsize>";
         $this->detail .= "<volume>{$this->volume}</volume>";
+        $this->detail .= "<lost>{$this->lost}</lost>";
         $this->detail .= "<customsize>{$this->customsize}</customsize>";
         $this->detail .= "<sef>{$this->sef}</sef>";
 

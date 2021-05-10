@@ -56,6 +56,7 @@ class TTN extends \App\Pages\Base
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
+        $this->docform->add(new DropDownChoice('salesource', H::getSaleSources() , H::getDefSaleSource()));
 
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
 
@@ -135,6 +136,7 @@ class TTN extends \App\Pages\Base
             $this->docform->nostore->setChecked($this->_doc->headerdata['nostore']);
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
+            $this->docform->salesource->setValue($this->_doc->headerdata['salesource']);
             $this->docform->customer->setKey($this->_doc->customer_id);
 
             if ($this->_doc->customer_id) {
@@ -164,6 +166,7 @@ class TTN extends \App\Pages\Base
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
+                        $this->docform->salesource->setValue($basedoc->headerdata['salesource']);
                         $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
 
@@ -255,6 +258,7 @@ class TTN extends \App\Pages\Base
                         }
 
 
+                        $this->docform->salesource->setValue($basedoc->headerdata['salesource']);
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
 
@@ -562,6 +566,7 @@ class TTN extends \App\Pages\Base
         $this->_doc->headerdata['ship_amount'] = $this->docform->ship_amount->getText();
         $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
         $this->_doc->headerdata['delivery_name'] = $this->docform->delivery->getValueName();
+        $this->_doc->headerdata['salesource'] = $this->docform->salesource->getValue();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['store_name'] = $this->docform->store->getValueName();
         $this->_doc->headerdata['emp_id'] = $this->docform->emp->getValue();

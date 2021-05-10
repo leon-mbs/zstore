@@ -99,6 +99,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editvolume'));
         $this->itemdetail->add(new TextInput('editcustomsize'));
         $this->itemdetail->add(new TextInput('editwarranty'));
+        $this->itemdetail->add(new TextInput('editlost'));
 
         $this->itemdetail->add(new TextInput('editcell'));
         $this->itemdetail->add(new TextInput('editmsr'));
@@ -129,6 +130,15 @@ class ItemList extends \App\Pages\Base
         $this->setpanel->add(new Label('stitle'));
         $this->setpanel->add(new ClickLink('backtolist', $this, "onback"));
 
+       
+        $this->_tvars['hp1']  = strlen($common['price1'])>0 ? $common['price1'] : false;
+        $this->_tvars['hp2']  = strlen($common['price2'])>0 ? $common['price2'] : false;
+        $this->_tvars['hp3']  = strlen($common['price3'])>0 ? $common['price3'] : false;
+        $this->_tvars['hp4']  = strlen($common['price4'])>0 ? $common['price4'] : false;
+        $this->_tvars['hp5']  = strlen($common['price5'])>0 ? $common['price5'] : false;
+          
+        
+        
         if ($add == false) {
             $this->itemtable->itemlist->Reload();
         } else {
@@ -145,23 +155,13 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('cat_name', $item->cat_name));
         $row->add(new Label('manufacturer', $item->manufacturer));
-        $plist = array();
-        if ($item->price1 > 0) {
-            $plist[] = $item->price1;
-        }
-        if ($item->price2 > 0) {
-            $plist[] = $item->price2;
-        }
-        if ($item->price3 > 0) {
-            $plist[] = $item->price3;
-        }
-        if ($item->price4 > 0) {
-            $plist[] = $item->price4;
-        }
-        if ($item->price5 > 0) {
-            $plist[] = $item->price5;
-        }
-        $row->add(new Label('price', implode(', ', $plist)));
+ 
+        $row->add(new Label('price1', $item->price1));
+        $row->add(new Label('price2', $item->price2));
+        $row->add(new Label('price3', $item->price3));
+        $row->add(new Label('price4', $item->price4));
+        $row->add(new Label('price5', $item->price5));
+        
         $row->add(new Label('hasnotes'))->setVisible(strlen($item->description) > 0);
         $row->hasnotes->setAttribute('title', htmlspecialchars_decode($item->description));
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
@@ -227,6 +227,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editmsr->setText($this->_item->msr);
         $this->itemdetail->editmaxsize->setText($this->_item->maxsize);
         $this->itemdetail->editvolume->setText($this->_item->volume);
+        $this->itemdetail->editlost->setText($this->_item->lost);
         $this->itemdetail->editcustomsize->setText($this->_item->customsize);
         $this->itemdetail->editwarranty->setText($this->_item->warranty);
         $this->itemdetail->edittype->setValue($this->_item->item_type);
@@ -310,6 +311,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->weight = $this->itemdetail->editweight->getText();
         $this->_item->maxsize = $this->itemdetail->editmaxsize->getText();
         $this->_item->volume = $this->itemdetail->editvolume->getText();
+        $this->_item->lost = $this->itemdetail->editlost->getText();
         $this->_item->customsize = $this->itemdetail->editcustomsize->getText();
         $this->_item->warranty = $this->itemdetail->editwarranty->getText();
         $this->_item->item_type = $this->itemdetail->edittype->getValue();
