@@ -48,7 +48,7 @@
 
         <div   zippy="docpanel">
             <h4>Оформление  чека</h4>
-            <a zippy="tochecklist"><i class="fa fa-arrow-circle-left"></i> Список чеков</a>
+            <a zippy="tochecklist"><i class="fa fa-list"></i> Список чеков</a>
        
         <form zippy="form2">   
             {{#ppo}}
@@ -355,7 +355,7 @@
 
                                 <label for="searchcust"> Клиент </label>
 
-                                <input placeholder="Начните ввоить..." class="form-control mr-2" type="text" zippy="searchcust"  >
+                                <input placeholder="Начните вводить..." class="form-control mr-2" type="text" zippy="searchcust"  >
                            
                                 <input type="submit" class="  btn btn-outline-success  " value="Искать">
 
@@ -370,30 +370,24 @@
               
                 <table class="table  table-sm">
                     <tr>
+                     <th>Дата</th>
                     <th>Номер</th>
-               
-                    
-                 
-                    <th >Статус</th>
-                     
-                  
-                      <th ></th>
-               
+                   
                     <th class="text-right">Сумма</th>
                     
                   
                     <th ></th>
+                   
                 
                     </tr>
                     <tr zippy="checklist">
-                        <td ><a zippy="docnumber"></a></td>
-                      
-                        <td class="text-nowrap  " zippy="state">  </td>
-                         <td ><i title="Ждет  оплату" class="fa fa-credit-card" zippy="waitpay" /></td>
-                       
+                        <td zippy="rowdate"> </td>
+                        <td ><a zippy="rownumber"></a></td>
+                            
                         <td class="text-right" zippy="rowamount"> </td>
                           
                         <td zippy="rownotes"></td>
+                        
                     </tr>
 
                 </table>  <a id="dankor"></a>
@@ -401,7 +395,9 @@
               <div class="col-12 col-md-10 xl-8" > 
                <div class="row" zippy="statuspan">
                 
-             
+                 {{#hideblock}}
+                     
+                 
                 <div class="card">
                     <div class="card-body">
                         <div class="navbar nav">
@@ -421,7 +417,8 @@
                         </div>
                     </div>
                 </div>
-            
+                     {{/hideblock}}
+         
                 
                 
                 <div class="card">

@@ -74,8 +74,10 @@ class ARMPos extends \App\Pages\Base
         $this->checklistpan->add(new DataView('checklist', new ArrayDataSource($this, '_doclist'), $this, 'onDocRow'));
 
         //панель статуса,  просмотр
-        $this->checklistpan->add(new Panel('searchform'));
-        
+        $this->checklistpan->add(new Form('searchform'))->onSubmit($this,'updatechecklist');
+        $this->checklistpan->searchform->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');
+        $this->checklistpan->searchform->add(new TextInput('searchnumber', $filter->searchnumber));
+      
         $this->checklistpan->add(new Panel('statuspan'))->setVisible(false);
         
         $this->checklistpan->statuspan->add(new \App\Widgets\DocView('docview'))->setVisible(false);
@@ -191,7 +193,7 @@ class ARMPos extends \App\Pages\Base
         
         $this->checklistpan->setVisible(true);
         $this->checklistpan->statuspan->setVisible(true);
-        $this->updatechecklist();
+        $this->updatechecklist(null);
     }
     
       
@@ -250,7 +252,7 @@ class ARMPos extends \App\Pages\Base
         
 
         $this->checklistpan->setVisible(false);
-          
+        $this->checklistpan->searchform->clean();  
   
         $this->_doc = \App\Entity\Doc\Document::create('POSCheck');
 
@@ -968,19 +970,31 @@ class ARMPos extends \App\Pages\Base
     
   public function onDocRow($row) {
         $doc = $row->getDataItem();           
-        $row->add(new ClickLink('docnumber',$this,'OnDocViewClick' ))->setValue($doc->document_number);
-        $row->add(new Label('state', Document::getStateName($doc->state)));
-        $row->add(new Label('rowamount', H::fa($doc->amount)));
-        $row->add(new Label('rownotes', $doc->notes));
-        $row->add(new Label('waitpay' ))->setVisible($doc->payed < $doc->payamount && $doc->payamount>0);
+        $row->add(new ClickLink('rownumber',$this,'OnDocViewClick' ))->setValue($doc->document_number);
 
+        $row->add(new Label('rowamount', H::fa($doc->amount)));
+        $row->add(new Label('rowdate', H::fd($doc->document_date)));
+        $row->add(new Label('rownotes', $doc->notes));
+       
         if ($doc->document_id == $this->_doc->document_id) {
             $row->setAttribute('class', 'table-success');
         }    
     
     }
-    private function updatechecklist() {
+    public function updatechecklist($sender) {
         $where = "meta_name='PosCheck' ";
+        if($sender  instanceof Form){
+            $text = trim($sender->searchnumber->getText()); 
+            $cust = $sender->searchcust->getKey(); 
+            if(strlen($text)>0) {
+                $where .= " and document_number=" .Document::qstr($text)  ;
+            }
+            if(strlen($text)==0 && $cust >0) {
+                $where .= " and customer_id=" . $cust  ;
+            }
+            
+            
+        }
         $this->_doclist = Document::find($where, 'document_id desc');
         $this->checklistpan->checklist->Reload();
     }

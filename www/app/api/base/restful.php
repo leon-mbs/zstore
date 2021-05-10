@@ -75,6 +75,7 @@ abstract class RestFul
         header("Content-type: text/plain");
         echo $text;
     }
+ 
 
     protected function OKAnswer() {
         http_response_code(200);

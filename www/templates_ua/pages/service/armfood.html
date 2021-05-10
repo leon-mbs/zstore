@@ -57,7 +57,7 @@
 
         <div   zippy="docpanel">
             <h4>Оформлення замовлення</h4>
-            <a zippy="toorderlist"><i class="fa fa-arrow-circle-left"></i> До списку замовлень</a>
+            <a zippy="toorderlist"><i class="fa fa-list"></i> Список замовлень</a>
             <div class="row"  >
                 <div class="col-12  col-xl-10">    
                     <div   zippy="catpan" class="row">
@@ -283,13 +283,22 @@
                 <a  class="btn btn-success" zippy="neworder">Нове замовлення</a>  &nbsp;&nbsp;&nbsp;
               {{#hideblock}}   <a  class="btn btn-success" zippy="newdelivery">Нова доставка</a>      {{/hideblock}} 
             
-              {{#hideblock}} 
+              
              <div class="row"  >       
                 <div class="card">
                     <div class="card-body">
                         <div class="navbar nav">
                             <form zippy="searchform" class="form-inline ">
-                             
+                                 <label for="searchnumber"> № </label>
+
+                                <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
+
+                                <label for="searchcust"> Клiент </label>
+
+                                <input placeholder="Почнiть вводити..." class="form-control mr-2" type="text" zippy="searchcust"  >
+                           
+                                <input type="submit" class="  btn btn-outline-success  " value="Шукати">
+                           
 
                             </form>
                         </div>
@@ -297,11 +306,12 @@
                 </div>
              </div>
               
-                   {{/hideblock}} 
+                    
               
               
                 <table class="table  table-sm">
                     <tr>
+                    <th>Дата</th>
                     <th>Номер</th>
                     {{#tables}}
                     <th>Стіл</th>
@@ -320,6 +330,7 @@
                     <th ></th>
                     </tr>
                     <tr zippy="orderlist">
+                        <td zippy="docdate"  >   </td>
                         <td ><a zippy="docnumber"></a></td>
                        {{#tables}} <td zippy="tablenumber"></td>  {{/tables}}
                        
@@ -330,10 +341,10 @@
                         <td ><i class="fa fa-blender"/></td>
                         <td ><i class="fa fa-credit-card" /></td>
                         <td ><i class="fa fa-dolly" /></td>
-                       {{/hideblock}}   
-                        <td class="text-right"></td>
+                       <td class="text-right" zippy="docamount"></td>
                         
                         <td zippy="notes"></td>
+              
                     </tr>
 
                 </table>  <a id="dankor"></a>
@@ -404,19 +415,18 @@
             </div>
         </form>
 
-    {{#usescanner}}
+  
     <script>
         $(document).ready(function () {
-                   $('#pfpayed').focus();
+                     $('#pfpayed').focus();
   
-            $('#barcode').focus();
-            
     
-                $("#pfdisc").change(function () {
+                $("#pfdisc").change(function () {   
                     var amount = $("#pfamount").val();
                     var paydisc = $("#pfdisc").val();
                     var payamount = parseFloat(amount) - parseFloat(paydisc);
                     $("#pfforpay").val(payamount.toFixed(2));
+          
                 });
                 $("#pfpayed").change(function () {
                     var payed = $("#pfpayed").val();
@@ -429,24 +439,39 @@
                     }
 
                 });        
-            
+
+              
             
         });
 
-        function onBarCode(ele) {
-
-            if (event.key === 'Enter' || event.keyCode == 13) {
-                // alert($('#barcode').val());
-                $('#addcode').click()
-            }
-        }
+       
+    
         
         
         function printpos() {
            $('#checktext').printThis();
         }        
         
+    </script>
+      
+      {{#usescanner}} 
+    <script>
+    
+    
+       $('#barcode').focus();        
+  
+    
+       function onBarCode(ele) {
+
+            if (event.key === 'Enter' || event.keyCode == 13) {
+                // alert($('#barcode').val());
+                $('#addcode').click()
+            }
+        }     
     </script>  
+    
+    
+    
     {{/usescanner}} 
 </body>
 </html>

@@ -48,7 +48,7 @@
        <div   zippy="docpanel">
         
                <h4>Оформлення  чеку</h4>
-            <a zippy="tochecklist"><i class="fa fa-arrow-circle-left"></i> Список  чекiв</a>
+            <a zippy="tochecklist"><i class="fa fa-list"></i> Список  чекiв</a>
  
         <form zippy="form2">
             {{#ppo}}
@@ -342,46 +342,48 @@
                 <h4>Список  чекiв</h4>
                 <a  class="btn btn-success" zippy="newcheck">Новий чек</a>   
       
-                 {{#hideblock}}
+      
               <div class="row"  >       
                 <div class="card">
                     <div class="card-body">
                         <div class="navbar nav">
                             <form zippy="searchform" class="form-inline ">
-                             
+                                  <label for="searchnumber"> № </label>
+
+                                <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
+
+                                <label for="searchcust"> Клiент </label>
+
+                                <input placeholder="Почнiть вводити..." class="form-control mr-2" type="text" zippy="searchcust"  >
+                           
+                                <input type="submit" class="  btn btn-outline-success  " value="Шукати">
+                         
 
                             </form>
                         </div>
                     </div>
                 </div>
                 </div>
-                {{/hideblock}}
+              
                 
     
               
                 <table class="table  table-sm">
                     <tr>
+                    <th>Дата</th>
                     <th>Номер</th>
-               
-                    
-                 
-                    <th >Статус</th>
-                     
-                  
-                      <th ></th>
-               
+                   
                     <th class="text-right">Сума</th>
                     
                   
                     <th ></th>
+                    
                 
                     </tr>
                     <tr zippy="checklist">
-                        <td ><a zippy="docnumber"></a></td>
-                      
-                        <td class="text-nowrap  " zippy="state">  </td>
-                         <td ><i title="Очiкуе  оплату" class="fa fa-credit-card" zippy="waitpay" /></td>
-                       
+                        <td zippy="rowdate"> </td>
+                        <td ><a zippy="rownumber"></a></td>
+                            
                         <td class="text-right" zippy="rowamount"> </td>
                           
                         <td zippy="rownotes"></td>
