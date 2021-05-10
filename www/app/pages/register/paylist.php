@@ -216,7 +216,8 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
 
         $conn = \ZDB\DB::getConnect();
 
-        $where = " d.customer_id in(select  customer_id from  customers  where  status=0)";
+        //$where = "   d.customer_id in(select  customer_id from  customers  where  status=0)";
+        $where = "  1=1 ";
 
         $author = $this->page->filter->fuser->getValue();
         $type = $this->page->filter->ftype->getValue();

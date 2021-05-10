@@ -78,7 +78,7 @@
 {{/_type2}}
 {{#_type3}}
 <tr style="font-size:larger; font-weight: bolder;">
-    <td align="center" colspan="5">
+    <td align="center" colspan="6">
         Продажи по датам <br> <br>
     </td>
 </tr>
@@ -86,6 +86,7 @@
     <th style="border: solid black 1px;width:120px;">Дата</th>
 
     <th align="right" style="border: solid black 1px;width:100px;">На сумму</th>
+    <th align="right" style="border: solid black 1px;width:100px;">Прибыль</th>
     <th></th>
     <th></th>
     <th></th>
@@ -99,13 +100,14 @@
 
 
     <td align="right">{{summa}}</td>
+    <td align="right">{{navar}}</td>
     <td></td>
     <td></td>
     <td></td>
 
 </tr>
 {{/_detail}}
-<tr><td  ></td><td align="right" ><b>{{totsumma}}</b></td> <td   > </td><td   > </td><td   > </td> </tr>
+<tr><td  ></td><td align="right" ><b>{{totsumma}}</b></td> <td align="right"  ><b>{{totnavar}}</b> </td><td   > </td><td   > </td><td   > </td> </tr>
 
 </table>
 {{/_type3}}

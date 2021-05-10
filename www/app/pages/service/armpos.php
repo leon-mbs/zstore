@@ -74,6 +74,8 @@ class ARMPos extends \App\Pages\Base
         $this->checklistpan->add(new DataView('checklist', new ArrayDataSource($this, '_doclist'), $this, 'onDocRow'));
 
         //панель статуса,  просмотр
+        $this->checklistpan->add(new Panel('searchform'));
+        
         $this->checklistpan->add(new Panel('statuspan'))->setVisible(false);
         
         $this->checklistpan->statuspan->add(new \App\Widgets\DocView('docview'))->setVisible(false);
@@ -89,7 +91,7 @@ class ARMPos extends \App\Pages\Base
 
         //  ввод товаров
 
-        $this->docpanel->form2->add(new SubmitButton('next2'))->onClick($this, 'next2docOnClick');
+        $this->docpanel->form2->add(new SubmitButton('topay'))->onClick($this, 'topayOnClick');
         $this->docpanel->form2->add(new TextInput('barcode'));
         $this->docpanel->form2->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
         $this->docpanel->form2->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
@@ -124,10 +126,10 @@ class ARMPos extends \App\Pages\Base
 
         $this->docpanel->form3->add(new Label('discount'));
         //печать
-        $this->docpanel->add(new Form('form4'))->setVisible(false);
-        $this->docpanel->form4->add(new Label('showcheck'));
-        $this->docpanel->form4->add(new Button('newdoc'))->onClick($this, 'newdoc');
-        $this->docpanel->form4->add(new Button('print'));
+        $this->docpanel->add(new Form('formcheck'))->setVisible(false);
+        $this->docpanel->formcheck->add(new Label('showcheck'));
+        $this->docpanel->formcheck->add(new Button('newdoc'))->onClick($this, 'newdoc');
+        $this->docpanel->formcheck->add(new Button('print'));
 
         $this->docpanel->add(new Form('editdetail'))->setVisible(false);
         $this->docpanel->editdetail->add(new TextInput('editquantity'))->setText("1");
@@ -182,7 +184,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->setVisible(false);
         $this->docpanel->form2->setVisible(false);
         $this->docpanel->form3->setVisible(false);
-        $this->docpanel->form4->setVisible(false);
+        $this->docpanel->formcheck->setVisible(false);
         $this->docpanel->editserdetail->setVisible(false);
         $this->docpanel->wselitem->setVisible(false);
         $this->docpanel->editdetail->setVisible(false);
@@ -204,7 +206,7 @@ class ARMPos extends \App\Pages\Base
     public function cancel3docOnClick($sender) {
 
         $this->docpanel->form3->setVisible(true);
-        $this->docpanel->form4->setVisible(false);
+        $this->docpanel->formcheck->setVisible(false);
     }
 
     public function next1docOnClick($sender) {
@@ -269,10 +271,10 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form3->discount->setText('');
 
         $this->docpanel->form2->setVisible(true);
-        $this->docpanel->form4->setVisible(false);
+        $this->docpanel->formcheck->setVisible(false);
     }
 
-    public function next2docOnClick($sender) {
+    public function topayOnClick($sender) {
         if (count($this->_itemlist) == 0 && count($this->_serlist) == 0) {
             $this->setError('noenterpos');
             return;
@@ -840,10 +842,10 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form3->customer->setText('');
         $this->docpanel->form3->payment->setValue(H::getDefMF());
         $this->docpanel->form3->setVisible(false);
-        $this->docpanel->form4->setVisible(true);
+        $this->docpanel->formcheck->setVisible(true);
         $this->docpanel->form3->notes->setText('') ;
         $check = $this->_doc->generatePosReport();
-        $this->docpanel->form4->showcheck->setText($check, true);
+        $this->docpanel->formcheck->showcheck->setText($check, true);
     }
 
     public function OnPayment($sender) {

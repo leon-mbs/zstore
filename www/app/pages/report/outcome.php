@@ -197,7 +197,7 @@ class Outcome extends \App\Pages\Base
         }
         if ($type == 3) {   //по датам
             $sql = "
-          select e.`document_date` as dt  ,  sum(0-e.quantity*e.partion) as summa    ,0 as navar
+          select e.`document_date` as dt  ,  sum(0-e.`amount`) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
               from `entrylist_view`  e
 
               join `items` i on e.`item_id` = i.`item_id`

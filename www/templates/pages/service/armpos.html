@@ -48,7 +48,7 @@
 
         <div   zippy="docpanel">
             <h4>Оформление  чека</h4>
-            <a zippy="tochecklist"><i class="fa fa-arrow-circle-left"></i> К  списку чеков</a>
+            <a zippy="tochecklist"><i class="fa fa-arrow-circle-left"></i> Список чеков</a>
        
         <form zippy="form2">   
             {{#ppo}}
@@ -74,7 +74,7 @@
 
                     <a class="btn btn-info  " zippy="addrow">Добавить товар</a>
                     &nbsp;&nbsp;<a class="btn btn-info  " zippy="addser">Добавить услугу</a>
-                    &nbsp;&nbsp;<input type="submit" value="Перейти к оплате >" zippy="next2" class="btn  btn-info">
+                    &nbsp;&nbsp;<input type="submit" value="Перейти к оплате >" zippy="topay" class="btn  btn-info">
 
 
                     <table class="table table-sm">
@@ -231,7 +231,7 @@
             </div>
 
         </form>
-        <form zippy="form4">
+        <form zippy="formcheck">
             <div class="row">
                 <div class="col-6">
                     <div zippy="showcheck">
@@ -343,20 +343,28 @@
                 <h4>Список  чеков</h4>
                 <a  class="btn btn-success" zippy="newcheck">Новый чек</a>   
       
-                 {{#hideblock}}
+             
               <div class="row"  >       
                 <div class="card">
                     <div class="card-body">
                         <div class="navbar nav">
                             <form zippy="searchform" class="form-inline ">
-                             
+                                <label for="searchnumber"> № </label>
+
+                                <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
+
+                                <label for="searchcust"> Клиент </label>
+
+                                <input placeholder="Начните ввоить..." class="form-control mr-2" type="text" zippy="searchcust"  >
+                           
+                                <input type="submit" class="  btn btn-outline-success  " value="Искать">
 
                             </form>
                         </div>
                     </div>
                 </div>
                 </div>
-                {{/hideblock}}
+                
                 
     
               
@@ -392,7 +400,7 @@
             
               <div class="col-12 col-md-10 xl-8" > 
                <div class="row" zippy="statuspan">
-                 {{#hideblock}}
+                
              
                 <div class="card">
                     <div class="card-body">
@@ -413,7 +421,7 @@
                         </div>
                     </div>
                 </div>
-                {{/hideblock}}
+            
                 
                 
                 <div class="card">
