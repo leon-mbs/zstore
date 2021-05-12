@@ -32,14 +32,10 @@ class ABC extends \App\Pages\Base
         $this->typelist[4] = H::l('abc4');
         $this->typelist[5] = H::l('abc5');
 
-        $dt = new \Carbon\Carbon;
-        $dt->subMonth();
-        $from = $dt->startOfMonth()->timestamp;
-        $to = $dt->endOfMonth()->timestamp;
-
+       
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
-        $this->filter->add(new Date('from', $from));
-        $this->filter->add(new Date('to', $to));
+        $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
+        $this->filter->add(new Date('to', time()));
         $this->filter->add(new DropDownChoice('type', $this->typelist, 1));
 
         $this->add(new Panel('detail'))->setVisible(false);
@@ -81,19 +77,19 @@ class ABC extends \App\Pages\Base
 
         $detail = array();
 
-        if ($type == 1) {
+        if ($type == 1) {     //Товары,  прибыль
             $detail = $this->find1();
         }
-        if ($type == 2) {
+        if ($type == 2) {    //Поставщики, объем поставок
             $detail = $this->find2();
         }
-        if ($type == 3) {
+        if ($type == 3) {  //Покупатели, объем продаж"
             $detail = $this->find3();
         }
-        if ($type == 4) {
+        if ($type == 4) {   //Услуги, выручка
             $detail = $this->find4();
         }
-        if ($type == 5) {
+        if ($type == 5) {  //Покупатели, прибыль
             $detail = $this->find5();
         }
 
@@ -137,12 +133,12 @@ class ABC extends \App\Pages\Base
         $list = array();
         $conn = \ZDB\DB::getConnect();
         $sql = "SELECT * FROM (
-                    SELECT items.itemname as name, SUM( ABS( extcode*quantity ) ) AS value
+                    SELECT items.itemname as name, SUM( ABS( (outprice-partion )*quantity ) ) AS value
                     FROM  `entrylist_view` 
                        join items on entrylist_view.item_id = items.item_id 
                        join documents_view  on entrylist_view.document_id = documents_view.document_id 
                        
-                    WHERE   extcode <>0  and meta_name in('GoodsIssue', 'POSCheck','ReturnIssue','TTN') 
+                    WHERE partion  is  not null and    in('GoodsIssue', 'POSCheck','ReturnIssue','TTN') 
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
                     {$this->br} 
@@ -164,11 +160,11 @@ class ABC extends \App\Pages\Base
         $list = array();
         $conn = \ZDB\DB::getConnect();
         $sql = "SELECT * FROM (
-                    SELECT customers.customer_name as name, SUM( ABS( entrylist_view.amount ) ) AS value
+                    SELECT customers.customer_name as name, SUM( ABS( partion *quantity ) ) AS value
                     FROM  `entrylist_view` 
                     join customers on entrylist_view.customer_id = customers.customer_id 
                     join documents_view  on entrylist_view.document_id = documents_view.document_id 
-                    WHERE   entrylist_view.amount  >0 and meta_name in('GoodsReceipt') 
+                    WHERE  partion  is  not null and   entrylist_view.quantity  >0 and meta_name in('GoodsReceipt','RetCustIssue') 
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
                     AND customers.detail not like '%<isholding>1</isholding>%' 
@@ -179,7 +175,7 @@ class ABC extends \App\Pages\Base
 
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
-            $row['value'] = round($row['value'] / 1000);
+            $row['value'] = round($row['value']  );
             $list[] = $row;
         }
 
@@ -190,11 +186,11 @@ class ABC extends \App\Pages\Base
         $list = array();
         $conn = \ZDB\DB::getConnect();
         $sql = "SELECT * FROM (
-                    SELECT customers.customer_name as name, SUM( ABS( entrylist_view.amount ) ) AS value
+                    SELECT customers.customer_name as name, SUM( ABS( partion *quantity ) ) AS value
                     FROM  `entrylist_view` 
                     join customers on entrylist_view.customer_id = customers.customer_id 
                     join documents_view  on entrylist_view.document_id = documents_view.document_id 
-                    WHERE   entrylist_view.amount <0 and meta_name in('GoodsIssue','POSCheck','Order')  
+                    WHERE   partion  is  not null and  entrylist_view.quantity <0 and meta_name in('GoodsIssue',    'POSCheck','ReturnIssue','TTN' )  
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
                     AND customers.detail not like '%<isholding>1</isholding>%' 
@@ -205,7 +201,7 @@ class ABC extends \App\Pages\Base
 
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
-            $row['value'] = round($row['value'] / 1000);
+            $row['value'] = round($row['value']  );
             $list[] = $row;
         }
 
@@ -216,12 +212,12 @@ class ABC extends \App\Pages\Base
         $list = array();
         $conn = \ZDB\DB::getConnect();
         $sql = "SELECT * FROM (
-                    SELECT services.service_name as name, SUM( ABS( entrylist_view.amount  ) ) AS value
+                    SELECT services.service_name as name, SUM( ABS( entrylist_view.outprice  ) ) AS value
                     FROM  `entrylist_view` 
                        join services on entrylist_view.service_id = services.service_id 
                        join documents_view  on entrylist_view.document_id = documents_view.document_id 
                        
-                    WHERE  entrylist_view.amount>0  and meta_name in('ServiceAct') 
+                    WHERE  partion  is  not null and  entrylist_view.outprice>0  and meta_name in('ServiceAct') 
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
                     {$this->br}  
@@ -231,7 +227,7 @@ class ABC extends \App\Pages\Base
 
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
-            $row['value'] = round($row['value'] / 1000);
+            $row['value'] = round($row['value']  );
             $list[] = $row;
         }
 
@@ -242,11 +238,11 @@ class ABC extends \App\Pages\Base
         $list = array();
         $conn = \ZDB\DB::getConnect();
         $sql = "SELECT * FROM (
-                    SELECT customers.customer_name as name, SUM( ABS( extcode*quantity  ) ) AS value
+                    SELECT customers.customer_name as name, SUM( ABS( (outprice-partion )*quantity  ) ) AS value
                     FROM  `entrylist_view` 
                     join customers on entrylist_view.customer_id = customers.customer_id 
                     join documents_view  on entrylist_view.document_id = documents_view.document_id 
-                    WHERE   entrylist_view.amount <0 and meta_name in('GoodsIssue','POSCheck','TTN')  
+                    WHERE   entrylist_view.quantity <0 and meta_name in('GoodsIssue',    'POSCheck','ReturnIssue','TTN' )  
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
                     {$this->br} 

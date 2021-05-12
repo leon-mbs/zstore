@@ -1,7 +1,8 @@
 
    
-
+ALTER TABLE `customers` ADD `country` VARCHAR(255) NULL  ;     
 ALTER TABLE `timesheet` ADD `branch_id` INT NULL  ;
+
 
 alter VIEW `timesheet_view` AS 
   select 
@@ -20,7 +21,6 @@ alter VIEW `timesheet_view` AS
     `timesheet` `t` join `employees` `e` on `t`.`emp_id` = `e`.`employee_id`
      left join branches  b  on t.branch_id = b.branch_id;
 
-ALTER TABLE `customers` ADD `country` VARCHAR(255) NULL  ;     
      
 ALTER VIEW `customers_view` AS 
   select 

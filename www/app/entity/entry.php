@@ -22,15 +22,13 @@ class Entry extends \ZCL\DB\Entity
         parent::__construct();
 
         $this->document_id = $document_id;
-        $this->amount = $amount;
+       // $this->amount = $amount;
 
         $this->quantity = $quantity;
     }
 
     protected function init() {
-
-        $this->extcode = 0;
-    
+     
     }
 
     protected function afterLoad() {
@@ -50,12 +48,7 @@ class Entry extends \ZCL\DB\Entity
         $this->service_id = $service_id;
     }
 
-    //типы  налогов, начислений  удержаний, прочая вспомагтельная  аналитика
-    public function setExtCode($code) {
-
-        $this->extcode = $code;
-    }
-
+ 
     public function setOutPrice($price) {
 
         $this->outprice = $price;

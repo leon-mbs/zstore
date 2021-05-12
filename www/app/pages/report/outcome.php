@@ -165,13 +165,13 @@ class Outcome extends \App\Pages\Base
         $sql = '';
         if ($type == 1 || $type == 6 || strlen($cat) > 0) {    //по товарам
             $sql = "
-          select i.`itemname`,i.`item_code`,sum(0-e.`quantity`) as qty, sum(0-e.quantity*e.partion) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
+          select i.`itemname`,i.`item_code`,sum(0-e.`quantity`) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.`quantity`)) as navar
               from `entrylist_view`  e
 
               join `items_view` i on e.`item_id` = i.`item_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
-               where e.`item_id` >0  and e.`quantity` <> 0   {$cat}   {$cust}  
-               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderCust')
+               where e.partion  is  not null and  e.`item_id` >0  and e.`quantity` <> 0   {$cat}   {$cust}  
+               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN' )
                {$br}  {$u}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
@@ -182,13 +182,13 @@ class Outcome extends \App\Pages\Base
         if ($type == 2) {  //по покупателям
             $empty = H::l("emptycust");
             $sql = "
-          select coalesce(c.`customer_name`,'{$empty}') as itemname,c.`customer_id`,  sum(0-e.quantity*e.partion) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
+          select coalesce(c.`customer_name`,'{$empty}') as itemname,c.`customer_id`,  sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.`quantity`)) as navar
           from `entrylist_view`  e
 
         left  join `customers`  c on c.`customer_id` = e.`customer_id`
          join `documents_view`  d on d.`document_id` = e.`document_id`
-           where   e.`quantity` <>0       
-             and d.`meta_name` in ('GoodsIssue',    'POSCheck','ReturnIssue','TTN','OrderCust')         AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
+           where  e.partion  is  not null and   e.`quantity` <>0       
+             and d.`meta_name` in ('GoodsIssue',    'POSCheck','ReturnIssue','TTN' )         AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               {$br} {$u}   AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
              AND c.detail not like '%<isholding>1</isholding>%'               
           group by  c.`customer_name`,c.`customer_id`
@@ -197,7 +197,7 @@ class Outcome extends \App\Pages\Base
         }
         if ($type == 3) {   //по датам
             $sql = "
-          select e.`document_date` as dt  ,  sum(0-e.`amount`) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
+          select e.`document_date` as dt  ,  sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.`quantity`)) as navar
               from `entrylist_view`  e
 
               join `items` i on e.`item_id` = i.`item_id`
@@ -213,7 +213,7 @@ class Outcome extends \App\Pages\Base
 
         if ($type == 4 || $type == 7) {    //по сервисам
             $sql = "
-         select s.`service_name` as itemname, sum(0-e.`quantity`) as qty, sum(0-e.`amount`) as summa    ,0 as navar
+         select s.`service_name` as itemname, sum(0-e.`quantity`) as qty, sum(0-e.`outprice`) as summa    ,0 as navar
               from `entrylist_view`  e
 
               join `services` s on e.`service_id` = s.`service_id`
@@ -228,13 +228,13 @@ class Outcome extends \App\Pages\Base
 
         if ($type == 5 && strlen($cat) == 0) {    //по категориях
             $sql = "
-            select  i.`cat_name` as itemname,sum(0-e.`quantity`) as qty, sum(0- e.quantity*e.partion) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
+            select  i.`cat_name` as itemname,sum(0-e.`quantity`) as qty, sum(0- e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.`quantity`)) as navar
               from `entrylist_view`  e
 
               join `items_view` i on e.`item_id` = i.`item_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
-               where e.`item_id` >0  and e.`quantity` <>0
-               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderCust')
+               where  e.partion  is  not null and  e.`item_id` >0  and e.`quantity` <>0
+               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN' )
                 {$br} {$u}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
@@ -259,13 +259,13 @@ class Outcome extends \App\Pages\Base
 
 
                 $sqlc = "
-                  select    coalesce(sum(0-e.`amount`) ,0) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
+                  select    coalesce(sum(0-e.quantity*e.partion) ,0) as summa, sum((e.outprice-e.partion )*(0-e.`quantity`)) as navar
                   from `entrylist_view`  e
 
                
                  join `documents_view`  d on d.`document_id` = e.`document_id`
-                   where     e.`quantity` <>0 
-                     and d.`meta_name` in ('GoodsIssue', 'ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderCust')    
+                   where e.partion  is  not null and e.`quantity` <>0 
+                     and d.`meta_name` in ('GoodsIssue', 'ServiceAct' , 'POSCheck','ReturnIssue','TTN' )    
                       {$br} {$u}  AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
                       AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                       and d.customer_id in({$custlist})
@@ -282,12 +282,12 @@ class Outcome extends \App\Pages\Base
 
         if ($type == 9) {    //по компаниям
             $sql = "
-            select  d.`firm_name` as itemname,sum(0-e.`quantity`) as qty, sum(0-e.`amount`) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
+            select  d.`firm_name` as itemname,sum(0-e.`quantity`) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.`quantity`)) as navar
               from `entrylist_view`  e
 
              
              join `documents_view` d on d.`document_id` = e.`document_id`
-               where d.`firm_id` >0  and e.`quantity` <>0
+               where  e.partion  is  not null and  d.`firm_id` >0  and e.`quantity` <>0
                and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN')
                 {$br} {$u}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
@@ -298,7 +298,7 @@ class Outcome extends \App\Pages\Base
         }
         if ($type == 10) {    //по складах
             $sql = "
-            select  sr.`storename` as itemname,sum(0-e.`quantity`) as qty, sum(0-e.quantity*e.partion) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
+            select  sr.`storename` as itemname,sum(0-e.`quantity`) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.`quantity`)) as navar
               from `entrylist_view`  e
 
                 
@@ -306,7 +306,7 @@ class Outcome extends \App\Pages\Base
                 join `stores` sr on sr.`store_id` = st.`store_id`
                 
              join `documents_view` d on d.`document_id` = e.`document_id`
-               where   e.`quantity` <>0
+               where   e.partion  is  not null and  e.`quantity` <>0
                and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN')
                 {$br} {$u}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
@@ -319,13 +319,13 @@ class Outcome extends \App\Pages\Base
        if ($type == 11) {    //по источникам
             
             $sql = "
-            select i.itemname,  sum(0-e.`quantity`) as qty, sum(0-e.quantity*e.partion) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
+            select i.itemname,  sum(0-e.`quantity`) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.`quantity`)) as navar
               from `entrylist_view`  e
 
                  join `items` i on e.`item_id` = i.`item_id`
               
              join `documents_view` d on d.`document_id` = e.`document_id`
-               where   e.`quantity` <>0  and ExtractValue(d.content, '//doc/header/salesource') = {$salesource}  
+               where  e.partion  is  not null and e.`quantity` <>0  and ExtractValue(d.content, '//doc/header/salesource') = {$salesource}  
                and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN')
                 {$br} {$u}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "

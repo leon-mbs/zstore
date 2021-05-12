@@ -54,17 +54,20 @@ class CustomerList extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('searchleadstatus', Customer::getLeadStatuses(), "0"));
 
         $this->add(new Panel('customertable'))->setVisible(true);
-        $this->customertable->add(new DataView('customerlist', new CustomerDataSource($this), $this, 'customerlistOnRow'));
-        $this->customertable->customerlist->setPageSize(Helper::getPG());
-        $this->customertable->add(new \Zippy\Html\DataList\Paginator('pag', $this->customertable->customerlist));
+        $this->customertable->add(new Form('listform')) ;
+        $this->customertable->listform->add(new DataView('customerlist', new CustomerDataSource($this), $this, 'customerlistOnRow'));
+        $this->customertable->listform->customerlist->setPageSize(Helper::getPG());
+        $this->customertable->listform->add(new \Zippy\Html\DataList\Paginator('pag', $this->customertable->listform->customerlist));
 
-        $this->customertable->customerlist->Reload();
-        $this->customertable->add(new SortLink("sortdoc", "docs", $this, "onSort"));
-        $this->customertable->add(new SortLink("sortname", "customer_name", $this, "onSort"));
-        $this->customertable->add(new SortLink("sortleadstatus", "leadstatus", $this, "onSort"));
+        $this->customertable->listform->customerlist->Reload();
+        $this->customertable->listform->add(new SortLink("sortdoc", "docs", $this, "onSort"));
+        $this->customertable->listform->add(new SortLink("sortname", "customer_name", $this, "onSort"));
+        $this->customertable->listform->add(new SortLink("sortleadstatus", "leadstatus", $this, "onSort"));
 
-        $this->customertable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
-        $this->customertable->add(new ClickLink('showstat'))->onClick($this, 'showStat');
+        $this->customertable->listform->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
+        $this->customertable->listform->add(new ClickLink('showstat'))->onClick($this, 'showStat');
+        $this->customertable->listform->add(new SubmitLink('deleteall'))->onClick($this, 'OnDelAll');
+           
         $this->add(new Panel('statpan'))->setVisible(false);
         $this->statpan->add(new ClickLink('closestat'))->onClick($this, 'closeStat');
 
@@ -158,12 +161,12 @@ class CustomerList extends \App\Pages\Base
 
         $this->_tvars['leadmode'] = $sender->isChecked();
         $this->filter->clean();
-        $this->customertable->customerlist->Reload();
+        $this->customertable->listform->customerlist->Reload();
     }
 
     public function OnSearch($sender) {
 
-        $this->customertable->customerlist->Reload();
+        $this->customertable->listform->customerlist->Reload();
         $this->contentview->setVisible(false);
     }
 
@@ -185,8 +188,9 @@ class CustomerList extends \App\Pages\Base
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('contentlist'))->onClick($this, 'editContentOnClick');
-        $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
-
+       
+        $row->add(new CheckBox('seldel', new \Zippy\Binding\PropertyBinding($item, 'seldel')));
+       
         $row->setAttribute('style', $item->status == 1 ? 'color: #aaa' : null);
         if ($item->customer_id == $this->_customer->customer_id) {
             $row->setAttribute('class', 'table-success');
@@ -197,13 +201,13 @@ class CustomerList extends \App\Pages\Base
         $sortfield = $sender->fileld;
         $sortdir = $sender->dir;
 
-        $this->customertable->sortdoc->Reset();
+        $this->customertable->listform->sortdoc->Reset();
 
-        $this->customertable->customerlist->setSorting($sortfield, $sortdir);
+        $this->customertable->listform->customerlist->setSorting($sortfield, $sortdir);
 
         $sender->fileld = $sortfield;
         $sender->dir = $sortdir;
-        $this->customertable->customerlist->Reload();
+        $this->customertable->listform->customerlist->Reload();
     }
 
     public function editOnClick($sender) {
@@ -251,7 +255,7 @@ class CustomerList extends \App\Pages\Base
         }
 
 
-        $this->customertable->customerlist->Reload();
+        $this->customertable->listform->customerlist->Reload();
     }
 
     public function addOnClick($sender) {
@@ -342,7 +346,7 @@ class CustomerList extends \App\Pages\Base
         $this->_customer->save();
         $this->customerdetail->setVisible(false);
         $this->customertable->setVisible(true);
-        $this->customertable->customerlist->Reload();
+        $this->customertable->listform->customerlist->Reload();
     }
 
     public function cancelOnClick($sender) {
@@ -357,8 +361,8 @@ class CustomerList extends \App\Pages\Base
     //просмотр контента
     public function editContentOnClick($sender) {
         $this->_customer = $sender->getOwner()->getDataItem();
-        $this->customertable->customerlist->setSelectedRow($sender->getOwner());
-        $this->customertable->customerlist->Reload();
+        
+        $this->customertable->listform->customerlist->Reload();
         
         $this->viewContent(); 
     }
@@ -407,7 +411,7 @@ class CustomerList extends \App\Pages\Base
         $this->contentview->addfileform->adddescfile->setText('');
         $this->updateFiles();
         $this->goAnkor('contentviewlink');
-        $this->customertable->customerlist->Reload(false);
+        $this->customertable->listform->customerlist->Reload(false);
     }
 
     // обновление  списка  прикрепленных файлов
@@ -432,7 +436,7 @@ class CustomerList extends \App\Pages\Base
         $file = $sender->owner->getDataItem();
         Helper::deleteFile($file->file_id);
         $this->updateFiles();
-        $this->customertable->customerlist->Reload(false);
+        $this->customertable->listform->customerlist->Reload(false);
     }
 
     /**
@@ -455,7 +459,7 @@ class CustomerList extends \App\Pages\Base
         $this->contentview->addmsgform->addmsg->setText('');
         $this->updateMessages();
         $this->goAnkor('contentviewlink');
-        $this->customertable->customerlist->Reload(false);
+        $this->customertable->listform->customerlist->Reload(false);
     }
 
     //список   комментариев
@@ -480,7 +484,7 @@ class CustomerList extends \App\Pages\Base
         $msg = $sender->owner->getDataItem();
         \App\Entity\Message::delete($msg->message_id);
         $this->updateMessages();
-        $this->customertable->customerlist->Reload(false);
+        $this->customertable->listform->customerlist->Reload(false);
     }
 
     public function OnEventSubmit($sender) {
@@ -510,7 +514,7 @@ class CustomerList extends \App\Pages\Base
         $this->contentview->addeventform->clean();
         $this->updateEvents();
         $this->goAnkor('contentviewlink');
-        $this->customertable->customerlist->Reload(false);
+        $this->customertable->listform->customerlist->Reload(false);
     }
 
     //список   событий
@@ -541,7 +545,7 @@ class CustomerList extends \App\Pages\Base
         $event = $sender->owner->getDataItem();
         \App\Entity\Event::delete($event->event_id);
         $this->updateEvents();
-        $this->customertable->customerlist->Reload(false);
+        $this->customertable->listform->customerlist->Reload(false);
     }
 
     public function contrListOnRow(DataRow $row) {
@@ -562,7 +566,7 @@ class CustomerList extends \App\Pages\Base
     public function OnSelStatus($sender) {
         $this->_customer->leadstatus = $sender->getValue();
         $this->_customer->save();
-        $this->customertable->customerlist->Reload();
+        $this->customertable->listform->customerlist->Reload();
     }
 
     public function onConvert($sender) {
@@ -570,7 +574,7 @@ class CustomerList extends \App\Pages\Base
         $this->_tvars['leadmode'] = false;
 
         $this->filter->clean();
-        $this->customertable->customerlist->Reload();
+        $this->customertable->listform->customerlist->Reload();
         $this->_customer->status = 0;
         $this->_customer->fromlead = 1;
 
@@ -761,6 +765,10 @@ class CustomerList extends \App\Pages\Base
     public function closeStat($sender) {
         $this->customertable->setVisible(true);
         $this->statpan->setVisible(false);
+    }
+    public function OnDelAll($sender) {
+        
+        
     }
 
 }

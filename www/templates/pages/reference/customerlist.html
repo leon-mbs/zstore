@@ -64,10 +64,13 @@
                     {{/leadmode}}  
                     <a zippy="addnew" class="btn btn-primary">Добавить нового</a>
 
-
+                    <form zippy="listform">
                     <table class="table table-hover   table-sm mt-2">
                         <tr>
-                            <th ><a zippy="sortname">Имя</a> </th>
+                      <th onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
+                                            style="width:30px;cursor:pointer" title="Снять/выставить флажки"><i
+                                                class="fa fa-check-double "></i></th>
+                       <th ><a zippy="sortname">Имя</a> </th>
                             <th >Тел.</th>
                             <th >E-Mail</th>
                             {{^leadmode}}        <th  ><a zippy="sortdoc">Док.</a> </th>    {{/leadmode}}
@@ -79,8 +82,9 @@
                             <th> </th>
                             <th> </th>
                             <th> </th>
-                        </tr>
+                          </tr>
                         <tr zippy="customerlist">
+                            <td><input  zippy="seldel" class="seldel" type="checkbox"></td>
                             <td zippy="customername" class="text-nowrap"></td>
                             <td zippy="customerphone" class="text-nowrap"></td>
                             <td zippy="customeremail" class="text-nowrap"></td>
@@ -96,13 +100,16 @@
 
                             <td style="white-space:  nowrap"> &nbsp;&nbsp;
                                 <a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a>
-                                &nbsp;<a zippy="contentlist" title="Редактировать дополнительные данные"><i
+                                &nbsp;&nbsp;&nbsp;<a zippy="contentlist" title="Редактировать дополнительные данные"><i
                                         class="fa fa-eye"></i></a>
-                                &nbsp;<a zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a>
+                                
                             </td>
+                            
                         </tr>
+                        <tr><td><a class="text-danger" zippy="deleteall" title="Удалить(деактивировать)"><i class="fa fa-trash"></i></a></td><td colspan="9"></td></tr>
                     </table>
                     <div zippy="pag"></div>
+                    </form>
                 </div>
 
 
@@ -599,6 +606,13 @@ type: 'pie',
         </script> 
 
         {{/leadmode}}  
+     <script>
+             function check_deleteall() {
 
+                return confirm("Удалить?")
+
+            }
+        </script>
+   
     </body>
 </html>

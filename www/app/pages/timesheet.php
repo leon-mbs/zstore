@@ -286,7 +286,7 @@ class TimeSheet extends \App\Pages\Base
         $row->add(new Label('lto', date('H:i', $item->t_end)));
         $row->add(new Label('ltypename', $tl[$item->t_type]));
         $row->add(new Label('ldesc', $item->description));
-        $row->add(new Label('lbranch', $item->branch_name));
+        $row->add(new Label('lbranch', $item->branch_id > 0 ? $item->branch_name :''));
 
         $diff = $item->t_end - $item->t_start - ($item->t_break * 60);
         $diff = number_format($diff / 3600, 2, '.', '');

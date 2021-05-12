@@ -128,9 +128,7 @@ class Document extends \ZCL\DB\Entity
         $this->content = "<doc><header>";
 
         foreach ($this->headerdata as $key => $value) {
-            if ($key > 0) {
-                continue;
-            }
+            
 
             if (strpos($value, '[CDATA[') !== false) {
                 \App\System::setWarnMsg('CDATA в  поле  обьекта');
