@@ -48,6 +48,7 @@ class DocList extends \App\Pages\Base
             $filter->page = 1;
             $filter->doctype = 0;
             $filter->customer = 0;
+            $filter->author = 0;
             $filter->customer_name = '';
 
             $filter->searchnumber = '';
@@ -56,6 +57,7 @@ class DocList extends \App\Pages\Base
         $this->filter->add(new Date('from', $filter->from));
         $this->filter->add(new Date('to', $filter->to));
         $this->filter->add(new DropDownChoice('doctype', H::getDocTypes(), $filter->doctype));
+        $this->filter->add(new DropDownChoice('author', \App\Entity\User::findArray('username','','username'), $filter->author));
 
         $this->filter->add(new ClickLink('erase', $this, "onErase"));
         $this->filter->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');
@@ -126,6 +128,7 @@ class DocList extends \App\Pages\Base
         $filter->from = $this->filter->from->getDate();
         $filter->to = $this->filter->to->getDate(true);
         $filter->doctype = $this->filter->doctype->getValue();
+        $filter->author = $this->filter->author->getValue();
         $filter->customer = $this->filter->searchcust->getKey();
         $filter->customer_name = $this->filter->searchcust->getText();
 
@@ -426,6 +429,10 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         }
         if ($filter->customer > 0) {
             $where .= " and customer_id  ={$filter->customer} ";
+        }
+
+        if ($filter->author > 0) {
+            $where .= " and user_id  ={$filter->author} ";
         }
 
 

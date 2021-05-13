@@ -299,7 +299,7 @@ class Base extends \Zippy\Html\WebPage
         if ($user->defmf == 0) {
             $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("nodefmf") . "\"");
         }
-
+        if(count( $this->_tvars["toasts"])==0)$this->_tvars["toasts"][] = array('title' => '');
         \App\Session::getSession()->toasts = true;
     }
 

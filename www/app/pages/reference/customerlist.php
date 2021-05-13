@@ -766,9 +766,41 @@ class CustomerList extends \App\Pages\Base
         $this->customertable->setVisible(true);
         $this->statpan->setVisible(false);
     }
+ 
     public function OnDelAll($sender) {
+        if (false == \App\ACL::checkDelRef('CustomerList')) {
+            return;
+        }        
         
+          $ids = array();
+          foreach ( $this->customertable->listform->customerlist->getDataRows() as $row) {
+            $item = $row->getDataItem();
+            if ($item->seldel == true) {
+                $ids[] = $item->customer_id;
+            }
+         }  
+         if(count($ids)==0) return;
+         
+         $conn = \ZDB\DB::getConnect();
+         $d=0;$u=0;  
+         foreach($ids as $id) {
+            $sql = "  select count(*)  from  documents where   customer_id = {$id}  ";
+            $cnt = $conn->GetOne($sql);
+            if($cnt >0) {
+                $u++;
+                $conn->Execute("update customers  set  status=1 where   customer_id={$id}");
+            }   else {
+                $d++;
+                $conn->Execute("delete from customers  where   customer_id={$id}");
+                
+            }
+         }
         
+            
+         $this->setSuccess("delcusts",$d,$u) ;
+         
+         $this->customertable->listform->customerlist->Reload();
+          
     }
 
 }
