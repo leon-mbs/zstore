@@ -20,6 +20,7 @@ use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
+use Zippy\Html\Link\SubmitLink;
 
 class ItemList extends \App\Pages\Base
 {
@@ -43,13 +44,23 @@ class ItemList extends \App\Pages\Base
             $catlist[$k] = $v;
         }
         $this->filter->add(new DropDownChoice('searchcat', $catlist, 0));
-
+  
         $this->add(new Panel('itemtable'))->setVisible(true);
-        $this->itemtable->add(new DataView('itemlist', new ItemDataSource($this), $this, 'itemlistOnRow'));
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
-        $this->itemtable->itemlist->setPageSize(H::getPG());
-        $this->itemtable->add(new \Zippy\Html\DataList\Paginator('pag', $this->itemtable->itemlist));
-        $this->itemtable->itemlist->setSelectedClass('table-success');
+
+        $this->itemtable->add(new Form('listform')) ;
+        
+        $this->itemtable->listform->add(new DataView('itemlist', new ItemDataSource($this), $this, 'itemlistOnRow'));
+        $this->itemtable->listform->itemlist->setPageSize(H::getPG());
+        $this->itemtable->listform->add(new \Zippy\Html\DataList\Paginator('pag', $this->itemtable->listform->itemlist));
+        $this->itemtable->listform->itemlist->setSelectedClass('table-success');
+        $this->itemtable->listform->add(new SubmitLink('deleteall'))->onClick($this, 'OnDelAll');
+        $this->itemtable->listform->add(new SubmitLink('printall'))->onClick($this, 'OnPrintAll',true);
+         
+        $catlist = Category::findArray( "cat_name","cat_id not in (select parent_id from item_cat )", "cat_name");
+       
+         
+        $this->itemtable->listform->add(new DropDownChoice('allcat', $catlist, 0))->onChange($this,'onAllCat');
 
         $this->add(new Form('itemdetail'))->setVisible(false);
         $this->itemdetail->add(new TextInput('editname'));
@@ -60,6 +71,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editprice4'));
         $this->itemdetail->add(new TextInput('editprice5'));
         $this->itemdetail->add(new TextInput('editmanufacturer'));
+        $this->itemdetail->add(new TextInput('editurl'));
         $common = System::getOptions('common');
         if (strlen($common['price1']) > 0) {
             $this->itemdetail->editprice1->setVisible(true);
@@ -140,7 +152,7 @@ class ItemList extends \App\Pages\Base
         
         
         if ($add == false) {
-            $this->itemtable->itemlist->Reload();
+            $this->itemtable->listform->itemlist->Reload();
         } else {
             $this->addOnClick(null);
         }
@@ -174,14 +186,18 @@ class ItemList extends \App\Pages\Base
         $row->add(new ClickLink('set'))->onClick($this, 'setOnClick');
         $row->set->setVisible($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD);
 
-        $row->add(new ClickLink('print'))->onClick($this, 'printOnClick', true);
-
+        $row->add(new ClickLink('printqr'))->onClick($this, 'printQrOnClick', true);
+        $row->printqr->setVisible(strlen($item->url)>0) ;
+        
         $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?id={$item->image_id}");
         $row->imagelistitem->setAttribute('href', "/loadimage.php?id={$item->image_id}");
         $row->imagelistitem->setAttribute('data-gallery', $item->image_id);
         if ($item->image_id == 0) {
             $row->imagelistitem->setVisible(false);
         }
+        
+        $row->add(new CheckBox('seldel', new \Zippy\Binding\PropertyBinding($item, 'seldel')));
+           
     }
 
     public function deleteOnClick($sender) {
@@ -200,7 +216,7 @@ class ItemList extends \App\Pages\Base
         }
 
 
-        $this->itemtable->itemlist->Reload(false);
+        $this->itemtable->listform->itemlist->Reload(false);
         $this->resetURL();
     }
 
@@ -232,6 +248,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editwarranty->setText($this->_item->warranty);
         $this->itemdetail->edittype->setValue($this->_item->item_type);
 
+        $this->itemdetail->editurl->setText($this->_item->url);
         $this->itemdetail->editcell->setText($this->_item->cell);
         $this->itemdetail->editminqty->setText(\App\Helper::fqty($this->_item->minqty));
         $this->itemdetail->editzarp->setText(\App\Helper::fqty($this->_item->zarp));
@@ -250,8 +267,8 @@ class ItemList extends \App\Pages\Base
             $this->itemdetail->editimage->setVisible(false);
         }
 
-        $this->itemtable->itemlist->setSelectedRow($sender->getOwner());
-        $this->itemtable->itemlist->Reload(false);
+        $this->itemtable->listform->itemlist->setSelectedRow($sender->getOwner());
+        $this->itemtable->listform->itemlist->Reload(false);
 
         $this->updateman();
     }
@@ -282,7 +299,7 @@ class ItemList extends \App\Pages\Base
     }
 
     public function OnFilter($sender) {
-        $this->itemtable->itemlist->Reload();
+        $this->itemtable->listform->itemlist->Reload();
     }
 
     public function OnSubmit($sender) {
@@ -307,6 +324,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->manufacturer = trim($this->itemdetail->editmanufacturer->getText());
 
         $this->_item->bar_code = trim($this->itemdetail->editbarcode->getText());
+        $this->_item->url = trim($this->itemdetail->editurl->getText());
         $this->_item->msr = $this->itemdetail->editmsr->getText();
         $this->_item->weight = $this->itemdetail->editweight->getText();
         $this->_item->maxsize = $this->itemdetail->editmaxsize->getText();
@@ -419,7 +437,7 @@ class ItemList extends \App\Pages\Base
             $this->_item->Save();
         }
 
-        $this->itemtable->itemlist->Reload(false);
+        $this->itemtable->listform->itemlist->Reload(false);
 
         $this->itemtable->setVisible(true);
         $this->itemdetail->setVisible(false);
@@ -496,6 +514,19 @@ class ItemList extends \App\Pages\Base
         $this->setpanel->setlist->Reload();
     }
 
+    public function printQrOnClick($sender) {
+         $item = $sender->getOwner()->getDataItem();
+        
+         $qrCode = new \Endroid\QrCode\QrCode($item->url);
+         $qrCode->setSize(100);
+         $qrCode->setMargin(5); 
+         $qrCode->setWriterByName('png'); 
+         
+         $dataUri = $qrCode->writeDataUri();
+         $html = "<img src=\"{$dataUri}\"  />";        
+         $this->updateAjax(array(), "  $('#tag').html('{$html}') ; $('#pform').modal()");
+  
+    }
     public function printOnClick($sender) {
         $item = $sender->getOwner()->getDataItem();
         $printer = \App\System::getOptions('printer');
@@ -544,6 +575,8 @@ class ItemList extends \App\Pages\Base
 
 
         $html = $report->generate($header);
+        
+        
         $this->updateAjax(array(), "  $('#tag').html('{$html}') ; $('#pform').modal()");
     }
 
@@ -559,6 +592,133 @@ class ItemList extends \App\Pages\Base
         }
     }
 
+    
+ public function OnPrintAll($sender) {
+     
+          $items= array();
+          foreach ( $this->itemtable->listform->itemlist->getDataRows() as $row) {
+            $item = $row->getDataItem();
+            if ($item->seldel == true) {
+                $items[] = $item ;
+            }
+         }  
+         if(count($items)==0) return;
+   
+        $printer = \App\System::getOptions('printer');
+        $pwidth = 'style="width:40mm;"';
+        $pfs = 'style="font-size:16px;"';
+
+        if (strlen($printer['pwidth']) > 0) {
+            $pwidth = 'style="width:' . $printer['pwidth'] . ' ";';
+        }
+        if (strlen($printer['pfontsize']) > 0) {
+            $pfs = 'style="font-size:' . $printer['pfontsize'] . 'px";';
+        }
+   
+        $htmls="";
+        
+        foreach($items as $item){
+            $report = new \App\Report('item_tag.tpl');
+            $header = array('width' => $pwidth, 'fsize' => $pfs);
+            if ($printer['pname'] == 1) {
+
+                if (strlen($item->shortname) > 0) {
+                    $header['name'] = $item->shortname;
+                } else {
+                    $header['name'] = $item->itemname;
+                }
+            }
+            $header['isap'] = false;
+            if ($printer['pprice'] == 1) {
+                $header['price'] = number_format($item->getPrice($printer['pricetype']), 2, '.', '');
+                $header['isap'] = true;
+            }
+            if ($printer['pcode'] == 1) {
+                $header['article'] = $item->item_code;
+                $header['isap'] = true;
+            }
+
+            if ($printer['pbarcode'] == 1) {
+                $barcode = $item->bar_code;
+                if (strlen($barcode) == 0) {
+                    $barcode = $item->item_code;
+                }
+                if(strlen($barcode)==0)  continue;
+                
+                $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+                $img = '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($barcode, $printer['barcodetype'])) . '">';
+                $header['img'] = $img;
+                $header['barcode'] = \App\Util::addSpaces($barcode);
+            }
+
+
+            $htmls = $htmls. $report->generate($header);
+                        
+        }
+        $this->updateAjax(array(), "  $('#tag').html('{$htmls}') ;$('.seldel').prop('checked',null); $('#pform').modal()");
+       
+           
+ }
+ public function onAllCat($sender) {
+          $cat_id = $sender->getValue();
+          if($cat_id==0)  return;
+      
+          $items= array();
+          foreach ( $this->itemtable->listform->itemlist->getDataRows() as $row) {
+            $item = $row->getDataItem();
+            if ($item->seldel == true) {
+                $items[] = $item ;
+            }
+         }  
+         if(count($items)==0) return;
+         $conn = \ZDB\DB::getConnect();
+        
+        
+         foreach($items as $item)   {
+              
+             $conn->Execute("update items set  cat_id={$cat_id} where  item_id={$item->item_id}") ;     
+         }
+     
+         $this->itemtable->listform->itemlist->Reload();
+          
+ }
+ public function OnDelAll($sender) {
+        if (false == \App\ACL::checkDelRef('ItemList')) {
+            return;
+        }        
+        
+          $ids = array();
+          foreach ( $this->itemtable->listform->itemlist->getDataRows() as $row) {
+            $item = $row->getDataItem();
+            if ($item->seldel == true) {
+                $ids[] = $item->item_id;
+            }
+         }  
+         if(count($ids)==0) return;
+         
+         $conn = \ZDB\DB::getConnect();
+         $d=0;$u=0;  
+         foreach($ids as $id) {
+            $sql = "  select count(*)  from  store_stock where   item_id = {$id}  ";
+            $cnt = $conn->GetOne($sql);
+            if($cnt >0) {
+                $u++;
+                $conn->Execute("update items  set  disabled=1 where   item_id={$id}");
+            }   else {
+                $d++;
+                $conn->Execute("delete from items  where   item_id={$id}");
+                
+            }
+         }
+        
+            
+         $this->setSuccess("delitems",$d,$u) ;
+         
+         $this->itemtable->listform->itemlist->Reload();
+          
+    }
+    
+    
 }
 
 class ItemDataSource implements \Zippy\Interfaces\DataSource

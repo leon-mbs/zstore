@@ -74,6 +74,9 @@ class DocView extends \Zippy\Html\PageFragment
         $this->addmsgform->add(new TextArea('addmsg'));
         $this->add(new DataView('dw_msglist', new ArrayDataSource(new Prop($this, '_msglist')), $this, 'msgListOnRow'));
 
+        $this->addmsgform->add(new \Zippy\Html\Form\CheckBoxList('userm', '<br>'));        
+        
+        
         $this->add(new ClickLink('doctabp', $this, "onTab"));
         $this->add(new ClickLink('doctabd', $this, "onTab"));
         $this->add(new ClickLink('doctabf', $this, "onTab"));
@@ -149,6 +152,17 @@ class DocView extends \Zippy\Html\PageFragment
             $this->scanimage->setUrl('/loadfile.php?im=1&id=' . $this->_doc->headerdata['scan']);
         }
 
+        $users = \App\Entity\User::getByBranch($this->_doc->branch_id) ;
+        $this->addmsgform->userm->clean() ;
+        $curr = System::getUser() ;
+        foreach($users as $id=>$name){
+             $f = false;
+             if($id==$this->_doc->user_id) $f =true;//автор
+             if($id==$curr->user_id) continue;//себе не  нужно
+             
+             $this->addmsgform->userm->AddCheckBox($id, $f, $name);
+        }
+        
 
         $this->onTab($this->doctabp);
     }
@@ -256,20 +270,10 @@ class DocView extends \Zippy\Html\PageFragment
 
         // уведомления
 
-        $users = array();
-        foreach ($this->_msglist as $msg) {
-            $users[$msg->user_id] = $msg->user_id;
-        }
-        $users[$this->_doc->user_id] = $this->_doc->user_id; //автор дока
+        
 
-        unset($users[$user->user_id]); //себе не  нужно
-
-
-        foreach ($users as $adr) {
-            if ($adr == $user->user_id) {
-                continue;
-            } //себе не  нужно
-
+        foreach ($this->addmsgform->userm->getCheckedList() as $adr) {
+            
             $n = new \App\Entity\Notify();
             $n->user_id = $adr;
             $n->message = "<b>" . H::l("newdoccomment") . ":</b> {$this->_doc->meta_desc} {$this->_doc->document_number}  ";

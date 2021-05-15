@@ -124,7 +124,7 @@ class Category extends \ZCL\DB\Entity
     }
 
     //список  с  тмц
-    public static function getList($fullname = false) {
+    public static function getList($fullname = false ) {
         if ($fullname == false) {
             return Category::findArray("cat_name", "cat_id in (select cat_id from items where disabled <>1 )", "cat_name");
         }
@@ -138,5 +138,7 @@ class Category extends \ZCL\DB\Entity
         }
         return $ret;
     }
+   
+  
 
 }

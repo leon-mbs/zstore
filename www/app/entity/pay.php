@@ -60,7 +60,7 @@ class Pay extends \ZCL\DB\Entity
 
     //возвращает список оплат
     public static function getPayments($document_id) {
-        $list = Pay::find("document_id=" . $document_id, "pl_id");
+        $list = Pay::find("mf_id >0  and document_id=" . $document_id, "pl_id");
 
         return $list;
     }

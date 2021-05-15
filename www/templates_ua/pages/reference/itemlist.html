@@ -38,9 +38,13 @@
                     </form>
                 </div>
                 <a zippy="addnew" class="btn btn-primary  ">Додати</a>
+                <form zippy="listform">
                 <table class="table table-hover  table-sm  ">
                     <tr>
-                        {{#useimages}}
+                      <th onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
+                                            style="width:30px;cursor:pointer" title="Снять/выставить флажки"><i
+                                                class="fa fa-check-double "></i></th>                    
+                       {{#useimages}}
                         <th></th>
                         {{/useimages}}
                         <th>Найменування</th>
@@ -63,12 +67,14 @@
                         {{/usesnumber}}
                         <th></th>
                         <th></th>
+                        <th></th>
 
 
                         <th style="width:150px"></th>
                     </tr>
                     <tr zippy="itemlist">
-                        {{#useimages}}
+                      <td><input  zippy="seldel" class="seldel" type="checkbox"></td>
+                         {{#useimages}}
                         <td>
                             <a zippy="imagelistitem" data-type="image" data-toggle="lightbox"  > <img
                                     style="float:left; width:64px"></a>
@@ -98,17 +104,26 @@
                                data-html="true"></i></td>
 
                         <td><a zippy="set" title="Комплекти"><i class="fa fa-cogs"></i></a> &nbsp;</td>
+                        <td  >
+                            <a zippy="printqr" title="Друк QR коду"><i class="fa fa-qrcode"></i></a>
+                        </td>
                         <td aling="center">
 
 
-                            <a zippy="print" title="Друк етикеток"><i class="fa fa-print"></i></a>&nbsp;&nbsp;
+                            
                             <a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> &nbsp;
                             <a zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a>
 
                         </td>
                     </tr>
+                    <tr><td colspan="9">
+                    <a class="text-danger" zippy="deleteall" title="Удалить(деактивировать)"><i class="fa fa-trash"></i></a>&nbsp;&nbsp;
+                    <a  zippy="printall" title="Друк маркування"><i class="fa fa-print"></i></a>&nbsp;&nbsp;
+                    в категорiю  <select   zippy="allcat"><option value="0">Не вказана</select>
+                     </td> </tr>                 
                 </table>
-                <div zippy="pag"></div>
+                <div zippy="pag"></div>   
+                </form>
             </div>
 
 
@@ -326,6 +341,14 @@
 
                             {{/useimages}}
                             <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editurl">URL в  iнтернет магазинi</label>
+                                <div class="col-7">
+                                    <input class="form-control" zippy="editurl"/>
+
+                                </div>
+                            </div>
+                           
+                            <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editdescription">Опис</label>
                                 <div class="col-7">
                                     <textarea class="form-control" zippy="editdescription"></textarea>
@@ -380,7 +403,7 @@
 
         <div id="pform" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
              aria-hidden="true">
-            <div class="modal-dialog modal-sm">
+            <div class="modal-dialog  ">
                 <div class="modal-content">
                     <div class="modal-body">
                         <table>
@@ -418,7 +441,7 @@
                 }
             }
 
-            function check_delete() {
+            function check_deleteall() {
                 return confirm("Видалити  ТМЦ?")
             }
 

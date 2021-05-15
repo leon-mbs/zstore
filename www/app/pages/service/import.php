@@ -50,6 +50,8 @@ class Import extends \App\Pages\Base
         $form->add(new CheckBox("passfirst"));
         $form->add(new CheckBox("preview"));
         $form->add(new CheckBox("checkname"));
+        $form->add(new CheckBox("showprice"));
+        $form->add(new CheckBox("showshop"));
 
         $form->onSubmit($this, "onImport");
 
@@ -104,6 +106,19 @@ class Import extends \App\Pages\Base
         $this->iform->colqty->setVisible($t == 1);
         $this->iform->store->setVisible($t == 1);
         $this->iform->colinprice->setVisible($t == 1);
+        if($t==2) {
+          $this->iform->checkname->setVisible(false);
+          $this->iform->showprice->setVisible(false);
+          $this->iform->showshop->setVisible(false);
+          $this->iform->colname->setVisible(false);
+          $this->iform->colbarcode->setVisible(false);
+          $this->iform->colgr->setVisible(false);
+          $this->iform->colmsr->setVisible(false);
+          $this->iform->coldesc->setVisible(false);
+          $this->iform->colqty->setVisible(false);
+          $this->iform->colinprice->setVisible(false);
+            
+        }
     }
 
     public function onImport($sender) {
@@ -130,7 +145,7 @@ class Import extends \App\Pages\Base
         $colmsr = $this->iform->colmsr->getValue();
         $colbrand = $this->iform->colbrand->getValue();
         $coldesc = $this->iform->coldesc->getValue();
-        if ($colname === '0') {
+        if ($colname === '0' && $t != 2) {
             $this->setError('noselcolname');
             return;
         }
@@ -195,6 +210,40 @@ class Import extends \App\Pages\Base
         $newitems = array();
         foreach ($data as $row) {
 
+            $price1 = str_replace(',', '.', trim($row[$colprice1]));
+            $price2 = str_replace(',', '.', trim($row[$colprice2]));
+            $price3 = str_replace(',', '.', trim($row[$colprice3]));
+            $price4 = str_replace(',', '.', trim($row[$colprice4]));
+            $price5 = str_replace(',', '.', trim($row[$colprice5]));
+            $itemcode = trim($row[$colcode]);
+            $colbrand = trim($row[$colbrand]);
+           
+            if ($t == 2){   //обновление  цен
+                
+                if(strlen($itemcode)==0) continue;
+                if(strlen($colbrand)>0) {
+                    $it = Item::getFirst('item_code='.Item::qstr($itemcode). " and manufacturer = ".Item::qstr($colbrand) )  ;
+                }   else {
+                    $it = Item::getFirst('item_code='.Item::qstr($itemcode))  ;
+                }
+                if($it==null) continue;
+                
+                if($price1>0) $it->price1 = $price1;
+                if($price2>0) $it->price2 = $price2;
+                if($price3>0) $it->price3 = $price3;
+                if($price4>0) $it->price4 = $price4;
+                if($price5>0) $it->price5 = $price5;
+                
+                
+                $it->save() ;
+                $cnt++;
+                
+                continue;
+            }
+             
+             
+            
+            
             $catname = $row[$colgr];
             if (strlen($catname) > 0) {
                 $cat = Category::getFirst('cat_name=' . Category::qstr($catname));
@@ -242,7 +291,7 @@ class Import extends \App\Pages\Base
                         $item->msr = trim($row[$colmsr]);
                     }
                     if (strlen($row[$colbrand]) > 0) {
-                        $item->manufacturer = trim($row[$colbrand]);
+                        $item->manufacturer = $colbrand ;
                     }
                     if (strlen(trim($row[$coldesc])) > 0) {
                         $item->description = trim($row[$coldesc]);
@@ -274,6 +323,10 @@ class Import extends \App\Pages\Base
                     }
 
                     $item->amount = $item->quantity * $item->price;
+                    
+                    $item->noprice=   $this->iform->showprice->isChecked()?1:0 ;
+                    $item->noshop=   $this->iform->showshop->isChecked()?1:0 ;
+                    
                     $item->save();
                     $cnt++;
                     if ($item->quantity > 0) {
