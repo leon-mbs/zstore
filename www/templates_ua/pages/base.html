@@ -136,28 +136,7 @@
                 <div class="sidebar">
                     <nav class="mt-2">
                         <ul class="nav  nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                            {{#shopmenu}}
-                            <li class="nav-item  ">
-                                <a href="/index.php" class="nav-link">
-                                    <i class="nav-icon fa fa-shopping-cart"></i>
-                                    <p>
-                                        Головна Магазин
-
-                                    </p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item  ">
-                                <a href="/store" class="nav-link">
-                                    <i class="nav-icon fa fa-home"></i>
-                                    <p>
-                                        Головна Склад
-
-                                    </p>
-                                </a>
-                            </li>
-                            {{/shopmenu}}
-                            {{^shopmenu}}
+                     
                             <li class="nav-item  ">
                                 <a href="/index.php" class="nav-link">
                                     <i class="nav-icon fa fa-home"></i>
@@ -166,7 +145,7 @@
                                     </p>
                                 </a>
                             </li>
-                            {{/shopmenu}}
+                      
                             <li class="nav-item  ">
                                 <a href="?p=/App/Pages/Main" class="nav-link">
                                     <i class="nav-icon fa fa-chart-pie"></i>
@@ -446,6 +425,12 @@
                                         </a>
                                         <ul class="nav nav-treeview">
                                             <li class="nav-item">
+                                                <a href="/shop" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>
+                                                    <p>&nbsp;&nbsp;Перейти  до  каталогу</p>
+                                                </a>
+                                            </li>
+                                           <li class="nav-item">
                                                 <a href="/index.php?p=App/Modules/Shop/Pages/GroupList" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
                                                     <p>&nbsp;&nbsp;Атрибути товарiв</p>

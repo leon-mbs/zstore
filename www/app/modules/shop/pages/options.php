@@ -41,6 +41,7 @@ class Options extends \App\Pages\Base
         $this->shop->add(new CheckBox('uselogin'));
         $this->shop->add(new CheckBox('usefilter'));
         $this->shop->add(new CheckBox('usefeedback'));
+        $this->shop->add(new CheckBox('usemainpage'));
         $this->shop->add(new CheckBox('createnewcust'));
 
         $this->add(new Form('texts'))->onSubmit($this, 'saveTextsOnClick');
@@ -65,6 +66,7 @@ class Options extends \App\Pages\Base
         $this->shop->usefilter->setChecked($shop['usefilter']);
         $this->shop->createnewcust->setChecked($shop['createnewcust']);
         $this->shop->usefeedback->setChecked($shop['usefeedback']);
+        $this->shop->usemainpage->setChecked($shop['usemainpage']);
         $this->shop->shopname->setText($shop['shopname']);
         $this->shop->email->setText($shop['email']);
         $this->shop->currencyname->setText($shop['currencyname']);
@@ -101,6 +103,7 @@ class Options extends \App\Pages\Base
         $shop['usefilter'] = $this->shop->usefilter->isChecked() ? 1 : 0;
         $shop['createnewcust'] = $this->shop->createnewcust->isChecked() ? 1 : 0;
         $shop['usefeedback'] = $this->shop->usefeedback->isChecked() ? 1 : 0;
+        $shop['usemainpage'] = $this->shop->usemainpage->isChecked() ? 1 : 0;
 
         $file = $sender->logo->getFile();
         if (strlen($file["tmp_name"]) > 0) {
