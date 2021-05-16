@@ -35,13 +35,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["useval"] = $options['useval'] == 1;
         $this->_tvars["usecattree"] = $options['usecattree'] == 1;
         $this->_tvars["usemobileprinter"] = $options['usemobileprinter'] == 1;
-        if (System::getSession()->defbranch > 0) {
-            $this->branch_id = System::getSession()->defbranch;
-            System::setBranch($this->branch_id);
-        }
-        if($this->branch_id==null) {
-            $this->branch_id =0;
-        }
+
 
 
         $blist = array();
@@ -53,6 +47,16 @@ class Base extends \Zippy\Html\WebPage
                 $this->branch_id = array_pop($k);
                 System::setBranch($this->branch_id);
             }
+            
+            //куки  после  логина
+            if (System::getSession()->defbranch > 0 && $this->branch_id == 0) {
+              $this->branch_id = System::getSession()->defbranch;
+              System::setBranch($this->branch_id);
+            }
+            if($this->branch_id==null) {
+                $this->branch_id =0;
+            }          
+            
         }
         //форма  филиалов       
         $this->add(new \Zippy\Html\Form\Form('nbform'));
@@ -295,7 +299,7 @@ class Base extends \Zippy\Html\WebPage
         if ($user->defmf == 0) {
             $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("nodefmf") . "\"");
         }
-
+        if(count( $this->_tvars["toasts"])==0)$this->_tvars["toasts"][] = array('title' => '');
         \App\Session::getSession()->toasts = true;
     }
 

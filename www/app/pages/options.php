@@ -100,6 +100,7 @@ class Options extends \App\Pages\Base
 
         $this->common->usesnumber->setChecked($common['usesnumber']);
 
+        $this->common->usemobileprinter->setChecked($common['usemobileprinter']);
         $this->common->showactiveusers->setChecked($common['showactiveusers']);
         $this->common->usecattree->setChecked($common['usecattree']);
         $this->common->usescanner->setChecked($common['usescanner']);
@@ -138,7 +139,7 @@ class Options extends \App\Pages\Base
         $this->add(new Form('printer'))->onSubmit($this, 'savePrinterOnClick');
         $this->printer->add(new TextInput('pwidth'));
         $this->printer->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList()));
-        $this->printer->add(new DropDownChoice('barcodetype', array('EAN13' => 'EAN-13', 'EAN8' => 'EAN-8', 'C128' => 'Code128', 'C39' => 'Code39'), 'EAN13'));
+        $this->printer->add(new DropDownChoice('barcodetype', array('EAN13' => 'EAN-13', 'EAN8' => 'EAN-8', 'C128' => 'Code128', 'C39' => 'Code39'), 'Code128'));
         $this->printer->add(new DropDownChoice('pfontsize', array('12' => '12', '14' => '14', '16' => '16', '20' => '20', '24' => '24', '28' => '28', '36' => '36',), '16'));
         $this->printer->add(new CheckBox('pname'));
         $this->printer->add(new CheckBox('pcode'));
@@ -256,7 +257,7 @@ class Options extends \App\Pages\Base
         $common['shopname'] = $this->common->shopname->getText();
         $common['ts_break'] = $this->common->ts_break->getText();
         $common['ts_start'] = $this->common->ts_start->getText();
-        $common['ts_end'] = $this->common->ts_end->getText();
+        $common['ts_end']   = $this->common->ts_end->getText();
         $common['checkslogan'] = $this->common->checkslogan->getText();
 
         $common['autoarticle'] = $this->common->autoarticle->isChecked() ? 1 : 0;
@@ -265,6 +266,7 @@ class Options extends \App\Pages\Base
         $common['usescanner'] = $this->common->usescanner->isChecked() ? 1 : 0;
         $common['useimages'] = $this->common->useimages->isChecked() ? 1 : 0;
 
+        $common['usemobileprinter'] = $this->common->usemobileprinter->isChecked() ? 1 : 0;
         $common['showactiveusers'] = $this->common->showactiveusers->isChecked() ? 1 : 0;
         $common['usecattree'] = $this->common->usecattree->isChecked() ? 1 : 0;
         $common['usebranch'] = $this->common->usebranch->isChecked() ? 1 : 0;

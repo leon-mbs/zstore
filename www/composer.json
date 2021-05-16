@@ -17,8 +17,9 @@
         "dompdf/dompdf": "v0.8.5",
         "firebase/php-jwt": "v5.0.0",
         "roave/security-advisories": "dev-master",
-        "picqer/php-barcode-generator": "v0.3",
-     
+        "picqer/php-barcode-generator": "v2.0.1",
+         "endroid/qr-code": "3.9.6",
+
         "masterexploder/phpthumb" :"*",
         "lemmon/fetch" :"v0.3.0",
         "lis-dev/nova-poshta-api-2" :"0.1.6",
@@ -28,7 +29,7 @@
         "symfony/polyfill-mbstring": "v1.22.0",
         "symfony/polyfill-uuid": "v1.22.0",
        
-        "leon-mbs/zippy": "2.2.9"
+        "leon-mbs/zippy": "2.2.10"
 
     }
 }

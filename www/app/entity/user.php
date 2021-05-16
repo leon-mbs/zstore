@@ -199,4 +199,22 @@ class User extends \ZCL\DB\Entity
         $this->_options[$key] = $value;
     }
 
+    
+    public  static function getByBranch($branch_id) {
+        $users = array();
+        
+        foreach(User::find('disabled <> 1','username') as $u){
+            if($u->userrole=='admins' || $branch_id==0) {
+              $users[$u->user_id]=$u->username ;
+              continue;       
+            }
+            $br =  explode(',', $u->aclbranch) ;
+            if(in_array($branch_id,$br)){
+                $users[$u->user_id]=$u->username ;  
+            }
+            
+        }
+        return  $users;  
+    }
+    
 }

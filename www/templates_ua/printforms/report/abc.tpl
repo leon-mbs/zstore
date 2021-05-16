@@ -7,7 +7,7 @@
     <tr style="font-weight: bolder;">
 
         <th   style="border-bottom:1px #000 solid;">Назва</th>
-        <th   style="border-bottom:1px #000 solid;" align="right">Знач., Тис.</th>
+        <th   style="border-bottom:1px #000 solid;" align="right">Знач. </th>
         <th   style="border-bottom:1px #000 solid;" align="right">%</th>
         <th   style="border-bottom:1px #000 solid;"></th>
     </tr>

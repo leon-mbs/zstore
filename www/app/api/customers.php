@@ -20,6 +20,7 @@ class customers extends \App\API\Base\JsonRPC
                 'phone'         => $cust->phone,
                 'email'         => $cust->email,
                 'city'          => $cust->city,
+                'country'       => $cust->country,
                 'address'       => $cust->address,
                 'description'   => base64_encode($cust->comment)
             );

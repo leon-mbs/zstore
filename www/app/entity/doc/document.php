@@ -128,9 +128,7 @@ class Document extends \ZCL\DB\Entity
         $this->content = "<doc><header>";
 
         foreach ($this->headerdata as $key => $value) {
-            if ($key > 0) {
-                continue;
-            }
+            
 
             if (strpos($value, '[CDATA[') !== false) {
                 \App\System::setWarnMsg('CDATA в  поле  обьекта');
@@ -169,7 +167,13 @@ class Document extends \ZCL\DB\Entity
             return;
         }
         foreach ($xml->header->children() as $child) {
-            $this->headerdata[(string)$child->getName()] = (string)$child;
+          /*  $ch = (string)$child;
+            if(is_numeric($ch)) {
+                   if(ctype_digit($ch))  $ch = intval($ch);
+                   else $ch = doubleval($ch)  ;
+            }            
+            */
+            $this->headerdata[(string)$child->getName()] =$ch ;
         }
         $this->detaildata = array();
 
@@ -367,10 +371,7 @@ class Document extends \ZCL\DB\Entity
         if ($oldstate != $state) {
             $doc = $this->cast();
             $doc->onState($state);
-            
-            
-          
-            
+             
             \App\Entity\Subscribe::onDocumentState($doc->document_id, $state);
         }
 

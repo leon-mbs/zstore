@@ -73,26 +73,14 @@ class Warranty extends \App\Pages\Base
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
                     $this->docform->customer->setText($basedoc->headerdata['customer_name']);
+                    $this->_tovarlist = $basedoc->unpackDetails('detaildata');
 
                     if ($basedoc->meta_name == 'GoodsIssue') {
-                        $this->_tovarlist = array();
-                        $itemlist = $basedoc->unpackDetails('detaildata');
-                        foreach ($itemlist as $it) {
-
-                            $this->_tovarlist[$it->item_id] = $it;
-                        }
+                        
                     }
-                    if ($basedoc->meta_name == 'TTN') {
-
-
-                        $this->_tovarlist = $basedoc->unpackDetails('detaildata');
-                    }
-                    if ($basedoc->meta_name == 'POSCheck') {
-
-
-                        $this->_tovarlist = $basedoc->unpackDetails('detaildata');
-                    }
-                }
+                   
+                     
+                
             }
         }
 
@@ -100,6 +88,7 @@ class Warranty extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
+    }
     }
 
     public function detailOnRow($row) {
@@ -120,10 +109,10 @@ class Warranty extends \App\Pages\Base
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
-        $tovar = $sender->owner->getDataItem();
-        // unset($this->_tovarlist[$tovar->tovar_id]);
-
-        $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->item_id => $this->_tovarlist[$tovar->item_id]));
+        $item = $sender->owner->getDataItem();
+        $this->_tovarlist = array_diff_key($this->_tovarlist, array($item->rowid => $this->_tovarlist[$item->rowid]));
+    
+        
         $this->docform->detail->Reload();
     }
 
@@ -139,7 +128,7 @@ class Warranty extends \App\Pages\Base
         $this->editdetail->editsn->setText($item->sn);
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
-        $this->_rowid = $item->item_id;
+        $this->_rowid = $item->rowid;
     }
 
     public function addrowOnClick($sender) {
@@ -163,8 +152,17 @@ class Warranty extends \App\Pages\Base
         $item->price = $this->editdetail->editprice->getText();
         $item->sn = $this->editdetail->editsn->getText();
         $item->warranty = $this->editdetail->editwarranty->getText();
+      
+        if ($this->_rowid > 0) {
+            $item->rowid = $this->_rowid;
+        } else {
+            $next = count($this->_tovarlist) > 0 ? max(array_keys($this->_tovarlist)) : 0;
+            $item->rowid = $next + 1;
+        }
+        $this->_tovarlist[$item->rowid] = $item;
 
-        $this->_tovarlist[$item->item_id] = $item;
+        $this->_rowid = 0;
+        
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();

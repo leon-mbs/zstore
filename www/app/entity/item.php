@@ -61,6 +61,7 @@ class Item extends \ZCL\DB\Entity
         $this->warranty = (string)$xml->warranty[0];
         $this->extdata = (string)$xml->extdata[0];
         $this->sef = (string)$xml->sef[0];
+        $this->url = (string)$xml->url[0];
 
         $this->cell = (string)$xml->cell[0];
         //  $this->octoreoptions = (string) $xml->octoreoptions[0];
@@ -127,6 +128,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<lost>{$this->lost}</lost>";
         $this->detail .= "<customsize>{$this->customsize}</customsize>";
         $this->detail .= "<sef>{$this->sef}</sef>";
+        $this->detail .= "<url>{$this->url}</url>";
 
         //упаковываем  цены  по  филиалам
         $brprice = serialize($this->brprice);

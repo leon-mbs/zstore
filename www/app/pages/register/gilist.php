@@ -630,6 +630,16 @@ class GIList extends \App\Pages\Base
             $this->_doc->save();
             $this->setSuccess(H::l("npnewdec", $this->_doc->headerdata['ship_number']));
 
+            
+           $order = Document::load($this->_doc->parent_id);
+            if ($order instanceof Document) {
+                if ($order->state == Document::STATE_READYTOSHIP ) {
+                    $order->updateStatus(Document::STATE_INSHIPMENT) ;   
+                }
+            }
+            
+            
+            
             $this->statuspan->setVisible(false);
             $this->listpan->setVisible(true);
             $this->nppan->setVisible(false);

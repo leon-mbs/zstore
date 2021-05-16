@@ -37,9 +37,13 @@
                     </form>
                 </div>
                 <a zippy="addnew" class="btn btn-primary  ">Добавить</a>
-                <table class="table table-hover  table-sm  ">
+                  <form zippy="listform">
+                  <table class="table table-hover  table-sm  ">
                     <tr>
-                        {{#useimages}}
+                        <th onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
+                                            style="width:30px;cursor:pointer" title="Снять/выставить флажки"><i
+                                                class="fa fa-check-double "></i></th>                    
+                       {{#useimages}}
                         <th></th>
                         {{/useimages}}
                         <th>Наименование</th>
@@ -61,12 +65,14 @@
                         {{/usesnumber}}
                         <th></th>
                         <th></th>
+                        <th></th>
 
 
-                        <th style="width:150px"></th>
+                        <th  ></th>
                     </tr>
                     <tr zippy="itemlist">
-                        {{#useimages}}
+                            <td><input  zippy="seldel" class="seldel" type="checkbox"></td>
+                       {{#useimages}}
                         <td>
                             <a zippy="imagelistitem" data-type="image" data-toggle="lightbox"  > <img
                                     style="float:left; width:64px"></a>
@@ -97,17 +103,26 @@
                                data-html="true"></i></td>
 
                         <td><a zippy="set" title="Комплекты"><i class="fa fa-cogs"></i></a> &nbsp;</td>
+                        <td  >
+                            <a zippy="printqr" title="Друк QR коду"><i class="fa fa-qrcode"></i></a>
+                        </td>
+                       
                         <td aling="center">
 
 
-                            <a zippy="print" title="Печатать этикетку"><i class="fa fa-print"></i></a>&nbsp;&nbsp;
                             <a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> &nbsp;
-                            <a zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a>
-
+                          
                         </td>
                     </tr>
+                    <tr><td colspan="9">
+                    <a class="text-danger" zippy="deleteall" title="Удалить(деактивировать)"><i class="fa fa-trash"></i></a>&nbsp;&nbsp;   &nbsp;&nbsp;
+                    <a  zippy="printall" title="Печать маркировки"><i class="fa fa-print"></i></a>&nbsp;&nbsp;    &nbsp;&nbsp;
+                    в категорию  <select   zippy="allcat"><option value="0">Не  выбрана</select>
+                    </td> </tr>
+                      
                 </table>
                 <div zippy="pag"></div>
+                </form>
             </div>
 
 
@@ -321,11 +336,20 @@
                                         <label class="form-check-label" data-label="editdelimage" for="editdelimage">Удалить
                                             избражение</label>
                                     </div>
-                                    <small>Изображение  должно  быть квадратным  иначе  будет  обрезано</small>
+                                    <small>Изображение  должно  быть примерно квадратным  иначе  будет  обрезано</small>
                                 </div>
                             </div>
 
                             {{/useimages}} 
+                             <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editurl">URL в  интернет магазине</label>
+                                <div class="col-7">
+                                    <input class="form-control" zippy="editurl"/>
+
+                                </div>
+                            </div>
+                            
+                            
                             <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editdescription">Описание</label>
                                 <div class="col-7">
@@ -382,7 +406,7 @@
 
         <div id="pform" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
              aria-hidden="true">
-            <div class="modal-dialog modal-sm">
+            <div class="modal-dialog  ">
                 <div class="modal-content">
                     <div class="modal-body">
                         <table>
@@ -420,11 +444,13 @@
                 }
             }
 
-            function check_delete() {
-                return confirm("Удалить  ТМЦ?")
+         function check_deleteall() {
+
+                return confirm("Удалить ТМЦ?")
+
             }
 
         </script>
-
+        
     </body>
 </html>

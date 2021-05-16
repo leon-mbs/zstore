@@ -66,9 +66,9 @@ class StockList extends \App\Pages\Base
 
         $row->add(new Label('partion', H::fa($doc->partion)));
         $row->add(new Label('qty', H::fqty($doc->quantity)));
-        $price = $doc->quantity >= 0 ? '' : H::fa($doc->extcode + $doc->partion);
+        $price = $doc->quantity >= 0 ?   H::fa($doc->outprice  )  : '';
         if ($doc->meta_name == 'ReturnIssue') {
-            $price = H::fa((0 - $doc->extcode) + $doc->partion);
+            $price = H::fa((0 - $doc->outprice)  );
         }
 
         $row->add(new Label('price', $price));
@@ -147,7 +147,7 @@ class StockListDataSource implements \Zippy\Interfaces\DataSource
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
         $conn = \ZDB\DB::getConnect();
-        $sql = "select e.extcode,e.entry_id, e.quantity,  e.amount  , d.document_id, d.document_number,d.document_date,s.partion,s.snumber from documents   d ";
+        $sql = "select e.outprice,e.entry_id, e.quantity,  e.amount  , d.document_id, d.document_number,d.document_date,s.partion,s.snumber from documents   d ";
         $sql .= " join `entrylist` e on d.`document_id` = e.`document_id` ";
         $sql .= " join `store_stock` s on s.`stock_id` = e.`stock_id` ";
         $sql .= " where " . $this->getWhere() . " order  by  entry_id     ";
