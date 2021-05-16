@@ -182,7 +182,7 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('inseria'))->setVisible($item->useserial);
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
-        $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+        
         $row->add(new ClickLink('set'))->onClick($this, 'setOnClick');
         $row->set->setVisible($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD);
 
@@ -200,25 +200,7 @@ class ItemList extends \App\Pages\Base
            
     }
 
-    public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkDelRef('ItemList')) {
-            return;
-        }
-
-        $item = $sender->owner->getDataItem();
-
-        if ($item->allowDelete()) {
-            Item::delete($item->item_id);
-        } else {
-            $this->setWarn("delitemwarn");
-            $item->disabled = 1;
-            $item->save();
-        }
-
-
-        $this->itemtable->listform->itemlist->Reload(false);
-        $this->resetURL();
-    }
+ 
 
     public function editOnClick($sender) {
         $item = $sender->owner->getDataItem();

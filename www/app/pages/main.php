@@ -206,7 +206,7 @@ class Main extends Base
             $mon[] = $m['name'];
 
             $sql = "
-           select  coalesce(sum(0-e.`amount`)) as summa 
+           select  coalesce(sum(0-(e.outprice*e.quantity))) as summa 
               from `entrylist_view`  e
 
               join `items_view` i on e.`item_id` = i.`item_id`
@@ -223,7 +223,7 @@ class Main extends Base
             $tstov[] = abs(round($conn->GetOne($sql)));
 
             $sql = "
-           select  coalesce( sum(0-e.`amount`) ) as summa     
+           select  coalesce( sum(0-(e.outprice*e.quantity)) ) as summa     
               from `entrylist_view`  e
 
               join `services` s on e.`service_id` = s.`service_id`

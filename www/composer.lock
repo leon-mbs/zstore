@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "674b8c588a4ad21a9ddb5d0932de5e91",
+    "content-hash": "a935492e8867814d9c68e861bef140cb",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -868,16 +868,16 @@
         },
         {
             "name": "leon-mbs/zippy",
-            "version": "2.2.9",
+            "version": "2.2.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/zippy.git",
-                "reference": "18e946ffd99ae0f5cacf055ce318168bca5586f4"
+                "reference": "c58d3548c96927788c9622c632112df09eefb456"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/18e946ffd99ae0f5cacf055ce318168bca5586f4",
-                "reference": "18e946ffd99ae0f5cacf055ce318168bca5586f4",
+                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/c58d3548c96927788c9622c632112df09eefb456",
+                "reference": "c58d3548c96927788c9622c632112df09eefb456",
                 "shasum": ""
             },
             "require": {
@@ -909,9 +909,9 @@
             ],
             "support": {
                 "issues": "https://github.com/leon-mbs/zippy/issues",
-                "source": "https://github.com/leon-mbs/zippy/tree/2.2.9"
+                "source": "https://github.com/leon-mbs/zippy/tree/2.2.10"
             },
-            "time": "2021-05-07T06:54:38+00:00"
+            "time": "2021-05-11T18:37:08+00:00"
         },
         {
             "name": "lis-dev/nova-poshta-api-2",
@@ -2203,12 +2203,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "630d41ce85b7af3598a7d2c07952739da298ecc6"
+                "reference": "5ffdb87f627ff16cc392e30515a1fe069cddc3e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/630d41ce85b7af3598a7d2c07952739da298ecc6",
-                "reference": "630d41ce85b7af3598a7d2c07952739da298ecc6",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/5ffdb87f627ff16cc392e30515a1fe069cddc3e2",
+                "reference": "5ffdb87f627ff16cc392e30515a1fe069cddc3e2",
                 "shasum": ""
             },
             "conflict": {
@@ -2449,7 +2449,7 @@
                 "symfony/security-core": ">=2.4,<2.6.13|>=2.7,<2.7.9|>=2.7.30,<2.7.32|>=2.8,<3.4.48|>=4,<4.4.23|>=5,<5.2.8",
                 "symfony/security-csrf": ">=2.4,<2.7.48|>=2.8,<2.8.41|>=3,<3.3.17|>=3.4,<3.4.11|>=4,<4.0.11",
                 "symfony/security-guard": ">=2.8,<3.4.48|>=4,<4.4.23|>=5,<5.2.8",
-                "symfony/security-http": ">=2.3,<2.3.41|>=2.4,<2.7.51|>=2.8,<2.8.50|>=3,<3.4.26|>=4,<4.2.12|>=4.3,<4.3.8|>=4.4,<4.4.7|>=5,<5.0.7|>=5.1,<5.2.8",
+                "symfony/security-http": ">=2.3,<2.3.41|>=2.4,<2.7.51|>=2.8,<3.4.48|>=4,<4.4.23|>=5,<5.2.8",
                 "symfony/serializer": ">=2,<2.0.11",
                 "symfony/symfony": ">=2,<3.4.48|>=4,<4.4.23|>=5,<5.2.8",
                 "symfony/translation": ">=2,<2.0.17",
@@ -2551,7 +2551,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-05-12T16:13:16+00:00"
+            "time": "2021-05-13T21:03:10+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",

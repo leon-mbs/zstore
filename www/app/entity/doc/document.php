@@ -167,7 +167,13 @@ class Document extends \ZCL\DB\Entity
             return;
         }
         foreach ($xml->header->children() as $child) {
-            $this->headerdata[(string)$child->getName()] = (string)$child;
+          /*  $ch = (string)$child;
+            if(is_numeric($ch)) {
+                   if(ctype_digit($ch))  $ch = intval($ch);
+                   else $ch = doubleval($ch)  ;
+            }            
+            */
+            $this->headerdata[(string)$child->getName()] =$ch ;
         }
         $this->detaildata = array();
 

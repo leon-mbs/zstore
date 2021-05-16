@@ -1,5 +1,28 @@
   
-     
+  CREATE TABLE `custacc` (
+  `ca_id` int(11) NOT NULL AUTO_INCREMENT,
+  `customer_id` int(11) NOT NULL,
+  `document_id` int(11) DEFAULT NULL,
+  `optype` int(11) DEFAULT '0',
+ 
+  `amount` decimal(10,2) NOT NULL,
+  `createdon` date NOT NULL,
+  PRIMARY KEY (`ca_id`),
+  KEY `customer_id` (`customer_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE   VIEW `custacc_view` AS 
+  select 
+    `c`.`ca_id` AS `ca_id`,
+    `c`.`customer_id` AS `customer_id`,
+    `c`.`document_id` AS `document_id`,
+    `c`.`optype` AS `optype`,
+   
+    `c`.`amount` AS `amount`,
+    `d`.`document_number` AS `document_number`,
+    `c`.`createdon` AS `createdon`  
+  from 
+    (`custacc` `c` join `documents` `d` on((`d`.`document_id` = `c`.`document_id`)));       
      
 /*  
 

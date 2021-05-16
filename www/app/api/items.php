@@ -29,6 +29,10 @@ class items extends \App\API\Base\JsonRPC
         }
         return $list;
     }
+    //список  типов ТМЦ
+    public function typelist() {
+        return Item::getTypes();
+    }
 
     // список артикулов
     public function articlelist() {
@@ -56,21 +60,37 @@ class items extends \App\API\Base\JsonRPC
         if ($args['cat'] > 0) {
             $w .= " and cat_id=" . $args['cat'];
         }
+        if ($args['item_type'] > 0) {
+            $w .= " and item_type=" . $args['item_type'];
+        }
+        if (strlen($args['item_code']) > 0) {
+            $w .= " and item_code=" . Item::qstr($args['item_code']);
+        }
+        if (strlen($args['bar_code']) > 0) {
+            $w .= " and bar_code=" . Item::qstr($args['bar_code']);
+        }
 
         foreach (Item::find($w, 'itemname') as $item) {
             $plist = array();
 
-            $it = $it = array(
+            $it   = array(
                 'item_code'    => $item->item_code,
                 'bar_code'     => $item->bar_code,
                 'itemname'     => $item->itemname,
                 'description'  => base64_encode($item->description),
                 'measure'      => $item->msr,
+                'item_type'      => $item->item_type,
                 'manufacturer' => $item->manufacturer,
                 'cat_name'     => $item->cat_name,
                 'cat_id'       => $item->cat_id
             );
-
+            
+            $it = array_merge($it,$item->getData())   ;
+           
+            unset($it['detail']);
+            unset($it['disabled']);
+           
+           
             if (strlen($item->price1) > 0) {
                 $it['price1'] = $item->price1;
             }
@@ -131,10 +151,11 @@ class items extends \App\API\Base\JsonRPC
         $item->item_code = $args['item_code'];
         $item->bar_code = $args['bar_code'];
         $item->itemname = $args['itemname'];
-        $item->measure = $args['measure'];
+        $item->msr = $args['measure'];
         $item->manufacturer = $args['manufacturer'];
         $item->description = @base64_decode($args['description']);
         $item->cat_id = $args['cat_id'];
+        $item->item_type = $args['item_type'];
 
         if ($args['price1'] > 0) {
             $item->price1 = $args['price1'];
