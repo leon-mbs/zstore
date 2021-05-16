@@ -54,12 +54,13 @@ class Warranty extends \App\Pages\Base
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
-
+        $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'));
+   
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
 
-            $this->docform->customer->setKey($this->_doc->customer_id);
+           // $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->notes->setText($this->_doc->notes);
@@ -84,11 +85,15 @@ class Warranty extends \App\Pages\Base
             }
         }
 
-        $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
+        
+      }
+      
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
-    }
+        
+        $this->docform->detail->Reload();
+      
     }
 
     public function detailOnRow($row) {

@@ -35,7 +35,7 @@ try {
     
     $app = new \App\Application();
 
-    if ($_config['modules']['shop'] == 1) {
+    if ($_config['modules']['shop'] == 1 && \App\System::getOption('shop','usemainpage')==1 ) {
         $app->Run('\App\Modules\Shop\Pages\Main');
     } else {
         $app->Run($mainpage);

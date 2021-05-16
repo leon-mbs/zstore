@@ -308,6 +308,7 @@ class CustomerList extends \App\Pages\Base
 
             $this->_customer->status = $this->customerdetail->editdisabled->isChecked() ? 1 : 0;
         }
+        $this->_customer->jurid = $this->customerdetail->editjurid->isChecked() ? 1 : 0;
         $this->_customer->nosubs = $this->customerdetail->editnosubs->isChecked() ? 1 : 0;
 
         $this->_customer->isholding = $this->customerdetail->editisholding->isChecked() ? 1 : 0;
