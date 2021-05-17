@@ -19,7 +19,10 @@ abstract class JsonRPC
         // $request = '{"jsonrpc": "2.0", "method": "checkstatus", "params":{"numbers": ["ID0001"]}, "id": 1}';
         //  $request = '{"jsonrpc": "2.0", "method": "createorder", "params":{"number":"ID0001","phone":"0971111111","ship_address":"Харьков","items":[{"item_code":"cbs500-1","quantity":2,"price":234},{"item_code":"ID0018","quantity":2,"price":234}] },   "id": 1}';
 
-
+         if($_SERVER['REQUEST_METHOD'] !='POST'){
+             die('Must  be POST method');
+         }
+         
         if (!is_string($request)) {
             $response = self::parseError();
         } else {
