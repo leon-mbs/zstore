@@ -80,7 +80,9 @@ class Warranty extends \App\Pages\Base
                         
                     }
                    
-                     
+                    if(count($basedoc->getChildren('Warranty'))>0 ){
+                        $this->setWarn('alreadywar') ;
+                    } 
                 
             }
         }
