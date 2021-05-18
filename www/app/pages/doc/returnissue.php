@@ -98,6 +98,17 @@ class ReturnIssue extends \App\Pages\Base
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
 
+                    $d = $basedoc->getChildren('ReturnIssue');
+
+                    if (count($d) > 0) {
+
+                        $this->setError('return_exists');
+                        App::Redirect("\\App\\Pages\\Register\\DocList" );
+                        return;                         
+                    }
+                        
+                    
+                    
                     if ($basedoc->meta_name == 'GoodsIssue') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->customer->setKey($basedoc->customer_id);
@@ -395,6 +406,32 @@ class ReturnIssue extends \App\Pages\Base
             $this->setError("noselstore");
         }
 
+        $base = Document::load($this->_basedocid) ;
+        if($base instanceof Document){
+            $base = $base->cast();
+            $bt = $base->unpackDetails('detaildata');
+            
+            if(is_array($bt)){
+            
+                foreach($this->_tovarlist as $t){
+                    $ok = false;                                
+                    foreach($bt as $b) {
+                        if($b->item_id == $t->item_id && $b->price == $t->price)  {
+                           $ok = true;break;   
+                        }
+                    }
+                    if($ok == false) {
+                        $this->setError("thesameitempriceret");
+                        break;
+                    }
+                    
+                }
+            }
+        }
+        
+        
+        
+        
         return !$this->isError();
     }
 

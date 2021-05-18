@@ -316,7 +316,7 @@ class Options extends \App\Pages\Base
         $this->api->aexp->setVisible($type == 1);
         $this->api->akey->setVisible($type == 1);
 
-        //  $this->goAnkor('atype');
+        $this->goAnkor('atype');
     }
 
     public function saveApiOnClick($sender) {

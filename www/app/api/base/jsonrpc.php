@@ -19,26 +19,36 @@ abstract class JsonRPC
         // $request = '{"jsonrpc": "2.0", "method": "checkstatus", "params":{"numbers": ["ID0001"]}, "id": 1}';
         //  $request = '{"jsonrpc": "2.0", "method": "createorder", "params":{"number":"ID0001","phone":"0971111111","ship_address":"Харьков","items":[{"item_code":"cbs500-1","quantity":2,"price":234},{"item_code":"ID0018","quantity":2,"price":234}] },   "id": 1}';
 
+         if($_SERVER['REQUEST_METHOD'] !='POST'){
+             echo json_encode(self::error($id, -1015, "Method  must  be POST" ), JSON_UNESCAPED_UNICODE);
+             return ;
+         }
+        try{
+            if (!is_string($request)) {
+                $response = self::parseError();
+            } else {
+                $json =  json_decode($request, true);
+                $response = $this->processInput($json);
+            }
 
-        if (!is_string($request)) {
-            $response = self::parseError();
-        } else {
-            $json = json_decode($request, true);
-            $response = $this->processInput($json);
-        }
 
-
-        if ($response != null) {
-            echo json_encode($response, JSON_UNESCAPED_UNICODE);
-        } else {
-            http_response_code(200);
+            if ($response != null) {
+                echo json_encode($response, JSON_UNESCAPED_UNICODE);
+            } else {
+                http_response_code(200);
+            }
+        
+        }catch(\Exception $e){
+             echo json_encode(self::error($id, -1016, $e->getMessage() ), JSON_UNESCAPED_UNICODE);
+             return ;
+          
         }
     }
 
     protected function checkAcess() {
         $api = \App\System::getOptions('api');
         $user = null;
-
+           
         //Bearer
         if ($api['atype'] == 1) {
 

@@ -52,7 +52,7 @@ class items extends \App\API\Base\JsonRPC
     }
 
     //  список  ТМЦ
-    public function itemlist() {
+    public function itemlist($args) {
 
         $list = array();
         $w = 'disabled<> 1 ';
@@ -69,7 +69,7 @@ class items extends \App\API\Base\JsonRPC
         if (strlen($args['bar_code']) > 0) {
             $w .= " and bar_code=" . Item::qstr($args['bar_code']);
         }
-
+             
         foreach (Item::find($w, 'itemname') as $item) {
             $plist = array();
 

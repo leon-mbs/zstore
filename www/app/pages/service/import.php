@@ -50,8 +50,8 @@ class Import extends \App\Pages\Base
         $form->add(new CheckBox("passfirst"));
         $form->add(new CheckBox("preview"));
         $form->add(new CheckBox("checkname"));
-        $form->add(new CheckBox("showprice"));
-        $form->add(new CheckBox("showshop"));
+        $form->add(new CheckBox("noshowprice"));
+        $form->add(new CheckBox("noshowshop"));
 
         $form->onSubmit($this, "onImport");
 
@@ -108,8 +108,8 @@ class Import extends \App\Pages\Base
         $this->iform->colinprice->setVisible($t == 1);
         if($t==2) {
           $this->iform->checkname->setVisible(false);
-          $this->iform->showprice->setVisible(false);
-          $this->iform->showshop->setVisible(false);
+          $this->iform->noshowprice->setVisible(false);
+          $this->iform->noshowshop->setVisible(false);
           $this->iform->colname->setVisible(false);
           $this->iform->colbarcode->setVisible(false);
           $this->iform->colgr->setVisible(false);
@@ -216,13 +216,13 @@ class Import extends \App\Pages\Base
             $price4 = str_replace(',', '.', trim($row[$colprice4]));
             $price5 = str_replace(',', '.', trim($row[$colprice5]));
             $itemcode = trim($row[$colcode]);
-            $colbrand = trim($row[$colbrand]);
+            $brand = trim($row[$colbrand]);
            
             if ($t == 2){   //обновление  цен
                 
                 if(strlen($itemcode)==0) continue;
                 if(strlen($colbrand)>0) {
-                    $it = Item::getFirst('item_code='.Item::qstr($itemcode). " and manufacturer = ".Item::qstr($colbrand) )  ;
+                    $it = Item::getFirst('item_code='.Item::qstr($itemcode). " and manufacturer = ".Item::qstr($brand) )  ;
                 }   else {
                     $it = Item::getFirst('item_code='.Item::qstr($itemcode))  ;
                 }
@@ -291,7 +291,7 @@ class Import extends \App\Pages\Base
                         $item->msr = trim($row[$colmsr]);
                     }
                     if (strlen($row[$colbrand]) > 0) {
-                        $item->manufacturer = $colbrand ;
+                        $item->manufacturer = $row[$colbrand] ;
                     }
                     if (strlen(trim($row[$coldesc])) > 0) {
                         $item->description = trim($row[$coldesc]);
@@ -324,8 +324,8 @@ class Import extends \App\Pages\Base
 
                     $item->amount = $item->quantity * $item->price;
                     
-                    $item->noprice=   $this->iform->showprice->isChecked()?1:0 ;
-                    $item->noshop=   $this->iform->showshop->isChecked()?1:0 ;
+                    $item->noprice=   $this->iform->noshowprice->isChecked()?1:0 ;
+                    $item->noshop=   $this->iform->noshowshop->isChecked()?1:0 ;
                     
                     $item->save();
                     $cnt++;
