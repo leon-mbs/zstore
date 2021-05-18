@@ -209,7 +209,7 @@ class Jobs extends \App\Pages\Base
           $where= " ( description like {$text} or title like {$text} or customer_name like {$text}) and user_id=" . System::getUser()->user_id;    
         }
         
-        $this->ds->setWhere();
-        $this->nlist->Reload();
+        $this->ds->setWhere($where);
+        $this->listpan->nlist->Reload();
     }   
 }
