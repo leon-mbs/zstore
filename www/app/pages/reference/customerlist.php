@@ -233,6 +233,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->bonus->setText($this->_customer->bonus);
         $this->customerdetail->editcomment->setText($this->_customer->comment);
         $this->customerdetail->edittype->setValue($this->_customer->type);
+
         $this->customerdetail->editleadsource->setValue($this->_customer->leadsource);
         $this->customerdetail->editleadstatus->setValue($this->_customer->leadstatus);
         $this->customerdetail->editholding->setValue($this->_customer->holding);
@@ -606,6 +607,7 @@ class CustomerList extends \App\Pages\Base
 
         $this->filter->searchleadsource->setOptionList(Customer::getLeadSources());
         $this->customerdetail->editleadsource->setOptionList(Customer::getLeadSources());
+        
     }
 
     public function OnAddLeadSource($sender) {
@@ -658,7 +660,10 @@ class CustomerList extends \App\Pages\Base
         System::setOptions('common', $options);
 
         $this->filter->searchleadstatus->setOptionList(Customer::getLeadStatuses());
+        $this->contentview->conlstform->conleadstatus->setOptionList(Customer::getLeadStatuses());
         $this->customerdetail->editleadstatus->setOptionList(Customer::getLeadStatuses());
+        
+        
     }
 
     public function OnAddLeadStatus($sender) {
