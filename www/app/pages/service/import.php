@@ -221,7 +221,7 @@ class Import extends \App\Pages\Base
             if ($t == 2){   //обновление  цен
                 
                 if(strlen($itemcode)==0) continue;
-                if(strlen($colbrand)>0) {
+                if(strlen($brand)>0) {
                     $it = Item::getFirst('item_code='.Item::qstr($itemcode). " and manufacturer = ".Item::qstr($brand) )  ;
                 }   else {
                     $it = Item::getFirst('item_code='.Item::qstr($itemcode))  ;
