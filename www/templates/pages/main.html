@@ -206,7 +206,7 @@
 
 
         </div>
-        <span zippy="testa" onclick="test()"></span>  
+        <span zippy="testa" onclick="test()">tttttttttttt</span>  
 
 
 
@@ -349,13 +349,13 @@
 
 
             };
-            /*
+         
              function test(){
              
              $.ajax({
-             type: 'POST',
-             url: '{{_baseurl}}'+'::test:1:3   ',
-             data: 'xxx'
+             type: 'GET',
+             url: 'http://localhost:44701/api/echo?echo=test',
+            
              }).success(function (data) {
              
              console.log(data);
@@ -364,9 +364,9 @@
              
              console.log(JSON.stringify(data));
              });
-             }   */
+             }    
 
         </script>
-
+                 
     </body>
 </html>
