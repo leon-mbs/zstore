@@ -340,7 +340,7 @@ class ARMFood extends \App\Pages\Base
             if ($_item->bar_code == $code || $_item->item_code == $code) {
                 $this->_itemlist[$ri]->quantity += 1;
                 $this->docpanel->listsform->itemlist->Reload();
-                
+                $this->calcTotal() ;
                 return;
             }
         }
@@ -372,9 +372,11 @@ class ARMFood extends \App\Pages\Base
         $item->price = $price;
         $item->quantity = 1;
         $item->myself = 1==$this->_foodtype?1:0;
- 
+        $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
+        $item->rowid = $next + 1;
+   
     
-        $this->_itemlist[$item->item_id] = $item; 
+        $this->_itemlist[$item->rowid] = $item; 
 
         $this->docpanel->listsform->itemlist->Reload();
         $this->calcTotal() ;

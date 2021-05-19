@@ -748,10 +748,19 @@ class POSCheck extends \App\Pages\Base
             $this->setError("noitemonstore", $item->itemname);
         }
 
+        foreach ($this->_itemlist as $ri => $_item) {
+            if ($_item->bar_code == $code || $_item->item_code == $code) {
+                $this->_itemlist[$ri]->quantity += 1;
+                $this->docform->detail->Reload();
+                $this->calcTotal();
+                $this->calcPay();
 
-        if ($this->_itemlist[$item->item_id] instanceof Item) {
-            $this->_itemlist[$item->item_id]->quantity += 1;
-        } else {
+
+                return;
+            }
+        }
+
+       
 
 
             $price = $item->getPrice($this->docform->pricetype->getValue(), $store_id);
@@ -783,8 +792,12 @@ class POSCheck extends \App\Pages\Base
                     $item->snumber = $serial;
                 }
             }
-            $this->_itemlist[$item->item_id] = $item;
-        }
+            
+           $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
+            $item->rowid = $next + 1;
+             
+            $this->_itemlist[$item->rowid] = $item;
+   
         $this->docform->detail->Reload();
         $this->calcTotal();
         $this->calcPay();
