@@ -237,6 +237,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
         $this->itemdetail->edituseserial->setChecked($this->_item->useserial);
         $this->itemdetail->editnoshop->setChecked($this->_item->noshop);
+        $this->itemdetail->editnoprice->setChecked($this->_item->noprice);
         $this->itemdetail->editautooutcome->setChecked($this->_item->autooutcome);
         $this->itemdetail->editautoincome->setChecked($this->_item->autoincome);
         if ($this->_item->image_id > 0) {

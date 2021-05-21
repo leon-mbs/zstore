@@ -100,7 +100,9 @@ class Pay extends \ZCL\DB\Entity
         $mf = \App\Entity\MoneyFund::load($mf_id);
         if ($mf instanceof \App\Entity\MoneyFund) {
             //банковский процент
-            if ($mf->beznal == 1 and $mf->btran > 0  && $amount < 0) {
+          
+          
+            if ($mf->beznal == 1 && $mf->btran > 0  && $amount < 0) {
                 $payb = new \App\Entity\Pay();
                 $payb->mf_id = $mf_id;
                 $payb->document_id = $document_id;
@@ -111,6 +113,19 @@ class Pay extends \ZCL\DB\Entity
                 $payb->user_id = \App\System::getUser()->user_id;
                 $payb->save();
             }
+            
+            if ($mf->beznal == 1 && $mf->btranin > 0  && $amount > 0) {
+                $payb = new \App\Entity\Pay();
+                $payb->mf_id = $mf_id;
+                $payb->document_id = $document_id;
+                $payb->amount =  0- ($amount * $mf->btranin / 100);
+                $payb->paytype = Pay::PAY_BANK;
+                $payb->paydate = $paydate;
+                $payb->notes = \App\Helper::l('bankproc');
+                $payb->user_id = \App\System::getUser()->user_id;
+                $payb->save();
+            }
+            
         }
 
 

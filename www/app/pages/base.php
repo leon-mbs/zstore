@@ -49,7 +49,7 @@ class Base extends \Zippy\Html\WebPage
             }
             
             //куки  после  логина
-            if (System::getSession()->defbranch > 0 && $this->branch_id == 0) {
+            if (System::getSession()->defbranch > 0 && $this->branch_id === null) {
               $this->branch_id = System::getSession()->defbranch;
               System::setBranch($this->branch_id);
             }

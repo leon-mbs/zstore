@@ -401,6 +401,9 @@ class Item extends \ZCL\DB\Entity
         foreach ($itemlist as $key => $value) {
 
             $list[$key] = $value->itemname;
+            if (strlen($value->item_code) > 0) {
+                $list[$key] = $value->itemname . ', ' . $value->item_code  ;
+            }
             if (strlen($value->manufacturer) > 0) {
                 $list[$key] = $value->itemname . ' (' . $value->manufacturer . ')';
             }
