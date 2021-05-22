@@ -131,7 +131,6 @@ class Import extends \App\Pages\Base
           $this->iform->checkname->setVisible(false);
           $this->iform->noshowprice->setVisible(false);
           $this->iform->noshowshop->setVisible(false);
-          $this->iform->colname->setVisible(false);
           $this->iform->colbarcode->setVisible(false);
           $this->iform->colgr->setVisible(false);
           $this->iform->colmsr->setVisible(false);
@@ -249,11 +248,11 @@ class Import extends \App\Pages\Base
                 }
                 if($it==null) continue;
                 
-                if($price1>0) $it->price1 = $price1;
-                if($price2>0) $it->price2 = $price2;
-                if($price3>0) $it->price3 = $price3;
-                if($price4>0) $it->price4 = $price4;
-                if($price5>0) $it->price5 = $price5;
+                if($colprice1 != "0") $it->price1 = $price1;
+                if($colprice2 != "0") $it->price2 = $price2;
+                if($colprice3 != "0") $it->price3 = $price3;
+                if($colprice4 != "0") $it->price4 = $price4;
+                if($colprice5 != "0") $it->price5 = $price5;
                 
                 
                 $it->save() ;

@@ -142,7 +142,7 @@ class Order extends \App\Entity\Doc\Document
 
 
             if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-                $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
+                $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_INCOME);
                 if ($payed > 0) {
                     $this->payed = $payed;
                 }

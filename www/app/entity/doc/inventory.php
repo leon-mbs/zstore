@@ -37,6 +37,16 @@ class Inventory extends Document
                 $sc = new Entry($this->document_id, $qty * $stock->partion, $qty);
                 $sc->setStock($stock->stock_id);
                 $sc->save();
+                
+                //записываем  в доход
+                $io = new \App\Entity\IOState();
+                $io->document_id = $this->document_id;
+                $io->amount =  $qty * $stock->partion;
+                $io->iotype = \App\Entity\IOState::TYPE_OVER;
+          
+                $io->save();
+                
+                
             }
 
             //списываем  со склада
@@ -47,6 +57,16 @@ class Inventory extends Document
                     $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                     $sc->setStock($st->stock_id);
                     $sc->save();
+
+                    //записываем  в потери
+                    $io = new \App\Entity\IOState();
+                    $io->document_id = $this->document_id;
+                    $io->amount =  0-$qty * $stock->partion;
+                    $io->iotype = \App\Entity\IOState::TYPE_LOST;
+              
+                    $io->save();
+                    
+                    
                 }
             }
         }

@@ -451,7 +451,7 @@ class OrderList extends \App\Pages\Base
             }
         }
 
-        Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(), Pay::PAY_BASE_INCOME, $form->pcomment->getText());
+        Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(),  \App\Entity\IOState::TYPE_BASE_INCOME, $form->pcomment->getText());
 
         $this->setSuccess('payment_added');
 

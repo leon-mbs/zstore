@@ -79,8 +79,8 @@ class ARMFood extends \App\Pages\Base
 
         $this->setupform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', ''), $filter->pos));
         $this->setupform->add(new DropDownChoice('store', \App\Entity\Store::getList(), $filter->store));
-        $this->setupform->add(new DropDownChoice('nal', \App\Entity\MoneyFund::getList(false, false, 1), $filter->nal));
-        $this->setupform->add(new DropDownChoice('beznal', \App\Entity\MoneyFund::getList(false, false, 2), $filter->beznal ));
+        $this->setupform->add(new DropDownChoice('nal', \App\Entity\MoneyFund::getList( false, 1), $filter->nal));
+        $this->setupform->add(new DropDownChoice('beznal', \App\Entity\MoneyFund::getList(  false, 2), $filter->beznal ));
         
         //список  заказов
         $this->add(new Panel('orderlistpan'))->setVisible(false);

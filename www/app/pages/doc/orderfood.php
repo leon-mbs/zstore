@@ -220,12 +220,7 @@ class OrderFood extends \App\Pages\Base
         $this->editdetail->editprice->setText($item->price);
         $this->editdetail->editquantity->setText($item->quantity);
         
-        if ($item->rowid > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $item->rowid = $item->item_id;
-        }
+ 
 
         $this->_rowid = $item->rowid;
     }

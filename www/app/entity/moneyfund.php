@@ -80,15 +80,15 @@ class MoneyFund extends \ZCL\DB\Entity
     /**
      * список счетов для комбо
      *
-     * @param mixed $beznal добавить пункт  В  кредит
+     *  
      * @param mixed $prepaid добавить пункт  Была предоплата
      * @param mixed $nal 0 - все, 1- нол,2- безнал
      */
-    public static function getList($credit = false, $prepaid = false, $nal = 0) {
+    public static function getList( $prepaid = false, $nal = 0) {
         $ml = array();
-        if ($credit) {
-            $ml[self::CREDIT] = \App\Helper::l("credit");
-        }
+       // if ($credit) {
+       //     $ml[self::CREDIT] = \App\Helper::l("credit");
+       // }
         if ($prepaid) {
             $ml[self::PREPAID] = \App\Helper::l("prepaid");
         }

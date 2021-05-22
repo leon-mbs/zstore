@@ -47,7 +47,7 @@ class Order extends \App\Pages\Base
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
 
         $this->docform->add(new TextArea('notes'));
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, false), MoneyFund::CREDIT))->onChange($this, 'OnPayment');
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(  false), MoneyFund::CREDIT))->onChange($this, 'OnPayment');
         $this->docform->add(new DropDownChoice('salesource', H::getSaleSources() , H::getDefSaleSource()));
   
         $this->docform->add(new TextInput('editpaydisc'));

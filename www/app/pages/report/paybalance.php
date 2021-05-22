@@ -92,7 +92,7 @@ class PayBalance extends \App\Pages\Base
         }
 
 
-        $pl = Pay::getPayTypeList();
+        $pl = \App\Entity\IOState::getTypeList();
 
         $conn = \ZDB\DB::getConnect();
 
@@ -151,7 +151,7 @@ class PayBalance extends \App\Pages\Base
         $sql = " 
          SELECT   coalesce(sum(abs(amount)),0)  as am   FROM paylist 
              WHERE   
-              paytype  = " . Pay::PAY_BASE_OUTCOME . "   {$brpay}
+              paytype  = " . \App\Entity\IOState::TYPE_BASE_OUTCOME . "   {$brpay}
               AND paydate  >= " . $conn->DBDate($from) . "
               AND  paydate  <= " . $conn->DBDate($to) . "
              
@@ -163,7 +163,7 @@ class PayBalance extends \App\Pages\Base
         $sql = " 
          SELECT   coalesce(  sum(abs(amount)),0)  as am   FROM paylist 
              WHERE   
-              paytype  = " . Pay::PAY_BASE_INCOME . "   {$brpay}
+              paytype  = " . \App\Entity\IOState::TYPE_BASE_INCOME . "   {$brpay}
               AND paydate  >= " . $conn->DBDate($from) . "
               AND  paydate  <= " . $conn->DBDate($to) . "
              

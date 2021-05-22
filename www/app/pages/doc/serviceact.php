@@ -49,7 +49,7 @@ class ServiceAct extends \App\Pages\Base
         $this->docform->add(new TextInput('device'));
         $this->docform->add(new TextInput('devsn'));
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true), MoneyFund::CREDIT))->onChange($this, 'OnPayment');
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), 0))->onChange($this, 'OnPayment');
 
         $this->docform->add(new TextInput('editpayamount'));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');

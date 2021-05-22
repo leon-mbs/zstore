@@ -97,6 +97,14 @@ class Pay extends \ZCL\DB\Entity
         $pay->user_id = \App\System::getUser()->user_id;
         $pay->save();
 
+        $io = new \App\Entity\IOState();
+        $io->document_id = $document_id;
+        $io->amount = $amount;
+        $io->iotype = $type;
+  
+        $io->save();
+        
+        
         $mf = \App\Entity\MoneyFund::load($mf_id);
         if ($mf instanceof \App\Entity\MoneyFund) {
             //банковский процент
@@ -127,7 +135,6 @@ class Pay extends \ZCL\DB\Entity
             }
             
         }
-
 
         $conn = \ZDB\DB::getConnect();
 
