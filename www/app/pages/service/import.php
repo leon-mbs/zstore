@@ -12,6 +12,7 @@ use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
 use Zippy\WebApplication as App;
 
 class Import extends \App\Pages\Base
@@ -43,6 +44,15 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("colprice3", $cols));
         $form->add(new DropDownChoice("colprice4", $cols));
         $form->add(new DropDownChoice("colprice5", $cols));
+
+        $pt = \App\Entity\Item::getPriceTypeList() ;
+
+        $form->add(new Label('pricename1',$pt['price1']));
+        $form->add(new Label('pricename2',$pt['price2']));
+        $form->add(new Label('pricename3',$pt['price3']));
+        $form->add(new Label('pricename4',$pt['price4']));
+        $form->add(new Label('pricename5',$pt['price5']));
+        
         $form->add(new DropDownChoice("colinprice", $cols));
         $form->add(new DropDownChoice("colmsr", $cols));
         $form->add(new DropDownChoice("colbrand", $cols));
@@ -106,11 +116,21 @@ class Import extends \App\Pages\Base
         $this->iform->colqty->setVisible($t == 1);
         $this->iform->store->setVisible($t == 1);
         $this->iform->colinprice->setVisible($t == 1);
+        $this->iform->checkname->setVisible(true);
+          $this->iform->noshowprice->setVisible(true);
+          $this->iform->noshowshop->setVisible(true);
+          $this->iform->colname->setVisible(true);
+          $this->iform->colbarcode->setVisible(true);
+          $this->iform->colgr->setVisible(true);
+          $this->iform->colmsr->setVisible(true);
+          $this->iform->coldesc->setVisible(true);
+          $this->iform->colqty->setVisible(true);
+          $this->iform->colinprice->setVisible(true);
+     
         if($t==2) {
           $this->iform->checkname->setVisible(false);
           $this->iform->noshowprice->setVisible(false);
           $this->iform->noshowshop->setVisible(false);
-          $this->iform->colname->setVisible(false);
           $this->iform->colbarcode->setVisible(false);
           $this->iform->colgr->setVisible(false);
           $this->iform->colmsr->setVisible(false);
@@ -228,11 +248,11 @@ class Import extends \App\Pages\Base
                 }
                 if($it==null) continue;
                 
-                if($price1>0) $it->price1 = $price1;
-                if($price2>0) $it->price2 = $price2;
-                if($price3>0) $it->price3 = $price3;
-                if($price4>0) $it->price4 = $price4;
-                if($price5>0) $it->price5 = $price5;
+                if($colprice1 != "0") $it->price1 = $price1;
+                if($colprice2 != "0") $it->price2 = $price2;
+                if($colprice3 != "0") $it->price3 = $price3;
+                if($colprice4 != "0") $it->price4 = $price4;
+                if($colprice5 != "0") $it->price5 = $price5;
                 
                 
                 $it->save() ;
@@ -324,7 +344,7 @@ class Import extends \App\Pages\Base
 
                     $item->amount = $item->quantity * $item->price;
                     
-                    $item->noprice=   $this->iform->noshowprice->isChecked()?1:0 ;
+                    $item->noprice =   $this->iform->noshowprice->isChecked()?1:0 ;
                     $item->noshop=   $this->iform->noshowshop->isChecked()?1:0 ;
                     
                     $item->save();

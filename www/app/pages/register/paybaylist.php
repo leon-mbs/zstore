@@ -247,11 +247,11 @@ class PayBayList extends \App\Pages\Base
 
             $this->setWarn('sumoverpay');
         }
-        $type = Pay::PAY_BASE_INCOME;
+        $type =  \App\Entity\IOState::TYPE_BASE_INCOME;
 
         if (in_array($this->_doc->meta_name, array('GoodsReceipt', 'InvoiceCust', 'ReturnIssue'))) {
             $amount = 0 - $amount;
-            $type = Pay::PAY_BASE_OUTCOME;
+            $type = \App\Entity\IOState::TYPE_BASE_OUTCOME;
         }
 
 

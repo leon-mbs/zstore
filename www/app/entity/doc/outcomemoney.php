@@ -24,8 +24,8 @@ class OutcomeMoney extends Document
 
     public function generateReport() {
 
-        $pt = Pay::getPayTypeList(2);
-
+      
+        $pt = \App\Entity\IOState::getTypeList(2) ;
         $header = array(
             'amount'          => H::fa($this->amount),
             'date'            => H::fd($this->document_date),

@@ -217,7 +217,7 @@ class Options extends \App\Pages\Base
         $this->food->add(new CheckBox('foodtables',$food['tables']));
         
         $this->food->add(new CheckBox('foodbar',$food['bar']));
-
+     
         
         //источники  продаж
         $this->add(new Form('salesourcesform')) ;

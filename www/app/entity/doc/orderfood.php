@@ -136,6 +136,18 @@ class OrderFood extends Document
 
                         $itemp = \App\Entity\Item::load($part->item_id);
                         $itemp->quantity = $item->quantity * $part->qty;
+                        
+                       //учитываем  отходы
+                        if($itemp->lost >0){
+                            $k = 1/(1-$itemp->lost/100) ;
+                            $itemp->quantity  = \App\Helper::fqty($itemp->quantity*$k);
+                            $lost = $k-1;
+                             
+                            
+                        }
+                        
+                        
+                        
                         $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
 
                         foreach ($listst as $st) {
@@ -143,6 +155,16 @@ class OrderFood extends Document
                             $sc->setStock($st->stock_id);
 
                             $sc->save();
+                            if($lost>0) {
+                                $io = new \App\Entity\IOState();
+                                $io->document_id = $this->document_id;
+                                $io->amount = 0-$st->quantity * $st->partion * $lost;
+                                $io->iotype = \App\Entity\IOState::TYPE_TRASH;
+                          
+                             //   $io->save();
+
+                            }   
+                            
                         }
                     }
                 }
@@ -193,7 +215,7 @@ class OrderFood extends Document
       
    
         if ($this->headerdata['payment'] > 0 && $payed > 0) {
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
+            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $payed, $this->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_INCOME);
             if ($payed > 0) {
                 $this->payed = $payed;
             }

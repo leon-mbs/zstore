@@ -368,6 +368,7 @@ class ACL
         if ($options['usebranch'] != 1) {
             return '';
         }
+        $user = \App\System::getUser();
 
         $id = \App\System::getBranch(); //если  выбран  конкретный
         if ($id > 0) {
@@ -376,8 +377,7 @@ class ACL
         }
 
 
-        $user = \App\System::getUser();
-        if ($user->rolename == 'admins') {
+         if ($user->rolename == 'admins') {
             return '';
         }
 

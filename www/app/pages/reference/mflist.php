@@ -42,6 +42,7 @@ class MFList extends \App\Pages\Base
 
         $this->mfdetail->add(new CheckBox('editbeznal'))->onChange($this, 'onBeznal');
         $this->mfdetail->add(new TextInput('editbtran'));
+        $this->mfdetail->add(new TextInput('editbtranin'));
         $this->mfdetail->add(new TextArea('editmf_description'));
         $this->mfdetail->add(new TextInput('editbank'));
         $this->mfdetail->add(new TextInput('editbankacc'));
@@ -83,6 +84,7 @@ class MFList extends \App\Pages\Base
         $this->mftable->setVisible(false);
         $this->mfdetail->setVisible(true);
         $this->mfdetail->editbtran->setText($this->_mf->btran);
+        $this->mfdetail->editbtranin->setText($this->_mf->btranin);
         $this->mfdetail->editmf_name->setText($this->_mf->mf_name);
         $this->mfdetail->editbranch->setValue($this->_mf->branch_id);
         $this->mfdetail->editbeznal->setChecked($this->_mf->beznal);
@@ -114,6 +116,7 @@ class MFList extends \App\Pages\Base
             return;
         }
         $this->_mf->btran = $this->mfdetail->editbtran->getText();
+        $this->_mf->btranin = $this->mfdetail->editbtranin->getText();
         $this->_mf->bank = $this->mfdetail->editbank->getText();
         $this->_mf->bankacc = $this->mfdetail->editbankacc->getText();
 

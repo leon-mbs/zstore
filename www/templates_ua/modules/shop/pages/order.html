@@ -35,53 +35,66 @@
             </div>
             <div class="w-100"></div>
             <div class="col-12 col-md-8 col-lg-6">
+    <div class="col-12 col-md-8   col-xl-6">
                 <form zippy="orderform" method="post">
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">Им'я та/або  прiзвище</span>
-                        </div>
-                        <input required="required" zippy="name" class="form-control">
+                    <div class="form-group  row">
+                       
+                     <label class="col-5 col-form-label" for="name" >Iм'я та/або прiзвище</label>
+                      <div class="col-7">
+                         <input required="required" zippy="name" class="form-control">
+                      </div>
                     </div>
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">Телефон</span>
-                        </div>
-                        <input zippy="phone" class="form-control">
+                    <div class="form-group  row">
+                      
+                      <label class="col-5 col-form-label" for="phone" >Телефон</label>
+                        
+                       <div class="col-7">
+                       <input zippy="phone" class="form-control">
                     </div>
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">Email</span>
-                        </div>
-                        <input zippy="email" class="form-control">
+                    </div>
+                    <div class="form-group  row">
+                      
+                      <label class="col-5 col-form-label" for="email" >Email</label>
+                       
+                       <div class="col-7">
+                       <input zippy="email" class="form-control">
+                    </div>
                     </div>
 
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <label class="input-group-text" for="delivery">Доставка</label>
-                        </div>
-                        <select class="form-control" zippy="delivery">
+                    <div class="form-group  row">
+                    
+                            <label class="col-5 col-form-label" for="delivery">Доставка</label>
+                      
+                       <div class="col-7">
+                       <select class="form-control" zippy="delivery">
                             <option value="0">Вибрати</option>
                         </select>
                     </div>
-
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <label data-label="address" for="address" class="input-group-text">Адреса</label>
-                        </div>
-                        <textarea zippy="address" class="form-control"></textarea>
                     </div>
 
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">Комментар </span>
+                    <div class="form-group  row">
+             
+                        <label class="col-5 col-form-label" data-label="address" for="address"  >Адреса</label>
+                      
+                        <div class="col-7">
+                          <textarea style="height:100px" zippy="address" class="form-control"></textarea>
                         </div>
-                        <textarea zippy="notes" class="form-control"></textarea>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group  row">
+                    
+                          <label class="col-5 col-form-label" for="notes" >Комментар </label>
+                       
+                          <div class="col-7">
+                          <textarea zippy="notes" class="form-control"></textarea>
+                    </div>
+                    </div>
+
+                    <div class="form-group row">
                         <input type="submit" class="btn btn-primary" value="Вiдправити">
                     </div>
                 </form>
+            </div>
             </div>
         </div>
 

@@ -130,7 +130,8 @@ class Main extends Base
         $to = $dt->startOfMonth()->timestamp;
         $dt->subMonths(3);
         $from = $dt->startOfMonth()->timestamp;
-        $names = \App\Entity\Pay::getPayTypeList(2);
+        
+        $names = \App\Entity\IOState::getTypeList() ;        
         if (strlen($brids) > 0) {
 
             $brpay = " and  document_id in(select  document_id from  documents where branch_id in ({$brids}) )";

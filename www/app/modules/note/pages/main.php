@@ -328,7 +328,7 @@ class Main extends \App\Pages\Base
         $this->ReloadTopic($id);
         $this->_sarr = array();
         $this->searchlist->Reload();
-          
+        $this->sform->skeyword->setText('');      
         
     }
 

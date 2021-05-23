@@ -139,12 +139,7 @@ class Stock extends \ZCL\DB\Entity
 
         $stlist = self::find($where, ' stock_id  ');
 
-        //учитываем  отходы
-        if($item->lost >0){
-            $k = 1/(1-$item->lost/100) ;
-            $item->quantity = \App\Helper::fqty($item->quantity*$k);
-        }
-        
+         
         $qty = $item->quantity;
         $last = null;
         foreach ($stlist as $st) {

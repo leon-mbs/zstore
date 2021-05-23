@@ -25,8 +25,8 @@ class IncomeMoney extends Document
 
     public function generateReport() {
 
-        $pt = Pay::getPayTypeList(1);
-
+     
+        $pt = \App\Entity\IOState::getTypeList(1) ;
         $header = array(
             'amount'          => H::fa($this->amount),
             'date'            => H::fd($this->document_date),

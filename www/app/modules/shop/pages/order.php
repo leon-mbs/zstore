@@ -31,12 +31,18 @@ class Order extends Base
         $this->OnUpdate($this);
         $form = $this->add(new Form('orderform'));
         $form->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np'] == 1)))->onChange($this, 'OnDelivery');
+        
+        if($this->_tvars["isfood"]) $form->delivery->setValue(Document::DEL_BOY);
+        
         $form->add(new TextInput('email'));
         $form->add(new TextInput('phone'));
         $form->add(new TextInput('name'));
         $form->add(new TextArea('address'))->setVisible(false);
         $form->add(new TextArea('notes'));
         $form->onSubmit($this, 'OnSave');
+        
+        $this->OnDelivery($form->delivery)  ;
+        
     }
 
     public function OnDelivery($sender) {

@@ -37,7 +37,7 @@ class PayList extends \App\Pages\Base
             return;
         }
 
-        $this->_ptlist = \App\Entity\Pay::getPayTypeList();
+        $this->_ptlist = \App\Entity\IOState::getTypeList();
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new DropDownChoice('fmfund', \App\Entity\MoneyFund::getList(), 0));

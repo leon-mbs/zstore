@@ -37,6 +37,7 @@ class ItemList extends \App\Pages\Base
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new CheckBox('showdis'));
+        $this->filter->add(new TextInput('searchbrand'));
         $this->filter->add(new TextInput('searchkey'));
         $catlist = array();
         $catlist[-1] = H::l("withoutcat");
@@ -148,7 +149,8 @@ class ItemList extends \App\Pages\Base
         $this->_tvars['hp3']  = strlen($common['price3'])>0 ? $common['price3'] : false;
         $this->_tvars['hp4']  = strlen($common['price4'])>0 ? $common['price4'] : false;
         $this->_tvars['hp5']  = strlen($common['price5'])>0 ? $common['price5'] : false;
-          
+        
+        $this->updateman();      
         
         
         if ($add == false) {
@@ -237,6 +239,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
         $this->itemdetail->edituseserial->setChecked($this->_item->useserial);
         $this->itemdetail->editnoshop->setChecked($this->_item->noshop);
+        $this->itemdetail->editnoprice->setChecked($this->_item->noprice);
         $this->itemdetail->editautooutcome->setChecked($this->_item->autooutcome);
         $this->itemdetail->editautoincome->setChecked($this->_item->autoincome);
         if ($this->_item->image_id > 0) {
@@ -413,7 +416,8 @@ class ItemList extends \App\Pages\Base
                 $image->thumb = $thumb->getImageAsString();
             }
 
-
+            $this->updateman();
+            
             $image->save();
             $this->_item->image_id = $image->image_id;
             $this->_item->Save();
@@ -717,6 +721,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         $form = $this->page->filter;
         $where = "1=1";
         $text = trim($form->searchkey->getText());
+        $brand = trim($form->searchbrand->getText());
         $cat = $form->searchcat->getValue();
         $showdis = $form->showdis->isChecked();
 
@@ -727,6 +732,14 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
                 $where = $where . " and cat_id=" . $cat;
             }
         }
+        
+        if (strlen($brand) > 0) {
+
+            $brand = Item::qstr($brand);
+            $where = $where . " and  manufacturer like {$brand}      ";
+        }
+        
+        
         if ($showdis == true) {
 
         } else {

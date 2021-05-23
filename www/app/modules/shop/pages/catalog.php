@@ -27,10 +27,7 @@ class Catalog extends Base
         parent::__construct();
 
         $this->cat_id = $id;
-        $options = \App\System::getOptions('shop');
-        $this->_tvars['usefilter'] = $options['usefilter'] == 1;
-        $this->_tvars['usefeedback'] = $options['usefeedback'] == 1;
-
+      
         $this->add(new BookmarkableLink("filterbtn"));
         $this->add(new Label("breadcrumb", Helper::getBreadScrumbs($id), true));
 
