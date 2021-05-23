@@ -28,7 +28,8 @@ class Document extends \ZCL\DB\Entity
     const STATE_FAIL        = 17; // Аннулирован
     const STATE_FINISHED    = 18; // Закончен
     const STATE_APPROVED    = 19;      //  Готов к выполнению
-    const STATE_READYTOSHIP = 20; // готов к отправке    
+    const STATE_READYTOSHIP = 20; // готов к отправке   
+     
     // типы  экспорта
     const EX_WORD  = 1; //  Word
     const EX_EXCEL = 2;    //  Excel
@@ -571,7 +572,7 @@ class Document extends \ZCL\DB\Entity
 
         $conn->Execute("delete from docstatelog where document_id=" . $this->document_id);
         $conn->Execute("delete from paylist where document_id=" . $this->document_id);
-        $conn->Execute("delete from iostate where document_id=" . $this->document_id);
+      //  $conn->Execute("delete from iostate where document_id=" . $this->document_id);
         $conn->Execute("delete from messages where item_type=" . \App\Entity\Message::TYPE_DOC . " and item_id=" . $this->document_id);
         $conn->Execute("delete from files where item_type=" . \App\Entity\Message::TYPE_DOC . " and item_id=" . $this->document_id);
         $conn->Execute("delete from filesdata where   file_id not in (select file_id from files)");
