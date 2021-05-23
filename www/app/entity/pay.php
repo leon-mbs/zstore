@@ -102,7 +102,7 @@ class Pay extends \ZCL\DB\Entity
         $io->amount = $amount;
         $io->iotype = $type;
   
-        $io->save();
+       // $io->save();
         
         
         $mf = \App\Entity\MoneyFund::load($mf_id);

@@ -44,7 +44,7 @@ class Inventory extends Document
                 $io->amount =  $qty * $stock->partion;
                 $io->iotype = \App\Entity\IOState::TYPE_OVER;
           
-                $io->save();
+              //  $io->save();
                 
                 
             }
@@ -64,7 +64,7 @@ class Inventory extends Document
                     $io->amount =  0-$qty * $stock->partion;
                     $io->iotype = \App\Entity\IOState::TYPE_LOST;
               
-                    $io->save();
+                  //  $io->save();
                     
                     
                 }

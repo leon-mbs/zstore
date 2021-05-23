@@ -27,7 +27,8 @@ class Item extends \ZCL\DB\Entity
 
         $this->price = 0;
         $this->image_id = 0;
-        $this->pricelist = 1;
+        $this->noprice = 0;
+        $this->noshop = 0;
     }
 
     protected function afterLoad() {
@@ -434,7 +435,7 @@ class Item extends \ZCL\DB\Entity
 
         $conn = \ZDB\DB::getConnect();
 
-        $sql = "  select distinct manufacturer from  items    order  by manufacturer";
+        $sql = "  select distinct manufacturer from  items  where  disabled<> 1  order  by manufacturer";
         $res = $conn->Execute($sql);
         $list = array();
         foreach ($res as $v) {

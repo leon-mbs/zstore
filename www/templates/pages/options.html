@@ -440,7 +440,8 @@
                     <div class="card-body">
                         <h4>Общепит</h4>
                         
-                        <form zippy="food">
+                         <form zippy="food">
+                      
 
                             <div class="form-group  ">
                                 <label for="foodpricetype">Тип цен</label>
@@ -452,15 +453,14 @@
                                 <label class="form-check-label" for="foodtables">Показывать номера  столов</label>
                                 
                             </div>
-                            {{#hideblock}} 
-                                 <div class="form-check">
+                            
+                            <div class="form-check">
                                 <input zippy="fooddelivery" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="fooddelivery">Возможность доставки</label>
                                 
                             </div>
-
-                       
-                         
+ 
+                            
                             <div class="form-check">
                                 <input zippy="foodbar" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="foodbar">Бар  отдельно от кухни</label>
@@ -471,11 +471,11 @@
                                 <select class="form-control" zippy="foodworktype">
                                    <option value="0">Сразу  выдача  заказа  и оплата на месте</option>
                                    <option value="1">Оплата  затем  производство  и выдача</option>
-                                   <option value="2">Производство,  выдача, расчет официантом</option>
+                                   <option value="2">Заказ, производство,  выдача, расчет официантом</option>
                                 </select>
                                
                             </div>
-                            {{/hideblock}}
+                          
                             <div class="form-group">
                                 <button class="btn btn-primary" type="submit">Сохранить</button>
                             </div>
@@ -485,9 +485,9 @@
         
             </div>
         </div>
-
-
-        <script>
+          
+        <script   >
+   
             function check_rowdelete() {
                 return confirm("Удалить  запись?")
             }

@@ -21,16 +21,24 @@
                     <form zippy="filter" class="form-inline">
 
                         <label for="searchkey">Пошук</label>
-                        <input class="form-control mr-sm-2" type="text" zippy="searchkey" onkeydown="onSearch()">
+                        <input class="form-control mr-2" type="text" zippy="searchkey" onkeydown="onSearch()">
                         <label for="searchcat">категорія</label>
 
-                        <select class="form-control mr-sm-2" zippy="searchcat">
+                        <select class="form-control mr-2" zippy="searchcat">
                             <option value="0">Не вказано</option>
                         </select>
+                        <label for="searchbrand">Бренд </label>
+                        <input autocomplete="off" list="searchbrandlist" class="form-control mr-2" zippy="searchbrand"/>
+                        <datalist id="searchbrandlist">
+                            {{#manlist}}
+                            <option label='{{mitem}}' value='{{mitem}}'>
+                                {{/manlist}}
+                        </datalist>
+                        
                         <div class="form-check">
 
                             <input title="Показати неактуальні" class="form-check-input" type="checkbox" zippy="showdis">
-                            <label class="form-check-label mr-sm-3" for="showdis">Усе</label>
+                            <label class="form-check-label mr-3" for="showdis">Усе</label>
                         </div>
 
                         <input class="btn btn-outline-success  " type="submit" value="ОК">
