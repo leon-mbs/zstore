@@ -406,6 +406,8 @@ class ReturnIssue extends \App\Pages\Base
             $this->setError("noselstore");
         }
 
+        
+        //проверка  что не  поменялась  цена
         $base = Document::load($this->_basedocid) ;
         if($base instanceof Document){
             $base = $base->cast();

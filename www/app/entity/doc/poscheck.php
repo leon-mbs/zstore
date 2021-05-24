@@ -5,6 +5,7 @@ namespace App\Entity\Doc;
 use App\Entity\Entry;
 use App\Entity\Item;
 use App\Helper as H;
+use App\System as System;
 
 /**
  * Класс-сущность  документ  кассовый чек
@@ -14,7 +15,7 @@ class POSCheck extends Document
 {
 
     public function generateReport() {
-
+        
 
         $i = 1;
         $detail = array();
@@ -48,7 +49,7 @@ class POSCheck extends Document
             );
         }
 
-        $common = \App\System::getOptions('common');
+        $common =  System::getOptions('common');
 
         $firm = H::getFirmData($this->firm_id);
 
@@ -69,7 +70,9 @@ class POSCheck extends Document
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
                         "prepaid"         => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
-                        "payamount"       => H::fa($this->payamount)
+                         "docbarcode"         => $this->getBarCodeImage(),
+                        "docqrcode"         => $this->getQRCodeImage(),
+                       "payamount"       => H::fa($this->payamount)
         );
 
         $report = new \App\Report('doc/poscheck.tpl');
@@ -101,13 +104,13 @@ class POSCheck extends Document
                               "amount"     => H::fa($ser->quantity * $ser->price)
             );
         }
-        $common = \App\System::getOptions('common');
+        $common =  System::getOptions('common');
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
-                        "username"        => \App\System::getUser()->username,
+                        "username"        =>  System::getUser()->username,
                         "firm_name"       => $firm["firm_name"],
                         "shopname"        => strlen($common["shopname"]) > 0 ? $common["shopname"] : false,
                         "address"         => $firm["address"],
@@ -125,6 +128,8 @@ class POSCheck extends Document
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
                         "prepaid"         => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
+                        "docbarcode"         => $this->getBarCodeImage(),
+                        "docqrcode"         => $this->getQRCodeImage(),
                         "payamount"       => H::fa($this->payamount)
         );
 
@@ -245,4 +250,8 @@ class POSCheck extends Document
         return $list;
     }
 
+    
+   
+    
+    
 }

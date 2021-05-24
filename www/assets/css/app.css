@@ -115,3 +115,10 @@ table {
   
   background-color: #fff;
 }
+
+input[type=date] {
+    width:150px !important;
+}
+input[type=time] {
+    width:100px !important;
+}

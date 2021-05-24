@@ -80,6 +80,14 @@
         <td align="right">{{exchange}}</td>
     </tr>
     {{/prepaid}}
+                        <tr>
+                        <td colspan="3" > 
+                            {{{docbarcode}}}
+                        </td>
+                        <td colspan="4"> 
+                            {{{docqrcode}}}
+                        </td>
 
+                    </tr>
 </table>
 

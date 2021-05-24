@@ -121,9 +121,33 @@ class OrderFood extends Document
     }
 
     public function Execute() {
-        //$conn = \ZDB\DB::getConnect();
 
+        $this->DoStore()    ;
+      
+        $this->DoPayment() ;
 
+        return true;
+    }
+
+    protected function getNumberTemplate() {
+        return 'ЗО-000000';
+    }
+
+    public function supportedExport() {
+        return array(self::EX_EXCEL, self::EX_PDF, self::EX_POS);
+    }
+
+ 
+    public function DoPayment() {
+       if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
+            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_INCOME);
+            if ($payed > 0) {
+                $this->payed = $payed;
+            }
+        }
+    }
+ 
+    public function DoStore() {
         foreach ($this->unpackDetails('detaildata') as $item) {
 
 
@@ -198,40 +222,9 @@ class OrderFood extends Document
                 $sc->save();
             }
         }
-
-        //списываем бонусы
-        if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
-            $customer = \App\Entity\Customer::load($this->customer_id);
-            if ($customer->discount > 0) {
-                //процент
-            } else {
-                $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0);
-                if ($customer->bonus < 0) {
-                    $customer->bonus = 0;
-                }
-                $customer->save();
-            }
-        }
-      
-   
-        if ($this->headerdata['payment'] > 0 && $payed > 0) {
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $payed, $this->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_INCOME);
-            if ($payed > 0) {
-                $this->payed = $payed;
-            }
-        }
-
-        return true;
-    }
-
-    protected function getNumberTemplate() {
-        return 'ЗО-000000';
-    }
-
-    public function supportedExport() {
-        return array(self::EX_EXCEL, self::EX_PDF, self::EX_POS);
-    }
-
+    }    
      
+    protected function onState($state) {
 
+    }
 }

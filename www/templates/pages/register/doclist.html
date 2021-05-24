@@ -14,7 +14,7 @@
                 <div class="navbar nav  ">
                     <form zippy="filter" class="form-inline ">
                         <input placeholder="Поиск..." class="form-control mr-2" type="text" zippy="searchnumber"
-                               style="width:150px" title="При поиске по номеру  остальные  элементы фильтра  игнорируются">
+                        autocomplete="off" autofocus  onkeydown="onBarCode()"     style="width:150px" title="При поиске по номеру  остальные  элементы фильтра  игнорируются">
 
                         <label for="from">С </label>
                         <input type="text" class="form-control mr-sm-1  " zippy="from" style="width:110px">
@@ -36,7 +36,7 @@
                         </select>
 
 
-                        <input type="submit" class="  ml-2 mr-2  btn btn-outline-success  " value="ОК">
+                        <input id="bsubmit" type="submit" class="  ml-2 mr-2  btn btn-outline-success  " value="ОК">
                         <a zippy="erase" title="Сбросить фильтр"><i class="fa fa-eraser"></i></a>
 
 
@@ -132,6 +132,17 @@
         </div>
 
         <script>
+            $('#searchnumber').focus();
+
+        
+            function onBarCode(ele) {
+
+                if (event.key === 'Enter' || event.keyCode == 13) {
+                    // alert($('#barcode').val());
+                    $('#bsubmit').click()
+                }
+            }
+        
             function check_delete() {
                 return confirm("Удалить  документ?")
             }

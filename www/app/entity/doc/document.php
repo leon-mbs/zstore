@@ -233,19 +233,20 @@ class Document extends \ZCL\DB\Entity
 
     }
 
-    /**
-     * Запись  проводок по  складу
-     * На  случаей  если  проводки надо  выполнить  на статусе  отличном  от Executed
-     */
-    public function Store() {
-
-    }
+    
 
     /**
      * Запись  платежей
-     * На  случаей  если  платежи надо  выполнить  на статусе  отличном  от Executed
+     *  
      */
-    public function Pay() {
+    public function DoPayment() {
+
+    }
+    /**
+     * Проводки по складу
+     * 
+     */
+    public function DoStore() {
 
     }
 
@@ -840,4 +841,63 @@ class Document extends \ZCL\DB\Entity
         return "";
     }
 
+    
+    /**
+    * есть ли  оплаты
+    * 
+    */
+    public  function hasPayments(){
+        $conn = \ZDB\DB::getConnect();
+        $sql = "select coalesce(sum(amount),0) from paylist where   document_id=" . $this->document_id;
+        $am = doubleval($conn->GetOne($sql));
+        
+        return $am  != 0 ;   
+          
+    }
+    /**
+    * есть ли  проводки  по  складу
+    * 
+    */
+    public  function hasStore(){
+        $conn = \ZDB\DB::getConnect();
+        $sql = "select coalesce(count(*),0) from entrylist where   document_id=" . $this->document_id;
+        $am = round($conn->GetOne($sql));
+        
+        return $am  > 0 ;   
+          
+    }
+
+    /**
+    * возвращает  тэг <img> со штрих кодом номера  документа
+    * 
+    */
+    protected  function getBarCodeImage(){
+        $print = System::getOption('common','printoutbarcode');
+        if($print==0) return '';
+         $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+         $img = '<img style="max-width:200px" src="data:image/png;base64,' . base64_encode($generator->getBarcode($this->document_number, 'C128')) . '">';
+      
+         return $img;
+    }
+    
+    /**
+    * возвращает  тэг <img> со QR кодом ссылки на  документ 
+    * 
+    */
+    protected  function getQRCodeImage(){
+        $print = System::getOption('common','printoutqrcode');
+        if($print==0) return '';
+        $url = _BASEURL."?p=App/Pages/Register/DocList&arg=".$this->document_id;
+        $qrCode = new \Endroid\QrCode\QrCode($url);
+         $qrCode->setSize(100);
+         $qrCode->setMargin(5); 
+         $qrCode->setWriterByName('png'); 
+         
+         $dataUri = $qrCode->writeDataUri();
+         $img = "<img src=\"{$dataUri}\"  />";
+
+         return $img;
+   }
+    
+    
 }

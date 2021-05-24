@@ -86,6 +86,10 @@ class ContractList extends \App\Pages\Base
         $row->add(new Label('contract_number', $item->contract_number));
         $row->add(new Label('shortdesc', $item->shortdesc));
         $row->add(new Label('term', H::fd($item->createdon) . ' - ' . H::fd($item->enddate)));
+        if($item->enddate >0 && $item->enddate < time()) {
+            $row->term->setAttribute('class','text-danger');
+        }
+        
         $row->add(new Label('customer', $item->customer_name));
         $row->add(new Label('firm', $item->firm_name));
 
