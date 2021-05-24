@@ -185,7 +185,7 @@ class OrderFood extends Document
                                 $io->amount = 0-$st->quantity * $st->partion * $lost;
                                 $io->iotype = \App\Entity\IOState::TYPE_TRASH;
                           
-                              //  $io->save();
+                                $io->save();
 
                             }   
                             
