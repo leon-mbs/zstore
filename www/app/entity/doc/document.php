@@ -267,16 +267,8 @@ class Document extends \ZCL\DB\Entity
             //отменяем оплаты   
             $conn->Execute("delete from paylist where document_id = " . $this->document_id);
 
-            // возвращаем бонусы
-            if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
-                $customer = \App\Entity\Customer::load($this->customer_id);
-                if ($customer->discount > 0) {
-                    //  return; //процент
-                } else {
-                    $customer->bonus = $customer->bonus + $this->headerdata['paydisc'];
-                    $customer->save();
-                }
-            }
+     
+            $conn->Execute("delete from iostate where document_id=" . $this->document_id);
 
 
             $conn->CompleteTrans();
@@ -569,17 +561,16 @@ class Document extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
 
         $hasExecuted = $conn->GetOne("select count(*)  from docstatelog where docstate = " . Document::STATE_EXECUTED . " and  document_id=" . $this->document_id);
-        $hasPayment = $conn->GetOne("select count(*)  from paylist where   document_id=" . $this->document_id);
+     //   $hasPayment = $conn->GetOne("select count(*)  from paylist where   document_id=" . $this->document_id);
 
         $conn->Execute("delete from docstatelog where document_id=" . $this->document_id);
-        $conn->Execute("delete from paylist where document_id=" . $this->document_id);
-      //  $conn->Execute("delete from iostate where document_id=" . $this->document_id);
+        
         $conn->Execute("delete from messages where item_type=" . \App\Entity\Message::TYPE_DOC . " and item_id=" . $this->document_id);
         $conn->Execute("delete from files where item_type=" . \App\Entity\Message::TYPE_DOC . " and item_id=" . $this->document_id);
         $conn->Execute("delete from filesdata where   file_id not in (select file_id from files)");
 
         //   if(System::getUser()->userlogin =='admin') return;
-        if ($hasExecuted || $hasPayment) {
+        if ($hasExecuted  ) {
             $admin = \App\Entity\User::getByLogin('admin');
 
             $n = new \App\Entity\Notify();

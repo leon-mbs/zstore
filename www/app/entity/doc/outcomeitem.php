@@ -31,6 +31,17 @@ class OutcomeItem extends Document
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
                 $sc->save();
+        
+                   if($this->headerdata['mtype'] > 0) {
+                      $io = new \App\Entity\IOState();
+                      $io->document_id = $this->document_id;
+                      $io->amount =  0-$qty * $stock->partion;
+                      $io->iotype =$this->headerdata['mtype'];
+              
+                      $io->save();
+                   }
+                
+                
             }
         }
 

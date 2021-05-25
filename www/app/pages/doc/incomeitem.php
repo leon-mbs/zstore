@@ -50,6 +50,7 @@ class IncomeItem extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name")))->onChange($this, 'OnEmp');
         $this->docform->add(new DropDownChoice('exmf', \App\Entity\MoneyFund::getList(), H::getDefMF()));
         $this->docform->add(new TextInput('examount'));
+        $this->docform->add(new DropDownChoice('mtype', \App\Entity\IOState::getTypeList(3), 0));
 
         $this->add(new Form('editdetail'))->setVisible(false);
 
@@ -68,6 +69,7 @@ class IncomeItem extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
 
+            $this->docform->mtype->setValue($this->_doc->headerdata['mtype']);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->emp->setValue($this->_doc->headerdata['emp']);
             $this->docform->exmf->setValue($this->_doc->headerdata['exmf']);
@@ -245,6 +247,7 @@ class IncomeItem extends \App\Pages\Base
             return;
         }
 
+        $this->_doc->headerdata['mtype'] = $this->docform->mtype->getValue();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
         $this->_doc->headerdata['emp'] = $this->docform->emp->getValue();

@@ -48,6 +48,7 @@ class OutcomeItem extends \App\Pages\Base
             }
         }
 
+        $this->docform->add(new DropDownChoice('mtype', \App\Entity\IOState::getTypeList(4) ));
 
         $this->docform->add(new DropDownChoice('tostore', $tostore, 0));
 
@@ -78,6 +79,7 @@ class OutcomeItem extends \App\Pages\Base
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->tostore->setValue($this->_doc->headerdata['tostore']);
+            $this->docform->mtype->setValue($this->_doc->headerdata['mtype']);
 
             $this->docform->notes->setText($this->_doc->notes);
 
@@ -222,6 +224,7 @@ class OutcomeItem extends \App\Pages\Base
 
         $this->_doc->notes = $this->docform->notes->getText();
 
+        $this->_doc->headerdata['mtype'] = $this->docform->mtype->getValue();
         $this->_doc->headerdata['tostore'] = $this->docform->tostore->getValue();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();

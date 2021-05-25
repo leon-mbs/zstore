@@ -59,15 +59,15 @@ class IOState extends \ZCL\DB\Entity
     */
     public static function getTypeList($type = 0) {
         $list = array();
-        if ($type == 1 || $type ==0 || $type==13) {
+        if ($type == 1 || $type ==0  || $type ==13 ) {
             $list[self::TYPE_BASE_INCOME] = \App\Helper::l('pt_inprod');
 
-            $list[self::TYPE_OTHER_INCOME] = \App\Helper::l('pt_inother');
             $list[self::TYPE_FIN] = \App\Helper::l('pt_fin');
             $list[self::TYPE_CANCEL_CUST] = \App\Helper::l('pt_cancelcust');
+            $list[self::TYPE_OTHER_INCOME] = \App\Helper::l('pt_inother');
         }
 
-        if ($type == 2 || $type ==0|| $type==24) {
+        if ($type == 2 || $type ==0  || $type ==24) {
             $list[self::TYPE_BASE_OUTCOME] = \App\Helper::l('pt_outprod');
             $list[self::TYPE_COMMON_OUTCOME] = \App\Helper::l('pt_outcommon');
             $list[self::TYPE_ADMIN_OUTCOME] = \App\Helper::l('pt_outadm');
@@ -76,22 +76,27 @@ class IOState extends \ZCL\DB\Entity
             $list[self::TYPE_TAX_OUTCOME] = \App\Helper::l('pt_outtax');
             $list[self::TYPE_BILL_OUTCOME] = \App\Helper::l('pt_outrent');
             $list[self::TYPE_DIVIDEND_OUTCOME] = \App\Helper::l('pt_outcap');
-            $list[self::TYPE_OTHER_OUTCOME] = \App\Helper::l('pt_outother');
             $list[self::TYPE_INV] = \App\Helper::l('pt_inv');
             $list[self::TYPE_BANK] = \App\Helper::l('pt_bank');
             $list[self::TYPE_CANCEL] = \App\Helper::l('pt_cancel');
+            $list[self::TYPE_OTHER_OUTCOME] = \App\Helper::l('pt_outother');
         }
      
-        if ($type == 3 || $type == 0 || $type==13) {
+        if ($type == 3 || $type == 0  || $type ==13 ) {
             $list[self::TYPE_OVER] = \App\Helper::l('pt_itover');
-
+            $list[self::TYPE_OTHER_INCOME] = \App\Helper::l('pt_inother');
+ 
            
         }
      
-        if ($type == 4 || $type == 0 || $type==24) {
+        if ($type == 4 || $type == 0   || $type ==24) {
             $list[self::TYPE_LOST] = \App\Helper::l('pt_itlost');
             $list[self::TYPE_TRASH] = \App\Helper::l('pt_ittrash');
-            
+            $list[self::TYPE_BASE_OUTCOME] = \App\Helper::l('pt_outprod');
+            $list[self::TYPE_COMMON_OUTCOME] = \App\Helper::l('pt_outcommon');
+            $list[self::TYPE_ADMIN_OUTCOME] = \App\Helper::l('pt_outadm');
+            $list[self::TYPE_OTHER_OUTCOME] = \App\Helper::l('pt_outother');
+          
         }
 
         return $list;
