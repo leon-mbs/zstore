@@ -273,9 +273,7 @@ class InvoiceCust extends \App\Pages\Base
         $this->_doc->headerdata['nds'] = $this->docform->nds->getText();
         $this->_doc->headerdata['disc'] = $this->docform->disc->getText();
 
-        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
-            $this->_doc->payed = 0;
-        }
+      
         $this->_doc->customer_id = $this->docform->customer->getKey();
         if ($this->_doc->customer_id > 0) {
             $customer = Customer::load($this->_doc->customer_id);
@@ -292,7 +290,8 @@ class InvoiceCust extends \App\Pages\Base
         if ($this->checkForm() == false) {
             return;
         }
-
+        if($this->_doc->payed ==0)   $this->_doc->headerdata['payment']=0;
+        
         $file = $this->docform->scan->getFile();
         if ($file['size'] > 10000000) {
             $this->setError("filemore10M");
@@ -461,8 +460,8 @@ class InvoiceCust extends \App\Pages\Base
         if ($this->docform->customer->getKey() == 0) {
             $this->setError("noselsender");
         }
-        if ($this->docform->payment->getValue() == 0) {
-            $this->setError("noselpaytype");
+        if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
+            $this->setError("noselmf");
         }
         return !$this->isError();
     }

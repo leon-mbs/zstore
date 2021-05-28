@@ -55,7 +55,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(  true), H::getDefMF()))->onChange($this, 'OnPayment');
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(   ), H::getDefMF()))->onChange($this, 'OnPayment');
 
         $this->docform->add(new DropDownChoice('val', H::getValList(), '0'))->onChange($this, 'OnVal');
 
@@ -435,13 +435,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->_doc->payed = $this->docform->payed->getText();
 
-        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID) {
-            $this->_doc->payed = 0;
-            $this->_doc->payamount = 0;
-        }
-        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
-            $this->_doc->payed = 0;
-        }
+         
 
         if ($this->checkForm() == false) {
             return;
@@ -452,6 +446,8 @@ class GoodsReceipt extends \App\Pages\Base
             $this->setError("filemore10M");
             return;
         }
+
+        if($this->_doc->payed == 0)   $this->_doc->headerdata['payment']=0;
 
         $common = System::getOptions("common");
 
@@ -648,9 +644,10 @@ class GoodsReceipt extends \App\Pages\Base
         if ($this->docform->customer->getKey() == 0) {
             $this->setError("noselsender");
         }
-        if ($this->docform->payment->getValue() == 0) {
-            $this->setError("noselpaytype");
+        if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
+            $this->setError("noselmf");
         }
+
         return !$this->isError();
     }
 

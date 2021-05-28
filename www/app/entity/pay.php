@@ -85,12 +85,6 @@ class Pay extends \ZCL\DB\Entity
         $pay->user_id = \App\System::getUser()->user_id;
         $pay->save();
 
-        $io = new \App\Entity\IOState();
-        $io->document_id = $document_id;
-        $io->amount = $amount;
-        $io->iotype = $type;
-  
-        $io->save();
         
         
         $mf = \App\Entity\MoneyFund::load($mf_id);
@@ -124,12 +118,12 @@ class Pay extends \ZCL\DB\Entity
             
         }
 
-        $conn = \ZDB\DB::getConnect();
+      //  $conn = \ZDB\DB::getConnect();
 
-        $sql = "select coalesce(abs(sum(amount)),0) from paylist where paytype <> ".Pay::PAY_BANK." and  document_id=" . $document_id;
-        $payed = $conn->GetOne($sql);
-        $conn->Execute("update documents set payed={$payed} where   document_id =" . $document_id);
-        return $payed;
+      //  $sql = "select coalesce(abs(sum(amount)),0) from paylist where paytype <> ".Pay::PAY_BANK." and  document_id=" . $document_id;
+       // $payed = $conn->GetOne($sql);
+      //  $conn->Execute("update documents set payed={$payed} where   document_id =" . $document_id);
+       // return $payed;
     }
 
     public static function cancelPayment($id, $comment) {

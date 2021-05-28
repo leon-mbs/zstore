@@ -46,6 +46,18 @@ class IOState extends \ZCL\DB\Entity
         
     }
   
+      public static function addIOState($document_id, $amount,     $type ) {
+        if (0 == (float)$amount || 0 == (int)$document_id || 0 == (int)$type) {
+            return;
+        }
+            $io = new  IOState();
+            $io->document_id = $document_id;
+            $io->amount = $amount;
+            $io->iotype = $type;
+            $io->save();      
+      }
+  
+  
     protected function afterLoad() {
         $this->document_date = strtotime($this->document_date);
         
