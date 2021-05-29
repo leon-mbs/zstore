@@ -99,6 +99,24 @@ class Contract extends \ZCL\DB\Entity
 
         return $ar;
     }
+    /**
+     * список  платежей
+     *
+     */
+    public function getPayments() {
+
+        $ar = array();
+
+        $where = " document_id in (select document_id from  documents where  customer_id={$this->customer_id} and  content like '%<contract_id>{$this->contract_id}</contract_id>%'  )";
+
+        $res = \App\Entity\Pay::find($where, 'pl_id asc');
+        foreach ($res as $k => $v) {
+            $ar[$k] = $v;
+        }
+
+
+        return $ar;
+    }
 
     /**
      * к оплате

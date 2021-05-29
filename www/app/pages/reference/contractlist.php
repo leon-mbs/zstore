@@ -72,6 +72,9 @@ class ContractList extends \App\Pages\Base
         $this->docpan->add(new DataView('dtable', new ArrayDataSource(array()), $this, 'doclistOnRow'));
         $this->docpan->dtable->setPageSize(H::getPG());
         $this->docpan->add(new \Zippy\Html\DataList\Paginator('dpag', $this->docpan->dtable));
+        $this->docpan->add(new DataView('ptable', new ArrayDataSource(array()), $this, 'paylistOnRow'));
+        $this->docpan->dtable->setPageSize(H::getPG());
+        $this->docpan->add(new \Zippy\Html\DataList\Paginator('ppag', $this->docpan->ptable));
 
         if ($id > 0) {
             $c = Contract::load($id);
@@ -105,7 +108,7 @@ class ContractList extends \App\Pages\Base
             $row->scanlink->setLink(_BASEURL . 'loadfile.php?id=' . $item->file_id);
         }
 
-        $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
+          $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
@@ -224,9 +227,12 @@ class ContractList extends \App\Pages\Base
         $this->docpan->cname->setText($this->_contract->contract_number);
 
         $dlist = $this->_contract->getDocs();
+        $plist = $this->_contract->getPayments();
 
         $this->docpan->dtable->getDataSource()->setArray($dlist);
         $this->docpan->dtable->Reload();
+        $this->docpan->ptable->getDataSource()->setArray($plist);        
+        $this->docpan->ptable->Reload();
     }
 
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
@@ -235,6 +241,13 @@ class ContractList extends \App\Pages\Base
         $row->add(new Label("dtype", $doc->meta_desc));
         $row->add(new Label("ddate", H::fd($doc->document_date)));
         $row->add(new Label("dsumma", H::fa($doc->amount)));
+    }
+    public function paylistOnRow(\Zippy\Html\DataList\DataRow $row) {
+        $doc = $row->getDataItem();
+        $row->add(new Label("pmfname", $doc->mf_name));
+        $row->add(new Label("pnotes", $doc->notes));
+        $row->add(new Label("pdate", H::fd($doc->paydate)));
+        $row->add(new Label("psumma", H::fa($doc->amount)));
     }
 
 }
