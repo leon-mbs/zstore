@@ -34,6 +34,7 @@ class UserRole extends Entity
             $acl = array();
         }
 
+        $this->noshowpartion = $acl['noshowpartion'];
         $this->aclview = $acl['aclview'];
         $this->acledit = $acl['acledit'];
         $this->aclexe = $acl['aclexe'];
@@ -57,6 +58,7 @@ class UserRole extends Entity
 
         $acl = array();
 
+        $acl['noshowpartion'] = $this->noshowpartion;
         $acl['aclview'] = $this->aclview;
         $acl['acledit'] = $this->acledit;
         $acl['aclexe'] = $this->aclexe;
@@ -64,6 +66,7 @@ class UserRole extends Entity
         $acl['aclstate'] = $this->aclstate;
         $acl['acldelete'] = $this->acldelete;
 
+        $acl['widgets'] = $this->widgets;
         $acl['widgets'] = $this->widgets;
         $acl['modules'] = $this->modules;
         $acl['smartmenu'] = $this->smartmenu;

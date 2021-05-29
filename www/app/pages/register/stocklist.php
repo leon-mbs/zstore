@@ -147,7 +147,7 @@ class StockListDataSource implements \Zippy\Interfaces\DataSource
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
         $conn = \ZDB\DB::getConnect();
-        $sql = "select e.outprice,e.entry_id, e.quantity,  e.amount  , d.document_id, d.document_number,d.document_date,s.partion,s.snumber from documents   d ";
+        $sql = "select e.outprice,e.entry_id, e.quantity,  (s.partion*e.quantity) as amount  , d.document_id, d.document_number,d.document_date,s.partion,s.snumber from documents   d ";
         $sql .= " join `entrylist` e on d.`document_id` = e.`document_id` ";
         $sql .= " join `store_stock` s on s.`stock_id` = e.`stock_id` ";
         $sql .= " where " . $this->getWhere() . " order  by  entry_id     ";

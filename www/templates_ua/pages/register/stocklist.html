@@ -1,7 +1,7 @@
 <html>
     <body>
         <div class="row">
-            <div class="col-12 col-xl-8  ">
+            <div class="col-12 col-xl-10  ">
 
                 <h3>Журнал руху ТМЦ </h3>
 
@@ -39,8 +39,12 @@
 
                         <th>Дата</th>
                         <th>Документ</th>
+                           {{^noshowpartion}}
 
                         <th class="text-right">Обл. ціна</th>
+                           {{/noshowpartion}}
+                           
+
                         {{#usesnumber}}
                         <th class="text-right">Серія</th>
                         {{/usesnumber}}

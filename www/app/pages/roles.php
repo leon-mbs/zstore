@@ -46,9 +46,10 @@ class Roles extends \App\Pages\Base
         $this->add(new Panel("editpan"))->setVisible(false);
         $this->editpan->add(new Form('editform'))->onSubmit($this, 'saveaclOnClick');
 
+
+        $this->editpan->editform->add(new CheckBox('editnoshowpartion'));
+
         //виджеты
-
-
         $this->editpan->editform->add(new CheckBox('editwminqty'));
         $this->editpan->editform->add(new CheckBox('editwsdate'));
         $this->editpan->editform->add(new CheckBox('editwrdoc'));
@@ -133,6 +134,10 @@ class Roles extends \App\Pages\Base
 
         $this->editpan->editform->metaaccess->metarow->Reload();
 
+        
+        $this->editpan->editform->editnoshowpartion->setChecked($this->role->noshowpartion);
+        
+        
         if (strpos($this->role->widgets, 'wminqty') !== false) {
             $this->editpan->editform->editwminqty->setChecked(true);
         }
@@ -212,6 +217,7 @@ class Roles extends \App\Pages\Base
 
     public function saveaclOnClick($sender) {
 
+        $this->role->noshowpartion = $this->editpan->editform->editnoshowpartion->isChecked() ?1:0;
 
         $varr = array();
         $earr = array();
@@ -265,7 +271,8 @@ class Roles extends \App\Pages\Base
         if ($this->editpan->editform->editwgraph->isChecked()) {
             $widgets = $widgets . ',wgraph';
         }
-
+     
+     
 
         $this->role->widgets = trim($widgets, ',');
 

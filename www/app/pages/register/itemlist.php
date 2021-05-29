@@ -7,6 +7,7 @@ use App\Entity\Item;
 use App\Entity\Stock;
 use App\Entity\Store;
 use App\Helper as H;
+use App\System  ;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
@@ -96,6 +97,9 @@ class ItemList extends \App\Pages\Base
         if ($item->image_id == 0) {
             $row->imagelistitem->setVisible(false);
         }
+        
+      
+        
     }
 
     public function OnFilter($sender) {

@@ -35,8 +35,8 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["useval"] = $options['useval'] == 1;
         $this->_tvars["usecattree"] = $options['usecattree'] == 1;
         $this->_tvars["usemobileprinter"] = $options['usemobileprinter'] == 1;
-
-
+        $this->_tvars["noshowpartion"]  = System::getUser()->noshowpartion;
+        
 
         $blist = array();
         if ($this->_tvars["usebranch"] == true) {

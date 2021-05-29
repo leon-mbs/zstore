@@ -222,7 +222,7 @@ class ProductList extends \App\Pages\Base
                 return;
             }
 
-            if ($imagedata[0] * $imagedata[1] > 1000000) {
+            if ($imagedata[0] * $imagedata[1] > 10000000) {
                 $this->setError('toobigimage');
                 return;
             }

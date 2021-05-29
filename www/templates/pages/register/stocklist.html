@@ -1,7 +1,7 @@
 <html>
     <body>
         <div class="row">
-            <div class="col-12 col-xl-8  ">
+            <div class="col-12 col-xl-10  ">
 
                 <h3>Журнал движения ТМЦ </h3>
 
@@ -39,8 +39,10 @@
 
                         <th>Дата</th>
                         <th>Документ</th>
-
+                        {{^noshowpartion}}
                         <th class="text-right">Уч. цена</th>
+                        {{/noshowpartion}}
+                        
                         {{#usesnumber}}
                         <th class="text-right">Серия</th>
                         {{/usesnumber}}
@@ -56,7 +58,10 @@
 
                         <td class="text-nowrap" zippy="date"></td>
                         <td zippy="dnumber"></td>
+                        {{^noshowpartion}}
                         <td zippy="partion" class="text-right"></td>
+                        {{/noshowpartion}}
+                        
                         {{#usesnumber}}
                         <td zippy="snumber"></td>
                         {{/usesnumber}}
