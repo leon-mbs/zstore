@@ -14,8 +14,8 @@ class Pay extends \ZCL\DB\Entity
 
     
     const PAY_CUSTOMER         = 1;   //расчеты  с  контрагентм
-    const PAY_BANK             = 2;   //эквайринг
-    const PAY_BONUS            = 3;   //бонусы  клиенту
+    const PAY_BANK             = 1000;   //эквайринг
+    const PAY_BONUS            = 1001;   //бонусы  клиенту
     
     
     protected function init() {
@@ -92,38 +92,34 @@ class Pay extends \ZCL\DB\Entity
             //банковский процент
           
           
-            if ($mf->beznal == 1 && $mf->btran > 0  && $amount < 0) {
-                $payb = new \App\Entity\Pay();
-                $payb->mf_id = $mf_id;
-                $payb->document_id = $document_id;
-                $payb->amount =   ($amount * $mf->btran / 100);
-                $payb->paytype = Pay::PAY_BANK;
-                $payb->paydate = $paydate;
-                $payb->notes = \App\Helper::l('bankproc');
-                $payb->user_id = \App\System::getUser()->user_id;
-                $payb->save();
+            if ($mf->beznal == 1)  {
+                if ( ($mf->btran > 0  && $amount < 0)||($mf->btranin > 0  && $amount > 0)  ) {
+                    $amount = abs($amount);
+                    $payb = new \App\Entity\Pay();
+                    $payb->mf_id = $mf_id;
+                    $payb->document_id = $document_id;
+                    $payb->amount =  0 - ($amount * $mf->btran / 100);
+                    $payb->paytype = Pay::PAY_BANK;
+                    $payb->paydate = $paydate;
+                    $payb->notes = \App\Helper::l('bankproc');
+                    $payb->user_id = \App\System::getUser()->user_id;
+                    $payb->save();
+                    
+                    \App\Entity\IOState::addIOState($document_id,  $amount,\App\Entity\IOState::TYPE_BANK);
+  
+                    
+                }
             }
-            
-            if ($mf->beznal == 1 && $mf->btranin > 0  && $amount > 0) {
-                $payb = new \App\Entity\Pay();
-                $payb->mf_id = $mf_id;
-                $payb->document_id = $document_id;
-                $payb->amount =  0- ($amount * $mf->btranin / 100);
-                $payb->paytype = Pay::PAY_BANK;
-                $payb->paydate = $paydate;
-                $payb->notes = \App\Helper::l('bankproc');
-                $payb->user_id = \App\System::getUser()->user_id;
-                $payb->save();
-            }
+             
             
         }
 
-      //  $conn = \ZDB\DB::getConnect();
+        $conn = \ZDB\DB::getConnect();
 
-      //  $sql = "select coalesce(abs(sum(amount)),0) from paylist where paytype <> ".Pay::PAY_BANK." and  document_id=" . $document_id;
-       // $payed = $conn->GetOne($sql);
-      //  $conn->Execute("update documents set payed={$payed} where   document_id =" . $document_id);
-       // return $payed;
+        $sql = "select coalesce(abs(sum(amount)),0) from paylist where paytype < 1000  and  document_id=" . $document_id;
+        $payed = $conn->GetOne($sql);
+        $conn->Execute("update documents set payed={$payed} where   document_id =" . $document_id);
+        return $payed;
     }
 
     public static function cancelPayment($id, $comment) {

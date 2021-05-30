@@ -336,7 +336,7 @@ class DocList extends \App\Pages\Base
         }
 
         $doc->updateStatus(Document::STATE_CANCELED);
-      
+        $doc->payed=0;
         $doc->save();
 
         $this->doclist->setSelectedRow($sender->getOwner());

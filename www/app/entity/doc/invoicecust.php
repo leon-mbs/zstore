@@ -63,7 +63,10 @@ class InvoiceCust extends Document
     public function Execute() {
 
         if ($this->headerdata['payment'] > 0 && $this->payed) {
-             \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->payed, $this->headerdata['payment'], \App\Entity\PAY::PAY_CUSTOMER);
+             $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->payed, $this->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_OUTCOME);
+            if ($payed > 0) {
+                $this->payed = $payed;
+            }
              \App\Entity\IOState::addIOState($document_id,0 - $this->payed,\App\Entity\IOState::TYPE_BASE_OUTCOME);
         
         }

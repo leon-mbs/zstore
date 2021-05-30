@@ -360,7 +360,7 @@ class Document extends \ZCL\DB\Entity
         $this->state = $state;
         $this->insertLog($state);
 
-        $this->save();
+        
 
         if ($oldstate != $state) {
             $doc = $this->cast();
@@ -368,7 +368,9 @@ class Document extends \ZCL\DB\Entity
              
             \App\Entity\Subscribe::onDocumentState($doc->document_id, $state);
         }
-
+        
+        $this->save();
+        
         return true;
     }
 

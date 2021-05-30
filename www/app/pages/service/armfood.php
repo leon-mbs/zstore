@@ -41,7 +41,7 @@ class ARMFood extends \App\Pages\Base
     private $_doc;
     public  $_itemlist   = array();
     public  $_catlist    = array();
-    public  $_prodlist = array();
+    public  $_prodlist   = array();
     public  $_doclist    = array();
 
     public function __construct() {
@@ -107,7 +107,8 @@ class ARMFood extends \App\Pages\Base
 
         $this->docpanel->add(new Panel('catpan'))->setVisible(false);
         $this->docpanel->catpan->add(new DataView('catlist', new ArrayDataSource($this, '_catlist'), $this, 'onCatRow'));
-
+        $this->docpanel->catpan->add(new ClickLink('stopcat',$this,'onStopCat'));  
+        
         $this->docpanel->add(new Panel('prodpan'))->setVisible(false);
         $this->docpanel->prodpan->add(new DataView('prodlist', new ArrayDataSource($this, '_prodlist'), $this, 'onProdRow'));
 
@@ -232,7 +233,11 @@ class ARMFood extends \App\Pages\Base
     public function addnewposOnClick($sender) {
         $this->docpanel->catpan->setVisible(true);
         $this->docpanel->prodpan->setVisible(false);
-        $this->_catlist = Category::find('coalesce(parent_id,0)=0');
+        $this->docpanel->listsform->setVisible(false);        
+        $this->docpanel->navform->setVisible(false);        
+        
+        
+        $this->_catlist = Category::find('coalesce(parent_id,0)=0 and  cat_id in (select cat_id  from items where item_type in(1,4,5) and  disabled<> 1 )');
         $this->docpanel->catpan->catlist->Reload();
     }
 
@@ -297,7 +302,7 @@ class ARMFood extends \App\Pages\Base
              $this->_catlist    = $catlist;
              $this->docpanel->catpan->catlist->Reload();
         } else {
-            $this->_prodlist  = Item::find('disabled<>1  and  item_type in (1,4)  and cat_id='.$cat->cat_id) ;
+            $this->_prodlist  = Item::find('disabled<>1  and  item_type in (1,4,5)  and cat_id='.$cat->cat_id) ;
             $this->docpanel->catpan->setVisible(false);
             $this->docpanel->prodpan->setVisible(true);
             $this->docpanel->prodpan->prodlist->Reload();
@@ -305,6 +310,7 @@ class ARMFood extends \App\Pages\Base
         
     }
 
+    
     public function onProdBtnClick($sender) {
         $item = $sender->getOwner()->getDataItem();
          $store_id = $this->setupform->store->getValue();
@@ -324,10 +330,20 @@ class ARMFood extends \App\Pages\Base
            // $item->price = $item->getPrice($this->_pricetype, $this->_store);
             $this->_itemlist[$item->item_id] = $item;
         }
+         $this->docpanel->catpan->setVisible(true);
          $this->docpanel->prodpan->setVisible(false);
-         $this->docpanel->listsform->itemlist->Reload(); 
-         $this->calcTotal() ;        
+      
     }
+
+    public function onStopCat($sender) {
+        
+         $this->docpanel->listsform->setVisible(true);        
+         $this->docpanel->navform->setVisible(true);        
+         $this->docpanel->catpan->setVisible(false);        
+         $this->docpanel->listsform->itemlist->Reload(); 
+         $this->calcTotal() ;  
+    }
+
     
     public function addcodeOnClick($sender) {
         $code = trim($this->docpanel->navform->barcode->getText());
