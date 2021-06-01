@@ -132,9 +132,9 @@
                                     <th class="text-right ">Кіл.</th>
                                     <th class="text-right">Ціна</th>
                                     <th class="text-right">Сума</th>
-                                   
+                                    {{#pack}}
                                     <th class="text-center text-nowrap">С собою</th>
-                                   
+                                    {{/pack}}
                                     
                                     <th > </th>
                                 </tr>
@@ -150,9 +150,9 @@
                                     </td>
                                     <td zippy="price" class="text-right"></td>
                                     <td zippy="amount" class="text-right"></td>
-                                
+                                    {{#pack}}
                                     <td class="text-center"> <a zippy="myselfon"><i class="fa fa-toggle-on text-success"></i></a> <a zippy="myselfoff"><i class="fa fa-toggle-off"></i></a> </td>
-                                 
+                                    {{/pack}}
                                     <td><a zippy="removeitem"  ><i class="fa fa-trash text-danger" ></i></a></td>
                                 </tr>
                                 <tr>
@@ -184,10 +184,10 @@
                        <div class="form-group  ">
 
                             <input zippy="btopay" type="submit" value="До сплати "   class="btn btn-success mr-4">
+                            <input zippy="btodel" type="submit" value="Доставка"   class="btn btn-success mr-4">
                            {{#hideblock}} 
                                <input zippy="btoprod" type="submit" value="У виробництво   "   class="btn btn-success mr-4">
                          
-                            <input zippy="btodel" type="submit" value="Доставка"   class="btn btn-success mr-4">
                            {{/hideblock}} 
                         </div>
                     </form>  
@@ -286,7 +286,7 @@
             <div class="col-12 col-md-6 xl-4" >
                 <h4>Список  заказов</h4>
                 <a  class="btn btn-success" zippy="neworder">Нове замовлення</a>  &nbsp;&nbsp;&nbsp;
-              {{#hideblock}}   <a  class="btn btn-success" zippy="newdelivery">Нова доставка</a>      {{/hideblock}} 
+              {{#delivery}}   <a  class="btn btn-success" zippy="newdelivery">Нова доставка</a>      {{/delivery}} 
             
               
              <div class="row"  >       
@@ -345,7 +345,7 @@
                         
                         <td ><i class="fa fa-blender"/></td>
                         <td ><i class="fa fa-credit-card" /></td>
-                        <td ><i class="fa fa-dolly" /></td>
+                        <td ><i class="fa fa-dolly" />() </td>
                        <td class="text-right" zippy="docamount"></td>
                         
                         <td zippy="notes"></td>

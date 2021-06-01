@@ -140,6 +140,7 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->editdisc->setText(H::fa($this->_doc->headerdata['disc']));
             $this->docform->payed->setText(H::fa($this->_doc->payed));
             $this->docform->editpayed->setText(H::fa($this->_doc->payed));
+            if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )$this->_doc->payed = $this->_doc->headerdata['payed'];
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->firm->setValue($this->_doc->firm_id);
@@ -434,6 +435,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->_doc->headerdata['basedoc'] = $this->docform->basedoc->getText();
 
         $this->_doc->payed = $this->docform->payed->getText();
+        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
 
          
 

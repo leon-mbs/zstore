@@ -87,6 +87,7 @@ class RetCustIssue extends \App\Pages\Base
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->total->setText(H::fa($this->_doc->amount));
             $this->docform->payed->setText(H::fa($this->_doc->payed));
+            if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )$this->_doc->payed = $this->_doc->headerdata['payed'];
             $this->docform->editpayed->setText(H::fa($this->_doc->payed));
 
             $this->docform->notes->setText($this->_doc->notes);
@@ -246,6 +247,7 @@ class RetCustIssue extends \App\Pages\Base
         $this->_doc->amount = $this->docform->total->getText();
         $this->_doc->payamount = $this->docform->total->getText();
         $this->_doc->payed = $this->docform->payed->getText();
+        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
 
         if ($this->checkForm() == false) {
             return;

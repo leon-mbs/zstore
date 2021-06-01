@@ -59,7 +59,6 @@ class ARMFood extends \App\Pages\Base
         $this->_tvars['delivery'] = $food['delivery'] ?? 0;
         $this->_tvars['tables'] = $food['tables']?? 0 ;
         $this->_tvars['pack'] = $food['pack'] ?? 0;
-        $this->_tvars['bar'] = $food['bar'] ?? 0;
         
           
        

@@ -451,9 +451,20 @@
                     <div class="card">
                     <div class="card-body">
                         <h4>Общепит</h4>
-                        
+                         <small class="badge badge-warning">В  процессе  разработки</small>
                          <form zippy="food">
-                      
+                               <div class="form-check">
+                                <label for="foodworktype">Тип заведения</label>
+                                <select class="form-control" zippy="foodworktype">
+                                   <option value="0">Фастфуд</option>
+                                   <option value="0">Фастфуд (c кухней)</option>
+                                   <option value="2">Кафе</option>
+                                   <option value="3">Кафе (бар отдельно от  кухни)</option>
+                                </select>
+                                <small>Кафе  означает расчет  официантом  после выноса  заказа.
+                                Наличие  кухни (производства)  означает  что  заказ  сначала  отправляется  
+                                на  выполнение </small>
+                            </div>                   
 
                             <div class="form-group  ">
                                 <label for="foodpricetype">Тип цен</label>
@@ -463,31 +474,20 @@
                             <div class="form-check">
                                 <input zippy="foodtables" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="foodtables">Показывать номера  столов</label>
-                                
+                                 <br><small>Для  кафе</small>
                             </div>
                             
                             <div class="form-check">
                                 <input zippy="fooddelivery" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="fooddelivery">Возможность доставки</label>
-                                
-                            </div>
- 
-                            {{#hideform}}
-                            <div class="form-check">
-                                <input zippy="foodbar" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="foodbar">Бар  отдельно от кухни</label>
-                                <br><small>Отдельный чек  (заказ) для  бара</small>
+                                <br><small>Возможность  создания  доставки  из АРМ кассира (по  звонку  клиента)</small>
                             </div>
                             <div class="form-check">
-                                <label for="foodworktype">Организация процесса</label>
-                                <select class="form-control" zippy="foodworktype">
-                                   <option value="0">Сразу  выдача  заказа  и оплата на месте</option>
-                                   <option value="1">Оплата  затем  производство  и выдача</option>
-                                   <option value="2">Заказ, производство,  выдача, расчет официантом</option>
-                                </select>
-                               
+                                <input zippy="foodpack" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="foodpack">Возможность упаковки  с  собой.</label>
+                                <br><small>Ставится если  есть оба варианта (с собой и на месте) и нужно  уточнять в  заказе</small>
                             </div>
-                            {{/hideform}}
+                              
                             <div class="form-group">
                                 <button class="btn btn-primary" type="submit">Сохранить</button>
                             </div>

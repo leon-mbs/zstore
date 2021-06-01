@@ -34,6 +34,9 @@ class Order extends Base
         
         if($this->_tvars["isfood"]) $form->delivery->setValue(Document::DEL_BOY);
         
+        $form->add(new \ZCL\BT\DateTimePicker('time'))->setVisible($this->_tvars["isfood"]);
+        $form->time->setDate(time()+3600);
+        
         $form->add(new TextInput('email'));
         $form->add(new TextInput('phone'));
         $form->add(new TextInput('name'));
@@ -93,6 +96,7 @@ class Order extends Base
         }
         $shop = System::getOptions("shop");
 
+        $time = trim($this->orderform->time->getText());
         $email = trim($this->orderform->email->getText());
         $phone = trim($this->orderform->phone->getText());
         $name = trim($this->orderform->name->getText());
@@ -121,6 +125,11 @@ class Order extends Base
         }
         if (strlen($phone) > 0 && strlen($phone) != \App\Helper::PhoneL()) {
             $this->setError("tel10", \App\Helper::PhoneL());
+            return;
+        }
+
+         if($this->_tvars["isfood"] &&  $time < (time()+3600) ) {
+            $this->setError("timedelivery" );
             return;
         }
 
@@ -165,6 +174,7 @@ class Order extends Base
                 'delivery'      => $delivery,
                 'delivery_name' => $this->orderform->delivery->getValueName(),
                 'email'         => $email,
+                'time'         => $time,
                 'phone'         => $phone,
                 'ship_address'  => $address,
                 'total'         => $amount
