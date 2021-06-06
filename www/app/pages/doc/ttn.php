@@ -348,7 +348,7 @@ class TTN extends \App\Pages\Base
                 $this->_itemlist[$ri]->quantity += 1;
                 $this->docform->detail->Reload();
                 $this->calcTotal();
-                $this->CalcPay();
+              
                 return;
             }
         }
@@ -378,11 +378,7 @@ class TTN extends \App\Pages\Base
             $this->setWarn("noitemonstore", $item->itemname);
         }
 
-
-        if ($this->_itemlist[$item->item_id] instanceof Item) {
-            $this->_itemlist[$item->item_id]->quantity += 1;
-        } else {
-
+   
 
             $price = $item->getPrice($this->docform->pricetype->getValue(), $store_id);
             $item->price = $price;
@@ -417,7 +413,7 @@ class TTN extends \App\Pages\Base
             $item->rowid = $next + 1;
 
             $this->_itemlist[$item->rowid] = $item;
-        }
+        
         $this->docform->detail->Reload();
         $this->calcTotal();
 

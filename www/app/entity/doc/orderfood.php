@@ -42,14 +42,19 @@ class OrderFood extends Document
         $common = \App\System::getOptions('common');
 
         $firm = H::getFirmData($this->firm_id);
-
+        $deliverydata="";
+        $deliverydata =  $this->headerdata["delivery_name"]  ;      
+        if($this->headerdata["delivery"] >1) $deliverydata =   $deliverydata .', '.$this->headerdata["ship_address"];        
+        $deliverydata =   $deliverydata .', '.date("Y-m-d H:i",$this->headerdata["deltime"] );        
+        
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
                         "firm_name"       => $firm["firm_name"],
                         "shopname"        => $common["shopname"],
-                        "address"         => $firm["address"],
-                        "phone"           => $firm["phone"],
-                        "inn"             => $firm["inn"],
+                        "isdelivery"      => $this->headerdata["delivery"] > 0,
+                        "deliverydata"    => $deliverydata  ,
+                        
+                       
                         "customer_name"   => strlen($this->customer_name) > 0 ? $this->customer_name : false,
                         "exchange"        => H::fa($this->headerdata["exchange"]),
                         "pos_name"        => $this->headerdata["pos_name"],
@@ -59,7 +64,6 @@ class OrderFood extends Document
                         "payed"           => H::fa($this->payed),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
-                        "prepaid"         => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
                         "payamount"       => H::fa($this->payamount)
         );
 
@@ -109,7 +113,7 @@ class OrderFood extends Document
                         "payed"           => H::fa($this->payed),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
-                        "prepaid"         => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
+                        
                         "payamount"       => H::fa($this->payamount)
         );
 
@@ -121,9 +125,38 @@ class OrderFood extends Document
     }
 
     public function Execute() {
-        //$conn = \ZDB\DB::getConnect();
 
+     
 
+        return true;
+    }
+
+    protected function getNumberTemplate() {
+        return 'ЗО-000000';
+    }
+
+    public function supportedExport() {
+        return array(self::EX_EXCEL, self::EX_PDF, self::EX_POS);
+    }
+
+ 
+    public function DoPayment() {
+       if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
+        $payed = $this->payed;
+        if ($this->headerdata['exchange'] > 0 && $this->payed > $this->headerdata['exchange']) {
+
+            $payed = $this->payed - $this->headerdata['exchange']; //без здачи
+        }           
+           
+           
+            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $payed, $this->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_INCOME);
+            if ($payed > 0) {
+                $this->payed = $payed;
+            }
+        }
+    }
+ 
+    public function DoStore() {
         foreach ($this->unpackDetails('detaildata') as $item) {
 
 
@@ -161,7 +194,7 @@ class OrderFood extends Document
                                 $io->amount = 0-$st->quantity * $st->partion * $lost;
                                 $io->iotype = \App\Entity\IOState::TYPE_TRASH;
                           
-                              //  $io->save();
+                                $io->save();
 
                             }   
                             
@@ -198,40 +231,9 @@ class OrderFood extends Document
                 $sc->save();
             }
         }
-
-        //списываем бонусы
-        if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
-            $customer = \App\Entity\Customer::load($this->customer_id);
-            if ($customer->discount > 0) {
-                //процент
-            } else {
-                $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0);
-                if ($customer->bonus < 0) {
-                    $customer->bonus = 0;
-                }
-                $customer->save();
-            }
-        }
-      
-   
-        if ($this->headerdata['payment'] > 0 && $payed > 0) {
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $payed, $this->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_INCOME);
-            if ($payed > 0) {
-                $this->payed = $payed;
-            }
-        }
-
-        return true;
-    }
-
-    protected function getNumberTemplate() {
-        return 'ЗО-000000';
-    }
-
-    public function supportedExport() {
-        return array(self::EX_EXCEL, self::EX_PDF, self::EX_POS);
-    }
-
+    }    
      
+    protected function onState($state) {
 
+    }
 }

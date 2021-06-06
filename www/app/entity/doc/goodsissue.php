@@ -64,6 +64,8 @@ class GoodsIssue extends Document
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
                         "prepaid"         => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
+                        "docbarcode"         => $this->getBarCodeImage(),
+                        "docqrcode"         => $this->getQRCodeImage(),
                         "payamount"       => H::fa($this->payamount)
         );
 
@@ -201,6 +203,8 @@ class GoodsIssue extends Document
                         "phone"           => $firm["phone"],
                         "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
                         "document_number" => $this->document_number,
+                        "docbarcode"         => $this->getBarCodeImage(),
+                        "docqrcode"         => $this->getQRCodeImage(),
                         "total"           => H::fa($this->amount)
         );
 

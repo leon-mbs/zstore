@@ -233,19 +233,20 @@ class Document extends \ZCL\DB\Entity
 
     }
 
-    /**
-     * Запись  проводок по  складу
-     * На  случаей  если  проводки надо  выполнить  на статусе  отличном  от Executed
-     */
-    public function Store() {
-
-    }
+    
 
     /**
      * Запись  платежей
-     * На  случаей  если  платежи надо  выполнить  на статусе  отличном  от Executed
+     *  
      */
-    public function Pay() {
+    public function DoPayment() {
+
+    }
+    /**
+     * Проводки по складу
+     * 
+     */
+    public function DoStore() {
 
     }
 
@@ -266,16 +267,8 @@ class Document extends \ZCL\DB\Entity
             //отменяем оплаты   
             $conn->Execute("delete from paylist where document_id = " . $this->document_id);
 
-            // возвращаем бонусы
-            if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
-                $customer = \App\Entity\Customer::load($this->customer_id);
-                if ($customer->discount > 0) {
-                    //  return; //процент
-                } else {
-                    $customer->bonus = $customer->bonus + $this->headerdata['paydisc'];
-                    $customer->save();
-                }
-            }
+     
+            $conn->Execute("delete from iostate where document_id=" . $this->document_id);
 
 
             $conn->CompleteTrans();
@@ -320,7 +313,7 @@ class Document extends \ZCL\DB\Entity
      * Приведение  типа и клонирование  документа
      */
     public function cast() {
-
+        
         if (strlen($this->meta_name) == 0) {
             $metarow = Helper::getMetaType($this->meta_id);
             $this->meta_name = $metarow['meta_name'];
@@ -353,10 +346,10 @@ class Document extends \ZCL\DB\Entity
 
             $state = self::STATE_WA;   //переводим на   ожидание  утверждения
         }
-
+        else
         if ($state == self::STATE_CANCELED) {
             $this->Cancel();
-        }
+        } else
         if ($state == self::STATE_EXECUTED) {
             $this->Execute();
         }
@@ -367,7 +360,7 @@ class Document extends \ZCL\DB\Entity
         $this->state = $state;
         $this->insertLog($state);
 
-        $this->save();
+        
 
         if ($oldstate != $state) {
             $doc = $this->cast();
@@ -375,7 +368,9 @@ class Document extends \ZCL\DB\Entity
              
             \App\Entity\Subscribe::onDocumentState($doc->document_id, $state);
         }
-
+        
+        $this->save();
+        
         return true;
     }
 
@@ -568,17 +563,16 @@ class Document extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
 
         $hasExecuted = $conn->GetOne("select count(*)  from docstatelog where docstate = " . Document::STATE_EXECUTED . " and  document_id=" . $this->document_id);
-        $hasPayment = $conn->GetOne("select count(*)  from paylist where   document_id=" . $this->document_id);
+     //   $hasPayment = $conn->GetOne("select count(*)  from paylist where   document_id=" . $this->document_id);
 
         $conn->Execute("delete from docstatelog where document_id=" . $this->document_id);
-        $conn->Execute("delete from paylist where document_id=" . $this->document_id);
-      //  $conn->Execute("delete from iostate where document_id=" . $this->document_id);
+        
         $conn->Execute("delete from messages where item_type=" . \App\Entity\Message::TYPE_DOC . " and item_id=" . $this->document_id);
         $conn->Execute("delete from files where item_type=" . \App\Entity\Message::TYPE_DOC . " and item_id=" . $this->document_id);
         $conn->Execute("delete from filesdata where   file_id not in (select file_id from files)");
 
         //   if(System::getUser()->userlogin =='admin') return;
-        if ($hasExecuted || $hasPayment) {
+        if ($hasExecuted  ) {
             $admin = \App\Entity\User::getByLogin('admin');
 
             $n = new \App\Entity\Notify();
@@ -840,4 +834,63 @@ class Document extends \ZCL\DB\Entity
         return "";
     }
 
+    
+    /**
+    * есть ли  оплаты
+    * 
+    */
+    public  function hasPayments(){
+        $conn = \ZDB\DB::getConnect();
+        $sql = "select coalesce(sum(amount),0) from paylist where   document_id=" . $this->document_id;
+        $am = doubleval($conn->GetOne($sql));
+        
+        return $am  != 0 ;   
+          
+    }
+    /**
+    * есть ли  проводки  по  складу
+    * 
+    */
+    public  function hasStore(){
+        $conn = \ZDB\DB::getConnect();
+        $sql = "select coalesce(count(*),0) from entrylist where   document_id=" . $this->document_id;
+        $am = round($conn->GetOne($sql));
+        
+        return $am  > 0 ;   
+          
+    }
+
+    /**
+    * возвращает  тэг <img> со штрих кодом номера  документа
+    * 
+    */
+    protected  function getBarCodeImage(){
+        $print = System::getOption('common','printoutbarcode');
+        if($print==0) return '';
+         $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+         $img = '<img style="max-width:200px" src="data:image/png;base64,' . base64_encode($generator->getBarcode($this->document_number, 'C128')) . '">';
+      
+         return $img;
+    }
+    
+    /**
+    * возвращает  тэг <img> со QR кодом ссылки на  документ 
+    * 
+    */
+    protected  function getQRCodeImage(){
+        $print = System::getOption('common','printoutqrcode');
+        if($print==0) return '';
+        $url = _BASEURL."?p=App/Pages/Register/DocList&arg=".$this->document_id;
+        $qrCode = new \Endroid\QrCode\QrCode($url);
+         $qrCode->setSize(100);
+         $qrCode->setMargin(5); 
+         $qrCode->setWriterByName('png'); 
+         
+         $dataUri = $qrCode->writeDataUri();
+         $img = "<img src=\"{$dataUri}\"  />";
+
+         return $img;
+   }
+    
+    
 }

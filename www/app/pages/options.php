@@ -60,6 +60,8 @@ class Options extends \App\Pages\Base
         $this->common->add(new CheckBox('usecattree'));
         $this->common->add(new CheckBox('usemobileprinter'));
         $this->common->add(new CheckBox('showactiveusers'));
+        $this->common->add(new CheckBox('printoutbarcode'));
+        $this->common->add(new CheckBox('printoutqrcode'));
         $this->common->add(new CheckBox('allowminus'));
         $this->common->add(new CheckBox('noallowfiz'));
         $this->common->add(new CheckBox('capcha'));
@@ -102,6 +104,8 @@ class Options extends \App\Pages\Base
 
         $this->common->usemobileprinter->setChecked($common['usemobileprinter']);
         $this->common->showactiveusers->setChecked($common['showactiveusers']);
+        $this->common->printoutbarcode->setChecked($common['printoutbarcode']);
+        $this->common->printoutqrcode->setChecked($common['printoutqrcode']);
         $this->common->usecattree->setChecked($common['usecattree']);
         $this->common->usescanner->setChecked($common['usescanner']);
         $this->common->useimages->setChecked($common['useimages']);
@@ -138,6 +142,7 @@ class Options extends \App\Pages\Base
         //печать
         $this->add(new Form('printer'))->onSubmit($this, 'savePrinterOnClick');
         $this->printer->add(new TextInput('pwidth'));
+        $this->printer->add(new TextInput('pmaxname'));
         $this->printer->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList()));
         $this->printer->add(new DropDownChoice('barcodetype', array('EAN13' => 'EAN-13', 'EAN8' => 'EAN-8', 'C128' => 'Code128', 'C39' => 'Code39'), 'Code128'));
         $this->printer->add(new DropDownChoice('pfontsize', array('12' => '12', '14' => '14', '16' => '16', '20' => '20', '24' => '24', '28' => '28', '36' => '36',), '16'));
@@ -152,6 +157,7 @@ class Options extends \App\Pages\Base
         }
 
         $this->printer->pwidth->setText($printer['pwidth']);
+        $this->printer->pmaxname->setText($printer['pmaxname']);
         $this->printer->pricetype->setValue($printer['pricetype']);
         $this->printer->barcodetype->setValue($printer['barcodetype']);
         $this->printer->pfontsize->setValue($printer['pfontsize']);
@@ -213,11 +219,12 @@ class Options extends \App\Pages\Base
         }
         $this->add(new Form('food'))->onSubmit($this,'onFood');
         $this->food->add(new DropDownChoice('foodpricetype', \App\Entity\Item::getPriceTypeList(),$food['pricetype']));
+        $this->food->add(new DropDownChoice('foodworktype', array(),$food['worktype']));
         $this->food->add(new CheckBox('fooddelivery',$food['delivery']));
         $this->food->add(new CheckBox('foodtables',$food['tables']));
+        $this->food->add(new CheckBox('foodpack',$food['pack']));
         
-        $this->food->add(new CheckBox('foodbar',$food['bar']));
-     
+        
         
         //источники  продаж
         $this->add(new Form('salesourcesform')) ;
@@ -266,6 +273,8 @@ class Options extends \App\Pages\Base
         $common['usescanner'] = $this->common->usescanner->isChecked() ? 1 : 0;
         $common['useimages'] = $this->common->useimages->isChecked() ? 1 : 0;
 
+        $common['printoutqrcode'] = $this->common->printoutqrcode->isChecked() ? 1 : 0;
+        $common['printoutbarcode'] = $this->common->printoutbarcode->isChecked() ? 1 : 0;
         $common['usemobileprinter'] = $this->common->usemobileprinter->isChecked() ? 1 : 0;
         $common['showactiveusers'] = $this->common->showactiveusers->isChecked() ? 1 : 0;
         $common['usecattree'] = $this->common->usecattree->isChecked() ? 1 : 0;
@@ -299,6 +308,7 @@ class Options extends \App\Pages\Base
     public function savePrinterOnClick($sender) {
         $printer = array();
         $printer['pwidth'] = $this->printer->pwidth->getText();
+        $printer['pmaxname'] = $this->printer->pmaxname->getText();
         $printer['pricetype'] = $this->printer->pricetype->getValue();
         $printer['barcodetype'] = $this->printer->barcodetype->getValue();
         $printer['pfontsize'] = $this->printer->pfontsize->getValue();
@@ -371,11 +381,13 @@ class Options extends \App\Pages\Base
     }
     public function onFood($sender) {
         $food = array();
+        $food['worktype'] = $sender->foodworktype->getValue() ;
         $food['pricetype'] = $sender->foodpricetype->getValue() ;
         $food['delivery'] = $sender->fooddelivery->isChecked()?1:0 ;
         $food['tables'] = $sender->foodtables->isChecked()?1:0 ;
+        $food['pack'] = $sender->foodpack->isChecked()?1:0 ;
         
-        $food['bar'] = $sender->foodbar->isChecked()?1:0 ;
+        
         System::setOptions("food", $food);
         $this->setSuccess('saved');
     }

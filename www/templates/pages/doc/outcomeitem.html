@@ -23,6 +23,13 @@
                             <option value="0">Не выбран</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="mtype">Тип затрат</label>
+                        <select class="form-control" zippy="mtype">
+                            <option value="0">Не выбран</option>
+                        </select>
+                    </div>
+                    
                     {{#usebranch}}
                     <div class="form-group  ">
                         <label for="tostore">Оприходовать на склад другого филиала</label>
@@ -58,6 +65,7 @@
                     <table class="table table-sm">
                         <tr>
                             <th>Название</th>
+                            <th>Код</th>
                             <th>Ед.</th>
                             {{#usesnumber}}
                             <th>Серия</th>
@@ -69,6 +77,7 @@
                         </tr>
                         <tr zippy="detail">
                             <td zippy="item"></td>
+                            <td zippy="item_code"></td>
                             <td zippy="msr"></td>
                             {{#usesnumber}}
                             <td zippy="snumber"></td>

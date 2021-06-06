@@ -87,6 +87,7 @@ class RetCustIssue extends \App\Pages\Base
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->total->setText(H::fa($this->_doc->amount));
             $this->docform->payed->setText(H::fa($this->_doc->payed));
+            if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )$this->_doc->payed = $this->_doc->headerdata['payed'];
             $this->docform->editpayed->setText(H::fa($this->_doc->payed));
 
             $this->docform->notes->setText($this->_doc->notes);
@@ -234,10 +235,7 @@ class RetCustIssue extends \App\Pages\Base
             $customer = Customer::load($this->_doc->customer_id);
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
         }
-        if ($this->checkForm() == false) {
-            return;
-        }
-
+ 
         //  $this->calcTotal();
         $firm = H::getFirmData($this->_doc->firm_id, $this->branch_id);
         $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
@@ -249,7 +247,15 @@ class RetCustIssue extends \App\Pages\Base
         $this->_doc->amount = $this->docform->total->getText();
         $this->_doc->payamount = $this->docform->total->getText();
         $this->_doc->payed = $this->docform->payed->getText();
+        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
 
+        if ($this->checkForm() == false) {
+            return;
+        }
+        
+        if($this->_doc->payed ==0)   $this->_doc->headerdata['payment']=0;
+        
+        
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -341,9 +347,10 @@ class RetCustIssue extends \App\Pages\Base
         if (($this->docform->store->getValue() > 0) == false) {
             $this->setError("noselstore");
         }
-        if ($this->docform->customer->getKey() == 0 && trim($this->docform->customer->getText()) == '') {
-            //$this->setError("Неверно введен  постащик");
+        if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
+            $this->setError("noselmf");
         }
+
         return !$this->isError();
     }
 

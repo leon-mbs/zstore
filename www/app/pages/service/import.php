@@ -44,6 +44,7 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("colprice3", $cols));
         $form->add(new DropDownChoice("colprice4", $cols));
         $form->add(new DropDownChoice("colprice5", $cols));
+        $form->add(new DropDownChoice("colcell", $cols));
 
         $pt = \App\Entity\Item::getPriceTypeList() ;
 
@@ -62,6 +63,7 @@ class Import extends \App\Pages\Base
         $form->add(new CheckBox("checkname"));
         $form->add(new CheckBox("noshowprice"));
         $form->add(new CheckBox("noshowshop"));
+        
 
         $form->onSubmit($this, "onImport");
 
@@ -286,7 +288,8 @@ class Import extends \App\Pages\Base
                         $item = Item::getFirst('item_code=' . Item::qstr($itemcode));
                     }
                 }
-                if ($item == null && $checkname == true) {
+                
+                if (  $item == null && $checkname == true) {
                     $item = Item::getFirst('itemname=' . Item::qstr($itemname));
                 }
 
@@ -309,6 +312,9 @@ class Import extends \App\Pages\Base
                     }
                     if (strlen($row[$colmsr]) > 0) {
                         $item->msr = trim($row[$colmsr]);
+                    }
+                    if (strlen($row[$colcell]) > 0) {
+                        $item->cell = trim($row[$colcell]);
                     }
                     if (strlen($row[$colbrand]) > 0) {
                         $item->manufacturer = $row[$colbrand] ;
@@ -494,7 +500,8 @@ class Import extends \App\Pages\Base
     public function onNImport($sender) {
         $store = $this->nform->nstore->getValue();
         $c = $this->nform->ncust->getKey();
-
+        $checkname = $this->nform->ncheckname->isChecked();
+ 
         $preview = $this->nform->npreview->isChecked();
         $passfirst = $this->nform->npassfirst->isChecked();
         $this->_tvars['preview3'] = false;
@@ -576,7 +583,7 @@ class Import extends \App\Pages\Base
                 if (strlen($itemcode) > 0) {
                     $item = Item::getFirst('item_code=' . Item::qstr($itemcode));
                 }
-                if ($item == null) {
+                if ($checkname== true && $item == null) {
                     $item = Item::getFirst('itemname=' . Item::qstr($itemname));
                 }
 

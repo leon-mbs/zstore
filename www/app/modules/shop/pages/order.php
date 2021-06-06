@@ -34,6 +34,9 @@ class Order extends Base
         
         if($this->_tvars["isfood"]) $form->delivery->setValue(Document::DEL_BOY);
         
+        $form->add(new \ZCL\BT\DateTimePicker('time'))->setVisible($this->_tvars["isfood"]);
+        $form->time->setDate(time()+3600);
+        
         $form->add(new TextInput('email'));
         $form->add(new TextInput('phone'));
         $form->add(new TextInput('name'));
@@ -93,6 +96,7 @@ class Order extends Base
         }
         $shop = System::getOptions("shop");
 
+        $time = trim($this->orderform->time->getDate());
         $email = trim($this->orderform->email->getText());
         $phone = trim($this->orderform->phone->getText());
         $name = trim($this->orderform->name->getText());
@@ -114,13 +118,30 @@ class Order extends Base
             $this->setError("enterteldeliv");
             return;
         }
-        if (strlen($phone) == 0 && strlen($email) == 0) {
 
-            $this->setError("entertelemail");
-            return;
+        
+        if($this->_tvars["isfood"] == true) {
+        
+            if (strlen($phone) == 0  ) {
+
+                $this->setError("entertelemail");
+                return;
+            }
+        }  
+        else {
+            if (strlen($phone) == 0 && strlen($email) == 0) {
+
+                $this->setError("entertelemail");
+                return;
+            }       
         }
         if (strlen($phone) > 0 && strlen($phone) != \App\Helper::PhoneL()) {
             $this->setError("tel10", \App\Helper::PhoneL());
+            return;
+        }
+
+         if($this->_tvars["isfood"] &&  $time < (time()+1800) ) {
+            $this->setError("timedelivery" );
             return;
         }
 
@@ -165,8 +186,10 @@ class Order extends Base
                 'delivery'      => $delivery,
                 'delivery_name' => $this->orderform->delivery->getValueName(),
                 'email'         => $email,
+                'deltime'          => $time,
                 'phone'         => $phone,
                 'ship_address'  => $address,
+                'ship_name'     => $name,
                 'total'         => $amount
             );
             $order->packDetails('detaildata', $itlist);
@@ -196,15 +219,16 @@ class Order extends Base
                     $order->customer_id = $c->customer_id;
                 }
             }
-
             $order->headerdata['pricetype'] = $shop["defpricetype"];
+            $order->headerdata['contact'] = $name.', '.$phone;
 
             $order->notes = trim($this->orderform->notes->getText());
             $order->amount = $amount;
+            $order->payamount = $amount;
             $order->branch_id = $op["defbranch"];
             $order->save();
             $order->updateStatus(Document::STATE_NEW);
-             if ($shop['ordertype'] == 1) {
+             if ($shop['ordertype'] == 1) {  //Кассовый чек
                 $order->updateStatus(Document::STATE_EXECUTED);
              }
             

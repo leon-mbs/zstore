@@ -26,6 +26,7 @@ class ItemList extends \App\Pages\Base
 {
 
     private $_item;
+    private $_copy = false;
     private $_pitem_id = 0;
     public  $_itemset  = array();
 
@@ -183,6 +184,7 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('cell', $item->cell));
         $row->add(new Label('inseria'))->setVisible($item->useserial);
 
+        $row->add(new ClickLink('copy'))->onClick($this, 'copyOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         
         $row->add(new ClickLink('set'))->onClick($this, 'setOnClick');
@@ -204,7 +206,14 @@ class ItemList extends \App\Pages\Base
 
  
 
+    public function copyOnClick($sender) {
+          $this->editOnClick($sender);
+          $this->_copy = true;
+          $this->_item->item_id=0;
+          
+    } 
     public function editOnClick($sender) {
+        $this->_copy = false;
         $item = $sender->owner->getDataItem();
         $this->_item = Item::load($item->item_id);
 
@@ -259,6 +268,7 @@ class ItemList extends \App\Pages\Base
     }
 
     public function addOnClick($sender) {
+        $this->_copy = false;
         $this->itemtable->setVisible(false);
         $this->itemdetail->setVisible(true);
         // Очищаем  форму
@@ -291,7 +301,7 @@ class ItemList extends \App\Pages\Base
         if (false == \App\ACL::checkEditRef('ItemList')) {
             return;
         }
-
+ 
         $this->_item->itemname = $this->itemdetail->editname->getText();
         if (strlen($this->_item->itemname) == 0) {
             $this->setError('entername');
@@ -362,6 +372,13 @@ class ItemList extends \App\Pages\Base
                 $this->setWarn('barcode_exists');
             }
         }
+        $printer = System::getOptions('printer');
+        
+        if ( intval($printer['pmaxname']) >0 && strlen($this->_item->shortname) >   intval($printer['pmaxname'])  ) {
+ 
+            $this->setWarn('tolongshortname',$printer['pmaxname']);
+         
+        }
 
 
         $itemname = Item::qstr($this->_item->itemname);
@@ -380,7 +397,15 @@ class ItemList extends \App\Pages\Base
             $this->_item->image_id = 0;
         }
 
-        $this->_item->Save();
+         if ($this->_item->image_id > 0 && $this->_copy==true) {
+              $image =  \App\Entity\Image::load($this->_item->image_id);
+              $image->image_id = 0; 
+              $image->save();
+              $this->_item->image_id = $image->image_id;
+                
+         }
+        
+        $this->_item->save();
 
         $file = $this->itemdetail->editaddfile->getFile();
         if (strlen($file["tmp_name"]) > 0) {
@@ -391,7 +416,7 @@ class ItemList extends \App\Pages\Base
                 return;
             }
 
-            if ($imagedata[0] * $imagedata[1] > 1000000) {
+            if ($imagedata[0] * $imagedata[1] > 10000000) {
 
                 $this->setError('toobigimage');
                 return;

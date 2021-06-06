@@ -111,6 +111,12 @@ class PaySelList extends \App\Pages\Base
         $row->add(new Label('phone', $cust->phone));
         $row->add(new Label('amount', H::fa($cust->sam)));
 
+        $row->add(new RedirectLink('createpay'))->setVisible(false) ;
+        if($cust->sam>0) {
+            $row->createpay->setLink("\\App\\Pages\\Doc\\OutcomeMoney",array(0,$cust->customer_id,$cust->sam));    
+            $row->createpay->setVisible(true)  ;
+        }
+                       
         $row->add(new ClickLink('showdocs'))->onClick($this, 'showdocsOnClick');
 
         $this->_totamount += $cust->sam;

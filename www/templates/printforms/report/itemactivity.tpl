@@ -24,7 +24,7 @@
         <th align="right" style="border: solid black 1px">Кон.</th>
         <th style="border: solid black 1px">Документы</th>
     </tr>
-    {{#_detail}}
+    {{#_detail}}       
     <tr>
 
         <td>{{date}}</td>
@@ -38,6 +38,7 @@
         <td> {{{documents}}}</td>
     </tr>
     {{/_detail}}
+    {{^noshowpartion}}
     <tr>
 
         <td></td>
@@ -50,6 +51,7 @@
         <td align="right"><b>{{baend}}</b></td>
         <th></th>
     </tr>
+  {{/noshowpartion}}    
 </table>
 
 

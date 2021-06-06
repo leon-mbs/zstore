@@ -20,6 +20,29 @@
         <th align="right" width="50px" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Кол.</th>
         <th align="right" width="50px" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Факт</th>
     </tr>
+   
+       {{#_detaillost}}
+    <tr>
+
+        <td>{{item_name}}</td>
+        <td>{{snumber}}</td>
+
+
+        <td align="right">{{quantity}}</td>
+        <td align="right" style="color:red">{{qfact}}</td>
+    </tr>
+    {{/_detaillost}}
+    {{#_detailover}}
+    <tr>
+
+        <td>{{item_name}}</td>
+        <td>{{snumber}}</td>
+
+
+        <td align="right">{{quantity}}</td>
+        <td align="right" style="color:green">{{qfact}}</td>
+    </tr>
+    {{/_detailover}}
     {{#_detail}}
     <tr>
 

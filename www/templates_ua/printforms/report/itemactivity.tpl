@@ -38,6 +38,7 @@
         <td> {{{documents}}}</td>
     </tr>
     {{/_detail}}
+     {{^noshowpartion}} 
     <tr>
 
         <td></td>
@@ -50,6 +51,7 @@
         <td align="right"><b>{{baend}}</b></td>
         <th></th>
     </tr>
+   {{/noshowpartion}}    
 </table>
 
 

@@ -2,7 +2,7 @@
 
     <body>
         <div class="row">
-            <div class="col-12 col-lg-6  card">
+            <div class="col-12   card">
                 <h3>Імпорт номенклатури
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-toggle="popover"
@@ -14,7 +14,7 @@
 
                 <br><br>
                 <form zippy="iform" class="row" enctype="multipart/form-data">
-                    <div class="col-6">
+                    <div class="col-4">
 
                         <div class="form-group  ">
                             <label for="itype">Тип імпорту</label>
@@ -51,7 +51,8 @@
                             <input zippy="noshowshop" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="noshowshop">Не показувати в  онлайн каталозi </label>
                         </div>
-
+                     
+           
                         <div class="  form-check">
                             <input zippy="preview" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="preview">Попередній перегляд</label>
@@ -61,7 +62,7 @@
                             <input class="btn btn-info" type="submit" value="Загрузити"/>
                         </div>
                     </div>
-                    <div class="col-6">
+                    <div class="col-4">
                         <div class="form-group  ">
                             <label><b>Номери стовпців Excel файлу</b> </label>
 
@@ -96,7 +97,15 @@
                             <select style="width:100px;" zippy="colmsr" class="form-control  ">
                             </select>
                         </div>
+                     <div class="form-group  ">
+                            <label for="colcell">Комiрка</label>
+                            <select style="width:100px;" zippy="colcell" class="form-control  ">
+                            </select>
+                        </div>
+      
+                    </div>
 
+                     <div class="col-4">
                         <div class="form-group  ">
                             <label data-label="colqty" for="colqty">Кількість</label>
                             <select style="width:100px;" zippy="colqty" class="form-control  ">
@@ -131,12 +140,15 @@
                             <label  zippy="pricename5" for="colprice5"> </label>
                             <select style="width:100px;" zippy="colprice5" class="form-control  ">
                             </select>
-                        </div>
-
-
-                    </div>
-
-
+                        </div> 
+                        <div class="form-group   ">
+                            <label class="col-8 col-form-label" for="coldesc">Опис </label>
+                     
+                            <select   zippy="coldesc" class="form-control  ">
+                            </select>
+                          </div>  
+ 
+                     </div>
                 </form>
                 {{#preview}}
                 <div class="row">
@@ -215,6 +227,10 @@
                             <label class="form-check-label" for="npassfirst">Пропустити першу строку</label>
                         </div>
                         <div class="  form-check">
+                            <input zippy="ncheckname" type="checkbox" class="form-check-input">
+                            <label class="form-check-label" for="ncheckname">Провiряти на унiкальнiсть назви</label>
+                        </div>
+                       <div class="  form-check">
                             <input zippy="npreview" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="npreview">Попередній перегляд</label>
                         </div>

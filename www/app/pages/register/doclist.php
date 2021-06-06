@@ -133,7 +133,7 @@ class DocList extends \App\Pages\Base
         $filter->customer_name = $this->filter->searchcust->getText();
 
         $filter->searchnumber = trim($this->filter->searchnumber->getText());
-
+        $this->filter->searchnumber->setText('') ;
         $this->doclist->setCurrentPage(1);
         //$this->doclist->setPageSize($this->filter->rowscnt->getValue());
 
@@ -336,7 +336,7 @@ class DocList extends \App\Pages\Base
         }
 
         $doc->updateStatus(Document::STATE_CANCELED);
-        $doc->payed = 0;  //отменяем  оплату
+        $doc->payed=0;
         $doc->save();
 
         $this->doclist->setSelectedRow($sender->getOwner());

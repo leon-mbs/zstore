@@ -196,6 +196,8 @@ class DocView extends \Zippy\Html\PageFragment
         $row->add(new Label('itpartion', H::fa($entry->partion  )));
         $row->add(new Label('itprice', H::fa($entry->outprice  )));
         $row->add(new Label('itamount', H::fa($entry->outprice * $entry->quantity)));
+         
+        
     }
 
     /**

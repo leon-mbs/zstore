@@ -55,7 +55,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(  true), H::getDefMF()))->onChange($this, 'OnPayment');
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(   ), H::getDefMF()))->onChange($this, 'OnPayment');
 
         $this->docform->add(new DropDownChoice('val', H::getValList(), '0'))->onChange($this, 'OnVal');
 
@@ -129,17 +129,18 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
-            $this->docform->payamount->setText($this->_doc->payamount);
-            $this->docform->editpayamount->setText($this->_doc->payamount);
-            $this->docform->nds->setText($this->_doc->headerdata['nds']);
-            $this->docform->editnds->setText($this->_doc->headerdata['nds']);
+            $this->docform->payamount->setText(H::fa($this->_doc->payamount));
+            $this->docform->editpayamount->setText(H::fa($this->_doc->payamount));
+            $this->docform->nds->setText(H::fa($this->_doc->headerdata['nds']));
+            $this->docform->editnds->setText(H::fa($this->_doc->headerdata['nds']));
             $this->docform->val->setValue($this->_doc->headerdata['val']);
             $this->docform->rate->setText($this->_doc->headerdata['rate']);
             $this->docform->editrate->setText($this->_doc->headerdata['rate']);
-            $this->docform->disc->setText($this->_doc->headerdata['disc']);
-            $this->docform->editdisc->setText($this->_doc->headerdata['disc']);
-            $this->docform->payed->setText($this->_doc->payed);
-            $this->docform->editpayed->setText($this->_doc->payed);
+            $this->docform->disc->setText(H::fa($this->_doc->headerdata['disc']));
+            $this->docform->editdisc->setText(H::fa($this->_doc->headerdata['disc']));
+            $this->docform->payed->setText(H::fa($this->_doc->payed));
+            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
+            if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )$this->_doc->payed = $this->_doc->headerdata['payed'];
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->firm->setValue($this->_doc->firm_id);
@@ -434,14 +435,9 @@ class GoodsReceipt extends \App\Pages\Base
         $this->_doc->headerdata['basedoc'] = $this->docform->basedoc->getText();
 
         $this->_doc->payed = $this->docform->payed->getText();
+        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
 
-        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID) {
-            $this->_doc->payed = 0;
-            $this->_doc->payamount = 0;
-        }
-        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
-            $this->_doc->payed = 0;
-        }
+         
 
         if ($this->checkForm() == false) {
             return;
@@ -452,6 +448,8 @@ class GoodsReceipt extends \App\Pages\Base
             $this->setError("filemore10M");
             return;
         }
+
+        if($this->_doc->payed == 0)   $this->_doc->headerdata['payment']=0;
 
         $common = System::getOptions("common");
 
@@ -648,9 +646,10 @@ class GoodsReceipt extends \App\Pages\Base
         if ($this->docform->customer->getKey() == 0) {
             $this->setError("noselsender");
         }
-        if ($this->docform->payment->getValue() == 0) {
-            $this->setError("noselpaytype");
+        if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
+            $this->setError("noselmf");
         }
+
         return !$this->isError();
     }
 

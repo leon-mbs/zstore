@@ -66,6 +66,8 @@ class User extends \ZCL\DB\Entity
         }
 
 
+        $this->noshowpartion = $acl['noshowpartion'];
+        
         $this->aclview = $acl['aclview'];
         $this->acledit = $acl['acledit'];
         $this->aclexe = $acl['aclexe'];

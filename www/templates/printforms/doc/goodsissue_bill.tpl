@@ -47,6 +47,17 @@
         <td colspan="2" align="right">Всего:</td>
         <td align="right">{{total}}</td>
     </tr>
+    <tr>
+                        <td colspan="3" > 
+                            {{{docbarcode}}}
+                        </td>
+       </tr>                 
+       <tr>                    
+                        <td colspan="3"> 
+                            {{{docqrcode}}}
+                        </td>
+
+                    </tr>
 
 
 </table>

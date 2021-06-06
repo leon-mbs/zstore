@@ -26,6 +26,7 @@
 
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Название</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Код</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"></th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Ед.</th>
 
@@ -39,6 +40,7 @@
     <tr>
 
         <td>{{item_name}}</td>
+        <td>{{item_code}}</td>
 
         <td align="right">{{snumber}}</td>
         <td>{{msr}}</td>
@@ -49,7 +51,7 @@
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
-        <td style="border-top:1px #000 solid;" colspan="5" align="right">На сумму:</td>
+        <td style="border-top:1px #000 solid;" colspan="6" align="right">На сумму:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
     <tr>

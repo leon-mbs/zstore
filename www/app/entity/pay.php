@@ -12,24 +12,12 @@ namespace App\Entity;
 class Pay extends \ZCL\DB\Entity
 {
 
-    //типы платежей - затраты и доходы
-    const PAY_BASE_INCOME      = 1;     //операционные доходы
-    const PAY_OTHER_INCOME     = 2;   //прочие доходы
-    const PAY_FIN              = 3;   //доходы от  фин.  деятельности
-    const PAY_CANCEL_CUST      = 5;    //отмена  платежа  покупки
-    const PAY_BASE_OUTCOME     = 50;    //операционные расходы
-    const PAY_COMMON_OUTCOME   = 51;    //общепроизводственные  расходы
-    const PAY_ADMIN_OUTCOME    = 52;    //административные  расходы
-    const PAY_SALE_OUTCOME     = 53;    //расходы на сбыт
-    const PAY_SALARY_OUTCOME   = 54;    //выплата зарплат
-    const PAY_TAX_OUTCOME      = 55;    //уплата  налогов  и сборов
-    const PAY_BILL_OUTCOME     = 56;    //расходы на  аренду и комуналку
-    const PAY_OTHER_OUTCOME    = 57;   //прочие расходы
-    const PAY_DIVIDEND_OUTCOME = 58;   //распределение прибыли
-    const PAY_INV              = 59;   //Инвестиции
-    const PAY_BANK             = 60;   //Банковское  обслуживание
-    const PAY_CANCEL           = 58;    //отмена  платежа  продажи
-
+    
+    const PAY_CUSTOMER         = 1;   //расчеты  с  контрагентм
+    const PAY_BANK             = 1000;   //эквайринг
+    const PAY_BONUS            = 1001;   //бонусы  клиенту
+    
+    
     protected function init() {
         $this->pl_id = 0;
         $this->paytype = 0;
@@ -97,12 +85,6 @@ class Pay extends \ZCL\DB\Entity
         $pay->user_id = \App\System::getUser()->user_id;
         $pay->save();
 
-        $io = new \App\Entity\IOState();
-        $io->document_id = $document_id;
-        $io->amount = $amount;
-        $io->iotype = $type;
-  
-        //$io->save();
         
         
         $mf = \App\Entity\MoneyFund::load($mf_id);
@@ -110,35 +92,31 @@ class Pay extends \ZCL\DB\Entity
             //банковский процент
           
           
-            if ($mf->beznal == 1 && $mf->btran > 0  && $amount < 0) {
-                $payb = new \App\Entity\Pay();
-                $payb->mf_id = $mf_id;
-                $payb->document_id = $document_id;
-                $payb->amount =   ($amount * $mf->btran / 100);
-                $payb->paytype = Pay::PAY_BANK;
-                $payb->paydate = $paydate;
-                $payb->notes = \App\Helper::l('bankproc');
-                $payb->user_id = \App\System::getUser()->user_id;
-                $payb->save();
+            if ($mf->beznal == 1)  {
+                if ( ($mf->btran > 0  && $amount < 0)||($mf->btranin > 0  && $amount > 0)  ) {
+                    $amount = abs($amount);
+                    $payb = new \App\Entity\Pay();
+                    $payb->mf_id = $mf_id;
+                    $payb->document_id = $document_id;
+                    $payb->amount =  0 - ($amount * $mf->btran / 100);
+                    $payb->paytype = Pay::PAY_BANK;
+                    $payb->paydate = $paydate;
+                    $payb->notes = \App\Helper::l('bankproc');
+                    $payb->user_id = \App\System::getUser()->user_id;
+                    $payb->save();
+                    
+                    \App\Entity\IOState::addIOState($document_id,  $amount,\App\Entity\IOState::TYPE_BANK);
+  
+                    
+                }
             }
-            
-            if ($mf->beznal == 1 && $mf->btranin > 0  && $amount > 0) {
-                $payb = new \App\Entity\Pay();
-                $payb->mf_id = $mf_id;
-                $payb->document_id = $document_id;
-                $payb->amount =  0- ($amount * $mf->btranin / 100);
-                $payb->paytype = Pay::PAY_BANK;
-                $payb->paydate = $paydate;
-                $payb->notes = \App\Helper::l('bankproc');
-                $payb->user_id = \App\System::getUser()->user_id;
-                $payb->save();
-            }
+             
             
         }
 
         $conn = \ZDB\DB::getConnect();
 
-        $sql = "select coalesce(abs(sum(amount)),0) from paylist where paytype <> ".Pay::PAY_BANK." and  document_id=" . $document_id;
+        $sql = "select coalesce(abs(sum(amount)),0) from paylist where paytype < 1000  and  document_id=" . $document_id;
         $payed = $conn->GetOne($sql);
         $conn->Execute("update documents set payed={$payed} where   document_id =" . $document_id);
         return $payed;
@@ -167,37 +145,5 @@ class Pay extends \ZCL\DB\Entity
         $pay->save();
     }
 
-    /**
-     * список  расходов  и доходов
-     *
-     * @param mixed $type 0- все, 1- доходы, 2-расходы
-     */
-    public static function getPayTypeList($type = 0) {
-        $list = array();
-        if ($type != 2) {
-            $list[self::PAY_BASE_INCOME] = \App\Helper::l('pt_inprod');
-
-            $list[self::PAY_OTHER_INCOME] = \App\Helper::l('pt_inother');
-            $list[self::PAY_FIN] = \App\Helper::l('pt_fin');
-            $list[self::PAY_CANCEL_CUST] = \App\Helper::l('pt_cancelcust');
-        }
-
-        if ($type != 1) {
-            $list[self::PAY_BASE_OUTCOME] = \App\Helper::l('pt_outprod');
-            $list[self::PAY_COMMON_OUTCOME] = \App\Helper::l('pt_outcommon');
-            $list[self::PAY_ADMIN_OUTCOME] = \App\Helper::l('pt_outadm');
-            $list[self::PAY_SALE_OUTCOME] = \App\Helper::l('pt_outsell');
-            $list[self::PAY_SALARY_OUTCOME] = \App\Helper::l('pt_outsalary');
-            $list[self::PAY_TAX_OUTCOME] = \App\Helper::l('pt_outtax');
-            $list[self::PAY_BILL_OUTCOME] = \App\Helper::l('pt_outrent');
-            $list[self::PAY_DIVIDEND_OUTCOME] = \App\Helper::l('pt_outcap');
-            $list[self::PAY_OTHER_OUTCOME] = \App\Helper::l('pt_outother');
-            $list[self::PAY_INV] = \App\Helper::l('pt_inv');
-            $list[self::PAY_BANK] = \App\Helper::l('pt_bank');
-            $list[self::PAY_CANCEL] = \App\Helper::l('pt_cancel');
-        }
-
-        return $list;
-    }
-
+    
 }

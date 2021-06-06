@@ -56,11 +56,16 @@
 
 
         <div   zippy="docpanel">
-            <h4>Оформлення замовлення</h4>
             <a zippy="toorderlist"><i class="fa fa-list"></i> Список замовлень</a>
+            <h4>Оформлення замовлення</h4>
+            
             <div class="row"  >
                 <div class="col-12  col-xl-10">    
                     <div   zippy="catpan" class="row">
+                        <div    class="col-12">
+                         <i class="fa fa-arrow-alt-circle-left"></i><a  zippy="stopcat">До замовлення</a>  
+                         </div>                    
+                    
                         <div   zippy="catlist" class="col-12 col-sm-6 col-md-4  col-xl-3">
                             <div class="card mb-2" zippy="catbtn"  style="cursor:pointer" >
 
@@ -127,9 +132,9 @@
                                     <th class="text-right ">Кіл.</th>
                                     <th class="text-right">Ціна</th>
                                     <th class="text-right">Сума</th>
-                                   
+                                    {{#pack}}
                                     <th class="text-center text-nowrap">С собою</th>
-                                   
+                                    {{/pack}}
                                     
                                     <th > </th>
                                 </tr>
@@ -145,9 +150,9 @@
                                     </td>
                                     <td zippy="price" class="text-right"></td>
                                     <td zippy="amount" class="text-right"></td>
-                                
+                                    {{#pack}}
                                     <td class="text-center"> <a zippy="myselfon"><i class="fa fa-toggle-on text-success"></i></a> <a zippy="myselfoff"><i class="fa fa-toggle-off"></i></a> </td>
-                                 
+                                    {{/pack}}
                                     <td><a zippy="removeitem"  ><i class="fa fa-trash text-danger" ></i></a></td>
                                 </tr>
                                 <tr>
@@ -179,10 +184,10 @@
                        <div class="form-group  ">
 
                             <input zippy="btopay" type="submit" value="До сплати "   class="btn btn-success mr-4">
+                            <input zippy="btodel" type="submit" value="Доставка"   class="btn btn-success mr-4">
                            {{#hideblock}} 
                                <input zippy="btoprod" type="submit" value="У виробництво   "   class="btn btn-success mr-4">
                          
-                            <input zippy="btodel" type="submit" value="Доставка"   class="btn btn-success mr-4">
                            {{/hideblock}} 
                         </div>
                     </form>  
@@ -265,9 +270,9 @@
 
                         <div zippy="checktext"></div> 
                         <br>
-                        <a onclick=" printpos()"  zippy="btoprint"  class="btn  btn-info">Печать</a>&nbsp;&nbsp;&nbsp;
+                        <a onclick=" printpos()"  zippy="btoprint"  class="btn  btn-info">Друк</a>&nbsp;&nbsp;&nbsp;
                         <a zippy="bnewcheck"  class="btn  btn-success">Нове замовлення</a> &nbsp;&nbsp;&nbsp;
-                   {{#hideblock}}       <a zippy="bnewdelivery" class="btn  btn-success">Нова доставка</a>       {{/hideblock}} 
+                   
                     </div>
                 </div> 
 
@@ -278,10 +283,10 @@
 
     <div class="row" zippy="orderlistpan">
         
-            <div class="col-12 col-md-6 xl-4" >
+            <div class="col-12 col-md-8 xl-6" >
                 <h4>Список  заказов</h4>
                 <a  class="btn btn-success" zippy="neworder">Нове замовлення</a>  &nbsp;&nbsp;&nbsp;
-              {{#hideblock}}   <a  class="btn btn-success" zippy="newdelivery">Нова доставка</a>      {{/hideblock}} 
+              {{#delivery}}   <a  class="btn btn-success" zippy="newdelivery">Нова доставка</a>      {{/delivery}} 
             
               
              <div class="row"  >       
@@ -317,14 +322,15 @@
                     <th>Стіл</th>
                     {{/tables}}
                     
-                     {{#hideblock}} 
+                   
                     <th >Статус</th>
-                  
+                      {{#prod}} 
                     
+                    <th ></th>  
+                     {{/prod}}  
+                    <th ></th>    
                     <th ></th>
-                    <th ></th>
-                    <th ></th>
-                     {{/hideblock}}  
+                   
                     <th class="text-right">Сума</th>
                     
                     <th ></th>
@@ -335,12 +341,14 @@
                        {{#tables}} <td zippy="tablenumber"></td>  {{/tables}}
                        
                         <td class="text-nowrap  " zippy="state">  </td>
-                        {{#hideblock}} 
-                        
-                        
+                        {{#prod}} 
                         <td ><i class="fa fa-blender"/></td>
+                          {{/prod}}   
+                        
                         <td ><i class="fa fa-credit-card" /></td>
-                        <td ><i class="fa fa-dolly" /></td>
+                        <td ><i class="fa fa-dolly" />() </td>
+                     
+                     
                        <td class="text-right" zippy="docamount"></td>
                         
                         <td zippy="notes"></td>
@@ -353,13 +361,13 @@
                <div class="row" zippy="statuspan">
             
             
-             {{#hideblock}} 
+       
                 <div class="card">
                     <div class="card-body">
                         <div class="navbar nav">
                             <form zippy="statusform" class="form-inline ">
                                 <button zippy="bttn" type="submit" class="  btn btn-success  mr-2 ">Редактировать</button>
-                                <button zippy="bgar" type="submit" class="  btn btn-success  mr-2 ">В производство</button>
+                               {{#prod}}        <button zippy="bgar" type="submit" class="  btn btn-success  mr-2 ">В производство</button>     {{/prod}}   
                                 <button zippy="bret" type="submit" class="  btn btn-success  mr-2 ">Оплатить</button>
                                 <button zippy="bret" type="submit" class="  btn btn-success  mr-2 ">Доставка</button>
                                 <button zippy="bret" type="submit" class="  btn btn-success  mr-2 ">Закрыть</button>
@@ -370,7 +378,7 @@
                         </div>
                     </div>
                 </div>
-             {{/hideblock}}     
+               
                 
                 
                 <div class="card">

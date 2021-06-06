@@ -125,7 +125,7 @@ class ItemActivity extends \App\Pages\Base
     (
         SELECT  
           
-          COALESCE(SUM(sc3.`amount`), 0)  
+          COALESCE(SUM((st3.partion*sc3.quantity )), 0)  
          FROM entrylist_view sc3
           JOIN store_stock_view st3
             ON sc3.stock_id = st3.stock_id
@@ -147,8 +147,8 @@ class ItemActivity extends \App\Pages\Base
           date(sc.document_date) AS dt,
           SUM(CASE WHEN quantity > 0 THEN quantity ELSE 0 END) AS obin,
           SUM(CASE WHEN quantity < 0 THEN 0 - quantity ELSE 0 END) AS obout,
-          SUM(CASE WHEN sc.amount > 0 THEN sc.amount ELSE 0 END) AS obinamount,
-          SUM(CASE WHEN sc.amount < 0 THEN 0 - sc.amount ELSE 0 END) AS oboutamount,
+          SUM(CASE WHEN (st.partion*sc.quantity ) > 0 THEN (st.partion*sc.quantity ) ELSE 0 END) AS obinamount,
+          SUM(CASE WHEN (st.partion*sc.quantity )< 0 THEN 0 - (st.partion*sc.quantity ) ELSE 0 END) AS oboutamount,
           GROUP_CONCAT(distinct dc.document_number) AS docs
         FROM entrylist_view sc
           JOIN store_stock_view st
@@ -185,9 +185,11 @@ class ItemActivity extends \App\Pages\Base
             $bain = $bain + $row['obinamount'];
             $baout = $baout + $row['oboutamount'];
         }
+                 
 
         $header = array('datefrom' => \App\Helper::fd($from),
                         "_detail"  => $detail,
+                        'noshowpartion'   => \App\System::getUser()->noshowpartion,
                         'dateto'   => \App\Helper::fd($to),
                         "store"    => Store::load($storeid)->storename
         );

@@ -184,6 +184,18 @@
                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                                    title="Користувачi, якi з  останнi 5 хвилин  змiнили  статус будь якого  документу  "></i>
                             </div>
+                            <div class="form-check">
+                                <input zippy="printoutbarcode" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="printoutbarcode">Друкувати штрих-коди  на  видаткових документах</label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Дозволяе за допомогою сканера  знайти  документ в  журналi  документiв"></i>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="printoutqrcode" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="printoutqrcode">Друкувати QR коди  на  видаткових документах</label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Дозволяе за допомогою сканера мобiльного  пристрою   знайти  документ по  посиланню (користувач  мае  бути залогiненим)"></i>
+                            </div>
 
                             <div class="form-group  "><br>
                                 <label for="ts_start">Початок рабочого дня</label>
@@ -275,6 +287,12 @@
                                 <small class="form-text text-muted">Наприклад '100%' або '40mm' </small>
 
                             </div>
+                           <div class="form-group">
+                                <label for="pmaxname">Максимальна давжина  назви</label>
+                                <input style="width:60px" class="form-control" type="text" zippy="pmaxname">
+                                
+                            </div>
+                            
                             <div class="form-group">
                                 <label for="pwidth">Параметри для етикеток і цінників</label>
                             </div>
@@ -444,9 +462,21 @@
                  <div class="card">
                     <div class="card-body">
                         <h4>Громадське харчування</h4>
-                        
+                         <small class="badge badge-warning">В процессе розробки</small>
                         <form zippy="food">
-
+                                      
+                               <div class="form-check">
+                                <label for="foodworktype">Тип закладу</label>
+                                <select class="form-control" zippy="foodworktype">
+                                   <option value="0">Фастфуд</option>
+                                   <option value="1">Фастфуд (c кухнею)</option>
+                                   <option value="2">Кафе</option>
+                                   <option value="3">Кафе (бар окремо от  кухнi)</option>
+                                </select>
+                                <small>Кафе означає розрахунок офіціантом після винесення замовлення.
+                                 Наявність кухні (виробництва) означає що замовлення спочатку відправляється
+                                 на виконання</small> 
+                            </div>    
                             <div class="form-group  ">
                                 <label for="foodpricetype">Тип цiн</label>
                                 <select class="form-control" zippy="foodpricetype">
@@ -454,34 +484,21 @@
                             </div>
                              <div class="form-check">
                                 <input zippy="foodtables" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="foodtables">Обслуговування  столикiв  офiцiантом</label>
-                                
+                                <label class="form-check-label" for="foodtables">Показувати  номери  столикiв</label>
+                                  <br><small>Для  кафе</small>
                             </div>
                              
                             <div class="form-check">
                                 <input zippy="fooddelivery" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="fooddelivery">Можливiсть доставки</label>
-                            </div>
-                           
-                            
-                       
-                         
-                                
-                            <div class="form-check">
-                                <input zippy="foodbar" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="foodbar">Бар  окремо вiд кухнi</label>
-                                <small>Окремий чек  (замовлення) для  бару</small>
+                                <br><small>Можливiсть створювати  доставку з АРМ кассира (по  звiнку  клiента)</small>
                             </div>
                            <div class="form-check">
-                                <label for="foodworktype">Органiзацiя процессу</label>
-                                <select class="form-control" zippy="foodworktype">
-                                   <option value="0">Зразу видача замовлення та  оплата  на  мiсцi</option>
-                                   <option value="1">Оплата  потiм виробництво та  видача</option>
-                                   <option value="2">Замовлення  ,виробництво, видача, розрахунок офицiантом</option>
-                                </select>
-                               
+                                <input zippy="foodpack" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="foodpack">Можливiсть упаковки  з собою.</label>
+                                <br><small>Ставиться якщо є обидва варіанти (з собою і на місці) і потрібно уточнювати в замовленні</small>
                             </div>
-                            
+                              
                             
                         
                             <div class="form-group">
