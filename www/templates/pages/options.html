@@ -283,6 +283,11 @@
                                 <small class="form-text text-muted">Например '100%' или '40mm' </small>
                             </div>
                             <div class="form-group">
+                                <label for="pmaxname">Максимальная  длина  наименования</label>
+                                <input style="width:60px" class="form-control" type="text" zippy="pmaxname">
+                                
+                            </div>
+                            <div class="form-group">
                                 <label>Параметры для этикеток и ценников</label>
                             </div>
                             <div class="form-group  ">
@@ -457,7 +462,7 @@
                                 <label for="foodworktype">Тип заведения</label>
                                 <select class="form-control" zippy="foodworktype">
                                    <option value="0">Фастфуд</option>
-                                   <option value="0">Фастфуд (c кухней)</option>
+                                   <option value="1">Фастфуд (c кухней)</option>
                                    <option value="2">Кафе</option>
                                    <option value="3">Кафе (бар отдельно от  кухни)</option>
                                 </select>
@@ -471,12 +476,13 @@
                                 <select class="form-control" zippy="foodpricetype">
                                 </select>
                             </div>
+                            {{#hideblock}}
                             <div class="form-check">
                                 <input zippy="foodtables" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="foodtables">Показывать номера  столов</label>
                                  <br><small>Для  кафе</small>
                             </div>
-                            
+                            {{/hideblock}}
                             <div class="form-check">
                                 <input zippy="fooddelivery" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="fooddelivery">Возможность доставки</label>

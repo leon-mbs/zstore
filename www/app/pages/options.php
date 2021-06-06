@@ -142,6 +142,7 @@ class Options extends \App\Pages\Base
         //печать
         $this->add(new Form('printer'))->onSubmit($this, 'savePrinterOnClick');
         $this->printer->add(new TextInput('pwidth'));
+        $this->printer->add(new TextInput('pmaxname'));
         $this->printer->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList()));
         $this->printer->add(new DropDownChoice('barcodetype', array('EAN13' => 'EAN-13', 'EAN8' => 'EAN-8', 'C128' => 'Code128', 'C39' => 'Code39'), 'Code128'));
         $this->printer->add(new DropDownChoice('pfontsize', array('12' => '12', '14' => '14', '16' => '16', '20' => '20', '24' => '24', '28' => '28', '36' => '36',), '16'));
@@ -156,6 +157,7 @@ class Options extends \App\Pages\Base
         }
 
         $this->printer->pwidth->setText($printer['pwidth']);
+        $this->printer->pmaxname->setText($printer['pmaxname']);
         $this->printer->pricetype->setValue($printer['pricetype']);
         $this->printer->barcodetype->setValue($printer['barcodetype']);
         $this->printer->pfontsize->setValue($printer['pfontsize']);
@@ -217,6 +219,7 @@ class Options extends \App\Pages\Base
         }
         $this->add(new Form('food'))->onSubmit($this,'onFood');
         $this->food->add(new DropDownChoice('foodpricetype', \App\Entity\Item::getPriceTypeList(),$food['pricetype']));
+        $this->food->add(new DropDownChoice('foodworktype', array(),$food['worktype']));
         $this->food->add(new CheckBox('fooddelivery',$food['delivery']));
         $this->food->add(new CheckBox('foodtables',$food['tables']));
         $this->food->add(new CheckBox('foodpack',$food['pack']));
@@ -305,6 +308,7 @@ class Options extends \App\Pages\Base
     public function savePrinterOnClick($sender) {
         $printer = array();
         $printer['pwidth'] = $this->printer->pwidth->getText();
+        $printer['pmaxname'] = $this->printer->pmaxname->getText();
         $printer['pricetype'] = $this->printer->pricetype->getValue();
         $printer['barcodetype'] = $this->printer->barcodetype->getValue();
         $printer['pfontsize'] = $this->printer->pfontsize->getValue();
@@ -377,6 +381,7 @@ class Options extends \App\Pages\Base
     }
     public function onFood($sender) {
         $food = array();
+        $food['worktype'] = $sender->foodworktype->getValue() ;
         $food['pricetype'] = $sender->foodpricetype->getValue() ;
         $food['delivery'] = $sender->fooddelivery->isChecked()?1:0 ;
         $food['tables'] = $sender->foodtables->isChecked()?1:0 ;

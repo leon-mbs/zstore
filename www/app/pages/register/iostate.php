@@ -19,13 +19,13 @@ use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\BookmarkableLink;
 
 /**
- * журнал платежей
+ * журнал доходы  и расходы
  */
-class PayList extends \App\Pages\Base
+class IOState extends \App\Pages\Base
 {
 
     private $_doc    = null;
-  
+    private $_ptlist = null;
 
     /**
      *
@@ -33,36 +33,30 @@ class PayList extends \App\Pages\Base
      */
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowReg('PayList')) {
+        if (false == \App\ACL::checkShowReg('IOState')) {
             return;
         }
 
-      
-        $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
-        $this->filter->add(new DropDownChoice('fmfund', \App\Entity\MoneyFund::getList(), 0));
-        $this->filter->add(new DropDownChoice('fuser', \App\Entity\User::findArray('username', '', 'username'), 0));
-        
-        $this->filter->add(new AutocompleteTextInput('fcustomer'))->onText($this, 'OnAutoCustomer');
+        $this->_ptlist = \App\Entity\IOState::getTypeList();
 
-        $doclist = $this->add(new DataView('doclist', new PayListDataSource($this), $this, 'doclistOnRow'));
+        $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
+        $this->filter->add(new DropDownChoice('fuser', \App\Entity\User::findArray('username', '', 'username'), 0));
+        $this->filter->add(new DropDownChoice('ftype', $this->_ptlist, 0));
+
+        $doclist = $this->add(new DataView('doclist', new IOStateListDataSource($this), $this, 'doclistOnRow'));
 
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
 
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
-        $this->add(new Form('fnotes'))->onSubmit($this, 'delOnClick');
-        $this->fnotes->add(new TextInput('pl_id'));
-        $this->fnotes->add(new TextInput('notes'));
-
+ 
         $this->doclist->Reload();
-        $this->add(new ClickLink('csv', $this, 'oncsv'));
+        $this->add(new ClickLink('csv', $this, 'oncsv'))->setVisible(false);
 
-        
+        $this->_ptlist[0] = '';
     }
 
     public function filterOnSubmit($sender) {
-
-
         $this->docview->setVisible(false);
         $this->doclist->Reload();
     }
@@ -76,28 +70,21 @@ class PayList extends \App\Pages\Base
 
         $row->add(new Label('number', $doc->document_number));
 
-        $row->add(new Label('date', H::fdt($doc->paydate)));
+        $row->add(new Label('date', H::fd($doc->paydate)));
         $row->add(new Label('notes', $doc->notes));
-        $row->add(new Label('amountp', H::fa($doc->amount > 0 ? $doc->amount : "")));
-        $row->add(new Label('amountm', H::fa($doc->amount < 0 ? 0 - $doc->amount : "")));
-
-        $row->add(new Label('mf_name', $doc->mf_name));
+         
         $row->add(new Label('username', $doc->username));
-        $row->add(new Label('customer_name', $doc->customer_name));
         
+        $row->add(new Label('paytype', $this->_ptlist[$doc->paytype]));
 
         $row->add(new ClickLink('show', $this, 'showOnClick'));
         $user = \App\System::getUser();
-        $row->add(new BookmarkableLink('del'))->setVisible($user->rolename == 'admins');
-        $row->del->setAttribute('onclick', "delpay({$doc->pl_id})");
-
-        $row->add(new ClickLink('print'))->onClick($this, 'printOnClick', true);
+      
     }
 
     //просмотр
     public function showOnClick($sender) {
-
-
+ 
         $this->_doc = Document::load($sender->owner->getDataItem()->document_id);
 
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
@@ -108,40 +95,7 @@ class PayList extends \App\Pages\Base
         $this->docview->setDoc($this->_doc);
     }
 
-    public function delOnClick($sender) {
-
-
-        $id = $sender->pl_id->getText();
-
-        $pl = Pay::load($id);
-
-        $doc = Document::load($pl->document_id);
-        Pay::cancelPayment($id, $sender->notes->getText());
-
-        $conn = \ZDB\DB::getConnect();
-
-        $sql = "select coalesce(abs(sum(amount)),0) from paylist where document_id=" . $pl->document_id;
-        $payed = $conn->GetOne($sql);
-
-        $conn->Execute("update documents set payed={$payed} where   document_id =" . $pl->document_id);
-
-        $this->doclist->Reload(true);
-
-        $user = \App\System::getUser();
-        $admin = \App\Entity\User::getByLogin('admin');
-
-        $n = new \App\Entity\Notify();
-        $n->user_id = $admin->user_id;
-        $n->dateshow = time();
-
-        $n->message = H::l('deletedpay', $user->username, $doc->document_number, $sender->notes->getText());
-        $n->save();
-
-        $sender->notes->setText('');
-        $this->setSuccess('payment_canceled');
-        $this->resetURL();
-    }
-
+   
     public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1);
 
@@ -201,7 +155,7 @@ class PayList extends \App\Pages\Base
 /**
  *  Источник  данных  для   списка  документов
  */
-class PayListDataSource implements \Zippy\Interfaces\DataSource
+class IOStateListDataSource implements \Zippy\Interfaces\DataSource
 {
 
     private $page;
@@ -219,18 +173,13 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
         $where = "  1=1 ";
 
         $author = $this->page->filter->fuser->getValue();
-         
-        $cust = $this->page->filter->fcustomer->getKey();
-        $mf = $this->page->filter->fmfund->getValue();
-
+        $type = $this->page->filter->ftype->getValue();
        
-        if ($cust > 0) {
-            $where .= " and d.customer_id=" . $cust;
+        if ($type > 0) {
+            $where .= " and paytype=" . $type;
         }
-        if ($mf > 0) {
-
-            $where .= " and p.mf_id=" . $mf;
-        }
+       
+    
         if ($author > 0) {
             $where .= " and p.user_id=" . $author;
         }

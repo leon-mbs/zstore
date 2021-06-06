@@ -313,7 +313,7 @@ class Document extends \ZCL\DB\Entity
      * Приведение  типа и клонирование  документа
      */
     public function cast() {
-
+        
         if (strlen($this->meta_name) == 0) {
             $metarow = Helper::getMetaType($this->meta_id);
             $this->meta_name = $metarow['meta_name'];
@@ -346,10 +346,10 @@ class Document extends \ZCL\DB\Entity
 
             $state = self::STATE_WA;   //переводим на   ожидание  утверждения
         }
-
+        else
         if ($state == self::STATE_CANCELED) {
             $this->Cancel();
-        }
+        } else
         if ($state == self::STATE_EXECUTED) {
             $this->Execute();
         }

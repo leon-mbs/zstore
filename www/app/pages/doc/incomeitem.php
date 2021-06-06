@@ -373,7 +373,7 @@ class IncomeItem extends \App\Pages\Base
             return;
         }
 
-        if ($this->_tvars["usesnumber"] == true) {
+        if ($this->_tvars["usesnumber"] == true && $item->useserial==1 ) {
 
             $this->editdetail->setVisible(true);
             $this->docform->setVisible(false);
