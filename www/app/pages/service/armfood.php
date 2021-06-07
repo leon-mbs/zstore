@@ -277,7 +277,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->navform->setVisible(false);        
         
         
-        $this->_catlist = Category::find('coalesce(parent_id,0)=0 and  cat_id in (select cat_id  from items where item_type in(1,4,5) and  disabled<> 1 )');
+        $this->_catlist = Category::find(" coalesce(parent_id,0)=0 and detail  not  like '%<nofastfood>1</nofastfood>%' " );
         $this->docpanel->catpan->catlist->Reload();
     }
 
@@ -343,12 +343,12 @@ class ARMFood extends \App\Pages\Base
     //выбрана  группа
     public function onCatBtnClick($sender) {
         $cat = $sender->getOwner()->getDataItem();
-        $catlist = Category::find('coalesce(parent_id,0)='.$cat->cat_id);
+        $catlist = Category::find("  detail  not  like '%<nofastfood>1</nofastfood>%' and   coalesce(parent_id,0)= ".$cat->cat_id);
         if(count($catlist)>0) {
              $this->_catlist    = $catlist;
              $this->docpanel->catpan->catlist->Reload();
         } else {
-            $this->_prodlist  = Item::find('disabled<>1  and  item_type in (1,4,5)  and cat_id='.$cat->cat_id) ;
+            $this->_prodlist  = Item::find('disabled<>1  and  item_type in (1,4 )  and cat_id='.$cat->cat_id) ;
             $this->docpanel->catpan->setVisible(false);
             $this->docpanel->prodpan->setVisible(true);
             $this->docpanel->prodpan->prodlist->Reload();
@@ -361,7 +361,7 @@ class ARMFood extends \App\Pages\Base
          $store_id = $this->setupform->store->getValue();
        
         $qty = $item->getQuantity($store_id);
-        if ($qty <= 0) {
+        if ($qty <= 0 && $item->autoincome != 1) {
 
             $this->setWarn("noitemonstore", $item->itemname);
         }
