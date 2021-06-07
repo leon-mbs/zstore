@@ -32,7 +32,7 @@ class Category extends \ZCL\DB\Entity
         $this->price5 = (string)($xml->price5[0]);
         $this->image_id = (int)$xml->image_id[0];
         $this->noshop = (int)$xml->noshop[0];
-        $this->noshop = (int)$xml->nofastfood[0];
+        $this->nofastfood = (int)$xml->nofastfood[0];
 
         parent::afterLoad();
     }
