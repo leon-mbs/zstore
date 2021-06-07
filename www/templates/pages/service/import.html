@@ -35,7 +35,13 @@
                             <label for="filename">Файл импорта</label>
                             <input type="file" zippy="filename" class="form-control  "/>
                         </div>
-                        <div class="  form-check">
+                         <div class="form-group  ">
+                            <label data-label="item_type" for="item_type">Оприходовать как</label>
+                            <select zippy="item_type" class="form-control   ">
+                               <option value="0">Не задано</option>
+                            </select>
+                        </div>
+                       <div class="  form-check">
                             <input zippy="passfirst" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="passfirst">Пропустить первую строку</label>
                         </div>
@@ -51,7 +57,7 @@
                             <input zippy="noshowshop" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="noshowshop">Не  показывать в  онлайн каталоге </label>
                         </div>
-                   
+              
                         <div class="  form-check">
                             <input zippy="preview" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="preview">Предпросмотр</label>
@@ -114,6 +120,21 @@
                     </div>
 
                     <div class="col-4">
+                        <div class="form-group  row  ">
+                            <label class="col-8 col-form-label" for="coldesc">Описание</label>
+                            <div class="col-4">
+                                <select   zippy="coldesc" class="form-control  ">
+                                </select>
+                            </div>  
+                        </div>
+                        <div class="form-group  row  ">
+                            <label class="col-8 col-form-label" for="colcell">Ячейка</label>
+                            <div class="col-4">
+                                <select   zippy="colcell" class="form-control  ">
+                                </select>
+                            </div>  
+                        </div>                    
+                    
                         <div class="form-group  row">
                             <label class="col-8 col-form-label" data-label="colqty" for="colqty">Количество</label>
                             <div class="col-4">
@@ -121,42 +142,42 @@
                                 </select>
                             </div>  
                         </div>
-                        <div class="form-group  ">
+                        <div class="form-group row ">
                             <label class="col-8 col-form-label" data-label="colinprice" for="colinprice">Учетная цена</label>
                             <div class="col-4">
                                 <select   zippy="colinprice" class="form-control  ">
                                 </select>
                             </div>  
                         </div>                        
-                        <div class="form-group  row">
+                        <div class="form-group  row ">
                             <label zippy="pricename1" class="col-8 col-form-label" for="colprice1"> </label>
                             <div class="col-4">
                                 <select   zippy="colprice1" class="form-control  ">
                                 </select>
                             </div>  
                         </div>
-                        <div class="form-group  row">
+                        <div class="form-group  row ">
                             <label zippy="pricename2" class="col-8 col-form-label" for="colprice2"> </label>
                             <div class="col-4">
                                 <select   zippy="colprice2" class="form-control  ">
                                 </select>
                             </div>  
                         </div>
-                        <div class="form-group  row">
+                        <div class="form-group  row ">
                             <label zippy="pricename3" class="col-8 col-form-label"  for="colprice3"> </label>
                             <div class="col-4">
                                 <select   zippy="colprice3" class="form-control  ">
                                 </select>
                             </div>  
                         </div>
-                        <div class="form-group  row">
+                        <div class="form-group row  ">
                             <label zippy="pricename4" class="col-8 col-form-label" for="colprice4"> </label>
                             <div class="col-4">
                                 <select   zippy="colprice4" class="form-control  ">
                                 </select>
                             </div>  
                         </div>
-                        <div class="form-group  row">
+                        <div class="form-group  row ">
                             <label zippy="pricename5"   class="col-8 col-form-label" for="colprice5"> </label>
                             <div class="col-4">
                                 <select   zippy="colprice5" class="form-control  ">
@@ -164,20 +185,7 @@
                             </div>  
                         </div>                                      
 
-                        <div class="form-group  row ">
-                            <label class="col-8 col-form-label" for="coldesc">Описание</label>
-                            <div class="col-4">
-                                <select   zippy="coldesc" class="form-control  ">
-                                </select>
-                            </div>  
-                        </div>
-                        <div class="form-group  row ">
-                            <label class="col-8 col-form-label" for="colcell">Ячейка</label>
-                            <div class="col-4">
-                                <select   zippy="colcell" class="form-control  ">
-                                </select>
-                            </div>  
-                        </div>
+
 
                     </div>
 

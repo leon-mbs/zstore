@@ -138,7 +138,7 @@ class ABC extends \App\Pages\Base
                        join items on entrylist_view.item_id = items.item_id 
                        join documents_view  on entrylist_view.document_id = documents_view.document_id 
                        
-                    WHERE partion  is  not null and    in('GoodsIssue', 'POSCheck','ReturnIssue','TTN') 
+                    WHERE partion  is  not null and documents_view.meta_name   in('GoodsIssue', 'POSCheck','ReturnIssue','TTN') 
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
                     {$this->br} 

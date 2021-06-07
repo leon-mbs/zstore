@@ -34,6 +34,7 @@ class Export extends \App\Pages\Base
         $form->add(new DropDownChoice("itype", array(), 0))->onChange($this, "onType");
         $form->add(new DropDownChoice("price", Item::getPriceTypeList()));
         $form->add(new DropDownChoice("store", Store::getList(), H::getDefStore()));
+        $form->add(new DropDownChoice("item_type", Item::getTypes(), H::getDefStore()));
 
         $form->onSubmit($this, "onExport");
 
@@ -99,11 +100,14 @@ class Export extends \App\Pages\Base
 
     public function onExport($sender) {
         $t = $this->iform->itype->getValue();
+        $tp = $this->iform->item_type->getValue();
         $store = $this->iform->store->getValue();
         $pt = $this->iform->price->getValue();
 
         $sql = "disabled <> 1 ";
-
+        if( $tp > 0) {
+            $sql .= " and item_type=".$tp;
+        }
         $list = Item::find($sql, "itemname asc");
 
         $header = array();

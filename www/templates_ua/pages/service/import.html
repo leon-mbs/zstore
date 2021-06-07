@@ -35,7 +35,14 @@
                             <label for="filename">Файл імпорту</label>
                             <input type="file" zippy="filename" class="form-control  "/>
                         </div>
-                        <div class="  form-check">
+                         <div class="form-group  ">
+                            <label for="item_type" data-label="item_type">Оприходувати як</label>
+                            <select zippy="item_type" class="form-control   ">
+                               <option value="0">Не задано</option>
+                            </select>
+                        </div>
+                   
+                      <div class="  form-check">
                             <input zippy="passfirst" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="passfirst">Пропустити першу строку</label>
                         </div>
@@ -51,8 +58,7 @@
                             <input zippy="noshowshop" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="noshowshop">Не показувати в  онлайн каталозi </label>
                         </div>
-                     
-           
+            
                         <div class="  form-check">
                             <input zippy="preview" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="preview">Попередній перегляд</label>
