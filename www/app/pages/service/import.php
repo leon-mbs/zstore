@@ -29,7 +29,8 @@ class Import extends \App\Pages\Base
 
         $form->add(new DropDownChoice("itype", array(), 0))->onChange($this, "onType");
 
-        
+        $form->add(new DropDownChoice("item_type", Item::getTypes(), H::getDefStore()));
+      
         $form->add(new DropDownChoice("store", Store::getList(), H::getDefStore()));
 
         $form->add(new \Zippy\Html\Form\File("filename"));
@@ -119,6 +120,7 @@ class Import extends \App\Pages\Base
         $this->iform->store->setVisible($t == 1);
         $this->iform->colinprice->setVisible($t == 1);
         $this->iform->checkname->setVisible(true);
+          $this->iform->item_type->setVisible(true);
           $this->iform->noshowprice->setVisible(true);
           $this->iform->noshowshop->setVisible(true);
           $this->iform->colname->setVisible(true);
@@ -130,6 +132,7 @@ class Import extends \App\Pages\Base
           $this->iform->colinprice->setVisible(true);
      
         if($t==2) {
+          $this->iform->item_type->setVisible(false);
           $this->iform->checkname->setVisible(false);
           $this->iform->noshowprice->setVisible(false);
           $this->iform->noshowshop->setVisible(false);
@@ -146,6 +149,7 @@ class Import extends \App\Pages\Base
     public function onImport($sender) {
         $t = $this->iform->itype->getValue();
         $store = $this->iform->store->getValue();
+        $item_type = $this->iform->item_type->getValue();
       
         $preview = $this->iform->preview->isChecked();
         $passfirst = $this->iform->passfirst->isChecked();
@@ -346,6 +350,9 @@ class Import extends \App\Pages\Base
                     }
                     if ($cat->cat_id > 0) {
                         $item->cat_id = $cat->cat_id;
+                    }
+                    if ($item_type > 0) {
+                        $item->item_type = $item_type;
                     }
 
                     $item->amount = $item->quantity * $item->price;

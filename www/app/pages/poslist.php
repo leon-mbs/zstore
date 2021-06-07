@@ -60,6 +60,7 @@ class PosList extends \App\Pages\Base
 
         $row->add(new Label('pos_name', $item->pos_name));
         $row->add(new Label('branch_name', $this->_blist[$item->branch_id]));
+        $row->add(new Label('comment', $this->_blist[$item->comment]));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
