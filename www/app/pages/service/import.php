@@ -29,7 +29,7 @@ class Import extends \App\Pages\Base
 
         $form->add(new DropDownChoice("itype", array(), 0))->onChange($this, "onType");
 
-        $form->add(new DropDownChoice("item_type", Item::getTypes(), H::getDefStore()));
+        $form->add(new DropDownChoice("item_type", Item::getTypes(), Item::TYPE_TOVAR));
       
         $form->add(new DropDownChoice("store", Store::getList(), H::getDefStore()));
 
