@@ -118,6 +118,13 @@ class GIList extends \App\Pages\Base
         $this->statuspan->setVisible(false);
 
         $this->listpan->doclist->Reload();
+        if(count($this->listpan->doclist->getDataRows()) ==1){
+            $r = array_pop($this->listpan->doclist->getDataRows()) ;
+            
+            $this->_doc = $r->getDataItem();
+            $this->showOn() ;
+        }
+        
     }
 
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
@@ -698,12 +705,12 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
         if (strlen($st) > 2) {
             $st = $conn->qstr('%' . $st . '%');
 
-            $where .= " and    content like {$st} ";
+            $where .= " and  (  notes like {$st} or    content like {$st}  )";
         }
         $sn = trim($this->page->listpan->filter->searchnumber->getText());
         if (strlen($sn) > 1) { // игнорируем другие поля
-            $sn = $conn->qstr('%' . $sn . '%');
-            $where = " meta_name  in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' )  and document_number like  {$sn} ";
+            $conn->qstr('%' . $sn . '%');
+            $where = "  meta_name in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' ,'Warranty','TTN' )  and document_number like  {$sn}    ";
         }
 
         return $where;

@@ -13,8 +13,9 @@
 
                 <div class="navbar nav  ">
                     <form zippy="filter" class="form-inline ">
+                         <label for="searchnumber">№ </label>
                         <input placeholder="Поиск..." class="form-control mr-2" type="text" zippy="searchnumber"
-                        autocomplete="off" autofocus  onkeydown="onBarCode()"     style="width:150px" title="При поиске по номеру  остальные  элементы фильтра  игнорируются">
+                        autocomplete="off" autofocus  onkeydown="onBarCode()"     style="width:175px" title="При поиске по номеру  остальные  элементы фильтра  игнорируются">
 
                         <label for="from">С </label>
                         <input type="text" class="form-control mr-sm-1  " zippy="from" style="width:110px">
@@ -34,6 +35,7 @@
                         <select class="form-control select2  " zippy="author">
                             <option value="0">Не выбран</option>
                         </select>
+                         <input class="form-control ml-2 mr-2" type="text" zippy="searchtext" placeholder="Поиск по контенту">
 
 
                         <input id="bsubmit" type="submit" class="  ml-2 mr-2  btn btn-outline-success  " value="ОК">

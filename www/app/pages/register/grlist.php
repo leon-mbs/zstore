@@ -235,7 +235,7 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource
         if (strlen($st) > 2) {
             $st = $conn->qstr('%' . $st . '%');
 
-            $where .= "   and  content like {$st} ";
+            $where .= " and  (  notes like {$st} or    content like {$st}  )";
         }
         $sn = trim($this->page->filter->searchnumber->getText());
         if (strlen($sn) > 1) { // игнорируем другие поля

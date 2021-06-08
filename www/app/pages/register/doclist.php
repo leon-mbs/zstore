@@ -52,6 +52,7 @@ class DocList extends \App\Pages\Base
             $filter->customer_name = '';
 
             $filter->searchnumber = '';
+            $filter->searchtext = '';
         }
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', $filter->from));
@@ -64,6 +65,7 @@ class DocList extends \App\Pages\Base
         $this->filter->searchcust->setKey($filter->customer);
         $this->filter->searchcust->setText($filter->customer_name);
         $this->filter->add(new TextInput('searchnumber', $filter->searchnumber));
+        $this->filter->add(new TextInput('searchtext', $filter->searchtext));
 
         if (strlen($filter->docgroup) > 0) {
             $this->filter->docgroup->setValue($filter->docgroup);
@@ -112,6 +114,7 @@ class DocList extends \App\Pages\Base
         $filter->customer_name = '';
 
         $filter->searchnumber = '';
+        $filter->searchtext = '';
 
         $this->filter->clean();
         $this->filter->to->setDate(time());
@@ -133,7 +136,9 @@ class DocList extends \App\Pages\Base
         $filter->customer_name = $this->filter->searchcust->getText();
 
         $filter->searchnumber = trim($this->filter->searchnumber->getText());
+        $filter->searchtext = trim($this->filter->searchtext->getText());
         $this->filter->searchnumber->setText('') ;
+        $this->filter->searchtext->setText('') ;
         $this->doclist->setCurrentPage(1);
         //$this->doclist->setPageSize($this->filter->rowscnt->getValue());
 
@@ -434,6 +439,12 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         if ($filter->author > 0) {
             $where .= " and user_id  ={$filter->author} ";
         }
+        $st = $filter->searchtext;
+        if (strlen($st) > 2) {
+            $st = $conn->qstr('%' . $st . '%');
+
+            $where .= "  and(   content like  {$st}  or notes like  {$st} ) ";
+        }
 
 
         $sn = $filter->searchnumber;
@@ -442,7 +453,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
             // игнорируем другие поля
             $sn = $conn->qstr('%' . $sn . '%');
 
-            $where = "   document_number like  {$sn}  or content like  {$sn}  or notes like  {$sn}  ";
+            $where = "   document_number like  {$sn}    ";
         }
 
 
