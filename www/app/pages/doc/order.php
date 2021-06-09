@@ -47,7 +47,7 @@ class Order extends \App\Pages\Base
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
 
         $this->docform->add(new TextArea('notes'));
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(  true), MoneyFund::CREDIT))->onChange($this, 'OnPayment');
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(  true ), MoneyFund::CREDIT))->onChange($this, 'OnPayment');
         $this->docform->add(new DropDownChoice('salesource', H::getSaleSources() , H::getDefSaleSource()));
   
         $this->docform->add(new TextInput('editpaydisc'));
@@ -300,9 +300,7 @@ class Order extends \App\Pages\Base
             $customer = Customer::load($this->_doc->customer_id);
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
         }
-        if ($this->checkForm() == false) {
-            return;
-        }
+
 
 
         $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
@@ -334,7 +332,9 @@ class Order extends \App\Pages\Base
             $this->_doc->payed = 0;
         }
 
-
+        if ($this->checkForm() == false) {
+            return;
+        }
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -435,6 +435,10 @@ class Order extends \App\Pages\Base
         if ($c == 0) {
             $this->setError("noselcust");
         }
+        if($this->_doc->payed == 0 && intval($this->_doc->headerdata['payment'])==0) {
+            $this->setError("noselmf");            
+        }
+        
         return !$this->isError();
     }
 
@@ -594,13 +598,15 @@ class Order extends \App\Pages\Base
 
         $p = $this->docform->payment->getValue();
 
-        if ($p > 0) {
+    //    if ($p > 0) {
             $this->docform->editpayamount->setText(H::fa($total));
             $this->docform->payamount->setText(H::fa($total));
-        }
-        if ($p > 0 && $p < 10000) {
-            $this->docform->editpayed->setText(H::fa($total));
-            $this->docform->payed->setText(H::fa($total));
+     //   }
+        if ($p > 10000  ) {
+            $this->docform->editpayed->setText(H::fa(0));
+            $this->docform->payed->setText(H::fa(0));
+            $this->docform->editpayamount->setText(H::fa(0));
+            $this->docform->payamount->setText(H::fa(0));
         }
     }
 
@@ -608,7 +614,8 @@ class Order extends \App\Pages\Base
         $this->docform->payed->setVisible(true);
         $this->docform->payamount->setVisible(true);
         $this->docform->paydisc->setVisible(true);
-
+         $this->calcPay();
+         return;
         $b = $sender->getValue();
 
         if ($b == 0) {
@@ -627,7 +634,7 @@ class Order extends \App\Pages\Base
             $this->docform->payed->setText(0);
             $this->docform->editpayed->setText(0);
         }
-        $this->calcPay();
+       
     }
 
     public function onSelectItem($item_id, $itemname) {
