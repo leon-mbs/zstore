@@ -99,13 +99,10 @@ class ARMFood extends \App\Pages\Base
         $sf->add(new  SubmitButton('bedit'))->onClick($this,'onStatus') ;
         $sf->add(new  SubmitButton('btoprod'))->onClick($this,'onStatus') ;
         $sf->add(new  SubmitButton('bpay'))->onClick($this,'onStatus') ;
-        $sf->add(new  SubmitButton('bsend'))->onClick($this,'onStatus') ;
+        
         $sf->add(new  SubmitButton('bclose'))->onClick($this,'onStatus') ;
         $sf->add(new  SubmitButton('brefuse'))->onClick($this,'onStatus') ;
-        $sf->add(new  SubmitButton('bdelivered'))->onClick($this,'onStatus') ;
-
-     
-  
+        
          
         $this->orderlistpan->statuspan->add(new \App\Widgets\DocView('docview'))->setVisible(false);
          
@@ -508,18 +505,9 @@ class ARMFood extends \App\Pages\Base
         $sf->bedit->setVisible(false);
         $sf->btoprod->setVisible(false);
         $sf->bpay->setVisible(false);
-        $sf->bsend->setVisible(false);
         $sf->bclose->setVisible(false);
         $sf->brefuse->setVisible(false);
-        $sf->bdelivered->setVisible(false);
   
-        if($this->_doc->state == Document::STATE_READYTOSHIP) { //готов  к  отправке
-           $sf->bsend->setVisible(true);    
-        }
-        if($this->_doc->state == Document::STATE_INSHIPMENT) { //доставлен
-           $sf->bdelivered->setVisible(true);    
-           
-        }
         if($this->_doc->state == Document::STATE_DELIVERED && $this->_doc->payamount <= $this->_doc->payed ) { 
            
            $sf->bclose->setVisible(true);    
@@ -603,20 +591,8 @@ class ARMFood extends \App\Pages\Base
                
              return;
          }
-         if($sender->id == 'bsend') {
-  
-            $this->_doc->updateStatus(Document::STATE_INSHIPMENT);
-         }
-         if($sender->id == 'bdelivered') {
-  
-            $this->_doc->updateStatus(Document::STATE_DELIVERED);
-            
-            
-         }
          $this->orderlistpan->statuspan->setVisible(false);
-       //  $this->orderlistpan->statuspan->docview->setVisible(false);
-      //   $this->orderlistpan->statuspan->statusform->setVisible(false);
-          
+            
          
          $this->updateorderlist(null);
       

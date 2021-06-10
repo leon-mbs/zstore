@@ -216,6 +216,8 @@ class TTN extends Document
                 if ($payed > 0) {
                     $this->payed = $payed;
                 }
+                \App\Entity\IOState::addIOState($this->document_id,   0 - $this->headerdata['ship_amount'],\App\Entity\IOState::TYPE_SALE_OUTCOME);
+                
             }
         }
         $common = \App\System::getOptions("common");

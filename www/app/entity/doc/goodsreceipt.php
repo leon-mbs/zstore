@@ -128,7 +128,7 @@ class GoodsReceipt extends Document
                 $this->payed = $payed;
           }
 
-            \App\Entity\IOState::addIOState($document_id,0 - $this->payed,\App\Entity\IOState::TYPE_BASE_OUTCOME);
+            \App\Entity\IOState::addIOState($this->document_id,0 - $this->payed,\App\Entity\IOState::TYPE_BASE_OUTCOME);
            
            
           

@@ -19,6 +19,7 @@ class OutSalary extends Document
         if ($payed > 0) {
             $this->payed = $payed;
         }
+           \App\Entity\IOState::addIOState($this->document_id,  $this->amount,\App\Entity\IOState::TYPE_SALARY_OUTCOME);
 
         return true;
     }

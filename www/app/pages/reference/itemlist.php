@@ -616,12 +616,21 @@ class ItemList extends \App\Pages\Base
          if(count($items)==0) return;
    
         $printer = \App\System::getOptions('printer');
-        $pwidth = 'style="width:40mm;"';
+        $pwidth =  "width:70mm;";
+        $pheight =  "height:40mm;";
         $pfs = 'style="font-size:16px;"';
 
         if (strlen($printer['pwidth']) > 0) {
-            $pwidth = 'style="width:' . $printer['pwidth'] . ' ";';
+            $pwidth =  "width:" . $printer['pwidth'] .  ";";
         }
+        if (strlen($printer['pheight']) > 0) {
+            $pheight = "height:" . $printer['pheight'] .  ";";
+        }
+        $style="style=\"" ;
+        $style.= $pwidth ;
+        $style.= $pheight ;
+        $style.="\"" ;
+        
         if (strlen($printer['pfontsize']) > 0) {
             $pfs = 'style="font-size:' . $printer['pfontsize'] . 'px";';
         }
@@ -630,7 +639,7 @@ class ItemList extends \App\Pages\Base
         
         foreach($items as $item){
             $report = new \App\Report('item_tag.tpl');
-            $header = array('width' => $pwidth, 'fsize' => $pfs);
+            $header = array('style' => $style, 'fsize' => $pfs);
             if ($printer['pname'] == 1) {
 
                 if (strlen($item->shortname) > 0) {
@@ -666,6 +675,7 @@ class ItemList extends \App\Pages\Base
             $htmls = $htmls. $report->generate($header);
                         
         }
+        $htmls  =str_replace("\'","",$htmls) ;
         $this->updateAjax(array(), "  $('#tag').html('{$htmls}') ;$('.seldel').prop('checked',null); $('#pform').modal()");
        
            

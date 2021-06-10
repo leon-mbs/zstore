@@ -229,6 +229,8 @@ class POSCheck extends Document
             if ($payed > 0) {
                 $this->payed = $payed;
             }
+           \App\Entity\IOState::addIOState($this->document_id, $payed,\App\Entity\IOState::TYPE_BASE_INCOME);
+            
         }
 
         return true;

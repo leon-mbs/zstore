@@ -146,6 +146,8 @@ class Order extends \App\Entity\Doc\Document
                 if ($payed > 0) {
                     $this->payed = $payed;
                 }
+            \App\Entity\IOState::addIOState($this->document_id,  $this->payed,\App\Entity\IOState::TYPE_BASE_INCOME);
+                
             }
         }
     }
