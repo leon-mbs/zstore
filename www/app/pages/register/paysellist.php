@@ -27,7 +27,7 @@ class PaySelList extends \App\Pages\Base
     public  $_doclist   = array();
     public  $_pays      = array();
     public  $_totamount = 0;
-    private $_docs      = " and ( meta_name in('GoodsReceipt','InvoiceCust' )  or  (meta_name='OutcomeMoney'  and content like '%<detail>1</detail>%'  )  or  (meta_name='IncomeMoney'  and content like '%<detail>2</detail>%'  ))  ";
+    private $_docs      = " and ( meta_name in('GoodsReceipt','InvoiceCust','RetCustIssue' )  or  (meta_name='OutcomeMoney'  and content like '%<detail>1</detail>%'  )  or  (meta_name='IncomeMoney'  and content like '%<detail>2</detail>%'  ))  ";
     private $_state     = "1,2,3,17,8";
 
     public function __construct() {
@@ -89,7 +89,7 @@ class PaySelList extends \App\Pages\Base
         }
 
         $sql = "select c.customer_name,c.phone, c.customer_id,coalesce(sum(sam),0)  as sam  from (
-        select customer_id,   (case when   meta_name='IncomeMoney' then  (payed - payamount )   else  (payamount - payed)  end) as sam   
+        select customer_id,   (case when  ( meta_name='IncomeMoney' or meta_name='RetCustIssue') then  (payed - payamount )   else  (payamount - payed)  end) as sam   
               from `documents_view`  
             where {$br}   customer_id > 0  {$this->_docs}      and state > 3  and (payamount >0  or  payed >0)   and payamount <> payed  
             ) t join customers c  on t.customer_id = c.customer_id and c.status=0     {$hold}

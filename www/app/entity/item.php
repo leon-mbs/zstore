@@ -355,6 +355,25 @@ class Item extends \ZCL\DB\Entity
         }
         return $list;
     }
+    
+    /**
+    * вовращает  самую срочную по  дате  серию  кроме  просроченых  
+    * 
+    * @param mixed $store_id
+    */
+    public function getNearestSerie($store_id = 0) {
+
+        $conn = \ZDB\DB::getConnect();
+        $sql = "  select coalesce(snumber,'') as snumber   from  store_stock_view where   item_id = {$this->item_id} and qty >0 and snumber <>'' and snumber is not null   and (  sdate is   null  or sdate >=  now()  )   ";
+        if ($store_id > 0) {
+            $sql .= " and store_id = " . $store_id;
+        }
+        $sql .= " order  by  sdate  desc limit 0,1";
+    
+
+        return $conn->GetOne($sql);
+        
+    }
 
     /**
      * возвращает сумму на складах

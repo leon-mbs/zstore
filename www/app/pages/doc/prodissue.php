@@ -362,11 +362,7 @@ class ProdIssue extends \App\Pages\Base
 
             if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
 
-                $serial = '';
-                $slist = $item->getSerials($store_id);
-                if (count($slist) == 1) {
-                    $serial = array_pop($slist);
-                }
+                $serial = $item->getNearestSerie($store_id);
 
 
                 if (strlen($serial) == 0) {
@@ -437,11 +433,7 @@ class ProdIssue extends \App\Pages\Base
 
         if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
 
-            $serial = '';
-            $slist = $item->getSerials($store_id);
-            if (count($slist) == 1) {
-                $serial = array_pop($slist);
-            }
+            $serial = $item->getNearestSerie($store_id);
             $this->editdetail->editserial->setText($serial);
         }
 

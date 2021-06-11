@@ -177,7 +177,13 @@ class Subscribe extends \ZCL\DB\Entity
         $header['nal'] = '';
         $header['mf'] = '';
         $header['pos'] = '';
-        $header['nal'] = '';
+        $header['device'] = $doc->headerdata['device'];
+        if(strlen($doc->headerdata['device']) >0  && strlen($doc->headerdata['devsn'])>0) {
+             $header['device'] .= " (".$doc->headerdata['devsn'].")" ;
+        }
+        
+        $header['notes'] = $doc->document_number;
+        
         if ($doc->headerdata['payment'] > 0 && $doc->headerdata['payment'] < 10000) {
             $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
             $header['mf'] = $mf->mf_name;
