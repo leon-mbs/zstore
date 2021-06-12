@@ -55,7 +55,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(   ), H::getDefMF()))->onChange($this, 'OnPayment');
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(   ), H::getDefMF()));
 
         $this->docform->add(new DropDownChoice('val', H::getValList(), '0'))->onChange($this, 'OnVal');
 
@@ -139,8 +139,10 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->disc->setText(H::fa($this->_doc->headerdata['disc']));
             $this->docform->editdisc->setText(H::fa($this->_doc->headerdata['disc']));
             $this->docform->payed->setText(H::fa($this->_doc->payed));
-            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
-            if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )$this->_doc->payed = $this->_doc->headerdata['payed'];
+            
+            if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )  $this->_doc->payed = $this->_doc->headerdata['payed'];
+            $this->docform->editpayed->setText(H::fa($this->_doc->payed));            
+            
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->firm->setValue($this->_doc->firm_id);
@@ -148,7 +150,6 @@ class GoodsReceipt extends \App\Pages\Base
 
             $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
 
-            $this->OnPayment($this->docform->payment);
 
             $this->docform->total->setText($this->_doc->amount);
 
@@ -179,7 +180,7 @@ class GoodsReceipt extends \App\Pages\Base
 
                         $invoice = $basedoc->cast();
                         $this->docform->basedoc->setText('Счет ' . $invoice->document_number);
-                        $this->docform->payment->setValue(\App\Entity\MoneyFund::PREPAID);
+                        $this->docform->payment->setValue(0);
                         $this->docform->nds->setText($invoice->headerdata['nds']);
                         $this->docform->editnds->setText($invoice->headerdata['nds']);
                         $this->docform->rate->setText($invoice->headerdata['rate']);
@@ -208,7 +209,7 @@ class GoodsReceipt extends \App\Pages\Base
 
                         $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
 
-                        $this->docform->payment->setValue(\App\Entity\MoneyFund::PREPAID);
+                        $this->docform->payment->setValue(0);
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
@@ -435,7 +436,12 @@ class GoodsReceipt extends \App\Pages\Base
         $this->_doc->headerdata['basedoc'] = $this->docform->basedoc->getText();
 
         $this->_doc->payed = $this->docform->payed->getText();
-        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+        if ($this->_doc->headerdata['payment'] == 0) {
+            $this->_doc->headerdata['paydisc'] = 0;
+            $this->_doc->payed = 0;
+            $this->_doc->payamount = 0;
+        }
+       $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
 
          
 
@@ -550,27 +556,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->goAnkor("tankor");
     }
 
-    public function OnPayment($sender) {
-        $this->docform->payed->setVisible(true);
-        $this->docform->payamount->setVisible(true);
-        $this->docform->nds->setVisible(true);
-        $this->docform->rate->setVisible(true);
-        $this->docform->disc->setVisible(true);
-
-        $b = $sender->getValue();
-
-        if ($b == \App\Entity\MoneyFund::PREPAID) {
-            $this->docform->payed->setVisible(false);
-            $this->docform->payamount->setVisible(false);
-            $this->docform->nds->setVisible(false);
-            $this->docform->rate->setVisible(false);
-            $this->docform->disc->setVisible(false);
-        }
-        if ($b == \App\Entity\MoneyFund::CREDIT) {
-            $this->docform->payed->setVisible(false);
-        }
-    }
-
+    
     public function onDisc($sender) {
         $this->docform->disc->setText(H::fa($this->docform->editdisc->getText()));
         $this->CalcPay();

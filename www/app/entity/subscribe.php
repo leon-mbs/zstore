@@ -184,7 +184,7 @@ class Subscribe extends \ZCL\DB\Entity
         
         $header['notes'] = $doc->document_number;
         
-        if ($doc->headerdata['payment'] > 0 && $doc->headerdata['payment'] < 10000) {
+        if ($doc->headerdata['payment'] > 0  ) {
             $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
             $header['mf'] = $mf->mf_name;
             if ($mf->beznal == 1) {
@@ -193,10 +193,10 @@ class Subscribe extends \ZCL\DB\Entity
                 $header['nal'] = \App\Helper::l("cnal");
             }
         }
-        if ($doc->headerdata['nal'] == \App\Entity\MoneyFund::CREDIT) {
+        if ($doc->headerdata['nal'] == 0 && $doc->payamount>0 ) {
             $header['mf'] = \App\Helper::l("credit");
         }
-        if ($doc->headerdata['nal'] == \App\Entity\MoneyFund::PREPAID) {
+        if ($doc->headerdata['nal'] == 0 && $doc->payamount==0 ) {
             $header['mf'] = \App\Helper::l("prepaid");
         }
 

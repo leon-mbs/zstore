@@ -162,6 +162,9 @@ class OrderFood extends Document
  
     public function DoStore() {
         foreach ($this->unpackDetails('detaildata') as $item) {
+                       if($item->checkMinus($item->quantity,$this->headerdata['store'])) { 
+                            throw new \Exception(\App\Helper::l("nominus",$item->quantity,$item->itemname));
+                        }
 
 
             //оприходуем  с  производства
@@ -173,7 +176,10 @@ class OrderFood extends Document
 
                         $itemp = \App\Entity\Item::load($part->item_id);
                         $itemp->quantity = $item->quantity * $part->qty;
-                        
+                        if($itemp->checkMinus($itemp->quantity,$this->headerdata['store'])) { 
+                            throw new \Exception(\App\Helper::l("nominus",$itemp->quantity,$itemp->itemname));
+                        }
+                      
                        //учитываем  отходы
                         if($itemp->lost >0){
                             $k = 1/(1-$itemp->lost/100) ;

@@ -89,7 +89,7 @@ class PayBayList extends \App\Pages\Base
         }
 
         $sql = "select c.customer_name,c.phone, c.customer_id,coalesce(sum(sam),0) as sam  from (
-        select customer_id,  (case when   meta_name='OutcomeMoney' then  (payed - payamount )   else  (payamount - payed)  end) as sam 
+        select customer_id,  (case when  ( meta_name='OutcomeMoney' or meta_name='ReturnIssue' ) then  (payed - payamount )   else  (payamount - payed)  end) as sam 
             from `documents_view`  
             where {$br}     (payamount >0  or  payed >0) {$this->_docs}  and state not in ({$this->_state})   and  ( (meta_name <>'POSCheck' and payamount <> payed) or(meta_name = 'POSCheck' and payamount > payed  ))
             ) t join customers c  on t.customer_id = c.customer_id  and c.status=0   {$hold}
@@ -111,6 +111,11 @@ class PayBayList extends \App\Pages\Base
         $row->add(new Label('phone', $cust->phone));
         $row->add(new Label('amount', H::fa($cust->sam)));
 
+        $row->add(new RedirectLink('createpay'))->setVisible(false) ;
+        if($cust->sam>0) {
+            $row->createpay->setLink("\\App\\Pages\\Doc\\IncomeMoney",array(0,$cust->customer_id,$cust->sam));    
+            $row->createpay->setVisible(true)  ;
+        }
         $row->add(new ClickLink('showdocs'))->onClick($this, 'showdocsOnClick');
 
         $this->_totamount += $cust->sam;

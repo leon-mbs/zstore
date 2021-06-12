@@ -67,13 +67,10 @@ class Pay extends \ZCL\DB\Entity
             return;
         }
 
-        if ($mf_id == MoneyFund::CREDIT) {
+        if ($mf_id == 0) {
             return;
-        } //в  долг
-        if ($mf_id == MoneyFund::PREPAID) {
-            return;
-        } //предоплата
-
+        }  
+       
 
         $pay = new \App\Entity\Pay();
         $pay->mf_id = $mf_id;

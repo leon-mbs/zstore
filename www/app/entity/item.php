@@ -331,7 +331,24 @@ class Item extends \ZCL\DB\Entity
         $cnt = $conn->GetOne($sql);
         return $cnt;
     }
-
+ 
+    /**
+    * проверка  на  списывание  в  миннуч
+    *  
+    * @param mixed $testqty
+    * @param mixed $store_id
+    * @param mixed $snumber
+    */
+    public function checkMinus($testqty,$store_id = 0, $snumber = "") {
+         $allowminus = \App\System::getOption("common", "allowminus");
+         if ($allowminus == 1) return true;
+         
+         $qty = $this->getQuantity($store_id,$snumber) ;
+         
+         return doubleval($qty) >= doubleval($testqty);
+       
+    }
+    
     /**
      * возвращает список скенрий производителя
      *

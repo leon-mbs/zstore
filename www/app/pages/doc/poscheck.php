@@ -45,7 +45,7 @@ class POSCheck extends \App\Pages\Base
 
         $this->docform->add(new Date('document_date'))->setDate(time());
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(  true), H::getDefMF()))->onChange($this, 'OnPayment');
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(   ), H::getDefMF()));
          $this->docform->add(new DropDownChoice('salesource', H::getSaleSources() , H::getDefSaleSource()));
 
         $this->docform->add(new Label('discount'))->setVisible(false);
@@ -139,10 +139,11 @@ class POSCheck extends \App\Pages\Base
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
 
             $this->docform->payed->setText(H::fa($this->_doc->headerdata['payed']));
-            $this->docform->editpayed->setText(H::fa($this->_doc->headerdata['payed']));
+         if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )  $this->_doc->payed = $this->_doc->headerdata['payed'];
+               $this->docform->editpayed->setText(H::fa($this->_doc->headerdata['payed']));
             $this->docform->exchange->setText(H::fa($this->_doc->headerdata['exchange']));
 
-            $this->OnPayment($this->docform->payment);
+            
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             //  $this->docform->pos->setValue($this->_doc->headerdata['pos']);
@@ -216,7 +217,7 @@ class POSCheck extends \App\Pages\Base
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
                         if ($invoice->payamount > 0) {
-                            $this->docform->payment->setValie(MoneyFund::PREPAID); // предоплата
+                            $this->docform->payment->setValie(0); // предоплата
                         }
                     }
                     if ($basedoc->meta_name == 'Task') {
@@ -489,15 +490,13 @@ class POSCheck extends \App\Pages\Base
         $this->_doc->headerdata['exchange'] = $this->docform->exchange->getText();
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-        if ($this->_doc->headerdata['payment'] == \App\entity\MoneyFund::PREPAID) {
+        if ($this->_doc->headerdata['payment'] == 0) {
             $this->_doc->headerdata['paydisc'] = 0;
             $this->_doc->payed = 0;
             $this->_doc->payamount = 0;
         }
-        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
-            $this->_doc->payed = 0;
-        }
-
+        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+ 
         if ($this->checkForm() == false) {
             return;
         }
@@ -704,20 +703,7 @@ class POSCheck extends \App\Pages\Base
         $this->docform->exchange->setText(H::fa(0));
     }
 
-    public function OnPayment($sender) {
-        $b = $sender->getValue();
-        if ($b == \App\Entity\MoneyFund::PREPAID) {
-            $this->docform->payed->setVisible(false);
-            $this->docform->payamount->setVisible(false);
-            $this->docform->paydisc->setVisible(false);
-            $this->docform->exchange->setVisible(false);
-        } else {
-            $this->docform->payed->setVisible(true);
-            $this->docform->payamount->setVisible(true);
-            $this->docform->paydisc->setVisible(true);
-            $this->docform->exchange->setVisible(true);
-        }
-    }
+ 
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
@@ -829,14 +815,12 @@ class POSCheck extends \App\Pages\Base
         }
         $p = $this->docform->payment->getValue();
         $c = $this->docform->customer->getKey();
-        if ($p == 0) {
-            $this->setError("noselpaytype");
-        }
-        if ($p == \App\Entity\MoneyFund::PREPAID && $c == 0) {
-            $this->setError("mustsel_cust");
-        }
+      
         if ($this->_doc->payamount > $this->_doc->payed && $c == 0) {
             $this->setError("mustsel_cust");
+        }
+        if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
+            $this->setError("noselmf");
         }
 
 

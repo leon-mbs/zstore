@@ -11,10 +11,7 @@ namespace App\Entity;
 class MoneyFund extends \ZCL\DB\Entity
 {
 
-    //  const BEZNAL = 10000;
-    const PREPAID = 10001;
-    const CREDIT  = 10002;
-
+   
     protected function init() {
         $this->mf_id = 0;
         $this->branch_id = 0;
@@ -80,18 +77,12 @@ class MoneyFund extends \ZCL\DB\Entity
     /**
      * список счетов для комбо
      *
-     *  
-     * @param mixed $prepaid добавить пункт  Была предоплата
+     *     
+   
      * @param mixed $nal 0 - все, 1- нол,2- безнал
      */
-    public static function getList( $prepaid = false, $nal = 0) {
+    public static function getList(   $nal = 0) {
         $ml = array();
-       // if ($credit) {
-       //     $ml[self::CREDIT] = \App\Helper::l("credit");
-       // }
-        if ($prepaid) {
-            $ml[self::PREPAID] = \App\Helper::l("prepaid");
-        }
 
         foreach (MoneyFund::find("") as $k => $v) {
             if ($nal == 1 && $v->beznal == 1) {

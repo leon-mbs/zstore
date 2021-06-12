@@ -56,7 +56,7 @@ class Invoice extends \App\Pages\Base
         $this->docform->add(new TextInput('phone'));
         $this->docform->add(new TextInput('customer_print'));
 
-        $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList( ), H::getDefMF()))->onChange($this, 'OnPayment');
+        $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList( ), H::getDefMF()));
 
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new TextInput('editpaydisc'));
@@ -114,7 +114,8 @@ class Invoice extends \App\Pages\Base
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->payed->setText($this->_doc->payed);
-            $this->docform->editpayed->setText($this->_doc->payed);
+         if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )  $this->_doc->payed = $this->_doc->headerdata['payed'];
+               $this->docform->editpayed->setText($this->_doc->payed);
 
             $this->docform->total->setText($this->_doc->amount);
 
@@ -296,6 +297,7 @@ class Invoice extends \App\Pages\Base
 
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->payed = $this->docform->payed->getText();
+        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
         if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
             $this->_doc->payed = 0;
         }
@@ -359,21 +361,7 @@ class Invoice extends \App\Pages\Base
         }
     }
 
-    public function OnPayment($sender) {
-        $this->docform->payed->setVisible(true);
-        $this->docform->payamount->setVisible(true);
-        $this->docform->paydisc->setVisible(true);
-
-        $b = $sender->getValue();
-
-        if ($b == \App\Entity\MoneyFund::CREDIT) {
-            $this->docform->payed->setVisible(false);
-            $this->docform->editpayed->setVisible(false);
-            $this->docform->payed->setText(0);
-            $this->docform->editpayed->setText(0);
-        }
-        $this->calcPay();
-    }
+ 
 
     public function onPayAmount($sender) {
         $this->docform->payamount->setText(H::fa($this->docform->editpayamount->getText()));
@@ -433,16 +421,13 @@ class Invoice extends \App\Pages\Base
         $total = $this->docform->total->getText();
         $disc = $this->docform->paydisc->getText();
 
-        $p = $this->docform->payment->getValue();
-
-        if ($p > 0) {
-            $this->docform->editpayamount->setText(H::fa($total));
-            $this->docform->payamount->setText(H::fa($total));
-        }
-        if ($p > 0 && $p < 10000) {
-            $this->docform->editpayed->setText(H::fa($total));
-            $this->docform->payed->setText(H::fa($total));
-        }
+    
+            $this->docform->editpayamount->setText(H::fa($total-$disc));
+            $this->docform->payamount->setText(H::fa($total-$disc));
+        
+            $this->docform->editpayed->setText(H::fa($total-$disc));
+            $this->docform->payed->setText(H::fa($total-$disc));
+        
     }
 
     /**
@@ -464,11 +449,16 @@ class Invoice extends \App\Pages\Base
         if (count($this->_tovarlist) == 0) {
             $this->setError("noenteritem");
         }
-        if ($this->docform->payment->getValue() == 0) {
-            $this->setError("noselpaytype");
-        }
+    
         if (($this->docform->store->getValue() > 0) == false) {
             $this->setError("noselstore");
+        }
+        if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
+            $this->setError("noselmf");
+        }
+        $c = $this->docform->customer->getKey();
+        if ( $c == 0) {
+            $this->setError("mustsel_cust");
         }
 
         return !$this->isError();

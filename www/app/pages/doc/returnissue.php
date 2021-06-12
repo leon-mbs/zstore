@@ -84,8 +84,9 @@ class ReturnIssue extends \App\Pages\Base
 
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
-            $this->docform->payed->setText(H::fa($this->_doc->payed));
-            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
+            (H::fa($this->_doc->payed));
+         if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )  $this->_doc->payed = $this->_doc->headerdata['payed'];
+               $this->docform->editpayed->setText(H::fa($this->_doc->payed));
             $this->docform->total->setText(H::fa($this->_doc->amount));
 
             $this->_tovarlist = $this->_doc->unpackDetails('detaildata');
@@ -277,7 +278,8 @@ class ReturnIssue extends \App\Pages\Base
         $this->_doc->amount = $this->docform->total->getText();
         $this->_doc->payamount = $this->docform->total->getText();
         $this->_doc->payed = $this->docform->payed->getText();
-        $isEdited = $this->_doc->document_id > 0;
+         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+       $isEdited = $this->_doc->document_id > 0;
 
         $pos_id = $this->docform->pos->getValue();
 
@@ -404,6 +406,9 @@ class ReturnIssue extends \App\Pages\Base
         }
         if (($this->docform->store->getValue() > 0) == false) {
             $this->setError("noselstore");
+        }
+        if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
+            $this->setError("noselmf");
         }
 
         

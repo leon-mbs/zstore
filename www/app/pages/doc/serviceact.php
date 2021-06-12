@@ -100,7 +100,8 @@ class ServiceAct extends \App\Pages\Base
             $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->payed->setText($this->_doc->payed);
-            $this->docform->editpayed->setText($this->_doc->payed);
+          if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )  $this->_doc->payed = $this->_doc->headerdata['payed'];
+              $this->docform->editpayed->setText($this->_doc->payed);
             $this->docform->device->setText($this->_doc->device);
             $this->docform->devsn->setText($this->_doc->devsn);
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
@@ -131,8 +132,7 @@ class ServiceAct extends \App\Pages\Base
                 }
             }
         }
-        $this->OnPayment($this->docform->payment);
-
+       
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_servicelist')), $this, 'detailOnRow'))->Reload();
         $this->calcTotal();
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
@@ -275,14 +275,12 @@ class ServiceAct extends \App\Pages\Base
 
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->payed = $this->docform->payed->getText();
-        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID) {
+       if ($this->_doc->headerdata['payment'] == 0) {
             $this->_doc->headerdata['paydisc'] = 0;
             $this->_doc->payed = 0;
             $this->_doc->payamount = 0;
         }
-        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
-            $this->_doc->payed = 0;
-        }
+        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
         if ($this->checkForm() == false) {
             return;
         }
@@ -373,24 +371,7 @@ class ServiceAct extends \App\Pages\Base
         $this->docform->editpaydisc->setText($disc);
     }
 
-    public function OnPayment($sender) {
-        $this->docform->payed->setVisible(true);
-        $this->docform->payamount->setVisible(true);
-        $this->docform->paydisc->setVisible(true);
-
-        $b = $sender->getValue();
-
-        if ($b == \App\Entity\MoneyFund::PREPAID) {
-            $this->docform->payed->setVisible(false);
-            $this->docform->payamount->setVisible(false);
-            $this->docform->paydisc->setVisible(false);
-        }
-        if ($b == \App\Entity\MoneyFund::CREDIT) {
-            $this->docform->payed->setVisible(false);
-            $this->docform->payed->setText(0);
-            $this->docform->editpayed->setText(0);
-        }
-    }
+ 
 
     public function onPayAmount($sender) {
         $this->docform->payamount->setText($this->docform->editpayamount->getText());
@@ -431,8 +412,9 @@ class ServiceAct extends \App\Pages\Base
         if (count($this->_servicelist) == 0) {
             //  $this->setError("noenterpos");
         }
-        if ($this->docform->payment->getValue() == 0) {
-            $this->setError("noselpaytype");
+      
+        if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
+            $this->setError("noselmf");
         }
 
         return !$this->isError();

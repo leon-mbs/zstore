@@ -61,7 +61,7 @@ class Order extends \App\Entity\Doc\Document
                         "payed"           => H::fa($this->payed),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
-            //"prepaid"   => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
+          
                         "payamount"       => H::fa($this->payamount)
         );
 

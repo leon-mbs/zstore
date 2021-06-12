@@ -101,7 +101,8 @@ class InvoiceCust extends \App\Pages\Base
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->docform->payed->setText($this->_doc->payed);
-            $this->docform->editpayed->setText($this->_doc->payed);
+         if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )  $this->_doc->payed = $this->_doc->headerdata['payed'];
+               $this->docform->editpayed->setText($this->_doc->payed);
             $this->docform->nds->setText($this->_doc->headerdata['nds']);
             $this->docform->editnds->setText($this->_doc->headerdata['nds']);
             $this->docform->rate->setText($this->_doc->headerdata['rate']);
@@ -268,6 +269,7 @@ class InvoiceCust extends \App\Pages\Base
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->payed = $this->docform->payed->getText();
+         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
 
         $this->_doc->headerdata['rate'] = $this->docform->rate->getText();
         $this->_doc->headerdata['nds'] = $this->docform->nds->getText();
@@ -463,6 +465,11 @@ class InvoiceCust extends \App\Pages\Base
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
             $this->setError("noselmf");
         }
+        $c = $this->docform->customer->getKey();
+        if ( $c == 0) {
+            $this->setError("mustsel_cust");
+        }
+        
         return !$this->isError();
     }
 

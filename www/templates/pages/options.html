@@ -469,7 +469,7 @@
                                    <option value="0">Фастфуд</option>
                                    <option value="1">Фастфуд (c кухней)</option>
                                    <option value="2">Кафе</option>
-                                   <option value="3">Кафе (бар отдельно от  кухни)</option>
+                                   
                                 </select>
                                 <small>Кафе  означает расчет  официантом  после выноса  заказа.
                                 Наличие  кухни (производства)  означает  что  заказ  сначала  отправляется  
@@ -481,13 +481,18 @@
                                 <select class="form-control" zippy="foodpricetype">
                                 </select>
                             </div>
-                            {{#hideblock}}
+                           
                             <div class="form-check">
                                 <input zippy="foodtables" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="foodtables">Показывать номера  столов</label>
                                  <br><small>Для  кафе</small>
                             </div>
-                            {{/hideblock}}
+                            <div class="form-check">
+                                <input zippy="foodbar" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="foodbar">Бар  отдельно  от кухни</label>
+                                 <br><small>Для  кафе</small>
+                            </div>
+                           
                             <div class="form-check">
                                 <input zippy="fooddelivery" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="fooddelivery">Возможность доставки</label>

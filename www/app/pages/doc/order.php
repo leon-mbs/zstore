@@ -47,7 +47,7 @@ class Order extends \App\Pages\Base
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
 
         $this->docform->add(new TextArea('notes'));
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(  true ), MoneyFund::CREDIT))->onChange($this, 'OnPayment');
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(    ), MoneyFund::CREDIT));
         $this->docform->add(new DropDownChoice('salesource', H::getSaleSources() , H::getDefSaleSource()));
   
         $this->docform->add(new TextInput('editpaydisc'));
@@ -131,7 +131,8 @@ class Order extends \App\Pages\Base
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->payed->setText($this->_doc->payed);
-            $this->docform->editpayed->setText($this->_doc->payed);
+         if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )  $this->_doc->payed = $this->_doc->headerdata['payed'];
+               $this->docform->editpayed->setText($this->_doc->payed);
 
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->email->setText($this->_doc->headerdata['email']);
@@ -152,7 +153,7 @@ class Order extends \App\Pages\Base
                 }
             }
         }
-        $this->OnPayment($this->docform->payment);
+        
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
@@ -318,19 +319,13 @@ class Order extends \App\Pages\Base
         $this->_doc->payamount = $this->docform->payamount->getText();
 
         $this->_doc->payed = $this->docform->payed->getText();
+        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
 
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         $this->_doc->headerdata['salesource'] = $this->docform->salesource->getValue();
 
-        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID) {
-            $this->_doc->headerdata['paydisc'] = 0;
-            $this->_doc->payed = 0;
-            $this->_doc->payamount = 0;
-        }
-        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
-            $this->_doc->payed = 0;
-        }
+     
 
         if ($this->checkForm() == false) {
             return;
@@ -435,9 +430,10 @@ class Order extends \App\Pages\Base
         if ($c == 0) {
             $this->setError("noselcust");
         }
-        if($this->_doc->payed == 0 && intval($this->_doc->headerdata['payment'])==0) {
-            $this->setError("noselmf");            
+        if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
+            $this->setError("noselmf");
         }
+
         
         return !$this->isError();
     }
@@ -598,45 +594,16 @@ class Order extends \App\Pages\Base
 
         $p = $this->docform->payment->getValue();
 
-    //    if ($p > 0) {
+   
             $this->docform->editpayamount->setText(H::fa($total));
             $this->docform->payamount->setText(H::fa($total));
-     //   }
-        if ($p > 10000  ) {
-            $this->docform->editpayed->setText(H::fa(0));
-            $this->docform->payed->setText(H::fa(0));
-            $this->docform->editpayamount->setText(H::fa(0));
-            $this->docform->payamount->setText(H::fa(0));
-        }
+            $this->docform->editpayed->setText(H::fa($total));
+            $this->docform->payed->setText(H::fa($total));
+ 
+        
     }
 
-    public function OnPayment($sender) {
-        $this->docform->payed->setVisible(true);
-        $this->docform->payamount->setVisible(true);
-        $this->docform->paydisc->setVisible(true);
-         $this->calcPay();
-         return;
-        $b = $sender->getValue();
-
-        if ($b == 0) {
-            $this->docform->payed->setVisible(false);
-            $this->docform->payamount->setVisible(false);
-            $this->docform->paydisc->setVisible(false);
-            $this->docform->payed->setText(0);
-            $this->docform->editpayed->setText(0);
-            $this->docform->payamount->setText(0);
-            $this->docform->editpayamount->setText(0);
-            $this->docform->paydisc->setText(0);
-            $this->docform->editpaydisc->setText(0);
-        }
-        if ($b == \App\Entity\MoneyFund::CREDIT) {
-            $this->docform->payed->setVisible(false);
-            $this->docform->payed->setText(0);
-            $this->docform->editpayed->setText(0);
-        }
-       
-    }
-
+   
     public function onSelectItem($item_id, $itemname) {
         $this->editdetail->edittovar->setKey($item_id);
         $this->editdetail->edittovar->setText($itemname);

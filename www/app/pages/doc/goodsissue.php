@@ -49,7 +49,7 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->docform->add(new Date('document_date'))->setDate(time());
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(  true), H::getDefMF()))->onChange($this, 'OnPayment');
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(   ), H::getDefMF()));
         $this->docform->add(new DropDownChoice('salesource', H::getSaleSources() , H::getDefSaleSource()));
 
         $this->docform->add(new Label('discount'))->setVisible(false);
@@ -135,10 +135,10 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->payed->setText($this->_doc->payed);
+            if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )$this->_doc->payed = $this->_doc->headerdata['payed'];
             $this->docform->editpayed->setText($this->_doc->payed);
 
-            $this->OnPayment($this->docform->payment);
-
+             
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->customer->setKey($this->_doc->customer_id);
 
@@ -204,8 +204,8 @@ class GoodsIssue extends \App\Pages\Base
 
                         $this->OnChangeCustomer($this->docform->customer);
                         if ($order->payamount > 0) {
-                            $this->docform->payment->setValue(MoneyFund::PREPAID); // предоплата
-                            $this->OnPayment($this->docform->payment);
+                            $this->docform->payment->setValue(0); // предоплата
+                            
                         }
 
 
@@ -236,8 +236,8 @@ class GoodsIssue extends \App\Pages\Base
                         $this->calcPay();
 
                         if ($invoice->payamount > 0) {
-                            $this->docform->payment->setValue(MoneyFund::PREPAID); // предоплата
-                            $this->OnPayment($this->docform->payment);
+                            $this->docform->payment->setValue(0); // предоплата
+                          
                         }
                     }
 
@@ -558,16 +558,14 @@ class GoodsIssue extends \App\Pages\Base
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
 
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-
-        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID) {
+  
+        if ($this->_doc->headerdata['payment'] == 0) {
             $this->_doc->headerdata['paydisc'] = 0;
             $this->_doc->payed = 0;
             $this->_doc->payamount = 0;
         }
-        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
-            $this->_doc->payed = 0;
-        }
-
+        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+      
 
         if ($this->checkForm() == false) {
             return;
@@ -723,42 +721,16 @@ class GoodsIssue extends \App\Pages\Base
         if ($disc > 0) {
             $total -= $disc;
         }
-        $p = $this->docform->payment->getValue();
-        if ($p > 0 && $p != \App\Entity\MoneyFund::PREPAID) {
+ 
             $this->docform->editpayamount->setText(H::fa($total));
             $this->docform->payamount->setText(H::fa($total));
-        }
-        if ($p > 0 && $p < 10000) {
+ 
             $this->docform->editpayed->setText(H::fa($total));
             $this->docform->payed->setText(H::fa($total));
-        }
+        
     }
 
-    public function OnPayment($sender) {
-        $this->docform->payed->setVisible(true);
-        $this->docform->payamount->setVisible(true);
-        $this->docform->paydisc->setVisible(true);
-
-        $b = $sender->getValue();
-
-        if ($b == \App\Entity\MoneyFund::PREPAID) {
-            $this->docform->payed->setVisible(false);
-            $this->docform->payamount->setVisible(false);
-            $this->docform->paydisc->setVisible(false);
-            $this->docform->payed->setText(0);
-            $this->docform->editpayed->setText(0);
-            $this->docform->payamount->setText(0);
-            $this->docform->editpayamount->setText(0);
-            $this->docform->paydisc->setText(0);
-            $this->docform->editpaydisc->setText(0);
-        }
-        if ($b == \App\Entity\MoneyFund::CREDIT) {
-            $this->docform->payed->setVisible(false);
-            $this->docform->payed->setText(0);
-            $this->docform->editpayed->setText(0);
-        }
-        $this->calcPay();
-    }
+ 
 
     /**
      * Валидация   формы
@@ -794,15 +766,12 @@ class GoodsIssue extends \App\Pages\Base
         }
 
 
-        $p = $this->docform->payment->getValue();
-        if ($p == 0) {
-            $this->setError("noselpaytype");
-        }
-        if ($p == \App\Entity\MoneyFund::PREPAID && $c == 0) {
-            $this->setError("mustsel_cust");
-        }
+      
         if ($this->_doc->payamount > $this->_doc->payed && $c == 0) {
             $this->setError("mustsel_cust");
+        }
+        if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
+            $this->setError("noselmf");
         }
 
 

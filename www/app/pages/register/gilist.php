@@ -710,7 +710,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
         }
         $sn = trim($this->page->listpan->filter->searchnumber->getText());
         if (strlen($sn) > 1) { // игнорируем другие поля
-            $conn->qstr('%' . $sn . '%');
+            $sn = $conn->qstr('%' . $sn . '%');
             $where = "  meta_name in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' ,'Warranty','TTN' )  and document_number like  {$sn}    ";
         }
 

@@ -108,7 +108,7 @@ class ARMPos extends \App\Pages\Base
 
         //оплата
         $this->docpanel->add(new Form('form3'))->setVisible(false);
-        $this->docpanel->form3->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList( ), H::getDefMF()))->onChange($this, 'OnPayment');
+        $this->docpanel->form3->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList( ), H::getDefMF()));
 
         $this->docpanel->form3->add(new TextInput('document_number'));
 
@@ -753,26 +753,20 @@ class ARMPos extends \App\Pages\Base
 
         $this->_doc->headerdata['time'] = time();
         $this->_doc->payed = $this->docpanel->form3->payed->getText();
-        $this->_doc->headerdata['exchange'] = $this->docpanel->form3->exchange->getText();
         $this->_doc->headerdata['payed'] = $this->docpanel->form3->payed->getText();
+        $this->_doc->headerdata['exchange'] = $this->docpanel->form3->exchange->getText();
         $this->_doc->headerdata['paydisc'] = $this->docpanel->form3->paydisc->getText();
         $this->_doc->headerdata['payment'] = $this->docpanel->form3->payment->getValue();
 
-        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID) {
-            $this->_doc->headerdata['paydisc'] = 0;
-            $this->_doc->payed = 0;
-            $this->_doc->payamount = 0;
-        }
-        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
-            $this->_doc->payed = 0;
-        }
+ 
 
-        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID && $this->_doc->customer_id == 0) {
+        
+        if ($this->_doc->payamount > $this->_doc->payed && $this->_doc->customer_id == 0) {
             $this->setError("mustsel_cust");
             return;
         }
-        if ($this->_doc->payamount > $this->_doc->payed && $this->_doc->customer_id == 0) {
-            $this->setError("mustsel_cust");
+        if ($this->docpanel->form3->payment->getValue()== 0 && $this->_doc->payed > 0) {
+            $this->setError("noselmf");
             return;
         }
 
@@ -861,27 +855,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->formcheck->showcheck->setText($check, true);
     }
 
-    public function OnPayment($sender) {
-        $b = $sender->getValue();
-        $this->docpanel->form3->payed->setVisible(true);
-        $this->docpanel->form3->payamount->setVisible(true);
-        $this->docpanel->form3->paydisc->setVisible(true);
-        $this->docpanel->form3->exchange->setVisible(true);
-
-        if ($b == \App\Entity\MoneyFund::PREPAID) {
-            $this->docpanel->form3->payed->setVisible(false);
-            $this->docpanel->form3->payamount->setVisible(false);
-            $this->docpanel->form3->paydisc->setVisible(false);
-            $this->docpanel->form3->exchange->setVisible(false);
-        }
-        if ($b == \App\Entity\MoneyFund::CREDIT) {
-            $this->docpanel->form3->payed->setVisible(false);
-            //$this->docpanel->form3->payamount->setVisible(false);
-            $this->docpanel->form3->paydisc->setVisible(false);
-            $this->docpanel->form3->exchange->setVisible(false);
-        }
-    }
-
+   
     public function OnOpenShift() {
         $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, true);
         if ($ret['success'] == false && $ret['docnumber'] > 0) {
