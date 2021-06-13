@@ -225,10 +225,7 @@ class Options extends \App\Pages\Base
         $this->food->add(new CheckBox('fooddelivery',$food['delivery']));
         $this->food->add(new CheckBox('foodtables',$food['tables']));
         $this->food->add(new CheckBox('foodpack',$food['pack']));
-        $this->food->add(new CheckBox('foodbar',$food['bar']));
-        
-        
-        
+          
         //источники  продаж
         $this->add(new Form('salesourcesform')) ;
         $this->salesourcesform->add(new SubmitButton('salesourcesave'))->onClick($this, 'OnSaveSaleSource');
@@ -389,7 +386,7 @@ class Options extends \App\Pages\Base
         $food['pricetype'] = $sender->foodpricetype->getValue() ;
         $food['delivery'] = $sender->fooddelivery->isChecked()?1:0 ;
         $food['tables'] = $sender->foodtables->isChecked()?1:0 ;
-        $food['bar'] = $sender->foodbar->isChecked()?1:0 ;
+    
         $food['pack'] = $sender->foodpack->isChecked()?1:0 ;
         
         

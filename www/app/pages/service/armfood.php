@@ -57,7 +57,7 @@ class ARMFood extends \App\Pages\Base
             $this->setWarn('nocommonoptions') ;
         }
         
-        $this->_tvars['prod'] =0;// $food['worktype'] ?? 0 ;
+        $this->_tvars['prod'] =  $food['worktype'] ?? 0 ;
         $this->_tvars['delivery'] = $food['delivery'] ?? 0;
         $this->_tvars['tables'] = $food['tables']?? 0 ;
         $this->_tvars['pack'] = $food['pack'] ?? 0;
@@ -632,8 +632,9 @@ class ARMFood extends \App\Pages\Base
         }  
         
        $this->createdoc();        
-        
-       $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
+       if($this->_tvar['prod']==0) 
+       {
+             $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
              $conn = \ZDB\DB::getConnect();
              $conn->BeginTrans();
              //списываем  со  склада
@@ -649,14 +650,25 @@ class ARMFood extends \App\Pages\Base
 
                 $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
                 return;
-            }             
-       $this->setInfo('sentdelivary');      
+             } 
+             
+                      
+             $this->setInfo('sentdelivary'); 
+                       
+       } else {  //в  производство
+           $this->_doc->updateStatus(Document::STATE_INPROCESS);
+           $this->setInfo('sentprod'); 
+                
+       }
+       
        $this->onNewOrder(); 
     }
     
     // в  производсво
     public function toprodOnClick($sender) {
-        
+          $this->_doc->updateStatus(Document::STATE_INPROCESS);
+          $this->setInfo('sentprod'); 
+          $this->onNewOrder();     
     }     
      
      
@@ -687,13 +699,9 @@ class ARMFood extends \App\Pages\Base
       
          try {
          
-        
-            
-           $this->createdoc()   ;
+            $this->createdoc()   ;
            
-   
-            
-           
+             
             $this->_doc->payamount = $this->docpanel->payform->pfforpay->getText();
             $this->_doc->payed = $this->docpanel->payform->pfpayed->getText();
             $this->_doc->headerdata['exchange'] = $this->docpanel->payform->pfrest->getText();
@@ -712,17 +720,24 @@ class ARMFood extends \App\Pages\Base
             $this->_doc->save(); 
             $this->_doc = $this->_doc->cast();
             $this->_doc->DoPayment() ; 
-            if($this->_doc->state <4) {
-               $this->_doc->DoStore()    ;
-               $this->_doc->updateStatus(Document::STATE_EXECUTED);
-            }  
             
+           if($this->_tvar['prod']==0) 
+           {
+                if($this->_doc->state < 4) {
+                   $this->_doc->DoStore()    ;
+                   $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                }  
+                 
+           } else {  // в  производство
+               $this->_doc->updateStatus(Document::STATE_INPROCESS);
+               $this->setInfo('sentprod'); 
+             
+           }    
             //если  оплачен    закрываем
             if ($this->_doc->payamount <= $this->_doc->payed  && ($this->_doc->state == Document::STATE_EXECUTED || $this->_doc->state==Document::STATE_DELIVERED || $this->_doc->state==Document::STATE_FINISHED) ){
                 $this->_doc->updateStatus(Document::STATE_CLOSED);
-            }
-            $conn->CommitTrans();
-              
+            }             
+            $conn->CommitTrans(); 
             
          } catch(\Throwable $ee) {
             global $logger;

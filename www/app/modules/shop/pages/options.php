@@ -88,7 +88,10 @@ class Options extends \App\Pages\Base
     }
 
     public function saveShopOnClick($sender) {
-        $shop = array();
+        $shop = System::getOptions("shop");
+        if (!is_array($shop)) {
+            $shop = array();
+        }
 
         $shop['defcust'] = $this->shop->shopdefcust->getKey();
         $shop['defcustname'] = $this->shop->shopdefcust->getText();
@@ -150,7 +153,9 @@ class Options extends \App\Pages\Base
 
     public function saveTextsOnClick($sender) {
         $shop = System::getOptions("shop");
-
+        if (!is_array($shop)) {
+            $shop = array();
+        }
         $shop['aboutus'] = base64_encode($this->texts->aboutus->getText());
         $shop['contact'] = base64_encode($this->texts->contact->getText());
         $shop['delivery'] = base64_encode($this->texts->delivery->getText());
