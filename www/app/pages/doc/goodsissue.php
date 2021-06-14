@@ -123,20 +123,22 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->document_number);
 
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
-            $this->docform->total->setText($this->_doc->amount);
+            $this->docform->total->setText(H::fa($this->_doc->amount));
 
             $this->docform->document_date->setDate($this->_doc->document_date);
 
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->salesource->setValue($this->_doc->headerdata['salesource']);
 
-            $this->docform->payamount->setText($this->_doc->payamount);
-            $this->docform->editpayamount->setText($this->_doc->payamount);
+            $this->docform->payamount->setText(H::fa($this->_doc->payamount));
+            $this->docform->editpayamount->setText(H::fa($this->_doc->payamount));
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->payed->setText($this->_doc->payed);
-            if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )$this->_doc->payed = $this->_doc->headerdata['payed'];
-            $this->docform->editpayed->setText($this->_doc->payed);
+            if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 ) {
+                $this->docform->editpayed->setText(H::fa($this->_doc->headerdata['payed']));
+                $this->docform->payed->setText(H::fa($this->_doc->headerdata['payed']));
+            }
 
              
             $this->docform->store->setValue($this->_doc->headerdata['store']);
@@ -602,19 +604,7 @@ class GoodsIssue extends \App\Pages\Base
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
 
-                // проверка на минус  в  количестве
-
-                $allowminus = System::getOption("common", "allowminus");
-                if ($allowminus != 1) {
-
-                    foreach ($this->_itemlist as $item) {
-                        $qty = $item->getQuantity($this->_doc->headerdata['store']);
-                        if ($qty < $item->quantity) {
-                            $this->setError("nominus", H::fqty($qty), $item->itemname);
-                            return;
-                        }
-                    }
-                }
+    
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
                 if ($this->_doc->parent_id > 0) {   //закрываем заказ
@@ -654,6 +644,8 @@ class GoodsIssue extends \App\Pages\Base
 
     public function onPayAmount($sender) {
         $this->docform->payamount->setText($this->docform->editpayamount->getText());
+        $this->docform->editpayed->setText($this->docform->editpayamount->getText());
+        $this->docform->payed->setText($this->docform->editpayamount->getText());
         $this->goAnkor("tankor");
     }
 
@@ -765,9 +757,8 @@ class GoodsIssue extends \App\Pages\Base
             $this->setError("noselcust");
         }
 
-
-      
-        if ($this->_doc->payamount > $this->_doc->payed && $c == 0) {
+     
+        if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $c == 0) {
             $this->setError("mustsel_cust");
         }
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {

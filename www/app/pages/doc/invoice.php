@@ -298,7 +298,7 @@ class Invoice extends \App\Pages\Base
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
-        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
+        if ($this->_doc->headerdata['payment'] == 0) {
             $this->_doc->payed = 0;
         }
 

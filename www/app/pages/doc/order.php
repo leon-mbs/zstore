@@ -47,7 +47,7 @@ class Order extends \App\Pages\Base
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
 
         $this->docform->add(new TextArea('notes'));
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(    ), MoneyFund::CREDIT));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(    ), 0));
         $this->docform->add(new DropDownChoice('salesource', H::getSaleSources() , H::getDefSaleSource()));
   
         $this->docform->add(new TextInput('editpaydisc'));
@@ -131,8 +131,11 @@ class Order extends \App\Pages\Base
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->payed->setText($this->_doc->payed);
-         if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )  $this->_doc->payed = $this->_doc->headerdata['payed'];
-               $this->docform->editpayed->setText($this->_doc->payed);
+         if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 ) {
+               
+               $this->docform->editpayed->setText($this->_doc->headerdata['payed']);
+               $this->docform->payed->setText($this->_doc->headerdata['payed']);
+         }
 
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->email->setText($this->_doc->headerdata['email']);
@@ -485,7 +488,6 @@ class Order extends \App\Pages\Base
     }
 
     public function OnAutoItem($sender) {
-        
         return Item::findArrayAC( $sender->getText());
     }
 
@@ -562,6 +564,9 @@ class Order extends \App\Pages\Base
 
     public function onPayAmount($sender) {
         $this->docform->payamount->setText($this->docform->editpayamount->getText());
+        $this->docform->editpayed->setText($this->docform->editpayamount->getText());
+        $this->docform->payed->setText($this->docform->editpayamount->getText());
+        
         $this->goAnkor("tankor");
     }
 
@@ -575,7 +580,7 @@ class Order extends \App\Pages\Base
         } else {
             $this->goAnkor("tankor");
         }
-        $this->calcPay();
+        
     }
 
     public function onPayDisc() {
