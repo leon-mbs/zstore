@@ -27,7 +27,7 @@ class PayBayList extends \App\Pages\Base
     public  $_doclist   = array();
     public  $_pays      = array();
     public  $_totamount = 0;
-    private $_docs      = " and ( meta_name in('GoodsIssue','Invoice' ,'PosCheck','ServiceAct','Order')  or  (meta_name='IncomeMoney'  and content like '%<detail>1</detail>%'  )  or  (meta_name='OutcomeMoney'  and content like '%<detail>2</detail>%'  ))  ";
+    private $_docs      = " and ( meta_name in('GoodsIssue','Invoice' ,'PosCheck','ServiceAct','Order','ReturnIssue')  or  (meta_name='IncomeMoney'  and content like '%<detail>1</detail>%'  )  or  (meta_name='OutcomeMoney'  and content like '%<detail>2</detail>%'  ))  ";
     private $_state     = "1,2,3,17,8";
 
     public function __construct() {

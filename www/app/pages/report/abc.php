@@ -133,7 +133,7 @@ class ABC extends \App\Pages\Base
         $list = array();
         $conn = \ZDB\DB::getConnect();
         $sql = "SELECT * FROM (
-                    SELECT items.itemname as name, SUM( ABS( (outprice-partion )*quantity ) ) AS value
+                    SELECT items.itemname as name, ABS( SUM( (outprice-partion )*quantity ) ) AS value
                     FROM  `entrylist_view` 
                        join items on entrylist_view.item_id = items.item_id 
                        join documents_view  on entrylist_view.document_id = documents_view.document_id 

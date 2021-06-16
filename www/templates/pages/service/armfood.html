@@ -247,16 +247,14 @@
                       <div class="  w-100 ">
 
                         
-                          {{^prod}} 
+                        
                             <input zippy="btopay" type="submit" value="К оплате"   class="btn btn-success mr-4">
                              
                             <input zippy="btodel" type="submit" value="В доставку"   class="btn btn-success mr-4">
-                             {{/prod}}  
-                          {{#prod}} 
+                        
                             <input zippy="btoprod" type="submit" value="В производство"   class="btn btn-success mr-4">
 
-                            
-                            {{/prod}} 
+                        
                          
                      </div>
                     </form>  
@@ -389,10 +387,11 @@
                         <th ></th>
                       
                        
-                    
+                         <th ></th>
+                         <th ></th>
                         <th class="text-right">Сумма</th>
 
-                        <th ></th>
+                       
                         <th ></th>
                     </tr>
                     <tr zippy="orderlist">
@@ -404,10 +403,11 @@
                         <td class="text-nowrap  " zippy="state">  </td>
                         <td >   </td>
                         
-                     
+                        <td   ><i title="Доставка" zippy="isdel" class="fa fa-truck" /></td>
+                        <td   ><i title="Ждет оплату" zippy="wp" class="fa fa-credit-card" /></td>
                         <td class="text-right" zippy="docamount"></td>
 
-                        <td   ><i title="Ждет оплату" zippy="wp" class="fa fa-credit-card" /></td>
+                        
                         <td zippy="docnotes"></td>
                     </tr>
 
@@ -424,7 +424,7 @@
                                 <div class="navbar nav">
                                     <form zippy="statusform" class="form-inline ">
                                         <button zippy="bedit" type="submit" class="  btn btn-info  mr-2 ">Редактировать</button>
-                                      {{#prod}}    <button zippy="btoprod" type="submit" class="  btn btn-info  mr-2 ">В производство</button>      {{/prod}}   
+                                        
                                         <button zippy="bpay" type="submit" class="  btn btn-primary  mr-2 ">Оплатить</button>
                               
                                     

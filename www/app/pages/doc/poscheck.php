@@ -120,7 +120,7 @@ class POSCheck extends \App\Pages\Base
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
-        if ($docid > 0) {    //загружаем   содержимок  документа настраницу
+        if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
 
@@ -136,14 +136,15 @@ class POSCheck extends \App\Pages\Base
             $this->docform->payamount->setText(H::fa($this->_doc->payamount));
             $this->docform->editpayamount->setText(H::fa($this->_doc->payamount));
             $this->docform->paydisc->setText(H::fa($this->_doc->headerdata['paydisc']));
-            $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
+            $this->docform->editpaydisc->setText(H::fa($this->_doc->headerdata['paydisc']));
 
             $this->docform->payed->setText(H::fa($this->_doc->headerdata['payed']));
-         if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )  $this->_doc->payed = $this->_doc->headerdata['payed'];
-               $this->docform->editpayed->setText(H::fa($this->_doc->headerdata['payed']));
+              if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 ) {
+                $this->docform->editpayed->setText(H::fa($this->_doc->headerdata['payed']));
+                $this->docform->payed->setText(H::fa($this->_doc->headerdata['payed']));
+            }
             $this->docform->exchange->setText(H::fa($this->_doc->headerdata['exchange']));
-
-            
+             
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             //  $this->docform->pos->setValue($this->_doc->headerdata['pos']);
@@ -626,6 +627,8 @@ class POSCheck extends \App\Pages\Base
 
     public function onPayAmount($sender) {
         $this->docform->payamount->setText($this->docform->editpayamount->getText());
+        $this->docform->editpayed->setText($this->docform->editpayamount->getText());
+        $this->docform->payed->setText($this->docform->editpayamount->getText());
         $this->goAnkor("tankor");
     }
 
@@ -816,7 +819,7 @@ class POSCheck extends \App\Pages\Base
         $p = $this->docform->payment->getValue();
         $c = $this->docform->customer->getKey();
       
-        if ($this->_doc->payamount > $this->_doc->payed && $c == 0) {
+        if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $c == 0) {
             $this->setError("mustsel_cust");
         }
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {

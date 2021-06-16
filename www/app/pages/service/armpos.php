@@ -757,11 +757,8 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['exchange'] = $this->docpanel->form3->exchange->getText();
         $this->_doc->headerdata['paydisc'] = $this->docpanel->form3->paydisc->getText();
         $this->_doc->headerdata['payment'] = $this->docpanel->form3->payment->getValue();
-
- 
-
-        
-        if ($this->_doc->payamount > $this->_doc->payed && $this->_doc->customer_id == 0) {
+          
+        if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $this->_doc->customer_id == 0) {
             $this->setError("mustsel_cust");
             return;
         }
