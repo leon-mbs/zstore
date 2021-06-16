@@ -87,7 +87,7 @@ class Income extends \App\Pages\Base
 
         if ($type == 1) {    //по товарам
             $sql = "
-          select i.`itemname`,i.`item_code`,sum(e.`quantity`) as qty, sum(e.`amount`) as summa
+          select i.`itemname`,i.`item_code`,sum(e.`quantity`) as qty, sum(e.`outprice` * e.`quantity`) as summa
               from `entrylist_view`  e
 
               join `items` i on e.`item_id` = i.`item_id`
@@ -103,7 +103,7 @@ class Income extends \App\Pages\Base
         }
         if ($type == 2) {  //по постащикам
             $sql = "
-          select c.`customer_name` as itemname,c.`customer_id`,  sum(e.`amount`) as summa
+          select c.`customer_name` as itemname,c.`customer_id`,  sum(e.`outprice` * e.`quantity`) as summa
           from `entrylist_view`  e
 
          join `customers`  c on c.`customer_id` = e.`customer_id`
@@ -121,7 +121,7 @@ class Income extends \App\Pages\Base
         }
         if ($type == 3) {   //по датам
             $sql = "
-          select e.`document_date` as dt  ,  sum(e.`amount`) as summa
+          select e.`document_date` as dt  ,  sum(e.`outprice` * e.`quantity`) as summa
               from `entrylist_view`  e
 
               join `items` i on e.`item_id` = i.`item_id`
