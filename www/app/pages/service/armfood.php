@@ -516,7 +516,7 @@ class ARMFood extends \App\Pages\Base
            $sf->bclose->setVisible(true);    
         }
       
-        if($this->_doc->state < 4  ) { 
+        if($this->_doc->state < 4 || $this->_doc->state == Document::STATE_INPROCESS || $this->_doc->state == Document::STATE_READYTOSHIP) { 
            $sf->bedit->setVisible(true);    
            $sf->brefuse->setVisible(true);  
         }
@@ -668,9 +668,30 @@ class ARMFood extends \App\Pages\Base
        $this->onNewOrder(); 
     }
     
-    // в  производсво
+    // в  производство
     public function toprodOnClick($sender) {
-          $this->_doc->updateStatus(Document::STATE_INPROCESS);
+         
+          
+             $conn = \ZDB\DB::getConnect();
+             $conn->BeginTrans();
+             //списываем  со  склада
+             try{
+                  $this->_doc->DoStore()  ;
+                  $this->_doc->save()  ;
+                  $this->_doc->updateStatus(Document::STATE_INPROCESS);
+                  
+                  $conn->CommitTrans();
+             } catch(\Throwable $ee) {
+                global $logger;
+                $conn->RollbackTrans();
+                $this->setError($ee->getMessage());
+
+                $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+                return;
+             } 
+             
+                            
+          
           $this->setInfo('sentprod'); 
           $this->onNewOrder();     
     }     
@@ -683,6 +704,7 @@ class ARMFood extends \App\Pages\Base
            $this->docpanel->listsform->setVisible(false);
            $this->docpanel->navform->setVisible(false);
            $this->docpanel->payform->clean();
+         
            $amount = $this->docpanel->listsform->totalamount->getText() ;
            $this->docpanel->payform->pfamount->setText(H::fa($amount))  ;
            $this->docpanel->payform->pfforpay->setText(H::fa($amount))  ;
