@@ -85,6 +85,7 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("ncolmsr", $cols));
         $form->add(new CheckBox("npassfirst"));
         $form->add(new CheckBox("npreview"));
+        $form->add(new CheckBox("ncheckname"));
 
         $form->onSubmit($this, "onNImport");
 
