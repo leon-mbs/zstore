@@ -7,7 +7,7 @@
     "prefer-stable" : true,
   
     "require": {
-        "php": ">=7.2",
+        "php": "^7.2",
          
         "phpmailer/phpmailer": "~6.1",
         "monolog/monolog": "1.25.4",
@@ -20,7 +20,7 @@
         "picqer/php-barcode-generator": "v2.0.1",
          "endroid/qr-code": "3.9.6",
 
-        "masterexploder/phpthumb" :"*",
+        "masterexploder/phpthumb" :"2.1",
         "lemmon/fetch" :"v0.3.0",
         "lis-dev/nova-poshta-api-2" :"0.1.6",
         "phpoffice/phpspreadsheet" :"^1.15.0",
@@ -29,7 +29,7 @@
         "symfony/polyfill-mbstring": "v1.22.0",
         "symfony/polyfill-uuid": "v1.22.0",
        
-        "leon-mbs/zippy": "2.2.10"
+        "leon-mbs/zippy": "2.3.0"
 
     }
 }
