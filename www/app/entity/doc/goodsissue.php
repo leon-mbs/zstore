@@ -63,7 +63,7 @@ class GoodsIssue extends Document
                         "payed"           => H::fa($this->payed),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
-                        "prepaid"         => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
+                        "prepaid"         => $this->headerdata['payment'] == 0,
                         "docbarcode"         => $this->getBarCodeImage(),
                         "docqrcode"         => $this->getQRCodeImage(),
                         "payamount"       => H::fa($this->payamount)
@@ -92,6 +92,9 @@ class GoodsIssue extends Document
         $amount = 0;
         foreach ($this->unpackDetails('detaildata') as $item) {
 
+                        if(false == $item->checkMinus($item->quantity,$this->headerdata['store'])) { 
+                            throw new \Exception(\App\Helper::l("nominus",$item->quantity,$item->itemname));
+                        }
 
             //оприходуем  с  производства
             if ($item->autoincome == 1 && $item->item_type == Item::TYPE_PROD) {
@@ -102,6 +105,11 @@ class GoodsIssue extends Document
 
                         $itemp = \App\Entity\Item::load($part->item_id);
                         $itemp->quantity = $item->quantity * $part->qty;
+                        
+                        if(false==$itemp->checkMinus($itemp->quantity,$this->headerdata['store'])) { 
+                            throw new \Exception(\App\Helper::l("nominus",$itemp->quantity,$itemp->itemname));
+                        }
+                        
                         $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
 
                         foreach ($listst as $st) {
@@ -142,25 +150,15 @@ class GoodsIssue extends Document
         }
 
 
-        //списываем бонусы
-        if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
-            $customer = \App\Entity\Customer::load($this->customer_id);
-            if ($customer->discount > 0) {
-                //процент
-            } else {
-                $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0);
-                if ($customer->bonus < 0) {
-                    $customer->bonus = 0;
-                }
-                $customer->save();
-            }
-        }
+ 
 
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
             $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_INCOME);
             if ($payed > 0) {
                 $this->payed = $payed;
             }
+            \App\Entity\IOState::addIOState($this->document_id,  $this->payed,\App\Entity\IOState::TYPE_BASE_INCOME);
+
         }
 
         return true;

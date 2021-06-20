@@ -1,6 +1,61 @@
 <html>
 <body>
-  <label class="badge badge-warning">В розробцi</label>
-  
+         <div class="row"  >
+
+            <div class="col-12  " >
+                <h3>АРМ кухня</h3>
+                
+             </div>
+
+                  <div class="col-12 col-md-10 col-lg-8" >
+             
+
+                 <a zippy="btnupdate" class="btn btn-info">Оновити</a>
+                <table class="table table-striped">
+              
+                    <tr zippy="itemlist">
+                   
+
+                        <td zippy="docnumber"> </td>
+                        <td zippy="name">  </td>
+                        <td zippy="qty" class="text-right">  </td>
+                        
+                        <td zippy="notes">  </td>
+                      
+         
+                        <td zippy="docnotes"></td>
+                        <td  ><a zippy="ready" class="btn btn-success">Готово</a></td>
+                    </tr>
+
+                </table> 
+                   <a id="dankor"></a>
+                 </div>
+          
+        </div> 
+     
+      
+          <script>
+   //  var Mustache = require('mustache');
+     //  var dd= chattpl.content.querySelectorAll("div");
+    //  var output = Mustache.render('<[{xxx}]>' , {"xxx":"d<br>d"},{},[ '<[', ']>' ]);
+      //   console.log(output    );
+        
+           var url = '{{{_baseurl}}}::getMessages:1&ajax=true'
+           
+     
+          fetch(url)
+          .then((response) => {
+            return response.text();
+          })
+          .then((data) => {
+            var d =  eval(data);
+            console.log(d);
+            
+            
+          });
+
+            
+        </script>
+        
 </body>
 </html>

@@ -410,6 +410,7 @@ class Task extends \App\Pages\Base
         $eq = $row->getDataItem();
 
         $row->add(new Label('eq_name', $eq->eq_name));
+        $row->add(new Label('eq_code', $eq->serial));
         $row->add(new ClickLink('delete4'))->onClick($this, 'delete4OnClick');
     }
 

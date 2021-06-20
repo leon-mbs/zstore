@@ -61,7 +61,7 @@ class Order extends \App\Entity\Doc\Document
                         "payed"           => H::fa($this->payed),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
-            //"prepaid"   => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
+          
                         "payamount"       => H::fa($this->payamount)
         );
 
@@ -146,6 +146,8 @@ class Order extends \App\Entity\Doc\Document
                 if ($payed > 0) {
                     $this->payed = $payed;
                 }
+            \App\Entity\IOState::addIOState($this->document_id,  $this->payed,\App\Entity\IOState::TYPE_BASE_INCOME);
+                
             }
         }
     }

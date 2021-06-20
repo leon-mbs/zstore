@@ -29,6 +29,7 @@ class Item extends \ZCL\DB\Entity
         $this->image_id = 0;
         $this->noprice = 0;
         $this->noshop = 0;
+        $this->foodstate = 0;
     }
 
     protected function afterLoad() {
@@ -63,6 +64,7 @@ class Item extends \ZCL\DB\Entity
         $this->extdata = (string)$xml->extdata[0];
         $this->sef = (string)$xml->sef[0];
         $this->url = (string)$xml->url[0];
+        $this->foodstate = (int)$xml->foodstate[0];
 
         $this->cell = (string)$xml->cell[0];
         //  $this->octoreoptions = (string) $xml->octoreoptions[0];
@@ -130,6 +132,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<customsize>{$this->customsize}</customsize>";
         $this->detail .= "<sef>{$this->sef}</sef>";
         $this->detail .= "<url>{$this->url}</url>";
+        $this->detail .= "<foodstate>{$this->foodstate}</foodstate>";
 
         //упаковываем  цены  по  филиалам
         $brprice = serialize($this->brprice);
@@ -331,7 +334,24 @@ class Item extends \ZCL\DB\Entity
         $cnt = $conn->GetOne($sql);
         return $cnt;
     }
-
+ 
+    /**
+    * проверка  на  списывание  в  миннуч
+    *  
+    * @param mixed $testqty
+    * @param mixed $store_id
+    * @param mixed $snumber
+    */
+    public function checkMinus($testqty,$store_id = 0, $snumber = "") {
+         $allowminus = \App\System::getOption("common", "allowminus");
+         if ($allowminus == 1) return true;
+         
+         $qty = $this->getQuantity($store_id,$snumber) ;
+         
+         return doubleval($qty) >= doubleval($testqty);
+       
+    }
+    
     /**
      * возвращает список скенрий производителя
      *
@@ -354,6 +374,25 @@ class Item extends \ZCL\DB\Entity
             }
         }
         return $list;
+    }
+    
+    /**
+    * вовращает  самую срочную по  дате  серию  кроме  просроченых  
+    * 
+    * @param mixed $store_id
+    */
+    public function getNearestSerie($store_id = 0) {
+
+        $conn = \ZDB\DB::getConnect();
+        $sql = "  select coalesce(snumber,'') as snumber   from  store_stock_view where   item_id = {$this->item_id} and qty >0 and snumber <>'' and snumber is not null   and (  sdate is   null  or sdate >=  now()  )   ";
+        if ($store_id > 0) {
+            $sql .= " and store_id = " . $store_id;
+        }
+        $sql .= " order  by  sdate  desc limit 0,1";
+    
+
+        return $conn->GetOne($sql);
+        
     }
 
     /**

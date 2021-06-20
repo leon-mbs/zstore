@@ -49,21 +49,25 @@ class DocList extends \App\Pages\Base
             $filter->doctype = 0;
             $filter->customer = 0;
             $filter->author = 0;
+            $filter->status = 0;
             $filter->customer_name = '';
 
             $filter->searchnumber = '';
+            $filter->searchtext = '';
         }
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', $filter->from));
         $this->filter->add(new Date('to', $filter->to));
         $this->filter->add(new DropDownChoice('doctype', H::getDocTypes(), $filter->doctype));
         $this->filter->add(new DropDownChoice('author', \App\Entity\User::findArray('username','','username'), $filter->author));
+        $this->filter->add(new DropDownChoice('status',  Document::getStateList(), $filter->status));
 
         $this->filter->add(new ClickLink('erase', $this, "onErase"));
         $this->filter->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');
         $this->filter->searchcust->setKey($filter->customer);
         $this->filter->searchcust->setText($filter->customer_name);
         $this->filter->add(new TextInput('searchnumber', $filter->searchnumber));
+        $this->filter->add(new TextInput('searchtext', $filter->searchtext));
 
         if (strlen($filter->docgroup) > 0) {
             $this->filter->docgroup->setValue($filter->docgroup);
@@ -108,15 +112,19 @@ class DocList extends \App\Pages\Base
         $filter->from = time() - (7 * 24 * 3600);
         $filter->page = 1;
         $filter->doctype = 0;
+        $filter->status = 0;
+        $filter->author = 0;
         $filter->customer = 0;
         $filter->customer_name = '';
 
         $filter->searchnumber = '';
+        $filter->searchtext = '';
 
         $this->filter->clean();
         $this->filter->to->setDate(time());
         $this->filter->from->setDate(time() - (7 * 24 * 3600));
         $this->filter->doctype->setValue(0);
+        $this->filter->status->setValue(0);
         $this->filterOnSubmit($this->filter);
     }
 
@@ -129,11 +137,14 @@ class DocList extends \App\Pages\Base
         $filter->to = $this->filter->to->getDate(true);
         $filter->doctype = $this->filter->doctype->getValue();
         $filter->author = $this->filter->author->getValue();
+        $filter->status = $this->filter->status->getValue();
         $filter->customer = $this->filter->searchcust->getKey();
         $filter->customer_name = $this->filter->searchcust->getText();
 
         $filter->searchnumber = trim($this->filter->searchnumber->getText());
+        $filter->searchtext = trim($this->filter->searchtext->getText());
         $this->filter->searchnumber->setText('') ;
+        $this->filter->searchtext->setText('') ;
         $this->doclist->setCurrentPage(1);
         //$this->doclist->setPageSize($this->filter->rowscnt->getValue());
 
@@ -294,12 +305,32 @@ class DocList extends \App\Pages\Base
 
             return;
         }
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
+        
+        try{
 
-        $del = Document::delete($doc->document_id);
-        if (strlen($del) > 0) {
+           $del = Document::delete($doc->document_id);
+         if (strlen($del) > 0) {
             $this->setError($del);
+            $conn->RollbackTrans();
+            
             return;
-        }
+         }      
+        
+            $conn->CommitTrans();
+       
+
+        } catch(\Throwable $ee) {
+            global $logger;
+            $conn->RollbackTrans();
+      
+            $this->setError($ee->getMessage());
+
+            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            return;
+        } 
+
 
         $this->doclist->Reload(true);
         $this->resetURL();
@@ -334,11 +365,25 @@ class DocList extends \App\Pages\Base
             $this->setError("dochasnocanceledchilld");
             return;
         }
+        
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
+        
+        try{
+          $doc->updateStatus(Document::STATE_CANCELED);
+          $doc->payed=0;
+          $doc->save();
+          $conn->CommitTrans();
+       
+        } catch(\Throwable $ee) {
+            global $logger;
+            $conn->RollbackTrans();
+      
+            $this->setError($ee->getMessage());
 
-        $doc->updateStatus(Document::STATE_CANCELED);
-        $doc->payed=0;
-        $doc->save();
-
+            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            return;
+        }
         $this->doclist->setSelectedRow($sender->getOwner());
         $this->doclist->Reload(false);
         $this->resetURL();
@@ -434,6 +479,15 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         if ($filter->author > 0) {
             $where .= " and user_id  ={$filter->author} ";
         }
+        if ($filter->status > 0) {
+            $where .= " and state  ={$filter->status} ";
+        }
+        $st = $filter->searchtext;
+        if (strlen($st) > 2) {
+            $st = $conn->qstr('%' . $st . '%');
+
+            $where .= "  and(   content like  {$st}  or notes like  {$st} ) ";
+        }
 
 
         $sn = $filter->searchnumber;
@@ -442,7 +496,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
             // игнорируем другие поля
             $sn = $conn->qstr('%' . $sn . '%');
 
-            $where = "   document_number like  {$sn}  or content like  {$sn}  or notes like  {$sn}  ";
+            $where = "   document_number like  {$sn}    ";
         }
 
 

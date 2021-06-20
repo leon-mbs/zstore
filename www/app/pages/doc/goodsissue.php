@@ -49,7 +49,7 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->docform->add(new Date('document_date'))->setDate(time());
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(  true), H::getDefMF()))->onChange($this, 'OnPayment');
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(   ), H::getDefMF()));
         $this->docform->add(new DropDownChoice('salesource', H::getSaleSources() , H::getDefSaleSource()));
 
         $this->docform->add(new Label('discount'))->setVisible(false);
@@ -123,22 +123,22 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->document_number);
 
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
-            $this->docform->total->setText($this->_doc->amount);
+            $this->docform->total->setText(H::fa($this->_doc->amount));
 
             $this->docform->document_date->setDate($this->_doc->document_date);
 
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->salesource->setValue($this->_doc->headerdata['salesource']);
 
-            $this->docform->payamount->setText($this->_doc->payamount);
-            $this->docform->editpayamount->setText($this->_doc->payamount);
+            $this->docform->payamount->setText(H::fa($this->_doc->payamount));
+            $this->docform->editpayamount->setText(H::fa($this->_doc->payamount));
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
-            $this->docform->payed->setText($this->_doc->payed);
-            $this->docform->editpayed->setText($this->_doc->payed);
+            if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )  $this->_doc->payed = $this->_doc->headerdata['payed'];
+            $this->docform->editpayed->setText(H::fa($this->_doc->payed));            
+            $this->docform->payed->setText(H::fa($this->_doc->payed));
 
-            $this->OnPayment($this->docform->payment);
-
+             
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->customer->setKey($this->_doc->customer_id);
 
@@ -204,8 +204,8 @@ class GoodsIssue extends \App\Pages\Base
 
                         $this->OnChangeCustomer($this->docform->customer);
                         if ($order->payamount > 0) {
-                            $this->docform->payment->setValue(MoneyFund::PREPAID); // предоплата
-                            $this->OnPayment($this->docform->payment);
+                            $this->docform->payment->setValue(0); // предоплата
+                            
                         }
 
 
@@ -236,8 +236,8 @@ class GoodsIssue extends \App\Pages\Base
                         $this->calcPay();
 
                         if ($invoice->payamount > 0) {
-                            $this->docform->payment->setValue(MoneyFund::PREPAID); // предоплата
-                            $this->OnPayment($this->docform->payment);
+                            $this->docform->payment->setValue(0); // предоплата
+                          
                         }
                     }
 
@@ -558,16 +558,14 @@ class GoodsIssue extends \App\Pages\Base
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
 
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-
-        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID) {
+  
+        if ($this->_doc->headerdata['payment'] == 0) {
             $this->_doc->headerdata['paydisc'] = 0;
             $this->_doc->payed = 0;
             $this->_doc->payamount = 0;
         }
-        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
-            $this->_doc->payed = 0;
-        }
-
+        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+      
 
         if ($this->checkForm() == false) {
             return;
@@ -604,19 +602,7 @@ class GoodsIssue extends \App\Pages\Base
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
 
-                // проверка на минус  в  количестве
-
-                $allowminus = System::getOption("common", "allowminus");
-                if ($allowminus != 1) {
-
-                    foreach ($this->_itemlist as $item) {
-                        $qty = $item->getQuantity($this->_doc->headerdata['store']);
-                        if ($qty < $item->quantity) {
-                            $this->setError("nominus", H::fqty($qty), $item->itemname);
-                            return;
-                        }
-                    }
-                }
+    
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
                 if ($this->_doc->parent_id > 0) {   //закрываем заказ
@@ -656,6 +642,8 @@ class GoodsIssue extends \App\Pages\Base
 
     public function onPayAmount($sender) {
         $this->docform->payamount->setText($this->docform->editpayamount->getText());
+        $this->docform->editpayed->setText($this->docform->editpayamount->getText());
+        $this->docform->payed->setText($this->docform->editpayamount->getText());
         $this->goAnkor("tankor");
     }
 
@@ -723,42 +711,16 @@ class GoodsIssue extends \App\Pages\Base
         if ($disc > 0) {
             $total -= $disc;
         }
-        $p = $this->docform->payment->getValue();
-        if ($p > 0 && $p != \App\Entity\MoneyFund::PREPAID) {
+ 
             $this->docform->editpayamount->setText(H::fa($total));
             $this->docform->payamount->setText(H::fa($total));
-        }
-        if ($p > 0 && $p < 10000) {
+ 
             $this->docform->editpayed->setText(H::fa($total));
             $this->docform->payed->setText(H::fa($total));
-        }
+        
     }
 
-    public function OnPayment($sender) {
-        $this->docform->payed->setVisible(true);
-        $this->docform->payamount->setVisible(true);
-        $this->docform->paydisc->setVisible(true);
-
-        $b = $sender->getValue();
-
-        if ($b == \App\Entity\MoneyFund::PREPAID) {
-            $this->docform->payed->setVisible(false);
-            $this->docform->payamount->setVisible(false);
-            $this->docform->paydisc->setVisible(false);
-            $this->docform->payed->setText(0);
-            $this->docform->editpayed->setText(0);
-            $this->docform->payamount->setText(0);
-            $this->docform->editpayamount->setText(0);
-            $this->docform->paydisc->setText(0);
-            $this->docform->editpaydisc->setText(0);
-        }
-        if ($b == \App\Entity\MoneyFund::CREDIT) {
-            $this->docform->payed->setVisible(false);
-            $this->docform->payed->setText(0);
-            $this->docform->editpayed->setText(0);
-        }
-        $this->calcPay();
-    }
+ 
 
     /**
      * Валидация   формы
@@ -793,16 +755,12 @@ class GoodsIssue extends \App\Pages\Base
             $this->setError("noselcust");
         }
 
-
-        $p = $this->docform->payment->getValue();
-        if ($p == 0) {
-            $this->setError("noselpaytype");
-        }
-        if ($p == \App\Entity\MoneyFund::PREPAID && $c == 0) {
+     
+        if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $c == 0) {
             $this->setError("mustsel_cust");
         }
-        if ($this->_doc->payamount > $this->_doc->payed && $c == 0) {
-            $this->setError("mustsel_cust");
+        if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
+            $this->setError("noselmf");
         }
 
 
@@ -825,11 +783,8 @@ class GoodsIssue extends \App\Pages\Base
         $this->editdetail->editprice->setText($price);
         if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
 
-            $serial = '';
-            $slist = $item->getSerials($store_id);
-            if (count($slist) == 1) {
-                $serial = array_pop($slist);
-            }
+            $serial = $item->getNearestSerie($store_id);
+ 
             $this->editdetail->editserial->setText($serial);
         }
 

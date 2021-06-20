@@ -176,6 +176,8 @@ class Document extends \ZCL\DB\Entity
           */  
             $this->headerdata[(string)$child->getName()] =$ch ;
         }
+        
+        /*
         $this->detaildata = array();
 
         //deprecated
@@ -206,7 +208,8 @@ class Document extends \ZCL\DB\Entity
                 }
             }
             $this->packDetails('detaildata', $detaildata);
-        }
+            
+        }  */ 
     }
 
     /**
@@ -713,7 +716,7 @@ class Document extends \ZCL\DB\Entity
         $list = @unserialize(@base64_decode($this->headerdata[$dataname]));
         if (is_array($list)) {
             return $list;
-        } else {
+        } else {  
             return array();
         }
     }
@@ -721,6 +724,16 @@ class Document extends \ZCL\DB\Entity
     public function packDetails($dataname, $list) {
         $data = base64_encode(serialize($list));
         $this->headerdata[$dataname] = $data;
+        //для поиска
+        $s = array()  ;
+        foreach($list as $it){
+           if(strlen($it->itemname)>0) $s[]=$it->itemname;
+           if(strlen($it->item_code)>0) $s[]=$it->item_code;
+           if(strlen($it->bar_code)>0) $s[]=$it->bar_code;
+           if(strlen($it->service_name)>0) $s[]=$it->service_name;
+           
+        }
+        $this->headerdata["__Ssearchdata__"] = serialize($s) ;
     }
 
     /**

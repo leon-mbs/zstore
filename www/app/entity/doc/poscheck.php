@@ -69,7 +69,7 @@ class POSCheck extends Document
                         "payed"           => H::fa($this->payed),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
-                        "prepaid"         => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
+                        "prepaid"         => $this->headerdata['payment'] == 0,
                          "docbarcode"         => $this->getBarCodeImage(),
                         "docqrcode"         => $this->getQRCodeImage(),
                        "payamount"       => H::fa($this->payamount)
@@ -127,7 +127,7 @@ class POSCheck extends Document
                         "payed"           => H::fa($this->payed),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
-                        "prepaid"         => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
+                        "prepaid"         => $this->headerdata['payment'] == 0,
                         "docbarcode"         => $this->getBarCodeImage(),
                         "docqrcode"         => $this->getQRCodeImage(),
                         "payamount"       => H::fa($this->payamount)
@@ -145,6 +145,9 @@ class POSCheck extends Document
 
 
         foreach ($this->unpackDetails('detaildata') as $item) {
+            if(false==$item->checkMinus($item->quantity,$this->headerdata['store'])) { 
+                throw new \Exception(\App\Helper::l("nominus",$item->quantity,$item->itemname));
+            }
 
 
             //оприходуем  с  производства
@@ -229,6 +232,8 @@ class POSCheck extends Document
             if ($payed > 0) {
                 $this->payed = $payed;
             }
+           \App\Entity\IOState::addIOState($this->document_id, $payed,\App\Entity\IOState::TYPE_BASE_INCOME);
+            
         }
 
         return true;

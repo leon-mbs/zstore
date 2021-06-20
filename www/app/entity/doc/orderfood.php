@@ -149,15 +149,22 @@ class OrderFood extends Document
         }           
            
            
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $payed, $this->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_INCOME);
-            if ($payed > 0) {
-                $this->payed = $payed;
-            }
+        $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $payed, $this->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_INCOME);
+        if ($payed > 0) {
+            $this->payed = $payed;
+        }
+            
+        \App\Entity\IOState::addIOState($this->document_id,0 - $this->payed,\App\Entity\IOState::TYPE_BASE_OUTCOME);
+               
+            
         }
     }
  
     public function DoStore() {
         foreach ($this->unpackDetails('detaildata') as $item) {
+                       if($item->checkMinus($item->quantity,$this->headerdata['store'])==false) { 
+                            throw new \Exception(\App\Helper::l("nominus",H::fqty($item->getQuantity($this->headerdata['store'])),$item->itemname));
+                        }
 
 
             //оприходуем  с  производства
@@ -169,7 +176,10 @@ class OrderFood extends Document
 
                         $itemp = \App\Entity\Item::load($part->item_id);
                         $itemp->quantity = $item->quantity * $part->qty;
-                        
+                        if($itemp->checkMinus($itemp->quantity,$this->headerdata['store'])==false) { 
+                            throw new \Exception(\App\Helper::l("nominus",H::fqty($itemp->getQuantity($this->headerdata['store'])),$itemp->itemname));
+                        }
+                      
                        //учитываем  отходы
                         if($itemp->lost >0){
                             $k = 1/(1-$itemp->lost/100) ;

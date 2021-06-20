@@ -45,7 +45,7 @@ class GIList extends \App\Pages\Base
 
         $this->listpan->filter->add(new TextInput('searchnumber'));
         $this->listpan->filter->add(new TextInput('searchtext'));
-        $this->listpan->filter->add(new DropDownChoice('status', array(0 => H::l('opened'), 1 => H::l('newed'), 2 => H::l('sended'), 4 => H::l('notpayed'), 3 => H::l('all')), 0));
+        $this->listpan->filter->add(new DropDownChoice('status', array(0 => H::l('opened'), 1 => H::l('newed'), 2 => H::l('sended') ,5 => H::l('st_rdshipment'), 3 => H::l('all')), 0));
         $this->listpan->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
         $this->listpan->filter->add(new DropDownChoice('salesource', H::getSaleSources() , 0));
 
@@ -118,6 +118,13 @@ class GIList extends \App\Pages\Base
         $this->statuspan->setVisible(false);
 
         $this->listpan->doclist->Reload();
+        if(count($this->listpan->doclist->getDataRows()) ==1){
+            $r = array_pop($this->listpan->doclist->getDataRows()) ;
+            
+            $this->_doc = $r->getDataItem();
+            $this->showOn() ;
+        }
+        
     }
 
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
@@ -677,7 +684,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
 
         $status = $this->page->listpan->filter->status->getValue();
         if ($status == 0) {
-            $where .= "  and  (  (payamount >0 and payamount > payed and  state >3 )  or(  state >3 and  state  not in(14,5,9) )   )      ";
+            $where .= "  and    state >3 and  state  not in(14,5,9)        ";
         }
         if ($status == 1) {
             $where .= " and  state =  " . Document::STATE_NEW;
@@ -685,9 +692,10 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
         if ($status == 2) {
             $where .= " and state = " . Document::STATE_INSHIPMENT;
         }
-        if ($status == 4) {
-            $where .= "  and payamount >0 and  payamount > payed  and  state >3  ";
+        if ($status == 5) {
+            $where .= " and state = " . Document::STATE_READYTOSHIP;
         }
+       
         $comp = $this->page->listpan->filter->searchcomp->getValue();
         if ($comp > 0) {
             $where = $where . " and firm_id = " . $comp;
@@ -698,12 +706,12 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
         if (strlen($st) > 2) {
             $st = $conn->qstr('%' . $st . '%');
 
-            $where .= " and    content like {$st} ";
+            $where .= " and  (  notes like {$st} or    content like {$st}  )";
         }
         $sn = trim($this->page->listpan->filter->searchnumber->getText());
         if (strlen($sn) > 1) { // игнорируем другие поля
             $sn = $conn->qstr('%' . $sn . '%');
-            $where = " meta_name  in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' )  and document_number like  {$sn} ";
+            $where = "  meta_name in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' ,'Warranty','TTN' )  and document_number like  {$sn}    ";
         }
 
         return $where;

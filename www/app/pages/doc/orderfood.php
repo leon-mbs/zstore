@@ -122,9 +122,9 @@ class OrderFood extends \App\Pages\Base
             $this->docform->paydisc->setText(H::fa($this->_doc->headerdata['paydisc']));
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
 
-            $this->docform->payed->setText(H::fa($this->_doc->headerdata['payed']));
-            $this->docform->editpayed->setText(H::fa($this->_doc->headerdata['payed']));
-            $this->docform->exchange->setText(H::fa($this->_doc->headerdata['exchange']));
+            if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )  $this->_doc->payed = $this->_doc->headerdata['payed'];
+            $this->docform->editpayed->setText(H::fa($this->_doc->payed));            
+            $this->docform->payed->setText(H::fa($this->_doc->payed));
 
             
 
@@ -307,14 +307,13 @@ class OrderFood extends \App\Pages\Base
         $this->_doc->headerdata['exchange'] = $this->docform->exchange->getText();
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-        if ($this->_doc->headerdata['payment'] == \App\entity\MoneyFund::PREPAID) {
+        if ($this->_doc->headerdata['payment'] == 0) {
             $this->_doc->headerdata['paydisc'] = 0;
             $this->_doc->payed = 0;
             $this->_doc->payamount = 0;
         }
-        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
-            $this->_doc->payed = 0;
-        }
+         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+    
 
         if ($this->checkForm() == false) {
             return;
@@ -539,14 +538,12 @@ class OrderFood extends \App\Pages\Base
         }
         $p = $this->docform->payment->getValue();
         $c = $this->docform->customer->getKey();
-        if ($p == 0) {
-            $this->setError("noselpaytype");
-        }
-        if ($p == \App\Entity\MoneyFund::PREPAID && $c == 0) {
-            $this->setError("mustsel_cust");
-        }
+ 
         if ($this->_doc->payamount > $this->_doc->payed && $c == 0) {
             $this->setError("mustsel_cust");
+        }
+        if ($p == 0 && $this->_doc->payed > 0) {
+            $this->setError("noselmf");
         }
 
 

@@ -22,7 +22,9 @@ CREATE   VIEW `iostate_view` AS
      
 ALTER TABLE `paylist` CHANGE `mf_id` `mf_id` INT(11) NULL;
 
-ALTER VIEW `paylist_view` AS 
+DROP VIEW `paylist_view`;
+
+CREATE VIEW `paylist_view` AS 
   select 
     `pl`.`pl_id` AS `pl_id`,
     `pl`.`document_id` AS `document_id`,

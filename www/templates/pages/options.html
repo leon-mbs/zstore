@@ -279,12 +279,17 @@
                         <form zippy="printer">
                             <div class="form-group">
                                 <label for="pwidth">Ширина печати</label>
-                                <input style="width:60px" class="form-control" type="text" zippy="pwidth">
-                                <small class="form-text text-muted">Например '100%' или '40mm' </small>
+                                <input style="width:100px" class="form-control" type="text" zippy="pwidth">
+                                <small class="form-text text-muted">Например <b>100%</b> или <b>70mm</b> или <b>250px</b> </small>
+                            </div>
+                            <div class="form-group">
+                                <label for="pheight">Высота печати</label>
+                                <input style="width:100px" class="form-control" type="text" zippy="pheight">
+                                <small class="form-text text-muted">Например <b>100%</b> или <b>40mm</b> или <b>150px</b></small>
                             </div>
                             <div class="form-group">
                                 <label for="pmaxname">Максимальная  длина  наименования</label>
-                                <input style="width:60px" class="form-control" type="text" zippy="pmaxname">
+                                <input style="width:100px" class="form-control" type="text" zippy="pmaxname">
                                 
                             </div>
                             <div class="form-group">
@@ -456,7 +461,7 @@
                     <div class="card">
                     <div class="card-body">
                         <h4>Общепит</h4>
-                         <small class="badge badge-warning">В  процессе  разработки</small>
+                         
                          <form zippy="food">
                                <div class="form-check">
                                 <label for="foodworktype">Тип заведения</label>
@@ -464,11 +469,11 @@
                                    <option value="0">Фастфуд</option>
                                    <option value="1">Фастфуд (c кухней)</option>
                                    <option value="2">Кафе</option>
-                                   <option value="3">Кафе (бар отдельно от  кухни)</option>
+                                   
                                 </select>
                                 <small>Кафе  означает расчет  официантом  после выноса  заказа.
                                 Наличие  кухни (производства)  означает  что  заказ  сначала  отправляется  
-                                на  выполнение </small>
+                                в  производство </small>
                             </div>                   
 
                             <div class="form-group  ">
@@ -476,13 +481,14 @@
                                 <select class="form-control" zippy="foodpricetype">
                                 </select>
                             </div>
-                            {{#hideblock}}
+                           
                             <div class="form-check">
                                 <input zippy="foodtables" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="foodtables">Показывать номера  столов</label>
                                  <br><small>Для  кафе</small>
                             </div>
-                            {{/hideblock}}
+                         
+                           
                             <div class="form-check">
                                 <input zippy="fooddelivery" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="fooddelivery">Возможность доставки</label>
@@ -490,8 +496,8 @@
                             </div>
                             <div class="form-check">
                                 <input zippy="foodpack" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="foodpack">Возможность упаковки  с  собой.</label>
-                                <br><small>Ставится если  есть оба варианта (с собой и на месте) и нужно  уточнять в  заказе</small>
+                                <label class="form-check-label" for="foodpack">Выбор  возможности упаковки  с  собой  .</label>
+                                <br><small>Устанавливается если  есть оба варианта (с собой и на месте) и нужно  уточнять в  заказе</small>
                             </div>
                               
                             <div class="form-group">
