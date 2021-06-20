@@ -29,6 +29,7 @@ class Item extends \ZCL\DB\Entity
         $this->image_id = 0;
         $this->noprice = 0;
         $this->noshop = 0;
+        $this->foodstate = 0;
     }
 
     protected function afterLoad() {
@@ -63,6 +64,7 @@ class Item extends \ZCL\DB\Entity
         $this->extdata = (string)$xml->extdata[0];
         $this->sef = (string)$xml->sef[0];
         $this->url = (string)$xml->url[0];
+        $this->foodstate = (int)$xml->foodstate[0];
 
         $this->cell = (string)$xml->cell[0];
         //  $this->octoreoptions = (string) $xml->octoreoptions[0];
@@ -130,6 +132,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<customsize>{$this->customsize}</customsize>";
         $this->detail .= "<sef>{$this->sef}</sef>";
         $this->detail .= "<url>{$this->url}</url>";
+        $this->detail .= "<foodstate>{$this->foodstate}</foodstate>";
 
         //упаковываем  цены  по  филиалам
         $brprice = serialize($this->brprice);

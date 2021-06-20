@@ -100,9 +100,10 @@ class InvoiceCust extends \App\Pages\Base
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
+            if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )  $this->_doc->payed = $this->_doc->headerdata['payed'];
+            $this->docform->editpayed->setText($this->_doc->payed);
             $this->docform->payed->setText($this->_doc->payed);
-         if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )  $this->_doc->payed = $this->_doc->headerdata['payed'];
-               $this->docform->editpayed->setText($this->_doc->payed);
+
             $this->docform->nds->setText($this->_doc->headerdata['nds']);
             $this->docform->editnds->setText($this->_doc->headerdata['nds']);
             $this->docform->rate->setText($this->_doc->headerdata['rate']);

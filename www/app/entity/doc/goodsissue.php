@@ -106,7 +106,7 @@ class GoodsIssue extends Document
                         $itemp = \App\Entity\Item::load($part->item_id);
                         $itemp->quantity = $item->quantity * $part->qty;
                         
-                        if($itemp->checkMinus($itemp->quantity,$this->headerdata['store'])) { 
+                        if(false==$itemp->checkMinus($itemp->quantity,$this->headerdata['store'])) { 
                             throw new \Exception(\App\Helper::l("nominus",$itemp->quantity,$itemp->itemname));
                         }
                         

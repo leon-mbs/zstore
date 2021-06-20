@@ -30,11 +30,32 @@
                 </table> 
                    <a id="dankor"></a>
                  </div>
-               
-
-
-
-         
+          
         </div> 
+     
+      
+          <script>
+   //  var Mustache = require('mustache');
+     //  var dd= chattpl.content.querySelectorAll("div");
+    //  var output = Mustache.render('<[{xxx}]>' , {"xxx":"d<br>d"},{},[ '<[', ']>' ]);
+      //   console.log(output    );
+        
+           var url = '{{{_baseurl}}}::getMessages:1&ajax=true'
+           
+     
+          fetch(url)
+          .then((response) => {
+            return response.text();
+          })
+          .then((data) => {
+            var d =  eval(data);
+            console.log(d);
+            
+            
+          });
+
+            
+        </script>
+        
 </body>
 </html>

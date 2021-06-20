@@ -6,30 +6,30 @@
 
 
         <form zippy="setupform">
-            <h3>АРМ кассира</h3>
+            <h3>АРМ касира</h3>
             <div class="row">
                 <div class="col-12 col-md-6 col-xl-4">
                     <div class="form-group row ">
-                        <label class="col-6 col-form-label" for="nal">Наличная касса</label>
+                        <label class="col-6 col-form-label" for="nal">Готiвкова каса</label>
                         <div class="col-6">
                             <select class="form-control" zippy="nal">
-                                <option value="0">Не выбрана</option>
+                                <option value="0">Не вибрана</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group row  ">
-                        <label class="col-6 col-form-label" for="beznal">Безналичный счет</label>
+                        <label class="col-6 col-form-label" for="beznal">Безготiвковий счет</label>
                         <div class="col-6">
                             <select class="form-control" zippy="beznal">
-                                <option value="0">Не выбран</option>
+                                <option value="0">Не вибраний</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group  row ">
-                        <label class="col-6 col-form-label" for="pos">POS терминал</label>
+                        <label class="col-6 col-form-label" for="pos">POS термiнал</label>
                         <div class="col-6">
                             <select class="form-control" zippy="pos">
-                                <option value="0">Не выбран</option>
+                                <option value="0">Не вибраний</option>
                             </select>
                         </div>
                     </div>
@@ -39,7 +39,7 @@
                         <label class="col-6 col-form-label"   for="store">Склад (кухня)</label>
                         <div class="col-6">
                             <select class="form-control" zippy="store">
-                                <option value="0">Не выбран</option>
+                                <option value="0">Не вибраний</option>
                             </select>
                         </div>
                     </div>
@@ -56,8 +56,8 @@
 
 
         <div   zippy="docpanel">
-            <h5><strong><a zippy="toorderlist"><i class="fa fa-list"></i> К списку  заказов</a></strong> </h5>
-            <h3>Оформление  заказа</h3>
+            <h5><strong><a zippy="toorderlist"><i class="fa fa-list"></i> До списку  замовлень</a></strong> </h5>
+            <h3>Оформлення  замовлення</h3>
             
             
             <div class="row"  >
@@ -65,7 +65,7 @@
                     
                     <div   zippy="catpan" class="row">
                         <div    class="col-12">
-                         <i class="fa fa-arrow-alt-circle-left"></i><a  zippy="stopcat">К заказу</a>  
+                         <i class="fa fa-arrow-alt-circle-left"></i><a  zippy="stopcat">До  замовлення</a>  
                          </div>
                         <div   zippy="catlist" class="col-12 col-sm-6 col-md-4  col-xl-3">
                             <div class="card mb-2" zippy="catbtn"  style="cursor:pointer" >
@@ -89,7 +89,7 @@
                     </div >        
                     <div   zippy="prodpan" class="row">
                         <div    class="col-12">
-                         <i class="fa fa-arrow-alt-circle-left"></i><a  zippy="stopprod">К заказу</a>  
+                         <i class="fa fa-arrow-alt-circle-left"></i><a  zippy="stopprod">До  замовлення</a>  
                          </div>                      <div   zippy="prodlist" class="col-12 col-sm-6 col-md-4  col-xl-3">
                             <div class="card mb-2" zippy="prodbtn" style="cursor:pointer;;">
                                 <table style="height:100%;width:100%;"  >
@@ -117,7 +117,7 @@
                     
                     <div class="navbar mt-4">        
                         <form zippy="navform" class="form-inline   ">                   
-                            <input  zippy="baddnewpos"  type="submit" value="Добавить позицию "   class="btn btn-info mr-4"> 
+                            <input  zippy="baddnewpos"  type="submit" value="Додати позицiю    "   class="btn btn-info mr-4"> 
                             {{#usescanner}}
                             Штрих-код &nbsp;<input class="form-control"   style="width:150px;" autocomplete="off" autofocus type="text" zippy="barcode"
                                                    onkeydown="onBarCode()"> &nbsp;<a zippy="addcode" class="btn btn-info btn-sm mr-4">+</a>
@@ -131,13 +131,13 @@
                         <div class="card">
                             <table class="table   " style="font-size:large">
                                 <tr>
-                                    <th>Наименование</th>
+                                    <th>Назва</th>
                                     <th>Код</th>
-                                    <th class="text-right ">Кол.</th>
-                                    <th class="text-right">Цена</th>
-                                    <th class="text-right">Сумма</th>
+                                    <th class="text-right ">Кiл.</th>
+                                    <th class="text-right">Цiна</th>
+                                    <th class="text-right">Сума</th>
                                     {{#pack}}
-                                    <th class="text-center text-nowrap">С собой</th>
+                                    <th class="text-center text-nowrap">С собою</th>
                                     {{/pack}}
 
                                     <th > </th>
@@ -170,17 +170,17 @@
                      <div class="  row ">
                           <div class="  col-6 ">
                             <div class="form-group   ">
-                                <label   for="customer">Клиент</label>
+                                <label   for="customer">Клiент</label>
 
-                                <input  zippy="customer" class="form-control" placeholder="Начните  вводить..."  > 
-                                <a zippy="addcust" >Добавить нового</a>
+                                <input  zippy="customer" class="form-control" placeholder="Почнiть вводити..."  > 
+                                <a zippy="addcust" >Додати нового</a>
 
                             </div>                          
                           
                           
                         {{#tables}}
                         <div class="form-group   ">
-                            <label  for="table">Номер  стола</label>
+                            <label  for="table">Номер  столу</label>
                             
                                 <input  style="width:100px;" zippy="table" class="form-control"  > 
 
@@ -188,7 +188,7 @@
                         </div>
                         {{/tables}}
                         <div class="form-group   ">
-                            <label   for="notes">Коментарий</label>
+                            <label   for="notes">Коментар </label>
                          
                                 <input  zippy="notes" class="form-control"  > 
 
@@ -205,7 +205,7 @@
                             <label   for="delivery">Доставка</label>
                          
                                 <select class="form-control" zippy="delivery">
-                            <option value="0">Доставки нет</option>
+                            <option value="0">Доставки нема</option>
                         </select>
 
                             
@@ -220,7 +220,7 @@
                     </div>                           
                        <div class="form-group   ">
              
-                        <label   data-label="address" for="address"  >Адрес</label>
+                        <label   data-label="address" for="address"  >Адреса</label>
                       
                          
                           <input   zippy="address" class="form-control"> 
@@ -229,7 +229,7 @@
                                       
                   <div class="form-group   ">
                       
-                      <label   for="time" >Время доставки</label>
+                      <label   for="time" >Час доставки</label>
                        
                        
                        <input  style="width:200px" zippy="time" class="form-control">
@@ -248,11 +248,11 @@
 
                         
                         
-                            <input zippy="btopay" type="submit" value="К оплате"   class="btn btn-success mr-4">
+                            <input zippy="btopay" type="submit" value="До спрлати"   class="btn btn-success mr-4">
                              
                             <input zippy="btodel" type="submit" value="В доставку"   class="btn btn-success mr-4">
                         
-                            <input zippy="btoprod" type="submit" value="В производство"   class="btn btn-success mr-4">
+                            <input zippy="btoprod" type="submit" value="До  виробництва"   class="btn btn-success mr-4">
 
                         
                          
@@ -266,7 +266,7 @@
                         <div class="col-12 col-md-4 col-xl-3 mr-4 ">   
 
                             <div class="form-group   ">
-                                <label for="pfamount"  >Сумма</label>
+                                <label for="pfamount"  >Сума</label>
 
                                 <input zippy="pfamount" readonly="readonly" style="width:100px;"  class="form-control  "  pattern="[0-9\.]+">
 
@@ -278,7 +278,7 @@
 
                             </div>
                             <div class="form-group   ">
-                                <label  for="pfforpay" >К оплате</label>
+                                <label  for="pfforpay" >До сплати</label>
 
                                 <input zippy="pfforpay" readonly="readonly" style="width:100px;" class="form-control  "  pattern="[0-9\.]+">
 
@@ -287,12 +287,12 @@
                         <div class="col-12 col-md-4 col-xl-3  ">  
 
                             <div class="form-group   ">
-                                <label   >Тип  оплаты</label>
+                                <label   >Тип  оплати</label>
                                 <br>
 
                                 <div class="form-check form-check-inline">
                                     <input zippy="pfnal" class="form-check-input" type="radio"   >
-                                    <label class="form-check-label" for="pfnal"><i class="fa fa-coins"></i> Наличные</label>
+                                    <label class="form-check-label" for="pfnal"><i class="fa fa-coins"></i> Готiвка</label>
                                 </div>
                                 <div class="form-check form-check-inline">
                                     <input zippy="pfbeznal" class="form-check-input" type="radio"    >
@@ -309,7 +309,7 @@
                             </div>
                             <div class="form-group   ">
 
-                                <label for="pfrest"  >Здача   </label>
+                                <label for="pfrest"  >Решта   </label>
 
                                 <input zippy="pfrest" style="width:100px;" class="form-control  "  pattern="[0-9\.]+">
 
@@ -331,7 +331,7 @@
 
                         <div zippy="checktext"></div> 
                         <br>
-                        <a onclick=" printpos()"  zippy="btoprint"  class="btn  btn-info">Печать</a>&nbsp;&nbsp;&nbsp;
+                        <a onclick=" printpos()"  zippy="btoprint"  class="btn  btn-info">Друк</a>&nbsp;&nbsp;&nbsp;
                         <a zippy="bnewcheck"  class="btn  btn-success">Новый заказ</a> &nbsp;&nbsp;&nbsp;
                         
                     </div>
@@ -345,8 +345,8 @@
         <div class="row" zippy="orderlistpan">
 
             <div class="col-12  " >
-                <h3>Список  заказов</h3>
-                <a  class="btn btn-success" zippy="neworder">Новый заказ</a>  &nbsp;&nbsp;&nbsp;
+                <h3>Список  замовлень</h3>
+                <a  class="btn btn-success" zippy="neworder">Нове замовлення</a>  &nbsp;&nbsp;&nbsp;
              </div>
 
                   <div class="col-12 col-md-8 xl-6" >
@@ -358,11 +358,11 @@
 
                                     <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
 
-                                    <label for="searchcust"> Клиент </label>
+                                    <label for="searchcust"> Клiент </label>
 
-                                    <input placeholder="Начните вводить..." class="form-control mr-2" type="text" zippy="searchcust"  >
+                                    <input placeholder="Почнiть вводити..." class="form-control mr-2" type="text" zippy="searchcust"  >
 
-                                    <input type="submit" class="  btn btn-outline-success  " value="Искать">
+                                    <input type="submit" class="  btn btn-outline-success  " value="Шукати">
 
 
                                 </form>
@@ -379,7 +379,7 @@
                         <th>Дата</th>
                         <th>Номер</th>
                         {{#tables}}
-                        <th>Стол</th>
+                        <th>Стiл</th>
                         {{/tables}}
 
                    
@@ -389,7 +389,7 @@
                        
                          <th ></th>
                          <th ></th>
-                        <th class="text-right">Сумма</th>
+                        <th class="text-right">Сума</th>
 
                        
                         <th ></th>
@@ -423,9 +423,9 @@
                             <div class="card-body">
                                 <div class="navbar nav">
                                     <form zippy="statusform" class="form-inline ">
-                                        <button zippy="bedit" type="submit" class="  btn btn-info  mr-2 ">Редактировать</button>
+                                        <button zippy="bedit" type="submit" class="  btn btn-info  mr-2 ">Редагувати</button>
                                         
-                                        <button zippy="bpay" type="submit" class="  btn btn-primary  mr-2 ">Оплатить</button>
+                                        <button zippy="bpay" type="submit" class="  btn btn-primary  mr-2 ">Сплатити</button>
                               
                                     
                                         <button zippy="bclose" type="submit" class="  btn btn-success  mr-2 ">Закрыть</button>
@@ -456,12 +456,12 @@
         </div>
 
         <form zippy="editcust">
-            <h3>&nbsp;Новый покупатель </h3>
+            <h3>&nbsp;Новый покупець </h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 
                     <div class="form-group">
-                        <label for="editcustname">Имя </label>
+                        <label for="editcustname">Им'я </label>
                         <input class="form-control " zippy="editcustname" required="required"/>
                     </div>
                     <div class="form-group">
@@ -469,14 +469,14 @@
                         <input class="form-control" type="text" zippy="editphone"/>
                     </div>
                     <div class="form-group">
-                        <label for="editaddress">Адрес</label>
+                        <label for="editaddress">Адреса</label>
                         <input class="form-control" type="text" zippy="editaddress"/>
                     </div>
 
 
                     <div class="form-group">
-                        <input zippy="savecust" type="submit" value="Сохранить" class="btn btn-outline-primary">
-                        <input type="button" zippy="cancelcust" value="Отменить" class="btn btn-light ">
+                        <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-outline-primary">
+                        <input type="button" zippy="cancelcust" value="Вiдмiнити" class="btn btn-light ">
                     </div>
                 </div>
             </div>
@@ -514,7 +514,7 @@
             }
             
             function check_brefuse() {
-                return confirm("Аннулировать заказ?")
+                return confirm("Анулювати замовлення?")
             }
         </script>
 

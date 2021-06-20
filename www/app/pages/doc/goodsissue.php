@@ -134,11 +134,9 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->editpayamount->setText(H::fa($this->_doc->payamount));
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
-            $this->docform->payed->setText($this->_doc->payed);
-            if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 ) {
-                $this->docform->editpayed->setText(H::fa($this->_doc->headerdata['payed']));
-                $this->docform->payed->setText(H::fa($this->_doc->headerdata['payed']));
-            }
+            if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )  $this->_doc->payed = $this->_doc->headerdata['payed'];
+            $this->docform->editpayed->setText(H::fa($this->_doc->payed));            
+            $this->docform->payed->setText(H::fa($this->_doc->payed));
 
              
             $this->docform->store->setValue($this->_doc->headerdata['store']);

@@ -99,9 +99,11 @@ class ServiceAct extends \App\Pages\Base
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
-            $this->docform->payed->setText($this->_doc->payed);
-          if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )  $this->_doc->payed = $this->_doc->headerdata['payed'];
-              $this->docform->editpayed->setText($this->_doc->payed);
+
+            if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )  $this->_doc->payed = $this->_doc->headerdata['payed'];
+            $this->docform->editpayed->setText(H::fa($this->_doc->payed));            
+            $this->docform->payed->setText(H::fa($this->_doc->payed));
+    
             $this->docform->device->setText($this->_doc->device);
             $this->docform->devsn->setText($this->_doc->devsn);
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);

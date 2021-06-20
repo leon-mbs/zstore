@@ -370,7 +370,10 @@ class ARMFood extends \App\Pages\Base
         if(isset($this->_itemlist[$item->item_id])) {
             $this->_itemlist[$item->item_id]->quantity++;           
         }   else {                                                 
-            $item->myself = 1!=$this->_worktype?1:0;
+            $item->myself = $this->_worktype==0;
+            if($this->_tvars['pack'] == false) {
+                 $item->myself =0;
+            }
             $item->quantity = 1;
            // $item->price = $item->getPrice($this->_pricetype, $this->_store);
             $this->_itemlist[$item->item_id] = $item;
@@ -433,7 +436,10 @@ class ARMFood extends \App\Pages\Base
         $price = $item->getPrice($this->_pricetype, $store_id);
         $item->price = $price;
         $item->quantity = 1;
-        $item->myself = 1==$this->_worktype?1:0;
+        $item->myself =  $this->_worktype==0;
+        if($this->_tvars['pack'] == false) {
+             $item->myself =0;
+        }
         $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
         $item->rowid = $next + 1;
    
@@ -456,8 +462,8 @@ class ARMFood extends \App\Pages\Base
         $row->add(new Label('qty', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));
         $row->add(new Label('amount', H::fa($item->price*$item->quantity)));
-        $row->add(new ClickLink('myselfon',$this, 'onMyselfClick'))->setVisible($item->myself!=1);
-        $row->add(new ClickLink('myselfoff',$this, 'onMyselfClick'))->setVisible($item->myself==1);
+        $row->add(new ClickLink('myselfon',$this, 'onMyselfClick'))->setVisible($item->myself==1);
+        $row->add(new ClickLink('myselfoff',$this, 'onMyselfClick'))->setVisible($item->myself!=1);
         $row->add(new ClickLink('qtymin'))->onClick($this, 'onQtyClick');
         $row->add(new ClickLink('qtyplus'))->onClick($this, 'onQtyClick');
         $row->add(new ClickLink('removeitem'))->onClick($this, 'onDelItemClick');
@@ -671,7 +677,8 @@ class ARMFood extends \App\Pages\Base
     // в  производство
     public function toprodOnClick($sender) {
          
-          
+             $this->createdoc();        
+     
              $conn = \ZDB\DB::getConnect();
              $conn->BeginTrans();
              //списываем  со  склада
@@ -679,6 +686,7 @@ class ARMFood extends \App\Pages\Base
                   $this->_doc->DoStore()  ;
                   $this->_doc->save()  ;
                   $this->_doc->updateStatus(Document::STATE_INPROCESS);
+                      
                   
                   $conn->CommitTrans();
              } catch(\Throwable $ee) {
@@ -790,21 +798,22 @@ class ARMFood extends \App\Pages\Base
      
      public function createdoc() {
      
-        if($this->_doc->document_id>0)  return true;
+        $idnew= $this->_doc->document_id ==0;
       
         if(count($this->_itemlist)==0) {
             $this->setError('noenterpos') ;
             return false;
         }    
-  
-        $this->_doc->document_number = $this->_doc->nextNumber();
-  
-        if (false == $this->_doc->checkUniqueNumber()) {
-            $next = $this->_doc->nextNumber();
-            $this->_doc->document_number = $next;
-            if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
-                return false;
+        if($idnew  ) {
+            $this->_doc->document_number = $this->_doc->nextNumber();
+      
+            if (false == $this->_doc->checkUniqueNumber()) {
+                $next = $this->_doc->nextNumber();
+                $this->_doc->document_number = $next;
+                if (strlen($next) == 0) {
+                    $this->setError('docnumbercancreated');
+                    return false;
+                }
             }
         }
         $this->_doc->document_date = time();
@@ -834,8 +843,10 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->packDetails('detaildata', $this->_itemlist);
         $this->_doc->amount = $this->docpanel->listsform->totalamount->getText();
         $this->_doc->payamount = $this->_doc->amount;
+ 
         $this->_doc->save();
-        $this->_doc->updateStatus(Document::STATE_NEW);
+        
+        if($idnew)$this->_doc->updateStatus(Document::STATE_NEW);
      
         
         

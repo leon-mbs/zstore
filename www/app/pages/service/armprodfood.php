@@ -37,6 +37,7 @@ class ArmProdFood extends \App\Pages\Base
         $this->add(new  ClickLink("btnupdate",$this,'update') );
         
         $this->update();
+       
     }
     
     
@@ -47,8 +48,8 @@ class ArmProdFood extends \App\Pages\Base
        $row->add(new  Label("name",$item->itemname) );
        $row->add(new  Label("qty",$item->quantity) );
        $notes ="";
-       if($item->myself == 1)   $notes ="С собой";
-       if($item->del == true)   $notes ="Доставка";
+       if($item->myself == 1)   $notes =H::l("myself");
+       if($item->del == true)   $notes =H::l("delivery"); 
        $row->add(new  Label("notes",$notes) );
        $row->add(new  ClickLink("ready",$this,'onReady') );
          
@@ -63,9 +64,11 @@ class ArmProdFood extends \App\Pages\Base
         foreach($docs  as $doc)  {
             $items = $doc->unpackDetails('detaildata');
             foreach($items as $item) {
-                
+               if($item->foodstate==1) continue;
+               
                $item->ordern = $doc->document_number ;
                $item->docnotes = $doc->notes ;
+               $item->document_id = $doc->document_id ;
                $item->del = $doc->headerdata['delivery'] >0 ;
                 
                $this->_itemlist[]=$item; 
@@ -77,6 +80,25 @@ class ArmProdFood extends \App\Pages\Base
     
     
     public function onReady($sender){
-        
+        $item = $sender->getOwner()->getDataItem();
+        $doc = Document::load($item->document_id) ;
+        $items = $doc->unpackDetails('detaildata');
+        $items[$item->item_id]->foodstate=1;
+        $doc->packDetails('detaildata',$items);
+        $doc->save();
+        $hasinproces = false;
+        foreach($items as $it) {
+            if($it->foodstate!==true) $hasinproces=true;
+        }
+        if($hasinproces == false) { 
+           $doc->updateStatus(Document::STATE_FINISHED) ;      
+        }
+        $this->update(null) ;
     }
+   
+    public function getMessages($args,$post){
+       return    json_encode(array(1,2,3), JSON_UNESCAPED_UNICODE);
+    }
+    
+    
 }

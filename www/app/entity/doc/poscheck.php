@@ -145,7 +145,7 @@ class POSCheck extends Document
 
 
         foreach ($this->unpackDetails('detaildata') as $item) {
-            if($item->checkMinus($item->quantity,$this->headerdata['store'])) { 
+            if(false==$item->checkMinus($item->quantity,$this->headerdata['store'])) { 
                 throw new \Exception(\App\Helper::l("nominus",$item->quantity,$item->itemname));
             }
 
