@@ -67,7 +67,7 @@ class MoneyFund extends \ZCL\DB\Entity
 
         $conn = \ZDB\DB::getConnect();
         $list = array();
-        $rc = $conn->Execute("select coalesce(sum(amount),0)  as amount,mf_id from paylist group by  mf_id ");
+        $rc = $conn->Execute("select coalesce(sum(amount),0)  as amount,mf_id from paylist where  paytype <=1000  group by  mf_id ");
         foreach ($rc as $row) {
             $list[$row["mf_id"]] = $row["amount"];
         }
