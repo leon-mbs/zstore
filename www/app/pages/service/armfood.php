@@ -288,6 +288,7 @@ class ARMFood extends \App\Pages\Base
         $row->add(new Label('docdate', H::fd($doc->document_date)));
         $row->add(new Label('docamount', H::fa($doc->amount)));
         $row->add(new Label('docnotes', $doc->notes));
+        $row->add(new Label('tablenumber', $doc->headerdata['table']));
         $row->add(new Label('wp' ))->setVisible($doc->payamount > $doc->payed);
         $row->add(new Label('isdel' ))->setVisible($doc->headerdata['delivery'] > 0);
         
