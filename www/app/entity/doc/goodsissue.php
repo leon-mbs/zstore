@@ -60,13 +60,14 @@ class GoodsIssue extends Document
                         "document_number" => $this->document_number,
                         "totalstr"        => $totalstr,
                         "total"           => H::fa($this->amount),
-                        "payed"           => H::fa($this->payed),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
-                        "prepaid"         => $this->headerdata['payment'] == 0,
+                        
                         "docbarcode"         => $this->getBarCodeImage(),
                         "docqrcode"         => $this->getQRCodeImage(),
-                        "payamount"       => H::fa($this->payamount)
+                        "payed"           => $this->payed >0 ? H::fa($this->payed):false,
+                        "payamount"       => $this->payamount >0 ? H::fa($this->payamount):false 
+
         );
 
         if ($this->headerdata["contract_id"] > 0) {

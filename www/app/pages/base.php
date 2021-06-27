@@ -149,10 +149,7 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["showsermenu"]  = true;
             $this->_tvars["showmodmenu"]  = true;  
         }        
-        
-          
-        
-
+  
         //скрыть  боковое  меню
         $this->_tvars["hidesidebar"] = $user->hidesidebar == 1 ? 'hold-transition   sidebar-collapse' : 'hold-transition sidebar-mini sidebar-collapse';
         //для скрытия блока разметки  в  шаблоне страниц                           

@@ -11,7 +11,7 @@ use Zippy\Html\Panel;
 use \App\Entity\Pay;
 
 /**
- * Плптежный  баланс
+ * Платежный  баланс
  */
 class PayBalance extends \App\Pages\Base
 {

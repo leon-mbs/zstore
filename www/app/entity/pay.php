@@ -95,7 +95,8 @@ class Pay extends \ZCL\DB\Entity
                     $payb = new \App\Entity\Pay();
                     $payb->mf_id = $mf_id;
                     $payb->document_id = $document_id;
-                    $payb->amount =  0 - ($amount * $mf->btran / 100);
+                    if($mf->btran>0)$payb->amount =  0 - ($amount * $mf->btran / 100);
+                    if($mf->btranin>0)$payb->amount =   ($amount * $mf->btranin / 100);
                     $payb->paytype = Pay::PAY_BANK;
                     $payb->paydate = $paydate;
                     $payb->notes = \App\Helper::l('bankproc');

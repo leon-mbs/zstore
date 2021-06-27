@@ -60,8 +60,8 @@ class Invoice extends \App\Entity\Doc\Document
                         "document_number" => $this->document_number,
                         "totalstr"        => $totalstr,
                         "total"           => H::fa($this->amount),
-                        "payamount"       => H::fa($this->payamount),
-                        "payed"           => H::fa($this->payed),
+                       "payed"           => $this->payed >0 ? H::fa($this->payed):false,
+                        "payamount"       => $this->payamount >0 ? H::fa($this->payamount):false ,
                         "paydisc"         => H::fa($this->headerdata["paydisc"])
         );
         if (strlen($this->headerdata["customer_print"]) > 0) {

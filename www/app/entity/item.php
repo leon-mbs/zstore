@@ -468,7 +468,7 @@ class Item extends \ZCL\DB\Entity
     /**
      * список производителей
      *
-     * @param mixed $nametoindex добавить имя в  индекс 9для  комбобоксов)
+     * @param mixed $nametoindex добавить имя в  индекс (для  комбобоксов)
      */
     public static function getManufacturers($nametoindex = false) {
 

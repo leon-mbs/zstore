@@ -39,6 +39,9 @@ class ItemList extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new CheckBox('showdis'));
         $this->filter->add(new TextInput('searchbrand'));
+        $this->filter->searchbrand->setDataList(Item::getManufacturers() ) ;
+        
+        
         $this->filter->add(new TextInput('searchkey'));
         $catlist = array();
         $catlist[-1] = H::l("withoutcat");
@@ -151,7 +154,7 @@ class ItemList extends \App\Pages\Base
         $this->_tvars['hp4']  = strlen($common['price4'])>0 ? $common['price4'] : false;
         $this->_tvars['hp5']  = strlen($common['price5'])>0 ? $common['price5'] : false;
         
-        $this->updateman();      
+     
         
         
         if ($add == false) {
@@ -264,7 +267,8 @@ class ItemList extends \App\Pages\Base
         $this->itemtable->listform->itemlist->setSelectedRow($sender->getOwner());
         $this->itemtable->listform->itemlist->Reload(false);
 
-        $this->updateman();
+        $this->filter->searchbrand->setDataList(Item::getManufacturers() ) ;
+
     }
 
     public function addOnClick($sender) {
@@ -285,7 +289,8 @@ class ItemList extends \App\Pages\Base
         if (System::getOption("common", "autoarticle") == 1) {
             $this->itemdetail->editcode->setText(Item::getNextArticle());
         }
-        $this->updateman();
+        $this->filter->searchbrand->setDataList(Item::getManufacturers() ) ;
+
     }
 
     public function cancelOnClick($sender) {
@@ -441,7 +446,8 @@ class ItemList extends \App\Pages\Base
                 $image->thumb = $thumb->getImageAsString();
             }
 
-            $this->updateman();
+        $this->filter->searchbrand->setDataList(Item::getManufacturers() ) ;
+
             
             $image->save();
             $this->_item->image_id = $image->image_id;
@@ -591,17 +597,7 @@ class ItemList extends \App\Pages\Base
         $this->updateAjax(array(), "  $('#tag').html('{$html}') ; $('#pform').modal()");
     }
 
-    public function updateman() {
-        $this->_tvars['manlist'] = array();
-
-        foreach (Item::getManufacturers() as $man) {
-            if (strlen($man) == 0) {
-                continue;
-            }
-
-            $this->_tvars['manlist'][] = array('mitem' => $man);
-        }
-    }
+  
 
     
  public function OnPrintAll($sender) {

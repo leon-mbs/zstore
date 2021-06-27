@@ -58,11 +58,10 @@ class Order extends \App\Entity\Doc\Document
                         "isoutnumber"     => strlen($this->headerdata["outnumber"]) > 0,
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount),
-                        "payed"           => H::fa($this->payed),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
-          
-                        "payamount"       => H::fa($this->payamount)
+                        "payed"           => $this->payed >0 ? H::fa($this->payed):false,
+                        "payamount"       => $this->payamount >0 ? H::fa($this->payamount):false 
         );
 
         $report = new \App\Report('doc/order.tpl');

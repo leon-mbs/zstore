@@ -58,7 +58,7 @@ class MFList extends \App\Pages\Base
         $row->add(new Label('branch', $this->_blist[$item->branch_id]));
 
         $row->add(new Label('description', $item->description));
-        $row->add(new Label('amount', $this->_balance[$item->mf_id]));
+        $row->add(new Label('amount', \App\Helper::fa($this->_balance[$item->mf_id])));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
