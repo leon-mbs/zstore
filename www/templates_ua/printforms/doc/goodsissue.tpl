@@ -76,7 +76,7 @@
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
 
-    {{^prepaid}}
+   
     {{#isdisc}}
     <tr style="font-weight: bolder;">
         <td colspan="6" align="right">Знижка:</td>
@@ -85,16 +85,19 @@
     {{/isdisc}}
 
 
+   {{#payamount}}
     <tr style="font-weight: bolder;">
-
         <td colspan="6" align="right">До оплати:</td>
         <td align="right">{{payamount}}</td>
     </tr>
+    {{/payamount}} 
+   {{#payed}}  
     <tr style="font-weight: bolder;">
         <td colspan="6" align="right">Оплата:</td>
         <td align="right">{{payed}}</td>
     </tr>
-    {{/prepaid}}
+     {{/payed}}  
+
     <tr>
         <td colspan="7">На суму <b>{{totalstr}}<b></td>
 

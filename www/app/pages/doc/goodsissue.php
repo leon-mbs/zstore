@@ -283,11 +283,7 @@ class GoodsIssue extends \App\Pages\Base
             return;
         }
 
-        $this->_tvars['manlist'] = array();
-
-        foreach (Item::getManufacturers() as $man) {
-            $this->_tvars['manlist'][] = array('mitem' => $man);
-        }
+        
     }
 
     public function detailOnRow($row) {
@@ -559,11 +555,7 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
   
-        if ($this->_doc->headerdata['payment'] == 0) {
-            $this->_doc->headerdata['paydisc'] = 0;
-            $this->_doc->payed = 0;
-            $this->_doc->payamount = 0;
-        }
+     
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
       
 

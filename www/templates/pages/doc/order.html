@@ -93,7 +93,7 @@
             <div class="row">
                 <div class="col-10">
 
-                    <a class="btn btn-info btn-sm" zippy="addrow">Добавить товар</a>
+                    <a class="btn btn-info  " zippy="addrow">Добавить товар</a>
                     <table class="table table-sm">
                         <tr>
                             <th>Название</th>
@@ -253,7 +253,7 @@
                         <label for="edittovar">Название</label>
                         <input placeholder="Начните вводить..." class="form-control " zippy="edittovar"/>
                         <a zippy="openitemsel">Открыть справочник</a>
-                        <br><a style="font-size:smaller" zippy="addnewitem">Добавить новый</a>
+                        <br><a   zippy="addnewitem">Добавить новый</a>
 
                         <br>Наличие : <span zippy="qtystock"></span>
 
@@ -331,12 +331,8 @@
                     </div>
                     <div class="form-group">
                         <label for="editnewbrand">Производитель, бренд</label>
-                        <input autocomplete="off" list="manlist" class="form-control" type="text" zippy="editnewbrand"/>
-                        <datalist id="manlist">
-                            {{#manlist}}
-                            <option label='{{mitem}}' value='{{mitem}}'>
-                                {{/manlist}}
-                        </datalist>
+                        <input autocomplete="off"   class="form-control" type="text" zippy="editnewbrand"/>
+                     
                         
                     </div>
                     <div class="form-group  ">

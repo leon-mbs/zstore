@@ -97,14 +97,18 @@
         <td align="right">{{paydisc}}</td>
     </tr>
     {{/paydisc}}
+     {{#payamount}}
     <tr style="font-weight: bolder;">
         <td colspan="8" align="right">К оплате:</td>
         <td align="right">{{payamount}}</td>
     </tr>
+     {{/payamount}}
+      {{#payed}}  
     <tr style="font-weight: bolder;">
         <td colspan="8" align="right">Оплата:</td>
         <td align="right">{{payed}}</td>
     </tr>
+        {{/payed}}   
     <tr>
         <td colspan="9">На сумму <b>{{totalstr}}<b></td>
 

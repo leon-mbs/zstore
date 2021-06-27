@@ -46,9 +46,8 @@ class GoodsReceipt extends Document
                         "customer_name"   => $this->customer_name,
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount),
-                        "payed"           => H::fa($this->payed),
-                        "prepaid"         => $this->headerdata['payment'] == 0,
-                        "payamount"       => H::fa($this->payamount)
+                        "payed"           => $this->payed >0 ? H::fa($this->payed):false,
+                        "payamount"       => $this->payamount >0 ? H::fa($this->payamount):false 
         );
         if ($this->headerdata["contract_id"] > 0) {
             $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);

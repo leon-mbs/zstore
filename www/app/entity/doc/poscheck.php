@@ -119,18 +119,18 @@ class POSCheck extends Document
                         "checkslogan"     => $common["checkslogan"],
                         "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
                         "fiscalnumber"    => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
-                        "exchange"        => H::fa($this->headerdata["exchange"]),
+                        
                         "pos_name"        => $this->headerdata["pos_name"],
                         "time"            => H::fdt($this->headerdata["time"]),
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount),
-                        "payed"           => H::fa($this->payed),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
-                        "prepaid"         => $this->headerdata['payment'] == 0,
+                        "exchange"           => $this->headerdata["exchange"]>0 ? H::fa($this->headerdata["exchange"]):false,  
                         "docbarcode"         => $this->getBarCodeImage(),
                         "docqrcode"         => $this->getQRCodeImage(),
-                        "payamount"       => H::fa($this->payamount)
+                        "payed"           => $this->payed >0 ? H::fa($this->payed):false,
+                        "payamount"       => $this->payamount >0 ? H::fa($this->payamount):false 
         );
 
         $report = new \App\Report('doc/poscheck_bill.tpl');

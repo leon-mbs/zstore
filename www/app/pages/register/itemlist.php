@@ -20,6 +20,7 @@ class ItemList extends \App\Pages\Base
 {
 
     public $_item;
+    private $_total;
 
     public function __construct() {
         parent::__construct();
@@ -73,7 +74,8 @@ class ItemList extends \App\Pages\Base
         $qty = $item->getQuantity($store);
         $row->add(new Label('iqty', H::fqty($qty)));
         $row->add(new Label('minqty', H::fqty($item->minqty)));
-        $row->add(new Label('iamount', H::fa(abs($item->getAmount($store)))));
+        $am =  $item->getAmount($store);
+        $row->add(new Label('iamount', H::fa(abs($am))));
 
         $row->add(new Label('cat_name', $item->cat_name));
 
@@ -98,15 +100,16 @@ class ItemList extends \App\Pages\Base
             $row->imagelistitem->setVisible(false);
         }
         
-      
+        $this->_total +=  $am;
         
     }
 
     public function OnFilter($sender) {
+         $this->_total=0;
         $this->itempanel->itemlist->Reload();
 
-        $am = $this->getTotalAmount();
-        $this->itempanel->totamount->setText((H::fa($am)));
+       // $am = $this->getTotalAmount();
+        $this->itempanel->totamount->setText((H::fa($this->_total)));
     }
 
     public function getTotalAmount() {
@@ -143,10 +146,7 @@ class ItemList extends \App\Pages\Base
             $row->sdate->setText(H::fd($stock->sdate));
         }
         $row->add(new Label('partion', H::fa($stock->partion)));
-
-        if (\App\System::getUser()->rolename != 'admins') {
-            $row->partion->setText('');
-        };
+         
 
         $row->add(new Label('qty', H::fqty($stock->qty)));
         $row->add(new Label('amount', H::fa($stock->qty * $stock->partion)));
@@ -290,7 +290,9 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         if (strlen($text) > 0) {
 
             $text = Stock::qstr('%' . $text . '%');
-            $where = "   (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  )  ";
+            $where = "   disabled <> 1 and  ( select sum(st1.qty) from store_stock st1 where st1.item_id= item_id ) >0 ";
+            
+            $where .= " and  (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  )  ";
         }
 
 

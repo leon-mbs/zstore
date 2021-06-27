@@ -225,11 +225,7 @@ class GoodsReceipt extends \App\Pages\Base
             return;
         }
 
-        $this->_tvars['manlist'] = array();
-
-        foreach (Item::getManufacturers() as $man) {
-            $this->_tvars['manlist'][] = array('mitem' => $man);
-        }
+         
     }
 
     public function detailOnRow($row) {
@@ -436,12 +432,8 @@ class GoodsReceipt extends \App\Pages\Base
         $this->_doc->headerdata['basedoc'] = $this->docform->basedoc->getText();
 
         $this->_doc->payed = $this->docform->payed->getText();
-        if ($this->_doc->headerdata['payment'] == 0) {
-            $this->_doc->headerdata['paydisc'] = 0;
-            $this->_doc->payed = 0;
-            $this->_doc->payamount = 0;
-        }
-       $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+ 
+        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
 
          
 
@@ -676,6 +668,9 @@ class GoodsReceipt extends \App\Pages\Base
         if (System::getOption("common", "autoarticle") == 1) {
             $this->editnewitem->editnewitemcode->setText(Item::getNextArticle());
         }
+        
+       $this->editnewitem->editnewmanufacturer->setDataList(Item::getManufacturers() );
+        
     }
 
     public function savenewitemOnClick($sender) {

@@ -160,11 +160,7 @@ class Order extends \App\Pages\Base
             return;
         }
         
-        $this->_tvars['manlist'] = array();
-
-        foreach (Item::getManufacturers() as $man) {
-            $this->_tvars['manlist'][] = array('mitem' => $man);
-        }        
+           
         
     }
 
@@ -623,7 +619,7 @@ class Order extends \App\Pages\Base
         $this->editdetail->setVisible(false);
 
         $this->editnewitem->clean();
-        
+        $this->editnewitem->editnewbrand->setDataList(Item::getManufacturers() );
     }
 
     public function savenewitemOnClick($sender) {

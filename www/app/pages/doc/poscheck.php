@@ -489,11 +489,7 @@ class POSCheck extends \App\Pages\Base
         $this->_doc->headerdata['exchange'] = $this->docform->exchange->getText();
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-        if ($this->_doc->headerdata['payment'] == 0) {
-            $this->_doc->headerdata['paydisc'] = 0;
-            $this->_doc->payed = 0;
-            $this->_doc->payamount = 0;
-        }
+   
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
  
         if ($this->checkForm() == false) {

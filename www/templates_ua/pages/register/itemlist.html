@@ -49,6 +49,11 @@
 
                         <th class="text-right  ">Мін. Кіл.</th>
                         <th class="text-right  ">Кіл.</th>
+                      {{^noshowpartion}}
+                       <th class="text-right  ">На суму</th>
+                    
+                        {{/noshowpartion}}                        
+                      
                         {{#hp1}}<th class="text-right  ">{{hp1}}</th>{{/hp1}}
                         {{#hp2}}<th class="text-right  ">{{hp2}}</th>{{/hp2}}
                         {{#hp3}}<th class="text-right  ">{{hp3}}</th>{{/hp3}}
@@ -56,7 +61,7 @@
                         {{#hp5}}<th class="text-right  ">{{hp5}}</th>{{/hp5}}
                         {{^noshowpartion}}
 
-                        <th class="text-right  ">На суму</th>
+                      
                         <th style="width:50px"></th>
                         {{/noshowpartion}}
 
@@ -80,6 +85,13 @@
 
                         <td zippy="minqty" class="text-right  "></td>
                         <td zippy="iqty" class="text-right  "></td>
+                       {{^noshowpartion}}
+                        
+                        
+                        <td zippy="iamount" class="text-right  "></td>
+                    
+                       {{/noshowpartion}}                        
+                      
                         {{#hp1}}<td zippy="iprice1" class="text-right  "></td>{{/hp1}}
                         {{#hp2}}<td zippy="iprice2" class="text-right  "></td>{{/hp2}}
                         {{#hp3}}<td zippy="iprice3" class="text-right  "></td>{{/hp3}}
@@ -87,7 +99,7 @@
                         {{#hp5}}<td zippy="iprice5" class="text-right  "></td>{{/hp5}}
                        {{^noshowpartion}}
                         
-                        <td zippy="iamount" class="text-right  "></td>
+                      
                         <td><a zippy="show" title="Детальна інформація"><i class="fa fa-eye"></i></a></td>
                        {{/noshowpartion}}
 
@@ -98,10 +110,10 @@
                         <td></td>
                         {{/useimages}}
 
-
-                        <td colspan="6" class="text-right font-weight-bolder"> Всього на суму:</td>
+                           {{^noshowpartion}}
+                        <td colspan="7" class="text-right font-weight-bolder"> Всього на суму:</td>
                         <td class="text-right font-weight-bolder" zippy="totamount"></td>
-                        <td></td>
+                        <td></td>    {{/noshowpartion}}
                     </tr>
                 </table>
                 <div zippy="pag"></div>
