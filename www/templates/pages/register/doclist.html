@@ -1,7 +1,7 @@
 <html>
     <body>
         <div class="row">
-            <div class="col-12 col-xl-11">
+            <div class="col-12 col-xl-12">
 
                 <h3>Журнал документов
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
@@ -13,7 +13,9 @@
 
                 <div class="navbar nav  ">
                     <form zippy="filter" class="form-inline ">
-                         <label for="searchnumber">№ </label>
+                       
+                       
+                        <label for="searchnumber">№ </label>
                         <input placeholder="Поиск..." class="form-control mr-2" type="text" zippy="searchnumber"
                         autocomplete="off" autofocus  onkeydown="onBarCode()"     style="width:175px" title="При поиске по номеру  остальные  элементы фильтра  игнорируются">
 
@@ -23,7 +25,8 @@
 
                         <label for="to"> по </label>
                         <input type="text" class="form-control mr-sm-1 " style="width:110px" zippy="to">
-                           <label for="status"> Статус </label>
+                        
+                        <label for="status"> Статус </label>
                             <select class="form-control mr-2" zippy="status">
                              <option value="0">Не выбран</option>
                            </select>
@@ -31,7 +34,8 @@
                         <label for="doctype"> Тип </label>
                         <select class="form-control mr-sm-1  " zippy="doctype">
                             <option value="0">Не выбран</option>
-                        </select>
+                        </select> 
+                       
                         <label for="searchcust"> Контрагент </label>
                         <input placeholder="Начните вводить..." class="form-control mr-1" type="text" zippy="searchcust">
                          <label for="author"> Автор </label>
