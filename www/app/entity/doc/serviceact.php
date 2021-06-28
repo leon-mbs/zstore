@@ -40,8 +40,8 @@ class ServiceAct extends Document
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "devsn"           => $this->headerdata["devsn"],
                         "document_number" => $this->document_number,
-                        "payamount"       => H::fa($this->payamount),
-                        "payed"           => H::fa($this->payed),
+                        "payed"           => $this->payed >0 ? H::fa($this->payed):false,
+                        "payamount"       => $this->payamount >0 ? H::fa($this->payamount):false ,
                         "total"           => H::fa($this->amount)
         );
         if ($this->headerdata["contract_id"] > 0) {
