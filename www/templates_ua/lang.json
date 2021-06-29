@@ -430,6 +430,7 @@
     "entercontact": "Введiть  контактнi данi" ,
     "sentprod": "Передано до  виробництва" ,
     "delivery": "Доставка" ,
-    "myself": "С собою" 
+    "myself": "С собою",
+    "invoicefor": "Рахунок для %s"      
      
 }

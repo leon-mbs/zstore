@@ -25,7 +25,7 @@ class Invoice extends \App\Entity\Doc\Document
                 $detail[$item->item_id]['quantity'] += $item->quantity;
             } else {
                 $detail[] = array("no"         => $i++,
-                                  "tovar_name" => $item->itemname,
+                                  "tovar_name" => strlen($item->itemname) > 0 ? $item->itemname : $item->service_name  ,
                                   "tovar_code" => $item->item_code,
                                   "quantity"   => H::fqty($item->quantity),
                                   "price"      => H::fa($item->price),
@@ -114,6 +114,7 @@ class Invoice extends \App\Entity\Doc\Document
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
         $list['Invoice'] = self::getDesc('Invoice');
         $list['TTN'] = self::getDesc('TTN');
+        $list['ServiceAct'] = self::getDesc('ServiceAct');
 
         return $list;
     }

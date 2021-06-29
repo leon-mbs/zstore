@@ -88,10 +88,15 @@ class ArmProdFood extends \App\Pages\Base
         $doc->save();
         $hasinproces = false;
         foreach($items as $it) {
-            if($it->foodstate!==true) $hasinproces=true;
+            if($it->foodstate!==1) $hasinproces=true;
         }
         if($hasinproces == false) { 
-           $doc->updateStatus(Document::STATE_FINISHED) ;      
+           $doc->updateStatus(Document::STATE_FINISHED) ;  
+           if($doc->payed>0) {
+               $doc->updateStatus(Document::STATE_CLOSED) ;   
+           }
+           
+               
         }
         $this->update(null) ;
     }

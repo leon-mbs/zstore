@@ -6,6 +6,7 @@ use App\Application as App;
 use App\Entity\Customer;
 use App\Entity\Doc\Document;
 use App\Entity\Item;
+use App\Entity\Service;
 use App\Entity\Store;
 use App\Helper as H;
 use Zippy\Html\DataList\DataView;
@@ -27,7 +28,7 @@ use Zippy\Html\Link\SubmitLink;
 class Invoice extends \App\Pages\Base
 {
 
-    public  $_tovarlist = array();
+    public  $_itemlist = array();
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = 0;
@@ -73,6 +74,7 @@ class Invoice extends \App\Pages\Base
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
+        $this->docform->add(new SubmitLink('addserrow'))->onClick($this, 'addserrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
 
@@ -80,6 +82,7 @@ class Invoice extends \App\Pages\Base
 
         $this->docform->add(new Label('total', 0));
 
+        
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
@@ -92,6 +95,13 @@ class Invoice extends \App\Pages\Base
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
 
+        $this->add(new Form('editserdetail'))->setVisible(false);        
+        $this->editserdetail->add(new DropDownChoice('editservice', Service::findArray("service_name", "disabled<>1", "service_name")))->onChange($this, 'OnChangeServive', true);
+        $this->editserdetail->add(new TextInput('editserquantity'))->setText("1");
+        $this->editserdetail->add(new TextInput('editserprice'));
+        $this->editserdetail->add(new Button('cancelserrow'))->onClick($this, 'cancelrowOnClick');
+        $this->editserdetail->add(new SubmitButton('submitserrow'))->onClick($this, 'saveserrowOnClick');
+     
         //добавление нового кантрагента
         $this->add(new Form('editcust'))->setVisible(false);
         $this->editcust->add(new TextInput('editcustname'));
@@ -127,7 +137,7 @@ class Invoice extends \App\Pages\Base
             $this->docform->customer->setText($this->_doc->customer_name);
             $this->_prevcust = $this->_doc->customer_id;
 
-            $this->_tovarlist = $this->_doc->unpackDetails('detaildata');
+            $this->_itemlist = $this->_doc->unpackDetails('detaildata');
             $this->docform->firm->setValue($this->_doc->firm_id);
 
             $this->OnChangeCustomer($this->docform->customer);
@@ -148,20 +158,20 @@ class Invoice extends \App\Pages\Base
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
 
-                        $this->docform->notes->setText("счет  к  заказу " . $basedoc->document_number);
+                        $this->docform->notes->setText( H::l("invoicefor",$basedoc->document_number) );
                         $order = $basedoc->cast();
 
                         $this->docform->total->setText($order->amount);
 
                         $this->calcPay();
 
-                        $this->_tovarlist = $basedoc->unpackDetails('detaildata');
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
                     }
                 }
             }
         }
 
-        $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
+        $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
@@ -170,7 +180,7 @@ class Invoice extends \App\Pages\Base
     public function detailOnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new Label('tovar', $item->itemname));
+        $row->add(new Label('tovar', strlen($item->itemname) > 0 ? $item->itemname : $item->service_name  )  );
 
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('msr', $item->msr));
@@ -187,10 +197,16 @@ class Invoice extends \App\Pages\Base
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
-        $tovar = $sender->owner->getDataItem();
-        // unset($this->_tovarlist[$tovar->tovar_id]);
+        $item = $sender->owner->getDataItem();
+        if ($item->rowid > 0) {
+            ;
+        }               //для совместимости
+        else {
+            $item->rowid = $item->item_id;
+            if($item->service_id >0) $item->rowid = $item->service_id;
+        }
 
-        $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->item_id => $this->_tovarlist[$tovar->item_id]));
+        $this->_itemlist = array_diff_key($this->_itemlist, array($item->rowid => $this->_itemlist[$item->rowid]));
         $this->docform->detail->Reload();
         $this->calcTotal();
         $this->calcPay();
@@ -203,19 +219,46 @@ class Invoice extends \App\Pages\Base
         $this->docform->setVisible(false);
         $this->_rowid = 0;
     }
+    public function addserrowOnClick($sender) {
+        $this->editserdetail->setVisible(true);
+        $this->editserdetail->editserquantity->setText("1");
+        $this->editserdetail->editserprice->setText("");
+        $this->docform->setVisible(false);
+        $this->_rowid = 0;
+    }
 
     public function editOnClick($sender) {
         $item = $sender->getOwner()->getDataItem();
-        $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
+        if($item instanceof  Item){
+            $this->editdetail->setVisible(true);
 
-        $this->editdetail->editquantity->setText($item->quantity);
-        $this->editdetail->editprice->setText($item->price);
+            $this->editdetail->editquantity->setText($item->quantity);
+            $this->editdetail->editprice->setText($item->price);
 
-        $this->editdetail->edittovar->setKey($item->item_id);
-        $this->editdetail->edittovar->setText($item->itemname);
+            $this->editdetail->edittovar->setKey($item->item_id);
+            $this->editdetail->edittovar->setText($item->itemname);
+        }
+        if($item instanceof  Service){
+            $this->editserdetail->setVisible(true);
 
-        $this->_rowid = $item->item_id;
+            $this->editserdetail->editserquantity->setText($item->quantity);
+            $this->editserdetail->editserprice->setText($item->price);
+
+            $this->editserdetail->editservice->setValue($item->service_id);
+            
+        }
+        
+        
+        if ($item->rowid > 0) {
+            ;
+        }               //для совместимости
+        else {
+            $item->rowid = $item->item_id;
+            if($item->service_id >0) $item->rowid = $item->service_id;
+        }
+
+        $this->_rowid = $item->rowid;
     }
 
     public function saverowOnClick($sender) {
@@ -233,21 +276,14 @@ class Invoice extends \App\Pages\Base
 
         $item->price = $this->editdetail->editprice->getText();
 
-        $tarr = array();
-
-        foreach ($this->_tovarlist as $k => $value) {
-
-            if ($this->_rowid > 0 && $this->_rowid == $k) {
-                $tarr[$item->item_id] = $item;    // заменяем
-            } else {
-                $tarr[$k] = $value;    // старый
-            }
+        if ($this->_rowid > 0) {
+            $item->rowid = $this->_rowid;
+        } else {
+            $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
+            $item->rowid = $next + 1;
         }
+        $this->_itemlist[$item->rowid] = $item;
 
-        if ($this->_rowid == 0) {        // в конец
-            $tarr[$item->item_id] = $item;
-        }
-        $this->_tovarlist = $tarr;
         $this->_rowid = 0;
 
         $this->editdetail->setVisible(false);
@@ -263,17 +299,58 @@ class Invoice extends \App\Pages\Base
 
         $this->editdetail->editprice->setText("");
     }
+  
+     public function saveserrowOnClick($sender) {
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
+            return;
+        }
+        $id = $this->editserdetail->editservice->getValue();
+        if ($id == 0) {
+            $this->setError("noselitem");
+            return;
+        }
+
+        $item = Service::load($id);
+        $item->quantity = $this->editserdetail->editserquantity->getText();
+
+        $item->price = $this->editserdetail->editserprice->getText();
+
+        if ($this->_rowid > 0) {
+            $item->rowid = $this->_rowid;
+        } else {
+            $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
+            $item->rowid = $next + 1;
+        }
+        $this->_itemlist[$item->rowid] = $item;
+
+        $this->_rowid = 0;
+
+        $this->editdetail->setVisible(false);
+        $this->docform->setVisible(true);
+        $this->docform->detail->Reload();
+        $this->calcTotal();
+        $this->calcPay();
+        //очищаем  форму
+        $this->editserdetail->clean();
+     
+
+        $this->editserdetail->editserquantity->setText("1");
+
+         
+    }
 
     public function cancelrowOnClick($sender) {
         $this->editdetail->setVisible(false);
+        $this->editserdetail->setVisible(false);
+        $this->editserdetail->clean();
+        $this->editserdetail->editserquantity->setText("1");
+        
         $this->docform->setVisible(true);
         //очищаем  форму
-        $this->editdetail->edittovar->setKey(0);
-        $this->editdetail->edittovar->setText('');
+        $this->editdetail->clean();
 
         $this->editdetail->editquantity->setText("1");
-
-        $this->editdetail->editprice->setText("");
+        
     }
 
     public function savedocOnClick($sender) {
@@ -312,7 +389,7 @@ class Invoice extends \App\Pages\Base
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
         $this->_doc->firm_id = $this->docform->firm->getValue();
 
-        $this->_doc->packDetails('detaildata', $this->_tovarlist);
+        $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->amount = $this->docform->total->getText();
 
@@ -387,7 +464,7 @@ class Invoice extends \App\Pages\Base
 
         $total = 0;
 
-        foreach ($this->_tovarlist as $item) {
+        foreach ($this->_itemlist as $item) {
             $item->amount = $item->price * $item->quantity;
 
             $total = $total + $item->amount;
@@ -446,7 +523,7 @@ class Invoice extends \App\Pages\Base
                 $this->setError('docnumbercancreated');
             }
         }
-        if (count($this->_tovarlist) == 0) {
+        if (count($this->_itemlist) == 0) {
             $this->setError("noenteritem");
         }
     
@@ -458,7 +535,7 @@ class Invoice extends \App\Pages\Base
         }
         $c = $this->docform->customer->getKey();
         if ( $c == 0) {
-            $this->setError("mustsel_cust");
+            $this->setError("noselcust");
         }
 
         return !$this->isError();
@@ -482,7 +559,16 @@ class Invoice extends \App\Pages\Base
     public function OnAutoCustomer($sender) {
         return Customer::getList($sender->getText(), 1);
     }
+    public function OnChangeServive($sender) {
+        $id = $sender->getValue();
 
+        $item = Service::load($id);
+        $price = $item->price;
+
+        $this->editserdetail->editserprice->setText($price);
+
+        $this->updateAjax(array('editserprice'));
+    }
     public function OnChangeCustomer($sender) {
         $this->docform->discount->setVisible(false);
 
@@ -567,7 +653,7 @@ class Invoice extends \App\Pages\Base
     }
 
     public function OnChangePriceType($sender) {
-        foreach ($this->_tovarlist as $item) {
+        foreach ($this->_itemlist as $item) {
             //$item = Item::load($item->item_id);
             $price = $item->getPrice($this->docform->pricetype->getValue());
         }

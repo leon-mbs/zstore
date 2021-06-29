@@ -91,7 +91,7 @@
             <div class="row">
                 <div class="col-10 col-lg-8">
 
-                    <a zippy="addrow">Додати товар</a>
+                    <a zippy="addrow"><b>Додати товар</b></a>   &nbsp;&nbsp;   <a zippy="addserrow"><b>Додати послугу</b></a>
                     <table class="table table-sm">
                         <tr>
                             <th>Назва</th>
@@ -227,7 +227,7 @@
             </div>
         </form>
         <form zippy="editdetail">
-            <h4>Введення товару </h4>
+            <h4>Редагування товару </h4>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 
@@ -262,6 +262,41 @@
                 </div>
             </div>
         </form>
+        <form zippy="editserdetail">
+            <h4>Редагування послуги</h4>
+            <div class="row">
+                <div class="col-12 col-md-4 col-xl-3">
+
+                     <div class="form-group">
+                        <label for="editservice">Робота, послуга </label>
+                        <select zippy="editservice" class="form-control select2">
+                            <option>Не выбрана</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editserquantity">Кiлькiсть</label>
+                        <input autocomplete="off" class="form-control" type="text" zippy="editserquantity" required="required"
+                               pattern="[0-9\.]+" style="width: 70px;">
+
+                    </div>
+                    <div class="form-group">
+                        <label for="editserprice">Цiна </label>
+                        <input autocomplete="off" class="form-control" type="text" zippy="editserprice" required="required"
+                               pattern="[0-9\.]+"
+                               style="width: 70px;">
+
+                    </div>
+
+
+                    <div class="form-group">
+                        <input type="submit" zippy="submitserrow" value="Зберегти" class="btn btn-outline-primary ">
+                        &nbsp; <input type="button" zippy="cancelserrow" value="Скасувати" class="btn btn-light ">
+                    </div>
+
+
+                </div>
+            </div>
+        </form>        
         <form zippy="editcust">
             <h3>&nbsp;Новий контрагент </h3>
             <div class="row">

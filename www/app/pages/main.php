@@ -138,12 +138,12 @@ class Main extends Base
         }
 
         $sql = " 
-         SELECT   paytype,coalesce(sum(amount),0) as am   FROM paylist 
+         SELECT   iotype,coalesce(sum(amount),0) as am   FROM iostate_view 
              WHERE   
-              paytype >= 50    {$brpay}
-              AND paydate  >= " . $conn->DBDate($from) . "
-              AND  paydate  <= " . $conn->DBDate($to) . "
-             GROUP BY  paytype order  by  paytype  
+              iotype >= 50    {$brpay}
+              AND document_date  >= " . $conn->DBDate($from) . "
+              AND  document_date  <= " . $conn->DBDate($to) . "
+             GROUP BY  iotype order  by  iotype  
                          
         ";
 
@@ -154,7 +154,7 @@ class Main extends Base
 
         foreach ($rs as $row) {
             $data[] = abs(round($row['am']));
-            $title[] = $names[$row['paytype']];
+            $title[] = $names[$row['iotype']];
             $color[] = '#' . Util::genColor();
         }
         $this->_tvars['pbtitle'] = json_encode($title, JSON_UNESCAPED_UNICODE);
@@ -170,21 +170,21 @@ class Main extends Base
 
         foreach ($mlist as $m) {
             $sql = " 
-             SELECT   coalesce(sum(amount),0) as am   FROM paylist 
+             SELECT   coalesce(sum(amount),0) as am   FROM iostate_view 
                  WHERE   
-                  paytype >= 50    {$brpay}
-                  AND paydate  >= " . $conn->DBDate($m['start']) . "
-                  AND  paydate  <= " . $conn->DBDate($m['end']) . "
+                  iotype >= 50    {$brpay}
+                  AND document_date  >= " . $conn->DBDate($m['start']) . "
+                  AND  document_date  <= " . $conn->DBDate($m['end']) . "
                   
                              
             ";
             $out[] = abs(round($conn->GetOne($sql)));
             $sql = " 
-             SELECT   coalesce(sum(amount),0) as am   FROM paylist 
+             SELECT   coalesce(sum(amount),0) as am   FROM iostate_view 
                  WHERE   
-                  paytype <  50    {$brpay}
-                  AND paydate  >= " . $conn->DBDate($m['start']) . "
-                  AND  paydate  <= " . $conn->DBDate($m['end']) . "
+                  iotype <  50    {$brpay}
+                  AND document_date  >= " . $conn->DBDate($m['start']) . "
+                  AND  document_date  <= " . $conn->DBDate($m['end']) . "
                   
                              
             ";
