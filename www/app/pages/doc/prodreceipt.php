@@ -328,9 +328,7 @@ class ProdReceipt extends \App\Pages\Base
         if (($this->docform->store->getValue() > 0) == false) {
             $this->setError("noselstore");
         }
-       if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
-            $this->setError("noselmf");
-        }
+      
 
 
         return !$this->isError();

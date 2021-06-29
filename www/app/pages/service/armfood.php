@@ -139,7 +139,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->listsform->add(new TextInput('notes')) ;
         $this->docpanel->listsform->add(new TextInput('contact')) ;
         $this->docpanel->listsform->add(new TextInput('table')) ;
-        $this->docpanel->listsform->add(new DropDownChoice('delivery', Document::getDeliveryTypes()))->onChange($this, 'OnDelivery');
+        $this->docpanel->listsform->add(new DropDownChoice('delivery', Document::getDeliveryTypes(),0))->onChange($this, 'OnDelivery');
         $this->docpanel->listsform->add(new ClickLink('addcust'))->onClick($this, 'addcustOnClick');
         $this->docpanel->listsform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docpanel->listsform->customer->onChange($this, 'OnChangeCustomer',true);
@@ -240,7 +240,7 @@ class ARMFood extends \App\Pages\Base
         
         if ($sender->getValue() == 0) {
            $this->docpanel->listsform->table->setVisible(true) ; 
-           if($this->_worktype == 1) $this->docpanel->listsform->btopay->setVisible(true) ;   
+           if($this->_worktype == 0 || $this->_worktype == 1 ) $this->docpanel->listsform->btopay->setVisible(true) ;   
            if($this->_worktype == 2) $this->docpanel->listsform->btoprod->setVisible(true) ;   
         } 
         if ($sender->getValue() > 0) { 
@@ -379,6 +379,11 @@ class ARMFood extends \App\Pages\Base
            // $item->price = $item->getPrice($this->_pricetype, $this->_store);
             $this->_itemlist[$item->item_id] = $item;
         }
+        
+        $this->_catlist = Category::find(" coalesce(parent_id,0)=0 and detail  not  like '%<nofastfood>1</nofastfood>%' " );
+        $this->docpanel->catpan->catlist->Reload();
+        
+        
          $this->docpanel->catpan->setVisible(true);
          $this->docpanel->prodpan->setVisible(false);
       
@@ -709,6 +714,9 @@ class ARMFood extends \App\Pages\Base
      
      //к  оплате
      public function topayOnClick($sender) {
+         
+           if($this->createdoc() ==false) return; 
+         
            $this->docpanel->payform->setVisible(true);
            $this->docpanel->listsform->setVisible(false);
            $this->docpanel->navform->setVisible(false);
@@ -720,6 +728,8 @@ class ARMFood extends \App\Pages\Base
          //  $this->docpanel->payform->pfpayed->setText(H::fa($amount))  ;
            $this->docpanel->payform->pfrest->setText(H::fa(0))  ;
           $this->docpanel->payform->bbackitems->setVisible(true); 
+          
+                  
      }
      //Оплата
      public function payandcloseOnClick() {
@@ -728,7 +738,7 @@ class ARMFood extends \App\Pages\Base
             $this->setError("noselpaytype");
             return;
         }   
-          $this->createdoc()   ;
+   
       
           $conn = \ZDB\DB::getConnect();
           $conn->BeginTrans();
@@ -763,9 +773,13 @@ class ARMFood extends \App\Pages\Base
                    $this->_doc->updateStatus(Document::STATE_EXECUTED);
                 }  
                  
-           } else {  // в  производство
+           } 
+           if($this->_worktype ==1)  // в  производство
+           { 
+             
                $this->_doc->updateStatus(Document::STATE_INPROCESS);
                $this->setInfo('sentprod'); 
+             
              
            }    
             //если  оплачен и  закончен   закрываем
@@ -816,7 +830,8 @@ class ARMFood extends \App\Pages\Base
                     return false;
                 }
             }
-        }
+        }     
+     
         $this->_doc->document_date = time();
         $this->_doc->headerdata['time'] = time();
         $this->_doc->headerdata['contact'] = $this->docpanel->listsform->contact->getText();

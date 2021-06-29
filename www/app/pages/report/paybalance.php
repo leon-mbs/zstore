@@ -97,12 +97,12 @@ class PayBalance extends \App\Pages\Base
         $conn = \ZDB\DB::getConnect();
 
         $sql = " 
-         SELECT   paytype,coalesce(sum(amount),0) as am   FROM paylist 
-             WHERE    {$cstr}
-              paytype <50   {$brpay}
-              AND paydate  >= " . $conn->DBDate($from) . "
-              AND  paydate  <= " . $conn->DBDate($to) . "
-              GROUP BY  paytype order  by  paytype  
+         SELECT   iotype,coalesce(sum(amount),0) as am   FROM iostate_view 
+             WHERE    
+              iotype <50   {$brpay}
+              AND document_date  >= " . $conn->DBDate($from) . "
+              AND  document_date  <= " . $conn->DBDate($to) . "
+              GROUP BY  iotype order  by  iotype  
                          
         ";
 
@@ -111,18 +111,18 @@ class PayBalance extends \App\Pages\Base
         foreach ($rs as $row) {
             $detail[] = array(
                 "in"   => H::fa($row['am']),
-                "type" => $pl[$row['paytype']]
+                "type" => $pl[$row['iotype']]
             );
             $tin += $row['am'];
         }
 
         $sql = " 
-         SELECT   paytype,coalesce(sum(amount),0) as am   FROM paylist 
+         SELECT   iotype,coalesce(sum(amount),0) as am   FROM iostate_view 
              WHERE   
-              paytype >= 50    {$brpay}
-              AND paydate  >= " . $conn->DBDate($from) . "
-              AND  paydate  <= " . $conn->DBDate($to) . "
-              GROUP BY  paytype order  by  paytype  
+              iotype >= 50    {$brpay}
+              AND document_date  >= " . $conn->DBDate($from) . "
+              AND  document_date  <= " . $conn->DBDate($to) . "
+              GROUP BY  iotype order  by  iotype  
                          
         ";
 
@@ -130,10 +130,10 @@ class PayBalance extends \App\Pages\Base
 
         foreach ($rs as $row) {
             $detail2[] = array(
-                "out"  => H::fa(0 - $row['am']),
-                "type" => $pl[$row['paytype']]
+                "out"  =>0- H::fa(  $row['am']),
+                "type" => $pl[$row['iotype']]
             );
-            $tout += 0 - $row['am'];
+            $tout +=  0- $row['am'];
         }
 
         $total = $tin - $tout;
@@ -149,11 +149,11 @@ class PayBalance extends \App\Pages\Base
         );
 
         $sql = " 
-         SELECT   coalesce(sum(abs(amount)),0)  as am   FROM paylist 
+         SELECT   coalesce(sum(abs(amount)),0)  as am   FROM iostate_view 
              WHERE   
-              paytype  = " . \App\Entity\IOState::TYPE_BASE_OUTCOME . "   {$brpay}
-              AND paydate  >= " . $conn->DBDate($from) . "
-              AND  paydate  <= " . $conn->DBDate($to) . "
+              iotype  = " . \App\Entity\IOState::TYPE_BASE_OUTCOME . "   {$brpay}
+              AND document_date  >= " . $conn->DBDate($from) . "
+              AND  document_date  <= " . $conn->DBDate($to) . "
              
                          
         ";
@@ -161,11 +161,11 @@ class PayBalance extends \App\Pages\Base
         $OPOUT = $conn->GetOne($sql); // переменные расходы
 
         $sql = " 
-         SELECT   coalesce(  sum(abs(amount)),0)  as am   FROM paylist 
+         SELECT   coalesce(  sum(abs(amount)),0)  as am   FROM iostate_view 
              WHERE   
-              paytype  = " . \App\Entity\IOState::TYPE_BASE_INCOME . "   {$brpay}
-              AND paydate  >= " . $conn->DBDate($from) . "
-              AND  paydate  <= " . $conn->DBDate($to) . "
+              iotype  = " . \App\Entity\IOState::TYPE_BASE_INCOME . "   {$brpay}
+              AND document_date  >= " . $conn->DBDate($from) . "
+              AND  document_date  <= " . $conn->DBDate($to) . "
              
                          
         ";

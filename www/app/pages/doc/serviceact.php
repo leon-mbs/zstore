@@ -129,7 +129,14 @@ class ServiceAct extends \App\Pages\Base
                     $this->docform->customer->setKey($basedoc->customer_id);
                     $this->docform->customer->setText($basedoc->customer_name);
 
-                    $this->docform->notes->setText('Наряд ' . $basedoc->document_number);
+                  
+                    $this->_servicelist = $basedoc->unpackDetails('detaildata');
+                }
+                if ($basedoc->meta_name == 'Invoice') {
+                    $this->docform->customer->setKey($basedoc->customer_id);
+                    $this->docform->customer->setText($basedoc->customer_name);
+
+                  
                     $this->_servicelist = $basedoc->unpackDetails('detaildata');
                 }
             }
