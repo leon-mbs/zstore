@@ -80,6 +80,7 @@ class Import extends \App\Pages\Base
 
         $form->add(new DropDownChoice("ncolname", $cols));
         $form->add(new DropDownChoice("ncolcode", $cols));
+        $form->add(new DropDownChoice("ncolbarcode", $cols));
         $form->add(new DropDownChoice("ncolqty", $cols));
         $form->add(new DropDownChoice("ncolprice", $cols));
         $form->add(new DropDownChoice("ncolmsr", $cols));
@@ -516,6 +517,7 @@ class Import extends \App\Pages\Base
 
         $colname = $this->nform->ncolname->getValue();
         $colcode = $this->nform->ncolcode->getValue();
+        $colbarcode = $this->nform->ncolbarcode->getValue();
         $colqty = $this->nform->ncolqty->getValue();
         $colprice = $this->nform->ncolprice->getValue();
         $colmsr = $this->nform->ncolmsr->getValue();
@@ -570,6 +572,7 @@ class Import extends \App\Pages\Base
                 $this->_tvars['list'][] = array(
                     'colname'  => $row[$colname],
                     'colcode'  => $row[$colcode],
+                    'colbarcode'  => $row[$colbarcode],
                     'colqty'   => $row[$colqty],
                     'colmsr'   => $row[$colmsr],
                     'colprice' => $row[$colprice]
