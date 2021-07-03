@@ -280,7 +280,9 @@ class Base extends \Zippy\Html\WebPage
     }
 
     private function generateTosats() {
+              
 
+                  
         $this->_tvars["toasts"] = array();
         if (\App\Session::getSession()->toasts == true) {
             return;
@@ -296,6 +298,12 @@ class Base extends \Zippy\Html\WebPage
         if ($user->defmf == 0) {
             $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("nodefmf") . "\"");
         }
+        if($user->userlogin == "admin"){       
+            if ($user->userpass == "admin" ||   $user->userpass= '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.') {
+                   $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("nodeadminpass") . "\"");
+         
+            }
+        }          
         if(count( $this->_tvars["toasts"])==0)$this->_tvars["toasts"][] = array('title' => '');
         \App\Session::getSession()->toasts = true;
     }

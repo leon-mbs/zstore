@@ -92,11 +92,14 @@
         <td colspan="6" align="right">Оплата:</td>
         <td align="right">{{payed}}</td>
     </tr>
-        {{/payed}}   
+        {{/payed}} 
+        {{#payamount}}  
     <tr>
         <td colspan="7">На сумму <b>{{totalstr}}<b></td>
 
                     </tr>
+              {{/payamount}}         
+                    
                     <tr>
                         <td colspan="7"><b>Отпустил </b>__________________</td>
                     </tr>

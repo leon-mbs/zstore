@@ -213,7 +213,11 @@ class ItemList extends \App\Pages\Base
           $this->editOnClick($sender);
           $this->_copy = true;
           $this->_item->item_id=0;
-          
+          $this->itemdetail->editcode->setText('');          
+          $this->itemdetail->editbarcode->setText('');
+          if (System::getOption("common", "autoarticle") == 1) {
+            $this->itemdetail->editcode->setText(Item::getNextArticle());
+          }         
     } 
     public function editOnClick($sender) {
         $this->_copy = false;
