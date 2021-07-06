@@ -110,10 +110,12 @@
         <td align="right">{{payed}}</td>
     </tr>
      {{/payed}}  
+       {{#payamount}}
     <tr>
         <td colspan="7">На суму <b>{{totalstr}}<b></td>
 
                     <tr>
+  {{/payamount}}                     
                         <td colspan="5">
                             {{#isstamp}}
                             <img style="height:100px;" src='{{stamp}}'/>

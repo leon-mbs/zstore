@@ -492,7 +492,7 @@ class ARMFood extends \App\Pages\Base
     public function onMyselfClick($sender) {
          $item = $sender->getOwner()->getDataItem();
          
-         $item->myself = strpos($sender->id,"myselfon") === 0  ?1:0 ;
+         $item->myself = strpos($sender->id,"myselfon") === 0  ?0:1 ;
          $this->docpanel->listsform->itemlist->Reload();
          
     }

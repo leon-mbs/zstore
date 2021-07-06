@@ -97,11 +97,12 @@
         <td align="right">{{payed}}</td>
     </tr>
      {{/payed}}  
-
+       {{#payamount}}
     <tr>
         <td colspan="7">На суму <b>{{totalstr}}<b></td>
 
-                    </tr>
+        </tr>
+              {{/payamount}} 
                     <tr>
                         <td colspan="4" > 
                             Продавець ___________

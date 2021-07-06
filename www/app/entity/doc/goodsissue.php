@@ -45,7 +45,7 @@ class GoodsIssue extends Document
             );
         }
 
-        $totalstr = H::sumstr($this->amount);
+        $totalstr = H::sumstr($this->payamount);
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
 

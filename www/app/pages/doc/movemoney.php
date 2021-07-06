@@ -24,16 +24,22 @@ class MoveMoney extends \App\Pages\Base
 {
 
     private $_doc;
-
+   
     public function __construct($docid = 0) {
         parent::__construct();
 
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
+        $balance = MoneyFund::Balance();
 
-        $this->docform->add(new DropDownChoice('paymentfrom', MoneyFund::getList(), H::getDefMF()));
-        $this->docform->add(new DropDownChoice('paymentto', MoneyFund::getList(), H::getDefMF()));
+        $list = array();
+        foreach( MoneyFund::getList() as $id =>$mf ) {
+           $list[$id]= $mf .", ". H::fa($balance[$id])   ;
+        }
+        
+        $this->docform->add(new DropDownChoice('paymentfrom', $list, H::getDefMF()));
+        $this->docform->add(new DropDownChoice('paymentto', $list, H::getDefMF()));
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('amount'));
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');

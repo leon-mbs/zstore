@@ -108,7 +108,7 @@ class ContractList extends \App\Pages\Base
             $row->scanlink->setLink(_BASEURL . 'loadfile.php?id=' . $item->file_id);
         }
 
-          $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
+        $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }

@@ -62,7 +62,7 @@ class ItemList extends \App\Pages\Base
         $this->itemtable->listform->add(new SubmitLink('deleteall'))->onClick($this, 'OnDelAll');
         $this->itemtable->listform->add(new SubmitLink('printall'))->onClick($this, 'OnPrintAll',true);
          
-        $catlist = Category::findArray( "cat_name","cat_id not in (select parent_id from item_cat )", "cat_name");
+        $catlist = Category::findArray( "cat_name","cat_id not in (select COALESCE(parent_id,0) from item_cat )", "cat_name");
        
          
         $this->itemtable->listform->add(new DropDownChoice('allcat', $catlist, 0))->onChange($this,'onAllCat');
@@ -213,7 +213,11 @@ class ItemList extends \App\Pages\Base
           $this->editOnClick($sender);
           $this->_copy = true;
           $this->_item->item_id=0;
-          
+          $this->itemdetail->editcode->setText('');          
+          $this->itemdetail->editbarcode->setText('');
+          if (System::getOption("common", "autoarticle") == 1) {
+            $this->itemdetail->editcode->setText(Item::getNextArticle());
+          }         
     } 
     public function editOnClick($sender) {
         $this->_copy = false;
@@ -697,7 +701,7 @@ class ItemList extends \App\Pages\Base
          }
      
          $this->itemtable->listform->itemlist->Reload();
-          
+         $sender->setValue(0); 
  }
  public function OnDelAll($sender) {
         if (false == \App\ACL::checkDelRef('ItemList')) {

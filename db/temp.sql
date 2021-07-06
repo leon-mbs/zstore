@@ -1,6 +1,7 @@
-  
- ALTER TABLE `users` ADD `lastactive` DATETIME NULL  ;
+ ALTER TABLE `notifies` CHANGE `user_id` `user_id` INT(11) NULL;
 
+ ALTER TABLE `users` ADD `lastactive` DATETIME NULL  ;
+ 
  DROP VIEW users_view  ;
  CREATE VIEW users_view AS
 SELECT
@@ -12,7 +13,8 @@ SELECT
   `users`.`acl` AS `acl`,
   `users`.`options` AS `options`,
   `users`.`disabled` AS `disabled`,
-  `lastactive`,
+  `users`.`lastactive` AS `lastactive`,
+ 
   `roles`.`rolename` AS `rolename`,
   `users`.`role_id` AS `role_id`,
   `roles`.`acl` AS `roleacl`,

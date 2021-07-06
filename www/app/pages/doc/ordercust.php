@@ -276,11 +276,7 @@ class OrderCust extends \App\Pages\Base
 
             $conn->CommitTrans();
 
-            if ($isEdited) {
-                App::RedirectBack();
-            } else {
-                App::Redirect("\\App\\Pages\\Register\\OrderCustList");
-            }
+        
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
@@ -292,7 +288,8 @@ class OrderCust extends \App\Pages\Base
 
             return;
         }
-        App::RedirectBack();
+        App::Redirect("\\App\\Pages\\Register\\GRList");
+
     }
 
     /**
