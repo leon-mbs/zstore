@@ -519,6 +519,7 @@ class GoodsReceipt extends \App\Pages\Base
                 }
             }
 
+             App::Redirect("\\App\\Pages\\Register\\GRList");
 
             $conn->CommitTrans();
         } catch(\Throwable $ee) {
@@ -532,7 +533,7 @@ class GoodsReceipt extends \App\Pages\Base
 
             return;
         }
-        App::RedirectBack();
+ 
     }
 
     public function onPayAmount($sender) {

@@ -1,5 +1,5 @@
- ALTER TABLE `notifies` CHANGE `user_id` `user_id` INT(11) NULL;
-
+ 
+   
  ALTER TABLE `users` ADD `lastactive` DATETIME NULL  ;
  
  DROP VIEW users_view  ;

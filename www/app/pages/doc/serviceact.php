@@ -325,7 +325,8 @@ class ServiceAct extends \App\Pages\Base
             }
 
             $conn->CommitTrans();
-            App::RedirectBack();
+            App::Redirect("\\App\\Pages\\Register\\SerList");
+
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();

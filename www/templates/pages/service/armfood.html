@@ -3,7 +3,18 @@
 
     </head>
     <body>
+            <div class="row">
+           <div class="col-12 col-md-6 col-xl-4">
+                   <div id="newordersalert" style="display:none;"  class="alert alert-info  ml-4"  >
+                           <span id="neworderscnt"></span>
+                    </div>   
+                         <div id="newprodalert" style="display:none;"  class="alert alert-sucess  ml-4"  >
+                           <span id="newprodcnt"></span>
+                    </div>   
 
+          
+            </div>
+            </div>
 
         <form zippy="setupform">
             <h3>АРМ кассира</h3>
@@ -516,6 +527,40 @@
             function check_brefuse() {
                 return confirm("Аннулировать заказ?")
             }
+            
+            
+            
+            
+            
+       window.setInterval(onNewOrder, 5000 );
+     
+           var url = '{{{_baseurl}}}::getMessages&ajax=true'
+           
+          function onNewOrder(){
+             fetch(url)
+              .then((response) => {
+                return response.json();
+              })
+              .then((data) => {
+                
+                  if(data.cntorder > 0) {
+                      $('#newordersalert').show();
+                      $('#neworderscnt').text('Новых заказов ' +data.cntorder);
+                       
+                  }
+                  if(data.cntprod > 0) {
+                      $('#newprodalert').show();
+                      $('#newprodcnt').text('Готово  в производстве ' +data.cntprod);
+                       
+                  }
+                  
+                
+               });             
+          }            
+            
+                        
+            
+            
         </script>
 
         {{#usescanner}} 
@@ -532,6 +577,10 @@
                     $('#addcode').click()
                 }
             }
+            
+            
+
+            
         </script>  
 
 

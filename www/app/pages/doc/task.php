@@ -474,11 +474,9 @@ class Task extends \App\Pages\Base
             }
 
             $conn->CommitTrans();
-            if ($this->_doc->state < 4) {
-                App::RedirectBack();
-            } else {
+        
                 App::Redirect("\\App\\Pages\\Register\\TaskList");
-            }
+            
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();

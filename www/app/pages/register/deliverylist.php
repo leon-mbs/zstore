@@ -191,5 +191,18 @@ class DeliveryList extends \App\Pages\Base
         
 
     }
- 
+  
+    public function getMessages($args,$post){
+        
+       $cnt = 0;
+       $mlist =   \App\Entity\Notify::find("checked <> 1 and user_id=".\App\Entity\Notify::DELIV)  ;
+       foreach($mlist as $n) {
+           $doc = Document::load(intval($n->message))  ;
+           if($doc->state==Document::STATE_READYTOSHIP)  $cnt++;
+       }
+        
+       \App\Entity\Notify::markRead(\App\Entity\Notify::DELIV);
+        
+       return    json_encode(array("cnt"=>$cnt), JSON_UNESCAPED_UNICODE);
+    } 
 }

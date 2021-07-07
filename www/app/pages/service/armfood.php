@@ -668,11 +668,23 @@ class ARMFood extends \App\Pages\Base
                 return;
              } 
              
-                      
+            $n = new \App\Entity\Notify();
+            $n->user_id = \App\Entity\Notify::DELIV;
+            $n->dateshow = time();
+            $n->message = $this->_doc->document_id;
+
+            $n->save();                     
              $this->setInfo('sentdelivary'); 
                        
        } else {  //в  производство
            $this->_doc->updateStatus(Document::STATE_INPROCESS);
+            $n = new \App\Entity\Notify();
+            $n->user_id = \App\Entity\Notify::ARMFOODPROD;
+            $n->dateshow = time();
+            $n->message = $this->_doc->document_id;
+
+            $n->save();             
+           
            $this->setInfo('sentprod'); 
                 
        }
@@ -703,7 +715,13 @@ class ARMFood extends \App\Pages\Base
                 $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
                 return;
              } 
-             
+       
+            $n = new \App\Entity\Notify();
+            $n->user_id = \App\Entity\Notify::ARMFOODPROD;
+            $n->dateshow = time();
+            $n->message = $this->_doc->document_id;
+
+            $n->save();          
                             
           
           $this->setInfo('sentprod'); 
@@ -951,5 +969,22 @@ class ARMFood extends \App\Pages\Base
         
         
   }  
+  
+  
+    public function getMessages($args,$post){
+        
+       $cntorder = 0;
+       $cntprod = 0;
+       $mlist =   \App\Entity\Notify::find("checked <> 1 and user_id=".\App\Entity\Notify::ARMFOOD)  ;
+       foreach($mlist as $n) {
+           $doc = Document::load(intval($n->message))  ;
+           if($doc->state == Document::STATE_FINISHED)  $cntprod++;
+           if($doc->state == Document::STATE_NEW)  $cntorder++;
+       }
+        
+       \App\Entity\Notify::markRead(\App\Entity\Notify::ARMFOOD);
+        
+       return   json_encode(array("cntprod"=>$cntprod, 'cntorder'=>$cntorder), JSON_UNESCAPED_UNICODE);
+    }  
         
 }
