@@ -2,10 +2,14 @@
 <body>
          <div class="row"  >
 
-            <div class="col-12  " >
+            <div class="col-12 col-md-4 col-xl-3   " >
                 <h3>Журнал  доставок</h3>
-                
+                    <div id="newordersalert" style="display:none;"  class="alert alert-success  ml-4"  >
+                           <span id="neworderscnt"></span>
+                    </div>   
+        
              </div>
+                  <div class="w-100">
 
                   <div class="col-12 col-md-10 col-xl-8" >
                     <div class="card">
@@ -109,10 +113,32 @@
                     </div>
              
                  </div>
-
-
-
+   
          
         </div> 
+        
+  <script>
+           window.setInterval(onNewOrder, 5000 );
+     
+           var url = '{{{_baseurl}}}::getMessages:1&ajax=true'
+           
+          function onNewOrder(){
+             fetch(url)
+              .then((response) => {
+                return response.json();
+              })
+              .then((data) => {
+                
+                  if(data.cnt > 0) {
+                      $('#newordersalert').show();
+                      $('#neworderscnt').text('Нових доставок ' +data.cnt);
+                       
+                  }
+                  
+                
+               });             
+          }
+               
+        </script>             
 </body>
 </html>

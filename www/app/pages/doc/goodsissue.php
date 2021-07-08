@@ -614,11 +614,9 @@ class GoodsIssue extends \App\Pages\Base
 
 
             $conn->CommitTrans();
-            if ($isEdited) {
-                App::RedirectBack();
-            } else {
+        
                 App::Redirect("\\App\\Pages\\Register\\GIList",$this->_doc->document_id);
-            }
+          
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();

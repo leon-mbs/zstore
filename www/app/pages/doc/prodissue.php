@@ -15,6 +15,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\TextArea;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
@@ -39,7 +40,7 @@ class ProdIssue extends \App\Pages\Base
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
         $this->docform->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
-        $this->docform->add(new TextInput('notes'));
+        $this->docform->add(new TextArea('notes'));
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
 

@@ -91,18 +91,40 @@ class ArmProdFood extends \App\Pages\Base
             if($it->foodstate!==1) $hasinproces=true;
         }
         if($hasinproces == false) { 
-           $doc->updateStatus(Document::STATE_FINISHED) ;  
-           if($doc->payed>0) {
-               $doc->updateStatus(Document::STATE_CLOSED) ;   
-           }
+           $doc->updateStatus(Document::STATE_FINISHED) ;
            
+           if($doc->headerdata['delivery'] >0) {
+                $doc->updateStatus(Document::STATE_READYTOSHIP) ;
+              
+                $n = new \App\Entity\Notify();
+                $n->user_id = \App\Entity\Notify::DELIV;
+                $n->dateshow = time();
+                $n->message = $doc->document_id;
+
+                $n->save();         
+           }   else
+           {
+               if($doc->payed>0) {
+                   $doc->updateStatus(Document::STATE_CLOSED) ;   
+               }
+           }
                
         }
         $this->update(null) ;
     }
    
     public function getMessages($args,$post){
-       return    json_encode(array(1,2,3), JSON_UNESCAPED_UNICODE);
+        
+       $cnt = 0;
+       $mlist =   \App\Entity\Notify::find("checked <> 1 and user_id=".\App\Entity\Notify::ARMFOODPROD)  ;
+       foreach($mlist as $n) {
+           $doc = Document::load(intval($n->message))  ;
+           if($doc->state == Document::STATE_INPROCESS)  $cnt++;
+       }
+        
+       \App\Entity\Notify::markRead(\App\Entity\Notify::ARMFOODPROD);
+        
+       return    json_encode(array("cnt"=>$cnt), JSON_UNESCAPED_UNICODE);
     }
     
     

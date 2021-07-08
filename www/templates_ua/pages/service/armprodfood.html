@@ -2,11 +2,14 @@
 <body>
          <div class="row"  >
 
-            <div class="col-12  " >
+            <div class="col-12 col-md-4 col-xl-3  " >
                 <h3>АРМ кухня</h3>
-                
+                  <div id="newordersalert" style="display:none;"  class="alert alert-success  ml-4"  >
+                           <span id="neworderscnt"></span>
+                    </div>   
+      
              </div>
-
+                    <div class="w-100">
                   <div class="col-12 col-md-10 col-lg-8" >
              
 
@@ -35,26 +38,28 @@
      
       
           <script>
-   //  var Mustache = require('mustache');
-     //  var dd= chattpl.content.querySelectorAll("div");
-    //  var output = Mustache.render('<[{xxx}]>' , {"xxx":"d<br>d"},{},[ '<[', ']>' ]);
-      //   console.log(output    );
-        
+           window.setInterval(onNewOrder, 5000 );
+     
            var url = '{{{_baseurl}}}::getMessages:1&ajax=true'
            
-     
-          fetch(url)
-          .then((response) => {
-            return response.text();
-          })
-          .then((data) => {
-            var d =  eval(data);
-            console.log(d);
-            
-            
-          });
-
-            
+          function onNewOrder(){
+             fetch(url)
+              .then((response) => {
+                return response.json();
+              })
+              .then((data) => {
+                
+                  if(data.cnt > 0) {
+                      $('#newordersalert').show();
+                      $('#neworderscnt').text('Нових замовлень ' +data.cnt);
+             
+                        
+                  }
+                  
+                
+               });             
+          }
+               
         </script>
         
 </body>

@@ -232,6 +232,18 @@ class Order extends Base
                 $order->updateStatus(Document::STATE_EXECUTED);
              }
             
+            
+            
+             if ($shop['ordertype'] == 2) {  //уведомление  в арм  кухни
+                $n = new \App\Entity\Notify();
+                $n->user_id = \App\Entity\Notify::ARMFOOD;
+                $n->dateshow = time();
+                $n->message = $order->document_id;
+
+                $n->save();               
+             }
+           
+            
             $this->setSuccess("shopneworder", $order->document_number);
 
             if (strlen($phone) > 0) {

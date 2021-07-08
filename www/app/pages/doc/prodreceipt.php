@@ -16,6 +16,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\TextArea;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
@@ -42,7 +43,7 @@ class ProdReceipt extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
 
-        $this->docform->add(new TextInput('notes'));
+        $this->docform->add(new TextArea('notes'));
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
@@ -288,7 +289,8 @@ class ProdReceipt extends \App\Pages\Base
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
             return;
         }
-        App::RedirectBack();
+        App::Redirect("\\App\\Pages\\Register\\StockList");
+
     }
 
     /**

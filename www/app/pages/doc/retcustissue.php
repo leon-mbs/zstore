@@ -278,11 +278,9 @@ class RetCustIssue extends \App\Pages\Base
             }
 
             $conn->CommitTrans();
-            if ($isEdited) {
-                App::RedirectBack();
-            } else {
-                App::Redirect("\\App\\Pages\\Register\\GIList");
-            }
+         
+             App::Redirect("\\App\\Pages\\Register\\GIList");
+             
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();

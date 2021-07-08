@@ -777,3 +777,11 @@ const mustache = require('mustache');
 
 window.require = require;
 },{"mustache":1}]},{},[2]);
+
+
+
+ //  var Mustache = require('mustache');
+     //  var dd= chattpl.content.querySelectorAll("div");
+    //  var output = Mustache.render('<[{xxx}]>' , {"xxx":"d<br>d"},{},[ '<[', ']>' ]);
+      //   console.log(output    );
+  

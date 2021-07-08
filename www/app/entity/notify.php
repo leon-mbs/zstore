@@ -10,12 +10,17 @@ namespace App\Entity;
 class Notify extends \ZCL\DB\Entity
 {
 
+    const ARMFOODPROD = -1;  //арм  кухни    
+    const ARMFOOD = -2;  //арм  кассира кафе    
+    const DELIV = -3;  //журнал  доставок
+    
     protected function init() {
 
         $this->sender_id = 0;
         $this->notify_id = 0;
         $this->checked = 0;
         $this->user_id = 0;
+        $this->message = '';
         $this->dateshow = time();
     }
 

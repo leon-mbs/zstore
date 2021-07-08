@@ -344,7 +344,8 @@ class ReturnIssue extends \App\Pages\Base
 
 
             $conn->CommitTrans();
-            App::RedirectBack();
+               App::Redirect("\\App\\Pages\\Register\\GIList");
+
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
