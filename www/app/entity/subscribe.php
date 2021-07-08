@@ -200,10 +200,10 @@ class Subscribe extends \ZCL\DB\Entity
                 $header['mf']  = H::l("prepaid");
             }
         }
-        if ($doc->headerdata['nal'] == 0 && $doc->payamount>0 ) {
+        if ($doc->headerdata['payed'] == 0 && $doc->payamount>0 ) {
             $header['mf'] = \App\Helper::l("credit");
         }
-        if ($doc->headerdata['nal'] == 0 && $doc->payamount==0 ) {
+        if ($doc->headerdata['payed'] == 0 && $doc->payamount==0 ) {
             $header['mf'] = \App\Helper::l("prepaid");
         }
 

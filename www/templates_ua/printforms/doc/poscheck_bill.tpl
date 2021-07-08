@@ -1,5 +1,5 @@
 <table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{printw}}}>
-    <tr>
+    <tr style="font-weight: bolder;">
         <td colspan="3">Чек {{document_number}}</td>
     </tr>
     {{#fiscalnumber}}
@@ -61,7 +61,7 @@
         <td align="right">{{amount}}</td>
     </tr>
     {{/_detail}}
-    <tr>
+    <tr style="font-weight: bolder;">
         <td colspan="2" align="right">Всього:</td>
         <td align="right">{{total}}</td>
     </tr>
