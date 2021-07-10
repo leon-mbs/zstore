@@ -88,9 +88,11 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutoItem');
+        $this->editdetail->edititem->onChange($this, 'OnChangeItem', true);
         $this->editdetail->add(new SubmitLink('addnewitem'))->onClick($this, 'addnewitemOnClick');
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
+        $this->editdetail->add(new TextInput('editsellprice'));
         $this->editdetail->add(new TextInput('editsnumber'));
         $this->editdetail->add(new Date('editsdate'));
         $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
@@ -300,6 +302,7 @@ class GoodsReceipt extends \App\Pages\Base
             $this->editdetail->edititem->setKey($item->item_id);
             $this->editdetail->edititem->setText($item->itemname);
             $this->editdetail->editprice->setText('');
+            $this->editdetail->editsellprice->setText('');
         }
     }
 
@@ -316,6 +319,15 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->editdetail->editquantity->setText($item->quantity);
         $this->editdetail->editprice->setText($item->price);
+        
+        $olditem = Item::load($item->item_id);
+        if($olditem != null){
+           $this->editdetail->editsellprice->setText($olditem->price1);    
+        }
+        
+ 
+        
+        $this->editdetail->editsellprice->setText($item->price1);
         $this->editdetail->editsnumber->setText($item->snumber);
         $this->editdetail->editsdate->setDate($item->sdate);
 
@@ -347,6 +359,15 @@ class GoodsReceipt extends \App\Pages\Base
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
+        $sellprice = $this->editdetail->editsellprice->getText();
+        if(strlen($sellprice)>0) {
+          $olditem = Item::load($item->item_id);
+          if($olditem != null){
+             $olditem->price1 = $sellprice;    
+             $olditem->save();  
+          } 
+        }
+        
 
         if ($item->price == 0) {
 
@@ -663,7 +684,8 @@ class GoodsReceipt extends \App\Pages\Base
     public function addnewitemOnClick($sender) {
         $this->editnewitem->setVisible(true);
         $this->editdetail->setVisible(false);
-
+        $this->wselitem->setVisible(false);
+  
         $this->editnewitem->clean();
 
         if (System::getOption("common", "autoarticle") == 1) {
@@ -711,6 +733,8 @@ class GoodsReceipt extends \App\Pages\Base
         if ($item->sdate == false) {
             $item->sdate = '';
         }
+        $this->editdetail->editsnumber->setText($item->snumber);
+        $this->editdetail->editsdate->setText($item->sdate);
 
 
         $item->cat_id = $this->editnewitem->editnewcat->getValue();
@@ -785,6 +809,10 @@ class GoodsReceipt extends \App\Pages\Base
     public function onSelectItem($item_id, $itemname) {
         $this->editdetail->edititem->setKey($item_id);
         $this->editdetail->edititem->setText($itemname);
+   
+        $item = Item::load($item_id);
+        
+        $this->editdetail->editsellprice->setText($item->price1);
     }
 
     public function OnCustomerFirm($sender) {
@@ -800,6 +828,16 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->contract->setVisible(false);
             $this->docform->contract->setValue(0);
         }
+    }
+
+    public function OnChangeItem($sender) {
+        $id = $sender->getKey();
+        $item = Item::load($id);
+        
+        $this->editdetail->editsellprice->setText($item->price1);
+ 
+
+        $this->updateAjax(array('editsellprice' ));
     }
 
 }

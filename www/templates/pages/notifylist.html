@@ -2,8 +2,8 @@
 
     <body>
         <div class="row">
-            <div class="col-8">
-                <h3>Уведомления</h3>
+            <div class="col-12 col-md-8 col-xl-6">
+                <h4>Уведомления</h4>
                 <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
 
@@ -32,6 +32,36 @@
                 <div zippy="pag"></div>
 
             </div>
+            
+            
+             <div class="col-12 col-md-4 col-xl-3">   
+             <h4>Сообщение пользователю</h4>
+                <form zippy="msgform" role="form">
+                    <div class="form-group  ">
+                        <label for="users">Выбрать получателя</label>
+
+                        <select class="form-control select2" zippy="users">
+                            <option value='0'>Не выбран</option>
+                        </select>
+                    </div>
+                    <div class="form-check">
+                        <input zippy="sendall" type="checkbox" class="form-check-input">
+                        <label data-label="sendall" class="form-check-label" for="sendall">Всем пользователям</label>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="msgtext">Текст</label>
+
+                        <textarea required="required" class="form-control" zippy="msgtext"></textarea>
+
+                    </div>
+                    <div class="form-group">
+
+                        <button type="submit" class="btn btn-primary   ">Отправить</button>
+
+                    </div>
+                </form>  
+             </div>
         </div>
 
     </body>

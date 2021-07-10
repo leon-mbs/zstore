@@ -299,7 +299,9 @@ class ARMPos extends \App\Pages\Base
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));
-
+        $row->add(new ClickLink('plus',$this, 'plusOnClick'));
+        $row->add(new ClickLink('minus',$this, 'minusOnClick'))->setVisible($item->quantity>1)  ;
+ 
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -409,6 +411,18 @@ class ARMPos extends \App\Pages\Base
         $this->_rowid = $tovar->rowid;
     }
 
+    public function plusOnClick($sender) {  
+            $tovar = $sender->owner->getDataItem();
+            $tovar->quantity++;
+        $this->docpanel->form2->detail->Reload();
+        $this->calcTotal();
+    }
+    public function minusOnClick($sender) {  
+        $tovar = $sender->owner->getDataItem();
+        if($tovar->quantity>1)$tovar->quantity--;
+        $this->docpanel->form2->detail->Reload();
+        $this->calcTotal();        
+    }
     public function deleteOnClick($sender) {
 
         $tovar = $sender->owner->getDataItem();
