@@ -23,6 +23,7 @@ class User extends \ZCL\DB\Entity
         $this->defsalesource = 0;
         $this->deffirm = 0;
         $this->hidesidebar = 0;
+        $this->usemobileprinter = 0;
         $this->pagesize = 25;
         $this->createdon = time();
         $this->mainpage = '\App\Pages\Main';
@@ -96,6 +97,7 @@ class User extends \ZCL\DB\Entity
         $this->viber = (string)$options['viber'];
 
         $this->hidesidebar = (int)$options['hidesidebar'];
+        $this->usemobileprinter = (int)$options['usemobileprinter'];
         $this->mainpage = $options['mainpage'];
 
         parent::afterLoad();
@@ -126,6 +128,7 @@ class User extends \ZCL\DB\Entity
         $options['defsalesource'] = $this->defsalesource;
         $options['pagesize'] = $this->pagesize;
         $options['hidesidebar'] = $this->hidesidebar;
+        $options['usemobileprinter'] = $this->usemobileprinter;
         $options['mainpage'] = $this->mainpage;
 
         $this->options = serialize($options);

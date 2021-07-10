@@ -87,7 +87,7 @@
                             {{/usesnumber}}
 
 
-                            <th class="text-right">Кіл.</th>
+                            <th  style="width:40px" class="text-right">Кіл.</th>
                             <th class="text-right">Ціна</th>
 
                             <th class="text-right">Сума</th>
@@ -104,9 +104,8 @@
                             <td zippy="sdate"></td>
                             {{/usesnumber}}
 
-
-                            <td zippy="quantity" class="text-right"></td>
-                            <td zippy="price" class="text-right"></td>
+                           <td  class="text-right text-nowrap"><b><a  zippy="minus">-</a></b>&nbsp;&nbsp;<span zippy="quantity"></span>&nbsp;&nbsp;<b><a zippy="plus">+</a></b>  </td>
+                           <td zippy="price" class="text-right"></td>
 
                             <td zippy="amount" class="text-right"></td>
                             <td><a zippy="edit"><i class="fa fa-edit"></i></a></td>

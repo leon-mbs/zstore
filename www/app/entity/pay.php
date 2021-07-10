@@ -15,8 +15,7 @@ class Pay extends \ZCL\DB\Entity
     
     const PAY_CUSTOMER         = 1;   //расчеты  с  контрагентм
     const PAY_BANK             = 1000;   //эквайринг
-    const PAY_BONUS            = 1001;   //бонусы  клиенту
-    
+     
     
     protected function init() {
         $this->pl_id = 0;

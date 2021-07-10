@@ -35,6 +35,7 @@ class UserProfile extends \App\Pages\Base
         $form->add(new TextInput('phone', $this->user->phone));
         $form->add(new TextInput('viber', $this->user->viber));
         $form->add(new CheckBox('hidesidebar', $this->user->hidesidebar));
+        $form->add(new CheckBox('usemobileprinter', $this->user->usemobileprinter));
 
         $form->add(new DropDownChoice('deffirm', \App\Entity\Firm::getList(), $this->user->deffirm));
         $form->add(new DropDownChoice('defstore', \App\Entity\Store::getList(), $this->user->defstore));
@@ -89,10 +90,6 @@ class UserProfile extends \App\Pages\Base
         $form->onSubmit($this, 'onsubmitpass');
         $this->add($form);
 
-        $this->add(new Form('msgform'))->onSubmit($this, 'OnSend');
-        $this->msgform->add(new TextArea('msgtext'));
-        $this->msgform->add(new DropDownChoice('users', \App\Entity\User::findArray('username', 'disabled <> 1 and user_id <>' . $this->user->user_id, 'username'), 0));
-        $this->msgform->add(new CheckBox('sendall'))->setVisible($this->user->rolename == 'admins');
     }
 
     public function onsubmit($sender) {
@@ -101,6 +98,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->phone = $sender->phone->getText();
         $this->user->viber = $sender->viber->getText();
         $this->user->hidesidebar = $sender->hidesidebar->isChecked() ? 1 : 0;
+        $this->user->usemobileprinter = $sender->usemobileprinter->isChecked() ? 1 : 0;
 
         $this->user->deffirm = $sender->deffirm->getValue();
         $this->user->defstore = $sender->defstore->getValue();
@@ -157,41 +155,5 @@ class UserProfile extends \App\Pages\Base
         $sender->confirmpassword->setText('');
     }
 
-    public function OnSend($sender) {
-        $msg = trim($sender->msgtext->getText());
-
-        if (strlen($msg) == 0) {
-            return;
-        }
-
-
-        $all = $sender->sendall->isChecked();
-
-        $list = array();
-        if ($all) {
-            foreach ($sender->users->getOptionList() as $id => $n) {
-                $list[] = $id;
-            }
-        } else {
-            $id = $sender->users->getValue();
-            if ($id == 0) {
-
-                $this->setError('noselreciever');
-                return;
-            }
-            $list[] = $id;
-        }
-
-
-        foreach ($list as $id) {
-            $n = new \App\Entity\Notify();
-            $n->user_id = $id;
-            $n->message = $msg;
-            $n->sender_name = $this->user->username;
-            $n->save();
-        }
-        $this->setSuccess('sent');
-        $sender->clean();
-    }
-
+ 
 }

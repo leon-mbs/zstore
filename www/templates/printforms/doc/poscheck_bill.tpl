@@ -91,7 +91,7 @@
         <td align="right">{{exchange}}</td>
     </tr>
     {{/prepaid}}
-    <tr style="font-weight: bolder;">
+    <tr  >
         <td colspan="3"><br>{{checkslogan}}</td>
 
     </tr>

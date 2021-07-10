@@ -268,6 +268,9 @@ class Item extends \ZCL\DB\Entity
             }
         }
 
+        
+        //акции
+        
 
         return \App\Helper::fa($price);
     }

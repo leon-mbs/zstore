@@ -553,17 +553,19 @@ class ItemList extends \App\Pages\Base
         $printer = \App\System::getOptions('printer');
         $pwidth = 'style="width:40mm;"';
         $pfs = 'style="font-size:16px;"';
+        $pfsp = 'style="font-size:24px;"';
 
         if (strlen($printer['pwidth']) > 0) {
             $pwidth = 'style="width:' . $printer['pwidth'] . ' ";';
         }
         if (strlen($printer['pfontsize']) > 0) {
             $pfs = 'style="font-size:' . $printer['pfontsize'] . 'px";';
+            $pfsp = 'style="font-size:' . intval(($printer['pfontsize'] *1.5)). 'px";';
         }
 
 
         $report = new \App\Report('item_tag.tpl');
-        $header = array('width' => $pwidth, 'fsize' => $pfs);
+        $header = array('width' => $pwidth, 'fsize' => $pfs, 'fsizep' => $pfsp);
         if ($printer['pname'] == 1) {
 
             if (strlen($item->shortname) > 0) {
@@ -582,6 +584,16 @@ class ItemList extends \App\Pages\Base
             $header['isap'] = true;
         }
 
+        if ($printer['pqrcode'] == 1 && strlen($item->url)>0) {
+             $qrCode = new \Endroid\QrCode\QrCode($item->url);
+             $qrCode->setSize(100);
+             $qrCode->setMargin(5); 
+             $qrCode->setWriterByName('png'); 
+             
+             $dataUri = $qrCode->writeDataUri();
+             $header['qrcode'] = "<img src=\"{$dataUri}\"  />";        
+             
+        }
         if ($printer['pbarcode'] == 1) {
             $barcode = $item->bar_code;
             if (strlen($barcode) == 0) {
@@ -619,7 +631,8 @@ class ItemList extends \App\Pages\Base
         $pwidth =  "width:70mm;";
         $pheight =  "height:40mm;";
         $pfs = 'style="font-size:16px;"';
-
+        $pfs = 'style="font-size:24px;"';
+    
         if (strlen($printer['pwidth']) > 0) {
             $pwidth =  "width:" . $printer['pwidth'] .  ";";
         }
@@ -633,13 +646,14 @@ class ItemList extends \App\Pages\Base
         
         if (strlen($printer['pfontsize']) > 0) {
             $pfs = 'style="font-size:' . $printer['pfontsize'] . 'px";';
-        }
+            $pfsp = 'style="font-size:' . intval(($printer['pfontsize'] *1.5)). 'px";';
+       }
    
         $htmls="";
         
         foreach($items as $item){
             $report = new \App\Report('item_tag.tpl');
-            $header = array('style' => $style, 'fsize' => $pfs);
+            $header = array('style' => $style, 'fsize' => $pfs, 'fsizep' => $pfsp);
             if ($printer['pname'] == 1) {
 
                 if (strlen($item->shortname) > 0) {
@@ -650,14 +664,23 @@ class ItemList extends \App\Pages\Base
             }
             $header['isap'] = false;
             if ($printer['pprice'] == 1) {
-                $header['price'] = number_format($item->getPrice($printer['pricetype']), 2, '.', '');
+                $header['price'] = H::fa($item->getPrice($printer['pricetype']));
                 $header['isap'] = true;
             }
             if ($printer['pcode'] == 1) {
                 $header['article'] = $item->item_code;
                 $header['isap'] = true;
             }
-
+             if ($printer['pqrcode'] == 1 && strlen($item->url)>0) {
+                 $qrCode = new \Endroid\QrCode\QrCode($item->url);
+                 $qrCode->setSize(100);
+                 $qrCode->setMargin(5); 
+                 $qrCode->setWriterByName('png'); 
+                 
+                 $dataUri = $qrCode->writeDataUri();
+                 $header['qrcode'] = "<img src=\"{$dataUri}\"  />";        
+                 
+            }
             if ($printer['pbarcode'] == 1) {
                 $barcode = $item->bar_code;
                 if (strlen($barcode) == 0) {
