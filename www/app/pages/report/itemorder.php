@@ -12,21 +12,21 @@ use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
 
 /**
- * Заказанные товары у  поставщиков
+ * Заказанные покупателями товары
  */
-class CustOrder extends \App\Pages\Base
+class ItemOrder extends \App\Pages\Base
 {
 
     public function __construct() {
         parent::__construct();
 
-        if (false == \App\ACL::checkShowReport('CustOrder')) {
+        if (false == \App\ACL::checkShowReport('ItemOrder')) {
             return;
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
 
-        $where = "status<>1 and customer_id in  (select customer_id from documents_view where meta_name='OrderCust'  and state= " . Document::STATE_INPROCESS . ")";
+        $where = "status<>1 and customer_id in  (select customer_id from documents_view where meta_name='Order'  and (state= " . Document::STATE_INPROCESS . " or state =".Document::STATE_NEW." ) )";
         $this->filter->add(new DropDownChoice('cust', Customer::findArray('customer_name', $where, 'customer_name'), 0));
 
         $this->add(new Panel('detail'))->setVisible(false);
@@ -46,7 +46,7 @@ class CustOrder extends \App\Pages\Base
 
         // \ZippyERP\System\Session::getSession()->storereport = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
         $reportpage = "App/Pages/ShowReport";
-        $reportname = "custorder";
+        $reportname = "itemorder";
 
         $this->detail->word->pagename = $reportpage;
         $this->detail->word->params = array('doc', $reportname);
@@ -64,7 +64,7 @@ class CustOrder extends \App\Pages\Base
 
         $detail = array();
 
-        $where = "   meta_name='OrderCust'  and  state= " . Document::STATE_INPROCESS;
+        $where = "   meta_name='Order'  and  (state= " . Document::STATE_INPROCESS . " or state =".Document::STATE_NEW." )";
         if ($cust > 0) {
             $where .= " and customer_id=" . $cust;
         }
