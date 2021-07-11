@@ -1,4 +1,5 @@
- 
+INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  2, 'Заказаные товары', 'ItemOrder', 'Продажи', 0);
+
    
  ALTER TABLE `users` ADD `lastactive` DATETIME NULL  ;
  
