@@ -30,7 +30,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12 col-lg-8 col-xl-6">
+            <div class="col-12 col-md-10 col-xl-8">
 
 
                 <table class="table   table-sm   ">
@@ -39,6 +39,7 @@
 
                         <th>Дата</th>
                         <th>Документ</th>
+                        <th>Контрагент</th>
                         {{^noshowpartion}}
                         <th class="text-right">Уч. цена</th>
                         {{/noshowpartion}}
@@ -58,6 +59,7 @@
 
                         <td class="text-nowrap" zippy="date"></td>
                         <td zippy="dnumber"></td>
+                        <td zippy="customer_name"></td>
                         {{^noshowpartion}}
                         <td zippy="partion" class="text-right"></td>
                         {{/noshowpartion}}
