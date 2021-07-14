@@ -87,8 +87,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->add(new CheckBox('editnosubs'));
         $this->customerdetail->add(new CheckBox('editdisabled'));
 
-        $this->customerdetail->add(new TextInput('discount'));
-        $this->customerdetail->add(new TextInput('bonus'));
+ 
         $this->customerdetail->add(new TextArea('editcomment'));
         $this->customerdetail->add(new DropDownChoice('editleadsource', Customer::getLeadSources(), "0"));
         $this->customerdetail->add(new DropDownChoice('editleadstatus', Customer::getLeadStatuses(), "0"));
@@ -229,9 +228,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->editaddress->setText($this->_customer->address);
         $this->customerdetail->editcity->setText($this->_customer->city);
         $this->customerdetail->editcountry->setText($this->_customer->country);
-        $this->customerdetail->discount->setText($this->_customer->discount);
-        $this->customerdetail->bonus->setText($this->_customer->bonus);
-        $this->customerdetail->editcomment->setText($this->_customer->comment);
+         $this->customerdetail->editcomment->setText($this->_customer->comment);
         $this->customerdetail->edittype->setValue($this->_customer->type);
 
         $this->customerdetail->editleadsource->setValue($this->_customer->leadsource);
@@ -286,9 +283,7 @@ class CustomerList extends \App\Pages\Base
         $this->_customer->address = $this->customerdetail->editaddress->getText();
         $this->_customer->city = $this->customerdetail->editcity->getText();
         $this->_customer->country = $this->customerdetail->editcountry->getText();
-        $this->_customer->discount = $this->customerdetail->discount->getText();
-        $this->_customer->bonus = $this->customerdetail->bonus->getText();
-        $this->_customer->comment = $this->customerdetail->editcomment->getText();
+         $this->_customer->comment = $this->customerdetail->editcomment->getText();
         $this->_customer->type = $this->customerdetail->edittype->getValue();
         $this->_customer->holding = $this->customerdetail->editholding->getValue();
         $this->_customer->holding_name = $this->customerdetail->editholding->getValueName();

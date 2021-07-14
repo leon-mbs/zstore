@@ -12,7 +12,7 @@ use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
 
 /**
- * Заказанные товары у  поставщиков
+ * Заказанные товары
  */
 class CustOrder extends \App\Pages\Base
 {
@@ -46,7 +46,7 @@ class CustOrder extends \App\Pages\Base
 
         // \ZippyERP\System\Session::getSession()->storereport = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
         $reportpage = "App/Pages/ShowReport";
-        $reportname = "custorder";
+        $reportname = "emptask";
 
         $this->detail->word->pagename = $reportpage;
         $this->detail->word->params = array('doc', $reportname);
@@ -79,12 +79,12 @@ class CustOrder extends \App\Pages\Base
                     $items[$item->itemname] = array('itemname' => $item->itemname, 'msr' => $item->msr, 'qty' => 0);
                 }
                 $items[$item->itemname]['qty'] += $item->quantity;
-                $total += ($item->price * $item->quantity);
+                $total += $item->amount;
             }
         }
 
         $names = array_keys($items);
-        sort($names);  //сортируем по  алфавиту
+        sort($names);  //соартируем по  алфавиту
 
         foreach ($names as $name) {
             $item = $items[$name];
@@ -100,7 +100,7 @@ class CustOrder extends \App\Pages\Base
             'date'          => \App\Helper::fd(time()),
             'customer_name' => $this->filter->cust->getValueName()
         );
-        $report = new \App\Report('report/itemorder.tpl');
+        $report = new \App\Report('report/custorder.tpl');
 
         $html = $report->generate($header);
 

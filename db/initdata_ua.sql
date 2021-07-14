@@ -92,4 +92,6 @@ INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `men
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(96, 5, 'АРМ кухнi (бару)', 'ArmProdFood', 'Кафе', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(97, 3, 'Прибутки та  видатки', 'IOState', '', 0);
 INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  2, 'Замовленi товари', 'ItemOrder', 'Продажі', 0);
+INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 5, 'Знижки та  акції', 'Discounts', '', 0);
+
 
