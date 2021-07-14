@@ -1,5 +1,5 @@
- INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  2, 'Заказаные товары', 'ItemOrder', 'Продажи', 0);
- INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 5, 'Скидки и акции', 'Discounts', '', 0);
+ INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  2, 'Р—Р°РєР°Р·Р°РЅС‹Рµ С‚РѕРІР°СЂС‹', 'ItemOrder', 'Р—Р°РєСѓРїРєРё', 0);
+ INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 5, 'РЎРєРёРґРєРё Рё Р°РєС†РёРё', 'Discounts', '', 0);
 
    
  ALTER TABLE `users` ADD `lastactive` DATETIME NULL  ;
