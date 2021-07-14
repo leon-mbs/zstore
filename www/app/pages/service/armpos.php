@@ -612,6 +612,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->total->setText(H::fa($total));
         $this->docpanel->form3->total2->setText(H::fa($total));
         $this->docpanel->form3->payamount->setText(H::fa($total));
+        $this->docpanel->form3->payed->setText(H::fa($total));
     }
 
     public function OnChangeItem($sender) {

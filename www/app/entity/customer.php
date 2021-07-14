@@ -31,7 +31,7 @@ class Customer extends \ZCL\DB\Entity
         //упаковываем  данные в detail
         $this->detail = "<detail><code>{$this->code}</code>";
         $this->detail .= "<discount>{$this->discount}</discount>";
-        $this->detail .= "<bonus>{$this->bonus}</bonus>";
+        
         $this->detail .= "<type>{$this->type}</type>";
         $this->detail .= "<fromlead>{$this->fromlead}</fromlead>";
         $this->detail .= "<jurid>{$this->jurid}</jurid>";
@@ -56,7 +56,7 @@ class Customer extends \ZCL\DB\Entity
         $xml = simplexml_load_string($this->detail);
 
         $this->discount = doubleval($xml->discount[0]);
-        $this->bonus = (int)($xml->bonus[0]);
+
         $this->type = (int)($xml->type[0]);
         $this->jurid = (int)($xml->jurid[0]);
         $this->shopcust_id = (int)($xml->shopcust_id[0]);

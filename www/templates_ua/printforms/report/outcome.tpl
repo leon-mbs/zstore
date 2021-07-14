@@ -178,7 +178,7 @@
 {{#_type6}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="5">
-        Продажi по копманiях <br> <br>
+        Продажi по компанiях <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
