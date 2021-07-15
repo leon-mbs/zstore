@@ -80,9 +80,7 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('cat_name', $item->cat_name));
 
         $plist = array();
-
  
-
         $row->add(new Label('iprice1', H::fa($item->getPrice('price1', $store))));
         $row->add(new Label('iprice2', H::fa($item->getPrice('price2', $store))));
         $row->add(new Label('iprice3', H::fa($item->getPrice('price3', $store))));
