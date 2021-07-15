@@ -3,7 +3,63 @@
 
     </head>
     <body>
-        <h3>  Скидки и акции</h3>
-  
+        
+       
+        <div class="row">
+
+
+            <div class="col-12  col-xl-10   ">
+             <h3>  Скидки и акции</h3>
+
+                <div class="mt-1" style="font-size: 1.5rem">
+                    <a zippy="tabo"><span class="{{{tabobadge}}}">  Общие  настройки</span> </a> &nbsp;&nbsp;
+                    <a zippy="tabc"><span class="{{{tabcbadge}}}">  Контрагенты   </span> </a>
+                    <a zippy="tabg"><span class="{{{tabgbadge}}}">  Категории   </span> </a>
+                    <a zippy="tabi"><span class="{{{tabibadge}}}">  Товары   </span> </a>
+                    <a zippy="tabs"><span class="{{{tabsbadge}}}">  Услуги, работы   </span> </a>
+                    
+
+                </div>
+               <div zippy="otab">
+                   <form zippy="commonform">
+                            <div class="form-group">
+                                <label for="firstbay">Скидка на первую  покупку, % от суммы</label>
+                                <input zippy="firstbay"  pattern="[0-9\.]+" style="width:100px"  class="form-control" type="text">
+                            </div>
+                            <div class="form-group">
+                                <label for="bonus1">Бонусы от суммы покупки больше 0,%</label>
+                                <input zippy="bonus1" style="width:100px" pattern="[0-9\.]+"                                       class="form-control" type="text">
+                            </div>
+                            <div class="form-group">
+                                <label for="level2">Если сумма больше</label>
+                                <input zippy="level2" style="width:100px" pattern="[0-9\.]+"                                       class="form-control" type="text">
+                                <small>Второй уровень</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="bonus2">Бонусы,%</label>
+                                <input zippy="bonus2" style="width:100px" pattern="[0-9\.]+"                                       class="form-control" type="text">
+                            </div>
+ 
+                            <div class="form-group">
+                                <button class="btn btn-primary" type="submit">Сохранить</button>
+                            </div>
+                        </form>
+               </div>
+               <div zippy="ctab">
+
+               </div>
+               <div zippy="gtab">
+
+               </div>
+              <div zippy="itab">
+
+               </div>
+               <div zippy="stab">
+
+               </div>
+                
+           </div>
+
+        </div>                
 </body>
 </html>
