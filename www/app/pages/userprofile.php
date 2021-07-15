@@ -138,7 +138,8 @@ class UserProfile extends \App\Pages\Base
             $this->user->userpass = (\password_hash($pass, PASSWORD_DEFAULT));
             $this->user->save();
             $this->setSuccess('saved');
-        }
+            System::setUser($this->user);
+       }
 
         if ($this->user->userlogin != 'admin') {
             $admin = \App\Entity\User::getByLogin('admin');
