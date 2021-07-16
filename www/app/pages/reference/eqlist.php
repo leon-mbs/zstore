@@ -107,7 +107,7 @@ class EqList extends \App\Pages\Base
 
                     $it = new \App\DataItem(array(
                         "usetask"  => $task->document_number,
-                        "useplace" => $eq->eq_name
+                        "useplace" => $task->headerdata['pareaname']
                     ));
                     $this->_uselist[] = $it;
                 }
