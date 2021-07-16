@@ -6,9 +6,7 @@
         
        
         <div class="row">
-
-
-            <div class="col-12  col-xl-10   ">
+             <div class="col-12    ">
              <h3>  Скидки и акции</h3>
 
                 <div class="mt-1" style="font-size: 1.5rem">
@@ -21,6 +19,10 @@
 
                 </div>
                <div zippy="otab">
+                  
+                  <div class="row">
+                   <div class="col-12 col-md-4 col-xl-3   ">
+                    <h4> Общие настройки</h4>
                    <form zippy="commonform">
                             <div class="form-group">
                                 <label for="firstbay">Скидка на первую  покупку, % от суммы</label>
@@ -44,9 +46,45 @@
                                 <button class="btn btn-primary" type="submit">Сохранить</button>
                             </div>
                         </form>
-               </div>
+                    </div>
+                   </div>
+                  </div>
                <div zippy="ctab">
+                <div class="row">
+                   <div class="col-12 col-md-8 col-xl-6   ">
+                       <h4> Покупатели</h4>
+                       <div class="navbar nav  ">
+                            <form zippy="cfilter" class="form-inline ">
 
+                                <label for="csearchkey">Поиск</label>
+                                <input class="form-control mr-sm-2" type="text" zippy="csearchkey">
+                              
+                                <input class="btn btn-outline-success   " type="submit" value="ОК"  >
+
+                            </form> 
+                       </div>
+                        <div zippy="clistpan">
+                            <small> <i class="fa fa-exclamation-triangle"/> Если задана  постоянная скидка  остальные  скидки и акции игнорируются </small> 
+                             <table class="table    table-sm mt-2">
+                                <tr>
+                               <th ><a  >Имя</a> </th>
+                               <th ><a  >Тел.</a> </th>
+                               <th ><a   class="text-right">Скидка,%</a> </th>
+                               <th ><a   class="text-right">Бонусы</a> </th>
+                               <th >   </th>
+                                </tr>
+                                <tr  zippy="clist">
+                                  <td zippy="cname"></td>
+                                  <td zippy="cphone"></td>
+                                  <td zippy="cdisc"  class="text-right"></td>
+                                  <td zippy="cbonus"  class="text-right"></td>
+                                  <td  ><a zippy="cedit"><i class="fa fa-edit"/></a></td>
+                                </tr>
+                                </table>
+                               <div zippy="cpag"></div>
+                           </div>
+                     
+                   </div>
                </div>
                <div zippy="gtab">
 
