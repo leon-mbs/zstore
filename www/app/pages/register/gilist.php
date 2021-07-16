@@ -62,6 +62,7 @@ class GIList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bsend'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bdevivered'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bgi'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bgar'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bret'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bnp'))->onClick($this, 'npshowOnSubmit');
@@ -211,6 +212,10 @@ class GIList extends \App\Pages\Base
 
             App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
         }
+       if ($sender->id == "bgi") {
+
+            App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
+        }
 
         if ($sender->id == "bgar") {
             App::Redirect("\\App\\Pages\\Doc\\Warranty", 0, $this->_doc->document_id);
@@ -230,6 +235,7 @@ class GIList extends \App\Pages\Base
 
         $this->statuspan->statusform->bdevivered->setVisible(true);
         $this->statuspan->statusform->bttn->setVisible(true);
+        $this->statuspan->statusform->bgi->setVisible(true);
         $this->statuspan->statusform->bret->setVisible(true);
         $this->statuspan->statusform->bsend->setVisible(true);
         $this->statuspan->statusform->bgar->setVisible(true);
@@ -275,19 +281,23 @@ class GIList extends \App\Pages\Base
             }
 
             $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->bgi->setVisible(false);
         }
         if ($this->_doc->meta_name == 'TTN' && $this->_doc->state == Document::STATE_READYTOSHIP) {
             $this->statuspan->statusform->bnp->setVisible(true);
+            $this->statuspan->statusform->bgi->setVisible(false);
         }
 
         if ($this->_doc->meta_name == 'GoodsIssue') {
 
             $this->statuspan->statusform->bdevivered->setVisible(false);
             $this->statuspan->statusform->ship_number->setVisible(false);
+            $this->statuspan->statusform->bgi->setVisible(false);
         }
         if ($this->_doc->meta_name == 'POSCheck') {
             $this->statuspan->statusform->bdevivered->setVisible(false);
             $this->statuspan->statusform->ship_number->setVisible(false);
+            $this->statuspan->statusform->bgi->setVisible(false);
         }
         if ($this->_doc->meta_name == 'Invoice') {
 
@@ -295,6 +305,7 @@ class GIList extends \App\Pages\Base
             $this->statuspan->statusform->bdevivered->setVisible(false);
             $this->statuspan->statusform->bret->setVisible(false);
             $this->statuspan->statusform->bgar->setVisible(false);
+            $this->statuspan->statusform->bgi->setVisible(true);
         }
         if ($this->_doc->meta_name == 'ReturnIssue') {
 
@@ -303,11 +314,13 @@ class GIList extends \App\Pages\Base
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bret->setVisible(false);
             $this->statuspan->statusform->bgar->setVisible(false);
+            $this->statuspan->statusform->bgi->setVisible(false);
         }
 
         if ($this->_doc->meta_name == 'TTN' && $this->_doc->state != Document::STATE_DELIVERED) {
             $this->statuspan->statusform->ship_number->setVisible(true);
             $this->statuspan->statusform->bdecl->setVisible(true);
+            $this->statuspan->statusform->bgi->setVisible(false);
         }
     }
 
