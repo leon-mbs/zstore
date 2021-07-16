@@ -3,7 +3,8 @@
 namespace App\Pages\Service;
 
 use App\Entity\Customer;
-use App\Entity\Doc\Document;
+ 
+use App\Entity\Category;
 use App\Entity\Item;
 use App\Entity\Service;
 use App\Helper as H;
@@ -58,6 +59,18 @@ class Discounts extends \App\Pages\Base
         $form->add(new  TextInput("level2",$disc["level2"])) ;
         $form->add(new  TextInput("bonus2",$disc["bonus2"])) ;
         
+        //покупатели
+        $this->ctab->add(new Form('cfilter'))->onSubmit($this, 'OnCSearch');
+        $this->ctab->cfilter->add(new TextInput('csearchkey'));
+      
+        $this->ctab->add(new  Panel("clistpan"));
+           
+        $this->ctab->clistpan->add(new DataView('clist', new DiscCustomerDataSource($this), $this, 'customerlistOnRow'));
+        $this->ctab->clistpan->clist->setPageSize(H::getPG());
+        $this->ctab->clistpan->add(new \Zippy\Html\DataList\Paginator('cpag', $this->ctab->clistpan->clist));
+
+        $this->ctab->clistpan->clist->Reload();
+       
         
      }
      
@@ -75,6 +88,7 @@ class Discounts extends \App\Pages\Base
         
    }
    
+
    public function onTab($sender) {
 
         $this->_tvars['tabcbadge'] = $sender->id == 'tabc' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
@@ -90,5 +104,57 @@ class Discounts extends \App\Pages\Base
         $this->stab->setVisible($sender->id == 'tabs');
         
     }
+  
+   public function OnCSearch($sender) { 
+      $this->ctab->clistpan->clist->Reload();
      
+   } 
+   public function customerlistOnRow($row) {  
+       $c = $row->getDataItem();   
+       $row->add(new  Label("cname",$c->customer_name)) ;
+       $row->add(new  Label("cphone",$c->phone)) ;
+       $row->add(new  Label("cbonus",$c->bonus == "0" ? "":$c->bonus)) ;
+       $row->add(new  Label("cdisc",$c->discount == "0" ? "":$c->discount)) ;
+       
+   }
+     
+}
+
+class DiscCustomerDataSource implements \Zippy\Interfaces\DataSource
+{
+
+    private $page;
+
+    public function __construct($page) {
+        $this->page = $page;
+    }
+
+    private function getWhere() {
+ 
+        $conn = \ZDB\DB::getConnect();
+
+        $search = trim($this->page->ctab->cfilter->csearchkey->getText());
+        $where = "status = 0 and detail not like '%<type>2</type>%' and detail not like '%<isholding>1</isholding>%'     ";
+     
+        if (strlen($search) > 0) {
+            $search = Customer::qstr('%' . $search . '%');
+            $where .= " and (customer_name like  {$search} or phone like {$search} or email like {$search}    )";
+        }     
+        
+        return $where;
+    }
+
+    public function getItemCount() {
+        return Customer::findCnt($this->getWhere());
+    }
+
+    public function getItems($start, $count, $sortfield = null, $asc = null) {
+
+        return Customer::find($this->getWhere(), $sortfield . " " . $asc, $count, $start, "*, coalesce(  (select  count(*) from  documents where  documents.customer_id= customers_view.customer_id and documents.state>3 ),0)  as bonus");
+    }
+
+    public function getItem($id) {
+
+    }
+
 }
