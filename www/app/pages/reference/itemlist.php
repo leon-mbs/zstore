@@ -673,12 +673,12 @@ class ItemList extends \App\Pages\Base
             }
              if ($printer['pqrcode'] == 1 && strlen($item->url)>0) {
                  $qrCode = new \Endroid\QrCode\QrCode($item->url);
-                 $qrCode->setSize(100);
+                 $qrCode->setSize(500);
                  $qrCode->setMargin(5); 
                  $qrCode->setWriterByName('png'); 
                  
                  $dataUri = $qrCode->writeDataUri();
-                 $header['qrcode'] = "<img src=\"{$dataUri}\"  />";        
+                 $header['qrcode'] = "<img style=\"width:100px\" src=\"{$dataUri}\"  />";        
                  
             }
             if ($printer['pbarcode'] == 1) {
