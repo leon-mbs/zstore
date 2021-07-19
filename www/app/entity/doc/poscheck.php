@@ -105,12 +105,19 @@ class POSCheck extends Document
             );
         }
         $common =  System::getOptions('common');
+        $printer =  System::getOptions('printer');
+        $pfs="";
+        if (strlen($printer['pdocfontsize']) > 0) {
+            $pfs = 'style="font-size:' . $printer['pdocfontsize'] . 'px";';
+            
+        }
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
-                        "username"        =>  System::getUser()->username,
+                         "fsize"          =>  $pfs,
+                       "username"         =>  System::getUser()->username,
                         "firm_name"       => $firm["firm_name"],
                         "shopname"        => strlen($common["shopname"]) > 0 ? $common["shopname"] : false,
                         "address"         => $firm["address"],
