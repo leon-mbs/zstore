@@ -900,7 +900,7 @@ class Document extends \ZCL\DB\Entity
          $qrCode->setWriterByName('png'); 
          
          $dataUri = $qrCode->writeDataUri();
-         $img = "<img src=\"{$dataUri}\"  />";
+         $img = "<img   src=\"{$dataUri}\"  />";
 
          return $img;
    }
