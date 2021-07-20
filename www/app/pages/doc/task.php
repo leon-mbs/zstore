@@ -16,6 +16,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\Date;
 use Zippy\Html\Form\AutocompleteTextInput;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
@@ -42,7 +43,8 @@ class Task extends \App\Pages\Base
 
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
-        $this->docform->add(new \ZCL\BT\DateTimePicker('document_date'))->setDate(time());
+        $this->docform->add(new Date('document_date'))->setDate(time());
+        $this->docform->add(new \App\Time('document_time'))->setDateTime(time());
 
         $this->docform->add(new TextArea('notes'));
         $this->docform->add(new TextInput('taskhours', "0"));
@@ -98,6 +100,7 @@ class Task extends \App\Pages\Base
             $this->docform->customer->setText($this->_doc->customer_name);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
+            $this->docform->document_time->setDateTime($this->_doc->headerdata['start']);
             $this->docform->parea->setValue($this->_doc->headerdata['parea']);
 
             $this->_servicelist = $this->_doc->unpackDetails('detaildata');
@@ -109,7 +112,8 @@ class Task extends \App\Pages\Base
             $this->docform->document_date->setDate(time());
             if ($date > 0) { //с календаря
                 $this->docform->document_date->setDate($date);
-                $this->docform->taskhours->setText(7);
+                $this->docform->document_time->setDateTime($date);
+                $this->docform->taskhours->setText(8);
             }
             $this->docform->document_number->setText($this->_doc->nextNumber());
             if ($basedocid > 0) { //создание на  основании
@@ -428,9 +432,10 @@ class Task extends \App\Pages\Base
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
 
+        
         $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
         $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
-        $this->_doc->headerdata['start'] = $this->_doc->document_date;
+        $this->_doc->headerdata['start'] = $this->docform->document_time->getDateTime($this->_doc->document_date);;
         $this->_doc->headerdata['taskhours'] = $this->docform->taskhours->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->customer_id = $this->docform->customer->getKey();

@@ -7,6 +7,7 @@ use \Zippy\Event;
 use \Zippy\Interfaces\ChangeListener;
 use \Zippy\Interfaces\EventReceiver;
 use \Zippy\Interfaces\Requestable;
+use \Zippy\Html\Form\TextInput;
 
 /**
  * Компонент  тэга  &lt;input type=&quot;time&quot;&gt; 
