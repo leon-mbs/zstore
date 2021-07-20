@@ -34,7 +34,7 @@
                 </form>
             </div>
             <div class="w-100"></div>
-            <div class="col-12 col-md-8   col-xl-6">
+            <div class="col-12 col-md-8   col-xl-7">
                 <form zippy="orderform" method="post">
                     <div class="form-group  row">
                        
@@ -81,10 +81,14 @@
                     </div>
                     <div class="form-group  row">
                       
-                      <label class="col-5 col-form-label" for="time" >Время доставки</label>
+                      <label class="col-5 col-form-label" for="deltime" >Время доставки</label>
                        
                        <div class="col-7">
-                         <input  style="width:200px" zippy="time" class="form-control">
+                         <div class="input-group">
+                         <input   class="form-control"   zippy="deldate" required="required">
+                           <span class="input-group-text">:</span>
+                         <input    class="form-control"   zippy="deltime" required="required">
+                       </div>
                        </div>
                     </div>
 

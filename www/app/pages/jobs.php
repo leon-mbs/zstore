@@ -13,9 +13,10 @@ use Zippy\Html\Form\Button;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Date;
 use Zippy\Html\Panel;
 use Zippy\Html\Label;
-use Zippy\Html\Form\Date;
+
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\RedirectLink;
  
@@ -47,7 +48,8 @@ class Jobs extends \App\Pages\Base
         
         $this->add(new  Form('addeventform'))->setVisible(false); 
         $this->addeventform->onSubmit($this, 'onSave');
-        $this->addeventform->add(new \ZCL\BT\DateTimePicker('addeventdate', time()));
+        $this->addeventform->add(new Date('addeventdate', time()));
+        $this->addeventform->add(new \App\Time('addeventtime', time()));
         $this->addeventform->add(new TextInput('addeventtitle'));
         $this->addeventform->add(new TextArea('addeventdesc'));
         $this->addeventform->add(new DropDownChoice('addeventnotify', array(1 => "1 час", 2 => "2 часа", 4 => "4 часа", 8 => "8 часов", 16 => "16 часов", 24 => "24 часа"), 0));
@@ -55,7 +57,8 @@ class Jobs extends \App\Pages\Base
        
         $this->add(new  Form('editeventform'))->setVisible(false); 
         $this->editeventform->onSubmit($this, 'onSaveEdited');
-        $this->editeventform->add(new \ZCL\BT\DateTimePicker('editeventdate', time()));
+        $this->editeventform->add(new Date('editeventdate', time()));
+        $this->editeventform->add(new \App\Time('editeventtime', time()));
         $this->editeventform->add(new TextInput('editeventtitle'));
         $this->editeventform->add(new TextArea('editeventdesc'));
         
@@ -120,6 +123,7 @@ class Jobs extends \App\Pages\Base
       $this->addeventform->setVisible(true) ;   
       $this->addeventform->clean() ;   
       $this->addeventform->addeventdate->setDate(time()) ;   
+      $this->addeventform->addeventtime->setDateTime(time()) ;   
         
         
         
@@ -130,6 +134,7 @@ class Jobs extends \App\Pages\Base
         $event->title = $this->addeventform->addeventtitle->getText();
         $event->description = $this->addeventform->addeventdesc->getText();
         $event->eventdate = $this->addeventform->addeventdate->getDate();
+        $event->eventdate = $this->addeventform->addeventtime->getDateTime($event->eventdate);
         $event->user_id = System::getUser()->user_id;
         
 
@@ -160,6 +165,7 @@ class Jobs extends \App\Pages\Base
         $this->editeventform->editeventtitle->setText($this->_event->title);
         $this->editeventform->editeventdesc->setText($this->_event->description);
         $this->editeventform->editeventdate->setDate($this->_event->eventdate);
+        $this->editeventform->editeventtime->setDateTime($this->_event->eventdate);
          
       $this->listpan->setVisible(false) ;   
       $this->editeventform->setVisible(true) ;   
@@ -176,6 +182,7 @@ class Jobs extends \App\Pages\Base
         $this->_event->title = $this->editeventform->editeventtitle->getText();
         $this->_event->description = $this->editeventform->editeventdesc->getText();
         $this->_event->eventdate = $this->editeventform->editeventdate->getDate();
+        $this->_event->eventdate = $this->editeventform->editeventtime->getDateTime($this->_event->eventdate);
          
 
         if (strlen($this->_event->title) == 0) {

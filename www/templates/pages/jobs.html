@@ -50,7 +50,11 @@
      <small>Задачи,  связаные  с  контрагентом  следует задавать из справочника контрагентов</small>
                             <div class="form-group">
                                 <label for="addeventdate">Дата, время</label>
-                                <input class="form-control" zippy="addeventdate">
+                                <div class="input-group">
+                                 <input   class="form-control"   zippy="addeventdate" required="required">
+                                   <span class="input-group-text">:</span>
+                                 <input   class="form-control"   zippy="addeventtime" required="required">
+                               </div>
                             </div>
                             <div class="form-group">
                                 <label for="addeventtitle">Заголовок, тип события</label>
@@ -75,7 +79,13 @@
                         <form zippy="editeventform" >
                             <div class="form-group">
                                 <label for="editeventdate">Дата, время</label>
-                                <input class="form-control" zippy="editeventdate">
+                                
+                              <div class="input-group">
+                                 <input   class="form-control"   zippy="editeventdate" required="required">
+                                   <span class="input-group-text">:</span>
+                                 <input   class="form-control"   zippy="editeventtime" required="required">
+                               </div>
+                                
                             </div>
                             <div class="form-group">
                                 <label for="editeventtitle">Заголовок, тип события</label>
