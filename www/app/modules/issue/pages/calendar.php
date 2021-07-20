@@ -12,6 +12,7 @@ use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\Date;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
@@ -36,7 +37,7 @@ class Calendar extends \App\Pages\Base
         $this->add(new ClickLink('tabs', $this, 'onTab'));
         $this->listpan->add(new Panel('tasktab'))->setVisible(false);
 
-        $this->listpan->tasktab->add(new ClickLink('addtime', $this, 'OnAdd'));
+        $this->listpan->add(new ClickLink('addtime', $this, 'OnAdd'));
 
         $this->listpan->tasktab->add(new DataView('timelist', new EntityDataSource("\\App\\Modules\\Issue\\Entity\\TimeLine", 'user_id=' . $user->user_id, 'id desc'), $this, 'OnTimeRow'));
         $this->listpan->tasktab->add(new \Zippy\Html\DataList\Paginator('pag', $this->listpan->tasktab->timelist));
@@ -51,9 +52,10 @@ class Calendar extends \App\Pages\Base
         $this->add(new Form('editform'))->onSubmit($this, 'OnSave');
         $this->editform->setVisible(false);
         $this->editform->add(new ClickLink('cancel', $this, 'OnCancel'));
-        $this->editform->add(new \ZCL\BT\DateTimePicker('edate', time()));
-        $this->editform->edate->setMinMax(15, 8);
-        $this->editform->add(new TextInput('etime'));
+        $this->editform->add(new Date('edate', time()));
+        $this->editform->add(new \App\Time('etime', time()));
+        
+        $this->editform->add(new TextInput('ehours'));
         $this->editform->add(new TextInput('enotes'));
         $this->editform->add(new DropDownChoice('eproject', Project::findArray('project_name', '', 'project_id desc')))->onChange($this, 'OnProject');
         $this->editform->add(new DropDownChoice('eissue'));
@@ -93,6 +95,8 @@ class Calendar extends \App\Pages\Base
         $this->listpan->setVisible(false);
         $this->editform->setVisible(true);
         $this->_tl = new TimeLine();
+        $this->editform->edate->setDate(time());
+        $this->editform->etime->setDateTime(time());
     }
 
     public function OnDelete($sender) {
@@ -113,8 +117,9 @@ class Calendar extends \App\Pages\Base
         $this->editform->eproject->setValue($this->_tl->project_id);
         $this->OnProject($this->editform->eproject);
         $this->editform->eissue->setValue($this->_tl->issue_id);
-        $this->editform->etime->setValue($this->_tl->duration);
+        $this->editform->ehours->setValue($this->_tl->duration);
         $this->editform->edate->setDate($this->_tl->createdon);
+        $this->editform->etime->setDateTime($this->_tl->createdon);
         $this->editform->enotes->setText($this->_tl->notes);
 
         $this->listpan->setVisible(false);
@@ -126,7 +131,7 @@ class Calendar extends \App\Pages\Base
         $this->editform->setVisible(true);
 
         $issue = $sender->eissue->getValue();
-        $h = $sender->etime->getText();
+        $h = $sender->ehours->getText();
         if ($issue == 0) {
 
             $this->setError('nosetissue');
@@ -143,6 +148,7 @@ class Calendar extends \App\Pages\Base
         $this->_tl->user_id = System::getUser()->user_id;
         $this->_tl->duration = $h;
         $this->_tl->createdon = $sender->edate->getDate();
+        $this->_tl->createdon = $sender->etime->getDateTime($this->_tl->createdon);
         $this->_tl->notes = $sender->enotes->getText();
         $this->_tl->save();
 

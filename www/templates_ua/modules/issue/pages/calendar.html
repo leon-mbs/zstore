@@ -106,11 +106,15 @@
                     </div>
                     <div class="form-group  ">
                         <label for="edate">Дата</label>
-                        <input required="required" style="width:160px;" zippy="edate" class="form-control">
+                        <div class="input-group">
+                         <input   class="form-control"   zippy="edate" required="required">
+                           <span class="input-group-text">:</span>
+                         <input   class="form-control"   zippy="etime" required="required">
+                       </div> 
                     </div>
                     <div class="form-group  ">
-                        <label for="etime">Годин</label>
-                        <input required="required" pattern="[0-9\.]+" style="width:100px;" zippy="etime" class="form-control">
+                        <label for="ehours">Годин</label>
+                        <input required="required" pattern="[0-9\.]+" style="width:100px;" zippy="ehours" class="form-control">
                     </div>
                     <div class="form-group  ">
                         <label for="enotes">Коментар</label>

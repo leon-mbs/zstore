@@ -242,9 +242,13 @@
                       
                       <label   for="time" >Время доставки</label>
                        
+                               
                        
-                       <input  style="width:200px" zippy="time" class="form-control">
-                      
+                   <div class="input-group">
+                         <input   class="form-control"   zippy="dt"  >
+                           <span class="input-group-text">:</span>
+                         <input   zippy="time" class="form-control">
+                       </div>      
                     </div>                        
                         
                         
@@ -342,7 +346,7 @@
 
                         <div zippy="checktext"></div> 
                         <br>
-                        <a onclick=" printpos()"  zippy="btoprint"  class="btn  btn-info">Печать</a>&nbsp;&nbsp;&nbsp;
+                        <a onclick=" printcheck()"  zippy="btoprint"  class="btn  btn-info">Печать</a>&nbsp;&nbsp;&nbsp;
                         <a zippy="bnewcheck"  class="btn  btn-success">Новый заказ</a> &nbsp;&nbsp;&nbsp;
                         
                     </div>
@@ -520,7 +524,7 @@
  
             });
  
-            function printpos() {
+            function printcheck() {
                 $('#checktext').printThis();
             }
             

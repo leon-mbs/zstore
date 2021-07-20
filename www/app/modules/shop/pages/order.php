@@ -10,6 +10,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\Date;
 use Zippy\Html\Image;
 use Zippy\Html\Label;
 
@@ -34,8 +35,9 @@ class Order extends Base
         
         if($this->_tvars["isfood"]) $form->delivery->setValue(Document::DEL_BOY);
         
-        $form->add(new \ZCL\BT\DateTimePicker('time'))->setVisible($this->_tvars["isfood"]);
-        $form->time->setDate(time()+3600);
+        $form->add(new Date('deldate',time()))->setVisible($this->_tvars["isfood"]);
+        $form->add(new \App\Time('deltime',time()+3600))->setVisible($this->_tvars["isfood"]);
+        
         
         $form->add(new TextInput('email'));
         $form->add(new TextInput('phone'));
@@ -96,7 +98,8 @@ class Order extends Base
         }
         $shop = System::getOptions("shop");
 
-        $time = trim($this->orderform->time->getDate());
+        $time = trim($this->orderform->deldate->getDate());
+        $time = trim($this->orderform->deltime->getDateTime($time));
         $email = trim($this->orderform->email->getText());
         $phone = trim($this->orderform->phone->getText());
         $name = trim($this->orderform->name->getText());

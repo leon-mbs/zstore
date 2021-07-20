@@ -12,6 +12,7 @@ use Zippy\Html\Form\Button;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form; 
+use Zippy\Html\Form\Date; 
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
@@ -116,7 +117,8 @@ class CustomerList extends \App\Pages\Base
         $this->contentview->add(new DataView('dw_msglist', new ArrayDataSource(new Bind($this, '_msglist')), $this, 'msgListOnRow'));
 
         $this->contentview->add(new Form('addeventform'))->onSubmit($this, 'OnEventSubmit');
-        $this->contentview->addeventform->add(new \ZCL\BT\DateTimePicker('addeventdate', time()));
+        $this->contentview->addeventform->add(new Date('addeventdate', time()));
+        $this->contentview->addeventform->add(new \App\Time('addeventtime', time()));
         $this->contentview->addeventform->add(new TextInput('addeventtitle'));
         $this->contentview->addeventform->add(new TextArea('addeventdesc'));
 
@@ -489,6 +491,7 @@ class CustomerList extends \App\Pages\Base
         $event->title = $this->contentview->addeventform->addeventtitle->getText();
         $event->description = $this->contentview->addeventform->addeventdesc->getText();
         $event->eventdate = $this->contentview->addeventform->addeventdate->getDate();
+        $event->eventdate = $this->contentview->addeventform->addeventtime->getDateTime($event->eventdate);
         $event->user_id = System::getUser()->user_id;
         $event->customer_id = $this->_customer->customer_id;
 

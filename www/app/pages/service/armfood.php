@@ -135,7 +135,8 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->listsform->add(new Label('totalamount',"0")) ;
         
         $this->docpanel->listsform->add(new TextInput('address')) ;
-        $this->docpanel->listsform->add(new \ZCL\BT\DateTimePicker('time')) ;
+        $this->docpanel->listsform->add(new Date('dt',time())) ;
+        $this->docpanel->listsform->add(new \App\Time('time')) ;
         $this->docpanel->listsform->add(new TextInput('notes')) ;
         $this->docpanel->listsform->add(new TextInput('contact')) ;
         $this->docpanel->listsform->add(new TextInput('table')) ;
@@ -208,7 +209,8 @@ class ARMFood extends \App\Pages\Base
         
         $this->docpanel->listsform->setVisible(true);
         $this->docpanel->listsform->clean();         
-        $this->docpanel->listsform->time->setDate(time()+3600);
+        $this->docpanel->listsform->dt->setDate(time());
+        $this->docpanel->listsform->time->setDateTime(time()+3600);
         $this->docpanel->navform->setVisible(true);
         $this->docpanel->navform->clean();
 
@@ -232,6 +234,7 @@ class ARMFood extends \App\Pages\Base
     public function OnDelivery($sender) {
          $this->docpanel->listsform->contact->setVisible(false) ;
          $this->docpanel->listsform->address->setVisible(false) ;
+         $this->docpanel->listsform->dt->setVisible(false) ;
          $this->docpanel->listsform->time->setVisible(false) ;
          $this->docpanel->listsform->table->setVisible(false) ;
          $this->docpanel->listsform->btopay->setVisible(false) ;
@@ -244,6 +247,7 @@ class ARMFood extends \App\Pages\Base
            if($this->_worktype == 2) $this->docpanel->listsform->btoprod->setVisible(true) ;   
         } 
         if ($sender->getValue() > 0) { 
+           $this->docpanel->listsform->dt->setVisible(true) ; 
            $this->docpanel->listsform->time->setVisible(true) ; 
            $this->docpanel->listsform->btodel->setVisible(true) ; 
            $this->docpanel->listsform->contact->setVisible(true) ; 
@@ -569,7 +573,8 @@ class ARMFood extends \App\Pages\Base
                 $this->OnDelivery($this->docpanel->listsform->delivery);  
                 $this->docpanel->listsform->address->setText($this->_doc->headerdata['ship_address']) ;
                 $this->docpanel->listsform->contact->setText($this->_doc->headerdata['contact']) ;
-                $this->docpanel->listsform->time->setDate($this->_doc->headerdata['deltime']) ;
+                $this->docpanel->listsform->dt->setDate($this->_doc->headerdata['deltime']) ;
+                $this->docpanel->listsform->time->setDateTime($this->_doc->headerdata['deltime']) ;
                 
             }
             
@@ -637,7 +642,8 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->headerdata['delivery_name'] = $this->docpanel->listsform->delivery->getValueName();
         $this->_doc->headerdata['ship_address'] = trim($this->docpanel->listsform->address->getText());
         $this->_doc->headerdata['contact'] = trim($this->docpanel->listsform->contact->getText());
-        $this->_doc->headerdata['deltime'] = $this->docpanel->listsform->time->getDate();
+        $dt = $this->docpanel->listsform->dt->getDate() ;
+        $this->_doc->headerdata['deltime'] = $this->docpanel->listsform->time->getDateTime($dt);
         if($this->_doc->headerdata['delivery']>1 && $this->_doc->headerdata['ship_address']=="") {
              $this->setError('enteraddress'); 
              return;
