@@ -72,7 +72,7 @@ class TimeSheet extends \App\Pages\Base
         $tagen->add(new DataView('llist', new ArrayDataSource($this, '_list'), $this, 'listOnRow'));
         $tstat->add(new DataView('lstat', new ArrayDataSource($this, '_stat'), $this, 'statOnRow'));
 
-        $tcal->add(new \App\Calendar('calendar'))->setEvent($this, 'OnCal');
+        $tcal->add(new \App\Calendar('calendar',$this->lang))->setEvent($this, 'OnCal');
 
         $this->add(new Form('editform'))->onSubmit($this, 'timeOnSubmit');
         $this->editform->setVisible(false);

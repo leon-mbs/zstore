@@ -5,23 +5,21 @@ namespace App;
 class Calendar extends \Zippy\Html\HtmlComponent implements \Zippy\Interfaces\Requestable, \Zippy\Interfaces\AjaxRender
 {
 
+    private $lang='ru';
     private $event = null;
     private $data  = array();
     private $view  = 'dayGridMonth';
 
-    public function __construct($id) {
+    public function __construct($id,$lang='ru') {
         parent::__construct($id);
         $this->view = 'dayGridMonth';
+        $this->lang = $lang;
     }
 
     public final function RenderImpl() {
-        global $_config;
+       
         $id = $this->getAttribute('id');
         $url = $this->owner->getURLNode() . "::" . $this->id;
-        $lang = 'ru';
-        if ($_config['common']['lang'] == 'ua') {
-            $lang = 'ua';
-        }
 
         if (count($this->data) > 0) {
             $ev = ",events: [";
@@ -90,7 +88,7 @@ class Calendar extends \Zippy\Html\HtmlComponent implements \Zippy\Interfaces\Re
              getUpdate(url)  ;
 
   } ,        
-         locale: '{$lang}' 
+         locale: '{$this->lang}' 
           {$ev}
         
          
