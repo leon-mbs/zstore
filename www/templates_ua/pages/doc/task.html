@@ -43,11 +43,16 @@
 
                     <div class="form-group">
                         <label for="document_date"> Дата початку</label>
-                        <input minute-step="30" class="form-control" type="text" zippy="document_date" required="required">
+                       <div class="input-group">
+                         <input   class="form-control"   zippy="document_date" required="required">
+                           <span class="input-group-text">:</span>
+                         <input   class="form-control"   zippy="document_time" required="required">
+                       </div>                        
                     </div>
 
                     <div class="form-group">
                         <label for="taskhours">Кіл. годин</label>
+                       
                         <input style="width:100px;" pattern[0-9\.]+ class="form-control" type="text" zippy="taskhours">
                     </div>
 

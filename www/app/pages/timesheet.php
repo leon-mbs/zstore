@@ -78,8 +78,8 @@ class TimeSheet extends \App\Pages\Base
         $this->editform->setVisible(false);
         $this->editform->add(new DropDownChoice('edittype', TimeItem::getTypeTime(), TimeItem::TIME_WORK));
         $this->editform->add(new TextInput('editnote'));
-        $this->editform->add(new TextInput('editfrom'));
-        $this->editform->add(new TextInput('editto'));
+        $this->editform->add(new \App\Time('editfrom'));
+        $this->editform->add(new  \App\Time('editto'));
         $this->editform->add(new TextInput('editbreak'));
         $this->editform->add(new Date('editdate', time()));
         $this->editform->add(new Button('cancel'))->onClick($this, 'onCancel');
