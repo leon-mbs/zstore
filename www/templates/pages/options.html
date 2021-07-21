@@ -272,11 +272,22 @@
                         <h4>Настройка принтера</h4>
                         <small>Настройки узкого принтера для печати чеков и этикеток</small>
                         <form zippy="printer">
-                            <div class="form-group  ">
+                          <div class="form-group">
+                                <label>Параметры для чеков</label>
+                            </div>
+                          <div class="form-group  ">
                                 <label for="pdocfontsize">Размер шрифта</label>
                                 <select style="width:100px" class="form-control" zippy="pdocfontsize">
                                 </select>
-                            </div>           
+                             </div>           
+                             <div class="form-group">
+                                <label for="pdocwidth">Ширина печати</label>
+                                <input style="width:100px" class="form-control" type="text" zippy="pdocwidth">
+                                <small class="form-text text-muted">Например <b>100%</b> или <b>70mm</b> или <b>250px</b> </small>
+                            </div>
+                         <div class="form-group">
+                                <label>Параметры для этикеток и ценников</label>
+                            </div>
                             <div class="form-group">
                                 <label for="pwidth">Ширина печати</label>
                                 <input style="width:100px" class="form-control" type="text" zippy="pwidth">
@@ -292,9 +303,7 @@
                                 <input style="width:100px" class="form-control" type="text" zippy="pmaxname">
                                 
                             </div>
-                            <div class="form-group">
-                                <label>Параметры для этикеток и ценников</label>
-                            </div>
+                         
                             <div class="form-group  ">
                                 <label for="pfontsize">Размер шрифта</label>
                                 <select style="width:100px" class="form-control" zippy="pfontsize">

@@ -1,4 +1,4 @@
-<table class="ctable"  border="0" cellpadding="1" cellspacing="0" {{{printw}}}>
+<table class="ctable"  border="0" cellpadding="1" cellspacing="0" {{{style}}}>
     <tr>
         <td colspan="3">Заказ {{document_number}}</td>
     </tr>
