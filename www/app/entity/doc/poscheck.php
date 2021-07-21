@@ -106,9 +106,9 @@ class POSCheck extends Document
         }
         $common =  System::getOptions('common');
         $printer =  System::getOptions('printer');
-        $pfs="";
-        if (strlen($printer['pdocfontsize']) > 0) {
-            $pfs = 'style="font-size:' . $printer['pdocfontsize'] . 'px";';
+        $style="";
+        if (strlen($printer['pdocfontsize']) > 0 || strlen($printer['pdocwidth']) > 0) {
+            $style = 'style="font-size:' . $printer['pdocfontsize'] . 'px;width:' . $printer['pdocwidth'] . ';"';
             
         }
 
@@ -116,8 +116,8 @@ class POSCheck extends Document
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
-                         "fsize"          =>  $pfs,
-                       "username"         =>  System::getUser()->username,
+                         "style"          =>  $style,
+                        "username"         =>  System::getUser()->username,
                         "firm_name"       => $firm["firm_name"],
                         "shopname"        => strlen($common["shopname"]) > 0 ? $common["shopname"] : false,
                         "address"         => $firm["address"],

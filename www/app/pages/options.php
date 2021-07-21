@@ -142,6 +142,7 @@ class Options extends \App\Pages\Base
         //печать
         $this->add(new Form('printer'))->onSubmit($this, 'savePrinterOnClick');
         $this->printer->add(new TextInput('pwidth'));
+        $this->printer->add(new TextInput('pdocwidth'));
         $this->printer->add(new TextInput('pheight'));
         $this->printer->add(new TextInput('pmaxname'));
         $this->printer->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList()));
@@ -160,6 +161,7 @@ class Options extends \App\Pages\Base
         }
 
         $this->printer->pwidth->setText($printer['pwidth']);
+        $this->printer->pdocwidth->setText($printer['pdocwidth']);
         $this->printer->pheight->setText($printer['pheight']);
         $this->printer->pmaxname->setText($printer['pmaxname']);
         $this->printer->pricetype->setValue($printer['pricetype']);
@@ -313,6 +315,7 @@ class Options extends \App\Pages\Base
         $printer = array();
         $printer['pheight'] = $this->printer->pheight->getText();
         $printer['pwidth'] = $this->printer->pwidth->getText();
+        $printer['pdocwidth'] = $this->printer->pdocwidth->getText();
         $printer['pmaxname'] = $this->printer->pmaxname->getText();
         $printer['pricetype'] = $this->printer->pricetype->getValue();
         $printer['barcodetype'] = $this->printer->barcodetype->getValue();

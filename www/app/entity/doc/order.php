@@ -108,6 +108,12 @@ class Order extends \App\Entity\Doc\Document
         }
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
+         $printer =  System::getOptions('printer');
+        $style="";
+        if (strlen($printer['pdocfontsize']) > 0 || strlen($printer['pdocwidth']) > 0) {
+            $style = 'style="font-size:' . $printer['pdocfontsize'] . 'px;width:' . $printer['pdocwidth'] . ';"';
+            
+        }
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
@@ -115,6 +121,7 @@ class Order extends \App\Entity\Doc\Document
                         "phone"           => $firm["phone"],
                         "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
                         "document_number" => $this->document_number,
+                         "style"          =>  $style,
                         "total"           => H::fa($this->amount)
         );
 
