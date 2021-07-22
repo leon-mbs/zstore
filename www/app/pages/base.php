@@ -161,13 +161,18 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["hideblock"] = false;
 
         //активные   пользователий
-        $this->_tvars["activeusers"] = false;
+        
         $this->_tvars["activeuserscnt"] = 0;
         $this->_tvars["aulist"] = array();
-        if($options['showactiveusers'] == 1) {
-           $this->_tvars["activeusers"]  = true   ;
+          $user->lastactive = time();
+          $user->save();
+             
+           $w = "     TIME_TO_SEC(timediff(now(),lastactive)) <300  ";
+           if($this->branch_id>0){
+             $w .= "  and  employee_id  in (select employee_id from employees where branch_id ={$this->branch_id}) ";  
+           }
            
-           $w = " ( user_id in(select  user_id  from docstatelog where   TIME_TO_SEC(timediff(now(),createdon)) <300 ) or user_id in (select user_id from paylist where    TIME_TO_SEC(timediff(now(),paydate)) <300 ) )";
+           
            $users = \App\Entity\User::findArray('username',$w,'username') ;
            foreach($users as $u){
               $this->_tvars["aulist"][]=array('ausername'=>$u); 
@@ -176,10 +181,10 @@ class Base extends \Zippy\Html\WebPage
            
            $this->_tvars["activeuserscnt"]  = count( $this->_tvars["aulist"]);
              
-        }
+       
         
         
-        $this->generateTosats();
+        $this->generateToasts();
     }
 
     public function LogoutClick($sender) {
@@ -284,7 +289,7 @@ class Base extends \Zippy\Html\WebPage
         $this->goAnkor('dankor');
     }
 
-    private function generateTosats() {
+    private function generateToasts() {
               
 
                   

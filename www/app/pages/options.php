@@ -59,7 +59,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new CheckBox('usebranch'));
         $this->common->add(new CheckBox('usecattree'));
         
-        $this->common->add(new CheckBox('showactiveusers'));
+        
         $this->common->add(new CheckBox('printoutbarcode'));
         $this->common->add(new CheckBox('printoutqrcode'));
         $this->common->add(new CheckBox('allowminus'));
@@ -103,7 +103,7 @@ class Options extends \App\Pages\Base
         $this->common->usesnumber->setChecked($common['usesnumber']);
 
         
-        $this->common->showactiveusers->setChecked($common['showactiveusers']);
+        
         $this->common->printoutbarcode->setChecked($common['printoutbarcode']);
         $this->common->printoutqrcode->setChecked($common['printoutqrcode']);
         $this->common->usecattree->setChecked($common['usecattree']);
@@ -282,7 +282,7 @@ class Options extends \App\Pages\Base
         $common['printoutqrcode'] = $this->common->printoutqrcode->isChecked() ? 1 : 0;
         $common['printoutbarcode'] = $this->common->printoutbarcode->isChecked() ? 1 : 0;
         
-        $common['showactiveusers'] = $this->common->showactiveusers->isChecked() ? 1 : 0;
+        
         $common['usecattree'] = $this->common->usecattree->isChecked() ? 1 : 0;
         $common['usebranch'] = $this->common->usebranch->isChecked() ? 1 : 0;
         $common['noallowfiz'] = $this->common->noallowfiz->isChecked() ? 1 : 0;

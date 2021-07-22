@@ -15,7 +15,8 @@ class Pay extends \ZCL\DB\Entity
     
     const PAY_CUSTOMER         = 1;   //расчеты  с  контрагентм
     const PAY_BANK             = 1000;   //эквайринг
-     
+    const PAY_BONUS             = 1001;   //бонусы
+      
     
     protected function init() {
         $this->pl_id = 0;
@@ -23,25 +24,11 @@ class Pay extends \ZCL\DB\Entity
         $this->paydate = time();
     }
 
-    protected function beforeSave() {
-        parent::beforeSave();
-        //упаковываем  данные в detail
-        $this->detail = "<detail>";
-
-        $this->detail .= "</detail>";
-
-        return true;
-    }
+ 
 
     protected function afterLoad() {
         $this->paydate = strtotime($this->paydate);
-        //распаковываем  данные из detail
-        if (strlen($this->detail) == 0) {
-            return;
-        }
-
-        $xml = simplexml_load_string($this->detail);
-
+    
         parent::afterLoad();
     }
 
@@ -111,6 +98,10 @@ class Pay extends \ZCL\DB\Entity
             
         }
 
+        if($amount>0 ) {
+            self::addBonus($document_id,$amount) ;
+        }
+           
         $conn = \ZDB\DB::getConnect();
 
         $sql = "select coalesce(abs(sum(amount)),0) from paylist where paytype < 1000  and  document_id=" . $document_id;
@@ -142,5 +133,63 @@ class Pay extends \ZCL\DB\Entity
         $pay->save();
     }
 
+    //начисление  (списание)  бонусов
+    public static function addBonus($document_id, $customer_id,  $amount ) {
+        if (0 == (int)$amount) {
+            return;
+        }
+        
+        $disc= \App\System::getOption("discount") ;
+        
+        $c= \App\Entity\Customer::load($customer_id);
+        if($c==null)  return;
+      
+        if (0 >(int)$amount) { //списание
+            $pay = new \App\Entity\Pay();
+         
+            $pay->document_id = $document_id;
+            $pay->bonus =(int) $amount;
+            $pay->paytype = self::PAY_BONUS;
+            $pay->paydate = time();
+     
+            $pay->save();        
+        
+            return;
+        }
+          
+           
+       if(doubleval($c->discount) >0) {
+           return;  
+       } 
+       
+       $conn = \Zdb\DB::getConnect() ;
+       $cnt = (int) $conn->GetOne("select  count(*)  from paylist_view where  customer_id=".$d->customer_id) ;
+       
+       if($cnt==0 && doubleval($disc["firstbay"])>Ю0){   //первая  покупка
+             $bonus = round( $amount * doubleval($disc["firstbay"]/100  );
+       }  else {
+       
+        
+            if($disc["summa1"] >0 && $disc["bonus1"] >0 && $disc["summa1"] < $amount) {
+                $bonus = round( $amount * $disc["bonus1"]/100  );
+            }
+            if($disc["summa2"] >0 && $disc["bonus2"] >0 && $disc["summa2"] < $amount) {
+                $bonus = round( $amount * $disc["bonus2"]/100  );
+            }
+       }
+        
+        if($bonus >0) {
+             
+            
+            $pay = new \App\Entity\Pay();
+         
+            $pay->document_id = $document_id;
+            $pay->bonus =(int) $bonus;
+            $pay->paytype = self::PAY_BONUS;
+            $pay->paydate = time();
+     
+            $pay->save();
+        }
+    }
     
 }
