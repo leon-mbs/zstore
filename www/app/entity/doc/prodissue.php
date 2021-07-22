@@ -62,6 +62,7 @@ class ProdIssue extends Document
             foreach ($listst as $st) {
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
+                $sc->setOutPrice($st->partion);
 
                 $sc->save();
             }

@@ -74,7 +74,7 @@ class Prod extends \App\Pages\Base
         }
 
         $sql = "
-          select i.`itemname`,i.`item_code`,0-sum(e.`quantity`) as qty, 0-sum(e.`amount`) as summa
+          select i.`itemname`,i.`item_code`,0-sum(e.`quantity`) as qty, 0-sum((partion )*quantity) as summa
               from `entrylist_view`  e
 
               join `items` i on e.`item_id` = i.`item_id`
@@ -101,7 +101,7 @@ class Prod extends \App\Pages\Base
         }
 
         $sql = "
-          select i.`itemname`,i.`item_code`,sum(e.`quantity`) as qty, sum(e.`amount`) as summa
+          select i.`itemname`,i.`item_code`,sum(e.`quantity`) as qty, sum((partion  )*quantity) as summa
               from `entrylist_view`  e
 
               join `items` i on e.`item_id` = i.`item_id`

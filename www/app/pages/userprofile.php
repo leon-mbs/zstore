@@ -108,6 +108,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->mainpage = $sender->mainpage->getValue();
 
         if (!$this->isError()) {
+            
             $this->user->save();
             $this->setSuccess('saved');
             System::setUser($this->user);
