@@ -30,7 +30,10 @@ class Customer extends \ZCL\DB\Entity
         parent::beforeSave();
         //упаковываем  данные в detail
         $this->detail = "<detail><code>{$this->code}</code>";
-        $this->detail .= "<discount>{$this->discount}</discount>";
+        if($this->discount>0) {
+           $this->detail .= "<discount>{$this->discount}</discount>";    
+        }
+        
         
         $this->detail .= "<type>{$this->type}</type>";
         $this->detail .= "<fromlead>{$this->fromlead}</fromlead>";
