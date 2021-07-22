@@ -23,6 +23,7 @@ use Zippy\Html\Label;
 use Zippy\Html\Panel;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
+use Zippy\Binding\PropertyBinding as Bind;
 
 /**
  * Скидки и акции
@@ -56,20 +57,22 @@ class Discounts extends \App\Pages\Base
         $form->onSubmit($this,"onCommon") ;
         $form->add(new  TextInput("firstbay",$disc["firstbay"])) ;
         $form->add(new  TextInput("bonus1",$disc["bonus1"])) ;
-        $form->add(new  TextInput("level2",$disc["level2"])) ;
+        $form->add(new  TextInput("summa1",$disc["summa1"])) ;
         $form->add(new  TextInput("bonus2",$disc["bonus2"])) ;
+        $form->add(new  TextInput("summa2",$disc["summa2"])) ;
         
         //покупатели
-        $this->ctab->add(new Form('cfilter'))->onSubmit($this, 'OnCSearch');
-        $this->ctab->cfilter->add(new TextInput('csearchkey'));
+        $this->ctab->add(new Form('cfilter'))->onSubmit($this, 'OnCAdd');
+        $this->ctab->cfilter->add(new AutocompleteTextInput('csearchkey'))->onText($this, 'OnAutoCustomer');
+        $this->ctab->cfilter->add(new TextInput('csearchdisc'));
       
-        $this->ctab->add(new  Panel("clistpan"));
+        $this->ctab->add(new  Form("clistform"))->onSubmit($this, 'OnCSave');
            
-        $this->ctab->clistpan->add(new DataView('clist', new DiscCustomerDataSource($this), $this, 'customerlistOnRow'));
-        $this->ctab->clistpan->clist->setPageSize(H::getPG());
-        $this->ctab->clistpan->add(new \Zippy\Html\DataList\Paginator('cpag', $this->ctab->clistpan->clist));
+        $this->ctab->clistform->add(new DataView('clist', new DiscCustomerDataSource($this), $this, 'customerlistOnRow'));
+        $this->ctab->clistform->clist->setPageSize(H::getPG());
+        $this->ctab->clistform->add(new \Zippy\Html\DataList\Paginator('cpag', $this->ctab->clistform->clist));
 
-        $this->ctab->clistpan->clist->Reload();
+        $this->ctab->clistform->clist->Reload();
        
         
      }
@@ -82,10 +85,11 @@ class Discounts extends \App\Pages\Base
         }
         $disc["firstbay"] =  $sender->firstbay->getText();
         $disc["bonus1"] =  $sender->bonus1->getText();
-        $disc["level2"] =  $sender->level2->getText();
+        $disc["summa1"] =  $sender->summa1->getText();
         $disc["bonus2"] =  $sender->bonus2->getText();
+        $disc["summa2"] =  $sender->summa2->getText();
         System::setOptions("discount",$disc) ;
-        
+        $this->setSuccess('saved') ;
    }
    
 
@@ -105,18 +109,55 @@ class Discounts extends \App\Pages\Base
         
     }
   
-   public function OnCSearch($sender) { 
-      $this->ctab->clistpan->clist->Reload();
+   public function OnCAdd($sender) { 
+       $c= \App\Entity\Customer::load($sender->csearchkey->getKey());
+       if($c==null) return;
+       $d = doubleval($sender->csearchdisc->getText()) ;
+       if($d >0) {
+         $c->discount=$d;
+         $c->save() ;  
+         $this->ctab->clistform->clist->Reload();    
+       }
+       $sender->clean();
      
    } 
    public function customerlistOnRow($row) {  
        $c = $row->getDataItem();   
        $row->add(new  Label("cname",$c->customer_name)) ;
        $row->add(new  Label("cphone",$c->phone)) ;
-       $row->add(new  Label("cbonus",$c->bonus == "0" ? "":$c->bonus)) ;
-       $row->add(new  Label("cdisc",$c->discount == "0" ? "":$c->discount)) ;
+       $row->add(new  TextInput("cdisc" ))->setText( new  Bind($c,"discount") )  ;
+       $row->add(new  ClickLink('сdel'))->onClick($this, 'cdeleteOnClick');
        
    }
+   public function OnCSave($sender) { 
+       $rows=  $this->ctab->clistform->clist->getDataRows() ;
+       foreach($rows as $row) {
+            $c = $row->getDataItem();
+            if( doubleval( $c->discount )>0 ) {
+                $c->save() ;
+            }   else {
+                $c->discount=0;
+                $c->save() ;
+            }
+       }
+       $this->ctab->clistform->clist->Reload();    
+     
+       $this->setSuccess('saved') ;
+      
+   }
+   
+ public function cdeleteOnClick($sender) {
+         $c= $sender->owner->getDataItem();
+         $c->discount=0;
+         $c->save() ;  
+         $this->ctab->clistform->clist->Reload();    
+       
+        
+ }   
+   
+    public function OnAutoCustomer($sender) {
+        return Customer::getList($sender->getText(), 1);
+    }
      
 }
 
@@ -133,13 +174,10 @@ class DiscCustomerDataSource implements \Zippy\Interfaces\DataSource
  
         $conn = \ZDB\DB::getConnect();
 
-        $search = trim($this->page->ctab->cfilter->csearchkey->getText());
+  
         $where = "status = 0 and detail not like '%<type>2</type>%' and detail not like '%<isholding>1</isholding>%'     ";
      
-        if (strlen($search) > 0) {
-            $search = Customer::qstr('%' . $search . '%');
-            $where .= " and (customer_name like  {$search} or phone like {$search} or email like {$search}    )";
-        }     
+        $where .= "   and detail   like  '%<discount>%' ";
         
         return $where;
     }
@@ -150,7 +188,7 @@ class DiscCustomerDataSource implements \Zippy\Interfaces\DataSource
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
-        return Customer::find($this->getWhere(), $sortfield . " " . $asc, $count, $start, "*, coalesce(  (select  count(*) from  documents where  documents.customer_id= customers_view.customer_id and documents.state>3 ),0)  as bonus");
+        return Customer::find($this->getWhere(),   "customer_name "  , $count, $start );
     }
 
     public function getItem($id) {

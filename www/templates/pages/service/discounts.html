@@ -9,39 +9,49 @@
              <div class="col-12    ">
              <h3>  Скидки и акции</h3>
 
-                <div class="mt-1" style="font-size: 1.5rem">
+                <div class="mt-1" style="font-size: 1.5rem"  >
                     <a zippy="tabo"><span class="{{{tabobadge}}}">  Общие  настройки</span> </a> &nbsp;&nbsp;
-                    <a zippy="tabc"><span class="{{{tabcbadge}}}">  Контрагенты   </span> </a>
+                    <a zippy="tabc"><span class="{{{tabcbadge}}}">  Покупатели   </span> </a>
                     <a zippy="tabg"><span class="{{{tabgbadge}}}">  Категории   </span> </a>
                     <a zippy="tabi"><span class="{{{tabibadge}}}">  Товары   </span> </a>
                     <a zippy="tabs"><span class="{{{tabsbadge}}}">  Услуги, работы   </span> </a>
                     
 
-                </div>
-               <div zippy="otab">
+                </div>   <br>
+               <div zippy="otab" >
                   
                   <div class="row">
                    <div class="col-12 col-md-4 col-xl-3   ">
-                    <h4> Общие настройки</h4>
+                    <h3> Общие настройки</h3>
                    <form zippy="commonform">
                             <div class="form-group">
                                 <label for="firstbay">Скидка на первую  покупку, % от суммы</label>
                                 <input zippy="firstbay"  pattern="[0-9\.]+" style="width:100px"  class="form-control" type="text">
                             </div>
                             <div class="form-group">
-                                <label for="bonus1">Бонусы от суммы покупки больше 0,%</label>
-                                <input zippy="bonus1" style="width:100px" pattern="[0-9\.]+"                                       class="form-control" type="text">
+                                <label ><b>Бонусы от суммы покупки</b></label>
+                            </div>
+                           <div class="form-group">
+                                
+                                 <div class="input-group">
+                                 <span class="input-group-text"> Бельше</span>
+                                 <input   class="form-control"   zippy="summa1"   pattern="[0-9]+">
+                                   <span class="input-group-text"> бонус,%</span>
+                                 <input   class="form-control"   zippy="bonus1"   pattern="[0-9\.]+">
+                               </div>      
+                               <small>Первый уровень</small>
                             </div>
                             <div class="form-group">
-                                <label for="level2">Если сумма больше</label>
-                                <input zippy="level2" style="width:100px" pattern="[0-9\.]+"                                       class="form-control" type="text">
+                               <div class="input-group">
+                                 <span class="input-group-text"> Бельше</span>
+                                 <input   class="form-control"   zippy="summa2"   pattern="[0-9]+">
+                                   <span class="input-group-text"> бонус,%</span>
+                                 <input   class="form-control"   zippy="bonus2"   pattern="[0-9\.]+">
+                               </div>      
+
                                 <small>Второй уровень</small>
                             </div>
-                            <div class="form-group">
-                                <label for="bonus2">Бонусы,%</label>
-                                <input zippy="bonus2" style="width:100px" pattern="[0-9\.]+"                                       class="form-control" type="text">
-                            </div>
- 
+                     
                             <div class="form-group">
                                 <button class="btn btn-primary" type="submit">Сохранить</button>
                             </div>
@@ -52,50 +62,53 @@
                <div zippy="ctab">
                 <div class="row">
                    <div class="col-12 col-md-8 col-xl-6   ">
-                       <h4> Покупатели</h4>
+                       <h3> Покупатели</h3>
+                       <small> <i class="fa fa-exclamation-triangle"/> Если задана  постоянная скидка  остальные  скидки и акции игнорируются </small> 
                        <div class="navbar nav  ">
                             <form zippy="cfilter" class="form-inline ">
 
-                                <label for="csearchkey">Поиск</label>
-                                <input class="form-control mr-sm-2" type="text" zippy="csearchkey">
+                                <label for="csearchkey">Имя</label>
+                                <input placeholder="Начните вводить..." class="form-control mr-sm-2" type="text" zippy="csearchkey">
+                                <label for="csearchdisc">скидка,%</label>
+                                <input   class="form-control mr-sm-2" type="text" zippy="csearchdisc" pattern="[0-9\.]+" style="width:50px;">
                               
-                                <input class="btn btn-outline-success   " type="submit" value="ОК"  >
+                                <input class="btn btn-outline-success   " type="submit" value="Добавить"  >
 
                             </form> 
                        </div>
-                        <div zippy="clistpan">
-                            <small> <i class="fa fa-exclamation-triangle"/> Если задана  постоянная скидка  остальные  скидки и акции игнорируются </small> 
+                        <form zippy="clistform">
+                            
                              <table class="table    table-sm mt-2">
                                 <tr>
                                <th >Имя </th>
                                <th >Тел. </th>
-                               <th   class="text-right">Скидка,%</th>
-                               <th   class="text-right">Бонусы</th>
-                               <th >   </th>
+                               <th    >Скидка,%</th>
+                               <th    > </th>
+                        
+                             
                                 </tr>
                                 <tr  zippy="clist">
                                   <td zippy="cname"></td>
                                   <td zippy="cphone"></td>
-                                  <td zippy="cdisc"  class="text-right"></td>
-                                  <td zippy="cbonus"  class="text-right"></td>
-                                  <td  ><a zippy="cedit"><i class="fa fa-edit"/></a></td>
+                                  <td >
+                                  <input style="width:50px;" zippy="cdisc"    pattern="[0-9\.]+">
+                                  </td>
+                                 
+                                  <td  ><a zippy="сdel"><i class="fa fa-trash"/></a></td>
+                                 
                                 </tr>
                                 </table>
+                                <input  type="submit" class="btn  btn-success" value="Сохранить"> 
                                <div zippy="cpag"></div>
-                           </div>
-                       <div zippy="cedit">
-                          <form zippy="cform">
-                          
-                          </form>
+                      </form>
                        
-                       </div>
                    </div>
                </div>
                </div>
                <div zippy="gtab">
                  <div class="row">
                    <div class="col-12 col-md-8 col-xl-6   ">
-                     <h4> Категории</h4>
+                     <h3> Категории</h3>
                          <table class="table    table-sm mt-2">
                            <tr>
                                <th > Наименование </th>
@@ -116,10 +129,10 @@
                 </div>
                </div>
               <div zippy="itab">
-                <h4> Товары</h4>
+                <h3> Товары</h3>
                </div>
                <div zippy="stab">
-                <h4> Услуги</h4>
+                <h3> Услуги</h3>
                </div>
                 
            </div>
