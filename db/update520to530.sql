@@ -3,6 +3,7 @@
 
    
  ALTER TABLE `users` ADD `lastactive` DATETIME NULL  ;
+ ALTER TABLE `services` ADD `category` VARCHAR(255) NULL ;
  
  DROP VIEW users_view  ;
  

@@ -28,6 +28,7 @@ class ServiceList extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new CheckBox('showdis'));
         $this->filter->add(new TextInput('searchkey'));
+        $this->filter->add(new TextInput('searchcat'))->setDataList(Service::getCategoryList());
 
         $this->add(new Panel('servicetable'))->setVisible(true);
         $this->servicetable->add(new DataView('servicelist', new ServiceDataSource($this), $this, 'servicelistOnRow'))->Reload();
@@ -38,6 +39,7 @@ class ServiceList extends \App\Pages\Base
         $this->add(new Form('servicedetail'))->setVisible(false);
         $this->servicedetail->add(new TextInput('editservice_name'));
         $this->servicedetail->add(new TextInput('editprice'));
+        $this->servicedetail->add(new TextInput('editcat'));
         $this->servicedetail->add(new TextInput('editcost'));
         $this->servicedetail->add(new TextInput('edithours'));
         $this->servicedetail->add(new CheckBox('editdisabled'));
@@ -81,6 +83,8 @@ class ServiceList extends \App\Pages\Base
         $this->servicedetail->editcost->setText($this->_service->cost);
         $this->servicedetail->edithours->setText($this->_service->hours);
         $this->servicedetail->editdisabled->setChecked($this->_service->disabled);
+        $this->servicedetail->editcat->setText($this->_service->category);
+        $this->servicedetail->editcat->setDataList(Service::getCategoryList())  ;   
     }
 
     public function addOnClick($sender) {
@@ -88,6 +92,7 @@ class ServiceList extends \App\Pages\Base
         $this->servicedetail->setVisible(true);
         // Очищаем  форму
         $this->servicedetail->clean();
+        $this->servicedetail->editcat->setDataList(Service::getCategoryList())  ;   
 
         $this->_service = new Service();
     }
@@ -99,6 +104,7 @@ class ServiceList extends \App\Pages\Base
 
         $this->_service->service_name = $this->servicedetail->editservice_name->getText();
         $this->_service->price = $this->servicedetail->editprice->getText();
+        $this->_service->category = $this->servicedetail->editcat->getText();
         $this->_service->cost = $this->servicedetail->editcost->getText();
         $this->_service->hours = $this->servicedetail->edithours->getText();
         if ($this->_service->service_name == '') {
@@ -107,10 +113,13 @@ class ServiceList extends \App\Pages\Base
         }
         $this->_service->disabled = $this->servicedetail->editdisabled->isChecked() ? 1 : 0;
 
-        $this->_service->Save();
+        $this->_service->save();
         $this->servicedetail->setVisible(false);
         $this->servicetable->setVisible(true);
         $this->servicetable->servicelist->Reload();
+        
+        $this->filter->searchcat->setDataList(Service::getCategoryList())  ;   
+      
     }
 
     public function cancelOnClick($sender) {
@@ -138,12 +147,17 @@ class ServiceDataSource implements \Zippy\Interfaces\DataSource
         $form = $this->page->filter;
         $where = "1=1";
         $text = trim($form->searchkey->getText());
+        $cat = trim($form->searchcat->getText());
         $showdis = $form->showdis->isChecked();
 
         if ($showdis > 0) {
 
         } else {
             $where = $where . " and disabled <> 1";
+        }
+        if (strlen($cat) > 0) {
+            $cat = Service::qstr('%' . $cat . '%');
+            $where = $where . " and category like {$cat}   ";
         }
         if (strlen($text) > 0) {
             $text = Service::qstr('%' . $text . '%');
