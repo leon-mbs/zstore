@@ -37,6 +37,8 @@ class Service extends \ZCL\DB\Entity
 
         $this->detail .= "</detail>";
 
+        if(strlen( $this->category)==0)   $this->category=null;
+        
         return true;
     }
 
@@ -48,4 +50,11 @@ class Service extends \ZCL\DB\Entity
         return ($cnt > 0) ? \App\Helper::l('nodelservice') : "";
     }
 
+    public static function getCategoryList(){
+       $conn = \Zdb\DB::getConnect() ;
+       
+       $list = $conn->GetCol("select distinct  category from services where  category  is not null order by category ") ;
+       if(is_array($list) )  return $list;
+       return array();
+    }
 }

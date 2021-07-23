@@ -134,15 +134,23 @@ class Pay extends \ZCL\DB\Entity
     }
 
     //начисление  (списание)  бонусов
-    public static function addBonus($document_id, $customer_id,  $amount ) {
+    public static function addBonus($document_id,    $amount ) {
         if (0 == (int)$amount) {
             return;
         }
+        $conn = \Zdb\DB::getConnect() ;
+      
+        $customer_id =  (int) $conn->GetOne("select  customer_id  from  documents where  document_id=".$document_id);
         
-        $disc= \App\System::getOption("discount") ;
-        
-        $c= \App\Entity\Customer::load($customer_id);
+        $c = \App\Entity\Customer::load($customer_id);
         if($c==null)  return;
+
+        $cnt = (int) $conn->GetOne("select  count(*)  from paylist_view where  customer_id=".$customer_id) ;
+        
+  
+       if(doubleval($c->discount) >0) { //если  постоянная скидка бонусы  не  начисляем
+           return;  
+       }   
       
         if (0 >(int)$amount) { //списание
             $pay = new \App\Entity\Pay();
@@ -158,11 +166,10 @@ class Pay extends \ZCL\DB\Entity
         }
           
            
-       if(doubleval($c->discount) >0) {
-           return;  
-       } 
+  
+       $disc= \App\System::getOption("discount") ;
+
        
-       $conn = \Zdb\DB::getConnect() ;
        $cnt = (int) $conn->GetOne("select  count(*)  from paylist_view where  customer_id=".$d->customer_id) ;
        
        if($cnt==0 && doubleval($disc["firstbay"])>Ю0){   //первая  покупка
