@@ -699,6 +699,7 @@ class Helper
         if (isset($labels[$label])) {
             $text = $labels[$label];
             $text = sprintf($text, $p1, $p2, $p3);
+            $text = str_replace("\'","`",$text);
             return $text;
         } else {
             return $label;

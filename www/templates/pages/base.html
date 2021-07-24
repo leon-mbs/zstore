@@ -65,7 +65,7 @@
                         </form>
                     </li>
                     {{/usebranch}}
-                  
+                    {{#showactiveusers}}     
                  <li class="nav-item dropdown">
                     <a title="Активные пользователи" class="nav-link" data-toggle="dropdown" href="#">
                       <i class="fa fa-users"></i>
@@ -79,7 +79,7 @@
                           </table>
                      </div>
                   </li>               
-                    
+                   {{/showactiveusers}}     
                     
                    {{#taskcnt}} 
                     <li class="nav-item  ">
@@ -742,12 +742,18 @@
                                             <p>&nbsp;&nbsp;Подписки</p>
                                         </a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a href="/index.php?p=App/Pages/SystemLog" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>&nbsp;&nbsp;Системный лог</p>
+                                        </a>
+                                    </li>
 
                                 </ul>
 
                             </li>
                             {{/isadmins}}
-                            <li class="nav-item  ">
+                            <li class="nav-item   ">
                                 <a href="https://zippy.com.ua/aboutus#contact" class="nav-link">
                                     <i class="nav-icon fas fa-phone-alt"></i>
                                     <p>

@@ -102,9 +102,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["tecdoc"] = $_config['modules']['tecdoc'] == 1;
         $this->_tvars["ppo"] = $_config['modules']['ppo'] == 1;
         $this->_tvars["np"] = $_config['modules']['np'] == 1;
-        
-       
-
+  
         
         //доступы к  модулям
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
@@ -161,27 +159,28 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["hideblock"] = false;
 
         //активные   пользователий
-        
-        $this->_tvars["activeuserscnt"] = 0;
-        $this->_tvars["aulist"] = array();
-          $user->lastactive = time();
-          $user->save();
-             
-           $w = "     TIME_TO_SEC(timediff(now(),lastactive)) <300  ";
-           if($this->branch_id>0){
-             $w .= "  and  employee_id  in (select employee_id from employees where branch_id ={$this->branch_id}) ";  
-           }
-           
-           
-           $users = \App\Entity\User::findArray('username',$w,'username') ;
-           foreach($users as $u){
-              $this->_tvars["aulist"][]=array('ausername'=>$u); 
-           }    
-           
-           
-           $this->_tvars["activeuserscnt"]  = count( $this->_tvars["aulist"]);
-             
-       
+         if($options['showactiveusers'] == 1) {
+              $this->_tvars["showactiveusers"]  = true   ;
+              $this->_tvars["activeuserscnt"] = 0;
+              $this->_tvars["aulist"] = array();
+              $user->lastactive = time();
+              $user->save();
+                 
+               $w = "     TIME_TO_SEC(timediff(now(),lastactive)) <300  ";
+               if($this->branch_id>0){
+                 $w .= "  and  employee_id  in (select employee_id from employees where branch_id ={$this->branch_id}) ";  
+               }
+               
+               
+               $users = \App\Entity\User::findArray('username',$w,'username') ;
+               foreach($users as $u){
+                  $this->_tvars["aulist"][]=array('ausername'=>$u); 
+               }    
+               
+               
+               $this->_tvars["activeuserscnt"]  = count( $this->_tvars["aulist"]);
+                 
+        }
         
         
         $this->generateToasts();
@@ -310,7 +309,7 @@ class Base extends \Zippy\Html\WebPage
         }
         if($user->userlogin == "admin"){       
             if ($user->userpass == "admin" ||   $user->userpass= '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.') {
-                   $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("nodeadminpass") . "\"");
+                   $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("nodefadminpass") . "\"");
          
             }
         }          

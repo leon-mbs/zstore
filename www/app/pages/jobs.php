@@ -150,7 +150,7 @@ class Jobs extends \App\Pages\Base
             $n->user_id = System::getUser()->user_id;
             $n->dateshow = $event->eventdate - ($nt * 3600);
             $n->message = "<b>" . $event->title . "</b>" . "<br>" . $event->description;
-            
+            $n->sender_id = \App\Entity\Notify::EVENT;      
 
             $n->save();
         }

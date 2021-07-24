@@ -351,7 +351,7 @@ class IssueList extends \App\Pages\Base
             $n->user_id = $u;
             $n->message = H::l('msgtask') . "  #{$this->_issue->issue_id} {$this->_issue->issue_name} ";
             $n->message .= "<br>  <a href=\"/issue/{$this->_issue->issue_id}/{$this->_issue->project_id}/#msgankor\">" . H::l('msgreply') . "</a> ";
-            $n->sender_name = System::getUser()->getUserName();
+            $n->sender_id = System::getUser()->user_id;
             $n->save();
         }
 
@@ -458,7 +458,7 @@ class IssueList extends \App\Pages\Base
             $n->user_id = $this->_issue->user_id;
             $n->message = "  #{$this->_issue->issue_id} {$this->_issue->issue_name} ";
             $n->message .= H::l("isassigned") . "#{$this->_issue->issue_id}  <br>  <a href=\"/issue/{$this->_issue->issue_id}/{$this->_issue->project_id}\">" . H::l("msgopen") . "</a> ";
-            $n->sender_name = System::getUser()->username;
+            $n->sender_id = System::getUser()->user_id;
             $n->save();
         }
     }

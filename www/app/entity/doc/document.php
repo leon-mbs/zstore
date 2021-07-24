@@ -576,10 +576,10 @@ class Document extends \ZCL\DB\Entity
 
         //   if(System::getUser()->userlogin =='admin') return;
         if ($hasExecuted  ) {
-            $admin = \App\Entity\User::getByLogin('admin');
-
+             
             $n = new \App\Entity\Notify();
-            $n->user_id = $admin->user_id;
+            $n->user_id = \App\Entity\Notify::SYSTEM;
+         
             $n->message = Helper::l('deleteddoc', System::getUser()->username, $this->document_number);
             $n->save();
         }

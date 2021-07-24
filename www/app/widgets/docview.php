@@ -281,7 +281,7 @@ class DocView extends \Zippy\Html\PageFragment
             $n->message = "<b>" . H::l("newdoccomment") . ":</b> {$this->_doc->meta_desc} {$this->_doc->document_number}  ";
             $n->message .= "<br> {$msg->message} ";
             $n->message .= "<br>  <a href=\"/index.php?p=App/Pages/Register/DocList&arg={$this->_doc->document_id}\">" . H::l("toanswer") . "</a> ";
-            $n->sender_name = $user->username;
+            $n->sender_id = $user->user_id;
             $n->save();
         }
     }

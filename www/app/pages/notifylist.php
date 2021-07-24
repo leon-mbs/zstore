@@ -20,14 +20,16 @@ class NotifyList extends \App\Pages\Base
 
     public $user = null;
     public $ds;
-
+    private $users;
+    
     public function __construct() {
         parent::__construct();
         $user = System::getUser();
         if ($user->user_id == 0) {
             App::Redirect("\\App\\Pages\\Userlogin");
         }
-
+        $this->users = \App\Entity\User::findArray("username","disabled <>1");
+        
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new TextInput('searchtext'));
 
@@ -52,8 +54,27 @@ class NotifyList extends \App\Pages\Base
     public function OnRow($row) {
         $notify = $row->getDataItem();
 
-        $row->add(new Label("sender"))->setText($notify->sender_name);
-
+        $row->add(new Label("sender")) ;
+        $row->add(new Label("sendericon"))  ;
+        if($notify->sender_id >0)  {
+            $row->sender->setText($this->users[$notify->sender_id]);                             
+            $row->sendericon->setAttribute('class','fa fa-user');                             
+            
+        }
+        if($notify->sender_id == Notify::SYSTEM)  {
+            $row->sender->setText(H::l("systemmsg"));                             
+            $row->sendericon->setAttribute('class','fa fa-cog');                             
+        }
+        if($notify->sender_id == Notify::EVENT)  {
+            $row->sender->setText(H::l("alertmsg"));                             
+            $row->sendericon->setAttribute('class','fa fa-calendar');                             
+        }
+        if($notify->sender_id == Notify::SUBSCRIBE)  {
+            $row->sender->setText(H::l("subsmsg"));                             
+            $row->sendericon->setAttribute('class','fa fa-envelope');                             
+        }
+        
+        
         $row->add(new Label("msg"))->setText($notify->message, true);
         $row->add(new Label("ndate", \App\Helper::fdt($notify->dateshow)));
         $row->add(new Label("newn"))->setVisible($notify->checked == 0);
@@ -65,14 +86,14 @@ class NotifyList extends \App\Pages\Base
         $text = trim($sender->searchtext->getText());
         if (strlen($text)> 0) {
            $text = Notify::qstr('%' . $text . '%');
-           $where=  "(sender_name like {$text} or message like {$text}) and user_id=" . System::getUser()->user_id ;
+           $where=  "(  message like {$text}) and user_id=" . System::getUser()->user_id ;
         }
         
         $this->ds->setWhere($where);
         $this->nlist->Reload();
     }
     
-   public function OnSend($sender) {
+    public function OnSend($sender) {
         $msg = trim($sender->msgtext->getText());
 
         if (strlen($msg) == 0) {
@@ -102,7 +123,7 @@ class NotifyList extends \App\Pages\Base
             $n = new \App\Entity\Notify();
             $n->user_id = $id;
             $n->message = $msg;
-            $n->sender_name = $this->user->username;
+            $n->sender_id = $this->user->user_id;
             $n->save();
         }
         $this->setSuccess('sent');

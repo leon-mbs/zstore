@@ -138,12 +138,18 @@ class UserLogin extends \Zippy\Html\WebPage
             $msg .= '<br>' . $this->loginform->userlogin->getText() . ', ';
             $msg .= $_SERVER['HTTP_HOST'] . ' ' . $_SERVER['SERVER_ADDR'];
             $admin = \App\Entity\User::getByLogin('admin');
+            
             $n = new \App\Entity\Notify();
-            $n->user_id = $admin->user_id;
-
+            $n->user_id = \App\Entity\Notify::SYSTEM;
             $n->dateshow = time();
             $n->message = $msg;
+            $n->save();
 
+            $n = new \App\Entity\Notify();
+            $n->user_id = $admin->user_id;
+            $n->sender_id = \App\Entity\Notify::SYSTEM;
+            $n->dateshow = time();
+            $n->message = $msg;
             $n->save();
 
             $this->setError('invalidloginalert');
