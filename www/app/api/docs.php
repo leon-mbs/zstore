@@ -497,8 +497,10 @@ class docs extends \App\API\Base\JsonRPC
         $admin = \App\Entity\User::getByLogin('admin');
         $n = new \App\Entity\Notify();
         $n->user_id = $admin->user_id;
+        $n->sender_id = $user->user_id;
+        
         $n->dateshow = time();
-        $n->message = H::l("apiasccancel", $user->username, $doc->document_number, $args['reason']);
+        $n->message = H::l("apiasccancel",   $doc->document_number, $args['reason']);
         $n->save();
     }
 

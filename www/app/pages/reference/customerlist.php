@@ -508,7 +508,7 @@ class CustomerList extends \App\Pages\Base
             $n->dateshow = $event->eventdate - ($nt * 3600);
             $n->message = "<b>" . $event->title . "</b>" . "<br>" . $event->description;
             $n->message .= "<br><br><b> Контрагент: </b> {$this->_customer->customer_name} &nbsp;&nbsp; {$this->_customer->phone} ";
-
+            $n->sender_id =  \App\Entity\Notify::EVENT;
             $n->save();
         }
         $this->contentview->addeventform->clean();

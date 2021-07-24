@@ -250,6 +250,7 @@ class Subscribe extends \ZCL\DB\Entity
     public static function sendNotify($user_id, $text) {
         $n = new \App\Entity\Notify();
         $n->user_id = $user_id;
+        $n->sender_id = \App\Entity\Notify::SUBSCRIBE;
         $n->message = $text;
 
         $n->save();

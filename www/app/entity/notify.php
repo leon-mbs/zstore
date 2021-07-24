@@ -9,10 +9,14 @@ namespace App\Entity;
  */
 class Notify extends \ZCL\DB\Entity
 {
-
+   
     const ARMFOODPROD = -1;  //арм  кухни    
     const ARMFOOD = -2;  //арм  кассира кафе    
     const DELIV = -3;  //журнал  доставок
+    const SYSTEM = -4;  //система
+    const EVENT = -5;  //напоминание о событии
+    const CHAT = -6;  //сообщение  в  чат
+    const SUBSCRIBE = -7;  //рассылка
     
     protected function init() {
 

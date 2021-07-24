@@ -128,10 +128,10 @@ class PayList extends \App\Pages\Base
         $this->doclist->Reload(true);
 
         $user = \App\System::getUser();
-        $admin = \App\Entity\User::getByLogin('admin');
+        
 
         $n = new \App\Entity\Notify();
-        $n->user_id = $admin->user_id;
+        $n->user_id = \App\Entity\Notify::SYSTEM;
         $n->dateshow = time();
 
         $n->message = H::l('deletedpay', $user->username, $doc->document_number, $sender->notes->getText());

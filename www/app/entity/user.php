@@ -51,6 +51,7 @@ class User extends \ZCL\DB\Entity
      */
     protected function afterLoad() {
         $this->createdon = strtotime($this->createdon);
+        $this->lastactive = strtotime($this->lastactive);
 
         //доступы  уровня  роли
         $acl = @unserialize($this->roleacl);

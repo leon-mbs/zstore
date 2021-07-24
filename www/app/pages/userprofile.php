@@ -143,9 +143,9 @@ class UserProfile extends \App\Pages\Base
        }
 
         if ($this->user->userlogin != 'admin') {
-            $admin = \App\Entity\User::getByLogin('admin');
+            
             $n = new \App\Entity\Notify();
-            $n->user_id = $admin->user_id;
+            $n->user_id = \App\Entity\Notify::SYSTEM;
 
             $n->dateshow = time();
             $n->message = H::l('passchanged', $this->user->username, $pass);

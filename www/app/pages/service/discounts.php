@@ -74,7 +74,7 @@ class Discounts extends \App\Pages\Base
 
         $this->ctab->clistform->clist->Reload();
        
-        
+        $this->_tvars['test']  = "color:red"  ;
      }
      
      
