@@ -108,24 +108,45 @@
                </div>
                <div zippy="gtab">
                  <div class="row">
-                   <div class="col-12 col-md-8 col-xl-6   ">
+                   <div class="col-12 col-md-10 col-xl-8   ">
                      <h3> Категории</h3>
+                         <div class="navbar nav  ">
+                            <form zippy="gfilter" class="form-inline ">
+
+                                <label for="gsearchkey">Имя</label>
+                                <select   class="form-control select2"   zippy="gsearchkey"></select>
+                                 &nbsp;   &nbsp;
+                                <label for="gsearchdisc">скидка,%</label>
+                                <input   class="form-control mr-sm-2" type="text" zippy="gsearchdisc" pattern="[0-9\.]+" style="width:50px;">
+                                <label for="gsearchfrom">с</label>
+                                <input  class="form-control mr-sm-2"   zippy="gsearchfrom"  style="width:100px;">
+                                <label  for="gsearchto">по</label>
+                                <input  class="form-control mr-sm-2"   zippy="gsearchto" style="width:100px;" >
+                                 
+                                <input class="btn btn-outline-success  ml-2 " type="submit" value="Добавить"  >
+
+                            </form> 
+                       </div>                     
                          <table class="table    table-sm mt-2">
                            <tr>
                                <th > Наименование </th>
-                               <th > Скидка,%</th>
+                               <th style="width:100px"> Скидка,%</th>
                                <th > С</th>
                                <th > По</th>
                                <th >  </th>
                           </tr>
                           <tr  zippy="glist">      
                                <td zippy="gname"></td>               
-                               <td> </td>               
-                               <td> </td>               
-                               <td> </td>               
-                               <td> </td>               
+                                              
+                               <td  class="text-right"> <span class="badge "  zippy="gdisc"></span> </td>               
+                               <td zippy="gfrom"></td>               
+                               <td zippy="gto"></td>               
+                                 
+                               <td  ><a zippy="gdel"><i class="fa fa-trash"/></a></td>
+                              
                           </tr>
-                        </table>     
+                        </table>  
+                        <div zippy="gpag"></div>   
                    </div>
                 </div>
                </div>

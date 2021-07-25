@@ -21,7 +21,7 @@ class Category extends \ZCL\DB\Entity
     }
 
     protected function afterLoad() {
-
+  
 
         $xml = @simplexml_load_string($this->detail);
 
@@ -33,7 +33,10 @@ class Category extends \ZCL\DB\Entity
         $this->image_id = (int)$xml->image_id[0];
         $this->noshop = (int)$xml->noshop[0];
         $this->nofastfood = (int)$xml->nofastfood[0];
-
+        $this->discount = doubleval($xml->discount[0]);
+        $this->todate =  intval($xml->todate[0]);
+        $this->fromdate =  intval($xml->fromdate[0]);
+ 
         parent::afterLoad();
     }
 
@@ -50,6 +53,11 @@ class Category extends \ZCL\DB\Entity
         $this->detail .= "<image_id>{$this->image_id}</image_id>";
         $this->detail .= "<noshop>{$this->noshop}</noshop>";
         $this->detail .= "<nofastfood>{$this->nofastfood}</nofastfood>";
+        if($this->discount>0) {
+           $this->detail .= "<discount>{$this->discount}</discount>";  
+        } 
+        $this->detail .= "<todate>{$this->todate}</todate>";
+        $this->detail .= "<fromdate>{$this->fromdate}</fromdate>";
 
         $this->detail .= "</detail>";
 
