@@ -47,7 +47,13 @@ abstract class JsonRPC
 
     protected function checkAcess() {
         $api = \App\System::getOptions('api');
-        $user = null;
+        $user = null;  ;
+ 
+        if(\App\System::getUser()->user_id>0 ) {   //вызов с  сайта
+            
+            return;
+        }
+ 
            
         //Bearer
         if ($api['atype'] == 1) {

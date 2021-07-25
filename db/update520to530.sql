@@ -2,10 +2,12 @@
  INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 5, 'Скидки и акции', 'Discounts', '', 0);
 
    
- ALTER TABLE `users` ADD `lastactive` DATETIME NULL  ;
  ALTER TABLE `services` ADD `category` VARCHAR(255) NULL ;
  ALTER TABLE `notifies` ADD `sender_id` INT NULL  ;
  
+
+ ALTER TABLE `users` ADD `lastactive` DATETIME NULL  ;
+
  DROP VIEW users_view  ;
  
  CREATE VIEW users_view AS
