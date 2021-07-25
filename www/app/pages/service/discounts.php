@@ -74,7 +74,21 @@ class Discounts extends \App\Pages\Base
 
         $this->ctab->clistform->clist->Reload();
        
-        $this->_tvars['test']  = "color:red"  ;
+       //категории
+        $this->gtab->add(new Form('gfilter'))->onSubmit($this, 'OnGAdd');
+        $this->gtab->gfilter->add(new DropDownChoice('gsearchkey',Category::getList( ),0)) ;
+        $this->gtab->gfilter->add(new Date('gsearchfrom' ))->setDate(time());
+        $this->gtab->gfilter->add(new Date('gsearchto'))->setDate(strtotime("+7day",time()));                          
+        $this->gtab->gfilter->add(new TextInput('gsearchdisc'));
+       
+        $this->gtab->add(new DataView('glist', new DiscCatDataSource($this), $this, 'catlistOnRow'));
+        $this->gtab->glist->setPageSize(H::getPG());
+        $this->gtab->add(new \Zippy\Html\DataList\Paginator('gpag', $this->gtab->glist));
+
+        $this->gtab->glist->Reload();
+       
+    
+        
      }
      
      
@@ -109,6 +123,8 @@ class Discounts extends \App\Pages\Base
         
     }
   
+  
+  //контрагенты
    public function OnCAdd($sender) { 
        $c= \App\Entity\Customer::load($sender->csearchkey->getKey());
        if($c==null) return;
@@ -158,7 +174,48 @@ class Discounts extends \App\Pages\Base
     public function OnAutoCustomer($sender) {
         return Customer::getList($sender->getText(), 1);
     }
-     
+   //категории
+   public function OnGAdd($sender) { 
+       $g= \App\Entity\Category::load($sender->gsearchkey->getValue());
+       if($g==null) return;
+       $d = doubleval($sender->gsearchdisc->getText()) ;
+       if($d >0) {
+         $g->discount=$d;
+         $g->fromdate=$sender->gsearchfrom->getDate();
+         $g->todate=$sender->gsearchto->getDate(true);;
+         if( $g->fromdate > $g->todate) {
+             $this->setError("ts_invalidinterval") ;
+             return;
+         }
+         $g->save() ;  
+         $this->gtab->glist->Reload();    
+       }
+        
+       $sender->gsearchdisc->setText("");
+   } 
+  
+  public function catlistOnRow($row) {  
+       $g = $row->getDataItem();   
+       $row->add(new  Label("gname",$g->cat_name)) ;
+       $row->add(new  Label("gdisc" ))->setText(  $g->discount)  ;
+       
+       if($g->fromdate < time() && $g->todate > time())$row->gdisc->setAttribute("class","badge badge-success") ;
+      
+       
+       
+       $row->add(new  Label("gfrom" ))->setText( H::fd($g->fromdate))  ;
+       $row->add(new  Label("gto" ))->setText( H::fd($g->todate) ) ;
+       $row->add(new  ClickLink('gdel'))->onClick($this, 'gdeleteOnClick');
+       
+   }
+ public function gdeleteOnClick($sender) {
+         $g= $sender->owner->getDataItem();
+         $g->discount=0;
+         $g->save() ;  
+         $this->gtab->glist->Reload();    
+       
+        
+ }      
 }
 
 class DiscCustomerDataSource implements \Zippy\Interfaces\DataSource
@@ -189,6 +246,40 @@ class DiscCustomerDataSource implements \Zippy\Interfaces\DataSource
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
         return Customer::find($this->getWhere(),   "customer_name "  , $count, $start );
+    }
+
+    public function getItem($id) {
+
+    }
+
+}
+
+
+class DiscCatDataSource implements \Zippy\Interfaces\DataSource
+{
+
+    private $page;
+
+    public function __construct($page) {
+        $this->page = $page;
+    }
+
+    private function getWhere() {
+ 
+        $conn = \ZDB\DB::getConnect();
+
+        $where  = "     detail   like  '%<discount>%' ";
+        
+        return $where;
+    }
+
+    public function getItemCount() {
+        return Customer::findCnt($this->getWhere());
+    }
+
+    public function getItems($start, $count, $sortfield = null, $asc = null) {
+
+        return Category::find($this->getWhere(),   "cat_name "  , $count, $start );
     }
 
     public function getItem($id) {
