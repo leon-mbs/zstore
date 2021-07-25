@@ -88,3 +88,38 @@ $(document).ready(function() {
     */
     
     
+    // вызов  метода страницы
+    function  callPageMethod(method,params,postdata,callback    )
+    {
+           
+           var p='';
+           if(Array.isArray(params))  {
+               p =   params.join(':');
+           }
+           var url = window._baseurl+'::'+method+':'+p+'&ajax=true'
+           var opt={
+               method: 'GET' ,
+               credentials: "same-origin"               
+           };
+           if(postdata !=null) {
+              opt.method = "POST"
+              opt.body = JSON.stringify(postdata)   
+           }
+            fetch(url,opt)                                            
+              .then((response) => {
+                return response.json();
+              })
+              .then((data) => {
+                     callback(data )
+                  
+                
+               });  
+    
+    }
+    
+    // вызов  метода api 
+    function  callApiMethod(method,params, callback    )
+    {
+        
+        
+    }  
