@@ -11,8 +11,8 @@ use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\Button;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\DropDownChoice;
-use Zippy\Html\Form\Form; 
-use Zippy\Html\Form\Date; 
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\Date;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
@@ -36,7 +36,7 @@ class CustomerList extends \App\Pages\Base
     public  $_contrtlist      = array();
     public  $_leadsourceslist = array();
 
-    public function __construct($id = 0 ) {
+    public function __construct($id = 0) {
         parent::__construct();
         if (false == \App\ACL::checkShowRef('CustomerList')) {
             return;
@@ -55,7 +55,7 @@ class CustomerList extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('searchleadstatus', Customer::getLeadStatuses(), "0"));
 
         $this->add(new Panel('customertable'))->setVisible(true);
-        $this->customertable->add(new Form('listform')) ;
+        $this->customertable->add(new Form('listform'));
         $this->customertable->listform->add(new DataView('customerlist', new CustomerDataSource($this), $this, 'customerlistOnRow'));
         $this->customertable->listform->customerlist->setPageSize(Helper::getPG());
         $this->customertable->listform->add(new \Zippy\Html\DataList\Paginator('pag', $this->customertable->listform->customerlist));
@@ -68,7 +68,7 @@ class CustomerList extends \App\Pages\Base
         $this->customertable->listform->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->customertable->listform->add(new ClickLink('showstat'))->onClick($this, 'showStat');
         $this->customertable->listform->add(new SubmitLink('deleteall'))->onClick($this, 'OnDelAll');
-           
+
         $this->add(new Panel('statpan'))->setVisible(false);
         $this->statpan->add(new ClickLink('closestat'))->onClick($this, 'closeStat');
 
@@ -88,7 +88,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->add(new CheckBox('editnosubs'));
         $this->customerdetail->add(new CheckBox('editdisabled'));
 
- 
+
         $this->customerdetail->add(new TextArea('editcomment'));
         $this->customerdetail->add(new DropDownChoice('editleadsource', Customer::getLeadSources(), "0"));
         $this->customerdetail->add(new DropDownChoice('editleadstatus', Customer::getLeadStatuses(), "0"));
@@ -150,10 +150,10 @@ class CustomerList extends \App\Pages\Base
         if ($id > 0) {
             $this->_customer = Customer::load($id);
             if ($this->_customer instanceof Customer) {
-                 $this->viewContent(); 
+                $this->viewContent();
             }
         }
-       
+
 
         $this->_tvars['leadmode'] = false;
     }
@@ -189,9 +189,9 @@ class CustomerList extends \App\Pages\Base
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('contentlist'))->onClick($this, 'editContentOnClick');
-       
+
         $row->add(new CheckBox('seldel', new \Zippy\Binding\PropertyBinding($item, 'seldel')));
-       
+
         $row->setAttribute('style', $item->status == 1 ? 'color: #aaa' : null);
         if ($item->customer_id == $this->_customer->customer_id) {
             $row->setAttribute('class', 'table-success');
@@ -230,7 +230,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->editaddress->setText($this->_customer->address);
         $this->customerdetail->editcity->setText($this->_customer->city);
         $this->customerdetail->editcountry->setText($this->_customer->country);
-         $this->customerdetail->editcomment->setText($this->_customer->comment);
+        $this->customerdetail->editcomment->setText($this->_customer->comment);
         $this->customerdetail->edittype->setValue($this->_customer->type);
 
         $this->customerdetail->editleadsource->setValue($this->_customer->leadsource);
@@ -285,7 +285,7 @@ class CustomerList extends \App\Pages\Base
         $this->_customer->address = $this->customerdetail->editaddress->getText();
         $this->_customer->city = $this->customerdetail->editcity->getText();
         $this->_customer->country = $this->customerdetail->editcountry->getText();
-         $this->_customer->comment = $this->customerdetail->editcomment->getText();
+        $this->_customer->comment = $this->customerdetail->editcomment->getText();
         $this->_customer->type = $this->customerdetail->edittype->getValue();
         $this->_customer->holding = $this->customerdetail->editholding->getValue();
         $this->_customer->holding_name = $this->customerdetail->editholding->getValueName();
@@ -354,19 +354,18 @@ class CustomerList extends \App\Pages\Base
         $this->contentview->setVisible(false);
     }
 
-    
-    
-    
+
     //просмотр контента
     public function editContentOnClick($sender) {
         $this->_customer = $sender->getOwner()->getDataItem();
-        
+
         $this->customertable->listform->customerlist->Reload();
-        
-        $this->viewContent(); 
+
+        $this->viewContent();
     }
+
     public function viewContent() {
-        
+
         $this->customerdetail->setVisible(false);
         $this->contentview->setVisible(true);
         $this->customertable->setVisible(false);
@@ -508,7 +507,7 @@ class CustomerList extends \App\Pages\Base
             $n->dateshow = $event->eventdate - ($nt * 3600);
             $n->message = "<b>" . $event->title . "</b>" . "<br>" . $event->description;
             $n->message .= "<br><br><b> Контрагент: </b> {$this->_customer->customer_name} &nbsp;&nbsp; {$this->_customer->phone} ";
-            $n->sender_id =  \App\Entity\Notify::EVENT;
+            $n->sender_id = \App\Entity\Notify::EVENT;
             $n->save();
         }
         $this->contentview->addeventform->clean();
@@ -605,7 +604,7 @@ class CustomerList extends \App\Pages\Base
 
         $this->filter->searchleadsource->setOptionList(Customer::getLeadSources());
         $this->customerdetail->editleadsource->setOptionList(Customer::getLeadSources());
-        
+
     }
 
     public function OnAddLeadSource($sender) {
@@ -660,8 +659,8 @@ class CustomerList extends \App\Pages\Base
         $this->filter->searchleadstatus->setOptionList(Customer::getLeadStatuses());
         $this->contentview->conlstform->conleadstatus->setOptionList(Customer::getLeadStatuses());
         $this->customerdetail->editleadstatus->setOptionList(Customer::getLeadStatuses());
-        
-        
+
+
     }
 
     public function OnAddLeadStatus($sender) {
@@ -770,41 +769,44 @@ class CustomerList extends \App\Pages\Base
         $this->customertable->setVisible(true);
         $this->statpan->setVisible(false);
     }
- 
+
     public function OnDelAll($sender) {
         if (false == \App\ACL::checkDelRef('CustomerList')) {
             return;
-        }        
-        
-          $ids = array();
-          foreach ( $this->customertable->listform->customerlist->getDataRows() as $row) {
+        }
+
+        $ids = array();
+        foreach ($this->customertable->listform->customerlist->getDataRows() as $row) {
             $item = $row->getDataItem();
             if ($item->seldel == true) {
                 $ids[] = $item->customer_id;
             }
-         }  
-         if(count($ids)==0) return;
-         
-         $conn = \ZDB\DB::getConnect();
-         $d=0;$u=0;  
-         foreach($ids as $id) {
+        }
+        if (count($ids) == 0) {
+            return;
+        }
+
+        $conn = \ZDB\DB::getConnect();
+        $d = 0;
+        $u = 0;
+        foreach ($ids as $id) {
             $sql = "  select count(*)  from  documents where   customer_id = {$id}  ";
             $cnt = $conn->GetOne($sql);
-            if($cnt >0) {
+            if ($cnt > 0) {
                 $u++;
                 $conn->Execute("update customers  set  status=1 where   customer_id={$id}");
-            }   else {
+            } else {
                 $d++;
                 $conn->Execute("delete from customers  where   customer_id={$id}");
-                
+
             }
-         }
-        
-            
-         $this->setSuccess("delcusts",$d,$u) ;
-         
-         $this->customertable->listform->customerlist->Reload();
-          
+        }
+
+
+        $this->setSuccess("delcusts", $d, $u);
+
+        $this->customertable->listform->customerlist->Reload();
+
     }
 
 }

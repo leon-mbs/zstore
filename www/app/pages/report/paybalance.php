@@ -130,10 +130,10 @@ class PayBalance extends \App\Pages\Base
 
         foreach ($rs as $row) {
             $detail2[] = array(
-                "out"  =>0- H::fa(  $row['am']),
+                "out"  => 0 - H::fa($row['am']),
                 "type" => $pl[$row['iotype']]
             );
-            $tout +=  0- $row['am'];
+            $tout += 0 - $row['am'];
         }
 
         $total = $tin - $tout;

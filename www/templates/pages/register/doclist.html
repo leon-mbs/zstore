@@ -13,11 +13,11 @@
 
                 <div class="navbar nav  ">
                     <form zippy="filter" class="form-inline ">
-                       
-                       
+
+
                         <label for="searchnumber">№ </label>
                         <input placeholder="Поиск..." class="form-control mr-2" type="text" zippy="searchnumber"
-                        autocomplete="off" autofocus  onkeydown="onBarCode()"     style="width:175px" title="При поиске по номеру  остальные  элементы фильтра  игнорируются">
+                               autocomplete="off" autofocus  onkeydown="onBarCode()"     style="width:175px" title="При поиске по номеру  остальные  элементы фильтра  игнорируются">
 
                         <label for="from">С </label>
                         <input type="text" class="form-control mr-sm-1  " zippy="from" style="width:110px">
@@ -25,24 +25,24 @@
 
                         <label for="to"> по </label>
                         <input type="text" class="form-control mr-sm-1 " style="width:110px" zippy="to">
-                        
+
                         <label for="status"> Статус </label>
-                            <select class="form-control mr-2" zippy="status">
-                             <option value="0">Не выбран</option>
-                           </select>
+                        <select class="form-control mr-2" zippy="status">
+                            <option value="0">Не выбран</option>
+                        </select>
 
                         <label for="doctype"> Тип </label>
                         <select class="form-control mr-sm-1  " zippy="doctype">
                             <option value="0">Не выбран</option>
                         </select> 
-                       
+
                         <label for="searchcust"> Контрагент </label>
                         <input placeholder="Начните вводить..." class="form-control mr-1" type="text" zippy="searchcust">
-                         <label for="author"> Автор </label>
+                        <label for="author"> Автор </label>
                         <select class="form-control select2  " zippy="author">
                             <option value="0">Не выбран</option>
                         </select>
-                         <input class="form-control ml-2 mr-2" type="text" zippy="searchtext" placeholder="Поиск по контенту">
+                        <input class="form-control ml-2 mr-2" type="text" zippy="searchtext" placeholder="Поиск по контенту">
 
 
                         <input id="bsubmit" type="submit" class="  ml-2 mr-2  btn btn-outline-success  " value="ОК">
@@ -102,7 +102,7 @@
 
                             </td>
                             <td>
-                               <a zippy="delete" title="Удаление"><i class="fa fa-trash"></i></a>
+                                <a zippy="delete" title="Удаление"><i class="fa fa-trash"></i></a>
                             </td>
                             <td>
                                 <div class="btn-group" zippy="basedon">
@@ -143,7 +143,7 @@
         <script>
             $('#searchnumber').focus();
 
-        
+
             function onBarCode(ele) {
 
                 if (event.key === 'Enter' || event.keyCode == 13) {
@@ -151,7 +151,7 @@
                     $('#bsubmit').click()
                 }
             }
-        
+
             function check_delete() {
                 return confirm("Удалить  документ?")
             }

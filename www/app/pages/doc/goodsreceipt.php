@@ -55,7 +55,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(   ), H::getDefMF()));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
 
         $this->docform->add(new DropDownChoice('val', H::getValList(), '0'))->onChange($this, 'OnVal');
 
@@ -140,11 +140,13 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->editrate->setText($this->_doc->headerdata['rate']);
             $this->docform->disc->setText(H::fa($this->_doc->headerdata['disc']));
             $this->docform->editdisc->setText(H::fa($this->_doc->headerdata['disc']));
-            
-            if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )  $this->_doc->payed = $this->_doc->headerdata['payed'];
-            $this->docform->editpayed->setText(H::fa($this->_doc->payed));            
+
+            if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
+                $this->_doc->payed = $this->_doc->headerdata['payed'];
+            }
+            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
             $this->docform->payed->setText(H::fa($this->_doc->payed));
-          
+
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->firm->setValue($this->_doc->firm_id);
@@ -227,7 +229,7 @@ class GoodsReceipt extends \App\Pages\Base
             return;
         }
 
-         
+
     }
 
     public function detailOnRow($row) {
@@ -319,14 +321,13 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->editdetail->editquantity->setText($item->quantity);
         $this->editdetail->editprice->setText($item->price);
-        
+
         $olditem = Item::load($item->item_id);
-        if($olditem != null){
-           $this->editdetail->editsellprice->setText($olditem->price1);    
+        if ($olditem != null) {
+            $this->editdetail->editsellprice->setText($olditem->price1);
         }
-        
- 
-        
+
+
         $this->editdetail->editsellprice->setText($item->price1);
         $this->editdetail->editsnumber->setText($item->snumber);
         $this->editdetail->editsdate->setDate($item->sdate);
@@ -360,14 +361,14 @@ class GoodsReceipt extends \App\Pages\Base
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
         $sellprice = $this->editdetail->editsellprice->getText();
-        if(strlen($sellprice)>0) {
-          $olditem = Item::load($item->item_id);
-          if($olditem != null){
-             $olditem->price1 = $sellprice;    
-             $olditem->save();  
-          } 
+        if (strlen($sellprice) > 0) {
+            $olditem = Item::load($item->item_id);
+            if ($olditem != null) {
+                $olditem->price1 = $sellprice;
+                $olditem->save();
+            }
         }
-        
+
 
         if ($item->price == 0) {
 
@@ -453,10 +454,9 @@ class GoodsReceipt extends \App\Pages\Base
         $this->_doc->headerdata['basedoc'] = $this->docform->basedoc->getText();
 
         $this->_doc->payed = $this->docform->payed->getText();
- 
+
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
 
-         
 
         if ($this->checkForm() == false) {
             return;
@@ -468,7 +468,9 @@ class GoodsReceipt extends \App\Pages\Base
             return;
         }
 
-        if($this->_doc->payed == 0)   $this->_doc->headerdata['payment']=0;
+        if ($this->_doc->payed == 0) {
+            $this->_doc->headerdata['payment'] = 0;
+        }
 
         $common = System::getOptions("common");
 
@@ -570,7 +572,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->goAnkor("tankor");
     }
 
-    
+
     public function onDisc($sender) {
         $this->docform->disc->setText(H::fa($this->docform->editdisc->getText()));
         $this->CalcPay();
@@ -685,15 +687,15 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editnewitem->setVisible(true);
         $this->editdetail->setVisible(false);
         $this->wselitem->setVisible(false);
-  
+
         $this->editnewitem->clean();
 
         if (System::getOption("common", "autoarticle") == 1) {
             $this->editnewitem->editnewitemcode->setText(Item::getNextArticle());
         }
-        
-       $this->editnewitem->editnewmanufacturer->setDataList(Item::getManufacturers() );
-        
+
+        $this->editnewitem->editnewmanufacturer->setDataList(Item::getManufacturers());
+
     }
 
     public function savenewitemOnClick($sender) {
@@ -706,19 +708,19 @@ class GoodsReceipt extends \App\Pages\Base
         $item->itemname = $itemname;
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
 
-         if(strlen($item->item_code)>0) {
+        if (strlen($item->item_code) > 0) {
             $code = Item::qstr($item->item_code);
             $cnt = Item::findCnt("  item_code={$code} ");
             if ($cnt > 0) {
-               $this->setError('itemcode_exists');
-               return;
+                $this->setError('itemcode_exists');
+                return;
             }
-        
-        }  else {
-              if(System::getOption("common", "autoarticle") == 1)   {
-                 
-                 $item->item_code = Item::getNextArticle() ;
-              } 
+
+        } else {
+            if (System::getOption("common", "autoarticle") == 1) {
+
+                $item->item_code = Item::getNextArticle();
+            }
         }
 
 
@@ -809,9 +811,9 @@ class GoodsReceipt extends \App\Pages\Base
     public function onSelectItem($item_id, $itemname) {
         $this->editdetail->edititem->setKey($item_id);
         $this->editdetail->edititem->setText($itemname);
-   
+
         $item = Item::load($item_id);
-        
+
         $this->editdetail->editsellprice->setText($item->price1);
     }
 
@@ -833,11 +835,11 @@ class GoodsReceipt extends \App\Pages\Base
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $item = Item::load($id);
-        
-        $this->editdetail->editsellprice->setText($item->price1);
- 
 
-        $this->updateAjax(array('editsellprice' ));
+        $this->editdetail->editsellprice->setText($item->price1);
+
+
+        $this->updateAjax(array('editsellprice'));
     }
 
 }

@@ -46,7 +46,7 @@ class Calendar extends \App\Pages\Base
 
         $this->listpan->add(new Panel('caltab'));
 
-        $this->listpan->caltab->add(new \App\Calendar('calendar',$this->lang))->setEvent($this, 'OnCal');
+        $this->listpan->caltab->add(new \App\Calendar('calendar', $this->lang))->setEvent($this, 'OnCal');
         $this->updateCal();
 
         $this->add(new Form('editform'))->onSubmit($this, 'OnSave');
@@ -54,7 +54,7 @@ class Calendar extends \App\Pages\Base
         $this->editform->add(new ClickLink('cancel', $this, 'OnCancel'));
         $this->editform->add(new Date('edate', time()));
         $this->editform->add(new \App\Time('etime', time()));
-        
+
         $this->editform->add(new TextInput('ehours'));
         $this->editform->add(new TextInput('enotes'));
         $this->editform->add(new DropDownChoice('eproject', Project::findArray('project_name', '', 'project_id desc')))->onChange($this, 'OnProject');

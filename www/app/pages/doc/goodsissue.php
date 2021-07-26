@@ -49,8 +49,8 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->docform->add(new Date('document_date'))->setDate(time());
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(   ), H::getDefMF()));
-        $this->docform->add(new DropDownChoice('salesource', H::getSaleSources() , H::getDefSaleSource()));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
+        $this->docform->add(new DropDownChoice('salesource', H::getSaleSources(), H::getDefSaleSource()));
 
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new TextInput('editpaydisc'));
@@ -134,11 +134,13 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->editpayamount->setText(H::fa($this->_doc->payamount));
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
-            if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )  $this->_doc->payed = $this->_doc->headerdata['payed'];
-            $this->docform->editpayed->setText(H::fa($this->_doc->payed));            
+            if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
+                $this->_doc->payed = $this->_doc->headerdata['payed'];
+            }
+            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
             $this->docform->payed->setText(H::fa($this->_doc->payed));
 
-             
+
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->customer->setKey($this->_doc->customer_id);
 
@@ -205,7 +207,7 @@ class GoodsIssue extends \App\Pages\Base
                         $this->OnChangeCustomer($this->docform->customer);
                         if ($order->payamount > 0) {
                             $this->docform->payment->setValue(0); // предоплата
-                            
+
                         }
 
 
@@ -237,7 +239,7 @@ class GoodsIssue extends \App\Pages\Base
 
                         if ($invoice->payamount > 0) {
                             $this->docform->payment->setValue(0); // предоплата
-                          
+
                         }
                     }
 
@@ -283,7 +285,7 @@ class GoodsIssue extends \App\Pages\Base
             return;
         }
 
-        
+
     }
 
     public function detailOnRow($row) {
@@ -367,8 +369,6 @@ class GoodsIssue extends \App\Pages\Base
             return;
         }
 
-
-        
 
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
@@ -554,10 +554,10 @@ class GoodsIssue extends \App\Pages\Base
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
 
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-  
-     
+
+
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
-      
+
 
         if ($this->checkForm() == false) {
             return;
@@ -594,7 +594,6 @@ class GoodsIssue extends \App\Pages\Base
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
 
-    
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
                 if ($this->_doc->parent_id > 0) {   //закрываем заказ
@@ -614,9 +613,9 @@ class GoodsIssue extends \App\Pages\Base
 
 
             $conn->CommitTrans();
-        
-          App::Redirect("\\App\\Pages\\Register\\GIList",$this->_doc->document_id);
-          
+
+            App::Redirect("\\App\\Pages\\Register\\GIList", $this->_doc->document_id);
+
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
@@ -701,16 +700,15 @@ class GoodsIssue extends \App\Pages\Base
         if ($disc > 0) {
             $total -= $disc;
         }
- 
-            $this->docform->editpayamount->setText(H::fa($total));
-            $this->docform->payamount->setText(H::fa($total));
- 
-            $this->docform->editpayed->setText(H::fa($total));
-            $this->docform->payed->setText(H::fa($total));
-        
+
+        $this->docform->editpayamount->setText(H::fa($total));
+        $this->docform->payamount->setText(H::fa($total));
+
+        $this->docform->editpayed->setText(H::fa($total));
+        $this->docform->payed->setText(H::fa($total));
+
     }
 
- 
 
     /**
      * Валидация   формы
@@ -745,7 +743,7 @@ class GoodsIssue extends \App\Pages\Base
             $this->setError("noselcust");
         }
 
-     
+
         if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $c == 0) {
             $this->setError("mustsel_cust");
         }
@@ -774,7 +772,7 @@ class GoodsIssue extends \App\Pages\Base
         if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
 
             $serial = $item->getNearestSerie($store_id);
- 
+
             $this->editdetail->editserial->setText($serial);
         }
 

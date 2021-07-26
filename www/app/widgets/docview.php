@@ -74,9 +74,9 @@ class DocView extends \Zippy\Html\PageFragment
         $this->addmsgform->add(new TextArea('addmsg'));
         $this->add(new DataView('dw_msglist', new ArrayDataSource(new Prop($this, '_msglist')), $this, 'msgListOnRow'));
 
-        $this->addmsgform->add(new \Zippy\Html\Form\CheckBoxList('userm', '<br>'));        
-        
-        
+        $this->addmsgform->add(new \Zippy\Html\Form\CheckBoxList('userm', '<br>'));
+
+
         $this->add(new ClickLink('doctabp', $this, "onTab"));
         $this->add(new ClickLink('doctabd', $this, "onTab"));
         $this->add(new ClickLink('doctabf', $this, "onTab"));
@@ -152,17 +152,21 @@ class DocView extends \Zippy\Html\PageFragment
             $this->scanimage->setUrl('/loadfile.php?im=1&id=' . $this->_doc->headerdata['scan']);
         }
 
-        $users = \App\Entity\User::getByBranch($this->_doc->branch_id) ;
-        $this->addmsgform->userm->clean() ;
-        $curr = System::getUser() ;
-        foreach($users as $id=>$name){
-             $f = false;
-             if($id==$this->_doc->user_id) $f =true;//автор
-             if($id==$curr->user_id) continue;//себе не  нужно
-             
-             $this->addmsgform->userm->AddCheckBox($id, $f, $name);
+        $users = \App\Entity\User::getByBranch($this->_doc->branch_id);
+        $this->addmsgform->userm->clean();
+        $curr = System::getUser();
+        foreach ($users as $id => $name) {
+            $f = false;
+            if ($id == $this->_doc->user_id) {
+                $f = true;
+            }//автор
+            if ($id == $curr->user_id) {
+                continue;
+            }//себе не  нужно
+
+            $this->addmsgform->userm->AddCheckBox($id, $f, $name);
         }
-        
+
 
         $this->onTab($this->doctabp);
     }
@@ -193,11 +197,11 @@ class DocView extends \Zippy\Html\PageFragment
         $row->add(new Label('itname', $entry->itemname));
         $row->add(new Label('itcode', $entry->item_code));
         $row->add(new Label('itqty', H::fqty($entry->quantity)));
-        $row->add(new Label('itpartion', H::fa($entry->partion  )));
-        $row->add(new Label('itprice', H::fa($entry->outprice  )));
+        $row->add(new Label('itpartion', H::fa($entry->partion)));
+        $row->add(new Label('itprice', H::fa($entry->outprice)));
         $row->add(new Label('itamount', H::fa($entry->outprice * $entry->quantity)));
-         
-        
+
+
     }
 
     /**
@@ -272,10 +276,9 @@ class DocView extends \Zippy\Html\PageFragment
 
         // уведомления
 
-        
 
         foreach ($this->addmsgform->userm->getCheckedList() as $adr) {
-            
+
             $n = new \App\Entity\Notify();
             $n->user_id = $adr;
             $n->message = "<b>" . H::l("newdoccomment") . ":</b> {$this->_doc->meta_desc} {$this->_doc->document_number}  ";

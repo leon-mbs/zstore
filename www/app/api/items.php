@@ -29,6 +29,7 @@ class items extends \App\API\Base\JsonRPC
         }
         return $list;
     }
+
     //список  типов ТМЦ
     public function typelist() {
         return Item::getTypes();
@@ -69,28 +70,28 @@ class items extends \App\API\Base\JsonRPC
         if (strlen($args['bar_code']) > 0) {
             $w .= " and bar_code=" . Item::qstr($args['bar_code']);
         }
-             
+
         foreach (Item::find($w, 'itemname') as $item) {
             $plist = array();
 
-            $it   = array(
+            $it = array(
                 'item_code'    => $item->item_code,
                 'bar_code'     => $item->bar_code,
                 'itemname'     => $item->itemname,
                 'description'  => base64_encode($item->description),
                 'measure'      => $item->msr,
-                'item_type'      => $item->item_type,
+                'item_type'    => $item->item_type,
                 'manufacturer' => $item->manufacturer,
                 'cat_name'     => $item->cat_name,
                 'cat_id'       => $item->cat_id
             );
-            
-            $it = array_merge($it,$item->getData())   ;
-           
+
+            $it = array_merge($it, $item->getData());
+
             unset($it['detail']);
             unset($it['disabled']);
-           
-           
+
+
             if (strlen($item->price1) > 0) {
                 $it['price1'] = $item->price1;
             }

@@ -45,8 +45,8 @@ class POSCheck extends \App\Pages\Base
 
         $this->docform->add(new Date('document_date'))->setDate(time());
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(   ), H::getDefMF()));
-         $this->docform->add(new DropDownChoice('salesource', H::getSaleSources() , H::getDefSaleSource()));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
+        $this->docform->add(new DropDownChoice('salesource', H::getSaleSources(), H::getDefSaleSource()));
 
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new TextInput('editpaydisc'));
@@ -138,11 +138,13 @@ class POSCheck extends \App\Pages\Base
             $this->docform->paydisc->setText(H::fa($this->_doc->headerdata['paydisc']));
             $this->docform->editpaydisc->setText(H::fa($this->_doc->headerdata['paydisc']));
 
-            if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )  $this->_doc->payed = $this->_doc->headerdata['payed'];
-            $this->docform->editpayed->setText(H::fa($this->_doc->payed));            
+            if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
+                $this->_doc->payed = $this->_doc->headerdata['payed'];
+            }
+            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
             $this->docform->payed->setText(H::fa($this->_doc->payed));
             $this->docform->exchange->setText(H::fa($this->_doc->headerdata['exchange']));
-             
+
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             //  $this->docform->pos->setValue($this->_doc->headerdata['pos']);
@@ -489,9 +491,9 @@ class POSCheck extends \App\Pages\Base
         $this->_doc->headerdata['exchange'] = $this->docform->exchange->getText();
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-   
+
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
- 
+
         if ($this->checkForm() == false) {
             return;
         }
@@ -604,7 +606,7 @@ class POSCheck extends \App\Pages\Base
             if ($isEdited) {
                 App::RedirectBack();
             } else {
-                App::Redirect("\\App\\Pages\\Register\\GIList",$this->_doc->document_id);
+                App::Redirect("\\App\\Pages\\Register\\GIList", $this->_doc->document_id);
             }
         } catch(\Throwable $ee) {
             global $logger;
@@ -700,7 +702,6 @@ class POSCheck extends \App\Pages\Base
         $this->docform->exchange->setText(H::fa(0));
     }
 
- 
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
@@ -743,41 +744,38 @@ class POSCheck extends \App\Pages\Base
             }
         }
 
-       
+
+        $price = $item->getPrice($this->docform->pricetype->getValue(), $store_id);
+        $item->price = $price;
+        $item->quantity = 1;
+
+        if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
+
+            $serial = $item->getNearestSerie($store_id);
 
 
-            $price = $item->getPrice($this->docform->pricetype->getValue(), $store_id);
-            $item->price = $price;
-            $item->quantity = 1;
+            if (strlen($serial) == 0) {
+                $this->setWarn('needs_serial');
+                $this->editdetail->setVisible(true);
+                $this->docform->setVisible(false);
 
-            if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
+                $this->editdetail->edittovar->setKey($item->item_id);
+                $this->editdetail->edittovar->setText($item->itemname);
+                $this->editdetail->editserial->setText('');
+                $this->editdetail->editquantity->setText('1');
+                $this->editdetail->editprice->setText($item->price);
 
-                $serial = $item->getNearestSerie($store_id);
-
-
-
-                if (strlen($serial) == 0) {
-                    $this->setWarn('needs_serial');
-                    $this->editdetail->setVisible(true);
-                    $this->docform->setVisible(false);
-
-                    $this->editdetail->edittovar->setKey($item->item_id);
-                    $this->editdetail->edittovar->setText($item->itemname);
-                    $this->editdetail->editserial->setText('');
-                    $this->editdetail->editquantity->setText('1');
-                    $this->editdetail->editprice->setText($item->price);
-
-                    return;
-                } else {
-                    $item->snumber = $serial;
-                }
+                return;
+            } else {
+                $item->snumber = $serial;
             }
-            
-           $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
-            $item->rowid = $next + 1;
-             
-            $this->_itemlist[$item->rowid] = $item;
-   
+        }
+
+        $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
+        $item->rowid = $next + 1;
+
+        $this->_itemlist[$item->rowid] = $item;
+
         $this->docform->detail->Reload();
         $this->calcTotal();
         $this->calcPay();
@@ -812,7 +810,7 @@ class POSCheck extends \App\Pages\Base
         }
         $p = $this->docform->payment->getValue();
         $c = $this->docform->customer->getKey();
-      
+
         if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $c == 0) {
             $this->setError("mustsel_cust");
         }
@@ -846,9 +844,9 @@ class POSCheck extends \App\Pages\Base
         $this->editdetail->editprice->setText($price);
         if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
 
-           $serial = $item->getNearestSerie($store_id);
- 
-           $this->editdetail->editserial->setText($serial);
+            $serial = $item->getNearestSerie($store_id);
+
+            $this->editdetail->editserial->setText($serial);
         }
 
 

@@ -138,7 +138,7 @@ class UserLogin extends \Zippy\Html\WebPage
             $msg .= '<br>' . $this->loginform->userlogin->getText() . ', ';
             $msg .= $_SERVER['HTTP_HOST'] . ' ' . $_SERVER['SERVER_ADDR'];
             $admin = \App\Entity\User::getByLogin('admin');
-            
+
             $n = new \App\Entity\Notify();
             $n->user_id = \App\Entity\Notify::SYSTEM;
             $n->dateshow = time();

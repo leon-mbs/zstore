@@ -84,7 +84,7 @@ class ServiceList extends \App\Pages\Base
         $this->servicedetail->edithours->setText($this->_service->hours);
         $this->servicedetail->editdisabled->setChecked($this->_service->disabled);
         $this->servicedetail->editcat->setText($this->_service->category);
-        $this->servicedetail->editcat->setDataList(Service::getCategoryList())  ;   
+        $this->servicedetail->editcat->setDataList(Service::getCategoryList());
     }
 
     public function addOnClick($sender) {
@@ -92,7 +92,7 @@ class ServiceList extends \App\Pages\Base
         $this->servicedetail->setVisible(true);
         // Очищаем  форму
         $this->servicedetail->clean();
-        $this->servicedetail->editcat->setDataList(Service::getCategoryList())  ;   
+        $this->servicedetail->editcat->setDataList(Service::getCategoryList());
 
         $this->_service = new Service();
     }
@@ -117,9 +117,9 @@ class ServiceList extends \App\Pages\Base
         $this->servicedetail->setVisible(false);
         $this->servicetable->setVisible(true);
         $this->servicetable->servicelist->Reload();
-        
-        $this->filter->searchcat->setDataList(Service::getCategoryList())  ;   
-      
+
+        $this->filter->searchcat->setDataList(Service::getCategoryList());
+
     }
 
     public function cancelOnClick($sender) {

@@ -13,12 +13,12 @@ class Base extends \Zippy\Html\WebPage
 {
 
     public $branch_id = 0;
-    public $lang='ru';
+    public $lang      = 'ru';
 
     public function __construct($params = null) {
         global $_config;
- 
-        if (strlen($_config['common']['lang'])>0) {
+
+        if (strlen($_config['common']['lang']) > 0) {
             $this->lang = 'ua';
         }
 
@@ -40,8 +40,8 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["useval"] = $options['useval'] == 1;
         $this->_tvars["usecattree"] = $options['usecattree'] == 1;
         $this->_tvars["usemobileprinter"] = $user->usemobileprinter == 1;
-        $this->_tvars["noshowpartion"]  = System::getUser()->noshowpartion;
-        
+        $this->_tvars["noshowpartion"] = System::getUser()->noshowpartion;
+
 
         $blist = array();
         if ($this->_tvars["usebranch"] == true) {
@@ -52,16 +52,16 @@ class Base extends \Zippy\Html\WebPage
                 $this->branch_id = array_pop($k);
                 System::setBranch($this->branch_id);
             }
-            
+
             //куки  после  логина
             if (System::getSession()->defbranch > 0 && $this->branch_id === null) {
-              $this->branch_id = System::getSession()->defbranch;
-              System::setBranch($this->branch_id);
+                $this->branch_id = System::getSession()->defbranch;
+                System::setBranch($this->branch_id);
             }
-            if($this->branch_id==null) {
-                $this->branch_id =0;
-            }          
-            
+            if ($this->branch_id == null) {
+                $this->branch_id = 0;
+            }
+
         }
         //форма  филиалов       
         $this->add(new \Zippy\Html\Form\Form('nbform'));
@@ -76,13 +76,13 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["refmenu"] = Helper::generateMenu(4);
         $this->_tvars["sermenu"] = Helper::generateMenu(5);
 
-        $this->_tvars["showdocmenu"]  = count($this->_tvars["docmenu"]['groups'] )>0 || count($this->_tvars["docmenu"]['items'] )>0;
-        $this->_tvars["showrepmenu"]  = count($this->_tvars["repmenu"]['groups'] )>0 || count($this->_tvars["repmenu"]['items'] )>0;
-        $this->_tvars["showregmenu"]  = count($this->_tvars["regmenu"]['groups'] )>0 || count($this->_tvars["regmenu"]['items'] )>0;
-        $this->_tvars["showrefmenu"]  = count($this->_tvars["refmenu"]['groups'] )>0 || count($this->_tvars["refmenu"]['items'] )>0;
-        $this->_tvars["showsermenu"]  = count($this->_tvars["sermenu"]['groups'] )>0 || count($this->_tvars["sermenu"]['items'] )>0;
-        
-        
+        $this->_tvars["showdocmenu"] = count($this->_tvars["docmenu"]['groups']) > 0 || count($this->_tvars["docmenu"]['items']) > 0;
+        $this->_tvars["showrepmenu"] = count($this->_tvars["repmenu"]['groups']) > 0 || count($this->_tvars["repmenu"]['items']) > 0;
+        $this->_tvars["showregmenu"] = count($this->_tvars["regmenu"]['groups']) > 0 || count($this->_tvars["regmenu"]['items']) > 0;
+        $this->_tvars["showrefmenu"] = count($this->_tvars["refmenu"]['groups']) > 0 || count($this->_tvars["refmenu"]['items']) > 0;
+        $this->_tvars["showsermenu"] = count($this->_tvars["sermenu"]['groups']) > 0 || count($this->_tvars["sermenu"]['items']) > 0;
+
+
         $this->_tvars["islogined"] = $user->user_id > 0;
         $this->_tvars["isadmin"] = $user->userlogin == 'admin';
         $this->_tvars["isadmins"] = $user->rolename == 'admins';
@@ -93,7 +93,7 @@ class Base extends \Zippy\Html\WebPage
         }
         $this->_tvars["smart"] = Helper::generateSmartMenu();
         //модули
-        
+
         $this->_tvars["shop"] = $_config['modules']['shop'] == 1;
         $this->_tvars["ocstore"] = $_config['modules']['ocstore'] == 1;
         $this->_tvars["woocomerce"] = $_config['modules']['woocomerce'] == 1;
@@ -102,8 +102,8 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["tecdoc"] = $_config['modules']['tecdoc'] == 1;
         $this->_tvars["ppo"] = $_config['modules']['ppo'] == 1;
         $this->_tvars["np"] = $_config['modules']['np'] == 1;
-  
-        
+
+
         //доступы к  модулям
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["shop"] = false;
@@ -130,59 +130,59 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["np"] = false;
         }
 
-        if($this->_tvars["shop"] || 
-           $this->_tvars["ocstore"] || 
-           $this->_tvars["woocomerce"] || 
-           $this->_tvars["note"] || 
-           $this->_tvars["issue"] || 
-           $this->_tvars["tecdoc"] || 
-           $this->_tvars["ppo"] || 
-           $this->_tvars["np"]   
+        if ($this->_tvars["shop"] ||
+            $this->_tvars["ocstore"] ||
+            $this->_tvars["woocomerce"] ||
+            $this->_tvars["note"] ||
+            $this->_tvars["issue"] ||
+            $this->_tvars["tecdoc"] ||
+            $this->_tvars["ppo"] ||
+            $this->_tvars["np"]
         ) {
-           $this->_tvars["showmodmenu"]  = true;  
-        }   else {
-           $this->_tvars["showmodmenu"]  = false;  
+            $this->_tvars["showmodmenu"] = true;
+        } else {
+            $this->_tvars["showmodmenu"] = false;
         }
-        
-        if($this->_tvars["isadmins"]){  //для  роли админов  видные все  разделы  меню
-            $this->_tvars["showdocmenu"]  = true;
-            $this->_tvars["showrepmenu"]  = true;
-            $this->_tvars["showregmenu"]  = true;
-            $this->_tvars["showrefmenu"]  = true;
-            $this->_tvars["showsermenu"]  = true;
-            $this->_tvars["showmodmenu"]  = true;  
-        }        
-  
+
+        if ($this->_tvars["isadmins"]) {  //для  роли админов  видные все  разделы  меню
+            $this->_tvars["showdocmenu"] = true;
+            $this->_tvars["showrepmenu"] = true;
+            $this->_tvars["showregmenu"] = true;
+            $this->_tvars["showrefmenu"] = true;
+            $this->_tvars["showsermenu"] = true;
+            $this->_tvars["showmodmenu"] = true;
+        }
+
         //скрыть  боковое  меню
         $this->_tvars["hidesidebar"] = $user->hidesidebar == 1 ? 'hold-transition   sidebar-collapse' : 'hold-transition sidebar-mini sidebar-collapse';
         //для скрытия блока разметки  в  шаблоне страниц                           
         $this->_tvars["hideblock"] = false;
 
         //активные   пользователий
-         if($options['showactiveusers'] == 1) {
-              $this->_tvars["showactiveusers"]  = true   ;
-              $this->_tvars["activeuserscnt"] = 0;
-              $this->_tvars["aulist"] = array();
-              $user->lastactive = time();
-              $user->save();
-                 
-               $w = "     TIME_TO_SEC(timediff(now(),lastactive)) <300  ";
-               if($this->branch_id>0){
-                 $w .= "  and  employee_id  in (select employee_id from employees where branch_id ={$this->branch_id}) ";  
-               }
-               
-               
-               $users = \App\Entity\User::findArray('username',$w,'username') ;
-               foreach($users as $u){
-                  $this->_tvars["aulist"][]=array('ausername'=>$u); 
-               }    
-               
-               
-               $this->_tvars["activeuserscnt"]  = count( $this->_tvars["aulist"]);
-                 
+        if ($options['showactiveusers'] == 1) {
+            $this->_tvars["showactiveusers"] = true;
+            $this->_tvars["activeuserscnt"] = 0;
+            $this->_tvars["aulist"] = array();
+            $user->lastactive = time();
+            $user->save();
+
+            $w = "     TIME_TO_SEC(timediff(now(),lastactive)) <300  ";
+            if ($this->branch_id > 0) {
+                $w .= "  and  employee_id  in (select employee_id from employees where branch_id ={$this->branch_id}) ";
+            }
+
+
+            $users = \App\Entity\User::findArray('username', $w, 'username');
+            foreach ($users as $u) {
+                $this->_tvars["aulist"][] = array('ausername' => $u);
+            }
+
+
+            $this->_tvars["activeuserscnt"] = count($this->_tvars["aulist"]);
+
         }
-        
-        
+
+
         $this->generateToasts();
     }
 
@@ -241,10 +241,10 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars['alerterror'] = "";
         if (strlen(System::getErrorMsg()) > 0) {
             $this->_tvars['alerterror'] = System::getErrorMsg();
-        
-            $this->goAnkor('topankor') ;    
-       
-            
+
+            $this->goAnkor('topankor');
+
+
         }
     }
 
@@ -289,9 +289,8 @@ class Base extends \Zippy\Html\WebPage
     }
 
     private function generateToasts() {
-              
 
-                  
+
         $this->_tvars["toasts"] = array();
         if (\App\Session::getSession()->toasts == true) {
             return;
@@ -307,13 +306,15 @@ class Base extends \Zippy\Html\WebPage
         if ($user->defmf == 0) {
             $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("nodefmf") . "\"");
         }
-        if($user->userlogin == "admin"){       
-            if ($user->userpass == "admin" ||   $user->userpass= '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.') {
-                   $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("nodefadminpass") . "\"");
-         
+        if ($user->userlogin == "admin") {
+            if ($user->userpass == "admin" || $user->userpass = '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.') {
+                $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("nodefadminpass") . "\"");
+
             }
-        }          
-        if(count( $this->_tvars["toasts"])==0)$this->_tvars["toasts"][] = array('title' => '');
+        }
+        if (count($this->_tvars["toasts"]) == 0) {
+            $this->_tvars["toasts"][] = array('title' => '');
+        }
         \App\Session::getSession()->toasts = true;
     }
 

@@ -155,9 +155,9 @@ class ProjectList extends \App\Pages\Base
         $user = System::getUser();
         $this->_project->creator_id = $user->user_id;
         $this->_project->creator = $user->username;
-        
+
         $this->updateUsers();
-        
+
         $this->projectform->userlist->setAllChecked(0);
     }
 
@@ -177,11 +177,11 @@ class ProjectList extends \App\Pages\Base
         if (in_array($this->_project->creator_id, $users) == false) {
             $users[] = $this->_project->creator_id;
         }
-        
+
 
         $this->_project->save();
-        $this->_project->setUsers($users);        
-        
+        $this->_project->setUsers($users);
+
         $this->projectform->setVisible(false);
         $this->projectpanel->setVisible(true);
         $this->projectpanel->projectlist->Reload();

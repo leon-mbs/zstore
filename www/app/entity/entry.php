@@ -18,17 +18,17 @@ class Entry extends \ZCL\DB\Entity
      * @param mixed $amount Сумма.
      * @param mixed $quantity количество
      */
-    public function __construct($document_id=0 , $amount = 0, $quantity = 0) {
+    public function __construct($document_id = 0, $amount = 0, $quantity = 0) {
         parent::__construct();
 
         $this->document_id = $document_id;
-       // $this->amount = $amount;
+        // $this->amount = $amount;
 
         $this->quantity = $quantity;
     }
 
     protected function init() {
-     
+
     }
 
     protected function afterLoad() {
@@ -38,17 +38,17 @@ class Entry extends \ZCL\DB\Entity
     public function setQuantity($quantity) {
         $this->quantity = $quantity;
     }
+
     public function setStock($stock_id) {
         $this->stock_id = $stock_id;
     }
 
- 
 
     public function setService($service_id) {
         $this->service_id = $service_id;
     }
 
- 
+
     public function setOutPrice($price) {
 
         $this->outprice = $price;

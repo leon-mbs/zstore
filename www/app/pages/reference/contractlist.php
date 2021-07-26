@@ -89,10 +89,10 @@ class ContractList extends \App\Pages\Base
         $row->add(new Label('contract_number', $item->contract_number));
         $row->add(new Label('shortdesc', $item->shortdesc));
         $row->add(new Label('term', H::fd($item->createdon) . ' - ' . H::fd($item->enddate)));
-        if($item->enddate >0 && $item->enddate < time()) {
-            $row->term->setAttribute('class','text-danger');
+        if ($item->enddate > 0 && $item->enddate < time()) {
+            $row->term->setAttribute('class', 'text-danger');
         }
-        
+
         $row->add(new Label('customer', $item->customer_name));
         $row->add(new Label('firm', $item->firm_name));
 
@@ -231,7 +231,7 @@ class ContractList extends \App\Pages\Base
 
         $this->docpan->dtable->getDataSource()->setArray($dlist);
         $this->docpan->dtable->Reload();
-        $this->docpan->ptable->getDataSource()->setArray($plist);        
+        $this->docpan->ptable->getDataSource()->setArray($plist);
         $this->docpan->ptable->Reload();
     }
 
@@ -242,6 +242,7 @@ class ContractList extends \App\Pages\Base
         $row->add(new Label("ddate", H::fd($doc->document_date)));
         $row->add(new Label("dsumma", H::fa($doc->amount)));
     }
+
     public function paylistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
         $row->add(new Label("pmfname", $doc->mf_name));

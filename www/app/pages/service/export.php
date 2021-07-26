@@ -105,8 +105,8 @@ class Export extends \App\Pages\Base
         $pt = $this->iform->price->getValue();
 
         $sql = "disabled <> 1 ";
-        if( $tp > 0) {
-            $sql .= " and item_type=".$tp;
+        if ($tp > 0) {
+            $sql .= " and item_type=" . $tp;
         }
         $list = Item::find($sql, "itemname asc");
 

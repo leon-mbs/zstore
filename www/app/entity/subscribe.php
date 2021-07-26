@@ -107,10 +107,12 @@ class Subscribe extends \ZCL\DB\Entity
             if ($sub->state != $state) {
                 continue;
             }
-            
-            $cnt =  $doc->checkStates(array($state));
-            if($cnt>1) continue;
-            
+
+            $cnt = $doc->checkStates(array($state));
+            if ($cnt > 1) {
+                continue;
+            }
+
             $phone = '';
             //  $viber='';
             $email = '';
@@ -178,13 +180,13 @@ class Subscribe extends \ZCL\DB\Entity
         $header['mf'] = '';
         $header['pos'] = '';
         $header['device'] = $doc->headerdata['device'];
-        if(strlen($doc->headerdata['device']) >0  && strlen($doc->headerdata['devsn'])>0) {
-             $header['device'] .= " (".$doc->headerdata['devsn'].")" ;
+        if (strlen($doc->headerdata['device']) > 0 && strlen($doc->headerdata['devsn']) > 0) {
+            $header['device'] .= " (" . $doc->headerdata['devsn'] . ")";
         }
-        
+
         $header['notes'] = $doc->document_number;
-        
-        if ($doc->headerdata['payment'] > 0  ) {
+
+        if ($doc->headerdata['payment'] > 0) {
             $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
             $header['mf'] = $mf->mf_name;
             if ($mf->beznal == 1) {
@@ -193,17 +195,17 @@ class Subscribe extends \ZCL\DB\Entity
                 $header['nal'] = \App\Helper::l("cnal");
             }
         } else {
-            if($doc->headerdata['payamount']>0 && $doc->headerdata['payed']==0) {
-                $header['mf']  = H::l("credit");
+            if ($doc->headerdata['payamount'] > 0 && $doc->headerdata['payed'] == 0) {
+                $header['mf'] = H::l("credit");
             }
-            if($doc->headerdata['payamount']==0) {
-                $header['mf']  = H::l("prepaid");
+            if ($doc->headerdata['payamount'] == 0) {
+                $header['mf'] = H::l("prepaid");
             }
         }
-        if ($doc->headerdata['payed'] == 0 && $doc->payamount>0 ) {
+        if ($doc->headerdata['payed'] == 0 && $doc->payamount > 0) {
             $header['mf'] = \App\Helper::l("credit");
         }
-        if ($doc->headerdata['payed'] == 0 && $doc->payamount==0 ) {
+        if ($doc->headerdata['payed'] == 0 && $doc->payamount == 0) {
             $header['mf'] = \App\Helper::l("prepaid");
         }
 

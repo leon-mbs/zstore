@@ -37,16 +37,16 @@ class Inventory extends Document
                 $sc = new Entry($this->document_id, $qty * $stock->partion, $qty);
                 $sc->setStock($stock->stock_id);
                 $sc->save();
-                
+
                 //записываем  в доход
                 $io = new \App\Entity\IOState();
                 $io->document_id = $this->document_id;
-                $io->amount =  $qty * $stock->partion;
+                $io->amount = $qty * $stock->partion;
                 $io->iotype = \App\Entity\IOState::TYPE_OVER;
-          
+
                 $io->save();
-                
-                
+
+
             }
 
             //списываем  со склада
@@ -61,12 +61,12 @@ class Inventory extends Document
                     //записываем  в потери
                     $io = new \App\Entity\IOState();
                     $io->document_id = $this->document_id;
-                    $io->amount =  0-$qty * $stock->partion;
+                    $io->amount = 0 - $qty * $stock->partion;
                     $io->iotype = \App\Entity\IOState::TYPE_LOST;
-              
+
                     $io->save();
-                    
-                    
+
+
                 }
             }
         }
@@ -88,8 +88,8 @@ class Inventory extends Document
             if ($user->rolename != 'admins') {
                 $q = '-';
             }
-            
-            if(round($item->qfact)==round($q)) {
+
+            if (round($item->qfact) == round($q)) {
                 $detail[] = array("no"        => $i++,
                                   "item_name" => $name,
                                   "qfact"     => $item->qfact,
@@ -97,27 +97,27 @@ class Inventory extends Document
                                   "quantity"  => $q
                 );
             }
-            if(round($item->qfact)<round($q)) {
+            if (round($item->qfact) < round($q)) {
                 $detaillost[] = array("no"        => $i++,
-                                  "item_name" => $name,
-                                  "qfact"     => $item->qfact,
-                                  "snumber"   => $item->snumber,
-                                  "quantity"  => $q
+                                      "item_name" => $name,
+                                      "qfact"     => $item->qfact,
+                                      "snumber"   => $item->snumber,
+                                      "quantity"  => $q
                 );
             }
-            if(round($item->qfact)>round($q)) {
+            if (round($item->qfact) > round($q)) {
                 $detailover[] = array("no"        => $i++,
-                                  "item_name" => $name,
-                                  "qfact"     => $item->qfact,
-                                  "snumber"   => $item->snumber,
-                                  "quantity"  => $q
+                                      "item_name" => $name,
+                                      "qfact"     => $item->qfact,
+                                      "snumber"   => $item->snumber,
+                                      "quantity"  => $q
                 );
             }
         }
 
         $header = array(
-            "_detaillost"         => $detaillost,
-            "_detailover"         => $detailover,
+            "_detaillost"     => $detaillost,
+            "_detailover"     => $detailover,
             "_detail"         => $detail,
             'date'            => H::fd($this->document_date),
             "store"           => $this->headerdata["storename"],

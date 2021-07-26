@@ -73,23 +73,23 @@ class Stock extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
 
         $where = "store_id = {$store_id} and item_id = {$item_id}   ";
-         
+
 
         if (strlen($snumber) > 0) {
             $where .= "  and  snumber =  " . $conn->qstr($snumber);
         }
 
-   //     if ($partiontype == '2') {    //учет  отдельно  по  каждой цене
-      //     $where .= " and partion = {$price}   ";
-   //     }
+        //     if ($partiontype == '2') {    //учет  отдельно  по  каждой цене
+        //     $where .= " and partion = {$price}   ";
+        //     }
 
-      
-        $stock = self::getFirst($where." and partion = {$price}   ", 'stock_id desc');
+
+        $stock = self::getFirst($where . " and partion = {$price}   ", 'stock_id desc');
         if ($partiontype == '1' && $stock == null) {  //если  не  нашли  такую  партию  то  берем  последнюю
-            $stock = self::getFirst($where , 'stock_id desc');
+            $stock = self::getFirst($where, 'stock_id desc');
         }
-        
-        
+
+
         if ($stock == null && $create == true) {
             $stock = new Stock();
             $stock->store_id = $store_id;
@@ -139,7 +139,7 @@ class Stock extends \ZCL\DB\Entity
 
         $stlist = self::find($where, ' stock_id  ');
 
-         
+
         $qty = $item->quantity;
         $last = null;
         foreach ($stlist as $st) {

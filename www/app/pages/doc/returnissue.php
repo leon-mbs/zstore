@@ -84,8 +84,10 @@ class ReturnIssue extends \App\Pages\Base
 
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
-           if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )  $this->_doc->payed = $this->_doc->headerdata['payed'];
-            $this->docform->editpayed->setText(H::fa($this->_doc->payed));            
+            if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
+                $this->_doc->payed = $this->_doc->headerdata['payed'];
+            }
+            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
             $this->docform->payed->setText(H::fa($this->_doc->payed));
 
             $this->docform->total->setText(H::fa($this->_doc->amount));
@@ -105,12 +107,11 @@ class ReturnIssue extends \App\Pages\Base
                     if (count($d) > 0) {
 
                         $this->setError('return_exists');
-                        App::Redirect("\\App\\Pages\\Register\\DocList" );
-                        return;                         
+                        App::Redirect("\\App\\Pages\\Register\\DocList");
+                        return;
                     }
-                        
-                    
-                    
+
+
                     if ($basedoc->meta_name == 'GoodsIssue') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->customer->setKey($basedoc->customer_id);
@@ -280,8 +281,8 @@ class ReturnIssue extends \App\Pages\Base
         $this->_doc->payamount = $this->docform->total->getText();
         $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
-    
-       $isEdited = $this->_doc->document_id > 0;
+
+        $isEdited = $this->_doc->document_id > 0;
 
         $pos_id = $this->docform->pos->getValue();
 
@@ -344,7 +345,7 @@ class ReturnIssue extends \App\Pages\Base
 
 
             $conn->CommitTrans();
-               App::Redirect("\\App\\Pages\\Register\\GIList");
+            App::Redirect("\\App\\Pages\\Register\\GIList");
 
         } catch(\Throwable $ee) {
             global $logger;
@@ -410,45 +411,44 @@ class ReturnIssue extends \App\Pages\Base
         if (($this->docform->store->getValue() > 0) == false) {
             $this->setError("noselstore");
         }
-        
+
         $c = $this->docform->customer->getKey();
         if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $c == 0) {
             $this->setError("mustsel_cust");
         }
-        
-        
+
+
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
             $this->setError("noselmf");
         }
 
-        
+
         //проверка  что не  поменялась  цена
-        $base = Document::load($this->_basedocid) ;
-        if($base instanceof Document){
+        $base = Document::load($this->_basedocid);
+        if ($base instanceof Document) {
             $base = $base->cast();
             $bt = $base->unpackDetails('detaildata');
-            
-            if(is_array($bt)){
-            
-                foreach($this->_tovarlist as $t){
-                    $ok = false;                                
-                    foreach($bt as $b) {
-                        if($b->item_id == $t->item_id && $b->price == $t->price)  {
-                           $ok = true;break;   
+
+            if (is_array($bt)) {
+
+                foreach ($this->_tovarlist as $t) {
+                    $ok = false;
+                    foreach ($bt as $b) {
+                        if ($b->item_id == $t->item_id && $b->price == $t->price) {
+                            $ok = true;
+                            break;
                         }
                     }
-                    if($ok == false) {
+                    if ($ok == false) {
                         $this->setError("thesameitempriceret");
                         break;
                     }
-                    
+
                 }
             }
         }
-        
-        
-        
-        
+
+
         return !$this->isError();
     }
 

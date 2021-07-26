@@ -46,8 +46,8 @@ class GoodsReceipt extends Document
                         "customer_name"   => $this->customer_name,
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount),
-                        "payed"           => $this->payed >0 ? H::fa($this->payed):false,
-                        "payamount"       => $this->payamount >0 ? H::fa($this->payamount):false 
+                        "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
+                        "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
         );
         if ($this->headerdata["contract_id"] > 0) {
             $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);
@@ -106,7 +106,7 @@ class GoodsReceipt extends Document
 
             $sc = new Entry($this->document_id, $item->price * $item->quantity, $item->quantity);
             $sc->setStock($stock->stock_id);
-           // $sc->setExtCode($item->price); //Для АВС 
+            // $sc->setExtCode($item->price); //Для АВС
             $sc->setOutPrice($item->price);
 
             $sc->save();
@@ -122,17 +122,16 @@ class GoodsReceipt extends Document
 
 
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-          $payed=  \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->payed, $this->headerdata['payment'],   \App\Entity\IOState::TYPE_BASE_OUTCOME);
-          if ($payed > 0) {
+            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->payed, $this->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_OUTCOME);
+            if ($payed > 0) {
                 $this->payed = $payed;
-          }
+            }
 
-            \App\Entity\IOState::addIOState($this->document_id,0 - $this->payed,\App\Entity\IOState::TYPE_BASE_OUTCOME);
-           
-           
-          
+            \App\Entity\IOState::addIOState($this->document_id, 0 - $this->payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+
+
         }
- 
+
         return true;
     }
 

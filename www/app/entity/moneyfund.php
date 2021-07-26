@@ -11,7 +11,7 @@ namespace App\Entity;
 class MoneyFund extends \ZCL\DB\Entity
 {
 
-   
+
     protected function init() {
         $this->mf_id = 0;
         $this->branch_id = 0;
@@ -77,11 +77,10 @@ class MoneyFund extends \ZCL\DB\Entity
     /**
      * список счетов для комбо
      *
-     *     
-   
+     *
      * @param mixed $nal 0 - все, 1- нол,2- безнал
      */
-    public static function getList(   $nal = 0) {
+    public static function getList($nal = 0) {
         $ml = array();
 
         foreach (MoneyFund::find("") as $k => $v) {

@@ -47,16 +47,16 @@ class Equipment extends \ZCL\DB\Entity
 
     //возвращает  оборудование для выпадающих списков
     public static function getQuipment() {
-         $list = array();
-         foreach(Equipment::find(  "disabled<>1 and detail like'%<eq>1</eq>%' ", "eq_name") as $eq ) {
+        $list = array();
+        foreach (Equipment::find("disabled<>1 and detail like'%<eq>1</eq>%' ", "eq_name") as $eq) {
             $list[$eq->eq_id] = $eq->eq_name;
-            if(strlen($eq->serial) > 0) {
-               $list[$eq->eq_id] = $eq->eq_name .', '.$eq->serial;    
+            if (strlen($eq->serial) > 0) {
+                $list[$eq->eq_id] = $eq->eq_name . ', ' . $eq->serial;
             }
-            
-             
-         }
-         return  $list;
+
+
+        }
+        return $list;
     }
 
 }

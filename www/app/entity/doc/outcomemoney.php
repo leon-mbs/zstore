@@ -18,15 +18,15 @@ class OutcomeMoney extends Document
         if ($payed > 0) {
             $this->payed = $payed;
         }
-       \App\Entity\IOState::addIOState($this->document_id,  0 - $this->amount,$this->headerdata['type']);
+        \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, $this->headerdata['type']);
 
         return true;
     }
 
     public function generateReport() {
 
-      
-        $pt = \App\Entity\IOState::getTypeList(2) ;
+
+        $pt = \App\Entity\IOState::getTypeList(2);
         $header = array(
             'amount'          => H::fa($this->amount),
             'date'            => H::fd($this->document_date),

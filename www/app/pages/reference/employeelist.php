@@ -135,14 +135,14 @@ class EmployeeList extends \App\Pages\Base
         $this->_employee->branch_id = $this->employeedetail->editbranch->getValue();
 
         $this->_employee->disabled = $this->employeedetail->editdisabled->isChecked() ? 1 : 0;
-        if($this->_employee->disabled==1) {
-            $u = \App\Entity\User::getByLogin($this->_employee->login)  ;
+        if ($this->_employee->disabled == 1) {
+            $u = \App\Entity\User::getByLogin($this->_employee->login);
             $u->userpass = '';
             $u->save();
-            $this->_employee->login='';   
-           
+            $this->_employee->login = '';
+
         }
-        
+
         $this->_employee->save();
 
         $this->employeedetail->setVisible(false);

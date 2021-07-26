@@ -24,7 +24,7 @@ class MoveMoney extends \App\Pages\Base
 {
 
     private $_doc;
-   
+
     public function __construct($docid = 0) {
         parent::__construct();
 
@@ -34,10 +34,10 @@ class MoveMoney extends \App\Pages\Base
         $balance = MoneyFund::Balance();
 
         $list = array();
-        foreach( MoneyFund::getList() as $id =>$mf ) {
-           $list[$id]= $mf .", ". H::fa($balance[$id])   ;
+        foreach (MoneyFund::getList() as $id => $mf) {
+            $list[$id] = $mf . ", " . H::fa($balance[$id]);
         }
-        
+
         $this->docform->add(new DropDownChoice('paymentfrom', $list, H::getDefMF()));
         $this->docform->add(new DropDownChoice('paymentto', $list, H::getDefMF()));
         $this->docform->add(new TextInput('notes'));

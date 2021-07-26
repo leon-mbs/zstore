@@ -25,7 +25,7 @@ class Options extends \App\Pages\Base
 {
 
     private $metadatads;
-    public  $pricelist = array();
+    public  $pricelist        = array();
     public  $_salesourceslist = array();
 
     public function __construct() {
@@ -59,8 +59,8 @@ class Options extends \App\Pages\Base
         $this->common->add(new CheckBox('usebranch'));
         $this->common->add(new CheckBox('usecattree'));
         $this->common->add(new CheckBox('showactiveusers'));
-        
-        
+
+
         $this->common->add(new CheckBox('printoutbarcode'));
         $this->common->add(new CheckBox('printoutqrcode'));
         $this->common->add(new CheckBox('allowminus'));
@@ -103,8 +103,7 @@ class Options extends \App\Pages\Base
 
         $this->common->usesnumber->setChecked($common['usesnumber']);
 
-        
-        
+
         $this->common->printoutbarcode->setChecked($common['printoutbarcode']);
         $this->common->printoutqrcode->setChecked($common['printoutqrcode']);
         $this->common->showactiveusers->setChecked($common['showactiveusers']);
@@ -121,7 +120,7 @@ class Options extends \App\Pages\Base
         $this->common->ts_break->setText($common['ts_break'] == null ? '60' : $common['ts_break']);
         $this->common->ts_start->setText($common['ts_start'] == null ? '09:00' : $common['ts_start']);
         $this->common->ts_end->setText($common['ts_end'] == null ? '18:00' : $common['ts_end']);
-        $this->common->checkslogan->setText( $common['checkslogan']);
+        $this->common->checkslogan->setText($common['checkslogan']);
 
         //валюты
         $this->add(new Form('valform'))->onSubmit($this, 'saveValOnClick');
@@ -221,37 +220,37 @@ class Options extends \App\Pages\Base
         $this->sms->smstype->setValue($sms['smstype']);
 
         $this->onSMSType($this->sms->smstype);
-        
+
         //общепит
         $food = System::getOptions("food");
         if (!is_array($food)) {
-            $food = array( );
+            $food = array();
         }
-        $this->add(new Form('food'))->onSubmit($this,'onFood');
-        $this->food->add(new DropDownChoice('foodpricetype', \App\Entity\Item::getPriceTypeList(),$food['pricetype']));
-        $this->food->add(new DropDownChoice('foodworktype', array(),$food['worktype']));
-        $this->food->add(new CheckBox('fooddelivery',$food['delivery']));
-        $this->food->add(new CheckBox('foodtables',$food['tables']));
-        $this->food->add(new CheckBox('foodpack',$food['pack']));
-          
+        $this->add(new Form('food'))->onSubmit($this, 'onFood');
+        $this->food->add(new DropDownChoice('foodpricetype', \App\Entity\Item::getPriceTypeList(), $food['pricetype']));
+        $this->food->add(new DropDownChoice('foodworktype', array(), $food['worktype']));
+        $this->food->add(new CheckBox('fooddelivery', $food['delivery']));
+        $this->food->add(new CheckBox('foodtables', $food['tables']));
+        $this->food->add(new CheckBox('foodpack', $food['pack']));
+
         //источники  продаж
-        $this->add(new Form('salesourcesform')) ;
+        $this->add(new Form('salesourcesform'));
         $this->salesourcesform->add(new SubmitButton('salesourcesave'))->onClick($this, 'OnSaveSaleSource');
         $this->salesourcesform->add(new SubmitLink('addnewsalesource'))->onClick($this, 'OnAddSaleSource');
 
         $this->salesourcesform->add(new DataView('salesourceslist', new ArrayDataSource(new Bind($this, '_salesourceslist')), $this, 'salesourceListOnRow'));
-      
+
         $this->_salesourceslist = $common['salesources'];
         if (is_array($this->_salesourceslist) == false) {
             $this->_salesourceslist = array();
         }
 
         $this->salesourcesform->salesourceslist->Reload();
-      
+
     }
 
     public function saveCommonOnClick($sender) {
-         $common = System::getOptions("common");
+        $common = System::getOptions("common");
         if (!is_array($common)) {
             $common = array();
         }
@@ -272,7 +271,7 @@ class Options extends \App\Pages\Base
         $common['shopname'] = $this->common->shopname->getText();
         $common['ts_break'] = $this->common->ts_break->getText();
         $common['ts_start'] = $this->common->ts_start->getText();
-        $common['ts_end']   = $this->common->ts_end->getText();
+        $common['ts_end'] = $this->common->ts_end->getText();
         $common['checkslogan'] = $this->common->checkslogan->getText();
 
         $common['autoarticle'] = $this->common->autoarticle->isChecked() ? 1 : 0;
@@ -283,8 +282,8 @@ class Options extends \App\Pages\Base
 
         $common['printoutqrcode'] = $this->common->printoutqrcode->isChecked() ? 1 : 0;
         $common['printoutbarcode'] = $this->common->printoutbarcode->isChecked() ? 1 : 0;
-        
-        
+
+
         $common['showactiveusers'] = $this->common->showactiveusers->isChecked() ? 1 : 0;
         $common['usecattree'] = $this->common->usecattree->isChecked() ? 1 : 0;
         $common['usebranch'] = $this->common->usebranch->isChecked() ? 1 : 0;
@@ -392,20 +391,21 @@ class Options extends \App\Pages\Base
             $this->setError($res);
         }
     }
+
     public function onFood($sender) {
         $food = array();
-        $food['worktype'] = $sender->foodworktype->getValue() ;
-        $food['pricetype'] = $sender->foodpricetype->getValue() ;
-        $food['delivery'] = $sender->fooddelivery->isChecked()?1:0 ;
-        $food['tables'] = $sender->foodtables->isChecked()?1:0 ;
-    
-        $food['pack'] = $sender->foodpack->isChecked()?1:0 ;
-        
-        
+        $food['worktype'] = $sender->foodworktype->getValue();
+        $food['pricetype'] = $sender->foodpricetype->getValue();
+        $food['delivery'] = $sender->fooddelivery->isChecked() ? 1 : 0;
+        $food['tables'] = $sender->foodtables->isChecked() ? 1 : 0;
+
+        $food['pack'] = $sender->foodpack->isChecked() ? 1 : 0;
+
+
         System::setOptions("food", $food);
         $this->setSuccess('saved');
     }
- 
+
 
     public function OnAddSaleSource($sender) {
         $ls = new \App\DataItem();
@@ -413,11 +413,11 @@ class Options extends \App\Pages\Base
         $ls->id = time();
         $this->_salesourceslist[$ls->id] = $ls;
         $this->salesourcesform->salesourceslist->Reload();
-        $this->goAnkor('salesourcesform') ;
+        $this->goAnkor('salesourcesform');
     }
-   
 
-    public function salesourceListOnRow(  $row) {
+
+    public function salesourceListOnRow($row) {
         $item = $row->getDataItem();
         $row->add(new TextInput('salesourcename', new Bind($item, 'name')));
         $row->add(new ClickLink('delsalesource', $this, 'onDelSaleSource'));
@@ -429,15 +429,15 @@ class Options extends \App\Pages\Base
         $this->_salesourceslist = array_diff_key($this->_salesourceslist, array($item->id => $this->_salesourceslist[$item->id]));
 
         $this->salesourcesform->salesourceslist->Reload();
-        $this->goAnkor('salesourcesform') ;        
-    }  
-  
-     public function OnSaveSaleSource($sender) {
+        $this->goAnkor('salesourcesform');
+    }
+
+    public function OnSaveSaleSource($sender) {
 
         $options = System::getOptions('common');
         $options['salesources'] = $this->_salesourceslist;
         System::setOptions('common', $options);
 
-        $this->setSuccess('saved');      
-    } 
+        $this->setSuccess('saved');
+    }
 }

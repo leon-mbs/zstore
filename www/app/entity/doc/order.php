@@ -60,8 +60,8 @@ class Order extends \App\Entity\Doc\Document
                         "total"           => H::fa($this->amount),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
-                        "payed"           => $this->payed >0 ? H::fa($this->payed):false,
-                        "payamount"       => $this->payamount >0 ? H::fa($this->payamount):false 
+                        "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
+                        "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
         );
 
         $report = new \App\Report('doc/order.tpl');
@@ -108,11 +108,11 @@ class Order extends \App\Entity\Doc\Document
         }
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
-         $printer =  System::getOptions('printer');
-        $style="";
+        $printer = System::getOptions('printer');
+        $style = "";
         if (strlen($printer['pdocfontsize']) > 0 || strlen($printer['pdocwidth']) > 0) {
             $style = 'style="font-size:' . $printer['pdocfontsize'] . 'px;width:' . $printer['pdocwidth'] . ';"';
-            
+
         }
 
         $header = array('date'            => H::fd($this->document_date),
@@ -121,7 +121,7 @@ class Order extends \App\Entity\Doc\Document
                         "phone"           => $firm["phone"],
                         "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
                         "document_number" => $this->document_number,
-                         "style"          =>  $style,
+                        "style"           => $style,
                         "total"           => H::fa($this->amount)
         );
 
@@ -152,8 +152,8 @@ class Order extends \App\Entity\Doc\Document
                 if ($payed > 0) {
                     $this->payed = $payed;
                 }
-            \App\Entity\IOState::addIOState($this->document_id,  $this->payed,\App\Entity\IOState::TYPE_BASE_INCOME);
-                
+                \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+
             }
         }
     }

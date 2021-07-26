@@ -22,6 +22,7 @@ class docs extends \App\API\Base\JsonRPC
 
         return $list;
     }
+
     //список касс и  денежных счетов
     public function mflist() {
         $list = \App\Entity\MoneyFund::getList();
@@ -140,7 +141,7 @@ class docs extends \App\API\Base\JsonRPC
             throw new \Exception(H::l("apinumberexists", $args['number']));   //номер уже  существует
         }
         $doc = Document::create('TTN');
-       if ($args['customer_id'] > 0) {
+        if ($args['customer_id'] > 0) {
             $c = \App\Entity\Customer::load($args['customer_id']);
             if ($c == null) {
                 throw new \Exception(H::l("apicustnotfound"));
@@ -149,16 +150,16 @@ class docs extends \App\API\Base\JsonRPC
                 $doc->headerdata['customer_name'] = $c->customer_name;
             }
         }
-       
-            $st = \App\Entity\Store::load($args['store_id']);
-            if ($st == null) {
-                throw new \Exception(H::l("apistorenotfound"));
-            } else {
-                $doc->headerdata['store'] = $args['store_id'];
-                $doc->headerdata['store_name'] = $st->storename;
-            }
-       
-        
+
+        $st = \App\Entity\Store::load($args['store_id']);
+        if ($st == null) {
+            throw new \Exception(H::l("apistorenotfound"));
+        } else {
+            $doc->headerdata['store'] = $args['store_id'];
+            $doc->headerdata['store_name'] = $st->storename;
+        }
+
+
         $doc->document_number = $doc->nextNumber();
         $doc->document_date = time();
         $doc->state = Document::STATE_NEW;
@@ -207,7 +208,8 @@ class docs extends \App\API\Base\JsonRPC
 
         return $doc->document_number;
     }
-   //записать расходную накдадную
+
+    //записать расходную накдадную
     public function goodsissue($args) {
 
         if (strlen($args['number']) == 0) {
@@ -229,27 +231,26 @@ class docs extends \App\API\Base\JsonRPC
                 $doc->headerdata['customer_name'] = $c->customer_name;
             }
         }
-            $st = \App\Entity\Store::load($args['store_id']);
-            if ($st == null) {
-                throw new \Exception(H::l("apistorenotfound"));
-            } else {
-                $doc->headerdata['store'] = $args['store_id'];
-                $doc->headerdata['store_name'] = $st->storename;
-            }
-        
-        
-        
+        $st = \App\Entity\Store::load($args['store_id']);
+        if ($st == null) {
+            throw new \Exception(H::l("apistorenotfound"));
+        } else {
+            $doc->headerdata['store'] = $args['store_id'];
+            $doc->headerdata['store_name'] = $st->storename;
+        }
+
+
         $doc->document_number = $doc->nextNumber();
         $doc->document_date = time();
         $doc->state = Document::STATE_NEW;
         $doc->headerdata["apinumber"] = $args['number'];
         $doc->headerdata["payment"] = $args['mf'];
-       
+
 
         $doc->notes = @base64_decode($args['description']);
         $details = array();
         $total = 0;
-        
+
         if (is_array($args['items']) && count($args['items']) > 0) {
             foreach ($args['items'] as $it) {
                 if (strlen($it['item_code']) == 0) {
@@ -285,14 +286,15 @@ class docs extends \App\API\Base\JsonRPC
         $doc->payed = $args["payed"];
 
         $doc->save();
-        if($args["autoexec"]==true) {
-           $doc->updateStatus(Document::STATE_EXECUTED);    
+        if ($args["autoexec"] == true) {
+            $doc->updateStatus(Document::STATE_EXECUTED);
         }
-        
+
 
         return $doc->document_number;
     }
- //записать приходную накдадную
+
+    //записать приходную накдадную
     public function goodsreceipt($args) {
 
         if (strlen($args['number']) == 0) {
@@ -305,25 +307,24 @@ class docs extends \App\API\Base\JsonRPC
             throw new \Exception(H::l("apinumberexists", $args['number']));   //номер уже  существует
         }
         $doc = Document::create('GoodsReceipt');
-     
-            $c = \App\Entity\Customer::load($args['customer_id']);
-            if ($c == null) {
-                throw new \Exception(H::l("apicustnotfound"));
-            } else {
-                $doc->customer_id = $args['customer_id'];
-                $doc->headerdata['customer_name'] = $c->customer_name;
-            }
-     
-            $st = \App\Entity\Store::load($args['store_id']);
-            if ($st == null) {
-                throw new \Exception(H::l("apistorenotfound"));
-            } else {
-                $doc->headerdata['store'] = $args['store_id'];
-                $doc->headerdata['store_name'] = $st->storename;
-            }
-        
-        
-        
+
+        $c = \App\Entity\Customer::load($args['customer_id']);
+        if ($c == null) {
+            throw new \Exception(H::l("apicustnotfound"));
+        } else {
+            $doc->customer_id = $args['customer_id'];
+            $doc->headerdata['customer_name'] = $c->customer_name;
+        }
+
+        $st = \App\Entity\Store::load($args['store_id']);
+        if ($st == null) {
+            throw new \Exception(H::l("apistorenotfound"));
+        } else {
+            $doc->headerdata['store'] = $args['store_id'];
+            $doc->headerdata['store_name'] = $st->storename;
+        }
+
+
         $doc->document_number = $doc->nextNumber();
         $doc->document_date = time();
         $doc->state = Document::STATE_NEW;
@@ -331,12 +332,12 @@ class docs extends \App\API\Base\JsonRPC
         $doc->headerdata["payment"] = $args['mf'];
         $doc->headerdata["nds"] = 0;
         $doc->headerdata["disc"] = 0;
-       
+
 
         $doc->notes = @base64_decode($args['description']);
         $details = array();
         $total = 0;
-        
+
         if (is_array($args['items']) && count($args['items']) > 0) {
             foreach ($args['items'] as $it) {
                 if (strlen($it['item_code']) == 0) {
@@ -372,13 +373,14 @@ class docs extends \App\API\Base\JsonRPC
         $doc->payed = $args["payed"];
 
         $doc->save();
-        if($args["autoexec"]==true) {
-           $doc->updateStatus(Document::STATE_EXECUTED);    
+        if ($args["autoexec"] == true) {
+            $doc->updateStatus(Document::STATE_EXECUTED);
         }
-        
+
 
         return $doc->document_number;
     }
+
 //записать  оприходование  ТМЦ
     public function incomeitem($args) {
 
@@ -392,30 +394,27 @@ class docs extends \App\API\Base\JsonRPC
             throw new \Exception(H::l("apinumberexists", $args['number']));   //номер уже  существует
         }
         $doc = Document::create('IncomeItem');
-     
-    
-     
-            $st = \App\Entity\Store::load($args['store_id']);
-            if ($st == null) {
-                throw new \Exception(H::l("apistorenotfound"));
-            } else {
-                $doc->headerdata['store'] = $args['store_id'];
-                $doc->headerdata['store_name'] = $st->storename;
-            }
-        
-        
-        
+
+
+        $st = \App\Entity\Store::load($args['store_id']);
+        if ($st == null) {
+            throw new \Exception(H::l("apistorenotfound"));
+        } else {
+            $doc->headerdata['store'] = $args['store_id'];
+            $doc->headerdata['store_name'] = $st->storename;
+        }
+
+
         $doc->document_number = $doc->nextNumber();
         $doc->document_date = time();
         $doc->state = Document::STATE_NEW;
         $doc->headerdata["apinumber"] = $args['number'];
-        
-       
+
 
         $doc->notes = @base64_decode($args['description']);
         $details = array();
         $total = 0;
-        
+
         if (is_array($args['items']) && count($args['items']) > 0) {
             foreach ($args['items'] as $it) {
                 if (strlen($it['item_code']) == 0) {
@@ -449,10 +448,10 @@ class docs extends \App\API\Base\JsonRPC
 
 
         $doc->save();
-        if($args["autoexec"]==true) {
-           $doc->updateStatus(Document::STATE_EXECUTED);    
+        if ($args["autoexec"] == true) {
+            $doc->updateStatus(Document::STATE_EXECUTED);
         }
-        
+
 
         return $doc->document_number;
     }
@@ -498,9 +497,9 @@ class docs extends \App\API\Base\JsonRPC
         $n = new \App\Entity\Notify();
         $n->user_id = $admin->user_id;
         $n->sender_id = $user->user_id;
-        
+
         $n->dateshow = time();
-        $n->message = H::l("apiasccancel",   $doc->document_number, $args['reason']);
+        $n->message = H::l("apiasccancel", $doc->document_number, $args['reason']);
         $n->save();
     }
 
@@ -559,6 +558,5 @@ class docs extends \App\API\Base\JsonRPC
         return $doc->document_number;
     }
 
-    
-    
+
 }

@@ -18,7 +18,7 @@ class IncomeMoney extends Document
         if ($payed > 0) {
             $this->payed = $payed;
         }
-        \App\Entity\IOState::addIOState($this->document_id,  $this->amount,$this->headerdata['type']);
+        \App\Entity\IOState::addIOState($this->document_id, $this->amount, $this->headerdata['type']);
 
 
         return true;
@@ -26,8 +26,8 @@ class IncomeMoney extends Document
 
     public function generateReport() {
 
-     
-        $pt = \App\Entity\IOState::getTypeList(1) ;
+
+        $pt = \App\Entity\IOState::getTypeList(1);
         $header = array(
             'amount'          => H::fa($this->amount),
             'date'            => H::fd($this->document_date),

@@ -86,8 +86,10 @@ class RetCustIssue extends \App\Pages\Base
             $this->docform->customer->setText($this->_doc->customer_name);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->total->setText(H::fa($this->_doc->amount));
-            if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )  $this->_doc->payed = $this->_doc->headerdata['payed'];
-            $this->docform->editpayed->setText(H::fa($this->_doc->payed));            
+            if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
+                $this->_doc->payed = $this->_doc->headerdata['payed'];
+            }
+            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
             $this->docform->payed->setText(H::fa($this->_doc->payed));
 
             $this->docform->notes->setText($this->_doc->notes);
@@ -235,7 +237,7 @@ class RetCustIssue extends \App\Pages\Base
             $customer = Customer::load($this->_doc->customer_id);
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
         }
- 
+
         //  $this->calcTotal();
         $firm = H::getFirmData($this->_doc->firm_id, $this->branch_id);
         $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
@@ -252,10 +254,12 @@ class RetCustIssue extends \App\Pages\Base
         if ($this->checkForm() == false) {
             return;
         }
-        
-        if($this->_doc->payed ==0)   $this->_doc->headerdata['payment']=0;
-        
-        
+
+        if ($this->_doc->payed == 0) {
+            $this->_doc->headerdata['payment'] = 0;
+        }
+
+
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -278,9 +282,9 @@ class RetCustIssue extends \App\Pages\Base
             }
 
             $conn->CommitTrans();
-         
-             App::Redirect("\\App\\Pages\\Register\\GIList");
-             
+
+            App::Redirect("\\App\\Pages\\Register\\GIList");
+
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();

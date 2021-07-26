@@ -29,7 +29,7 @@ class Document extends \ZCL\DB\Entity
     const STATE_FINISHED    = 18; // Закончен
     const STATE_APPROVED    = 19;      //  Готов к выполнению
     const STATE_READYTOSHIP = 20; // готов к отправке   
-     
+
     // типы  экспорта
     const EX_WORD  = 1; //  Word
     const EX_EXCEL = 2;    //  Excel
@@ -129,7 +129,7 @@ class Document extends \ZCL\DB\Entity
         $this->content = "<doc><header>";
 
         foreach ($this->headerdata as $key => $value) {
-            
+
 
             if (strpos($value, '[CDATA[') !== false) {
                 \App\System::setWarnMsg('CDATA в  поле  обьекта');
@@ -148,7 +148,8 @@ class Document extends \ZCL\DB\Entity
 
         $this->content .= "</doc>";
     }
-      //   select ExtractValue(@xml, '//doc/header/customer_id') from  documents 
+    //   select ExtractValue(@xml, '//doc/header/customer_id') from  documents
+
     /**
      * распаковка из  XML
      *
@@ -169,14 +170,14 @@ class Document extends \ZCL\DB\Entity
         }
         foreach ($xml->header->children() as $child) {
             $ch = (string)$child;
-         /*   if(is_numeric($ch)) {
-                   if(ctype_digit($ch))  $ch = intval($ch);
-                   else $ch = doubleval($ch)  ;
-             }            
-          */  
-            $this->headerdata[(string)$child->getName()] =$ch ;
+            /*   if(is_numeric($ch)) {
+                      if(ctype_digit($ch))  $ch = intval($ch);
+                      else $ch = doubleval($ch)  ;
+                }
+             */
+            $this->headerdata[(string)$child->getName()] = $ch;
         }
-        
+
         /*
         $this->detaildata = array();
 
@@ -209,7 +210,7 @@ class Document extends \ZCL\DB\Entity
             }
             $this->packDetails('detaildata', $detaildata);
             
-        }  */ 
+        }  */
     }
 
     /**
@@ -236,18 +237,18 @@ class Document extends \ZCL\DB\Entity
 
     }
 
-    
 
     /**
      * Запись  платежей
-     *  
+     *
      */
     public function DoPayment() {
 
     }
+
     /**
      * Проводки по складу
-     * 
+     *
      */
     public function DoStore() {
 
@@ -270,7 +271,7 @@ class Document extends \ZCL\DB\Entity
             //отменяем оплаты   
             $conn->Execute("delete from paylist where document_id = " . $this->document_id);
 
-     
+
             $conn->Execute("delete from iostate where document_id=" . $this->document_id);
 
 
@@ -316,7 +317,7 @@ class Document extends \ZCL\DB\Entity
      * Приведение  типа и клонирование  документа
      */
     public function cast() {
-        
+
         if (strlen($this->meta_name) == 0) {
             $metarow = Helper::getMetaType($this->meta_id);
             $this->meta_name = $metarow['meta_name'];
@@ -348,32 +349,31 @@ class Document extends \ZCL\DB\Entity
             }
 
             $state = self::STATE_WA;   //переводим на   ожидание  утверждения
+        } else {
+            if ($state == self::STATE_CANCELED) {
+                $this->Cancel();
+            } else {
+                if ($state == self::STATE_EXECUTED) {
+                    $this->Execute();
+                }
+            }
         }
-        else
-        if ($state == self::STATE_CANCELED) {
-            $this->Cancel();
-        } else
-        if ($state == self::STATE_EXECUTED) {
-            $this->Execute();
-        }
-        
-        
-        
+
+
         $oldstate = $this->state;
         $this->state = $state;
         $this->insertLog($state);
 
-        
 
         if ($oldstate != $state) {
             $doc = $this->cast();
             $doc->onState($state);
-             
+
             \App\Entity\Subscribe::onDocumentState($doc->document_id, $state);
         }
-        
+
         $this->save();
-        
+
         return true;
     }
 
@@ -566,20 +566,20 @@ class Document extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
 
         $hasExecuted = $conn->GetOne("select count(*)  from docstatelog where docstate = " . Document::STATE_EXECUTED . " and  document_id=" . $this->document_id);
-     //   $hasPayment = $conn->GetOne("select count(*)  from paylist where   document_id=" . $this->document_id);
+        //   $hasPayment = $conn->GetOne("select count(*)  from paylist where   document_id=" . $this->document_id);
 
         $conn->Execute("delete from docstatelog where document_id=" . $this->document_id);
-        
+
         $conn->Execute("delete from messages where item_type=" . \App\Entity\Message::TYPE_DOC . " and item_id=" . $this->document_id);
         $conn->Execute("delete from files where item_type=" . \App\Entity\Message::TYPE_DOC . " and item_id=" . $this->document_id);
         $conn->Execute("delete from filesdata where   file_id not in (select file_id from files)");
 
         //   if(System::getUser()->userlogin =='admin') return;
-        if ($hasExecuted  ) {
-             
+        if ($hasExecuted) {
+
             $n = new \App\Entity\Notify();
             $n->user_id = \App\Entity\Notify::SYSTEM;
-         
+
             $n->message = Helper::l('deleteddoc', System::getUser()->username, $this->document_number);
             $n->save();
         }
@@ -628,7 +628,7 @@ class Document extends \ZCL\DB\Entity
         $states = implode(',', $states);
 
         $cnt = $conn->getOne("select coalesce(count(*),0) from docstatelog where docstate in({$states}) and document_id={$this->document_id}");
-        return $cnt  ;
+        return $cnt;
     }
 
     /**
@@ -716,7 +716,7 @@ class Document extends \ZCL\DB\Entity
         $list = @unserialize(@base64_decode($this->headerdata[$dataname]));
         if (is_array($list)) {
             return $list;
-        } else {  
+        } else {
             return array();
         }
     }
@@ -725,15 +725,23 @@ class Document extends \ZCL\DB\Entity
         $data = base64_encode(serialize($list));
         $this->headerdata[$dataname] = $data;
         //для поиска
-        $s = array()  ;
-        foreach($list as $it){
-           if(strlen($it->itemname)>0) $s[]=$it->itemname;
-           if(strlen($it->item_code)>0) $s[]=$it->item_code;
-           if(strlen($it->bar_code)>0) $s[]=$it->bar_code;
-           if(strlen($it->service_name)>0) $s[]=$it->service_name;
-           
+        $s = array();
+        foreach ($list as $it) {
+            if (strlen($it->itemname) > 0) {
+                $s[] = $it->itemname;
+            }
+            if (strlen($it->item_code) > 0) {
+                $s[] = $it->item_code;
+            }
+            if (strlen($it->bar_code) > 0) {
+                $s[] = $it->bar_code;
+            }
+            if (strlen($it->service_name) > 0) {
+                $s[] = $it->service_name;
+            }
+
         }
-        $this->headerdata["__Ssearchdata__"] = serialize($s) ;
+        $this->headerdata["__Ssearchdata__"] = serialize($s);
     }
 
     /**
@@ -847,63 +855,68 @@ class Document extends \ZCL\DB\Entity
         return "";
     }
 
-    
+
     /**
-    * есть ли  оплаты
-    * 
-    */
-    public  function hasPayments(){
+     * есть ли  оплаты
+     *
+     */
+    public function hasPayments() {
         $conn = \ZDB\DB::getConnect();
         $sql = "select coalesce(sum(amount),0) from paylist where   document_id=" . $this->document_id;
         $am = doubleval($conn->GetOne($sql));
-        
-        return $am  != 0 ;   
-          
+
+        return $am != 0;
+
     }
+
     /**
-    * есть ли  проводки  по  складу
-    * 
-    */
-    public  function hasStore(){
+     * есть ли  проводки  по  складу
+     *
+     */
+    public function hasStore() {
         $conn = \ZDB\DB::getConnect();
         $sql = "select coalesce(count(*),0) from entrylist where   document_id=" . $this->document_id;
         $am = round($conn->GetOne($sql));
-        
-        return $am  > 0 ;   
-          
+
+        return $am > 0;
+
     }
 
     /**
-    * возвращает  тэг <img> со штрих кодом номера  документа
-    * 
-    */
-    protected  function getBarCodeImage(){
-        $print = System::getOption('common','printoutbarcode');
-        if($print==0) return '';
-         $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-         $img = '<img style="max-width:200px" src="data:image/png;base64,' . base64_encode($generator->getBarcode($this->document_number, 'C128')) . '">';
-      
-         return $img;
+     * возвращает  тэг <img> со штрих кодом номера  документа
+     *
+     */
+    protected function getBarCodeImage() {
+        $print = System::getOption('common', 'printoutbarcode');
+        if ($print == 0) {
+            return '';
+        }
+        $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+        $img = '<img style="max-width:200px" src="data:image/png;base64,' . base64_encode($generator->getBarcode($this->document_number, 'C128')) . '">';
+
+        return $img;
     }
-    
+
     /**
-    * возвращает  тэг <img> со QR кодом ссылки на  документ 
-    * 
-    */
-    protected  function getQRCodeImage(){
-        $print = System::getOption('common','printoutqrcode');
-        if($print==0) return '';
-        $url = _BASEURL."?p=App/Pages/Register/DocList&arg=".$this->document_id;
+     * возвращает  тэг <img> со QR кодом ссылки на  документ
+     *
+     */
+    protected function getQRCodeImage() {
+        $print = System::getOption('common', 'printoutqrcode');
+        if ($print == 0) {
+            return '';
+        }
+        $url = _BASEURL . "?p=App/Pages/Register/DocList&arg=" . $this->document_id;
         $qrCode = new \Endroid\QrCode\QrCode($url);
-         $qrCode->setSize(100);
-         $qrCode->setMargin(5); 
-         $qrCode->setWriterByName('png'); 
-         
-         $dataUri = $qrCode->writeDataUri();
-         $img = "<img   src=\"{$dataUri}\"  />";
+        $qrCode->setSize(100);
+        $qrCode->setMargin(5);
+        $qrCode->setWriterByName('png');
 
-         return $img;
-   }
-    
-    
+        $dataUri = $qrCode->writeDataUri();
+        $img = "<img   src=\"{$dataUri}\"  />";
+
+        return $img;
+    }
+
+
 }

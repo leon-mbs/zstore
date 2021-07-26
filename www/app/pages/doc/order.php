@@ -47,9 +47,9 @@ class Order extends \App\Pages\Base
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
 
         $this->docform->add(new TextArea('notes'));
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(    ), 0));
-        $this->docform->add(new DropDownChoice('salesource', H::getSaleSources() , H::getDefSaleSource()));
-  
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), 0));
+        $this->docform->add(new DropDownChoice('salesource', H::getSaleSources(), H::getDefSaleSource()));
+
         $this->docform->add(new TextInput('editpaydisc'));
         $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
         $this->docform->add(new Label('paydisc', 0));
@@ -102,7 +102,7 @@ class Order extends \App\Pages\Base
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
-       //добавление нового товара
+        //добавление нового товара
         $this->add(new Form('editnewitem'))->setVisible(false);
         $this->editnewitem->add(new TextInput('editnewitemname'));
         $this->editnewitem->add(new TextInput('editnewitemcode'));
@@ -110,8 +110,8 @@ class Order extends \App\Pages\Base
         $this->editnewitem->add(new Button('cancelnewitem'))->onClick($this, 'cancelnewitemOnClick');
         $this->editnewitem->add(new DropDownChoice('editnewcat', \App\Entity\Category::getList(), 0));
         $this->editnewitem->add(new SubmitButton('savenewitem'))->onClick($this, 'savenewitemOnClick');
-        
-        
+
+
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
@@ -130,8 +130,10 @@ class Order extends \App\Pages\Base
             $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
-            if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )  $this->_doc->payed = $this->_doc->headerdata['payed'];
-            $this->docform->editpayed->setText(H::fa($this->_doc->payed));            
+            if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
+                $this->_doc->payed = $this->_doc->headerdata['payed'];
+            }
+            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
             $this->docform->payed->setText(H::fa($this->_doc->payed));
 
             $this->docform->notes->setText($this->_doc->notes);
@@ -153,15 +155,14 @@ class Order extends \App\Pages\Base
                 }
             }
         }
-        
+
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
-        
-           
-        
+
+
     }
 
     public function detailOnRow($row) {
@@ -299,7 +300,6 @@ class Order extends \App\Pages\Base
         }
 
 
-
         $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
         $this->_doc->headerdata['delivery_name'] = $this->docform->delivery->getValueName();
         $this->_doc->headerdata['ship_address'] = $this->docform->address->getText();
@@ -321,7 +321,6 @@ class Order extends \App\Pages\Base
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         $this->_doc->headerdata['salesource'] = $this->docform->salesource->getValue();
 
-     
 
         if ($this->checkForm() == false) {
             return;
@@ -430,7 +429,7 @@ class Order extends \App\Pages\Base
             $this->setError("noselmf");
         }
 
-        
+
         return !$this->isError();
     }
 
@@ -481,7 +480,7 @@ class Order extends \App\Pages\Base
     }
 
     public function OnAutoItem($sender) {
-        return Item::findArrayAC( $sender->getText());
+        return Item::findArrayAC($sender->getText());
     }
 
     //добавление нового контрагента
@@ -559,7 +558,7 @@ class Order extends \App\Pages\Base
         $this->docform->payamount->setText($this->docform->editpayamount->getText());
         $this->docform->editpayed->setText($this->docform->editpayamount->getText());
         $this->docform->payed->setText($this->docform->editpayamount->getText());
-        
+
         $this->goAnkor("tankor");
     }
 
@@ -573,7 +572,7 @@ class Order extends \App\Pages\Base
         } else {
             $this->goAnkor("tankor");
         }
-        
+
     }
 
     public function onPayDisc() {
@@ -592,16 +591,16 @@ class Order extends \App\Pages\Base
 
         $p = $this->docform->payment->getValue();
 
-   
-            $this->docform->editpayamount->setText(H::fa($total));
-            $this->docform->payamount->setText(H::fa($total));
-            $this->docform->editpayed->setText(H::fa($total));
-            $this->docform->payed->setText(H::fa($total));
- 
-        
+
+        $this->docform->editpayamount->setText(H::fa($total));
+        $this->docform->payamount->setText(H::fa($total));
+        $this->docform->editpayed->setText(H::fa($total));
+        $this->docform->payed->setText(H::fa($total));
+
+
     }
 
-   
+
     public function onSelectItem($item_id, $itemname) {
         $this->editdetail->edittovar->setKey($item_id);
         $this->editdetail->edittovar->setText($itemname);
@@ -613,13 +612,14 @@ class Order extends \App\Pages\Base
         $this->wselitem->setPriceType($this->docform->pricetype->getValue());
         $this->wselitem->Reload();
     }
-     //добавление нового товара
+
+    //добавление нового товара
     public function addnewitemOnClick($sender) {
         $this->editnewitem->setVisible(true);
         $this->editdetail->setVisible(false);
 
         $this->editnewitem->clean();
-        $this->editnewitem->editnewbrand->setDataList(Item::getManufacturers() );
+        $this->editnewitem->editnewbrand->setDataList(Item::getManufacturers());
     }
 
     public function savenewitemOnClick($sender) {
@@ -631,23 +631,23 @@ class Order extends \App\Pages\Base
         $item = new Item();
         $item->itemname = $itemname;
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
-        
-         if(strlen($item->item_code)>0) {
+
+        if (strlen($item->item_code) > 0) {
             $code = Item::qstr($item->item_code);
             $cnt = Item::findCnt("  item_code={$code} ");
             if ($cnt > 0) {
-               $this->setError('itemcode_exists');
-               return;
+                $this->setError('itemcode_exists');
+                return;
             }
-        
-        }  else {
-              if(\App\System::getOption("common", "autoarticle") == 1)   {
-                 
-                 $item->item_code = Item::getNextArticle() ;
-              } 
+
+        } else {
+            if (\App\System::getOption("common", "autoarticle") == 1) {
+
+                $item->item_code = Item::getNextArticle();
+            }
         }
-        
-        
+
+
         $item->manufacturer = $this->editnewitem->editnewbrand->getText();
         $item->cat_id = $this->editnewitem->editnewcat->getValue();
         $item->save();

@@ -32,22 +32,24 @@ class Order extends Base
         $this->OnUpdate($this);
         $form = $this->add(new Form('orderform'));
         $form->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np'] == 1)))->onChange($this, 'OnDelivery');
-        
-        if($this->_tvars["isfood"]) $form->delivery->setValue(Document::DEL_BOY);
-        
-        $form->add(new Date('deldate',time()))->setVisible($this->_tvars["isfood"]);
-        $form->add(new \App\Time('deltime',time()+3600))->setVisible($this->_tvars["isfood"]);
-        
-        
+
+        if ($this->_tvars["isfood"]) {
+            $form->delivery->setValue(Document::DEL_BOY);
+        }
+
+        $form->add(new Date('deldate', time()))->setVisible($this->_tvars["isfood"]);
+        $form->add(new \App\Time('deltime', time() + 3600))->setVisible($this->_tvars["isfood"]);
+
+
         $form->add(new TextInput('email'));
         $form->add(new TextInput('phone'));
         $form->add(new TextInput('name'));
         $form->add(new TextArea('address'))->setVisible(false);
         $form->add(new TextArea('notes'));
         $form->onSubmit($this, 'OnSave');
-        
-        $this->OnDelivery($form->delivery)  ;
-        
+
+        $this->OnDelivery($form->delivery);
+
     }
 
     public function OnDelivery($sender) {
@@ -122,29 +124,28 @@ class Order extends Base
             return;
         }
 
-        
-        if($this->_tvars["isfood"] == true) {
-        
-            if (strlen($phone) == 0  ) {
+
+        if ($this->_tvars["isfood"] == true) {
+
+            if (strlen($phone) == 0) {
 
                 $this->setError("entertelemail");
                 return;
             }
-        }  
-        else {
+        } else {
             if (strlen($phone) == 0 && strlen($email) == 0) {
 
                 $this->setError("entertelemail");
                 return;
-            }       
+            }
         }
         if (strlen($phone) > 0 && strlen($phone) != \App\Helper::PhoneL()) {
             $this->setError("tel10", \App\Helper::PhoneL());
             return;
         }
 
-         if($this->_tvars["isfood"] &&  $time < (time()+1800) ) {
-            $this->setError("timedelivery" );
+        if ($this->_tvars["isfood"] && $time < (time() + 1800)) {
+            $this->setError("timedelivery");
             return;
         }
 
@@ -169,7 +170,7 @@ class Order extends Base
                 } else {
                     $order = Document::create('Order', $f);
                 }
-                 
+
             }
 
             $order->document_number = $order->nextNumber();
@@ -189,7 +190,7 @@ class Order extends Base
                 'delivery'      => $delivery,
                 'delivery_name' => $this->orderform->delivery->getValueName(),
                 'email'         => $email,
-                'deltime'          => $time,
+                'deltime'       => $time,
                 'phone'         => $phone,
                 'ship_address'  => $address,
                 'ship_name'     => $name,
@@ -223,7 +224,7 @@ class Order extends Base
                 }
             }
             $order->headerdata['pricetype'] = $shop["defpricetype"];
-            $order->headerdata['contact'] = $name.', '.$phone;
+            $order->headerdata['contact'] = $name . ', ' . $phone;
 
             $order->notes = trim($this->orderform->notes->getText());
             $order->amount = $amount;
@@ -231,22 +232,21 @@ class Order extends Base
             $order->branch_id = $op["defbranch"];
             $order->save();
             $order->updateStatus(Document::STATE_NEW);
-             if ($shop['ordertype'] == 1) {  //Кассовый чек
+            if ($shop['ordertype'] == 1) {  //Кассовый чек
                 $order->updateStatus(Document::STATE_EXECUTED);
-             }
-            
-            
-            
-             if ($shop['ordertype'] == 2) {  //уведомление  в арм  кухни
+            }
+
+
+            if ($shop['ordertype'] == 2) {  //уведомление  в арм  кухни
                 $n = new \App\Entity\Notify();
                 $n->user_id = \App\Entity\Notify::ARMFOOD;
                 $n->dateshow = time();
                 $n->message = $order->document_id;
 
-                $n->save();               
-             }
-           
-            
+                $n->save();
+            }
+
+
             $this->setSuccess("shopneworder", $order->document_number);
 
             if (strlen($phone) > 0) {

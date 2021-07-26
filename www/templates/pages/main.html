@@ -206,152 +206,152 @@
 
 
         </div>
-        
+
 
 
         <script   src="/assets/js/chart.js"></script>
 
         <script>
-            //структура   расходов
-            var pieData = {
-            labels: {{{pbtitle}}},
-                    datasets: [
-                    {
-                    data: {{{pbdata}}},
-                            backgroundColor : {{{pbcolor}}},
-                    }
-                    ]
-            }
+//структура   расходов
+var pieData = {
+labels: {{{pbtitle}}},
+        datasets: [
+        {
+        data: {{{pbdata}}},
+                backgroundColor : {{{pbcolor}}},
+        }
+        ]
+        }
 
 
-            var pieOptions = {
-            maintainAspectRatio : false,
-                    responsive : true,
-                    title: {
-                    display: true,
-                            text: 'Структура расходов за  три месяца',
-                            position: 'top'
+var pieOptions = {
+maintainAspectRatio : false,
+        responsive : true,
+        title: {
+        display: true,
+                text: 'Структура расходов за  три месяца',
+                position: 'top'
 
-                    },
-                    legend: {
-                    display: true,
-                            position: 'right',
-                            labels: {
-                            boxWidth: 10,
-                                    fontColor: '#111',
-                                    padding:  5
-                            }
-                    },
-                    tooltips: {
-                    enabled: true
-                    },
-            }
+        },
+        legend: {
+        display: true,
+                position: 'right',
+                labels: {
+                boxWidth: 10,
+                        fontColor: '#111',
+                        padding:  5
+                }
+        },
+        tooltips: {
+        enabled: true
+        },
+        }
 
-            //сравнение  доходоа  и расходов
-
-
-
-
-            var barData = {
-            labels: {{{pcmon}}},
-                    datasets: [
-                    {
-                    label: "Расход",
-                            backgroundColor: "red",
-                            data: {{{pcout}}}
-                    }, {
-                    label: "Доход",
-                            backgroundColor: "green",
-                            data: {{{pcin}}}
-                    }
-                    ]
-            }
-
-
-            var barOptions = {
-            legend: {
-            display: true,
-                    position: 'right'
-            },
-                    title: {
-                    display: true,
-                            text: 'Доходы  и расходы'
-                    }
-            }
-
-
-            var sellData = {
-            labels  : {{{tsmon}}},
-                    datasets: [
-                    {
-                    label               : 'Товары',
-                            backgroundColor         : 'rgba(60,141,188,0.8)',
-                            borderColor         : 'rgba(60,141,188,0.8)',
-                            fill          : false,
-                            data                :  {{{tstov}}}
-                    },
-                    {
-                    label               : 'Услуги',
-                            backgroundColor         : 'rgba(210, 100, 100, 1)',
-                            borderColor         : 'rgba(210, 100, 100, 1)',
-                            fill          : false,
-                            data                :  {{{tsser}}}
-                    },
-                    ]
-            }
+//сравнение  доходоа  и расходов
 
 
 
 
+var barData = {
+labels: {{{pcmon}}},
+        datasets: [
+        {
+        label: "Расход",
+                backgroundColor: "red",
+                data: {{{pcout}}}
+        }, {
+        label: "Доход",
+                backgroundColor: "green",
+                data: {{{pcin}}}
+        }
+        ]
+        }
 
 
-            var sellOptions = {
-            title: {
-            display: true,
-                    text: 'Реализация'
-            },
-                    scales: {
-                    xAxes: [{
-                    gridLines : {
-                    display : false,
-                    }
-                    }],
-                            yAxes: [{
-                            gridLines : {
-                            display : false,
-                            }
-                            }]
-                    }
-            }
-
-            window.onload = function() {
+var barOptions = {
+legend: {
+display: true,
+        position: 'right'
+        },
+        title: {
+        display: true,
+                text: 'Доходы  и расходы'
+        }
+}
 
 
-            new Chart($('#paystructure').get(0).getContext('2d'), {
-            type: 'pie',
-                    data: pieData,
-                    options: pieOptions
-            })
+var sellData = {
+labels  : {{{tsmon}}},
+        datasets: [
+        {
+        label               : 'Товары',
+                backgroundColor         : 'rgba(60,141,188,0.8)',
+                borderColor         : 'rgba(60,141,188,0.8)',
+                fill          : false,
+                data                :  {{{tstov}}}
+        },
+        {
+        label               : 'Услуги',
+                backgroundColor         : 'rgba(210, 100, 100, 1)',
+                borderColor         : 'rgba(210, 100, 100, 1)',
+                fill          : false,
+                data                :  {{{tsser}}}
+        },
+        ]
+        }
 
-                    new Chart($('#paycompare').get(0).getContext('2d'), {
-                    type: 'bar',
-                            data: barData,
-                            options: barOptions
-                    })
-
-                    new Chart($('#sellstat').get(0).getContext('2d'), {
-                    type: 'line',
-                            data: sellData,
-                            options: sellOptions
-                    })
 
 
-            };
-         
-         
-      
+
+
+
+var sellOptions = {
+title: {
+display: true,
+        text: 'Реализация'
+        },
+        scales: {
+        xAxes: [{
+        gridLines : {
+        display : false,
+        }
+        }],
+                yAxes: [{
+                gridLines : {
+                display : false,
+                }
+                }]
+        }
+}
+
+window.onload = function() {
+
+
+new Chart($('#paystructure').get(0).getContext('2d'), {
+type: 'pie',
+        data: pieData,
+        options: pieOptions
+        })
+
+        new Chart($('#paycompare').get(0).getContext('2d'), {
+        type: 'bar',
+                data: barData,
+                options: barOptions
+        })
+
+        new Chart($('#sellstat').get(0).getContext('2d'), {
+        type: 'line',
+                data: sellData,
+                options: sellOptions
+        })
+
+
+        };
+
+
+
 
         </script>
-                 
+
     </body>
 </html>

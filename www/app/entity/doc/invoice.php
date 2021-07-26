@@ -25,7 +25,7 @@ class Invoice extends \App\Entity\Doc\Document
                 $detail[$item->item_id]['quantity'] += $item->quantity;
             } else {
                 $detail[] = array("no"         => $i++,
-                                  "tovar_name" => strlen($item->itemname) > 0 ? $item->itemname : $item->service_name  ,
+                                  "tovar_name" => strlen($item->itemname) > 0 ? $item->itemname : $item->service_name,
                                   "tovar_code" => $item->item_code,
                                   "quantity"   => H::fqty($item->quantity),
                                   "price"      => H::fa($item->price),
@@ -60,8 +60,8 @@ class Invoice extends \App\Entity\Doc\Document
                         "document_number" => $this->document_number,
                         "totalstr"        => $totalstr,
                         "total"           => H::fa($this->amount),
-                       "payed"           => $this->payed >0 ? H::fa($this->payed):false,
-                        "payamount"       => $this->payamount >0 ? H::fa($this->payamount):false ,
+                        "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
+                        "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false,
                         "paydisc"         => H::fa($this->headerdata["paydisc"])
         );
         if (strlen($this->headerdata["customer_print"]) > 0) {
@@ -99,8 +99,8 @@ class Invoice extends \App\Entity\Doc\Document
             if ($payed > 0) {
                 $this->payed = $payed;
             }
-            \App\Entity\IOState::addIOState($this->document_id,  $this->payed,\App\Entity\IOState::TYPE_BASE_INCOME);
-            
+            \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+
         }
         return true;
     }

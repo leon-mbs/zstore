@@ -177,7 +177,7 @@
                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                                    title="Пользователи,  которые за  последние 5 минут  открывали  какую  либо страницу  "></i>
                             </div>
-                      
+
                             <div class="form-check">
                                 <input zippy="printoutbarcode" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="printoutbarcode">Печатать штрих-коды  на  расходных документах</label>
@@ -211,12 +211,12 @@
                                 <input style="width:75px;" pattern="[0-9]+" class="form-control" type="text"
                                        zippy="ts_break">
                             </div>
-                           <div class="form-group">
+                            <div class="form-group">
                                 <label for="checkslogan">Фраза  в  конце  чека</label>
                                 <input   class="form-control" type="text"   zippy="checkslogan">
-                                       <small>Например 'Благодарим за доверие к нам!'</small>
+                                <small>Например 'Благодарим за доверие к нам!'</small>
                             </div>
-                        
+
                             <div class="form-group">
                                 <button class="btn btn-primary" type="submit">Сохранить</button>
                             </div>
@@ -273,20 +273,20 @@
                         <h4>Настройка принтера</h4>
                         <small>Настройки узкого принтера для печати чеков и этикеток</small>
                         <form zippy="printer">
-                          <div class="form-group">
+                            <div class="form-group">
                                 <label>Параметры для чеков</label>
                             </div>
-                          <div class="form-group  ">
+                            <div class="form-group  ">
                                 <label for="pdocfontsize">Размер шрифта</label>
                                 <select style="width:100px" class="form-control" zippy="pdocfontsize">
                                 </select>
-                             </div>           
-                             <div class="form-group">
+                            </div>           
+                            <div class="form-group">
                                 <label for="pdocwidth">Ширина печати</label>
                                 <input style="width:100px" class="form-control" type="text" zippy="pdocwidth">
                                 <small class="form-text text-muted">Например <b>100%</b> или <b>70mm</b> или <b>250px</b> </small>
                             </div>
-                         <div class="form-group">
+                            <div class="form-group">
                                 <label>Параметры для этикеток и ценников</label>
                             </div>
                             <div class="form-group">
@@ -302,9 +302,9 @@
                             <div class="form-group">
                                 <label for="pmaxname">Максимальная  длина  наименования</label>
                                 <input style="width:100px" class="form-control" type="text" zippy="pmaxname">
-                                
+
                             </div>
-                         
+
                             <div class="form-group  ">
                                 <label for="pfontsize">Размер шрифта</label>
                                 <select style="width:100px" class="form-control" zippy="pfontsize">
@@ -336,7 +336,7 @@
                                 <select class="form-control" zippy="barcodetype">
                                 </select>
                             </div>
-                           <div class="form-check">
+                            <div class="form-check">
                                 <input zippy="pqrcode" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="pqrcode">Печатать QR код</label>
                             </div>
@@ -451,43 +451,43 @@
                         </form>
                     </div>
                 </div>
-               
+
                 <div class="card">
                     <div class="card-body">
                         <h4>Источники  продаж</h4>
-                           <form zippy="salesourcesform">
-                                    <a  zippy="addnewsalesource">Добавить</a>
+                        <form zippy="salesourcesform">
+                            <a  zippy="addnewsalesource">Добавить</a>
 
-                                    <table class="table table-sm">
-                                        <tr zippy="salesourceslist">
-                                            <td><input style="width:100%;" zippy="salesourcename"  ></td>
-                                            <td><a zippy="delsalesource"> <i class="fa fa-trash"></i></a></td>
-                                    </table>
-                                    <input zippy="salesourcesave"  type="submit"  value="Сохранить" class="btn  btn-info">
-                                    
+                            <table class="table table-sm">
+                                <tr zippy="salesourceslist">
+                                    <td><input style="width:100%;" zippy="salesourcename"  ></td>
+                                    <td><a zippy="delsalesource"> <i class="fa fa-trash"></i></a></td>
+                            </table>
+                            <input zippy="salesourcesave"  type="submit"  value="Сохранить" class="btn  btn-info">
+
                         </form>         
-                     </div>
+                    </div>
                 </div>
 
 
             </div>
             <div class="col-12  col-md-5 col-xl-4  ">
-                    <div class="card">
+                <div class="card">
                     <div class="card-body">
                         <h4>Общепит</h4>
-                         
-                         <form zippy="food">
-                               <div class="form-check">
+
+                        <form zippy="food">
+                            <div class="form-check">
                                 <label for="foodworktype">Тип заведения</label>
                                 <select class="form-control" zippy="foodworktype">
-                                   <option value="0">Фастфуд</option>
-                                   <option value="1">Фастфуд (c кухней)</option>
-                                   <option value="2">Кафе</option>
-                                   
+                                    <option value="0">Фастфуд</option>
+                                    <option value="1">Фастфуд (c кухней)</option>
+                                    <option value="2">Кафе</option>
+
                                 </select>
                                 <small>Кафе  означает расчет  официантом  после выноса  заказа.
-                                Наличие  кухни (производства)  означает  что  заказ  сначала  отправляется  
-                                в  производство </small>
+                                    Наличие  кухни (производства)  означает  что  заказ  сначала  отправляется  
+                                    в  производство </small>
                             </div>                   
 
                             <div class="form-group  ">
@@ -495,14 +495,14 @@
                                 <select class="form-control" zippy="foodpricetype">
                                 </select>
                             </div>
-                           
+
                             <div class="form-check">
                                 <input zippy="foodtables" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="foodtables">Показывать номера  столов</label>
-                                 <br><small>Для  кафе</small>
+                                <br><small>Для  кафе</small>
                             </div>
-                         
-                           
+
+
                             <div class="form-check">
                                 <input zippy="fooddelivery" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="fooddelivery">Возможность доставки</label>
@@ -513,19 +513,19 @@
                                 <label class="form-check-label" for="foodpack">Выбор  возможности упаковки  с  собой  .</label>
                                 <br><small>Устанавливается если  есть оба варианта (с собой и на месте) и нужно  уточнять в  заказе</small>
                             </div>
-                              
+
                             <div class="form-group">
                                 <button class="btn btn-primary" type="submit">Сохранить</button>
                             </div>
                         </form>
                     </div>
                 </div>
-        
+
             </div>
         </div>
-          
+
         <script   >
-   
+
             function check_rowdelete() {
                 return confirm("Удалить  запись?")
             }

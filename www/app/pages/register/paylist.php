@@ -24,8 +24,8 @@ use Zippy\Html\Link\BookmarkableLink;
 class PayList extends \App\Pages\Base
 {
 
-    private $_doc    = null;
-  
+    private $_doc = null;
+
 
     /**
      *
@@ -37,11 +37,11 @@ class PayList extends \App\Pages\Base
             return;
         }
 
-      
+
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new DropDownChoice('fmfund', \App\Entity\MoneyFund::getList(), 0));
         $this->filter->add(new DropDownChoice('fuser', \App\Entity\User::findArray('username', '', 'username'), 0));
-        
+
         $this->filter->add(new AutocompleteTextInput('fcustomer'))->onText($this, 'OnAutoCustomer');
 
         $doclist = $this->add(new DataView('doclist', new PayListDataSource($this), $this, 'doclistOnRow'));
@@ -57,7 +57,7 @@ class PayList extends \App\Pages\Base
         $this->doclist->Reload();
         $this->add(new ClickLink('csv', $this, 'oncsv'));
 
-        
+
     }
 
     public function filterOnSubmit($sender) {
@@ -84,7 +84,7 @@ class PayList extends \App\Pages\Base
         $row->add(new Label('mf_name', $doc->mf_name));
         $row->add(new Label('username', $doc->username));
         $row->add(new Label('customer_name', $doc->customer_name));
-        
+
 
         $row->add(new ClickLink('show', $this, 'showOnClick'));
         $user = \App\System::getUser();
@@ -128,7 +128,7 @@ class PayList extends \App\Pages\Base
         $this->doclist->Reload(true);
 
         $user = \App\System::getUser();
-        
+
 
         $n = new \App\Entity\Notify();
         $n->user_id = \App\Entity\Notify::SYSTEM;
@@ -219,11 +219,11 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
         $where = "  1=1 ";
 
         $author = $this->page->filter->fuser->getValue();
-         
+
         $cust = $this->page->filter->fcustomer->getKey();
         $mf = $this->page->filter->fmfund->getValue();
 
-       
+
         if ($cust > 0) {
             $where .= " and d.customer_id=" . $cust;
         }

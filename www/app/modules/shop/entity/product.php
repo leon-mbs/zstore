@@ -18,7 +18,7 @@ class Product extends \App\Entity\Item
         $this->productdata = new ProductData();
 
         $this->productdata->desc = '';
-         
+
         $this->productdata->sold = 0;   //кол продаж
 
         $this->productdata->rating = 0;  //рейтинг

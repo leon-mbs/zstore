@@ -19,15 +19,15 @@ abstract class JsonRPC
         // $request = '{"jsonrpc": "2.0", "method": "checkstatus", "params":{"numbers": ["ID0001"]}, "id": 1}';
         //  $request = '{"jsonrpc": "2.0", "method": "createorder", "params":{"number":"ID0001","phone":"0971111111","ship_address":"Харьков","items":[{"item_code":"cbs500-1","quantity":2,"price":234},{"item_code":"ID0018","quantity":2,"price":234}] },   "id": 1}';
 
-         if($_SERVER['REQUEST_METHOD'] !='POST'){
-             echo json_encode(self::error($id, -1015, "Method  must  be POST" ), JSON_UNESCAPED_UNICODE);
-             return ;
-         }
-        try{
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            echo json_encode(self::error($id, -1015, "Method  must  be POST"), JSON_UNESCAPED_UNICODE);
+            return;
+        }
+        try {
             if (!is_string($request)) {
                 $response = self::parseError();
             } else {
-                $json =  json_decode($request, true);
+                $json = json_decode($request, true);
                 $response = $this->processInput($json);
             }
 
@@ -37,24 +37,24 @@ abstract class JsonRPC
             } else {
                 http_response_code(200);
             }
-        
-        }catch(\Exception $e){
-             echo json_encode(self::error($id, -1016, $e->getMessage() ), JSON_UNESCAPED_UNICODE);
-             return ;
-          
+
+        } catch(\Exception $e) {
+            echo json_encode(self::error($id, -1016, $e->getMessage()), JSON_UNESCAPED_UNICODE);
+            return;
+
         }
     }
 
     protected function checkAcess() {
         $api = \App\System::getOptions('api');
-        $user = null;  ;
- 
-        if(\App\System::getUser()->user_id>0 ) {   //вызов с  сайта
-            
+        $user = null;;
+
+        if (\App\System::getUser()->user_id > 0) {   //вызов с  сайта
+
             return;
         }
- 
-           
+
+
         //Bearer
         if ($api['atype'] == 1) {
 
@@ -72,27 +72,27 @@ abstract class JsonRPC
 
             $decoded = \Firebase\JWT\JWT::decode($jwt, $key, array('HS256'));
             if ($decoded->exp < time()) {
-                
-                return self::error(null, -1002, \App\Helper::l('apitokenexpired'));                
+
+                return self::error(null, -1002, \App\Helper::l('apitokenexpired'));
             }
             $user = \App\Entity\User::load($decoded->user_id);
         }
         //Basic
         if ($api['atype'] == 2) {
-         
+
             $user = \App\Helper::login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
-            
+
         }
         //без  авторизации
         if ($api['atype'] == 3) {
             $user = \App\Entity\User::getByLogin('admin');
         }
-        if ($user == null || $user==false) {
+        if ($user == null || $user == false) {
             return self::error(null, -1001, \App\Helper::l('apiusernotfound'));
         }
         \App\System::setUser($user);
-         
-         
+
+
     }
 
     /**
@@ -117,11 +117,11 @@ abstract class JsonRPC
             return self::requestError();
         }
         $result = $this->checkAcess();
-        if(is_array($result)) {
+        if (is_array($result)) {
             return $result;
         }
-         
-        
+
+
         if (isset($input[0])) {
             return $this->processBatchRequests($input);
         }

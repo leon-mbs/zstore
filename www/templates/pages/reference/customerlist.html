@@ -65,50 +65,50 @@
                     <a zippy="addnew" class="btn btn-primary">Добавить нового</a>
 
                     <form zippy="listform">
-                    <table class="table table-hover   table-sm mt-2">
-                        <tr>
-                      <th onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
-                                            style="width:30px;cursor:pointer" title="Снять/выставить флажки"><i
-                                                class="fa fa-check-double "></i></th>
-                       <th ><a zippy="sortname">Имя</a> </th>
-                            <th >Тел.</th>
-                            <th >E-Mail</th>
-                            {{^leadmode}}        <th  ><a zippy="sortdoc">Док.</a> </th>    {{/leadmode}}
-                            {{#leadmode}}     <th><a zippy="sortleadstatus">Состояние лида</a> </th>     {{/leadmode}} 
-                            <th> </th>
-                            <th> </th>
+                        <table class="table table-hover   table-sm mt-2">
+                            <tr>
+                                <th onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
+                                    style="width:30px;cursor:pointer" title="Снять/выставить флажки"><i
+                                        class="fa fa-check-double "></i></th>
+                                <th ><a zippy="sortname">Имя</a> </th>
+                                <th >Тел.</th>
+                                <th >E-Mail</th>
+                                {{^leadmode}}        <th  ><a zippy="sortdoc">Док.</a> </th>    {{/leadmode}}
+                                {{#leadmode}}     <th><a zippy="sortleadstatus">Состояние лида</a> </th>     {{/leadmode}} 
+                                <th> </th>
+                                <th> </th>
 
 
-                            <th> </th>
-                            <th> </th>
-                            <th> </th>
-                          </tr>
-                        <tr zippy="customerlist">
-                            <td><input  zippy="seldel" class="seldel" type="checkbox"></td>
-                            <td zippy="customername" class="text-nowrap"></td>
-                            <td zippy="customerphone" class="text-nowrap"></td>
-                            <td zippy="customeremail" class="text-nowrap"></td>
-                            {{^leadmode}}    <td class="text-right" > <span zippy="docs" class="badge badge-secondary badge-pill"></span> </td>  {{/leadmode}}
-                            {{#leadmode}}  
-                            <td zippy="leadstatus">  </td>  
-                            {{/leadmode}}    
-                            <td><i zippy="customercomment" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i></td>
+                                <th> </th>
+                                <th> </th>
+                                <th> </th>
+                            </tr>
+                            <tr zippy="customerlist">
+                                <td><input  zippy="seldel" class="seldel" type="checkbox"></td>
+                                <td zippy="customername" class="text-nowrap"></td>
+                                <td zippy="customerphone" class="text-nowrap"></td>
+                                <td zippy="customeremail" class="text-nowrap"></td>
+                                {{^leadmode}}    <td class="text-right" > <span zippy="docs" class="badge badge-secondary badge-pill"></span> </td>  {{/leadmode}}
+                                {{#leadmode}}  
+                                <td zippy="leadstatus">  </td>  
+                                {{/leadmode}}    
+                                <td><i zippy="customercomment" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i></td>
 
-                            <td><i zippy="hasmsg" class="fa fa-comments" title="Комментарии"></i></td>
-                            <td><i zippy="hasfiles" class="fa fa-paperclip" title="Прикрепленные  файлы  "></i></td>
-                            <td><i zippy="isplanned" class="fa fa-calendar-alt" title="Запланированые  события"></i></td>
+                                <td><i zippy="hasmsg" class="fa fa-comments" title="Комментарии"></i></td>
+                                <td><i zippy="hasfiles" class="fa fa-paperclip" title="Прикрепленные  файлы  "></i></td>
+                                <td><i zippy="isplanned" class="fa fa-calendar-alt" title="Запланированые  события"></i></td>
 
-                            <td style="white-space:  nowrap"> &nbsp;&nbsp;
-                                <a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a>
-                                &nbsp;&nbsp;&nbsp;<a zippy="contentlist" title="Редактировать дополнительные данные"><i
-                                        class="fa fa-eye"></i></a>
-                                
-                            </td>
-                            
-                        </tr>
-                        <tr><td><a class="text-danger" zippy="deleteall" title="Удалить(деактивировать)"><i class="fa fa-trash"></i></a></td><td colspan="9"></td></tr>
-                    </table>
-                    <div zippy="pag"></div>
+                                <td style="white-space:  nowrap"> &nbsp;&nbsp;
+                                    <a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a>
+                                    &nbsp;&nbsp;&nbsp;<a zippy="contentlist" title="Редактировать дополнительные данные"><i
+                                            class="fa fa-eye"></i></a>
+
+                                </td>
+
+                            </tr>
+                            <tr><td><a class="text-danger" zippy="deleteall" title="Удалить(деактивировать)"><i class="fa fa-trash"></i></a></td><td colspan="9"></td></tr>
+                        </table>
+                        <div zippy="pag"></div>
                     </form>
                 </div>
 
@@ -204,7 +204,7 @@
                     <label for="editaddress">Полный адрес</label>
                     <input class="form-control" zippy="editaddress"/>
                 </div>
-           
+
 
                 <div class="form-check">
                     <input zippy="editjurid" type="checkbox" class="form-check-input">
@@ -281,12 +281,12 @@
                         <form zippy="addeventform">
                             <div class="form-group">
                                 <label for="addeventdate">Дата, время</label>
-                                
-                               <div class="input-group">
-                                 <input   class="form-control"   zippy="addeventdate" >
-                                   <span class="input-group-text">:</span>
-                                 <input   class="form-control"   zippy="addeventtime" >
-                               </div>                                
+
+                                <div class="input-group">
+                                    <input   class="form-control"   zippy="addeventdate" >
+                                    <span class="input-group-text">:</span>
+                                    <input   class="form-control"   zippy="addeventtime" >
+                                </div>                                
                             </div>
                             <div class="form-group">
                                 <label for="addeventtitle">Заголовок, тип события</label>
@@ -469,148 +469,148 @@
 
         <script>
 //состояниея лидов
-var pieData1 = {
-labels: {{{gr1title}}},
-        datasets: [
-        {
-        data: {{{gr1data}}},
-                backgroundColor : {{{gr1color}}},
-        }
-        ]
-}
+                                    var pieData1 = {
+                                    labels: {{{gr1title}}},
+                                            datasets: [
+                                            {
+                                            data: {{{gr1data}}},
+                                                    backgroundColor : {{{gr1color}}},
+                                            }
+                                            ]
+                                    }
 
 
-var pieOptions1 = {
-maintainAspectRatio : false,
-        responsive : true,
-        title: {
-        display: true,
-                text: 'Состояния  лидов',
-                position: 'top'
+                                    var pieOptions1 = {
+                                    maintainAspectRatio : false,
+                                            responsive : true,
+                                            title: {
+                                            display: true,
+                                                    text: 'Состояния  лидов',
+                                                    position: 'top'
 
-        },
-        legend: {
-        display: true,
-                position: 'right',
-                labels: {
-                boxWidth: 10,
-                        fontColor: '#111',
-                        padding:  2
-                }
-        },
-        tooltips: {
-        enabled: true
-        },
-}
+                                            },
+                                            legend: {
+                                            display: true,
+                                                    position: 'right',
+                                                    labels: {
+                                                    boxWidth: 10,
+                                                            fontColor: '#111',
+                                                            padding:  2
+                                                    }
+                                            },
+                                            tooltips: {
+                                            enabled: true
+                                            },
+                                    }
 
-var pieData2 = {
-labels: {{{gr2title}}},
-        datasets: [
-        {
-        data: {{{gr2data}}},
-                backgroundColor : {{{gr2color}}},
-        }
-        ]
-}
-
-
-var pieOptions2 = {
-maintainAspectRatio : false,
-        responsive : true,
-        title: {
-        display: true,
-                text: 'Источники  лидов',
-                position: 'top'
-
-        },
-        legend: {
-        display: true,
-                position: 'right',
-                labels: {
-                boxWidth: 10,
-                        fontColor: '#111',
-                        padding:  2
-                }
-        },
-        tooltips: {
-        enabled: true
-        },
-}
-
-var pieData3 = {
-labels: {{{gr3title}}},
-        datasets: [
-        {
-        data: {{{gr3data}}},
-                backgroundColor : {{{gr3color}}},
-        }
-        ]
-}
+                                    var pieData2 = {
+                                    labels: {{{gr2title}}},
+                                            datasets: [
+                                            {
+                                            data: {{{gr2data}}},
+                                                    backgroundColor : {{{gr2color}}},
+                                            }
+                                            ]
+                                    }
 
 
-var pieOptions3 = {
-maintainAspectRatio : false,
-        responsive : true,
-        title: {
-        display: true,
-                text: 'Источники  конвертированых  лидов',
-                position: 'top'
+                                    var pieOptions2 = {
+                                    maintainAspectRatio : false,
+                                            responsive : true,
+                                            title: {
+                                            display: true,
+                                                    text: 'Источники  лидов',
+                                                    position: 'top'
 
-        },
-        legend: {
-        display: true,
-                position: 'right',
-                labels: {
-                boxWidth: 10,
-                        fontColor: '#111',
-                        padding:  2
-                }
-        },
-        tooltips: {
-        enabled: true
-        },
-}
+                                            },
+                                            legend: {
+                                            display: true,
+                                                    position: 'right',
+                                                    labels: {
+                                                    boxWidth: 10,
+                                                            fontColor: '#111',
+                                                            padding:  2
+                                                    }
+                                            },
+                                            tooltips: {
+                                            enabled: true
+                                            },
+                                    }
 
-
-window.onload = function() {
-
-
-new Chart($('#statusesg').get(0).getContext('2d'), {
-type: 'pie',
-        data: pieData1,
-        options: pieOptions1
-})
-
-
+                                    var pieData3 = {
+                                    labels: {{{gr3title}}},
+                                            datasets: [
+                                            {
+                                            data: {{{gr3data}}},
+                                                    backgroundColor : {{{gr3color}}},
+                                            }
+                                            ]
+                                    }
 
 
-        new Chart($('#sourcesg').get(0).getContext('2d'), {
-        type: 'pie',
-                data: pieData2,
-                options: pieOptions2
-        })
+                                    var pieOptions3 = {
+                                    maintainAspectRatio : false,
+                                            responsive : true,
+                                            title: {
+                                            display: true,
+                                                    text: 'Источники  конвертированых  лидов',
+                                                    position: 'top'
+
+                                            },
+                                            legend: {
+                                            display: true,
+                                                    position: 'right',
+                                                    labels: {
+                                                    boxWidth: 10,
+                                                            fontColor: '#111',
+                                                            padding:  2
+                                                    }
+                                            },
+                                            tooltips: {
+                                            enabled: true
+                                            },
+                                    }
+
+
+                                    window.onload = function() {
+
+
+                                    new Chart($('#statusesg').get(0).getContext('2d'), {
+                                    type: 'pie',
+                                            data: pieData1,
+                                            options: pieOptions1
+                                    })
 
 
 
-        new Chart($('#sourcescustg').get(0).getContext('2d'), {
-        type: 'pie',
-                data: pieData3,
-                options: pieOptions3
-        })
+
+                                            new Chart($('#sourcesg').get(0).getContext('2d'), {
+                                            type: 'pie',
+                                                    data: pieData2,
+                                                    options: pieOptions2
+                                            })
 
 
 
-};
+                                            new Chart($('#sourcescustg').get(0).getContext('2d'), {
+                                            type: 'pie',
+                                                    data: pieData3,
+                                                    options: pieOptions3
+                                            })
+
+
+
+                                    };
         </script> 
 
         {{/leadmode}}  
-     <script>
-             function check_deleteall() {
+        <script>
+            function check_deleteall() {
 
-                return confirm("Удалить?")
+            return confirm("Удалить?")
 
             }
         </script>
-   
+
     </body>
 </html>

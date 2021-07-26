@@ -1,66 +1,66 @@
 <html>
-<body>
-         <div class="row"  >
+    <body>
+        <div class="row"  >
 
             <div class="col-12 col-md-4 col-xl-3  " >
                 <h3>АРМ кухня</h3>
-                  <div id="newordersalert" style="display:none;"  class="alert alert-success  ml-4"  >
-                           <span id="neworderscnt"></span>
-                    </div>   
-      
-             </div>
-                    <div class="w-100">
-                  <div class="col-12 col-md-10 col-lg-8" >
-             
+                <div id="newordersalert" style="display:none;"  class="alert alert-success  ml-4"  >
+                    <span id="neworderscnt"></span>
+                </div>   
 
-                 <a zippy="btnupdate" class="btn btn-info">Оновити</a>
-                <table class="table table-striped">
-              
-                    <tr zippy="itemlist">
-                   
+            </div>
+            <div class="w-100">
+                <div class="col-12 col-md-10 col-lg-8" >
 
-                        <td zippy="docnumber"> </td>
-                        <td zippy="name">  </td>
-                        <td zippy="qty" class="text-right">  </td>
-                        
-                        <td zippy="notes">  </td>
-                      
-         
-                        <td zippy="docnotes"></td>
-                        <td  ><a zippy="ready" class="btn btn-success">Готово</a></td>
-                    </tr>
 
-                </table> 
-                   <a id="dankor"></a>
-                 </div>
-          
-        </div> 
-     
-      
-          <script>
-           window.setInterval(onNewOrder, 5000 );
-     
-           var url = '{{{_baseurl}}}::getMessages:1&ajax=true'
-           
-          function onNewOrder(){
-             fetch(url)
-              .then((response) => {
-                return response.json();
-              })
-              .then((data) => {
-                
-                  if(data.cnt > 0) {
-                      $('#newordersalert').show();
-                      $('#neworderscnt').text('Нових замовлень ' +data.cnt);
-             
-                        
-                  }
-                  
-                
-               });             
-          }
-               
-        </script>
-        
-</body>
+                    <a zippy="btnupdate" class="btn btn-info">Оновити</a>
+                    <table class="table table-striped">
+
+                        <tr zippy="itemlist">
+
+
+                            <td zippy="docnumber"> </td>
+                            <td zippy="name">  </td>
+                            <td zippy="qty" class="text-right">  </td>
+
+                            <td zippy="notes">  </td>
+
+
+                            <td zippy="docnotes"></td>
+                            <td  ><a zippy="ready" class="btn btn-success">Готово</a></td>
+                        </tr>
+
+                    </table> 
+                    <a id="dankor"></a>
+                </div>
+
+            </div> 
+
+
+            <script>
+                window.setInterval(onNewOrder, 5000);
+
+                var url = '{{{_baseurl}}}::getMessages:1&ajax=true'
+
+                function onNewOrder() {
+                    fetch(url)
+                            .then((response) => {
+                                return response.json();
+                            })
+                            .then((data) => {
+
+                                if (data.cnt > 0) {
+                                    $('#newordersalert').show();
+                                    $('#neworderscnt').text('Нових замовлень ' + data.cnt);
+
+
+                                }
+
+
+                            });
+                }
+
+            </script>
+
+    </body>
 </html>

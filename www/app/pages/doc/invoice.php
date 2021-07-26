@@ -28,7 +28,7 @@ use Zippy\Html\Link\SubmitLink;
 class Invoice extends \App\Pages\Base
 {
 
-    public  $_itemlist = array();
+    public  $_itemlist  = array();
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = 0;
@@ -57,7 +57,7 @@ class Invoice extends \App\Pages\Base
         $this->docform->add(new TextInput('phone'));
         $this->docform->add(new TextInput('customer_print'));
 
-        $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList( ), H::getDefMF()));
+        $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
 
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new TextInput('editpaydisc'));
@@ -82,7 +82,7 @@ class Invoice extends \App\Pages\Base
 
         $this->docform->add(new Label('total', 0));
 
-        
+
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
@@ -95,13 +95,13 @@ class Invoice extends \App\Pages\Base
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
 
-        $this->add(new Form('editserdetail'))->setVisible(false);        
+        $this->add(new Form('editserdetail'))->setVisible(false);
         $this->editserdetail->add(new DropDownChoice('editservice', Service::findArray("service_name", "disabled<>1", "service_name")))->onChange($this, 'OnChangeServive', true);
         $this->editserdetail->add(new TextInput('editserquantity'))->setText("1");
         $this->editserdetail->add(new TextInput('editserprice'));
         $this->editserdetail->add(new Button('cancelserrow'))->onClick($this, 'cancelrowOnClick');
         $this->editserdetail->add(new SubmitButton('submitserrow'))->onClick($this, 'saveserrowOnClick');
-     
+
         //добавление нового кантрагента
         $this->add(new Form('editcust'))->setVisible(false);
         $this->editcust->add(new TextInput('editcustname'));
@@ -123,8 +123,10 @@ class Invoice extends \App\Pages\Base
             $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
-            if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )  $this->_doc->payed = $this->_doc->headerdata['payed'];
-            $this->docform->editpayed->setText(H::fa($this->_doc->payed));            
+            if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
+                $this->_doc->payed = $this->_doc->headerdata['payed'];
+            }
+            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
             $this->docform->payed->setText(H::fa($this->_doc->payed));
 
             $this->docform->total->setText($this->_doc->amount);
@@ -158,7 +160,7 @@ class Invoice extends \App\Pages\Base
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
 
-                        $this->docform->notes->setText( H::l("invoicefor",$basedoc->document_number) );
+                        $this->docform->notes->setText(H::l("invoicefor", $basedoc->document_number));
                         $order = $basedoc->cast();
 
                         $this->docform->total->setText($order->amount);
@@ -180,7 +182,7 @@ class Invoice extends \App\Pages\Base
     public function detailOnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new Label('tovar', strlen($item->itemname) > 0 ? $item->itemname : $item->service_name  )  );
+        $row->add(new Label('tovar', strlen($item->itemname) > 0 ? $item->itemname : $item->service_name));
 
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('msr', $item->msr));
@@ -203,7 +205,9 @@ class Invoice extends \App\Pages\Base
         }               //для совместимости
         else {
             $item->rowid = $item->item_id;
-            if($item->service_id >0) $item->rowid = $item->service_id;
+            if ($item->service_id > 0) {
+                $item->rowid = $item->service_id;
+            }
         }
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($item->rowid => $this->_itemlist[$item->rowid]));
@@ -219,6 +223,7 @@ class Invoice extends \App\Pages\Base
         $this->docform->setVisible(false);
         $this->_rowid = 0;
     }
+
     public function addserrowOnClick($sender) {
         $this->editserdetail->setVisible(true);
         $this->editserdetail->editserquantity->setText("1");
@@ -230,7 +235,7 @@ class Invoice extends \App\Pages\Base
     public function editOnClick($sender) {
         $item = $sender->getOwner()->getDataItem();
         $this->docform->setVisible(false);
-        if($item instanceof  Item){
+        if ($item instanceof Item) {
             $this->editdetail->setVisible(true);
 
             $this->editdetail->editquantity->setText($item->quantity);
@@ -239,23 +244,25 @@ class Invoice extends \App\Pages\Base
             $this->editdetail->edittovar->setKey($item->item_id);
             $this->editdetail->edittovar->setText($item->itemname);
         }
-        if($item instanceof  Service){
+        if ($item instanceof Service) {
             $this->editserdetail->setVisible(true);
 
             $this->editserdetail->editserquantity->setText($item->quantity);
             $this->editserdetail->editserprice->setText($item->price);
 
             $this->editserdetail->editservice->setValue($item->service_id);
-            
+
         }
-        
-        
+
+
         if ($item->rowid > 0) {
             ;
         }               //для совместимости
         else {
             $item->rowid = $item->item_id;
-            if($item->service_id >0) $item->rowid = $item->service_id;
+            if ($item->service_id > 0) {
+                $item->rowid = $item->service_id;
+            }
         }
 
         $this->_rowid = $item->rowid;
@@ -299,8 +306,8 @@ class Invoice extends \App\Pages\Base
 
         $this->editdetail->editprice->setText("");
     }
-  
-     public function saveserrowOnClick($sender) {
+
+    public function saveserrowOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
@@ -332,11 +339,11 @@ class Invoice extends \App\Pages\Base
         $this->calcPay();
         //очищаем  форму
         $this->editserdetail->clean();
-     
+
 
         $this->editserdetail->editserquantity->setText("1");
 
-         
+
     }
 
     public function cancelrowOnClick($sender) {
@@ -344,13 +351,13 @@ class Invoice extends \App\Pages\Base
         $this->editserdetail->setVisible(false);
         $this->editserdetail->clean();
         $this->editserdetail->editserquantity->setText("1");
-        
+
         $this->docform->setVisible(true);
         //очищаем  форму
         $this->editdetail->clean();
 
         $this->editdetail->editquantity->setText("1");
-        
+
     }
 
     public function savedocOnClick($sender) {
@@ -423,7 +430,7 @@ class Invoice extends \App\Pages\Base
             if ($isEdited) {
                 App::RedirectBack();
             } else {
-                App::Redirect("\\App\\Pages\\Register\\GIList",$this->_doc->document_id);
+                App::Redirect("\\App\\Pages\\Register\\GIList", $this->_doc->document_id);
             }
         } catch(\Throwable $ee) {
             global $logger;
@@ -438,7 +445,6 @@ class Invoice extends \App\Pages\Base
         }
     }
 
- 
 
     public function onPayAmount($sender) {
         $this->docform->payamount->setText(H::fa($this->docform->editpayamount->getText()));
@@ -498,13 +504,13 @@ class Invoice extends \App\Pages\Base
         $total = $this->docform->total->getText();
         $disc = $this->docform->paydisc->getText();
 
-    
-            $this->docform->editpayamount->setText(H::fa($total-$disc));
-            $this->docform->payamount->setText(H::fa($total-$disc));
-        
-            $this->docform->editpayed->setText(H::fa($total-$disc));
-            $this->docform->payed->setText(H::fa($total-$disc));
-        
+
+        $this->docform->editpayamount->setText(H::fa($total - $disc));
+        $this->docform->payamount->setText(H::fa($total - $disc));
+
+        $this->docform->editpayed->setText(H::fa($total - $disc));
+        $this->docform->payed->setText(H::fa($total - $disc));
+
     }
 
     /**
@@ -526,7 +532,7 @@ class Invoice extends \App\Pages\Base
         if (count($this->_itemlist) == 0) {
             $this->setError("noenteritem");
         }
-    
+
         if (($this->docform->store->getValue() > 0) == false) {
             $this->setError("noselstore");
         }
@@ -534,7 +540,7 @@ class Invoice extends \App\Pages\Base
             $this->setError("noselmf");
         }
         $c = $this->docform->customer->getKey();
-        if ( $c == 0) {
+        if ($c == 0) {
             $this->setError("noselcust");
         }
 
@@ -559,6 +565,7 @@ class Invoice extends \App\Pages\Base
     public function OnAutoCustomer($sender) {
         return Customer::getList($sender->getText(), 1);
     }
+
     public function OnChangeServive($sender) {
         $id = $sender->getValue();
 
@@ -569,6 +576,7 @@ class Invoice extends \App\Pages\Base
 
         $this->updateAjax(array('editserprice'));
     }
+
     public function OnChangeCustomer($sender) {
         $this->docform->discount->setVisible(false);
 

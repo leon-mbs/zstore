@@ -59,8 +59,8 @@ class DocList extends \App\Pages\Base
         $this->filter->add(new Date('from', $filter->from));
         $this->filter->add(new Date('to', $filter->to));
         $this->filter->add(new DropDownChoice('doctype', H::getDocTypes(), $filter->doctype));
-        $this->filter->add(new DropDownChoice('author', \App\Entity\User::findArray('username','','username'), $filter->author));
-        $this->filter->add(new DropDownChoice('status',  Document::getStateList(), $filter->status));
+        $this->filter->add(new DropDownChoice('author', \App\Entity\User::findArray('username', '', 'username'), $filter->author));
+        $this->filter->add(new DropDownChoice('status', Document::getStateList(), $filter->status));
 
         $this->filter->add(new ClickLink('erase', $this, "onErase"));
         $this->filter->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');
@@ -143,8 +143,8 @@ class DocList extends \App\Pages\Base
 
         $filter->searchnumber = trim($this->filter->searchnumber->getText());
         $filter->searchtext = trim($this->filter->searchtext->getText());
-        $this->filter->searchnumber->setText('') ;
-        $this->filter->searchtext->setText('') ;
+        $this->filter->searchnumber->setText('');
+        $this->filter->searchtext->setText('');
         $this->doclist->setCurrentPage(1);
         //$this->doclist->setPageSize($this->filter->rowscnt->getValue());
 
@@ -307,29 +307,29 @@ class DocList extends \App\Pages\Base
         }
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
-        
-        try{
 
-           $del = Document::delete($doc->document_id);
-         if (strlen($del) > 0) {
-            $this->setError($del);
-            $conn->RollbackTrans();
-            
-            return;
-         }      
-        
+        try {
+
+            $del = Document::delete($doc->document_id);
+            if (strlen($del) > 0) {
+                $this->setError($del);
+                $conn->RollbackTrans();
+
+                return;
+            }
+
             $conn->CommitTrans();
-       
+
 
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
-      
+
             $this->setError($ee->getMessage());
 
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
             return;
-        } 
+        }
 
 
         $this->doclist->Reload(true);
@@ -355,7 +355,7 @@ class DocList extends \App\Pages\Base
         }
 
 
-        $f = $doc->checkStates(array(Document::STATE_CLOSED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED)) >0;
+        $f = $doc->checkStates(array(Document::STATE_CLOSED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED)) > 0;
         if ($f) {
             $this->setWarn("dochas_sent_rec_closed");
         }
@@ -365,20 +365,20 @@ class DocList extends \App\Pages\Base
             $this->setError("dochasnocanceledchilld");
             return;
         }
-        
+
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
-        
-        try{
-          $doc->updateStatus(Document::STATE_CANCELED);
-          $doc->payed=0;
-          $doc->save();
-          $conn->CommitTrans();
-       
+
+        try {
+            $doc->updateStatus(Document::STATE_CANCELED);
+            $doc->payed = 0;
+            $doc->save();
+            $conn->CommitTrans();
+
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
-      
+
             $this->setError($ee->getMessage());
 
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
@@ -409,7 +409,7 @@ class DocList extends \App\Pages\Base
             $n->user_id = $this->_doc->user_id;
             $n->sender_id = $user->user_id;
             $n->dateshow = time();
-            $n->message = H::l("userapprooveddoc",   $this->_doc->document_number);
+            $n->message = H::l("userapprooveddoc", $this->_doc->document_number);
 
             $n->save();
         }
@@ -423,8 +423,8 @@ class DocList extends \App\Pages\Base
             $n = new \App\Entity\Notify();
             $n->user_id = $this->_doc->user_id;
             $n->sender_id = $user->user_id;
-           $n->dateshow = time();
-            $n->message = H::l("userrefuseddoc",   $this->_doc->document_number);
+            $n->dateshow = time();
+            $n->message = H::l("userrefuseddoc", $this->_doc->document_number);
             $n->message .= "<br> " . $text;
             $n->save();
 

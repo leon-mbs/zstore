@@ -69,7 +69,7 @@ class User extends \ZCL\DB\Entity
 
 
         $this->noshowpartion = $acl['noshowpartion'];
-        
+
         $this->aclview = $acl['aclview'];
         $this->acledit = $acl['acledit'];
         $this->aclexe = $acl['aclexe'];
@@ -205,22 +205,22 @@ class User extends \ZCL\DB\Entity
         $this->_options[$key] = $value;
     }
 
-    
-    public  static function getByBranch($branch_id) {
+
+    public static function getByBranch($branch_id) {
         $users = array();
-        
-        foreach(User::find('disabled <> 1','username') as $u){
-            if($u->userrole=='admins' || $branch_id==0) {
-              $users[$u->user_id]=$u->username ;
-              continue;       
+
+        foreach (User::find('disabled <> 1', 'username') as $u) {
+            if ($u->userrole == 'admins' || $branch_id == 0) {
+                $users[$u->user_id] = $u->username;
+                continue;
             }
-            $br =  explode(',', $u->aclbranch) ;
-            if(in_array($branch_id,$br)){
-                $users[$u->user_id]=$u->username ;  
+            $br = explode(',', $u->aclbranch);
+            if (in_array($branch_id, $br)) {
+                $users[$u->user_id] = $u->username;
             }
-            
+
         }
-        return  $users;  
+        return $users;
     }
-    
+
 }

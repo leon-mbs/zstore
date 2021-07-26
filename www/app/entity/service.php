@@ -23,9 +23,9 @@ class Service extends \ZCL\DB\Entity
         $this->hours = (string)($xml->hours[0]);
         $this->price = (string)($xml->price[0]);
         $this->cost = (string)($xml->cost[0]);
-       $this->actionprice = doubleval($xml->actionprice[0]);
-        $this->todate =  intval($xml->todate[0]);
-        $this->fromdate =  intval($xml->fromdate[0]);
+        $this->actionprice = doubleval($xml->actionprice[0]);
+        $this->todate = intval($xml->todate[0]);
+        $this->fromdate = intval($xml->fromdate[0]);
 
         parent::afterLoad();
     }
@@ -37,16 +37,18 @@ class Service extends \ZCL\DB\Entity
         $this->detail .= "<cost>{$this->cost}</cost>";
         $this->detail .= "<price>{$this->price}</price>";
         $this->detail .= "<hours>{$this->hours}</hours>";
-         if($this->actionprice>0) {
-           $this->detail .= "<actionprice>{$this->actionprice}</actionprice>";  
-        } 
+        if ($this->actionprice > 0) {
+            $this->detail .= "<actionprice>{$this->actionprice}</actionprice>";
+        }
         $this->detail .= "<todate>{$this->todate}</todate>";
         $this->detail .= "<fromdate>{$this->fromdate}</fromdate>";
 
         $this->detail .= "</detail>";
 
-        if(strlen( $this->category)==0)   $this->category=null;
-        
+        if (strlen($this->category) == 0) {
+            $this->category = null;
+        }
+
         return true;
     }
 
@@ -58,11 +60,13 @@ class Service extends \ZCL\DB\Entity
         return ($cnt > 0) ? \App\Helper::l('nodelservice') : "";
     }
 
-    public static function getCategoryList(){
-       $conn = \Zdb\DB::getConnect() ;
-       
-       $list = $conn->GetCol("select distinct  category from services where  category  is not null order by category ") ;
-       if(is_array($list) )  return $list;
-       return array();
+    public static function getCategoryList() {
+        $conn = \Zdb\DB::getConnect();
+
+        $list = $conn->GetCol("select distinct  category from services where  category  is not null order by category ");
+        if (is_array($list)) {
+            return $list;
+        }
+        return array();
     }
 }

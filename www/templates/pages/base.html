@@ -6,7 +6,7 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        
+
         <link rel="stylesheet" href="/assets/css/adminlte.css">
         <!--<link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/bootstrap.css">   -->
         <link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/zippy-bundle.min.css">
@@ -52,7 +52,7 @@
                 </ul>
 
                 <ul class="navbar-nav ml-auto">
-                 
+
                     {{#usebranch}}
                     <li class="nav-item">
                         <form zippy="nbform" class="form-inline ">
@@ -66,32 +66,32 @@
                     </li>
                     {{/usebranch}}
                     {{#showactiveusers}}     
-                 <li class="nav-item dropdown">
-                    <a title="Активные пользователи" class="nav-link" data-toggle="dropdown" href="#">
-                      <i class="fa fa-users"></i>
-                      <span  class="badge badge-success navbar-badge">{{activeuserscnt}}</span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                          <table class="table table-sm">
-                          {{#aulist}}
-                            <tr><td>{{ausername}}</td></tr>
-                          {{/aulist}}
-                          </table>
-                     </div>
-                  </li>               
-                   {{/showactiveusers}}     
-                    
-                   {{#taskcnt}} 
+                    <li class="nav-item dropdown">
+                        <a title="Активные пользователи" class="nav-link" data-toggle="dropdown" href="#">
+                            <i class="fa fa-users"></i>
+                            <span  class="badge badge-success navbar-badge">{{activeuserscnt}}</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                            <table class="table table-sm">
+                                {{#aulist}}
+                                <tr><td>{{ausername}}</td></tr>
+                                {{/aulist}}
+                            </table>
+                        </div>
+                    </li>               
+                    {{/showactiveusers}}     
+
+                    {{#taskcnt}} 
                     <li class="nav-item  ">
                         <a class="nav-link  " href="/index.php?p=App/Pages/Jobs">
                             <i class="fa fa-gavel "></i>
-                            
+
                             <span class="badge badge-danger  navbar-badge">{{taskcnt}}</span>
-                            
+
                         </a>
                     </li>
                     {{/taskcnt}}
-                  <li class="nav-item  ">
+                    <li class="nav-item  ">
                         <a class="nav-link  " href="/index.php?p=App/Pages/NotifyList">
                             <i class="fa fa-bell "></i>
                             {{#notcnt}}
@@ -107,7 +107,7 @@
                                 <a class="dropdown-item  " href="/index.php?p=App/Pages/Jobs"><i
                                         class="fa fa-gavel"></i>  Мои задачи</a>
                             </li>
-                           <li>
+                            <li>
                                 <a class="dropdown-item  " href="/index.php?p=App/Pages/TimeSheet"><i
                                         class="fa fa-calendar-alt"></i> Учет раб. времени</a>
                             </li>
@@ -140,8 +140,8 @@
                 <div class="sidebar">
                     <nav class="mt-2">
                         <ul class="nav  nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            
-                        
+
+
                             <li class="nav-item  ">
                                 <a href="/index.php" class="nav-link">
                                     <i class="nav-icon fa fa-home"></i>
@@ -150,7 +150,7 @@
                                     </p>
                                 </a>
                             </li>
-                         
+
                             <li class="nav-item  ">
                                 <a href="?p=/App/Pages/Main" class="nav-link">
                                     <i class="nav-icon fa fa-chart-pie"></i>
@@ -654,7 +654,7 @@
 
                             </li>
                             {{/showmodmenu}}
-                            
+
                             {{#isadmins}}
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
@@ -816,7 +816,7 @@
 
 
 
-{{#toasts}}
+        {{#toasts}}
         <script>
 $(document).Toasts('create', {
 icon: 'fa fa-exclamation-triangle text-warning',
@@ -825,45 +825,45 @@ icon: 'fa fa-exclamation-triangle text-warning',
 
 })
         </script>
-{{/toasts}}
+        {{/toasts}}
 
-     <script>
+        <script>
 
 
 
-        toastr.options = {
-        "closeButton": true,
-                "debug": false,
-                "newestOnTop": false,
-                "progressBar": false,
-                "positionClass": "toast-top-center",
-                "preventDuplicates": false,
-                "onclick": null,
-                "showDuration": "300",
-                "hideDuration": "1000",
-                "timeOut": "2000",
-                "extendedTimeOut": "1000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
-        };
-$(function () {
-$('[data-toggle="popover"]').popover();
-$('[data-toggle="tooltip"]').tooltip();
-$('.select2').select2();
-});
-$(window).scroll(function () {
-if ($(this).scrollTop() > 600) {
-if ($('#upbutton').is(':hidden')) {
-$('#upbutton').css({
-opacity: 0.7
-}).fadeIn('slow');
-}
-} else {
-$('#upbutton').stop(true, false).fadeOut('fast');
-}
-});
+                    toastr.options = {
+                    "closeButton": true,
+                            "debug": false,
+                            "newestOnTop": false,
+                            "progressBar": false,
+                            "positionClass": "toast-top-center",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "2000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut"
+                    };
+            $(function () {
+            $('[data-toggle="popover"]').popover();
+            $('[data-toggle="tooltip"]').tooltip();
+            $('.select2').select2();
+            });
+            $(window).scroll(function () {
+            if ($(this).scrollTop() > 600) {
+            if ($('#upbutton').is(':hidden')) {
+            $('#upbutton').css({
+            opacity: 0.7
+            }).fadeIn('slow');
+            }
+            } else {
+            $('#upbutton').stop(true, false).fadeOut('fast');
+            }
+            });
         </script>
         {{#usescanner}}
         <script src="/assets/js/quagga.js" type="text/javascript"></script>

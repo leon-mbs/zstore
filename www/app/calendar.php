@@ -5,19 +5,19 @@ namespace App;
 class Calendar extends \Zippy\Html\HtmlComponent implements \Zippy\Interfaces\Requestable, \Zippy\Interfaces\AjaxRender
 {
 
-    private $lang='ru';
+    private $lang  = 'ru';
     private $event = null;
     private $data  = array();
     private $view  = 'dayGridMonth';
 
-    public function __construct($id,$lang='ru') {
+    public function __construct($id, $lang = 'ru') {
         parent::__construct($id);
         $this->view = 'dayGridMonth';
         $this->lang = $lang;
     }
 
     public final function RenderImpl() {
-       
+
         $id = $this->getAttribute('id');
         $url = $this->owner->getURLNode() . "::" . $this->id;
 
