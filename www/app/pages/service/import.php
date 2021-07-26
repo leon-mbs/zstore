@@ -30,11 +30,11 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("itype", array(), 0))->onChange($this, "onType");
 
         $form->add(new DropDownChoice("item_type", Item::getTypes(), Item::TYPE_TOVAR));
-      
+
         $form->add(new DropDownChoice("store", Store::getList(), H::getDefStore()));
 
         $form->add(new \Zippy\Html\Form\File("filename"));
-        $cols = array(0 => '-', 'A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F', 'G' => 'G', 'H' => 'H', 'I' => 'I', 'J' => 'J','K' => 'K','L' => 'L','M' => 'M',);
+        $cols = array(0 => '-', 'A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F', 'G' => 'G', 'H' => 'H', 'I' => 'I', 'J' => 'J', 'K' => 'K', 'L' => 'L', 'M' => 'M',);
         $form->add(new DropDownChoice("colname", $cols));
         $form->add(new DropDownChoice("colcode", $cols));
         $form->add(new DropDownChoice("colbarcode", $cols));
@@ -47,14 +47,14 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("colprice5", $cols));
         $form->add(new DropDownChoice("colcell", $cols));
 
-        $pt = \App\Entity\Item::getPriceTypeList() ;
+        $pt = \App\Entity\Item::getPriceTypeList();
 
-        $form->add(new Label('pricename1',$pt['price1']));
-        $form->add(new Label('pricename2',$pt['price2']));
-        $form->add(new Label('pricename3',$pt['price3']));
-        $form->add(new Label('pricename4',$pt['price4']));
-        $form->add(new Label('pricename5',$pt['price5']));
-        
+        $form->add(new Label('pricename1', $pt['price1']));
+        $form->add(new Label('pricename2', $pt['price2']));
+        $form->add(new Label('pricename3', $pt['price3']));
+        $form->add(new Label('pricename4', $pt['price4']));
+        $form->add(new Label('pricename5', $pt['price5']));
+
         $form->add(new DropDownChoice("colinprice", $cols));
         $form->add(new DropDownChoice("colmsr", $cols));
         $form->add(new DropDownChoice("colbrand", $cols));
@@ -64,7 +64,7 @@ class Import extends \App\Pages\Base
         $form->add(new CheckBox("checkname"));
         $form->add(new CheckBox("noshowprice"));
         $form->add(new CheckBox("noshowshop"));
-        
+
 
         $form->onSubmit($this, "onImport");
 
@@ -122,29 +122,29 @@ class Import extends \App\Pages\Base
         $this->iform->store->setVisible($t == 1);
         $this->iform->colinprice->setVisible($t == 1);
         $this->iform->checkname->setVisible(true);
-          $this->iform->item_type->setVisible(true);
-          $this->iform->noshowprice->setVisible(true);
-          $this->iform->noshowshop->setVisible(true);
-          $this->iform->colname->setVisible(true);
-          $this->iform->colbarcode->setVisible(true);
-          $this->iform->colgr->setVisible(true);
-          $this->iform->colmsr->setVisible(true);
-          $this->iform->coldesc->setVisible(true);
-          $this->iform->colqty->setVisible(true);
-          $this->iform->colinprice->setVisible(true);
-     
-        if($t==2) {
-          $this->iform->item_type->setVisible(false);
-          $this->iform->checkname->setVisible(false);
-          $this->iform->noshowprice->setVisible(false);
-          $this->iform->noshowshop->setVisible(false);
-          $this->iform->colbarcode->setVisible(false);
-          $this->iform->colgr->setVisible(false);
-          $this->iform->colmsr->setVisible(false);
-          $this->iform->coldesc->setVisible(false);
-          $this->iform->colqty->setVisible(false);
-          $this->iform->colinprice->setVisible(false);
-            
+        $this->iform->item_type->setVisible(true);
+        $this->iform->noshowprice->setVisible(true);
+        $this->iform->noshowshop->setVisible(true);
+        $this->iform->colname->setVisible(true);
+        $this->iform->colbarcode->setVisible(true);
+        $this->iform->colgr->setVisible(true);
+        $this->iform->colmsr->setVisible(true);
+        $this->iform->coldesc->setVisible(true);
+        $this->iform->colqty->setVisible(true);
+        $this->iform->colinprice->setVisible(true);
+
+        if ($t == 2) {
+            $this->iform->item_type->setVisible(false);
+            $this->iform->checkname->setVisible(false);
+            $this->iform->noshowprice->setVisible(false);
+            $this->iform->noshowshop->setVisible(false);
+            $this->iform->colbarcode->setVisible(false);
+            $this->iform->colgr->setVisible(false);
+            $this->iform->colmsr->setVisible(false);
+            $this->iform->coldesc->setVisible(false);
+            $this->iform->colqty->setVisible(false);
+            $this->iform->colinprice->setVisible(false);
+
         }
     }
 
@@ -152,10 +152,10 @@ class Import extends \App\Pages\Base
         $t = $this->iform->itype->getValue();
         $store = $this->iform->store->getValue();
         $item_type = $this->iform->item_type->getValue();
-      
+
         $preview = $this->iform->preview->isChecked();
         $passfirst = $this->iform->passfirst->isChecked();
-        
+
         $checkname = $this->iform->checkname->isChecked();
         $this->_tvars['preview'] = false;
 
@@ -222,11 +222,11 @@ class Import extends \App\Pages\Base
                     'colqty'     => $row[$colqty],
                     'colmsr'     => $row[$colmsr],
                     'colinprice' => $row[$colinprice],
-                    'colprice1'   => $row[$colprice1],
-                    'colprice2'   => $row[$colprice2],
-                    'colprice3'   => $row[$colprice3],
-                    'colprice4'   => $row[$colprice4],
-                    'colprice5'   => $row[$colprice5],
+                    'colprice1'  => $row[$colprice1],
+                    'colprice2'  => $row[$colprice2],
+                    'colprice3'  => $row[$colprice3],
+                    'colprice4'  => $row[$colprice4],
+                    'colprice5'  => $row[$colprice5],
                     'colbrand'   => $row[$colbrand],
                     'coldesc'    => $row[$coldesc]
                 );
@@ -245,33 +245,45 @@ class Import extends \App\Pages\Base
             $price5 = str_replace(',', '.', trim($row[$colprice5]));
             $itemcode = trim($row[$colcode]);
             $brand = trim($row[$colbrand]);
-           
-            if ($t == 2){   //обновление  цен
-                
-                if(strlen($itemcode)==0) continue;
-                if(strlen($brand)>0) {
-                    $it = Item::getFirst('item_code='.Item::qstr($itemcode). " and manufacturer = ".Item::qstr($brand) )  ;
-                }   else {
-                    $it = Item::getFirst('item_code='.Item::qstr($itemcode))  ;
+
+            if ($t == 2) {   //обновление  цен
+
+                if (strlen($itemcode) == 0) {
+                    continue;
                 }
-                if($it==null) continue;
-                
-                if($colprice1 != "0") $it->price1 = $price1;
-                if($colprice2 != "0") $it->price2 = $price2;
-                if($colprice3 != "0") $it->price3 = $price3;
-                if($colprice4 != "0") $it->price4 = $price4;
-                if($colprice5 != "0") $it->price5 = $price5;
-                
-                
-                $it->save() ;
+                if (strlen($brand) > 0) {
+                    $it = Item::getFirst('item_code=' . Item::qstr($itemcode) . " and manufacturer = " . Item::qstr($brand));
+                } else {
+                    $it = Item::getFirst('item_code=' . Item::qstr($itemcode));
+                }
+                if ($it == null) {
+                    continue;
+                }
+
+                if ($colprice1 != "0") {
+                    $it->price1 = $price1;
+                }
+                if ($colprice2 != "0") {
+                    $it->price2 = $price2;
+                }
+                if ($colprice3 != "0") {
+                    $it->price3 = $price3;
+                }
+                if ($colprice4 != "0") {
+                    $it->price4 = $price4;
+                }
+                if ($colprice5 != "0") {
+                    $it->price5 = $price5;
+                }
+
+
+                $it->save();
                 $cnt++;
-                
+
                 continue;
             }
-             
-             
-            
-            
+
+
             $catname = $row[$colgr];
             if (strlen($catname) > 0) {
                 $cat = Category::getFirst('cat_name=' . Category::qstr($catname));
@@ -294,8 +306,8 @@ class Import extends \App\Pages\Base
                         $item = Item::getFirst('item_code=' . Item::qstr($itemcode));
                     }
                 }
-                
-                if (  $item == null && $checkname == true) {
+
+                if ($item == null && $checkname == true) {
                     $item = Item::getFirst('itemname=' . Item::qstr($itemname));
                 }
 
@@ -323,7 +335,7 @@ class Import extends \App\Pages\Base
                         $item->cell = trim($row[$colcell]);
                     }
                     if (strlen($row[$colbrand]) > 0) {
-                        $item->manufacturer = $row[$colbrand] ;
+                        $item->manufacturer = $row[$colbrand];
                     }
                     if (strlen(trim($row[$coldesc])) > 0) {
                         $item->description = trim($row[$coldesc]);
@@ -343,7 +355,7 @@ class Import extends \App\Pages\Base
                     if ($price5 > 0) {
                         $item->price5 = $price5;
                     }
-                    
+
                     if ($inprice > 0) {
                         $item->price = $inprice;
                     }
@@ -358,10 +370,10 @@ class Import extends \App\Pages\Base
                     }
 
                     $item->amount = $item->quantity * $item->price;
-                    
-                    $item->noprice =   $this->iform->noshowprice->isChecked()?1:0 ;
-                    $item->noshop=   $this->iform->noshowshop->isChecked()?1:0 ;
-                    
+
+                    $item->noprice = $this->iform->noshowprice->isChecked() ? 1 : 0;
+                    $item->noshop = $this->iform->noshowshop->isChecked() ? 1 : 0;
+
                     $item->save();
                     $cnt++;
                     if ($item->quantity > 0) {
@@ -510,7 +522,7 @@ class Import extends \App\Pages\Base
         $store = $this->nform->nstore->getValue();
         $c = $this->nform->ncust->getKey();
         $checkname = $this->nform->ncheckname->isChecked();
- 
+
         $preview = $this->nform->npreview->isChecked();
         $passfirst = $this->nform->npassfirst->isChecked();
         $this->_tvars['preview3'] = false;
@@ -570,12 +582,12 @@ class Import extends \App\Pages\Base
             foreach ($data as $row) {
 
                 $this->_tvars['list'][] = array(
-                    'colname'  => $row[$colname],
-                    'colcode'  => $row[$colcode],
-                    'colbarcode'  => $row[$colbarcode],
-                    'colqty'   => $row[$colqty],
-                    'colmsr'   => $row[$colmsr],
-                    'colprice' => $row[$colprice]
+                    'colname'    => $row[$colname],
+                    'colcode'    => $row[$colcode],
+                    'colbarcode' => $row[$colbarcode],
+                    'colqty'     => $row[$colqty],
+                    'colmsr'     => $row[$colmsr],
+                    'colprice'   => $row[$colprice]
                 );
             }
             return;
@@ -594,7 +606,7 @@ class Import extends \App\Pages\Base
                 if (strlen($itemcode) > 0) {
                     $item = Item::getFirst('item_code=' . Item::qstr($itemcode));
                 }
-                if ($checkname== true && $item == null) {
+                if ($checkname == true && $item == null) {
                     $item = Item::getFirst('itemname=' . Item::qstr($itemname));
                 }
 

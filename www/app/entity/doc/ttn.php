@@ -198,7 +198,7 @@ class TTN extends Document
             foreach ($listst as $st) {
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
-              //  $sc->setExtCode($item->price - $st->partion); //Для АВС 
+                //  $sc->setExtCode($item->price - $st->partion); //Для АВС
                 $sc->setOutPrice($item->price);
                 $sc->save();
             }
@@ -216,8 +216,8 @@ class TTN extends Document
                 if ($payed > 0) {
                     $this->payed = $payed;
                 }
-                \App\Entity\IOState::addIOState($this->document_id,   0 - $this->headerdata['ship_amount'],\App\Entity\IOState::TYPE_SALE_OUTCOME);
-                
+                \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata['ship_amount'], \App\Entity\IOState::TYPE_SALE_OUTCOME);
+
             }
         }
         $common = \App\System::getOptions("common");

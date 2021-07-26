@@ -56,7 +56,7 @@ class TTN extends \App\Pages\Base
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
-        $this->docform->add(new DropDownChoice('salesource', H::getSaleSources() , H::getDefSaleSource()));
+        $this->docform->add(new DropDownChoice('salesource', H::getSaleSources(), H::getDefSaleSource()));
 
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
 
@@ -287,7 +287,6 @@ class TTN extends \App\Pages\Base
             return;
         }
 
-    
 
         $this->OnDelivery($this->docform->delivery);
     }
@@ -344,7 +343,7 @@ class TTN extends \App\Pages\Base
                 $this->_itemlist[$ri]->quantity += 1;
                 $this->docform->detail->Reload();
                 $this->calcTotal();
-              
+
                 return;
             }
         }
@@ -374,39 +373,38 @@ class TTN extends \App\Pages\Base
             $this->setWarn("noitemonstore", $item->itemname);
         }
 
-   
 
-            $price = $item->getPrice($this->docform->pricetype->getValue(), $store_id);
-            $item->price = $price;
-            $item->quantity = 1;
+        $price = $item->getPrice($this->docform->pricetype->getValue(), $store_id);
+        $item->price = $price;
+        $item->quantity = 1;
 
-            if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
+        if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
 
-                $serial = '';
-                $serial = $item->getNearestSerie($store_id);
+            $serial = '';
+            $serial = $item->getNearestSerie($store_id);
 
 
-                if (strlen($serial) == 0) {
-                    $this->setWarn('needs_serial');
-                    $this->editdetail->setVisible(true);
-                    $this->docform->setVisible(false);
+            if (strlen($serial) == 0) {
+                $this->setWarn('needs_serial');
+                $this->editdetail->setVisible(true);
+                $this->docform->setVisible(false);
 
-                    $this->editdetail->edittovar->setKey($item->item_id);
-                    $this->editdetail->edittovar->setText($item->itemname);
-                    $this->editdetail->editserial->setText('');
-                    $this->editdetail->editquantity->setText('1');
-                    $this->editdetail->editprice->setText($item->price);
+                $this->editdetail->edittovar->setKey($item->item_id);
+                $this->editdetail->edittovar->setText($item->itemname);
+                $this->editdetail->editserial->setText('');
+                $this->editdetail->editquantity->setText('1');
+                $this->editdetail->editprice->setText($item->price);
 
-                    return;
-                } else {
-                    $item->snumber = $serial;
-                }
+                return;
+            } else {
+                $item->snumber = $serial;
             }
-            $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
-            $item->rowid = $next + 1;
+        }
+        $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
+        $item->rowid = $next + 1;
 
-            $this->_itemlist[$item->rowid] = $item;
-        
+        $this->_itemlist[$item->rowid] = $item;
+
         $this->docform->detail->Reload();
         $this->calcTotal();
 

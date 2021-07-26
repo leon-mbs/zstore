@@ -21,7 +21,7 @@ class Category extends \ZCL\DB\Entity
     }
 
     protected function afterLoad() {
-  
+
 
         $xml = @simplexml_load_string($this->detail);
 
@@ -34,9 +34,9 @@ class Category extends \ZCL\DB\Entity
         $this->noshop = (int)$xml->noshop[0];
         $this->nofastfood = (int)$xml->nofastfood[0];
         $this->discount = doubleval($xml->discount[0]);
-        $this->todate =  intval($xml->todate[0]);
-        $this->fromdate =  intval($xml->fromdate[0]);
- 
+        $this->todate = intval($xml->todate[0]);
+        $this->fromdate = intval($xml->fromdate[0]);
+
         parent::afterLoad();
     }
 
@@ -53,9 +53,9 @@ class Category extends \ZCL\DB\Entity
         $this->detail .= "<image_id>{$this->image_id}</image_id>";
         $this->detail .= "<noshop>{$this->noshop}</noshop>";
         $this->detail .= "<nofastfood>{$this->nofastfood}</nofastfood>";
-        if($this->discount>0) {
-           $this->detail .= "<discount>{$this->discount}</discount>";  
-        } 
+        if ($this->discount > 0) {
+            $this->detail .= "<discount>{$this->discount}</discount>";
+        }
         $this->detail .= "<todate>{$this->todate}</todate>";
         $this->detail .= "<fromdate>{$this->fromdate}</fromdate>";
 
@@ -134,7 +134,7 @@ class Category extends \ZCL\DB\Entity
     }
 
     //список  с  тмц
-    public static function getList($fullname = false ) {
+    public static function getList($fullname = false) {
         if ($fullname == false) {
             return Category::findArray("cat_name", "cat_id in (select cat_id from items where disabled <>1 )", "cat_name");
         }
@@ -148,7 +148,6 @@ class Category extends \ZCL\DB\Entity
         }
         return $ret;
     }
-   
-  
+
 
 }

@@ -37,8 +37,8 @@ class InvoiceCust extends Document
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "total"           => H::fa($this->amount),
-                         "payed"           => $this->payed >0 ? H::fa($this->payed):false,
-                        "payamount"       => $this->payamount >0 ? H::fa($this->payamount):false 
+                        "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
+                        "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
         );
         if ($this->headerdata["contract_id"] > 0) {
             $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);
@@ -63,12 +63,12 @@ class InvoiceCust extends Document
     public function Execute() {
 
         if ($this->headerdata['payment'] > 0 && $this->payed) {
-             $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->payed, $this->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_OUTCOME);
+            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->payed, $this->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_OUTCOME);
             if ($payed > 0) {
                 $this->payed = $payed;
             }
-             \App\Entity\IOState::addIOState($this->document_id,0 - $this->payed,\App\Entity\IOState::TYPE_BASE_OUTCOME);
-        
+            \App\Entity\IOState::addIOState($this->document_id, 0 - $this->payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+
         }
 
         return true;

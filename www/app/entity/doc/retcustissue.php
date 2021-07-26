@@ -69,18 +69,18 @@ class RetCustIssue extends Document
             foreach ($listst as $st) {
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $item->price, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
-             //   $sc->setExtCode($item->price - $st->partion); //Для АВС 
+                //   $sc->setExtCode($item->price - $st->partion); //Для АВС
                 $sc->setOutPrice($item->price);
                 $sc->save();
             }
         }
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-            $payed =   \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_INCOME);
+            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_INCOME);
             if ($payed > 0) {
                 $this->payed = $payed;
             }
-            \App\Entity\IOState::addIOState($this->document_id,  $this->payed,\App\Entity\IOState::TYPE_BASE_INCOME);
-       
+            \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+
         }
 
 

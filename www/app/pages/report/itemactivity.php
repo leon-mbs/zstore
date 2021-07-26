@@ -185,13 +185,13 @@ class ItemActivity extends \App\Pages\Base
             $bain = $bain + $row['obinamount'];
             $baout = $baout + $row['oboutamount'];
         }
-                 
 
-        $header = array('datefrom' => \App\Helper::fd($from),
-                        "_detail"  => $detail,
-                        'noshowpartion'   => \App\System::getUser()->noshowpartion,
-                        'dateto'   => \App\Helper::fd($to),
-                        "store"    => Store::load($storeid)->storename
+
+        $header = array('datefrom'      => \App\Helper::fd($from),
+                        "_detail"       => $detail,
+                        'noshowpartion' => \App\System::getUser()->noshowpartion,
+                        'dateto'        => \App\Helper::fd($to),
+                        "store"         => Store::load($storeid)->storename
         );
         $header['ba'] = H::fa($ba);
         $header['bain'] = H::fa($bain);

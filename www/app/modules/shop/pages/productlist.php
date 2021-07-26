@@ -81,7 +81,7 @@ class ProductList extends \App\Pages\Base
 
         $editform = $this->editpanel->add(new Form('editform'));
         $editform->add(new TextInput('esef'));
-       
+
         $editform->add(new TextArea('edescdet'));
 
         $editform->add(new DataView('attrlist', new ArrayDataSource(new PB($this, 'attrlist')), $this, 'attrlistOnRow'));
@@ -151,7 +151,7 @@ class ProductList extends \App\Pages\Base
         $this->_item = $sender->getOwner()->getDataItem();
 
         $this->editpanel->editform->esef->setText($this->_item->sef);
-     
+
         $this->editpanel->editform->edescdet->setText($this->_item->getDescription());
 
         $this->attrlist = $this->_item->getAttrList();
@@ -163,7 +163,7 @@ class ProductList extends \App\Pages\Base
         $this->_item->sef = $sender->esef->getText();
 
         $this->_item->productdata->desc = $sender->edescdet->getText();
-   
+
         $this->_item->productdata->attributevalues = array();
 
         $rows = $sender->attrlist->getChildComponents();

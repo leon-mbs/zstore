@@ -13,9 +13,9 @@
 
                 <div class="navbar nav  ">
                     <form zippy="filter" class="form-inline ">
-                           <label for="searchnumber">№ </label>
-                           <input placeholder="Пошук..." class="form-control mr-2" type="text" zippy="searchnumber"
-                        autocomplete="off" autofocus  onkeydown="onBarCode()"         style="width:175px" title="Якщо  пошук по номеру iншi елементи  фiльтру  iгноруются">
+                        <label for="searchnumber">№ </label>
+                        <input placeholder="Пошук..." class="form-control mr-2" type="text" zippy="searchnumber"
+                               autocomplete="off" autofocus  onkeydown="onBarCode()"         style="width:175px" title="Якщо  пошук по номеру iншi елементи  фiльтру  iгноруются">
 
                         <label for="from">З </label>
                         <input type="text" class="form-control mr-sm-1  " zippy="from" style="width:110px">
@@ -24,10 +24,10 @@
                         <label for="to"> по </label>
                         <input type="text" class="form-control mr-sm-1 " style="width:110px" zippy="to">
 
-                          <label for="status"> Статус </label>
-                            <select class="form-control mr-2" zippy="status">
-                             <option value="0">Не вказано</option>
-                           </select>
+                        <label for="status"> Статус </label>
+                        <select class="form-control mr-2" zippy="status">
+                            <option value="0">Не вказано</option>
+                        </select>
 
                         <label for="doctype"> Тип </label>
                         <select class="form-control mr-sm-1  " zippy="doctype">
@@ -35,13 +35,13 @@
                         </select>
                         <label for="searchcust"> Контрагент </label>
                         <input placeholder="Почніть вводити..." class="form-control mr-1" type="text" zippy="searchcust">
-                       
-                       <label for="author"> Автор </label>
+
+                        <label for="author"> Автор </label>
                         <select class="form-control select2  " zippy="author">
                             <option value="0">Не вибраний</option>
                         </select>
-                       <input class="form-control ml-2  mr-2" type="text" zippy="searchtext" placeholder="Пошук по контенту"   >
-                            
+                        <input class="form-control ml-2  mr-2" type="text" zippy="searchtext" placeholder="Пошук по контенту"   >
+
 
                         <input type="submit" class="  ml-2  mr-2  btn btn-outline-success  " value="ОК">
                         <a zippy="erase" title="Скинути фільтр"><i class="fa fa-eraser"></i></a>
@@ -101,7 +101,7 @@
 
                             </td>
                             <td>
-                                 <a zippy="delete" title="Видалення"><i class="fa fa-trash"></i></a>
+                                <a zippy="delete" title="Видалення"><i class="fa fa-trash"></i></a>
                             </td>
                             <td>
                                 <div class="btn-group" zippy="basedon">
@@ -142,7 +142,7 @@
         <script>
             $('#searchnumber').focus();
 
-        
+
             function onBarCode(ele) {
 
                 if (event.key === 'Enter' || event.keyCode == 13) {

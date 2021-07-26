@@ -432,7 +432,7 @@ class Task extends \App\Pages\Base
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
 
-        
+
         $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
         $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
         $this->_doc->headerdata['start'] = $this->docform->document_time->getDateTime($this->_doc->document_date);;
@@ -479,9 +479,9 @@ class Task extends \App\Pages\Base
             }
 
             $conn->CommitTrans();
-        
-                App::Redirect("\\App\\Pages\\Register\\TaskList");
-            
+
+            App::Redirect("\\App\\Pages\\Register\\TaskList");
+
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();

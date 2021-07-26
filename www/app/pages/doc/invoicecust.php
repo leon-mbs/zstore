@@ -51,7 +51,7 @@ class InvoiceCust extends \App\Pages\Base
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
-        $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList( ), H::getDefMF()));
+        $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
 
         $this->docform->add(new TextInput('editpayamount', "0"));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
@@ -100,7 +100,9 @@ class InvoiceCust extends \App\Pages\Base
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
-            if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )  $this->_doc->payed = $this->_doc->headerdata['payed'];
+            if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
+                $this->_doc->payed = $this->_doc->headerdata['payed'];
+            }
             $this->docform->editpayed->setText($this->_doc->payed);
             $this->docform->payed->setText($this->_doc->payed);
 
@@ -184,7 +186,7 @@ class InvoiceCust extends \App\Pages\Base
         }               //для совместимости
         else {
             $item->rowid = $item->item_id;
-            
+
         }
 
         $this->_rowid = $item->rowid;
@@ -195,20 +197,20 @@ class InvoiceCust extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
-       
-       
+
+
         if ($item->rowid > 0) {
             ;
         }               //для совместимости
         else {
             $item->rowid = $item->item_id;
-           
+
         }
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($item->rowid => $this->_itemlist[$item->rowid]));
-        
+
         $this->docform->detail->Reload();
-        
+
         $this->calcTotal();
         $this->calcPay();
     }
@@ -281,13 +283,13 @@ class InvoiceCust extends \App\Pages\Base
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->payed = $this->docform->payed->getText();
-         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
 
         $this->_doc->headerdata['rate'] = $this->docform->rate->getText();
         $this->_doc->headerdata['nds'] = $this->docform->nds->getText();
         $this->_doc->headerdata['disc'] = $this->docform->disc->getText();
 
-      
+
         $this->_doc->customer_id = $this->docform->customer->getKey();
         if ($this->_doc->customer_id > 0) {
             $customer = Customer::load($this->_doc->customer_id);
@@ -304,8 +306,10 @@ class InvoiceCust extends \App\Pages\Base
         if ($this->checkForm() == false) {
             return;
         }
-        if($this->_doc->payed ==0)   $this->_doc->headerdata['payment']=0;
-        
+        if ($this->_doc->payed == 0) {
+            $this->_doc->headerdata['payment'] = 0;
+        }
+
         $file = $this->docform->scan->getFile();
         if ($file['size'] > 10000000) {
             $this->setError("filemore10M");
@@ -360,8 +364,7 @@ class InvoiceCust extends \App\Pages\Base
 
             $conn->CommitTrans();
 
-     
-            
+
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
@@ -373,7 +376,7 @@ class InvoiceCust extends \App\Pages\Base
 
             return;
         }
-         App::Redirect("\\App\\Pages\\Register\\GRList");
+        App::Redirect("\\App\\Pages\\Register\\GRList");
 
     }
 
@@ -476,10 +479,10 @@ class InvoiceCust extends \App\Pages\Base
             $this->setError("noselmf");
         }
         $c = $this->docform->customer->getKey();
-        if ( $c == 0) {
+        if ($c == 0) {
             $this->setError("mustsel_cust");
         }
-        
+
         return !$this->isError();
     }
 
@@ -516,23 +519,23 @@ class InvoiceCust extends \App\Pages\Base
         $item = new Item();
         $item->itemname = $itemname;
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
-        
-        if(strlen($item->item_code)>0) {
+
+        if (strlen($item->item_code) > 0) {
             $code = Item::qstr($item->item_code);
             $cnt = Item::findCnt("  item_code={$code} ");
             if ($cnt > 0) {
-               $this->setError('itemcode_exists');
-               return;
+                $this->setError('itemcode_exists');
+                return;
             }
-        
-        }  else {
-              if(System::getOption("common", "autoarticle") == 1)   {
-                 
-                 $item->item_code = Item::getNextArticle() ;
-              } 
+
+        } else {
+            if (System::getOption("common", "autoarticle") == 1) {
+
+                $item->item_code = Item::getNextArticle();
+            }
         }
-        
-        
+
+
         $item->cat_id = $this->editnewitem->editnewcat->getValue();
         $item->save();
         $this->editdetail->edititem->setText($item->itemname);

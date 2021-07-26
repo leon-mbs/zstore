@@ -40,8 +40,8 @@ class ServiceAct extends Document
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "devsn"           => $this->headerdata["devsn"],
                         "document_number" => $this->document_number,
-                        "payed"           => $this->payed >0 ? H::fa($this->payed):false,
-                        "payamount"       => $this->payamount >0 ? H::fa($this->payamount):false ,
+                        "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
+                        "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false,
                         "total"           => H::fa($this->amount)
         );
         if ($this->headerdata["contract_id"] > 0) {
@@ -66,7 +66,7 @@ class ServiceAct extends Document
             $sc = new Entry($this->document_id, 0 - ($ser->price * $ser->quantity), $ser->quantity);
             $sc->setService($ser->service_id);
 
-          //  $sc->setExtCode($ser->price); //Для АВС 
+            //  $sc->setExtCode($ser->price); //Для АВС
             //$sc->setCustomer($this->customer_id);
             $sc->setOutPrice($item->price);
             $sc->save();
@@ -79,8 +79,8 @@ class ServiceAct extends Document
             if ($payed > 0) {
                 $this->payed = $payed;
             }
-           \App\Entity\IOState::addIOState($this->document_id,    $this->payed,\App\Entity\IOState::TYPE_BASE_INCOME);
-            
+            \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+
         }
     }
 

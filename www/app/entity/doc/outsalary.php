@@ -15,11 +15,11 @@ class OutSalary extends Document
     public function Execute() {
 
 
-        $payed = Pay::addPayment($this->document_id, $this->document_date, 0 - $this->amount, $this->headerdata['payment'], \App\Entity\IOState::TYPE_SALARY_OUTCOME,$this->notes);
+        $payed = Pay::addPayment($this->document_id, $this->document_date, 0 - $this->amount, $this->headerdata['payment'], \App\Entity\IOState::TYPE_SALARY_OUTCOME, $this->notes);
         if ($payed > 0) {
             $this->payed = $payed;
         }
-        \App\Entity\IOState::addIOState($this->document_id, 0- $this->amount,\App\Entity\IOState::TYPE_SALARY_OUTCOME);
+        \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, \App\Entity\IOState::TYPE_SALARY_OUTCOME);
 
         return true;
     }

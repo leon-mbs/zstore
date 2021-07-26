@@ -26,7 +26,7 @@ class ItemOrder extends \App\Pages\Base
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
 
-        $where = "status<>1 and customer_id in  (select customer_id from documents_view where meta_name='Order'  and (state= " . Document::STATE_INPROCESS . " or state =".Document::STATE_NEW." ) )";
+        $where = "status<>1 and customer_id in  (select customer_id from documents_view where meta_name='Order'  and (state= " . Document::STATE_INPROCESS . " or state =" . Document::STATE_NEW . " ) )";
         $this->filter->add(new DropDownChoice('cust', Customer::findArray('customer_name', $where, 'customer_name'), 0));
 
         $this->add(new Panel('detail'))->setVisible(false);
@@ -64,7 +64,7 @@ class ItemOrder extends \App\Pages\Base
 
         $detail = array();
 
-        $where = "   meta_name='Order'  and  (state= " . Document::STATE_INPROCESS . " or state =".Document::STATE_NEW." )";
+        $where = "   meta_name='Order'  and  (state= " . Document::STATE_INPROCESS . " or state =" . Document::STATE_NEW . " )";
         if ($cust > 0) {
             $where .= " and customer_id=" . $cust;
         }

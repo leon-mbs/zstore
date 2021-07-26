@@ -456,11 +456,11 @@ class Helper
         }
         return 0;
     }
-    
+
     /**
-    * источники  продаж
-    * 
-    */
+     * источники  продаж
+     *
+     */
     public static function getSaleSources() {
         $common = System::getOptions("common");
         if (!is_array($common)) {
@@ -470,25 +470,25 @@ class Helper
         if (is_array($salesourceslist) == false) {
             $salesourceslist = array();
         }
-        $slist = array() ;
-        foreach($salesourceslist as $s){
-           $slist[$s->id]=$s->name;    
-        } 
+        $slist = array();
+        foreach ($salesourceslist as $s) {
+            $slist[$s->id] = $s->name;
+        }
         return $slist;
     }
-    
-   /**
+
+    /**
      * Возвращает источник продаж  по  умолчанию
      *
      */
     public static function getDefSaleSource() {
         $user = System::getUser();
         if ($user->defsalesource > 0) {
-             return $user->defsalesource;
+            return $user->defsalesource;
         }
 
-        $slist = Helper::getSaleSources() ;
-      
+        $slist = Helper::getSaleSources();
+
         if (count($slist) > 0) {
             $keys = array_keys($slist);
             return $keys[0];
@@ -699,7 +699,7 @@ class Helper
         if (isset($labels[$label])) {
             $text = $labels[$label];
             $text = sprintf($text, $p1, $p2, $p3);
-            $text = str_replace("\'","`",$text);
+            $text = str_replace("\'", "`", $text);
             return $text;
         } else {
             return $label;

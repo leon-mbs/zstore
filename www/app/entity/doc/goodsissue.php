@@ -62,11 +62,11 @@ class GoodsIssue extends Document
                         "total"           => H::fa($this->amount),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
-                        
-                        "docbarcode"         => $this->getBarCodeImage(),
-                        "docqrcode"         => $this->getQRCodeImage(),
-                        "payed"           => $this->payed >0 ? H::fa($this->payed):false,
-                        "payamount"       => $this->payamount >0 ? H::fa($this->payamount):false 
+
+                        "docbarcode" => $this->getBarCodeImage(),
+                        "docqrcode"  => $this->getQRCodeImage(),
+                        "payed"      => $this->payed > 0 ? H::fa($this->payed) : false,
+                        "payamount"  => $this->payamount > 0 ? H::fa($this->payamount) : false
 
         );
 
@@ -93,9 +93,9 @@ class GoodsIssue extends Document
         $amount = 0;
         foreach ($this->unpackDetails('detaildata') as $item) {
 
-                        if(false == $item->checkMinus($item->quantity,$this->headerdata['store'])) { 
-                            throw new \Exception(\App\Helper::l("nominus",$item->quantity,$item->itemname));
-                        }
+            if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
+                throw new \Exception(\App\Helper::l("nominus", $item->quantity, $item->itemname));
+            }
 
             //оприходуем  с  производства
             if ($item->autoincome == 1 && $item->item_type == Item::TYPE_PROD) {
@@ -106,11 +106,11 @@ class GoodsIssue extends Document
 
                         $itemp = \App\Entity\Item::load($part->item_id);
                         $itemp->quantity = $item->quantity * $part->qty;
-                        
-                        if(false==$itemp->checkMinus($itemp->quantity,$this->headerdata['store'])) { 
-                            throw new \Exception(\App\Helper::l("nominus",$itemp->quantity,$itemp->itemname));
+
+                        if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
+                            throw new \Exception(\App\Helper::l("nominus", $itemp->quantity, $itemp->itemname));
                         }
-                        
+
                         $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
 
                         foreach ($listst as $st) {
@@ -143,7 +143,7 @@ class GoodsIssue extends Document
             foreach ($listst as $st) {
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
-             //   $sc->setExtCode($item->price * $k - $st->partion); //Для АВС
+                //   $sc->setExtCode($item->price * $k - $st->partion); //Для АВС
                 $sc->setOutPrice($item->price * $k);
                 $sc->save();
                 $amount += $item->price * $k * $st->quantity;
@@ -151,14 +151,12 @@ class GoodsIssue extends Document
         }
 
 
- 
-
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
             $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_INCOME);
             if ($payed > 0) {
                 $this->payed = $payed;
             }
-            \App\Entity\IOState::addIOState($this->document_id,  $this->payed,\App\Entity\IOState::TYPE_BASE_INCOME);
+            \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
 
         }
 
@@ -202,8 +200,8 @@ class GoodsIssue extends Document
                         "phone"           => $firm["phone"],
                         "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
                         "document_number" => $this->document_number,
-                        "docbarcode"         => $this->getBarCodeImage(),
-                        "docqrcode"         => $this->getQRCodeImage(),
+                        "docbarcode"      => $this->getBarCodeImage(),
+                        "docqrcode"       => $this->getQRCodeImage(),
                         "total"           => H::fa($this->amount)
         );
 

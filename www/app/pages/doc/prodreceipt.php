@@ -192,7 +192,7 @@ class ProdReceipt extends \App\Pages\Base
         if ($item->sdate == false) {
             $item->sdate = '';
         }
-        if (strlen($item->snumber) > 0 && strlen($item->sdate) == 0 && $this->_tvars["usesnumber"] == true && $item->useserial==1 ) {
+        if (strlen($item->snumber) > 0 && strlen($item->sdate) == 0 && $this->_tvars["usesnumber"] == true && $item->useserial == 1) {
             $this->setError("dateforserial");
             return;
         }
@@ -330,7 +330,6 @@ class ProdReceipt extends \App\Pages\Base
         if (($this->docform->store->getValue() > 0) == false) {
             $this->setError("noselstore");
         }
-      
 
 
         return !$this->isError();

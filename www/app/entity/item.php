@@ -85,8 +85,8 @@ class Item extends \ZCL\DB\Entity
         }
 
         $this->actionprice = doubleval($xml->actionprice[0]);
-        $this->todate =  intval($xml->todate[0]);
-        $this->fromdate =  intval($xml->fromdate[0]);
+        $this->todate = intval($xml->todate[0]);
+        $this->fromdate = intval($xml->fromdate[0]);
 
         parent::afterLoad();
     }
@@ -142,13 +142,13 @@ class Item extends \ZCL\DB\Entity
 
         $this->detail .= "<brprice><![CDATA[{$brprice}]]></brprice>";
 
-        if($this->actionprice>0) {
-           $this->detail .= "<actionprice>{$this->actionprice}</actionprice>";  
-        } 
+        if ($this->actionprice > 0) {
+            $this->detail .= "<actionprice>{$this->actionprice}</actionprice>";
+        }
         $this->detail .= "<todate>{$this->todate}</todate>";
         $this->detail .= "<fromdate>{$this->fromdate}</fromdate>";
-        
-        
+
+
         $this->detail .= "</detail>";
 
         return true;
@@ -278,9 +278,9 @@ class Item extends \ZCL\DB\Entity
             }
         }
 
-        
+
         //акции
-        
+
 
         return \App\Helper::fa($price);
     }
@@ -347,24 +347,26 @@ class Item extends \ZCL\DB\Entity
         $cnt = $conn->GetOne($sql);
         return $cnt;
     }
- 
+
     /**
-    * проверка  на  списывание  в  миннуч
-    *  
-    * @param mixed $testqty
-    * @param mixed $store_id
-    * @param mixed $snumber
-    */
-    public function checkMinus($testqty,$store_id = 0, $snumber = "") {
-         $allowminus = \App\System::getOption("common", "allowminus");
-         if ($allowminus == 1) return true;
-         
-         $qty = $this->getQuantity($store_id,$snumber) ;
-         
-         return doubleval($qty) >= doubleval($testqty);
-       
+     * проверка  на  списывание  в  миннуч
+     *
+     * @param mixed $testqty
+     * @param mixed $store_id
+     * @param mixed $snumber
+     */
+    public function checkMinus($testqty, $store_id = 0, $snumber = "") {
+        $allowminus = \App\System::getOption("common", "allowminus");
+        if ($allowminus == 1) {
+            return true;
+        }
+
+        $qty = $this->getQuantity($store_id, $snumber);
+
+        return doubleval($qty) >= doubleval($testqty);
+
     }
-    
+
     /**
      * возвращает список скенрий производителя
      *
@@ -388,12 +390,12 @@ class Item extends \ZCL\DB\Entity
         }
         return $list;
     }
-    
+
     /**
-    * вовращает  самую срочную по  дате  серию  кроме  просроченых  
-    * 
-    * @param mixed $store_id
-    */
+     * вовращает  самую срочную по  дате  серию  кроме  просроченых
+     *
+     * @param mixed $store_id
+     */
     public function getNearestSerie($store_id = 0) {
 
         $conn = \ZDB\DB::getConnect();
@@ -402,10 +404,10 @@ class Item extends \ZCL\DB\Entity
             $sql .= " and store_id = " . $store_id;
         }
         $sql .= " order  by  sdate  desc limit 0,1";
-    
+
 
         return $conn->GetOne($sql);
-        
+
     }
 
     /**
@@ -455,7 +457,7 @@ class Item extends \ZCL\DB\Entity
 
             $list[$key] = $value->itemname;
             if (strlen($value->item_code) > 0) {
-                $list[$key] = $value->itemname . ', ' . $value->item_code  ;
+                $list[$key] = $value->itemname . ', ' . $value->item_code;
             }
             if (strlen($value->manufacturer) > 0) {
                 $list[$key] = $value->itemname . ' (' . $value->manufacturer . ')';

@@ -41,9 +41,9 @@ class UserProfile extends \App\Pages\Base
         $form->add(new DropDownChoice('defstore', \App\Entity\Store::getList(), $this->user->defstore));
         $form->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList(), $this->user->defmf));
         $form->add(new DropDownChoice('pagesize', array(15 => 15, 25 => 25, 50 => 50, 100 => 100), $this->user->pagesize));
-       
-        $form->add(new DropDownChoice('defsalesource', H::getSaleSources() , $this->user->defsalesource));
-          
+
+        $form->add(new DropDownChoice('defsalesource', H::getSaleSources(), $this->user->defsalesource));
+
         $pages = array();
 
         foreach (\App\Entity\MetaData::find("meta_type<>1", "meta_type,description") as $m) {
@@ -108,7 +108,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->mainpage = $sender->mainpage->getValue();
 
         if (!$this->isError()) {
-            
+
             $this->user->save();
             $this->setSuccess('saved');
             System::setUser($this->user);
@@ -140,10 +140,10 @@ class UserProfile extends \App\Pages\Base
             $this->user->save();
             $this->setSuccess('saved');
             System::setUser($this->user);
-       }
+        }
 
         if ($this->user->userlogin != 'admin') {
-            
+
             $n = new \App\Entity\Notify();
             $n->user_id = \App\Entity\Notify::SYSTEM;
 
@@ -157,5 +157,5 @@ class UserProfile extends \App\Pages\Base
         $sender->confirmpassword->setText('');
     }
 
- 
+
 }

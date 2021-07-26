@@ -32,7 +32,7 @@ class ABC extends \App\Pages\Base
         $this->typelist[4] = H::l('abc4');
         $this->typelist[5] = H::l('abc5');
 
-       
+
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
@@ -175,7 +175,7 @@ class ABC extends \App\Pages\Base
 
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
-            $row['value'] = round($row['value']  );
+            $row['value'] = round($row['value']);
             $list[] = $row;
         }
 
@@ -201,7 +201,7 @@ class ABC extends \App\Pages\Base
 
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
-            $row['value'] = round($row['value']  );
+            $row['value'] = round($row['value']);
             $list[] = $row;
         }
 
@@ -227,7 +227,7 @@ class ABC extends \App\Pages\Base
 
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
-            $row['value'] = round($row['value']  );
+            $row['value'] = round($row['value']);
             $list[] = $row;
         }
 

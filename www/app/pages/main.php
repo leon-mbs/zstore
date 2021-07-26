@@ -130,8 +130,8 @@ class Main extends Base
         $to = $dt->startOfMonth()->timestamp;
         $dt->subMonths(3);
         $from = $dt->startOfMonth()->timestamp;
-        
-        $names = \App\Entity\IOState::getTypeList() ;        
+
+        $names = \App\Entity\IOState::getTypeList();
         if (strlen($brids) > 0) {
 
             $brpay = " and  document_id in(select  document_id from  documents where branch_id in ({$brids}) )";
@@ -328,10 +328,10 @@ class Main extends Base
     }
 
     public function onSDcsv($sender) {
-      //  $brids = \App\ACL::getBranchIDsConstraint();
-      //  if (strlen($brids) > 0) {
-      //      $br = " and d.branch_id in ({$brids}) ";
-      //  }
+        //  $brids = \App\ACL::getBranchIDsConstraint();
+        //  if (strlen($brids) > 0) {
+        //      $br = " and d.branch_id in ({$brids}) ";
+        //  }
         $cstr = \App\Acl::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "    store_id in ({$cstr})  and   ";

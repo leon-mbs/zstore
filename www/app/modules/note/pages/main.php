@@ -28,8 +28,8 @@ use App\Helper as H;
 class Main extends \App\Pages\Base
 {
 
-    private $_edited    = 0;
-    
+    private $_edited = 0;
+
     private $clipboard  = array();
     public  $_tarr      = array();
     public  $_sarr      = array();
@@ -324,12 +324,12 @@ class Main extends \App\Pages\Base
     public function onTree($sender, $id) {
         $this->_edited = 0;
         $this->_tvars['editor'] = false;
-        
+
         $this->ReloadTopic($id);
         $this->_sarr = array();
         $this->searchlist->Reload();
-        $this->sform->skeyword->setText('');      
-        
+        $this->sform->skeyword->setText('');
+
     }
 
     //вывод строки  списка  топиков
@@ -337,11 +337,11 @@ class Main extends \App\Pages\Base
     public function onRow($row) {
         $topic = $row->getDataitem();
         $row->add(new Label('title', $topic->title));
-        
+
         $fav = $row->add(new Label('fav'));
         $fav->setVisible(in_array($topic->topic_id, $this->_favorites));
-        
-        
+
+
     }
 
     //клик по топику
@@ -350,10 +350,10 @@ class Main extends \App\Pages\Base
         $topic = $row->getDataItem();
         $this->_farr = Helper::findFileByTopic($topic->topic_id);
         $this->filelist->Reload();
-        
-        $this->topiclist->setSelectedRow($row);        
-        $this->topiclist->Reload(false);        
-   }
+
+        $this->topiclist->setSelectedRow($row);
+        $this->topiclist->Reload(false);
+    }
 
     //избранное
     public function onFav($sender) {
@@ -529,27 +529,27 @@ class Main extends \App\Pages\Base
 
         $row->add(new Label('stitle', $item->title));
         $row->add(new Label('snodes', $item->nodes()));
-     
-        
+
+
     }
 
     //выбор  строки  из  результата  поиска
     public function onSearchTopic($row) {
 
-        $topic= $row->getDataItem()  ;
+        $topic = $row->getDataItem();
         $this->tree->selectedNodeId(intval($topic->node_id));
-  
+
         $this->ReloadTopic($topic->node_id);
-        $trows = $this->topiclist->getDataRows() ;
-        foreach($trows as $tr) {
+        $trows = $this->topiclist->getDataRows();
+        foreach ($trows as $tr) {
             $t = $tr->getDataItem();
-            if($t->topic_id==$topic->topic_id) {
-                 $this->onTopic($tr) ;
+            if ($t->topic_id == $topic->topic_id) {
+                $this->onTopic($tr);
             }
         }
-        
-        $this->searchlist->setSelectedRow($row);        
-        $this->searchlist->Reload(false);        
+
+        $this->searchlist->setSelectedRow($row);
+        $this->searchlist->Reload(false);
     }
 
     /**

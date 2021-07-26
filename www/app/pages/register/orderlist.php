@@ -43,8 +43,8 @@ class OrderList extends \App\Pages\Base
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
         $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 3 => 'Все'), 0));
-        $this->filter->add(new DropDownChoice('salesource', H::getSaleSources() , 0));
-  
+        $this->filter->add(new DropDownChoice('salesource', H::getSaleSources(), 0));
+
         $doclist = $this->add(new DataView('doclist', new OrderDataSource($this), $this, 'doclistOnRow'));
 
         $this->add(new Paginator('pag', $doclist));
@@ -217,11 +217,11 @@ class OrderList extends \App\Pages\Base
         $state = $this->_doc->state;
 
         //доставлен
-        $closed = $this->_doc->checkStates(array(Document::STATE_CLOSED))>0;
+        $closed = $this->_doc->checkStates(array(Document::STATE_CLOSED)) > 0;
         //выполняется
-        $inproc = $this->_doc->checkStates(array(Document::STATE_INPROCESS))>0;
+        $inproc = $this->_doc->checkStates(array(Document::STATE_INPROCESS)) > 0;
         //аннулирован
-        $ref = $this->_doc->checkStates(array(Document::STATE_REFUSED))>0;
+        $ref = $this->_doc->checkStates(array(Document::STATE_REFUSED)) > 0;
 
         $this->statuspan->statusform->brd->setVisible(false);
 
@@ -451,7 +451,7 @@ class OrderList extends \App\Pages\Base
             }
         }
 
-        Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(),  \App\Entity\IOState::TYPE_BASE_INCOME, $form->pcomment->getText());
+        Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(), \App\Entity\IOState::TYPE_BASE_INCOME, $form->pcomment->getText());
 
         $this->setSuccess('payment_added');
 
@@ -488,9 +488,9 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
 
         $salesource = $this->page->filter->salesource->getValue();
         if ($salesource > 0) {
-            $where .= " and  ExtractValue(content, '//doc/header/salesource') = ". $salesource;
+            $where .= " and  ExtractValue(content, '//doc/header/salesource') = " . $salesource;
         }
-        
+
         $status = $this->page->filter->status->getValue();
         if ($status == 0) {
             $where .= " and  state not in (9,17) ";

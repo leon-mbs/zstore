@@ -18,18 +18,18 @@ use Zippy\WebApplication as App;
 class NotifyList extends \App\Pages\Base
 {
 
-    public $user = null;
-    public $ds;
+    public  $user = null;
+    public  $ds;
     private $users;
-    
+
     public function __construct() {
         parent::__construct();
         $user = System::getUser();
         if ($user->user_id == 0) {
             App::Redirect("\\App\\Pages\\Userlogin");
         }
-        $this->users = \App\Entity\User::findArray("username","disabled <>1");
-        
+        $this->users = \App\Entity\User::findArray("username", "disabled <>1");
+
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new TextInput('searchtext'));
 
@@ -41,58 +41,58 @@ class NotifyList extends \App\Pages\Base
         $this->nlist->Reload();
 
         \App\Entity\Notify::markRead($user->user_id);
-        
-        
+
+
         $this->add(new Form('msgform'))->onSubmit($this, 'OnSend');
         $this->msgform->add(new TextArea('msgtext'));
         $this->msgform->add(new DropDownChoice('users', \App\Entity\User::findArray('username', 'disabled <> 1 and user_id <>' . $user->user_id, 'username'), 0));
         $this->msgform->add(new CheckBox('sendall'))->setVisible($this->user->rolename == 'admins');
-        
-        
+
+
     }
 
     public function OnRow($row) {
         $notify = $row->getDataItem();
 
-        $row->add(new Label("sender")) ;
-        $row->add(new Label("sendericon"))  ;
-        if($notify->sender_id >0)  {
-            $row->sender->setText($this->users[$notify->sender_id]);                             
-            $row->sendericon->setAttribute('class','fa fa-user');                             
-            
+        $row->add(new Label("sender"));
+        $row->add(new Label("sendericon"));
+        if ($notify->sender_id > 0) {
+            $row->sender->setText($this->users[$notify->sender_id]);
+            $row->sendericon->setAttribute('class', 'fa fa-user');
+
         }
-        if($notify->sender_id == Notify::SYSTEM)  {
-            $row->sender->setText(H::l("systemmsg"));                             
-            $row->sendericon->setAttribute('class','fa fa-cog');                             
+        if ($notify->sender_id == Notify::SYSTEM) {
+            $row->sender->setText(H::l("systemmsg"));
+            $row->sendericon->setAttribute('class', 'fa fa-cog');
         }
-        if($notify->sender_id == Notify::EVENT)  {
-            $row->sender->setText(H::l("alertmsg"));                             
-            $row->sendericon->setAttribute('class','fa fa-calendar');                             
+        if ($notify->sender_id == Notify::EVENT) {
+            $row->sender->setText(H::l("alertmsg"));
+            $row->sendericon->setAttribute('class', 'fa fa-calendar');
         }
-        if($notify->sender_id == Notify::SUBSCRIBE)  {
-            $row->sender->setText(H::l("subsmsg"));                             
-            $row->sendericon->setAttribute('class','fa fa-envelope');                             
+        if ($notify->sender_id == Notify::SUBSCRIBE) {
+            $row->sender->setText(H::l("subsmsg"));
+            $row->sendericon->setAttribute('class', 'fa fa-envelope');
         }
-        
-        
+
+
         $row->add(new Label("msg"))->setText($notify->message, true);
         $row->add(new Label("ndate", \App\Helper::fdt($notify->dateshow)));
         $row->add(new Label("newn"))->setVisible($notify->checked == 0);
     }
 
     public function filterOnSubmit($sender) {
-        $where='user_id=' . System::getUser()->user_id;
-  
+        $where = 'user_id=' . System::getUser()->user_id;
+
         $text = trim($sender->searchtext->getText());
-        if (strlen($text)> 0) {
-           $text = Notify::qstr('%' . $text . '%');
-           $where=  "(  message like {$text}) and user_id=" . System::getUser()->user_id ;
+        if (strlen($text) > 0) {
+            $text = Notify::qstr('%' . $text . '%');
+            $where = "(  message like {$text}) and user_id=" . System::getUser()->user_id;
         }
-        
+
         $this->ds->setWhere($where);
         $this->nlist->Reload();
     }
-    
+
     public function OnSend($sender) {
         $msg = trim($sender->msgtext->getText());
 
@@ -129,7 +129,6 @@ class NotifyList extends \App\Pages\Base
         $this->setSuccess('sent');
         $sender->clean();
     }
-    
-    
+
 
 }

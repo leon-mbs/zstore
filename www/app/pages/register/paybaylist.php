@@ -111,10 +111,10 @@ class PayBayList extends \App\Pages\Base
         $row->add(new Label('phone', $cust->phone));
         $row->add(new Label('amount', H::fa($cust->sam)));
 
-        $row->add(new RedirectLink('createpay'))->setVisible(false) ;
-        if($cust->sam>0) {
-            $row->createpay->setLink("\\App\\Pages\\Doc\\IncomeMoney",array(0,$cust->customer_id,$cust->sam));    
-            $row->createpay->setVisible(true)  ;
+        $row->add(new RedirectLink('createpay'))->setVisible(false);
+        if ($cust->sam > 0) {
+            $row->createpay->setLink("\\App\\Pages\\Doc\\IncomeMoney", array(0, $cust->customer_id, $cust->sam));
+            $row->createpay->setVisible(true);
         }
         $row->add(new ClickLink('showdocs'))->onClick($this, 'showdocsOnClick');
 
@@ -252,7 +252,7 @@ class PayBayList extends \App\Pages\Base
 
             $this->setWarn('sumoverpay');
         }
-        $type =  \App\Entity\IOState::TYPE_BASE_INCOME;
+        $type = \App\Entity\IOState::TYPE_BASE_INCOME;
 
         if (in_array($this->_doc->meta_name, array('GoodsReceipt', 'InvoiceCust', 'ReturnIssue'))) {
             $amount = 0 - $amount;

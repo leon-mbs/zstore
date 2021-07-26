@@ -30,11 +30,11 @@ class Customer extends \ZCL\DB\Entity
         parent::beforeSave();
         //упаковываем  данные в detail
         $this->detail = "<detail><code>{$this->code}</code>";
-        if($this->discount>0) {
-           $this->detail .= "<discount>{$this->discount}</discount>";    
+        if ($this->discount > 0) {
+            $this->detail .= "<discount>{$this->discount}</discount>";
         }
-        
-        
+
+
         $this->detail .= "<type>{$this->type}</type>";
         $this->detail .= "<fromlead>{$this->fromlead}</fromlead>";
         $this->detail .= "<jurid>{$this->jurid}</jurid>";
@@ -124,7 +124,7 @@ class Customer extends \ZCL\DB\Entity
      * @param mixed $type
      */
     public static function getList($search = '', $type = 0) {
-       
+
 
         $where = "status=0 and detail not like '%<isholding>1</isholding>%' ";
         if (strlen($search) > 0) {

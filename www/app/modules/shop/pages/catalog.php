@@ -27,7 +27,7 @@ class Catalog extends Base
         parent::__construct();
 
         $this->cat_id = $id;
-      
+
         $this->add(new BookmarkableLink("filterbtn"));
         $this->add(new Label("breadcrumb", Helper::getBreadScrumbs($id), true));
 

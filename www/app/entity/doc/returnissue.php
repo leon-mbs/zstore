@@ -67,7 +67,7 @@ class ReturnIssue extends Document
             $sc = new Entry($this->document_id, $item->amount, $item->quantity);
             $sc->setStock($stock->stock_id);
 
-          //  $sc->setExtCode(($item->price - $stock->partion)); //Для АВС
+            //  $sc->setExtCode(($item->price - $stock->partion)); //Для АВС
             //  $sc->setCustomer($this->customer_id);
             $sc->setOutPrice($item->price);
             $sc->save();
@@ -77,8 +77,8 @@ class ReturnIssue extends Document
             if ($payed > 0) {
                 $this->payed = $payed;
             }
-           \App\Entity\IOState::addIOState($this->document_id, 0 - $this->payed,\App\Entity\IOState::TYPE_BASE_INCOME);
-            
+            \App\Entity\IOState::addIOState($this->document_id, 0 - $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+
         }
 
         return true;

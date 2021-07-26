@@ -33,8 +33,8 @@ class Outcome extends \App\Pages\Base
         $this->filter->add(new Date('to', time()));
         $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username', "user_id in (select user_id from documents_view  where  meta_name  in('GoodsIssue','ServiceAct','Task','Order','POSCheck','TTN')  {$br}  )", 'username'), 0));
         $this->filter->add(new DropDownChoice('cat', \App\Entity\Category::getList(), 0))->setVisible(false);
-        $this->filter->add(new DropDownChoice('salesource', H::getSaleSources() , 0))->setVisible(false);
-       
+        $this->filter->add(new DropDownChoice('salesource', H::getSaleSources(), 0))->setVisible(false);
+
         $hlist = \App\Entity\Customer::getHoldList();
         //  $this->filter->add(new DropDownChoice('holding', $hlist, 0))->setVisible(false);
 
@@ -77,8 +77,8 @@ class Outcome extends \App\Pages\Base
         $this->filter->salesource->setVisible($type == 11);
         $this->filter->cust->setVisible($type == 6 || $type == 7);
         //  $this->filter->holding->setVisible($type == 7);
-        
-        
+
+
     }
 
     public function OnAutoItem($sender) {
@@ -316,8 +316,8 @@ class Outcome extends \App\Pages\Base
         ";
         }
 
-       if ($type == 11) {    //по источникам
-            
+        if ($type == 11) {    //по источникам
+
             $sql = "
             select i.itemname,  sum(0-e.`quantity`) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.`quantity`)) as navar
               from `entrylist_view`  e

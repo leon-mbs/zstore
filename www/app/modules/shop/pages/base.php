@@ -39,7 +39,7 @@ class Base extends \Zippy\Html\WebPage
         $this->add(new \Zippy\Html\Link\BookmarkableLink('showcompare', "/index.php?p=/App/Modules/Shop/Pages/Compare"))->setVisible(false);
 
         $this->op = System::getOptions("shop");
-        
+
 
         $this->add(new \Zippy\Html\Link\BookmarkableLink('logo', "/"))->setVisible(strlen($this->op['logo']) > 0);
         $this->logo->setValue($this->op['logo']);
@@ -50,19 +50,19 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["news"] = strlen($this->op['news']) > 0;
         $this->_tvars["usefilter"] = strlen($this->op['usefilter']) > 0;
         $this->_tvars["usefeedback"] = strlen($this->op['usefeedback']) > 0;
-        $this->_tvars["isfood"] = $this->op['ordertype']==2;
+        $this->_tvars["isfood"] = $this->op['ordertype'] == 2;
 
-        $this->_tvars["np"] = $_config['modules']['np'] == 1 && $this->op['ordertype'] !=2;
-        
-        if($this->op['ordertype']==1) {
-             $this->_tvars["delivery"] = false;
+        $this->_tvars["np"] = $_config['modules']['np'] == 1 && $this->op['ordertype'] != 2;
+
+        if ($this->op['ordertype'] == 1) {
+            $this->_tvars["delivery"] = false;
         }
-        if($this->op['ordertype']==2) {
-             
-             $this->_tvars["usefilter"] = false;
-             $this->_tvars["usefeedback"] = false;
+        if ($this->op['ordertype'] == 2) {
+
+            $this->_tvars["usefilter"] = false;
+            $this->_tvars["usefeedback"] = false;
         }
-                         
+
     }
 
     public function onSearch(\Zippy\Html\Form\AutocompleteTextInput $sender) {

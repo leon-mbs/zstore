@@ -15,7 +15,7 @@ class POSCheck extends Document
 {
 
     public function generateReport() {
-        
+
 
         $i = 1;
         $detail = array();
@@ -49,7 +49,7 @@ class POSCheck extends Document
             );
         }
 
-        $common =  System::getOptions('common');
+        $common = System::getOptions('common');
 
         $firm = H::getFirmData($this->firm_id);
 
@@ -70,9 +70,9 @@ class POSCheck extends Document
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
                         "prepaid"         => $this->headerdata['payment'] == 0,
-                         "docbarcode"         => $this->getBarCodeImage(),
-                        "docqrcode"         => $this->getQRCodeImage(),
-                       "payamount"       => H::fa($this->payamount)
+                        "docbarcode"      => $this->getBarCodeImage(),
+                        "docqrcode"       => $this->getQRCodeImage(),
+                        "payamount"       => H::fa($this->payamount)
         );
 
         $report = new \App\Report('doc/poscheck.tpl');
@@ -104,40 +104,40 @@ class POSCheck extends Document
                               "amount"     => H::fa($ser->quantity * $ser->price)
             );
         }
-        $common =  System::getOptions('common');
-        $printer =  System::getOptions('printer');
-        $style="";
+        $common = System::getOptions('common');
+        $printer = System::getOptions('printer');
+        $style = "";
         if (strlen($printer['pdocfontsize']) > 0 || strlen($printer['pdocwidth']) > 0) {
             $style = 'style="font-size:' . $printer['pdocfontsize'] . 'px;width:' . $printer['pdocwidth'] . ';"';
-            
+
         }
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
 
-        $header = array('date'            => H::fd($this->document_date),
-                        "_detail"         => $detail,
-                         "style"          =>  $style,
-                        "username"         =>  System::getUser()->username,
-                        "firm_name"       => $firm["firm_name"],
-                        "shopname"        => strlen($common["shopname"]) > 0 ? $common["shopname"] : false,
-                        "address"         => $firm["address"],
-                        "phone"           => $firm["phone"],
-                        "inn"             => $firm["inn"],
-                        "checkslogan"     => $common["checkslogan"],
-                        "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
-                        "fiscalnumber"    => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
-                        
+        $header = array('date'          => H::fd($this->document_date),
+                        "_detail"       => $detail,
+                        "style"         => $style,
+                        "username"      => System::getUser()->username,
+                        "firm_name"     => $firm["firm_name"],
+                        "shopname"      => strlen($common["shopname"]) > 0 ? $common["shopname"] : false,
+                        "address"       => $firm["address"],
+                        "phone"         => $firm["phone"],
+                        "inn"           => $firm["inn"],
+                        "checkslogan"   => $common["checkslogan"],
+                        "customer_name" => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
+                        "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
+
                         "pos_name"        => $this->headerdata["pos_name"],
                         "time"            => H::fdt($this->headerdata["time"]),
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
-                        "exchange"           => $this->headerdata["exchange"]>0 ? H::fa($this->headerdata["exchange"]):false,  
-                        "docbarcode"         => $this->getBarCodeImage(),
-                        "docqrcode"         => $this->getQRCodeImage(),
-                        "payed"           => $this->payed >0 ? H::fa($this->payed):false,
-                        "payamount"       => $this->payamount >0 ? H::fa($this->payamount):false 
+                        "exchange"        => $this->headerdata["exchange"] > 0 ? H::fa($this->headerdata["exchange"]) : false,
+                        "docbarcode"      => $this->getBarCodeImage(),
+                        "docqrcode"       => $this->getQRCodeImage(),
+                        "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
+                        "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
         );
 
         $report = new \App\Report('doc/poscheck_bill.tpl');
@@ -152,8 +152,8 @@ class POSCheck extends Document
 
 
         foreach ($this->unpackDetails('detaildata') as $item) {
-            if(false==$item->checkMinus($item->quantity,$this->headerdata['store'])) { 
-                throw new \Exception(\App\Helper::l("nominus",$item->quantity,$item->itemname));
+            if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
+                throw new \Exception(\App\Helper::l("nominus", $item->quantity, $item->itemname));
             }
 
 
@@ -201,7 +201,7 @@ class POSCheck extends Document
             foreach ($listst as $st) {
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
-             //   $sc->setExtCode($item->price * $k - $st->partion); //Для АВС 
+                //   $sc->setExtCode($item->price * $k - $st->partion); //Для АВС
                 $sc->setOutPrice($item->price * $k);
                 $sc->save();
             }
@@ -229,7 +229,7 @@ class POSCheck extends Document
 
             $sc = new Entry($this->document_id, 0 - ($ser->price * $k * $ser->quantity), 0);
             $sc->setService($ser->service_id);
-           // $sc->setExtCode(0 - ($ser->price * $k)); //Для АВС
+            // $sc->setExtCode(0 - ($ser->price * $k)); //Для АВС
             $sc->setOutPrice(0 - $item->price * $k);
 
             $sc->save();
@@ -239,8 +239,8 @@ class POSCheck extends Document
             if ($payed > 0) {
                 $this->payed = $payed;
             }
-           \App\Entity\IOState::addIOState($this->document_id, $payed,\App\Entity\IOState::TYPE_BASE_INCOME);
-            
+            \App\Entity\IOState::addIOState($this->document_id, $payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+
         }
 
         return true;
@@ -262,8 +262,5 @@ class POSCheck extends Document
         return $list;
     }
 
-    
-   
-    
-    
+
 }

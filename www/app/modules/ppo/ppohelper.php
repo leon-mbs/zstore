@@ -393,7 +393,7 @@ class PPOHelper
         $header['pays'] = array();
         $n = 1;
 
-        if ($doc->headerdata['payment'] == 0  ) {
+        if ($doc->headerdata['payment'] == 0) {
             $pay = array(
                 'formname' => H::l('ppo_prepaid'),
                 'formcode' => 3,

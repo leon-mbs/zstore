@@ -49,7 +49,7 @@ class IOState extends \App\Pages\Base
         $doclist->setPageSize(H::getPG());
 
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
- 
+
         $this->doclist->Reload();
         $this->add(new ClickLink('csv', $this, 'oncsv'))->setVisible(false);
 
@@ -72,19 +72,19 @@ class IOState extends \App\Pages\Base
 
         $row->add(new Label('date', H::fd($doc->paydate)));
         $row->add(new Label('notes', $doc->notes));
-         
+
         $row->add(new Label('username', $doc->username));
-        
+
         $row->add(new Label('paytype', $this->_ptlist[$doc->paytype]));
 
         $row->add(new ClickLink('show', $this, 'showOnClick'));
         $user = \App\System::getUser();
-      
+
     }
 
     //просмотр
     public function showOnClick($sender) {
- 
+
         $this->_doc = Document::load($sender->owner->getDataItem()->document_id);
 
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
@@ -95,7 +95,7 @@ class IOState extends \App\Pages\Base
         $this->docview->setDoc($this->_doc);
     }
 
-   
+
     public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1);
 
@@ -174,12 +174,12 @@ class IOStateListDataSource implements \Zippy\Interfaces\DataSource
 
         $author = $this->page->filter->fuser->getValue();
         $type = $this->page->filter->ftype->getValue();
-       
+
         if ($type > 0) {
             $where .= " and paytype=" . $type;
         }
-       
-    
+
+
         if ($author > 0) {
             $where .= " and p.user_id=" . $author;
         }

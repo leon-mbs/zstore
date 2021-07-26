@@ -48,7 +48,7 @@ class OutcomeItem extends \App\Pages\Base
             }
         }
 
-        $this->docform->add(new DropDownChoice('mtype', \App\Entity\IOState::getTypeList(4) ));
+        $this->docform->add(new DropDownChoice('mtype', \App\Entity\IOState::getTypeList(4)));
 
         $this->docform->add(new DropDownChoice('tostore', $tostore, 0));
 
@@ -413,7 +413,7 @@ class OutcomeItem extends \App\Pages\Base
             return;
         }
 
-        if ($this->_tvars["usesnumber"] == true && $item->useserial==1 ) {
+        if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
 
             $this->editdetail->setVisible(true);
             $this->docform->setVisible(false);

@@ -49,7 +49,7 @@ class ServiceAct extends \App\Pages\Base
         $this->docform->add(new TextInput('device'));
         $this->docform->add(new TextInput('devsn'));
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), 0)) ;
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), 0));
 
         $this->docform->add(new TextInput('editpayamount'));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
@@ -100,10 +100,12 @@ class ServiceAct extends \App\Pages\Base
             $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
 
-            if($this->_doc->payed==0  && $this->_doc->headerdata['payed'] >0 )  $this->_doc->payed = $this->_doc->headerdata['payed'];
-            $this->docform->editpayed->setText(H::fa($this->_doc->payed));            
+            if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
+                $this->_doc->payed = $this->_doc->headerdata['payed'];
+            }
+            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
             $this->docform->payed->setText(H::fa($this->_doc->payed));
-    
+
             $this->docform->device->setText($this->_doc->device);
             $this->docform->devsn->setText($this->_doc->devsn);
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
@@ -129,19 +131,19 @@ class ServiceAct extends \App\Pages\Base
                     $this->docform->customer->setKey($basedoc->customer_id);
                     $this->docform->customer->setText($basedoc->customer_name);
 
-                  
+
                     $this->_servicelist = $basedoc->unpackDetails('detaildata');
                 }
                 if ($basedoc->meta_name == 'Invoice') {
                     $this->docform->customer->setKey($basedoc->customer_id);
                     $this->docform->customer->setText($basedoc->customer_name);
 
-                  
+
                     $this->_servicelist = $basedoc->unpackDetails('detaildata');
                 }
             }
         }
-       
+
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_servicelist')), $this, 'detailOnRow'))->Reload();
         $this->calcTotal();
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
@@ -284,7 +286,7 @@ class ServiceAct extends \App\Pages\Base
 
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->payed = $this->docform->payed->getText();
-     
+
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
         if ($this->checkForm() == false) {
             return;
@@ -377,7 +379,6 @@ class ServiceAct extends \App\Pages\Base
         $this->docform->editpaydisc->setText($disc);
     }
 
- 
 
     public function onPayAmount($sender) {
         $this->docform->payamount->setText($this->docform->editpayamount->getText());
@@ -418,7 +419,7 @@ class ServiceAct extends \App\Pages\Base
         if (count($this->_servicelist) == 0) {
             //  $this->setError("noenterpos");
         }
-      
+
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
             $this->setError("noselmf");
         }

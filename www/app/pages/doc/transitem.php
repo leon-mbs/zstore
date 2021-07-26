@@ -112,7 +112,7 @@ class TransItem extends \App\Pages\Base
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
             $conn->CommitTrans();
-             App::Redirect("\\App\\Pages\\Register\\StockList");
+            App::Redirect("\\App\\Pages\\Register\\StockList");
 
         } catch(\Throwable $ee) {
             global $logger;

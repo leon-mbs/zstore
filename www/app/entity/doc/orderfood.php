@@ -37,24 +37,26 @@ class OrderFood extends Document
                               "amount"     => H::fa($item->quantity * $item->price)
             );
         }
-      
+
 
         $common = \App\System::getOptions('common');
 
         $firm = H::getFirmData($this->firm_id);
-        $deliverydata="";
-        $deliverydata =  $this->headerdata["delivery_name"]  ;      
-        if($this->headerdata["delivery"] >1) $deliverydata =   $deliverydata .', '.$this->headerdata["ship_address"];        
-        $deliverydata =   $deliverydata .', '.date("Y-m-d H:i",$this->headerdata["deltime"] );        
-        
-        $header = array('date'            => H::fd($this->document_date),
-                        "_detail"         => $detail,
-                        "firm_name"       => $firm["firm_name"],
-                        "shopname"        => $common["shopname"],
-                        "isdelivery"      => $this->headerdata["delivery"] > 0,
-                        "deliverydata"    => $deliverydata  ,
-                        
-                       
+        $deliverydata = "";
+        $deliverydata = $this->headerdata["delivery_name"];
+        if ($this->headerdata["delivery"] > 1) {
+            $deliverydata = $deliverydata . ', ' . $this->headerdata["ship_address"];
+        }
+        $deliverydata = $deliverydata . ', ' . date("Y-m-d H:i", $this->headerdata["deltime"]);
+
+        $header = array('date'         => H::fd($this->document_date),
+                        "_detail"      => $detail,
+                        "firm_name"    => $firm["firm_name"],
+                        "shopname"     => $common["shopname"],
+                        "isdelivery"   => $this->headerdata["delivery"] > 0,
+                        "deliverydata" => $deliverydata,
+
+
                         "customer_name"   => strlen($this->customer_name) > 0 ? $this->customer_name : false,
                         "exchange"        => H::fa($this->headerdata["exchange"]),
                         "pos_name"        => $this->headerdata["pos_name"],
@@ -89,7 +91,7 @@ class OrderFood extends Document
             );
         }
         $i = 1;
-     
+
         $common = \App\System::getOptions('common');
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
@@ -113,8 +115,8 @@ class OrderFood extends Document
                         "payed"           => H::fa($this->payed),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
-                        
-                        "payamount"       => H::fa($this->payamount)
+
+                        "payamount" => H::fa($this->payamount)
         );
 
         $report = new \App\Report('doc/orderfood_bill.tpl');
@@ -126,7 +128,6 @@ class OrderFood extends Document
 
     public function Execute() {
 
-     
 
         return true;
     }
@@ -139,32 +140,32 @@ class OrderFood extends Document
         return array(self::EX_EXCEL, self::EX_PDF, self::EX_POS);
     }
 
- 
-    public function DoPayment() {
-       if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-        $payed = $this->payed;
-        if ($this->headerdata['exchange'] > 0 && $this->payed > $this->headerdata['exchange']) {
 
-            $payed = $this->payed - $this->headerdata['exchange']; //без здачи
-        }           
-           
-           
-        $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $payed, $this->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_INCOME);
-        if ($payed > 0) {
-            $this->payed = $payed;
-        }
-            
-        \App\Entity\IOState::addIOState($this->document_id,0 - $this->payed,\App\Entity\IOState::TYPE_BASE_OUTCOME);
-               
-            
+    public function DoPayment() {
+        if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
+            $payed = $this->payed;
+            if ($this->headerdata['exchange'] > 0 && $this->payed > $this->headerdata['exchange']) {
+
+                $payed = $this->payed - $this->headerdata['exchange']; //без здачи
+            }
+
+
+            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $payed, $this->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_INCOME);
+            if ($payed > 0) {
+                $this->payed = $payed;
+            }
+
+            \App\Entity\IOState::addIOState($this->document_id, 0 - $this->payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+
+
         }
     }
- 
+
     public function DoStore() {
         foreach ($this->unpackDetails('detaildata') as $item) {
-                       if($item->checkMinus($item->quantity,$this->headerdata['store'])==false) { 
-                            throw new \Exception(\App\Helper::l("nominus",H::fqty($item->getQuantity($this->headerdata['store'])),$item->itemname));
-                        }
+            if ($item->checkMinus($item->quantity, $this->headerdata['store']) == false) {
+                throw new \Exception(\App\Helper::l("nominus", H::fqty($item->getQuantity($this->headerdata['store'])), $item->itemname));
+            }
 
 
             //оприходуем  с  производства
@@ -176,21 +177,20 @@ class OrderFood extends Document
 
                         $itemp = \App\Entity\Item::load($part->item_id);
                         $itemp->quantity = $item->quantity * $part->qty;
-                        if($itemp->checkMinus($itemp->quantity,$this->headerdata['store'])==false) { 
-                            throw new \Exception(\App\Helper::l("nominus",H::fqty($itemp->getQuantity($this->headerdata['store'])),$itemp->itemname));
+                        if ($itemp->checkMinus($itemp->quantity, $this->headerdata['store']) == false) {
+                            throw new \Exception(\App\Helper::l("nominus", H::fqty($itemp->getQuantity($this->headerdata['store'])), $itemp->itemname));
                         }
-                      
-                       //учитываем  отходы
-                        if($itemp->lost >0){
-                            $k = 1/(1-$itemp->lost/100) ;
-                            $itemp->quantity  = \App\Helper::fqty($itemp->quantity*$k);
-                            $lost = $k-1;
-                             
-                            
+
+                        //учитываем  отходы
+                        if ($itemp->lost > 0) {
+                            $k = 1 / (1 - $itemp->lost / 100);
+                            $itemp->quantity = \App\Helper::fqty($itemp->quantity * $k);
+                            $lost = $k - 1;
+
+
                         }
-                        
-                        
-                        
+
+
                         $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
 
                         foreach ($listst as $st) {
@@ -198,16 +198,16 @@ class OrderFood extends Document
                             $sc->setStock($st->stock_id);
 
                             $sc->save();
-                            if($lost>0) {
+                            if ($lost > 0) {
                                 $io = new \App\Entity\IOState();
                                 $io->document_id = $this->document_id;
-                                $io->amount = 0-$st->quantity * $st->partion * $lost;
+                                $io->amount = 0 - $st->quantity * $st->partion * $lost;
                                 $io->iotype = \App\Entity\IOState::TYPE_TRASH;
-                          
+
                                 $io->save();
 
-                            }   
-                            
+                            }
+
                         }
                     }
                 }
@@ -236,13 +236,13 @@ class OrderFood extends Document
             foreach ($listst as $st) {
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
-             //   $sc->setExtCode($item->price * $k - $st->partion); //Для АВС 
+                //   $sc->setExtCode($item->price * $k - $st->partion); //Для АВС
                 $sc->setOutPrice($item->price * $k);
                 $sc->save();
             }
         }
-    }    
-     
+    }
+
     protected function onState($state) {
 
     }

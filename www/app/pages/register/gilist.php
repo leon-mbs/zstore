@@ -45,9 +45,9 @@ class GIList extends \App\Pages\Base
 
         $this->listpan->filter->add(new TextInput('searchnumber'));
         $this->listpan->filter->add(new TextInput('searchtext'));
-        $this->listpan->filter->add(new DropDownChoice('status', array(0 => H::l('opened'), 1 => H::l('newed'), 2 => H::l('sended') ,5 => H::l('st_rdshipment'), 3 => H::l('all')), 0));
+        $this->listpan->filter->add(new DropDownChoice('status', array(0 => H::l('opened'), 1 => H::l('newed'), 2 => H::l('sended'), 5 => H::l('st_rdshipment'), 3 => H::l('all')), 0));
         $this->listpan->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
-        $this->listpan->filter->add(new DropDownChoice('salesource', H::getSaleSources() , 0));
+        $this->listpan->filter->add(new DropDownChoice('salesource', H::getSaleSources(), 0));
 
         $doclist = $this->listpan->add(new DataView('doclist', new GoodsIssueDataSource($this), $this, 'doclistOnRow'));
 
@@ -109,8 +109,8 @@ class GIList extends \App\Pages\Base
 
         if ($doc > 0) {
             $this->_doc = Document::load($doc);
-            $this->showOn() ;
-           // $this->npshowOnSubmit($this->statuspan->statusform->bnp);;
+            $this->showOn();
+            // $this->npshowOnSubmit($this->statuspan->statusform->bnp);;
         }
     }
 
@@ -119,13 +119,13 @@ class GIList extends \App\Pages\Base
         $this->statuspan->setVisible(false);
 
         $this->listpan->doclist->Reload();
-        if(count($this->listpan->doclist->getDataRows()) ==1){
-            $r = array_pop($this->listpan->doclist->getDataRows()) ;
-            
+        if (count($this->listpan->doclist->getDataRows()) == 1) {
+            $r = array_pop($this->listpan->doclist->getDataRows());
+
             $this->_doc = $r->getDataItem();
-            $this->showOn() ;
+            $this->showOn();
         }
-        
+
     }
 
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
@@ -212,7 +212,7 @@ class GIList extends \App\Pages\Base
 
             App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
         }
-       if ($sender->id == "bgi") {
+        if ($sender->id == "bgi") {
 
             App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
         }
@@ -325,14 +325,14 @@ class GIList extends \App\Pages\Base
     }
 
     //просмотр
-    
-    
+
+
     public function showOnClick($sender) {
         $this->_doc = $sender->owner->getDataItem();
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
         }
-        $this->showOn() ;
+        $this->showOn();
     }
 
     public function showOn() {
@@ -650,16 +650,15 @@ class GIList extends \App\Pages\Base
             $this->_doc->save();
             $this->setSuccess(H::l("npnewdec", $this->_doc->headerdata['ship_number']));
 
-            
-           $order = Document::load($this->_doc->parent_id);
+
+            $order = Document::load($this->_doc->parent_id);
             if ($order instanceof Document) {
-                if ($order->state == Document::STATE_READYTOSHIP ) {
-                    $order->updateStatus(Document::STATE_INSHIPMENT) ;   
+                if ($order->state == Document::STATE_READYTOSHIP) {
+                    $order->updateStatus(Document::STATE_INSHIPMENT);
                 }
             }
-            
-            
-            
+
+
             $this->statuspan->setVisible(false);
             $this->listpan->setVisible(true);
             $this->nppan->setVisible(false);
@@ -689,10 +688,10 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
         $conn = \ZDB\DB::getConnect();
 
         $where = "   meta_name  in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' ,'Warranty','TTN' ) ";
-        
+
         $salesource = $this->page->listpan->filter->salesource->getValue();
         if ($salesource > 0) {
-            $where .= " and  ExtractValue(content, '//doc/header/salesource') = ". $salesource;
+            $where .= " and  ExtractValue(content, '//doc/header/salesource') = " . $salesource;
         }
 
         $status = $this->page->listpan->filter->status->getValue();
@@ -708,7 +707,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
         if ($status == 5) {
             $where .= " and state = " . Document::STATE_READYTOSHIP;
         }
-       
+
         $comp = $this->page->listpan->filter->searchcomp->getValue();
         if ($comp > 0) {
             $where = $where . " and firm_id = " . $comp;
