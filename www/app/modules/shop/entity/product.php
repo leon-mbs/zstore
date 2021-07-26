@@ -18,7 +18,7 @@ class Product extends \App\Entity\Item
         $this->productdata = new ProductData();
 
         $this->productdata->desc = '';
-        $this->productdata->actionprice = '';
+         
         $this->productdata->sold = 0;   //кол продаж
 
         $this->productdata->rating = 0;  //рейтинг
@@ -94,8 +94,8 @@ class Product extends \App\Entity\Item
 
     //для сортировки 
     public function getPriceFinal() {
-        if ($this->productdata->actionprice > 0) {
-            return $this->productdata->actionprice;
+        if ($this->actionprice > 0) {
+            return $this->actionprice;
         } else {
             $options = \App\System::getOptions('shop');
             return $this->getPrice($options['defpricetype']);

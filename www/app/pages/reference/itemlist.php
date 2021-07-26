@@ -574,6 +574,8 @@ class ItemList extends \App\Pages\Base
                 $header['name'] = $item->itemname;
             }
         }
+        $header['action'] = $item->actionprice>0;
+        $header['actionprice'] = $item->actionprice ;
         $header['isap'] = false;
         if ($printer['pprice'] == 1) {
             $header['price'] = number_format($item->getPrice($printer['pricetype']), 2, '.', '');
@@ -693,6 +695,8 @@ class ItemList extends \App\Pages\Base
                 $header['img'] = $img;
                 $header['barcode'] = \App\Util::addSpaces($barcode);
             }
+          $header['action'] = $item->actionprice>0;
+        $header['actionprice'] = $item->actionprice ;
 
 
             $htmls = $htmls. $report->generate($header);

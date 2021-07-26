@@ -84,7 +84,7 @@ class Item extends \ZCL\DB\Entity
             $this->price5 = $this->brprice[$id]['price5'];
         }
 
-        $this->discount = doubleval($xml->discount[0]);
+        $this->actionprice = doubleval($xml->actionprice[0]);
         $this->todate =  intval($xml->todate[0]);
         $this->fromdate =  intval($xml->fromdate[0]);
 
@@ -142,8 +142,8 @@ class Item extends \ZCL\DB\Entity
 
         $this->detail .= "<brprice><![CDATA[{$brprice}]]></brprice>";
 
-        if($this->discount>0) {
-           $this->detail .= "<discount>{$this->discount}</discount>";  
+        if($this->actionprice>0) {
+           $this->detail .= "<actionprice>{$this->actionprice}</actionprice>";  
         } 
         $this->detail .= "<todate>{$this->todate}</todate>";
         $this->detail .= "<fromdate>{$this->fromdate}</fromdate>";

@@ -253,7 +253,7 @@ class Discounts extends \App\Pages\Base
        if($s==null) return;
        $d = doubleval($sender->ssearchdisc->getText()) ;
        if($d >0) {
-         $s->discount=$d;
+         $s->actionprice=$d;
          $s->fromdate=$sender->ssearchfrom->getDate();
          $s->todate=$sender->ssearchto->getDate(true);;
          if( $s->fromdate > $s->todate) {
@@ -270,7 +270,7 @@ class Discounts extends \App\Pages\Base
    public function serlistOnRow($row) {  
        $s = $row->getDataItem();   
        $row->add(new  Label("sname",$s->service_name)) ;
-       $row->add(new  Label("sdisc" ))->setText(  $s->discount)  ;
+       $row->add(new  Label("sdisc" ))->setText(  $s->actionprice)  ;
        
        if($s->fromdate < time() && $s->todate > time())$row->sdisc->setAttribute("class","badge badge-success") ;
        if($s->fromdate > time() )$row->sdisc->setAttribute("class","badge badge-warning") ;
@@ -298,7 +298,7 @@ class Discounts extends \App\Pages\Base
        if($i==null) return;
        $d = doubleval($sender->isearchdisc->getText()) ;
        if($d > 0) {
-         $i->discount=$d;
+         $i->actionprice=$d;
          $i->fromdate=$sender->isearchfrom->getDate();
          $i->todate=$sender->isearchto->getDate(true);;
          if( $i->fromdate > $i->todate) {
@@ -317,7 +317,7 @@ class Discounts extends \App\Pages\Base
    public function itemlistOnRow($row) {  
        $i = $row->getDataItem();   
        $row->add(new  Label("iname",$i->itemname)) ;
-       $row->add(new  Label("idisc" ))->setText(  $i->discount)  ;
+       $row->add(new  Label("idisc" ))->setText(  $i->actionprice)  ;
        
        if($i->fromdate < time() && $i->todate > time())$row->idisc->setAttribute("class","badge badge-success") ;
        if($i->fromdate > time() )$row->idisc->setAttribute("class","badge badge-warning") ;
@@ -428,7 +428,7 @@ class DiscSerDataSource implements \Zippy\Interfaces\DataSource
  
         $conn = \ZDB\DB::getConnect();
 
-        $where  = "  disabled<>1  and    detail   like  '%<discount>%' ";
+        $where  = "  disabled<>1  and    detail   like  '%<actionprice>%' ";
         
         return $where;
     }
@@ -462,7 +462,7 @@ class DiscItemDataSource implements \Zippy\Interfaces\DataSource
  
         $conn = \ZDB\DB::getConnect();
 
-        $where  = "  disabled<>1  and    detail   like  '%<discount>%' ";
+        $where  = "  disabled<>1  and    detail   like  '%<actionprice>%' ";
         
         return $where;
     }
