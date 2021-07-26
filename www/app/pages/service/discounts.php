@@ -29,7 +29,8 @@ use Zippy\Binding\PropertyBinding as Bind;
  * Скидки и акции
  */
 class Discounts extends \App\Pages\Base
-{    public function __construct() {
+{ 
+   public function __construct() {
         parent::__construct();
 
         if (false == \App\ACL::checkShowSer('Discounts')) {
@@ -87,8 +88,34 @@ class Discounts extends \App\Pages\Base
 
         $this->gtab->glist->Reload();
        
-    
-        
+       //услуги
+        $this->stab->add(new Form('sfilter'))->onSubmit($this, 'OnSAdd');
+        $this->stab->sfilter->add(new DropDownChoice('ssearchkey',Service::findArray("service_name","disabled<>1","service_name" ),0)) ;
+        $this->stab->sfilter->add(new Date('ssearchfrom' ))->setDate(time());
+        $this->stab->sfilter->add(new Date('ssearchto'))->setDate(strtotime("+7day",time()));                          
+        $this->stab->sfilter->add(new TextInput('ssearchdisc'));
+       
+        $this->stab->add(new DataView('slist', new DiscSerDataSource($this), $this, 'serlistOnRow'));
+        $this->stab->slist->setPageSize(H::getPG());
+        $this->stab->add(new \Zippy\Html\DataList\Paginator('spag', $this->stab->slist));
+
+        $this->stab->slist->Reload();
+       
+       //товары
+       
+        $this->itab->add(new Form('ifilter'))->onSubmit($this, 'OnIAdd');
+        $this->itab->ifilter->add(new AutocompleteTextInput('isearchkey'))->onText($this, 'OnAutoItem');
+        $this->itab->ifilter->add(new Date('isearchfrom' ))->setDate(time());
+        $this->itab->ifilter->add(new Date('isearchto'))->setDate(strtotime("+7day",time()));                          
+        $this->itab->ifilter->add(new TextInput('isearchdisc'));
+       
+        $this->itab->add(new DataView('ilist', new DiscItemDataSource($this), $this, 'itemlistOnRow'));
+        $this->itab->ilist->setPageSize(H::getPG());
+        $this->itab->add(new \Zippy\Html\DataList\Paginator('ipag', $this->itab->ilist));
+
+        $this->itab->ilist->Reload();
+       
+      
      }
      
      
@@ -174,6 +201,7 @@ class Discounts extends \App\Pages\Base
     public function OnAutoCustomer($sender) {
         return Customer::getList($sender->getText(), 1);
     }
+
    //категории
    public function OnGAdd($sender) { 
        $g= \App\Entity\Category::load($sender->gsearchkey->getValue());
@@ -194,13 +222,15 @@ class Discounts extends \App\Pages\Base
        $sender->gsearchdisc->setText("");
    } 
   
-  public function catlistOnRow($row) {  
+   public function catlistOnRow($row) {  
        $g = $row->getDataItem();   
        $row->add(new  Label("gname",$g->cat_name)) ;
        $row->add(new  Label("gdisc" ))->setText(  $g->discount)  ;
        
        if($g->fromdate < time() && $g->todate > time())$row->gdisc->setAttribute("class","badge badge-success") ;
-      
+       if($g->fromdate > time() )$row->gdisc->setAttribute("class","badge badge-warning") ;
+       if($g->todate < time() )$row->gdisc->setAttribute("class","badge badge-secondary") ;
+    
        
        
        $row->add(new  Label("gfrom" ))->setText( H::fd($g->fromdate))  ;
@@ -208,14 +238,111 @@ class Discounts extends \App\Pages\Base
        $row->add(new  ClickLink('gdel'))->onClick($this, 'gdeleteOnClick');
        
    }
- public function gdeleteOnClick($sender) {
+   public function gdeleteOnClick($sender) {
          $g= $sender->owner->getDataItem();
          $g->discount=0;
          $g->save() ;  
          $this->gtab->glist->Reload();    
        
         
- }      
+ }  
+
+   //услуги
+   public function OnSAdd($sender) { 
+       $s= \App\Entity\Service::load($sender->ssearchkey->getValue());
+       if($s==null) return;
+       $d = doubleval($sender->ssearchdisc->getText()) ;
+       if($d >0) {
+         $s->discount=$d;
+         $s->fromdate=$sender->ssearchfrom->getDate();
+         $s->todate=$sender->ssearchto->getDate(true);;
+         if( $s->fromdate > $s->todate) {
+             $this->setError("ts_invalidinterval") ;
+             return;
+         }
+         $s->save() ;  
+         $this->stab->slist->Reload();    
+       }
+        
+       $sender->ssearchdisc->setText("");
+   } 
+  
+   public function serlistOnRow($row) {  
+       $s = $row->getDataItem();   
+       $row->add(new  Label("sname",$s->service_name)) ;
+       $row->add(new  Label("sdisc" ))->setText(  $s->discount)  ;
+       
+       if($s->fromdate < time() && $s->todate > time())$row->sdisc->setAttribute("class","badge badge-success") ;
+       if($s->fromdate > time() )$row->sdisc->setAttribute("class","badge badge-warning") ;
+       if($s->todate < time() )$row->sdisc->setAttribute("class","badge badge-secondary") ;
+       
+       $row->add(new  Label("sfrom" ))->setText( H::fd($s->fromdate))  ;
+       $row->add(new  Label("sto" ))->setText( H::fd($s->todate) ) ;
+       $row->add(new  ClickLink('sdel'))->onClick($this, 'sdeleteOnClick');
+       
+   }
+   public function sdeleteOnClick($sender) {
+         $s= $sender->owner->getDataItem();
+         $s->discount=0;
+         $s->save() ;  
+         $this->stab->slist->Reload();    
+       
+        
+ }  
+ 
+ 
+   //товары
+  public function OnIAdd($sender) { 
+       $k= $sender->isearchkey->getKey()  ;
+       $i = Item::load($k);
+       if($i==null) return;
+       $d = doubleval($sender->isearchdisc->getText()) ;
+       if($d > 0) {
+         $i->discount=$d;
+         $i->fromdate=$sender->isearchfrom->getDate();
+         $i->todate=$sender->isearchto->getDate(true);;
+         if( $i->fromdate > $i->todate) {
+             $this->setError("ts_invalidinterval") ;
+             return;
+         }
+         $i->save() ;  
+         $this->itab->ilist->Reload();    
+       }
+        
+       $sender->isearchdisc->setText("");
+       $sender->isearchkey->setText("");
+       $sender->isearchkey->setKey(0);
+   } 
+  
+   public function itemlistOnRow($row) {  
+       $i = $row->getDataItem();   
+       $row->add(new  Label("iname",$i->itemname)) ;
+       $row->add(new  Label("idisc" ))->setText(  $i->discount)  ;
+       
+       if($i->fromdate < time() && $i->todate > time())$row->idisc->setAttribute("class","badge badge-success") ;
+       if($i->fromdate > time() )$row->idisc->setAttribute("class","badge badge-warning") ;
+       if($i->todate < time() )$row->idisc->setAttribute("class","badge badge-secondary") ;
+       
+       $row->add(new  Label("ifrom" ))->setText( H::fd($i->fromdate))  ;
+       $row->add(new  Label("ito" ))->setText( H::fd($i->todate) ) ;
+       $row->add(new  ClickLink('idel'))->onClick($this, 'ideleteOnClick');
+       
+   }
+   public function ideleteOnClick($sender) {
+         $i= $sender->owner->getDataItem();
+         $i->discount=0;
+         $i->save() ;  
+         $this->itab->ilist->Reload();    
+    }  
+  
+  
+  public function OnAutoItem($sender) {
+        $text = trim($sender->getText());
+        return Item::findArrayAC($text);
+    }
+ 
+ 
+     
 }
 
 class DiscCustomerDataSource implements \Zippy\Interfaces\DataSource
@@ -274,7 +401,7 @@ class DiscCatDataSource implements \Zippy\Interfaces\DataSource
     }
 
     public function getItemCount() {
-        return Customer::findCnt($this->getWhere());
+        return Category::findCnt($this->getWhere());
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
@@ -287,3 +414,71 @@ class DiscCatDataSource implements \Zippy\Interfaces\DataSource
     }
 
 }
+
+class DiscSerDataSource implements \Zippy\Interfaces\DataSource
+{
+
+    private $page;
+
+    public function __construct($page) {
+        $this->page = $page;
+    }
+
+    private function getWhere() {
+ 
+        $conn = \ZDB\DB::getConnect();
+
+        $where  = "  disabled<>1  and    detail   like  '%<discount>%' ";
+        
+        return $where;
+    }
+
+    public function getItemCount() {
+        return Service::findCnt($this->getWhere());
+    }
+
+    public function getItems($start, $count, $sortfield = null, $asc = null) {
+
+        return Service::find($this->getWhere(),   "service_name "  , $count, $start );
+    }
+
+    public function getItem($id) {
+
+    }
+
+}
+
+
+class DiscItemDataSource implements \Zippy\Interfaces\DataSource
+{
+
+    private $page;
+
+    public function __construct($page) {
+        $this->page = $page;
+    }
+
+    private function getWhere() {
+ 
+        $conn = \ZDB\DB::getConnect();
+
+        $where  = "  disabled<>1  and    detail   like  '%<discount>%' ";
+        
+        return $where;
+    }
+
+    public function getItemCount() {
+        return Item::findCnt($this->getWhere());
+    }
+
+    public function getItems($start, $count, $sortfield = null, $asc = null) {
+
+        return Item::find($this->getWhere(),   "itemname "  , $count, $start );
+    }
+
+    public function getItem($id) {
+
+    }
+
+}
+

@@ -138,7 +138,7 @@
                           <tr  zippy="glist">      
                                <td zippy="gname"></td>               
                                               
-                               <td  class="text-right"> <span class="badge "  zippy="gdisc"></span> </td>               
+                               <td  class="text-right"> <span    zippy="gdisc"></span> </td>               
                                <td zippy="gfrom"></td>               
                                <td zippy="gto"></td>               
                                  
@@ -151,10 +151,95 @@
                 </div>
                </div>
               <div zippy="itab">
-                <h3> Товары</h3>
+                     <div class="row">
+                   <div class="col-12 col-md-10 col-xl-8   ">
+                 <h3> Товары</h3>
+                             <div class="navbar nav  ">
+                            <form zippy="ifilter" class="form-inline ">
+
+                                <label for="isearchkey">Имя</label>
+                                <input   class="form-control  "   zippy="isearchkey"> 
+                                
+                                <label for="isearchdisc">скидка,%</label>
+                                <input   class="form-control mr-sm-2" type="text" zippy="isearchdisc" pattern="[0-9\.]+" style="width:50px;">
+                                <label for="isearchfrom">с</label>
+                                <input  class="form-control mr-sm-2"   zippy="isearchfrom"  style="width:100px;">
+                                <label  for="isearchto">по</label>
+                                <input  class="form-control mr-sm-2"   zippy="isearchto" style="width:100px;" >
+                                 
+                                <input class="btn btn-outline-success  ml-2 " type="submit" value="Добавить"  >
+
+                            </form> 
+                       </div>                     
+                         <table class="table    table-sm mt-2">
+                           <tr>
+                               <th > Наименование </th>
+                               <th style="width:100px"> Скидка,%</th>
+                               <th > С</th>
+                               <th > По</th>
+                               <th >  </th>
+                          </tr>
+                          <tr  zippy="ilist">      
+                               <td zippy="iname"></td>               
+                                              
+                               <td  class="text-right"> <span    zippy="idisc"></span> </td>               
+                               <td zippy="ifrom"></td>               
+                               <td zippy="ito"></td>               
+                                 
+                               <td  ><a zippy="idel"><i class="fa fa-trash"/></a></td>
+                              
+                          </tr>
+                        </table>  
+                        <div zippy="ipag"></div>   
+            
+                 
+                 </div>
+               </div>
                </div>
                <div zippy="stab">
-                <h3> Услуги</h3>
+                         <div class="row">
+                   <div class="col-12 col-md-10 col-xl-8   ">
+                  <h3> Услуги</h3>
+                        <div class="navbar nav  ">
+                            <form zippy="sfilter" class="form-inline ">
+
+                                <label for="ssearchkey">Имя</label>
+                                <select   class="form-control select2"   zippy="ssearchkey"></select>
+                                 &nbsp;   &nbsp;
+                                <label for="ssearchdisc">скидка,%</label>
+                                <input   class="form-control mr-sm-2" type="text" zippy="ssearchdisc" pattern="[0-9\.]+" style="width:50px;">
+                                <label for="ssearchfrom">с</label>
+                                <input  class="form-control mr-sm-2"   zippy="ssearchfrom"  style="width:100px;">
+                                <label  for="sgsearchto">по</label>
+                                <input  class="form-control mr-sm-2"   zippy="ssearchto" style="width:100px;" >
+                                 
+                                <input class="btn btn-outline-success  ml-2 " type="submit" value="Добавить"  >
+
+                            </form> 
+                       </div>                     
+                         <table class="table    table-sm mt-2">
+                           <tr>
+                               <th > Наименование </th>
+                               <th style="width:100px"> Скидка,%</th>
+                               <th > С</th>
+                               <th > По</th>
+                               <th >  </th>
+                          </tr>
+                          <tr  zippy="slist">      
+                               <td zippy="sname"></td>               
+                                              
+                               <td  class="text-right"> <span    zippy="sdisc"></span> </td>               
+                               <td zippy="sfrom"></td>               
+                               <td zippy="sto"></td>               
+                                 
+                               <td  ><a zippy="sdel"><i class="fa fa-trash"/></a></td>
+                              
+                          </tr>
+                        </table>  
+                        <div zippy="spag"></div>   
+             
+                 </div>
+                 </div>
                </div>
                 
            </div>

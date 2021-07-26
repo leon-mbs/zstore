@@ -23,6 +23,9 @@ class Service extends \ZCL\DB\Entity
         $this->hours = (string)($xml->hours[0]);
         $this->price = (string)($xml->price[0]);
         $this->cost = (string)($xml->cost[0]);
+       $this->discount = doubleval($xml->discount[0]);
+        $this->todate =  intval($xml->todate[0]);
+        $this->fromdate =  intval($xml->fromdate[0]);
 
         parent::afterLoad();
     }
@@ -34,6 +37,11 @@ class Service extends \ZCL\DB\Entity
         $this->detail .= "<cost>{$this->cost}</cost>";
         $this->detail .= "<price>{$this->price}</price>";
         $this->detail .= "<hours>{$this->hours}</hours>";
+         if($this->discount>0) {
+           $this->detail .= "<discount>{$this->discount}</discount>";  
+        } 
+        $this->detail .= "<todate>{$this->todate}</todate>";
+        $this->detail .= "<fromdate>{$this->fromdate}</fromdate>";
 
         $this->detail .= "</detail>";
 
