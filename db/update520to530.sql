@@ -64,3 +64,13 @@ FROM (((`paylist` `pl`
   LEFT JOIN `mfund` `m`
     ON ((`pl`.`mf_id` = `m`.`mf_id`)));
 
+CREATE TABLE shop_prod_var (
+  var_id int(11) NOT NULL AUTO_INCREMENT,
+  attr_id int(11) NOT NULL,
+  details text DEFAULT NULL,
+  var_name varchar(255) NOT NULL,
+  PRIMARY KEY (var_id)
+)
+ENGINE = INNODB,
+CHARACTER SET utf8,
+COLLATE utf8_general_ci;

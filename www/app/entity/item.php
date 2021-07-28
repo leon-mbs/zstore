@@ -171,7 +171,7 @@ class Item extends \ZCL\DB\Entity
         }
     }
 
-    //Вычисляет  отпускную цену
+    //Вычисляет  отпускную цену без скидок
     //$_price - цифра (заданая цена) или  наименование  цены из настроек 
     //$store - склад
     //$partion - партия
@@ -285,6 +285,17 @@ class Item extends \ZCL\DB\Entity
         return \App\Helper::fa($price);
     }
 
+    
+    public function actionPrice($price){
+        
+        if() {
+            
+        }
+        
+        return $price
+    }
+    
+    
     //последняя  партия true по  приходной  false по расходной
     public function getLastPartion($store = 0, $snumber = "", $gi = true) {
         $conn = \ZDB\DB::getConnect();
