@@ -170,13 +170,13 @@ class Pay extends \ZCL\DB\Entity
         }
 
 
-        $disc = \App\System::getOption("discount");
+        $disc = \App\System::getOptions("discount" );
 
 
-        $cnt = (int)$conn->GetOne("select  count(*)  from paylist_view where  customer_id=" . $d->customer_id);
+        $cnt = (int)$conn->GetOne("select  count(*)  from paylist_view where  customer_id=" . $customer_id);
 
-        if ($cnt == 0 && doubleval($disc["firstbay"]) > Ю0) {   //первая  покупка
-            $bonus = round($amount * doubleval($disc["firstbay"] / 100);
+        if ($cnt == 0 && doubleval($disc["firstbay"]) > 0) {   //первая  покупка
+            $bonus = round($amount * doubleval($disc["firstbay"] / 100));
         } else {
 
 
@@ -194,6 +194,9 @@ class Pay extends \ZCL\DB\Entity
             $pay = new \App\Entity\Pay();
 
             $pay->document_id = $document_id;
+     
+            $pay->user_id = 0;
+            $pay->amount = 0;
             $pay->bonus = (int)$bonus;
             $pay->paytype = self::PAY_BONUS;
             $pay->paydate = time();

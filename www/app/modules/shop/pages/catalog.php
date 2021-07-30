@@ -187,13 +187,14 @@ class Catalog extends Base
 
         $row->add(new BookmarkableLink("simage", $item->getSEF()))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
         $row->add(new BookmarkableLink("scatname", $item->getSEF()))->setValue($item->itemname);
+         $price=  $item->getPurePrice() ;
 
-        $row->add(new Label("sprice", $item->price . ' ' . $options['currencyname']));
-        $row->add(new Label("sactionprice", $item->actionprice . ' ' . $options['currencyname']))->setVisible(false);
+        $row->add(new Label("sprice", $price . ' ' . $options['currencyname']));
+        $row->add(new Label("sactionprice", $item->getActionPrice($price) . ' ' . $options['currencyname']))->setVisible(false);
         $row->add(new Label('saction'))->setVisible(false);
 
-        if ($item->actionprice > 0) {
-            $row->sprice->setAttribute('style', 'text-decoration:line-through');
+        if ($item->hasAction()) {
+            $row->sprice->setAttribute('style', 'font-size:smaller;text-decoration:line-through');
             $row->sactionprice->setVisible(true);
             $row->saction->setVisible(true);
         }

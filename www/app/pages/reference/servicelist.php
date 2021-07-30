@@ -52,6 +52,7 @@ class ServiceList extends \App\Pages\Base
         $item = $row->getDataItem();
 
         $row->add(new Label('service_name', $item->service_name));
+        $row->add(new Label('hasaction'))->setVisible($item->hasAction());
         $row->add(new Label('price', $item->price));
         $row->add(new Label('cost', $item->cost));
         $row->add(new Label('hours', $item->hours));

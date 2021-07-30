@@ -184,6 +184,7 @@ class ItemList extends \App\Pages\Base
 
         $row->add(new Label('cell', $item->cell));
         $row->add(new Label('inseria'))->setVisible($item->useserial);
+        $row->add(new Label('hasaction'))->setVisible($item->hasAction());
 
         $row->add(new ClickLink('copy'))->onClick($this, 'copyOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -663,12 +664,7 @@ class ItemList extends \App\Pages\Base
                     $header['name'] = $item->itemname;
                 }
             }
-            $header['isap'] = false;
-            if ($printer['pprice'] == 1) {
-                $header['price'] = H::fa($item->getPrice($printer['pricetype']));
-                $header['isap'] = true;
-            }
-            if ($printer['pcode'] == 1) {
+             if ($printer['pcode'] == 1) {
                 $header['article'] = $item->item_code;
                 $header['isap'] = true;
             }
@@ -696,8 +692,17 @@ class ItemList extends \App\Pages\Base
                 $header['img'] = $img;
                 $header['barcode'] = \App\Util::addSpaces($barcode);
             }
-            $header['action'] = $item->actionprice > 0;
-            $header['actionprice'] = $item->actionprice;
+         
+            $header['isap'] = false;
+            if ($printer['pprice'] == 1) {
+                $header['price'] = H::fa($item->getPurePrice($printer['pricetype']));
+                $header['isap'] = true;
+            }
+         
+            $header['action'] = $item->hasAction();  ;
+            if($header['action']) {
+               $header['actionprice'] = $item->getActionPrice($header['price']); 
+            } 
 
 
             $htmls = $htmls . $report->generate($header);

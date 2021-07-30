@@ -69,4 +69,27 @@ class Service extends \ZCL\DB\Entity
         }
         return array();
     }
+    
+     public  function hasAction(){
+         if(doubleval($this->actionprice)>0    )  {
+             
+             if($this->fromdate < time() && $this->todate > time()){
+                 return  true;
+             }
+             
+         }
+         
+         return  false;
+    }   
+   public function getPrice( ){
+        
+        $price =  $this->price;
+        if($this->hasAction()  ) {
+          $price =  $this->actionprice;
+          
+        }
+        
+       return \App\Helper::fa($price);
+    }    
+       
 }

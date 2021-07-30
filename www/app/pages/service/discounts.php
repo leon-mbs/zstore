@@ -39,12 +39,12 @@ class Discounts extends \App\Pages\Base
         $this->add(new ClickLink('tabo', $this, 'onTab'));
         $this->add(new ClickLink('tabc', $this, 'onTab'));
         $this->add(new ClickLink('tabi', $this, 'onTab'));
-        $this->add(new ClickLink('tabg', $this, 'onTab'));
+        
         $this->add(new ClickLink('tabs', $this, 'onTab'));
         $this->add(new Panel('otab'));
         $this->add(new Panel('ctab'));
         $this->add(new Panel('itab'));
-        $this->add(new Panel('gtab'));
+        
         $this->add(new Panel('stab'));
 
         $this->onTab($this->tabo);
@@ -76,17 +76,13 @@ class Discounts extends \App\Pages\Base
         $this->ctab->clistform->clist->Reload();
 
         //категории
-        $this->gtab->add(new Form('gfilter'))->onSubmit($this, 'OnGAdd');
-        $this->gtab->gfilter->add(new DropDownChoice('gsearchkey', Category::getList(), 0));
-        $this->gtab->gfilter->add(new Date('gsearchfrom'))->setDate(time());
-        $this->gtab->gfilter->add(new Date('gsearchto'))->setDate(strtotime("+7day", time()));
-        $this->gtab->gfilter->add(new TextInput('gsearchdisc'));
+        $this->itab->add(new Form('gfilter'))->onSubmit($this, 'OnGAdd');
+        $this->itab->gfilter->add(new DropDownChoice('gsearchkey', Category::getList(), 0));
+        $this->itab->gfilter->add(new Date('gsearchfrom'))->setDate(time());
+        $this->itab->gfilter->add(new Date('gsearchto'))->setDate(strtotime("+7day", time()));
+        $this->itab->gfilter->add(new TextInput('gsearchdisc'));
 
-        $this->gtab->add(new DataView('glist', new DiscCatDataSource($this), $this, 'catlistOnRow'));
-        $this->gtab->glist->setPageSize(H::getPG());
-        $this->gtab->add(new \Zippy\Html\DataList\Paginator('gpag', $this->gtab->glist));
-
-        $this->gtab->glist->Reload();
+       
 
         //услуги
         $this->stab->add(new Form('sfilter'))->onSubmit($this, 'OnSAdd');
@@ -139,13 +135,13 @@ class Discounts extends \App\Pages\Base
         $this->_tvars['tabcbadge'] = $sender->id == 'tabc' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
         $this->_tvars['tabobadge'] = $sender->id == 'tabo' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";;
         $this->_tvars['tabibadge'] = $sender->id == 'tabi' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";;
-        $this->_tvars['tabgbadge'] = $sender->id == 'tabg' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";;
+        
         $this->_tvars['tabsbadge'] = $sender->id == 'tabs' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";;
 
         $this->ctab->setVisible($sender->id == 'tabc');
         $this->otab->setVisible($sender->id == 'tabo');
         $this->itab->setVisible($sender->id == 'tabi');
-        $this->gtab->setVisible($sender->id == 'tabg');
+        
         $this->stab->setVisible($sender->id == 'tabs');
 
     }
@@ -206,58 +202,8 @@ class Discounts extends \App\Pages\Base
         return Customer::getList($sender->getText(), 1);
     }
 
-    //категории
-    public function OnGAdd($sender) {
-        $g = \App\Entity\Category::load($sender->gsearchkey->getValue());
-        if ($g == null) {
-            return;
-        }
-        $d = doubleval($sender->gsearchdisc->getText());
-        if ($d > 0) {
-            $g->discount = $d;
-            $g->fromdate = $sender->gsearchfrom->getDate();
-            $g->todate = $sender->gsearchto->getDate(true);;
-            if ($g->fromdate > $g->todate) {
-                $this->setError("ts_invalidinterval");
-                return;
-            }
-            $g->save();
-            $this->gtab->glist->Reload();
-        }
-
-        $sender->gsearchdisc->setText("");
-    }
-
-    public function catlistOnRow($row) {
-        $g = $row->getDataItem();
-        $row->add(new  Label("gname", $g->cat_name));
-        $row->add(new  Label("gdisc"))->setText($g->discount);
-
-        if ($g->fromdate < time() && $g->todate > time()) {
-            $row->gdisc->setAttribute("class", "badge badge-success");
-        }
-        if ($g->fromdate > time()) {
-            $row->gdisc->setAttribute("class", "badge badge-warning");
-        }
-        if ($g->todate < time()) {
-            $row->gdisc->setAttribute("class", "badge badge-secondary");
-        }
-
-
-        $row->add(new  Label("gfrom"))->setText(H::fd($g->fromdate));
-        $row->add(new  Label("gto"))->setText(H::fd($g->todate));
-        $row->add(new  ClickLink('gdel'))->onClick($this, 'gdeleteOnClick');
-
-    }
-
-    public function gdeleteOnClick($sender) {
-        $g = $sender->owner->getDataItem();
-        $g->discount = 0;
-        $g->save();
-        $this->gtab->glist->Reload();
-
-
-    }
+  
+  
 
     //услуги
     public function OnSAdd($sender) {
@@ -322,6 +268,7 @@ class Discounts extends \App\Pages\Base
         $d = doubleval($sender->isearchdisc->getText());
         if ($d > 0) {
             $i->actionprice = $d;
+            $i->actiondisc = 0;
             $i->fromdate = $sender->isearchfrom->getDate();
             $i->todate = $sender->isearchto->getDate(true);;
             if ($i->fromdate > $i->todate) {
@@ -339,9 +286,21 @@ class Discounts extends \App\Pages\Base
 
     public function itemlistOnRow($row) {
         $i = $row->getDataItem();
+        $row->add(new  Label("icat_name", $i->cat_name));
         $row->add(new  Label("iname", $i->itemname));
-        $row->add(new  Label("idisc"))->setText($i->actionprice);
-
+        $row->add(new  Label("iprice"))->setText($i->actionprice);
+        $row->iprice->setVisible($i->actionprice>0);
+        if ($i->fromdate < time() && $i->todate > time()) {
+            $row->iprice->setAttribute("class", "badge badge-success");
+        }
+        if ($i->fromdate > time()) {
+            $row->iprice->setAttribute("class", "badge badge-warning");
+        }
+        if ($i->todate < time()) {
+            $row->iprice->setAttribute("class", "badge badge-secondary");
+        }
+        $row->add(new  Label("idisc"))->setText($i->actiondisc);
+        $row->idisc->setVisible($i->actiondisc>0);
         if ($i->fromdate < time() && $i->todate > time()) {
             $row->idisc->setAttribute("class", "badge badge-success");
         }
@@ -363,6 +322,37 @@ class Discounts extends \App\Pages\Base
         $i->discount = 0;
         $i->save();
         $this->itab->ilist->Reload();
+    }
+   //категории
+    public function OnGAdd($sender) {
+        $g = \App\Entity\Category::load($sender->gsearchkey->getValue());
+        if ($g == null) {
+            return;
+        }
+        $d = doubleval($sender->gsearchdisc->getText());
+        if ($d > 0) {
+            $g->discount = $d;
+            $g->fromdate = $sender->gsearchfrom->getDate();
+            $g->todate = $sender->gsearchto->getDate(true);;
+            if ($g->fromdate > $g->todate) {
+                $this->setError("ts_invalidinterval");
+                return;
+            }
+          
+            $items=Item::find("disabled <> 1 and cat_id=".$g->cat_id);
+            foreach($items as $item){
+                $item->actionprice = 0;
+                $item->actiondisc = $d;
+                $item->fromdate = $g->fromdate;
+                $item->todate = $g->todate;
+                $item->save();
+            }
+            $this->itab->ilist->Reload();
+        }
+
+        $sender->gsearchdisc->setText("");
+        $sender->gsearchkey->setValue(0);
+                
     }
 
 
@@ -410,39 +400,7 @@ class DiscCustomerDataSource implements \Zippy\Interfaces\DataSource
 
 }
 
-
-class DiscCatDataSource implements \Zippy\Interfaces\DataSource
-{
-
-    private $page;
-
-    public function __construct($page) {
-        $this->page = $page;
-    }
-
-    private function getWhere() {
-
-        $conn = \ZDB\DB::getConnect();
-
-        $where = "     detail   like  '%<discount>%' ";
-
-        return $where;
-    }
-
-    public function getItemCount() {
-        return Category::findCnt($this->getWhere());
-    }
-
-    public function getItems($start, $count, $sortfield = null, $asc = null) {
-
-        return Category::find($this->getWhere(), "cat_name ", $count, $start);
-    }
-
-    public function getItem($id) {
-
-    }
-
-}
+ 
 
 class DiscSerDataSource implements \Zippy\Interfaces\DataSource
 {
@@ -491,7 +449,7 @@ class DiscItemDataSource implements \Zippy\Interfaces\DataSource
 
         $conn = \ZDB\DB::getConnect();
 
-        $where = "  disabled<>1  and    detail   like  '%<actionprice>%' ";
+        $where = "  disabled<>1  and  (  detail   like  '%<actionprice>%'  or  detail   like  '%<actiondisc>%'  ) ";
 
         return $where;
     }

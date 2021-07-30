@@ -570,7 +570,7 @@ class Invoice extends \App\Pages\Base
         $id = $sender->getValue();
 
         $item = Service::load($id);
-        $price = $item->price;
+        $price = $item->getPrice();
 
         $this->editserdetail->editserprice->setText($price);
 

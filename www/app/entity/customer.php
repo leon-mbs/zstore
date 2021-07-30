@@ -187,4 +187,12 @@ class Customer extends \ZCL\DB\Entity
         return $list;
     }
 
+    
+    public function getBonus(){
+         $conn = \ZDB\DB::getConnect();
+         $sql = "select coalesce(sum(bonus),0) as bonus from paylist where  document_id in (select  document_id  from  documents where  customer_id={$this->customer_id})";
+     
+         return  $conn->GetOne($sql);
+         
+    }
 }
