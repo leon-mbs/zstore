@@ -85,9 +85,12 @@ class Item extends \ZCL\DB\Entity
         }
 
         $this->actionprice = doubleval($xml->actionprice[0]);
+        $this->actiondisc = doubleval($xml->actiondisc[0]);
         $this->todate = intval($xml->todate[0]);
         $this->fromdate = intval($xml->fromdate[0]);
-
+   
+        
+        
         parent::afterLoad();
     }
 
@@ -145,6 +148,9 @@ class Item extends \ZCL\DB\Entity
         if ($this->actionprice > 0) {
             $this->detail .= "<actionprice>{$this->actionprice}</actionprice>";
         }
+        if ($this->actiondisc > 0) {
+            $this->detail .= "<actiondisc>{$this->actiondisc}</actiondisc>";
+        }
         $this->detail .= "<todate>{$this->todate}</todate>";
         $this->detail .= "<fromdate>{$this->fromdate}</fromdate>";
 
@@ -175,7 +181,7 @@ class Item extends \ZCL\DB\Entity
     //$_price - цифра (заданая цена) или  наименование  цены из настроек 
     //$store - склад
     //$partion - партия
-    public function getPrice($_price_ = 'price1', $store = 0, $partion = 0) {
+    public function getPurePrice($_price_ = 'price1', $store = 0, $partion = 0) {
         $price = 0;
         $_price = 0;
         $common = \App\System::getOptions("common");
@@ -278,21 +284,41 @@ class Item extends \ZCL\DB\Entity
             }
         }
 
-
-        //акции
-
-
-        return \App\Helper::fa($price);
+    
+        return  $price ;
     }
 
+    public  function hasAction(){
+         if(doubleval($this->actionprice)>0 || doubleval($this->actiondisc>0) )  {
+             
+             if($this->fromdate < time() && $this->todate > time()){
+                 return  true;
+             }
+             
+         }
+         
+         return  false;
+    }
     
-    public function actionPrice($price){
+    //цена  со  скидкой
+    public  function getActionPrice($price){
+              if(doubleval($this->actionprice)>0 ) return   $this->actionprice;
+              if(doubleval($this->actiondisc)>0 ) return  ($price+ $price * $this->actiondisc/100);
+              
+              return  $price;
+              
+    }
+    
+    //цена  со  скидками (если  есть)
+    public function getPrice($_price_ = 'price1', $store = 0, $partion = 0){
         
-        if() {
-            
+        $price =  $this->getPurePrice($_price_,$store,$partion);
+        if($this->hasAction()  ) {
+          $price =  $this->getActionPrice($price);
+          
         }
         
-        return $price
+       return \App\Helper::fa($price);
     }
     
     

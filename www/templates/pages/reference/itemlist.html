@@ -57,6 +57,7 @@
                             <th>Категория</th>
                             <th>Бренд</th>
                             <th>Ед.</th>
+                            <th> </th>
 
                             {{#hp1}}<th class="text-right  ">{{hp1}}</th>{{/hp1}}
                             {{#hp2}}<th class="text-right  ">{{hp2}}</th>{{/hp2}}
@@ -91,6 +92,7 @@
                             <td zippy="cat_name"></td>
                             <td zippy="manufacturer"></td>
                             <td zippy="msr"></td>
+                            <td  class="text-right"><i title="Акция" zippy="hasaction" class="fa fa-gift"/></td>
 
                             {{#hp1}}<td zippy="price1" class="text-right  "></td>{{/hp1}}
                             {{#hp2}}<td zippy="price2" class="text-right  "></td>{{/hp2}}
@@ -109,7 +111,7 @@
 
                             <td><a zippy="set" title="Комплекты"><i class="fa fa-cogs"></i></a> &nbsp;</td>
                             <td  >
-                                <a zippy="printqr" title="Друк QR коду"><i class="fa fa-qrcode"></i></a>
+                                <a zippy="printqr" title="Печать QR кода"><i class="fa fa-qrcode"></i></a>
                             </td>
 
                             <td aling="center">

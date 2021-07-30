@@ -869,7 +869,7 @@ class POSCheck extends \App\Pages\Base
     public function OnChangeSer($sender) {
         $id = $sender->getKey();
         $ser = Service::load($id);
-        $this->editserdetail->editserprice->setText($ser->price);
+        $this->editserdetail->editserprice->setText($ser->getPrice());
 
         $this->updateAjax(array('editserprice'));
     }
