@@ -7,7 +7,7 @@
     "prefer-stable" : true,
   
     "require": {
-        "php": "^7.2",
+        "php": ">=7.2",
          
         "phpmailer/phpmailer": "~6.1",
         "monolog/monolog": "1.25.4",

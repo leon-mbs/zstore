@@ -667,26 +667,33 @@ class ARMPos extends \App\Pages\Base
         $disc = 0;
 
         $customer_id = $this->docpanel->form3->customer->getKey();
+      
         if ($customer_id > 0) {
-            $customer = Customer::load($customer_id);
-            if ($customer->discount > 0) {
-                $this->docpanel->form3->discount->setText("Постоянная скидка " . $customer->discount . '%');
-                $this->docpanel->form3->discount->setVisible(true);
-                $disc = round($total * ($customer->discount / 100));
-            } else {
-                if ($customer->bonus > 0) {
-                    $this->docpanel->form3->discount->setText("Бонусы " . $customer->bonus);
-                    $this->docpanel->form3->discount->setVisible(true);
-                    if ($total >= $customer->bonus) {
-                        $disc = $customer->bonus;
+            $cust = Customer::load($customer_id) ;
+            
+            $disctext="";
+            if (doubleval($cust->discount) > 0) {
+               $disctext   = H::l("custdisc")." {$cust->discount}%";
+               $disc = round($total * ($customer->discount / 100));
+        }  else {
+               $bonus = $cust->getBonus();
+               if($bonus>0) {
+                    $disctext   = H::l("custbonus")." {$bonus} ";  
+                    
+                    $total = $this->docpanel->form2->total->getText( );
+
+                    
+                    if ($total >= $bonus) {
+                        $disc = $bonus;
                     } else {
                         $disc = $total;
                     }
-                }
-            }
+               }
+           }        
+           $this->docpanel->form3->discount->setText($disctext); 
+           $this->docpanel->form3->discount->setVisible(true);
+
         }
-
-
         $this->docpanel->form3->paydisc->setText(H::fa($disc));
         $this->docpanel->form3->payamount->setText(H::fa($total - $disc));
     }

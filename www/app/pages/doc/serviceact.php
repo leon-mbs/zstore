@@ -376,8 +376,8 @@ class ServiceAct extends \App\Pages\Base
             }
         }
 
-        $this->docform->paydisc->setText($disc);
-        $this->docform->editpaydisc->setText($disc);
+        $this->docform->paydisc->setText(H::fa($disc) );
+        $this->docform->editpaydisc->setText(H::fa($disc));
     }
 
 
