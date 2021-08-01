@@ -250,7 +250,7 @@ class Discounts extends \App\Pages\Base
 
     public function sdeleteOnClick($sender) {
         $s = $sender->owner->getDataItem();
-        $s->discount = 0;
+        $s->actionprice = 0;
         $s->save();
         $this->stab->slist->Reload();
 
@@ -319,7 +319,8 @@ class Discounts extends \App\Pages\Base
 
     public function ideleteOnClick($sender) {
         $i = $sender->owner->getDataItem();
-        $i->discount = 0;
+        $i->actionprice = 0;
+        $i->actiondisc = 0;
         $i->save();
         $this->itab->ilist->Reload();
     }

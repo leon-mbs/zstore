@@ -13,7 +13,7 @@
                 <div class="mt-1" style="font-size: 1.5rem"  >
                     <a zippy="tabo"><span class="{{{tabobadge}}}"> Бонуси</span> </a> &nbsp;&nbsp;
                     <a zippy="tabc"><span class="{{{tabcbadge}}}">  Покупці   </span> </a>
-                    <a zippy="tabg"><span class="{{{tabgbadge}}}">  Категорії   </span> </a>
+                    
                     <a zippy="tabi"><span class="{{{tabibadge}}}">  Товари   </span> </a>
                     <a zippy="tabs"><span class="{{{tabsbadge}}}">  Послуги, роботи   </span> </a>
 
@@ -106,11 +106,30 @@
                         </div>
                     </div>
                 </div>
-                <div zippy="gtab">
+           
+                <div zippy="itab">
                     <div class="row">
                         <div class="col-12 col-md-10 col-xl-8   ">
-                            <h3> Категорії</h3>
-                            <div class="navbar nav  ">
+                            <h3> Товари</h3>
+            <div class="navbar nav  ">
+                                <form zippy="ifilter" class="form-inline ">
+
+                                    <label for="isearchkey">Назва</label>
+                                    <input  placeholder="Начните вводить..."  class="form-control  "   zippy="isearchkey"> 
+
+                                    <label for="isearchdisc">акц. цiна</label>
+                                    <input   class="form-control mr-sm-2" type="text" zippy="isearchdisc" pattern="[0-9\.]+" style="width:50px;">
+                                    <label for="isearchfrom">з</label>
+                                    <input  class="form-control mr-sm-2"   zippy="isearchfrom"  style="width:100px;">
+                                    <label  for="isearchto">по</label>
+                                    <input  class="form-control mr-sm-2"   zippy="isearchto" style="width:100px;" >
+
+                                    <input class="btn btn-outline-success  ml-2 " type="submit" value="Добавить"  >
+
+                                </form>  <br>
+                                <span>Встановлює акційну ціну на даний товар</span>
+                            </div>  
+                           <div class="navbar nav  ">
                                 <form zippy="gfilter" class="form-inline ">
 
                                     <label for="gsearchkey">Назва</label>
@@ -123,67 +142,29 @@
                                     <label  for="gsearchto">по</label>
                                     <input  class="form-control mr-sm-2"   zippy="gsearchto" style="width:100px;" >
 
-                                    <input class="btn btn-outline-success  ml-2 " type="submit" value="Додати"  >
+                                    <input class="btn btn-outline-success  ml-2 " type="submit" value="Добавить"  >
 
-                                </form> 
+                                </form><br>
+                                <span>Встановлює знижку на всі товари даної категорії</span> 
                             </div>                     
+                                  
                             <table class="table    table-sm mt-2">
                                 <tr>
+                                    <th > Категорiя </th>
                                     <th > Назва </th>
+                                     <th style="width:100px"> акц. цiна</th>
                                     <th style="width:100px"> знижка,%</th>
-                                    <th > З</th>
-                                    <th > По</th>
-                                    <th >  </th>
-                                </tr>
-                                <tr  zippy="glist">      
-                                    <td zippy="gname"></td>               
-
-                                    <td  class="text-right"> <span    zippy="gdisc"></span> </td>               
-                                    <td zippy="gfrom"></td>               
-                                    <td zippy="gto"></td>               
-
-                                    <td  ><a zippy="gdel"><i class="fa fa-trash"/></a></td>
-
-                                </tr>
-                            </table>  
-                            <div zippy="gpag"></div>   
-                        </div>
-                    </div>
-                </div>
-                <div zippy="itab">
-                    <div class="row">
-                        <div class="col-12 col-md-10 col-xl-8   ">
-                            <h3> Товари</h3>
-                            <div class="navbar nav  ">
-                                <form zippy="ifilter" class="form-inline ">
-
-                                    <label for="isearchkey">Назва</label>
-                                    <input placeholder="Почнiть вводити..."  class="form-control  "   zippy="isearchkey"> 
-
-                                    <label for="isearchdisc">акц. ціна</label>
-                                    <input   class="form-control mr-sm-2" type="text" zippy="isearchdisc" pattern="[0-9\.]+" style="width:50px;">
-                                    <label for="isearchfrom">з</label>
-                                    <input  class="form-control mr-sm-2"   zippy="isearchfrom"  style="width:100px;">
-                                    <label  for="isearchto">по</label>
-                                    <input  class="form-control mr-sm-2"   zippy="isearchto" style="width:100px;" >
-
-                                    <input class="btn btn-outline-success  ml-2 " type="submit" value="Додати"  >
-
-                                </form> 
-                            </div>                     
-                            <table class="table    table-sm mt-2">
-                                <tr>
-                                    <th > Назва </th>
-                                    <th style="width:100px"> Акц. ціна</th>
-                                    <th > З</th>
+                                 <th > З</th>
                                     <th > По</th>
                                     <th >  </th>
                                 </tr>
                                 <tr  zippy="ilist">      
-                                    <td zippy="iname"></td>               
+                                <td zippy="icat_name"></td>               
+                                        <td zippy="iname"></td>               
 
+                                <td  class="text-right"> <span    zippy="iprice"></span> </td>               
                                     <td  class="text-right"> <span    zippy="idisc"></span> </td>               
-                                    <td zippy="ifrom"></td>               
+                                        <td zippy="ifrom"></td>               
                                     <td zippy="ito"></td>               
 
                                     <td  ><a zippy="idel"><i class="fa fa-trash"/></a></td>

@@ -1,17 +1,3 @@
-
-  CREATE TABLE `discounts` (
-     id,
-     typedisc, 
-     document_id,
-     customer_id,
-     item_id,
-     cat_id,
-     pricetype,
-     bonus,
-     discount,
-     startdate,
-     enddate
-  )
  
  
 CREATE TABLE `prodproc` (
