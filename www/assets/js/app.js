@@ -5,7 +5,7 @@
  * Licensed under the GPL license
  */
 
-
+ /*
 $(document).ready(function() {
     $('.dropdown-menu a.dropdown-toggle').on('click', function(e) {
         var $el = $(this);
@@ -34,6 +34,8 @@ $(document).ready(function() {
     
     
 });
+
+*/
 /* menu*/
 
 

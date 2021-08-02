@@ -1,6 +1,7 @@
 AddDefaultCharset utf-8
 DirectoryIndex index.php
 
+#php_value error_reporting 5
  
 RewriteEngine on
 RewriteBase / 
