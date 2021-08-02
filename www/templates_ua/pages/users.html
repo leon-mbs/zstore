@@ -31,7 +31,8 @@
                             <th>Дата реєс.</th>
 
                             <th>Email</th>
-                            <th>Ост. акт.</th>
+                 {{#showactiveusers}}     <th>Ост. акт.</th>   {{/showactiveusers}}
+
 
                             <th width="24">&nbsp;</th>
                             <th width="24">&nbsp;</th>
@@ -46,7 +47,7 @@
                             <td zippy="created" align="center" style="white-space:nowrap"></td>
 
                             <td zippy="email"></td>
-                            <td zippy="lastactive" align="center" style="white-space:nowrap"></td>
+            {{#showactiveusers}}     <td zippy="lastactive" align="center" style="white-space:nowrap"></td>  {{/showactiveusers}}
 
                             <td><a zippy="edit"><i class="fa fa-edit"></i></a></td>
                             <td><a zippy="remove"><i class="fa fa-trash"></i></a></td>
