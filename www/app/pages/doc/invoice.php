@@ -59,7 +59,7 @@ class Invoice extends \App\Pages\Base
 
         $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
 
-        $this->docform->add(new Label('discount'))->setVisible(false);
+        $this->docform->add(new Label('discount')) ;
         $this->docform->add(new TextInput('editpaydisc'));
         $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
         $this->docform->add(new Label('paydisc', 0));
@@ -485,9 +485,10 @@ class Invoice extends \App\Pages\Base
             if ($customer->discount > 0) {
                 $disc = round($total * ($customer->discount / 100));
             } else {
-                if ($customer->bonus > 0) {
-                    if ($total >= $customer->bonus) {
-                        $disc = $customer->bonus;
+                $bonus = $customer->getBonus();
+                if ($bonus > 0) {
+                    if ($total >= $bonus) {
+                        $disc = $bonus;
                     } else {
                         $disc = $total;
                     }
@@ -582,21 +583,22 @@ class Invoice extends \App\Pages\Base
 
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
-            $customer = Customer::load($customer_id);
+            $cust = Customer::load($customer_id) ;
+            
+            $disctext="";
+            if (doubleval($cust->discount) > 0) {
+               $disctext   = H::l("custdisc")." {$cust->discount}%";
+            }  else {
+               $bonus = $cust->getBonus();
+               if($bonus>0) {
+                  $disctext   = H::l("custbonus")." {$bonus} ";    
+               }
+           }        
+           $this->docform->discount->setText($disctext); 
+           $this->docform->discount->setVisible(true);
 
-            $this->docform->phone->setText($customer->phone);
-            $this->docform->email->setText($customer->email);
-
-            if ($customer->discount > 0) {
-                $this->docform->discount->setText("Постоянная скидка " . $customer->discount . '%');
-                $this->docform->discount->setVisible(true);
-            } else {
-                if ($customer->bonus > 0) {
-                    $this->docform->discount->setText("Бонусы " . $customer->bonus);
-                    $this->docform->discount->setVisible(true);
-                }
-            }
         }
+
         if ($this->_prevcust != $customer_id) {//сменился контрагент
             $this->_prevcust = $customer_id;
         }
