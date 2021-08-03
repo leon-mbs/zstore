@@ -3,6 +3,7 @@
 namespace App\Entity\Doc;
 
 use App\Helper as H;
+use App\System;
 
 /**
  * Класс-сущность  документ расходная  накладая
