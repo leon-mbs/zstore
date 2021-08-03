@@ -3,12 +3,14 @@
 namespace App\Modules\WC;
 
 use App\Entity\Item;
+use App\Entity\Category;
 use App\Helper as H;
 use App\System;
 use Zippy\Binding\PropertyBinding as Prop;
 use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
@@ -31,6 +33,7 @@ class Items extends \App\Pages\Base
         $modules = System::getOptions("modules");
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
+         $this->filter->add(new DropDownChoice('searchcat', Category::getList(), 0));
 
         $this->add(new Form('exportform'))->onSubmit($this, 'exportOnSubmit');
 
@@ -63,8 +66,13 @@ class Items extends \App\Pages\Base
             }
         }
         unset($data);
-
-        $items = Item::find("disabled <> 1", "itemname");
+        $cat_id=$sender->searchcat->getValue(0);       
+        
+        $w = "disabled <> 1";
+        if($cat_id >0)  {
+            $w .= " and cat_id=".$cat_id;
+        }
+        $items = Item::find($w, "itemname");
         foreach ($items as $item) {
             if (strlen($item->item_code) == 0) {
                 continue;

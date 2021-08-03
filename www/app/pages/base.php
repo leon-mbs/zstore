@@ -173,8 +173,8 @@ class Base extends \Zippy\Html\WebPage
 
 
             $users = \App\Entity\User::findArray('username', $w, 'username');
-            foreach ($users as $u) {
-                $this->_tvars["aulist"][] = array('ausername' => $u);
+            foreach ($users as $id=>$u) {
+                $this->_tvars["aulist"][] = array("auserid"=>$id,'ausername' => $u);
             }
 
 

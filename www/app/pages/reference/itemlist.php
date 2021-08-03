@@ -350,10 +350,10 @@ class ItemList extends \App\Pages\Base
         $this->_item->autoincome = $this->itemdetail->editautoincome->isChecked() ? 1 : 0;
 
         //проверка  уникальности артикула
-        if (strlen($this->_item->item_code) > 0) {
+        if (strlen($this->_item->item_code) > 0 && System::getOption("common", "nocheckarticle") != 1 ) {
             $code = Item::qstr($this->_item->item_code);
             $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and item_code={$code} ");
-            if ($cnt > 0) {
+            if ($cnt > 0 ) {
                 //пытаемся генерить еще раз 
                 if ($this->_item->item_id == 0 && System::getOption("common", "autoarticle") == 1) {
                     $this->_item->item_code = Item::getNextArticle();
