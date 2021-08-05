@@ -49,7 +49,7 @@ class Jobs extends \App\Pages\Base
         $this->add(new  Form('addeventform'))->setVisible(false);
         $this->addeventform->onSubmit($this, 'onSave');
         $this->addeventform->add(new Date('addeventdate', time()));
-        $this->addeventform->add(new \App\Time('addeventtime', time()));
+        $this->addeventform->add(new \Zippy\Html\Form\Time('addeventtime', time()));
         $this->addeventform->add(new TextInput('addeventtitle'));
         $this->addeventform->add(new TextArea('addeventdesc'));
         $this->addeventform->add(new DropDownChoice('addeventnotify', array(1 => "1 час", 2 => "2 часа", 4 => "4 часа", 8 => "8 часов", 16 => "16 часов", 24 => "24 часа"), 0));
@@ -58,7 +58,7 @@ class Jobs extends \App\Pages\Base
         $this->add(new  Form('editeventform'))->setVisible(false);
         $this->editeventform->onSubmit($this, 'onSaveEdited');
         $this->editeventform->add(new Date('editeventdate', time()));
-        $this->editeventform->add(new \App\Time('editeventtime', time()));
+        $this->editeventform->add(new \Zippy\Html\Form\Time('editeventtime', time()));
         $this->editeventform->add(new TextInput('editeventtitle'));
         $this->editeventform->add(new TextArea('editeventdesc'));
 

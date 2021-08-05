@@ -174,6 +174,7 @@ class Base extends \Zippy\Html\WebPage
 
             $users = \App\Entity\User::findArray('username', $w, 'username');
             foreach ($users as $id=>$u) {
+                if($id==$user->user_id ) $id = null;
                 $this->_tvars["aulist"][] = array("auserid"=>$id,'ausername' => $u);
             }
 
@@ -181,8 +182,11 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["activeuserscnt"] = count($this->_tvars["aulist"]);
 
         }
-
-
+        //чат
+        if ($options['showchat'] == 1) {
+            $this->_tvars["showchat"] = true;
+ 
+        }
         $this->generateToasts();
     }
 
@@ -288,8 +292,13 @@ class Base extends \Zippy\Html\WebPage
         $this->goAnkor('dankor');
     }
     public function sendMsg($args, $post) {
-         $user_id =  $post;
          
+            $n = new \App\Entity\Notify();
+            $n->user_id = $post["sendmsgrecid"];
+            $n->message = $post["sendmsgtext"];
+            $n->sender_id = System::getUser()->user_id;
+            $n->save();
+           
     }
 
     private function generateToasts() {

@@ -136,7 +136,7 @@ class ARMFood extends \App\Pages\Base
 
         $this->docpanel->listsform->add(new TextInput('address'));
         $this->docpanel->listsform->add(new Date('dt', time()));
-        $this->docpanel->listsform->add(new \App\Time('time'));
+        $this->docpanel->listsform->add(new \Zippy\Html\Form\Time('time'));
         $this->docpanel->listsform->add(new TextInput('notes'));
         $this->docpanel->listsform->add(new TextInput('contact'));
         $this->docpanel->listsform->add(new TextInput('table'));

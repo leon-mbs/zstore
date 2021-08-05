@@ -46,14 +46,14 @@ class Calendar extends \App\Pages\Base
 
         $this->listpan->add(new Panel('caltab'));
 
-        $this->listpan->caltab->add(new \App\Calendar('calendar', $this->lang))->setEvent($this, 'OnCal');
+        $this->listpan->caltab->add(new \ZCL\Calendar\Calendar('calendar', $this->lang))->setEvent($this, 'OnCal');
         $this->updateCal();
 
         $this->add(new Form('editform'))->onSubmit($this, 'OnSave');
         $this->editform->setVisible(false);
         $this->editform->add(new ClickLink('cancel', $this, 'OnCancel'));
         $this->editform->add(new Date('edate', time()));
-        $this->editform->add(new \App\Time('etime', time()));
+        $this->editform->add(new \Zippy\Html\Form\Time('etime', time()));
 
         $this->editform->add(new TextInput('ehours'));
         $this->editform->add(new TextInput('enotes'));
@@ -182,7 +182,7 @@ class Calendar extends \App\Pages\Base
 
             $col = 'black';
 
-            $list[] = new \App\CEvent($item->id, $item->issue_name, $item->createdon, $item->createdon + (3600 * $item->duration), $col);
+            $list[] = new \ZCL\Calendar\CEvent($item->id, $item->issue_name, $item->createdon, $item->createdon + (3600 * $item->duration), $col);
         }
 
 

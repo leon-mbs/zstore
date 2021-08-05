@@ -538,23 +538,21 @@
 
             window.setInterval(onNewOrder, 5000);
 
-            var url = '{{{_baseurl}}}::getMessages&ajax=true'
-
+           
             function onNewOrder() {
-                fetch(url)
-                        .then((response) => {
-                            return response.json();
-                        })
-                        .then((data) => {
-
-                            if (data.cntorder > 0) {
+                  callPageMethod('getMessages',null,null,(data)=> 
+                        {
+                           
+                           var  answer = JSON.parse(data)  
+                 
+                            if (answer.cntorder > 0) {
                                 $('#newordersalert').show();
-                                $('#neworderscnt').text('Новых заказов ' + data.cntorder);
+                                $('#neworderscnt').text('Новых заказов ' + answer.cntorder);
 
                             }
-                            if (data.cntprod > 0) {
+                            if (answer.cntprod > 0) {
                                 $('#newprodalert').show();
-                                $('#newprodcnt').text('Готово  в производстве ' + data.cntprod);
+                                $('#newprodcnt').text('Готово  в производстве ' + answer.cntprod);
 
                             }
 

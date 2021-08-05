@@ -59,6 +59,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new CheckBox('usebranch'));
         $this->common->add(new CheckBox('usecattree'));
         $this->common->add(new CheckBox('showactiveusers'));
+        $this->common->add(new CheckBox('showchat'));
 
 
         $this->common->add(new CheckBox('printoutbarcode'));
@@ -109,6 +110,7 @@ class Options extends \App\Pages\Base
         $this->common->printoutqrcode->setChecked($common['printoutqrcode']);
         $this->common->nocheckarticle->setChecked($common['nocheckarticle']);
         $this->common->showactiveusers->setChecked($common['showactiveusers']);
+        $this->common->showchat->setChecked($common['showchat']);
         $this->common->usecattree->setChecked($common['usecattree']);
         $this->common->usescanner->setChecked($common['usescanner']);
         $this->common->useimages->setChecked($common['useimages']);
@@ -288,6 +290,7 @@ class Options extends \App\Pages\Base
 
 
         $common['showactiveusers'] = $this->common->showactiveusers->isChecked() ? 1 : 0;
+        $common['showchat'] = $this->common->showchat->isChecked() ? 1 : 0;
         $common['usecattree'] = $this->common->usecattree->isChecked() ? 1 : 0;
         $common['usebranch'] = $this->common->usebranch->isChecked() ? 1 : 0;
         $common['noallowfiz'] = $this->common->noallowfiz->isChecked() ? 1 : 0;
