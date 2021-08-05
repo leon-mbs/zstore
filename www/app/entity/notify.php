@@ -17,7 +17,7 @@ class Notify extends \ZCL\DB\Entity
     const EVENT       = -5;  //напоминание о событии
     const CHAT        = -6;  //сообщение  в  чат
     const SUBSCRIBE   = -7;  //рассылка
-
+    
     protected function init() {
 
         $this->sender_id = 0;

@@ -287,6 +287,10 @@ class Base extends \Zippy\Html\WebPage
     public function goDocView() {
         $this->goAnkor('dankor');
     }
+    public function sendMsg($args, $post) {
+         $user_id =  $post;
+         
+    }
 
     private function generateToasts() {
 
