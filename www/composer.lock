@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3251698f6ae26183dae44be64c73bdbc",
+    "content-hash": "e11298472fdaab33720728f8f934d675",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -868,16 +868,16 @@
         },
         {
             "name": "leon-mbs/zippy",
-            "version": "2.3.0",
+            "version": "2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/zippy.git",
-                "reference": "344cf898521c627cc5929b95f1c3fb9b1b13c07c"
+                "reference": "448f720ea025a30c42c75b2447c726bd7c00fbe9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/344cf898521c627cc5929b95f1c3fb9b1b13c07c",
-                "reference": "344cf898521c627cc5929b95f1c3fb9b1b13c07c",
+                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/448f720ea025a30c42c75b2447c726bd7c00fbe9",
+                "reference": "448f720ea025a30c42c75b2447c726bd7c00fbe9",
                 "shasum": ""
             },
             "require": {
@@ -909,9 +909,9 @@
             ],
             "support": {
                 "issues": "https://github.com/leon-mbs/zippy/issues",
-                "source": "https://github.com/leon-mbs/zippy/tree/2.3.0"
+                "source": "https://github.com/leon-mbs/zippy/tree/2.4.0"
             },
-            "time": "2021-06-18T06:26:47+00:00"
+            "time": "2021-08-05T19:42:06+00:00"
         },
         {
             "name": "lis-dev/nova-poshta-api-2",

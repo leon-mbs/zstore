@@ -3,68 +3,70 @@
     <body>
         <div class="row">
             <div class="col-12 col-md-8 col-xl-6">
-                <h4>Уведомления</h4>
-                <div class="navbar nav">
-                    <form zippy="filter" class="form-inline ">
+                <h4>Общий чат</h4>
+ 
 
-
-                        <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Поиск по контенту">
-
-                        <input type="submit" class="  btn btn-outline-success  " value="Искать">
-
-
-                    </form>
+          <div class="card direct-chat direct-chat-primary">
+               
+              <div class="card-body">
+              
+                <div class="direct-chat-messages" style="height:400px">
+                  {{#chat}}
+                  
+                      {{^isme}}
+                      <div class="direct-chat-msg">
+                        <div class="direct-chat-infos clearfix">
+                          <span class="direct-chat-name float-left">{{sender}}</span>
+                          <span class="direct-chat-timestamp float-right">{{msgdate}}</span>
+                        </div>
+                          <div class="direct-chat-text">
+                          {{message}}
+                        </div>
+                       
+                      </div>
+                      {{/isme}}
+                      {{#isme}}
+                       
+                      <div class="direct-chat-msg right">
+                        <div class="direct-chat-infos clearfix">
+                          <span class="direct-chat-name float-right"> {{sender}}</span>
+                          <span class="direct-chat-timestamp float-left">{{msgdate}}</span>
+                        </div>
+                       
+                        <div class="direct-chat-text">
+                          {{message}}
+                        </div>
+                       
+                      </div>
+                      {{/isme}} 
+                {{/chat}}
+                <a id="endchat" name="endchat"></a>
                 </div>
-
-                <table class="table table-sm    ">
-                    <tr zippy="nlist">
-
-                        <td><i class="fa fa-clock"> </i> <span zippy="ndate"></span>
-                            &nbsp;&nbsp;&nbsp;<i zippy="sendericon"  ></i> <span zippy="sender"></span>
-                            <p zippy="msg">
-                            <p>
-                           
-                            <span zippy="nanswer"  style="cursor:pointer" >Ответить</span>
-                             
-                        </td>
-                        <td><span zippy="newn" class="badge badge-info">Новое</span></td>
-
-
-                    </tr>
-                </table>
-                <div zippy="pag"></div>
+               
+  
+              </div>
+              
+              <div class="card-footer">
+                <form  zippy="msgform"  >
+                  <div class="input-group">
+                    <textarea required="required"   zippy="msgtext"   class="form-control"></textarea>
+                     
+                       
+                  </div>
+                 <div class="input-group">
+                    
+                      <button type="submit" class="btn btn-primary">Отправить</button>
+                    
+                  </div>
+                </form>
+              </div>
+              
+            </div>
+  
 
             </div>
 
-
-            <div class="col-12 col-md-4 col-xl-3">   
-                <h4>Сообщение пользователю</h4>
-                <form zippy="msgform" role="form">
-                    <div class="form-group  ">
-                        <label for="users">Выбрать получателя</label>
-
-                        <select class="form-control select2" zippy="users">
-                            <option value='0'>Не выбран</option>
-                        </select>
-                    </div>
-                    <div class="form-check">
-                        <input zippy="sendall" type="checkbox" class="form-check-input">
-                        <label data-label="sendall" class="form-check-label" for="sendall">Всем пользователям</label>
-
-                    </div>
-                    <div class="form-group">
-                        <label for="msgtext">Текст</label>
-
-                        <textarea required="required" class="form-control" zippy="msgtext"></textarea>
-
-                    </div>
-                    <div class="form-group">
-
-                        <button type="submit" class="btn btn-primary   ">Отправить</button>
-
-                    </div>
-                </form>  
-            </div>
+      
         </div>
 
     </body>

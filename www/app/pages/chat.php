@@ -19,120 +19,61 @@ class Chat extends \App\Pages\Base
 {
 
     public  $user = null;
-    public  $ds;
+ 
     private $users;
-
+    private $offset=0;
+    
     public function __construct() {
         parent::__construct();
-        $user = System::getUser();
-        if ($user->user_id == 0) {
+        $this->user = System::getUser();
+        if ($this->user->user_id == 0) {
             App::Redirect("\\App\\Pages\\Userlogin");
         }
         $this->users = \App\Entity\User::findArray("username", "disabled <>1");
-
-        $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
-        $this->filter->add(new TextInput('searchtext'));
-
-        $this->ds = new EntityDataSource("\\App\\Entity\\Notify", "dateshow <= now() and user_id=" . $user->user_id, " dateshow desc");
-
-        $this->add(new DataView("nlist", $this->ds, $this, 'OnRow'));
-        $this->nlist->setPageSize(H::getPG());
-        $this->add(new \Zippy\Html\DataList\Pager("pag", $this->nlist));
-        $this->nlist->Reload();
-
-        \App\Entity\Notify::markRead($user->user_id);
-
-
+    
         $this->add(new Form('msgform'))->onSubmit($this, 'OnSend');
         $this->msgform->add(new TextArea('msgtext'));
-        $this->msgform->add(new DropDownChoice('users', \App\Entity\User::findArray('username', 'disabled <> 1 and user_id <>' . $user->user_id, 'username'), 0));
-        $this->msgform->add(new CheckBox('sendall'))->setVisible($this->user->rolename == 'admins');
-
-
+   
+        $this->Reload( ) ;
+     
+       $this->goAnkor('endchat') ;
     }
 
-    public function OnRow($row) {
-        $notify = $row->getDataItem();
-
-        $row->add(new Label("sender"));
-        $row->add(new Label("sendericon"));
-        $sender_name=$this->users[$notify->sender_id] ;
-        if ($notify->sender_id > 0) {
-            $row->sender->setText($sender_name);
-            $row->sendericon->setAttribute('class', 'fa fa-user');
-
-        }
-        if ($notify->sender_id == Notify::SYSTEM) {
-            $row->sender->setText(H::l("systemmsg"));
-            $row->sendericon->setAttribute('class', 'fa fa-cog');
-        }
-        if ($notify->sender_id == Notify::EVENT) {
-            $row->sender->setText(H::l("alertmsg"));
-            $row->sendericon->setAttribute('class', 'fa fa-calendar');
-        }
-        if ($notify->sender_id == Notify::SUBSCRIBE) {
-            $row->sender->setText(H::l("subsmsg"));
-            $row->sendericon->setAttribute('class', 'fa fa-envelope');
-        }
-
-
-        $row->add(new Label("msg"))->setText($notify->message, true);
-        $row->add(new Label("ndate", \App\Helper::fdt($notify->dateshow)));
-        $row->add(new Label("newn"))->setVisible($notify->checked == 0);
-        $row->add(new Label("nanswer"))->setVisible($notify->sender_id > 0);
-        $row->nanswer->setAttribute('onclick',"openSendMsg({$notify->sender_id},'{$sender_name}')");
+    public function Reload( ) {
+       
+        $this->_tvars['chat']=array();
         
+        $nlist = Notify::find("","notify_id desc",  H::getPG(),$this->offset) ;
+        $nlist = array_reverse( $nlist) ;
         
-    }
-
-    public function filterOnSubmit($sender) {
-        $where = 'user_id=' . System::getUser()->user_id;
-
-        $text = trim($sender->searchtext->getText());
-        if (strlen($text) > 0) {
-            $text = Notify::qstr('%' . $text . '%');
-            $where = "(  message like {$text}) and user_id=" . System::getUser()->user_id;
+        foreach($nlist  as $n) {
+            $item = array();
+            $item['isme']= $n->sender_id==$this->user->user_id;
+            $item['message'] = $n->message;
+            $item['sender'] = $this->users[$n->sender_id] ;
+           
+            $item['msgdate'] =  date('Y-m-d H:i',$n->dateshow) ;
+            if(date('Y-m-d',$n->dateshow)==date('Y-m-d')) {
+                $item['msgdate'] =  date('H:i',$n->dateshow) ;    
+            }
+                
+             $this->_tvars['chat'][]= $item;
         }
-
-        $this->ds->setWhere($where);
-        $this->nlist->Reload();
+ 
     }
 
+    
     public function OnSend($sender) {
-        $msg = trim($sender->msgtext->getText());
-
-        if (strlen($msg) == 0) {
-            return;
-        }
-
-
-        $all = $sender->sendall->isChecked();
-
-        $list = array();
-        if ($all) {
-            foreach ($sender->users->getOptionList() as $id => $n) {
-                $list[] = $id;
-            }
-        } else {
-            $id = $sender->users->getValue();
-            if ($id == 0) {
-
-                $this->setError('noselreciever');
-                return;
-            }
-            $list[] = $id;
-        }
-
-
-        foreach ($list as $id) {
-            $n = new \App\Entity\Notify();
-            $n->user_id = $id;
-            $n->message = $msg;
-            $n->sender_id = $this->user->user_id;
+            
+        
+            $n = new  Notify();
+            $n->user_id = Notify::CHAT ;
+            $n->message = $sender->msgtext->getText();
+            $n->sender_id = System::getUser()->user_id;
             $n->save();
-        }
-        $this->setSuccess('sent');
-        $sender->clean();
+            $sender->msgtext->sgetText('') ;
+            $this->Reload( ) ;
+     
     }
 
 
