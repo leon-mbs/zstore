@@ -127,7 +127,8 @@ class EmployeeList extends \App\Pages\Base
         }
         $this->_employee->login = $login;
         $this->_employee->emp_name = trim($this->employeedetail->editemp_name->getText());
-
+        $this->_employee->emp_name = str_replace("'","`",$this->_employee->emp_name) ;
+        
         $this->_employee->email = $this->employeedetail->editemail->getText();
         $this->_employee->phone = $this->employeedetail->editphone->getText();
         $this->_employee->comment = $this->employeedetail->editcomment->getText();

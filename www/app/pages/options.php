@@ -159,6 +159,7 @@ class Options extends \App\Pages\Base
         $this->printer->add(new CheckBox('pbarcode'));
         $this->printer->add(new CheckBox('pprice'));
         $this->printer->add(new CheckBox('pqrcode'));
+        $this->printer->add(new CheckBox('pcolor'));
 
         $printer = System::getOptions("printer");
         if (!is_array($printer)) {
@@ -178,6 +179,7 @@ class Options extends \App\Pages\Base
         $this->printer->pbarcode->setChecked($printer['pbarcode']);
         $this->printer->pqrcode->setChecked($printer['pqrcode']);
         $this->printer->pprice->setChecked($printer['pprice']);
+        $this->printer->pcolor->setChecked($printer['pcolor']);
 
         //API
         $this->add(new Form('api'))->onSubmit($this, 'saveApiOnClick');
@@ -334,6 +336,7 @@ class Options extends \App\Pages\Base
         $printer['pbarcode'] = $this->printer->pbarcode->isChecked() ? 1 : 0;
         $printer['pqrcode'] = $this->printer->pqrcode->isChecked() ? 1 : 0;
         $printer['pprice'] = $this->printer->pprice->isChecked() ? 1 : 0;
+        $printer['pcolor'] = $this->printer->pcolor->isChecked() ? 1 : 0;
 
         System::setOptions("printer", $printer);
         $this->setSuccess('saved');

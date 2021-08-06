@@ -33,6 +33,7 @@ class Chat extends \App\Pages\Base
     
         $this->add(new Form('msgform'))->onSubmit($this, 'OnSend');
         $this->msgform->add(new TextArea('msgtext'));
+        $this->msgform->add(new DropDownChoice('msgpersonal',\App\Entity\User::findArray("username","disabled<>1 and user_id<>".$this->user->user_id,"username"),0));
    
         $this->Reload( ) ;
      
@@ -49,9 +50,9 @@ class Chat extends \App\Pages\Base
         foreach($nlist  as $n) {
             $item = array();
             $item['isme']= $n->sender_id==$this->user->user_id;
-            $item['message'] = $n->message;
+            $item['message'] =  nl2br($n->message);
             $item['sender'] = $this->users[$n->sender_id] ;
-           
+             
             $item['msgdate'] =  date('Y-m-d H:i',$n->dateshow) ;
             if(date('Y-m-d',$n->dateshow)==date('Y-m-d')) {
                 $item['msgdate'] =  date('H:i',$n->dateshow) ;    
@@ -70,10 +71,18 @@ class Chat extends \App\Pages\Base
             $n->user_id = Notify::CHAT ;
             $n->message = $sender->msgtext->getText();
             $n->sender_id = System::getUser()->user_id;
+            
+            $up = $sender->msgpersonal->getValue();
+            if($up>0) {
+               $n->user_id = $up;  //личное  
+               $this->setSuccess("sent") ;
+            }
             $n->save();
-            $sender->msgtext->sgetText('') ;
+            $sender->clean();
+            
             $this->Reload( ) ;
-     
+          
+            $this->goAnkor('endchat') ;
     }
 
 
