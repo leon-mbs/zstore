@@ -184,8 +184,12 @@ class Base extends \Zippy\Html\WebPage
         }
         //чат
         if ($options['showchat'] == 1) {
-            $this->_tvars["showchat"] = true;
+            $this->_tvars["showchat"] = true; 
  
+            $cnt=\App\Entity\Notify::findCnt("user_id=".\App\Entity\Notify::CHAT." and notify_id>".intval($_COOKIE['last_chat_id'])) ;
+            
+            $this->_tvars["chatcnt"] =  $cnt >0 ? $cnt : false; ;
+
         }
         $this->generateToasts();
     }

@@ -63,7 +63,7 @@ class Chat extends \App\Pages\Base
         $this->_tvars['chat']=array();
         
         $w = "user_id=".Notify::CHAT;
-        $w="1=1";
+        
         if(strlen($st)>0) {
             $w .= " and  message like ".Notify::qstr("%{$st}%");
         }
@@ -97,6 +97,7 @@ class Chat extends \App\Pages\Base
       
         $this->goAnkor('endchat') ;
 
+        setcookie("last_chat_id",$stat['idmax']) ;
     }
 
     
