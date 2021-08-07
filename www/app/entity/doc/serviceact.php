@@ -63,12 +63,12 @@ class ServiceAct extends Document
 
         foreach ($this->unpackDetails('detaildata') as $ser) {
 
-            $sc = new Entry($this->document_id, 0 - ($ser->price * $ser->quantity), $ser->quantity);
+            $sc = new Entry($this->document_id,  0-  ($ser->price * $ser->quantity), 0-$ser->quantity);
             $sc->setService($ser->service_id);
 
             //  $sc->setExtCode($ser->price); //Для АВС
             //$sc->setCustomer($this->customer_id);
-            $sc->setOutPrice($item->price);
+            $sc->setOutPrice($ser->price);
             $sc->save();
         }
     }
