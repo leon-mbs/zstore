@@ -607,7 +607,7 @@ class ItemList extends \App\Pages\Base
             $header['img'] = $img;
             $header['barcode'] = \App\Util::addSpaces($barcode);
         }
-
+         $header['iscolor'] = $printer['pcolor'] == 1;
 
         $html = $report->generate($header);
 
@@ -703,6 +703,7 @@ class ItemList extends \App\Pages\Base
             if($header['action']) {
                $header['actionprice'] = $item->getActionPrice($header['price']); 
             } 
+            $header['iscolor'] = $printer['pcolor'] == 1;
 
 
             $htmls = $htmls . $report->generate($header);

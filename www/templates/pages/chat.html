@@ -41,8 +41,8 @@
                 {{/chat}}
                 <a id="endchat" name="endchat"></a>
                 <table style="width:100%;font-size:smaller">
-                <tr><td>      <a zippy="prev" > <i class="fa fa-angle-double-left" /> предыдущие</a></td>
-                <td class="text-right"><a zippy="next" >  следующие <i class="fa fa-angle-double-right" /> </a></td></tr></table>
+                <tr><td>      <a zippy="prevpart" > <i class="fa fa-angle-double-left" /> предыдущие</a></td>
+                <td class="text-right"><a zippy="nextpart" >  следующие <i class="fa fa-angle-double-right" /> </a></td></tr></table>
                 
                
   
@@ -53,10 +53,10 @@
                <div class="form-group">
           
                     <div class="input-group  ">
-                      <input placeholder="Поиск..." class="form-control"   - >
+                      <input zippy="searchtext" placeholder="Поиск..." class="form-control"   - >
                       <div class="input-group-append">
                         <button type="submit" class="btn btn-info" type="button"  ><i class="fa fa-search" /></button>
-                        <button class="btn btn-outline-secondary" type="button"  ><i class="fa fa-eraser " /></button>
+                        <a class="btn btn-outline-secondary" zippy="searchclear"   ><i class="fa fa-eraser " /></a>
                       </div>
                     </div>       
                     
