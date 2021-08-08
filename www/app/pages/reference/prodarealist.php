@@ -12,7 +12,7 @@ use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
 
-//роизводственные  участвки
+//Производственные  участки
 class ProdAreaList extends \App\Pages\Base
 {
 

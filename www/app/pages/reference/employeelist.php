@@ -3,7 +3,7 @@
 namespace App\Pages\Reference;
 
 use App\Entity\Employee;
-use App\Helper;
+use App\Helper as H;
 use ZCL\DB\EntityDataSource as EDS;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\Button;
@@ -32,7 +32,7 @@ class EmployeeList extends \App\Pages\Base
 
         $this->add(new Panel('employeetable'))->setVisible(true);
         $this->employeetable->add(new DataView('employeelist', new EDS('\App\Entity\Employee', '', 'disabled, emp_name'), $this, 'employeelistOnRow'))->Reload();
-        $this->employeetable->employeelist->setPageSize(Helper::getPG());
+        $this->employeetable->employeelist->setPageSize(H::getPG());
         $this->employeetable->add(new \Zippy\Html\DataList\Paginator('pag', $this->employeetable->employeelist));
 
         $this->employeetable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
@@ -48,15 +48,22 @@ class EmployeeList extends \App\Pages\Base
         $this->employeedetail->add(new TextInput('editemail'));
         $this->employeedetail->add(new TextArea('editcomment'));
         $this->employeedetail->add(new CheckBox('editdisabled'));
+
+        $this->employeedetail->add(new DropDownChoice('editztype', array("1"=>H::l("zoklad"),"2"=>H::l("zhour"),"3"=>H::l("ztask")), 1))->onChange($this,"onType");
+        $this->employeedetail->add(new TextInput('editzhour'));
+        $this->employeedetail->add(new TextInput('editzmon'));
+        $this->employeedetail->add(new TextInput('editadvance'));
+    
+    
     }
 
-    /*
+ 
       public function onType($sender){
-      $t = $sender->getValue();
-      $this->employeedetail->editzmon->setVisible($t==1) ;
-      $this->employeedetail->editzhour->setVisible($t==2) ;
+        $t = $sender->getValue();
+        $this->employeedetail->editzmon->setVisible($t==1) ;
+        $this->employeedetail->editzhour->setVisible($t==2) ;
       }
-     */
+   
 
     public function employeelistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
@@ -98,6 +105,13 @@ class EmployeeList extends \App\Pages\Base
         $this->employeedetail->editphone->setText($this->_employee->phone);
         $this->employeedetail->editbranch->setValue($this->_employee->branch_id);
         $this->employeedetail->editdisabled->setChecked($this->_employee->disabled);
+      
+        $this->employeedetail->editztype->setValue($this->_employee->ztype);
+        $this->employeedetail->editzhour->setText($this->_employee->zhour);
+        $this->employeedetail->editzmon->setText($this->_employee->zmon);
+        $this->employeedetail->editadvance->setText($this->_employee->advance);
+        $this->onType( $this->employeedetail->editztype);
+        
     }
 
     public function addOnClick($sender) {
@@ -107,6 +121,7 @@ class EmployeeList extends \App\Pages\Base
         $this->employeedetail->clean();
         $this->employeedetail->editlogin->setOptionList(Employee::getFreeLogins());
         $this->employeedetail->editlogin->setValue('0');
+        $this->employeedetail->editztype->setValue('1');
 
         $b = \App\System::getBranch();
         $this->employeedetail->editbranch->setValue($b > 0 ? $b : 0);
@@ -134,7 +149,13 @@ class EmployeeList extends \App\Pages\Base
         $this->_employee->comment = $this->employeedetail->editcomment->getText();
 
         $this->_employee->branch_id = $this->employeedetail->editbranch->getValue();
-
+      
+        $this->_employee->ztype = $this->employeedetail->editztype->getValue();
+        $this->_employee->zhour = $this->employeedetail->editzhour->getText();
+        $this->_employee->zmon  = $this->employeedetail->editzmon->getText();
+        $this->_employee->advance = $this->employeedetail->editadvance->getText();
+         
+        
         $this->_employee->disabled = $this->employeedetail->editdisabled->isChecked() ? 1 : 0;
         if ($this->_employee->disabled == 1) {
             $u = \App\Entity\User::getByLogin($this->_employee->login);

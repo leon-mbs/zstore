@@ -28,6 +28,10 @@ class Employee extends \ZCL\DB\Entity
         $this->detail .= "<balance>{$this->balance}</balance>";
         $this->detail .= "<email>{$this->email}</email>";
         $this->detail .= "<phone>{$this->phone}</phone>";
+        $this->detail .= "<ztype>{$this->ztype}</ztype>";
+        $this->detail .= "<zmon>{$this->zmon}</zmon>";
+        $this->detail .= "<zhour>{$this->zhour}</zhour>";
+        $this->detail .= "<advance>{$this->advance}</advance>";
         $this->detail .= "<comment><![CDATA[{$this->comment}]]></comment>";
 
         $this->detail .= "</detail>";
@@ -43,6 +47,11 @@ class Employee extends \ZCL\DB\Entity
         $this->email = (string)($xml->email[0]);
         $this->phone = (string)($xml->phone[0]);
         $this->comment = (string)($xml->comment[0]);
+        $this->ztype = (int)($xml->ztype[0]);
+        if($this->ztype==0) $this->ztype=1;
+        $this->zmon = (int)($xml->zmon[0]);
+        $this->advance = (int)($xml->advance[0]);
+        $this->zhour = (int)($xml->zhour[0]);
 
         parent::afterLoad();
     }
