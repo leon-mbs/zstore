@@ -2,7 +2,7 @@
 
 namespace App\Pages\Reference;
 
-use App\Entity\ProdArea;
+use App\Entity\SalType;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\Button;
 use Zippy\Html\Form\Form;
@@ -12,15 +12,15 @@ use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
 
-//Производственные  участки
-class ProdAreaList extends \App\Pages\Base
+//начисления  удержания
+class SalaryTypeList extends \App\Pages\Base
 {
 
     private $_pa;
 
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowRef('ProdAreaList')) {
+        if (false == \App\ACL::checkShowRef('SalaryTypeList')) {
             return;
         }
 

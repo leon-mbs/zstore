@@ -20,6 +20,16 @@ class IncomeMoney extends Document
         }
         \App\Entity\IOState::addIOState($this->document_id, $this->amount, $this->headerdata['type']);
 
+        
+        if($this->headerdata['detail']==3) {  //Приход от сотрудника
+          $ua = new \App\Entity\UserAcc() ;
+          $ua->optype =  \App\Entity\UserAcc::OUTCOME_TO_MF;
+          $ua->document_id =  $this->document_id;
+          $ua->emp_id =  $this->headerdata["emp"];
+          $ua->amount =  $this->amount;
+          $ua->save() ;
+            
+        }
 
         return true;
     }

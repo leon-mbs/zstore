@@ -93,5 +93,7 @@ INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `men
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(97, 3, 'Прибутки та  видатки', 'IOState', '', 0);
 INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  2, 'Замовленi товари', 'ItemOrder', 'Закупки', 0);
 INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 5, 'Знижки та  акції', 'Discounts', '', 0);
+INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  1, 'Нарахування зарплати', 'CalcSalary', 'Каса та платежі', 0);
+INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  4, 'Нарахування та утримання', 'SalaryTypeList', '', 0);
 
 

@@ -17,14 +17,14 @@ class IncomeItem extends Document
 
 
         $conn = \ZDB\DB::getConnect();
-
+        $amount=0;
         foreach ($this->unpackDetails('detaildata') as $item) {
 
             $stockto = Stock::getStock($this->headerdata['store'], $item->item_id, $item->price, $item->snumber, $item->sdate, true);
             $sc = new Entry($this->document_id, $item->quantity * $item->price, $item->quantity);
             $sc->setStock($stockto->stock_id);
             $sc->save();
-
+            $amount  = $amount + $item->quantity * $item->price;
             if ($this->headerdata['mtype'] > 0) {
                 $io = new \App\Entity\IOState();
                 $io->document_id = $this->document_id;
@@ -44,8 +44,24 @@ class IncomeItem extends Document
             }
             \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
 
+             
         }
-
+          //авансовый    отчет
+          $ua = new \App\Entity\UserAcc() ;
+          $ua->optype =  \App\Entity\UserAcc::OUTCOME_TO_MF;
+          $ua->document_id =  $this->document_id;
+          $ua->emp_id =  $this->headerdata["emp"];
+          $ua->amount =  $amount;
+          if($this->headerdata['examount']>0) {
+            $ua->amount +=  $this->headerdata['examount'];    
+          }
+          if($ua->amount>0) {
+             $ua->save() ;    
+          }
+          
+            
+       
+        
         return true;
     }
 
