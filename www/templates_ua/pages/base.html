@@ -32,7 +32,7 @@
 
 
     </head>
-    <body class="{{hidesidebar}}">
+    <body class="{{hidesidebar}} ">
         {{#usescanner}}
         <link rel="stylesheet" href="/assets/css/mscanner.css">
         {{/usescanner}}
@@ -88,9 +88,9 @@
                     <li class="nav-item  ">
                         <a class="nav-link  " href="/index.php?p=App/Pages/Chat">
                             <i title="Загальний чат" class="fa fa-comments "></i>
-
-                            <span class="badge badge-danger  navbar-badge">{{chatcnt}}</span>
-
+                            {{#chatcnt}}
+                            <span class="badge badge-success  navbar-badge">{{chatcnt}}</span>
+                            {{/chatcnt}}
                         </a>
                     </li>
                     {{/showchat}}
@@ -870,7 +870,7 @@ icon: 'fa fa-exclamation-triangle text-warning',
             $(function () {
             $('[data-toggle="popover"]').popover();
             $('[data-toggle="tooltip"]').tooltip();
-            $('.select2').select2();
+       //     $('.select2').select2();
             });
             $(window).scroll(function () {
             if ($(this).scrollTop() > 600) {

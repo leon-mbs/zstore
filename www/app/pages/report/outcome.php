@@ -213,7 +213,7 @@ class Outcome extends \App\Pages\Base
 
         if ($type == 4 || $type == 7) {    //по сервисам
             $sql = "
-         select s.`service_name` as itemname, sum(0-e.`quantity`) as qty, sum(0-e.`outprice`) as summa    ,0 as navar
+         select s.`service_name` as itemname, sum(0-e.`quantity`) as qty, sum(0-e.`outprice`*e.`quantity`) as summa    ,0 as navar
               from `entrylist_view`  e
 
               join `services` s on e.`service_id` = s.`service_id`

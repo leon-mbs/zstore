@@ -155,6 +155,12 @@ class Base extends \Zippy\Html\WebPage
 
         //скрыть  боковое  меню
         $this->_tvars["hidesidebar"] = $user->hidesidebar == 1 ? 'hold-transition   sidebar-collapse' : 'hold-transition sidebar-mini sidebar-collapse';
+        if( $user->darkmode==1) {
+          $this->_tvars["hidesidebar"] = $this->_tvars["hidesidebar"] . ' ' .  'dark-mode';    
+        }
+        
+        
+        
         //для скрытия блока разметки  в  шаблоне страниц                           
         $this->_tvars["hideblock"] = false;
 
@@ -184,8 +190,12 @@ class Base extends \Zippy\Html\WebPage
         }
         //чат
         if ($options['showchat'] == 1) {
-            $this->_tvars["showchat"] = true;
+            $this->_tvars["showchat"] = true; 
  
+            $cnt=\App\Entity\Notify::findCnt("user_id=".\App\Entity\Notify::CHAT." and notify_id>".intval($_COOKIE['last_chat_id'])) ;
+            
+            $this->_tvars["chatcnt"] =  $cnt >0 ? $cnt : false; ;
+
         }
         $this->generateToasts();
     }

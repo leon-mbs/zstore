@@ -37,7 +37,12 @@ class Chat extends \App\Pages\Base
         $this->add(new Form('msgform'))->onSubmit($this, 'OnSend');
         $this->msgform->add(new TextArea('msgtext'));
         $this->msgform->add(new DropDownChoice('msgpersonal',\App\Entity\User::findArray("username","disabled<>1 and user_id<>".$this->user->user_id,"username"),0));
+        $this->msgform->add(new \Zippy\Html\Form\File('msgfile'));
+        $this->msgform->add(new TextInput('msglink'));
+        $this->msgform->add(new \Zippy\Html\Form\AutocompleteTextInput('msgdoc'))->onText($this, 'OnAutoDoc');;
 
+        
+        
         $this->add(new Form('searchform'))->onSubmit($this, 'OnSearch');
         $this->searchform->add(new TextInput('searchtext'));
         $this->searchform->add(new ClickLink('searchclear',$this,"onClear"));
@@ -63,7 +68,7 @@ class Chat extends \App\Pages\Base
         $this->_tvars['chat']=array();
         
         $w = "user_id=".Notify::CHAT;
-        $w="1=1";
+        
         if(strlen($st)>0) {
             $w .= " and  message like ".Notify::qstr("%{$st}%");
         }
@@ -97,6 +102,7 @@ class Chat extends \App\Pages\Base
       
         $this->goAnkor('endchat') ;
 
+        setcookie("last_chat_id",$stat['idmax']) ;
     }
 
     
@@ -118,6 +124,12 @@ class Chat extends \App\Pages\Base
            $this->offset=0;
            $this->Reload( ) ;  
     }
+   public function OnAutoDoc($sender) {
+         $text= $sender->getText()  ;
+         $text = \App\Entity\Doc\Document::qstr('%'.$text.'%') ;
+         
+         return \App\Entity\Doc\Document::findArray('document_number',"document_number like ". $text) ;
+    }
     
     public function OnSend($sender) {
             $this->searchform->searchtext->setText('');
@@ -128,6 +140,36 @@ class Chat extends \App\Pages\Base
             $n->message = $sender->msgtext->getText();
             $n->sender_id = System::getUser()->user_id;
             
+            $link = $sender->msglink->getText();
+            if(strlen($link)>0) {
+               $n->message .= "<br><a href=\"{$link}\" > <i class=\"fa fa-link\" ></i>". $link."</a>"  ;  
+            }
+            $doc_id = $sender->msgdoc->getKey();
+            
+            if($doc_id >0) {
+                $doc = \App\Entity\Doc\Document::load($doc_id); 
+                if( $doc != null) {
+                   $n->message .= "<br><a href=\"/index.php?p=App/Pages/Register/DocList&arg={$doc_id}\" ><i class=\"fa fa-file\" ></i> ".$doc->document_number."</a>"  ;  
+                }
+            }
+            $file=   $sender->msgfile->getFile();
+            if(strlen($file["tmp_name"])>0) {
+                   if ($file['size'] > 10000000) {
+                        $this->getOwnerPage()->setError("filemore10M");
+                        return;
+                   }
+                   $id=     H::addFile($file, 0, '', \App\Entity\Message::TYPE_NOTIFY);
+    
+                   $url = _BASEURL . 'loadfile.php?id=' . $id;
+                    
+                   $imagedata = getimagesize($file["tmp_name"]);
+    
+                   if (is_array($imagedata) > 0) {
+                       $url = $url . '&im=1';
+                   }  
+                
+                   $n->message .= "<br><a target=\"_blank\" href=\"{$url}\" ><i class=\"fa fa-paperclip\" ></i> ". $file['name'] ."</a>"  ;  
+            }
             $up = $sender->msgpersonal->getValue();
             if($up>0) {
                $n->user_id = $up;  //личное  

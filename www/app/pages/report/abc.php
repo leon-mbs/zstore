@@ -212,12 +212,12 @@ class ABC extends \App\Pages\Base
         $list = array();
         $conn = \ZDB\DB::getConnect();
         $sql = "SELECT * FROM (
-                    SELECT services.service_name as name, SUM( ABS( entrylist_view.outprice  ) ) AS value
+                    SELECT services.service_name as name, SUM( ABS( entrylist_view.outprice *entrylist_view.quantity ) ) AS value
                     FROM  `entrylist_view` 
                        join services on entrylist_view.service_id = services.service_id 
                        join documents_view  on entrylist_view.document_id = documents_view.document_id 
                        
-                    WHERE  partion  is  not null and  entrylist_view.outprice>0  and meta_name in('ServiceAct') 
+                    WHERE     entrylist_view.outprice>0  and meta_name in('ServiceAct') 
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
                     {$this->br}  
