@@ -97,6 +97,7 @@ class User extends \ZCL\DB\Entity
         $this->phone = (string)$options['phone'];
         $this->viber = (string)$options['viber'];
 
+        $this->darkmode = (int)$options['darkmode'];
         $this->hidesidebar = (int)$options['hidesidebar'];
         $this->usemobileprinter = (int)$options['usemobileprinter'];
         $this->mainpage = $options['mainpage'];
@@ -129,6 +130,7 @@ class User extends \ZCL\DB\Entity
         $options['defsalesource'] = $this->defsalesource;
         $options['pagesize'] = $this->pagesize;
         $options['hidesidebar'] = $this->hidesidebar;
+        $options['darkmode'] = $this->darkmode;
         $options['usemobileprinter'] = $this->usemobileprinter;
         $options['mainpage'] = $this->mainpage;
 

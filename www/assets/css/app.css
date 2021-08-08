@@ -23,15 +23,33 @@ body {
    font-family: "Arial";
 }
 
+.dark-mode .ctable  {
+   color:#fff; 
+    background-color: #454d55;
+   font-family: "Arial";
+     
+}
 
 .ctable td {
     padding: 4px;
-    ;
+    
 }
 
 .ctable th {
     padding: 4px;
     text-align: center;
+     
+}
+.dark-mode .ctable th {
+    padding: 4px;
+    text-align: center;
+    border: 1px solid white !important; ;
+}
+.dark-mode .fa {
+   color: white;
+}
+.dark-mode a {
+   color: #ccf;
 }
 
 .icon20 {

@@ -19,6 +19,7 @@ class Message extends \ZCL\DB\Entity
     const TYPE_ISSUE       = 5;
     const TYPE_PROJECT     = 6;
     const TYPE_CONTRACT    = 7;
+    const TYPE_NOTIFY    = 8;
      
 
     protected function init() {
