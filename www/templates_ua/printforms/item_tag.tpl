@@ -15,7 +15,13 @@
                   {{/action}}
                   {{#action}}
                   <s style="font-size:smaller;" >{{price}}</s>&nbsp;  
-                  <b style="color:red;"  >{{actionprice}}</b>  
+                   {{#iscolor}}
+                    <b style="color:red;"  >{{actionprice}}</b>  
+                   {{/iscolor}}
+                   {{^iscolor}}
+                    <b  >{{actionprice}}</b>  
+                   {{/iscolor}}
+                  
                   {{/action}}
                 </td>
                 

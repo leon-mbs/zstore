@@ -72,14 +72,14 @@ class TimeSheet extends \App\Pages\Base
         $tagen->add(new DataView('llist', new ArrayDataSource($this, '_list'), $this, 'listOnRow'));
         $tstat->add(new DataView('lstat', new ArrayDataSource($this, '_stat'), $this, 'statOnRow'));
 
-        $tcal->add(new \App\Calendar('calendar', $this->lang))->setEvent($this, 'OnCal');
+        $tcal->add(new  \ZCL\Calendar\Calendar('calendar', $this->lang))->setEvent($this, 'OnCal');
 
         $this->add(new Form('editform'))->onSubmit($this, 'timeOnSubmit');
         $this->editform->setVisible(false);
         $this->editform->add(new DropDownChoice('edittype', TimeItem::getTypeTime(), TimeItem::TIME_WORK));
         $this->editform->add(new TextInput('editnote'));
-        $this->editform->add(new \App\Time('editfrom'));
-        $this->editform->add(new  \App\Time('editto'));
+        $this->editform->add(new \Zippy\Html\Form\Time('editfrom'));
+        $this->editform->add(new \Zippy\Html\Form\Time('editto'));
         $this->editform->add(new TextInput('editbreak'));
         $this->editform->add(new Date('editdate', time()));
         $this->editform->add(new Button('cancel'))->onClick($this, 'onCancel');
@@ -239,7 +239,7 @@ class TimeSheet extends \App\Pages\Base
             }
 
 
-            $tasks[] = new \App\CEvent($item->time_id, '', $item->t_start, $item->t_end, $col);
+            $tasks[] = new \ZCL\Calendar\CEvent($item->time_id, '', $item->t_start, $item->t_end, $col);
         }
 
 

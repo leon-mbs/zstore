@@ -19,8 +19,7 @@ class Message extends \ZCL\DB\Entity
     const TYPE_ISSUE       = 5;
     const TYPE_PROJECT     = 6;
     const TYPE_CONTRACT    = 7;
-    const TYPE_ARMFOOD     = 8;  //собщения  для  арм  кассира  кафе
-    const TYPE_ARMPRODFOOD = 9; //собщения  для  арм  кухни
+     
 
     protected function init() {
         $this->user_id = 0;

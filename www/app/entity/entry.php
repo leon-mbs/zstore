@@ -5,6 +5,7 @@ namespace App\Entity;
 /**
  * сущность для хранения аналитического  учета
  *
+ * @view=entrylist_view
  * @table=entrylist
  * @keyfield=entry_id
  */

@@ -118,7 +118,7 @@ class CustomerList extends \App\Pages\Base
 
         $this->contentview->add(new Form('addeventform'))->onSubmit($this, 'OnEventSubmit');
         $this->contentview->addeventform->add(new Date('addeventdate', time()));
-        $this->contentview->addeventform->add(new \App\Time('addeventtime', time()));
+        $this->contentview->addeventform->add(new \Zippy\Html\Form\Time('addeventtime', time()));
         $this->contentview->addeventform->add(new TextInput('addeventtitle'));
         $this->contentview->addeventform->add(new TextArea('addeventdesc'));
 

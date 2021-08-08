@@ -59,6 +59,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new CheckBox('usebranch'));
         $this->common->add(new CheckBox('usecattree'));
         $this->common->add(new CheckBox('showactiveusers'));
+        $this->common->add(new CheckBox('showchat'));
 
 
         $this->common->add(new CheckBox('printoutbarcode'));
@@ -109,6 +110,7 @@ class Options extends \App\Pages\Base
         $this->common->printoutqrcode->setChecked($common['printoutqrcode']);
         $this->common->nocheckarticle->setChecked($common['nocheckarticle']);
         $this->common->showactiveusers->setChecked($common['showactiveusers']);
+        $this->common->showchat->setChecked($common['showchat']);
         $this->common->usecattree->setChecked($common['usecattree']);
         $this->common->usescanner->setChecked($common['usescanner']);
         $this->common->useimages->setChecked($common['useimages']);
@@ -157,6 +159,7 @@ class Options extends \App\Pages\Base
         $this->printer->add(new CheckBox('pbarcode'));
         $this->printer->add(new CheckBox('pprice'));
         $this->printer->add(new CheckBox('pqrcode'));
+        $this->printer->add(new CheckBox('pcolor'));
 
         $printer = System::getOptions("printer");
         if (!is_array($printer)) {
@@ -176,6 +179,7 @@ class Options extends \App\Pages\Base
         $this->printer->pbarcode->setChecked($printer['pbarcode']);
         $this->printer->pqrcode->setChecked($printer['pqrcode']);
         $this->printer->pprice->setChecked($printer['pprice']);
+        $this->printer->pcolor->setChecked($printer['pcolor']);
 
         //API
         $this->add(new Form('api'))->onSubmit($this, 'saveApiOnClick');
@@ -288,6 +292,7 @@ class Options extends \App\Pages\Base
 
 
         $common['showactiveusers'] = $this->common->showactiveusers->isChecked() ? 1 : 0;
+        $common['showchat'] = $this->common->showchat->isChecked() ? 1 : 0;
         $common['usecattree'] = $this->common->usecattree->isChecked() ? 1 : 0;
         $common['usebranch'] = $this->common->usebranch->isChecked() ? 1 : 0;
         $common['noallowfiz'] = $this->common->noallowfiz->isChecked() ? 1 : 0;
@@ -331,6 +336,7 @@ class Options extends \App\Pages\Base
         $printer['pbarcode'] = $this->printer->pbarcode->isChecked() ? 1 : 0;
         $printer['pqrcode'] = $this->printer->pqrcode->isChecked() ? 1 : 0;
         $printer['pprice'] = $this->printer->pprice->isChecked() ? 1 : 0;
+        $printer['pcolor'] = $this->printer->pcolor->isChecked() ? 1 : 0;
 
         System::setOptions("printer", $printer);
         $this->setSuccess('saved');

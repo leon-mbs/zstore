@@ -29,7 +29,7 @@
         "symfony/polyfill-mbstring": "v1.22.0",
         "symfony/polyfill-uuid": "v1.22.0",
        
-        "leon-mbs/zippy": "2.3.0"
+        "leon-mbs/zippy": "2.4.0"
 
     }
 }

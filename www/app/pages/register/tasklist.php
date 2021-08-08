@@ -71,7 +71,7 @@ class TaskList extends \App\Pages\Base
 
         $this->tasktab->statuspan->add(new \App\Widgets\DocView('docview'));
 
-        $this->caltab->add(new \App\Calendar('calendar', $this->lang))->setEvent($this, 'OnCal');
+        $this->caltab->add(new \ZCL\Calendar\Calendar('calendar', $this->lang))->setEvent($this, 'OnCal');
 
         $this->updateTasks();
         $this->updateCal();
@@ -289,7 +289,7 @@ class TaskList extends \App\Pages\Base
             $d = ($item->headerdata['taskhours']);
             $end_date = $item->headerdata['start'] + round(3600 * $d);
 
-            $tasks[] = new \App\CEvent($item->document_id, $item->document_number, $item->headerdata['start'], $end_date, $col);
+            $tasks[] = new \ZCL\Calendar\CEvent($item->document_id, $item->document_number, $item->headerdata['start'], $end_date, $col);
         }
 
 

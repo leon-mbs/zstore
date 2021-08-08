@@ -38,7 +38,7 @@ class Order extends Base
         }
 
         $form->add(new Date('deldate', time()))->setVisible($this->_tvars["isfood"]);
-        $form->add(new \App\Time('deltime', time() + 3600))->setVisible($this->_tvars["isfood"]);
+        $form->add(new \Zippy\Html\Form\Time('deltime', time() + 3600))->setVisible($this->_tvars["isfood"]);
 
 
         $form->add(new TextInput('email'));

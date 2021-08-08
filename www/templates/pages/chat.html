@@ -1,0 +1,103 @@
+<html>
+
+    <body>
+        <div class="row">
+            <div class="col-12 col-md-8 col-xl-6">
+                <h4>Общий чат</h4>
+ 
+
+          <div class="card direct-chat direct-chat-primary">
+               
+              <div class="card-body">
+              
+                   {{#chat}}
+                  
+                      {{^isme}}
+                      <div class="direct-chat-msg">
+                        <div class="direct-chat-infos clearfix">
+                          <span class="direct-chat-name float-left">{{sender}}    </span>
+                          <span class="direct-chat-timestamp float-right">{{msgdate}}</span>
+                        </div>
+                          <div class="direct-chat-text">
+                          {{message}}
+                        </div>
+                       
+                      </div>
+                      {{/isme}}
+                      {{#isme}}
+                       
+                      <div class="direct-chat-msg right">
+                        <div class="direct-chat-infos clearfix">
+                          <span class="direct-chat-name float-right"> {{sender}}</span>
+                          <span class="direct-chat-timestamp float-left">{{msgdate}}</span>
+                        </div>
+                       
+                        <div class="direct-chat-text">
+                          {{{message}}}
+                        </div>
+                       
+                      </div>
+                      {{/isme}} 
+                {{/chat}}
+                <a id="endchat" name="endchat"></a>
+                <table style="width:100%;font-size:smaller">
+                <tr><td>      <a zippy="prevpart" > <i class="fa fa-angle-double-left" /> предыдущие</a></td>
+                <td class="text-right"><a zippy="nextpart" >  следующие <i class="fa fa-angle-double-right" /> </a></td></tr></table>
+                
+               
+  
+              </div>
+              
+              <div class="card-footer">
+            <form  zippy="searchform"  >
+               <div class="form-group">
+          
+                    <div class="input-group  ">
+                      <input zippy="searchtext" placeholder="Поиск..." class="form-control"   - >
+                      <div class="input-group-append">
+                        <button type="submit" class="btn btn-info" type="button"  ><i class="fa fa-search" /></button>
+                        <a class="btn btn-outline-secondary" zippy="searchclear"   ><i class="fa fa-eraser " /></a>
+                      </div>
+                    </div>       
+                    
+                     
+                       
+                  </div>
+                  </form>
+            <form  zippy="msgform"  >
+              
+             <div class="form-group">
+                     <label for="msgtext">Сообщение</label> 
+                    <textarea required="required"   zippy="msgtext"   class="form-control"></textarea>
+                     
+                       
+                  </div>
+                 <div class="form-group">
+                     <label for="msgpersonal">Личное сообщение</label> 
+                    <select    zippy="msgpersonal"   class="form-control select2">
+                      <option value="0">Не выбран</option>
+                    </select>
+                     
+                       
+                  </div>
+                 <div class="input-group">
+                    
+                      <button type="submit" class="btn btn-primary">Отправить</button>
+                    
+                  </div>
+                </form>
+            
+
+              </div>
+              
+            </div>
+  
+
+            </div>
+
+      
+        </div>
+
+    </body>
+
+</html>

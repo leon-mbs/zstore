@@ -1,5 +1,8 @@
  
  
+ALTER TABLE `notifies` ADD `sender_id` INT NULL  ;
+
+ 
 CREATE TABLE `prodproc` (
   `pp_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,

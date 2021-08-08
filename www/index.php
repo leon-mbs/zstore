@@ -1,13 +1,14 @@
 <?php
+            
 
-require_once 'init.php';
+ require_once 'init.php';
 
 global $_config;
 
 if (strpos($_SERVER['REQUEST_URI'], 'index.php') > 1) {
     die('Сайт размещен не в  корневой папке');
 }
-
+        
 try {
  
 

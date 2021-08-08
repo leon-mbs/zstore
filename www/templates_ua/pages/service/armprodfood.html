@@ -40,18 +40,17 @@
             <script>
                 window.setInterval(onNewOrder, 5000);
 
-                var url = '{{{_baseurl}}}::getMessages:1&ajax=true'
-
+             
                 function onNewOrder() {
-                    fetch(url)
-                            .then((response) => {
-                                return response.json();
-                            })
-                            .then((data) => {
-
-                                if (data.cnt > 0) {
+                   
+                        callPageMethod('getMessages',null,null,(data)=> 
+                        {
+                           
+                               var  answer = JSON.parse(data)  
+      
+                                if (answer.cnt > 0) {
                                     $('#newordersalert').show();
-                                    $('#neworderscnt').text('Нових замовлень ' + data.cnt);
+                                    $('#neworderscnt').text('Нових замовлень ' + answer.cnt);
 
 
                                 }

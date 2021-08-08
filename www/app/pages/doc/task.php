@@ -44,7 +44,7 @@ class Task extends \App\Pages\Base
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date'))->setDate(time());
-        $this->docform->add(new \App\Time('document_time'))->setDateTime(time());
+        $this->docform->add(new \Zippy\Html\Form\Time('document_time'))->setDateTime(time());
 
         $this->docform->add(new TextArea('notes'));
         $this->docform->add(new TextInput('taskhours', "0"));

@@ -44,9 +44,14 @@
                 <div zippy="pag"></div>                
 
             </div>
-            <div class="col-12 col-md-4  col-xl-3">
+            
+  </div>    
+  
+         
+            
+                <form zippy="addeventform" class="row">
+                  <div class="col-12 col-md-4  col-xl-3">
 
-                <form zippy="addeventform" >
                     <small>Задачи,  связаные  с  контрагентом  следует задавать из справочника контрагентов</small>
                     <div class="form-group">
                         <label for="addeventdate">Дата, время</label>
@@ -64,18 +69,36 @@
                         <label for="addeventdesc">Комментарий</label>
                         <textarea class="form-control" zippy="addeventdesc" style=" height:120px;"></textarea>
                     </div>
+                 
                     <div class="form-group">
+                        <a zippy="cancel" class="btn btn-outline-success  mr-4">Отменить</a>
+                        <input class="btn btn-success  " type="submit" value="Сохранить">
+                    </div>
+                    </div>
+                    
+                    
+                    <div class="col-12 col-md-4  col-xl-3">
+                       <div class="form-group">
                         <label for="addeventnotify">Напомнить уведомлением за</label>
                         <select class="form-control" zippy="addeventnotify">
                             <option value="0">Не напоминать</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <a zippy="cancel" class="btn btn-outline-success  mr-4">Отменить</a>
-                        <input class="btn btn-success  " type="submit" value="Сохранить">
+                      <div class="form-group">
+                        <label for="adduser">Назначить пользователю</label>
+                        <select class="form-control select2" zippy="adduser">
+                            <option value="0">Не выбрано</option>
+                        </select>
                     </div>
+                   
+                      </div>
                 </form>
+                
+                
+                <div class="row">          
+            <div class="col-12 col-md-4  col-xl-3">
 
+                
                 <form zippy="editeventform" >
                     <div class="form-group">
                         <label for="editeventdate">Дата, время</label>
@@ -101,6 +124,7 @@
 
                 </form>
 
+            </div>  
             </div>  
 
 
