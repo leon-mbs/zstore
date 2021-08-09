@@ -8,6 +8,7 @@ use Zippy\Html\Form\Button;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
@@ -16,7 +17,7 @@ use Zippy\Html\Panel;
 class SalaryTypeList extends \App\Pages\Base
 {
 
-    private $_pa;
+    private $_st;
 
     public function __construct() {
         parent::__construct();
@@ -24,74 +25,95 @@ class SalaryTypeList extends \App\Pages\Base
             return;
         }
 
-        $this->add(new Panel('patable'))->setVisible(true);
-        $this->patable->add(new DataView('palist', new \ZCL\DB\EntityDataSource('\App\Entity\ProdArea', '', 'pa_name'), $this, 'palistOnRow'))->Reload();
-        $this->patable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
-        $this->add(new Form('padetail'))->setVisible(false);
-        $this->padetail->add(new TextInput('editpa_name'));
-        $this->padetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
-        $this->padetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
+        $this->add(new Panel('tablepan')) ;
+        $this->tablepan->add(new DataView('stlist', new \ZCL\DB\EntityDataSource('\App\Entity\SalType', '', 'salcode'), $this, 'listOnRow'))->Reload();
+        $this->tablepan->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
+      
+        $this->add(new Form('editform'))->setVisible(false);
+        $this->editform->add(new TextInput('editstname'));
+        $this->editform->add(new TextInput('editshortname'));
+        $this->editform->add(new TextInput('editcode'));
+        $this->editform->add(new CheckBox('editdisabled'));
+        $this->editform->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
+        $this->editform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
+        $this->editform->add(new Button('delete'))->onClick($this, 'deleteOnClick');
     }
 
-    public function palistOnRow($row) {
+    public function listOnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new Label('pa_name', $item->pa_name));
+        $row->add(new Label('stname', $item->salname));
+        $row->add(new Label('shortname', $item->salshortname));
+        $row->add(new Label('code', $item->salcode));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
-        $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
-    }
+     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkDelRef('ProdAreaList')) {
+        if (false == \App\ACL::checkDelRef('SalaryTypeList')) {
             return;
         }
-        $pa = $sender->owner->getDataItem();
+        $sa = $sender->owner->getDataItem();
 
-        $del = ProdArea::delete($pa->pa_id);
+        $del = SalType::delete($sa->st_id);
         if (strlen($del) > 0) {
             $this->setError($del);
             return;
         }
-        $this->patable->palist->Reload();
+        $this->tablepan->list->Reload();
     }
 
     public function editOnClick($sender) {
-        $this->_pa = $sender->owner->getDataItem();
-        $this->patable->setVisible(false);
-        $this->padetail->setVisible(true);
-        $this->padetail->editpa_name->setText($this->_pa->pa_name);
+        $this->_st = $sender->owner->getDataItem();
+        $this->tablepan->setVisible(false);
+        $this->editform->setVisible(true);
+        $this->editform->editstname->setText($this->_st->salname);
+        $this->editform->editshortname->setText($this->_st->salshortname);
+        $this->editform->editdisabled->setChecked($this->_st->disabled);
+        $this->editform->editcode->setText($this->_st->salcode);
     }
 
     public function addOnClick($sender) {
-        $this->patable->setVisible(false);
-        $this->padetail->setVisible(true);
+        $this->tablepan->setVisible(false);
+        $this->editform->setVisible(true);
         // Очищаем  форму
-        $this->padetail->clean();
+        $this->editform->clean();
 
-        $this->_pa = new ProdArea();
+        $this->_st = new SalType();
     }
 
     public function saveOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('ProdAreaList')) {
+        if (false == \App\ACL::checkEditRef('SalaryTypeList')) {
             return;
         }
 
 
-        $this->_pa->pa_name = $this->padetail->editpa_name->getText();
-        if ($this->_pa->pa_name == '') {
-            $this->setError("entername");
-            return;
+       $this->_st->salname  = $this->editform->editstname->getText();
+       $this->_st->salshortname = $this->editform->editshortname->getText();
+       $this->_st->salcode = $this->editform->editcode->getText();
+       $this->_st->disabled = $this->editform->editdisabled->ischecked() ? 1 : 0;
+      
+  
+       $code = intval($this->_st->salcode) ;
+       if($code < 100 || $code > 999) {
+           $this->setError('invalidcode') ;
+           return;
+       }
+        $c =  SalType::getFirst("salcode={$code} and st_id<>". $this->_st->st_id) ;    
+        if($c != null) {
+           $this->setError('codeexists') ;
+           return;
+          
         }
-
-        $this->_pa->save();
-        $this->padetail->setVisible(false);
-        $this->patable->setVisible(true);
-        $this->patable->palist->Reload();
+        
+        $this->_st->save();
+        $this->editform->setVisible(false);
+        $this->tablepan->setVisible(true);
+        $this->tablepan->stlist->Reload();
     }
 
     public function cancelOnClick($sender) {
-        $this->patable->setVisible(true);
-        $this->padetail->setVisible(false);
+        $this->tablepan->setVisible(true);
+        $this->editform->setVisible(false);
     }
 
 }

@@ -6,12 +6,12 @@ INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, 
 
 CREATE TABLE `saltypes` (
   `st_id` int(11) NOT NULL AUTO_INCREMENT,
-  `saltype` tinyint(1) NOT NULL,
+ 
   `salcode` int(11) NOT NULL,
   `salname` varchar(255) NOT NULL,
   `salshortname` varchar(255) DEFAULT NULL,
-  `formula` varchar(1000) DEFAULT NULL,
-  `maninput` tinyint(1) NOT NULL , 
+ 
+  `disabled` tinyint(1) NOT NULL DEFAULT 0 , 
   
    PRIMARY KEY (`st_id`) 
  
