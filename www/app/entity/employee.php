@@ -28,6 +28,7 @@ class Employee extends \ZCL\DB\Entity
         $this->detail .= "<balance>{$this->balance}</balance>";
         $this->detail .= "<email>{$this->email}</email>";
         $this->detail .= "<phone>{$this->phone}</phone>";
+        $this->detail .= "<hiredate>{$this->hiredate}</hiredate>";
         $this->detail .= "<ztype>{$this->ztype}</ztype>";
         $this->detail .= "<zmon>{$this->zmon}</zmon>";
         $this->detail .= "<zhour>{$this->zhour}</zhour>";
@@ -47,6 +48,7 @@ class Employee extends \ZCL\DB\Entity
         $this->email = (string)($xml->email[0]);
         $this->phone = (string)($xml->phone[0]);
         $this->comment = (string)($xml->comment[0]);
+        $this->hiredate = (int)($xml->hiredate[0]);
         $this->ztype = (int)($xml->ztype[0]);
         if($this->ztype==0) $this->ztype=1;
         $this->zmon = (int)($xml->zmon[0]);

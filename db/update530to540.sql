@@ -1,19 +1,18 @@
 
 
-INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  1, 'Начисление зарплаты', 'CalcSalary', 'Касса и платежи', 0);
-INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  4, 'Начисления и удержания', 'SalaryTypeList', '', 0);
+INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  1, 'РќР°С‡РёСЃР»РµРЅРёРµ Р·Р°СЂРїР»Р°С‚С‹', 'CalcSalary', 'РљР°СЃСЃР° Рё РїР»Р°С‚РµР¶Рё', 0);
+INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  4, 'РќР°С‡РёСЃР»РµРЅРёСЏ Рё СѓРґРµСЂР¶Р°РЅРёСЏ', 'SalaryTypeList', '', 0);
 
 
 CREATE TABLE `saltypes` (
-  `st_id` int(11) NOT NULL AUTO_INCREMENT,
+  `salcode` int(11) NOT NULL  ,
  
-  `salcode` int(11) NOT NULL,
   `salname` varchar(255) NOT NULL,
   `salshortname` varchar(255) DEFAULT NULL,
  
-  `disabled` tinyint(1) NOT NULL DEFAULT 0 , 
+   `disabled` tinyint(1) NOT NULL DEFAULT 0 , 
   
-   PRIMARY KEY (`st_id`) 
+   PRIMARY KEY (`salcode`) 
  
 ) engine=InnoDB DEFAULT CHARSET=utf8;
 
@@ -23,8 +22,7 @@ CREATE TABLE `empacc` (
   `emp_id` int(11) NOT NULL,
   `document_id` int(11) DEFAULT NULL,
   `optype` int(11) DEFAULT NULL,
-  `salcode` int(11) DEFAULT NULL,
-  
+    
   `notes` varchar(255) DEFAULT NULL,
   `amount` decimal(10,2) NOT NULL,
  
@@ -40,7 +38,7 @@ SELECT
   `e`.`emp_id` AS `emp_id`,
   `e`.`document_id` AS `document_id`,
   `e`.`optype` AS `optype`,
-  `e`.`salcode` AS `salcode`,
+  
   `e`.`notes` AS `notes`,
   `e`.`amount` AS `amount`,
   `d`.`document_date` AS `document_date`,
