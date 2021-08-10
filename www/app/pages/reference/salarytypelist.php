@@ -158,22 +158,13 @@ class SalaryTypeList extends \App\Pages\Base
         $this->updateAjax(array(),"toastr.success('". H::l("saved") ."')") ;
     }
   
-    public function onCheck($sender) {
-        $text  = $this->calcform->algo->getText(); 
-        
-        try{
-              eval($text);
-        } catch( \Exception $e ) {
-            
-        }
-         
-        $this->updateAjax(array(),"toastr.success('". H::l("saved") ."')") ;
-    }
+ 
   
     public function onSaveCalc($sender) {
         $opt = System::getOptions("salary") ;
         $opt['calc']  = $this->calcform->algo->getText(); 
-        
+        System::setOptions('salary',$opt) ;
+      
         $this->updateAjax(array(),"toastr.success('". H::l("saved") ."')") ;
     }
 
