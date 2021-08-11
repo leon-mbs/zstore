@@ -62,15 +62,57 @@
         </form>
         
         <form zippy="calcform">
-           
-           
-            <div class="row">
-                <div class="col-12 col-md-6">
-                    <input type="button" value="Назад" zippy="todoc" class="btn   btn-light">
-                    &nbsp; <input zippy="savedoc" type="submit" value="Сохранить" class="btn   btn-outline-primary">
+            <input type="hidden"  zippy="total">
+            <div class="form-group row">
+                <div class="col-auto pt-2">
+                  <label   > Сотрудник</label>
+                </div>
+               <div class="col-auto">
+                  <select class="form-control"  zippy="newemp" >
+                     <option value="0">Не выбран</option>
+                        </select>
+                </div>
+               <div class="col-auto pt-2">
+                     <a zippy="addemp"  >Добавить</a>
+                </div>
+                
+                
+                
+            </div>
+
+             <table class="table table-sm">
+                   <tr>
+                      <th></th>
+                      <th>ФИО</th>
+                       {{#stnames}}
+                          <th>{{name}}</th>
+                       {{/stnames}}
+                   </tr>
+                  <tr zippy="elist">
+                      <td style="width:20px" >
+                       <input  type="checkbox" zippy="emp_ch">
+                      </td>
+                      <td zippy="emp_name"></td>
+                     
+                        <templateinputs/>
+                      
+                      
+                          
+                          
+                  </tr>
+             </table>
+             
+             <div class="col-12 col-md-6   mt-4">
+                <a zippy="edel" ><i class="fa fa-trash text-danger" ></i></a>   &nbsp;
+               <button onclick="recalc();return false" class="btn btn-info" >Пересчитать</button> &nbsp;&nbsp;&nbsp;  <b>Всего: </b>  <b id="totsal"> </b>   
+               
+             </div>
+             <div class="col-12 col-md-6 mt-4">
+                    <input type="submit" value="Назад" zippy="todoc" class="btn   btn-light">
+                    &nbsp; <input zippy="savedoc" type="submit" value="Сохранить" class="btn   btn-info">
                     &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
 
-                </div>
+             </div>
      
         </form>
         
@@ -80,27 +122,65 @@
        </div>
           
         
-        
+         
         
         <script>
 
-            function calcTotal() {
-                var total = 0;
-
-                $('.salsum').each(function (index, value) {
-                    var a = $(this).val();
-                    a = parseFloat(a);
-                    if (isNaN(a) == false) {
-                        total = total + a;
-                    }
-
-
-                });
-
-                $('#total').text(total)
-            }
+           var cnt={{colemps}}
+        
+           function recalc(){
+              
+              for(i=1;i<=cnt;i++) {
+                  onCalc(i);
+              } 
+              
+             
+           }
+           
+           function onCalc(rnum){
+              
+              {{#stcodes}}
+              var attr = 'v{{code}}_'+rnum 
+              var v  =parseFloat($('#'+attr).val()); 
+              var v{{code}}  = 0 ;
+              if(Number.isNaN(v)==false) v{{code}}  = v ;
+            
+             
+              {{/stcodes}}
+              
+               
+              
+              {{#stcodes}}
+              var attr = 'v{{code}}_'+rnum 
+              $('#'+attr).val( v{{code}}  ); 
+              {{/stcodes}}
+              
+              
+              
+               onTotal() ; 
+                
+           }
+           
+           function onTotal(){
+                
+             var  totsal =0;
+              for(i=1;i<=cnt;i++) {
+                  var attr = 'v{{totst}}_'+i 
+                  
+                  var v = parseFloat($('#'+attr).val())  ;
+                  if(Number.isNaN(v)==false) totsal = totsal+ v;
+                  
+              }  
+             
+              $('#totsal').text(totsal);
+              $('#total').val(totsal);
+           }
+           
+           
+           
         </script>
-
+       
     </body>
 
 </html>
+ 

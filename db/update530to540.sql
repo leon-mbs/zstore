@@ -5,14 +5,15 @@ INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, 
 
 
 CREATE TABLE `saltypes` (
-  `salcode` int(11) NOT NULL  ,
+  `st_id` int(11) NOT NULL AUTO_INCREMENT,
  
+  `salcode` int(11) NOT NULL,
   `salname` varchar(255) NOT NULL,
   `salshortname` varchar(255) DEFAULT NULL,
  
-   `disabled` tinyint(1) NOT NULL DEFAULT 0 , 
+  `disabled` tinyint(1) NOT NULL DEFAULT 0 , 
   
-   PRIMARY KEY (`salcode`) 
+   PRIMARY KEY (`st_id`) 
  
 ) engine=InnoDB DEFAULT CHARSET=utf8;
 

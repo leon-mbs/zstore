@@ -6,7 +6,7 @@ namespace App\Entity;
  * Класc-сущность   тип начислений удержаний
  *
  * @table=saltypes
- * @keyfield=salcode
+ * @keyfield=st_id
  */
 class SalType extends \ZCL\DB\Entity
 {
@@ -19,6 +19,12 @@ class SalType extends \ZCL\DB\Entity
 
     
     public  static function getList(){
-        return  self::findArray("concat(salcode,' ',salname)","disabled<>1","salcode")  ;
+        $list = array();
+        
+        foreach(self::find("disabled<>1","salcode") as $v){
+           $list[$v->salcode]= $v->salcode.', '.$v->salname  ; 
+        } ;
+        
+        return $list;
     }
 }

@@ -49,8 +49,7 @@ class SalaryTypeList extends \App\Pages\Base
           
         $this->add(new Form('calcform'));
         $this->calcform->add(new TextArea('algo', $opt['calc'] ));
-        $this->calcform->add(new SubmitLink('check'))->onClick($this,"onCheck",true);
-        $this->calcform->add(new SubmitLink('savecalc'))->onClick($this,"onSaveCalc",true);
+         $this->calcform->add(new SubmitLink('savecalc'))->onClick($this,"onSaveCalc",true);
       
         
         $this->add(new Form('optform'));
@@ -74,14 +73,16 @@ class SalaryTypeList extends \App\Pages\Base
         if (false == \App\ACL::checkDelRef('SalaryTypeList')) {
             return;
         }
-        $sa = $sender->owner->getDataItem();
-
-        $del = SalType::delete($sa->salcode);
+        
+        $del = SalType::delete($this->_st->st_id);
         if (strlen($del) > 0) {
             $this->setError($del);
             return;
         }
-        $this->tablepan->list->Reload();
+        $this->tablepan->stlist->Reload();
+        $this->tablepan->setVisible(true);
+        $this->editform->setVisible(false);
+         
     }
 
     public function editOnClick($sender) {
