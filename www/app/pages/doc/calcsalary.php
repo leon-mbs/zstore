@@ -244,6 +244,7 @@ class CalcSalary extends \App\Pages\Base
           $this->_tvars['stnames'] = array();
           $this->_tvars['colemps'] = count($this->_list);
           $this->_tvars['totst'] = $opt['coderesult'];
+          $this->_tvars['calc'] = $opt['calc'];
        
           
           foreach($this->_stlist as $c=>$n){

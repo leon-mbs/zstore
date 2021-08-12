@@ -527,10 +527,11 @@
                     var total2 = $("#total2").val();
                     var paydisc = $("#paydisc").val();
                     var payamount = parseFloat(total2) - parseFloat(paydisc);
-                    $("#payamount").val(payamount.toFixed(2));
-                });
+                    $("#payamount").val(payamount.toFixed(2)); 
+                    $("#payed").val(payamount.toFixed(2));
+             });
                 $("#payed").change(function () {
-                    var payed = $("#payed").val();
+                    var payed = $("#payed").val();  
                     var payamount = $("#payamount").val();
                     var exchange = parseFloat(payed) - parseFloat(payamount);
                     if (exchange > 0) {

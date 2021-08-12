@@ -116,9 +116,7 @@ class User extends \ZCL\DB\Entity
 
         $acl['aclbranch'] = $this->aclbranch;
         $acl['onlymy'] = $this->onlymy;
-        $acl['phone'] = $this->phone;
-        $acl['viber'] = $this->viber;
-
+   
         $this->acl = serialize($acl);
 
         $options = array();
@@ -133,6 +131,8 @@ class User extends \ZCL\DB\Entity
         $options['darkmode'] = $this->darkmode;
         $options['usemobileprinter'] = $this->usemobileprinter;
         $options['mainpage'] = $this->mainpage;
+        $options['phone'] = $this->phone;
+        $options['viber'] = $this->viber;
 
         $this->options = serialize($options);
 
