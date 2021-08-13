@@ -1,9 +1,10 @@
 
 
 INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  1, 'Начисление зарплаты', 'CalcSalary', 'Касса и платежи', 0);
-UPDATE `metadata`   set  menugroup = 'Касса и платежи' where  meta_name= 'OutSalary';
 INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  4, 'Начисления и удержания', 'SalaryTypeList', '', 0);
 INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Зарплата', 'SalaryList', 'Касса и платежи', 0);
+UPDATE `metadata`   set  menugroup = 'Касса и платежи' where  meta_name= 'OutSalary';
+UPDATE `metadata`   set  description = 'Перекомплектация (расфасовка)' where  meta_name= 'TransItem';
 
 
 
@@ -27,8 +28,7 @@ CREATE TABLE `empacc` (
   `document_id` int(11) DEFAULT NULL,
   `optype` int(11) DEFAULT NULL,
     
-  `notes` varchar(255) DEFAULT NULL,
-  `amount` decimal(10,2) NOT NULL,
+   `amount` decimal(10,2) NOT NULL,
  
   PRIMARY KEY (`ea_id`),
   KEY `emp_id` (`emp_id`)  ,
@@ -43,7 +43,7 @@ SELECT
   `e`.`document_id` AS `document_id`,
   `e`.`optype` AS `optype`,
   
-  `e`.`notes` AS `notes`,
+  `d`.`notes` AS `notes`,
   `e`.`amount` AS `amount`,
   `d`.`document_date` AS `document_date`,
   `d`.`document_number` AS `document_number`,

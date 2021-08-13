@@ -54,6 +54,18 @@ class Helper
         return count($list) > 0;
     }
 
+    public static function logout() {
+        
+        setcookie("remember", '', 0);
+        System::setUser(new \App\Entity\User());
+        $_SESSION['user_id'] = 0;
+        $_SESSION['userlogin'] = 'Гость';
+
+        Application::Redirect("\\App\\Pages\\UserLogin");
+
+      
+    }
+
     public static function generateMenu($meta_type) {
 
         $conn = \ZDB\DB::getConnect();

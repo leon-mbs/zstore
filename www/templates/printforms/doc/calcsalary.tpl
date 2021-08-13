@@ -1,25 +1,20 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
     <tr>
-        <td colspan="2" align="center">
-            <b> Выплата зарплаты № {{document_number}} от {{date}}</b> <br>
+        <td  colspan="{{colspan}}">
+            <b> Начисление зарплаты № {{document_number}} от {{date}}</b> <br>
         </td>
     </tr>
 
+   
 
     <tr>
-        <td colspan="2">
-            <b>Со счета:</b> {{paymentname}}
-        </td>
-    </tr>
-
-    <tr>
-        <td colspan="2">
+        <td  colspan="{{colspan}}">
             <b>Месяц:</b> {{month}} {{year}}
         </td>
     </tr>
 
     <tr>
-        <td colspan="2">
+        <td  colspan="{{colspan}}">
             {{{notes}}}
         </td>
     </tr>
@@ -27,9 +22,11 @@
         <td>
             <b>ФИО</b>
         </td>
+        {{#stnames}}
         <td class="text-right">
-            <b>Сумма</b>
+            <b>{{name}}</b>
         </td>
+        {{/stnames}}
     </tr>
 
     {{#_detail}}
@@ -37,19 +34,19 @@
         <td>
             {{emp_name}}
         </td>
-        <td class="text-right">
-            {{amount}}
+        {{#amounts}}
+                <td class="text-right">
+            {{am}}
         </td>
+        {{/amounts}}
     </tr>
 
     {{/_detail}}
     <tr>
-        <td>
-            <b>Всего:</b>
+        <td colspan="{{colspan}}">
+            <b>Всего:  {{total}}</b>
         </td>
-        <td class="text-right">
-            <b>{{total}}</b>
-        </td>
+         
     </tr>
 
 </table>

@@ -39,25 +39,14 @@ class SalaryList extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
 
         $this->filter->add(new TextInput('searchnumber'));
-        $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => H::l("opened"), 1 => H::l("newed"), 2 => H::l("st_inprocess"), 3 => H::l("all")), 0));
-
+       
         $doclist = $this->add(new DataView('doclist', new SerListDataSource($this), $this, 'doclistOnRow'));
 
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
 
         $this->add(new Panel("statuspan"))->setVisible(false);
-
-        $this->statuspan->add(new Form('statusform'));
-
-        $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bfin'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bclose'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('binproc'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('btask'))->onClick($this, 'statusOnSubmit');
-
+   
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
         $this->doclist->Reload();
@@ -81,7 +70,8 @@ class SalaryList extends \App\Pages\Base
         $row->add(new Label('onotes', $doc->notes));
         $row->add(new Label('amount', H::fa($doc->amount)));
 
-        $row->add(new Label('customer', $doc->customer_name));
+        $row->add(new Label('year', $doc->headerdata['year']));
+        $row->add(new Label('month', $doc->headerdata['monthname']));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
 
@@ -100,105 +90,7 @@ class SalaryList extends \App\Pages\Base
         }
     }
 
-    public function statusOnSubmit($sender) {
-        if (\App\Acl::checkChangeStateDoc($this->_doc, true, true) == false) {
-            return;
-        }
-
-        $state = $this->_doc->state;
-
-        $ttn = count($this->_doc->getChildren('GoodsIssue')) > 0;
-        $task = count($this->_doc->getChildren('Task')) > 0;
-
-        if ($sender->id == "btask") {
-            if ($task) {
-
-                $this->setWarn('task_exists');
-            }
-            App::Redirect("\\App\\Pages\\Doc\\Task", 0, $this->_doc->document_id);
-        }
-        if ($sender->id == "bttn") {
-            if ($ttn) {
-                $this->setWarn('goodsissue_exists');
-            }
-            App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
-        }
-        if ($sender->id == "bref") {
-            if ($ttn || $task) {
-
-                $this->setWarn('created_task_gi');
-            }
-            $this->_doc->updateStatus(Document::STATE_REFUSED);
-        }
-
-        if ($sender->id == "binproc") {
-            $this->_doc->updateStatus(Document::STATE_INPROCESS);
-        }
-        if ($sender->id == "bfin") {
-            $this->_doc->updateStatus(Document::STATE_FINISHED);
-        }
-
-        if ($sender->id == "bclose") {
-            $this->_doc->updateStatus(Document::STATE_EXECUTED);
-            $this->_doc->updateStatus(Document::STATE_CLOSED);
-        }
-
-
-        $this->doclist->Reload(false);
-
-        $this->updateStatusButtons();
-    }
-
-    public function updateStatusButtons() {
-
-
-        $state = $this->_doc->state;
-
-        //новый     
-        if ($state < Document::STATE_EXECUTED) {
-            $this->statuspan->statusform->binproc->setVisible(true);
-            $this->statuspan->statusform->bclose->setVisible(false);
-            $this->statuspan->statusform->bttn->setVisible(false);
-            $this->statuspan->statusform->bref->setVisible(false);
-            $this->statuspan->statusform->btask->setVisible(false);
-            $this->statuspan->statusform->bfin->setVisible(false);
-        }
-
-
-        // в работе
-        if ($state == Document::STATE_INPROCESS) {
-
-            $this->statuspan->statusform->binproc->setVisible(false);
-            $this->statuspan->statusform->bclose->setVisible(true);
-            $this->statuspan->statusform->bttn->setVisible(true);
-            $this->statuspan->statusform->bref->setVisible(true);
-            $this->statuspan->statusform->btask->setVisible(true);
-            $this->statuspan->statusform->bfin->setVisible(true);
-        }
-
-        // выполнен
-        if ($state == Document::STATE_FINISHED) {
-
-            $this->statuspan->statusform->binproc->setVisible(false);
-            $this->statuspan->statusform->bclose->setVisible(true);
-            $this->statuspan->statusform->bttn->setVisible(false);
-            $this->statuspan->statusform->bref->setVisible(false);
-            $this->statuspan->statusform->btask->setVisible(false);
-            $this->statuspan->statusform->bfin->setVisible(false);
-        }
-
-        //закрыт
-        if ($state == Document::STATE_CLOSED) {
-            $this->statuspan->statusform->binproc->setVisible(false);
-            $this->statuspan->statusform->bclose->setVisible(false);
-            $this->statuspan->statusform->bttn->setVisible(false);
-            $this->statuspan->statusform->bref->setVisible(false);
-            $this->statuspan->statusform->btask->setVisible(false);
-            $this->statuspan->statusform->bfin->setVisible(false);
-            $this->statuspan->statusform->setVisible(false);
-        }
-    }
-
+   
     //просмотр
     public function showOnClick($sender) {
 
@@ -211,7 +103,7 @@ class SalaryList extends \App\Pages\Base
         $this->statuspan->docview->setDoc($this->_doc);
 
         $this->doclist->Reload(false);
-        $this->updateStatusButtons();
+        
         $this->goAnkor('dankor');
     }
 
@@ -220,9 +112,12 @@ class SalaryList extends \App\Pages\Base
         if (false == \App\ACL::checkEditDoc($doc, true)) {
             return;
         }
+        $type = H::getMetaType($doc->meta_id);
+        $class = "\\App\\Pages\\Doc\\" . $type['meta_name'];
+      
+        App::Redirect($class, $doc->document_id);
 
-
-        App::Redirect("\\App\\Pages\\Doc\\ServiceAct", $doc->document_id);
+        
     }
 
     public function oncsv($sender) {

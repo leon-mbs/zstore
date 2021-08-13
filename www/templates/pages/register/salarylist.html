@@ -14,18 +14,15 @@
 
                         <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
 
-                        <select class="form-control mr-2" zippy="status">
-                        </select>
-
-                        <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Поиск по контенту">
-
+                      
 
                         <input type="submit" class="  btn btn-outline-success  " value="ОК">
 
                     </form>
                 </div>
 
-                <a href="/index.php?p=App/Pages/Doc/ServiceAct" class="btn btn-info mt-2 mb-3">Создать новый</a>
+                <a href="/index.php?p=App/Pages/Doc/CalcSalary" class="btn btn-info mt-2 mb-3">Создать Начисление</a>
+                <a href="/index.php?p=App/Pages/Doc/OutSalary" class="btn btn-info mt-2 mb-3">Создать выплату</a>
                 <br> <a zippy="csv">Экспорт в Excel</a>
 
                 <table class="table   table-sm   ">
@@ -33,7 +30,8 @@
 
                         <th>Номер</th>
                         <th>Дата</th>
-                        <th>Клиент</th>
+                        <th>Год</th>
+                        <th>Месяц</th>
                         <th class="text-right">Сумма</th>
 
                         <th>Статус</th>
@@ -48,7 +46,8 @@
 
                         <td zippy="number"></td>
                         <td class="text-nowrap" zippy="date"></td>
-                        <td zippy="customer"></td>
+                        <td zippy="year"></td>
+                        <td zippy="month"></td>
                         <td zippy="amount" class="text-right"></td>
 
 
@@ -78,21 +77,7 @@
         <div class="row" zippy="statuspan">
             <div class="col-12">
 
-                <div class="navbar nav">
-                    <form zippy="statusform" class="form-inline ">
-
-                        <button zippy="binproc" type="submit" class="  btn btn-success  mr-2 ">На выполнение</button>
-                        <button zippy="bfin" type="submit" class="  btn btn-success  mr-2 ">Выполнен</button>
-                        <button zippy="bclose" type="submit" class="  btn btn-success  mr-2 ">Закрыть</button>
-                        <button zippy="bttn" type="submit" class="  btn btn-info mr-2 "
-                                title="Накладная  на комплектующие, поплачиваемые  заказчиком">Накладная
-                        </button>
-                        <button zippy="btask" type="submit" class=" btn btn-info mr-2 ">Создать наряд</button>
-                        <button zippy="bref" type="submit" class="  btn btn-danger mr-2 ">Заказ аннулирован</button>
-
-
-                    </form>
-                </div>
+                
 
 
                 <div zippy="docview"></div>

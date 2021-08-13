@@ -3,6 +3,7 @@
 namespace App\Entity\Doc;
 
 use App\Entity\Pay;
+use App\Entity\EmpAcc;
 use App\Helper as H;
 
 /**
@@ -14,7 +15,14 @@ class OutSalary extends Document
 
     public function Execute() {
 
-
+           foreach ($this->unpackDetails('detaildata') as $emp) {
+             
+              $eacc->emp_id = $emp->employee_id;
+              $eacc->document_id = $this->document_id;
+              $eacc->optype = EmpAcc::SALARY_PAY;
+              $eacc->amount = 0-$emp->amount;
+              $eacc->save();
+          }
         $payed = Pay::addPayment($this->document_id, $this->document_date, 0 - $this->amount, $this->headerdata['payment'], \App\Entity\IOState::TYPE_SALARY_OUTCOME, $this->notes);
         if ($payed > 0) {
             $this->payed = $payed;
