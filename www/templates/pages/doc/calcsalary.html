@@ -42,7 +42,7 @@
                     </div>
                     <div class="form-group  ">
                         <label for="dayscnt">Кол. раб. дней </label>
-                        <input required="required" pattern="[0-9]+" class="form-control" type="text" zippy="dayscnt">
+                        <input style="width:100px;" required="required" pattern="[0-9]+" class="form-control" type="text" zippy="dayscnt">
                         <small>Количество рабочих дней в месяце</small>
                     </div>
  
@@ -103,8 +103,8 @@
              </table>
              
              <div class="col-12 col-md-6   mt-4">
-                <a zippy="edel" ><i class="fa fa-trash text-danger" ></i></a>   &nbsp;
-               <button onclick="recalc();return false" class="btn btn-info" >Пересчитать</button> &nbsp;&nbsp;&nbsp;  <b>Всего: </b>  <b id="totsal"> </b>   
+                <a zippy="edel" title="Удалить" ><i class="fa fa-trash text-danger" ></i></a>  
+               &nbsp; &nbsp; &nbsp; &nbsp;<i title="Пересчитать" style="cursor:pointer" onclick="recalc();return false" class="fa fa-sync" ></i>&nbsp;&nbsp;  <b>Всего: </b>  <b id="totsal"> </b>   &nbsp;&nbsp;
                
              </div>
              <div class="col-12 col-md-6 mt-4">

@@ -120,7 +120,8 @@ class OutSalary extends \App\Pages\Base
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
             $conn->CommitTrans();
-            App::RedirectBack();
+            App::Redirect("\\App\\Pages\\Register\\SalaryList");
+
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
