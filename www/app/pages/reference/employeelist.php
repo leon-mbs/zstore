@@ -55,7 +55,10 @@ class EmployeeList extends \App\Pages\Base
         $this->employeedetail->add(new TextInput('editzhour'));
         $this->employeedetail->add(new TextInput('editzmon'));
         $this->employeedetail->add(new TextInput('editadvance'));
-    
+        $this->employeedetail->add(new TextInput('editchildren'));
+        $this->employeedetail->add(new CheckBox('editinvalid'));
+        $this->employeedetail->add(new CheckBox('editcoworker'));
+   
     
     }
 
@@ -113,8 +116,13 @@ class EmployeeList extends \App\Pages\Base
         $this->employeedetail->editzhour->setText($this->_employee->zhour);
         $this->employeedetail->editzmon->setText($this->_employee->zmon);
         $this->employeedetail->editadvance->setText($this->_employee->advance);
+        $this->employeedetail->editchildren->setText($this->_employee->children);
+        $this->employeedetail->editinvalid->setChecked($this->_employee->invalid);
+        $this->employeedetail->editcoworker->setChecked($this->_employee->coworker);
+
+
         $this->onType( $this->employeedetail->editztype);
-        
+       
     }
 
     public function addOnClick($sender) {
@@ -158,8 +166,12 @@ class EmployeeList extends \App\Pages\Base
         $this->_employee->zhour = $this->employeedetail->editzhour->getText();
         $this->_employee->zmon  = $this->employeedetail->editzmon->getText();
         $this->_employee->advance = $this->employeedetail->editadvance->getText();
+        $this->_employee->children = $this->employeedetail->editchildren->getText();
          
         
+        $this->_employee->invalid = $this->employeedetail->editinvalid->isChecked() ? 1 : 0;
+        $this->_employee->coworker = $this->employeedetail->editcoworker->isChecked() ? 1 : 0;
+      
         $this->_employee->disabled = $this->employeedetail->editdisabled->isChecked() ? 1 : 0;
         if ($this->_employee->disabled == 1) {
             $u = \App\Entity\User::getByLogin($this->_employee->login);

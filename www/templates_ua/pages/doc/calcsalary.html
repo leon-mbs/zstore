@@ -97,7 +97,8 @@
                         <templateinputs/>
                       
                       
-                          
+                           <input  type="hidden" zippy="invalid">     
+                    
                           
                   </tr>
              </table>
@@ -141,20 +142,21 @@
            function onCalc(rnum){
               
               {{#stcodes}}
-              var attr = 'v{{code}}_'+rnum 
-              var v  =parseFloat($('#'+attr).val()); 
-              var v{{code}}  = 0 ;
-              if(Number.isNaN(v)==false) v{{code}}  = v ;
-            
-             
+                  var attr = 'v{{code}}_'+rnum 
+                  var v  =parseFloat($('#'+attr).val()); 
+                  var v{{code}}  = 0 ;
+                  if(Number.isNaN(v)==false) v{{code}}  = v ;
               {{/stcodes}}
+         
+             var invalid= $('#invalid_'+rnum).val() ==1 ? true : false
               
               
               {{calc}}
               
+              
               {{#stcodes}}
-              var attr = 'v{{code}}_'+rnum 
-              $('#'+attr).val( v{{code}}  ); 
+                var attr = 'v{{code}}_'+rnum 
+                $('#'+attr).val( v{{code}}  ); 
               {{/stcodes}}
               
               

@@ -286,7 +286,8 @@ class CalcSalary extends \App\Pages\Base
            $ti->setAttribute("onblur","onCalc(".$row->getNumber().")"  );
         } 
         
-        
+        $row->add(new TextInput('invalid', $emp->invalid)) ;
+      
     }    
     public function Reload() {
           $opt = System::getOptions("salary") ;

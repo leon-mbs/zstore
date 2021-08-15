@@ -19,6 +19,7 @@ class Employee extends \ZCL\DB\Entity
         $this->advance = 0;
         $this->zhour = 0;
         $this->branch_id = 0;
+        $this->children = 0;
     }
 
     protected function beforeSave() {
@@ -33,6 +34,9 @@ class Employee extends \ZCL\DB\Entity
         $this->detail .= "<zmon>{$this->zmon}</zmon>";
         $this->detail .= "<zhour>{$this->zhour}</zhour>";
         $this->detail .= "<advance>{$this->advance}</advance>";
+        $this->detail .= "<children>{$this->children}</children>";
+        $this->detail .= "<invalid>{$this->invalid}</invalid>";
+        $this->detail .= "<coworker>{$this->coworker}</coworker>";
         $this->detail .= "<comment><![CDATA[{$this->comment}]]></comment>";
 
         $this->detail .= "</detail>";
@@ -54,6 +58,9 @@ class Employee extends \ZCL\DB\Entity
         $this->zmon = (int)($xml->zmon[0]);
         $this->advance = (int)($xml->advance[0]);
         $this->zhour = (int)($xml->zhour[0]);
+        $this->children = (int)($xml->children[0]);
+        $this->coworker = (int)($xml->coworker[0]);
+        $this->invalid = (int)($xml->invalid[0]);
 
         parent::afterLoad();
     }

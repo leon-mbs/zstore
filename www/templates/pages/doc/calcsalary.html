@@ -97,7 +97,7 @@
                         <templateinputs/>
                       
                       
-                          
+                      <input  type="hidden" zippy="invalid">     
                           
                   </tr>
              </table>
@@ -138,23 +138,29 @@
              
            }
            
+           //вычисление  по номеру строки
            function onCalc(rnum){
               
+              //значяения  кодов с полей
               {{#stcodes}}
-              var attr = 'v{{code}}_'+rnum 
-              var v  =parseFloat($('#'+attr).val()); 
-              var v{{code}}  = 0 ;
-              if(Number.isNaN(v)==false) v{{code}}  = v ;
-            
-             
+                  var attr = 'v{{code}}_'+rnum 
+                  var v  =parseFloat($('#'+attr).val()); 
+                  var v{{code}}  = 0 ;
+                  if(Number.isNaN(v)==false) v{{code}}  = v ;
               {{/stcodes}}
               
+              //переменные окружения
+              var invalid= $('#invalid_'+rnum).val() ==1 ? true : false
+               
+              
+              //формулы
               
               {{calc}}
               
+              //присваеваем  полям обратно
               {{#stcodes}}
-              var attr = 'v{{code}}_'+rnum 
-              $('#'+attr).val( v{{code}}  ); 
+                var attr = 'v{{code}}_'+rnum 
+                $('#'+attr).val( v{{code}}  ); 
               {{/stcodes}}
               
               
