@@ -25,7 +25,7 @@ class Employee extends \ZCL\DB\Entity
         parent::beforeSave();
         //упаковываем  данные в detail
         $this->detail = "<detail><login>{$this->login}</login>";
-        $this->detail .= "<balance>{$this->balance}</balance>";
+      //  $this->detail .= "<balance>{$this->balance}</balance>";
         $this->detail .= "<email>{$this->email}</email>";
         $this->detail .= "<phone>{$this->phone}</phone>";
         $this->detail .= "<hiredate>{$this->hiredate}</hiredate>";
@@ -43,7 +43,7 @@ class Employee extends \ZCL\DB\Entity
     protected function afterLoad() {
         //распаковываем  данные из detail
         $xml = simplexml_load_string($this->detail);
-        $this->balance = (int)($xml->balance[0]);
+      //  $this->balance = (int)($xml->balance[0]);
         $this->login = (string)($xml->login[0]);
         $this->email = (string)($xml->email[0]);
         $this->phone = (string)($xml->phone[0]);

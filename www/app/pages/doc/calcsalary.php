@@ -7,6 +7,7 @@ use App\Entity\Doc\Document;
 use App\Entity\Employee;
 use App\Entity\MoneyFund; 
 use App\Entity\SalType;
+use App\Entity\EmpAcc;
 use App\Helper as H;
 use App\System ;
 use Zippy\Html\DataList\ArrayDataSource;
@@ -85,9 +86,13 @@ class CalcSalary extends \App\Pages\Base
         $this->calcform->add(new DataView('elist', new ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_list')), $this, 'employeelistOnRow'));
 
         $this->_stlist =  SalType::find("disabled<>1","salcode") ;
-          
-        $this->Reload();
-    
+      
+        $opt = System::getOptions("salary") ;
+         
+         
+        $this->_tvars['colemps'] = count($this->_list);
+        $this->_tvars['totst'] = $opt['coderesult'];
+ 
   
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
@@ -188,7 +193,34 @@ class CalcSalary extends \App\Pages\Base
     }
     public function tocalcOnClick($sender) {
        $this->calcform->setVisible(true);  
-       $this->docform->setVisible(false);  
+       $this->docform->setVisible(false); 
+       
+       
+      if($this->_doc->document_id == 0) {
+                  $opt = System::getOptions("salary") ;
+
+                  if($opt['codeadvance']>0) { //аванс
+                      
+                      $rows = EmpAcc::getAmountByType($this->_doc->headerdata['year'] ,$this->_doc->headerdata['month'] ,EmpAcc::ADVANCE) ;
+                      foreach($rows as $row){
+                          $c = '_c'.$opt['codeadvance'] ;
+                          $this->_list[$row['emp_id']]->{$c}= 0-H::fa( $row['am'] );
+                      }
+                  }
+                  if($opt['codebaseincom']>0)  {
+                        $c = '_c'.$opt['codebaseincom'] ;
+                        foreach( $this->_list as $emp) {
+                           $emp->{$c} = 0 ;
+                        }                        
+                  }
+                  
+                  
+         
+          }
+          
+       
+        
+        $this->Reload();
          
     }
     public function delOnClick($sender) {
@@ -207,8 +239,27 @@ class CalcSalary extends \App\Pages\Base
          $id = $this->calcform->newemp->getValue();
          if($id > 0){
              $this->_list[$id]= Employee::load($id);
+             
+                  $opt = System::getOptions("salary") ;
+
+                  if($opt['codeadvance']>0) { //аванс
+                      
+                      $rows = EmpAcc::getAmountByType($this->_doc->headerdata['year'] ,$this->_doc->headerdata['month'] ,EmpAcc::ADVANCE) ;
+                      foreach($rows as $row){
+                          $c = '_c'.$opt['codeadvance'] ;
+                          if($id==$row['emp_id']) {
+                             $this->_list[$row['emp_id']]->{$c}= 0-H::fa( $row['am'] );
+                          }
+                      }
+                  }             
+             
+                  if($opt['codebaseincom']>0)  {
+                        $c = '_c'.$opt['codebaseincom'] ;
+                        $this->_list[$id]->{$c}=  0;
+                  }
+             
          }
-          $this->Reload();
+         $this->Reload();
     }
     public function updateAddList() {
           
@@ -231,8 +282,8 @@ class CalcSalary extends \App\Pages\Base
         foreach($this->_stlist as $c=>$n){
             
            $ti = $row->add(new TextInput('v'.$n->salcode,new Bind($emp, '_c'.$n->salcode)));
-;          $ti->setAttribute("r-n",$row->getNumber());
-;          $ti->setAttribute("onblur","onCalc(".$row->getNumber().")"  );
+           $ti->setAttribute("r-n",$row->getNumber());
+           $ti->setAttribute("onblur","onCalc(".$row->getNumber().")"  );
         } 
         
         
@@ -252,12 +303,11 @@ class CalcSalary extends \App\Pages\Base
              $this->_tvars['stcodes'][]=array('code'=>$n->salcode) ;
              
           }      
+
          
-        
           $this->calcform->elist->Reload();  
           $this->updateAddList();
-          
-          
+            
            
     }    
     

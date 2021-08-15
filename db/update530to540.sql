@@ -27,7 +27,7 @@ CREATE TABLE `empacc` (
   `emp_id` int(11) NOT NULL,
   `document_id` int(11) DEFAULT NULL,
   `optype` int(11) DEFAULT NULL,
-    
+  
    `amount` decimal(10,2) NOT NULL,
  
   PRIMARY KEY (`ea_id`),
@@ -42,7 +42,7 @@ SELECT
   `e`.`emp_id` AS `emp_id`,
   `e`.`document_id` AS `document_id`,
   `e`.`optype` AS `optype`,
-  
+   
   `d`.`notes` AS `notes`,
   `e`.`amount` AS `amount`,
   `d`.`document_date` AS `document_date`,

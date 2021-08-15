@@ -15,6 +15,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\TextArea;
 
 /**
  * Страница  ввода перекомплектация товаров
@@ -34,12 +35,13 @@ class TransItem extends \App\Pages\Base
         $this->docform->add(new Date('document_date', time()));
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
+        $this->docform->add(new DropDownChoice('tostore', Store::getList(), H::getDefStore()));
         $this->docform->add(new AutocompleteTextInput('fromitem'))->onText($this, 'OnAutocompleteItem');
         $this->docform->add(new AutocompleteTextInput('toitem'))->onText($this, 'OnAutocompleteItem');
 
         $this->docform->add(new TextInput('fromquantity'));
         $this->docform->add(new TextInput('toquantity'));
-        $this->docform->add(new TextInput('notes'));
+        $this->docform->add(new TextArea('notes'));
 
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
@@ -50,6 +52,7 @@ class TransItem extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
+            $this->docform->tostore->setValue($this->_doc->headerdata['tostore']);
             $this->docform->fromitem->setKey($this->_doc->headerdata['fromitem']);
             $fi = Stock::load($this->_doc->headerdata['fromitem']);
             $this->docform->fromitem->setText($fi->itemname . ', ' . $fi->partion);
@@ -82,6 +85,7 @@ class TransItem extends \App\Pages\Base
         $this->_doc->notes = $this->docform->notes->getText();
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['tostore'] = $this->docform->tostore->getValue();
         $this->_doc->headerdata['fromitem'] = $this->docform->fromitem->getKey();
         $this->_doc->headerdata['toitem'] = $this->docform->toitem->getKey();
         $this->_doc->headerdata['fromquantity'] = $this->docform->fromquantity->getText();
