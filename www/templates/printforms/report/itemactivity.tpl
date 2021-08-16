@@ -1,20 +1,21 @@
 <table class="ctable" border="0" cellpadding="2" cellspacing="0">
 
     <tr style="font-size:larger; font-weight: bolder;">
-        <td align="center" colspan="8">
+        <td align="center" colspan="9">
             Движение по складу
         </td>
     </tr>
     <tr>
 
-        <td align="center" colspan="8">
-            Период с {{datefrom}} по {{dateto}}&nbsp;&nbsp;&nbsp;&nbsp; Склад: <strong>{{store}}</strong>
+        <td align="center" colspan="9">
+            Период с {{datefrom}} по {{dateto}}&nbsp;&nbsp;&nbsp;&nbsp; 
         </td>
     </tr>
 
     <tr style="font-weight: bolder;">
 
         <th style="border: solid black 1px">Дата</th>
+        <th style="border: solid black 1px">Склад</th>
         <th style="border: solid black 1px">Код</th>
         <th style="border: solid black 1px">Наименование</th>
 
@@ -28,6 +29,7 @@
     <tr>
 
         <td>{{date}}</td>
+        <td>{{store}}</td>
         <td>{{code}}</td>
         <td>{{name}}</td>
 
@@ -43,13 +45,14 @@
 
         <td></td>
         <td></td>
+        <td></td>
         <td align="right"><b>На сумму</b></td>
 
         <td align="right"><b>{{ba}}</b></td>
         <td align="right"><b>{{bain}}</b></td>
         <td align="right"><b>{{baout}}</b></td>
         <td align="right"><b>{{baend}}</b></td>
-        <th></th>
+        <td> </td>
     </tr>
   {{/noshowpartion}}    
 </table>

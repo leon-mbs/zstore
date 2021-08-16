@@ -186,6 +186,7 @@ class GoodsIssue extends Document
 
             $detail[] = array(
                 "tovar_name" => $item->itemname,
+                "tovar_code" => $item->item_code,
                 "quantity"   => H::fqty($item->quantity),
                 "price"      => H::fa($item->price),
                 "amount"     => H::fa($item->quantity * $item->price)

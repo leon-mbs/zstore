@@ -108,7 +108,7 @@
                                 <label class="form-check-label" for="usesnumber">Облік ТМЦ за серіями
                                     (партіями) виробника</label>
                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Окремий облік по кожній партії виробника з урахуванням терміну придатності. Чи використовує конкретний товар облік по партіях вказується в картці товару."></i>
+                                   title="Окремий облік по кожній партії виробника з урахуванням терміну придатності або по  серiйномк  номеру виробу. Чи використовує конкретний товар облік по партіях вказується в картці товару."></i>
                             </div>
 
                             <div class="form-check">
@@ -289,10 +289,9 @@
                 <div class="card">
                     <div class="card-body">
                         <h4>Налаштування принтера</h4>
-                        <small>Налаштування вузького принтера для друку чеків і етикеток</small>
-                        <form zippy="printer">
+                         <form zippy="printer">
                             <div class="form-group">
-                                <label   >Параметри для чеків</label>
+                                <label  style="font-size:larger" >Параметри для принтеру чеків</label>
                             </div>
                             <div class="form-group  ">
                                 <label for="pdocfontsize">Розмiр шрифту</label>
@@ -306,7 +305,7 @@
 
                             </div>
                             <div class="form-group">
-                                <label for="pwidth">Параметри для етикеток і цінників</label>
+                                <label style="font-size:larger">Параметри для етикеток і цінників</label>
                             </div>
                             <div class="form-group">
                                 <label for="pwidth">Ширина друку </label>
@@ -366,7 +365,15 @@
                                 <input zippy="pcolor" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="pcolor">Кольоровий принтер</label>
                             </div>
-        
+                            <div class="form-group">
+                                <label style="font-size:larger">Параметри для  широкого  принтеру</label>
+                            </div>
+                           <div class="form-group">
+                                <label for="pa4width">Ширина друку</label>
+                                <input style="width:100px" class="form-control" type="text" zippy="pa4width">
+                                <small class="form-text text-muted">Например <b>100%</b> или <b>70mm</b> или <b>250px</b> </small>
+                            </div>
+
                             <div class="form-group">
                                 <button class="btn btn-primary" type="submit">Зберегти</button>
                             </div>
@@ -476,7 +483,13 @@
                         </form>
                     </div>
                 </div>
-                <div class="card">
+                
+
+
+
+            </div>
+            <div class="col-12  col-md-5 col-xl-4  ">
+<div class="card">
                     <div class="card-body">
                         <h4>Джерела  продаж</h4>
                         <form zippy="salesourcesform">
@@ -491,12 +504,7 @@
 
                         </form>         
                     </div>
-                </div>
-
-
-
-            </div>
-            <div class="col-12  col-md-5 col-xl-4  ">
+                </div>            
                 <div class="card">
                     <div class="card-body">
                         <h4>Громадське харчування</h4>
