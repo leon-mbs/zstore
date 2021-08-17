@@ -102,7 +102,7 @@ class Warranty extends \App\Pages\Base
         $item = $row->getDataItem();
 
         $row->add(new Label('tovar', $item->itemname));
-        $row->add(new Label('sn', $item->sn));
+        $row->add(new Label('sn', $item->snumber));
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('warranty', $item->warranty));
         $row->add(new Label('quantity', H::fqty($item->quantity)));
@@ -132,7 +132,7 @@ class Warranty extends \App\Pages\Base
 
         $this->editdetail->editquantity->setText($item->quantity);
         $this->editdetail->editwarranty->setText($item->warranty);
-        $this->editdetail->editsn->setText($item->sn);
+        $this->editdetail->editsn->setText($item->snumber);
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
         $this->_rowid = $item->rowid;
@@ -157,7 +157,7 @@ class Warranty extends \App\Pages\Base
         $item = Item::load($id);
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
-        $item->sn = $this->editdetail->editsn->getText();
+        $item->snumber = $this->editdetail->editsn->getText();
         $item->warranty = $this->editdetail->editwarranty->getText();
 
         if ($this->_rowid > 0) {

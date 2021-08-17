@@ -52,11 +52,19 @@ class POSCheck extends Document
         $common = System::getOptions('common');
 
         $firm = H::getFirmData($this->firm_id);
+       $printer = System::getOptions('printer');
+ 
+        $style = "";
+        if (  strlen($printer['pa4width']) > 0) {
+            $style = 'style=" width:' . $printer['pa4width'] . ';"';
+
+        }
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
                         "firm_name"       => $firm["firm_name"],
-                        "shopname"        => $common["shopname"],
+                         "style"         => $style,
+                       "shopname"        => $common["shopname"],
                         "address"         => $firm["address"],
                         "phone"           => $firm["phone"],
                         "inn"             => $firm["inn"],

@@ -5,6 +5,7 @@ namespace App\Entity\Doc;
 use App\Entity\Entry;
 use App\Entity\Item;
 use App\Helper as H;
+use App\System;
 
 /**
  * Класс-сущность  документ торгово-транспортная  накладная
@@ -47,6 +48,14 @@ class TTN extends Document
 
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
+  
+        $printer = System::getOptions('printer');
+ 
+        $style = "";
+        if (  strlen($printer['pa4width']) > 0) {
+            $style = 'style=" width:' . $printer['pa4width'] . ';"';
+
+        }
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
@@ -54,6 +63,7 @@ class TTN extends Document
                         "customer_name"   => $this->customer_id ? $this->customer_name : $this->headerdata["customer_name"],
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                         "store_name"      => $this->headerdata["store_name"],
+                        "style"         => $style,
                         "weight"          => $weight > 0 ? H::l("allweight", $weight) : '',
                         "ship_address"    => strlen($this->headerdata["ship_address"]) > 0 ? $this->headerdata["ship_address"] : false,
                         "ship_number"     => strlen($this->headerdata["ship_number"]) > 0 ? $this->headerdata["ship_number"] : false,
@@ -114,11 +124,18 @@ class TTN extends Document
 
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
+         $printer = System::getOptions('printer');
+        $style = "";
+        if (strlen($printer['pdocfontsize']) > 0 || strlen($printer['pdocwidth']) > 0) {
+            $style = 'style="font-size:' . $printer['pdocfontsize'] . 'px;width:' . $printer['pdocwidth'] . ';"';
+
+        }
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
                         "firm_name"       => $firm['firm_name'],
-                        "customer_name"   => $this->customer_id ? $this->customer_name : $this->headerdata["customer_name"],
+                         "style"         => $style,
+                       "customer_name"   => $this->customer_id ? $this->customer_name : $this->headerdata["customer_name"],
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                         "ship_number"     => strlen($this->headerdata["ship_number"]) > 0 ? $this->headerdata["ship_number"] : false,
                         "order"           => strlen($this->headerdata["order"]) > 0 ? $this->headerdata["order"] : false,

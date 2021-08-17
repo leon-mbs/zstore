@@ -1,4 +1,4 @@
-<table class="ctable" border="0" cellspacing="0" cellpadding="2">
+<table class="ctable" border="0" cellspacing="0" cellpadding="2"  {{{style}}}}>
 
 
     <tr>

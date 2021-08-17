@@ -5,6 +5,7 @@ namespace App\Entity\Doc;
 use App\Entity\Entry;
 use App\Entity\Item;
 use App\Helper as H;
+use App\System;
 
 /**
  * Класс-сущность  документ расходная  накладная
@@ -48,6 +49,14 @@ class GoodsIssue extends Document
         $totalstr = H::sumstr($this->payamount);
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
+ 
+        $printer = System::getOptions('printer');
+ 
+        $style = "";
+        if (  strlen($printer['pa4width']) > 0) {
+            $style = 'style=" width:' . $printer['pa4width'] . ';"';
+
+        }
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
@@ -62,7 +71,8 @@ class GoodsIssue extends Document
                         "total"           => H::fa($this->amount),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
-
+                        "style"         => $style,
+ 
                         "docbarcode" => $this->getBarCodeImage(),
                         "docqrcode"  => $this->getQRCodeImage(),
                         "payed"      => $this->payed > 0 ? H::fa($this->payed) : false,
@@ -195,10 +205,19 @@ class GoodsIssue extends Document
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
 
+        $printer = System::getOptions('printer');
+        $style = "";
+        if (strlen($printer['pdocfontsize']) > 0 || strlen($printer['pdocwidth']) > 0) {
+            $style = 'style="font-size:' . $printer['pdocfontsize'] . 'px;width:' . $printer['pdocwidth'] . ';"';
+
+        }
+        
+        
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
                         "firm_name"       => $firm["firm_name"],
-                        "phone"           => $firm["phone"],
+                          "style"         => $style,
+                         "phone"           => $firm["phone"],
                         "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
                         "document_number" => $this->document_number,
                         "docbarcode"      => $this->getBarCodeImage(),
