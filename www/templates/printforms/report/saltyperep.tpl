@@ -2,7 +2,7 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="2">
-            Отчет по зарплате
+            Отчет по начислениям  и удержаниям
         </td>
     </tr>
     <tr>
@@ -28,13 +28,7 @@
 
     </tr>
     {{/_detail}}
-    <tr style="font-weight: bolder;">
-
-        <td class="text-right">Итого:</td>
-
-        <td class="text-right">{{total}}</td>
-
-    </tr>
+  
 
 </table>
 

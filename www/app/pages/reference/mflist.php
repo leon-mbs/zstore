@@ -132,7 +132,7 @@ class MFList extends \App\Pages\Base
         //      return;
         //   }
 
-        $this->_mf->Save();
+        $this->_mf->save();
         $this->mfdetail->setVisible(false);
         $this->mftable->setVisible(true);
         $this->mftable->mflist->Reload();

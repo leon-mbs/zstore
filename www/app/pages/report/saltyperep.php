@@ -3,6 +3,7 @@
 namespace App\Pages\Report;
 
 use App\Entity\Employee;
+use App\Entity\SalType;
 use App\Helper as H;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
@@ -11,7 +12,7 @@ use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
 
 /**
- *  Отчет по  зарплате
+ *  Отчет по начислениям  и удержаним
  */
 class SalTypeRep extends \App\Pages\Base
 {
@@ -70,50 +71,42 @@ class SalTypeRep extends \App\Pages\Base
         $mto = $this->filter->mto->getValue();
         $mtoname = $this->filter->mto->getValueName();
 
-        $doclist = \App\Entity\Doc\Document::find("meta_name = 'OutSalary' and state >= 5 ");
-
+  
         $detail = array();
 
         $from = strtotime($yfrom . '-' . $mfrom . '-01');
-        $to = strtotime($yto . '-' . $mto . '-01 23:59:59');
+        $dt = new \Carbon\Carbon($from);
+        $from = $dt->startOfMonth()->timestamp;
+ 
+    
+         $to = strtotime($yto . '-' . $mto . '-01 23:59:59');
+         $dt = new \Carbon\Carbon($to);
 
+         $to = $dt->endOfMonth()->timestamp;
+    
+        $conn = \Zdb\DB::getConnect() ;
+        
+        $doclist = \App\Entity\Doc\Document::find("meta_name = 'CalcSalary' and state >= 5 and document_date >= ". $conn->DBDate($from) . " and document_date <= " . $conn->DBDate($to) );
+
+        $stlist   =   SalType::find("","salcode")
+        
+        $stam = array();
+        
+    
         foreach ($doclist as $doc) {
 
-            $date = strtotime($doc->headerdata['year'] . '-' . $doc->headerdata['month'] . '-01');
-
-            $d1 = \App\Helper::fdt($from);
-            $d2 = \App\Helper::fdt($to);
-            $d3 = \App\Helper::fdt($date);
-
-            if ($date < $from || $date > $to) {
-                continue;
-            }
-
+         
+    
             foreach ($doc->unpackDetails('detaildata') as $emp) {
-
-                if ($emp_id > 0 && $emp->amount > 0) {
-                    if ($emp->employee_id != $emp_id) {
-                        continue;
-                    }
-                    if (is_array($detail[$doc->headerdata['year'] . $doc->headerdata['month']])) {
-                        $detail[$doc->headerdata['year'] . $doc->headerdata['month']]['v'] += $emp->amount;
-                    } else {
-                        $detail[$doc->headerdata['year'] . $doc->headerdata['month']] = array('k' => $doc->headerdata['monthname'] . ' ' . $doc->headerdata['year'], 'v' => $emp->amount);
-                    }
-                } else {
-                    if ($emp->amount > 0) {
-                        if (is_array($detail[$emp->employee_id])) {
-                            $detail[$emp->employee_id]['v'] += $emp->amount;
-                        } else {
-                            $detail[$emp->employee_id] = array('k' => $emp->emp_name, 'v' => $emp->amount);
-                        }
-                    }
-                }
+                if($emp_id >0 && $emp_id != $emp->employee_id) continue;
+                
+                
+                 
             }
         }
-        $total = 0;
+       
         foreach ($detail as $k => $item) {
-            $total += $item['v'];
+           
             $item['v'] = H::fa($item['v']);
         }
 
@@ -125,7 +118,7 @@ class SalTypeRep extends \App\Pages\Base
             'yto'      => $yto,
             'mto'      => $mtoname,
             'isemp'    => $emp_id > 0,
-            'total'    => H::fa($total),
+            
             "emp_name" => $emp_name
         );
 
