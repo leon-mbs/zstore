@@ -1,20 +1,20 @@
-<table border="0" class="ctable" cellpadding="2" cellspacing="0">
+<table border="0" class="ctable" cellpadding="3" cellspacing="0">
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="2">
-            Отчет по зарплате
+           Звiт по нарахуванням  та  утриманням
         </td>
     </tr>
     <tr>
 
-        <td align="center" colspan="2">
-            Период с {{mfrom}} {{yfrom}} по {{mto}} {{yto}}
+        <td align="center" colspan="3">
+            Перiод з {{mfrom}} {{yfrom}} по {{mto}} {{yto}}
         </td>
     </tr>
     {{#isemp}}
     <tr>
 
-        <td style="font-weight: bolder;" colspan="2">
+        <td style="font-weight: bolder;" colspan="3">
             {{emp_name}}
         </td>
     </tr>
@@ -23,18 +23,12 @@
     {{#_detail}}
     <tr>
 
-        <td>{{k}}</td>
-        <td class="text-right">{{v}}</td>
+        <td>{{code}}</td>
+        <td>{{name}}</td>
+        <td class="text-right">{{am}}</td>
 
     </tr>
     {{/_detail}}
-    <tr style="font-weight: bolder;">
-
-        <td class="text-right">Итого:</td>
-
-        <td class="text-right">{{total}}</td>
-
-    </tr>
 
 </table>
 

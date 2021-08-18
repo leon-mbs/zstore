@@ -72,8 +72,7 @@ class SalTypeRep extends \App\Pages\Base
         $mtoname = $this->filter->mto->getValueName();
 
   
-        $detail = array();
-
+   
         $from = strtotime($yfrom . '-' . $mfrom . '-01');
         $dt = new \Carbon\Carbon($from);
         $from = $dt->startOfMonth()->timestamp;
@@ -88,10 +87,12 @@ class SalTypeRep extends \App\Pages\Base
         
         $doclist = \App\Entity\Doc\Document::find("meta_name = 'CalcSalary' and state >= 5 and document_date >= ". $conn->DBDate($from) . " and document_date <= " . $conn->DBDate($to) );
 
-        $stlist   =   SalType::find("","salcode")
+        $stlist   =   SalType::find("disabled<>1","salcode");
         
         $stam = array();
-        
+        foreach($stlist as $st){
+            $stam[$st->salcode]  = 0;   
+        }
     
         foreach ($doclist as $doc) {
 
@@ -99,15 +100,25 @@ class SalTypeRep extends \App\Pages\Base
     
             foreach ($doc->unpackDetails('detaildata') as $emp) {
                 if($emp_id >0 && $emp_id != $emp->employee_id) continue;
-                
-                
+            
+                foreach($stlist as $st){
+                    $code = '_c'.$st->salcode;
+                    $am = doubleval($emp->{$code} );
+                    
+                    $stam[$st->salcode]  += $am;   
+                    
+                }  
+                        
                  
             }
         }
-       
-        foreach ($detail as $k => $item) {
-           
-            $item['v'] = H::fa($item['v']);
+        $detail = array();
+   
+        foreach($stlist as $st){
+                     
+            $detail[] = array('code'=>$st->salcode,
+               'name'=>$st->salname,'am'=>H::fa($stam[$st->salcode] )
+               );
         }
 
 
