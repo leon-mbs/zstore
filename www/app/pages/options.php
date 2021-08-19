@@ -146,6 +146,7 @@ class Options extends \App\Pages\Base
 
         //печать
         $this->add(new Form('printer'))->onSubmit($this, 'savePrinterOnClick');
+        $this->printer->add(new TextInput('pa4width'));
         $this->printer->add(new TextInput('pwidth'));
         $this->printer->add(new TextInput('pdocwidth'));
         $this->printer->add(new TextInput('pheight'));
@@ -166,6 +167,7 @@ class Options extends \App\Pages\Base
             $printer = array();
         }
 
+        $this->printer->pa4width->setText($printer['pa4width']);
         $this->printer->pwidth->setText($printer['pwidth']);
         $this->printer->pdocwidth->setText($printer['pdocwidth']);
         $this->printer->pheight->setText($printer['pheight']);
@@ -324,6 +326,7 @@ class Options extends \App\Pages\Base
     public function savePrinterOnClick($sender) {
         $printer = array();
         $printer['pheight'] = $this->printer->pheight->getText();
+        $printer['pa4width'] = $this->printer->pa4width->getText();
         $printer['pwidth'] = $this->printer->pwidth->getText();
         $printer['pdocwidth'] = $this->printer->pdocwidth->getText();
         $printer['pmaxname'] = $this->printer->pmaxname->getText();

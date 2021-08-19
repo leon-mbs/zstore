@@ -120,8 +120,14 @@ class PPOList extends \App\Pages\Base
 
     public function updateShifts() {
         $this->_shlist = array();
-        $from = \Carbon\Carbon::now()->addMonths(-1)->startOfMonth()->format('c');
-        $to = \Carbon\Carbon::now()->format('c');
+        $dt = new \App\DateTime( );
+   
+        $from = $dt->addMonth(-1)->startOfMonth()->getISO();
+         
+        $dt = new \App\DateTime( );
+   
+        $to= $dt->getISO();
+        
         $cid = $this->opan->filter->searchcomp->getValue();
         $firm = Firm::load($cid);
 

@@ -1,0 +1,187 @@
+<html>
+    <head>
+    </head>
+
+    <body>
+        <div class="row">
+            <div class="col-12  ">
+            
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active"   data-toggle="tab" href="#listtab" role="tab"  >Список</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link"   data-toggle="tab" href="#calctab" role="tab"  >Формулы</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link"   data-toggle="tab" href="#optiontab" role="tab"  >Настройки</a>
+  </li>
+</ul>
+<div class="tab-content"  >
+  <div class="tab-pane   show active" id="listtab"  >
+       <div class="row"    >
+       
+               <div zippy="tablepan"  class="col-12  col-md-8  col-xl-6" >
+                <h3>Справочник  начислений и удержаний </h3>    
+                    <a zippy="addnew" class="btn btn-outline-primary  ">Добавить</a>
+                    <table class="table table-bordered   table-sm"  >
+                        <tr>
+                            <th>Наименование</th>
+
+                            <th> Сокращение</th>
+                            <th> Код</th>
+                         
+                            <th> </th>
+                        </tr>
+                        <tr zippy="stlist">
+                            <td zippy="stname"></td>
+                            <td zippy="shortname"></td>
+                            <td zippy="code"></td>
+                           
+              
+                            <td  ><a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a></td>
+                        </tr>
+                    </table>
+
+
+                </div>
+
+                <form class="col-6 col-md-6 col-xl-4" zippy="editform">
+                    <div class="form-group">
+                        <label for="editstname">Наименование</label>
+                        <input required="required" class="form-control" zippy="editstname"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="editshortname">Сокращенное обозначение</label>
+                        <input maxlength="10"  style="width:200px;" required="required" class="form-control" zippy="editshortname"/>
+                        <small>До 10  символов.  Используется  для  заголовков  таблиц в документах и отчетах</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="editcode">Код                        </label>
+                        <input style="width:75px;" pattern="[0-9]{3}" required="required" class="form-control" zippy="editcode"/>
+                        <small>Трехзначный код больше 100 для использования в  формулах. Колонки  в  документах  и отчетах будут  располагатся  в  порядке, заданом  кодом. 
+                         </small>
+                    </div>
+
+                 
+                    <div class="form-check">
+                        <input zippy="editdisabled" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="editdisabled">Больше не  используется</label>
+                    </div>
+                   <div class="form-group">
+                  
+                     <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  ">&nbsp;&nbsp;
+                      <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary  ">&nbsp;&nbsp;
+                      <input zippy="delete" type="button" value="Удалить" class="btn btn-outline-danger  ">
+                   </div>
+                </form>
+  
+         
+       </div>
+  </div>
+  <div class="tab-pane  " id="calctab"  >
+     <h3>Формулы расчета  зарплаты</h3>   
+      <div class="row"    >
+       <div class="col-12 col-md-6 col-xl-4"    >
+         
+         <form zippy="calcform"  >
+             <div class="form-group">
+             
+               <textarea style="height:600px" class="form-control" zippy="algo" ></textarea>
+             </div> 
+             <div class="form-group">
+                    
+                     <input zippy="savecalc" type="button" value="Сохранить" class="btn btn-success  ">&nbsp;&nbsp;
+                      
+             </div>
+                
+             
+         </form>   
+         
+          </div>
+ <div class="col-12 col-md-6  "    >
+     <h5>Коды контекста      </h5>
+       <b>daysmon</b>  - количество дней в  месяце   
+       <br>
+       <b>invalid</b>  - инвалид (true или false)
+     
+      
+       <br>
+       <br>
+<details>
+            <summary><b>Руководство  по синтаксису</b></summary>
+            <p>  <br>
+              Формулы  пишутся  с  использованием  синтакиса  языка  JavaScript. Вычисления  (в  документе Начисление зарплаты)  производятся  по  
+              строкам  (по  сотруднику  в списке) .
+              <br>Начисления  и удержания  обозначаются  кодом  с префиксом  v.  
+               <br>Например      v900 = v200 + v300
+              <br>При необходимости  список  начислений  и удержаний  может  иметь не  денежные  поля - например  количество  дней  отпуска  
+              или  больничного для  расчета  на  основании  зарплаты  и количества  лней в  месяце.
+              <br>Также  могут  использоватся  некоторые  системные переменные такие  как  количество  дней в
+              месяце,  количество  детей,  инвалид,  совместитель и так  далее.
+              
+              <br>Результат  должен  быть  присвоен  переменной  с  номером  заданым  в  настройках  - 
+              поле  К выдаче. По этому  полю будет  выполнена  запись  в  личный  счет  сотрудника.
+              
+              <br>Формулы сохраняются  как  настройки,  то  есть может  быть  задан алгоритм для  любого  
+              типа  бизнеса  и любого законодательства  любой страны.
+              
+             </p>
+         </details>        
+       </div>
+     </div>
+       
+  </div>
+  <div class="tab-pane  " id="optiontab"  >
+     <h3>Настройки </h3>
+    <div class="row"    >
+       <div class="col-12 col-md-6 col-xl-4"    >
+         
+         <form zippy="optform"  >
+             <div class="form-group">
+                <label for="optbaseincom">Основная  зарплата</label>
+                <select  class="form-control" zippy="optbaseincom" >
+                   <option value="0"></option>
+                </select>
+                <span>Если задано, автоматически  подставляются  начальные  значения  например ставки</span>
+             </div> 
+             <div class="form-group">
+                <label for="optadvance">Выданые авансы</label>
+                <select  class="form-control" zippy="optadvance" >
+                   <option value="0"></option>
+                </select>
+                <span>Заполняется  выданными  авансами за  указаный месяц</span>
+             </div> 
+     
+      
+             <div class="form-group">
+                <label for="optresult">К выдаче</label>
+                <select  class="form-control" zippy="optresult" >
+                
+                </select>
+                <span>Обязательное поле, значение  которого  заносится в  баланс  лицевого  счета  сотрудника. </span>
+                
+             </div> 
+     
+             <div class="form-group">
+                    
+                      
+                   <a zippy="saveopt"    class="btn btn-success  ">Сохранить</a>
+                      
+             </div>
+                
+             
+         </form>    
+     
+  </div>
+</div>           
+</div>           
+                     
+                 
+                
+                
+            </div>
+        </div>
+
+    </body>
+</html>

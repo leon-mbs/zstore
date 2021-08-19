@@ -13,6 +13,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\Date;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
@@ -44,6 +45,7 @@ class EmployeeList extends \App\Pages\Base
         $this->employeedetail->add(new TextInput('editemp_name'));
         $this->employeedetail->add(new DropDownChoice('editbranch', $this->_blist, 0));
 
+        $this->employeedetail->add(new Date('edithiredate'));
         $this->employeedetail->add(new TextInput('editphone'));
         $this->employeedetail->add(new TextInput('editemail'));
         $this->employeedetail->add(new TextArea('editcomment'));
@@ -53,7 +55,10 @@ class EmployeeList extends \App\Pages\Base
         $this->employeedetail->add(new TextInput('editzhour'));
         $this->employeedetail->add(new TextInput('editzmon'));
         $this->employeedetail->add(new TextInput('editadvance'));
-    
+        $this->employeedetail->add(new TextInput('editchildren'));
+        $this->employeedetail->add(new CheckBox('editinvalid'));
+        $this->employeedetail->add(new CheckBox('editcoworker'));
+   
     
     }
 
@@ -106,12 +111,18 @@ class EmployeeList extends \App\Pages\Base
         $this->employeedetail->editbranch->setValue($this->_employee->branch_id);
         $this->employeedetail->editdisabled->setChecked($this->_employee->disabled);
       
+        $this->employeedetail->edithiredate->setDate($this->_employee->hiredate);
         $this->employeedetail->editztype->setValue($this->_employee->ztype);
         $this->employeedetail->editzhour->setText($this->_employee->zhour);
         $this->employeedetail->editzmon->setText($this->_employee->zmon);
         $this->employeedetail->editadvance->setText($this->_employee->advance);
+        $this->employeedetail->editchildren->setText($this->_employee->children);
+        $this->employeedetail->editinvalid->setChecked($this->_employee->invalid);
+        $this->employeedetail->editcoworker->setChecked($this->_employee->coworker);
+
+
         $this->onType( $this->employeedetail->editztype);
-        
+       
     }
 
     public function addOnClick($sender) {
@@ -150,12 +161,17 @@ class EmployeeList extends \App\Pages\Base
 
         $this->_employee->branch_id = $this->employeedetail->editbranch->getValue();
       
+        $this->_employee->hiredate = $this->employeedetail->edithiredate->getDate();
         $this->_employee->ztype = $this->employeedetail->editztype->getValue();
         $this->_employee->zhour = $this->employeedetail->editzhour->getText();
         $this->_employee->zmon  = $this->employeedetail->editzmon->getText();
         $this->_employee->advance = $this->employeedetail->editadvance->getText();
+        $this->_employee->children = $this->employeedetail->editchildren->getText();
          
         
+        $this->_employee->invalid = $this->employeedetail->editinvalid->isChecked() ? 1 : 0;
+        $this->_employee->coworker = $this->employeedetail->editcoworker->isChecked() ? 1 : 0;
+      
         $this->_employee->disabled = $this->employeedetail->editdisabled->isChecked() ? 1 : 0;
         if ($this->_employee->disabled == 1) {
             $u = \App\Entity\User::getByLogin($this->_employee->login);

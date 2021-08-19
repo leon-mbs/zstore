@@ -83,7 +83,7 @@ class ProdAreaList extends \App\Pages\Base
             return;
         }
 
-        $this->_pa->Save();
+        $this->_pa->save();
         $this->padetail->setVisible(false);
         $this->patable->setVisible(true);
         $this->patable->palist->Reload();

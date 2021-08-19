@@ -165,9 +165,10 @@ class DocList extends \App\Pages\Base
         $row->add(new Label('state', Document::getStateName($doc->state)));
         $row->add(new Label('waitapp'))->setVisible($doc->state == Document::STATE_WA);
 
-        $date = new \Carbon\Carbon();
-        $date = $date->addDay();
-        $start = $date->startOfDay()->timestamp;
+        $date = new \App\DateTime();
+        
+        $date = $date->addDay(1);
+        $start = $date->startOfDay()->getTimestamp();
         $row->add(new Label('isplanned'))->setVisible($doc->document_date >= $start);
 
         $row->add(new Label('hasnotes'))->setVisible(strlen($doc->notes) > 0 && $doc->notes == strip_tags($doc->notes));

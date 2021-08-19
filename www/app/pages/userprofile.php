@@ -139,22 +139,26 @@ class UserProfile extends \App\Pages\Base
 
         if (!$this->isError()) {
             $this->user->userpass = (\password_hash($pass, PASSWORD_DEFAULT));
+          //  $this->user->userpass = $pass;
             $this->user->save();
-            $this->setSuccess('saved');
-            System::setUser($this->user);
+             
+             if ($this->user->userlogin != 'admin') {
+
+                $n = new \App\Entity\Notify();
+                $n->user_id = \App\Entity\Notify::SYSTEM;
+
+                $n->dateshow = time();
+                $n->message = H::l('passchanged', $this->user->username, $pass);
+
+                $n->save();
+            }
+          
+            \App\Helper::logout();
+            
+            
         }
 
-        if ($this->user->userlogin != 'admin') {
-
-            $n = new \App\Entity\Notify();
-            $n->user_id = \App\Entity\Notify::SYSTEM;
-
-            $n->dateshow = time();
-            $n->message = H::l('passchanged', $this->user->username, $pass);
-
-            $n->save();
-        }
-
+ 
         $sender->userpassword->setText('');
         $sender->confirmpassword->setText('');
     }

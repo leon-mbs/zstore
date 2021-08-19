@@ -84,7 +84,7 @@ class Orders extends \App\Pages\Base
 
                 $isorder = Document::findCnt(" (meta_name='Order' or meta_name='TTN') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'");
                 if ($isorder > 0) { //уже импортирован
-                    continue;
+                     continue;
                 }
                 foreach ($ocorder['_products_'] as $product) {
                     $code = trim($product['sku']);
@@ -193,6 +193,7 @@ class Orders extends \App\Pages\Base
                 $neworder->notes .= " Тел:" . $shoporder->telephone . ";";
             }
             $neworder->notes .= " Адрес:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
+            $neworder->notes .= " Оплата:" . $shoporder->payment_method . ";";
             $neworder->notes .= " Комментарий:" . $shoporder->comment . ";";
             $neworder->save();
             $neworder->updateStatus(Document::STATE_NEW);

@@ -58,6 +58,10 @@
                                 </select>
                                 <small>Логин связывает сотрудника с пользователем системы</small>
                             </div>
+                           <div class="form-group">
+                                <label for="edithiredate">Дата поступления</label>
+                                <input type="date" class="form-control" zippy="edithiredate"/>
+                            </div>
                             <div class="form-group">
                                 <label for="editemail">E-mail</label>
                                 <input type="email" class="form-control" zippy="editemail"/>
@@ -88,7 +92,7 @@
                             </div>
                         </div>
                         
-                          <div class="col-12 col-md-6 col-xl-4">
+                          <div class="col-12 col-md-4 col-xl-3">
                       
                                 <div class="form-group">
                                    <label for="editztype">Тип зарплаты</label>
@@ -109,7 +113,17 @@
                                <label for="editadvance">Аванс</label>
                                <input pattern="[0-9]+"    class="form-control" zippy="editadvance"/>
                            </div>
-        
+                           <div class="form-group">
+                               <label for="editchildren">Кол детей до  14</label>
+                               <input pattern="[0-9]+"    class="form-control" zippy="editchildren"/>
+                           </div>
+                           <div class="form-check">
+                                <input zippy="editinvalid" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="editinvalid">Инвалид</label>
+                                <br><input zippy="editcoworker" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="editcoworker">Совместитель</label>
+                           </div>
+
                          </div>   
                     </div>
                 </form>

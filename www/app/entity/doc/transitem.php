@@ -28,7 +28,7 @@ class TransItem extends Document
         if ($this->headerdata['toitem'] > 0) {
             $ti = Item::load($this->headerdata['toitem']);
             $price = round(($this->amount) / $this->headerdata["toquantity"]);
-            $stockto = Stock::getStock($this->headerdata['store'], $ti->item_id, $price, "", "", true);
+            $stockto = Stock::getStock($this->headerdata['tostore'], $ti->item_id, $price, "", "", true);
             $sc = new Entry($this->document_id, $this->headerdata["toquantity"] * $price, $this->headerdata["toquantity"]);
             $sc->setStock($stockto->stock_id);
             $sc->save();

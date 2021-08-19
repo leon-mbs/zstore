@@ -125,11 +125,11 @@ class Main extends Base
 
 
         //структура  доходов  и расходов
-        $dt = new \Carbon\Carbon;
-
-        $to = $dt->startOfMonth()->timestamp;
-        $dt->subMonths(3);
-        $from = $dt->startOfMonth()->timestamp;
+        $dt = new \App\DateTime();
+     
+        $to = $dt->startOfMonth()->getTimestamp();
+        $dt=$dt->subMonth(3);
+        $from = $dt->startOfMonth()->getTimestamp();
 
         $names = \App\Entity\IOState::getTypeList();
         if (strlen($brids) > 0) {
@@ -268,7 +268,15 @@ class Main extends Base
                   and state > 3  and (payamount >0  or  payed >0)   and payamount <> payed  
             ";
 
-        $this->_tvars['bicredit'] = H::fa($conn->GetOne($sql));
+       $this->_tvars['bicredit'] = H::fa($conn->GetOne($sql));
+       
+       $sql = "select coalesce(sum(amount),0)  from paylist where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail like '%<beznal>0</beznal>%' )";
+          
+       $this->_tvars['binal'] = H::fa($conn->GetOne($sql));
+       $sql = "select coalesce(sum(amount),0)  from paylist where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail like '%<beznal>1</beznal>%' )";
+       $this->_tvars['bibeznal'] = H::fa($conn->GetOne($sql));
+          
+        
     }
 
     public function sdlistOnRow($row) {

@@ -303,7 +303,7 @@ class Item extends \ZCL\DB\Entity
     //цена  со  скидкой
     public  function getActionPrice($price){
               if(doubleval($this->actionprice)>0 ) return   $this->actionprice;
-              if(doubleval($this->actiondisc)>0 ) return  ($price+ $price * $this->actiondisc/100);
+              if(doubleval($this->actiondisc)>0 ) return  ($price - $price * $this->actiondisc/100);
               
               return  $price;
               

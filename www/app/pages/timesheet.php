@@ -49,10 +49,10 @@ class TimeSheet extends \App\Pages\Base
 
         $this->filter->add(new DropDownChoice('emp', $list, $def));
 
-        $dt = new \Carbon\Carbon;
-
-        $from = $dt->startOfMonth()->timestamp;
-        $to = $dt->endOfMonth()->timestamp;
+        $dt = new \App\DateTime();
+     
+        $from = $dt->startOfMonth()->getTimestamp();
+        $to = $dt->endOfMonth()->getTimestamp();
 
         $this->filter->add(new Date('from', $from));
         $this->filter->add(new Date('to', $to));

@@ -17,7 +17,13 @@
             <b>Месяц:</b> {{month}} {{year}}
         </td>
     </tr>
-
+    {{#advance}}
+  <tr>
+        <td colspan="2">
+            <b>Выплата аванса</b> 
+        </td>
+    </tr>
+    {{/advance}}
     <tr>
         <td colspan="2">
             {{{notes}}}

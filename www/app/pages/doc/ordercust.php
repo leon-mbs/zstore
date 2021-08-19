@@ -66,6 +66,7 @@ class OrderCust extends \App\Pages\Base
         $this->add(new Form('editnewitem'))->setVisible(false);
         $this->editnewitem->add(new TextInput('editnewitemname'));
         $this->editnewitem->add(new TextInput('editnewitemcode'));
+        $this->editnewitem->add(new TextInput('editnewitembrand'));
         $this->editnewitem->add(new Button('cancelnewitem'))->onClick($this, 'cancelnewitemOnClick');
         $this->editnewitem->add(new DropDownChoice('editnewcat', \App\Entity\Category::getList(), 0));
         $this->editnewitem->add(new SubmitButton('savenewitem'))->onClick($this, 'savenewitemOnClick');
@@ -373,6 +374,7 @@ class OrderCust extends \App\Pages\Base
         $item->itemname = $itemname;
         $item->cat_id = $this->editnewitem->editnewcat->getValue();
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
+        $item->manufacturer = $this->editnewitem->editnewitembrand->getText();
 
         if (strlen($item->item_code) > 0) {
             $code = Item::qstr($item->item_code);

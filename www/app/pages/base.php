@@ -201,15 +201,7 @@ class Base extends \Zippy\Html\WebPage
     }
 
     public function LogoutClick($sender) {
-        setcookie("remember", '', 0);
-        System::setUser(new \App\Entity\User());
-        $_SESSION['user_id'] = 0;
-        $_SESSION['userlogin'] = 'Гость';
-
-        //$page = $this->getOwnerPage();
-        //  $page = get_class($page)  ;
-        App::Redirect("\\App\\Pages\\UserLogin");
-        //    App::$app->getresponse()->toBack();
+        \App\Helper::logout();
     }
 
     public function onnbFirm($sender) {

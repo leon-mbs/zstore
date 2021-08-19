@@ -150,14 +150,14 @@ class Util
 
         $list = array();
 
-        $dt = new \Carbon\Carbon;
-        $dt->subMonth();
+        $dt = new \App\DateTime();
+        $dt->subMonth(1);
         for ($i = 1; $i <= $num; $i++) {
             $mon[] = $mlist[$dt->month];
-            $to = $dt->endOfMonth()->timestamp;
-            $from = $dt->startOfMonth()->timestamp;
-            $list[] = array('number' => $dt->month, 'name' => $mlist[$dt->month], 'start' => $from, 'end' => $to);
-            $dt->subMonth();
+            $to = $dt->endOfMonth()->getTimestamp();
+            $from = $dt->startOfMonth()->getTimestamp();
+            $list[] = array('number' => $dt->monthNumber(), 'name' => $mlist[$dt->monthNumber()], 'start' => $from, 'end' => $to);
+            $dt = $dt->subMonth(1);
         }
         $list = array_reverse($list);
 

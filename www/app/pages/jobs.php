@@ -86,10 +86,10 @@ class Jobs extends \App\Pages\Base
         $row->add(new Label("sttoday"))->setVisible(false);
         $row->add(new Label("stpast"))->setVisible(false);
         $row->add(new Label("stdone"))->setVisible(false);
-        $date = new \Carbon\Carbon();
-        $date = $date->addDay();
-        $start = $date->startOfDay()->timestamp;
-
+        $date = new \App\DateTime();
+        $start = $date->addDay(1)->startOfDay()->getTimestamp();
+       
+         
         if ($start <= $event->eventdate) {
             $row->stwait->setVisible(true);
         } else {
