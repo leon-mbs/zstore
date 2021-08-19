@@ -64,58 +64,54 @@ class EmpAccRep extends \App\Pages\Base
         $emp_id = $this->filter->emp->getValue();
         $emp_name = $this->filter->emp->getValueName();
         $yfrom = $this->filter->yfrom->getValue();
-        $mfrom = $this->filter->mfrom->getValue();
+        $mfrom = $this->filter->mfrom->getValue() ;
         $mfromname = $this->filter->mfrom->getValueName();
         $yto = $this->filter->yto->getValue();
-        $mto = $this->filter->mto->getValue();
+        $mto = $this->filter->mto->getValue() ;
         $mtoname = $this->filter->mto->getValueName();
 
-        $doclist = \App\Entity\Doc\Document::find("meta_name = 'OutSalary' and state >= 5 ");
-
-        $detail = array();
-
         $from = strtotime($yfrom . '-' . $mfrom . '-01');
-        $to = strtotime($yto . '-' . $mto . '-01 23:59:59');
+        $dt = new \Carbon\Carbon($from );
+        $from = $dt->startOfMonth()->timestamp;
+ 
+        $d = $yfrom . '-' . $mfrom . '-01';
+        $d = date('Y-m-d H:i' ,$from);
+       
+         $to = strtotime($yto . '-' . $mto . '-01 ');
+         $dt = new \Carbon\Carbon($to);
+         
+         $to = $dt->endOfMonth()->timestamp;
+      
+         $d = date('Y-m-d H:i' ,$to);
+   
+         $conn = \Zdb\DB::getConnect() ;
 
-        foreach ($doclist as $doc) {
+         $sql = "select coalesce(sum(amount),0) from empacc_view where emp_id = {$emp_id} and document_date < ". $conn->DBDate($from)    ;   
 
-            $date = strtotime($doc->headerdata['year'] . '-' . $doc->headerdata['month'] . '-01');
+         $b = $conn->GetOne($sql);
+         
+         $sql = "select coalesce(sum(  case  when amount >0 then amount else  0 end ),0)  as inp, coalesce(sum(  case  when amount <0 then 0-amount else  0 end ),0)  as outp,document_date,document_id,document_number from empacc_view where emp_id= {$emp_id} and document_date >= ". $conn->DBDate($from) . " and document_date <= " . $conn->DBDate($to) . " group by  document_date,document_id,document_number  order  by document_date, document_id "   ;   
+         
+         $rc= $conn->Execute($sql);
+       
+         $detail = array();
+         
+         foreach ($rc as $row) {
 
-            $d1 = \App\Helper::fdt($from);
-            $d2 = \App\Helper::fdt($to);
-            $d3 = \App\Helper::fdt($date);
-
-            if ($date < $from || $date > $to) {
-                continue;
-            }
-
-            foreach ($doc->unpackDetails('detaildata') as $emp) {
-
-                if ($emp_id > 0 && $emp->amount > 0) {
-                    if ($emp->employee_id != $emp_id) {
-                        continue;
-                    }
-                    if (is_array($detail[$doc->headerdata['year'] . $doc->headerdata['month']])) {
-                        $detail[$doc->headerdata['year'] . $doc->headerdata['month']]['v'] += $emp->amount;
-                    } else {
-                        $detail[$doc->headerdata['year'] . $doc->headerdata['month']] = array('k' => $doc->headerdata['monthname'] . ' ' . $doc->headerdata['year'], 'v' => $emp->amount);
-                    }
-                } else {
-                    if ($emp->amount > 0) {
-                        if (is_array($detail[$emp->employee_id])) {
-                            $detail[$emp->employee_id]['v'] += $emp->amount;
-                        } else {
-                            $detail[$emp->employee_id] = array('k' => $emp->emp_name, 'v' => $emp->amount);
-                        }
-                    }
-                }
-            }
-        }
-        $total = 0;
-        foreach ($detail as $k => $item) {
-            $total += $item['v'];
-            $item['v'] = H::fa($item['v']);
-        }
+           $detail[] = array(
+             'dt'=> $row['document_date'] ,
+             'doc'=>$row['document_number'],
+             'begin'=> H::fa($b),
+            'in'=>H::fa($row['inp']),
+            'out'=>H::fa($row['outp']),
+            'end'=>H::fa($b + $row['inp'] - $row['outp'] )
+              );
+         
+          
+            $b  = $b + $row['inp'] - $row['outp']  ;
+         }
+        
+     
 
 
         $header = array(
@@ -124,8 +120,7 @@ class EmpAccRep extends \App\Pages\Base
             'mfrom'    => $mfromname,
             'yto'      => $yto,
             'mto'      => $mtoname,
-            'isemp'    => $emp_id > 0,
-            'total'    => H::fa($total),
+        
             "emp_name" => $emp_name
         );
 
