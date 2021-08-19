@@ -22,10 +22,11 @@ class PayBalance extends \App\Pages\Base
             return;
         }
 
-        $dt = new \Carbon\Carbon;
-        $dt->subMonth();
-        $from = $dt->startOfMonth()->timestamp;
-        $to = $dt->endOfMonth()->timestamp;
+        $dt = new \App\DateTime();
+        $dt->subMonth(1);
+ 
+        $from = $dt->startOfMonth()->getTimestamp();
+        $to = $dt->endOfMonth()->getTimestamp();
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
 

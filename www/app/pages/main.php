@@ -125,11 +125,11 @@ class Main extends Base
 
 
         //структура  доходов  и расходов
-        $dt = new \Carbon\Carbon;
-
-        $to = $dt->startOfMonth()->timestamp;
-        $dt->subMonths(3);
-        $from = $dt->startOfMonth()->timestamp;
+        $dt = new \App\DateTime();
+     
+        $to = $dt->startOfMonth()->getTimestamp();
+        $dt=$dt->subMonth(3);
+        $from = $dt->startOfMonth()->getTimestamp();
 
         $names = \App\Entity\IOState::getTypeList();
         if (strlen($brids) > 0) {

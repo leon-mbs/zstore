@@ -60,7 +60,13 @@ class EmpAccRep extends \App\Pages\Base
     }
 
     private function generateReport() {
-
+    $dt = new \App\DateTime( );
+     $from = $dt->addMonth(-1)->startOfMonth()->getTimestamp();
+        $from= date(\DateTime::ISO8601,$from);
+        
+        
+        $to= date(\DateTime::ISO8601,time());
+   
         $emp_id = $this->filter->emp->getValue();
         $emp_name = $this->filter->emp->getValueName();
         $yfrom = $this->filter->yfrom->getValue();
@@ -70,20 +76,14 @@ class EmpAccRep extends \App\Pages\Base
         $mto = $this->filter->mto->getValue() ;
         $mtoname = $this->filter->mto->getValueName();
 
-        $from = strtotime($yfrom . '-' . $mfrom . '-01');
-        $dt = new \Carbon\Carbon($from );
-        $from = $dt->startOfMonth()->timestamp;
- 
-        $d = $yfrom . '-' . $mfrom . '-01';
-        $d = date('Y-m-d H:i' ,$from);
-       
-         $to = strtotime($yto . '-' . $mto . '-01 ');
-         $dt = new \Carbon\Carbon($to);
+    
+         $dt = new \App\DateTime(strtotime($yfrom . '-' . $mfrom . '-01')) ;        
+         $from = $dt->startOfMonth()->getTimestamp();
+           
+         $dt = new \App\DateTime(strtotime($yto . '-' . $mto . '-01')) ;        
+         $to = $dt->endOfMonth()->getTimestamp();
          
-         $to = $dt->endOfMonth()->timestamp;
       
-         $d = date('Y-m-d H:i' ,$to);
-   
          $conn = \Zdb\DB::getConnect() ;
 
          $sql = "select coalesce(sum(amount),0) from empacc_view where emp_id = {$emp_id} and document_date < ". $conn->DBDate($from)    ;   

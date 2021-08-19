@@ -39,11 +39,10 @@ class EmpAcc extends \ZCL\DB\Entity
     }
     public  static function getAmountByType($y,$m,$t){
          
-         $dt = strtotime($y.'-'.$m.'-01') ;
-         $dt = new \Carbon\Carbon($dt);
+        $dt = new \App\DateTime(strtotime($y.'-'.$m.'-01') );
 
-         $from = $dt->startOfMonth()->timestamp;
-         $to = $dt->endOfMonth()->timestamp;
+        $from = $dt->startOfMonth()->getTimestamp();
+        $to = $dt->endOfMonth()->getTimestamp()    ;
            
         
          $conn = \ZDB\DB::getConnect();

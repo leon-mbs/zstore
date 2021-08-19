@@ -74,14 +74,15 @@ class SalTypeRep extends \App\Pages\Base
   
    
         $from = strtotime($yfrom . '-' . $mfrom . '-01');
-        $dt = new \Carbon\Carbon($from);
-        $from = $dt->startOfMonth()->timestamp;
+        $dt = new \App\DateTime($from);
+        $from = $dt->startOfMonth()->getTimestamp();
  
     
-         $to = strtotime($yto . '-' . $mto . '-01 23:59:59');
-         $dt = new \Carbon\Carbon($to);
-
-         $to = $dt->endOfMonth()->timestamp;
+         $to = strtotime($yto . '-' . $mto . '-01');
+         $dt = new \App\DateTime($to);
+        
+  
+         $to = $dt->endOfMonth()->getTimestamp();
     
         $conn = \Zdb\DB::getConnect() ;
         

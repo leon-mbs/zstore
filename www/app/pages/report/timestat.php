@@ -26,10 +26,10 @@ class TimeStat extends \App\Pages\Base
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
 
-        $dt = new \Carbon\Carbon;
+        $dt = new \App\DateTime();
 
-        $from = $dt->startOfMonth()->timestamp;
-        $to = $dt->endOfMonth()->timestamp;
+        $from = $dt->startOfMonth()->getTimestamp();
+        $to = $dt->endOfMonth()->getTimestamp()    ;
 
         $this->filter->add(new Date('from', $from));
         $this->filter->add(new Date('to', $to));
