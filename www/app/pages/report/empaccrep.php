@@ -11,7 +11,7 @@ use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
 
 /**
- *  Отчет по  зарплате
+ *  Отчет движение  по  лицевым  счетам
  */
 class EmpAccRep extends \App\Pages\Base
 {
@@ -60,8 +60,8 @@ class EmpAccRep extends \App\Pages\Base
     }
 
     private function generateReport() {
-    $dt = new \App\DateTime( );
-     $from = $dt->addMonth(-1)->startOfMonth()->getTimestamp();
+        $dt = new \App\DateTime( );
+        $from = $dt->addMonth(-1)->startOfMonth()->getTimestamp();
         $from= date(\DateTime::ISO8601,$from);
         
         
@@ -69,6 +69,10 @@ class EmpAccRep extends \App\Pages\Base
    
         $emp_id = $this->filter->emp->getValue();
         $emp_name = $this->filter->emp->getValueName();
+        if(strlen($emp_name)==0) {
+            $this->setError('noempselected') ;
+            return;
+        }
         $yfrom = $this->filter->yfrom->getValue();
         $mfrom = $this->filter->mfrom->getValue() ;
         $mfromname = $this->filter->mfrom->getValueName();
