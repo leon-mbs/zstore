@@ -28,7 +28,8 @@
         "symfony/polyfill-mbstring": "v1.22.0",
         "symfony/polyfill-uuid": "v1.22.0",
         "myclabs/php-enum": "1.7.7",
-       
+               
+ 
         "leon-mbs/zippy": "2.4.0"
 
     }
