@@ -907,7 +907,7 @@ icon: 'fa fa-exclamation-triangle text-warning',
             $(function () {
             $('[data-toggle="popover"]').popover();
             $('[data-toggle="tooltip"]').tooltip();
-          //  $('.select2').select2();
+            $('.select2').select2();
             });
             $(window).scroll(function () {
             if ($(this).scrollTop() > 600) {
@@ -948,8 +948,36 @@ icon: 'fa fa-exclamation-triangle text-warning',
             }
             
          
-              
-               
+            function  _getValue(id){
+                  var v = parseFloat($('#'+id).val()); 
+                
+                  if(Number.isNaN(v)==false) {
+                      return v;  
+                  } else {
+                      return 0;
+                  }
+                
+            }
+            
+            {{#twodigit}}
+            //форматирует
+            function  _setText(id,v){
+               $('#'+id).val( v.toFixed(2)  );         
+            }
+            function  _setVal(id,v){
+               $('#'+id).val( v.toFixed(2) );         
+            }
+            {{/twodigit}}
+        
+            {{^twodigit}}
+            //форматирует
+            function  _setText(id,v){
+               $('#'+id).val( v.toFixed(0)  );         
+            }
+            function  _setVal(id,v){
+               $('#'+id).val( v.toFixed(0) );         
+            }
+            {{/twodigit}}
             
         </script>
         {{#usescanner}}
