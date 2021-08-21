@@ -60,16 +60,9 @@ class Invoice extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
 
         $this->docform->add(new Label('discount')) ;
-        $this->docform->add(new TextInput('editpaydisc'));
-        $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
-        $this->docform->add(new Label('paydisc', 0));
-
-        $this->docform->add(new TextInput('editpayamount'));
-        $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
-        $this->docform->add(new TextInput('editpayed', "0"));
-        $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
-        $this->docform->add(new Label('payed', 0));
-        $this->docform->add(new Label('payamount', 0));
+        $this->docform->add(new TextInput('paydisc', 0))->onChange($this,'onPayDisc',true);
+        $this->docform->add(new TextInput('payed', 0));
+        $this->docform->add(new TextInput('payamount', 0));
 
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
 
@@ -120,13 +113,13 @@ class Invoice extends \App\Pages\Base
             $this->docform->store->setValue($this->_doc->headerdata['store']);
 
             $this->docform->payamount->setText($this->_doc->payamount);
-            $this->docform->editpayamount->setText($this->_doc->payamount);
+            
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
-            $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
+            
             if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
                 $this->_doc->payed = $this->_doc->headerdata['payed'];
             }
-            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
+            
             $this->docform->payed->setText(H::fa($this->_doc->payed));
 
             $this->docform->total->setText($this->_doc->amount);
@@ -446,21 +439,7 @@ class Invoice extends \App\Pages\Base
     }
 
 
-    public function onPayAmount($sender) {
-        $this->docform->payamount->setText(H::fa($this->docform->editpayamount->getText()));
-    }
-
-    public function onPayed($sender) {
-        $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
-    }
-
-    public function onPayDisc() {
-
-
-        $this->docform->paydisc->setText(H::fa($this->docform->editpaydisc->getText()));
-
-        $this->calcPay();
-    }
+ 
 
     /**
      * Расчет  итого
@@ -476,29 +455,9 @@ class Invoice extends \App\Pages\Base
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
-        $disc = 0;
-
-        $customer_id = $this->docform->customer->getKey();
-        if ($customer_id > 0) {
-            $customer = Customer::load($customer_id);
-
-            if ($customer->discount > 0) {
-                $disc = round($total * ($customer->discount / 100));
-            } else {
-                $bonus = $customer->getBonus();
-                if ($bonus > 0) {
-                    if ($total >= $bonus) {
-                        $disc = $bonus;
-                    } else {
-                        $disc = $total;
-                    }
-                }
-            }
-        }
-
-
-        $this->docform->paydisc->setText(H::fa($disc));
-        $this->docform->editpaydisc->setText(H::fa($disc));
+        
+      
+         
     }
 
     private function calcPay() {
@@ -506,14 +465,21 @@ class Invoice extends \App\Pages\Base
         $disc = $this->docform->paydisc->getText();
 
 
-        $this->docform->editpayamount->setText(H::fa($total - $disc));
         $this->docform->payamount->setText(H::fa($total - $disc));
+        
 
-        $this->docform->editpayed->setText(H::fa($total - $disc));
         $this->docform->payed->setText(H::fa($total - $disc));
+        
 
     }
 
+    
+    public function onPayDisc($sender){
+         $this->calcPay() ;
+         $this->updateAjax(array('payamount','payed'));         
+    }
+    
+    
     /**
      * Валидация   формы
      *
