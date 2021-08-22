@@ -205,15 +205,19 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->total->setText($order->amount);
 
                         $this->OnChangeCustomer($this->docform->customer);
-                        if ($order->payamount > 0) {
-                            $this->docform->payment->setValue(0); // предоплата
-
-                        }
-
+                     
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                         $this->calcTotal();
                         $this->calcPay();
+                        
+                        if ($order->payamount > 0) {
+                            $this->docform->payment->setValue(0); // предоплата
+                            $this->docform->editpayed->setText(H::fa(0));
+                            $this->docform->payed->setText(H::fa(0));
+                        }
+                        
+                        
                     }
                     if ($basedoc->meta_name == 'Invoice') {
 
@@ -239,6 +243,8 @@ class GoodsIssue extends \App\Pages\Base
 
                         if ($invoice->payamount > 0) {
                             $this->docform->payment->setValue(0); // предоплата
+                            $this->docform->editpayed->setText(H::fa(0));
+                            $this->docform->payed->setText(H::fa(0));
 
                         }
                     }
@@ -706,6 +712,9 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->editpayamount->setText(H::fa($total));
         $this->docform->payamount->setText(H::fa($total));
 
+        
+        
+        
         $this->docform->editpayed->setText(H::fa($total));
         $this->docform->payed->setText(H::fa($total));
 
