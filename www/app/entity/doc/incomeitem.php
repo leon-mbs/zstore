@@ -47,8 +47,8 @@ class IncomeItem extends Document
              
         }
           //авансовый    отчет
-          $ua = new \App\Entity\UserAcc() ;
-          $ua->optype =  \App\Entity\UserAcc::OUTCOME_TO_MF;
+          $ua = new \App\Entity\EmpAcc() ;
+          $ua->optype =  \App\Entity\EmpAcc::OUTCOME_TO_MF;
           $ua->document_id =  $this->document_id;
           $ua->emp_id =  $this->headerdata["emp"];
           $ua->amount =  $amount;
