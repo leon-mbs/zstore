@@ -89,19 +89,20 @@ class EmpTask extends \App\Pages\Base
             $total = 0;
             $hours = 0;
             foreach ($doc->unpackDetails('detaildata') as $service) {
-                $total += $service->cost * $service->qty;
-                $hours += $service->hours * $service->qty;
+                $ser = \App\Entity\Service::load($service->service_id)  ;
+                
+                $total += $ser->cost * $service->quantity;
+                $hours += $ser->hours * $service->quantity;
             }
             if ($doc->headerdata['hours'] > 0) {
                 $hours = $doc->headerdata['hours'];
             }
 
-            $part = round($total / count($emplist)); //доля денег
-
+            
             foreach ($emplist as $emp) {
 
 
-                $elist[$emp->employee_id]->amount += $part;
+                $elist[$emp->employee_id]->amount += round($total * $emp->ktu);
                 $elist[$emp->employee_id]->hours += $hours;
                 $elist[$emp->employee_id]->cnt += 1;
             }

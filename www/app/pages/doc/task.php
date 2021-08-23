@@ -76,12 +76,13 @@ class Task extends \App\Pages\Base
 
         $this->editdetailprod->add(new TextInput('editqtyprod'));
         $this->editdetailprod->add(new TextInput('editdescprod'));
-        $this->editdetailprod->add(new Button('cancelrowprod'))->onClick($this, 'cancelrowprodOnClick');
+        $this->editdetailprod->add(new Button('cancelrowprod'))->onClick($this, 'cancelprodrowOnClick');
         $this->editdetailprod->add(new SubmitButton('saverowprod'))->onClick($this, 'saverowprodOnClick');
 
         //employer
         $this->add(new Form('editdetail3'))->setVisible(false);
         $this->editdetail3->add(new DropDownChoice('editemp', Employee::findArray("emp_name", "disabled<>1", "emp_name")));
+        $this->editdetail3->add(new TextInput('editktu'));
         $this->editdetail3->add(new Button('cancelrow3'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail3->add(new SubmitButton('saverow3'))->onClick($this, 'saverow3OnClick');
 
@@ -209,6 +210,8 @@ class Task extends \App\Pages\Base
         }
 
         $this->_servicelist = array_diff_key($this->_servicelist, array($service->_rowidser => $this->_servicelist[$service->_rowidser]));
+        $this->docform->detail->Reload();
+        
     }
 
     public function saverowOnClick($sender) {
@@ -225,8 +228,7 @@ class Task extends \App\Pages\Base
         if (strlen($service->price) == 0) {
             $service->price = 0;
         }
-
-
+ 
         if ($this->_rowidser > 0) {
             $service->_rowidser = $this->_rowidser;
         } else {
@@ -356,6 +358,7 @@ class Task extends \App\Pages\Base
         $this->editdetail3->setVisible(true);
         $this->docform->setVisible(false);
 
+        $this->editdetail3->editktu->setText('1');
         $this->editdetail3->editemp->setValue(0);
     }
 
@@ -367,7 +370,7 @@ class Task extends \App\Pages\Base
             return;
         }
         $emp = Employee::load($id);
-
+        $emp->ktu =   $this->editdetail3->editktu->getText();
         $this->_emplist[$emp->employee_id] = $emp;
         $this->editdetail3->setVisible(false);
         $this->docform->setVisible(true);
@@ -378,6 +381,7 @@ class Task extends \App\Pages\Base
         $emp = $row->getDataItem();
 
         $row->add(new Label('empname', $emp->emp_name));
+        $row->add(new Label('empktu', $emp->ktu));
         $row->add(new ClickLink('delete3'))->onClick($this, 'delete3OnClick');
     }
 
@@ -518,7 +522,17 @@ class Task extends \App\Pages\Base
         if (count($this->_servicelist) == 0 && count($this->_prodlist) == 0) {
             $this->setError("noenterpos");
         }
-
+        if(count($this->_emplist)>0) {
+          $ktu=0;    
+          foreach($this->_emplist as $emp){
+             $ktu += doubleval($emp->ktu) ;   
+          }
+          if($ktu != 1) {
+              $this->setError("ktu1") ;
+          }
+          
+        }
+        
         return !$this->isError();
     }
 

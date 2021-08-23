@@ -270,6 +270,7 @@ class ProdIssue extends \App\Pages\Base
         $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
         $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
