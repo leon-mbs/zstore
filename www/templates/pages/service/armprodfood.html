@@ -44,23 +44,32 @@
                         callPageMethod('getMessages',null,null,(data)=> 
                         {
                            
-                           var  answer = JSON.parse(data)  
-     
-                                if (answer.cnt > 0) {
-                                    $('#newordersalert').show();
-                                    $('#neworderscnt').text('Новых заказов ' + answer.cnt);
-
+                                var  answer = JSON.parse(data)  
+                                
+                                if (answer.update==true ) {
+                                  
+                                      $('#btnupdate').trigger('click') ;
+                                      return;
                                 }
-
-
+                             
+                                
+                                if(answer.cnt > 0){
+                                   $('#newordersalert').show();
+                                   $('#neworderscnt').text('Новых заказов ' + answer.cnt);
+                                   
+                                  window.setTimeout(function(){
+                                                  
+                                        $('#btnupdate').trigger('click') ;
+                                        }, 5000); 
+                                           
+                                 }
+                                 
+                                
                             });
                 }
 
 
-                
-
-                //  callPageMethod('getMessages',[1],null,(data)=>{ alert('test '+data.cnt) }) ;
-
+                                   
             </script>
 
     </body>

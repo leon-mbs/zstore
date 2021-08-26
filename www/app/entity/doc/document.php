@@ -235,7 +235,7 @@ class Document extends \ZCL\DB\Entity
     }
 
     /**
-     * Выполнение документа - обычно обновление склада
+     * Выполнение документа - обычно проводки по  складу и платежи
      *
      */
     public function Execute() {
@@ -245,7 +245,7 @@ class Document extends \ZCL\DB\Entity
 
     /**
      * Запись  платежей
-     *
+     * Для  документов  у которых платеж идет отдельно от остальных проводок  
      */
     public function DoPayment() {
 
@@ -253,7 +253,7 @@ class Document extends \ZCL\DB\Entity
 
     /**
      * Проводки по складу
-     *
+     * Для  документов  у которых проводки  по  складу  идут отдельно от остальных проводок  
      */
     public function DoStore() {
 
@@ -925,5 +925,12 @@ class Document extends \ZCL\DB\Entity
         return $img;
     }
 
+    /**
+    * проверка  может  ли  быть  отменен
+    * 
+    */
+    public  function canCanceled(){
+        return  true;
+    }
 
 }

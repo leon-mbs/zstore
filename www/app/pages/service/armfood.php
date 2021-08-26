@@ -483,6 +483,14 @@ class ARMFood extends \App\Pages\Base
         $row->add(new ClickLink('qtymin'))->onClick($this, 'onQtyClick');
         $row->add(new ClickLink('qtyplus'))->onClick($this, 'onQtyClick');
         $row->add(new ClickLink('removeitem'))->onClick($this, 'onDelItemClick');
+        if($item->foodstate==1) {
+           $row->removeitem->setVisible(false);   
+           $row->myselfon->setVisible(false);   
+           $row->myselfoff->setVisible(false);   
+           $row->qtymin->setVisible(false);   
+           $row->qtyplus->setVisible(false);   
+           $row->removeitem->setVisible(false);   
+        }
     }
 
     public function onQtyClick($sender) {
@@ -517,7 +525,8 @@ class ARMFood extends \App\Pages\Base
 
 
     public function OnDocViewClick($sender) {
-        $this->_doc = $sender->getOwner()->getDataItem();
+        
+        $this->_doc = Document::load($sender->getOwner()->getDataItem()->document_id);
         $this->OnDocView();
 
     }
@@ -680,7 +689,7 @@ class ARMFood extends \App\Pages\Base
             $n = new \App\Entity\Notify();
             $n->user_id = \App\Entity\Notify::DELIV;
             $n->dateshow = time();
-            $n->message = $this->_doc->document_id;
+            $n->message = serialize(array('document_id'=>$this->_doc->document_id)) ;
 
             $n->save();
             $this->setInfo('sentdelivary');
@@ -690,7 +699,7 @@ class ARMFood extends \App\Pages\Base
             $n = new \App\Entity\Notify();
             $n->user_id = \App\Entity\Notify::ARMFOODPROD;
             $n->dateshow = time();
-            $n->message = $this->_doc->document_id;
+            $n->message = serialize(array('cmd'=>'new', 'document_id'=>$this->_doc->document_id)) ;
 
             $n->save();
 
@@ -704,12 +713,29 @@ class ARMFood extends \App\Pages\Base
     // в  производство
     public function toprodOnClick($sender) {
 
+ 
         $this->createdoc();
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         //списываем  со  склада
+   
         try {
+            if($this->_doc->state==Document::STATE_INPROCESS){
+                  $conn = \ZDB\DB::getConnect();
+                  $conn->Execute("delete from entrylist where document_id =" . $this->_doc->document_id);
+                  $conn->Execute("delete from iostate where document_id=" . $this->_doc->document_id);
+  
+                $n = new \App\Entity\Notify();
+                $n->user_id = \App\Entity\Notify::ARMFOODPROD;
+                $n->dateshow = time();
+              
+                $n->message = serialize(array('cmd'=>'update')) ;
+                 
+           
+                $n->save();
+            }
+            
             $this->_doc->DoStore();
             $this->_doc->save();
             $this->_doc->updateStatus(Document::STATE_INPROCESS);
@@ -725,12 +751,7 @@ class ARMFood extends \App\Pages\Base
             return;
         }
 
-        $n = new \App\Entity\Notify();
-        $n->user_id = \App\Entity\Notify::ARMFOODPROD;
-        $n->dateshow = time();
-        $n->message = $this->_doc->document_id;
-
-        $n->save();
+      
 
 
         $this->setInfo('sentprod');
@@ -981,8 +1002,10 @@ class ARMFood extends \App\Pages\Base
         $cntprod = 0;
         $mlist = \App\Entity\Notify::find("checked <> 1 and user_id=" . \App\Entity\Notify::ARMFOOD);
         foreach ($mlist as $n) {
-            $doc = Document::load(intval($n->message));
-            if ($doc->state == Document::STATE_FINISHED) {
+            $msg  = @unserialize($n->message)  ;
+            
+            $doc = Document::load(intval($msg['document_id']));
+            if ($doc->state == Document::STATE_FINISHED || $doc->state == Document::STATE_CLOSED ) {
                 $cntprod++;
             }
             if ($doc->state == Document::STATE_NEW) {

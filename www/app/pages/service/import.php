@@ -64,6 +64,7 @@ class Import extends \App\Pages\Base
         $form->add(new CheckBox("checkname"));
         $form->add(new CheckBox("noshowprice"));
         $form->add(new CheckBox("noshowshop"));
+        $form->add(new CheckBox("update"));
 
 
         $form->onSubmit($this, "onImport");
@@ -245,6 +246,7 @@ class Import extends \App\Pages\Base
             $price5 = str_replace(',', '.', trim($row[$colprice5]));
             $itemcode = trim($row[$colcode]);
             $brand = trim($row[$colbrand]);
+            $itemname = trim($row[$colname]);
 
             if ($t == 2) {   //обновление  цен
 
@@ -275,7 +277,9 @@ class Import extends \App\Pages\Base
                 if ($colprice5 != "0") {
                     $it->price5 = $price5;
                 }
-
+                if(strlen($itemname)>0) {
+                    $it->itemname = $itemname;
+                }
 
                 $it->save();
                 $cnt++;
