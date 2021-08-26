@@ -369,7 +369,9 @@ class DocList extends \App\Pages\Base
             $this->setError("dochasnocanceledchilld");
             return;
         }
-        if ($doc->canCanceled()==false) {
+        $cc = $doc->canCanceled();
+        if (strlen($cc)>0) {
+             $this->setError($cc);
 
              return;
         }

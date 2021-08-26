@@ -98,9 +98,7 @@ INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `d
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  4, 'Нарахування та утримання', 'SalaryTypeList', '', 0);
 INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Нарахування та утримання', 'SalTypeRep', 'Зарплата', 0);
 INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Рух  по особовому рахунку', 'EmpAccRep', 'Зарплата', 0);
-INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Вир. процеси', 'ProdProcList', 'Виробництво', 0);
-INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Вир. етапи', 'ProdStageList', 'Виробництво', 0);
- 
+  
 
 
 INSERT INTO `saltypes` (`st_id`, `salcode`, `salname`, `salshortname`, `disabled`) VALUES(2, 105, 'Основна  зарплата', 'осн', 0);

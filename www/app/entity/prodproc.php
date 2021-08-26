@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use App\Helper;
+use App\System;
+
 /**
  * Класс-сущность  производственный процесс
  *
@@ -11,7 +14,13 @@ namespace App\Entity;
 class ProdProc extends \ZCL\DB\Entity
 {
 
-
+    const STATE_NEW=0;
+    const STATE_INPROCESS=1;
+    const STATE_STOPPED=2;
+    const STATE_FINISHED=3;
+    const STATE_CANCELED=4;
+    
+    
     protected function init() {
         $this->pp_id = 0;
   
@@ -21,12 +30,8 @@ class ProdProc extends \ZCL\DB\Entity
         parent::beforeSave();
         //упаковываем  данные в detail
         $this->detail = "<detail>";
-        $this->detail .= "<beznal>{$this->beznal}</beznal>";
-        $this->detail .= "<btran>{$this->btran}</btran>";
-        $this->detail .= "<btranin>{$this->btranin}</btranin>";
-        $this->detail .= "<bank><![CDATA[{$this->bank}]]></bank>";
-        $this->detail .= "<bankacc><![CDATA[{$this->bankacc}]]></bankacc>";
-
+         $this->detail .= "<notes><![CDATA[{$this->notes}]]></notes>";
+      
         $this->detail .= "</detail>";
 
         return true;
@@ -39,15 +44,37 @@ class ProdProc extends \ZCL\DB\Entity
         }
 
         $xml = simplexml_load_string($this->detail);
-        $this->beznal = intval($xml->beznal[0]);
-        $this->btran = floatval($xml->btran[0]);
-        $this->btranin = floatval($xml->btranin[0]);
-        $this->bank = (string)($xml->bank[0]);
-        $this->bankacc = (string)($xml->bankacc[0]);
+ 
+        $this->notes = (string)($xml->notes[0]);
 
         parent::afterLoad();
     }
 
-    
+  
+    /**
+     * Возвращает название  статуса  документа
+     *
+     * @param mixed $state
+     * @return mixed
+     */
+    public static function getStateName($state) {
+
+        switch($state) {
+            case Document::STATE_NEW:
+                return Helper::l('stpp_new');
+            case Document::STATE_INPROCESS:
+                return Helper::l('stpp_inprocess');
+            case Document::STATE_STOPPED:
+                return Helper::l('stpp_stopped');
+            case Document::STATE_FINISHED:
+                return Helper::l('stpp_finished');
+            case Document::STATE_CANCELED:
+                return Helper::l('stpp_canceled');
+            
+
+            default:
+                return Helper::l('st_unknow');
+        }
+    }  
  
 }

@@ -38,7 +38,7 @@ class ProdProcList extends \App\Pages\Base
         }
 
      
-        $proclist = $this->add(new DataView('doclist', new PProcListDataSource($this), $this, 'proclistOnRow'));
+        $proclist = $this->add(new DataView('proclist', new PProcListDataSource($this), $this, 'proclistOnRow'));
 
         $this->add(new Paginator('pag', $proclist));
         $proclist->setPageSize(H::getPG());
@@ -106,7 +106,7 @@ class PProcListDataSource implements \Zippy\Interfaces\DataSource
     public function getItems($start, $count, $sortfield = null, $asc = null) {
          
 
-       return  ProdProc::find($this->getWhere()," state  ");
+       return  ProdProc::find($this->getWhere()," pp_id desc  ");
 
         
     }
