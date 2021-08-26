@@ -64,8 +64,7 @@ class Import extends \App\Pages\Base
         $form->add(new CheckBox("checkname"));
         $form->add(new CheckBox("noshowprice"));
         $form->add(new CheckBox("noshowshop"));
-        $form->add(new CheckBox("update"));
-
+        
 
         $form->onSubmit($this, "onImport");
 
