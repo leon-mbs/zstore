@@ -341,6 +341,9 @@ class DocList extends \App\Pages\Base
         $this->docview->setVisible(false);
 
         $doc = $sender->owner->getDataItem();
+        
+        $doc = $doc->cast();
+        
         //   if (false == \App\ACL::checkEditDoc($doc, true))
         //     return;
         $user = System::getUser();
@@ -365,6 +368,10 @@ class DocList extends \App\Pages\Base
 
             $this->setError("dochasnocanceledchilld");
             return;
+        }
+        if ($doc->canCanceled()==false) {
+
+             return;
         }
 
         $conn = \ZDB\DB::getConnect();

@@ -243,7 +243,6 @@ class OrderFood extends Document
         }
     }
 
-    protected function onState($state) {
-
-    }
+    
+    
 }
