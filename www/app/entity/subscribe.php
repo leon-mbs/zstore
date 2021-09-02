@@ -216,7 +216,7 @@ class Subscribe extends \ZCL\DB\Entity
         }
         if ($doc->headerdata['salesource']>0) {
             $sl = H::getSaleSources() ;
-            $header['source'] = $doc->headerdata['salesource']>0;
+            $header['source'] = $sl[$doc->headerdata['salesource']] ;
         }
 
         $table = array();
