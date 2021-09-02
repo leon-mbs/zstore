@@ -3,7 +3,7 @@
 
     <tr>
 
-        <th align="center" colspan="9">
+        <th align="center" colspan="11">
             Прайс от {{date}}<br>
         </th>
     </tr>
@@ -21,6 +21,7 @@
         <th>{{price3name}}</th>
         <th>{{price4name}}</th>
         <th>{{price5name}}</th>
+        <th>Кол.</th>
 
     </tr>
     {{#_detail}}
@@ -37,7 +38,7 @@
         <td align="right">{{price3}}</td>
         <td align="right">{{price4}}</td>
         <td align="right">{{price5}}</td>
-
+        <td align="right">{{qty}}</td>
     </tr>
     {{/_detail}}
 </table>

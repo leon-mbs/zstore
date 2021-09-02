@@ -74,19 +74,22 @@ class Price extends \App\Pages\Base
         $onstore = $this->filter->onstore->isChecked();
 
         $detail = array();
-        $qty = "";
-        if ($onstore) {
-            $qty = " and item_id in(select  item_id from store_stock where  qty >0 ) ";
-        }
-        $items = Item::find("disabled <>1 {$qty} and detail not  like '%<noprice>1</noprice>%'", "cat_name,itemname");
+       
+        $items = Item::find("disabled <>1 and detail not  like '%<noprice>1</noprice>%'", "cat_name,itemname");
 
         foreach ($items as $item) {
+            
+            $qty = $item->getQuantity();
+            
+            if($onstore  &&  ($qty > 0)==false ) continue;
+            
             $detail[] = array(
                 "code"   => $item->item_code,
                 "name"   => $item->itemname,
                 "cat"    => $item->cat_name,
                 "brand"  => $item->manufacturer,
                 "msr"    => $item->msr,
+                "qty"    => \App\Helper::fqty($qty),
                 "price1" => $isp1 ? $item->getPrice('price1') : "",
                 "price2" => $isp2 ? $item->getPrice('price2') : "",
                 "price3" => $isp3 ? $item->getPrice('price3') : "",

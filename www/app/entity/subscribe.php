@@ -179,6 +179,7 @@ class Subscribe extends \ZCL\DB\Entity
         $header['nal'] = '';
         $header['mf'] = '';
         $header['pos'] = '';
+        $header['source'] = '';
         $header['device'] = $doc->headerdata['device'];
         if (strlen($doc->headerdata['device']) > 0 && strlen($doc->headerdata['devsn']) > 0) {
             $header['device'] .= " (" . $doc->headerdata['devsn'] . ")";
@@ -212,6 +213,10 @@ class Subscribe extends \ZCL\DB\Entity
         if ($doc->headerdata['pos']) {
             $pos = \App\Entity\Pos::load($doc->headerdata['pos']);
             $header['pos'] = $pos->pos_name;
+        }
+        if ($doc->headerdata['salesource']>0) {
+            $sl = H::getSaleSources() ;
+            $header['source'] = $sl[$doc->headerdata['salesource']] ;
         }
 
         $table = array();
