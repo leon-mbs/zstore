@@ -372,9 +372,13 @@ class Item extends \ZCL\DB\Entity
      * @param mixed $snumber партия проиводителя
      */
     public function getQuantity($store_id = 0, $snumber = "") {
+        $cstr = \App\Acl::getStoreBranchConstraint();
+        if (strlen($cstr) > 0) {
+            $cstr = "    store_id in ({$cstr})  and   ";
+        }
 
         $conn = \ZDB\DB::getConnect();
-        $sql = "  select coalesce(sum(qty),0) as qty  from  store_stock_view where   item_id = {$this->item_id} ";
+        $sql = "  select coalesce(sum(qty),0) as totqty  from  store_stock_view where {$cstr}  item_id = {$this->item_id} ";
         if ($store_id > 0) {
             $sql .= " and store_id = " . $store_id;
         }
@@ -383,6 +387,26 @@ class Item extends \ZCL\DB\Entity
         }
         $cnt = $conn->GetOne($sql);
         return $cnt;
+    }
+   /**
+     * возвращает сумму на складах
+     *
+     * @param mixed $item_id
+     * @param mixed $store_id
+     */
+    public function getAmount($store_id = 0) {
+        $cstr = \App\Acl::getStoreBranchConstraint();
+        if (strlen($cstr) > 0) {
+            $cstr = "    store_id in ({$cstr})  and   ";
+        }
+
+        $conn = \ZDB\DB::getConnect();
+        $sql = "  select coalesce(sum(qty*partion),0) as amount  from  store_stock_view where   {$cstr}  item_id = {$this->item_id} ";
+        if ($store_id > 0) {
+            $sql .= " and store_id = " . $store_id;
+        }
+        $amount = $conn->GetOne($sql);
+        return $amount;
     }
 
     /**
@@ -447,23 +471,7 @@ class Item extends \ZCL\DB\Entity
 
     }
 
-    /**
-     * возвращает сумму на складах
-     *
-     * @param mixed $item_id
-     * @param mixed $store_id
-     */
-    public function getAmount($store_id = 0) {
-
-        $conn = \ZDB\DB::getConnect();
-        $sql = "  select coalesce(sum(qty*partion),0) as amount  from  store_stock_view where   item_id = {$this->item_id} ";
-        if ($store_id > 0) {
-            $sql .= " and store_id = " . $store_id;
-        }
-        $amount = $conn->GetOne($sql);
-        return $amount;
-    }
-
+  
     /**
      * Метод  для   получения  имени  ТМЦ   для выпадающих списков
      *

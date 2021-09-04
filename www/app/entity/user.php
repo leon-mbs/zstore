@@ -83,6 +83,7 @@ class User extends \ZCL\DB\Entity
 
         $this->aclbranch = $acl['aclbranch'];
         $this->onlymy = $acl['onlymy'];
+        $this->hidemenu = $acl['hidemenu'];
 
         $options = @unserialize($this->options);
         if (!is_array($options)) {
@@ -116,6 +117,7 @@ class User extends \ZCL\DB\Entity
 
         $acl['aclbranch'] = $this->aclbranch;
         $acl['onlymy'] = $this->onlymy;
+        $acl['hidemenu'] = $this->hidemenu;
    
         $this->acl = serialize($acl);
 

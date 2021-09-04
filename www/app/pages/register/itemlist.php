@@ -97,8 +97,7 @@ class ItemList extends \App\Pages\Base
         if ($item->image_id == 0) {
             $row->imagelistitem->setVisible(false);
         }
-
-        $this->_total += $am;
+       
 
     }
 
@@ -106,14 +105,21 @@ class ItemList extends \App\Pages\Base
         $this->_total = 0;
         $this->itempanel->itemlist->Reload();
 
-        // $am = $this->getTotalAmount();
-        $this->itempanel->totamount->setText((H::fa($this->_total)));
+        $am = $this->getTotalAmount();
+        $this->itempanel->totamount->setText((H::fa($am)));
     }
 
     public function getTotalAmount() {
 
+        $cstr = \App\Acl::getStoreBranchConstraint();
+        if (strlen($cstr) > 0) {
+            $cstr = "    store_id in ({$cstr})  and   ";
+        }
+
         $conn = \ZDB\DB::getConnect();
-        $sql = "select  coalesce(sum(qty*partion),0) from store_stock_view where item_id in (select item_id from items where disabled<>1 ) ";
+        $sql = "select  coalesce(sum(qty*partion),0) from store_stock_view where {$cstr} qty >0 and item_id in (select item_id from items where disabled<>1 ) ";
+      
+      
         $cat = $this->filter->searchcat->getValue();
         $store = $this->filter->searchstore->getValue();
         if ($store > 0) {
@@ -271,7 +277,11 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         $conn = $conn = \ZDB\DB::getConnect();
 
         $form = $this->page->filter;
-        $where = "   disabled <> 1 and  ( select sum(st1.qty) from store_stock st1 where st1.item_id= item_id ) >0 ";
+        $where = "   disabled <> 1 and  ( select sum(st1.qty) from store_stock st1 where st1.item_id= item_id ) <>0 ";
+        $cstr = \App\Acl::getStoreBranchConstraint();
+        if (strlen($cstr) > 0) {
+            $cstr = "    store_id in ({$cstr})  and   ";
+        }     
 
         $cat = $form->searchcat->getValue();
         $store = $form->searchstore->getValue();
@@ -280,17 +290,17 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
             $where = $where . " and cat_id=" . $cat;
         }
         if ($store > 0) {
-            $where = $where . " and item_id in (select item_id from store_stock where qty <> 0 and store_id={$store}) ";
+            $where = $where . " and item_id in (select item_id from store_stock where {$cstr}  qty <> 0 and store_id={$store}) ";
         } else {
-            $where = $where . " and item_id in (select item_id from store_stock where qty <> 0) ";
+            $where = $where . " and item_id in (select item_id from store_stock where  {$cstr}  qty <> 0) ";
         }
         $text = trim($form->searchkey->getText());
         if (strlen($text) > 0) {
 
             $text = Stock::qstr('%' . $text . '%');
-            $where = "   disabled <> 1 and  ( select sum(st1.qty) from store_stock st1 where st1.item_id= item_id ) >0 ";
-
-            $where .= " and  (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  )  ";
+        
+            $where .= " disabled <> 1  and  ( select sum(st1.qty) from store_stock st1 where  {$cstr} st1.item_id= item_id ) >0  ";
+            $where .= "   (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  )  ";
         }
 
 

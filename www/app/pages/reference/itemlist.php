@@ -236,6 +236,9 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editcat->setValue($this->_item->cat_id);
 
         $this->itemdetail->editmanufacturer->setText($this->_item->manufacturer);
+        $this->itemdetail->editmanufacturer->setDataList(Item::getManufacturers());
+        
+        
         $this->itemdetail->editdescription->setText($this->_item->description);
         $this->itemdetail->editcode->setText($this->_item->item_code);
         $this->itemdetail->editbarcode->setText($this->_item->bar_code);
@@ -292,8 +295,8 @@ class ItemList extends \App\Pages\Base
         if (System::getOption("common", "autoarticle") == 1) {
             $this->itemdetail->editcode->setText(Item::getNextArticle());
         }
-        $this->filter->searchbrand->setDataList(Item::getManufacturers());
-
+         $this->itemdetail->editmanufacturer->setDataList(Item::getManufacturers());
+   
     }
 
     public function cancelOnClick($sender) {
@@ -454,11 +457,11 @@ class ItemList extends \App\Pages\Base
 
             $image->save();
             $this->_item->image_id = $image->image_id;
-            $this->_item->Save();
+            $this->_item->save();
         }
 
         $this->itemtable->listform->itemlist->Reload(false);
-
+ 
         $this->itemtable->setVisible(true);
         $this->itemdetail->setVisible(false);
     }
