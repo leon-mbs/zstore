@@ -202,18 +202,45 @@ class Helper
             }
         }
 
-        if ($_config['modules']['tecdoc'] == 1) {
-            if ($role->rolename == 'admins' || strpos($role->modules, 'tecdoc') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10001, 'meta_name' => "/Tecdoc/Search", 'meta_type' => 6, 'description' => self::l('modtecdocsearch')));
-            }
-        }
+
         if ($_config['modules']['shop'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'shop') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10002, 'meta_name' => "/Shop/Pages/ProductList", 'meta_type' => 6, 'description' => self::l('modshopprlist')));
             }
         }
+        
+        
+       if ($_config['modules']['ocstore'] == 1) {
+            if ($role->rolename == 'admins' || strpos($role->modules, 'ocstore') !== false) {
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10005, 'meta_name' => "/OCStore/Orders", 'meta_type' => 6, 'description' => self::l('modocstoreorders')));
+            }
+        }
+       if ($_config['modules']['ocstore'] == 1) {
+            if ($role->rolename == 'admins' || strpos($role->modules, 'ocstore') !== false) {
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10006, 'meta_name' => "/OCStore/Items", 'meta_type' => 6, 'description' => self::l('modocstoreitems')));
+            }
+        }
+       if ($_config['modules']['wc'] == 1) {
+            if ($role->rolename == 'admins' || strpos($role->modules, 'wc') !== false) {
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10009, 'meta_name' => "/WC/Orders", 'meta_type' => 6, 'description' => self::l('modwcorders')));
+            }
+        }
+       if ($_config['modules']['wc'] == 1) {
+            if ($role->rolename == 'admins' || strpos($role->modules, 'wc') !== false) {
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10010, 'meta_name' => "/WC/Items", 'meta_type' => 6, 'description' => self::l('modwcitems')));
+            }
+        }
 
-
+        if ($_config['modules']['issue'] == 1) {
+            if ($role->rolename == 'admins' || strpos($role->modules, 'issue') !== false) {
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10014, 'meta_name' => "/Issue/Pages/IssueList", 'meta_type' => 6, 'description' => self::l('modissueslist')));
+            }
+        }
+        if ($_config['modules']['tecdoc'] == 1) {
+            if ($role->rolename == 'admins' || strpos($role->modules, 'tecdoc') !== false) {
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10101, 'meta_name' => "/Tecdoc/Search", 'meta_type' => 6, 'description' => self::l('modtecdocsearch')));
+            }
+        }
         return $mdata;
     }
 
