@@ -456,11 +456,8 @@ class ARMFood extends \App\Pages\Base
         if ($this->_tvars['pack'] == false) {
             $item->myself = 0;
         }
-        $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
-        $item->rowid = $next + 1;
-
-
-        $this->_itemlist[$item->rowid] = $item;
+        $this->_itemlist[$item->item_id] = $item;
+ 
 
         $this->docpanel->listsform->itemlist->Reload();
         $this->calcTotal();
