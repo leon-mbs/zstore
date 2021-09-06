@@ -51,8 +51,13 @@
                                     <form zippy="searchform" class="form-inline justify-content-end my-2 my-lg-0">
                                         
                                            <table border=0 class="mr-2">
-                                            <tr><td>
-                                            <input zippy="searchitem" style="width:350px" class="form-control" type="search" placeholder="Почнiть вводити...">
+                                            <tr>
+                                            {{#phone}}
+                                              <td class="text-nowrap"><i class="fa fa-phone"></i> {{phone}} &nbsp;&nbsp;</td>
+                                            {{/phone}}
+
+                                            <td>
+                                            <input zippy="searchitem"   class="form-control" type="search" placeholder="Почнiть вводити...">
                                             </td><td>
                                             
                                              <span class="btn btn-success searchform-search mr-4 ">

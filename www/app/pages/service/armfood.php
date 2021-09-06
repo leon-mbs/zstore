@@ -621,7 +621,26 @@ class ARMFood extends \App\Pages\Base
             $this->docpanel->payform->clean();
             $amount = $this->_doc->payamount;
             $this->docpanel->payform->pfamount->setText(H::fa($amount));
-            $this->docpanel->payform->pfforpay->setText(H::fa($amount));
+            $disc=0;
+            if ($this->_doc->customer_id > 0) {
+                $customer = \App\Entity\Customer::load($this->_doc->customer_id) ;
+                if ($customer->discount > 0) {
+                    $disc = round($amount * ($customer->discount / 100));
+                } else {
+                    $bonus = $customer->getBonus();
+                    if ($bonus > 0) {
+                        if ($amount >= $bonus) {
+                            $disc = $bonus;
+                        } else {
+                            $disc = $amount;
+                        }
+                    }
+                }
+                
+            }
+        
+            $this->docpanel->payform->pfdisc->setText(H::fa($disc));
+            $this->docpanel->payform->pfforpay->setText(H::fa($amount-$disc));
             //  $this->docpanel->payform->pfpayed->setText(H::fa($amount))  ;
             $this->docpanel->payform->pfrest->setText(H::fa(0));
             $this->docpanel->payform->bbackitems->setVisible(false);
@@ -773,7 +792,29 @@ class ARMFood extends \App\Pages\Base
 
         $amount = $this->docpanel->listsform->totalamount->getText();
         $this->docpanel->payform->pfamount->setText(H::fa($amount));
-        $this->docpanel->payform->pfforpay->setText(H::fa($amount));
+        $disc=0;
+        if ($this->_doc->customer_id > 0) {
+                $customer = \App\Entity\Customer::load($this->_doc->customer_id) ;
+                if ($customer->discount > 0) {
+                    $disc = round($amount * ($customer->discount / 100));
+                } else {
+                    $bonus = $customer->getBonus();
+                    if ($bonus > 0) {
+                        if ($amount >= $bonus) {
+                            $disc = $bonus;
+                        } else {
+                            $disc = $amount;
+                        }
+                    }
+                }
+                
+            
+        }
+         
+        
+        
+        $this->docpanel->payform->pfdisc->setText(H::fa($disc));
+        $this->docpanel->payform->pfforpay->setText(H::fa($amount-$disc));
         //  $this->docpanel->payform->pfpayed->setText(H::fa($amount))  ;
         $this->docpanel->payform->pfrest->setText(H::fa(0));
         $this->docpanel->payform->bbackitems->setVisible(true);

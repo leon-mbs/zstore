@@ -31,6 +31,7 @@ class Base extends \Zippy\Html\WebPage
         //  $this->_tvars["islogined"] = $user->user_id > 0;
         $this->_tvars["currencyname"] = $shop["currencyname"];
         $this->_tvars["notcnt"] = false;
+        $this->_tvars["phone"] = strlen($shop["phone"]) > 0 ? $shop["phone"] : false;
 
         $this->add(new \Zippy\Html\Form\Form('searchform'));
         $this->searchform->add(new \Zippy\Html\Form\AutocompleteTextInput('searchitem'))->onText($this, 'onSearch');
