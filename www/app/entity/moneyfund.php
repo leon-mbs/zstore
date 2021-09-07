@@ -54,7 +54,7 @@ class MoneyFund extends \ZCL\DB\Entity
 
         $cnt = $conn->GetOne("select count(*) from paylist where mf_id = {$this->mf_id} ");
         if ($cnt > 0) {
-            return "Нельзя удалять счет с оплатами";
+           return  \App\Helper::l("nodelmf") ;
         }
         return "";
     }

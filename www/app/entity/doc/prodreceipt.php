@@ -40,6 +40,7 @@ class ProdReceipt extends Document
                         "_detail"         => $detail,
                         "document_number" => $this->document_number,
                         "pareaname"       => $this->headerdata["pareaname"],
+                        "storename"       => $this->headerdata["storename"],
                         "notes"           => nl2br($this->notes),
                         "total"           => H::fa($this->amount)
         );

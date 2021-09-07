@@ -52,7 +52,8 @@ class Task extends Document
         $detail3 = array();
         foreach ($this->unpackDetails('emplist') as $emp) {
             $detail3[] = array(
-                "emp_name" => $emp->emp_name
+                "emp_name" => $emp->emp_name,
+                "emp_ktu" => $emp->ktu
             );
         }
 

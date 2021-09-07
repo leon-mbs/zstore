@@ -15,7 +15,8 @@
                         {{#usebranch}}
                         <th>Филиал</th>
                         {{/usebranch}}
-                        <th>Описание</th>
+                       <th class="text-right">ТМЦ на  сумму</th>
+                       <th>Описание</th>
                         <th style="width: 80px"></th>
                     </tr>
                     <tr zippy="storelist">
@@ -24,6 +25,7 @@
                         <td zippy="branch"></td>
                         {{/usebranch}}
 
+                        <td zippy="qty" class="text-right"></td>
                         <td zippy="storedesc"></td>
                         <td align="center">
                             <a zippy="storeedit" title="Редактировать"><i class="fa fa-edit"></i></a>

@@ -83,6 +83,7 @@ class User extends \ZCL\DB\Entity
 
         $this->aclbranch = $acl['aclbranch'];
         $this->onlymy = $acl['onlymy'];
+        $this->hidemenu = $acl['hidemenu'];
 
         $options = @unserialize($this->options);
         if (!is_array($options)) {
@@ -98,6 +99,7 @@ class User extends \ZCL\DB\Entity
         $this->viber = (string)$options['viber'];
 
         $this->darkmode = (int)$options['darkmode'];
+        $this->emailnotify = (int)$options['emailnotify'];
         $this->hidesidebar = (int)$options['hidesidebar'];
         $this->usemobileprinter = (int)$options['usemobileprinter'];
         $this->mainpage = $options['mainpage'];
@@ -116,6 +118,7 @@ class User extends \ZCL\DB\Entity
 
         $acl['aclbranch'] = $this->aclbranch;
         $acl['onlymy'] = $this->onlymy;
+        $acl['hidemenu'] = $this->hidemenu;
    
         $this->acl = serialize($acl);
 
@@ -129,6 +132,7 @@ class User extends \ZCL\DB\Entity
         $options['pagesize'] = $this->pagesize;
         $options['hidesidebar'] = $this->hidesidebar;
         $options['darkmode'] = $this->darkmode;
+        $options['emailnotify'] = $this->emailnotify;
         $options['usemobileprinter'] = $this->usemobileprinter;
         $options['mainpage'] = $this->mainpage;
         $options['phone'] = $this->phone;

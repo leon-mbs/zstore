@@ -37,6 +37,7 @@ class Options extends \App\Pages\Base
         $this->shop->add(new TextInput('email'));
         $this->shop->add(new TextInput('shopname'));
         $this->shop->add(new TextInput('currencyname'));
+        $this->shop->add(new TextInput('phone'));
         $this->shop->add(new File('logo'));
         $this->shop->add(new CheckBox('uselogin'));
         $this->shop->add(new CheckBox('usefilter'));
@@ -70,6 +71,7 @@ class Options extends \App\Pages\Base
         $this->shop->shopname->setText($shop['shopname']);
         $this->shop->email->setText($shop['email']);
         $this->shop->currencyname->setText($shop['currencyname']);
+        $this->shop->phone->setText($shop['phone']);
 
         $this->add(new ClickLink('updatesitemap'))->onClick($this, 'updateSiteMapOnClick');
 
@@ -102,6 +104,7 @@ class Options extends \App\Pages\Base
         $shop['email'] = $this->shop->email->getText();
         $shop['shopname'] = $this->shop->shopname->getText();
         $shop['currencyname'] = $this->shop->currencyname->getText();
+        $shop['phone'] = $this->shop->phone->getText();
         $shop['uselogin'] = $this->shop->uselogin->isChecked() ? 1 : 0;
         $shop['usefilter'] = $this->shop->usefilter->isChecked() ? 1 : 0;
         $shop['createnewcust'] = $this->shop->createnewcust->isChecked() ? 1 : 0;

@@ -39,7 +39,7 @@ class Stat extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', strtotime("-1 month", time())));
         $this->filter->add(new Date('to', time()));
-        $projects = Project::findArray('project_name', '', 'project_name');
+        $projects = Project::findArray('project_name', 'status <> ' . Project::STATUS_CLOSED, 'project_name');
         $this->filter->add(new DropDownChoice('searchproject', $projects, 0));
         $users = User::findArray('username', '', 'username');
 

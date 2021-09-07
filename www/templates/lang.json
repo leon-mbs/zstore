@@ -454,5 +454,13 @@
     "zhour": "Почасовая оплата",
     "ztask": "Сдельная",
     "codeexists": "Код уже используется" ,
-    "invalidcode": "Неверный код"     
+    "invalidcode": "Неверный код" ,    
+    "nodelmf": "Нельзя удалять счет с оплатами" ,    
+    "ktu1": "Суммарный КТУ должен быть равен 1"     ,
+    "newnotify": "Новое уведомление" ,    
+    "modocstoreorders": "Заказы (Опенкарт)" ,   
+    "modocstoreitems": "Товары (Опенкарт)" ,   
+    "modwcorders": "Заказы (WC)"  ,  
+    "modwcitems": "Товары (WC)" ,   
+    "modissueslist": "Задачи (Проекты)"    
 }

@@ -126,11 +126,13 @@
                         <tr>
 
                             <th>ФИО</th>
+                            <th>КТУ</th>
                             <th width="50"></th>
                         </tr>
                         <tr zippy="detail3">
 
                             <td zippy="empname"></td>
+                            <td zippy="empktu" ></td>
                             <td>
                                 <a zippy="delete3"><i class="fa fa-trash"></i></a>
                             </td>
@@ -239,9 +241,14 @@
 
                     <div class="form-group">
                         <label for="editemp">ФИО </label>
-                        <select zippy="editemp" class="form-control select2">
+                        <select zippy="editemp" class="form-control  ">
                             <option>Не выбран</option>
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editktu">КТУ </label>
+                        <input zippy="editktu" class="form-control  " pattern="[0-9\.]+" style="width:50px">
+                        <small>Коэффицент тругодового участия, доля от стоимости  работ  в  оплате.  Сумма  всех КТУ в списке должна  равняться  1 </small>   
                     </div>
 
                     <div class="form-group">

@@ -42,6 +42,7 @@ class ProdIssue extends Document
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
                         "pareaname"       => $this->headerdata["pareaname"],
+                        "storename"       => $this->headerdata["storename"],
                         "document_number" => $this->document_number,
                         "notes"           => nl2br($this->notes)
         );

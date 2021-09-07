@@ -10,6 +10,11 @@
             Виробнича ділянка <b>{{pareaname}}</b><br>
         </td>
     </tr>
+   <tr>
+        <td colspan="8" valign="middle">
+            На  склад <b>{{storename}}</b><br>
+        </td>
+    </tr>
     <tr>
         <td colspan="8" valign="middle">
             {{{notes}}}<br>

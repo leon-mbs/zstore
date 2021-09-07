@@ -4,6 +4,7 @@ namespace App\Pages\Reference;
 
 use App\Entity\Employee;
 use App\Entity\Equipment;
+use App\Entity\ProdArea;
 use App\Helper;
 use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\DataList\DataView;
@@ -52,6 +53,7 @@ class EqList extends \App\Pages\Base
 
         $this->itemdetail->add(new TextInput('editserial'));
         $this->itemdetail->add(new DropDownChoice('editemp', Employee::findArray("emp_name", "", "emp_name"), 0));
+        $this->itemdetail->add(new DropDownChoice('editpa', ProdArea::findArray("pa_name", "", "pa_name"), 0));
         $this->itemdetail->add(new TextInput('editcode'));
         $this->itemdetail->add(new Date('editenterdate'));
         $this->itemdetail->add(new TextInput('editbalance'));
@@ -131,6 +133,7 @@ class EqList extends \App\Pages\Base
         $this->itemdetail->editname->setText($this->_item->eq_name);
 
         $this->itemdetail->editemp->setValue($this->_item->emp_id);
+        $this->itemdetail->editpa->setValue($this->_item->pa_id);
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
         $this->itemdetail->editeq->setChecked($this->_item->eq);
 
@@ -171,6 +174,8 @@ class EqList extends \App\Pages\Base
         $this->_item->eq_name = $this->itemdetail->editname->getText();
         $this->_item->emp_id = $this->itemdetail->editemp->getValue();
         $this->_item->emp_name = $this->itemdetail->editemp->getValueName();
+        $this->_item->pa_id = $this->itemdetail->editpa->getValue();
+        $this->_item->pa_name = $this->itemdetail->editpa->getValueName();
 
         $this->_item->code = $this->itemdetail->editcode->getText();
         $this->_item->balance = $this->itemdetail->editbalance->getText();

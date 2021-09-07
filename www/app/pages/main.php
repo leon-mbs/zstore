@@ -247,11 +247,11 @@ class Main extends Base
 
         $this->_tvars['biorders'] = $conn->GetOne($sql);
 
-        $sql = " select coalesce(sum(partion*qty),0) as cnt  from  store_stock_view  where {$cstr} qty >0     
-                ";
-
+        $sql = " select coalesce(sum(partion*qty),0) as cnt  from  store_stock_view  where {$cstr} qty >0  and item_id in (select item_id from items where disabled<>1 )                     ";
+        
         $this->_tvars['biitemscnt'] = H::fa($conn->GetOne($sql));
 
+        
         $sql = "select coalesce(  sum(case when   meta_name='OutcomeMoney' then  (payed - payamount )   else  (payamount - payed)  end) ,0) as sam 
             from `documents_view` d  
             where     (payamount >0  or  payed >0) {$br} and

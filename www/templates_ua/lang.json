@@ -455,6 +455,13 @@
     "zhour": "Погодинна оплата", 
     "ztask": "Відрядна", 
     "codeexists": "Код вже iснує" ,
-    "invalidcode": "Невiрний код" 
-
+    "invalidcode": "Невiрний код"   ,
+    "nodelmf": "Не можна  видалити  рахунок з оплатами" ,
+    "ktu1": "Сумарний КТУ повинен  бути  рiвний 1" ,
+    "newnotify": "Нове повiдомлення",
+    "modocstoreorders": "Замовлення (Опенкарт)" ,   
+    "modocstoreitems": "Товари (Опенкарт)" ,   
+    "modwcorders": "Замовлення (WC)"  ,  
+    "modwcitems": "Товари (WC)" ,   
+    "modissueslist": "Завдання (Проекты)"  
 }

@@ -927,10 +927,10 @@ class Document extends \ZCL\DB\Entity
 
     /**
     * проверка  может  ли  быть  отменен
-    * 
+    * Возвращает  текст ошибки если  нет
     */
     public  function canCanceled(){
-        return  true;
+        return  "";
     }
 
 }
