@@ -35,39 +35,10 @@ class Options extends \App\Pages\Base
         $form->add(new CheckBox('ssl', $modules['wcssl']));
 
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
-        $form->add(new SubmitButton('check'))->onClick($this, 'checkOnClick');
+        
     }
 
-    public function checkOnClick($sender) {
-        $site = $this->cform->site->getText();
-        $keyc = $this->cform->keyc->getText();
-        $keys = $this->cform->keys->getText();
-        $api = $this->cform->api->getValue();
-        $site = trim($site, '/') . '/';
-        $ssl = $this->cform->ssl->isChecked() ? 1 : 0;
-
-        System::getSession()->wcssl = $ssl;
-
-        $woocommerce = new \Automattic\WooCommerce\Client(
-            $site,
-            $keyc,
-            $keys,
-            [
-                'version'    => 'wc/' . $api,
-                'wp_api'     => true,
-                'verify_ssl' => $ssl == 1
-            ]
-        );
-        try {
-            $woocommerce->get('');
-        } catch(\Exception $ee) {
-            $this->setError($ee->getMessage());
-            return;
-        }
-
-
-        $this->setSuccess('connected');
-    }
+  
 
     public function saveOnClick($sender) {
         $site = $this->cform->site->getText();
@@ -100,6 +71,10 @@ class Options extends \App\Pages\Base
 
         System::setOptions("modules", $modules);
         $this->setSuccess('saved');
+        
+        \App\Modules\WC\Helper::connect()  ;
+         
+        
     }
 
 }
