@@ -49,8 +49,16 @@ class Items extends \App\Pages\Base
         $this->add(new ClickLink('updateqty'))->onClick($this, 'onUpdateQty');
         $this->add(new ClickLink('updateprice'))->onClick($this, 'onUpdatePrice');
         $this->add(new ClickLink('getitems'))->onClick($this, 'onGetItems');
+        $this->add(new ClickLink('checkconn'))->onClick($this, 'onCheck');
     }
 
+    public function onCheck($sender) {
+
+        Helper::connect() ;
+        \App\Application::Redirect("\\App\\Modules\\OCStore\\Items") ;
+    }
+    
+    
     public function filterOnSubmit($sender) {
         $this->_items = array();
         $modules = System::getOptions("modules");
