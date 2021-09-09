@@ -37,86 +37,9 @@ class Options extends \App\Pages\Base
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['ocpricetype']));
 
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
-        $form->add(new SubmitButton('check'))->onClick($this, 'checkOnClick');
-    }
+     }
 
-    public function checkOnClick($sender) {
-        $site = $this->cform->site->getText();
-        $apiname = $this->cform->apiname->getText();
-        $key = $this->cform->key->getText();
-        $site = trim($site, '/');
-        $ssl = $this->cform->ssl->isChecked() ? 1 : 0;
-
-        $url = $site . '/index.php?route=api/login';
-
-        $fields = array(
-            'username' => $apiname,
-            'key'      => $key
-        );
-        System::getSession()->ocssl = $ssl;
-
-        $json = Helper::do_curl_request($url, $fields);
-        if ($json === false) {
-
-            return;
-        }
-
-        $data = json_decode($json, true);
-        if ($data == null) {
-            $this->setError($json);
-            return;
-        }
-        if (is_array($data) && count($data) == 0) {
-
-            $this->setError('nodataresponse');
-            return;
-        }
-
-        if (is_array($data['error'])) {
-            $this->setError(implode(' ', $data['error']));
-        } else {
-            if (strlen($data['error']) > 0) {
-                $this->setError($data['error']);
-            }
-        }
-
-        if (strlen($data['success']) > 0) {
-
-            if (strlen($data['api_token']) > 0) { //версия 3
-                System::getSession()->octoken = "api_token=" . $data['api_token'];
-            }
-            if (strlen($data['token']) > 0) { //версия 2.3
-                System::getSession()->octoken = "token=" . $data['token'];
-            }
-
-
-            $this->setSuccess('connected');
-
-            //загружаем список статусов
-            $url = $site . '/index.php?route=api/zstore/statuses&' . System::getSession()->octoken;
-            $json = Helper::do_curl_request($url, array());
-            $data = json_decode($json, true);
-
-            if ($data['error'] != "") {
-                $this->setError($data['error']);
-            } else {
-
-                System::getSession()->statuses = $data['statuses'];
-            }
-            //загружаем список категорий
-            $url = $site . '/index.php?route=api/zstore/cats&' . System::getSession()->octoken;
-            $json = Helper::do_curl_request($url, array());
-            $data = json_decode($json, true);
-
-            if ($data['error'] != "") {
-                $this->setError($data['error']);
-            } else {
-
-                System::getSession()->cats = $data['cats'];
-            }
-        }
-    }
-
+ 
     public function saveOnClick($sender) {
         $site = $this->cform->site->getText();
         $apiname = $this->cform->apiname->getText();
@@ -151,7 +74,14 @@ class Options extends \App\Pages\Base
         $modules['ocoutcome'] = $outcome;
 
         System::setOptions("modules", $modules);
+        
+        
         $this->setSuccess('saved');
+        
+        \App\Modules\OCStore\Helper::connect()  ;
+        
+        
+        
     }
 
 }

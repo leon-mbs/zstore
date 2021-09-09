@@ -326,6 +326,8 @@ class PPOHelper
         return self::send($xml, 'doc', $firm['pposerver'], $firm['pposerverport'], true);
     }
 
+  
+    
     /**
      * отправка  чека
      *

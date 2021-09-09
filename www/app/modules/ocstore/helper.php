@@ -2,6 +2,10 @@
 
 namespace App\Modules\OCStore;
 
+use App\System;
+use App\Helper as H;
+
+
 /**
  * Вспомагательный  класс
  */
@@ -61,4 +65,86 @@ class Helper
         return $result;
     }
 
+    
+    public static function connect(){
+        $modules = System::getOptions("modules");
+ 
+
+        $site = $modules['ocsite'];
+        $apiname = $modules['ocapiname'];
+        $key = $modules['ockey'];
+        $site = trim($site, '/');
+        $ssl = $modules['ocssl'];
+
+        $url = $site . '/index.php?route=api/login';
+
+        $fields = array(
+            'username' => $apiname,
+            'key'      => $key
+        );
+        System::getSession()->ocssl = $ssl;
+
+        $json = Helper::do_curl_request($url, $fields);
+        if ($json === false) {
+
+            return;
+        }
+
+        $data = json_decode($json, true);
+        if ($data == null) {
+           System::setErrorMsg($json);
+            return;
+        }
+        if (is_array($data) && count($data) == 0) {
+
+            System::setErrorMsg(H::l('nodataresponse'));
+            return;
+        }
+
+        if (is_array($data['error'])) {
+           System::setErrorMsg(implode(' ', $data['error']));
+        } else {
+            if (strlen($data['error']) > 0) {
+               System::setErrorMsg($data['error']);
+            }
+        }
+
+        if (strlen($data['success']) > 0) {
+
+            if (strlen($data['api_token']) > 0) { //версия 3
+                System::getSession()->octoken = "api_token=" . $data['api_token'];
+            }
+            if (strlen($data['token']) > 0) { //версия 2.3
+                System::getSession()->octoken = "token=" . $data['token'];
+            }
+
+            
+            System::setSuccessMsg( H::l('connected'));
+
+            //загружаем список статусов
+            $url = $site . '/index.php?route=api/zstore/statuses&' . System::getSession()->octoken;
+            $json = Helper::do_curl_request($url, array());
+            $data = json_decode($json, true);
+
+            if ($data['error'] != "") {
+                System::setErrorMsg($data['error']);
+            } else {
+
+                System::getSession()->statuses = $data['statuses'];
+            }
+            //загружаем список категорий
+            $url = $site . '/index.php?route=api/zstore/cats&' . System::getSession()->octoken;
+            $json = Helper::do_curl_request($url, array());
+            $data = json_decode($json, true);
+
+            if ($data['error'] != "") {
+                System::setErrorMsg($data['error']);
+            } else {
+
+                System::getSession()->cats = $data['cats'];
+            }
+        }
+
+    }
+    
 }

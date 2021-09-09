@@ -54,6 +54,9 @@ class Orders extends \App\Pages\Base
         $this->add(new Form('updateform'))->onSubmit($this, 'exportOnSubmit');
         $this->updateform->add(new DataView('orderslist', new ArrayDataSource(new Prop($this, '_eorders')), $this, 'expRow'));
         $this->updateform->add(new DropDownChoice('estatus', $statuses, 0));
+ 
+        $this->add(new ClickLink('checkconn'))->onClick($this, 'onCheck');
+    
     }
 
     public function filterOnSubmit($sender) {
@@ -320,6 +323,11 @@ class Orders extends \App\Pages\Base
         $this->neworderslist->Reload();
     }
 
+    public function onCheck($sender) {
+
+        Helper::connect() ;
+        \App\Application::Redirect("\\App\\Modules\\OCStore\\Orders") ;
+    }
     public function onRefresh($sender) {
 
         $this->_eorders = Document::find("meta_name='Order' and content like '%<ocorderback>0</ocorderback>%' and state <> " . Document::STATE_NEW);

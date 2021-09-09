@@ -39,14 +39,27 @@ class ZForm extends \App\Pages\Base
 
         $this->stat->setVisible(true);
 
-        $data = \App\Modules\PPO\PPOHelper::getStat($pos_id, false);
+        $data = array();
+        $ret = \App\Modules\PPO\PPOHelper::getStat($pos_id, false);
+        foreach($ret as $row) {
+          $data = $row;break;  
+        }
+      
+        
+        
         $this->stat->nal->setText($data['amount0']);
         $this->stat->bnal->setText($data['amount1']);
         $this->stat->credit->setText($data['amount2']);
         $this->stat->prepaid->setText($data['amount3']);
         $this->stat->cnt->setText($data['cnt']);
 
-        $data = \App\Modules\PPO\PPOHelper::getStat($pos_id, true);
+        $data = array();
+        $ret = \App\Modules\PPO\PPOHelper::getStat($pos_id, true);
+       
+        foreach($ret as $row) {
+          $data = $row;break;  
+        }
+        
         $this->stat->retnal->setText($data['amount0']);
         $this->stat->retbnal->setText($data['amount1']);
         $this->stat->retcnt->setText($data['cnt']);
@@ -55,9 +68,28 @@ class ZForm extends \App\Pages\Base
     public function OnClose($sender) {
 
 
-        $ret = $this->zform();
+          $this->zform();
         if ($ret == true) {
-            $this->closeshift();
+            //$this->closeshift();
+                $pos = \App\Entity\Pos::load($this->pos->pos_id);
+
+          $ret =   \App\Modules\PPO\PPOHelper::shift($pos->branch_id,$this->pos->pos_id,false) ;
+          
+            if($ret['success'] == false && $ret['docnumber']>0) { 
+                //повторяем для  нового номера
+                $this->pos->fiscalnumber = $ret['docnumber'];
+                $this->pos->save();    
+                $ret =    \App\Modules\PPO\PPOHelper::shift($pos->branch_id,$this->pos->pos_id,false) ;
+             
+            }          
+          
+          if($ret['success'] != true) {
+              $this->setError($ret['data']) ;
+          }   else {
+             \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id);   
+              $this->setSuccess('Смена  закрыта') ;
+          }
+             
         };
     }
 
@@ -86,7 +118,7 @@ class ZForm extends \App\Pages\Base
             //повторяем для  нового номера
             $this->pos->fiscdocnumber = $ret['docnumber'];
             $this->pos->save();
-            $ret = \App\Modules\PPO\PPOHelper::zform($this->pos->pos_id, $stat, $rstat);
+            $ret = \App\Modules\PPO\PPOHelper::zformmanual($this->pos->pos_id, $stat, $rstat);
         }
         if ($ret['success'] == false) {
             $this->setError($ret['data']);
@@ -96,9 +128,10 @@ class ZForm extends \App\Pages\Base
             if ($ret['docnumber'] > 0) {
                 $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                 $this->pos->save();
+                 return true;
             } else {
                 $this->setError("ppo_noretnumber");
-                return;
+                return false;
             }
         }
 
