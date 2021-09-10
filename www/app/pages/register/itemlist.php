@@ -91,6 +91,9 @@ class ItemList extends \App\Pages\Base
         if ($qty < 0) {
             $row->setAttribute('class', 'text-danger');
         }
+        if ($qty == 0) {
+            $row->setAttribute('class', 'text-warning');
+        }
 
         $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?id={$item->image_id}");
         $row->imagelistitem->setAttribute('href', "/loadimage.php?id={$item->image_id}");
@@ -299,8 +302,9 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
 
             $text = Stock::qstr('%' . $text . '%');
         
-            $where .= " disabled <> 1  and  ( select sum(st1.qty) from store_stock st1 where  {$cstr} st1.item_id= item_id ) >0  ";
-            $where .= "   (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  )  ";
+            $where = "   disabled <> 1 and  ( select sum(st1.qty) from store_stock st1 where st1.item_id= item_id ) <>0 ";
+    
+            $where .= " and   (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  )  ";
         }
 
 
