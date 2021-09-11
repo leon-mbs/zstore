@@ -262,7 +262,8 @@ class MoveItem extends \App\Pages\Base
 
             return;
         }
-        App::RedirectBack();
+        App::Redirect("\\App\\Pages\\Register\\ItemList", $this->_doc->document_id);
+
     }
 
     /**

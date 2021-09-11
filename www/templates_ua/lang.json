@@ -463,5 +463,8 @@
     "modocstoreitems": "Товари (Опенкарт)" ,   
     "modwcorders": "Замовлення (WC)"  ,  
     "modwcitems": "Товари (WC)" ,   
-    "modissueslist": "Завдання (Проекты)"  
+    "modissueslist": "Завдання (Проекты)"  ,
+    "noselpart": "Не обрана  партiя"  ,    
+    "thesamestock": "Однаковi партiї"  ,    
+    "diffitem": "Рiзнi  ТМЦ"      
 }

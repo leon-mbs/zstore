@@ -181,6 +181,7 @@ class ItemList extends \App\Pages\Base
         }
 
         $row->add(new Label('price', implode(',', $plist)));
+        $row->add(new \Zippy\Html\Link\RedirectLink("createmove","\\App\\Pages\\Doc\\MovePart",array(0,$stock->stock_id) ))->setVisible($stock->qty < 0);
 
         if (\App\System::getUser()->rolename != 'admins') {
             $row->partion->setText('');
