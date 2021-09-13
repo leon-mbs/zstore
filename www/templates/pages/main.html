@@ -215,9 +215,43 @@
 
                 <div   class="card ">
                     <div   class="card-body">
-                        <h4>Мои недавние документы</h4>
+                        <h4>Недавние документы</h4>
                         <small>Документы с недавно измененным статусом</small>
                         <br><a zippy="rdcsv">Экспорт в  Excel</a>
+                        <table class="table   table-sm">
+                            <tr>
+                                <th>Номер</th>
+                                <th>Тип</th>
+                                <th>Статус</th>
+                                <th class="text-right">Сумма</th>
+                                <th>Изменил</th>
+                                <th>Дата</th>
+                                
+
+                            </tr>
+                            <tr zippy="rdoclist">
+                                <td><a zippy="wrd_number"></a></td>
+                                <td zippy="wrd_type"></td>
+                                <td zippy="wrd_state"></td>
+                                <td class="text-right" zippy="wrd_amount"></td>
+                                <td zippy="wrd_user"></td>
+                                <td zippy="wrd_date"></td>
+                                
+                            </tr>
+                        </table>
+                        <div zippy="wrpag"></div>    
+                    </div>
+                </div>
+            </div>      
+            {{/wrdoc}}
+      {{#wmdoc}}
+            <div   class="col-12 col-lg-6 ">
+
+                <div   class="card ">
+                    <div   class="card-body">
+                        <h4>Мои документы</h4>
+                        <small>Документы, созданные текушим  пользователем</small>
+                        <br><a zippy="mdcsv">Экспорт в  Excel</a>
                         <table class="table   table-sm">
                             <tr>
                                 <th>Номер</th>
@@ -226,18 +260,18 @@
                                 <th class="text-right">Сумма</th>
 
                             </tr>
-                            <tr zippy="rdoclist">
-                                <td><a zippy="wrd_number"></a></td>
-                                <td zippy="wrd_type"></td>
-                                <td zippy="wrd_date"></td>
-                                <td class="text-right" zippy="wrd_amount"></td>
+                            <tr zippy="mdoclist">
+                                <td><a zippy="wmd_number"></a></td>
+                                <td zippy="wmd_type"></td>
+                                <td zippy="wmd_date"></td>
+                                <td class="text-right" zippy="wmd_amount"></td>
                             </tr>
                         </table>
-                        <div zippy="wrpag"></div>    
+                        <div zippy="wmpag"></div>    
                     </div>
                 </div>
             </div>      
-            {{/wrdoc}}
+            {{/wmdoc}}
 
 
         </div>  

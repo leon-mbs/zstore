@@ -14,6 +14,7 @@ use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\TextArea;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\BookmarkableLink;
@@ -43,7 +44,16 @@ class ProdProcList extends \App\Pages\Base
         $this->add(new Paginator('pag', $proclist));
         $proclist->setPageSize(H::getPG());
 
+        $this->add(new Form('editproc'))->setVisible(false);
+        $this->editproc->add(new TextInput('editname'));
+        $this->editproc->add(new TextInput('editorder'));
+        $this->editproc->add(new TextInput('editpartion'));
+        $this->editproc->add(new TextArea('editnotes'));
         
+        $this->editproc->add(new SubmitButton('save'))->onClick($this, 'OnSave');
+        $this->editproc->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
+        $this->editproc->add(new Button('delete'))->onClick($this, 'deleteOnClick');
+      
         $proclist->Reload();
      
     }
@@ -51,19 +61,26 @@ class ProdProcList extends \App\Pages\Base
  
 
     public function proclistOnRow(\Zippy\Html\DataList\DataRow $row) {
-        $doc = $row->getDataItem();
+        $pnlist = ProdProc::getStateName()  ;
+       
+        $p = $row->getDataItem();
 
-        $row->add(new Label('number', $doc->document_number));
+        $row->add(new Label('name', $p->document_number));
 
-        $row->add(new Label('date', H::fd($doc->paydate)));
-        $row->add(new Label('notes', $doc->notes));
+        $row->add(new Label('basedoc', $p->basedoc));
 
-        $row->add(new Label('username', $doc->username));
+        $row->add(new Label('snumber', $p->snumber));
 
-        $row->add(new Label('paytype', $this->_ptlist[$doc->paytype]));
+        $row->add(new Label('state', $pnlist[$p->state]));
 
         $row->add(new ClickLink('show', $this, 'showOnClick'));
-        $user = \App\System::getUser();
+     //   $row->add(new Label('datestart', H::fd($doc->paydate)));
+    //    $row->add(new Label('dateend', H::fd($doc->paydate)));
+      
+          $row->add(new ClickLink('show'))->onClick($this, 'onShow');
+          $row->add(new ClickLink('edit'))->onClick($this, 'OnEdit');
+          $row->add(new ClickLink('stages'))->onClick($this, 'OnStages');
+          $row->add(new ClickLink('copy'))->onClick($this, 'OnCopy');
 
     }
 

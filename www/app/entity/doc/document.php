@@ -700,7 +700,7 @@ class Document extends \ZCL\DB\Entity
             $where .= " and meta_name='{$type}'";
         }
         if ($executed) {
-            $where .= " and state not in(1,2,3,0) ";
+            $where .= " and state > 4 ";
         }
         return Document::find($where);
     }

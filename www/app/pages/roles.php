@@ -53,6 +53,7 @@ class Roles extends \App\Pages\Base
         $this->editpan->editform->add(new CheckBox('editwminqty'));
         $this->editpan->editform->add(new CheckBox('editwsdate'));
         $this->editpan->editform->add(new CheckBox('editwrdoc'));
+        $this->editpan->editform->add(new CheckBox('editwmdoc'));
         $this->editpan->editform->add(new CheckBox('editwinfo'));
         $this->editpan->editform->add(new CheckBox('editwgraph'));
 
@@ -146,6 +147,9 @@ class Roles extends \App\Pages\Base
         }
         if (strpos($this->role->widgets, 'wrdoc') !== false) {
             $this->editpan->editform->editwrdoc->setChecked(true);
+        }
+        if (strpos($this->role->widgets, 'wmdoc') !== false) {
+            $this->editpan->editform->editwmdoc->setChecked(true);
         }
         if (strpos($this->role->widgets, 'winfo') !== false) {
             $this->editpan->editform->editwinfo->setChecked(true);
@@ -264,6 +268,9 @@ class Roles extends \App\Pages\Base
         }
         if ($this->editpan->editform->editwrdoc->isChecked()) {
             $widgets = $widgets . ',wrdoc';
+        }
+        if ($this->editpan->editform->editwmdoc->isChecked()) {
+            $widgets = $widgets . ',wmdoc';
         }
         if ($this->editpan->editform->editwinfo->isChecked()) {
             $widgets = $widgets . ',winfo';
