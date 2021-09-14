@@ -15,6 +15,9 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Panel;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\BookmarkableLink;
@@ -38,16 +41,18 @@ class ProdProcList extends \App\Pages\Base
             return;
         }
 
-     
-        $proclist = $this->add(new DataView('proclist', new PProcListDataSource($this), $this, 'proclistOnRow'));
+        $this->add(new Panel("listpan")) ;
+        
+        $proclist = $this->listpan->add(new DataView('proclist', new PProcListDataSource($this), $this, 'proclistOnRow'));
 
-        $this->add(new Paginator('pag', $proclist));
+        $this->listpan->add(new Paginator('pag', $proclist));
         $proclist->setPageSize(H::getPG());
 
+        $this->add(new ClickLink('addnewproc',$this,"OnAddProc")) ;
         $this->add(new Form('editproc'))->setVisible(false);
         $this->editproc->add(new TextInput('editname'));
-        $this->editproc->add(new TextInput('editorder'));
-        $this->editproc->add(new TextInput('editpartion'));
+        $this->editproc->add(new TextInput('editbasedoc'));
+        $this->editproc->add(new TextInput('editsnumber'));
         $this->editproc->add(new TextArea('editnotes'));
         
         $this->editproc->add(new SubmitButton('save'))->onClick($this, 'OnSave');
@@ -57,43 +62,86 @@ class ProdProcList extends \App\Pages\Base
         $proclist->Reload();
      
     }
-
  
-
     public function proclistOnRow(\Zippy\Html\DataList\DataRow $row) {
-        $pnlist = ProdProc::getStateName()  ;
+      
        
         $p = $row->getDataItem();
 
-        $row->add(new Label('name', $p->document_number));
+        $row->add(new Label('name', $p->procname));
 
         $row->add(new Label('basedoc', $p->basedoc));
 
         $row->add(new Label('snumber', $p->snumber));
 
-        $row->add(new Label('state', $pnlist[$p->state]));
+        $row->add(new Label('state', ProdProc::getStateName($p->state)  ));
 
-        $row->add(new ClickLink('show', $this, 'showOnClick'));
+        
+        
      //   $row->add(new Label('datestart', H::fd($doc->paydate)));
     //    $row->add(new Label('dateend', H::fd($doc->paydate)));
       
-          $row->add(new ClickLink('show'))->onClick($this, 'onShow');
           $row->add(new ClickLink('edit'))->onClick($this, 'OnEdit');
+          $row->add(new ClickLink('view' ))->onClick($this, 'onView');
           $row->add(new ClickLink('stages'))->onClick($this, 'OnStages');
           $row->add(new ClickLink('copy'))->onClick($this, 'OnCopy');
 
     }
 
-    //просмотр
-    public function showOnClick($sender) {
+    //новый процесс
+    public function OnAddProc($sender) {
 
-         
-
+        $this->listpan->setVisible(false); 
+        $this->editproc->setVisible(true); 
+        $this->editproc->clean(); 
+        $this->_proc = new ProdProc();
    
     }
 
+    public function cancelOnClick($sender) {
 
-   
+        $this->listpan->setVisible(true); 
+        $this->editproc->setVisible(false); 
+    
+    }
+    public function deleteOnClick($sender) {
+        
+        ProdProc::delete($this->_proc->pp_id);
+   //проверка
+        $this->listpan->setVisible(true); 
+        $this->editproc->setVisible(false); 
+ 
+        $this->listpan->proclist->Reload();
+    }
+    public function OnEdit($sender) {
+
+        $this->listpan->setVisible(false); 
+        $this->editproc->setVisible(true); 
+        $this->_proc = $sender->getOwner()->getDataItem();
+        
+        $this->editproc->editname->setText($this->_proc->procname ) ;
+        $this->editproc->editbasedoc->setText($this->_proc->basedoc ) ;
+        $this->editproc->editsnumber->setText($this->_proc->snumber ) ;
+        $this->editproc->editnotes->setText($this->_proc->notes ) ;
+        
+          
+    }
+
+    public function OnSave($sender) {
+
+        $this->_proc->procname =   $this->editproc->editname->getText();
+        $this->_proc->basedoc  =   $this->editproc->editbasedoc->getText();
+        $this->_proc->snumber  =   $this->editproc->editsnumber->getText();
+        $this->_proc->notes  =   $this->editproc->editnotes->getText();
+         
+        $this->_proc->save() ;
+         
+        $this->listpan->setVisible(true); 
+        $this->editproc->setVisible(false); 
+ 
+        $this->listpan->proclist->Reload();
+    }
+    
 }
 
 /**

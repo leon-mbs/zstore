@@ -465,5 +465,10 @@
     "modissueslist": "Задачи (Проекты)"  ,    
     "noselpart": "Не выбрана  партия"  ,    
     "thesamestock": "Одинаковые партии"  ,    
-    "diffitem": "Разные  ТМЦ"    
+    "diffitem": "Разные  ТМЦ",    
+    "stpp_new": "Новый",    
+    "stpp_inprocess": "Выполняется",    
+    "stpp_stopped": "Приостонавлен",    
+    "stpp_finished": "Закончен",    
+    "stpp_canceled": "Отменен"     
 }

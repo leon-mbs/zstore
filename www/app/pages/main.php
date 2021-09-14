@@ -300,7 +300,7 @@ class Main extends Base
 
        $this->_tvars['bicredit'] = H::fa($conn->GetOne($sql));
        
-       $sql = "select coalesce(sum(amount),0)  from paylist where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail like '%<beznal>0</beznal>%' )";
+       $sql = "select coalesce(sum(amount),0)  from paylist where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail not like '%<beznal>1</beznal>%' )";
           
        $this->_tvars['binal'] = H::fa($conn->GetOne($sql));
        $sql = "select coalesce(sum(amount),0)  from paylist where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail like '%<beznal>1</beznal>%' )";

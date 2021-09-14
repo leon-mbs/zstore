@@ -5,7 +5,7 @@
  
 CREATE TABLE `prodproc` (
   `pp_id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NOT NULL,
+  `procname` varchar(255)   NOT NULL,
   `basedoc` varchar(255) DEFAULT NULL,
   `snumber` varchar(255) DEFAULT NULL,
   `state` smallint(4) DEFAULT 0,
@@ -21,7 +21,7 @@ CREATE TABLE `prodproc` (
   `pa_id` int(11) NOT NULL ,
   `startdate` DateTime  NOT NULL,
   `enddate` DateTime  NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `stagename` varchar(255) NOT NULL,
   `detail` LONGTEXT DEFAULT NULL,
    KEY (`pp_id`) ,
    PRIMARY KEY (`st_id`)  ,
@@ -37,9 +37,9 @@ AS
       `ps`.`pa_id` AS `pa_id`,
       `ps`.`startdate` AS `startdate`,
       `ps`.`enddate` AS `enddate`,
-      `ps`.`name` AS `name`,
+      `ps`.`stagename` AS `stagename`,
       `ps`.`detail` AS `detail`,
-      `pr`.`name` AS `procname`,
+      `pr`.`procname` AS `procname`,
       `pr`.`state` AS `procstate`,
       `pa`.`pa_name` AS `pa_name`
     FROM ((`prodstage` `ps`

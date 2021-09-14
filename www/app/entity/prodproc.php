@@ -60,15 +60,15 @@ class ProdProc extends \ZCL\DB\Entity
     public static function getStateName($state) {
 
         switch($state) {
-            case Document::STATE_NEW:
+            case ProdProc::STATE_NEW:
                 return Helper::l('stpp_new');
-            case Document::STATE_INPROCESS:
+            case ProdProc::STATE_INPROCESS:
                 return Helper::l('stpp_inprocess');
-            case Document::STATE_STOPPED:
+            case ProdProc::STATE_STOPPED:
                 return Helper::l('stpp_stopped');
-            case Document::STATE_FINISHED:
+            case ProdProc::STATE_FINISHED:
                 return Helper::l('stpp_finished');
-            case Document::STATE_CANCELED:
+            case ProdProc::STATE_CANCELED:
                 return Helper::l('stpp_canceled');
             
 

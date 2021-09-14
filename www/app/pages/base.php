@@ -326,7 +326,7 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("nodefmf") . "\"");
         }
         if ($user->userlogin == "admin") {
-            if ($user->userpass == "admin" || $user->userpass = '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.') {
+            if ($user->userpass == "admin" || $user->userpass == '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.') {
                 $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("nodefadminpass") . "\"");
 
             }

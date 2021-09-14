@@ -13,7 +13,7 @@
         <div class="row" zippy="listpan">
             <div class="col-12 col-md-10 col-xl-8">
 
-                <a class="btn btn-info">Создать</a>
+                <a  zippy="addnewproc" class="btn btn-info">Создать</a>
                 <table class="table   table-sm   ">
                     <tr>
 
@@ -42,7 +42,7 @@
 
                         <td class="text-nowrap">
 
-                            <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i></a>
+                            <a zippy="view" title="Просмотр"><i class="fa fa-eye"></i></a>
                             &nbsp;&nbsp;
                             <a zippy="edit" title="Редактирование"><i class="fa fa-edit"></i></a>
                             &nbsp;&nbsp;
@@ -72,12 +72,12 @@
                     <input required="required" class="form-control" zippy="editname"/>
                </div>
                <div class="form-group">
-                    <label for="editorder">Заказ, договор</label>
-                    <input   class="form-control" zippy="editorder"/>
+                    <label for="editbasedoc">Заказ, договор</label>
+                    <input   class="form-control" zippy="editbasedoc"/>
                </div>
                <div class="form-group">
-                    <label for="editpartion">Серия, партия</label>
-                    <input   class="form-control" zippy="editpartion"/>
+                    <label for="editsnumber">Серия, партия</label>
+                    <input   class="form-control" zippy="editsnumber"/>
                </div>
                <div class="form-group">
                     <label for="editnotes">Примечание</label>
@@ -88,16 +88,20 @@
                  <h5>Запланированая  готовая  продукция</h5>
                  <div class="form-group row">
                      <div class="col-auto">
-                    <label for="additem">Наименование</label>
+                    <label  for="additem">Наименование</label>
                     </div>
                     <div class="col-auto">
-                       <input   class="form-control" zippy="additem"/>
+                       <select   class="form-control" zippy="additem">
+                          <option value="0">Не  выбрано</option>
+                        
+                       </select>
+                       
                    </div>  
                     <div class="col-auto">
                     <label for="addqty">Кол.</label>
                     </div>
                     <div class="col-auto">
-                       <input   class="form-control" zippy="addqty"/>
+                       <input style="width:60px"  class="form-control" zippy="addqty" pattern="[0-9\.]+" required="required"/>
                    </div>
                     <div class="col-auto">
                        <a zippy="addbtn" class="btn btn-success">+<a>
