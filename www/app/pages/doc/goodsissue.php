@@ -180,7 +180,8 @@ class GoodsIssue extends \App\Pages\Base
                         $this->_orderid = $basedocid;
                         $this->docform->order->setText($basedoc->document_number);
                         $this->docform->paydisc->setText($basedoc->headerdata['paydisc']);
-
+                        $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
+           
                         $notfound = array();
                         $order = $basedoc->cast();
 
@@ -202,19 +203,24 @@ class GoodsIssue extends \App\Pages\Base
                             return;
                         }
 
-                        $this->docform->total->setText($order->amount);
-
-                        $this->OnChangeCustomer($this->docform->customer);
-                     
-
+                        $this->docform->total->setText(H::fa($order->amount));
+                  
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
-                        $this->calcTotal();
+                       // $this->calcTotal();
                         $this->calcPay();
                         
-                        if ($order->payamount > 0) {
+                        if ($order->headerdata['payment'] > 0) {
                             $this->docform->payment->setValue(0); // предоплата
                             $this->docform->editpayed->setText(H::fa(0));
                             $this->docform->payed->setText(H::fa(0));
+                            $this->docform->editpayamount->setText(H::fa(0));
+                            $this->docform->payamount->setText(H::fa(0));
+                            $this->docform->editpaydisc->setText(H::fa(0));
+                            $this->docform->paydisc->setText(H::fa(0));
+                        }   else {
+                            $this->docform->editpayed->setText( $this->docform->editpayamount->getText());
+                            $this->docform->payed->setText($this->docform->payamount->getText());
+                 
                         }
                         
                         
@@ -245,7 +251,7 @@ class GoodsIssue extends \App\Pages\Base
                             $this->docform->payment->setValue(0); // предоплата
                             $this->docform->editpayed->setText(H::fa(0));
                             $this->docform->payed->setText(H::fa(0));
-
+                                            
                         }
                     }
 
@@ -263,9 +269,10 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->salesource->setValue($basedoc->headerdata['salesource']);
+                        $this->docform->paydisc->setText($basedoc->headerdata['paydisc']);
 
                         $this->docform->firm->setValue($basedoc->firm_id);
-
+                  
                         $this->OnChangeCustomer($this->docform->customer);
                         $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
 
