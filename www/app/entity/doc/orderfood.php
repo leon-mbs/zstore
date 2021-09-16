@@ -163,9 +163,6 @@ class OrderFood extends Document
 
     public function DoStore() {
         foreach ($this->unpackDetails('detaildata') as $item) {
-            if ($item->checkMinus($item->quantity, $this->headerdata['store']) == false) {
-                throw new \Exception(\App\Helper::l("nominus", H::fqty($item->getQuantity($this->headerdata['store'])), $item->itemname));
-            }
 
 
             //оприходуем  с  производства
@@ -226,11 +223,19 @@ class OrderFood extends Document
                 $sc->save();
             }
 
+            
+            if ($item->checkMinus($item->quantity, $this->headerdata['store']) == false) {
+                throw new \Exception(\App\Helper::l("nominus", H::fqty($item->getQuantity($this->headerdata['store'])), $item->itemname));
+            }
+            
+            
             $k = 1;   //учитываем  скидку
             if ($this->headerdata["paydisc"] > 0 && $this->amount > 0) {
                 $k = ($this->amount - $this->headerdata["paydisc"]) / $this->amount;
             }
 
+            
+            
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
             foreach ($listst as $st) {

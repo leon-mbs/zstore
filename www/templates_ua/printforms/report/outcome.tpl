@@ -245,13 +245,14 @@
     </td>
 </tr>
 <tr style="font-weight: bolder;">
-    <th colspan="3" style="border: solid black 1px">Найменування</th>
+    <th colspan="2" style="border: solid black 1px">Найменування</th>
 
+         <th align="right" style="border: solid black 1px">Кіл.</th>
 
     <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
     <th align="right" style="border: solid black 1px">Прибуток</th>
 
-    <th></th>
+    
 </tr>
 {{#_detail}}
 <tr>
@@ -260,9 +261,10 @@
     <td colspan="3">{{name}}</td>
 
 
+    <td align="right">{{qty}}</td>
     <td align="right">{{summa}}</td>
     <td align="right">{{navar}}</td>
-    <td></td>
+     
 </tr>
 {{/_detail}}
 <tr><td colspan="3" ></td> <td align="right" ><b>{{totsumma}}</b></td> <td align="right"   > <b>{{totnavar}}</b></td><td   > </td>  </tr>
