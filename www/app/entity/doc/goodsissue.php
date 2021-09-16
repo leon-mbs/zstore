@@ -103,10 +103,7 @@ class GoodsIssue extends Document
         $amount = 0;
         foreach ($this->unpackDetails('detaildata') as $item) {
 
-            if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
-                throw new \Exception(\App\Helper::l("nominus", $item->quantity, $item->itemname));
-            }
-
+ 
             //оприходуем  с  производства
             if ($item->autoincome == 1 && $item->item_type == Item::TYPE_PROD) {
 
@@ -146,6 +143,9 @@ class GoodsIssue extends Document
                 $sc->save();
             }
 
+            if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
+                throw new \Exception(\App\Helper::l("nominus", $item->quantity, $item->itemname));
+            }
 
             //продажа
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);

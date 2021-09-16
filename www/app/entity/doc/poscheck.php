@@ -160,10 +160,7 @@ class POSCheck extends Document
 
 
         foreach ($this->unpackDetails('detaildata') as $item) {
-            if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
-                throw new \Exception(\App\Helper::l("nominus", $item->quantity, $item->itemname));
-            }
-
+ 
 
             //оприходуем  с  производства
             if ($item->autoincome == 1 && $item->item_type == Item::TYPE_PROD) {
@@ -198,7 +195,12 @@ class POSCheck extends Document
 
                 $sc->save();
             }
+ 
+            if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
+                throw new \Exception(\App\Helper::l("nominus", $item->quantity, $item->itemname));
+            }
 
+ 
             $k = 1;   //учитываем  скидку
             if ($this->headerdata["paydisc"] > 0 && $this->amount > 0) {
                 $k = ($this->amount - $this->headerdata["paydisc"]) / $this->amount;
