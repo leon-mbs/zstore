@@ -49,7 +49,7 @@ class Helper
             return false;
         }
         $data = json_decode($result, true);
-        if ($data == null) {
+        if ($data === null) {
             if (strlen($result) > 0) {
                 \App\System::setErrorMsg($result);
             } else {
@@ -91,7 +91,7 @@ class Helper
         }
 
         $data = json_decode($json, true);
-        if ($data == null) {
+        if ($data === null) {
            System::setErrorMsg($json);
             return;
         }

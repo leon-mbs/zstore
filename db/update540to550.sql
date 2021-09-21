@@ -21,6 +21,7 @@ CREATE TABLE `prodproc` (
   `pa_id` int(11) NOT NULL ,
   `startdate` DateTime  NOT NULL,
   `enddate` DateTime  NOT NULL,
+ 
   `stagename` varchar(255) NOT NULL,
   `detail` LONGTEXT DEFAULT NULL,
    KEY (`pp_id`) ,
@@ -47,10 +48,7 @@ AS
         ON ((`pr`.`pp_id` = `ps`.`pp_id`)))
       JOIN `parealist` `pa`
         ON ((`pa`.`pa_id` = `ps`.`pa_id`))); 
- 
   
- 
- 
   
 журнал процесов, редактирование  этапов
 заказ  если  есть или договор

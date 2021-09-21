@@ -22,11 +22,8 @@ class ProdStage extends \ZCL\DB\Entity
         parent::beforeSave();
         //упаковываем  данные в detail
         $this->detail = "<detail>";
-        $this->detail .= "<beznal>{$this->beznal}</beznal>";
-        $this->detail .= "<btran>{$this->btran}</btran>";
-        $this->detail .= "<btranin>{$this->btranin}</btranin>";
-        $this->detail .= "<bank><![CDATA[{$this->bank}]]></bank>";
-        $this->detail .= "<bankacc><![CDATA[{$this->bankacc}]]></bankacc>";
+        $this->detail .= "<hours>{$this->hours}</hours>";
+        $this->detail .= "<notes><![CDATA[{$this->notes}]]></notes>";
 
         $this->detail .= "</detail>";
 
@@ -35,16 +32,18 @@ class ProdStage extends \ZCL\DB\Entity
 
     protected function afterLoad() {
         //распаковываем  данные из detail
+         $this->startdate = strtotime($this->startdate);
+         $this->enddate = strtotime($this->enddate);
+    
+        
+        
         if (strlen($this->detail) == 0) {
             return;
         }
 
         $xml = simplexml_load_string($this->detail);
-        $this->beznal = intval($xml->beznal[0]);
-        $this->btran = floatval($xml->btran[0]);
-        $this->btranin = floatval($xml->btranin[0]);
-        $this->bank = (string)($xml->bank[0]);
-        $this->bankacc = (string)($xml->bankacc[0]);
+        $this->hours = intval($xml->hours[0]);
+        $this->notes = (string)($xml->notes[0]);
 
         parent::afterLoad();
     }

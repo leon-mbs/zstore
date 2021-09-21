@@ -470,5 +470,6 @@
     "stpp_inprocess": "Выполняется",    
     "stpp_stopped": "Приостонавлен",    
     "stpp_finished": "Закончен",    
-    "stpp_canceled": "Отменен"     
+    "stpp_canceled": "Отменен",     
+    "noselparea": "Не выбран  производственный участок"     
 }

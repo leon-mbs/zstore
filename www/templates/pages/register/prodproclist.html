@@ -11,7 +11,7 @@
         </div>
 
         <div class="row" zippy="listpan">
-            <div class="col-12 col-md-10 col-xl-8">
+            <div class="col-12 col-md-12 col-xl-10">
 
                 <a  zippy="addnewproc" class="btn btn-info">Создать</a>
                 <table class="table   table-sm   ">
@@ -26,7 +26,11 @@
                         <th>Окончание</th>
 
 
-                        <th style="width:100px"> </th>
+                        <th  > </th>
+                        <th  > </th>
+                        <th  > </th>
+                        <th  > </th>
+                        <th  > </th>
       
 
                     </tr>
@@ -40,14 +44,17 @@
                         <td class="text-nowrap" zippy="dateend"></td>
                          
 
-                        <td class="text-nowrap">
-
+                        <td  >
                             <a zippy="view" title="Просмотр"><i class="fa fa-eye"></i></a>
-                            &nbsp;&nbsp;
+                           </td> 
+                        <td  >
+                            <a zippy="prods" title="Готовая продукция"><i class="fa fa-gift"></i></a>
+                           </td> 
+                           <td  >
                             <a zippy="edit" title="Редактирование"><i class="fa fa-edit"></i></a>
-                            &nbsp;&nbsp;
+                             </td> <td  >
                             <a zippy="stages" title="Призводственные  этапы"><i class="fa fa-gavel"></i></a>
-                            &nbsp;&nbsp;
+                            </td> <td  >
                             <a zippy="copy" title="Создать  копию"><i class="fa fa-copy"></i></a>
 
 
@@ -61,6 +68,27 @@
                 <div zippy="pag"></div>
    
             </div>
+   <div zippy="showpan" class="col-12">
+   <div zippy="showpan" class="row">
+             <div   class="col-12 col-md-6 col-xl-4">
+                   <h5>Готовая продукция</h5>
+                   <table class="table table-sm">
+                     <tr><th>Наименование</th><th class="text-right">План</th><th class="text-right">Факт</th></tr>
+                     <tr><td> </td><td> </td><td> </td></tr>
+                   </table>
+            </div>            
+             <div   class="col-12 col-md-6 col-xl-4">
+                   <h5>Списано ТМЦ</h5>
+                   <table class="table table-sm">
+                     <tr><th>Наименование</th><th class="text-right">Кол.</th><th class="text-right">Сумма</th></tr>
+                     <tr><td> </td><td> </td><td> </td></tr>
+                   </table>
+            </div>            
+            
+                </div>            
+                </div>            
+            
+            
            </div>
            
       <form zippy="editproc"  >
@@ -84,39 +112,7 @@
                     <textarea   class="form-control" zippy="editnotes"></textarea>
                </div>
             </div>
-             <div class="col-12 col-md-8 col-xl-6">
-                 <h5>Запланированая  готовая  продукция</h5>
-                 <div class="form-group row">
-                     <div class="col-auto">
-                    <label  for="additem">Наименование</label>
-                    </div>
-                    <div class="col-auto">
-                       <select   class="form-control" zippy="additem">
-                          <option value="0">Не  выбрано</option>
-                        
-                       </select>
-                       
-                   </div>  
-                    <div class="col-auto">
-                    <label for="addqty">Кол.</label>
-                    </div>
-                    <div class="col-auto">
-                       <input style="width:60px"  class="form-control" zippy="addqty" pattern="[0-9\.]+" required="required"/>
-                   </div>
-                    <div class="col-auto">
-                       <a zippy="addbtn" class="btn btn-success">+<a>
-                    </div>
-                    
-               </div>   
-                 <table class="table table-sm">
-                     <tr>
-                       <td zippy="proditemname"></td>
-                       <td zippy="proditemqty"></td>
-                       <td><a zippy="proditemdel"><i class="fa fa-trash"></i></a></td>
-                     <tr>
-                 </table>
-            </div>
-             
+            
              <div class="col-12">
                     <input zippy="save"   type="submit" value="Сохранить" class="btn btn-primary  ">&nbsp;&nbsp;
                     <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary  ">  &nbsp;&nbsp;
@@ -125,6 +121,105 @@
             </div>
         </form>           
        
+           <div class="row" zippy="prodspan" >
+           <div class="col-12 col-md-8 col-xl-6">
+                 <h5>Запланированая  готовая  продукция</h5>
+                     <div class="navbar nav">
+                                <form zippy="addprodform" class="form-inline ">
+                                     <label  for="additem">Наименование</label>
 
+                                     <select   class="form-control mr-2" zippy="additem">
+                                          <option value="0">Не  выбрано</option>
+                                        
+                                       </select>
+                                    <label for="addqty">Кол.</label>
+                                       <input style="width:60px"  class="form-control mr-2" zippy="addqty" pattern="[0-9\.]+"  />
+     
+                                    <input type="submit" class="  btn btn-success  " value="+">
+
+
+                                </form>
+                            </div>               
+                
+                 <table class="table table-sm">
+                     <tr zippy="proditemlist">
+                       <td zippy="proditemname"></td>
+                       <td zippy="proditemqty"></td>
+                       <td><a zippy="proditemdel"><i class="fa fa-trash"></i></a></td>
+                     <tr>
+                 </table>
+                 <a zippy="cancelprods" class="btn btn-outline-success" >Отменить</a>&nbsp;&nbsp;&nbsp;
+                 <a zippy="saveprods"  class="btn  btn-success">Сохранить</a>
+            </div>
+            </div>
+ 
+           <div class="row" zippy="stagespan" >
+           <div class="col-12 col-md-8 col-xl-6">
+                 <h5>Производственные этапы</h5>
+                 <a zippy="backtoproc"   ><i class="fa fa-arrow-alt-circle-left"></i> К списку процеcсов</a>  <br>
+                 <a zippy="addstage"  class="btn  btn-success">Добавить</a>
+                  <table class="table table-sm">
+                     <tr zippy="stagelist">
+                       <td zippy="stagename"></td>
+                       <td zippy="stageareaname"></td>
+                       
+                       <td><a zippy="stageedit"><i class="fa fa-edit"></i></a></td>
+                       <td><a zippy="stagedel"><i class="fa fa-trash"></i></a></td>
+                     <tr>
+                 </table>               
+            </div>
+            </div>
+            
+       <form zippy="editstage"  >
+            
+       <div class="row"  >
+               <div class="col-12 col-md-4 col-xl-3">
+                <div class="form-group">
+                    <label for="editstagename">Наименование</label>
+                    <input required="required" class="form-control" zippy="editstagename"/>
+               </div>
+               <div class="form-group">
+                    <label for="editstagearea">Производственный участок</label>
+                    <select  class="form-control" zippy="editstagearea">
+                        <option value="0">Не выбран</option>
+                    </select>
+               </div>
+        
+              <div class="form-group">
+                    <label for="editstagenotes">Коментарий</label>
+                    <textarea  style="height:100px"  class="form-control" zippy="editstagenotes"></textarea>
+               </div>
+            </div>
+            <div class="col-12 col-md-3 col-xl-2">
+                  <div class="form-group">
+                    <label for="editstagestart">Дата  начала</label>
+                    <input required="required" class="form-control" zippy="editstagestart"/>
+               </div>
+               <div class="form-group">
+                    <label for="editstageend">Дата  окончания</label>
+                    <input required="required" class="form-control" zippy="editstageend"/>
+               </div>
+               <div class="form-group">
+                    <label for="editstagehours">Кол. часов</label>
+                    <input pattern="[0-9\.]+" style="width:75px"   class="form-control" zippy="editstagehours"/>
+               </div>
+          </div>
+            
+             <div class="col-12">
+                    <input zippy="savestage"   type="submit" value="Сохранить" class="btn btn-primary  ">&nbsp;&nbsp;
+                    <input zippy="cancelstage" type="button" value="Отменить" class="btn btn-outline-primary  ">  &nbsp;&nbsp;
+               </div>
+            </div>
+        </form> 
+        
+         <script>               
+           function check_delete() {
+                return confirm("Удалить?")
+            }
+           function check_stagedel() {
+                return confirm("Удалить?")
+            }
+        </script>            
+         
     </body>
 </html>

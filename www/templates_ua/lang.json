@@ -369,7 +369,7 @@
     "apinodocstate": "Невірний статус документу",
     "apinodoctype": "Невірний тип документу",
     "apiinvalidparameters": "Невірні параметри",
-    "apiasccancel": "НеобхIдно  видалити документу %s. причина: %s",
+    "apiasccancel": "Необхiдно  видалити документ %s. причина: %s",
     "apinodoc": "Документ не знайдено",
     "apinoitems": "Не введені  позиції",
     "apiitemnotfound": "ТМЦ з артикулом %s не знайдений ",
@@ -466,5 +466,11 @@
     "modissueslist": "Завдання (Проекты)"  ,
     "noselpart": "Не обрана  партiя"  ,    
     "thesamestock": "Однаковi партiї"  ,    
-    "diffitem": "Рiзнi  ТМЦ"      
+    "diffitem": "Рiзнi  ТМЦ" ,
+    "stpp_new": "Новий",    
+    "stpp_inprocess": "Выконуєтся",    
+    "stpp_stopped": "Призупинений",    
+    "stpp_finished": "Виконаный",    
+    "stpp_canceled": "Скасований",     
+    "noselparea": "Не вибрано виробничу дiльницю"     
 }

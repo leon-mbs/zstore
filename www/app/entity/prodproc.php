@@ -20,18 +20,25 @@ class ProdProc extends \ZCL\DB\Entity
     const STATE_FINISHED=3;
     const STATE_CANCELED=4;
     
+    public $prodlist = array();
     
     protected function init() {
         $this->pp_id = 0;
   
+    }
+    public function clone() {
+        $proc = new ProdProc();
+         
+        return  $proc;
     }
 
     protected function beforeSave() {
         parent::beforeSave();
         //упаковываем  данные в detail
         $this->detail = "<detail>";
-         $this->detail .= "<notes><![CDATA[{$this->notes}]]></notes>";
-      
+        $this->detail .= "<notes><![CDATA[{$this->notes}]]></notes>";
+        $prodlist = base64_encode( serialize($this->prodlist) );
+        $this->detail .= "<prodlist><{$prodlist}></prodlist>";
         $this->detail .= "</detail>";
 
         return true;
@@ -46,7 +53,8 @@ class ProdProc extends \ZCL\DB\Entity
         $xml = simplexml_load_string($this->detail);
  
         $this->notes = (string)($xml->notes[0]);
-
+        $prodlist = @unserialize(@base64_decode((string)($xml->prodlist[0])));
+        if(!is_array($prodlist)) $prodlist = array();
         parent::afterLoad();
     }
 
