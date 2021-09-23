@@ -106,7 +106,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="  text-bold">Наявні кількость на складах</td>
+                            <td class="  text-bold">Наявна кількість на складах</td>
                             <td>/api/items</td>
                             <td>getqty</td>
                             <td class="text-nowrap">store_id - id складу</td>
@@ -234,7 +234,74 @@
                             </td>
                             <td></td>
                         </tr>
-
+                         <tr>
+                            <td class="  text-bold">Создание   расходной накладной</td>
+                            <td>/api/docs</td>
+                            <td>goodsissue</td>
+                            <td class="text-nowrap">number - номер документа. Уникальное значение 
+                                экспортирующей системы. Обязательное поле
+                                <br> mf - каcса  или  банковский  счет
+                                <br> branch_id - филиал, если включено
+                                <br> customer_id - контрагент
+                                <br> store_id - склад, обязательное поле
+                                <br> autoexec - true, если  надо  записать  проводки
+                                <br> total - итого по документу которое к оплате. На случай если отличается от итогов по
+                                позициям (например изза скидки)
+                                <br> payed - внесена сумма  оплаты.
+                                <br> items - список позиций
+                                <br> item_code - артикул
+                                <br> quantity - количество
+                                <br> price - цена
+                            </td>
+                            <td>
+                                {"number":"ID0001","store_id":19,"customer_id":8,"mf":2,"total":220,"payed":220,"items":[{"item_code":"cbs500-1","quantity":2,"price":234},{"item_code":"ID0018","quantity":2,"price":234}]
+                                }
+                            </td>
+                            <td></td>
+                        </tr>
+                       <tr>
+                            <td class="  text-bold">Создание  приходной накладной</td>
+                            <td>/api/docs</td>
+                            <td>goodsissue</td>
+                            <td class="text-nowrap">number - номер документа. Уникальное значение 
+                                экспортирующей системы. Обязательное поле
+                                <br> mf - каcса  или  банковский  счет
+                                <br> branch_id - филиал, если включено
+                                <br> customer_id - контрагент . Обязательное поле
+                                <br> store_id - склад, обязательное поле
+                                <br> autoexec - true, если  надо  записать  проводки
+                                <br> total - итого по документу которое к оплате. На случай если отличается от итогов по
+                                позициям (например изза скидки)
+                                <br> payed - внесена сумма  оплаты.
+                                <br> items - список позиций
+                                <br> item_code - артикул
+                                <br> quantity - количество
+                                <br> price - цена
+                            </td>
+                       
+                       <tr>
+                            <td class="  text-bold">Оприходование  ТМЦ</td>
+                            <td>/api/docs</td>
+                            <td>incomeitem</td>
+                            <td class="text-nowrap">number - номер документа. Уникальное значение 
+                                экспортирующей системы. Обязательное поле
+                                <br> mf - каcса  или  банковский  счет
+                                <br> branch_id - филиал, если включено
+                                <br> store_id - склад, обязательное поле
+                                <br> autoexec - true, если  надо  записать  проводки
+                                <br> total - итого по документу которое к оплате. На случай если отличается от итогов по
+                                позициям (например изза скидки)
+                                <br> items - список позиций
+                                <br> item_code - артикул
+                                <br> quantity - количество
+                                <br> price - цена
+                            </td>
+                            <td>
+                                {"number":"ID0001","autoexec":true,"store_id":19,"customer_id":8,"mf":2,"total":220,"payed":220,"items":[{"item_code":"cbs500-1","quantity":2,"price":234},{"item_code":"ID0018","quantity":2,"price":234}]
+                                }
+                            </td>
+                            <td></td>
+                        </tr>
                         <tr>
                             <td class="  text-bold">Статуси документів по списку номерів</td>
                             <td>/api/docs</td>
@@ -255,6 +322,44 @@
                                 вже експортовано.
                             </td>
                         </tr>
+ <tr>
+                            <td class="  text-bold">Перелiк робiт та  послуг</td>
+                            <td>/api/items</td>
+                            <td>servicelist</td>
+                            <td class="text-nowrap"></td>
+                            <td></td>
+                            <td>
+                            </td>
+                        </tr>  
+                        
+ <tr>
+                            <td class="  text-bold">Создание акта  выполненых работ</td>
+                            <td>/api/docs</td>
+                            <td>serviceact</td>
+                            <td class="text-nowrap">number - номер документа. Уникальное значение 
+                                экспортирующей системы. Обязательное поле
+                                <br> mf - каcса  или  банковский  счет
+                                <br> branch_id - филиал, если включено
+                                <br> customer_id - контрагент
+                                <br> device - изделие  заказчика
+                              
+                                <br> autoexec - true, если  отправляется  на  выполнение
+                                <br> total - итого по документу которое к оплате. На случай если отличается от итогов по
+                                позициям (например изза скидки)
+                                <br> payed - внесена сумма  оплаты.
+                                <br> items - список позиций
+                                <br> service_id - id 
+                                <br> quantity - количество
+                                <br> price - цена
+                            </td>
+                            <td>
+                                {"number":"ID0001", "customer_id":8,"mf":2,"total":220,"payed":220,"items":[{"service_id":"5","quantity":2,"price":234} ]
+                                }
+                            </td>
+                            <td></td>
+                        </tr>                        
+                        
+                                              
                     </table>
                     <h4>Коди помилок</h4>
                     <table class="table table-sm" style="width:400px;">

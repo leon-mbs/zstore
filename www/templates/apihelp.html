@@ -292,6 +292,7 @@
                                 <br> quantity - количество
                                 <br> price - цена
                             </td>
+                       
                        <tr>
                             <td class="  text-bold">Оприходование  ТМЦ</td>
                             <td>/api/docs</td>
@@ -335,6 +336,43 @@
                                 экспортирован.
                             </td>
                         </tr>
+                       <tr>
+                            <td class="  text-bold">Список работ и услуг</td>
+                            <td>/api/items</td>
+                            <td>servicelist</td>
+                            <td class="text-nowrap"></td>
+                            <td></td>
+                            <td>
+                            </td>
+                        </tr>
+               <tr>
+                            <td class="  text-bold">Создание акта  выполненых работ</td>
+                            <td>/api/docs</td>
+                            <td>serviceact</td>
+                            <td class="text-nowrap">number - номер документа. Уникальное значение 
+                                экспортирующей системы. Обязательное поле
+                                <br> mf - каcса  или  банковский  счет
+                                <br> branch_id - филиал, если включено
+                                <br> customer_id - контрагент
+                                <br> device - изделие  заказчика
+                              
+                                <br> autoexec - true, если  отправляется  на  выполнение
+                                <br> total - итого по документу которое к оплате. На случай если отличается от итогов по
+                                позициям (например изза скидки)
+                                <br> payed - внесена сумма  оплаты.
+                                <br> items - список позиций
+                                <br> service_id - id 
+                                <br> quantity - количество
+                                <br> price - цена
+                            </td>
+                            <td>
+                                {"number":"ID0001", "customer_id":8,"mf":2,"total":220,"payed":220,"items":[{"service_id":"5","quantity":2,"price":234} ]
+                                }
+                            </td>
+                            <td></td>
+                        </tr>
+                                
+                        
                     </table>
                     <h4>Коды ошибок</h4>
                     <table class="table table-sm" style="width:400px;">
