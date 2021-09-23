@@ -348,7 +348,7 @@ class ARMPos extends \App\Pages\Base
         }
 
 
-        $price = $item->getPrice($this->form1->pricetype->getValue(), $store);
+        $price = $item->getPrice($this->getPriveType(), $store);
         $item->price = $price;
         $item->quantity = 1;
 
@@ -583,7 +583,7 @@ class ARMPos extends \App\Pages\Base
 
     public function onOpenItemSel($sender) {
         $this->docpanel->wselitem->setVisible(true);
-        $this->docpanel->wselitem->setPriceType($this->form1->pricetype->getValue());
+        $this->docpanel->wselitem->setPriceType($this->getPriveType());
         $this->docpanel->wselitem->Reload();
     }
 
@@ -618,7 +618,7 @@ class ARMPos extends \App\Pages\Base
         $item = Item::load($id);
         $store = $this->form1->store->getValue();
 
-        $price = $item->getPrice($this->form1->pricetype->getValue(), $store);
+        $price = $item->getPrice($this->getPriveType(), $store);
         $qty = $item->getQuantity($store);
 
         $this->docpanel->editdetail->qtystock->setText(H::fqty($qty));
@@ -791,7 +791,7 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['pos_name'] = $this->pos->pos_name;
         $this->_doc->headerdata['store'] = $this->_store_id;
         $this->_doc->headerdata['salesource'] = $this->_salesource;
-        $this->_doc->headerdata['pricetype'] = $this->_pt;
+        $this->_doc->headerdata['pricetype'] = $this->getPriveType();
 
         $this->_doc->firm_id = $this->pos->firm_id;
 
@@ -1017,5 +1017,19 @@ class ARMPos extends \App\Pages\Base
         $this->goAnkor('dankor');
     }
 
+    //тип  цены с  учетом  контрагента
+    private function getPriveType(){
+        $id=$this->docpanel->form3->customer->getKey() ;
+        if($id>0){
+            $cust = \App\Entity\Customer::load() ;
+            if(strlen($cust->pricetype)>4 ) {
+               return $cust->pricetype ;    
+            }
+              
+            
+        }
+        
+        return  $this->_pt;
+    }
 
 }

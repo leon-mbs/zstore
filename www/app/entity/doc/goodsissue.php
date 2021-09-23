@@ -61,7 +61,7 @@ class GoodsIssue extends Document
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
                         "firm_name"       => $firm['firm_name'],
-                        "customer_name"   => $this->customer_id ? $this->customer_name : $this->headerdata["customer_name"],
+                        
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "store_name"      => $this->headerdata["store_name"],
@@ -80,6 +80,23 @@ class GoodsIssue extends Document
 
         );
 
+         $header["customer_name"]  = $this->headerdata["customer_name"];
+         $header["phone"]  = false;
+         $header["address"]  = false;
+         $header["edrpou"]  = false;
+        
+        if($this->customer_id > 0) {
+            $cust = \App\Entity\Customer::load($this->customer_id ) ;
+            $header["customer_name"]  = $cust->customer_name;
+            if(strlen($cust->phone)>0 )  $header["phone"]  =$cust->phone;
+            if(strlen($cust->address)>0 )  $header["address"]  =$cust->address;
+            if(strlen($cust->edrpou)>0 )  $header["edrpou"]  =$cust->edrpou;
+            
+        }
+        
+        if(strlen($this->headerdata["customer_name"])==0) $header["customer_name"] = false;
+        
+        
         if ($this->headerdata["contract_id"] > 0) {
             $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);
             $header['contract'] = $contract->contract_number;
@@ -224,7 +241,8 @@ class GoodsIssue extends Document
                         "docqrcode"       => $this->getQRCodeImage(),
                         "total"           => H::fa($this->amount)
         );
-
+        if(strlen($this->headerdata["customer_name"])==0) $header["customer_name"] = false;
+      
         $report = new \App\Report('doc/goodsissue_bill.tpl');
 
         $html = $report->generate($header);

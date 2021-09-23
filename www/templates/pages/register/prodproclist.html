@@ -164,6 +164,7 @@
                        <td zippy="stageareaname"></td>
                        
                        <td><a zippy="stageedit"><i class="fa fa-edit"></i></a></td>
+                       <td><a zippy="stagecard"><i class="fa fa fa-wrench"></i></a></td>
                        <td><a zippy="stagedel"><i class="fa fa-trash"></i></a></td>
                      <tr>
                  </table>               
@@ -211,6 +212,23 @@
                </div>
             </div>
         </form> 
+          
+  <form zippy="editcardform"  >
+        <h4 zippy=stagenameh4></h4>    
+       <div class="row"  >
+           <div class="col-12 col-md-8 col-xl-6">
+               <div class="form-group">
+                    <label for="editcard">Технологическая карта</label>
+                    <textarea     class="form-control" zippy="editcard"></textarea>
+               </div>             
+          
+           </div>
+           <div class="col-12">
+                    <input zippy="savecard"   type="submit" value="Сохранить" class="btn btn-primary  ">&nbsp;&nbsp;
+                    <input zippy="cancelcard" type="button" value="Отменить" class="btn btn-outline-primary  ">  &nbsp;&nbsp;
+           </div> 
+           </div>
+        </form> 
         
          <script>               
            function check_delete() {
@@ -219,6 +237,32 @@
            function check_stagedel() {
                 return confirm("Удалить?")
             }
+            
+        $(function () {
+                // Summernote
+
+                $('#editcard').summernote({
+                    height: 800,
+                    lang: 'ru-RU',
+
+                    callbacks: {
+                        onEnter: function (e) {
+                            if (e.keyCode === key.code.ENTER) {
+                                e.shiftKey = true;
+                                context.triggerEvent('enter', e);
+                            }
+                        },
+                        onPaste: function (e) {
+
+                            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                            e.preventDefault();
+                            document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
+                        }
+                    }
+                });
+           })            
+            
+            
         </script>            
          
     </body>

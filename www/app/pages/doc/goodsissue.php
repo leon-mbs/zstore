@@ -805,7 +805,7 @@ class GoodsIssue extends \App\Pages\Base
     }
 
     public function OnAutoCustomer($sender) {
-        return Customer::getList($sender->getText(), 1);
+        return Customer::getList($sender->getText(), 1,true);
     }
 
     public function OnChangeCustomer($sender) {
@@ -814,6 +814,12 @@ class GoodsIssue extends \App\Pages\Base
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
             $cust = Customer::load($customer_id) ;
+           
+            if(strlen($cust->pricetype)>4 ) {
+               $this->docform->pricetype->setValue($cust->pricetype) ;    
+            }
+           
+           
             
             $disctext="";
             if (doubleval($cust->discount) > 0) {
@@ -835,6 +841,9 @@ class GoodsIssue extends \App\Pages\Base
             $this->calcPay();
         }
         $this->OnCustomerFirm(null);
+        
+        
+        
     }
 
     //добавление нового контрагента

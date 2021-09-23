@@ -11,25 +11,40 @@
     {{/islogo}}
     <tr>
         <td></td>
-        <td>Покупець</td>
-        <td colspan="7">{{customer_name}}</td>
+        <td><b>Покупець</b></td>
+        <td colspan="7"><b>{{customer_name}}</b></td>
     </tr>
+    
+    {{#phone}}
     <tr>
         <td></td>
-        <td>Телефон</td>
+        <td valign="top">Телефон</td>
         <td colspan="7">{{phone}}</td>
     </tr>
+     {{/phone}} 
+   {{#address}}
     <tr>
         <td></td>
-        <td>Email</td>
-        <td colspan="7">{{email}}</td>
+        <td valign="top">Адреса</td>
+        <td colspan="7">{{address}}</td>
     </tr>
+     {{/address}} 
+   {{#edrpou}}
+    <tr>
+        <td></td>
+        <td valign="top">ЄДРПОУ</td>
+        <td colspan="7">{{edrpou}}</td>
+    </tr>
+     {{/edrpou}}       
+          
+    
+    
     {{#isfirm}}
     <tr>
 
         <td></td>
-        <td> Продавець</td>
-        <td colspan="7">{{firm_name}}</td>
+        <td><b> Продавець</b></td>
+        <td colspan="7"><b>{{firm_name}}</b></td>
 
     </tr>
     <tr>

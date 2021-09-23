@@ -10,19 +10,34 @@
     {{/islogo}}
     <tr>
         <td></td>
-        <td>Покупатель</td>
-        <td colspan="7">{{customer_name}}</td>
+        <td><b>Покупатель</b></td>
+        <td colspan="7"><b>{{customer_name}}</b></td>
     </tr>
+    {{#phone}}
     <tr>
         <td></td>
-        <td>Телефон</td>
+        <td valign="top">Телефон</td>
         <td colspan="7">{{phone}}</td>
     </tr>
+     {{/phone}} 
+   {{#address}}
     <tr>
         <td></td>
-        <td>Email</td>
-        <td colspan="7">{{email}}</td>
+        <td valign="top">Адрес</td>
+        <td colspan="7">{{address}}</td>
     </tr>
+     {{/address}} 
+   {{#edrpou}}
+    <tr>
+        <td></td>
+        <td valign="top">ОКПО</td>
+        <td colspan="7">{{edrpou}}</td>
+    </tr>
+     {{/edrpou}}  
+ 
+    
+    
+    
     {{#iscontract}}
     <tr>
 
@@ -36,8 +51,8 @@
     <tr>
 
         <td></td>
-        <td> Продавец</td>
-        <td colspan="7">{{firm_name}}</td>
+        <td><b> Продавец</b></td>
+        <td colspan="7"><b>{{firm_name}}</b></td>
 
     </tr>
     <tr>

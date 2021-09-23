@@ -24,6 +24,7 @@ class ProdStage extends \ZCL\DB\Entity
         $this->detail = "<detail>";
         $this->detail .= "<hours>{$this->hours}</hours>";
         $this->detail .= "<notes><![CDATA[{$this->notes}]]></notes>";
+        $this->detail .= "<card><![CDATA[{$this->card}]]></card>";
 
         $this->detail .= "</detail>";
 
@@ -44,6 +45,7 @@ class ProdStage extends \ZCL\DB\Entity
         $xml = simplexml_load_string($this->detail);
         $this->hours = intval($xml->hours[0]);
         $this->notes = (string)($xml->notes[0]);
+        $this->card = (string)($xml->card[0]);
 
         parent::afterLoad();
     }

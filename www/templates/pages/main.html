@@ -281,6 +281,13 @@
         <script   src="/assets/js/chart.js"></script>
 
         <script>
+        
+       var fontcolor='#000' ;
+        {{#darkmode}}
+            fontcolor='#fff' ;
+        {{/darkmode}}        
+        
+        
 //структура   расходов
 var pieData = {
 labels: {{{pbtitle}}},
@@ -298,7 +305,7 @@ maintainAspectRatio : false,
         responsive : true,
         title: {
         display: true,
-                text: 'Структура расходов за  три месяца',
+                text: 'Структура расходов за  три месяца',   fontColor: fontcolor,
                 position: 'top'
 
         },
@@ -307,7 +314,7 @@ maintainAspectRatio : false,
                 position: 'right',
                 labels: {
                 boxWidth: 10,
-                        fontColor: '#111',
+                        fontColor: fontcolor,
                         padding:  5
                 }
         },
@@ -339,11 +346,16 @@ labels: {{{pcmon}}},
 
 var barOptions = {
 legend: {
-display: true,
-        position: 'right'
+display: true,   
+        position: 'right',
+         labels: {
+                
+                        fontColor: fontcolor 
+                        
+                }
         },
         title: {
-        display: true,
+        display: true,      fontColor: fontcolor,
                 text: 'Доходы  и расходы'
         }
 }
@@ -376,9 +388,19 @@ labels  : {{{tsmon}}},
 
 var sellOptions = {
 title: {
-display: true,
+display: true,     fontColor: fontcolor,
         text: 'Реализация'
         },
+legend: {
+   labels: {
+                
+                        fontColor: fontcolor 
+                        
+                }
+      
+        },        
+        
+        
         scales: {
         xAxes: [{
         gridLines : {

@@ -204,13 +204,23 @@
                     <label for="editaddress">Полный адрес</label>
                     <input class="form-control" zippy="editaddress"/>
                 </div>
-
+                <div class="form-group">
+                    <label for="editedrpou"> ОКПО </label>
+                    <input value="0" class="form-control"   zippy="editedrpou">
+                </div>
 
                 <div class="form-check">
                     <input zippy="editjurid" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="editjurid">Юр. лицо</label>
                 </div>
                 {{/leadmode}} 
+                
+           <div class="form-group  ">
+                        <label for="editpricetype">Тип цены</label>
+                        <select class="form-control" zippy="editpricetype">
+                          <option value="none">Не выбран</option>
+                        </select>
+                    </div>            
                 <div class="form-group">
                     <label for="editcomment">Примечание</label>
                     <textarea style="height:100px" class="form-control" zippy="editcomment"></textarea>
@@ -468,6 +478,14 @@
         <script language="javascript" src="/assets/js/chart.js"></script>
 
         <script>
+        
+        var fontcolor='#000' ;
+        {{#darkmode}}
+            fontcolor='#fff' ;
+        {{/darkmode}}
+        
+        
+        
 //состояниея лидов
                                     var pieData1 = {
                                     labels: {{{gr1title}}},
@@ -486,7 +504,8 @@
                                             title: {
                                             display: true,
                                                     text: 'Состояния  лидов',
-                                                    position: 'top'
+                                                     fontColor: fontcolor,
+                                                     position: 'top'
 
                                             },
                                             legend: {
@@ -494,7 +513,7 @@
                                                     position: 'right',
                                                     labels: {
                                                     boxWidth: 10,
-                                                            fontColor: '#111',
+                                                            fontColor: fontcolor,
                                                             padding:  2
                                                     }
                                             },
@@ -520,7 +539,8 @@
                                             title: {
                                             display: true,
                                                     text: 'Источники  лидов',
-                                                    position: 'top'
+                                                     fontColor: fontcolor,
+                                                      position: 'top'
 
                                             },
                                             legend: {
@@ -528,7 +548,7 @@
                                                     position: 'right',
                                                     labels: {
                                                     boxWidth: 10,
-                                                            fontColor: '#111',
+                                                           fontColor: fontcolor,
                                                             padding:  2
                                                     }
                                             },
@@ -554,7 +574,8 @@
                                             title: {
                                             display: true,
                                                     text: 'Источники  конвертированых  лидов',
-                                                    position: 'top'
+                                                      fontColor: fontcolor,
+                                                      position: 'top'
 
                                             },
                                             legend: {
@@ -562,7 +583,7 @@
                                                     position: 'right',
                                                     labels: {
                                                     boxWidth: 10,
-                                                            fontColor: '#111',
+                                                             fontColor: fontcolor,
                                                             padding:  2
                                                     }
                                             },

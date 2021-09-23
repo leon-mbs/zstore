@@ -210,14 +210,22 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="bonus">Бонуси</label>
-                    <input value="0" class="form-control" pattern="[0-9\.]+" zippy="bonus">
+                    <label for="editedrpou">ЄДРПОУ</label>
+                    <input value="0" class="form-control"   zippy="editedrpou">
                 </div>
 
                 <div class="form-check">
                     <input zippy="editjurid" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="editjurid">Юр. особа</label>
                 </div>
+                
+           <div class="form-group  ">
+                        <label for="editpricetype">Тип ціни</label>
+                        <select class="form-control" zippy="editpricetype">
+                         <option value="none">Не вибраний</option>
+                        </select>
+                    </div>         
+                
                 {{/leadmode}} 
                 <div class="form-group">
                     <label for="editcomment">Примітка</label>
@@ -477,6 +485,12 @@
         <script language="javascript" src="/assets/js/chart.js"></script>
 
         <script>
+        
+        var fontcolor='#000' ;
+        {{#darkmode}}
+            fontcolor='#fff' ;
+        {{/darkmode}}        
+        
 //состояниея лидов
                                     var pieData1 = {
                                     labels: {{{gr1title}}},
@@ -493,7 +507,7 @@
                                     maintainAspectRatio : false,
                                             responsive : true,
                                             title: {
-                                            display: true,
+                                            display: true,   fontColor: fontcolor,
                                                     text: 'Стани лідів',
                                                     position: 'top'
 
@@ -503,7 +517,7 @@
                                                     position: 'right',
                                                     labels: {
                                                     boxWidth: 10,
-                                                            fontColor: '#111',
+                                                            fontColor: fontcolor,
                                                             padding:  2
                                                     }
                                             },
@@ -527,7 +541,7 @@
                                     maintainAspectRatio : false,
                                             responsive : true,
                                             title: {
-                                            display: true,
+                                            display: true,    fontColor: fontcolor,
                                                     text: 'Джерела лідів',
                                                     position: 'top'
 
@@ -537,7 +551,7 @@
                                                     position: 'right',
                                                     labels: {
                                                     boxWidth: 10,
-                                                            fontColor: '#111',
+                                                            fontColor: fontcolor,
                                                             padding:  2
                                                     }
                                             },
@@ -561,7 +575,7 @@
                                     maintainAspectRatio : false,
                                             responsive : true,
                                             title: {
-                                            display: true,
+                                            display: true,    fontColor: fontcolor,
                                                     text: 'Джерела  конвертованих лідів',
                                                     position: 'top'
 
@@ -571,7 +585,7 @@
                                                     position: 'right',
                                                     labels: {
                                                     boxWidth: 10,
-                                                            fontColor: '#111',
+                                                            fontColor: fontcolor,
                                                             padding:  2
                                                     }
                                             },

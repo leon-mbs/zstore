@@ -79,6 +79,7 @@ class ProdProcList extends \App\Pages\Base
         $this->stagespan->add(new DataView('stagelist', new PStageListDataSource($this ), $this, 'stagelistOnRow'));
          
          
+         
          $this->add(new Form('editstage'))->setVisible(false);
          $this->editstage->add(new TextInput('editstagename'));
          $this->editstage->add(new TextInput('editstagehours'));
@@ -89,7 +90,15 @@ class ProdProcList extends \App\Pages\Base
          $this->editstage->add(new DropDownChoice('editstagearea',\App\Entity\ProdArea::findArray('pa_name','')));
          $this->editstage->add(new SubmitButton('savestage'))->onClick($this, 'OnSaveStage');
          $this->editstage->add(new Button('cancelstage'))->onClick($this, 'onCanceStage');
-          
+         
+         
+         $this->add(new Form('editcardform'))->setVisible(false);
+         $this->editcardform->add(new Label('stagenameh4'));
+         $this->editcardform->add(new TextArea('editcard'));
+         $this->editcardform->add(new SubmitButton('savecard'))->onClick($this, 'OnSaveCard');
+         $this->editcardform->add(new Button('cancelcard'))->onClick($this, 'onCanceStage');
+
+       
          $this->listpan->add(new Panel("showpan"))->setVisible(false) ;
           
          $this->listpan->proclist->Reload();
@@ -263,6 +272,7 @@ class ProdProcList extends \App\Pages\Base
       
       $row->add(new ClickLink('stageedit'))->onClick($this, 'OnStageEdit');
       $row->add(new ClickLink('stagedel'))->onClick($this, 'OnStageDel');
+      $row->add(new ClickLink('stagecard'))->onClick($this, 'OnCard');
      
      
   }
@@ -323,11 +333,34 @@ class ProdProcList extends \App\Pages\Base
     }
   
     public function onCanceStage($sender) {
+         $this->editcardform->setVisible(false); 
          $this->editstage->setVisible(false); 
          $this->stagespan->setVisible(true); 
    
-  }
-     
+     }
+   //техкарта
+      public function OnCard($sender) {
+         $this->editcardform->setVisible(true); 
+         $this->editstage->setVisible(false); 
+         $this->stagespan->setVisible(false); 
+         
+         $this->_stage = $sender->getOwner()->getDataItem(); 
+         
+         $this->editcardform->editcard->setText($this->_stage->card);
+         $this->editcardform->stagenameh4->setText($this->_stage->stagename);
+     } 
+                                             
+   public function OnSaveCard($sender) {
+ 
+         $this->_stage->card =  $this->editcardform->editcard->getText();
+         $this->_stage->save();
+         
+         $this->editcardform->setVisible(false); 
+         $this->editstage->setVisible(false); 
+         $this->stagespan->setVisible(true);          
+         
+     } 
+                                             
     //просмотр 
     public function onView($sender) {
        $this->listpan->showpan->setVisible(true); 

@@ -43,8 +43,10 @@ class Customer extends \ZCL\DB\Entity
         $this->detail .= "<holding>{$this->holding}</holding>";
         $this->detail .= "<viber>{$this->viber}</viber>";
         $this->detail .= "<nosubs>{$this->nosubs}</nosubs>";
+        $this->detail .= "<edrpou>{$this->edrpou}</edrpou>";
 
         $this->detail .= "<user_id>{$this->user_id}</user_id>";
+        $this->detail .= "<pricetype>{$this->pricetype}</pricetype>";
 
         $this->detail .= "<holding_name><![CDATA[{$this->holding_name}]]></holding_name>";
         $this->detail .= "<address><![CDATA[{$this->address}]]></address>";
@@ -65,6 +67,7 @@ class Customer extends \ZCL\DB\Entity
         $this->shopcust_id = (int)($xml->shopcust_id[0]);
         $this->isholding = (int)($xml->isholding[0]);
         $this->user_id = (int)($xml->user_id[0]);
+        $this->pricetype = (string)($xml->pricetype[0]);
         $this->fromlead = (int)($xml->fromlead[0]);
 
         $this->nosubs = (int)($xml->nosubs[0]);
@@ -73,6 +76,7 @@ class Customer extends \ZCL\DB\Entity
         $this->address = (string)($xml->address[0]);
         $this->comment = (string)($xml->comment[0]);
         $this->viber = (string)($xml->viber[0]);
+        $this->edrpou = (string)($xml->edrpou[0]);
 
         $this->createdon = strtotime($this->createdon);
 
@@ -122,14 +126,24 @@ class Customer extends \ZCL\DB\Entity
      *
      * @param mixed $search
      * @param mixed $type
+     * @param mixed $edrpou
      */
-    public static function getList($search = '', $type = 0) {
+    public static function getList($search = '', $type = 0,$searchedrpou=false) {
 
 
         $where = "status=0 and detail not like '%<isholding>1</isholding>%' ";
         if (strlen($search) > 0) {
+            $edrpou = Customer::qstr('%<edrpou>' . $search . '</edrpou>%');
+
             $search = Customer::qstr('%' . $search . '%');
-            $where .= " and  (customer_name like {$search}  or phone like {$search}  or email like {$search} ) ";
+            
+            if($searchedrpou) {
+               $where .= " and  (customer_name like {$search}  or phone like {$search}  or email like {$search} or detail like {$edrpou}  ) ";    
+            }   else {
+               $where .= " and  (customer_name like {$search}  or phone like {$search}  or email like {$search} ) ";    
+            }
+            
+            
         }
         if ($type > 0) {
             $where .= " and  (detail like '%<type>{$type}</type>%'  or detail like '%<type>0</type>%' ) ";

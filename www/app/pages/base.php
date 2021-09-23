@@ -161,7 +161,7 @@ class Base extends \Zippy\Html\WebPage
           $this->_tvars["hidesidebar"] = $this->_tvars["hidesidebar"] . ' ' .  'dark-mode';    
         }
         
-        
+        $this->_tvars["darkmode"] = $user->darkmode==1;
         
         //для скрытия блока разметки  в  шаблоне страниц                           
         $this->_tvars["hideblock"] = false;
