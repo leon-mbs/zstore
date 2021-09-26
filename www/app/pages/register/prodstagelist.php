@@ -2,19 +2,22 @@
 
 namespace App\Pages\Register;
 
-use App\Entity\Customer;
-use App\Entity\Doc\Document;
-use App\Entity\Pay;
+use App\Entity\ProdProc;
+use App\Entity\ProdStage;
 use App\Helper as H;
 use App\System;
 use Zippy\Html\DataList\DataView;
+use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\DataList\Paginator;
 use Zippy\Html\Form\AutocompleteTextInput;
 use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\Button;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
+use Zippy\Html\Panel;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\BookmarkableLink;
 
@@ -24,8 +27,10 @@ use Zippy\Html\Link\BookmarkableLink;
 class ProdStageList extends \App\Pages\Base
 {
 
-    private $_doc    = null;
-    private $_ptlist = null;
+    private $_stage    = null;
+    public $_emps      = array();
+    public $_dates     = array();
+ 
 
     /**
      *
@@ -37,125 +42,192 @@ class ProdStageList extends \App\Pages\Base
             return;
         }
 
-        $this->_ptlist = \App\Entity\IOState::getTypeList();
+        $this->add(new Panel("listpan")) ;
+         
+      
+        $this->listpan->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
+        $this->listpan->filter->add(new DropDownChoice('fproc', ProdProc::findArray('procname', '', 'procname'), 0));
+     
+        $stlist = $this->listpan->add(new DataView('stlist', new ProcStageDataSource($this), $this, 'stlistOnRow'));
 
-        $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
-        $this->filter->add(new DropDownChoice('fuser', \App\Entity\User::findArray('username', '', 'username'), 0));
-        $this->filter->add(new DropDownChoice('ftype', $this->_ptlist, 0));
+        $this->listpan->add(new Paginator('pag', $stlist));
+        $stlist->setPageSize(H::getPG());
+  
+      
+        $this->add(new Panel("cardpan"))->setVisible(false)  ;
+        $this->cardpan->add(new Label("stagenamec")) ;
+        $this->cardpan->add(new Label("carddata")) ;
+        $this->cardpan->add(new ClickLink("backc",$this,"backOnClick")) ;
+   
+   
+                                 
+        $this->add(new Panel("userspan"))->setVisible(false) ;   
+        $this->userspan->add(new Label("stageh5")) ;
+        $this->userspan->add(new Form("useraddform"))->onSubmit($this,"onAddEmp");
+        
+        $this->userspan->useraddform->add(new DropDownChoice('adduser', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name")));
+        $this->userspan->useraddform->add(new  TextInput("addktu")) ;   
+        $this->userspan->add(new DataView('userslist', new  ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_emps')), $this, 'empOnRow')) ;
+                                                
+        $this->userspan->add(new Button("saveusers"))->onClick($this,"onSaveEmp") ;
+        $this->userspan->add(new Button("cancelusers"))->onClick($this,"backOnClick") ;
 
-        $doclist = $this->add(new DataView('doclist', new IOStateListDataSource($this), $this, 'doclistOnRow'));
 
-        $this->add(new Paginator('pag', $doclist));
-        $doclist->setPageSize(H::getPG());
+        $this->add(new Panel("statuspan"))->setVisible(false)  ;
+        $this->statuspan->add(new Label("stagenames")) ;
+        $this->statuspan->add(new ClickLink("backs",$this,"backOnClick")) ;
 
-        $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
+        $this->add(new Panel("calpan"))->setVisible(false)  ;
+        $this->calpan->add(new Label("stagenamed")) ;
+        $this->calpan->add(new Label("planhours")) ;
+        $this->calpan->add(new Label("facthours")) ;
+        $this->calpan->add(new ClickLink("backd",$this,"backOnClick")) ;
 
-        $this->doclist->Reload();
-        $this->add(new ClickLink('csv', $this, 'oncsv'))->setVisible(false);
-
-        $this->_ptlist[0] = '';
+ 
+        $stlist->Reload();
+       
+         
     }
 
     public function filterOnSubmit($sender) {
-        $this->docview->setVisible(false);
-        $this->doclist->Reload();
+        
+        $this->listpan->stlist->Reload();
     }
 
-    public function OnAutoCustomer($sender) {
-        return Customer::getList($sender->getText());
-    }
+  
 
-    public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
-        $doc = $row->getDataItem();
+    public function stlistOnRow(\Zippy\Html\DataList\DataRow $row) {
+        $st = $row->getDataItem();
 
-        $row->add(new Label('number', $doc->document_number));
+        $row->add(new Label('sname', $st->stagename));
+        $row->add(new Label('pname', $st->procname));
+        $row->add(new Label('snumber', $st->snumber));
 
-        $row->add(new Label('date', H::fd($doc->paydate)));
-        $row->add(new Label('notes', $doc->notes));
+        $row->add(new Label('startdate', H::fd($st->startdate)));
+        $row->add(new Label('enddate', H::fd($st->enddate)));
+      $row->add(new Label('hasnotes'))->setVisible(strlen($st->notes) > 0  );
+      $row->hasnotes->setAttribute('title', $st->notes);
 
-        $row->add(new Label('username', $doc->username));
-
-        $row->add(new Label('paytype', $this->_ptlist[$doc->paytype]));
-
+      $row->add(new ClickLink('card', $this, 'cardOnClick'))->setVisible(strlen($st->card) > 0  );
+       
         $row->add(new ClickLink('show', $this, 'showOnClick'));
-        $user = \App\System::getUser();
+        $row->add(new ClickLink('workers', $this, 'wOnClick'));
+        $row->add(new ClickLink('agenda', $this, 'cOnClick'));
+      
 
     }
 
-    //просмотр
+    
+
+   
+    public function cardOnClick($sender) {
+        $this->cardpan->setVisible(true);
+        $this->listpan->setVisible(false);
+        $this->_stage = $sender->getOwner()->getDataItem();
+        
+        $this->cardpan->stagenamec->setText($this->_stage->stagename); 
+        $this->cardpan->carddata->setText($this->_stage->card,true); 
+         
+    }
+    public function wOnClick($sender) {
+        $this->userspan->setVisible(true);
+        $this->listpan->setVisible(false);
+        $this->_stage = $sender->getOwner()->getDataItem();
+        $this->_emps = $this->_stage->emplist;
+        
+        $this->userspan->userslist->Reload();
+        $this->userspan->stageh5->setText($this->_stage->stagename); 
+        
+         
+    } 
+    public function onAddEmp($sender) {
+         $id = $sender->adduser->getValue() ;
+         $ktu = $sender->addktu->getText() ;
+         
+         if($id > 0 && $ktu > 0) {
+             $emp = \App\Entity\Employee::load($id) ;
+             $emp->ktu = $ktu  ;
+             $this->_emps[$id]=$emp; 
+             $sender->clean();
+             $this->userspan->userslist->Reload();
+         }
+         
+         
+         
+    }
+    public function empOnRow($row) {
+        $e = $row->getDataItem();
+
+        $row->add(new Label('username', $e->emp_name));
+        $row->add(new Label('ktu', $e->ktu));
+        $row->add(new ClickLink('deluser', $this, 'deluserOnClick'));
+               
+    }
+    
+    public function deluserOnClick($sender) {
+         $e = $sender->getOwner()->getDataItem();
+         $this->_emps = array_diff_key($this->_emps, array($e->employee_id   => $this->_emps[$e->employee_id]));
+       
+         $this->userspan->userslist->Reload();
+    }
+    
+    public function onSaveEmp($sender) {
+  
+      if(count($this->_emps)>0) {
+          $ktu = 0;    
+          foreach($this->_emps as $emp){
+              $ktu += doubleval($emp->ktu) ;   
+          }
+          if($ktu != 1) {
+              $this->setError("ktu1") ;
+              return;
+          }
+          
+        }     
+        
+        $this->_stage->emplist = $this->_emps;
+        $this->_stage->save() ;
+        $this->userspan->setVisible(false);
+        $this->listpan->setVisible(true);        
+    }
+  
+
     public function showOnClick($sender) {
-
-        $this->_doc = Document::load($sender->owner->getDataItem()->document_id);
-
-        if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
-            return;
-        }
-
-        $this->docview->setVisible(true);
-        $this->docview->setDoc($this->_doc);
+        $this->statuspan->setVisible(true);
+        $this->listpan->setVisible(false);
+        $this->_stage = $sender->getOwner()->getDataItem();
+ 
+        $this->statuspan->stagenames->setText($this->_stage->stagename); 
+    }    
+      
+    
+    public function cOnClick($sender) {
+        $this->calpan->setVisible(true);
+        $this->listpan->setVisible(false);
+        $this->_stage = $sender->getOwner()->getDataItem();
+ 
+        $this->calpan->stagenamed->setText($this->_stage->stagename); 
+        $this->calpan->planhours->setText($this->_stage->hours); 
+    }    
+    
+    public function backOnClick($sender) {
+        $this->cardpan->setVisible(false);
+        $this->userspan->setVisible(false);
+        $this->statuspan->setVisible(false);
+        $this->calpan->setVisible(false);
+        $this->listpan->setVisible(true);
+        
+        $this->listpan->stlist->Reload() ;
+         
     }
 
-
-    public function oncsv($sender) {
-        $list = $this->doclist->getDataSource()->getItems(-1, -1);
-
-        $header = array();
-        $data = array();
-
-        $header['A1'] = "Дата";
-        $header['B1'] = "Счет";
-        $header['C1'] = "Приход";
-        $header['D1'] = "Расход";
-        $header['E1'] = "Документ";
-        $header['F1'] = "Создал";
-        $header['G1'] = "Контрагент";
-        $header['H1'] = "Примечание";
-
-        $i = 1;
-        foreach ($list as $doc) {
-            $i++;
-            $data['A' . $i] = H::fd($doc->paydate);
-            $data['B' . $i] = $doc->mf_name;
-            $data['C' . $i] = ($doc->amount > 0 ? H::fa($doc->amount) : "");
-            $data['D' . $i] = ($doc->amount < 0 ? H::fa(0 - $doc->amount) : "");
-            $data['E' . $i] = $doc->document_number;
-            $data['F' . $i] = $doc->username;
-            $data['G' . $i] = $doc->customer_name;
-            $data['H' . $i] = $doc->notes;
-        }
-
-        H::exportExcel($data, $header, 'paylist.xlsx');
-    }
-
-    public function printOnClick($sender) {
-        $pay = $sender->getOwner()->getDataItem();
-        $doc = \App\Entity\Doc\Document::load($pay->document_id);
-
-        $header = array();
-        $header['document_number'] = $doc->document_number;
-        $header['firm_name'] = $doc->firm_name;
-        $header['customer_name'] = $doc->customer_name;
-        $list = Pay::find("document_id=" . $pay->document_id, "pl_id");
-        $all = 0;
-        $header['plist'] = array();
-        foreach ($list as $p) {
-            $header['plist'][] = array('ppay' => H::fa(abs($p->amount)), 'pdate' => H::fd($p->paydate));
-            $all += abs($p->amount);
-        }
-        $header['pall'] = H::fa($all);
-
-        $report = new \App\Report('pays_bill.tpl');
-
-        $html = $report->generate($header);
-        $this->updateAjax(array(), "  $('#paysprint').html('{$html}') ; $('#pform').modal()");
-    }
-
+   
 }
 
 /**
  *  Источник  данных  для   списка  документов
  */
-class IOStateListDataSource implements \Zippy\Interfaces\DataSource
+class ProcStageDataSource implements \Zippy\Interfaces\DataSource
 {
 
     private $page;
@@ -165,58 +237,24 @@ class IOStateListDataSource implements \Zippy\Interfaces\DataSource
     }
 
     private function getWhere() {
-        $user = System::getUser();
-
-        $conn = \ZDB\DB::getConnect();
-
-        //$where = "   d.customer_id in(select  customer_id from  customers  where  status=0)";
+  
         $where = "  1=1 ";
+                                                           
+        $proc = $this->page->listpan->filter->fproc->getValue();
 
-        $author = $this->page->filter->fuser->getValue();
-        $type = $this->page->filter->ftype->getValue();
-
-        if ($type > 0) {
-            $where .= " and paytype=" . $type;
+        if ($proc > 0) {
+            $where .= " and pp_id=" . $proc;
         }
-
-
-        if ($author > 0) {
-            $where .= " and p.user_id=" . $author;
-        }
-
-        $c = \App\ACL::getBranchConstraint();
-        if (strlen($c) > 0) {
-            $where .= " and " . $c;
-        }
-
-        if ($user->rolename != 'admins') {
-            if ($user->onlymy == 1) {
-
-                $where .= " and d.user_id  = " . $user->user_id;
-            }
-
-            $where .= " and d.meta_id in({$user->aclview}) ";
-        }
+      
         return $where;
     }
 
     public function getItemCount() {
-        $conn = \ZDB\DB::getConnect();
-        $sql = "select coalesce(count(*),0) from documents_view  d join `paylist_view` p on d.`document_id` = p.`document_id` where " . $this->getWhere();
-        return $conn->GetOne($sql);
+        return ProdStage::findCnt($this->getWhere());
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
-
-        $conn = \ZDB\DB::getConnect();
-        $sql = "select  p.*,d.`customer_name`,d.`meta_id`  from documents_view  d join `paylist_view` p on d.`document_id` = p.`document_id` where " . $this->getWhere() . " order  by  pl_id desc   ";
-        if ($count > 0) {
-            $sql .= " limit {$start},{$count}";
-        }
-
-        $docs = \App\Entity\Pay::findBySql($sql);
-
-        return $docs;
+       return  ProdStage::find($this->getWhere(),"");
     }
 
     public function getItem($id) {

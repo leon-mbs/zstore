@@ -31,6 +31,8 @@
                         <th  > </th>
                         <th  > </th>
                         <th  > </th>
+                        <th  >  </th>
+                        <th  >  </th>
       
 
                     </tr>
@@ -40,9 +42,10 @@
                         <td zippy="snumber"></td>
                         <td zippy="state"></td>
 
-                        <td class="text-nowrap" zippy="datestart"></td>
-                        <td class="text-nowrap" zippy="dateend"></td>
-                         
+                        <td class="text-nowrap" zippy="startdate"></td>
+                        <td class="text-nowrap" zippy="enddate"></td>
+                 <td><i zippy="hasnotes" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i></td>
+                
 
                         <td  >
                             <a zippy="view" title="Просмотр"><i class="fa fa-eye"></i></a>
@@ -54,11 +57,13 @@
                             <a zippy="edit" title="Редактирование"><i class="fa fa-edit"></i></a>
                              </td> <td  >
                             <a zippy="stages" title="Призводственные  этапы"><i class="fa fa-gavel"></i></a>
-                            </td> <td  >
-                            <a zippy="copy" title="Создать  копию"><i class="fa fa-copy"></i></a>
-
-
-                        </td>
+                            </td> 
+                            <td  >
+                              <a zippy="copy" title="Создать  копию"><i class="fa fa-copy"></i></a>
+                            </td>
+                            <td  >
+                              <a zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a>
+                            </td>
 
 
                     </tr>
@@ -109,14 +114,14 @@
                </div>
                <div class="form-group">
                     <label for="editnotes">Примечание</label>
-                    <textarea   class="form-control" zippy="editnotes"></textarea>
+                    <textarea  style="height:100px"  class="form-control" zippy="editnotes"></textarea>
                </div>
             </div>
             
              <div class="col-12">
                     <input zippy="save"   type="submit" value="Сохранить" class="btn btn-primary  ">&nbsp;&nbsp;
                     <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary  ">  &nbsp;&nbsp;
-                    <input zippy="delete" type="button" value="Удалить" class="btn btn-outline-danger  ">
+               
                 </div>
             </div>
         </form>           
@@ -190,19 +195,14 @@
                     <label for="editstagenotes">Коментарий</label>
                     <textarea  style="height:100px"  class="form-control" zippy="editstagenotes"></textarea>
                </div>
-            </div>
-            <div class="col-12 col-md-3 col-xl-2">
-                  <div class="form-group">
-                    <label for="editstagestart">Дата  начала</label>
-                    <input required="required" class="form-control" zippy="editstagestart"/>
-               </div>
+             
                <div class="form-group">
-                    <label for="editstageend">Дата  окончания</label>
-                    <input required="required" class="form-control" zippy="editstageend"/>
-               </div>
-               <div class="form-group">
-                    <label for="editstagehours">Кол. часов</label>
+                    <label for="editstagehours">Кол. часов (план)</label>
                     <input pattern="[0-9\.]+" style="width:75px"   class="form-control" zippy="editstagehours"/>
+               </div>
+               <div class="form-group">
+                    <label for="editstagesalary">Сумма по зарплате</label>
+                    <input pattern="[0-9]+" style="width:75px"   class="form-control" zippy="editstagesalary"/>
                </div>
           </div>
             

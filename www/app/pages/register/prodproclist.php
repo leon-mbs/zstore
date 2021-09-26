@@ -62,7 +62,7 @@ class ProdProcList extends \App\Pages\Base
            
         $this->editproc->add(new SubmitButton('save'))->onClick($this, 'OnSave');
         $this->editproc->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
-        $this->editproc->add(new Button('delete'))->onClick($this, 'deleteOnClick');
+        $this->editproc->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
       
         //продукция
         $this->add(new Panel("prodspan"))->setVisible(false) ;
@@ -83,8 +83,8 @@ class ProdProcList extends \App\Pages\Base
          $this->add(new Form('editstage'))->setVisible(false);
          $this->editstage->add(new TextInput('editstagename'));
          $this->editstage->add(new TextInput('editstagehours'));
-         $this->editstage->add(new Date('editstagestart',time()));
-         $this->editstage->add(new Date('editstageend',time()));
+         $this->editstage->add(new TextInput('editstagesalary'));
+         
          $this->editstage->add(new TextArea('editstagenotes'));
          
          $this->editstage->add(new DropDownChoice('editstagearea',\App\Entity\ProdArea::findArray('pa_name','')));
@@ -111,21 +111,21 @@ class ProdProcList extends \App\Pages\Base
 
         $row->add(new Label('name', $p->procname));
         $row->add(new Label('basedoc', $p->basedoc));
-        $row->add(new Label('snumber', $p->snumber));
+        $row->add(new Label('snumber', [HttpGet]->snumber));
         $row->add(new Label('state', ProdProc::getStateName($p->state)  ));
-        $conn = \ZDB\DB::getConnect() ;
-        
-        $st = $conn->GetRow("select count(*) as cnt,min(startdate) as  std, max(enddate) as  ste from prodstage where  pp_id=".$p->pp_id);
-        
-        $row->add(new Label('datestart',$st['cnt']>0 ? H::fd(strtotime($st['std'])) : ''));
-        $row->add(new Label('dateend', $st['cnt']>0 ? H::fd(strtotime($st['ste'])): '')) ;
+           
+        $row->add(new Label('startdate',H::fd( $p->startdate)) );
+        $row->add(new Label('enddate', H::fd( $p->enddate)) );
       
           $row->add(new ClickLink('edit'))->onClick($this, 'OnEdit');
           $row->add(new ClickLink('view' ))->onClick($this, 'onView');
           $row->add(new ClickLink('stages'))->onClick($this, 'OnStages');
           $row->add(new ClickLink('copy'))->onClick($this, 'OnCopy');
           $row->add(new ClickLink('prods'))->onClick($this, 'OnProds');
-
+          $row->add(new ClickLink('delete',$this, 'deleteOnClick'))->setVisible($p->stagecnt==0);
+      $row->add(new Label('hasnotes'))->setVisible(strlen($p->notes) > 0  );
+      $row->hasnotes->setAttribute('title', $p->notes);
+ 
           if($p->pp_id==$this->_proc->pp_id) {
              $row->setAttribute('class','table-success');    
           }
@@ -159,11 +159,10 @@ class ProdProcList extends \App\Pages\Base
     
     }
     public function deleteOnClick($sender) {
-        
-        ProdProc::delete($this->_proc->pp_id);
-   //проверка
-        $this->listpan->setVisible(true); 
-        $this->editproc->setVisible(false); 
+        $proc = $sender->getOwner()->getDataItem();
+       
+        ProdProc::delete($proc->pp_id);
+  
  
         $this->listpan->proclist->Reload();
     }
@@ -195,7 +194,6 @@ class ProdProcList extends \App\Pages\Base
  
         $this->listpan->proclist->Reload();
     }
-   
    
    //новая продукция
     public function OnProds($sender) {
@@ -263,7 +261,6 @@ class ProdProcList extends \App\Pages\Base
          $this->stagespan->stagelist->Reload();
     }
       
-     
     public function stagelistOnRow($row) {
       $s = $row->getDataItem();
 
@@ -283,9 +280,8 @@ class ProdProcList extends \App\Pages\Base
          $this->_stage->notes = $this->editstage->editstagenotes->getText();
          $this->_stage->pa_id = $this->editstage->editstagearea->getValue();
          $this->_stage->hours = $this->editstage->editstagehours->getText();
-         $this->_stage->startdate = $this->editstage->editstagestart->getDate();
-         $this->_stage->enddate = $this->editstage->editstageend->getDate();
-        
+         $this->_stage->salary = $this->editstage->editstagesalary->getText();
+       
          if($this->_stage->pa_id==0) {
              $this->setError('noselparea') ;
              return;
@@ -303,9 +299,7 @@ class ProdProcList extends \App\Pages\Base
          $this->stagespan->setVisible(false); 
          $this->editstage->clean();
          
-         $this->editstage->editstagestart->setDate(time());
-         $this->editstage->editstageend->setDate(time());
-         
+       
          $this->_stage = new ProdStage();
          $this->_stage->pp_id = $this->_proc->pp_id;
     }
@@ -319,15 +313,21 @@ class ProdProcList extends \App\Pages\Base
          $this->editstage->editstagename->setText($this->_stage->stagename)   ;
          $this->editstage->editstagenotes->setText($this->_stage->notes)   ;
          $this->editstage->editstagehours->setText($this->_stage->hours)   ;
+         $this->editstage->editstagesalary->setText($this->_stage->salary)   ;
          $this->editstage->editstagearea->setValue($this->_stage->pa_id)   ;
-         $this->editstage->editstagestart->setDate($this->_stage->startdate)   ;
-         $this->editstage->editstageend->setDate($this->_stage->enddate)   ;
-         
+     
         
     }
   
     public function OnStageDel($sender) {
-         $stage = $sender->getOwner()->getDataItem(); 
+         $stage = $sender->getOwner()->getDataItem();
+         
+         $conn= \ZDb\DB::getConnect() ;
+         
+         //проверка на  доки
+         
+         $conn->Execute("delete from prodstageagenda where  st_id=".$stage->st_id);
+          
          ProdStage::delete($stage->st_id) ;
          $this->stagespan->stagelist->Reload();
     }
@@ -339,7 +339,7 @@ class ProdProcList extends \App\Pages\Base
    
      }
    //техкарта
-      public function OnCard($sender) {
+    public function OnCard($sender) {
          $this->editcardform->setVisible(true); 
          $this->editstage->setVisible(false); 
          $this->stagespan->setVisible(false); 
@@ -350,7 +350,7 @@ class ProdProcList extends \App\Pages\Base
          $this->editcardform->stagenameh4->setText($this->_stage->stagename);
      } 
                                              
-   public function OnSaveCard($sender) {
+    public function OnSaveCard($sender) {
  
          $this->_stage->card =  $this->editcardform->editcard->getText();
          $this->_stage->save();
@@ -360,7 +360,6 @@ class ProdProcList extends \App\Pages\Base
          $this->stagespan->setVisible(true);          
          
      } 
-                                             
     //просмотр 
     public function onView($sender) {
        $this->listpan->showpan->setVisible(true); 
@@ -369,8 +368,7 @@ class ProdProcList extends \App\Pages\Base
        
        $this->goAnkor('showpan') ;
     }
-    
-    
+     
 }
 
 /**

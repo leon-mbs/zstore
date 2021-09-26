@@ -19,56 +19,96 @@ CREATE TABLE `prodproc` (
   `st_id` int(11) NOT NULL AUTO_INCREMENT,
   `pp_id` int(11) NOT NULL ,
   `pa_id` int(11) NOT NULL ,
-  `startdate` DateTime  NOT NULL,
-  `enddate` DateTime  NOT NULL,
- 
+  
   `stagename` varchar(255) NOT NULL,
   `detail` LONGTEXT DEFAULT NULL,
    KEY (`pp_id`) ,
-   PRIMARY KEY (`st_id`)  ,
-   CONSTRAINT `st_ibfk_1` FOREIGN KEY (`pp_id`) REFERENCES `prodproc` (`pp_id`) 
+   PRIMARY KEY (`st_id`)  
+   
 ) engine=InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE VIEW  prodstage_view
+ CREATE TABLE `prodstageagenda` (
+  `sta_id` int(11) NOT NULL AUTO_INCREMENT,
+  `st_id` int(11) NOT NULL ,
+  `startdate` DateTime  NOT NULL,
+  `enddate` DateTime  NOT NULL,
+ 
+   KEY (`st_id`) ,
+   PRIMARY KEY (`sta_id`)  
+   
+) engine=InnoDB DEFAULT CHARSET=utf8;
+  
+
+CREATE VIEW prodproc_view
 AS
-    SELECT
-      `ps`.`st_id` AS `st_id`,
-      `ps`.`pp_id` AS `pp_id`,
-      `ps`.`pa_id` AS `pa_id`,
-      `ps`.`startdate` AS `startdate`,
-      `ps`.`enddate` AS `enddate`,
-      `ps`.`stagename` AS `stagename`,
-      `ps`.`detail` AS `detail`,
-      `pr`.`procname` AS `procname`,
-      `pr`.`state` AS `procstate`,
-      `pa`.`pa_name` AS `pa_name`
-    FROM ((`prodstage` `ps`
-      JOIN `prodproc` `pr`
-        ON ((`pr`.`pp_id` = `ps`.`pp_id`)))
-      JOIN `parealist` `pa`
-        ON ((`pa`.`pa_id` = `ps`.`pa_id`))); 
+SELECT
+  `p`.`pp_id` AS `pp_id`,
+  `p`.`procname` AS `procname`,
+  `p`.`basedoc` AS `basedoc`,
+  `p`.`snumber` AS `snumber`,
+  `p`.`state` AS `state`,
+  COALESCE((SELECT
+      MIN(`ps`.`startdate`)
+    FROM `prodstage` `ps`), NULL) AS `startdate`,
+  COALESCE((SELECT
+      MAX(`ps`.`enddate`)
+    FROM `prodstage` `ps`), NULL) AS `enddate`,
+  `p`.`detail` AS `detail`
+FROM `prodproc` `p`;
+
+CREATE VIEW prodstage_view
+AS
+SELECT
+  `ps`.`st_id` AS `st_id`,
+  `ps`.`pp_id` AS `pp_id`,
+  `ps`.`pa_id` AS `pa_id`,
+  COALESCE((SELECT
+      MIN(`pag`.`startdate`)
+    FROM `prodstageagenda` `pag`), NULL) AS `startdate`,
+  COALESCE((SELECT
+      MAX(`pag`.`enddate`)
+    FROM `prodstageagenda` `pag`), NULL) AS `enddate`,
+  `ps`.`stagename` AS `stagename`,
+  `ps`.`detail` AS `detail`,
+  `pr`.`procname` AS `procname`,
+  `pr`.`state` AS `procstate`,
+  `pa`.`pa_name` AS `pa_name`
+FROM ((`prodstage` `ps`
+  JOIN `prodproc` `pr`
+    ON ((`pr`.`pp_id` = `ps`.`pp_id`)))
+  JOIN `parealist` `pa`
+    ON ((`pa`.`pa_id` = `ps`.`pa_id`)));
   
-  
-журнал процесов, редактирование  этапов
-заказ  если  есть или договор
-создаем  процесс с нуля  или  на  основании  копии
+ 
+CREATE VIEW prodstageagenda_view
+AS
+SELECT
+  `a`.`sta_id` AS `sta_id`,
+  `a`.`st_id` AS `st_id`,
+  `a`.`startdate` AS `startdate`,
+  `a`.`enddate` AS `enddate`,
+   TIMESTAMPDIFF(HOUR, startdate, enddate)  AS `hours`,
+  `pv`.`procname` AS `procname`,
+  `pv`.`stagename` AS `stagename`,
+  `pv`.`pa_name` AS `pa_name`,
+  `pv`.`procstate` AS `procstate`
+FROM (`prodstageagenda` `a`
+  JOIN `prodstage_view` `pv`
+    ON ((`a`.`st_id` = `pv`.`st_id`))); 
+ 
+
+ 
 старт  процесса. отмена  пока нет документов
+   
 
-
-список  этапов
-список  продукции
 сколько  списано  оприходовано  нормочасы или  сдельная
-коментарии
-  
+   
 
 производственный цикл - процес плюс дата процесса
 дата  определяется  этапми 
-в журнале  редактируется  список  этапов
-
-
-журнал  этапов календарь  по    участкам  с указаним  этапов
-
+ 
+ 
 код продукции этапа на данном участке сколько  оприходовать
 сколько надо списать на производство по каждому этапу 
 
@@ -76,9 +116,24 @@ AS
 создание  списания  и оприходования - привязка  документов  к  этапу
 инфа об этапе  в  комент
 подсчет по  докам сколько  списано  оприходовано и сколько надо
-исполнители  с  коефициентами  
  
-документ перемещение  между  этапами
+ 
+    каленларь  этапа
+ 
+    
+журнал  этапов
+смена  статуса
+документы  оприходования  и списания
+ 
+
+
+  календарь
+расписание по дням
+просмотр  по  фильтру на  календаре
+разными  цветами  отфильтрованые
+
+
+отчет для начисления  зарплаты (доделать  по нарядам? )
 
  
     

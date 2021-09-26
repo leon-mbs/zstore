@@ -9,6 +9,7 @@ use App\System;
  * Класс-сущность  производственный процесс
  *
  * @table=prodproc
+ * @view=prodproc_view
  * @keyfield=pp_id
  */
 class ProdProc extends \ZCL\DB\Entity
@@ -28,7 +29,17 @@ class ProdProc extends \ZCL\DB\Entity
     }
     public function clone() {
         $proc = new ProdProc();
-         
+        $proc->detail = $this->detail ;
+        $proc->procname = $this->procname."_copy";
+        $proc->pp_id=0;
+        $proc->save() ;
+        $stlist = ProdStage::find("pp_id=".$this->pp_id);
+        foreach($stlist as $st){
+            $st->st_id = 0;  
+            $st->pp_id = $proc->pp_id; 
+            $st->save() ;
+        } 
+        
         return  $proc;
     }
 
@@ -38,7 +49,7 @@ class ProdProc extends \ZCL\DB\Entity
         $this->detail = "<detail>";
         $this->detail .= "<notes><![CDATA[{$this->notes}]]></notes>";
         $prodlist = base64_encode( serialize($this->prodlist) );
-        $this->detail .= "<prodlist><{$prodlist}></prodlist>";
+        $this->detail .= "<prodlist>{$prodlist}</prodlist>";
         $this->detail .= "</detail>";
 
         return true;
@@ -53,8 +64,8 @@ class ProdProc extends \ZCL\DB\Entity
         $xml = simplexml_load_string($this->detail);
  
         $this->notes = (string)($xml->notes[0]);
-        $prodlist = @unserialize(@base64_decode((string)($xml->prodlist[0])));
-        if(!is_array($prodlist)) $prodlist = array();
+        $this->prodlist = @unserialize(@base64_decode((string)($xml->prodlist[0])));
+        if(!is_array($this->prodlist)) $this->prodlist = array();
         parent::afterLoad();
     }
 

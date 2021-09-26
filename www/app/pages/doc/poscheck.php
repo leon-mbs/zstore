@@ -147,7 +147,7 @@ class POSCheck extends \App\Pages\Base
 
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
-            //  $this->docform->pos->setValue($this->_doc->headerdata['pos']);
+            $this->docform->pos->setValue($this->_doc->headerdata['pos']);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
 
