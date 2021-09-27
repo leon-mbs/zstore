@@ -470,7 +470,9 @@
     "stpp_new": "Новий",    
     "stpp_inprocess": "Выконуєтся",    
     "stpp_stopped": "Призупинений",    
-    "stpp_finished": "Виконаный",    
+    "stpp_finished": "Виконаний",    
     "stpp_canceled": "Скасований",     
+      
     "noselparea": "Не вибрано виробничу дiльницю"     
+    
 }

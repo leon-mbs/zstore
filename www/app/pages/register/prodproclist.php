@@ -266,6 +266,7 @@ class ProdProcList extends \App\Pages\Base
 
       $row->add(new Label('stagename', $s->stagename));
       $row->add(new Label('stageareaname', $s->pa_name));
+      $row->add(new Label('stagestate', ProdStage::getStateName($s->state) ));
       
       $row->add(new ClickLink('stageedit'))->onClick($this, 'OnStageEdit');
       $row->add(new ClickLink('stagedel'))->onClick($this, 'OnStageDel');

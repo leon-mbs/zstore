@@ -98,6 +98,7 @@ class ProdStageList extends \App\Pages\Base
         $this->calendarpan->calfilter->add(new DropDownChoice('calfilterpa', \App\Entity\ProdArea::findArray('pa_name', '', 'pa_name'), 0));
         $this->calendarpan->calfilter->add(new DropDownChoice('calfilterpp', ProdProc::findArray('procname', 'state='.ProdProc::STATE_INPROCESS, 'procname'), 0))->onChange($this,"onProd");
         $this->calendarpan->calfilter->add(new DropDownChoice('calfilterps',array(), 0))->setVisible(false);
+        $this->calendarpan->calfilter->add(new DropDownChoice('calfilteremp',\App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"), 0)) ;
                                                 
         $stlist->Reload();
        
@@ -315,22 +316,37 @@ class ProdStageList extends \App\Pages\Base
         $this->calendarpan->calfilter->calfilterps->setValue(0);
         if($pp_id>0) {
            $this->calendarpan->calfilter->calfilterps->setVisible(true);    
-           $this->calendarpan->calfilter->calfilterps->setOptionList(ProdStage::findArray('stagename','pp_id='. $pp_id ,'stagename') );           
+           $this->calendarpan->calfilter->calfilterps->setOptionList(ProdStage::findArray('stagename','state <>2 and pp_id='. $pp_id ,'stagename') );           
         }
         
     }
     public function updateCal( ) {
          
         $tasks = array();
-        $where="pp_id in (select pp_id from prodproc where  state=1)";
+        $where="pp_id in (select pp_id from prodproc where  state=1) and st_id in (select st_id from `prodstage` where  state <>2 )";
+        $emp_id = $this->calendarpan->calfilter->calfilteremp->getValue();
+        $stemps=array(0);
+        if($emp_id>0) {
+            
+            foreach(ProdStage::find($where)  as $ps) {
+                $ei = array_keys($ps->emplist) ;
+                if(in_array($emp_id,$ei)) {
+                    $stemps[] = $ps->st_id;     
+                }    
+            }
+            
+            $where .=" and st_id in (".implode(",",$stemps) .") " ;
+            
+        }
+        
         $pp_id = $this->calendarpan->calfilter->calfilterpp->getValue();
-        $ps_id = $this->calendarpan->calfilter->calfilterps->getValue() ;
+        $st_id = $this->calendarpan->calfilter->calfilterps->getValue() ;
         $pa_id = $this->calendarpan->calfilter->calfilterpa->getValue() ;
         if($pp_id>0) {
            $where .= " and  pp_id=".$pp_id;    
         }
-        if($ps_id>0) {
-           $where .= " and  st_id=".$ps_id;    
+        if($st_id>0) {
+           $where .= " and  st_id=".$st_id;    
         }
         if($pa_id>0) {
            $where .= " and  pa_id=".$pa_id;    

@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Helper;
+
 /**
  * Класс-сущность  производственный этап
  *
@@ -12,7 +14,10 @@ namespace App\Entity;
 class ProdStage extends \ZCL\DB\Entity
 {
 
-
+    const STATE_NEW=0;
+    const STATE_INPROCESS=1;
+    const STATE_FINISHED=2;
+ 
     protected function init() {
         $this->st_id = 0;
          
@@ -56,5 +61,19 @@ class ProdStage extends \ZCL\DB\Entity
         
         parent::afterLoad();
     }
+     public static function getStateName($state) {
 
+        switch($state) {
+            case ProdStage::STATE_NEW:
+                return Helper::l('stpp_new');
+            case ProdStage::STATE_INPROCESS:
+                return Helper::l('stpp_inprocess');
+            case ProdStage::STATE_FINISHED:
+                return Helper::l('stpp_finished');
+ 
+
+            default:
+                return Helper::l('st_unknow');
+        }
+    }  
  }        
