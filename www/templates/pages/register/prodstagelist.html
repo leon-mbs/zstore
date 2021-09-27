@@ -8,11 +8,13 @@
 
                
             </div>
-        </div>      <div zippy="listpan">
+        </div>    
+          <div zippy="listpan">
         
         <div class="row">
             <div class="col-12  ">
-
+                <a zippy="opencal" class="btn btn-sm btn-primary ml-2"><i class="fa fa-calendar-alt "></i> Календарь</a>
+                
                  
 
                 <div class="navbar nav">
@@ -140,10 +142,10 @@
      </div>
         
      <div zippy="calpan"  class="row">
-        <div   class="col-12 col-md-8 col-xl-6">
+        <div   class="col-12 col-md-6 col-xl-4">
              <a zippy="backd"><i class="fa fa-arrow-alt-circle-left"></i> К списку</a> 
              <h5 zippy="stagenamed"></h5>
-              <b>График  работ  по  этапу. План<span zippy="planhours"></span> </b>
+              <b>График  работ  по  этапу. План, часов: <span zippy="planhours"></span> </b>
                      <form zippy="calform" class="form-inline ">
   
                         <label for="addcaldate"> Дата </label>
@@ -162,6 +164,7 @@
                           <td zippy="date" ></td>
                           <td zippy="from"  ></td>
                           <td zippy="to"  ></td>
+                          <td zippy="hours"  ></td>
                           <td><a zippy="delcal"><i class="fa fa-trash"></i></a></td>
                         </tr>
                     </table>
@@ -176,6 +179,33 @@
              
         </div>
      </div>
+ 
+ 
+     <div zippy="calendarpan"  class="row">
+        <div   class="col-12 col-xl-10 ">
+          <a zippy="backcal"><i class="fa fa-arrow-alt-circle-left"></i> К списку</a> 
+             <form zippy="calfilter" class="form-inline ">
+  
+                <label for="calfilterpp"> Процесс </label>
+                 <select  class="form-control mr-2" zippy="calfilterpp">
+                     <option value="0">Не выбран</option>
+                 </select>
+                 <label data-label="calfilterps" for="calfilterps"> этап </label>
+                 <select  class="form-control mr-2" zippy="calfilterps">
+                     <option value="0">Не выбран</option>
+                 </select>
+                <label for="calfilterpa"> пр. участок </label>
+                 <select  class="form-control mr-2" zippy="calfilterpa">
+                     <option value="0">Не выбран</option>
+                 </select>
+                  
+                 <input zippy="filterok" type="submit" class="  btn btn-success  " value="ОК">
+
+             </form>          
+             
+          <div zippy='calendar'></div>
+        </div>
+     </div> 
         
        
     </body>

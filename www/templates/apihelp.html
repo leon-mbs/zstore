@@ -161,13 +161,14 @@
                                 <br> customer_name - наименование, обязательное поле
                                 <br> phone - телефон, рекомендуется вводить в виде 10 цифр
                                 <br> email - email
+                                <br> type - тип 0- не задан,1-покупатель,2-поставщик
                                 <br> city - город
                                 <br> address - адрес
                                 <br> desсription - описание, кодированное в base64
                             </td>
 
                             <td> {"customer_id":"8","customer_name":"\"ООО
-                                Вектор2\"","phone":"0991111111","email":"test@ukr.net","city":"","address":""}
+                                Вектор2\"","phone":"0991111111","type":0,"email":"test@ukr.net","city":"","address":""}
                             </td>
                             <td>Если customer_id больше нуля то контрагент перезаписывается, если равно нулю или отсутствует то
                                 создается новый.
@@ -372,7 +373,35 @@
                             <td></td>
                         </tr>
                                 
-                        
+                        <tr>
+                            <td class="  text-bold">Список производственных участков</td>
+                            <td>/api/common</td>
+                            <td>parealist</td>
+                            <td class="text-nowrap"></td>
+                            <td></td>
+                            <td>
+                            </td>
+                        </tr>
+                           <tr>
+                            <td class="  text-bold">Список компаний</td>
+                            <td>/api/common</td>
+                            <td>firmlist</td>
+                            <td class="text-nowrap"></td>
+                            <td></td>
+                            <td>
+                            </td>
+                        </tr>
+                            <tr>
+                            <td class="  text-bold">Источники  продаж</td>
+                            <td>/api/common</td>
+                            <td>sourcelist</td>
+                            <td class="text-nowrap"></td>
+                            <td></td>
+                            <td>
+                            </td>
+                        </tr>
+                     
+                   
                     </table>
                     <h4>Коды ошибок</h4>
                     <table class="table table-sm" style="width:400px;">

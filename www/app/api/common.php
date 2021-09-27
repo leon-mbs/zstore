@@ -5,6 +5,7 @@ namespace App\API;
 class common extends \App\API\Base\JsonRPC
 {
 
+    
     //получение  токена
     public function token($args) {
 
@@ -34,4 +35,31 @@ class common extends \App\API\Base\JsonRPC
     public function checkapi() {
         return "OK";
     }
+    
+    
+   //список  производственных участвков
+    public function parealist() {
+        $list = \App\Entity\ProdArea::findArray('pa_name', '', 'pa_name');
+
+        return $list;
+    }
+   //список  компаний
+    public function firmlist() {
+        $list = \App\Entity\Firm::findArray('firm_name', 'disabled<>1', 'firm_name');
+
+        return $list;
+    }
+    
+    //список  источников  продаж
+    public function sourcelist() {
+        $common = \App\System::getOptions('common');
+        $list = array();
+        foreach($common['salesources'] as $s){
+            $list[$s->id]=$s->name;
+        };
+ 
+        return $list;
+    }
+    
+    
 }

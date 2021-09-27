@@ -633,6 +633,14 @@ class Helper
 
         return '';
     }
+    /**
+    * форматирование  времени
+    * @param mixed $date
+    * @return mixed
+    */
+    public static function ft($date) {
+       return date(  ' H:i', $date);
+    }
 
     /**
      * возвращает  данные  фирмы.  Учитывает  филиал  если  задан

@@ -30,13 +30,7 @@ class docs extends \App\API\Base\JsonRPC
         return $list;
     }
 
-    //список  производственных участвков
-    public function parealist() {
-        $list = \App\Entity\ProdArea::findArray('pa_name', '', 'pa_name');
-
-        return $list;
-    }
-
+ 
     //записать заказ
     public function createorder($args) {
         $options = \App\System::getOptions('common');
