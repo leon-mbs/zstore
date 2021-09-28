@@ -25,6 +25,7 @@ class ProdProc extends \ZCL\DB\Entity
     
     protected function init() {
         $this->pp_id = 0;
+        $this->state = 0;
   
     }
     public function clone() {

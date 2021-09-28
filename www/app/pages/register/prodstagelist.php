@@ -2,6 +2,7 @@
 
 namespace App\Pages\Register;
 
+use App\Application;
 use App\Entity\ProdProc;
 use App\Entity\ProdStage;
 use App\Entity\ProdStageAgenda;
@@ -32,6 +33,7 @@ class ProdStageList extends \App\Pages\Base
     private $_stage    = null;
     public $_emps      = array();
     public $_dates     = array();
+    public $_docs     = array();
  
 
     /**
@@ -46,22 +48,20 @@ class ProdStageList extends \App\Pages\Base
 
         $this->add(new Panel("listpan")) ;
         $this->listpan->add(new ClickLink("opencal",$this,"opencalOnClick")) ;
-        
       
         $this->listpan->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->listpan->filter->add(new DropDownChoice('fproc', ProdProc::findArray('procname', 'state='.ProdProc::STATE_INPROCESS , 'procname'), 0));
+        $this->listpan->filter->add(new DropDownChoice('fparea', \App\Entity\ProdArea::findArray('pa_name','','pa_name'), 0));
      
         $stlist = $this->listpan->add(new DataView('stlist', new ProcStageDataSource($this), $this, 'stlistOnRow'));
 
         $this->listpan->add(new Paginator('pag', $stlist));
         $stlist->setPageSize(H::getPG());
-  
       
         $this->add(new Panel("cardpan"))->setVisible(false)  ;
         $this->cardpan->add(new Label("stagenamec")) ;
         $this->cardpan->add(new Label("carddata")) ;
         $this->cardpan->add(new ClickLink("backc",$this,"backOnClick")) ;
-    
                                  
         $this->add(new Panel("userspan"))->setVisible(false) ;   
         $this->userspan->add(new Label("stageh5")) ;
@@ -77,6 +77,15 @@ class ProdStageList extends \App\Pages\Base
         $this->add(new Panel("statuspan"))->setVisible(false)  ;
         $this->statuspan->add(new Label("stagenames")) ;
         $this->statuspan->add(new ClickLink("backs",$this,"backOnClick")) ;
+        $this->statuspan->add(new ClickLink("btntoprod",$this,"toprodOnClick")) ;
+        $this->statuspan->add(new ClickLink("btnfromprod",$this,"fromprodOnClick")) ;
+        $this->statuspan->add(new ClickLink("btnclose",$this,"closeOnClick")) ;
+         
+        $this->statuspan->add(new DataView('doclist', new  ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_docs')), $this, 'onDocRow')) ;
+        $this->statuspan->add(new \App\Widgets\DocView('docview'))->setVisible(false);
+           
+         
+         
          
         $this->add(new Panel("calpan"))->setVisible(false)  ;
         $this->calpan->add(new Label("stagenamed")) ;
@@ -101,22 +110,22 @@ class ProdStageList extends \App\Pages\Base
         $this->calendarpan->calfilter->add(new DropDownChoice('calfilteremp',\App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"), 0)) ;
                                                 
         $stlist->Reload();
-       
-         
+          
+          
     }
 
     public function filterOnSubmit($sender) {
         
         $this->listpan->stlist->Reload();
     }
-   
-
+ 
     public function stlistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $st = $row->getDataItem();
 
         $row->add(new Label('sname', $st->stagename));
         $row->add(new Label('pname', $st->procname));
         $row->add(new Label('snumber', $st->snumber));
+        $row->add(new Label('sstate',  ProdStage::getStateName($st->state) ));
 
         $row->add(new Label('startdate', H::fd($st->startdate)));
         $row->add(new Label('enddate', H::fd($st->enddate)));
@@ -131,7 +140,6 @@ class ProdStageList extends \App\Pages\Base
       
 
     }
- 
    
     public function cardOnClick($sender) {
         $this->cardpan->setVisible(true);
@@ -205,13 +213,6 @@ class ProdStageList extends \App\Pages\Base
     }
   
 
-    public function showOnClick($sender) {
-        $this->statuspan->setVisible(true);
-        $this->listpan->setVisible(false);
-        $this->_stage = $sender->getOwner()->getDataItem();
- 
-        $this->statuspan->stagenames->setText($this->_stage->stagename); 
-    }    
       
     
     public function cOnClick($sender) {
@@ -280,7 +281,7 @@ class ProdStageList extends \App\Pages\Base
     public  function onCalDel($sender){
         $sta = $sender->getOwner()->getDataItem();
         ProdStageAgenda::delete($sta->sta_id);
-           $this->onCalUpdate()  ;
+        $this->onCalUpdate()  ;
     }
      
     public  function onCalUpdate(){
@@ -366,7 +367,7 @@ class ProdStageList extends \App\Pages\Base
          
     }
     
-   public function OnCal($sender, $action) {
+    public function OnCal($sender, $action) {
  
         if ($action['action'] == 'move') {
             $task = ProdStageAgenda::load($action['id']);
@@ -397,6 +398,77 @@ class ProdStageList extends \App\Pages\Base
     }
     
     
+    public function toprodOnClick($sender) {
+          if($this->_stage->state == ProdStage::STATE_NEW) {
+              $this->_stage->state = ProdStage::STATE_INPROCESS;
+              $this->_stage->save() ;
+          }
+          Application::Redirect("\\App\\Pages\\Doc\\ProdIssue", 0, 0,$this->_stage->st_id);
+     
+    }
+    public function fromprodOnClick($sender) {
+          if($this->_stage->state == ProdStage::STATE_NEW) {
+              $this->_stage->state = ProdStage::STATE_INPROCESS;
+              $this->_stage->save() ;
+          }
+          Application::Redirect("\\App\\Pages\\Doc\\ProdReceipt", 0, 0,$this->_stage->st_id);
+       
+    }
+    public function closeOnClick($sender) {
+         $this->_stage->state = ProdStage::STATE_INPROCESS;
+         $this->_stage->save() ;
+         $this->statuspan->setVisible(false);
+         $this->listpan->setVisible(true);
+        
+         $this->listpan->stlist->Reload() ;        
+    }
+    public function showOnClick($sender) {
+        $this->statuspan->setVisible(true);
+        $this->listpan->setVisible(false);
+        $this->_stage = $sender->getOwner()->getDataItem();
+ 
+        $this->statuspan->stagenames->setText($this->_stage->stagename); 
+        
+        
+        $this->statuspan->btnclose->setVisible(true); 
+        $this->statuspan->btntoprod->setVisible(true); 
+        $this->statuspan->btnfromprod->setVisible(true); 
+       
+        if( $this->_stage->state == ProdStage::STATE_NEW) {
+           $this->statuspan->btnclose->setVisible(false); 
+           
+        }
+ 
+        if( $this->_stage->state == ProdStage::STATE_FINISHED) {
+           $this->statuspan->btntoprod->setVisible(false); 
+           $this->statuspan->btnfromprod->setVisible(false); 
+           $this->statuspan->btnclose->setVisible(false); 
+           
+        }
+        
+        $this->_docs = \App\Entity\Doc\Document::find("state>4 and meta_name in('ProdReceipt','ProdIssue') and content like '%<st_id>{$this->_stage->st_id}</st_id>%'   ","document_id");
+        $this->statuspan->doclist->Reload();
+        
+        $this->statuspan->docview->setVisible(false);
+        
+    }    
+    
+    public function onDocRow($row) {
+        $doc=$row->getDataItem();
+        $row->add(new Label("docnumber",$doc->document_number)) ;
+        $row->add(new Label("docname",$doc->meta_desc)) ;
+        $row->add(new Label("docdate", H::fd($doc->document_date)) );
+        $row->add(new ClickLink("viewdoc", $this,"onViewDoc") );
+        
+    }
+    
+    public function onViewDoc($sender) {
+         $doc = $sender->getOwner()->getDataItem();
+         $this->statuspan->docview->setVisible(true);
+         $this->statuspan->docview->setDoc($doc);
+     
+        
+    }
     public function backOnClick($sender) {
         $this->cardpan->setVisible(false);
         $this->userspan->setVisible(false);
@@ -426,12 +498,16 @@ class ProcStageDataSource implements \Zippy\Interfaces\DataSource
 
     private function getWhere() {
   
-        $where = "  1=1 ";
+        $where = "procstate =".ProdProc::STATE_INPROCESS;
                                                            
         $proc = $this->page->listpan->filter->fproc->getValue();
+        $parea = $this->page->listpan->filter->fparea->getValue();
 
         if ($proc > 0) {
             $where .= " and pp_id=" . $proc;
+        }
+        if ($parea > 0) {
+            $where .= " and pa_id=" . $parea;
         }
       
         return $where;

@@ -26,6 +26,10 @@
                         <select class="form-control mr-2" zippy="fproc">
                             <option value="0">Не выбран</option>
                         </select>
+                        <label for="fparea"> Участок </label>
+                        <select class="form-control mr-2" zippy="fparea">
+                            <option value="0">Не выбран</option>
+                        </select>
                     
 
 
@@ -43,6 +47,7 @@
                     <tr>
 
                         <th>Наименование</th>
+                        <th>Статус</th>
                         <th>Начало</th>
                         <th>Окончание</th>
 
@@ -59,6 +64,7 @@
                     <tr zippy="stlist">
 
                         <td zippy="sname"></td>
+                        <td zippy="sstate"></td>
                       
 
                         <td class="text-nowrap" zippy="startdate"></td>
@@ -172,11 +178,29 @@
         </div>
      </div>
      <div zippy="statuspan"  class="row">
-        <div   class="col-12 col-md-8 col-xl-6">
+        <div   class="col-12 col-md-6 col-xl-4">
              <a zippy="backs"><i class="fa fa-arrow-alt-circle-left"></i> К списку</a> 
              <h5 zippy="stagenames"></h5>
-             
-             
+                <div class="navbar nav justify-content-start">
+                <a title="Списать в  производство  сырье  и материалы" class="btn btn-info" zippy="btntoprod">Списать</a>
+                &nbsp;&nbsp;
+                <a title="Оприходовать  готовую продукцию или  полуфабрикаты" class="btn btn-info" zippy="btnfromprod">Оприходовать</a>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <a title="Закрыть этап" class="btn btn-success" zippy="btnclose">Закрыть</a>
+              
+                
+               </div>             
+               <table class="table table-sm">
+                   <tr zippy="doclist">
+                     <td zippy="docdate"></td>
+                     <td zippy="docnumber"></td>
+                     <td zippy="docname"></td>
+                     <td  ><a zippy="viewdoc"><i class="fa fa-eye"></i></a></td>
+                   </tr>
+               </table>
+        </div>
+        <div   class="col-12 col-md-10 col-xl-9"> 
+            <div zippy="docview"></div>
         </div>
      </div>
  
@@ -211,6 +235,11 @@
         </div>
      </div> 
         
-       
+     <script>
+         
+            function check_btnclose() {
+                return confirm("Закрыть этап?")
+            }  
+     </script>  
     </body>
 </html>

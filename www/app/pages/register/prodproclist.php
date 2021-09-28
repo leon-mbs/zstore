@@ -11,6 +11,7 @@ use App\System;
 use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\DataList\Paginator;
+use ZCL\DB\EntityDataSource;
 use Zippy\Html\Form\AutocompleteTextInput;
 use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
@@ -76,9 +77,8 @@ class ProdProcList extends \App\Pages\Base
         $this->add(new Panel("stagespan"))->setVisible(false) ;
         $this->stagespan->add(new ClickLink('backtoproc'))->onClick($this,'onCancelProds') ;
         $this->stagespan->add(new ClickLink('addstage'))->onClick($this,'onAddStage') ;
-        $this->stagespan->add(new DataView('stagelist', new PStageListDataSource($this ), $this, 'stagelistOnRow'));
-         
-         
+        $this->stagespan->add(new DataView('stagelist', new EntityDataSource("\\App\\Entity\\ProdStage","","stagename"), $this, 'stagelistOnRow'));
+          
          
          $this->add(new Form('editstage'))->setVisible(false);
          $this->editstage->add(new TextInput('editstagename'));
@@ -87,7 +87,7 @@ class ProdProcList extends \App\Pages\Base
          
          $this->editstage->add(new TextArea('editstagenotes'));
          
-         $this->editstage->add(new DropDownChoice('editstagearea',\App\Entity\ProdArea::findArray('pa_name','')));
+         $this->editstage->add(new DropDownChoice('editstagearea',\App\Entity\ProdArea::findArray('pa_name','','pa_name')));
          $this->editstage->add(new SubmitButton('savestage'))->onClick($this, 'OnSaveStage');
          $this->editstage->add(new Button('cancelstage'))->onClick($this, 'onCanceStage');
          
@@ -100,7 +100,12 @@ class ProdProcList extends \App\Pages\Base
 
        
          $this->listpan->add(new Panel("showpan"))->setVisible(false) ;
-          
+         $this->listpan->showpan->add(new ClickLink('btnstinprocess',$this,'onProcStatus'));
+         $this->listpan->showpan->add(new ClickLink('btnstsuspend',$this,'onProcStatus'));
+         $this->listpan->showpan->add(new ClickLink('btnstcancel',$this,'onProcStatus'));
+         $this->listpan->showpan->add(new ClickLink('btnstclose',$this,'onProcStatus'));
+         $this->listpan->showpan->add(new DataView('stagelistshow', new EntityDataSource("\\App\\Entity\\ProdStage","","stagename"), $this, 'stagelistviewOnRow'));
+                                              
          $this->listpan->proclist->Reload();
   
     }
@@ -257,7 +262,6 @@ class ProdProcList extends \App\Pages\Base
          $this->stagespan->setVisible(true); 
          $this->listpan->setVisible(false); 
          $this->_proc = $sender->getOwner()->getDataItem();
-          
          $this->stagespan->stagelist->Reload();
     }
       
@@ -268,9 +272,9 @@ class ProdProcList extends \App\Pages\Base
       $row->add(new Label('stageareaname', $s->pa_name));
       $row->add(new Label('stagestate', ProdStage::getStateName($s->state) ));
       
-      $row->add(new ClickLink('stageedit'))->onClick($this, 'OnStageEdit');
-      $row->add(new ClickLink('stagedel'))->onClick($this, 'OnStageDel');
-      $row->add(new ClickLink('stagecard'))->onClick($this, 'OnCard');
+      $row->add(new ClickLink('stageedit',$this, 'OnStageEdit'));
+      $row->add(new ClickLink('stagedel',$this, 'OnStageDel'))->setVisible($s->state==0);
+      $row->add(new ClickLink('stagecard',$this, 'OnCard'));
      
      
   }
@@ -323,7 +327,7 @@ class ProdProcList extends \App\Pages\Base
     public function OnStageDel($sender) {
          $stage = $sender->getOwner()->getDataItem();
          
-         $conn= \ZDb\DB::getConnect() ;
+         $conn = \ZDb\DB::getConnect() ;
          
          //проверка на  доки
          
@@ -363,13 +367,67 @@ class ProdProcList extends \App\Pages\Base
      } 
     //просмотр 
     public function onView($sender) {
-       $this->listpan->showpan->setVisible(true); 
+       $pan =   $this->listpan->showpan;
+       $pan->setVisible(true); 
        $this->_proc = $sender->getOwner()->getDataItem();
-       $this->listpan->proclist->Reload();
+
+       $pan->btnstinprocess->setVisible(false);
+       $pan->btnstsuspend->setVisible(false);
+       $pan->btnstcancel->setVisible(false);
+       $pan->btnstclose->setVisible(false);
+       if($this->_proc->state == ProdProc::STATE_NEW  ) {
+            $pan->btnstinprocess->setVisible(true) ; 
+       }
+       if(  $this->_proc->state == ProdProc::STATE_STOPPED) {
+            $pan->btnstinprocess->setVisible(true) ; 
+            $pan->btnstclose->setVisible(true) ; 
+            $pan->btnstcancel->setVisible(true) ; 
+       }
+       if($this->_proc->state == ProdProc::STATE_INPROCESS  ) {
+             $pan->btnstsuspend->setVisible(true) ; 
+             $pan->btnstclose->setVisible(true) ; 
+             $pan->btnstcancel->setVisible(true) ; 
+       }
+
        
+       $pan->stagelistshow->getDataSource()->setWhere('pp_id='.$this->_proc->pp_id); 
+       $pan->stagelistshow ->Reload()  ;
+       
+       $this->listpan->proclist->Reload();
        $this->goAnkor('showpan') ;
     }
+    
+    public function stagelistviewOnRow($row) {
+      $s = $row->getDataItem();
+
+      $row->add(new Label('stageviewname', $s->stagename));
+      $row->add(new Label('stageviewareaname', $s->pa_name));
+      $row->add(new Label('stageviewstate', ProdStage::getStateName($s->state) ));
+      
+ 
      
+     
+  }   
+  
+    public function onProcStatus($sender) {
+       if($sender->id=="btnstinprocess")  {
+          $this->_proc->state = ProdProc::STATE_INPROCESS  ;
+       }
+       if($sender->id=="btnstsuspend")  {
+          $this->_proc->state = ProdProc::STATE_STOPPED  ;
+       }
+       if($sender->id=="btnstclose")  {
+          $this->_proc->state = ProdProc::STATE_FINISHED  ;
+       }
+       if($sender->id=="btnstcancel")  {
+          $this->_proc->state = ProdProc::STATE_CANCELED  ;
+       }
+       $this->_proc->save(); 
+       $this->listpan->showpan->setVisible(false); 
+       $this->listpan->proclist->Reload(); 
+    } 
+    
+    
 }
 
 /**
@@ -402,28 +460,4 @@ class PProcListDataSource implements \Zippy\Interfaces\DataSource
 
 }
 
-class PStageListDataSource implements \Zippy\Interfaces\DataSource
-{
-    private $page;
-
-    public function __construct($page) {
-        $this->page = $page;
-    }  
-    
-    private function getWhere() {
-        return "pp_id=".$this->page->_proc->pp_id;
-    }
-
-    public function getItemCount() {
-        return ProdStage::findCnt($this->getWhere());
-    }
-
-    public function getItems($start, $count, $sortfield = null, $asc = null) {
-       return  ProdStage::find($this->getWhere(),"");
-    }
-
-    public function getItem($id) {
-
-    }    
-        
-}
+ 

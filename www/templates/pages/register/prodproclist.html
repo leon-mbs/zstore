@@ -73,8 +73,33 @@
                 <div zippy="pag"></div>
    
             </div>
-   <div zippy="showpan" class="col-12">
-   <div zippy="showpan" class="row">
+       <div zippy="showpan" class="col-12">
+           <div   class="row">
+             <div   class="col-12  ">
+               <div class="navbar nav justify-content-start">
+                <a class="btn btn-info" zippy="btnstinprocess">На выполнение</a>
+                &nbsp;&nbsp;
+                <a class="btn btn-warning" zippy="btnstsuspend">Приостановить</a>
+                &nbsp;&nbsp;
+                <a class="btn btn-danger" zippy="btnstcancel">Отменить</a>
+                &nbsp;&nbsp;
+                <a class="btn btn-success" zippy="btnstclose">Выполнен</a>
+              
+                
+               </div>               
+             </div>
+             <div   class="col-12 col-md-6 col-xl-4">
+                   <h5>Производственные  этапы</h5>
+                   <table class="table table-sm">
+                     <tr><th>Наименование</th><th  >Статус</th><th  >Участок</th></tr>
+                     <tr zippy="stagelistshow"  >
+                       <td zippy="stageviewname" > </td>
+                       
+                       <td zippy="stageviewstate" > </td>
+                       <td zippy="stageviewareaname" > </td>
+                     </tr>
+                   </table>
+            </div>            
              <div   class="col-12 col-md-6 col-xl-4">
                    <h5>Готовая продукция</h5>
                    <table class="table table-sm">
@@ -91,15 +116,15 @@
             </div>            
             
                 </div>            
-                </div>            
+              </div>            
             
             
-           </div>
+        </div>
            
       <form zippy="editproc"  >
             
        <div class="row"  >
-               <div class="col-12 col-md-4 col-xl-3">
+            <div class="col-12 col-md-4 col-xl-3">
                 <div class="form-group">
                     <label for="editname">Наименование</label>
                     <input required="required" class="form-control" zippy="editname"/>
@@ -237,6 +262,15 @@
             }
            function check_stagedel() {
                 return confirm("Удалить?")
+            }
+           function check_btnstsuspend() {
+                return confirm("Приостановать?")
+            }
+           function check_btnstclose() {
+                return confirm("Закрыть?")
+            }
+           function check_btnstcancel() {
+                return confirm("Отменить?")
             }
             
         $(function () {

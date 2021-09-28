@@ -20,6 +20,7 @@ class ProdStage extends \ZCL\DB\Entity
  
     protected function init() {
         $this->st_id = 0;
+        $this->state = 0;
          
     }
 
