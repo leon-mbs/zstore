@@ -1021,7 +1021,7 @@ class ARMPos extends \App\Pages\Base
     private function getPriveType() {
         $id = $this->docpanel->form3->customer->getKey();
         if ($id > 0) {
-            $cust = \App\Entity\Customer::load();
+            $cust = \App\Entity\Customer::load($id);
             if (strlen($cust->pricetype) > 4) {
                 return $cust->pricetype;
             }

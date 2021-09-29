@@ -6,240 +6,240 @@
                 <h3>Производственные этапы</h3>
 
 
-               
+
             </div>
         </div>    
-          <div zippy="listpan">
-        
-        <div class="row">
-            <div class="col-12  ">
-                <a zippy="opencal" class="btn btn-sm btn-primary ml-2"><i class="fa fa-calendar-alt "></i> Календарь</a>
-                
-                 
+        <div zippy="listpan">
 
-                <div class="navbar nav">
-                    <form zippy="filter" class="form-inline ">
+            <div class="row">
+                <div class="col-12  ">
+                    <a zippy="opencal" class="btn btn-sm btn-primary ml-2"><i class="fa fa-calendar-alt "></i> Календарь</a>
 
 
 
-                        <label for="fproc"> Процесс </label>
-                        <select class="form-control mr-2" zippy="fproc">
-                            <option value="0">Не выбран</option>
-                        </select>
-                        <label for="fparea"> Участок </label>
-                        <select class="form-control mr-2" zippy="fparea">
-                            <option value="0">Не выбран</option>
-                        </select>
-                    
+                    <div class="navbar nav">
+                        <form zippy="filter" class="form-inline ">
 
 
-                        <input type="submit" class="  btn btn-outline-success  " value="ОК">
 
-                    </form>
+                            <label for="fproc"> Процесс </label>
+                            <select class="form-control mr-2" zippy="fproc">
+                                <option value="0">Не выбран</option>
+                            </select>
+                            <label for="fparea"> Участок </label>
+                            <select class="form-control mr-2" zippy="fparea">
+                                <option value="0">Не выбран</option>
+                            </select>
+
+
+
+                            <input type="submit" class="  btn btn-outline-success  " value="ОК">
+
+                        </form>
+                    </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-12 col-xl-10 col-xl-8">
+
+                    <table class="table   table-sm   ">
+                        <tr>
+
+                            <th>Наименование</th>
+                            <th>Статус</th>
+                            <th>Начало</th>
+                            <th>Окончание</th>
+
+                            <th>Процесс</th>
+                            <th>Серия, партия</th>                        
+
+
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+
+                        </tr>
+                        <tr zippy="stlist">
+
+                            <td zippy="sname"></td>
+                            <td zippy="sstate"></td>
+
+
+                            <td class="text-nowrap" zippy="startdate"></td>
+                            <td class="text-nowrap" zippy="enddate"></td>
+                            <td zippy="pname"></td>
+                            <td zippy="snumber"></td>
+                            <td><i zippy="hasnotes" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i></td>
+
+
+                            <td  >
+                                <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i></a>
+                            </td>
+                            <td  >
+                                <a zippy="workers" title="Исполнители"><i class="fa fa-users"></i></a>
+                            </td>
+                            <td  >
+                                <a zippy="agenda" title="Календарь"><i class="fa fa-calendar-day"></i></a>
+                            </td>
+                            <td  >
+                                <a zippy="card" title="Тех. карта"><i class="fa fa-wrench"></i></a>
+                            </td>
+
+                        </tr>
+
+                    </table>
+
+                    <div zippy="pag"></div>
+
+                    <div class="row" id="dankor">
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
         </div>
 
-        <div class="row">
-            <div class="col-12 col-xl-10 col-xl-8">
+        <div zippy="userspan"  class="row">
+            <div   class="col-12 col-md-6 col-xl-4">
+                <h5 zippy="stageh5"></h5>
+                <small>Исполнители, учатсвующие  в  данныом  этапе  с  коэффициентом трудового  участия  
+                    для  расчета  зарплат</small>
+                <form zippy="useraddform" class="form-inline ">
 
-                <table class="table   table-sm   ">
-                    <tr>
+                    <label for="adduser"> Исполнитель </label>
+                    <select class="form-control mr-2" zippy="adduser">
+                        <option value="0">Не выбран</option>
+                    </select>
+                    <label for="addktu"> КТУ </label>
+                    <input pattern="[0-9\.]+" style="width:75px" class="form-control mr-2" zippy="addktu">
 
-                        <th>Наименование</th>
-                        <th>Статус</th>
-                        <th>Начало</th>
-                        <th>Окончание</th>
+                    <input type="submit" class="  btn btn-success  " value="ОК">
 
-                        <th>Процесс</th>
-                        <th>Серия, партия</th>                        
-                    
-                       
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                </form> 
 
+                <table class="table table-sm">
+                    <tr zippy="userslist">
+                        <td zippy="username" ></td>
+                        <td zippy="ktu" class="text-right"></td>
+                        <td><a zippy="deluser"><i class="fa fa-trash"></i></a></td>
                     </tr>
-                    <tr zippy="stlist">
-
-                        <td zippy="sname"></td>
-                        <td zippy="sstate"></td>
-                      
-
-                        <td class="text-nowrap" zippy="startdate"></td>
-                        <td class="text-nowrap" zippy="enddate"></td>
-                          <td zippy="pname"></td>
-                          <td zippy="snumber"></td>
-                          <td><i zippy="hasnotes" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i></td>
-                                             
-                          
-                      <td  >
-                            <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i></a>
-                        </td>
-                        <td  >
-                            <a zippy="workers" title="Исполнители"><i class="fa fa-users"></i></a>
-                        </td>
-                        <td  >
-                            <a zippy="agenda" title="Календарь"><i class="fa fa-calendar-day"></i></a>
-                        </td>
-                        <td  >
-                            <a zippy="card" title="Тех. карта"><i class="fa fa-wrench"></i></a>
-                        </td>
-
-                    </tr>
-
                 </table>
 
-                <div zippy="pag"></div>
 
-                <div class="row" id="dankor">
-
-                </div>
-
+                <input zippy="cancelusers" type="button" value="Отменить" class="btn btn-outline-primary  ">  &nbsp;&nbsp;
+                <input zippy="saveusers"   type="button" value="Сохранить" class="btn btn-primary  ">
             </div>
-           
 
         </div>
 
+
+        <div zippy="cardpan"  class="row">
+            <div   class="col-12 col-md-8 col-xl-6">
+                <a zippy="backc"><i class="fa fa-arrow-alt-circle-left"></i> К списку</a> 
+                <h5 zippy="stagenamec"></h5>
+                <b>Технологическая карта</b>
+                <div zippy="carddata" ></div>
+            </div>
         </div>
- 
-       <div zippy="userspan"  class="row">
-        <div   class="col-12 col-md-6 col-xl-4">
-                    <h5 zippy="stageh5"></h5>
-                    <small>Исполнители, учатсвующие  в  данныом  этапе  с  коэффициентом трудового  участия  
-                       для  расчета  зарплат</small>
-                    <form zippy="useraddform" class="form-inline ">
-  
-                        <label for="adduser"> Исполнитель </label>
-                        <select class="form-control mr-2" zippy="adduser">
-                            <option value="0">Не выбран</option>
-                        </select>
-                         <label for="addktu"> КТУ </label>
-                         <input pattern="[0-9\.]+" style="width:75px" class="form-control mr-2" zippy="addktu">
 
-                         <input type="submit" class="  btn btn-success  " value="ОК">
+        <div zippy="calpan"  class="row">
+            <div   class="col-12 col-md-6 col-xl-4">
+                <a zippy="backd"><i class="fa fa-arrow-alt-circle-left"></i> К списку</a> 
+                <h5 zippy="stagenamed"></h5>
+                <b>График  работ  по  этапу. План, часов: <span zippy="planhours"></span> </b>
+                <form zippy="calform" class="form-inline ">
 
-                    </form> 
-                    
-                    <table class="table table-sm">
-                        <tr zippy="userslist">
-                          <td zippy="username" ></td>
-                          <td zippy="ktu" class="text-right"></td>
-                          <td><a zippy="deluser"><i class="fa fa-trash"></i></a></td>
-                        </tr>
-                    </table>
- 
-                    
-                    <input zippy="cancelusers" type="button" value="Отменить" class="btn btn-outline-primary  ">  &nbsp;&nbsp;
-                    <input zippy="saveusers"   type="button" value="Сохранить" class="btn btn-primary  ">
-             </div>
-          
-       </div>
-       
-       
-     <div zippy="cardpan"  class="row">
-        <div   class="col-12 col-md-8 col-xl-6">
-             <a zippy="backc"><i class="fa fa-arrow-alt-circle-left"></i> К списку</a> 
-             <h5 zippy="stagenamec"></h5>
-             <b>Технологическая карта</b>
-             <div zippy="carddata" ></div>
+                    <label for="addcaldate"> Дата </label>
+                    <input  type="date"  class="form-control mr-2" zippy="addcaldate">
+
+                    <label for="addcalfrom"> с </label>
+                    <input type="time"  class="form-control mr-2" zippy="addcalfrom">
+                    <label for="addcalto"> по </label>
+                    <input type="time"  class="form-control mr-2" zippy="addcalto">
+
+                    <input type="submit" class="  btn btn-success  " value="ОК">
+
+                </form>   
+                <table class="table table-sm">
+                    <tr zippy="callist"> 
+                        <td zippy="date" ></td>
+                        <td zippy="from"  ></td>
+                        <td zippy="to"  ></td>
+                        <td zippy="hours"  ></td>
+                        <td><a zippy="delcal"><i class="fa fa-trash"></i></a></td>
+                    </tr>
+                </table>
+                <b>Всего часов: <span zippy="facthours"></span></b>     
+            </div>
         </div>
-     </div>
-        
-     <div zippy="calpan"  class="row">
-        <div   class="col-12 col-md-6 col-xl-4">
-             <a zippy="backd"><i class="fa fa-arrow-alt-circle-left"></i> К списку</a> 
-             <h5 zippy="stagenamed"></h5>
-              <b>График  работ  по  этапу. План, часов: <span zippy="planhours"></span> </b>
-                     <form zippy="calform" class="form-inline ">
-  
-                        <label for="addcaldate"> Дата </label>
-                         <input  type="date"  class="form-control mr-2" zippy="addcaldate">
-
-                         <label for="addcalfrom"> с </label>
-                         <input type="time"  class="form-control mr-2" zippy="addcalfrom">
-                         <label for="addcalto"> по </label>
-                         <input type="time"  class="form-control mr-2" zippy="addcalto">
-
-                         <input type="submit" class="  btn btn-success  " value="ОК">
-
-                    </form>   
-                    <table class="table table-sm">
-                        <tr zippy="callist"> 
-                          <td zippy="date" ></td>
-                          <td zippy="from"  ></td>
-                          <td zippy="to"  ></td>
-                          <td zippy="hours"  ></td>
-                          <td><a zippy="delcal"><i class="fa fa-trash"></i></a></td>
-                        </tr>
-                    </table>
-                    <b>Всего часов: <span zippy="facthours"></span></b>     
-        </div>
-     </div>
-     <div zippy="statuspan"  class="row">
-        <div   class="col-12 col-md-6 col-xl-4">
-             <a zippy="backs"><i class="fa fa-arrow-alt-circle-left"></i> К списку</a> 
-             <h5 zippy="stagenames"></h5>
+        <div zippy="statuspan"  class="row">
+            <div   class="col-12 col-md-6 col-xl-4">
+                <a zippy="backs"><i class="fa fa-arrow-alt-circle-left"></i> К списку</a> 
+                <h5 zippy="stagenames"></h5>
                 <div class="navbar nav justify-content-start">
-                <a title="Списать в  производство  сырье  и материалы" class="btn btn-info" zippy="btntoprod">Списать</a>
-                &nbsp;&nbsp;
-                <a title="Оприходовать  готовую продукцию или  полуфабрикаты" class="btn btn-info" zippy="btnfromprod">Оприходовать</a>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <a title="Закрыть этап" class="btn btn-success" zippy="btnclose">Закрыть</a>
-              
-                
-               </div>             
-               <table class="table table-sm">
-                   <tr zippy="doclist">
-                     <td zippy="docdate"></td>
-                     <td zippy="docnumber"></td>
-                     <td zippy="docname"></td>
-                     <td  ><a zippy="viewdoc"><i class="fa fa-eye"></i></a></td>
-                   </tr>
-               </table>
-        </div>
-        <div   class="col-12 col-md-10 col-xl-9"> 
-            <div zippy="docview"></div>
-        </div>
-     </div>
- 
- 
-     <div zippy="calendarpan"  class="row">
-        <div   class="col-12 col-xl-10 ">
-          <a zippy="backcal"><i class="fa fa-arrow-alt-circle-left"></i> К списку</a> 
-             <form zippy="calfilter" class="form-inline ">
-  
-                <label for="calfilterpp"> Процесс </label>
-                 <select  class="form-control mr-2" zippy="calfilterpp">
-                     <option value="0">Не выбран</option>
-                 </select>
-                 <label data-label="calfilterps" for="calfilterps"> этап </label>
-                 <select  class="form-control mr-2" zippy="calfilterps">
-                     <option value="0">Не выбран</option>
-                 </select>
-                <label for="calfilterpa"> пр. участок </label>
-                 <select  class="form-control mr-2" zippy="calfilterpa">
-                     <option value="0">Не выбран</option>
-                 </select>
-               <label for="calfilteremp"> исполнитель </label>
-                 <select  class="form-control mr-2" zippy="calfilteremp">
-                     <option value="0">Не выбран</option>
-                 </select>
-                  
-                 <input zippy="filterok" type="submit" class="  btn btn-success  " value="ОК">
+                    <a title="Списать в  производство  сырье  и материалы" class="btn btn-info" zippy="btntoprod">Списать</a>
+                    &nbsp;&nbsp;
+                    <a title="Оприходовать  готовую продукцию или  полуфабрикаты" class="btn btn-info" zippy="btnfromprod">Оприходовать</a>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <a title="Закрыть этап" class="btn btn-success" zippy="btnclose">Закрыть</a>
 
-             </form>          
-             
-          <div zippy='calendar'></div>
+
+                </div>             
+                <table class="table table-sm">
+                    <tr zippy="doclist">
+                        <td zippy="docdate"></td>
+                        <td zippy="docnumber"></td>
+                        <td zippy="docname"></td>
+                        <td  ><a zippy="viewdoc"><i class="fa fa-eye"></i></a></td>
+                    </tr>
+                </table>
+            </div>
+            <div   class="col-12 col-md-10 col-xl-9"> 
+                <div zippy="docview"></div>
+            </div>
         </div>
-     </div> 
-        
-     <script>
-         
+
+
+        <div zippy="calendarpan"  class="row">
+            <div   class="col-12 col-xl-10 ">
+                <a zippy="backcal"><i class="fa fa-arrow-alt-circle-left"></i> К списку</a> 
+                <form zippy="calfilter" class="form-inline ">
+
+                    <label for="calfilterpp"> Процесс </label>
+                    <select  class="form-control mr-2" zippy="calfilterpp">
+                        <option value="0">Не выбран</option>
+                    </select>
+                    <label data-label="calfilterps" for="calfilterps"> этап </label>
+                    <select  class="form-control mr-2" zippy="calfilterps">
+                        <option value="0">Не выбран</option>
+                    </select>
+                    <label for="calfilterpa"> пр. участок </label>
+                    <select  class="form-control mr-2" zippy="calfilterpa">
+                        <option value="0">Не выбран</option>
+                    </select>
+                    <label for="calfilteremp"> исполнитель </label>
+                    <select  class="form-control mr-2" zippy="calfilteremp">
+                        <option value="0">Не выбран</option>
+                    </select>
+
+                    <input zippy="filterok" type="submit" class="  btn btn-success  " value="ОК">
+
+                </form>          
+
+                <div zippy='calendar'></div>
+            </div>
+        </div> 
+
+        <script>
+
             function check_btnclose() {
                 return confirm("Закрыть этап?")
-            }  
-     </script>  
+            }
+        </script>  
     </body>
 </html>

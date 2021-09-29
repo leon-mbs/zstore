@@ -34,6 +34,7 @@ class CustomerList extends \App\Pages\Base
     public  $_msglist         = array();
     public  $_eventlist       = array();
     public  $_contrtlist      = array();
+    public  $_leadstatuseslist = array();
     public  $_leadsourceslist = array();
 
     public function __construct($id = 0) {

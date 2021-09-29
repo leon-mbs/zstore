@@ -74,13 +74,13 @@ class ZForm extends \App\Pages\Base
             //$this->closeshift();
             $pos = \App\Entity\Pos::load($this->pos->pos_id);
 
-            $ret = \App\Modules\PPO\PPOHelper::shift($pos->branch_id, $this->pos->pos_id, false);
+            $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, false);
 
             if ($ret['success'] == false && $ret['docnumber'] > 0) {
                 //повторяем для  нового номера
                 $this->pos->fiscalnumber = $ret['docnumber'];
                 $this->pos->save();
-                $ret = \App\Modules\PPO\PPOHelper::shift($pos->branch_id, $this->pos->pos_id, false);
+                $ret = \App\Modules\PPO\PPOHelper::shift( $this->pos->pos_id, false);
 
             }
 
@@ -137,7 +137,7 @@ class ZForm extends \App\Pages\Base
         }
 
 
-        return true;
+
     }
 
     public function closeshift() {
