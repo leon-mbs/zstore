@@ -92,26 +92,32 @@
                    <h5>Производственные  этапы</h5>
                    <table class="table table-sm">
                      <tr><th>Наименование</th><th  >Статус</th><th  >Участок</th></tr>
-                     <tr zippy="stagelistshow"  >
-                       <td zippy="stageviewname" > </td>
+                     {{#stagelist}}
+                     <tr   >
+                       <td   >{{stagename}} </td>
                        
-                       <td zippy="stageviewstate" > </td>
-                       <td zippy="stageviewareaname" > </td>
+                       <td   >{{stagestatus}} </td>
+                       <td   >{{stagearea}} </td>
                      </tr>
+                      {{/stagelist}}
                    </table>
             </div>            
              <div   class="col-12 col-md-6 col-xl-4">
                    <h5>Готовая продукция</h5>
                    <table class="table table-sm">
                      <tr><th>Наименование</th><th class="text-right">План</th><th class="text-right">Факт</th></tr>
-                     <tr><td> </td><td> </td><td> </td></tr>
+                     {{#prodready}}
+                     <tr><td >{{itemname}} </td><td class="text-right">{{itemplan}} </td><td class="text-right">  {{itemfact}}</td></tr>
+                     {{/prodready}}
                    </table>
             </div>            
              <div   class="col-12 col-md-6 col-xl-4">
-                   <h5>Списано ТМЦ</h5>
+                   <h5>Списано материалов и комплектующих</h5>
                    <table class="table table-sm">
-                     <tr><th>Наименование</th><th class="text-right">Кол.</th><th class="text-right">Сумма</th></tr>
-                     <tr><td> </td><td> </td><td> </td></tr>
+                     <tr><th>Наименование</th><th class="text-right">Кол.</th><th class="text-right">На сумму</th></tr>
+                     {{#prodstuff}}
+                     <tr><td >{{itemname}} </td><td class="text-right">{{itemqty}} </td><td class="text-right">  {{itemamount}}</td></tr>
+                     {{/prodstuff}}                     
                    </table>
             </div>            
             

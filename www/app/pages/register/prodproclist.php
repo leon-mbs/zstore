@@ -104,7 +104,7 @@ class ProdProcList extends \App\Pages\Base
          $this->listpan->showpan->add(new ClickLink('btnstsuspend',$this,'onProcStatus'));
          $this->listpan->showpan->add(new ClickLink('btnstcancel',$this,'onProcStatus'));
          $this->listpan->showpan->add(new ClickLink('btnstclose',$this,'onProcStatus'));
-         $this->listpan->showpan->add(new DataView('stagelistshow', new EntityDataSource("\\App\\Entity\\ProdStage","","stagename"), $this, 'stagelistviewOnRow'));
+         
                                               
          $this->listpan->proclist->Reload();
   
@@ -272,7 +272,7 @@ class ProdProcList extends \App\Pages\Base
       $row->add(new Label('stageareaname', $s->pa_name));
       $row->add(new Label('stagestate', ProdStage::getStateName($s->state) ));
       
-      $row->add(new ClickLink('stageedit',$this, 'OnStageEdit'));
+      $row->add(new ClickLink('stageedit',$this, 'OnStageEdit'))->setVisible($s->state==0);
       $row->add(new ClickLink('stagedel',$this, 'OnStageDel'))->setVisible($s->state==0);
       $row->add(new ClickLink('stagecard',$this, 'OnCard'));
      
@@ -390,24 +390,90 @@ class ProdProcList extends \App\Pages\Base
        }
 
        
-       $pan->stagelistshow->getDataSource()->setWhere('pp_id='.$this->_proc->pp_id); 
-       $pan->stagelistshow ->Reload()  ;
+   
+     
+       $conn = \ZDB\DB::getConnect();
+     
+       //этапы
+       $stages = ProdStage::find('pp_id='.$this->_proc->pp_id) ;
+       $this->_tvars['stagelist']  = array();
+       foreach($stages as $st) {
+          $this->_tvars['stagelist'][]=array(
+            'stagename'=>$st->stagename, 
+            'stagestatus'=> ProdStage::getStateName($st->state) ,  
+            'stagearea'=>$st->pa_name 
+           );     
+       }
+       
+     
+     
+        $sql = "
+          select i.item_type,i.item_id,i.`itemname`  , sum(e.`quantity`) as qty,  sum((partion )*quantity) as summa
+              from `entrylist_view`  e
+
+              join `items` i on e.`item_id` = i.`item_id`
+             join `documents_view` d on d.`document_id` = e.`document_id`
+               where e.`item_id` >0   
+               and d.`meta_name` in ('ProdIssue','ProdReceipt')
+               and d.content like '%<pp_id>{$this->_proc->pp_id}</pp_id>%'  
+               group by i.item_type,i.item_id, i.`itemname` 
+               order  by i.`itemname`
+        ";       
+       
+         $items = $conn->Execute($sql);
+         
+         $this->_tvars['prodstuff']  = array();
+       foreach($items as $item) {
+          if($item['qty']<0 && $item['item_type']!=Item::TYPE_PROD) {
+           
+              $this->_tvars['prodstuff'][]=array(
+                'itemname'=>$item['itemname'], 
+                'itemamount'=> H::fa(0-$item['summa'] ),  
+                'itemqty'=> H::fqty(0-$item['qty'] )
+               );     
+           
+          }
+       }   
+   
+        
+        $this->_prodlist = $this->_proc->prodlist;
+        $ids = array();
+       
+         $this->_tvars['prodready']  = array();
+       foreach($items as $item) {
+          if($item['qty']>0 && $item['item_type']==Item::TYPE_PROD ) {
+        
+              $ids[]= $item['item_id'] ;
+              
+              $plan=0;
+              if($this->_prodlist[$item['item_id'] ] instanceof Item) {
+                 $plan =  $this->_prodlist[$item['item_id'] ]->qty;
+              }
+               
+              $this->_tvars['prodready'][]=array(
+                'itemname'=>$item['itemname'], 
+                'itemplan'=> $plan ,  
+                'itemfact'=> H::fqty($item['qty'] )
+               );  
+          }   
+       }
+       
+       foreach(   $this->_prodlist  as $id=>$p) {
+           if( in_array($id,$ids) )  continue;
+       
+           $this->_tvars['prodready'][]=array(
+            'itemname'=>$p->itemname, 
+            'itemplan'=> $p->qty ,  
+            'itemfact'=> H::fqty(0)
+           );          
+       }
+       
        
        $this->listpan->proclist->Reload();
        $this->goAnkor('showpan') ;
     }
     
-    public function stagelistviewOnRow($row) {
-      $s = $row->getDataItem();
-
-      $row->add(new Label('stageviewname', $s->stagename));
-      $row->add(new Label('stageviewareaname', $s->pa_name));
-      $row->add(new Label('stageviewstate', ProdStage::getStateName($s->state) ));
-      
- 
-     
-     
-  }   
+  
   
     public function onProcStatus($sender) {
        if($sender->id=="btnstinprocess")  {
