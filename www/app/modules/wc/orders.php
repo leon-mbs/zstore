@@ -44,13 +44,14 @@ class Orders extends \App\Pages\Base
         $this->add(new Form('updateform'))->onSubmit($this, 'exportOnSubmit');
         $this->updateform->add(new DataView('orderslist', new ArrayDataSource(new Prop($this, '_eorders')), $this, 'expRow'));
         $this->updateform->add(new DropDownChoice('estatus', array('completed' => 'Выполнен', 'shipped' => 'Доставлен', 'canceled' => 'Отменен'), 'completed'));
-           $this->add(new ClickLink('checkconn'))->onClick($this, 'onCheck');
+        $this->add(new ClickLink('checkconn'))->onClick($this, 'onCheck');
 
     }
-      public function onCheck($sender) {
 
-        Helper::connect() ;
-        \App\Application::Redirect("\\App\\Modules\\WC\\Orders") ;
+    public function onCheck($sender) {
+
+        Helper::connect();
+        \App\Application::Redirect("\\App\\Modules\\WC\\Orders");
     }
 
     public function filterOnSubmit($sender) {

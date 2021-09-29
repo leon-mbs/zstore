@@ -41,9 +41,9 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["usecattree"] = $options['usecattree'] == 1;
         $this->_tvars["usemobileprinter"] = $user->usemobileprinter == 1;
         $this->_tvars["noshowpartion"] = System::getUser()->noshowpartion;
-        $this->_tvars["showsidemenu"] = !(System::getUser()->hidemenu==true  );
-        $this->_tvars["twodigit"] = round($options['amdigits']) >0;
-    
+        $this->_tvars["showsidemenu"] = !(System::getUser()->hidemenu == true);
+        $this->_tvars["twodigit"] = round($options['amdigits']) > 0;
+
 
         $blist = array();
         if ($this->_tvars["usebranch"] == true) {
@@ -157,12 +157,12 @@ class Base extends \Zippy\Html\WebPage
 
         //скрыть  боковое  меню
         $this->_tvars["hidesidebar"] = $user->hidesidebar == 1 ? 'hold-transition   sidebar-collapse' : 'hold-transition sidebar-mini sidebar-collapse';
-        if( $user->darkmode==1) {
-          $this->_tvars["hidesidebar"] = $this->_tvars["hidesidebar"] . ' ' .  'dark-mode';    
+        if ($user->darkmode == 1) {
+            $this->_tvars["hidesidebar"] = $this->_tvars["hidesidebar"] . ' ' . 'dark-mode';
         }
-        
-        $this->_tvars["darkmode"] = $user->darkmode==1;
-        
+
+        $this->_tvars["darkmode"] = $user->darkmode == 1;
+
         //для скрытия блока разметки  в  шаблоне страниц                           
         $this->_tvars["hideblock"] = false;
 
@@ -171,11 +171,11 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["showactiveusers"] = true;
             $this->_tvars["activeuserscnt"] = 0;
             $this->_tvars["aulist"] = array();
-            
-            $conn = \ZDB\DB::getConnect() ;
-            $conn->Execute("update users  set  lastactive = now() where  user_id= ".$user->user_id);
-            
-   
+
+            $conn = \ZDB\DB::getConnect();
+            $conn->Execute("update users  set  lastactive = now() where  user_id= " . $user->user_id);
+
+
             $w = "     TIME_TO_SEC(timediff(now(),lastactive)) <300  ";
             if ($this->branch_id > 0) {
                 $w .= "  and  employee_id  in (select employee_id from employees where branch_id ={$this->branch_id}) ";
@@ -183,9 +183,11 @@ class Base extends \Zippy\Html\WebPage
 
 
             $users = \App\Entity\User::findArray('username', $w, 'username');
-            foreach ($users as $id=>$u) {
-                if($id==$user->user_id ) $id = null;
-                $this->_tvars["aulist"][] = array("auserid"=>$id,'ausername' => $u);
+            foreach ($users as $id => $u) {
+                if ($id == $user->user_id) {
+                    $id = null;
+                }
+                $this->_tvars["aulist"][] = array("auserid" => $id, 'ausername' => $u);
             }
 
 
@@ -194,11 +196,11 @@ class Base extends \Zippy\Html\WebPage
         }
         //чат
         if ($options['showchat'] == 1) {
-            $this->_tvars["showchat"] = true; 
- 
-            $cnt=\App\Entity\Notify::findCnt("user_id=".\App\Entity\Notify::CHAT." and notify_id>".intval($_COOKIE['last_chat_id'])) ;
-            
-            $this->_tvars["chatcnt"] =  $cnt >0 ? $cnt : false; ;
+            $this->_tvars["showchat"] = true;
+
+            $cnt = \App\Entity\Notify::findCnt("user_id=" . \App\Entity\Notify::CHAT . " and notify_id>" . intval($_COOKIE['last_chat_id']));
+
+            $this->_tvars["chatcnt"] = $cnt > 0 ? $cnt : false;;
 
         }
         $this->generateToasts();
@@ -297,14 +299,15 @@ class Base extends \Zippy\Html\WebPage
     public function goDocView() {
         $this->goAnkor('dankor');
     }
+
     public function sendMsg($args, $post) {
-         
-            $n = new \App\Entity\Notify();
-            $n->user_id = $post["sendmsgrecid"];
-            $n->message = $post["sendmsgtext"];
-            $n->sender_id = System::getUser()->user_id;
-            $n->save();
-           
+
+        $n = new \App\Entity\Notify();
+        $n->user_id = $post["sendmsgrecid"];
+        $n->message = $post["sendmsgtext"];
+        $n->sender_id = System::getUser()->user_id;
+        $n->save();
+
     }
 
     private function generateToasts() {

@@ -166,7 +166,7 @@ class DocList extends \App\Pages\Base
         $row->add(new Label('waitapp'))->setVisible($doc->state == Document::STATE_WA);
 
         $date = new \App\DateTime();
-        
+
         $date = $date->addDay(1);
         $start = $date->startOfDay()->getTimestamp();
         $row->add(new Label('isplanned'))->setVisible($doc->document_date >= $start);
@@ -341,9 +341,9 @@ class DocList extends \App\Pages\Base
         $this->docview->setVisible(false);
 
         $doc = $sender->owner->getDataItem();
-        
+
         $doc = $doc->cast();
-        
+
         //   if (false == \App\ACL::checkEditDoc($doc, true))
         //     return;
         $user = System::getUser();
@@ -370,10 +370,10 @@ class DocList extends \App\Pages\Base
             return;
         }
         $cc = $doc->canCanceled();
-        if (strlen($cc)>0) {
-             $this->setError($cc);
+        if (strlen($cc) > 0) {
+            $this->setError($cc);
 
-             return;
+            return;
         }
 
         $conn = \ZDB\DB::getConnect();

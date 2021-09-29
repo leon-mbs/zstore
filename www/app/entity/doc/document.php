@@ -211,11 +211,8 @@ class Document extends \ZCL\DB\Entity
             $this->packDetails('detaildata', $detaildata);
             
         }  */
-        
-        
-        
-        
-        
+
+
     }
 
     /**
@@ -245,7 +242,7 @@ class Document extends \ZCL\DB\Entity
 
     /**
      * Запись  платежей
-     * Для  документов  у которых платеж идет отдельно от остальных проводок  
+     * Для  документов  у которых платеж идет отдельно от остальных проводок
      */
     public function DoPayment() {
 
@@ -253,7 +250,7 @@ class Document extends \ZCL\DB\Entity
 
     /**
      * Проводки по складу
-     * Для  документов  у которых проводки  по  складу  идут отдельно от остальных проводок  
+     * Для  документов  у которых проводки  по  складу  идут отдельно от остальных проводок
      */
     public function DoStore() {
 
@@ -278,7 +275,7 @@ class Document extends \ZCL\DB\Entity
 
 
             $conn->Execute("delete from iostate where document_id=" . $this->document_id);
-          
+
             $conn->Execute("delete from empacc where document_id=" . $this->document_id);
 
 
@@ -926,11 +923,11 @@ class Document extends \ZCL\DB\Entity
     }
 
     /**
-    * проверка  может  ли  быть  отменен
-    * Возвращает  текст ошибки если  нет
-    */
-    public  function canCanceled(){
-        return  "";
+     * проверка  может  ли  быть  отменен
+     * Возвращает  текст ошибки если  нет
+     */
+    public function canCanceled() {
+        return "";
     }
 
 }

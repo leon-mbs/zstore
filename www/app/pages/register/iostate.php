@@ -78,7 +78,7 @@ class IOState extends \App\Pages\Base
         $row->add(new Label('paytype', $this->_ptlist[$doc->paytype]));
 
         $row->add(new ClickLink('show', $this, 'showOnClick'));
-        
+
 
     }
 

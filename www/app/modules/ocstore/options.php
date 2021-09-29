@@ -37,9 +37,9 @@ class Options extends \App\Pages\Base
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['ocpricetype']));
 
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
-     }
+    }
 
- 
+
     public function saveOnClick($sender) {
         $site = $this->cform->site->getText();
         $apiname = $this->cform->apiname->getText();
@@ -74,14 +74,13 @@ class Options extends \App\Pages\Base
         $modules['ocoutcome'] = $outcome;
 
         System::setOptions("modules", $modules);
-        
-        
+
+
         $this->setSuccess('saved');
-        
-        \App\Modules\OCStore\Helper::connect()  ;
-        
-        
-        
+
+        \App\Modules\OCStore\Helper::connect();
+
+
     }
 
 }

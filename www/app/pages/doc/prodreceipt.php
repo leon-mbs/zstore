@@ -31,11 +31,11 @@ class ProdReceipt extends \App\Pages\Base
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = 0;
-  
 
-    public function __construct($docid = 0, $basedocid = 0,$st_id=0) {
+
+    public function __construct($docid = 0, $basedocid = 0, $st_id = 0) {
         parent::__construct();
-       
+
 
         $common = System::getOptions("common");
 
@@ -109,18 +109,18 @@ class ProdReceipt extends \App\Pages\Base
                     }
                 }
             }
-            
-            if($st_id > 0) {
-                $st = \App\Entity\ProdStage::load($st_id) ;
+
+            if ($st_id > 0) {
+                $st = \App\Entity\ProdStage::load($st_id);
                 $this->docform->parea->setValue($st->pa_id);
-                $this->_doc->headerdata['st_id']  = $st->st_id;
-                $this->_doc->headerdata['pp_id']  = $st->pp_id;
-                $this->docform->notes->setText(  $st->stagename);
-                
-                
+                $this->_doc->headerdata['st_id'] = $st->st_id;
+                $this->_doc->headerdata['pp_id'] = $st->pp_id;
+                $this->docform->notes->setText($st->stagename);
+
+
             }
-            
-            
+
+
         }
         $this->calcTotal();
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
@@ -212,7 +212,6 @@ class ProdReceipt extends \App\Pages\Base
         }
 
 
-
         $tarr = array();
 
         foreach ($this->_itemlist as $k => $value) {
@@ -274,8 +273,6 @@ class ProdReceipt extends \App\Pages\Base
         $this->_doc->payamount = 0;
 
 
-        
-        
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {

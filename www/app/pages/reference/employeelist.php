@@ -51,24 +51,24 @@ class EmployeeList extends \App\Pages\Base
         $this->employeedetail->add(new TextArea('editcomment'));
         $this->employeedetail->add(new CheckBox('editdisabled'));
 
-        $this->employeedetail->add(new DropDownChoice('editztype', array("1"=>H::l("zoklad"),"2"=>H::l("zhour"),"3"=>H::l("ztask")), 1))->onChange($this,"onType");
+        $this->employeedetail->add(new DropDownChoice('editztype', array("1" => H::l("zoklad"), "2" => H::l("zhour"), "3" => H::l("ztask")), 1))->onChange($this, "onType");
         $this->employeedetail->add(new TextInput('editzhour'));
         $this->employeedetail->add(new TextInput('editzmon'));
         $this->employeedetail->add(new TextInput('editadvance'));
         $this->employeedetail->add(new TextInput('editchildren'));
         $this->employeedetail->add(new CheckBox('editinvalid'));
         $this->employeedetail->add(new CheckBox('editcoworker'));
-   
-    
+
+
     }
 
- 
-      public function onType($sender){
+
+    public function onType($sender) {
         $t = $sender->getValue();
-        $this->employeedetail->editzmon->setVisible($t==1) ;
-        $this->employeedetail->editzhour->setVisible($t==2) ;
-      }
-   
+        $this->employeedetail->editzmon->setVisible($t == 1);
+        $this->employeedetail->editzhour->setVisible($t == 2);
+    }
+
 
     public function employeelistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
@@ -110,7 +110,7 @@ class EmployeeList extends \App\Pages\Base
         $this->employeedetail->editphone->setText($this->_employee->phone);
         $this->employeedetail->editbranch->setValue($this->_employee->branch_id);
         $this->employeedetail->editdisabled->setChecked($this->_employee->disabled);
-      
+
         $this->employeedetail->edithiredate->setDate($this->_employee->hiredate);
         $this->employeedetail->editztype->setValue($this->_employee->ztype);
         $this->employeedetail->editzhour->setText($this->_employee->zhour);
@@ -121,8 +121,8 @@ class EmployeeList extends \App\Pages\Base
         $this->employeedetail->editcoworker->setChecked($this->_employee->coworker);
 
 
-        $this->onType( $this->employeedetail->editztype);
-       
+        $this->onType($this->employeedetail->editztype);
+
     }
 
     public function addOnClick($sender) {
@@ -153,25 +153,25 @@ class EmployeeList extends \App\Pages\Base
         }
         $this->_employee->login = $login;
         $this->_employee->emp_name = trim($this->employeedetail->editemp_name->getText());
-        $this->_employee->emp_name = str_replace("'","`",$this->_employee->emp_name) ;
-        
+        $this->_employee->emp_name = str_replace("'", "`", $this->_employee->emp_name);
+
         $this->_employee->email = $this->employeedetail->editemail->getText();
         $this->_employee->phone = $this->employeedetail->editphone->getText();
         $this->_employee->comment = $this->employeedetail->editcomment->getText();
 
         $this->_employee->branch_id = $this->employeedetail->editbranch->getValue();
-      
+
         $this->_employee->hiredate = $this->employeedetail->edithiredate->getDate();
         $this->_employee->ztype = $this->employeedetail->editztype->getValue();
         $this->_employee->zhour = $this->employeedetail->editzhour->getText();
-        $this->_employee->zmon  = $this->employeedetail->editzmon->getText();
+        $this->_employee->zmon = $this->employeedetail->editzmon->getText();
         $this->_employee->advance = $this->employeedetail->editadvance->getText();
         $this->_employee->children = $this->employeedetail->editchildren->getText();
-         
-        
+
+
         $this->_employee->invalid = $this->employeedetail->editinvalid->isChecked() ? 1 : 0;
         $this->_employee->coworker = $this->employeedetail->editcoworker->isChecked() ? 1 : 0;
-      
+
         $this->_employee->disabled = $this->employeedetail->editdisabled->isChecked() ? 1 : 0;
         if ($this->_employee->disabled == 1) {
             $u = \App\Entity\User::getByLogin($this->_employee->login);

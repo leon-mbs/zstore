@@ -233,7 +233,7 @@ class OrderCust extends \App\Pages\Base
         $this->_doc->customer_id = $this->docform->customer->getKey();
         if ($this->_doc->customer_id > 0) {
             $customer = Customer::load($this->_doc->customer_id);
-            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText()  ;
+            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         }
         if ($this->checkForm() == false) {
             return;
@@ -377,7 +377,7 @@ class OrderCust extends \App\Pages\Base
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
         $item->manufacturer = $this->editnewitem->editnewitembrand->getText();
         $item->msr = $this->editnewitem->editnewitemmsr->getText();
-        
+
 
         if (strlen($item->item_code) > 0) {
             $code = Item::qstr($item->item_code);

@@ -241,8 +241,8 @@ class Order extends Base
                 $n = new \App\Entity\Notify();
                 $n->user_id = \App\Entity\Notify::ARMFOOD;
                 $n->dateshow = time();
-               
-                $n->message = serialize(array('document_id'=>$order->document_id)) ;
+
+                $n->message = serialize(array('document_id' => $order->document_id));
 
                 $n->save();
             }

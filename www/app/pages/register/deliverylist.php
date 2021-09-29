@@ -196,7 +196,7 @@ class DeliveryList extends \App\Pages\Base
         $cnt = 0;
         $mlist = \App\Entity\Notify::find("checked <> 1 and user_id=" . \App\Entity\Notify::DELIV);
         foreach ($mlist as $n) {
-            $msg  = @unserialize($n->message)  ;
+            $msg = @unserialize($n->message);
             $doc = Document::load(intval($msg['document_id']));
             if ($doc->state == Document::STATE_READYTOSHIP) {
                 $cnt++;

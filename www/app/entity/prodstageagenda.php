@@ -1,5 +1,5 @@
 <?php
-  
+
 
 namespace App\Entity;
 
@@ -21,8 +21,8 @@ class ProdStageAgenda extends \ZCL\DB\Entity
     }
 
     protected function afterLoad() {
-       $this->startdate = strtotime($this->startdate);
-       $this->enddate = strtotime($this->enddate);
+        $this->startdate = strtotime($this->startdate);
+        $this->enddate = strtotime($this->enddate);
     }
-    
+
 } 

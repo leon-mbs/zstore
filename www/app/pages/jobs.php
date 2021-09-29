@@ -53,7 +53,7 @@ class Jobs extends \App\Pages\Base
         $this->addeventform->add(new TextInput('addeventtitle'));
         $this->addeventform->add(new TextArea('addeventdesc'));
         $this->addeventform->add(new DropDownChoice('addeventnotify', array(1 => "1 час", 2 => "2 часа", 4 => "4 часа", 8 => "8 часов", 16 => "16 часов", 24 => "24 часа"), 0));
-        $this->addeventform->add(new DropDownChoice('adduser', \App\Entity\User::findArray("username","disabled<>1 and  user_id<>".$user->user_id,"username")  , 0));
+        $this->addeventform->add(new DropDownChoice('adduser', \App\Entity\User::findArray("username", "disabled<>1 and  user_id<>" . $user->user_id, "username"), 0));
         $this->addeventform->add(new ClickLink('cancel', $this, 'onCancel'));
 
         $this->add(new  Form('editeventform'))->setVisible(false);
@@ -88,8 +88,8 @@ class Jobs extends \App\Pages\Base
         $row->add(new Label("stdone"))->setVisible(false);
         $date = new \App\DateTime();
         $start = $date->addDay(1)->startOfDay()->getTimestamp();
-       
-         
+
+
         if ($start <= $event->eventdate) {
             $row->stwait->setVisible(true);
         } else {
@@ -140,8 +140,8 @@ class Jobs extends \App\Pages\Base
         $event->eventdate = $this->addeventform->addeventtime->getDateTime($event->eventdate);
         $event->user_id = System::getUser()->user_id;
         $user = $this->addeventform->adduser->getValue();
-        if($user > 0){
-            $event->user_id = $user; 
+        if ($user > 0) {
+            $event->user_id = $user;
         }
 
         if (strlen($event->title) == 0) {

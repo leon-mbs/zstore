@@ -39,14 +39,14 @@ class SalaryList extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
 
         $this->filter->add(new TextInput('searchnumber'));
-       
+
         $doclist = $this->add(new DataView('doclist', new SerListDataSource($this), $this, 'doclistOnRow'));
 
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
 
         $this->add(new Panel("statuspan"))->setVisible(false);
-   
+
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
         $this->doclist->Reload();
@@ -90,7 +90,7 @@ class SalaryList extends \App\Pages\Base
         }
     }
 
-   
+
     //просмотр
     public function showOnClick($sender) {
 
@@ -103,7 +103,7 @@ class SalaryList extends \App\Pages\Base
         $this->statuspan->docview->setDoc($this->_doc);
 
         $this->doclist->Reload(false);
-        
+
         $this->goAnkor('dankor');
     }
 
@@ -114,10 +114,10 @@ class SalaryList extends \App\Pages\Base
         }
         $type = H::getMetaType($doc->meta_id);
         $class = "\\App\\Pages\\Doc\\" . $type['meta_name'];
-      
+
         App::Redirect($class, $doc->document_id);
 
-        
+
     }
 
     public function oncsv($sender) {
@@ -160,8 +160,7 @@ class SerListDataSource implements \Zippy\Interfaces\DataSource
 
         $where = "   meta_name  in( 'CalcSalary','OutSalary'  ) ";
 
-      
-    
+
         $sn = trim($this->page->filter->searchnumber->getText());
         if (strlen($sn) > 1) { // игнорируем другие поля
             $sn = $conn->qstr('%' . $sn . '%');

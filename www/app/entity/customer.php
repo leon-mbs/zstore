@@ -128,7 +128,7 @@ class Customer extends \ZCL\DB\Entity
      * @param mixed $type
      * @param mixed $edrpou
      */
-    public static function getList($search = '', $type = 0,$searchedrpou=false) {
+    public static function getList($search = '', $type = 0, $searchedrpou = false) {
 
 
         $where = "status=0 and detail not like '%<isholding>1</isholding>%' ";
@@ -136,14 +136,14 @@ class Customer extends \ZCL\DB\Entity
             $edrpou = Customer::qstr('%<edrpou>' . $search . '</edrpou>%');
 
             $search = Customer::qstr('%' . $search . '%');
-            
-            if($searchedrpou) {
-               $where .= " and  (customer_name like {$search}  or phone like {$search}  or email like {$search} or detail like {$edrpou}  ) ";    
-            }   else {
-               $where .= " and  (customer_name like {$search}  or phone like {$search}  or email like {$search} ) ";    
+
+            if ($searchedrpou) {
+                $where .= " and  (customer_name like {$search}  or phone like {$search}  or email like {$search} or detail like {$edrpou}  ) ";
+            } else {
+                $where .= " and  (customer_name like {$search}  or phone like {$search}  or email like {$search} ) ";
             }
-            
-            
+
+
         }
         if ($type > 0) {
             $where .= " and  (detail like '%<type>{$type}</type>%'  or detail like '%<type>0</type>%' ) ";
@@ -201,12 +201,12 @@ class Customer extends \ZCL\DB\Entity
         return $list;
     }
 
-    
-    public function getBonus(){
-         $conn = \ZDB\DB::getConnect();
-         $sql = "select coalesce(sum(bonus),0) as bonus from paylist where  document_id in (select  document_id  from  documents where  customer_id={$this->customer_id})";
-     
-         return  $conn->GetOne($sql);
-         
+
+    public function getBonus() {
+        $conn = \ZDB\DB::getConnect();
+        $sql = "select coalesce(sum(bonus),0) as bonus from paylist where  document_id in (select  document_id  from  documents where  customer_id={$this->customer_id})";
+
+        return $conn->GetOne($sql);
+
     }
 }

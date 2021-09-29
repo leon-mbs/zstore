@@ -170,7 +170,7 @@ class Pay extends \ZCL\DB\Entity
         }
 
 
-        $disc = \App\System::getOptions("discount" );
+        $disc = \App\System::getOptions("discount");
 
 
         $cnt = (int)$conn->GetOne("select  count(*)  from paylist_view where  customer_id=" . $customer_id);
@@ -194,7 +194,7 @@ class Pay extends \ZCL\DB\Entity
             $pay = new \App\Entity\Pay();
 
             $pay->document_id = $document_id;
-     
+
             $pay->user_id = 0;
             $pay->amount = 0;
             $pay->bonus = (int)$bonus;

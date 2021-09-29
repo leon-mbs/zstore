@@ -89,8 +89,8 @@ class EmpTask extends \App\Pages\Base
             $total = 0;
             $hours = 0;
             foreach ($doc->unpackDetails('detaildata') as $service) {
-                $ser = \App\Entity\Service::load($service->service_id)  ;
-                
+                $ser = \App\Entity\Service::load($service->service_id);
+
                 $total += $ser->cost * $service->quantity;
                 $hours += $ser->hours * $service->quantity;
             }
@@ -98,7 +98,7 @@ class EmpTask extends \App\Pages\Base
                 $hours = $doc->headerdata['hours'];
             }
 
-            
+
             foreach ($emplist as $emp) {
 
 

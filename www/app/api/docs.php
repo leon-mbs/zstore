@@ -30,7 +30,7 @@ class docs extends \App\API\Base\JsonRPC
         return $list;
     }
 
- 
+
     //записать заказ
     public function createorder($args) {
         $options = \App\System::getOptions('common');
@@ -552,7 +552,7 @@ class docs extends \App\API\Base\JsonRPC
         return $doc->document_number;
     }
 
-     //записать акт выполненых работ
+    //записать акт выполненых работ
     public function serviceact($args) {
 
         if (strlen($args['number']) == 0) {
@@ -574,7 +574,6 @@ class docs extends \App\API\Base\JsonRPC
                 $doc->headerdata['customer_name'] = $c->customer_name;
             }
         }
-  
 
 
         $doc->document_number = $doc->nextNumber();
@@ -585,13 +584,13 @@ class docs extends \App\API\Base\JsonRPC
         $doc->headerdata["device"] = $args['device'];
 
 
-    //    $doc->notes = @base64_decode($args['description']);
+        //    $doc->notes = @base64_decode($args['description']);
         $details = array();
         $total = 0;
 
         if (is_array($args['items']) && count($args['items']) > 0) {
             foreach ($args['items'] as $it) {
-               
+
                 $item = \App\Entity\Service::load($it['service_id']));
 
                 if ($item instanceof \App\Entity\Service) {

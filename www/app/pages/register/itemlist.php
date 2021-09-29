@@ -100,7 +100,7 @@ class ItemList extends \App\Pages\Base
         if ($item->image_id == 0) {
             $row->imagelistitem->setVisible(false);
         }
-       
+
 
     }
 
@@ -121,8 +121,8 @@ class ItemList extends \App\Pages\Base
 
         $conn = \ZDB\DB::getConnect();
         $sql = "select  coalesce(sum(qty*partion),0) from store_stock_view where {$cstr} qty >0 and item_id in (select item_id from items where disabled<>1 ) ";
-      
-      
+
+
         $cat = $this->filter->searchcat->getValue();
         $store = $this->filter->searchstore->getValue();
         if ($store > 0) {
@@ -184,7 +184,7 @@ class ItemList extends \App\Pages\Base
         }
 
         $row->add(new Label('price', implode(',', $plist)));
-        $row->add(new \Zippy\Html\Link\RedirectLink("createmove","\\App\\Pages\\Doc\\MovePart",array(0,$stock->stock_id) ))->setVisible($stock->qty < 0);
+        $row->add(new \Zippy\Html\Link\RedirectLink("createmove", "\\App\\Pages\\Doc\\MovePart", array(0, $stock->stock_id)))->setVisible($stock->qty < 0);
 
         if (\App\System::getUser()->rolename != 'admins') {
             $row->partion->setText('');
@@ -285,7 +285,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         $cstr = \App\Acl::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "    store_id in ({$cstr})  and   ";
-        }     
+        }
 
         $cat = $form->searchcat->getValue();
         $store = $form->searchstore->getValue();
@@ -302,9 +302,9 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         if (strlen($text) > 0) {
 
             $text = Stock::qstr('%' . $text . '%');
-        
+
             $where = "   disabled <> 1 and  ( select sum(st1.qty) from store_stock st1 where st1.item_id= item_id ) <>0 ";
-    
+
             $where .= " and   (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  )  ";
         }
 

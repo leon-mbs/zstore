@@ -29,11 +29,11 @@ class ProdIssue extends \App\Pages\Base
     public  $_itemlist  = array();
     private $_doc;
     private $_basedocid = 0;
- 
 
-    public function __construct($docid = 0, $basedocid = 0,$st_id=0) {
+
+    public function __construct($docid = 0, $basedocid = 0, $st_id = 0) {
         parent::__construct();
-       
+
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
 
@@ -124,17 +124,17 @@ class ProdIssue extends \App\Pages\Base
                     }
                 }
             }
-            if($st_id > 0) {
-                $st = \App\Entity\ProdStage::load($st_id) ;
+            if ($st_id > 0) {
+                $st = \App\Entity\ProdStage::load($st_id);
                 $this->docform->parea->setValue($st->pa_id);
-                $this->_doc->headerdata['st_id']  = $st->st_id;
-                $this->_doc->headerdata['pp_id']  = $st->pp_id;
-                $this->docform->notes->setText(  $st->stagename);
-                
-                
+                $this->_doc->headerdata['st_id'] = $st->st_id;
+                $this->_doc->headerdata['pp_id'] = $st->pp_id;
+                $this->docform->notes->setText($st->stagename);
+
+
             }
-            
-            
+
+
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
@@ -223,7 +223,7 @@ class ProdIssue extends \App\Pages\Base
 
             if (in_array($item->snumber, $slist) == false) {
                 $this->setError('invalid_serialno');
-                 return;
+                return;
             }
         }
 

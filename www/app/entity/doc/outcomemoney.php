@@ -20,16 +20,16 @@ class OutcomeMoney extends Document
         }
         \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, $this->headerdata['type']);
 
-       if($this->headerdata['detail']==3) {  //перечисление  сотруднику
-          $ua = new \App\Entity\EmpAcc() ;
-          $ua->optype =  \App\Entity\EmpAcc::INCOME_FROM_MF;
-          $ua->document_id =  $this->document_id;
-          $ua->emp_id =  $this->headerdata["emp"];
-          $ua->amount =  0-$this->amount;
-          $ua->save() ;
-            
+        if ($this->headerdata['detail'] == 3) {  //перечисление  сотруднику
+            $ua = new \App\Entity\EmpAcc();
+            $ua->optype = \App\Entity\EmpAcc::INCOME_FROM_MF;
+            $ua->document_id = $this->document_id;
+            $ua->emp_id = $this->headerdata["emp"];
+            $ua->amount = 0 - $this->amount;
+            $ua->save();
+
         }
-        
+
         return true;
     }
 

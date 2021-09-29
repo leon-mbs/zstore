@@ -668,31 +668,31 @@ class ARMPos extends \App\Pages\Base
         $disc = 0;
 
         $customer_id = $this->docpanel->form3->customer->getKey();
-      
-        if ($customer_id > 0) {
-            $cust = Customer::load($customer_id) ;
-            
-            $disctext="";
-            if (doubleval($cust->discount) > 0) {
-               $disctext   = H::l("custdisc")." {$cust->discount}%";
-               $disc = round($total * ($customer->discount / 100));
-        }  else {
-               $bonus = $cust->getBonus();
-               if($bonus>0) {
-                    $disctext   = H::l("custbonus")." {$bonus} ";  
-                    
-                    $total = $this->docpanel->form2->total->getText( );
 
-                    
+        if ($customer_id > 0) {
+            $cust = Customer::load($customer_id);
+
+            $disctext = "";
+            if (doubleval($cust->discount) > 0) {
+                $disctext = H::l("custdisc") . " {$cust->discount}%";
+                $disc = round($total * ($customer->discount / 100));
+            } else {
+                $bonus = $cust->getBonus();
+                if ($bonus > 0) {
+                    $disctext = H::l("custbonus") . " {$bonus} ";
+
+                    $total = $this->docpanel->form2->total->getText();
+
+
                     if ($total >= $bonus) {
                         $disc = $bonus;
                     } else {
                         $disc = $total;
                     }
-               }
-           }        
-           $this->docpanel->form3->discount->setText($disctext); 
-           $this->docpanel->form3->discount->setVisible(true);
+                }
+            }
+            $this->docpanel->form3->discount->setText($disctext);
+            $this->docpanel->form3->discount->setVisible(true);
 
         }
         $this->docpanel->form3->paydisc->setText(H::fa($disc));
@@ -1018,18 +1018,18 @@ class ARMPos extends \App\Pages\Base
     }
 
     //тип  цены с  учетом  контрагента
-    private function getPriveType(){
-        $id=$this->docpanel->form3->customer->getKey() ;
-        if($id>0){
-            $cust = \App\Entity\Customer::load() ;
-            if(strlen($cust->pricetype)>4 ) {
-               return $cust->pricetype ;    
+    private function getPriveType() {
+        $id = $this->docpanel->form3->customer->getKey();
+        if ($id > 0) {
+            $cust = \App\Entity\Customer::load();
+            if (strlen($cust->pricetype) > 4) {
+                return $cust->pricetype;
             }
-              
-            
+
+
         }
-        
-        return  $this->_pt;
+
+        return $this->_pt;
     }
 
 }

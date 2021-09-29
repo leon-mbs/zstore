@@ -237,8 +237,8 @@ class ItemList extends \App\Pages\Base
 
         $this->itemdetail->editmanufacturer->setText($this->_item->manufacturer);
         $this->itemdetail->editmanufacturer->setDataList(Item::getManufacturers());
-        
-        
+
+
         $this->itemdetail->editdescription->setText($this->_item->description);
         $this->itemdetail->editcode->setText($this->_item->item_code);
         $this->itemdetail->editbarcode->setText($this->_item->bar_code);
@@ -295,8 +295,8 @@ class ItemList extends \App\Pages\Base
         if (System::getOption("common", "autoarticle") == 1) {
             $this->itemdetail->editcode->setText(Item::getNextArticle());
         }
-         $this->itemdetail->editmanufacturer->setDataList(Item::getManufacturers());
-   
+        $this->itemdetail->editmanufacturer->setDataList(Item::getManufacturers());
+
     }
 
     public function cancelOnClick($sender) {
@@ -353,10 +353,10 @@ class ItemList extends \App\Pages\Base
         $this->_item->autoincome = $this->itemdetail->editautoincome->isChecked() ? 1 : 0;
 
         //проверка  уникальности артикула
-        if (strlen($this->_item->item_code) > 0 && System::getOption("common", "nocheckarticle") != 1 ) {
+        if (strlen($this->_item->item_code) > 0 && System::getOption("common", "nocheckarticle") != 1) {
             $code = Item::qstr($this->_item->item_code);
             $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and item_code={$code} ");
-            if ($cnt > 0 ) {
+            if ($cnt > 0) {
                 //пытаемся генерить еще раз 
                 if ($this->_item->item_id == 0 && System::getOption("common", "autoarticle") == 1) {
                     $this->_item->item_code = Item::getNextArticle();
@@ -461,7 +461,7 @@ class ItemList extends \App\Pages\Base
         }
 
         $this->itemtable->listform->itemlist->Reload(false);
- 
+
         $this->itemtable->setVisible(true);
         $this->itemdetail->setVisible(false);
     }
@@ -610,7 +610,7 @@ class ItemList extends \App\Pages\Base
             $header['img'] = $img;
             $header['barcode'] = \App\Util::addSpaces($barcode);
         }
-         $header['iscolor'] = $printer['pcolor'] == 1;
+        $header['iscolor'] = $printer['pcolor'] == 1;
 
         $html = $report->generate($header);
 
@@ -667,7 +667,7 @@ class ItemList extends \App\Pages\Base
                     $header['name'] = $item->itemname;
                 }
             }
-             if ($printer['pcode'] == 1) {
+            if ($printer['pcode'] == 1) {
                 $header['article'] = $item->item_code;
                 $header['isap'] = true;
             }
@@ -695,17 +695,17 @@ class ItemList extends \App\Pages\Base
                 $header['img'] = $img;
                 $header['barcode'] = \App\Util::addSpaces($barcode);
             }
-         
+
             $header['isap'] = false;
             if ($printer['pprice'] == 1) {
                 $header['price'] = H::fa($item->getPurePrice($printer['pricetype']));
                 $header['isap'] = true;
             }
-         
-            $header['action'] = $item->hasAction();  ;
-            if($header['action']) {
-               $header['actionprice'] = $item->getActionPrice($header['price']); 
-            } 
+
+            $header['action'] = $item->hasAction();;
+            if ($header['action']) {
+                $header['actionprice'] = $item->getActionPrice($header['price']);
+            }
             $header['iscolor'] = $printer['pcolor'] == 1;
 
 

@@ -82,7 +82,7 @@ class EqList extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
-      
+
 
         $item = $sender->owner->getDataItem();
 

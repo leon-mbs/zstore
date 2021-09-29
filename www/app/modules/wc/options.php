@@ -35,10 +35,9 @@ class Options extends \App\Pages\Base
         $form->add(new CheckBox('ssl', $modules['wcssl']));
 
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
-        
+
     }
 
-  
 
     public function saveOnClick($sender) {
         $site = $this->cform->site->getText();
@@ -71,10 +70,10 @@ class Options extends \App\Pages\Base
 
         System::setOptions("modules", $modules);
         $this->setSuccess('saved');
-        
-        \App\Modules\WC\Helper::connect()  ;
-         
-        
+
+        \App\Modules\WC\Helper::connect();
+
+
     }
 
 }

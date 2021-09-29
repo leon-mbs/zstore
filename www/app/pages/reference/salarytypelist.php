@@ -16,7 +16,7 @@ use Zippy\Html\Link\SubmitLink;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
 use App\Helper as H;
-use App\System ;
+use App\System;
 
 //начисления  удержания
 class SalaryTypeList extends \App\Pages\Base
@@ -30,35 +30,35 @@ class SalaryTypeList extends \App\Pages\Base
             return;
         }
 
-        $this->add(new Panel('tablepan')) ;
+        $this->add(new Panel('tablepan'));
         $this->tablepan->add(new DataView('stlist', new \ZCL\DB\EntityDataSource('\App\Entity\SalType', '', 'salcode'), $this, 'listOnRow'))->Reload();
         $this->tablepan->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
-      
-        
+
+
         $this->add(new Form('editform'))->setVisible(false);
         $this->editform->add(new TextInput('editstname'));
         $this->editform->add(new TextInput('editshortname'));
         $this->editform->add(new TextInput('editcode'));
-        
+
         $this->editform->add(new CheckBox('editdisabled'));
         $this->editform->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->editform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
         $this->editform->add(new Button('delete'))->onClick($this, 'deleteOnClick');
-        
-        $opt = System::getOptions("salary") ;
-          
+
+        $opt = System::getOptions("salary");
+
         $this->add(new Form('calcform'));
-        $this->calcform->add(new TextArea('algo', $opt['calc'] ));
-         $this->calcform->add(new SubmitLink('savecalc'))->onClick($this,"onSaveCalc",true);
-      
-        
+        $this->calcform->add(new TextArea('algo', $opt['calc']));
+        $this->calcform->add(new SubmitLink('savecalc'))->onClick($this, "onSaveCalc", true);
+
+
         $this->add(new Form('optform'));
-        $this->optform->add(new DropDownChoice('optbaseincom',SalType::getList(),$opt['codebaseincom'] ));
-        $this->optform->add(new DropDownChoice('optadvance',SalType::getList(),$opt['codeadvance'] ));
-        $this->optform->add(new DropDownChoice('optresult',SalType::getList(),$opt['coderesult'] ));
-        $this->optform->add(new SubmitLink('saveopt'))->onClick($this,"onSaveOpt",true);
-       
-        
+        $this->optform->add(new DropDownChoice('optbaseincom', SalType::getList(), $opt['codebaseincom']));
+        $this->optform->add(new DropDownChoice('optadvance', SalType::getList(), $opt['codeadvance']));
+        $this->optform->add(new DropDownChoice('optresult', SalType::getList(), $opt['coderesult']));
+        $this->optform->add(new SubmitLink('saveopt'))->onClick($this, "onSaveOpt", true);
+
+
     }
 
     public function listOnRow($row) {
@@ -68,13 +68,13 @@ class SalaryTypeList extends \App\Pages\Base
         $row->add(new Label('shortname', $item->salshortname));
         $row->add(new Label('code', $item->salcode));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
-     }
+    }
 
     public function deleteOnClick($sender) {
         if (false == \App\ACL::checkDelRef('SalaryTypeList')) {
             return;
         }
-        
+
         $del = SalType::delete($this->_st->st_id);
         if (strlen($del) > 0) {
             $this->setError($del);
@@ -83,7 +83,7 @@ class SalaryTypeList extends \App\Pages\Base
         $this->tablepan->stlist->Reload();
         $this->tablepan->setVisible(true);
         $this->editform->setVisible(false);
-         
+
     }
 
     public function editOnClick($sender) {
@@ -110,66 +110,66 @@ class SalaryTypeList extends \App\Pages\Base
             return;
         }
 
-       $isnew =  $this->_st->salcode ==0;
-       $this->_st->salname  = $this->editform->editstname->getText();
-       $this->_st->salshortname = $this->editform->editshortname->getText();
-       $this->_st->salcode = $this->editform->editcode->getText();
-       $this->_st->disabled = $this->editform->editdisabled->ischecked() ? 1 : 0;
-      
-       $code = intval($this->_st->salcode) ;
-       if($code < 100 || $code > 999) {
-           $this->setError('invalidcode') ;
-           return;
-       }
-        $c =  SalType::getFirst("salcode=". $this->_st->salcode) ;    
-        if($c != null && $isnew) {
-           $this->setError('codeexists') ;
-           return;
-          
+        $isnew = $this->_st->salcode == 0;
+        $this->_st->salname = $this->editform->editstname->getText();
+        $this->_st->salshortname = $this->editform->editshortname->getText();
+        $this->_st->salcode = $this->editform->editcode->getText();
+        $this->_st->disabled = $this->editform->editdisabled->ischecked() ? 1 : 0;
+
+        $code = intval($this->_st->salcode);
+        if ($code < 100 || $code > 999) {
+            $this->setError('invalidcode');
+            return;
         }
-        
+        $c = SalType::getFirst("salcode=" . $this->_st->salcode);
+        if ($c != null && $isnew) {
+            $this->setError('codeexists');
+            return;
+
+        }
+
         $this->_st->save();
         $this->editform->setVisible(false);
         $this->tablepan->setVisible(true);
         $this->tablepan->stlist->Reload();
-        
-        
-        $sl =  SalType::getList() ;
+
+
+        $sl = SalType::getList();
         $codebaseincom = $this->optform->optbaseincom->getValue();
         $codeadvance = $this->optform->optadvance->getValue();
-        
-        $this->optform->optbaseincom->setOptionList($sl)   ;
-        $this->optform->optresult->setOptionList($sl)   ;
-        $this->optform->optadvance->setOptionList($sl)   ;
+
+        $this->optform->optbaseincom->setOptionList($sl);
+        $this->optform->optresult->setOptionList($sl);
+        $this->optform->optadvance->setOptionList($sl);
         //восстанавливаем значение
-        $this->optform->optbaseincom->setValue($codebaseincom)   ;
-        $this->optform->optresult->setValue($coderesult)   ;
-        $this->optform->optadvance->setValue($codeadvance)   ;
-        
-        
+        $this->optform->optbaseincom->setValue($codebaseincom);
+        $this->optform->optresult->setValue($coderesult);
+        $this->optform->optadvance->setValue($codeadvance);
+
+
     }
 
     public function cancelOnClick($sender) {
         $this->tablepan->setVisible(true);
         $this->editform->setVisible(false);
     }
- 
+
     public function onSaveOpt($sender) {
-        $opt = System::getOptions("salary") ;
+        $opt = System::getOptions("salary");
         $opt['codebaseincom'] = $this->optform->optbaseincom->getValue();
         $opt['coderesult'] = $this->optform->optresult->getValue();
         $opt['codeadvance'] = $this->optform->optadvance->getValue();
-        
-        System::setOptions('salary',$opt) ;
-        $this->updateAjax(array(),"toastr.success('". H::l("saved") ."')") ;
+
+        System::setOptions('salary', $opt);
+        $this->updateAjax(array(), "toastr.success('" . H::l("saved") . "')");
     }
-  
+
     public function onSaveCalc($sender) {
-        $opt = System::getOptions("salary") ;
-        $opt['calc']  = $this->calcform->algo->getText(); 
-        System::setOptions('salary',$opt) ;
-      
-        $this->updateAjax(array(),"toastr.success('". H::l("saved") ."')") ;
+        $opt = System::getOptions("salary");
+        $opt['calc'] = $this->calcform->algo->getText();
+        System::setOptions('salary', $opt);
+
+        $this->updateAjax(array(), "toastr.success('" . H::l("saved") . "')");
     }
 
 }

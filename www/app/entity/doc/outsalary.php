@@ -15,17 +15,17 @@ class OutSalary extends Document
 
     public function Execute() {
 
-           foreach ($this->unpackDetails('detaildata') as $emp) {
-              if($emp->amount>0) {
-                  $eacc = new \App\Entity\EmpAcc() ;
-                  $eacc->emp_id = $emp->employee_id;
-                  $eacc->document_id = $this->document_id;
-                  
-                  $eacc->optype = $this->headerdata['advance'] == 1? EmpAcc::ADVANCE :  EmpAcc::SALARY_PAY;
-                  $eacc->amount = 0-$emp->amount;
-                  $eacc->save();
-              }
-          }
+        foreach ($this->unpackDetails('detaildata') as $emp) {
+            if ($emp->amount > 0) {
+                $eacc = new \App\Entity\EmpAcc();
+                $eacc->emp_id = $emp->employee_id;
+                $eacc->document_id = $this->document_id;
+
+                $eacc->optype = $this->headerdata['advance'] == 1 ? EmpAcc::ADVANCE : EmpAcc::SALARY_PAY;
+                $eacc->amount = 0 - $emp->amount;
+                $eacc->save();
+            }
+        }
         $payed = Pay::addPayment($this->document_id, $this->document_date, 0 - $this->amount, $this->headerdata['payment'], \App\Entity\IOState::TYPE_SALARY_OUTCOME, $this->notes);
         if ($payed > 0) {
             $this->payed = $payed;

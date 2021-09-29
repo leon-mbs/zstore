@@ -54,11 +54,11 @@ class Items extends \App\Pages\Base
 
     public function onCheck($sender) {
 
-        Helper::connect() ;
-        \App\Application::Redirect("\\App\\Modules\\OCStore\\Items") ;
+        Helper::connect();
+        \App\Application::Redirect("\\App\\Modules\\OCStore\\Items");
     }
-    
-    
+
+
     public function filterOnSubmit($sender) {
         $this->_items = array();
         $modules = System::getOptions("modules");

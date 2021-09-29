@@ -49,19 +49,19 @@ class GoodsIssue extends Document
         $totalstr = H::sumstr($this->payamount);
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
- 
+
         $printer = System::getOptions('printer');
- 
+
         $style = "";
-        if (  strlen($printer['pa4width']) > 0) {
+        if (strlen($printer['pa4width']) > 0) {
             $style = 'style=" width:' . $printer['pa4width'] . ';"';
 
         }
 
-        $header = array('date'            => H::fd($this->document_date),
-                        "_detail"         => $detail,
-                        "firm_name"       => $firm['firm_name'],
-                        
+        $header = array('date'      => H::fd($this->document_date),
+                        "_detail"   => $detail,
+                        "firm_name" => $firm['firm_name'],
+
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "store_name"      => $this->headerdata["store_name"],
@@ -71,8 +71,8 @@ class GoodsIssue extends Document
                         "total"           => H::fa($this->amount),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
-                        "style"         => $style,
- 
+                        "style"           => $style,
+
                         "docbarcode" => $this->getBarCodeImage(),
                         "docqrcode"  => $this->getQRCodeImage(),
                         "payed"      => $this->payed > 0 ? H::fa($this->payed) : false,
@@ -80,23 +80,31 @@ class GoodsIssue extends Document
 
         );
 
-         $header["customer_name"]  = $this->headerdata["customer_name"];
-         $header["phone"]  = false;
-         $header["address"]  = false;
-         $header["edrpou"]  = false;
-        
-        if($this->customer_id > 0) {
-            $cust = \App\Entity\Customer::load($this->customer_id ) ;
-            $header["customer_name"]  = $cust->customer_name;
-            if(strlen($cust->phone)>0 )  $header["phone"]  =$cust->phone;
-            if(strlen($cust->address)>0 )  $header["address"]  =$cust->address;
-            if(strlen($cust->edrpou)>0 )  $header["edrpou"]  =$cust->edrpou;
-            
+        $header["customer_name"] = $this->headerdata["customer_name"];
+        $header["phone"] = false;
+        $header["address"] = false;
+        $header["edrpou"] = false;
+
+        if ($this->customer_id > 0) {
+            $cust = \App\Entity\Customer::load($this->customer_id);
+            $header["customer_name"] = $cust->customer_name;
+            if (strlen($cust->phone) > 0) {
+                $header["phone"] = $cust->phone;
+            }
+            if (strlen($cust->address) > 0) {
+                $header["address"] = $cust->address;
+            }
+            if (strlen($cust->edrpou) > 0) {
+                $header["edrpou"] = $cust->edrpou;
+            }
+
         }
-        
-        if(strlen($this->headerdata["customer_name"])==0) $header["customer_name"] = false;
-        
-        
+
+        if (strlen($this->headerdata["customer_name"]) == 0) {
+            $header["customer_name"] = false;
+        }
+
+
         if ($this->headerdata["contract_id"] > 0) {
             $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);
             $header['contract'] = $contract->contract_number;
@@ -120,7 +128,7 @@ class GoodsIssue extends Document
         $amount = 0;
         foreach ($this->unpackDetails('detaildata') as $item) {
 
- 
+
             //оприходуем  с  производства
             if ($item->autoincome == 1 && $item->item_type == Item::TYPE_PROD) {
 
@@ -228,21 +236,23 @@ class GoodsIssue extends Document
             $style = 'style="font-size:' . $printer['pdocfontsize'] . 'px;width:' . $printer['pdocwidth'] . ';"';
 
         }
-        
-        
+
+
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
                         "firm_name"       => $firm["firm_name"],
-                          "style"         => $style,
-                         "phone"           => $firm["phone"],
+                        "style"           => $style,
+                        "phone"           => $firm["phone"],
                         "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
                         "document_number" => $this->document_number,
                         "docbarcode"      => $this->getBarCodeImage(),
                         "docqrcode"       => $this->getQRCodeImage(),
                         "total"           => H::fa($this->amount)
         );
-        if(strlen($this->headerdata["customer_name"])==0) $header["customer_name"] = false;
-      
+        if (strlen($this->headerdata["customer_name"]) == 0) {
+            $header["customer_name"] = false;
+        }
+
         $report = new \App\Report('doc/goodsissue_bill.tpl');
 
         $html = $report->generate($header);

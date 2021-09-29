@@ -182,26 +182,24 @@ class items extends \App\API\Base\JsonRPC
         return array('item_code' => $item->item_code);
     }
 
-    
-  //  список  работ и услуг
+
+    //  список  работ и услуг
     public function servicelist($args) {
 
         $list = array();
         $w = 'disabled<> 1 ';
 
-    
 
         foreach (\App\Entity\Service::find($w, 'service_name') as $item) {
             $plist = array();
 
             $it = array(
-                'service_name'    => $item->service_name,
-                'price'     => $item->price,
+                'service_name' => $item->service_name,
+                'price'        => $item->price,
                 'category'     => $item->category,
-                'service_id'       => $item->service_id
+                'service_id'   => $item->service_id
             );
 
- 
 
             $list[] = $it;
         }
@@ -209,5 +207,5 @@ class items extends \App\API\Base\JsonRPC
 
         return $list;
     }
-    
+
 }

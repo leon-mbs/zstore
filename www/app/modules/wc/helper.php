@@ -38,11 +38,11 @@ class Helper
         return $woocommerce;
     }
 
-    
-   public static function connect(){
-  
-       $modules = System::getOptions("modules");
- 
+
+    public static function connect() {
+
+        $modules = System::getOptions("modules");
+
         $site = $modules['wcsite'];
         $keyc = $modules['wckeyc'];
         $keys = $modules['wckeys'];
@@ -70,8 +70,8 @@ class Helper
         }
 
 
-        System::setSuccessMsg( H::l('connected'));
- 
-  
-   }
+        System::setSuccessMsg(H::l('connected'));
+
+
+    }
 }

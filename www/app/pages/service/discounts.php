@@ -39,12 +39,12 @@ class Discounts extends \App\Pages\Base
         $this->add(new ClickLink('tabo', $this, 'onTab'));
         $this->add(new ClickLink('tabc', $this, 'onTab'));
         $this->add(new ClickLink('tabi', $this, 'onTab'));
-        
+
         $this->add(new ClickLink('tabs', $this, 'onTab'));
         $this->add(new Panel('otab'));
         $this->add(new Panel('ctab'));
         $this->add(new Panel('itab'));
-        
+
         $this->add(new Panel('stab'));
 
         $this->onTab($this->tabo);
@@ -82,7 +82,6 @@ class Discounts extends \App\Pages\Base
         $this->itab->gfilter->add(new Date('gsearchto'))->setDate(strtotime("+7day", time()));
         $this->itab->gfilter->add(new TextInput('gsearchdisc'));
 
-       
 
         //услуги
         $this->stab->add(new Form('sfilter'))->onSubmit($this, 'OnSAdd');
@@ -135,13 +134,13 @@ class Discounts extends \App\Pages\Base
         $this->_tvars['tabcbadge'] = $sender->id == 'tabc' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
         $this->_tvars['tabobadge'] = $sender->id == 'tabo' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";;
         $this->_tvars['tabibadge'] = $sender->id == 'tabi' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";;
-        
+
         $this->_tvars['tabsbadge'] = $sender->id == 'tabs' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";;
 
         $this->ctab->setVisible($sender->id == 'tabc');
         $this->otab->setVisible($sender->id == 'tabo');
         $this->itab->setVisible($sender->id == 'tabi');
-        
+
         $this->stab->setVisible($sender->id == 'tabs');
 
     }
@@ -202,8 +201,6 @@ class Discounts extends \App\Pages\Base
         return Customer::getList($sender->getText(), 1);
     }
 
-  
-  
 
     //услуги
     public function OnSAdd($sender) {
@@ -289,7 +286,7 @@ class Discounts extends \App\Pages\Base
         $row->add(new  Label("icat_name", $i->cat_name));
         $row->add(new  Label("iname", $i->itemname));
         $row->add(new  Label("iprice"))->setText($i->actionprice);
-        $row->iprice->setVisible($i->actionprice>0);
+        $row->iprice->setVisible($i->actionprice > 0);
         if ($i->fromdate < time() && $i->todate > time()) {
             $row->iprice->setAttribute("class", "badge badge-success");
         }
@@ -300,7 +297,7 @@ class Discounts extends \App\Pages\Base
             $row->iprice->setAttribute("class", "badge badge-secondary");
         }
         $row->add(new  Label("idisc"))->setText($i->actiondisc);
-        $row->idisc->setVisible($i->actiondisc>0);
+        $row->idisc->setVisible($i->actiondisc > 0);
         if ($i->fromdate < time() && $i->todate > time()) {
             $row->idisc->setAttribute("class", "badge badge-success");
         }
@@ -324,7 +321,8 @@ class Discounts extends \App\Pages\Base
         $i->save();
         $this->itab->ilist->Reload();
     }
-   //категории
+
+    //категории
     public function OnGAdd($sender) {
         $g = \App\Entity\Category::load($sender->gsearchkey->getValue());
         if ($g == null) {
@@ -339,9 +337,9 @@ class Discounts extends \App\Pages\Base
                 $this->setError("ts_invalidinterval");
                 return;
             }
-          
-            $items=Item::find("disabled <> 1 and cat_id=".$g->cat_id);
-            foreach($items as $item){
+
+            $items = Item::find("disabled <> 1 and cat_id=" . $g->cat_id);
+            foreach ($items as $item) {
                 $item->actionprice = 0;
                 $item->actiondisc = $d;
                 $item->fromdate = $g->fromdate;
@@ -353,7 +351,7 @@ class Discounts extends \App\Pages\Base
 
         $sender->gsearchdisc->setText("");
         $sender->gsearchkey->setValue(0);
-                
+
     }
 
 
@@ -401,7 +399,6 @@ class DiscCustomerDataSource implements \Zippy\Interfaces\DataSource
 
 }
 
- 
 
 class DiscSerDataSource implements \Zippy\Interfaces\DataSource
 {

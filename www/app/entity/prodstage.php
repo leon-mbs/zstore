@@ -14,14 +14,14 @@ use App\Helper;
 class ProdStage extends \ZCL\DB\Entity
 {
 
-    const STATE_NEW=0;
-    const STATE_INPROCESS=1;
-    const STATE_FINISHED=2;
- 
+    const STATE_NEW       = 0;
+    const STATE_INPROCESS = 1;
+    const STATE_FINISHED  = 2;
+
     protected function init() {
         $this->st_id = 0;
         $this->state = 0;
-         
+
     }
 
     protected function beforeSave() {
@@ -32,7 +32,7 @@ class ProdStage extends \ZCL\DB\Entity
         $this->detail .= "<salary>{$this->salary}</salary>";
         $this->detail .= "<notes><![CDATA[{$this->notes}]]></notes>";
         $this->detail .= "<card><![CDATA[{$this->card}]]></card>";
-        $emplist = base64_encode( serialize($this->emplist) );
+        $emplist = base64_encode(serialize($this->emplist));
         $this->detail .= "<emplist>{$emplist}</emplist>";
 
         $this->detail .= "</detail>";
@@ -42,11 +42,10 @@ class ProdStage extends \ZCL\DB\Entity
 
     protected function afterLoad() {
         //распаковываем  данные из detail
-         $this->startdate = strtotime($this->startdate);
-         $this->enddate = strtotime($this->enddate);
-    
-        
-        
+        $this->startdate = strtotime($this->startdate);
+        $this->enddate = strtotime($this->enddate);
+
+
         if (strlen($this->detail) == 0) {
             return;
         }
@@ -58,11 +57,14 @@ class ProdStage extends \ZCL\DB\Entity
         $this->card = (string)($xml->card[0]);
 
         $this->emplist = @unserialize(@base64_decode((string)($xml->emplist[0])));
-        if(!is_array($this->emplist)) $this->emplist = array();
-        
+        if (!is_array($this->emplist)) {
+            $this->emplist = array();
+        }
+
         parent::afterLoad();
     }
-     public static function getStateName($state) {
+
+    public static function getStateName($state) {
 
         switch($state) {
             case ProdStage::STATE_NEW:
@@ -71,10 +73,10 @@ class ProdStage extends \ZCL\DB\Entity
                 return Helper::l('stpp_inprocess');
             case ProdStage::STATE_FINISHED:
                 return Helper::l('stpp_finished');
- 
+
 
             default:
                 return Helper::l('st_unknow');
         }
-    }  
- }        
+    }
+}

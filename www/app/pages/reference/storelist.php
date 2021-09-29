@@ -47,18 +47,18 @@ class StoreList extends \App\Pages\Base
         $row->add(new Label('storename', $item->storename));
         $row->add(new Label('branch', $this->_blist[$item->branch_id]));
         $row->add(new Label('storedesc', $item->description));
-   
-   
+
+
         $conn = $conn = \ZDB\DB::getConnect();
-   
+
         $cstr = \App\Acl::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "  store_id in ({$cstr})  and  ";
         }
         $sql = " select coalesce(sum(partion*qty),0) as cnt  from  store_stock_view  where {$cstr} store_id={$item->store_id} and  qty >0                   ";
-        
-        
-        $row->add(new Label('qty', H::fqty($conn->GetOne($sql) )));
+
+
+        $row->add(new Label('qty', H::fqty($conn->GetOne($sql))));
         $row->add(new ClickLink('storeedit'))->onClick($this, 'storeeditOnClick');
         $row->add(new ClickLink('storedelete'))->onClick($this, 'storedeleteOnClick');
     }

@@ -10,7 +10,7 @@ abstract class JsonRPC
 {
 
     const VERSION = '2.0';
-      
+
     public function Execute() {
 
 
@@ -49,28 +49,28 @@ abstract class JsonRPC
         $api = \App\System::getOptions('api');
         $user = null;;
 
-          
+
         if (\App\System::getUser()->user_id > 0) {   //вызов с  сайта
 
             return;
         }
 
-       
+
         //Bearer
         if ($api['atype'] == 1) {
 
             $jwt = "";
             $headers = apache_request_headers();
             foreach ($headers as $header => $value) {
-                
-                  
+
+
                 if ($header == "authorization") {
                     $jwt = str_replace("Bearer ", "", $value);
                     $jwt = trim($jwt);
                     break;
                 }
             }
-           
+
             $key = strlen($api['key']) > 0 ? $api['key'] : "defkey";
 
             $decoded = \Firebase\JWT\JWT::decode($jwt, $key, array('HS256'));
@@ -119,22 +119,20 @@ abstract class JsonRPC
         if (count($input) === 0) {
             return self::requestError();
         }
-       
-        if( !in_array($input['method'],array('token','checkapi')) )
-        {
+
+        if (!in_array($input['method'], array('token', 'checkapi'))) {
             $result = $this->checkAcess();
             if (is_array($result)) {
                 return $result;
             }
-            
+
         }
-       
 
 
         if (isset($input[0])) {
             return $this->processBatchRequests($input);
         }
-      
+
         return $this->processRequest($input);
     }
 

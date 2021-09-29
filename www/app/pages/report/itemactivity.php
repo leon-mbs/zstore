@@ -32,12 +32,12 @@ class ItemActivity extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-        $this->filter->add(new CheckBox('showdoc' ));
+        $this->filter->add(new CheckBox('showdoc'));
         $this->filter->add(new TextInput('snumber'))->setVisible(false);
         $this->filter->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
 
         $this->filter->add(new AutocompleteTextInput('item'))->onText($this, 'OnAutoItem');
-        $this->filter->item->onChange($this,"onItem") ;
+        $this->filter->item->onChange($this, "onItem");
 
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
@@ -59,22 +59,22 @@ class ItemActivity extends \App\Pages\Base
         return $r;
     }
 
-   public function onItem($sender) {
+    public function onItem($sender) {
         $this->filter->snumber->setVisible(false);
-      
+
         $item = Item::load($sender->getKey());
-        if($item != null){
-          if($item->useserial==1) {
-              $this->filter->snumber->setVisible(true);
-              
-          } 
-               
+        if ($item != null) {
+            if ($item->useserial == 1) {
+                $this->filter->snumber->setVisible(true);
+
+            }
+
         }
-         
+
     }
 
     public function OnSubmit($sender) {
-      
+
         $reportpage = "App/Pages/ShowReport";
         $reportname = "movereport";
 
@@ -89,10 +89,10 @@ class ItemActivity extends \App\Pages\Base
 
         $html = $this->generateReport();
         \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
-        $this->detail->preview->setText($html,true);   
-         
-       // $this->addJavaScript("loadRep()",true) ;
-      
+        $this->detail->preview->setText($html, true);
+
+        // $this->addJavaScript("loadRep()",true) ;
+
     }
 
     private function generateReport() {
@@ -101,7 +101,7 @@ class ItemActivity extends \App\Pages\Base
         $itemid = $this->filter->item->getKey();
         $snumber = $this->filter->snumber->getText();
 
-        
+
         $it = "1=1";
         if ($itemid > 0) {
             $it .= " and st.item_id=" . $itemid;
@@ -116,7 +116,7 @@ class ItemActivity extends \App\Pages\Base
         $i = 1;
         $detail = array();
         $conn = \ZDB\DB::getConnect();
-        
+
         $sql = "
          SELECT  t.*,
           
@@ -131,7 +131,7 @@ class ItemActivity extends \App\Pages\Base
             ON sc2.document_id = dc2.document_id
               WHERE st2.item_id = t.item_id  
               
-              ". ($storeid > 0 ? " AND st2.store_id = {$storeid}  " : "" ) ."  
+              " . ($storeid > 0 ? " AND st2.store_id = {$storeid}  " : "") . "  
               AND sc2.document_date  < t.dt   
               GROUP BY st2.item_id 
                                  
@@ -147,7 +147,7 @@ class ItemActivity extends \App\Pages\Base
           JOIN documents dc3
             ON sc3.document_id = dc3.document_id
               WHERE st3.item_id = t.item_id  
-             ". ($storeid > 0 ? " AND st3.store_id = {$storeid}  " : ""  )."  
+             " . ($storeid > 0 ? " AND st3.store_id = {$storeid}  " : "") . "  
               AND sc3.document_date  < t.dt   
               GROUP BY st3.item_id 
                                  
@@ -172,7 +172,7 @@ class ItemActivity extends \App\Pages\Base
           JOIN documents dc
             ON sc.document_id = dc.document_id
               WHERE {$it}  
-           ". ($storeid > 0  ? " AND st.store_id = {$storeid}  " : "" ) ."  
+           " . ($storeid > 0 ? " AND st.store_id = {$storeid}  " : "") . "  
              AND DATE(sc.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(sc.document_date) <= " . $conn->DBDate($to) . "
               GROUP BY st.store_id,st.item_id,
@@ -187,17 +187,18 @@ class ItemActivity extends \App\Pages\Base
         $ba = 0;
         $bain = 0;
         $baout = 0;
-        
-         
-        
+
+
         foreach ($rs as $row) {
-            
-            if(strlen($row['snumber'])>0) $row['itemname']  = $row['itemname'] . " (с/н ".$row['snumber'].")";
-             $r = array(
-                "code"      => $row['item_code'],
-                "name"      => $row['itemname'],
-                "store"      => $row['storename'],
-                
+
+            if (strlen($row['snumber']) > 0) {
+                $row['itemname'] = $row['itemname'] . " (с/н " . $row['snumber'] . ")";
+            }
+            $r = array(
+                "code"  => $row['item_code'],
+                "name"  => $row['itemname'],
+                "store" => $row['storename'],
+
                 "date"      => \App\Helper::fd(strtotime($row['dt'])),
                 "documents" => '',
                 "in"        => H::fqty(strlen($row['begin_quantity']) > 0 ? $row['begin_quantity'] : 0),
@@ -205,9 +206,9 @@ class ItemActivity extends \App\Pages\Base
                 "obout"     => H::fqty($row['obout']),
                 "out"       => H::fqty($row['begin_quantity'] + $row['obin'] - $row['obout'])
             );
-            
-            if( $this->filter->showdoc->isChecked() ) {
-                $r["documents"] = $row['docs'] ;
+
+            if ($this->filter->showdoc->isChecked()) {
+                $r["documents"] = $row['docs'];
             }
             $detail[] = $r;
             $ba = $ba + $row['begin_amount'];
@@ -234,16 +235,15 @@ class ItemActivity extends \App\Pages\Base
         return $html;
     }
 
-    public function getData( ) {
+    public function getData() {
 
-      
-            $html = $this->generateReport();
-            \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
-      
-            return $html;
-         
+
+        $html = $this->generateReport();
+        \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
+
+        return $html;
+
     }
 
-  
 
 }

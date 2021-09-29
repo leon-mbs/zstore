@@ -33,7 +33,7 @@ class Items extends \App\Pages\Base
         $modules = System::getOptions("modules");
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
-         $this->filter->add(new DropDownChoice('searchcat', Category::getList(), 0));
+        $this->filter->add(new DropDownChoice('searchcat', Category::getList(), 0));
 
         $this->add(new Form('exportform'))->onSubmit($this, 'exportOnSubmit');
 
@@ -44,14 +44,15 @@ class Items extends \App\Pages\Base
         $this->add(new ClickLink('updateqty'))->onClick($this, 'onUpdateQty');
         $this->add(new ClickLink('updateprice'))->onClick($this, 'onUpdatePrice');
         $this->add(new ClickLink('getitems'))->onClick($this, 'onGetItems');
-  
-           $this->add(new ClickLink('checkconn'))->onClick($this, 'onCheck');
+
+        $this->add(new ClickLink('checkconn'))->onClick($this, 'onCheck');
 
     }
+
     public function onCheck($sender) {
 
-        Helper::connect() ;
-        \App\Application::Redirect("\\App\\Modules\\WC\\Items") ;
+        Helper::connect();
+        \App\Application::Redirect("\\App\\Modules\\WC\\Items");
     }
 
     public function filterOnSubmit($sender) {
@@ -74,11 +75,11 @@ class Items extends \App\Pages\Base
             }
         }
         unset($data);
-        $cat_id=$sender->searchcat->getValue(0);       
-        
+        $cat_id = $sender->searchcat->getValue(0);
+
         $w = "disabled <> 1";
-        if($cat_id >0)  {
-            $w .= " and cat_id=".$cat_id;
+        if ($cat_id > 0) {
+            $w .= " and cat_id=" . $cat_id;
         }
         $items = Item::find($w, "itemname");
         foreach ($items as $item) {

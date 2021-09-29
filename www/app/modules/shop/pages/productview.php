@@ -49,10 +49,10 @@ class ProductView extends Base
         $this->add(new Label('onstore'));
         $this->add(new Label('action'))->setVisible(false);
         $this->add(new \Zippy\Html\Label('manufacturername', $product->manufacturer))->SetVisible(strlen($product->manufacturer) > 0);
-        $price=  $product->getPurePrice($options['defpricetype']) ;
-        $this->add(new Label('price',$price . ' ' . $options['currencyname']));
+        $price = $product->getPurePrice($options['defpricetype']);
+        $this->add(new Label('price', $price . ' ' . $options['currencyname']));
         $this->add(new Label('actionprice', $product->getActionPrice($price) . ' ' . $options['currencyname']))->setVisible(false);
-        if ($product->hasAction() ) {
+        if ($product->hasAction()) {
             $this->price->setAttribute('style', 'font-size:smaller;text-decoration:line-through');
             $this->actionprice->setVisible(true);
             $this->action->setVisible(true);

@@ -29,7 +29,7 @@ class TimeStat extends \App\Pages\Base
         $dt = new \App\DateTime();
 
         $from = $dt->startOfMonth()->getTimestamp();
-        $to = $dt->endOfMonth()->getTimestamp()    ;
+        $to = $dt->endOfMonth()->getTimestamp();
 
         $this->filter->add(new Date('from', $from));
         $this->filter->add(new Date('to', $to));

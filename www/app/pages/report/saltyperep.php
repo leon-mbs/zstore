@@ -71,66 +71,66 @@ class SalTypeRep extends \App\Pages\Base
         $mto = $this->filter->mto->getValue();
         $mtoname = $this->filter->mto->getValueName();
 
-  
-   
+
         $from = strtotime($yfrom . '-' . $mfrom . '-01');
         $dt = new \App\DateTime($from);
         $from = $dt->startOfMonth()->getTimestamp();
- 
-    
-         $to = strtotime($yto . '-' . $mto . '-01');
-         $dt = new \App\DateTime($to);
-        
-  
-         $to = $dt->endOfMonth()->getTimestamp();
-    
-        $conn = \Zdb\DB::getConnect() ;
-        
-        $doclist = \App\Entity\Doc\Document::find("meta_name = 'CalcSalary' and state >= 5 and document_date >= ". $conn->DBDate($from) . " and document_date <= " . $conn->DBDate($to) );
 
-        $stlist   =   SalType::find("disabled<>1","salcode");
-        
+
+        $to = strtotime($yto . '-' . $mto . '-01');
+        $dt = new \App\DateTime($to);
+
+
+        $to = $dt->endOfMonth()->getTimestamp();
+
+        $conn = \Zdb\DB::getConnect();
+
+        $doclist = \App\Entity\Doc\Document::find("meta_name = 'CalcSalary' and state >= 5 and document_date >= " . $conn->DBDate($from) . " and document_date <= " . $conn->DBDate($to));
+
+        $stlist = SalType::find("disabled<>1", "salcode");
+
         $stam = array();
-        foreach($stlist as $st){
-            $stam[$st->salcode]  = 0;   
+        foreach ($stlist as $st) {
+            $stam[$st->salcode] = 0;
         }
-    
+
         foreach ($doclist as $doc) {
 
-         
-    
+
             foreach ($doc->unpackDetails('detaildata') as $emp) {
-                if($emp_id >0 && $emp_id != $emp->employee_id) continue;
-            
-                foreach($stlist as $st){
-                    $code = '_c'.$st->salcode;
-                    $am = doubleval($emp->{$code} );
-                    
-                    $stam[$st->salcode]  += $am;   
-                    
-                }  
-                        
-                 
+                if ($emp_id > 0 && $emp_id != $emp->employee_id) {
+                    continue;
+                }
+
+                foreach ($stlist as $st) {
+                    $code = '_c' . $st->salcode;
+                    $am = doubleval($emp->{$code});
+
+                    $stam[$st->salcode] += $am;
+
+                }
+
+
             }
         }
         $detail = array();
-   
-        foreach($stlist as $st){
-                     
-            $detail[] = array('code'=>$st->salcode,
-               'name'=>$st->salname,'am'=>H::fa($stam[$st->salcode] )
-               );
+
+        foreach ($stlist as $st) {
+
+            $detail[] = array('code' => $st->salcode,
+                              'name' => $st->salname, 'am' => H::fa($stam[$st->salcode])
+            );
         }
 
 
         $header = array(
-            "_detail"  => array_values($detail),
-            'yfrom'    => $yfrom,
-            'mfrom'    => $mfromname,
-            'yto'      => $yto,
-            'mto'      => $mtoname,
-            'isemp'    => $emp_id > 0,
-            
+            "_detail" => array_values($detail),
+            'yfrom'   => $yfrom,
+            'mfrom'   => $mfromname,
+            'yto'     => $yto,
+            'mto'     => $mtoname,
+            'isemp'   => $emp_id > 0,
+
             "emp_name" => $emp_name
         );
 

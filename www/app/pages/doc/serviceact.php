@@ -59,7 +59,7 @@ class ServiceAct extends \App\Pages\Base
         $this->docform->add(new Label('payed', 0));
         $this->docform->add(new Label('payamount', 0));
 
-        $this->docform->add(new Label('discount')) ;
+        $this->docform->add(new Label('discount'));
         $this->docform->add(new TextInput('editpaydisc'));
         $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
         $this->docform->add(new Label('paydisc', 0));
@@ -267,8 +267,8 @@ class ServiceAct extends \App\Pages\Base
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
         if ($this->_doc->customer_id > 0) {
-             $customer = Customer::load($this->_doc->customer_id);
-             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText()   ;
+            $customer = Customer::load($this->_doc->customer_id);
+            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         }
         $this->_doc->headerdata['device'] = $this->docform->device->getText();
         $this->_doc->headerdata['devsn'] = $this->docform->devsn->getText();
@@ -326,7 +326,7 @@ class ServiceAct extends \App\Pages\Base
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
 
-           $conn->CommitTrans();
+            $conn->CommitTrans();
             App::Redirect("\\App\\Pages\\Register\\SerList");
 
         } catch(\Throwable $ee) {
@@ -376,7 +376,7 @@ class ServiceAct extends \App\Pages\Base
             }
         }
 
-        $this->docform->paydisc->setText(H::fa($disc) );
+        $this->docform->paydisc->setText(H::fa($disc));
         $this->docform->editpaydisc->setText(H::fa($disc));
     }
 
@@ -452,7 +452,7 @@ class ServiceAct extends \App\Pages\Base
         $f = $this->docform->firm->getValue();
 
         $ar = \App\Entity\Contract::getList($c, $f);
-        
+
         $this->docform->contract->setOptionList($ar);
         if (count($ar) > 0) {
             $this->docform->contract->setVisible(true);
@@ -460,19 +460,19 @@ class ServiceAct extends \App\Pages\Base
             $this->docform->contract->setVisible(false);
             $this->docform->contract->setValue(0);
         }
-        
-        $cust = Customer::load($c) ;
-        
-        $disctext="";
+
+        $cust = Customer::load($c);
+
+        $disctext = "";
         if (doubleval($cust->discount) > 0) {
-           $disctext   = H::l("custdisc")." {$cust->discount}%";
-        }  else {
-           $bonus = $cust->getBonus();
-           if($bonus>0) {
-              $disctext   = H::l("custbonus")." {$bonus} ";    
-           }
-       }
-       $this->docform->discount->setText($disctext); 
+            $disctext = H::l("custdisc") . " {$cust->discount}%";
+        } else {
+            $bonus = $cust->getBonus();
+            if ($bonus > 0) {
+                $disctext = H::l("custbonus") . " {$bonus} ";
+            }
+        }
+        $this->docform->discount->setText($disctext);
     }
 
     //добавление нового контрагента
