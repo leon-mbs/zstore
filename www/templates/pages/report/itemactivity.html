@@ -17,17 +17,17 @@
 
                         <label for="store">Склад</label>
                         <select class="form-control mr-sm-2" zippy="store"> 
-                            <option value="0">По всем</option>
+                          <option value="0">По всем</option>
                         </select>
 
                         <label for="item">ТМЦ</label>
                         <input placeholder="Начните вводить..." class="form-control mr-sm-2" zippy="item">
-                        {{#usesnumber}}
-
+                            {{#usesnumber}}
+               
                         <label data-label="snumber" for="snumber">Серия, с/н</label>
                         <input class="form-control mr-sm-2" zippy="snumber">
-                        {{/usesnumber}}
-                        <div class="form-check">
+                            {{/usesnumber}}
+                    <div class="form-check">
 
                             <input title="Показать неактуальные" class="form-check-input" type="checkbox" zippy="showdoc">
                             <label class="form-check-label mr-3" for="showdoc">Документы</label>
@@ -39,7 +39,7 @@
                     </form>
                 </div>
 
-
+                
                 <div zippy="detail">
                     <div>
                         <a zippy="print" onclick=" $('#preview').printThis();" title="Печать"><img class="icon20"
@@ -55,27 +55,28 @@
 
 
                     <div zippy="preview" class="table-responsive-sm">
-                        <div class="spinner-border m-3" role="status">
-                            <span class="sr-only">Loading...</span>
-                        </div>                 
+                     <div class="spinner-border m-3" role="status">
+  <span class="sr-only">Loading...</span>
+</div>                 
                     </div>
 
                 </div>
             </div>
         </div>
-
+        
         <script>
-            function loadRep() {
+                    function loadRep(){
+                        
+                        callPageMethod('getData',null,null,(data)=> 
+                        {
+                           
+                              
+                               $('#preview').html(data);  
 
-                callPageMethod('getData', null, null, (data) =>
-                {
 
-
-                    $('#preview').html(data);
-
-
-                });
-            }
+                        });
+                    }
         </script>
     </body>
 </html>
+                

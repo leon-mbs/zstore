@@ -64,18 +64,18 @@
         <td colspan="4" style="border-top: 1px solid black;" align="right">Всего:</td>
         <td style="border-top: 1px solid black;" align="right">{{total}}</td>
     </tr>
-    {{#payamount}}
+     {{#payamount}}
     <tr style="font-weight: bolder;">
         <td colspan="4" align="right">К оплате:</td>
         <td align="right">{{payamount}}</td>
     </tr>
-    {{/payamount}}
-    {{#payed}}  
+     {{/payamount}}
+      {{#payed}}  
     <tr style="font-weight: bolder;">
         <td colspan="4" align="right">Оплата:</td>
         <td align="right">{{payed}}</td>
     </tr>
-    {{/payed}}  
+        {{/payed}}  
     <tr>
         <td colspan="5"><br>
             Гарантия: {{gar}}

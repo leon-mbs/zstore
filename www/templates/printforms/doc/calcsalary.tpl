@@ -5,7 +5,7 @@
         </td>
     </tr>
 
-
+   
 
     <tr>
         <td  colspan="{{colspan}}">
@@ -35,7 +35,7 @@
             {{emp_name}}
         </td>
         {{#amounts}}
-        <td class="text-right">
+                <td class="text-right">
             {{am}}
         </td>
         {{/amounts}}
@@ -46,7 +46,7 @@
         <td colspan="{{colspan}}">
             <b>Всего:  {{total}}</b>
         </td>
-
+         
     </tr>
 
 </table>

@@ -54,7 +54,7 @@
         <td align="right"><b>{{baend}}</b></td>
         <td> </td>
     </tr>
-    {{/noshowpartion}}    
+  {{/noshowpartion}}    
 </table>
 
 

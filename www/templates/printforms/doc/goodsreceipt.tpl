@@ -64,7 +64,7 @@
         <td style="border-top:1px #000 solid;" colspan="7" align="right">Итого:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
-
+   
     {{#isdisc}}
     <tr style="font-weight: bolder;">
         <td colspan="7" align="right">Скидка:</td>
@@ -83,7 +83,7 @@
         <td align="right">{{rate}}</td>
     </tr>
     {{/isval}}
-    {{#payamount}}
+   {{#payamount}}
     <tr style="font-weight: bolder;">
         <td colspan="7" align="right">К оплате:</td>
         <td align="right">{{payamount}}</td>

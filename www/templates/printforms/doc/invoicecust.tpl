@@ -76,18 +76,18 @@
     </tr>
     {{/israte}}
 
-    {{#payamount}}
+     {{#payamount}}
     <tr style="font-weight: bolder;">
         <td colspan="6" align="right">К оплате:</td>
         <td align="right">{{payamount}}</td>
     </tr>
-    {{/payamount}}
-    {{#payed}}  
+     {{/payamount}}
+      {{#payed}}  
     <tr style="font-weight: bolder;">
         <td colspan="6" align="right">Оплата:</td>
         <td align="right">{{payed}}</td>
     </tr>
-    {{/payed}}   
+        {{/payed}}   
 
 
 </table>

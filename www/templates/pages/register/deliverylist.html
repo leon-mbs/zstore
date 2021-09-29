@@ -121,23 +121,23 @@
             <script>
                 window.setInterval(onNewOrder, 5000);
 
-
+              
                 function onNewOrder() {
-                    callPageMethod('getMessages', null, null, (data) =>
-                    {
+                        callPageMethod('getMessages',null,null,(data)=> 
+                        {
+                           
+                               var  answer = JSON.parse(data)  
+                              
+                                if (answer.cnt > 0) {
+                                    $('#newordersalert').show();
+                                    $('#neworderscnt').text('Нових доставок ' + answer.cnt);
 
-                        var answer = JSON.parse(data)
-
-                        if (answer.cnt > 0) {
-                            $('#newordersalert').show();
-                            $('#neworderscnt').text('Нових доставок ' + answer.cnt);
-
-                        }
-
-                    })
-
-
-
+                                }       
+                            
+                        } )     
+                    
+                    
+                    
                 }
 
             </script>              

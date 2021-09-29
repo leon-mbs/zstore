@@ -1,36 +1,36 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2"  {{{style}}}}>
 
-    {{#customer_name}}
+     {{#customer_name}}
     <tr>
         <td></td>
         <td valign="top"><b>Покупатель</b></td>
         <td colspan="5"><b>{{customer_name}}</b></td>
     </tr>
-    {{/customer_name}} 
+     {{/customer_name}} 
     {{#phone}}
     <tr>
         <td></td>
         <td valign="top">Телефон</td>
         <td colspan="5">{{phone}}</td>
     </tr>
-    {{/phone}} 
-    {{#address}}
+     {{/phone}} 
+   {{#address}}
     <tr>
         <td></td>
         <td valign="top">Адрес</td>
         <td colspan="5">{{address}}</td>
     </tr>
-    {{/address}} 
-    {{#edrpou}}
+     {{/address}} 
+   {{#edrpou}}
     <tr>
         <td></td>
         <td valign="top">ОКПО</td>
         <td colspan="5">{{edrpou}}</td>
     </tr>
-    {{/edrpou}} 
-
-
-
+     {{/edrpou}} 
+ 
+    
+        
     {{#isfirm}}
     <tr>
 
@@ -98,7 +98,7 @@
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
 
-
+  
     {{#isdisc}}
     <tr style="font-weight: bolder;">
         <td colspan="6" align="right">Скидка:</td>
@@ -106,25 +106,25 @@
     </tr>
     {{/isdisc}}
 
-    {{#payamount}}
+     {{#payamount}}
     <tr style="font-weight: bolder;">
         <td colspan="6" align="right">К оплате:</td>
         <td align="right">{{payamount}}</td>
     </tr>
-    {{/payamount}}
-    {{#payed}}  
+     {{/payamount}}
+      {{#payed}}  
     <tr style="font-weight: bolder;">
         <td colspan="6" align="right">Оплата:</td>
         <td align="right">{{payed}}</td>
     </tr>
-    {{/payed}} 
-    {{#payamount}}  
+        {{/payed}} 
+        {{#payamount}}  
     <tr>
         <td colspan="7">На сумму <b>{{totalstr}}<b></td>
 
                     </tr>
-                    {{/payamount}}         
-
+              {{/payamount}}         
+                    
                     <tr>
                         <td colspan="7"><b>Отпустил </b>__________________</td>
                     </tr>
@@ -150,7 +150,7 @@
 
 
                     </tr>
-                    <tr>
+                        <tr>
                         <td colspan="3" > 
                             {{{docbarcode}}}
                         </td>

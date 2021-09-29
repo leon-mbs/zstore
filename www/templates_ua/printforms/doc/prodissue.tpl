@@ -11,7 +11,7 @@
             Виробнича ділянка <b>{{pareaname}}</b><br>
         </td>
     </tr>
-    <tr>
+   <tr>
         <td colspan="8" valign="middle">
             Зi складу <b>{{storename}}</b><br>
         </td>

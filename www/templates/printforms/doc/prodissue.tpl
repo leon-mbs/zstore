@@ -11,7 +11,7 @@
             Производственный участок <b>{{pareaname}}</b><br>
         </td>
     </tr>
-    <tr>
+   <tr>
         <td colspan="8" valign="middle">
             Со  склада <b>{{storename}}</b><br>
         </td>

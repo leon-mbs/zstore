@@ -41,7 +41,7 @@
                 <!-- /.info-box -->
             </div>
 
-            <div class="col-auto ">
+          <div class="col-auto ">
                 <div class="info-box">
                     <span class="info-box-icon bg-success elevation-1"><i class="fa fa-money-bill "></i></span>
 
@@ -57,7 +57,7 @@
                 </div>
                 <!-- /.info-box -->
             </div>
-            <div class="col-auto ">
+             <div class="col-auto ">
                 <div class="info-box">
                     <span class="info-box-icon bg-success elevation-1"><i class="fa fa-credit-card "></i></span>
 
@@ -73,9 +73,9 @@
                 </div>
                 <!-- /.info-box -->
             </div>
-
-
-
+          
+            
+            
             <div class="col-auto   ">
                 <div class="info-box">
                     <span class="info-box-icon bg-success elevation-1"><i class="fa fa-sign-out-alt"></i></span>
@@ -226,17 +226,17 @@
                                 <th class="text-right">Сума</th>
                                 <th>Змiнив</th>
                                 <th>Дата</th>
-
+                                
 
                             </tr>
                             <tr zippy="rdoclist">
-                                <td><a zippy="wrd_number"></a></td>
+                               <td><a zippy="wrd_number"></a></td>
                                 <td zippy="wrd_type"></td>
                                 <td zippy="wrd_state"></td>
                                 <td class="text-right" zippy="wrd_amount"></td>
                                 <td zippy="wrd_user"></td>
                                 <td zippy="wrd_date"></td>
-
+                                
                             </tr>
                         </table>
                         <div zippy="wrpag"></div>    
@@ -244,7 +244,7 @@
                 </div>
             </div>      
             {{/wrdoc}}
-            {{#wmdoc}}
+               {{#wmdoc}}
             <div   class="col-12 col-lg-6 ">
 
                 <div   class="card ">
@@ -284,29 +284,29 @@
         <script language="javascript" src="/assets/js/chart.js"></script>
 
         <script>
-
-var fontcolor = '#000';
-{{#darkmode}}
-fontcolor = '#fff';
-{{/darkmode}}              
-
+        
+    var fontcolor='#000' ;
+        {{#darkmode}}
+            fontcolor='#fff' ;
+        {{/darkmode}}              
+        
 //структура   расходов
-        var pieData = {
-        labels: {{{pbtitle}}},
-                datasets: [
-                {
-                data: {{{pbdata}}},
-                        backgroundColor : {{{pbcolor}}},
-                }
-                ]
+var pieData = {
+labels: {{{pbtitle}}},
+        datasets: [
+        {
+        data: {{{pbdata}}},
+                backgroundColor : {{{pbcolor}}},
         }
+        ]
+}
 
 
 var pieOptions = {
 maintainAspectRatio : false,
         responsive : true,
         title: {
-        display: true, fontColor: fontcolor,
+        display: true,   fontColor: fontcolor,
                 text: 'Структура видаткiв за  три мiсяцi',
                 position: 'top'
 
@@ -349,15 +349,15 @@ labels: {{{pcmon}}},
 var barOptions = {
 legend: {
 display: true,
-        position: 'right',
+        position: 'right',  
         labels: {
-
-        fontColor: fontcolor
-
-        }
-},
+                
+                        fontColor: fontcolor 
+                        
+                }
+         },
         title: {
-        display: true, fontColor: fontcolor,
+        display: true,   fontColor: fontcolor,
                 text: 'Прибутки та  видатки'
         }
 }
@@ -390,17 +390,19 @@ labels  : {{{tsmon}}},
 
 var sellOptions = {
 title: {
-display: true, fontColor: fontcolor,
+display: true,   fontColor: fontcolor,
         text: 'Реалiзацiя'
 },
-        legend: {
-        labels: {
 
-        fontColor: fontcolor
+legend: {
+   labels: {
+                
+                        fontColor: fontcolor 
+                        
+                }
+      
+        }, 
 
-        }
-
-        },
         scales: {
         xAxes: [{
         gridLines : {

@@ -96,7 +96,7 @@
     <tr>
 
         <td colspan="4">{{emp_name}}</td>
-        <td colspan="2">{{emp_ktu}}</td>
+       <td colspan="2">{{emp_ktu}}</td>
 
 
     </tr>

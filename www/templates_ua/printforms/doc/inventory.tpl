@@ -20,7 +20,7 @@
         <th align="right" width="50px" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Кіл.</th>
         <th align="right" width="50px" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Факт</th>
     </tr>
-    {{#_detaillost}}
+       {{#_detaillost}}
     <tr>
 
         <td>{{item_name}}</td>

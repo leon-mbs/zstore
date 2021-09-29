@@ -2,7 +2,7 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="2">
-            Звiт по нарахуванням  та  утриманням
+           Звiт по нарахуванням  та  утриманням
         </td>
     </tr>
     <tr>

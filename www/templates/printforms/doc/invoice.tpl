@@ -19,25 +19,25 @@
         <td valign="top">Телефон</td>
         <td colspan="7">{{phone}}</td>
     </tr>
-    {{/phone}} 
-    {{#address}}
+     {{/phone}} 
+   {{#address}}
     <tr>
         <td></td>
         <td valign="top">Адрес</td>
         <td colspan="7">{{address}}</td>
     </tr>
-    {{/address}} 
-    {{#edrpou}}
+     {{/address}} 
+   {{#edrpou}}
     <tr>
         <td></td>
         <td valign="top">ОКПО</td>
         <td colspan="7">{{edrpou}}</td>
     </tr>
-    {{/edrpou}}  
-
-
-
-
+     {{/edrpou}}  
+ 
+    
+    
+    
     {{#iscontract}}
     <tr>
 
@@ -112,24 +112,24 @@
         <td align="right">{{paydisc}}</td>
     </tr>
     {{/paydisc}}
-    {{#payamount}}
+     {{#payamount}}
     <tr style="font-weight: bolder;">
         <td colspan="8" align="right">К оплате:</td>
         <td align="right">{{payamount}}</td>
     </tr>
-    {{/payamount}}
-    {{#payed}}  
+     {{/payamount}}
+      {{#payed}}  
     <tr style="font-weight: bolder;">
         <td colspan="8" align="right">Оплата:</td>
         <td align="right">{{payed}}</td>
     </tr>
-    {{/payed}}   
-    {{#payamount}}
-    <tr>
+        {{/payed}}   
+       {{#payamount}}
+        <tr>
         <td colspan="9">На сумму <b>{{totalstr}}<b></td>
 
                     </tr>  
-                    {{/payamount}}
+                         {{/payamount}}
                     <tr>
                         <td colspan="5">
                             {{#isstamp}}

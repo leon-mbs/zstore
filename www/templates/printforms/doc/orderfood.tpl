@@ -7,8 +7,8 @@
         </td>
     </tr>
 
-
-
+ 
+ 
     <tr>
         <td></td>
         <td valign="top"><b>Терминал</b></td>
@@ -22,7 +22,7 @@
         <td colspan="5">{{customer_name}}</td>
     </tr>
     {{/customer_name}}
-    {{#isdelivery}}
+   {{#isdelivery}}
     <tr>
         <td></td>
         <td valign="top"><b>Доставка</b></td>

@@ -249,12 +249,12 @@
 <tr style="font-weight: bolder;">
     <th colspan="2" style="border: solid black 1px">Наименование</th>
 
-    <th align="right" style="border: solid black 1px">Кол.</th>
+          <th align="right" style="border: solid black 1px">Кол.</th>
 
     <th align="right" style="border: solid black 1px;width:100px;">На сумму</th>
     <th align="right" style="border: solid black 1px">Прибыль</th>
 
-
+  
 </tr>
 {{#_detail}}
 <tr>
@@ -266,7 +266,7 @@
     <td align="right">{{qty}}</td>
     <td align="right">{{summa}}</td>
     <td align="right">{{navar}}</td>
-
+    
 </tr>
 {{/_detail}}
 <tr><td colspan="3" ></td> <td align="right" ><b>{{totsumma}}</b></td> <td align="right"   > <b>{{totnavar}}</b></td><td   > </td>  </tr>
