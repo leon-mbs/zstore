@@ -532,27 +532,27 @@
 
             window.setInterval(onNewOrder, 5000);
 
-          
+
             function onNewOrder() {
-                  
-                        callPageMethod('getMessages',null,null,(data)=> 
-                        {
-                           
-                            var  answer = JSON.parse(data)  
-      
-                            if (answer.cntorder > 0) {
-                                $('#newordersalert').show();
-                                $('#neworderscnt').text('Новых заказов ' + answer.cntorder);
 
-                            }
-                            if (answer.cntprod > 0) {
-                                $('#newprodalert').show();
-                                $('#newprodcnt').text('Готово в виробництвi ' + answer.cntprod);
+                callPageMethod('getMessages', null, null, (data) =>
+                {
 
-                            }
+                    var answer = JSON.parse(data)
+
+                    if (answer.cntorder > 0) {
+                        $('#newordersalert').show();
+                        $('#neworderscnt').text('Новых заказов ' + answer.cntorder);
+
+                    }
+                    if (answer.cntprod > 0) {
+                        $('#newprodalert').show();
+                        $('#newprodcnt').text('Готово в виробництвi ' + answer.cntprod);
+
+                    }
 
 
-                        });
+                });
             }
 
 

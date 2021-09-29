@@ -10,20 +10,20 @@
         </td>
 
     </tr>
-   <tr>
+    <tr>
         <td colspan="4">
             <b> В :</b> {{to}}  
         </td>
 
     </tr>
-   <tr>
+    <tr>
         <td colspan="4">
             <b> Кiл. :</b> {{qty}}  
         </td>
 
     </tr>
 
-  
+
     <tr>
         <td colspan="4">
             {{{notes}}}

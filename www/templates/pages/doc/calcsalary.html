@@ -3,193 +3,189 @@
 
     </head>
     <body>
-      <div class="row">
-        <div class="col-12">
-             <h3> Начисление зарплаты</h3>
-        
+        <div class="row">
+            <div class="col-12">
+                <h3> Начисление зарплаты</h3>
 
-        <form zippy="docform">
-            <div class="row">
-                <div class="col-12 col-md-4 col-xl-3">
-                    <div class="form-group">
-                        <label for="document_number">Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number">
+
+                <form zippy="docform">
+                    <div class="row">
+                        <div class="col-12 col-md-4 col-xl-3">
+                            <div class="form-group">
+                                <label for="document_number">Номер документа</label>
+                                <input class="form-control" type="text" zippy="document_number">
+                            </div>
+                            <div class="form-group">
+                                <label for="document_date"> Дата</label>
+                                <input class="form-control" type="text" zippy="document_date" required="required">
+                            </div>
+
+
+                            <div class="form-group  ">
+                                <label for="notes">Примечание </label>
+
+                                <textarea class="form-control" type="text" zippy="notes"></textarea>
+
+                            </div>
+
+                        </div>
+                        <div class="col-12 col-md-4 col-xl-3">
+                            <div class="form-group  ">
+                                <label for="year">Год</label>
+                                <select class="form-control" zippy="year">
+                                </select>
+                            </div>
+                            <div class="form-group  ">
+                                <label for="month">Месяц</label>
+                                <select class="form-control" zippy="month">
+                                </select>
+                            </div>
+                            <div class="form-group  ">
+                                <label for="dayscnt">Кол. раб. дней </label>
+                                <input style="width:100px;" required="required" pattern="[0-9]+" class="form-control" type="text" zippy="dayscnt">
+                                <small>Количество рабочих дней в месяце</small>
+                            </div>
+
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="document_date"> Дата</label>
-                        <input class="form-control" type="text" zippy="document_date" required="required">
+
+
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <input type="button" value="Отменить" zippy="backtolist" class="btn   btn-light">
+                            &nbsp; <input zippy="tocalc" type="submit" value="Далее " class="btn   btn-outline-primary">
+
+                        </div>
                     </div>
 
 
-                    <div class="form-group  ">
-                        <label for="notes">Примечание </label>
+                </form>
 
-                        <textarea class="form-control" type="text" zippy="notes"></textarea>
+                <form zippy="calcform">
+                    <input type="hidden"  zippy="total">
+                    <div class="form-group row">
+                        <div class="col-auto pt-2">
+                            <label   > Сотрудник</label>
+                        </div>
+                        <div class="col-auto">
+                            <select class="form-control"  zippy="newemp" >
+                                <option value="0">Не выбран</option>
+                            </select>
+                        </div>
+                        <div class="col-auto pt-2">
+                            <a zippy="addemp"  >Добавить</a>
+                        </div>
+
+
 
                     </div>
 
-                </div>
-                <div class="col-12 col-md-4 col-xl-3">
-                    <div class="form-group  ">
-                        <label for="year">Год</label>
-                        <select class="form-control" zippy="year">
-                        </select>
-                    </div>
-                    <div class="form-group  ">
-                        <label for="month">Месяц</label>
-                        <select class="form-control" zippy="month">
-                        </select>
-                    </div>
-                    <div class="form-group  ">
-                        <label for="dayscnt">Кол. раб. дней </label>
-                        <input style="width:100px;" required="required" pattern="[0-9]+" class="form-control" type="text" zippy="dayscnt">
-                        <small>Количество рабочих дней в месяце</small>
-                    </div>
- 
-                </div>
-            </div>
-           
+                    <table class="table table-sm">
+                        <tr>
+                            <th></th>
+                            <th>ФИО</th>
+                            {{#stnames}}
+                            <th>{{name}}</th>
+                            {{/stnames}}
+                        </tr>
+                        <tr zippy="elist">
+                            <td style="width:20px" >
+                                <input  type="checkbox" zippy="emp_ch">
+                            </td>
+                            <td zippy="emp_name"></td>
 
-            <div class="row">
-                <div class="col-12 col-md-6">
-                    <input type="button" value="Отменить" zippy="backtolist" class="btn   btn-light">
-                    &nbsp; <input zippy="tocalc" type="submit" value="Далее " class="btn   btn-outline-primary">
-           
-                </div>
-            </div>
-
-
-        </form>
-        
-        <form zippy="calcform">
-            <input type="hidden"  zippy="total">
-            <div class="form-group row">
-                <div class="col-auto pt-2">
-                  <label   > Сотрудник</label>
-                </div>
-               <div class="col-auto">
-                  <select class="form-control"  zippy="newemp" >
-                     <option value="0">Не выбран</option>
-                        </select>
-                </div>
-               <div class="col-auto pt-2">
-                     <a zippy="addemp"  >Добавить</a>
-                </div>
-                
-                
-                
-            </div>
-
-             <table class="table table-sm">
-                   <tr>
-                      <th></th>
-                      <th>ФИО</th>
-                       {{#stnames}}
-                          <th>{{name}}</th>
-                       {{/stnames}}
-                   </tr>
-                  <tr zippy="elist">
-                      <td style="width:20px" >
-                       <input  type="checkbox" zippy="emp_ch">
-                      </td>
-                      <td zippy="emp_name"></td>
-                     
                         <templateinputs/>
-                      
-                      
-                      <input  type="hidden" zippy="invalid">     
-                          
-                  </tr>
-             </table>
-             
-             <div class="col-12 col-md-6   mt-4">
-                <a zippy="edel" title="Удалить" ><i class="fa fa-trash text-danger" ></i></a>  
-               &nbsp; &nbsp; &nbsp; &nbsp;<i title="Пересчитать" style="cursor:pointer" onclick="recalc();return false" class="fa fa-sync" ></i>&nbsp;&nbsp;  <b>Всего: </b>  <b id="totsal"> </b>   &nbsp;&nbsp;
-               
-             </div>
-             <div class="col-12 col-md-6 mt-4">
-                    <input type="submit" value="Назад" zippy="todoc" class="btn   btn-light">
-                    &nbsp; <input zippy="savedoc" type="submit" value="Сохранить" class="btn   btn-info">
-                    &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
 
-             </div>
-     
-        </form>
-        
-        
-        
-          </div>
-       </div>
-          
-        
-         
-        
+
+                        <input  type="hidden" zippy="invalid">     
+
+                        </tr>
+                    </table>
+
+                    <div class="col-12 col-md-6   mt-4">
+                        <a zippy="edel" title="Удалить" ><i class="fa fa-trash text-danger" ></i></a>  
+                        &nbsp; &nbsp; &nbsp; &nbsp;<i title="Пересчитать" style="cursor:pointer" onclick="recalc(); return false" class="fa fa-sync" ></i>&nbsp;&nbsp;  <b>Всего: </b>  <b id="totsal"> </b>   &nbsp;&nbsp;
+
+                    </div>
+                    <div class="col-12 col-md-6 mt-4">
+                        <input type="submit" value="Назад" zippy="todoc" class="btn   btn-light">
+                        &nbsp; <input zippy="savedoc" type="submit" value="Сохранить" class="btn   btn-info">
+                        &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
+
+                    </div>
+
+                </form>
+
+
+
+            </div>
+        </div>
+
+
+
+
         <script>
 
-           var colemps={{colemps}}
-        
-           function recalc(){
-              
-              for( var i=1;i<=colemps;i++) {
-               
-                  onCalc(i); 
-              } 
-              
-             
-           }
-           
-           //вычисление  по номеру строки
-           function onCalc(rnum){
-              
-              //значяения  кодов с полей
-              {{#stcodes}}
-                  var attr = 'v{{code}}_'+rnum 
-                  var v  =parseFloat($('#'+attr).val()); 
-                  var v{{code}}  = 0 ;
-                  if(Number.isNaN(v)==false) v{{code}}  = v ;
-              {{/stcodes}}
-              
-              //переменные окружения
-              var invalid= $('#invalid_'+rnum).val() ==1 ? true : false
-               
-              
-              //формулы
-              
-              {{calc}}
-              
-              //присваеваем  полям обратно
-              {{#stcodes}}
-                var attr = 'v{{code}}_'+rnum 
-                $('#'+attr).val( v{{code}}  ); 
-              {{/stcodes}}
-              
-              
-              
-               onTotal() ; 
-                
-           }
-           
-           function onTotal(){
-                
-             var  totsal =0;
-              for(var i=1;i<=colemps;i++) {
-                  var attr = 'v{{totst}}_'+i 
-                  
-                  var v = parseFloat($('#'+attr).val())  ;
-                 
-                  if(Number.isNaN(v)==false) totsal = totsal+ v;
-                  
-              }  
-             
-              $('#totsal').text(totsal);
-              $('#total').val(totsal);
-           }
-           
-           recalc();
-           
+            var colemps = {{colemps}}
+
+            function recalc(){
+
+            for (var i = 1; i <= colemps; i++) {
+
+            onCalc(i);
+            }
+
+
+            }
+
+            //вычисление  по номеру строки
+            function onCalc(rnum){
+
+            //значяения  кодов с полей
+            {{#stcodes}}
+            var attr = 'v{{code}}_' + rnum
+                    var v = parseFloat($('#' + attr).val());
+            var v{{code}} = 0;
+            if (Number.isNaN(v) == false) v{{code}} = v;
+            {{/stcodes}}
+
+                    //переменные окружения
+                    var invalid = $('#invalid_' + rnum).val() == 1 ? true : false
+
+
+                    //формулы
+
+                    {{calc}}
+
+            //присваеваем  полям обратно
+            {{#stcodes}}
+            var attr = 'v{{code}}_' + rnum
+                    $('#' + attr).val(v{{code}});
+            {{/stcodes}}
+
+
+
+                    onTotal();
+            }
+
+            function onTotal(){
+
+            var totsal = 0;
+            for (var i = 1; i <= colemps; i++) {
+            var attr = 'v{{totst}}_' + i
+
+                    var v = parseFloat($('#' + attr).val());
+            if (Number.isNaN(v) == false) totsal = totsal + v;
+            }
+
+            $('#totsal').text(totsal);
+            $('#total').val(totsal);
+            }
+
+            recalc();
+
         </script>
-       
+
     </body>
 
 </html>
- 

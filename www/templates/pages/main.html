@@ -1,7 +1,7 @@
 <html>
     <head>
         <link rel="stylesheet" href="/assets/css/chart.css">
-   
+
 
     </head>
     <body>
@@ -40,8 +40,8 @@
                 </div>
                 <!-- /.info-box -->
             </div>
-            
-           <div class="col-auto ">
+
+            <div class="col-auto ">
                 <div class="info-box">
                     <span class="info-box-icon bg-success elevation-1"><i class="fa fa-money-bill"></i></span>
 
@@ -57,7 +57,7 @@
                 </div>
                 <!-- /.info-box -->
             </div>
-             <div class="col-auto ">
+            <div class="col-auto ">
                 <div class="info-box">
                     <span class="info-box-icon bg-success elevation-1"><i class="fa fa-credit-card "></i></span>
 
@@ -73,8 +73,8 @@
                 </div>
                 <!-- /.info-box -->
             </div>
-          
-            
+
+
             <div class="col-auto  ">
                 <div class="info-box">
                     <span class="info-box-icon bg-success elevation-1"><i class="fa fa-sign-out-alt"></i></span>
@@ -226,7 +226,7 @@
                                 <th class="text-right">Сумма</th>
                                 <th>Изменил</th>
                                 <th>Дата</th>
-                                
+
 
                             </tr>
                             <tr zippy="rdoclist">
@@ -236,7 +236,7 @@
                                 <td class="text-right" zippy="wrd_amount"></td>
                                 <td zippy="wrd_user"></td>
                                 <td zippy="wrd_date"></td>
-                                
+
                             </tr>
                         </table>
                         <div zippy="wrpag"></div>    
@@ -244,7 +244,7 @@
                 </div>
             </div>      
             {{/wrdoc}}
-      {{#wmdoc}}
+            {{#wmdoc}}
             <div   class="col-12 col-lg-6 ">
 
                 <div   class="card ">
@@ -275,28 +275,28 @@
 
 
         </div>  
-        
+
 
 
         <script   src="/assets/js/chart.js"></script>
 
         <script>
-        
-       var fontcolor='#000' ;
-        {{#darkmode}}
-            fontcolor='#fff' ;
-        {{/darkmode}}        
-        
-        
+
+var fontcolor = '#000';
+{{#darkmode}}
+fontcolor = '#fff';
+{{/darkmode}}        
+
+
 //структура   расходов
-var pieData = {
-labels: {{{pbtitle}}},
-        datasets: [
-        {
-        data: {{{pbdata}}},
-                backgroundColor : {{{pbcolor}}},
-        }
-        ]
+        var pieData = {
+        labels: {{{pbtitle}}},
+                datasets: [
+                {
+                data: {{{pbdata}}},
+                        backgroundColor : {{{pbcolor}}},
+                }
+                ]
         }
 
 
@@ -305,7 +305,7 @@ maintainAspectRatio : false,
         responsive : true,
         title: {
         display: true,
-                text: 'Структура расходов за  три месяца',   fontColor: fontcolor,
+                text: 'Структура расходов за  три месяца', fontColor: fontcolor,
                 position: 'top'
 
         },
@@ -346,16 +346,16 @@ labels: {{{pcmon}}},
 
 var barOptions = {
 legend: {
-display: true,   
+display: true,
         position: 'right',
-         labels: {
-                
-                        fontColor: fontcolor 
-                        
-                }
-        },
+        labels: {
+
+        fontColor: fontcolor
+
+        }
+},
         title: {
-        display: true,      fontColor: fontcolor,
+        display: true, fontColor: fontcolor,
                 text: 'Доходы  и расходы'
         }
 }
@@ -388,19 +388,17 @@ labels  : {{{tsmon}}},
 
 var sellOptions = {
 title: {
-display: true,     fontColor: fontcolor,
+display: true, fontColor: fontcolor,
         text: 'Реализация'
         },
-legend: {
-   labels: {
-                
-                        fontColor: fontcolor 
-                        
-                }
-      
-        },        
-        
-        
+        legend: {
+        labels: {
+
+        fontColor: fontcolor
+
+        }
+
+        },
         scales: {
         xAxes: [{
         gridLines : {

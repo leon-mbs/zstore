@@ -18,7 +18,7 @@
         </td>
     </tr>
     {{#advance}}
-  <tr>
+    <tr>
         <td colspan="2">
             <b>Выплата аванса</b> 
         </td>

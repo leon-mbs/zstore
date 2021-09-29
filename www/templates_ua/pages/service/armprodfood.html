@@ -40,23 +40,23 @@
             <script>
                 window.setInterval(onNewOrder, 5000);
 
-             
+
                 function onNewOrder() {
-                   
-                        callPageMethod('getMessages',null,null,(data)=> 
-                        {
-                           
-                               var  answer = JSON.parse(data)  
-      
-                                if (answer.cnt > 0) {
-                                    $('#newordersalert').show();
-                                    $('#neworderscnt').text('Нових замовлень ' + answer.cnt);
+
+                    callPageMethod('getMessages', null, null, (data) =>
+                    {
+
+                        var answer = JSON.parse(data)
+
+                        if (answer.cnt > 0) {
+                            $('#newordersalert').show();
+                            $('#neworderscnt').text('Нових замовлень ' + answer.cnt);
 
 
-                                }
+                        }
 
 
-                            });
+                    });
                 }
 
             </script>

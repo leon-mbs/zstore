@@ -63,41 +63,41 @@
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
 
-  
+
     {{#isdisc}}
     <tr style="font-weight: bolder;">
         <td colspan="6" align="right">Скидка:</td>
         <td align="right">{{paydisc}}</td>
     </tr>
     {{/isdisc}}
-     {{#payamount}}
+    {{#payamount}}
     <tr style="font-weight: bolder;">
         <td colspan="6" align="right">К оплате:</td>
         <td align="right">{{payamount}}</td>
     </tr>
-     {{/payamount}}
-      {{#payed}}  
+    {{/payamount}}
+    {{#payed}}  
     <tr style="font-weight: bolder;">
         <td colspan="6" align="right">Оплата:</td>
         <td align="right">{{payed}}</td>
     </tr>
-        {{/payed}}  
-      {{#exchange}}  
+    {{/payed}}  
+    {{#exchange}}  
     <tr style="font-weight: bolder;">
         <td colspan="6" align="right">Сдача:</td>
         <td align="right">{{exchange}}</td>
     </tr>
-      {{/exchange}}  
+    {{/exchange}}  
 
-          <tr>
-                        <td colspan="3" > 
-                            {{{docbarcode}}}
-                        </td>
-                        <td colspan="4"> 
-                            {{{docqrcode}}}
-                        </td>
+    <tr>
+        <td colspan="3" > 
+            {{{docbarcode}}}
+        </td>
+        <td colspan="4"> 
+            {{{docqrcode}}}
+        </td>
 
-                    </tr>    
-    
+    </tr>    
+
 </table>
 

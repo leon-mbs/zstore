@@ -218,14 +218,14 @@
                     <input zippy="editjurid" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="editjurid">Юр. особа</label>
                 </div>
-                
-           <div class="form-group  ">
-                        <label for="editpricetype">Тип ціни</label>
-                        <select class="form-control" zippy="editpricetype">
-                         <option value="none">Не вибраний</option>
-                        </select>
-                    </div>         
-                
+
+                <div class="form-group  ">
+                    <label for="editpricetype">Тип ціни</label>
+                    <select class="form-control" zippy="editpricetype">
+                        <option value="none">Не вибраний</option>
+                    </select>
+                </div>         
+
                 {{/leadmode}} 
                 <div class="form-group">
                     <label for="editcomment">Примітка</label>
@@ -485,29 +485,29 @@
         <script language="javascript" src="/assets/js/chart.js"></script>
 
         <script>
-        
-        var fontcolor='#000' ;
-        {{#darkmode}}
-            fontcolor='#fff' ;
-        {{/darkmode}}        
-        
+
+                                    var fontcolor = '#000';
+                                    {{#darkmode}}
+                                    fontcolor = '#fff';
+                                    {{/darkmode}}        
+
 //состояниея лидов
-                                    var pieData1 = {
-                                    labels: {{{gr1title}}},
-                                            datasets: [
-                                            {
-                                            data: {{{gr1data}}},
-                                                    backgroundColor : {{{gr1color}}},
+                                            var pieData1 = {
+                                            labels: {{{gr1title}}},
+                                                    datasets: [
+                                                    {
+                                                    data: {{{gr1data}}},
+                                                            backgroundColor : {{{gr1color}}},
+                                                    }
+                                                    ]
                                             }
-                                            ]
-                                    }
 
 
                                     var pieOptions1 = {
                                     maintainAspectRatio : false,
                                             responsive : true,
                                             title: {
-                                            display: true,   fontColor: fontcolor,
+                                            display: true, fontColor: fontcolor,
                                                     text: 'Стани лідів',
                                                     position: 'top'
 
@@ -541,7 +541,7 @@
                                     maintainAspectRatio : false,
                                             responsive : true,
                                             title: {
-                                            display: true,    fontColor: fontcolor,
+                                            display: true, fontColor: fontcolor,
                                                     text: 'Джерела лідів',
                                                     position: 'top'
 
@@ -575,7 +575,7 @@
                                     maintainAspectRatio : false,
                                             responsive : true,
                                             title: {
-                                            display: true,    fontColor: fontcolor,
+                                            display: true, fontColor: fontcolor,
                                                     text: 'Джерела  конвертованих лідів',
                                                     position: 'top'
 

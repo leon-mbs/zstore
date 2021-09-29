@@ -14,31 +14,31 @@
         <td><b>Покупець</b></td>
         <td colspan="7"><b>{{customer_name}}</b></td>
     </tr>
-    
+
     {{#phone}}
     <tr>
         <td></td>
         <td valign="top">Телефон</td>
         <td colspan="7">{{phone}}</td>
     </tr>
-     {{/phone}} 
-   {{#address}}
+    {{/phone}} 
+    {{#address}}
     <tr>
         <td></td>
         <td valign="top">Адреса</td>
         <td colspan="7">{{address}}</td>
     </tr>
-     {{/address}} 
-   {{#edrpou}}
+    {{/address}} 
+    {{#edrpou}}
     <tr>
         <td></td>
         <td valign="top">ЄДРПОУ</td>
         <td colspan="7">{{edrpou}}</td>
     </tr>
-     {{/edrpou}}       
-          
-    
-    
+    {{/edrpou}}       
+
+
+
     {{#isfirm}}
     <tr>
 
@@ -113,24 +113,24 @@
         <td align="right">{{paydisc}}</td>
     </tr>
     {{/paydisc}}
-   {{#payamount}}
+    {{#payamount}}
     <tr style="font-weight: bolder;">
         <td colspan="8" align="right">До оплати:</td>
         <td align="right">{{payamount}}</td>
     </tr>
     {{/payamount}} 
-   {{#payed}}  
+    {{#payed}}  
     <tr style="font-weight: bolder;">
         <td colspan="8" align="right">Оплата:</td>
         <td align="right">{{payed}}</td>
     </tr>
-     {{/payed}}  
-       {{#payamount}}
+    {{/payed}}  
+    {{#payamount}}
     <tr>
         <td colspan="7">На суму <b>{{totalstr}}<b></td>
 
                     <tr>
-  {{/payamount}}                     
+                        {{/payamount}}                     
                         <td colspan="5">
                             {{#isstamp}}
                             <img style="height:100px;" src='{{stamp}}'/>

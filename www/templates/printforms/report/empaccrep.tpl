@@ -11,14 +11,14 @@
             Период с {{mfrom}} {{yfrom}} по {{mto}} {{yto}}
         </td>
     </tr>
-  
+
     <tr>
 
         <td style="font-weight: bolder;" colspan="6">
             {{emp_name}}
         </td>
     </tr>
-   
+
     <tr>
 
         <th>Дата</th>
@@ -31,7 +31,7 @@
     </tr>
     {{#_detail}}
 
-   <tr>
+    <tr>
 
         <td>{{dt}}</td>
         <td class="text-right">{{begin}}</td>
@@ -42,7 +42,7 @@
 
     </tr>
     {{/_detail}}
-   
+
 
 </table>
 
