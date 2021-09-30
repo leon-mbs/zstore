@@ -63,8 +63,8 @@ abstract class JsonRPC
             $headers = apache_request_headers();
             foreach ($headers as $header => $value) {
 
-
-                if ($header == "authorization") {
+                    
+                if ( strtolower($header) == "authorization") {
                     $jwt = str_replace("Bearer ", "", $value);
                     $jwt = trim($jwt);
                     break;

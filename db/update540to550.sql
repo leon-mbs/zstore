@@ -3,40 +3,33 @@
  INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 1, 'Перемещение  партий ТМЦ', 'MovePart', 'Склад', 0);
 
  
-CREATE TABLE `prodproc` (
-  `pp_id` int(11) NOT NULL AUTO_INCREMENT,
-  `procname` varchar(255)   NOT NULL,
-  `basedoc` varchar(255) DEFAULT NULL,
-  `snumber` varchar(255) DEFAULT NULL,
-  `state` smallint(4) DEFAULT 0,
-  `detail` LONGTEXT DEFAULT NULL,
-   PRIMARY KEY (`pp_id`)
-  
+CREATE TABLE prodproc (
+  pp_id int(11) NOT NULL AUTO_INCREMENT,
+  procname varchar(255) NOT NULL,
+  basedoc varchar(255) DEFAULT NULL,
+  snumber varchar(255) DEFAULT NULL,
+  state smallint(4) DEFAULT 0,
+  detail longtext DEFAULT NULL,
+  PRIMARY KEY (pp_id)
 ) engine=InnoDB DEFAULT CHARSET=utf8;
      
   
- CREATE TABLE `prodstage` (
-  `st_id` int(11) NOT NULL AUTO_INCREMENT,
-  `pp_id` int(11) NOT NULL ,
-  `pa_id` int(11) NOT NULL ,
-  
-  `stagename` varchar(255) NOT NULL,
-  `detail` LONGTEXT DEFAULT NULL,
-   KEY (`pp_id`) ,
-   PRIMARY KEY (`st_id`)  
-   
+CREATE TABLE prodstage (
+  st_id int(11) NOT NULL AUTO_INCREMENT,
+  pp_id int(11) NOT NULL,
+  pa_id int(11) NOT NULL,
+  stagename varchar(255) NOT NULL,
+  detail longtext DEFAULT NULL,
+  PRIMARY KEY (st_id)
 ) engine=InnoDB DEFAULT CHARSET=utf8;
 
 
- CREATE TABLE `prodstageagenda` (
-  `sta_id` int(11) NOT NULL AUTO_INCREMENT,
-  `st_id` int(11) NOT NULL ,
-  `startdate` DateTime  NOT NULL,
-  `enddate` DateTime  NOT NULL,
- 
-   KEY (`st_id`) ,
-   PRIMARY KEY (`sta_id`)  
-   
+CREATE TABLE prodstageagenda (
+  sta_id int(11) NOT NULL AUTO_INCREMENT,
+  st_id int(11) NOT NULL,
+  startdate datetime NOT NULL,
+  enddate datetime NOT NULL,
+  PRIMARY KEY (sta_id)
 ) engine=InnoDB DEFAULT CHARSET=utf8;
   
 
@@ -69,6 +62,7 @@ SELECT
   `ps`.`st_id` AS `st_id`,
   `ps`.`pp_id` AS `pp_id`,
   `ps`.`pa_id` AS `pa_id`,
+  `ps`.`state` AS `state`,ps.stagename,
   COALESCE((SELECT
       MIN(`pag`.`startdate`)
     FROM `prodstageagenda` `pag`
@@ -77,7 +71,10 @@ SELECT
       MAX(`pag`.`enddate`)
     FROM `prodstageagenda` `pag`
     WHERE (`pag`.`st_id` = `ps`.`st_id`)), NULL) AS `enddate`,
-  `ps`.`stagename` AS `stagename`,
+  COALESCE((SELECT
+      MAX(`pag`.`hours`)
+    FROM `prodstageagenda_view` `pag`
+    WHERE (`pag`.`st_id` = `ps`.`st_id`)), NULL) AS `hours`,
   `ps`.`detail` AS `detail`,
   `pr`.`procname` AS `procname`,
   `pr`.`snumber` AS `snumber`,
@@ -105,35 +102,7 @@ FROM (`prodstageagenda` `a`
   JOIN `prodstage` `pv`
     ON ((`a`.`st_id` = `pv`.`st_id`)));
  
-
- 
-старт  процесса. отмена  пока нет документов
-   
-
-сколько  списано  оприходовано  нормочасы или  сдельная
-   
-
-производственный цикл - процес плюс дата процесса
-дата  определяется  этапми 
  
  
-код продукции этапа на данном участке сколько  оприходовать
-сколько надо списать на производство по каждому этапу 
-
-
-создание  списания  и оприходования - привязка  документов  к  этапу
-инфа об этапе  в  комент
-подсчет по  докам сколько  списано  оприходовано и сколько надо
- 
- 
-журнал  этапов
-смена  статуса
-документы  оприходования  и списания
- 
- 
-
-
-отчет для начисления  зарплаты (доделать  по нарядам? )
-
  
     

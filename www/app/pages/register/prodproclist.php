@@ -122,7 +122,7 @@ class ProdProcList extends \App\Pages\Base
         $row->add(new Label('startdate', H::fd($p->startdate)));
         $row->add(new Label('enddate', H::fd($p->enddate)));
       
-          $row->add(new ClickLink('edit'))->onClick($this, 'OnEdit');
+          $row->add(new ClickLink('edit',$this, 'OnEdit'))->setVisible($p->state == 0);
           $row->add(new ClickLink('view'))->onClick($this, 'onView');
           $row->add(new ClickLink('stages'))->onClick($this, 'OnStages');
           $row->add(new ClickLink('copy'))->onClick($this, 'OnCopy');
