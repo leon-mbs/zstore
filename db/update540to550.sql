@@ -1,6 +1,8 @@
  INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Пр. процессы', 'ProdProcList', 'Производство', 0);
  INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Пр. этапы', 'ProdStageList', 'Производство', 0);
  INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 1, 'Перемещение  партий ТМЦ', 'MovePart', 'Склад', 0);
+ 
+ UPDATE `metadata` SET `description` = 'Оплата по производству' WHERE `meta_name` = 'EmpTask' ;
 
  
 CREATE TABLE prodproc (
