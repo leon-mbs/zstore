@@ -36,6 +36,7 @@ class GoodsIssue extends \App\Pages\Base
     private $_rowid     = 0;
     private $_orderid   = 0;
     private $_prevcust  = 0;   // преыдущий контрагент
+ 
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -251,6 +252,10 @@ class GoodsIssue extends \App\Pages\Base
                             $this->docform->payment->setValue(0); // предоплата
                             $this->docform->editpayed->setText(H::fa(0));
                             $this->docform->payed->setText(H::fa(0));
+                            $this->docform->editpayamount->setText(H::fa(0));
+                            $this->docform->payamount->setText(H::fa(0));
+                            $this->docform->editpaydisc->setText(H::fa(0));
+                            $this->docform->paydisc->setText(H::fa(0));
 
                         }
                     }

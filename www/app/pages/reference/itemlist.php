@@ -49,6 +49,7 @@ class ItemList extends \App\Pages\Base
             $catlist[$k] = $v;
         }
         $this->filter->add(new DropDownChoice('searchcat', $catlist, 0));
+        $this->filter->add(new DropDownChoice('searchsort', array(), 0));
 
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
@@ -843,8 +844,14 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
-        $l = Item::find($this->getWhere(true), "itemname asc", $count, $start);
-        $f = Item::find($this->getWhere(), "itemname asc", $count, $start);
+        $sortfield = "itemname asc";
+        $sort = $this->page->filter->searchsort->getValue();
+        
+        if($sort==1)  $sortfield = "item_code asc";
+        if($sort==2)  $sortfield = "item_id desc";
+        
+        $l = Item::find($this->getWhere(true), $sortfield, $count, $start);
+        $f = Item::find($this->getWhere(), $sortfield, $count, $start);
         foreach ($f as $k => $v) {
             $l[$k] = $v;
         }

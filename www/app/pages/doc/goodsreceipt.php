@@ -32,7 +32,7 @@ class GoodsReceipt extends \App\Pages\Base
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = 0;
-
+  
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
@@ -184,7 +184,7 @@ class GoodsReceipt extends \App\Pages\Base
 
                         $invoice = $basedoc->cast();
                         $this->docform->basedoc->setText('Счет ' . $invoice->document_number);
-                        $this->docform->payment->setValue(0);
+                        
                         $this->docform->nds->setText($invoice->headerdata['nds']);
                         $this->docform->editnds->setText($invoice->headerdata['nds']);
                         $this->docform->rate->setText($invoice->headerdata['rate']);
@@ -195,10 +195,19 @@ class GoodsReceipt extends \App\Pages\Base
                         $this->OnCustomerFirm($this->docform->customer);
 
                         $this->docform->contract->setValue($invoice->headerdata['contract_id']);
-
+                        
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                         $this->CalcTotal();
                         $this->CalcPay();
+                        //предоплата
+                            $this->docform->payment->setValue(0);  
+                            $this->docform->editpayed->setText(H::fa(0));
+                            $this->docform->payed->setText(H::fa(0));
+                            $this->docform->editpayamount->setText(H::fa(0));
+                            $this->docform->payamount->setText(H::fa(0));
+                            $this->docform->editdisc->setText(H::fa(0));
+                            $this->docform->disc->setText(H::fa(0));
+                          
                     }
                     $this->calcTotal();
                     if ($basedoc->meta_name == 'GoodsReceipt') {
