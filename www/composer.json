@@ -31,9 +31,10 @@
                
  
         "leon-mbs/zippy": "2.5.2",
+        
         "ext-json": "*",
         "ext-curl": "*",
-        "ext-simplexml": "*",
-        "ext-bcmath": "*"
+        "ext-simplexml": "*" 
+        
     }
 }
