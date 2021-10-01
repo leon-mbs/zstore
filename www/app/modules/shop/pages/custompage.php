@@ -12,7 +12,7 @@ class CustomPage extends Base
         $pages = $shop['pages'] ;
         if(!is_array($pages)) $pages = array();
        
-        
+        $this->_title =  $pages[$pageuri]->title;
         $this->_tvars['content'] = base64_decode($pages[$pageuri]->text);
     }
 
