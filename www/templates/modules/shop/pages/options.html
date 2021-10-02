@@ -2,43 +2,38 @@
 
 
     <body>
-        <div class="row">
-            <div class="col-12 col-md-6 col-lg-4  ">
-                <h4>Администрирование</h4>
-                <a zippy="updatesitemap" class="btn btn-outline-info"> Обновить sitemap.xml</a>
-            </div>
-        </div>
+      
 
-        <div class="row mt-4">
-            <div class="col-12  col-sm-10 col-md-8 col-lg-6  col-xl-6  ">
+        <div class="row ">
+            <div class="col-12    col-md-6 col-lg-4 col-xl-3   ">
                 <h4>Настройка</h4>
                 <form zippy="shop" enctype="multipart/form-data">
-                    <div class="form-group  row">
-                        <label class="col-sm-5 col-form-label" for="shopname">Название магазина</label>
-                        <div class="col-sm-7">
+                    <div class="form-group   ">
+                        <label  for="shopname">Название магазина</label>
+                     
                             <input required="required" class="form-control " zippy="shopname"/>
-                        </div>
+                         
                     </div>
-                    <div class="form-group  row">
-                        <label class="col-sm-5 col-form-label" for="logo">Логотип</label>
-                        <div class="col-sm-7">
+                    <div class="form-group   ">
+                        <label   for="logo">Логотип</label>
+                      
                             <input type="file" class="form-control " zippy="logo"/>
-                        </div>
+                     
                     </div>
 
 
 
 
-                    <div class="form-group  row">
-                        <label class="col-sm-5 col-form-label" for="shopdefpricetype">Тип цены </label>
-                        <div class="col-sm-7">
+                    <div class="form-group   h3">
+                        <label   for="shopdefpricetype">Тип цены </label>
+                      
                             <select class="form-control" zippy="shopdefpricetype">
                             </select>
-                        </div>
+                         
                     </div>
-                    <div class="form-group  row">
-                        <label class="col-sm-5 col-form-label" for="shopordertype">Формировать  по  заказу</label>
-                        <div class="col-sm-7">
+                    <div class="form-group   ">
+                        <label   for="shopordertype">Формировать  по  заказу</label>
+                      
                             <select class="form-control " zippy="shopordertype">
 
                                 <option value='0'>Обычный заказ</option>
@@ -49,47 +44,47 @@
                             <small>В кассовом  чеке нет  доставки.</small><br>
                             <small>В общепите не показываются фильтры и отзывы. В доставке только адрес
                                    в городе, заданом  в  настройках  общепита</small>
-                        </div>
+                       
                     </div>
                     {{#usebranch}}
-                    <div class="form-group  row">
-                        <label class="col-sm-5 col-form-label" for="shopdefbranch">Филиал </label>
-                        <div class="col-sm-7">
+                    <div class="form-group   ">
+                        <label   for="shopdefbranch">Филиал </label>
+                        
                             <select class="form-control" zippy="shopdefbranch">
                                 <option value="0">Не выбран</option>
                             </select>
                             <small>Филиал,  с  которым  создаются документы</small>
-                        </div>
+                      
                     </div>
                     {{/usebranch}}
-                    <div class="form-group  row">
-                        <label class="col-sm-5 col-form-label" for="shopdefcust">Покупатель по умолчанию</label>
-                        <div class="col-sm-7">
+                    <div class="form-group   ">
+                        <label   for="shopdefcust">Покупатель по умолчанию</label>
+                        
                             <input placeholder="Начните  вводить..." class="form-control  " zippy="shopdefcust">
 
                             <small class="form-text text-muted">Условный контрагент от имени которого будут формироваться   заказы
                                 если не  указан  конкретный  контрагент</small>
-                        </div>
+                        
                     </div>
 
-                    <div class="form-group  row">
-                        <label class="col-sm-5 col-form-label" for="email">Email для обратной связи</label>
-                        <div class="col-sm-7">
+                    <div class="form-group   ">
+                        <label   for="email">Email для обратной связи</label>
+                  
                             <input class="form-control " zippy="email"/>
-                        </div>
+                       
                     </div>
-                    <div class="form-group  row">
-                        <label class="col-sm-5 col-form-label" for="currencyname">Денежная единица</label>
-                        <div class="col-sm-7">
+                    <div class="form-group   ">
+                        <label   for="currencyname">Денежная единица</label>
+          
                             <input class="form-control " zippy="currencyname"/>
-                        </div>
+                      
                     </div>
 
-                  <div class="form-group  row">
-                        <label class="col-sm-5 col-form-label" for="phone">Телефон  для  заказов</label>
-                        <div class="col-sm-7">
+                  <div class="form-group   ">
+                        <label   for="phone">Телефон  для  заказов</label>
+                        
                             <input class="form-control " zippy="phone"/>
-                        </div>
+                        
                     </div>
 
 
@@ -128,103 +123,92 @@
 
                 </form>
             </div>
-            <div class="col-12 col-lg-8 col-xl-6">
-                <h4>Тексты страниц</h4>
-                <small>Изображениея должны  быть  как   можно меньше  размера.</small>
-            
-                <form zippy="texts">
+        
+            <div class="col-12 col-md-6 col-lg-8     ">
+              <div class="row">
+               <div class="col-12 col-md-10   col-xl-8 " zippy="adminpan">
+                <h4>Администрирование</h4>
+                <a zippy="updatesitemap" class="btn btn-outline-info"> Обновить sitemap.xml</a>
+               
+                <h4>Пользовательские  страницы</h4>
+                <a class="btn btn-info" zippy="padd">Добавить</a>
+                <table class="table table-sm">
+                   <tr zippy="plist">
+                     <td zippy="ptitle"></td>
+                     <td zippy="plink"></td>
+                     <td zippy="porder"></td>
+                     <td >
+                     <a zippy="pedit"><i class="fa fa-edit"></i></a>
+                     &nbsp;&nbsp;<a zippy="pdel"><i class="fa fa-trash"></i></a>
+                     </td>
+                   </tr>
+                </table>
+                
+                
+             </div>
+           
+           
+               <div class="col-12   ">
+                 
+                 <form zippy="pageform">
+                  <input type="hidden" zippy="oldlink">
+                <h4>Редактирование страницы</h4>  
                     <div class="form-group   ">
-                        <label for="aboutus">О нас</label>
-                        <textarea zippy="aboutus" class="form-control ">
+                        <label for="pagetitle">Название    </label>
+                        <input required="required" style="width:300px;" zippy="pagetitle" class="form-control ">
+                        </input>
+                    <small>Для отображения в  меню</small>
+                </div> 
+                  <div class="form-group   ">
+                        <label for="pagelink">Относительная ссылка    </label>
+                        <input pattern=[0-9a-z_]+ required="required" style="width:200px;" zippy="pagelink" class="form-control ">
+                        </input>
+                        <small>Не включая  адрес сайта. Допускаются  только  латиница  и подчеркивание. Например  news  about_us  dostavka</small>
+                        
+                    </div> 
+               <div class="form-group   ">
+                        <label for="pageorder">Порядковий  номер    </label>
+                        <input pattern=[0-9]+ required="required" style="width:40px;" zippy="pageorder" class="form-control ">
+                        </input>
+                        <small>Номер  порядку виводу  в  меню</small>
+                        
+                    </div> 
+                    <div class="form-group   ">
+                        <label for="pagetext">Змiст  </label>
+                        <textarea zippy="pagetext" class="form-control ">
                         </textarea>
-                    </div>
-                    <div class="form-group   ">
-                        <label for="delivery">Оплата и доставка</label>
-                        <textarea zippy="delivery" class="form-control ">
-                        </textarea>
-                    </div>
-                    <div class="form-group   ">
-                        <label for="contact">Контакты</label>
-                        <textarea zippy="contact" class="form-control ">
-                        </textarea>
-                    </div>
-                    <div class="form-group   ">
-                        <label for="news">Новости</label>
-                        <textarea zippy="news" class="form-control ">
-                        </textarea>
-                    </div>
-                    <div class="form-group   ">
+                <small>Зображення повинні бути якомога меншого розміру.</small>
+                        
+                    </div>      
+     
+                  <div class="form-group   ">
 
-                        <button class="btn btn-primary" type="submit">Сохранить</button>
+                        <a class="btn btn-outline-primary" zippy="pcancel">Скасувати</a>
+                        <button class="btn btn-primary" type="submit">Зберегти</button>
 
                     </div>
-                </form>
+                </form>      
+              </div>
+ 
+             </div>
             </div>
+              
+            
+            
         </div>
-
+        
+        
+        
+        
+  
         <script>
             $(function () {
                 // Summernote
 
-                $('#aboutus').summernote({
-                    height: 400,
-                    lang: 'ru-RU',
-
-                    callbacks: {
-                        onEnter: function (e) {
-                            if (e.keyCode === key.code.ENTER) {
-                                e.shiftKey = true;
-                                context.triggerEvent('enter', e);
-                            }
-                        },
-                        onPaste: function (e) {
-
-                            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-                            e.preventDefault();
-                            document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
-                        }
-                    }
-                });
-                $('#contact').summernote({
-                    height: 400,
-                    lang: 'ru-RU',
-
-                    callbacks: {
-                        onEnter: function (e) {
-                            if (e.keyCode === key.code.ENTER) {
-                                e.shiftKey = true;
-                                context.triggerEvent('enter', e);
-                            }
-                        },
-                        onPaste: function (e) {
-
-                            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-                            e.preventDefault();
-                            document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
-                        }
-                    }
-                });
-                $('#delivery').summernote({
-                    height: 400,
-                    lang: 'ru-RU',
-
-                    callbacks: {
-                        onEnter: function (e) {
-                            if (e.keyCode === key.code.ENTER) {
-                                e.shiftKey = true;
-                                context.triggerEvent('enter', e);
-                            }
-                        },
-                        onPaste: function (e) {
-
-                            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-                            e.preventDefault();
-                            document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
-                        }
-                    }
-                });
-                $('#news').summernote({
-                    height: 400,
+ 
+ 
+                $('#pagetext').summernote({
+                    height: 600,
                     lang: 'ru-RU',
 
                     callbacks: {

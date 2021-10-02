@@ -235,7 +235,7 @@ class RetCustIssue extends \App\Pages\Base
         $this->_doc->customer_id = $this->docform->customer->getKey();
         if ($this->_doc->customer_id > 0) {
             $customer = Customer::load($this->_doc->customer_id);
-            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
+            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         }
 
         //  $this->calcTotal();
@@ -371,19 +371,21 @@ class RetCustIssue extends \App\Pages\Base
         $item = Item::load($id);
 
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity()));
-        $cid= $this->docform->customer->getKey() ;
-        
-        $where =" document_id  in (select document_id from  documents_view where  meta_name='GoodsReceipt') and item_id=".$id;
-        
-        if($id > 0)$where .=" and  customer_id= {$cid} ";
-        
-        
-        $e= \App\Entity\Entry::getFirst($where,"entry_id desc") ;
-        
+        $cid = $this->docform->customer->getKey();
+
+        $where = " document_id  in (select document_id from  documents_view where  meta_name='GoodsReceipt') and item_id=" . $id;
+
+        if ($id > 0) {
+            $where .= " and  customer_id= {$cid} ";
+        }
+
+
+        $e = \App\Entity\Entry::getFirst($where, "entry_id desc");
+
         $this->editdetail->editprice->setText(H::fa($e->partion));
 
-        
-        $this->updateAjax(array('qtystock','editprice'));
+
+        $this->updateAjax(array('qtystock', 'editprice'));
     }
 
     public function OnAutoCustomer($sender) {

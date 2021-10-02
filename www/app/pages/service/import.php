@@ -64,7 +64,7 @@ class Import extends \App\Pages\Base
         $form->add(new CheckBox("checkname"));
         $form->add(new CheckBox("noshowprice"));
         $form->add(new CheckBox("noshowshop"));
-        
+
 
         $form->onSubmit($this, "onImport");
 
@@ -276,7 +276,7 @@ class Import extends \App\Pages\Base
                 if ($colprice5 != "0") {
                     $it->price5 = $price5;
                 }
-                if(strlen($itemname)>0) {
+                if (strlen($itemname) > 0) {
                     $it->itemname = $itemname;
                 }
 

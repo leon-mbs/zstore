@@ -3,6 +3,7 @@
 namespace App\Pages\Report;
 
 use App\Entity\Doc\Document;
+use App\Entity\ProdStage;
 use App\Entity\Employee;
 use Zippy\Html\Form\Date;
 use Zippy\Html\Form\Form;
@@ -11,7 +12,7 @@ use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
 
 /**
- * Оплата по нарядам
+ * Оплата  по  производству
  */
 class EmpTask extends \App\Pages\Base
 {
@@ -89,8 +90,8 @@ class EmpTask extends \App\Pages\Base
             $total = 0;
             $hours = 0;
             foreach ($doc->unpackDetails('detaildata') as $service) {
-                $ser = \App\Entity\Service::load($service->service_id)  ;
-                
+                $ser = \App\Entity\Service::load($service->service_id);
+
                 $total += $ser->cost * $service->quantity;
                 $hours += $ser->hours * $service->quantity;
             }
@@ -98,7 +99,7 @@ class EmpTask extends \App\Pages\Base
                 $hours = $doc->headerdata['hours'];
             }
 
-            
+
             foreach ($emplist as $emp) {
 
 
@@ -119,8 +120,58 @@ class EmpTask extends \App\Pages\Base
             }
         }
 
+        
+       $elist = Employee::find("", "emp_name");
+        foreach ($elist as $emp_id => $emp) {
+            $emp->cnt = 0;
+            $emp->hours = 0;
+            $emp->amount = 0;
+        }
+
+        $detail2 = array();
+        $where = "      
+                DATE( enddate) >= " . $conn->DBDate($from) . "
+              AND DATE( enddate) <= " . $conn->DBDate($to) . "
+                
+        and state= " . ProdStage::STATE_FINISHED;
+
+        $stages = ProdStage::find($where);
+       
+        foreach ($stages as $stage) {
+            
+            if (count($stage->emplist) == 0) {
+                continue;
+            }
+            if($stage->salary >0){
+           
+                foreach ($stage->emplist as $emp) {
+
+
+                    $elist[$emp->employee_id]->amount += round($stage->salary * $emp->ktu);
+                    $elist[$emp->employee_id]->hours += $stage->hours;
+                    $elist[$emp->employee_id]->cnt += 1;
+                }         
+                
+            }
+            
+            
+        }
+        
+        foreach ($elist as $emp_id => $emp) {
+            if ($emp->cnt > 0) {
+                $detail2[] = array(
+                    "name"   => $emp->emp_name,
+                    "cnt"    => $emp->cnt,
+                    "hours"  => $emp->hours,
+                    "amount" => round($emp->amount)
+                );
+            }
+        }        
+        
+        
         $header = array('datefrom' => \App\Helper::fd($from),
                         "_detail"  => $detail,
+                        "_detail2"  => $detail2,
                         'dateto'   => \App\Helper::fd($to)
         );
         $report = new \App\Report('report/emptask.tpl');

@@ -24,7 +24,7 @@ class PayBalance extends \App\Pages\Base
 
         $dt = new \App\DateTime();
         $dt->subMonth(1);
- 
+
         $from = $dt->startOfMonth()->getTimestamp();
         $to = $dt->endOfMonth()->getTimestamp();
 

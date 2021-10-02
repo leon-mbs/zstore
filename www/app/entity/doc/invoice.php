@@ -68,6 +68,22 @@ class Invoice extends \App\Entity\Doc\Document
             $header['customer_name'] = $this->headerdata["customer_print"];
         }
 
+        $header["phone"] = false;
+        $header["address"] = false;
+        $header["edrpou"] = false;
+        $cust = \App\Entity\Customer::load($this->customer_id);
+
+        if (strlen($cust->phone) > 0) {
+            $header["phone"] = $cust->phone;
+        }
+        if (strlen($cust->address) > 0) {
+            $header["address"] = $cust->address;
+        }
+        if (strlen($cust->edrpou) > 0) {
+            $header["edrpou"] = $cust->edrpou;
+        }
+
+
         if ($this->headerdata["contract_id"] > 0) {
             $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);
             $header['contract'] = $contract->contract_number;

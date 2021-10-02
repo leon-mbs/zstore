@@ -369,7 +369,7 @@
     "apinodocstate": "Невірний статус документу",
     "apinodoctype": "Невірний тип документу",
     "apiinvalidparameters": "Невірні параметри",
-    "apiasccancel": "НеобхIдно  видалити документу %s. причина: %s",
+    "apiasccancel": "Необхiдно  видалити документ %s. причина: %s",
     "apinodoc": "Документ не знайдено",
     "apinoitems": "Не введені  позиції",
     "apiitemnotfound": "ТМЦ з артикулом %s не знайдений ",
@@ -463,5 +463,17 @@
     "modocstoreitems": "Товари (Опенкарт)" ,   
     "modwcorders": "Замовлення (WC)"  ,  
     "modwcitems": "Товари (WC)" ,   
-    "modissueslist": "Завдання (Проекты)"  
+    "modissueslist": "Завдання (Проекты)"  ,
+    "noselpart": "Не обрана  партiя"  ,    
+    "thesamestock": "Однаковi партiї"  ,    
+    "diffitem": "Рiзнi  ТМЦ" ,
+    "stpp_new": "Новий",    
+    "stpp_inprocess": "Выконуєтся",    
+    "stpp_stopped": "Призупинений",    
+    "stpp_finished": "Виконаний",    
+    "stpp_canceled": "Скасований",     
+    "noselparea": "Не вибрано виробничу дiльницю"  ,   
+    "stpp_intersect_this": "Iнтервал перетинаєтся з iснуючим для цього етапу",
+    "stpp_intersect_other": "Iнтервал перетинаєтся з iснуючим на цiй дiлянцi для iншого етапу" 
+    
 }

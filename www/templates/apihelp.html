@@ -161,13 +161,14 @@
                                 <br> customer_name - наименование, обязательное поле
                                 <br> phone - телефон, рекомендуется вводить в виде 10 цифр
                                 <br> email - email
+                                <br> type - тип 0- не задан,1-покупатель,2-поставщик
                                 <br> city - город
                                 <br> address - адрес
                                 <br> desсription - описание, кодированное в base64
                             </td>
 
                             <td> {"customer_id":"8","customer_name":"\"ООО
-                                Вектор2\"","phone":"0991111111","email":"test@ukr.net","city":"","address":""}
+                                Вектор2\"","phone":"0991111111","type":0,"email":"test@ukr.net","city":"","address":""}
                             </td>
                             <td>Если customer_id больше нуля то контрагент перезаписывается, если равно нулю или отсутствует то
                                 создается новый.
@@ -292,6 +293,7 @@
                                 <br> quantity - количество
                                 <br> price - цена
                             </td>
+                       
                        <tr>
                             <td class="  text-bold">Оприходование  ТМЦ</td>
                             <td>/api/docs</td>
@@ -335,6 +337,71 @@
                                 экспортирован.
                             </td>
                         </tr>
+                       <tr>
+                            <td class="  text-bold">Список работ и услуг</td>
+                            <td>/api/items</td>
+                            <td>servicelist</td>
+                            <td class="text-nowrap"></td>
+                            <td></td>
+                            <td>
+                            </td>
+                        </tr>
+               <tr>
+                            <td class="  text-bold">Создание акта  выполненых работ</td>
+                            <td>/api/docs</td>
+                            <td>serviceact</td>
+                            <td class="text-nowrap">number - номер документа. Уникальное значение 
+                                экспортирующей системы. Обязательное поле
+                                <br> mf - каcса  или  банковский  счет
+                                <br> branch_id - филиал, если включено
+                                <br> customer_id - контрагент
+                                <br> device - изделие  заказчика
+                              
+                                <br> autoexec - true, если  отправляется  на  выполнение
+                                <br> total - итого по документу которое к оплате. На случай если отличается от итогов по
+                                позициям (например изза скидки)
+                                <br> payed - внесена сумма  оплаты.
+                                <br> items - список позиций
+                                <br> service_id - id 
+                                <br> quantity - количество
+                                <br> price - цена
+                            </td>
+                            <td>
+                                {"number":"ID0001", "customer_id":8,"mf":2,"total":220,"payed":220,"items":[{"service_id":"5","quantity":2,"price":234} ]
+                                }
+                            </td>
+                            <td></td>
+                        </tr>
+                                
+                        <tr>
+                            <td class="  text-bold">Список производственных участков</td>
+                            <td>/api/common</td>
+                            <td>parealist</td>
+                            <td class="text-nowrap"></td>
+                            <td></td>
+                            <td>
+                            </td>
+                        </tr>
+                           <tr>
+                            <td class="  text-bold">Список компаний</td>
+                            <td>/api/common</td>
+                            <td>firmlist</td>
+                            <td class="text-nowrap"></td>
+                            <td></td>
+                            <td>
+                            </td>
+                        </tr>
+                            <tr>
+                            <td class="  text-bold">Источники  продаж</td>
+                            <td>/api/common</td>
+                            <td>sourcelist</td>
+                            <td class="text-nowrap"></td>
+                            <td></td>
+                            <td>
+                            </td>
+                        </tr>
+                     
+                   
                     </table>
                     <h4>Коды ошибок</h4>
                     <table class="table table-sm" style="width:400px;">

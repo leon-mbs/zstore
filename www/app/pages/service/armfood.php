@@ -457,7 +457,7 @@ class ARMFood extends \App\Pages\Base
             $item->myself = 0;
         }
         $this->_itemlist[$item->item_id] = $item;
- 
+
 
         $this->docpanel->listsform->itemlist->Reload();
         $this->calcTotal();
@@ -480,13 +480,13 @@ class ARMFood extends \App\Pages\Base
         $row->add(new ClickLink('qtymin'))->onClick($this, 'onQtyClick');
         $row->add(new ClickLink('qtyplus'))->onClick($this, 'onQtyClick');
         $row->add(new ClickLink('removeitem'))->onClick($this, 'onDelItemClick');
-        if($item->foodstate==1) {
-           $row->removeitem->setVisible(false);   
-           $row->myselfon->setVisible(false);   
-           $row->myselfoff->setVisible(false);   
-           $row->qtymin->setVisible(false);   
-           $row->qtyplus->setVisible(false);   
-           $row->removeitem->setVisible(false);   
+        if ($item->foodstate == 1) {
+            $row->removeitem->setVisible(false);
+            $row->myselfon->setVisible(false);
+            $row->myselfoff->setVisible(false);
+            $row->qtymin->setVisible(false);
+            $row->qtyplus->setVisible(false);
+            $row->removeitem->setVisible(false);
         }
     }
 
@@ -522,7 +522,7 @@ class ARMFood extends \App\Pages\Base
 
 
     public function OnDocViewClick($sender) {
-        
+
         $this->_doc = Document::load($sender->getOwner()->getDataItem()->document_id);
         $this->OnDocView();
 
@@ -618,9 +618,9 @@ class ARMFood extends \App\Pages\Base
             $this->docpanel->payform->clean();
             $amount = $this->_doc->payamount;
             $this->docpanel->payform->pfamount->setText(H::fa($amount));
-            $disc=0;
+            $disc = 0;
             if ($this->_doc->customer_id > 0) {
-                $customer = \App\Entity\Customer::load($this->_doc->customer_id) ;
+                $customer = \App\Entity\Customer::load($this->_doc->customer_id);
                 if ($customer->discount > 0) {
                     $disc = round($amount * ($customer->discount / 100));
                 } else {
@@ -633,11 +633,11 @@ class ARMFood extends \App\Pages\Base
                         }
                     }
                 }
-                
+
             }
-        
+
             $this->docpanel->payform->pfdisc->setText(H::fa($disc));
-            $this->docpanel->payform->pfforpay->setText(H::fa($amount-$disc));
+            $this->docpanel->payform->pfforpay->setText(H::fa($amount - $disc));
             //  $this->docpanel->payform->pfpayed->setText(H::fa($amount))  ;
             $this->docpanel->payform->pfrest->setText(H::fa(0));
             $this->docpanel->payform->bbackitems->setVisible(false);
@@ -705,7 +705,7 @@ class ARMFood extends \App\Pages\Base
             $n = new \App\Entity\Notify();
             $n->user_id = \App\Entity\Notify::DELIV;
             $n->dateshow = time();
-            $n->message = serialize(array('document_id'=>$this->_doc->document_id)) ;
+            $n->message = serialize(array('document_id' => $this->_doc->document_id));
 
             $n->save();
             $this->setInfo('sentdelivary');
@@ -715,7 +715,7 @@ class ARMFood extends \App\Pages\Base
             $n = new \App\Entity\Notify();
             $n->user_id = \App\Entity\Notify::ARMFOODPROD;
             $n->dateshow = time();
-            $n->message = serialize(array('cmd'=>'new', 'document_id'=>$this->_doc->document_id)) ;
+            $n->message = serialize(array('cmd' => 'new', 'document_id' => $this->_doc->document_id));
 
             $n->save();
 
@@ -729,29 +729,29 @@ class ARMFood extends \App\Pages\Base
     // в  производство
     public function toprodOnClick($sender) {
 
- 
+
         $this->createdoc();
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         //списываем  со  склада
-   
+
         try {
-            if($this->_doc->state==Document::STATE_INPROCESS){
-                  $conn = \ZDB\DB::getConnect();
-                  $conn->Execute("delete from entrylist where document_id =" . $this->_doc->document_id);
-                  $conn->Execute("delete from iostate where document_id=" . $this->_doc->document_id);
-  
+            if ($this->_doc->state == Document::STATE_INPROCESS) {
+                $conn = \ZDB\DB::getConnect();
+                $conn->Execute("delete from entrylist where document_id =" . $this->_doc->document_id);
+                $conn->Execute("delete from iostate where document_id=" . $this->_doc->document_id);
+
                 $n = new \App\Entity\Notify();
                 $n->user_id = \App\Entity\Notify::ARMFOODPROD;
                 $n->dateshow = time();
-              
-                $n->message = serialize(array('cmd'=>'update')) ;
-                 
-           
+
+                $n->message = serialize(array('cmd' => 'update'));
+
+
                 $n->save();
             }
-            
+
             $this->_doc->DoStore();
             $this->_doc->save();
             $this->_doc->updateStatus(Document::STATE_INPROCESS);
@@ -766,8 +766,6 @@ class ARMFood extends \App\Pages\Base
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
             return;
         }
-
-      
 
 
         $this->setInfo('sentprod');
@@ -789,29 +787,28 @@ class ARMFood extends \App\Pages\Base
 
         $amount = $this->docpanel->listsform->totalamount->getText();
         $this->docpanel->payform->pfamount->setText(H::fa($amount));
-        $disc=0;
+        $disc = 0;
         if ($this->_doc->customer_id > 0) {
-                $customer = \App\Entity\Customer::load($this->_doc->customer_id) ;
-                if ($customer->discount > 0) {
-                    $disc = round($amount * ($customer->discount / 100));
-                } else {
-                    $bonus = $customer->getBonus();
-                    if ($bonus > 0) {
-                        if ($amount >= $bonus) {
-                            $disc = $bonus;
-                        } else {
-                            $disc = $amount;
-                        }
+            $customer = \App\Entity\Customer::load($this->_doc->customer_id);
+            if ($customer->discount > 0) {
+                $disc = round($amount * ($customer->discount / 100));
+            } else {
+                $bonus = $customer->getBonus();
+                if ($bonus > 0) {
+                    if ($amount >= $bonus) {
+                        $disc = $bonus;
+                    } else {
+                        $disc = $amount;
                     }
                 }
-                
-            
+            }
+
+
         }
-         
-        
-        
+
+
         $this->docpanel->payform->pfdisc->setText(H::fa($disc));
-        $this->docpanel->payform->pfforpay->setText(H::fa($amount-$disc));
+        $this->docpanel->payform->pfforpay->setText(H::fa($amount - $disc));
         //  $this->docpanel->payform->pfpayed->setText(H::fa($amount))  ;
         $this->docpanel->payform->pfrest->setText(H::fa(0));
         $this->docpanel->payform->bbackitems->setVisible(true);
@@ -1040,10 +1037,10 @@ class ARMFood extends \App\Pages\Base
         $cntprod = 0;
         $mlist = \App\Entity\Notify::find("checked <> 1 and user_id=" . \App\Entity\Notify::ARMFOOD);
         foreach ($mlist as $n) {
-            $msg  = @unserialize($n->message)  ;
-            
+            $msg = @unserialize($n->message);
+
             $doc = Document::load(intval($msg['document_id']));
-            if ($doc->state == Document::STATE_FINISHED || $doc->state == Document::STATE_CLOSED ) {
+            if ($doc->state == Document::STATE_FINISHED || $doc->state == Document::STATE_CLOSED) {
                 $cntprod++;
             }
             if ($doc->state == Document::STATE_NEW) {

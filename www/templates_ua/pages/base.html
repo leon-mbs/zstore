@@ -916,6 +916,7 @@ icon: 'fa fa-exclamation-triangle text-warning',
                          
                      toastr.success('Вiдправлено','',{'timeOut':'2000'})     
                     
+         
                 } )
             }
             function openSendMsg(id,name){
@@ -924,7 +925,7 @@ icon: 'fa fa-exclamation-triangle text-warning',
               $('#modalsendmsg').modal('show')  
               $('#sendmsgrecname').val(name)  
               $('#sendmsgrecid').val(id)  
-              $('#sendmsgtext').text('')  
+              $('#sendmsgtext').val('')  
             }
             
              function  _getValue(id){

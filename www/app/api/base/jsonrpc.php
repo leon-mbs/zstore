@@ -49,6 +49,7 @@ abstract class JsonRPC
         $api = \App\System::getOptions('api');
         $user = null;;
 
+
         if (\App\System::getUser()->user_id > 0) {   //вызов с  сайта
 
             return;
@@ -61,7 +62,9 @@ abstract class JsonRPC
             $jwt = "";
             $headers = apache_request_headers();
             foreach ($headers as $header => $value) {
-                if ($header == "Authorization") {
+
+                    
+                if ( strtolower($header) == "authorization") {
                     $jwt = str_replace("Bearer ", "", $value);
                     $jwt = trim($jwt);
                     break;
@@ -116,9 +119,13 @@ abstract class JsonRPC
         if (count($input) === 0) {
             return self::requestError();
         }
-        $result = $this->checkAcess();
-        if (is_array($result)) {
-            return $result;
+
+        if (!in_array($input['method'], array('token', 'checkapi'))) {
+            $result = $this->checkAcess();
+            if (is_array($result)) {
+                return $result;
+            }
+
         }
 
 

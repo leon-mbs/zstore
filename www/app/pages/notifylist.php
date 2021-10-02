@@ -43,8 +43,6 @@ class NotifyList extends \App\Pages\Base
         \App\Entity\Notify::markRead($user->user_id);
 
 
-    
-
     }
 
     public function OnRow($row) {
@@ -52,7 +50,7 @@ class NotifyList extends \App\Pages\Base
 
         $row->add(new Label("sender"));
         $row->add(new Label("sendericon"));
-        $sender_name=$this->users[$notify->sender_id] ;
+        $sender_name = $this->users[$notify->sender_id];
         if ($notify->sender_id > 0) {
             $row->sender->setText($sender_name);
             $row->sendericon->setAttribute('class', 'fa fa-user');
@@ -76,9 +74,9 @@ class NotifyList extends \App\Pages\Base
         $row->add(new Label("ndate", \App\Helper::fdt($notify->dateshow)));
         $row->add(new Label("newn"))->setVisible($notify->checked == 0);
         $row->add(new Label("nanswer"))->setVisible($notify->sender_id > 0);
-        $row->nanswer->setAttribute('onclick',"openSendMsg({$notify->sender_id},'{$sender_name}')");
-        
-        
+        $row->nanswer->setAttribute('onclick', "openSendMsg({$notify->sender_id},'{$sender_name}')");
+
+
     }
 
     public function filterOnSubmit($sender) {
@@ -94,5 +92,5 @@ class NotifyList extends \App\Pages\Base
         $this->nlist->Reload();
     }
 
-   
+
 }

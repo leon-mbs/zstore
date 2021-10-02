@@ -38,19 +38,19 @@ class Application extends \Zippy\WebApplication
             throw new \Exception('Invalid template path: ' . $path);
         }
         $template = @file_get_contents($path);
-        
-        if(strpos($name,"CalcSalary")>0) {  //костыль для  заплат
-            $inputs=""; 
-            
-            foreach( \App\Entity\SalType::find("disabled<>1","salcode") as $c=>$n ) {
-               $inputs .= "<td><input class=\"form-control\" style=\"width:85px\" zippy=\"v{$n->salcode}\"  pattern=\"[0-9\\.]+\"  ></td>" ;     
+
+        if (strpos($name, "CalcSalary") > 0) {  //костыль для  заплат
+            $inputs = "";
+
+            foreach (\App\Entity\SalType::find("disabled<>1", "salcode") as $c => $n) {
+                $inputs .= "<td><input class=\"form-control\" style=\"width:85px\" zippy=\"v{$n->salcode}\"  pattern=\"[0-9\\.]+\"  ></td>";
             }
-           
-            
-           $template = str_replace("<templateinputs/>",$inputs,$template) ;    
+
+
+            $template = str_replace("<templateinputs/>", $inputs, $template);
         }
-        
-        
+
+
         return $template;
     }
 
@@ -123,10 +123,10 @@ class Application extends \Zippy\WebApplication
             "admin"    => "\\App\\Pages\\Main",
             "shop"     => "\\App\\Modules\\Shop\\Pages\\Main",
             "sp"       => "\\App\\Modules\\Shop\\Pages\\ProductView",
-            "aboutus"  => "\\App\\Modules\\Shop\\Pages\\AboutUs",
-            "delivery" => "\\App\\Modules\\Shop\\Pages\\Delivery",
-            "contact"  => "\\App\\Modules\\Shop\\Pages\\Contact",
-            "news"     => "\\App\\Modules\\Shop\\Pages\\News",
+         //   "aboutus"  => "\\App\\Modules\\Shop\\Pages\\AboutUs",
+         //   "delivery" => "\\App\\Modules\\Shop\\Pages\\Delivery",
+        //    "contact"  => "\\App\\Modules\\Shop\\Pages\\Contact",
+        //    "news"     => "\\App\\Modules\\Shop\\Pages\\News",
             "scat"     => "\\App\\Modules\\Shop\\Pages\\Main",
             "pcat"     => "\\App\\Modules\\Shop\\Pages\\Catalog",
             "project"  => "\\App\\Modules\\Issue\\Pages\\ProjectList",
@@ -153,7 +153,14 @@ class Application extends \Zippy\WebApplication
             return;
         }
 
-
+        //кастомные страницы  в онлайн каталогк
+        $shoppages =      \App\Modules\Shop\Helper::getPages() ;
+        
+        if ( in_array($uri,$shoppages)  ) {
+            self::$app->LoadPage("\\App\\Modules\\Shop\\Pages\\CustomPage",$uri);
+            return;
+        }      
+        //товары в онлайн каталоге
         $prod = \App\Modules\Shop\Entity\Product::loadSEF($uri);
         if ($prod instanceof \App\Entity\Item) {
             self::$app->LoadPage($pages['sp'], $prod->item_id);

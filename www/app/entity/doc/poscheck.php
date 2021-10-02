@@ -52,10 +52,10 @@ class POSCheck extends Document
         $common = System::getOptions('common');
 
         $firm = H::getFirmData($this->firm_id);
-       $printer = System::getOptions('printer');
- 
+        $printer = System::getOptions('printer');
+
         $style = "";
-        if (  strlen($printer['pa4width']) > 0) {
+        if (strlen($printer['pa4width']) > 0) {
             $style = 'style=" width:' . $printer['pa4width'] . ';"';
 
         }
@@ -63,8 +63,8 @@ class POSCheck extends Document
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
                         "firm_name"       => $firm["firm_name"],
-                         "style"         => $style,
-                       "shopname"        => $common["shopname"],
+                        "style"           => $style,
+                        "shopname"        => $common["shopname"],
                         "address"         => $firm["address"],
                         "phone"           => $firm["phone"],
                         "inn"             => $firm["inn"],
@@ -160,7 +160,7 @@ class POSCheck extends Document
 
 
         foreach ($this->unpackDetails('detaildata') as $item) {
- 
+
 
             //оприходуем  с  производства
             if ($item->autoincome == 1 && $item->item_type == Item::TYPE_PROD) {
@@ -195,12 +195,12 @@ class POSCheck extends Document
 
                 $sc->save();
             }
- 
+
             if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
                 throw new \Exception(\App\Helper::l("nominus", $item->quantity, $item->itemname));
             }
 
- 
+
             $k = 1;   //учитываем  скидку
             if ($this->headerdata["paydisc"] > 0 && $this->amount > 0) {
                 $k = ($this->amount - $this->headerdata["paydisc"]) / $this->amount;

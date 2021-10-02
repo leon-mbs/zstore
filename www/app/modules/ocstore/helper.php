@@ -49,7 +49,7 @@ class Helper
             return false;
         }
         $data = json_decode($result, true);
-        if ($data == null) {
+        if ($data === null) {
             if (strlen($result) > 0) {
                 \App\System::setErrorMsg($result);
             } else {
@@ -65,10 +65,10 @@ class Helper
         return $result;
     }
 
-    
-    public static function connect(){
+
+    public static function connect() {
         $modules = System::getOptions("modules");
- 
+
 
         $site = $modules['ocsite'];
         $apiname = $modules['ocapiname'];
@@ -91,8 +91,8 @@ class Helper
         }
 
         $data = json_decode($json, true);
-        if ($data == null) {
-           System::setErrorMsg($json);
+        if ($data === null) {
+            System::setErrorMsg($json);
             return;
         }
         if (is_array($data) && count($data) == 0) {
@@ -102,10 +102,10 @@ class Helper
         }
 
         if (is_array($data['error'])) {
-           System::setErrorMsg(implode(' ', $data['error']));
+            System::setErrorMsg(implode(' ', $data['error']));
         } else {
             if (strlen($data['error']) > 0) {
-               System::setErrorMsg($data['error']);
+                System::setErrorMsg($data['error']);
             }
         }
 
@@ -118,8 +118,8 @@ class Helper
                 System::getSession()->octoken = "token=" . $data['token'];
             }
 
-            
-            System::setSuccessMsg( H::l('connected'));
+
+            System::setSuccessMsg(H::l('connected'));
 
             //загружаем список статусов
             $url = $site . '/index.php?route=api/zstore/statuses&' . System::getSession()->octoken;
@@ -146,5 +146,5 @@ class Helper
         }
 
     }
-    
+
 }

@@ -174,7 +174,7 @@ class OutcomeItem extends \App\Pages\Base
 
             if (in_array($item->snumber, $slist) == false) {
                 $this->setError('invalid_serialno');
-                 return;
+                return;
             }
         }
 

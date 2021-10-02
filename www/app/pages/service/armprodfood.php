@@ -107,23 +107,23 @@ class ArmProdFood extends \App\Pages\Base
                 $n = new \App\Entity\Notify();
                 $n->user_id = \App\Entity\Notify::DELIV;
                 $n->dateshow = time();
-           
-                $n->message = serialize(array('document_id'=>$doc->document_id)) ;
+
+                $n->message = serialize(array('document_id' => $doc->document_id));
 
                 $n->save();
             } else {
                 $n = new \App\Entity\Notify();
                 $n->user_id = \App\Entity\Notify::ARMFOOD;
                 $n->dateshow = time();
-           
-                $n->message = serialize(array('document_id'=>$doc->document_id)) ;
+
+                $n->message = serialize(array('document_id' => $doc->document_id));
 
                 $n->save();
-                
+
                 if ($doc->payed > 0) {
                     $doc->updateStatus(Document::STATE_CLOSED);
                 }
-            
+
             }
 
         }
@@ -133,32 +133,32 @@ class ArmProdFood extends \App\Pages\Base
     public function getMessages($args, $post) {
 
         $text = '';
-        $cnt =0;
-     
+        $cnt = 0;
+
         $mlist = \App\Entity\Notify::find("checked <> 1 and user_id=" . \App\Entity\Notify::ARMFOODPROD);
         foreach ($mlist as $n) {
-            $msg  = @unserialize($n->message)  ;
-            
-            if($msg['cmd']=='update') {
-                 $n->checked = 1;
-                 $n->save();
-                 return json_encode(array("update" => true ), JSON_UNESCAPED_UNICODE);
+            $msg = @unserialize($n->message);
+
+            if ($msg['cmd'] == 'update') {
+                $n->checked = 1;
+                $n->save();
+                return json_encode(array("update" => true), JSON_UNESCAPED_UNICODE);
             }
-            
+
             $doc = Document::load(intval($msg['document_id']));
-        
-            
-            if($msg['cmd']=='new') {
+
+
+            if ($msg['cmd'] == 'new') {
                 if ($doc->state == Document::STATE_INPROCESS) {
                     $cnt++;
                 }
-                 
+
             }
         }
-         
+
         \App\Entity\Notify::markRead(\App\Entity\Notify::ARMFOODPROD);
 
-        return json_encode(array("cnt" => $cnt ), JSON_UNESCAPED_UNICODE);
+        return json_encode(array("cnt" => $cnt), JSON_UNESCAPED_UNICODE);
     }
 
 

@@ -19,15 +19,19 @@ use App\Util;
  */
 class Main extends Base
 {
+    private $_docstatelist;
 
     public function __construct() {
         parent::__construct();
 
         $user = System::getUser();
 
+        $this->_docstatelist = \App\Entity\Doc\Document::getStateList();
+
         $this->_tvars['wminqty'] = strpos(System::getUser()->widgets, 'wminqty') !== false;
         $this->_tvars['wsdate'] = strpos(System::getUser()->widgets, 'wsdate') !== false;
         $this->_tvars['wrdoc'] = strpos(System::getUser()->widgets, 'wrdoc') !== false;
+        $this->_tvars['wmdoc'] = strpos(System::getUser()->widgets, 'wmdoc') !== false;
         $this->_tvars['winfo'] = strpos(System::getUser()->widgets, 'winfo') !== false;
         $this->_tvars['wgraph'] = strpos(System::getUser()->widgets, 'wgraph') !== false;
         if ($user->rolename == 'admins') {
@@ -35,6 +39,7 @@ class Main extends Base
 
             $this->_tvars['wsdate'] = true;
             $this->_tvars['wrdoc'] = true;
+            $this->_tvars['wmdoc'] = true;
             $this->_tvars['winfo'] = true;
             $this->_tvars['wgraph'] = true;
         }
@@ -104,7 +109,10 @@ class Main extends Base
         if ($this->_tvars['wrdoc'] == true) {
             $data = array();
 
-            $sql = "select  distinct d.document_id,d.meta_desc,d.document_number,d.document_date,d.amount from docstatelog_view l join documents_view d  on l.document_id= d.document_id where  1=1 {$br}  and  l.user_id={$user->user_id} and l.createdon > " . $conn->DBDate(strtotime("-1 month", time())) . " order  by  document_id desc  limit  0,25";
+            $sql = "SELECT u.username,d.document_number,d.amount,d.meta_desc,d.state,l.md  FROM (SELECT     document_id,user_id,MAX(createdon) AS md from docstatelog where  1=1 {$br} and createdon >  " . $conn->DBDate(strtotime("-1 week", time())) . " GROUP BY document_id,user_id      ) l 
+                      join documents_view d  on l.document_id= d.document_id  
+                      join users_view u  on l.user_id= u.user_id  ORDER  BY  md desc";
+
 
             $rc = $conn->Execute($sql);
 
@@ -123,12 +131,34 @@ class Main extends Base
             $doclist->Reload();
         }
 
+        //мои  документы
+        if ($this->_tvars['wmdoc'] == true) {
+            $data = array();
+
+            $sql = "select    d.document_id,d.meta_desc,d.document_number,d.document_date,d.amount from   documents_view d  where 1=1   {$br}  and  d.user_id={$user->user_id}   order  by  document_id desc  limit  0,25";
+
+            $rc = $conn->Execute($sql);
+
+            foreach ($rc as $row) {
+                $data[] = new \App\DataItem($row);
+            }
+            if (count($data) == 0) {
+                $this->_tvars['wmdoc'] = false;
+            }
+            $this->add(new ClickLink('mdcsv', $this, 'onMDcsv'));
+
+            $doclist = $this->add(new DataView('mdoclist', new ArrayDataSource($data), $this, 'mdoclistOnRow'));
+            $doclist->setPageSize(10);
+            $this->add(new Paginator("wmpag", $doclist));
+
+            $doclist->Reload();
+        }
 
         //структура  доходов  и расходов
         $dt = new \App\DateTime();
-     
+
         $to = $dt->startOfMonth()->getTimestamp();
-        $dt=$dt->subMonth(3);
+        $dt = $dt->subMonth(3);
         $from = $dt->startOfMonth()->getTimestamp();
 
         $names = \App\Entity\IOState::getTypeList();
@@ -248,10 +278,10 @@ class Main extends Base
         $this->_tvars['biorders'] = $conn->GetOne($sql);
 
         $sql = " select coalesce(sum(partion*qty),0) as cnt  from  store_stock_view  where {$cstr} qty >0  and item_id in (select item_id from items where disabled<>1 )                     ";
-        
+
         $this->_tvars['biitemscnt'] = H::fa($conn->GetOne($sql));
 
-        
+
         $sql = "select coalesce(  sum(case when   meta_name='OutcomeMoney' then  (payed - payamount )   else  (payamount - payed)  end) ,0) as sam 
             from `documents_view` d  
             where     (payamount >0  or  payed >0) {$br} and
@@ -268,15 +298,15 @@ class Main extends Base
                   and state > 3  and (payamount >0  or  payed >0)   and payamount <> payed  
             ";
 
-       $this->_tvars['bicredit'] = H::fa($conn->GetOne($sql));
-       
-       $sql = "select coalesce(sum(amount),0)  from paylist where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail like '%<beznal>0</beznal>%' )";
-          
-       $this->_tvars['binal'] = H::fa($conn->GetOne($sql));
-       $sql = "select coalesce(sum(amount),0)  from paylist where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail like '%<beznal>1</beznal>%' )";
-       $this->_tvars['bibeznal'] = H::fa($conn->GetOne($sql));
-          
-        
+        $this->_tvars['bicredit'] = H::fa($conn->GetOne($sql));
+
+        $sql = "select coalesce(sum(amount),0)  from paylist where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail not like '%<beznal>1</beznal>%' )";
+
+        $this->_tvars['binal'] = H::fa($conn->GetOne($sql));
+        $sql = "select coalesce(sum(amount),0)  from paylist where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail like '%<beznal>1</beznal>%' )";
+        $this->_tvars['bibeznal'] = H::fa($conn->GetOne($sql));
+
+
     }
 
     public function sdlistOnRow($row) {
@@ -306,18 +336,37 @@ class Main extends Base
     public function rdoclistOnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new Label('wrd_date', \App\Helper::fd(strtotime($item->document_date))));
+        $row->add(new Label('wrd_date', \App\Helper::fd(strtotime($item->md))));
         $row->add(new Label('wrd_type', $item->meta_desc));
+        $row->add(new Label('wrd_state', $this->_docstatelist[$item->state]));
+        $row->add(new Label('wrd_user', $item->username));
         $row->add(new Label('wrd_amount', H::fa($item->amount)));
+
         $row->add(new \Zippy\Html\Link\RedirectLink("wrd_number", "\\App\\Pages\\Register\\DocList", $item->document_id))->setValue($item->document_number);
     }
 
+    public function mdoclistOnRow($row) {
+        $item = $row->getDataItem();
+
+        $row->add(new Label('wmd_date', \App\Helper::fd(strtotime($item->document_date))));
+        $row->add(new Label('wmd_type', $item->meta_desc));
+        $row->add(new Label('wmd_amount', H::fa($item->amount)));
+        $row->add(new \Zippy\Html\Link\RedirectLink("wmd_number", "\\App\\Pages\\Register\\DocList", $item->document_id))->setValue($item->document_number);
+    }
+
     public function onRDcsv($sender) {
+        $br = '';
+        $brids = \App\ACL::getBranchIDsConstraint();
+        if (strlen($brids) > 0) {
+            $br = " and d.branch_id in ({$brids}) ";
+        }
+
         $data = array();
         $conn = $conn = \ZDB\DB::getConnect();
-        $user = System::getUser();
 
-        $sql = "select  distinct d.document_id,d.meta_desc,d.document_number,d.document_date,d.amount from docstatelog_view l join documents_view d  on l.document_id= d.document_id where  1=1 {$br}  and  l.user_id={$user->user_id} and l.createdon > " . $conn->DBDate(strtotime("-1 month", time())) . " limit  0,100";
+        $sql = "SELECT u.username,d.document_number,d.amount,d.meta_desc,d.state,l.md  FROM (SELECT     document_id,user_id,MAX(createdon) AS md from docstatelog where  1=1 {$br} and createdon >  " . $conn->DBDate(strtotime("-1 week", time())) . " GROUP BY document_id,user_id      ) l 
+                      join documents_view d  on l.document_id= d.document_id  
+                      join users_view u  on l.user_id= u.user_id  ORDER  BY  md desc";
 
         $rc = $conn->Execute($sql);
 
@@ -327,12 +376,45 @@ class Main extends Base
         $i = 0;
         foreach ($rc as $row) {
             $i++;
-            $data['A' . $i] = \App\Helper::fd(strtotime($row['document_date']));
+            $data['A' . $i] = $row['document_number'];
             $data['B' . $i] = $row['meta_desc'];
-            $data['C' . $i] = array('value' => H::fa($row['amount']), 'format' => 'number');
+            $data['C' . $i] = $this->_docstatelist[$row['state']];
+            $data['D' . $i] = array('value' => H::fa($row['amount']), 'format' => 'number');
+            $data['E' . $i] = $row['username'];
+            $data['F' . $i] = \App\Helper::fd(strtotime($row['md']));
         }
 
         H::exportExcel($data, $header, 'recentlydoc.xlsx');
+    }
+
+    public function onMDcsv($sender) {
+        $br = '';
+        $brids = \App\ACL::getBranchIDsConstraint();
+        if (strlen($brids) > 0) {
+            $br = " and d.branch_id in ({$brids}) ";
+        }
+
+        $data = array();
+        $conn = $conn = \ZDB\DB::getConnect();
+        $user = System::getUser();
+
+        $sql = "select    d.document_id,d.meta_desc,d.document_number,d.document_date,d.amount from   documents_view d  where 1=1   {$br}  and  d.user_id={$user->user_id}   order  by  document_id desc  limit  0,25";
+
+        $rc = $conn->Execute($sql);
+
+        $header = array();
+        $data = array();
+
+        $i = 0;
+        foreach ($rc as $row) {
+            $i++;
+            $data['A' . $i] = $row['document_number'];
+            $data['B' . $i] = \App\Helper::fd(strtotime($row['document_date']));
+            $data['C' . $i] = $row['meta_desc'];
+            $data['D' . $i] = array('value' => H::fa($row['amount']), 'format' => 'number');
+        }
+
+        H::exportExcel($data, $header, 'mydoc.xlsx');
     }
 
     public function onSDcsv($sender) {

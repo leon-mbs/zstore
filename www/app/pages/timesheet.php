@@ -50,7 +50,7 @@ class TimeSheet extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('emp', $list, $def));
 
         $dt = new \App\DateTime();
-     
+
         $from = $dt->startOfMonth()->getTimestamp();
         $to = $dt->endOfMonth()->getTimestamp();
 

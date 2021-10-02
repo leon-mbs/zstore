@@ -59,7 +59,7 @@ class Invoice extends \App\Pages\Base
 
         $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
 
-        $this->docform->add(new Label('discount')) ;
+        $this->docform->add(new Label('discount'));
         $this->docform->add(new TextInput('editpaydisc'));
         $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
         $this->docform->add(new Label('paydisc', 0));
@@ -370,7 +370,7 @@ class Invoice extends \App\Pages\Base
         $this->_doc->customer_id = $this->docform->customer->getKey();
         if ($this->_doc->customer_id > 0) {
             $customer = Customer::load($this->_doc->customer_id);
-            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
+            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         }
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
 
@@ -564,7 +564,7 @@ class Invoice extends \App\Pages\Base
     }
 
     public function OnAutoCustomer($sender) {
-        return Customer::getList($sender->getText(), 1);
+        return Customer::getList($sender->getText(), 0, true);
     }
 
     public function OnChangeServive($sender) {
@@ -583,19 +583,22 @@ class Invoice extends \App\Pages\Base
 
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
-            $cust = Customer::load($customer_id) ;
-            
-            $disctext="";
+            $cust = Customer::load($customer_id);
+            if (strlen($cust->pricetype) > 4) {
+                $this->docform->pricetype->setValue($cust->pricetype);
+            }
+
+            $disctext = "";
             if (doubleval($cust->discount) > 0) {
-               $disctext   = H::l("custdisc")." {$cust->discount}%";
-            }  else {
-               $bonus = $cust->getBonus();
-               if($bonus>0) {
-                  $disctext   = H::l("custbonus")." {$bonus} ";    
-               }
-           }        
-           $this->docform->discount->setText($disctext); 
-           $this->docform->discount->setVisible(true);
+                $disctext = H::l("custdisc") . " {$cust->discount}%";
+            } else {
+                $bonus = $cust->getBonus();
+                if ($bonus > 0) {
+                    $disctext = H::l("custbonus") . " {$bonus} ";
+                }
+            }
+            $this->docform->discount->setText($disctext);
+            $this->docform->discount->setVisible(true);
 
         }
 

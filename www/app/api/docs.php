@@ -30,12 +30,6 @@ class docs extends \App\API\Base\JsonRPC
         return $list;
     }
 
-    //список  производственных участвков
-    public function parealist() {
-        $list = \App\Entity\ProdArea::findArray('pa_name', '', 'pa_name');
-
-        return $list;
-    }
 
     //записать заказ
     public function createorder($args) {
@@ -209,7 +203,7 @@ class docs extends \App\API\Base\JsonRPC
         return $doc->document_number;
     }
 
-    //записать расходную накдадную
+    //записать расходную накладную
     public function goodsissue($args) {
 
         if (strlen($args['number']) == 0) {
@@ -558,5 +552,81 @@ class docs extends \App\API\Base\JsonRPC
         return $doc->document_number;
     }
 
+    //записать акт выполненых работ
+    public function serviceact($args) {
+
+        if (strlen($args['number']) == 0) {
+            throw new \Exception(H::l("apinumber"));  //не задан  номер
+        }
+        $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
+        $num2 = Document::qstr("%<apinumber><![CDATA[{$args['number']}]]></apinumber>%");
+        $doc = Document::getFirst("  content   like  {$num1} or  content   like  {$num2}  ");
+        if ($doc != null) {
+            throw new \Exception(H::l("apinumberexists", $args['number']));   //номер уже  существует
+        }
+        $doc = Document::create('ServiceAct');
+        if ($args['customer_id'] > 0) {
+            $c = \App\Entity\Customer::load($args['customer_id']);
+            if ($c == null) {
+                throw new \Exception(H::l("apicustnotfound"));
+            } else {
+                $doc->customer_id = $args['customer_id'];
+                $doc->headerdata['customer_name'] = $c->customer_name;
+            }
+        }
+
+
+        $doc->document_number = $doc->nextNumber();
+        $doc->document_date = time();
+        $doc->state = Document::STATE_NEW;
+        $doc->headerdata["apinumber"] = $args['number'];
+        $doc->headerdata["payment"] = $args['mf'];
+        $doc->headerdata["device"] = $args['device'];
+
+
+        //    $doc->notes = @base64_decode($args['description']);
+        $details = array();
+        $total = 0;
+
+        if (is_array($args['items']) && count($args['items']) > 0) {
+            foreach ($args['items'] as $it) {
+
+                $item = \App\Entity\Service::load($it['service_id']));
+
+                if ($item instanceof \App\Entity\Service) {
+
+                    $item->quantity = $it['quantity'];
+                    $item->price = $it['price'];
+                    $item->amount = $item->quantity * $item->price;
+                    $total = $total + $item->quantity * $item->price;
+                    $details[$item->service_id] = $item;
+                } else {
+                    throw new \Exception(H::l("apiitemnotfound", $it['service_id']));
+                }
+            }
+        } else {
+            throw new \Exception(H::l("apinoitems"));
+        }
+        if (count($details) == 0) {
+            throw new \Exception(H::l("apinoitems"));
+        }
+        $doc->packDetails('detaildata', $details);
+        if ($args['total'] > 0) {
+            $doc->amount = $args['total'];
+        } else {
+            $doc->amount = $total;
+        }
+
+        $doc->payamount = $doc->amount;
+        $doc->payed = $args["payed"];
+
+        $doc->save();
+        if ($args["autoexec"] == true) {
+            $doc->updateStatus(Document::STATE_INPROCESS);
+        }
+
+
+        return $doc->document_number;
+    }
 
 }

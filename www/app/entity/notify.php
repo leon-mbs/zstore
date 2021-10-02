@@ -17,7 +17,7 @@ class Notify extends \ZCL\DB\Entity
     const EVENT       = -5;  //напоминание о событии
     const CHAT        = -6;  //сообщение  в  чат
     const SUBSCRIBE   = -7;  //рассылка
-    
+
     protected function init() {
 
         $this->sender_id = 0;
@@ -31,18 +31,18 @@ class Notify extends \ZCL\DB\Entity
     protected function afterLoad() {
         $this->dateshow = strtotime($this->dateshow);
     }
-    
+
     protected function beforeSave() {
         parent::beforeSave();
-        
-        if($this->user_id > 0){
-            $user = User::load($this->user_id) ;
-            if($user->emailnotify == 1  &&  strlen($user->email) > 0) {
-                \App\Helper::sendLetter($this->message,null,$user->email, \App\Helper::l("newnotify")  );
+
+        if ($this->user_id > 0) {
+            $user = User::load($this->user_id);
+            if ($user->emailnotify == 1 && strlen($user->email) > 0) {
+                \App\Helper::sendLetter($this->message, null, $user->email, \App\Helper::l("newnotify"));
             }
         }
     }
-    
+
     //количество непрочитанных уведомлений 
     public static function isNotify($user_id) {
         $conn = \ZCL\DB\DB::getConnect();

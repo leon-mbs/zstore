@@ -54,9 +54,9 @@ class Orders extends \App\Pages\Base
         $this->add(new Form('updateform'))->onSubmit($this, 'exportOnSubmit');
         $this->updateform->add(new DataView('orderslist', new ArrayDataSource(new Prop($this, '_eorders')), $this, 'expRow'));
         $this->updateform->add(new DropDownChoice('estatus', $statuses, 0));
- 
+
         $this->add(new ClickLink('checkconn'))->onClick($this, 'onCheck');
-    
+
     }
 
     public function filterOnSubmit($sender) {
@@ -87,7 +87,7 @@ class Orders extends \App\Pages\Base
 
                 $isorder = Document::findCnt(" (meta_name='Order' or meta_name='TTN') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'");
                 if ($isorder > 0) { //уже импортирован
-                     continue;
+                    continue;
                 }
                 foreach ($ocorder['_products_'] as $product) {
                     $code = trim($product['sku']);
@@ -149,7 +149,7 @@ class Orders extends \App\Pages\Base
                     continue;
                 }
                 $tovar->quantity = $product['quantity'];
-                $tovar->price = str_replace(',', '.',$product['price']);
+                $tovar->price = str_replace(',', '.', $product['price']);
                 $desc = '';
                 if (array($product['_options_'])) {
                     foreach ($product['_options_'] as $k => $v) {
@@ -325,9 +325,10 @@ class Orders extends \App\Pages\Base
 
     public function onCheck($sender) {
 
-        Helper::connect() ;
-        \App\Application::Redirect("\\App\\Modules\\OCStore\\Orders") ;
+        Helper::connect();
+        \App\Application::Redirect("\\App\\Modules\\OCStore\\Orders");
     }
+
     public function onRefresh($sender) {
 
         $this->_eorders = Document::find("meta_name='Order' and content like '%<ocorderback>0</ocorderback>%' and state <> " . Document::STATE_NEW);

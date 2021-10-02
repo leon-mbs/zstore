@@ -36,6 +36,7 @@ class GoodsIssue extends \App\Pages\Base
     private $_rowid     = 0;
     private $_orderid   = 0;
     private $_prevcust  = 0;   // преыдущий контрагент
+ 
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -181,7 +182,7 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->order->setText($basedoc->document_number);
                         $this->docform->paydisc->setText($basedoc->headerdata['paydisc']);
                         $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
-           
+
                         $notfound = array();
                         $order = $basedoc->cast();
 
@@ -204,11 +205,11 @@ class GoodsIssue extends \App\Pages\Base
                         }
 
                         $this->docform->total->setText(H::fa($order->amount));
-                  
+
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
-                       // $this->calcTotal();
+                        // $this->calcTotal();
                         $this->calcPay();
-                        
+
                         if ($order->headerdata['payment'] > 0) {
                             $this->docform->payment->setValue(0); // предоплата
                             $this->docform->editpayed->setText(H::fa(0));
@@ -217,13 +218,13 @@ class GoodsIssue extends \App\Pages\Base
                             $this->docform->payamount->setText(H::fa(0));
                             $this->docform->editpaydisc->setText(H::fa(0));
                             $this->docform->paydisc->setText(H::fa(0));
-                        }   else {
-                            $this->docform->editpayed->setText( $this->docform->editpayamount->getText());
+                        } else {
+                            $this->docform->editpayed->setText($this->docform->editpayamount->getText());
                             $this->docform->payed->setText($this->docform->payamount->getText());
-                 
+
                         }
-                        
-                        
+
+
                     }
                     if ($basedoc->meta_name == 'Invoice') {
 
@@ -251,7 +252,11 @@ class GoodsIssue extends \App\Pages\Base
                             $this->docform->payment->setValue(0); // предоплата
                             $this->docform->editpayed->setText(H::fa(0));
                             $this->docform->payed->setText(H::fa(0));
-                                            
+                            $this->docform->editpayamount->setText(H::fa(0));
+                            $this->docform->payamount->setText(H::fa(0));
+                            $this->docform->editpaydisc->setText(H::fa(0));
+                            $this->docform->paydisc->setText(H::fa(0));
+
                         }
                     }
 
@@ -272,7 +277,7 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->paydisc->setText($basedoc->headerdata['paydisc']);
 
                         $this->docform->firm->setValue($basedoc->firm_id);
-                  
+
                         $this->OnChangeCustomer($this->docform->customer);
                         $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
 
@@ -553,7 +558,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->_doc->customer_id = $this->docform->customer->getKey();
         if ($this->_doc->customer_id > 0) {
             $customer = Customer::load($this->_doc->customer_id);
-            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
+            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         }
         $this->_doc->headerdata['salesource'] = $this->docform->salesource->getValue();
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
@@ -704,7 +709,7 @@ class GoodsIssue extends \App\Pages\Base
         }
 
 
-        $this->docform->paydisc->setText(H::fa($disc) );
+        $this->docform->paydisc->setText(H::fa($disc));
         $this->docform->editpaydisc->setText(H::fa($disc));
     }
 
@@ -719,9 +724,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->editpayamount->setText(H::fa($total));
         $this->docform->payamount->setText(H::fa($total));
 
-        
-        
-        
+
         $this->docform->editpayed->setText(H::fa($total));
         $this->docform->payed->setText(H::fa($total));
 
@@ -805,7 +808,7 @@ class GoodsIssue extends \App\Pages\Base
     }
 
     public function OnAutoCustomer($sender) {
-        return Customer::getList($sender->getText(), 1);
+        return Customer::getList($sender->getText(), 1, true);
     }
 
     public function OnChangeCustomer($sender) {
@@ -813,19 +816,24 @@ class GoodsIssue extends \App\Pages\Base
 
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
-            $cust = Customer::load($customer_id) ;
-            
-            $disctext="";
+            $cust = Customer::load($customer_id);
+
+            if (strlen($cust->pricetype) > 4) {
+                $this->docform->pricetype->setValue($cust->pricetype);
+            }
+
+
+            $disctext = "";
             if (doubleval($cust->discount) > 0) {
-               $disctext   = H::l("custdisc")." {$cust->discount}%";
-            }  else {
-               $bonus = $cust->getBonus();
-               if($bonus>0) {
-                  $disctext   = H::l("custbonus")." {$bonus} ";    
-               }
-           }        
-           $this->docform->discount->setText($disctext); 
-           $this->docform->discount->setVisible(true);
+                $disctext = H::l("custdisc") . " {$cust->discount}%";
+            } else {
+                $bonus = $cust->getBonus();
+                if ($bonus > 0) {
+                    $disctext = H::l("custbonus") . " {$bonus} ";
+                }
+            }
+            $this->docform->discount->setText($disctext);
+            $this->docform->discount->setVisible(true);
 
         }
         if ($this->_prevcust != $customer_id) {//сменился контрагент
@@ -835,6 +843,8 @@ class GoodsIssue extends \App\Pages\Base
             $this->calcPay();
         }
         $this->OnCustomerFirm(null);
+
+
     }
 
     //добавление нового контрагента
@@ -912,8 +922,8 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->contract->setVisible(false);
             $this->docform->contract->setValue(0);
         }
-        
-  
+
+
     }
 
     public function onPaste($sender) {

@@ -88,9 +88,8 @@ class Item extends \ZCL\DB\Entity
         $this->actiondisc = doubleval($xml->actiondisc[0]);
         $this->todate = intval($xml->todate[0]);
         $this->fromdate = intval($xml->fromdate[0]);
-   
-        
-        
+
+
         parent::afterLoad();
     }
 
@@ -284,44 +283,48 @@ class Item extends \ZCL\DB\Entity
             }
         }
 
-    
-        return  $price ;
+
+        return $price;
     }
 
-    public  function hasAction(){
-         if(doubleval($this->actionprice)>0 || doubleval($this->actiondisc>0) )  {
-             
-             if($this->fromdate < time() && $this->todate > time()){
-                 return  true;
-             }
-             
-         }
-         
-         return  false;
-    }
-    
-    //цена  со  скидкой
-    public  function getActionPrice($price){
-              if(doubleval($this->actionprice)>0 ) return   $this->actionprice;
-              if(doubleval($this->actiondisc)>0 ) return  ($price - $price * $this->actiondisc/100);
-              
-              return  $price;
-              
-    }
-    
-    //цена  со  скидками (если  есть)
-    public function getPrice($_price_ = 'price1', $store = 0, $partion = 0){
-        
-        $price =  $this->getPurePrice($_price_,$store,$partion);
-        if($this->hasAction()  ) {
-          $price =  $this->getActionPrice($price);
-          
+    public function hasAction() {
+        if (doubleval($this->actionprice) > 0 || doubleval($this->actiondisc > 0)) {
+
+            if ($this->fromdate < time() && $this->todate > time()) {
+                return true;
+            }
+
         }
-        
-       return \App\Helper::fa($price);
+
+        return false;
     }
-    
-    
+
+    //цена  со  скидкой
+    public function getActionPrice($price) {
+        if (doubleval($this->actionprice) > 0) {
+            return $this->actionprice;
+        }
+        if (doubleval($this->actiondisc) > 0) {
+            return ($price - $price * $this->actiondisc / 100);
+        }
+
+        return $price;
+
+    }
+
+    //цена  со  скидками (если  есть)
+    public function getPrice($_price_ = 'price1', $store = 0, $partion = 0) {
+
+        $price = $this->getPurePrice($_price_, $store, $partion);
+        if ($this->hasAction()) {
+            $price = $this->getActionPrice($price);
+
+        }
+
+        return \App\Helper::fa($price);
+    }
+
+
     //последняя  партия true по  приходной  false по расходной
     public function getLastPartion($store = 0, $snumber = "", $gi = true) {
         $conn = \ZDB\DB::getConnect();
@@ -388,7 +391,8 @@ class Item extends \ZCL\DB\Entity
         $cnt = $conn->GetOne($sql);
         return $cnt;
     }
-   /**
+
+    /**
      * возвращает сумму на складах
      *
      * @param mixed $item_id
@@ -471,7 +475,7 @@ class Item extends \ZCL\DB\Entity
 
     }
 
-  
+
     /**
      * Метод  для   получения  имени  ТМЦ   для выпадающих списков
      *

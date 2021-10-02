@@ -211,7 +211,7 @@ class Task extends \App\Pages\Base
 
         $this->_servicelist = array_diff_key($this->_servicelist, array($service->_rowidser => $this->_servicelist[$service->_rowidser]));
         $this->docform->detail->Reload();
-        
+
     }
 
     public function saverowOnClick($sender) {
@@ -228,7 +228,7 @@ class Task extends \App\Pages\Base
         if (strlen($service->price) == 0) {
             $service->price = 0;
         }
- 
+
         if ($this->_rowidser > 0) {
             $service->_rowidser = $this->_rowidser;
         } else {
@@ -370,7 +370,7 @@ class Task extends \App\Pages\Base
             return;
         }
         $emp = Employee::load($id);
-        $emp->ktu =   $this->editdetail3->editktu->getText();
+        $emp->ktu = $this->editdetail3->editktu->getText();
         $this->_emplist[$emp->employee_id] = $emp;
         $this->editdetail3->setVisible(false);
         $this->docform->setVisible(true);
@@ -445,7 +445,7 @@ class Task extends \App\Pages\Base
         $this->_doc->customer_id = $this->docform->customer->getKey();
         if ($this->_doc->customer_id > 0) {
             $customer = \App\Entity\Customer::load($this->_doc->customer_id);
-            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
+            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         }
 
         if ($this->checkForm() == false) {
@@ -522,17 +522,17 @@ class Task extends \App\Pages\Base
         if (count($this->_servicelist) == 0 && count($this->_prodlist) == 0) {
             $this->setError("noenterpos");
         }
-        if(count($this->_emplist)>0) {
-          $ktu=0;    
-          foreach($this->_emplist as $emp){
-             $ktu += doubleval($emp->ktu) ;   
-          }
-          if($ktu != 1) {
-              $this->setError("ktu1") ;
-          }
-          
+        if (count($this->_emplist) > 0) {
+            $ktu = 0;
+            foreach ($this->_emplist as $emp) {
+                $ktu += doubleval($emp->ktu);
+            }
+            if ($ktu != 1) {
+                $this->setError("ktu1");
+            }
+
         }
-        
+
         return !$this->isError();
     }
 

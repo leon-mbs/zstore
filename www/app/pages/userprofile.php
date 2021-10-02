@@ -141,10 +141,10 @@ class UserProfile extends \App\Pages\Base
 
         if (!$this->isError()) {
             $this->user->userpass = (\password_hash($pass, PASSWORD_DEFAULT));
-          //  $this->user->userpass = $pass;
+            //  $this->user->userpass = $pass;
             $this->user->save();
-             
-             if ($this->user->userlogin != 'admin') {
+
+            if ($this->user->userlogin != 'admin') {
 
                 $n = new \App\Entity\Notify();
                 $n->user_id = \App\Entity\Notify::SYSTEM;
@@ -154,13 +154,13 @@ class UserProfile extends \App\Pages\Base
 
                 $n->save();
             }
-          
+
             \App\Helper::logout();
-            
-            
+
+
         }
 
- 
+
         $sender->userpassword->setText('');
         $sender->confirmpassword->setText('');
     }

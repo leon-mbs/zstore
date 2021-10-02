@@ -55,7 +55,7 @@ class Helper
     }
 
     public static function logout() {
-        
+
         setcookie("remember", '', 0);
         System::setUser(new \App\Entity\User());
         $_SESSION['user_id'] = 0;
@@ -63,7 +63,7 @@ class Helper
 
         Application::Redirect("\\App\\Pages\\UserLogin");
 
-      
+
     }
 
     public static function generateMenu($meta_type) {
@@ -208,24 +208,24 @@ class Helper
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10002, 'meta_name' => "/Shop/Pages/ProductList", 'meta_type' => 6, 'description' => self::l('modshopprlist')));
             }
         }
-        
-        
-       if ($_config['modules']['ocstore'] == 1) {
+
+
+        if ($_config['modules']['ocstore'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'ocstore') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10005, 'meta_name' => "/OCStore/Orders", 'meta_type' => 6, 'description' => self::l('modocstoreorders')));
             }
         }
-       if ($_config['modules']['ocstore'] == 1) {
+        if ($_config['modules']['ocstore'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'ocstore') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10006, 'meta_name' => "/OCStore/Items", 'meta_type' => 6, 'description' => self::l('modocstoreitems')));
             }
         }
-       if ($_config['modules']['wc'] == 1) {
+        if ($_config['modules']['wc'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'wc') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10009, 'meta_name' => "/WC/Orders", 'meta_type' => 6, 'description' => self::l('modwcorders')));
             }
         }
-       if ($_config['modules']['wc'] == 1) {
+        if ($_config['modules']['wc'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'wc') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10010, 'meta_name' => "/WC/Items", 'meta_type' => 6, 'description' => self::l('modwcitems')));
             }
@@ -632,6 +632,15 @@ class Helper
         }
 
         return '';
+    }
+
+    /**
+     * форматирование  времени
+     * @param mixed $date
+     * @return mixed
+     */
+    public static function ft($date) {
+        return date(' H:i', $date);
     }
 
     /**

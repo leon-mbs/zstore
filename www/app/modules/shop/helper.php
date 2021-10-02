@@ -142,6 +142,15 @@ class Helper
         return $conn->GetCol($sql);
     }
 
+    public  static function getPages(){
+        $shop = \App\System::getOptions("shop");
+        $pages = $shop['pages'] ;
+        if(!is_array($pages)) $pages = array();
+        
+        return  array_keys($pages);
+    }
+    
+    
     /*
       //формирование  условий отбора   по  выбранным  критериям
       private static function _getWhere($filter) {

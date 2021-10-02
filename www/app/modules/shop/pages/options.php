@@ -14,10 +14,15 @@ use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Panel;
+use Zippy\Html\Label;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
 
 class Options extends \App\Pages\Base
 {
-
+    public $_pages = array();
+   
     public function __construct() {
         parent::__construct();
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
@@ -44,18 +49,35 @@ class Options extends \App\Pages\Base
         $this->shop->add(new CheckBox('usefeedback'));
         $this->shop->add(new CheckBox('usemainpage'));
         $this->shop->add(new CheckBox('createnewcust'));
-
-        $this->add(new Form('texts'))->onSubmit($this, 'saveTextsOnClick');
-        $this->texts->add(new TextArea('aboutus'));
-        $this->texts->add(new TextArea('contact'));
-        $this->texts->add(new TextArea('delivery'));
-        $this->texts->add(new TextArea('news'));
-
+          
+        
+        
+        
+        $this->add(new Panel('adminpan'));
+        $this->adminpan->add(new ClickLink('updatesitemap'))->onClick($this, 'updateSiteMapOnClick');
+        
+        $this->adminpan->add(new ClickLink('padd'))->onClick($this, 'paddOnClick');
+        $this->adminpan->add(new DataView('plist', new ArrayDataSource($this, "_pages"), $this, 'plistOnRow'));
+    
+        
+        $this->add(new Form('pageform'))->onSubmit($this, 'savePageOnClick');
+        $this->pageform->add(new TextArea('pagetext'));
+        $this->pageform->add(new TextInput('pagelink'));
+        $this->pageform->add(new TextInput('pagetitle'));
+        $this->pageform->add(new TextInput('oldlink'));
+        $this->pageform->add(new TextInput('pageorder'));
+        $this->pageform->setVisible(false) ;
+        $this->pageform->add(new ClickLink('pcancel'))->onClick($this, 'pcancelOnClick');
+         
+        
         $shop = System::getOptions("shop");
         if (!is_array($shop)) {
             $shop = array();
         }
-
+        $this->_pages =    $shop['pages'];
+        if (!is_array($this->_pages)) {
+            $this->_pages = array();
+        }   
 
         $this->shop->shopdefbranch->setValue($shop['defbranch']);
         $this->shop->shopdefcust->setKey($shop['defcust']);
@@ -73,20 +95,8 @@ class Options extends \App\Pages\Base
         $this->shop->currencyname->setText($shop['currencyname']);
         $this->shop->phone->setText($shop['phone']);
 
-        $this->add(new ClickLink('updatesitemap'))->onClick($this, 'updateSiteMapOnClick');
-
-        if (strlen($shop['aboutus']) > 10) {
-            $this->texts->aboutus->setText(base64_decode($shop['aboutus']));
-        }
-        if (strlen($shop['contact']) > 10) {
-            $this->texts->contact->setText(base64_decode($shop['contact']));
-        }
-        if (strlen($shop['delivery']) > 10) {
-            $this->texts->delivery->setText(base64_decode($shop['delivery']));
-        }
-        if (strlen($shop['news']) > 10) {
-            $this->texts->news->setText(base64_decode($shop['news']));
-        }
+        $this->adminpan->plist->Reload() ;
+    
     }
 
     public function saveShopOnClick($sender) {
@@ -154,22 +164,94 @@ class Options extends \App\Pages\Base
         $this->setSuccess('refreshed');
     }
 
-    public function saveTextsOnClick($sender) {
-        $shop = System::getOptions("shop");
-        if (!is_array($shop)) {
-            $shop = array();
-        }
-        $shop['aboutus'] = base64_encode($this->texts->aboutus->getText());
-        $shop['contact'] = base64_encode($this->texts->contact->getText());
-        $shop['delivery'] = base64_encode($this->texts->delivery->getText());
-        $shop['news'] = base64_encode($this->texts->news->getText());
-
-        System::setOptions("shop", $shop);
-        $this->setSuccess('refreshed');
-    }
-
+ 
     public function OnAutoCustomer($sender) {
         return \App\Entity\Customer::getList($sender->getText(), 1);
     }
+    public function plistOnRow($row) {
+        $p = $row->getDataItem();
+        $row->add(new Label("ptitle",$p->title));
+        $row->add(new Label("plink",$p->link));
+        $row->add(new Label("porder",$p->order));
+        $row->add(new ClickLink("pedit",$this,"peditOnClick"));
+        $row->add(new ClickLink("pdel",$this,"pdelOnClick"));
+    }
+    public function paddOnClick($sender) {
+        $this->pageform->clean();  
+        $this->pageform->setvisible(true);  
+        $this->adminpan->setvisible(false);  
+       
+    }
+    public function peditOnClick($sender) {
+        $page = $sender->getOwner()->getDataItem();
+       
+       
+        $this->pageform->oldlink->setText($page->link)  ;
+        $this->pageform->pagelink->setText($page->link)  ;
+        $this->pageform->pagetitle->setText($page->title) ;
+        $this->pageform->pageorder->setText($page->order) ;
+       
+        $this->pageform->pagetext->setText(@base64_decode($page->text));
+         
+        $this->pageform->setvisible(true);  
+        $this->adminpan->setvisible(false);  
+        
+    }
+    public function pcancelOnClick($sender) {
+         
+        $this->pageform->setvisible(false);  
+        $this->adminpan->setvisible(true);  
+       
+    }
+    public function pdelOnClick($sender) {
+        
+        $p = $sender->getOwner()->getDataItem();
+        
+        $this->_pages = array_diff_key($this->_pages, array($p->link => $this->_pages[$p->link]));
+       
+        $shop = System::getOptions("shop");
+        $shop['pages'] = $this->_pages ;    
+        System::setOptions("shop", $shop);
+        
+        $this->adminpan->plist->Reload() ;
+       
+    }
+ 
 
+    public function savePageOnClick($sender) {
+
+        $oldlink = $sender->oldlink->getText();
+        if(strlen($oldlink)>0)  {
+             $this->_pages = array_diff_key($this->_pages, array($oldlink => $this->_pages[$oldlink]));
+    
+        }
+        
+        $page = new \App\DataItem();
+        $page->link = $sender->pagelink->getText()  ;
+        $page->title = $sender->pagetitle->getText() ;
+        $page->order = $sender->pageorder->getText() ;
+        
+        $page->text = base64_encode($sender->pagetext->getText());
+ 
+        $this->_pages[$page->link] = $page;
+        
+    usort($this->_pages, function($a, $b) {
+            return $a->order > $b->order;
+        });       
+        $pages=array();
+        foreach($this->_pages as $p){
+            $pages[$p->link]=$p;
+        }
+        $this->_pages =$pages;
+        $shop = System::getOptions("shop");
+        $shop['pages'] = $this->_pages; 
+        System::setOptions("shop", $shop);
+        
+        $this->adminpan->plist->Reload() ;
+ 
+       $this->pageform->setvisible(false);  
+        $this->adminpan->setvisible(true);  
+    
+    }
+    
 }

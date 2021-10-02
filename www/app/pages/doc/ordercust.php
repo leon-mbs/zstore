@@ -67,6 +67,7 @@ class OrderCust extends \App\Pages\Base
         $this->editnewitem->add(new TextInput('editnewitemname'));
         $this->editnewitem->add(new TextInput('editnewitemcode'));
         $this->editnewitem->add(new TextInput('editnewitembrand'));
+        $this->editnewitem->add(new TextInput('editnewitemmsr'));
         $this->editnewitem->add(new Button('cancelnewitem'))->onClick($this, 'cancelnewitemOnClick');
         $this->editnewitem->add(new DropDownChoice('editnewcat', \App\Entity\Category::getList(), 0));
         $this->editnewitem->add(new SubmitButton('savenewitem'))->onClick($this, 'savenewitemOnClick');
@@ -232,7 +233,7 @@ class OrderCust extends \App\Pages\Base
         $this->_doc->customer_id = $this->docform->customer->getKey();
         if ($this->_doc->customer_id > 0) {
             $customer = Customer::load($this->_doc->customer_id);
-            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
+            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         }
         if ($this->checkForm() == false) {
             return;
@@ -375,6 +376,8 @@ class OrderCust extends \App\Pages\Base
         $item->cat_id = $this->editnewitem->editnewcat->getValue();
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
         $item->manufacturer = $this->editnewitem->editnewitembrand->getText();
+        $item->msr = $this->editnewitem->editnewitemmsr->getText();
+
 
         if (strlen($item->item_code) > 0) {
             $code = Item::qstr($item->item_code);

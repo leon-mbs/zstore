@@ -214,9 +214,9 @@ class Subscribe extends \ZCL\DB\Entity
             $pos = \App\Entity\Pos::load($doc->headerdata['pos']);
             $header['pos'] = $pos->pos_name;
         }
-        if ($doc->headerdata['salesource']>0) {
-            $sl = H::getSaleSources() ;
-            $header['source'] = $sl[$doc->headerdata['salesource']] ;
+        if ($doc->headerdata['salesource'] > 0) {
+            $sl = H::getSaleSources();
+            $header['source'] = $sl[$doc->headerdata['salesource']];
         }
 
         $table = array();

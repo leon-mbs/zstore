@@ -1,17 +1,42 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2"  {{{style}}}}>
 
-
+     {{#customer_name}}
     <tr>
         <td></td>
         <td valign="top"><b>Покупатель</b></td>
-        <td colspan="5">{{customer_name}}</td>
+        <td colspan="5"><b>{{customer_name}}</b></td>
     </tr>
+     {{/customer_name}} 
+    {{#phone}}
+    <tr>
+        <td></td>
+        <td valign="top">Телефон</td>
+        <td colspan="5">{{phone}}</td>
+    </tr>
+     {{/phone}} 
+   {{#address}}
+    <tr>
+        <td></td>
+        <td valign="top">Адрес</td>
+        <td colspan="5">{{address}}</td>
+    </tr>
+     {{/address}} 
+   {{#edrpou}}
+    <tr>
+        <td></td>
+        <td valign="top">ОКПО</td>
+        <td colspan="5">{{edrpou}}</td>
+    </tr>
+     {{/edrpou}} 
+ 
+    
+        
     {{#isfirm}}
     <tr>
 
         <td></td>
         <td valign="top"><b>Продавец</b></td>
-        <td colspan="5">{{firm_name}}</td>
+        <td colspan="5"><b>{{firm_name}}</b></td>
 
     </tr>
     {{/isfirm}}
@@ -27,7 +52,7 @@
 
     <tr>
         <td></td>
-        <td valign="top"><b>Списано с</b></td>
+        <td valign="top">Списано с</td>
         <td colspan="5">{{store_name}}</td>
     </tr>
 

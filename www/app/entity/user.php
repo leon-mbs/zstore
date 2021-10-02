@@ -119,7 +119,7 @@ class User extends \ZCL\DB\Entity
         $acl['aclbranch'] = $this->aclbranch;
         $acl['onlymy'] = $this->onlymy;
         $acl['hidemenu'] = $this->hidemenu;
-   
+
         $this->acl = serialize($acl);
 
         $options = array();

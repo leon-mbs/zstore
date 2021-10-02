@@ -2,13 +2,19 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="5">
-            Оплата по нарядам
+            Оплата  по  производству
         </td>
     </tr>
     <tr>
 
         <td align="center" colspan="5">
             Период с {{datefrom}} по {{dateto}}
+        </td>
+    </tr>
+    <tr>
+
+        <td   colspan="5">
+            <b>По нарядам</b>
         </td>
     </tr>
 
@@ -21,7 +27,7 @@
         <th align="right" style="border: solid black 1px">Часов</th>
 
         <th align="right" style="border: solid black 1px">Сумма</th>
-
+  </tr>
 
         {{#_detail}}
     <tr>
@@ -37,6 +43,44 @@
 
     </tr>
     {{/_detail}}
+    
+    <tr>
+
+        <td   colspan="5">
+            
+        </td>
+    </tr>     
+     <tr>
+
+        <td   colspan="5">
+            <b>По производственным этапам</b>
+        </td>
+    </tr>  
+    
+    <tr style="font-weight: bolder;">
+
+
+        <th style="border: solid black 1px">Исполнитель</th>
+
+        <th align="right" style="border: solid black 1px">Этапов</th>
+        <th align="right" style="border: solid black 1px">Часов</th>
+
+        <th align="right" style="border: solid black 1px">Сумма</th>
+  </tr>      
+        {{#_detail2}}
+    <tr>
+
+
+        <td>{{name}}</td>
+
+        <td align="right">{{cnt}}</td>
+        <td align="right">{{hours}}</td>
+
+        <td align="right">{{amount}}</td>
+
+
+    </tr>
+    {{/_detail2}}    
 </table>
 
 

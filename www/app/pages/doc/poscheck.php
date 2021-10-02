@@ -147,7 +147,7 @@ class POSCheck extends \App\Pages\Base
 
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
-            //  $this->docform->pos->setValue($this->_doc->headerdata['pos']);
+            $this->docform->pos->setValue($this->_doc->headerdata['pos']);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
 
@@ -483,7 +483,7 @@ class POSCheck extends \App\Pages\Base
         $this->_doc->customer_id = $this->docform->customer->getKey();
         if ($this->_doc->customer_id > 0) {
             $customer = Customer::load($this->_doc->customer_id);
-            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
+            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         }
         $this->_doc->payamount = $this->docform->payamount->getText();
 

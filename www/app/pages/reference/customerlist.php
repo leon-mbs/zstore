@@ -34,6 +34,7 @@ class CustomerList extends \App\Pages\Base
     public  $_msglist         = array();
     public  $_eventlist       = array();
     public  $_contrtlist      = array();
+    public  $_leadstatuseslist = array();
     public  $_leadsourceslist = array();
 
     public function __construct($id = 0) {
@@ -80,10 +81,12 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->add(new TextInput('editphone'));
         $this->customerdetail->add(new TextInput('editviber'));
         $this->customerdetail->add(new TextInput('editemail'));
+        $this->customerdetail->add(new TextInput('editedrpou'));
         $this->customerdetail->add(new CheckBox('editjurid'));
         $this->customerdetail->add(new CheckBox('editisholding'));
         $this->customerdetail->add(new DropDownChoice('editholding', Customer::getHoldList(), 0));
         $this->customerdetail->add(new DropDownChoice('edittype', array(1 => Helper::l("bayer"), 2 => Helper::l("seller")), 0));
+        $this->customerdetail->add(new DropDownChoice('editpricetype', \App\Entity\Item::getPriceTypeList(), Helper::getDefPriceType()));
 
         $this->customerdetail->add(new CheckBox('editnosubs'));
         $this->customerdetail->add(new CheckBox('editdisabled'));
@@ -229,6 +232,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->editemail->setText($this->_customer->email);
         $this->customerdetail->editaddress->setText($this->_customer->address);
         $this->customerdetail->editcity->setText($this->_customer->city);
+        $this->customerdetail->editedrpou->setText($this->_customer->edrpou);
         $this->customerdetail->editcountry->setText($this->_customer->country);
         $this->customerdetail->editcomment->setText($this->_customer->comment);
         $this->customerdetail->edittype->setValue($this->_customer->type);
@@ -236,6 +240,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->editleadsource->setValue($this->_customer->leadsource);
         $this->customerdetail->editleadstatus->setValue($this->_customer->leadstatus);
         $this->customerdetail->editholding->setValue($this->_customer->holding);
+        $this->customerdetail->editpricetype->setValue($this->_customer->pricetype);
         $this->customerdetail->editnosubs->setChecked($this->_customer->nosubs == 1);
         $this->customerdetail->editdisabled->setChecked($this->_customer->status == 1);
         $this->customerdetail->editjurid->setChecked($this->_customer->jurid);
@@ -284,10 +289,12 @@ class CustomerList extends \App\Pages\Base
         $this->_customer->email = $this->customerdetail->editemail->getText();
         $this->_customer->address = $this->customerdetail->editaddress->getText();
         $this->_customer->city = $this->customerdetail->editcity->getText();
+        $this->_customer->edrpou = $this->customerdetail->editedrpou->getText();
         $this->_customer->country = $this->customerdetail->editcountry->getText();
         $this->_customer->comment = $this->customerdetail->editcomment->getText();
         $this->_customer->type = $this->customerdetail->edittype->getValue();
         $this->_customer->holding = $this->customerdetail->editholding->getValue();
+        $this->_customer->pricetype = $this->customerdetail->editpricetype->getValue();
         $this->_customer->holding_name = $this->customerdetail->editholding->getValueName();
 
         if ($this->_tvars['leadmode'] == true) {
@@ -834,8 +841,9 @@ class CustomerDataSource implements \Zippy\Interfaces\DataSource
             $where = "status < 2 ";
 
             if (strlen($search) > 0) {
+                $edrpou = Customer::qstr('%<edrpou>' . $search . '</edrpou>%');
                 $search = Customer::qstr('%' . $search . '%');
-                $where .= " and (customer_name like  {$search} or phone like {$search} or email like {$search}    )";
+                $where .= " and (customer_name like  {$search} or phone like {$search} or email like {$search}  or detail like {$edrpou}    )";
             }
             if ($type == 1) {
                 $where .= " and detail like '%<type>1</type>%'    ";

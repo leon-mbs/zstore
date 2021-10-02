@@ -60,71 +60,69 @@ class EmpAccRep extends \App\Pages\Base
     }
 
     private function generateReport() {
-        $dt = new \App\DateTime( );
+        $dt = new \App\DateTime();
         $from = $dt->addMonth(-1)->startOfMonth()->getTimestamp();
-        $from= date(\DateTime::ISO8601,$from);
-        
-        
-        $to= date(\DateTime::ISO8601,time());
-   
+        $from = date(\DateTime::ISO8601, $from);
+
+
+        $to = date(\DateTime::ISO8601, time());
+
         $emp_id = $this->filter->emp->getValue();
         $emp_name = $this->filter->emp->getValueName();
-        if(strlen($emp_name)==0) {
-            $this->setError('noempselected') ;
+        if (strlen($emp_name) == 0) {
+            $this->setError('noempselected');
             return;
         }
         $yfrom = $this->filter->yfrom->getValue();
-        $mfrom = $this->filter->mfrom->getValue() ;
+        $mfrom = $this->filter->mfrom->getValue();
         $mfromname = $this->filter->mfrom->getValueName();
         $yto = $this->filter->yto->getValue();
-        $mto = $this->filter->mto->getValue() ;
+        $mto = $this->filter->mto->getValue();
         $mtoname = $this->filter->mto->getValueName();
 
-    
-         $dt = new \App\DateTime(strtotime($yfrom . '-' . $mfrom . '-01')) ;        
-         $from = $dt->startOfMonth()->getTimestamp();
-           
-         $dt = new \App\DateTime(strtotime($yto . '-' . $mto . '-01')) ;        
-         $to = $dt->endOfMonth()->getTimestamp();
-         
-      
-         $conn = \Zdb\DB::getConnect() ;
 
-         $sql = "select coalesce(sum(amount),0) from empacc_view where emp_id = {$emp_id} and document_date < ". $conn->DBDate($from)    ;   
+        $dt = new \App\DateTime(strtotime($yfrom . '-' . $mfrom . '-01'));
+        $from = $dt->startOfMonth()->getTimestamp();
 
-         $b = $conn->GetOne($sql);
-         
-         $sql = "select coalesce(sum(  case  when amount >0 then amount else  0 end ),0)  as inp, coalesce(sum(  case  when amount <0 then 0-amount else  0 end ),0)  as outp,document_date,document_id,document_number from empacc_view where emp_id= {$emp_id} and document_date >= ". $conn->DBDate($from) . " and document_date <= " . $conn->DBDate($to) . " group by  document_date,document_id,document_number  order  by document_date, document_id "   ;   
-         
-         $rc= $conn->Execute($sql);
-       
-         $detail = array();
-         
-         foreach ($rc as $row) {
+        $dt = new \App\DateTime(strtotime($yto . '-' . $mto . '-01'));
+        $to = $dt->endOfMonth()->getTimestamp();
 
-           $detail[] = array(
-             'dt'=> $row['document_date'] ,
-             'doc'=>$row['document_number'],
-             'begin'=> H::fa($b),
-            'in'=>H::fa($row['inp']),
-            'out'=>H::fa($row['outp']),
-            'end'=>H::fa($b + $row['inp'] - $row['outp'] )
-              );
-         
-          
-            $b  = $b + $row['inp'] - $row['outp']  ;
-         }
-        
-     
+
+        $conn = \Zdb\DB::getConnect();
+
+        $sql = "select coalesce(sum(amount),0) from empacc_view where emp_id = {$emp_id} and document_date < " . $conn->DBDate($from);
+
+        $b = $conn->GetOne($sql);
+
+        $sql = "select coalesce(sum(  case  when amount >0 then amount else  0 end ),0)  as inp, coalesce(sum(  case  when amount <0 then 0-amount else  0 end ),0)  as outp,document_date,document_id,document_number from empacc_view where emp_id= {$emp_id} and document_date >= " . $conn->DBDate($from) . " and document_date <= " . $conn->DBDate($to) . " group by  document_date,document_id,document_number  order  by document_date, document_id ";
+
+        $rc = $conn->Execute($sql);
+
+        $detail = array();
+
+        foreach ($rc as $row) {
+
+            $detail[] = array(
+                'dt'    => $row['document_date'],
+                'doc'   => $row['document_number'],
+                'begin' => H::fa($b),
+                'in'    => H::fa($row['inp']),
+                'out'   => H::fa($row['outp']),
+                'end'   => H::fa($b + $row['inp'] - $row['outp'])
+            );
+
+
+            $b = $b + $row['inp'] - $row['outp'];
+        }
 
 
         $header = array(
-            "_detail"  => array_values($detail),
-            'yfrom'    => $yfrom,
-            'mfrom'    => $mfromname,
-            'yto'      => $yto,
-            'mto'      => $mtoname,
-        
+            "_detail" => array_values($detail),
+            'yfrom'   => $yfrom,
+            'mfrom'   => $mfromname,
+            'yto'     => $yto,
+            'mto'     => $mtoname,
+
             "emp_name" => $emp_name
         );
 
