@@ -46,19 +46,21 @@ class IncomeItem extends Document
 
 
         }
-        //авансовый    отчет
-        $ua = new \App\Entity\EmpAcc();
-        $ua->optype = \App\Entity\EmpAcc::OUTCOME_TO_MF;
-        $ua->document_id = $this->document_id;
-        $ua->emp_id = $this->headerdata["emp"];
-        $ua->amount = $amount;
-        if ($this->headerdata['examount'] > 0) {
-            $ua->amount += $this->headerdata['examount'];
+        
+        if ($this->headerdata['emp'] > 0) {
+            //авансовый    отчет
+            $ua = new \App\Entity\EmpAcc();
+            $ua->optype = \App\Entity\EmpAcc::OUTCOME_TO_MF;
+            $ua->document_id = $this->document_id;
+            $ua->emp_id = $this->headerdata["emp"];
+            $ua->amount = $amount;
+            if ($this->headerdata['examount'] > 0) {
+                $ua->amount += $this->headerdata['examount'];
+            }
+            if ($ua->amount > 0) {
+                $ua->save();
+            }
         }
-        if ($ua->amount > 0) {
-            $ua->save();
-        }
-
 
         return true;
     }
