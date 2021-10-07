@@ -188,9 +188,9 @@ class Catalog extends Base
         $row->add(new BookmarkableLink("simage", $item->getSEF()))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
         $row->add(new BookmarkableLink("scatname", $item->getSEF()))->setValue($item->itemname);
         $price = $item->getPurePrice($options['defpricetype']);
-
+        $price = \App\Helper::fa($price);
         $row->add(new Label("sprice", $price . ' ' . $options['currencyname']));
-        $row->add(new Label("sactionprice", $item->getActionPrice($price) . ' ' . $options['currencyname']))->setVisible(false);
+        $row->add(new Label("sactionprice",\App\Helper::fa( $item->getActionPrice($price) ). ' ' . $options['currencyname']))->setVisible(false);
         $row->add(new Label('saction'))->setVisible(false);
 
         if ($item->hasAction()) {
