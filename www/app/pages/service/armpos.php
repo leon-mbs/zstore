@@ -570,6 +570,7 @@ class ARMPos extends \App\Pages\Base
 
     public function cancelrowOnClick($sender) {
         $this->docpanel->editdetail->setVisible(false);
+        $this->docpanel->editserdetail->setVisible(false);
         $this->docpanel->form2->setVisible(true);
         $this->docpanel->wselitem->setVisible(false);
         //очищаем  форму
