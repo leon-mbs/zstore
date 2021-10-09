@@ -40,7 +40,7 @@ class ItemSel extends \Zippy\Html\PageFragment
         $this->add(new Form('wisfilter'))->onSubmit($this, 'ReloadData');
 
         $this->wisfilter->add(new TextInput('wissearchkey'));
-        $this->wisfilter->add(new DropDownChoice('wissearchcat', Category::getList(), 0));
+        $this->wisfilter->add(new DropDownChoice('wissearchcat', Category::getList(false,false), 0));
         $this->wisfilter->add(new TextInput('wissearchmanufacturer'));
 
         $ds = new ArrayDataSource($this, '_list');

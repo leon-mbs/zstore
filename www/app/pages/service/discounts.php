@@ -77,7 +77,7 @@ class Discounts extends \App\Pages\Base
 
         //категории
         $this->itab->add(new Form('gfilter'))->onSubmit($this, 'OnGAdd');
-        $this->itab->gfilter->add(new DropDownChoice('gsearchkey', Category::getList(), 0));
+        $this->itab->gfilter->add(new DropDownChoice('gsearchkey', Category::getList(false,false), 0));
         $this->itab->gfilter->add(new Date('gsearchfrom'))->setDate(time());
         $this->itab->gfilter->add(new Date('gsearchto'))->setDate(strtotime("+7day", time()));
         $this->itab->gfilter->add(new TextInput('gsearchdisc'));

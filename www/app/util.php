@@ -557,11 +557,11 @@ function money2str_ua($money, $options = 0) {
 
 // service function to select the group of digits
 function dec_digits_group($number, $power, $digits = 1) {
-    
-    
-      
-     return     intval(   ( $number/pow(10, $power * $digits) ) % pow(10,    $digits) ) ;
-    
+                 
+    if (function_exists('gmp_init')  ) {
+       return   gmp_intval( gmp_mod(gmp_div((int)$number, gmp_pow(10,(int) $power * $digits )), gmp_pow(10, (int)$digits )));
+    }
+    return    intval(   ( $number/pow(10, $power * $digits) ) % pow(10,    $digits) ) ;
     
    // return (int)bcmod(bcdiv($number, bcpow(10, $power * $digits, 8)), bcpow(10, $digits, 8));
 }
