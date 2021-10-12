@@ -414,6 +414,8 @@ class ARMFood extends \App\Pages\Base
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docpanel->navform->barcode->getText());
+                $code = ltrim($code,'0');
+
         $this->docpanel->navform->barcode->setText('');
         if ($code == '') {
             return;
