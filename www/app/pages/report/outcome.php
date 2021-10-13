@@ -54,11 +54,17 @@ class Outcome extends \App\Pages\Base
         $types[9] = H::l('repbybyfirm');
         $types[10] = H::l('repbybystore');
         $types[11] = H::l('repbysalesource');
+        $types[12] = H::l('repbybrand');
 
         $this->filter->add(new DropDownChoice('type', $types, 1))->onChange($this, "OnType");
 
         $this->filter->add(new \Zippy\Html\Form\AutocompleteTextInput('cust'))->onText($this, 'OnAutoCustomer');
         $this->filter->cust->setVisible(false);
+
+        $this->filter->add(new \Zippy\Html\Form\TextInput('brand'));
+        $this->filter->brand->setDataList(Item::getManufacturers());
+        $this->filter->brand->setVisible(false);
+        
 
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
@@ -78,6 +84,7 @@ class Outcome extends \App\Pages\Base
         $this->filter->cust->setVisible($type == 6 || $type == 7);
         //  $this->filter->holding->setVisible($type == 7);
 
+        $this->filter->brand->setVisible($type == 12);
 
     }
 
@@ -331,8 +338,34 @@ class Outcome extends \App\Pages\Base
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                 group by   i.itemname
-                order  by   i.itemname
+                order by   i.itemname
                
+        ";
+        }
+
+        if ($type == 12  ) {    //по брендам
+        
+            $man="''";
+            $brand = trim($this->filter->brand->getText());
+            if(strlen($brand)>0) {
+               $man = $conn->qstr($brand) ;
+            }
+            
+            $sql = "
+            select  i.itemname,sum(0-e.`quantity`) as qty, sum(0- e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.`quantity`)) as navar
+              from `entrylist_view`  e
+
+              join `items_view` i on e.`item_id` = i.`item_id`
+             join `documents_view` d on d.`document_id` = e.`document_id`
+               where  e.partion  is  not null and  e.`item_id` >0  and e.`quantity` <>0
+               and  manufacturer = {$man}       
+               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN' )
+                {$br} {$u}
+                
+              AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
+              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+              
+               order  by i.itemname 
         ";
         }
 
@@ -412,6 +445,9 @@ class Outcome extends \App\Pages\Base
         if ($type == 11) {
             $header['_type8'] = true;
         }
+        if ($type == 12) {
+            $header['_type12'] = true;
+        }
 
 
         $report = new \App\Report('report/outcome.tpl');
@@ -422,3 +458,5 @@ class Outcome extends \App\Pages\Base
     }
 
 }
+
+
