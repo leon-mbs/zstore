@@ -365,6 +365,7 @@ class IncomeItem extends \App\Pages\Base
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
+        $code = ltrim($code,'0');
 
         $code = Item::qstr($code);
 

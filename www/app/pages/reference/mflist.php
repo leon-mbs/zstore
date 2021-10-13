@@ -89,7 +89,7 @@ class MFList extends \App\Pages\Base
         $this->mfdetail->editbranch->setValue($this->_mf->branch_id);
         $this->mfdetail->editbeznal->setChecked($this->_mf->beznal);
         $this->onBeznal($this->mfdetail->editbeznal);
-        $this->mfdetail->editmf_description->setText($this->_mf->mf_description);
+        $this->mfdetail->editmf_description->setText($this->_mf->description);
         $this->mfdetail->editbank->setText($this->_mf->bank);
         $this->mfdetail->editbankacc->setText($this->_mf->bankacc);
     }

@@ -53,15 +53,21 @@ class OrderCust extends \App\Pages\Base
         $this->docform->add(new Label('total'));
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutoItem');
+        $this->editdetail->edititem->onChange($this, 'OnChangeItem', true);
         $this->editdetail->add(new SubmitLink('addnewitem'))->onClick($this, 'addnewitemOnClick');
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editcustcode'));
         $this->editdetail->add(new TextInput('editprice'));
         $this->editdetail->add(new TextInput('editdesc'));
+        $this->editdetail->add(new Label('qtystock'));
+          $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
 
+        $this->add(new \App\Widgets\ItemSel('wselitem', $this, 'onSelectItem'))->setVisible(false);
+        
+        
         //добавление нового товара
         $this->add(new Form('editnewitem'))->setVisible(false);
         $this->editnewitem->add(new TextInput('editnewitemname'));
@@ -146,6 +152,9 @@ class OrderCust extends \App\Pages\Base
         else {
             $item->rowid = $item->item_id;
         }
+        $qty = $item->getQuantity();
+
+        $this->editdetail->qtystock->setText(H::fqty($qty));
 
         $this->_rowid = $item->rowid;
     }
@@ -170,6 +179,7 @@ class OrderCust extends \App\Pages\Base
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
         $this->editdetail->editdesc->setText("");
+        $this->editdetail->qtystock->setText("");
         $this->_rowid = 0;
         $this->editdetail->editprice->setText("0");
     }
@@ -427,5 +437,25 @@ class OrderCust extends \App\Pages\Base
 
         $this->calcTotal();
     }
+    public function OnChangeItem($sender) {
+        $id = $sender->getKey();
+        $item = Item::load($id);
 
+        $qty = $item->getQuantity();
+
+        $this->editdetail->qtystock->setText(H::fqty($qty));
+
+
+        $this->updateAjax(array('qtystock'));
+    }
+    
+    public function onSelectItem($item_id, $itemname) {
+        $this->editdetail->edititem->setKey($item_id);
+        $this->editdetail->edititem->setText($itemname);
+        $this->OnChangeItem($this->editdetail->edititem);
+    }    
+    public function onOpenItemSel($sender) {
+        $this->wselitem->setVisible(true);
+        $this->wselitem->Reload();
+    }    
 }

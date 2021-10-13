@@ -134,12 +134,14 @@ class Category extends \ZCL\DB\Entity
     }
 
     //список  с  тмц
-    public static function getList($fullname = false) {
+    public static function getList($fullname = false, $all=true) {
+        $where="cat_id in (select cat_id from items where disabled <>1 )";
+        if($all)  $where="";
         if ($fullname == false) {
-            return Category::findArray("cat_name", "cat_id in (select cat_id from items where disabled <>1 )", "cat_name");
+            return Category::findArray("cat_name", $where, "cat_name");
         }
 
-        $list = Category::find("cat_id in (select cat_id from items where disabled <>1 )", "cat_name");
+        $list = Category::find($where, "cat_name");
         $list = self::findFullData($list);
 
         $ret = array();

@@ -167,12 +167,24 @@ class Items extends \App\Pages\Base
         }
 
         $skulist = array();
+        $skuvarlist = array();
 
         foreach ($data as $p) {
             if (strlen($p->sku) == 0) {
                 continue;
             }
             $skulist[$p->sku] = $p->id;
+              if(is_array($p->variations)) {
+                    foreach($p->variations as $vid){
+                        $var = $client->get("products/{$p->id}/variations/{$vid}", array('status' => 'publish'));
+   
+                        if (strlen($var->sku) == 0) {
+                            continue;
+                        }
+                        $skuvarlist[$var->sku]=array("pid"=>$p->id,"vid"=>$vid);
+                        
+                    }
+              }            
         }
         unset($data);
 
@@ -201,7 +213,17 @@ class Items extends \App\Pages\Base
             $this->setError($ee->getMessage());
             return;
         }
-        $this->setSuccess("refreshed_items", count($data['update']));
+        $cnt =count($data['update']) ;
+        
+        foreach ($skuvarlist as $sku => $arr) {
+             $qty =  $elist[$sku];
+             if(strlen($qty)==0)$qty=0;
+             $client->put("products/{$arr['pid']}/variations/{$arr['vid']}", array(  'stock_quantity' => (string)$qty ));
+             $cnt++;
+        }      
+        
+        
+        $this->setSuccess("refreshed_items", $cnt);
     }
 
     //обновление цен в  магазине    
@@ -209,6 +231,7 @@ class Items extends \App\Pages\Base
         $modules = System::getOptions("modules");
         $client = \App\Modules\WC\Helper::getClient();
         $skulist = array();
+        $skuvarlist = array();
         try {
             $data = $client->get('products', array('status' => 'publish'));
         } catch(\Exception $ee) {
@@ -222,6 +245,18 @@ class Items extends \App\Pages\Base
                 continue;
             }
             $skulist[$p->sku] = $p->id;
+              if(is_array($p->variations)) {
+                    foreach($p->variations as $vid){
+                        $var = $client->get("products/{$p->id}/variations/{$vid}", array('status' => 'publish'));
+   
+                        if (strlen($var->sku) == 0) {
+                            continue;
+                        }
+                        $skuvarlist[$var->sku]=array("pid"=>$p->id,"vid"=>$vid);
+                        
+                    }
+              }
+            
         }
         unset($data);
 
@@ -231,7 +266,7 @@ class Items extends \App\Pages\Base
             if (strlen($item->item_code) == 0) {
                 continue;
             }
-            if ($skulist[$item->item_code] > 0) {
+            if ($skulist[$item->item_code] > 0 || is_array($skuvarlist[$item->item_code]) ) {
                 $price = $item->getPrice($modules['wcpricetype']);
                 if ($price > 0) {
                     $elist[$item->item_code] = $price;
@@ -250,7 +285,17 @@ class Items extends \App\Pages\Base
             $this->setError($ee->getMessage());
             return;
         }
-        $this->setSuccess("refreshed_items", count($data['update']));
+        
+        $cnt =count($data['update']) ;
+        
+        foreach ($skuvarlist as $sku => $arr) {
+             $price =  $elist[$sku];
+             $client->put("products/{$arr['pid']}/variations/{$arr['vid']}", array(  'price' => (string)$price, 'regular_price' => (string)$price));
+             $cnt++;
+        }      
+        
+        
+        $this->setSuccess("refreshed_items", $cnt);
     }
 
     //импорт товара с  магазина
@@ -329,6 +374,73 @@ class Items extends \App\Pages\Base
 
                 $item->save();
                 $i++;
+
+                //вариации
+                if(is_array($product->variations)) {
+                    foreach($product->variations as $vid){
+                        $var = $client->get("products/{$product->id}/variations/{$vid}", array('status' => 'publish', 'page' => $page, 'per_page' => 100));
+                        if (strlen($var->sku) == 0) {
+                            continue;
+                        }
+                        $cnt = Item::findCnt("item_code=" . Item::qstr($var->sku));
+                        if ($cnt > 0) {
+                            continue;
+                        } //уже  есть с  таким  артикулом
+
+                        
+                        $item = new Item();
+                      //  $item->wcvar = 1;
+                        $item->item_code = $var->sku;
+                        $item->itemname = $product->name ." (var {$vid})";
+                        //   $item->description = $product->short_description;
+
+                        if ($modules['wcpricetype'] == 'price1') {
+                            $item->price1 = $var->price;
+                        }
+                        if ($modules['wcpricetype'] == 'price2') {
+                            $item->price2 = $var->price;
+                        }
+                        if ($modules['wcpricetype'] == 'price3') {
+                            $item->price3 = $var->price;
+                        }
+                        if ($modules['wcpricetype'] == 'price4') {
+                            $item->price4 = $var->price;
+                        }
+                        if ($modules['wcpricetype'] == 'price5') {
+                            $item->price5 = $var->price;
+                        }
+
+
+                        if ($common['useimages'] == 1 && $var->image !=null ) {
+                       
+                                $im = @file_get_contents($var->image->src);
+                                if (strlen($im) > 0) {
+                                    $imagedata = getimagesizefromstring($im);
+                                    $image = new \App\Entity\Image();
+                                    $image->content = $im;
+                                    $image->mime = $imagedata['mime'];
+
+                                    $image->save();
+                                    $item->image_id = $image->image_id;
+                                    break;
+                                }
+                            
+                        }
+
+                         $item->save();
+                        $i++;                    
+                        
+                        
+                        
+                        
+                        
+                    }
+                    
+                }
+                
+                
+                
+                
             }
         }
 

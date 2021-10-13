@@ -317,7 +317,8 @@ class ARMPos extends \App\Pages\Base
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docpanel->form2->barcode->getText());
-        $store = $this->form1->store->getValue();
+            $code = ltrim($code,'0');
+    $store = $this->form1->store->getValue();
         $this->docpanel->form2->barcode->setText('');
         if ($code == '') {
             return;

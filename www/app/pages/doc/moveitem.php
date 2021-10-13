@@ -335,6 +335,8 @@ class MoveItem extends \App\Pages\Base
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
+                $code = ltrim($code,'0');
+
         $this->docform->barcode->setText('');
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
