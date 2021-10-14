@@ -714,12 +714,19 @@ class ItemList extends \App\Pages\Base
 
         }
         $htmls = str_replace("\'", "", $htmls);
-        $this->updateAjax(array(), "  $('#tag').html('{$htmls}') ;$('.seldel').prop('checked',null); $('#pform').modal()");
-
+        
+        if( \App\System::getUser()->usemobileprinter == 1) {
+            \App\Session::getSession()->printform =  $htmls;
+            $this->updateAjax(array(), "   $('.seldel').prop('checked',null); window.open('/index?p=App/Pages/ShowReport&arg=print')");
+        }
+        else {
+          $this->updateAjax(array(), "  $('#tag').html('{$htmls}') ;$('.seldel').prop('checked',null); $('#pform').modal()");
+             
+        }
 
     }
 
-    public function onAllCat($sender) {
+    public function onAllCat($sender) {                                                               
         $cat_id = $sender->getValue();
         if ($cat_id == 0) {
             return;
