@@ -6,7 +6,7 @@ namespace App\Pages;
 class ShowReport extends \Zippy\Html\WebPage
 {
 
-    public function __construct($type, $filename) {
+    public function __construct($type, $filename="") {
         parent::__construct();
 
         $user = \App\System::getUser();
