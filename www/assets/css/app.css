@@ -1,8 +1,8 @@
 body {
-    font-family: "Roboto", "Helvetica Neue";
+    font-family: "Segoe UI","Roboto", "Helvetica Neue"; 
     background-color: #FaFaFa;
 }
-
+      
 .brand-logo {
     width: 115px;
     height: 45px;
@@ -10,7 +10,7 @@ body {
     background: url(/assets/images/logo.png) no-repeat;
     background-size: cover;
 }
-
+      
 .logo-lg {
     font-family: "Georgia";
     color: #00c0ef;
@@ -20,13 +20,13 @@ body {
 .ctable  {
    color:#000; 
    background-color: #fff;
-   font-family: "Arial";
+   font-family:"Segoe UI","Arial";
 }
 
 .dark-mode .ctable  {
    color:#fff; 
     background-color: #454d55;
-   font-family: "Arial";
+   font-family: "Segoe UI","Arial";
      
 }
 
@@ -127,7 +127,7 @@ body {
    font-size:smaller ;
 }  
 table {
-  font-family: "Arial"
+  font-family:"Segoe UI","Arial"
 }  
 .toast-header {
   
@@ -135,8 +135,8 @@ table {
 }
 
 input[type=date] {
-    width:150px !important;
+    width:170px !important;
 }
 input[type=time] {
-    width:100px !important;
+    width:120px !important;
 }
