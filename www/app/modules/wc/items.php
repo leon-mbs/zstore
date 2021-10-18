@@ -151,7 +151,7 @@ class Items extends \App\Pages\Base
         $this->setSuccess("exported_items", count($elist));
 
         //обновляем таблицу
-        $this->filterOnSubmit(null);
+        $this->filterOnSubmit($this->filter);
     }
 
     //обновление  количества в  магазине
