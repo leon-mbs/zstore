@@ -75,7 +75,7 @@ class Items extends \App\Pages\Base
             }
         }
         unset($data);
-        $cat_id = $sender->searchcat->getValue(0);
+        $cat_id = $sender->searchcat->getValue();
 
         $w = "disabled <> 1";
         if ($cat_id > 0) {
