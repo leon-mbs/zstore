@@ -63,7 +63,9 @@ class Base extends \Zippy\Html\WebPage
         if(!is_array($shop["pages"]))  $shop["pages"] =  array();
         $this->_tvars['pages'] =array();
         foreach($shop["pages"] as $p)  {
-           $this->_tvars['pages'][]=array('link'=>  $p->link ,'title'=>$p->title);    
+           $link = _BASEURL .trim($p->link,"/");
+           
+           $this->_tvars['pages'][]=array('link'=> $link  ,'title'=>$p->title);    
         }
         
         

@@ -98,7 +98,7 @@ class Stock extends \ZCL\DB\Entity
             $stock->snumber = $snumber;
             $stock->sdate = $sdate;
 
-            \App\Helper::log(serialize($stock));
+            
             $stock->save();
         }
         if ($partiontype == '1' && $price > 0) {    //учет  по  последней цене
