@@ -63,7 +63,7 @@ class Order extends Base
 
     public function OnUpdate($sender) {
 
-
+        $this->listform->pitem->Reload();
         $this->sum = 0;
 
         $rows = $this->listform->pitem->getDataRows();
@@ -77,8 +77,9 @@ class Order extends Base
 
             $this->sum = $this->sum + $product->getPriceFinal() * $product->quantity;
         }
+       
         Basket::getBasket()->list = $this->basketlist;
-        $this->listform->pitem->Reload();
+        
     }
 
     public function OnDelete($sender) {
@@ -230,6 +231,12 @@ class Order extends Base
             $order->amount = $amount;
             $order->payamount = $amount;
             $order->branch_id = $op["defbranch"];
+            
+            if($order->user_id==0) {
+                $user = \App\Entity\user::getByLogin('admin') ;
+                $order->user_id = $user->user_id;    
+            }
+            
             $order->save();
             $order->updateStatus(Document::STATE_NEW);
             if ($shop['ordertype'] == 1) {  //Кассовый чек
@@ -255,6 +262,7 @@ class Order extends Base
             }
         } catch(\Exception $ee) {
             $this->setError($ee->getMessage());
+            return;
         }
 
 
