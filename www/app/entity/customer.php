@@ -209,4 +209,26 @@ class Customer extends \ZCL\DB\Entity
         return $conn->GetOne($sql);
 
     }
+    
+    public function getDolg() {
+     $br = "";
+        $c = \App\ACL::getBranchConstraint();
+        if (strlen($c) > 0) {
+            $br = " {$c} and ";
+        }    
+        $docs      = " and ( meta_name in('GoodsIssue','Invoice' ,'PosCheck','ServiceAct','Order','ReturnIssue')  or  (meta_name='IncomeMoney'  and content like '%<detail>1</detail>%'  )  or  (meta_name='OutcomeMoney'  and content like '%<detail>2</detail>%'  ))  ";
+ 
+        $conn = \ZDB\DB::getConnect();
+     $sql = "select  coalesce(sum(sam),0) as sam  from (
+        select   (case when  ( meta_name='OutcomeMoney' or meta_name='ReturnIssue' ) then  (payed - payamount )   else  (payamount - payed)  end) as sam 
+            from `documents_view`  
+            where {$br}   customer_id={$this->customer_id} and (payamount >0  or  payed >0) {$docs}  and state not in (1,2,3,17,8)   and  ( (meta_name <>'POSCheck' and payamount <> payed) or(meta_name = 'POSCheck' and payamount > payed  ))
+            ) t    ";
+
+ 
+        return $conn->GetOne($sql);
+
+    }
+    
+    
 }

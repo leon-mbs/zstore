@@ -49,6 +49,9 @@ class CompareList  // implements \Zippy\Interfaces\DataSource
     public function isEmpty() {
         return count($this->list) == 0;
     }
+    public function getItemCount() {
+        return count($this->list)  ;
+    }
 
     // реализация  DataSource
     /*

@@ -180,6 +180,8 @@ class Subscribe extends \ZCL\DB\Entity
         $header['mf'] = '';
         $header['pos'] = '';
         $header['source'] = '';
+        $header['payed'] = '';
+        $header['credit'] = '';
         $header['device'] = $doc->headerdata['device'];
         if (strlen($doc->headerdata['device']) > 0 && strlen($doc->headerdata['devsn']) > 0) {
             $header['device'] .= " (" . $doc->headerdata['devsn'] . ")";
@@ -209,6 +211,9 @@ class Subscribe extends \ZCL\DB\Entity
         if ($doc->headerdata['payed'] == 0 && $doc->payamount == 0) {
             $header['mf'] = \App\Helper::l("prepaid");
         }
+        if ($doc->headerdata['payed'] > 0) {
+            $header['payed'] = \App\Helper::fa($doc->headerdata['payed']);
+        }
 
         if ($doc->headerdata['pos']) {
             $pos = \App\Entity\Pos::load($doc->headerdata['pos']);
@@ -217,6 +222,14 @@ class Subscribe extends \ZCL\DB\Entity
         if ($doc->headerdata['salesource'] > 0) {
             $sl = H::getSaleSources();
             $header['source'] = $sl[$doc->headerdata['salesource']];
+        }
+        if ($doc->customer_id > 0) {
+            $cust = \App\Entity\Customer::load($doc->customer_id) ;
+            $dolg = $cust->getDolg();
+            if($dolg >0) {
+               $header['credit'] = \App\Helper::fa($dolg);    
+            }
+            
         }
 
         $table = array();

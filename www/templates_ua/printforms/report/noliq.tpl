@@ -19,7 +19,7 @@
         <th style="border: solid black 1px"> Найменування</th>
 
         <th style="border: solid black 1px">Од.</th>
-        <th align="right" style="border: solid black 1px">Кіл.</th>
+        <th align="right" style="border: solid black 1px">На кладi</th>
 
 
     </tr>

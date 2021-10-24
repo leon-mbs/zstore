@@ -69,7 +69,7 @@ class NoLiq extends \App\Pages\Base
         $this->data = array();
         $date = strtotime('-' . $mqty . ' month');
 
-        $sql = "select coalesce(sum(st.qty),0) as qty, st.itemname,st.item_code,st.storename from  store_stock_view  st where st.itemdisabled <> 1  and  st.qty >0 
+        $sql = "select  st.item_id, st.itemname,st.item_code,st.storename from  store_stock_view  st where st.itemdisabled <> 1  and  st.qty >0 
                {$cstr} and   st.stock_id not  in(select   stock_id    
                from  entrylist_view  
                where    document_date >" . $conn->DBDate($date) . "  and  quantity < 0 ) 
@@ -77,14 +77,18 @@ class NoLiq extends \App\Pages\Base
                from  entrylist_view  
                where    document_date <" . $conn->DBDate($date) . "  and  quantity > 0 ) 
                 
-               group by  st.itemname,st.item_code,st.storename 
-               order by  qty  desc
+               group by st.item_id, st.itemname,st.item_code,st.storename 
+               order by st.storename
                  ";
 
         $detail = array();
         $res = $conn->Execute($sql);
         foreach ($res as $item) {
-            $item['qty'] = H::fqty($item['qty']);
+            
+           $sql = "  select coalesce(sum(qty),0) as totqty  from  store_stock  where item_id = {$item['item_id']} ";
+    
+            
+            $item['qty'] = H::fqty($conn->GetOne($sql));
             $detail[] = $item;
         }
 
