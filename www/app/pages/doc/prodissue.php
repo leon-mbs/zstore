@@ -99,6 +99,11 @@ class ProdIssue extends \App\Pages\Base
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                     }
+                    if ($basedoc->meta_name == 'GoodsReceipt') {
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
+                       
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                    }
                     if ($basedoc->meta_name == 'ProdReceipt') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
