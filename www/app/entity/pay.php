@@ -91,7 +91,7 @@ class Pay extends \ZCL\DB\Entity
                     $payb->user_id = \App\System::getUser()->user_id;
                     $payb->save();
 
-                    \App\Entity\IOState::addIOState($document_id, $payb->amount, \App\Entity\IOState::TYPE_BANK);
+                    \App\Entity\IOState::addIOState($document_id, 0-$payb->amount, \App\Entity\IOState::TYPE_BANK);
 
 
                 }
