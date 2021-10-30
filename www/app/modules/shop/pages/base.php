@@ -30,7 +30,8 @@ class Base extends \Zippy\Html\WebPage
 
         //  $this->_tvars["islogined"] = $user->user_id > 0;
         $this->_tvars["currencyname"] = $shop["currencyname"];
-        $this->_tvars["notcnt"] = false;
+        $this->_tvars["basketcnt"] = false;
+        $this->_tvars["comparecnt"] = false;
         $this->_tvars["phone"] = strlen($shop["phone"]) > 0 ? $shop["phone"] : false;
 
         $this->add(new \Zippy\Html\Form\Form('searchform'));
@@ -63,7 +64,9 @@ class Base extends \Zippy\Html\WebPage
         if(!is_array($shop["pages"]))  $shop["pages"] =  array();
         $this->_tvars['pages'] =array();
         foreach($shop["pages"] as $p)  {
-           $this->_tvars['pages'][]=array('link'=>  $p->link ,'title'=>$p->title);    
+           $link = _BASEURL .trim($p->link,"/");
+           
+           $this->_tvars['pages'][]=array('link'=> $link  ,'title'=>$p->title);    
         }
         
         
@@ -115,10 +118,14 @@ class Base extends \Zippy\Html\WebPage
 
     protected function beforeRender() {
         $basket = \App\Modules\Shop\Basket::getBasket();
+        $comp = \App\Modules\Shop\CompareList::getCompareList();
+        
         $this->shopcart->setVisible($basket->isEmpty() == false);
-        $this->showcompare->setVisible(\App\Modules\Shop\CompareList::getCompareList()->isEmpty() == false);
+        $this->showcompare->setVisible($comp->isEmpty() == false);
 
-        $this->_tvars["notcnt"] = $basket->getItemCount();
+        $this->_tvars["basketcnt"] = $basket->getItemCount();
+        
+        $this->_tvars["comparecnt"] = $comp->getItemCount();
     }
 
     protected function afterRender() {

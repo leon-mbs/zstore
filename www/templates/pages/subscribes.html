@@ -139,9 +139,17 @@
                             <tr><td><small><b>{forpay} </b></small></td><td><small>К оплате</small></td></tr>
                             <tr><td><small><b>{source} </b></small></td><td><small>Источник продаж</small></td></tr>
                             <tr><td><small><b>{device} </b></small></td><td><small>Изделие, принятое от заказчика</small></td></tr>
+                            <tr><td><small><b>{credit} </b></small></td><td><small>Долг покупателя</small></td></tr>
+                            <tr><td><small><b>{payed} </b></small></td><td><small>Принятая оплата  по  документу</small></td></tr>
 
                         </table>
-
+                        Если  нужно вывести  текст  в  зависимости  от значения, например
+                        <br>
+                             {#credit}
+                                Ваш долг {credit}  &nbsp;
+                             {/credit}
+                        <br>
+                        <br>
                         Для  вывода  списков, например  позиций  документа нужно  заключить  вывод в теги
                         {#list}  и  {/list>} <br>
                         Внутри строки  списка  допускаются  следующие  теги
@@ -165,7 +173,7 @@
                             &lt;tr> &lt;td>{item_name} &lt;/td> &lt;td align="right" >{qty} &lt;/td>&lt;/tr> <br>
                             {/list} <br>
                             &lt;/table>&lt;br>   <br> 
-                            К оплате  {forpay}  как  с  куста &lt;br><br> 
+                            Ты нам  торчишь  {forpay}    &lt;br><br> 
                             Прайсы  по   &lt;a href="http://price.com/">ссылке&lt;/a>&lt;br><br> 
                             Пока, лошара
                         </p>

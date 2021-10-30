@@ -107,6 +107,7 @@ class PayBayList extends \App\Pages\Base
 
     public function custlistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $cust = $row->getDataItem();
+        
         $row->add(new RedirectLink('customer_name', "\\App\\Pages\\Reference\\CustomerList", array($cust->customer_id)))->setValue($cust->customer_name);
         $row->add(new Label('phone', $cust->phone));
         $row->add(new Label('amount', H::fa($cust->sam)));

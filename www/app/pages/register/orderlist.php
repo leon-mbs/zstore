@@ -154,7 +154,7 @@ class OrderList extends \App\Pages\Base
             $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
         }
         if ($sender->id == "bref") {
-            $this->_doc->updateStatus(Document::STATE_REFUSED);
+            $this->_doc->updateStatus(Document::STATE_FAIL);
 
             $this->setWarn('order_canceled');
         }

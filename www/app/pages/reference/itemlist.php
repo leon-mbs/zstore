@@ -503,7 +503,7 @@ class ItemList extends \App\Pages\Base
         }
 
         $in .= ")";
-        return Item::findArray('itemname', "coalesce(item_type,0)  in (2,5) and  item_id not in {$in} and (itemname like {$text} or item_code like {$text}) and disabled <> 1", 'itemname');
+        return Item::findArray('itemname', " item_type    in (2,5) and  item_id not in {$in} and (itemname like {$text} or item_code like {$text}) and disabled <> 1", 'itemname');
     }
 
     public function OnAddSet($sender) {

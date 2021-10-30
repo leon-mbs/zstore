@@ -21,7 +21,18 @@
                             <select zippy="itype" class="form-control  ">
                                 <option value="0">Только справочник</option>
                                 <option value="1">С оприходованием на склад</option>
-                                <option value="2">Только  обновить  цены и названия</option>
+                                
+                            </select>
+                        </div>
+                        <div class="form-group  ">
+                            <label for="icompare">Сопоставление при  обновлении</label>
+                            <select zippy="icompare" class="form-control  ">
+                                <option value="0">По артикулу</option>
+                                <option value="1">По наименованию</option>
+                                <option value="2">По наименованию и бренду</option>
+                                <option value="3">По артиклу и бренду</option>
+                                
+                                
                             </select>
                         </div>
 
@@ -45,10 +56,7 @@
                             <input zippy="passfirst" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="passfirst">Пропустить первую строку</label>
                         </div>
-                        <div class="  form-check">
-                            <input zippy="checkname" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="checkname">Проверять на уникальность наименования</label>
-                        </div>
+                     
                         <div class="  form-check">
                             <input zippy="noshowprice" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="noshowprice">Не  показывать в  прайсе </label>
@@ -95,9 +103,9 @@
                             </div>
                         </div>  
                         <div class="form-group  row">
-                            <label class="col-8 col-form-label" for="colgr">Категория</label>
+                            <label class="col-8 col-form-label" for="colcat">Категория</label>
                             <div class="col-4">
-                                <select  zippy="colgr" class="form-control  ">
+                                <select  zippy="colcat" class="form-control  ">
                                 </select>
                             </div>  
                         </div>
@@ -108,20 +116,38 @@
                                 </select>
                             </div>  
                         </div>
-                        <div class="form-group  row">
-                            <label class="col-8 col-form-label" for="colmsr">Ед. измерения</label>
+                      
+    <div class="form-group  row">
+                            <label class="col-8 col-form-label" data-label="colqty" for="colqty">Количество</label>
                             <div class="col-4">
-                                <select  zippy="colmsr" class="form-control  ">
+                                <select    zippy="colqty" class="form-control  ">
                                 </select>
                             </div>  
                         </div>
-
+                        <div class="form-group row ">
+                            <label class="col-8 col-form-label" data-label="colinprice" for="colinprice">Учетная цена</label>
+                            <div class="col-4">
+                                <select   zippy="colinprice" class="form-control  ">
+                                </select>
+                            </div>  
+                        </div> 
 
 
                     </div>
 
                     <div class="col-4">
-                        <div class="form-group  row  ">
+                       <div class="form-group  ">
+                            <label><b>&nbsp;</b> </label>
+
+                        </div>  
+                       <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="colmsr">Ед. измерения</label>
+                            <div class="col-4">
+                                <select  zippy="colmsr" class="form-control  ">
+                                </select>
+                            </div>  
+                        </div>                          
+                       <div class="form-group  row  ">
                             <label class="col-8 col-form-label" for="coldesc">Описание</label>
                             <div class="col-4">
                                 <select   zippy="coldesc" class="form-control  ">
@@ -136,20 +162,7 @@
                             </div>  
                         </div>                    
 
-                        <div class="form-group  row">
-                            <label class="col-8 col-form-label" data-label="colqty" for="colqty">Количество</label>
-                            <div class="col-4">
-                                <select    zippy="colqty" class="form-control  ">
-                                </select>
-                            </div>  
-                        </div>
-                        <div class="form-group row ">
-                            <label class="col-8 col-form-label" data-label="colinprice" for="colinprice">Учетная цена</label>
-                            <div class="col-4">
-                                <select   zippy="colinprice" class="form-control  ">
-                                </select>
-                            </div>  
-                        </div>                        
+                       
                         <div class="form-group  row ">
                             <label zippy="pricename1" class="col-8 col-form-label" for="colprice1"> </label>
                             <div class="col-4">
@@ -185,7 +198,7 @@
                                 </select>
                             </div>  
                         </div>                                      
-
+                        
 
 
                     </div>
@@ -266,10 +279,7 @@
                             <input zippy="npassfirst" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="npassfirst">Пропустить первую строку</label>
                         </div>
-                        <div class="  form-check">
-                            <input zippy="ncheckname" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="ncheckname">Проверять на уникальность наименования</label>
-                        </div>
+                      
 
                         <div class="  form-check">
                             <input zippy="npreview" type="checkbox" class="form-check-input">

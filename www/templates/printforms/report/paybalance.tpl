@@ -27,6 +27,18 @@
         <td align="right">{{in}}</td>
         <td></td>
     </tr>
+    {{#docdet}}
+   
+    
+    <tr>
+
+        <td style="font-size:smaller">&nbsp;&nbsp;{{docdesc}}</td>
+
+        <td style="font-size:smaller" align="right">{{indet}}</td>
+       <td></td>
+    </tr>   
+    {{/docdet}}
+    
     {{/_detail}}
     <tr style="font-weight: bolder;">
 
@@ -51,6 +63,17 @@
         <td align="right">{{out}}</td>
         <td></td>
     </tr>
+    {{#docdet}}
+    
+    <tr>
+
+        <td style="font-size:smaller">&nbsp;&nbsp;{{docdesc}}</td>
+
+        <td style="font-size:smaller" align="right">{{indet}}</td>
+       <td></td>
+    </tr>   
+    {{/docdet}}    
+    
     {{/_detail2}}
     <tr style="font-weight: bolder;">
 

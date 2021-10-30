@@ -28,6 +28,8 @@ class Import extends \App\Pages\Base
         $form = $this->add(new Form("iform"));
 
         $form->add(new DropDownChoice("itype", array(), 0))->onChange($this, "onType");
+        
+        $form->add(new DropDownChoice("icompare", array(), 0));
 
         $form->add(new DropDownChoice("item_type", Item::getTypes(), Item::TYPE_TOVAR));
 
@@ -38,13 +40,8 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("colname", $cols));
         $form->add(new DropDownChoice("colcode", $cols));
         $form->add(new DropDownChoice("colbarcode", $cols));
-        $form->add(new DropDownChoice("colgr", $cols));
+        $form->add(new DropDownChoice("colcat", $cols));
         $form->add(new DropDownChoice("colqty", $cols));
-        $form->add(new DropDownChoice("colprice1", $cols));
-        $form->add(new DropDownChoice("colprice2", $cols));
-        $form->add(new DropDownChoice("colprice3", $cols));
-        $form->add(new DropDownChoice("colprice4", $cols));
-        $form->add(new DropDownChoice("colprice5", $cols));
         $form->add(new DropDownChoice("colcell", $cols));
 
         $pt = \App\Entity\Item::getPriceTypeList();
@@ -55,13 +52,21 @@ class Import extends \App\Pages\Base
         $form->add(new Label('pricename4', $pt['price4']));
         $form->add(new Label('pricename5', $pt['price5']));
 
+        $form->add(new DropDownChoice("colprice1", $cols))->setVisible(strlen($pt['price1'])>0);
+        $form->add(new DropDownChoice("colprice2", $cols))->setVisible(strlen($pt['price2'])>0);
+        $form->add(new DropDownChoice("colprice3", $cols))->setVisible(strlen($pt['price3'])>0);
+        $form->add(new DropDownChoice("colprice4", $cols))->setVisible(strlen($pt['price4'])>0);
+        $form->add(new DropDownChoice("colprice5", $cols))->setVisible(strlen($pt['price5'])>0);
+       
+        
+        
         $form->add(new DropDownChoice("colinprice", $cols));
         $form->add(new DropDownChoice("colmsr", $cols));
         $form->add(new DropDownChoice("colbrand", $cols));
         $form->add(new DropDownChoice("coldesc", $cols));
         $form->add(new CheckBox("passfirst"));
         $form->add(new CheckBox("preview"));
-        $form->add(new CheckBox("checkname"));
+        
         $form->add(new CheckBox("noshowprice"));
         $form->add(new CheckBox("noshowshop"));
 
@@ -86,7 +91,6 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("ncolmsr", $cols));
         $form->add(new CheckBox("npassfirst"));
         $form->add(new CheckBox("npreview"));
-        $form->add(new CheckBox("ncheckname"));
 
         $form->onSubmit($this, "onNImport");
 
@@ -121,48 +125,27 @@ class Import extends \App\Pages\Base
         $this->iform->colqty->setVisible($t == 1);
         $this->iform->store->setVisible($t == 1);
         $this->iform->colinprice->setVisible($t == 1);
-        $this->iform->checkname->setVisible(true);
-        $this->iform->item_type->setVisible(true);
-        $this->iform->noshowprice->setVisible(true);
-        $this->iform->noshowshop->setVisible(true);
-        $this->iform->colname->setVisible(true);
-        $this->iform->colbarcode->setVisible(true);
-        $this->iform->colgr->setVisible(true);
-        $this->iform->colmsr->setVisible(true);
-        $this->iform->coldesc->setVisible(true);
-        $this->iform->colqty->setVisible(true);
-        $this->iform->colinprice->setVisible(true);
+ 
 
-        if ($t == 2) {
-            $this->iform->item_type->setVisible(false);
-            $this->iform->checkname->setVisible(false);
-            $this->iform->noshowprice->setVisible(false);
-            $this->iform->noshowshop->setVisible(false);
-            $this->iform->colbarcode->setVisible(false);
-            $this->iform->colgr->setVisible(false);
-            $this->iform->colmsr->setVisible(false);
-            $this->iform->coldesc->setVisible(false);
-            $this->iform->colqty->setVisible(false);
-            $this->iform->colinprice->setVisible(false);
-
-        }
+   
     }
 
     public function onImport($sender) {
         $t = $this->iform->itype->getValue();
+        $cmp = $this->iform->icompare->getValue();
         $store = $this->iform->store->getValue();
         $item_type = $this->iform->item_type->getValue();
 
         $preview = $this->iform->preview->isChecked();
         $passfirst = $this->iform->passfirst->isChecked();
 
-        $checkname = $this->iform->checkname->isChecked();
+        //$checkname = $this->iform->checkname->isChecked();
         $this->_tvars['preview'] = false;
 
         $colname = $this->iform->colname->getValue();
         $colcode = $this->iform->colcode->getValue();
         $colbarcode = $this->iform->colbarcode->getValue();
-        $colgr = $this->iform->colgr->getValue();
+        $colcat = $this->iform->colcat->getValue();
         $colqty = $this->iform->colqty->getValue();
         $colprice1 = $this->iform->colprice1->getValue();
         $colprice2 = $this->iform->colprice2->getValue();
@@ -171,12 +154,11 @@ class Import extends \App\Pages\Base
         $colprice5 = $this->iform->colprice5->getValue();
         $colinprice = $this->iform->colinprice->getValue();
         $colmsr = $this->iform->colmsr->getValue();
+        $colcell = $this->iform->colcell->getValue();
         $colbrand = $this->iform->colbrand->getValue();
         $coldesc = $this->iform->coldesc->getValue();
-        if ($colname === '0' && $t != 2) {
-            $this->setError('noselcolname');
-            return;
-        }
+     
+      
         if ($t == 1 && $colqty === '0') {
             $this->setError('noselcolqty');
             return;
@@ -208,6 +190,12 @@ class Import extends \App\Pages\Base
 
         unset($oSpreadsheet);
 
+        $catlist=array();
+        
+        foreach(Category::findArray('cat_name','') as $cid =>$cname) {
+             $catlist[$cname]= $cid;
+        }
+        
         if ($preview) {
 
             $this->_tvars['preview'] = true;
@@ -218,7 +206,7 @@ class Import extends \App\Pages\Base
                     'colname'    => $row[$colname],
                     'colcode'    => $row[$colcode],
                     'colbarcode' => $row[$colbarcode],
-                    'colgr'      => $row[$colgr],
+                    'colcat'      => $row[$colcat],
                     'colqty'     => $row[$colqty],
                     'colmsr'     => $row[$colmsr],
                     'colinprice' => $row[$colinprice],
@@ -228,6 +216,7 @@ class Import extends \App\Pages\Base
                     'colprice4'  => $row[$colprice4],
                     'colprice5'  => $row[$colprice5],
                     'colbrand'   => $row[$colbrand],
+                    'colcell'    => $row[$colcell],
                     'coldesc'    => $row[$coldesc]
                 );
             }
@@ -246,144 +235,112 @@ class Import extends \App\Pages\Base
             $itemcode = trim($row[$colcode]);
             $brand = trim($row[$colbrand]);
             $itemname = trim($row[$colname]);
+            $itembarcode = trim($row[$colbarcode]);
+            $cell = trim($row[$colcell]);
+            $msr = trim($row[$colcell]);
+            $desc = trim($row[$coldesc]);
+            $catname = trim($row[$colcat]);
+            $inprice = str_replace(',', '.', trim($row[$colinprice]));
+            $qty = str_replace(',', '.', trim($row[$colqty]));
 
-            if ($t == 2) {   //обновление  цен
-
-                if (strlen($itemcode) == 0) {
-                    continue;
-                }
-                if (strlen($brand) > 0) {
-                    $it = Item::getFirst('item_code=' . Item::qstr($itemcode) . " and manufacturer = " . Item::qstr($brand));
-                } else {
-                    $it = Item::getFirst('item_code=' . Item::qstr($itemcode));
-                }
-                if ($it == null) {
-                    continue;
-                }
-
-                if ($colprice1 != "0") {
-                    $it->price1 = $price1;
-                }
-                if ($colprice2 != "0") {
-                    $it->price2 = $price2;
-                }
-                if ($colprice3 != "0") {
-                    $it->price3 = $price3;
-                }
-                if ($colprice4 != "0") {
-                    $it->price4 = $price4;
-                }
-                if ($colprice5 != "0") {
-                    $it->price5 = $price5;
-                }
-                if (strlen($itemname) > 0) {
-                    $it->itemname = $itemname;
-                }
-
-                $it->save();
-                $cnt++;
-
-                continue;
-            }
-
-
-            $catname = $row[$colgr];
+            $cat_id=0;
+            
             if (strlen($catname) > 0) {
-                $cat = Category::getFirst('cat_name=' . Category::qstr($catname));
-                if ($cat == null) {
+                
+                if ($catlist[$catname] >0) {
+                    $cat_id = $catlist[$catname] ;
+                }  else {
                     $cat = new Category();
                     $cat->cat_name = $catname;
                     $cat->save();
+                    $cat_id = $cat->cat_id;
                 }
             }
             $item = null;
-            $itemname = trim($row[$colname]);
-            $itemcode = trim($row[$colcode]);
-            $itembarcode = trim($row[$colbarcode]);
-            if (strlen($itemname) > 0) {
-
-                if (strlen($itembarcode) > 0) {
-                    $item = Item::getFirst('bar_code=' . Item::qstr($itembarcode));
-                } else {
-                    if (strlen($itemcode) > 0) {
-                        $item = Item::getFirst('item_code=' . Item::qstr($itemcode));
-                    }
-                }
-
-                if ($item == null && $checkname == true) {
-                    $item = Item::getFirst('itemname=' . Item::qstr($itemname));
-                }
-
-
-                if ($item == null) {
-                    $price1 = str_replace(',', '.', trim($row[$colprice1]));
-                    $price2 = str_replace(',', '.', trim($row[$colprice2]));
-                    $price3 = str_replace(',', '.', trim($row[$colprice3]));
-                    $price4 = str_replace(',', '.', trim($row[$colprice4]));
-                    $price5 = str_replace(',', '.', trim($row[$colprice5]));
-                    $inprice = str_replace(',', '.', trim($row[$colinprice]));
-                    $qty = str_replace(',', '.', trim($row[$colqty]));
-                    $item = new Item();
-                    $item->itemname = $itemname;
-                    if (strlen($row[$colcode]) > 0) {
-                        $item->item_code = trim($row[$colcode]);
-                    }
-                    if (strlen($row[$colbarcode]) > 0) {
-                        $item->bar_code = trim($row[$colbarcode]);
-                    }
-                    if (strlen($row[$colmsr]) > 0) {
-                        $item->msr = trim($row[$colmsr]);
-                    }
-                    if (strlen($row[$colcell]) > 0) {
-                        $item->cell = trim($row[$colcell]);
-                    }
-                    if (strlen($row[$colbrand]) > 0) {
-                        $item->manufacturer = $row[$colbrand];
-                    }
-                    if (strlen(trim($row[$coldesc])) > 0) {
-                        $item->description = trim($row[$coldesc]);
-                    }
-                    if ($price1 > 0) {
-                        $item->price1 = $price1;
-                    }
-                    if ($price2 > 0) {
-                        $item->price2 = $price2;
-                    }
-                    if ($price3 > 0) {
-                        $item->price3 = $price3;
-                    }
-                    if ($price4 > 0) {
-                        $item->price4 = $price4;
-                    }
-                    if ($price5 > 0) {
-                        $item->price5 = $price5;
-                    }
-
-                    if ($inprice > 0) {
-                        $item->price = $inprice;
-                    }
-                    if ($qty > 0) {
-                        $item->quantity = $qty;
-                    }
-                    if ($cat->cat_id > 0) {
-                        $item->cat_id = $cat->cat_id;
-                    }
-                    if ($item_type > 0) {
-                        $item->item_type = $item_type;
-                    }
-
-                    $item->amount = $item->quantity * $item->price;
-
-                    $item->noprice = $this->iform->noshowprice->isChecked() ? 1 : 0;
-                    $item->noshop = $this->iform->noshowshop->isChecked() ? 1 : 0;
-
-                    $item->save();
-                    $cnt++;
-                    if ($item->quantity > 0) {
-                        $newitems[] = $item; //для склада   
-                    }
-                }
+ 
+            //поиск существующих
+            if($cmp==0 && strlen($itemcode) > 0){
+               $item = Item::getFirst('item_code=' . Item::qstr($itemcode)); 
             }
+            if($cmp==1 && strlen($itemname) > 0){
+               $item = Item::getFirst('itemname=' . Item::qstr($itemname)); 
+            }
+            if($cmp==2 && strlen($itemname) > 0 && strlen($brand) > 0){
+               $item = Item::getFirst('itemname=' . Item::qstr($itemname). ' and manufacturer='. Item::qstr($brand) ); 
+            }
+  
+            if($cmp==3 && strlen($itemcode) > 0 && strlen($brand) > 0){
+               $item = Item::getFirst('item_code=' . Item::qstr($itemcode). ' and manufacturer='. Item::qstr($brand) ); 
+            }
+  
+
+            if ($item == null) {
+                $item = new Item();
+            }
+            
+            if (strlen($itemname) > 0) {
+                $item->itemname = trim($itemname);
+            }
+            if (strlen($itemcode) > 0) {
+                $item->item_code = trim($itemcode);
+            }
+            if (strlen($itembarcode) > 0) {
+                $item->bar_code = trim($itembarcode);
+            }
+            if (strlen($msr) > 0) {
+                $item->msr = trim($msr);
+            }
+            if (strlen($cell) > 0) {
+                $item->cell = trim($cell);
+            }
+            if (strlen($brand) > 0) {
+                $item->manufacturer = $brand;
+            }
+            if (strlen($desc) > 0) {
+                $item->description = trim($desc);
+            }
+            if ($price1 > 0) {
+                $item->price1 = $price1;
+            }
+            if ($price2 > 0) {
+                $item->price2 = $price2;
+            }
+            if ($price3 > 0) {
+                $item->price3 = $price3;
+            }
+            if ($price4 > 0) {
+                $item->price4 = $price4;
+            }
+            if ($price5 > 0) {
+                $item->price5 = $price5;
+            }
+
+            if ($inprice > 0) {
+                $item->price = $inprice;
+            }
+            if ($qty > 0) {
+                $item->quantity = $qty;
+            }
+           
+            if ($cat_id > 0) {
+                $item->cat_id = $cat_id;
+            }
+            if ($item_type > 0) {
+                $item->item_type = $item_type;
+            }
+
+            $item->amount = $item->quantity * $item->price;
+
+            $item->noprice = $this->iform->noshowprice->isChecked() ? 1 : 0;
+            $item->noshop = $this->iform->noshowshop->isChecked() ? 1 : 0;
+
+            $item->save();
+            $cnt++;
+            if ($item->quantity > 0) {
+                $newitems[] = $item; //для склада   
+            }
+                 
+            
         }
         if (count($newitems) > 0) {
             $doc = \App\Entity\Doc\Document::create('IncomeItem');
@@ -524,7 +481,7 @@ class Import extends \App\Pages\Base
     public function onNImport($sender) {
         $store = $this->nform->nstore->getValue();
         $c = $this->nform->ncust->getKey();
-        $checkname = $this->nform->ncheckname->isChecked();
+        //$checkname = $this->nform->ncheckname->isChecked();
 
         $preview = $this->nform->npreview->isChecked();
         $passfirst = $this->nform->npassfirst->isChecked();
@@ -609,9 +566,10 @@ class Import extends \App\Pages\Base
                 if (strlen($itemcode) > 0) {
                     $item = Item::getFirst('item_code=' . Item::qstr($itemcode));
                 }
-                if ($checkname == true && $item == null) {
+                if (strlen($itemname) > 0) {
                     $item = Item::getFirst('itemname=' . Item::qstr($itemname));
                 }
+   
 
                 $price = str_replace(',', '.', trim($row[$colprice]));
                 $qty = str_replace(',', '.', trim($row[$colqty]));

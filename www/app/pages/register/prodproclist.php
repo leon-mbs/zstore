@@ -116,7 +116,7 @@ class ProdProcList extends \App\Pages\Base
 
         $row->add(new Label('name', $p->procname));
         $row->add(new Label('basedoc', $p->basedoc));
-        $row->add(new Label('snumber', [HttpGet]->snumber));
+        $row->add(new Label('snumber', $p->snumber));
         $row->add(new Label('state', ProdProc::getStateName($p->state)));
            
         $row->add(new Label('startdate', H::fd($p->startdate)));

@@ -12,7 +12,7 @@
 
         <th style="border: solid black 1px">Товар</th>
         <th style="border: solid black 1px">Код</th>
-        <th align="right" style="border: solid black 1px">Кол.</th>
+        <th align="right" style="border: solid black 1px">На складе</th>
 
     </tr>
     {{#_detail}}

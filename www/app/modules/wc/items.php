@@ -68,14 +68,14 @@ class Items extends \App\Pages\Base
             $this->setError($ee->getMessage());
             return;
         }
-
+          $qty =  count($data);
         foreach ($data as $p) {
             if (strlen($p->sku) > 0) {
                 $skus[] = $p->sku;
             }
         }
         unset($data);
-        $cat_id = $sender->searchcat->getValue(0);
+        $cat_id = $sender->searchcat->getValue();
 
         $w = "disabled <> 1";
         if ($cat_id > 0) {
@@ -151,7 +151,7 @@ class Items extends \App\Pages\Base
         $this->setSuccess("exported_items", count($elist));
 
         //обновляем таблицу
-        $this->filterOnSubmit(null);
+        $this->filterOnSubmit($this->filter);
     }
 
     //обновление  количества в  магазине
@@ -159,69 +159,88 @@ class Items extends \App\Pages\Base
         $modules = System::getOptions("modules");
         $client = \App\Modules\WC\Helper::getClient();
 
-        try {
-            $data = $client->get('products', array('status' => 'publish'));
-        } catch(\Exception $ee) {
-            $this->setError($ee->getMessage());
-            return;
-        }
-
-        $skulist = array();
-        $skuvarlist = array();
-
-        foreach ($data as $p) {
-            if (strlen($p->sku) == 0) {
-                continue;
+        $page=1;
+        $cnt =1;       
+        while(true) {
+     
+            try {
+                $data = $client->get('products', array('status' => 'publish' , 'page' => $page, 'per_page' => 100));
+            } catch(\Exception $ee) {
+                $this->setError($ee->getMessage());
+                return;
             }
-            $skulist[$p->sku] = $p->id;
-              if(is_array($p->variations)) {
-                    foreach($p->variations as $vid){
-                        $var = $client->get("products/{$p->id}/variations/{$vid}", array('status' => 'publish'));
-   
-                        if (strlen($var->sku) == 0) {
-                            continue;
+             $c = count($data);
+             
+             \App\Helper::log($page*$c); ;            
+             
+                if ($c == 0) {
+                    break;
+                }
+                $page++;
+                
+            $skulist = array();
+            $skuvarlist = array();
+     
+            foreach ($data as $p) {
+                if (strlen($p->sku) == 0) {
+                    continue;
+                }
+                $skulist[$p->sku] = $p->id;
+                  if(is_array($p->variations)) {
+                        foreach($p->variations as $vid){
+                            $var = $client->get("products/{$p->id}/variations/{$vid}", array('status' => 'publish'));
+       
+                            if (strlen($var->sku) == 0) {
+                                continue;
+                            }
+                            $skuvarlist[$var->sku]=array("pid"=>$p->id,"vid"=>$vid);
+                            
                         }
-                        $skuvarlist[$var->sku]=array("pid"=>$p->id,"vid"=>$vid);
-                        
-                    }
-              }            
-        }
-        unset($data);
-
-        $elist = array();
-        $items = Item::find("disabled <> 1  ");
-        foreach ($items as $item) {
-            if (strlen($item->item_code) == 0) {
-                continue;
+                  }            
             }
-            if ($skulist[$item->item_code] > 0) {
-                $qty = $item->getQuantity();
-                if ($qty > 0) {
-                    $elist[$item->item_code] = $qty;
+            unset($data);
+
+               
+            
+            
+            $qty =  count($skulist);
+            $qty =  count($skuvarlist);
+            
+            $elist = array();
+            $items = Item::find("disabled <> 1  ");
+            foreach ($items as $item) {
+                if (strlen($item->item_code) == 0) {
+                    continue;
+                }
+                if ($skulist[$item->item_code] > 0) {
+                    $qty = $item->getQuantity();
+                    if ($qty > 0) {
+                        $elist[$item->item_code] = $qty;
+                    }
                 }
             }
-        }
-        $data = array('update' => array());
-        foreach ($elist as $sku => $qty) {
+            $data = array('update' => array());
+            foreach ($elist as $sku => $qty) {
 
-            $data['update'][] = array('id' => $skulist[$sku], 'stock_quantity' => (string)$qty);
-        }
+                $data['update'][] = array('id' => $skulist[$sku], 'stock_quantity' => (string)$qty);
+                $cnt++;
+            }
 
-        try {
-            $client->post('products/batch', $data);
-        } catch(\Exception $ee) {
-            $this->setError($ee->getMessage());
-            return;
+            try {
+                $client->post('products/batch', $data);
+            } catch(\Exception $ee) {
+                $this->setError($ee->getMessage());
+                return;
+            }
+             
+            
+            foreach ($skuvarlist as $sku => $arr) {
+                 $qty =  $elist[$sku];
+                 if(strlen($qty)==0)$qty=0;
+                 $client->put("products/{$arr['pid']}/variations/{$arr['vid']}", array(  'stock_quantity' => (string)$qty ));
+                 $cnt++;
+            }      
         }
-        $cnt =count($data['update']) ;
-        
-        foreach ($skuvarlist as $sku => $arr) {
-             $qty =  $elist[$sku];
-             if(strlen($qty)==0)$qty=0;
-             $client->put("products/{$arr['pid']}/variations/{$arr['vid']}", array(  'stock_quantity' => (string)$qty ));
-             $cnt++;
-        }      
-        
         
         $this->setSuccess("refreshed_items", $cnt);
     }
@@ -230,70 +249,82 @@ class Items extends \App\Pages\Base
     public function onUpdatePrice($sender) {
         $modules = System::getOptions("modules");
         $client = \App\Modules\WC\Helper::getClient();
-        $skulist = array();
-        $skuvarlist = array();
-        try {
-            $data = $client->get('products', array('status' => 'publish'));
-        } catch(\Exception $ee) {
-            $this->setError($ee->getMessage());
-            return;
-        }
-
-        $sku = array();
-        foreach ($data as $p) {
-            if (strlen($p->sku) == 0) {
-                continue;
+       
+       $page=1;
+        $cnt =1;       
+        while(true) {
+           
+           
+            $skulist = array();
+            $skuvarlist = array();
+            try {
+                $data = $client->get('products', array('status' => 'publish'));
+            } catch(\Exception $ee) {
+                $this->setError($ee->getMessage());
+                return;
             }
-            $skulist[$p->sku] = $p->id;
-              if(is_array($p->variations)) {
-                    foreach($p->variations as $vid){
-                        $var = $client->get("products/{$p->id}/variations/{$vid}", array('status' => 'publish'));
-   
-                        if (strlen($var->sku) == 0) {
-                            continue;
+              $c = count($data);
+                if ($c == 0) {
+                    break;
+                }
+                $page++;
+
+            $sku = array();
+            foreach ($data as $p) {
+                if (strlen($p->sku) == 0) {
+                    continue;
+                }
+                $skulist[$p->sku] = $p->id;
+                  if(is_array($p->variations)) {
+                        foreach($p->variations as $vid){
+                            $var = $client->get("products/{$p->id}/variations/{$vid}", array('status' => 'publish'));
+       
+                            if (strlen($var->sku) == 0) {
+                                continue;
+                            }
+                            $skuvarlist[$var->sku]=array("pid"=>$p->id,"vid"=>$vid);
+                            
                         }
-                        $skuvarlist[$var->sku]=array("pid"=>$p->id,"vid"=>$vid);
-                        
-                    }
-              }
-            
-        }
-        unset($data);
-
-        $elist = array();
-        $items = Item::find("disabled <> 1  ");
-        foreach ($items as $item) {
-            if (strlen($item->item_code) == 0) {
-                continue;
+                  }
+                
             }
-            if ($skulist[$item->item_code] > 0 || is_array($skuvarlist[$item->item_code]) ) {
-                $price = $item->getPrice($modules['wcpricetype']);
-                if ($price > 0) {
-                    $elist[$item->item_code] = $price;
+            unset($data);
+
+            $elist = array();
+            $items = Item::find("disabled <> 1  ");
+            foreach ($items as $item) {
+                if (strlen($item->item_code) == 0) {
+                    continue;
+                }
+                if ($skulist[$item->item_code] > 0 || is_array($skuvarlist[$item->item_code]) ) {
+                    $price = $item->getPrice($modules['wcpricetype']);
+                    if ($price > 0) {
+                        $elist[$item->item_code] = $price;
+                    }
                 }
             }
-        }
-        $data = array('update' => array());
-        foreach ($elist as $sku => $price) {
+            $data = array('update' => array());
+            foreach ($elist as $sku => $price) {
+                 $cnt++;
+                $data['update'][] = array('id' => $skulist[$sku], 'price' => (string)$price, 'regular_price' => (string)$price);
+            }
 
-            $data['update'][] = array('id' => $skulist[$sku], 'price' => (string)$price, 'regular_price' => (string)$price);
+            try {
+                $client->post('products/batch', $data);
+            } catch(\Exception $ee) {
+                $this->setError($ee->getMessage());
+                return;
+            }
+            
+           
+            
+            foreach ($skuvarlist as $sku => $arr) {
+                 $price =  $elist[$sku];
+                 $client->put("products/{$arr['pid']}/variations/{$arr['vid']}", array(  'price' => (string)$price, 'regular_price' => (string)$price));
+                 $cnt++;
+            }      
+        
         }
-
-        try {
-            $client->post('products/batch', $data);
-        } catch(\Exception $ee) {
-            $this->setError($ee->getMessage());
-            return;
-        }
-        
-        $cnt =count($data['update']) ;
-        
-        foreach ($skuvarlist as $sku => $arr) {
-             $price =  $elist[$sku];
-             $client->put("products/{$arr['pid']}/variations/{$arr['vid']}", array(  'price' => (string)$price, 'regular_price' => (string)$price));
-             $cnt++;
-        }      
-        
         
         $this->setSuccess("refreshed_items", $cnt);
     }
