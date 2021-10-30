@@ -1,0 +1,93 @@
+<html>
+
+    <body>
+        <style>
+            .list-group-item {
+                padding: 04px;
+            }
+        </style>
+        <div class="row">
+            <div class="col-12">
+                <h3>Атрибути для товарiв</h3>
+                <small>Показуются  тiльки  категорii  якi мають  товари</small>
+            </div>
+            <div class="col-12 col-md-6  ">
+                <table class="table table-sm">
+                    <tr zippy="grouplist">
+                        <td ><a zippy="groupname"></a></td>
+                    </tr> 
+
+                </table>
+            </div>
+
+            <div class="col-12  col-md-6  ">
+
+
+
+                <div zippy="attrpanel" class="row">
+                    <div class="col-12    col-xl-10 ">
+                        <h4>Список атрибутiв</h4>
+                        <a zippy="addattr" class="btn btn-sm  btn-primary">Новий атрибут</a><br>
+                        <table class="   table    table-sm ">
+                            <tr>
+                                <th>Назва</th>
+                                <th>Тип</th>
+                                <th>Значення</th>
+                                <th style="width:16px;">&nbsp;</th>
+                                <th style="width:16px;">&nbsp;</th>
+                                <th style="width:75px;">&nbsp;</th>
+                            </tr>
+                            <tr zippy="attritem">
+                                <td zippy="itemname"></td>
+                                <td zippy="itemtype"></td>
+                                <td zippy="itemvalues"></td>
+                                <td><a zippy="orderup"><i class="fa fa-arrow-up"></i></a></td>
+                                <td><a zippy="orderdown"><i class="fa fa-arrow-down"></i></a></td>
+                                <td><a zippy="itemedit"><i class="fa fa-edit"></i></a> <a zippy="itemdel"><i
+                                            class="fa fa-trash"></i></a></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <form zippy="attreditform" class="col-12 col-md-6 ">
+                        <hr>
+                        <div class="form-group">
+                            <label for="attrtype">Тип: &nbsp;<i zippy="tt" class="fa fa-info-circle" data-toggle="tooltip"
+                                                                data-placement="top" title=""></i></label>
+                            <select zippy="attrtype" class="form-control"></select>
+                            <span zippy="attrtypename" class="form-control"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="attrname">Назва:</label>
+                            <input type="text" zippy="attrname" class="form-control" required="required"/>
+                        </div>
+                        <div class="form-group" zippy="attrvaluespanel">
+                            <label for="attrvalues">Значення:</label>
+                            <textarea rows="5" cols="30" class="form-control" zippy="attrvalues"></textarea>
+                            <small>Декiлька значень вводяться  через кому</small>
+                        </div>
+                        <div class="form-group" zippy="meashurepanel">
+                            <label for="meashure">Од. вим:</label>
+                            <input type="text" zippy="meashure" class="form-control" style="width:50px;"/>
+                        </div>
+
+
+
+                        <div class="form-group">
+
+                            <input type="submit" class="btn btn-sm  btn-success" value="Зберегти"/>
+                        </div>
+                        <input type="hidden" zippy="attrid" value="0">
+                    </form>
+                </div>
+
+
+            </div>
+        </div>
+        <script>
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            });
+        </script>
+    </body>
+</html>
