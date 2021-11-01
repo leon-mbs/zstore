@@ -74,7 +74,20 @@
 
 
 
-                            {{#ppo}}
+
+
+                            <div class="form-group">
+                                <label for="editcomment">Комментарий</label>
+                                <textarea class="form-control" zippy="editcomment">
+                                </textarea>
+                            </div>
+                            <div class="form-group">
+                                <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  ">&nbsp;&nbsp;
+                                <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary  ">
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-xl-3">
+                               {{#ppo}}
                             <div class="form-group">
                                 <div class="form-check">
                                     <input zippy="editusefisc" type="checkbox" class="form-check-input">
@@ -97,16 +110,6 @@
                             </div>
                             {{/ppo}}
 
-
-                            <div class="form-group">
-                                <label for="editcomment">Комментарий</label>
-                                <textarea class="form-control" zippy="editcomment">
-                                </textarea>
-                            </div>
-                            <div class="form-group">
-                                <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  ">&nbsp;&nbsp;
-                                <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary  ">
-                            </div>
                         </div>
 
                     </div>

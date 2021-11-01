@@ -10,6 +10,7 @@ use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\File;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
@@ -34,6 +35,7 @@ class FirmList extends \App\Pages\Base
         $this->firmtable->add(new DataView('firmlist', new \ZCL\DB\EntityDataSource('\App\Entity\Firm', '', 'disabled,firm_name'), $this, 'firmlistOnRow'))->Reload();
         $this->firmtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
 
+      
         $this->add(new Form('firmdetail'))->setVisible(false);
         $this->firmdetail->add(new TextInput('editfirm_name'));
         $this->firmdetail->add(new TextInput('editinn'));
@@ -45,10 +47,18 @@ class FirmList extends \App\Pages\Base
         $this->firmdetail->add(new TextInput('editlogo'));
         $this->firmdetail->add(new TextInput('editstamp'));
         $this->firmdetail->add(new TextInput('editsign'));
-        $this->firmdetail->add(new TextInput('editpposerv'));
-        $this->firmdetail->add(new TextInput('editpposervport'));
+      
+        
         $this->firmdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->firmdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
+        
+        $this->add(new Form('keyform'))->setVisible(false);        
+        $this->keyform->add(new Button('send'))  ;
+        $this->keyform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
+        $this->keyform->add(new TextInput('password'));
+        $this->keyform->add(new File('keyfile'));
+        $this->keyform->add(new File('certfile'));
+     
     }
 
     public function firmlistOnRow($row) {
@@ -56,6 +66,7 @@ class FirmList extends \App\Pages\Base
 
         $row->add(new Label('firm_name', $item->firm_name));
 
+        $row->add(new ClickLink('ppo'))->onClick($this, 'ppoOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
@@ -71,6 +82,12 @@ class FirmList extends \App\Pages\Base
         }
         $this->firmtable->firmlist->Reload();
     }
+   public function ppoOnClick($sender) {
+
+       $this->_firm = $sender->owner->getDataItem();
+
+  
+    }
 
     public function editOnClick($sender) {
         $this->_firm = $sender->owner->getDataItem();
@@ -85,8 +102,6 @@ class FirmList extends \App\Pages\Base
         $this->firmdetail->editlogo->setText($this->_firm->logo);
         $this->firmdetail->editstamp->setText($this->_firm->stamp);
         $this->firmdetail->editsign->setText($this->_firm->sign);
-        $this->firmdetail->editpposerv->setText($this->_firm->pposerver);
-        $this->firmdetail->editpposervport->setText($this->_firm->pposerverport);
 
         $this->firmdetail->editdisabled->setChecked($this->_firm->disabled);
     }
@@ -111,8 +126,6 @@ class FirmList extends \App\Pages\Base
         $this->_firm->logo = $this->firmdetail->editlogo->getText();
         $this->_firm->stamp = $this->firmdetail->editstamp->getText();
         $this->_firm->sign = $this->firmdetail->editsign->getText();
-        $this->_firm->pposerver = trim($this->firmdetail->editpposerv->getText());
-        $this->_firm->pposerverport = trim($this->firmdetail->editpposervport->getText());
 
         if ($this->_firm->firm_name == '') {
             $this->setError("entername");
@@ -121,7 +134,7 @@ class FirmList extends \App\Pages\Base
 
         $this->_firm->disabled = $this->firmdetail->editdisabled->isChecked() ? 1 : 0;
 
-        $this->_firm->Save();
+        $this->_firm->save();
         $this->firmdetail->setVisible(false);
         $this->firmtable->setVisible(true);
         $this->firmtable->firmlist->Reload();
@@ -130,6 +143,7 @@ class FirmList extends \App\Pages\Base
     public function cancelOnClick($sender) {
         $this->firmtable->setVisible(true);
         $this->firmdetail->setVisible(false);
+        $this->keyform->setVisible(false);
     }
 
 }

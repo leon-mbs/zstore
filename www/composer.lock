@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "152ccf0e15112b5d9b3f9ed1d2dc8693",
+    "content-hash": "0ea36cc6b01756255c6cde18c36381a8",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -886,6 +886,47 @@
                 "source": "https://github.com/leon-mbs/phpquery/tree/master"
             },
             "time": "2020-04-10T20:43:49+00:00"
+        },
+        {
+            "name": "leon-mbs/ppolib",
+            "version": "1.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/leon-mbs/ppolib.git",
+                "reference": "61a29a27cc8ff97a334bde89704579f48798f281"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/leon-mbs/ppolib/zipball/61a29a27cc8ff97a334bde89704579f48798f281",
+                "reference": "61a29a27cc8ff97a334bde89704579f48798f281",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2",
+                "sop/asn1": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PPOLib\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Леонид Мартынюк"
+                }
+            ],
+            "description": "Библиотека  цифровой подписи для РРО (Украина)",
+            "homepage": "https://github.com/leon-mbs/ppolib",
+            "support": {
+                "issues": "https://github.com/leon-mbs/ppolib/issues",
+                "source": "https://github.com/leon-mbs/ppolib/tree/1.0.6"
+            },
+            "time": "2021-10-27T18:11:11+00:00"
         },
         {
             "name": "leon-mbs/zdb",
@@ -2634,6 +2675,60 @@
                 "source": "https://github.com/sabberworm/PHP-CSS-Parser/tree/8.3.1"
             },
             "time": "2020-06-01T09:10:00+00:00"
+        },
+        {
+            "name": "sop/asn1",
+            "version": "4.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sop/asn1.git",
+                "reference": "660fd4e1e9adeb013f995a1d69ed2fe3569af2b2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sop/asn1/zipball/660fd4e1e9adeb013f995a1d69ed2fe3569af2b2",
+                "reference": "660fd4e1e9adeb013f995a1d69ed2fe3569af2b2",
+                "shasum": ""
+            },
+            "require": {
+                "ext-gmp": "*",
+                "ext-mbstring": "*",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Sop\\ASN1\\": "lib/ASN1/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Joni Eskelinen",
+                    "email": "jonieske@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A PHP library for X.690 ASN.1 DER encoding and decoding.",
+            "homepage": "https://github.com/sop/asn1",
+            "keywords": [
+                "DER",
+                "asn.1",
+                "asn1",
+                "x.690",
+                "x690"
+            ],
+            "support": {
+                "issues": "https://github.com/sop/asn1/issues",
+                "source": "https://github.com/sop/asn1/tree/master"
+            },
+            "time": "2019-06-26T06:52:06+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",

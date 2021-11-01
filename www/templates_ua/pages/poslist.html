@@ -70,6 +70,18 @@
                                 <small>Якщо задана використовується в чеках замість налаштувань компанii</small>
                             </div>
 
+
+                            <div class="form-group">
+                                <label for="editcomment">Коментар</label>
+                                <textarea class="form-control" zippy="editcomment">
+                                </textarea>
+                            </div>
+                            <div class="form-group">
+                                <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">&nbsp;&nbsp;
+                                <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary  ">
+                            </div>
+                        </div>
+                            <div class="col-6 col-md-4 col-xl-3">
                             {{#ppo}}
                             <div class="form-group">
                                 <div class="form-check">
@@ -92,16 +104,8 @@
                                 <input class="form-control" zippy="editfiscalnumber"/>
                             </div>
                             {{/ppo}}
-                            <div class="form-group">
-                                <label for="editcomment">Коментар</label>
-                                <textarea class="form-control" zippy="editcomment">
-                                </textarea>
+                            
                             </div>
-                            <div class="form-group">
-                                <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">&nbsp;&nbsp;
-                                <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary  ">
-                            </div>
-                        </div>
                     </div>
 
                 </form>
