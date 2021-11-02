@@ -220,6 +220,7 @@ class Order extends Base
                     $c->customer_name = $name;
                     $c->email = $email;
                     $c->phone = $phone;
+                    $c->type == \App\Entity\Customer::TYPE_BAYER;
                     $c->save();
                     $order->customer_id = $c->customer_id;
                 }

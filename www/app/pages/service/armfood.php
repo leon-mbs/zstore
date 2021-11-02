@@ -580,7 +580,7 @@ class ARMFood extends \App\Pages\Base
 
             if ($this->_doc->customer_id > 0) {
                 $this->docpanel->listsform->customer->setKey($this->_doc->customer_id);
-                $this->docpanel->listsform->customer->setText($this->_doc->headerdata['customer_name']);
+                $this->docpanel->listsform->customer->setText($this->_doc->customer_name);
             }
 
             if (intval($this->_doc->headerdata['delivery']) > 0) {
