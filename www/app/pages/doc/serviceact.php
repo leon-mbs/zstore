@@ -92,7 +92,7 @@ class ServiceAct extends \App\Pages\Base
         if ($docid > 0) { //загружаем   содержимое   документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
-            $this->docform->notes->setText($this->_doc->headerdata['notes']);
+            $this->docform->notes->setText($this->_doc->notes);
             $this->docform->gar->setText($this->_doc->headerdata['gar']);
 
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
@@ -130,16 +130,20 @@ class ServiceAct extends \App\Pages\Base
                 if ($basedoc->meta_name == 'Task') {
                     $this->docform->customer->setKey($basedoc->customer_id);
                     $this->docform->customer->setText($basedoc->customer_name);
-
-
-                    $this->_servicelist = $basedoc->unpackDetails('detaildata');
+                    $this->_servicelist = array();
+                    foreach($basedoc->unpackDetails('detaildata') as $v ) {
+                       $this->_servicelist[$v->service_id]= $v ;    
+                    }
+                    
                 }
                 if ($basedoc->meta_name == 'Invoice') {
                     $this->docform->customer->setKey($basedoc->customer_id);
                     $this->docform->customer->setText($basedoc->customer_name);
 
-
-                    $this->_servicelist = $basedoc->unpackDetails('detaildata');
+                    $this->_servicelist = array();
+                    foreach($basedoc->unpackDetails('detaildata') as $v ) {
+                       $this->_servicelist[$v->service_id]= $v ;    
+                    }
                 }
             }
         }
@@ -181,7 +185,7 @@ class ServiceAct extends \App\Pages\Base
             ;
         }               //для совместимости
         else {
-            $service->_rowid = $service->service_id;
+            $service->rowid = $service->service_id;
         }
 
         $this->_rowid = $service->rowid;
@@ -236,6 +240,8 @@ class ServiceAct extends \App\Pages\Base
             $next = count($this->_servicelist) > 0 ? max(array_keys($this->_servicelist)) : 0;
             $service->rowid = $next + 1;
         }
+        
+        $kk = array_keys($this->_servicelist) ;
         $this->_servicelist[$service->rowid] = $service;
 
         $this->_rowid = 0;
