@@ -150,6 +150,22 @@ class Helper
         return  array_keys($pages);
     }
     
+  
+    //список атрибутов для  вариации
+    public static function getAttrVar($cat_id ) {
+        $conn = DB::getConnect();
+        $sql = "select attribute_id,   attributename   from  shop_attributes   
+                    where   cat_id = {$cat_id} and attributetype = 3  order  by  attributename ";
+        $rs =  $conn->Execute($sql);
+        $attr  = array();
+        foreach($rs as $row){
+           $attr[ $row['attribute_id']]= $row['attributename'] ;
+        }
+        
+        return $attr;
+    }
+  
+  
     
     /*
       //формирование  условий отбора   по  выбранным  критериям

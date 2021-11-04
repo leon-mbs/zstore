@@ -5,6 +5,8 @@ namespace App\Modules\Shop\Pages;
 use App\Application as App;
 use App\Modules\Shop\Entity\Product;
 use App\Modules\Shop\Entity\ProductAttribute;
+use App\Modules\Shop\Entity\Variation;
+use App\Modules\Shop\Entity\VarItem;
 use App\Modules\Shop\Entity\ProductGroup;
 use App\Modules\Shop\Helper;
 use App\System;
@@ -14,8 +16,10 @@ use Zippy\Html\DataList\DataView;
 use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\Form;
+use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\Button;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
@@ -26,8 +30,11 @@ class VarList extends \App\Pages\Base
 
     private $group      = null;
     public  $_grouplist = array();
-    public  $attrlist   = array();
-    private $mm;
+    public  $_varlist   = array();
+    public  $_itemlist   = array();
+     
+    private $_var;
+ 
 
     public function __construct() {
         parent::__construct();
@@ -50,28 +57,30 @@ class VarList extends \App\Pages\Base
 
         $this->grouplist->Reload();
 
-        $attrpanel = $this->add(new Panel('attrpanel'));
-        $attrpanel->add(new \Zippy\Html\DataList\DataView('attritem', new \Zippy\Html\DataList\ArrayDataSource(new Bind($this, 'attrlist')), $this, 'OnAttrRow'));
+        $varpanel = $this->add(new Panel('varpanel'));
+        $varpanel->add(new Panel('varlistpanel'));
+        $varpanel->varlistpanel->add(new \Zippy\Html\DataList\DataView('varlist', new \Zippy\Html\DataList\ArrayDataSource(new Bind($this, '_varlist')), $this, 'OnVarRow'));
 
         //$this->UpdateAttrList();
 
-        $attrpanel->add(new ClickLink('addattr'))->onClick($this, 'OnAddAttribute');
-        $form = $attrpanel->add(new Form('attreditform'));
+        $varpanel->add(new ClickLink('addvar'))->onClick($this, 'OnAddVar');
+        
+        $form = $varpanel->add(new Form('vareditform'));
         $form->setVisible(false);
-        $form->onSubmit($this, 'OnSaveAttribute');
-        $form->add(new TextInput('attrname'));
-        $form->add(new TextInput('attrid'));
-        $form->add(new \Zippy\Html\Form\DropDownChoice('attrtype', Helper::getAttributeTypes()))->onChange($this, 'OnAttrType');
-        $form->add(new Label('attrtypename'));
-        $form->add(new Label('tt'))->setAttribute("title", "Атрибут 'Есть/Нет' указывает наличие или  отсутствие какойго либо параметра. Наприме FM-тюнер");
-
-        $form->add(new Panel('attrvaluespanel'));
-        $form->attrvaluespanel->add(new TextArea('attrvalues'));
-        $form->attrvaluespanel->setVisible(false);
-
-        $form->add(new Panel('meashurepanel'));
-        $form->meashurepanel->add(new TextInput('meashure'));
-        $form->meashurepanel->setVisible(false);
+        $form->onSubmit($this, 'OnSaveVar');
+        $form->add(new TextInput('editvarname'));
+       
+        $form->add(new  DropDownChoice('editattrtype')) ;
+        $form->add(new  Button('cancelvar'))->onClick($this,'OnCancel') ;
+        
+        $varpanel->add(new Panel('itemspanel'))->setVisible(false);
+        $varpanel->itemspanel->add(new Form('itemform'))->onSubmit($this,'onAddItem');
+        $varpanel->itemspanel->itemform->add(new  DropDownChoice('itemsel'))  ;
+        $varpanel->itemspanel->add(new  Label('vartitle'))  ;
+        $varpanel->itemspanel->add(new  ClickLink('backvar',$this,'onBackVar'))  ;
+        $varpanel->itemspanel->add(new \Zippy\Html\DataList\DataView('varitemslist', new \Zippy\Html\DataList\ArrayDataSource(new Bind($this, '_itemlist')), $this, 'OnItemRow'));
+      
+        
     }
 
     public function OnGroupRow($row) {
@@ -86,180 +95,162 @@ class VarList extends \App\Pages\Base
         $this->group = $sender->getOwner()->getDataItem();
 
         $this->grouplist->Reload(false);
-        $this->UpdateAttrList();
-        $this->attrpanel->attreditform->setVisible(false);
+        $this->UpdateVarList();
+        
+        $this->varpanel->itemspanel->setVisible(false); 
+     
+        $this->varpanel->vareditform->setVisible(false);
     }
 
-    //обновить атрибуты
-    protected function UpdateAttrList() {
-        $conn = \ZCL\DB\DB::getConnect();
-        $this->mm = $conn->GetRow("select coalesce(max(ordern),0) as mm,coalesce(min(ordern),0) as mi from shop_attributes_order where  pg_id=" . $this->group->cat_id);
+    //обновить вариации
+    protected function UpdateVarList() {
+        $this->_varlist =  Variation::find('cat_id='.$this->group->cat_id,'varname')  ;
 
-        $this->attrlist = Helper::getProductAttributeListByGroup($this->group->cat_id);
-        $this->attrpanel->attritem->Reload();
+        $this->varpanel->vareditform->editattrtype->setOptionList(Helper::getAttrVar($this->group->cat_id));
+        $this->varpanel->varlistpanel->varlist->Reload();
     }
 
-    public function OnAttrRow(\Zippy\Html\DataList\DataRow $datarow) {
-        $item = $datarow->getDataItem();
-        $datarow->add(new Label("itemname", $item->attributename));
-        $attrlist = Helper::getAttributeTypes();
-        $datarow->add(new Label("itemtype", $attrlist[$item->attributetype]));
-        $datarow->add(new Label("itemvalues", $item->valueslist));
-        $datarow->add(new ClickLink("itemdel", $this, 'OnDeleteAtribute'))->setVisible($this->group->cat_id == $item->cat_id);
-        $datarow->add(new ClickLink("itemedit", $this, 'OnEditAtribute'))->setVisible($this->group->cat_id == $item->cat_id);
-        $datarow->add(new ClickLink("orderup", $this, 'OnUp'))->setVisible($item->ordern > $this->mm["mi"]);
-        $datarow->add(new ClickLink("orderdown", $this, 'OnDown'))->setVisible($item->ordern < $this->mm["mm"]);
-
-        return $datarow;
+    public function OnVarRow(\Zippy\Html\DataList\DataRow $datarow) {
+        $var = $datarow->getDataItem();
+        
+        $datarow->add(new Label("varname", $var->varname));
+        
+        $datarow->add(new Label("attrname", $var->attributename ));
+        
+        $datarow->add(new ClickLink("vardel", $this, 'OnDeleteVar'));
+        $datarow->add(new ClickLink("varedit", $this, 'OnEditVar'));
+        $datarow->add(new ClickLink("varitems", $this, 'OnItems'));
+        
+        
     }
 
-    public function OnAddAttribute($sender) {
-        $form = $this->attrpanel->attreditform;
+    public function OnAddVar($sender) {
+        $form = $this->varpanel->vareditform;
         $form->setVisible(true);
-        $form->attrtype->setVisible(true);
-        $form->attrvaluespanel->setVisible(false);
-        $form->attrvaluespanel->attrvalues->setValue('');
-        $form->meashurepanel->setVisible(false);
-        $form->meashurepanel->meashure->setValue('');
-        $form->attrtypename->setVisible(false);
-        $form->attrtype->setValue(1);
-        $form->attrname->setValue("");
-        $form->attrid->setValue("0");
+        
+        $this->varpanel->varlistpanel->setVisible(false);
+   
+        $form->editvarname->setText("");
+        $form->editattrtype->setValue("0");
+        
+        $this->_var = new  Variation();
     }
 
-    //сменить  тип  атрибута
-    public function OnAttrType($sender) {
+  
 
-        $type = $sender->getValue();
-        $this->attrpanel->attreditform->attrvaluespanel->setVisible(false);
-        $this->attrpanel->attreditform->meashurepanel->setVisible(false);
-        if ($type == 2) {
-            $this->attrpanel->attreditform->meashurepanel->setVisible(true);
-        }
-        if ($type == 3 || $type == 4) {
-            $this->attrpanel->attreditform->attrvaluespanel->setVisible(true);
-        }
-        if ($type == 1) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattryn"));
-        }
-        if ($type == 2) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattrnum"));
-        }
-        if ($type == 3) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattrlist"));
-        }
-        if ($type == 4) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattrset"));
-        }
-        if ($type == 5) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут 'Строка'- просто текстовый параметр (например тип процессора). Значени не  используется в фильтре. ");
-        }
-    }
+    public function OnEditVar($sender) {
+        $this->_var = $sender->getOwner()->getDataItem();
 
-    public function OnEditAtribute($sender) {
-        $item = $sender->getOwner()->getDataItem();
-
-        $form = $this->attrpanel->attreditform;
+        $form = $this->varpanel->vareditform;
         $form->setVisible(true);
-        $form->attrid->setValue($item->attribute_id);
-        $form->attrname->setValue($item->attributename);
-        $form->meashurepanel->meashure->setValue($item->valueslist);
-        $form->attrvaluespanel->attrvalues->setValue($item->valueslist);
-
-        $form->attrtype->setVisible(false);
-        $form->attrvaluespanel->setVisible(false);
-        $form->meashurepanel->setVisible(false);
-        $form->attrtypename->setVisible(true);
-
-        $attrlist = Helper::getAttributeTypes();
-
-        $form->attrtypename->setText($attrlist[$item->attributetype]);
-
-        if ($item->attributetype == 2) {
-            $form->meashurepanel->setVisible(true);
-        }
-        if ($item->attributetype == 3 || $item->attributetype == 4) {
-            $form->attrvaluespanel->setVisible(true);
-        }
+        $this->varpanel->varlistpanel->setVisible(false);
+        $form->editattrtype->setValue($this->_var->attr_id);
+        $form->editvarname->setText($this->_var->varname);
+   
     }
 
-    public function OnSaveAttribute($sender) {
-        $form = $this->attrpanel->attreditform;
-        $attrid = $form->attrid->getText();
-
-        if ($attrid == "0") {
-            $attr = new ProductAttribute();
-            $attr->cat_id = $this->group->cat_id;
-            $attr->attributetype = $form->attrtype->getValue();
-        } else {
-            $attr = ProductAttribute::load($attrid);
+    public function OnSaveVar($sender) {
+        $form = $this->varpanel->vareditform;
+        $attrid = $form->editattrtype->getValue();
+        if($attrid==0)  return;
+        
+        if($this->_var->attr_id!=$attrid){
+            Variation::delItems($this->_var->var_id);
         }
-        $attr->attributename = $form->attrname->getText();
-
-        if (strlen($attr->attributename) == 0) {
-            $this->setError("entername");
-
-            return;
-        }
-        if ($attr->attributetype == 2) {
-            $attr->valueslist = $form->meashurepanel->meashure->getText();
-        }
-        if ($attr->attributetype == 3 || $attr->attributetype == 4) {
-            $attr->valueslist = $form->attrvaluespanel->attrvalues->getText();
-            $attr->valueslist = preg_replace('/\s+/', "", $attr->valueslist);
-        }
-
-        $attr->Save();
-
-        if ($attrid == "0") {
-            $conn = \ZCL\DB\DB::getConnect();
-            $no = $conn->GetOne("select coalesce(max(ordern),0)+1 from shop_attributes_order");
-            $conn->Execute("insert into shop_attributes_order (pg_id,attr_id,ordern)values({$attr->cat_id},{$attr->attribute_id},{$no} )");
-        }
-
-        $this->UpdateAttrList();
-
+        $this->_var->attr_id=$attrid;
+        $this->_var->varname=$form->editvarname->getText();
+        
+        $this->_var->save();
+        
+        $this->UpdateVarList();
+        $this->varpanel->varlistpanel->setVisible(true);
+ 
         $form->setVisible(false);
     }
 
-    public function OnUp($sender) {
-        $a1 = $sender->getOwner()->getDataItem();
-
-        //предыдущий
-        $a2 = ProductAttribute::getFirst("cat_id={$this->group->cat_id} and ordern < {$a1->ordern}", "ordern desc");
-        $conn = \ZCL\DB\DB::getConnect();
-        $conn->Execute("update shop_attributes_order set ordern={$a2->ordern} where pg_id={$this->group->cat_id} and attr_id={$a1->attribute_id}");
-        $conn->Execute("update shop_attributes_order set ordern={$a1->ordern} where pg_id={$this->group->cat_id} and attr_id={$a2->attribute_id}");
-
-        $this->UpdateAttrList();
+  
+    public function OnCancel($sender) {
+       $this->varpanel->varlistpanel->setVisible(true);
+       $this->varpanel->vareditform->setVisible(false);
+         
     }
-
-    public function OnDown($sender) {
-        $a1 = $sender->getOwner()->getDataItem();
-
-        //следующий
-        $a2 = ProductAttribute::getFirst("cat_id={$this->group->cat_id} and ordern > {$a1->ordern}", "ordern asc");
-        $conn = \ZCL\DB\DB::getConnect();
-        $conn->Execute("update shop_attributes_order set ordern={$a2->ordern} where pg_id={$this->group->cat_id} and attr_id={$a1->attribute_id}");
-        $conn->Execute("update shop_attributes_order set ordern={$a1->ordern} where pg_id={$this->group->cat_id} and attr_id={$a2->attribute_id}");
-
-        $this->UpdateAttrList();
+    public function OnDeleteVar($sender) {
+        $id = $sender->getOwner()->getDataItem()->var_id;
+        Variation::delItems($id);
+        Variation::delete($id);
+        $this->UpdateVarList();
+         
     }
-
-    public function OnDeleteAtribute($sender) {
-        $id = $sender->getOwner()->getDataItem()->attribute_id;
-        ProductAttribute::delete($id);
-        $this->UpdateAttrList();
-        $this->attrpanel->attreditform->setVisible(false);
+    public function OnItems($sender) {
+        $this->_var = $sender->getOwner()->getDataItem();
+        $this->varpanel->varlistpanel->setVisible(false); 
+        $this->varpanel->itemspanel->setVisible(true); 
+        $this->varpanel->itemspanel->vartitle->setText($this->_var->varname); 
+        
+         
+        $this->UpdateItemList();
+        
+         
     }
-
+    public function onAddItem($sender) {
+        $item_id = $sender->itemsel->getValue();
+        
+        if($item_id>0) {
+            $vi = new VarItem();
+            $vi->item_id=$item_id;
+            $vi->var_id=$this->_var->var_id;
+            $vi->save();
+            
+        }
+         
+        $this->UpdateItemList();       
+    }
+   
+    public function OnItemRow($row) {
+      $item = $row->getDataItem();
+         
+      $row->add(new Label("varitemname", $item->itemname));
+      $row->add(new Label("varitemcode", $item->item_code));
+      $row->add(new Label("varattrval", $item->attributevalue));
+      $row->add(new ClickLink("delitem", $this, 'OnDeleteItem'));
+        
+         
+    }
+   
+    public function OnDeleteItem($sender) {
+        $id = $sender->getOwner()->getDataItem()->varitem_id;
+    
+        VarItem::delete($id);
+        $this->UpdateItemList();
+         
+    }
+  
+    public function onBackVar($sender) {
+        
+        $this->varpanel->varlistpanel->setVisible(true);
+        $this->varpanel->itemspanel->setVisible(false); 
+        
+         
+    }
+    
+    //обновить товары
+    protected function UpdateItemList() {
+        $this->_itemlist =  VarItem::find('var_id='.$this->_var->var_id,'itemname')  ;
+        
+        $this->varpanel->itemspanel->varitemslist->Reload();
+        
+        $items = VarItem::getFreeItems($this->_var->attr_id) ;
+        $this->varpanel->itemspanel->itemform->itemsel->setOptionList($items); 
+        
+    }    
+    
     public function beforeRender() {
         parent::beforeRender();
 
-        $this->attrpanel->setVisible(false);
+        $this->varpanel->setVisible(false);
         if ($this->group instanceof \App\Entity\Category) {
 
-            $this->attrpanel->setVisible(true);
+            $this->varpanel->setVisible(true);
         }
     }
 
