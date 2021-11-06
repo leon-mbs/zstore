@@ -131,12 +131,32 @@ class Catalog extends Base
             }
         } //filtered
 
-        foreach (Product::find($where, 'itemname', -1, -1, $fields) as $prod) {
-            $prod->price = $prod->getPrice($options['defpricetype']);
+        //не  в вариациях
 
+        
+        $wherenovar = $where ." and  item_id  not in(select item_id from shop_varitems)     ";
+         
+        foreach (Product::find($wherenovar, 'itemname', -1, -1, $fields) as $prod) {
+            $prod->price = $prod->getPrice($options['defpricetype']);
+            
             $this->_list[] = $prod;
         }
 
+        $sql   = "select min(item_id) from shop_varitems where item_id in (select item_id from items where {$where} ) group by var_id" ;
+        
+        $ids= $conn->GetCol($sql);
+        
+        if(count($ids)>0) {
+           foreach (Product::find("item_id in(". implode(',',$ids)  ."  )", 'itemname', -1, -1, $fields) as $prod) {
+                $prod->price = $prod->getPrice($options['defpricetype']);
+             
+                $this->_list[] = $prod;
+            }
+     
+        }
+        
+        
+           
         $sort = $this->sortform->sortorder->getValue();
 
         if ($sort == 0) {

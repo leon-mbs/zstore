@@ -149,6 +149,39 @@ class Product extends \App\Entity\Item
         return $im;
     }
 
+ 
+    /**
+    * возвращает  вариации
+    * 
+    */
+    public function getVarList($defpricetype) {
+        $conn = \ZCL\DB\DB::getConnect();
+        
+        $var_id = $conn->GetOne("select coalesce(var_id,0) from shop_varitems where  item_id=".$this->item_id);
+        if($var_id>0) {
+           $items=array();
+           
+           foreach (VarItem::find("var_id=".$var_id) as $vi) {
+                $prod = Product::load($vi->item_id) ;
+                $vi->price = $prod->getPurePrice($defpricetype);
+                $vi->actionprice = $prod->getActionPrice($vi->price);
+                $vi->hasaction = $prod->hasAction() ;
+                   
+                $items[] = $vi;
+           }       
+           
+           $var = Variation::load($var_id) ;
+           $this->vattrname =  $var->attributename;
+               
+           return $items;
+        }
+        else {
+          return array();  
+        } 
+    }
+
+    
+    
 }
 
 /**

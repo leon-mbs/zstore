@@ -13,6 +13,7 @@ use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
+use Zippy\Html\Panel;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\RedirectLink;
 
@@ -105,13 +106,24 @@ class ProductView extends Base
         }
         $this->add(new DataView('imagelist', new ArrayDataSource($imglist), $this, 'imglistOnRow'))->Reload();
         $this->_tvars['islistimage'] = count($imglist) > 1;
-
+                                         
+        //вариации
+        $vars = $product->getVarList($options['defpricetype']);
+        
+        $this->add(new Panel('varpan'))->setVisible(count($vars)>0);
+        $this->add(new DataView('varlist', new ArrayDataSource($vars), $this, 'varlistOnRow'))->Reload();
+        $this->varpan->add(new Label("vattrname",$product->vattrname))  ;
+        
         $recently = \App\Session::getSession()->recently;
         if (!is_array($recently)) {
             $recently = array();
         }
         $recently[$product->item_id] = $product->item_id;
         \App\Session::getSession()->recently = $recently;
+        
+        
+        
+        
     }
 
     public function OnBack($sender) {
@@ -251,6 +263,26 @@ class ProductView extends Base
 
         $row->add(new \Zippy\Html\Link\BookmarkableLink('product_thumb'))->setValue("/loadshopimage.php?id={$image->image_id}&t=t");
         $row->product_thumb->setAttribute('href', "/loadshopimage.php?id={$image->image_id}");
+   }
+   public function varlistOnRow($row) {
+        $vi = $row->getDataItem();
+        $options = \App\System::getOptions('shop');
+        $row->add(new \Zippy\Html\Link\BookmarkableLink('vattrvalue',"/sp/".$vi->item_id))->setValue($vi->attributevalue);
+        $row->add(new Label("vprice",\App\Helper::fa($vi->price) ));
+        $row->add(new Label("vactionprice",\App\Helper::fa($vi->actionprice) ))->setVisible(false);
+        $row->add(new Label("vcurr",$options['currencyname'])) ;
+        if ($vi->hasaction) {
+            $row->vprice->setAttribute('style', 'font-size:smaller;text-decoration:line-through');
+            $row->vactionprice->setAttribute('style', 'color:red; ');
+            $row->vactionprice->setVisible(true);
+            
+        }       
+        
+        
+        if($vi->item_id == $this->item_id)  {
+           $row->vattrvalue->setAttribute('style','font-weight:bolder');    
+        }
+        
     }
 
 }

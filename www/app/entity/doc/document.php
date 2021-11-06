@@ -745,7 +745,7 @@ class Document extends \ZCL\DB\Entity
             }
 
         }
-        $this->headerdata["__Ssearchdata__"] = serialize($s);
+        $this->headerdata["__searchdata__"] = serialize($s);
     }
 
     /**

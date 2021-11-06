@@ -116,6 +116,7 @@ class VarList extends \App\Pages\Base
         $datarow->add(new Label("varname", $var->varname));
         
         $datarow->add(new Label("attrname", $var->attributename ));
+        $datarow->add(new Label("cnt", $var->cnt ));
         
         $datarow->add(new ClickLink("vardel", $this, 'OnDeleteVar'));
         $datarow->add(new ClickLink("varedit", $this, 'OnEditVar'));

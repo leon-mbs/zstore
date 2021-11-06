@@ -35,9 +35,9 @@
             </div>
 
 
-            <div class="col-12 col-sm-8 col-lg-6  col-xl-4">
+            <div class="col-12  col-lg-10  col-xl-8">
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-6">
 
                         <h5 zippy="productname" class="text-dark"></h5>
                         <h6>Код:  <span zippy="productcode"></span></h6>
@@ -58,6 +58,24 @@
                             {{/usefeedback}}
                         </div>
                     </div>
+                    
+                      <div class="col-6" zippy="varpan">
+                         <table class="ctable  " >
+                           <tr  >
+                            
+                             <td colspan="3"><b zippy="vattrname"></b> </td>
+                             
+                             
+                           </tr>
+                           <tr zippy="varlist">
+                            
+                             <td class="text-left   "> <div class="p-1 rounded  bg-secondary  ">  <a  class="footer"  zippy="vattrvalue"></a> </div> </td>
+                             <td class="text-right"> <span zippy="vprice"></span> <span   zippy="vactionprice"></span> </td>
+                             <td class="text-right" zippy="vcurr">    </td>
+                             
+                           </tr>
+                         </table>
+                      </div>
 
                 </div>
 
