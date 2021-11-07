@@ -12,12 +12,18 @@
                     <table class="table table-bordered   table-sm">
                         <tr>
                             <th>Назва</th>
-
+                           {{#ppo}}
+                            <th  >ПРРО</th>
+                            {{/ppo}}
                             <th></th>
                         </tr>
                         <tr zippy="firmlist">
                             <td zippy="firm_name"></td>
-
+                              {{#ppo}}
+                            <td  >
+                            <span zippy="ppoowner"></span> 
+                            <a  zippy="ppo" title="Загрузить ключ  и сертификат" ><i class="fa fa-key"></a></td>
+                            {{/ppo}}
 
                             <td style="width:75px"><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> <a
                                     zippy="delete" title="Видалити"><i class="fa fa-trash"></i></a></td>
@@ -80,6 +86,41 @@
 
             </form>
         </div>
+          <div class="row">
+            
+            <form class="col-6 col-md-4" zippy="keyform" enctype="multipart/form-data">
+                <h5>Завантаження  ключа  та сертифiкату</h5>
+               <small> <i class="fa fa-exclamation-triangle"></i> Завантаження ключа може тривати кілька хвилин.</small>
+                <div class="form-group">
+                    <label for="password">Пароль </label>
+                    <input required="required" class="form-control" type="text" zippy="password">
+                </div>
+                <div class="form-group">
+                    <label for="keyfile">Файл ключа </label>
+                    <input class="form-control" type="file" zippy="keyfile">
+                </div>
+                <div class="form-group">
+                    <label for="certfile">Файл сертифiкату </label>
+                    <input class="form-control" type="file" zippy="certfile">
+                </div>
+               
+                <span style="display:block" id="progress"></span>
+                <input zippy="send" type="button" value="Завантажити" class="btn btn-primary  ">&nbsp;&nbsp;
+                <input zippy="cancelppo" type="button" value="Скасувати" class="btn btn-outline-primary  ">
+      
 
+            </form>
+            
+            </div> 
+            <script>
+            
+            function check_send(){
+                $('#progress').text('Завантаження...');
+                $('#send').attr('disabled','disabled');
+               
+                return  true;
+            }
+            
+            </script>
     </body>
 </html>
