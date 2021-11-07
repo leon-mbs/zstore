@@ -147,18 +147,24 @@
                                 </form><br>
                                 <span>Встановлює знижку на всі товари даної категорії</span> 
                             </div>                     
-                                  
+                           <form  zippy="itform" >          
                             <table class="table    table-sm mt-2">
                                 <tr>
+             <th onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
+                           style="width:30px;cursor:pointer" title="Зняти/виставити галки"><i
+                                    class="fa fa-check-double "></i></th>                                     
+                                    
                                     <th > Категорiя </th>
                                     <th > Назва </th>
                                      <th style="width:100px"> акц. цiна</th>
                                     <th style="width:100px"> знижка,%</th>
                                  <th > З</th>
                                     <th > По</th>
-                                    <th >  </th>
+                                   
                                 </tr>
                                 <tr  zippy="ilist">      
+                                <td><input  zippy="seldel" class="seldel" type="checkbox"></td>
+                            
                                 <td zippy="icat_name"></td>               
                                         <td zippy="iname"></td>               
 
@@ -167,12 +173,15 @@
                                         <td zippy="ifrom"></td>               
                                     <td zippy="ito"></td>               
 
-                                    <td  ><a zippy="idel"><i class="fa fa-trash"/></a></td>
-
+                                    
                                 </tr>
+                                     <tr><td colspan="7">
+                                <a class="text-danger" zippy="deleteall" title="Видалити"><i class="fa fa-trash"></i></a>
+                              
+                            </td> </tr>  
                             </table>  
                             <div zippy="ipag"></div>   
-
+                            </form>
 
                         </div>
                     </div>

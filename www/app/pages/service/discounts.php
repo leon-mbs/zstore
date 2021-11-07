@@ -19,6 +19,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Panel;
 use Zippy\Html\Link\ClickLink;
@@ -104,11 +105,15 @@ class Discounts extends \App\Pages\Base
         $this->itab->ifilter->add(new Date('isearchto'))->setDate(strtotime("+7day", time()));
         $this->itab->ifilter->add(new TextInput('isearchdisc'));
 
-        $this->itab->add(new DataView('ilist', new DiscItemDataSource($this), $this, 'itemlistOnRow'));
-        $this->itab->ilist->setPageSize(H::getPG());
-        $this->itab->add(new \Zippy\Html\DataList\Paginator('ipag', $this->itab->ilist));
-
-        $this->itab->ilist->Reload();
+        
+        $this->itab->add(new Form('itform'));
+        
+        $this->itab->itform->add(new DataView('ilist', new DiscItemDataSource($this), $this, 'itemlistOnRow'));
+        $this->itab->itform->ilist->setPageSize(H::getPG());
+        $this->itab->itform->add(new \Zippy\Html\DataList\Paginator('ipag', $this->itab->itform->ilist));
+        $this->itab->itform->add(new SubmitLink('deleteall'))->onClick($this, 'OnDelAll');
+ 
+        $this->itab->itform->ilist->Reload();
 
 
     }
@@ -310,17 +315,32 @@ class Discounts extends \App\Pages\Base
 
         $row->add(new  Label("ifrom"))->setText(H::fd($i->fromdate));
         $row->add(new  Label("ito"))->setText(H::fd($i->todate));
-        $row->add(new  ClickLink('idel'))->onClick($this, 'ideleteOnClick');
+        $row->add(new CheckBox('seldel', new \Zippy\Binding\PropertyBinding($i, 'seldel')));
+       
+    }
+
+   public function OnDelAll($sender) {
+        if (false == \App\ACL::checkDelRef('ItemList')) {
+            return;
+        }
+
+        $ids = array();
+        foreach ($this->itab->itform->ilist->getDataRows() as $row) {
+            $item = $row->getDataItem();
+            if ($item->seldel == true) {
+                $item->actionprice = 0;
+                $item->actiondisc = 0;
+                $item->save();
+            }
+        }
+     
+     
+
+       
+        $this->itab->itform->ilist->Reload();
 
     }
 
-    public function ideleteOnClick($sender) {
-        $i = $sender->owner->getDataItem();
-        $i->actionprice = 0;
-        $i->actiondisc = 0;
-        $i->save();
-        $this->itab->ilist->Reload();
-    }
 
     //категории
     public function OnGAdd($sender) {
