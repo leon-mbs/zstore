@@ -53,8 +53,8 @@ class FirmList extends \App\Pages\Base
         $this->firmdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
         
         $this->add(new Form('keyform'))->setVisible(false);        
-        $this->keyform->add(new Button('send'))  ;
-        $this->keyform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
+        $this->keyform->add(new SubmitButton('send'))->onClick($this,'onSend',true)  ;
+        $this->keyform->add(new Button('cancelppo'))->onClick($this, 'cancelOnClick');
         $this->keyform->add(new TextInput('password'));
         $this->keyform->add(new File('keyfile'));
         $this->keyform->add(new File('certfile'));
@@ -65,6 +65,7 @@ class FirmList extends \App\Pages\Base
         $item = $row->getDataItem();
 
         $row->add(new Label('firm_name', $item->firm_name));
+        $row->add(new Label('ppoowner', $item->ppoowner));
 
         $row->add(new ClickLink('ppo'))->onClick($this, 'ppoOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -82,12 +83,7 @@ class FirmList extends \App\Pages\Base
         }
         $this->firmtable->firmlist->Reload();
     }
-   public function ppoOnClick($sender) {
 
-       $this->_firm = $sender->owner->getDataItem();
-
-  
-    }
 
     public function editOnClick($sender) {
         $this->_firm = $sender->owner->getDataItem();
@@ -144,6 +140,47 @@ class FirmList extends \App\Pages\Base
         $this->firmtable->setVisible(true);
         $this->firmdetail->setVisible(false);
         $this->keyform->setVisible(false);
+        $this->firmtable->firmlist->Reload();
     }
+    public function ppoOnClick($sender) {
 
+       $this->_firm = $sender->owner->getDataItem();
+      $this->keyform->setVisible(true);
+      $this->firmtable->setVisible(false);
+      $this->keyform->password->setText('') ;
+    } 
+    public function onSend($sender) {
+
+       $password = $this->keyform->password->getText() ;
+       $keyfile = $this->keyform->keyfile->getFile() ;
+       $certfile = $this->keyform->certfile->getFile() ;
+
+       $keydata =  @file_get_contents($keyfile['tmp_name']);
+       $certdata =  @file_get_contents($certfile['tmp_name']);
+       
+       if(strlen($password)==0  || strlen($keydata)==0  || strlen($certdata)==0 )  {
+         $this->updateAjax(array(),"   $('#progress').text('Не введены все  данные...');   $('#send').attr('disabled',null);            ") ;
+         return;
+       }
+       
+       try{
+         $cert =    \PPOLib\Cert::load($certdata) ;
+   
+         $key =   \PPOLib\KeyStore::load($keydata,$password,$cert ) ;
+         
+
+         $this->_firm->ppoowner =  $cert->getOwner()   ;
+         $this->_firm->ppocert = base64_encode(serialize($cert) )  ;
+         $this->_firm->ppokey =  base64_encode(serialize($key) )  ;
+         $this->_firm->save();
+         
+       } catch(\Exception $ee){
+         $msg = $ee->getMessage() ; 
+         $this->updateAjax(array(),"   $('#progress').text('{$msg}');   $('#send').attr('disabled',null);            ") ;
+         return;
+           
+       }      
+       $kl = \App\Helper::l("ppokeyloaded");
+       $this->updateAjax(array(),"   $('#progress').text('{$kl}')") ;
+    }
 }

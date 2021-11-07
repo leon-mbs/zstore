@@ -13,14 +13,16 @@
                         <tr>
                             <th>Название</th>
                            {{#ppo}}
-                            <th></th>
+                            <th  >ПРРО</th>
                             {{/ppo}}
                             <th></th>
                         </tr>
                         <tr zippy="firmlist">
                             <td zippy="firm_name"></td>
                             {{#ppo}}
-                            <td  ><a  zippy="ppo" >РРО</a></td>
+                            <td  >
+                            <span zippy="ppoowner"></span> 
+                            <a  zippy="ppo" title="Загрузить ключ  и сертификат" ><i class="fa fa-key"></a></td>
                             {{/ppo}}
 
                             <td style="width:75px"><a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> 
@@ -88,6 +90,7 @@
             
             <form class="col-6 col-md-4" zippy="keyform" enctype="multipart/form-data">
                 <h5>Загрузка  ключа  и сертификата</h5>
+               <small> <i class="fa fa-exclamation-triangle"></i> Загрузка  ключа  может  занять  до нескольких минут</small>
                 <div class="form-group">
                     <label for="password">Пароль </label>
                     <input required="required" class="form-control" type="text" zippy="password">
@@ -101,12 +104,24 @@
                     <input class="form-control" type="file" zippy="certfile">
                 </div>
                
-                
+                <span style="display:block" id="progress"></span>
                 <input zippy="send" type="button" value="Загрузить" class="btn btn-primary  ">&nbsp;&nbsp;
-                <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary  ">
+                <input zippy="cancelppo" type="button" value="Отменить" class="btn btn-outline-primary  ">
       
 
             </form>
-        </div>
+            
+            </div> 
+            <script>
+            
+            function check_send(){
+                $('#progress').text('Загрузка...');
+                $('#send').attr('disabled','disabled');
+               
+                return  true;
+            }
+            
+            </script>
+       
     </body>
 </html>

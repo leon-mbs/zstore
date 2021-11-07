@@ -367,17 +367,16 @@ class Document extends \ZCL\DB\Entity
         $oldstate = $this->state;
         $this->state = $state;
         $this->insertLog($state);
-
+    
+        $this->save();
 
         if ($oldstate != $state) {
             $doc = $this->cast();
             $doc->onState($state);
 
             \App\Entity\Subscribe::onDocumentState($doc->document_id, $state);
-        }
-
-        $this->save();
-
+        }        
+        
         return true;
     }
 
