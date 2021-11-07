@@ -929,4 +929,7 @@ class Document extends \ZCL\DB\Entity
         return "";
     }
 
+     public   function getID() {
+        return $this->document_id;
+    }  
 }

@@ -590,4 +590,8 @@ class Item extends \ZCL\DB\Entity
         return $price;
     }
 
+    
+    public   function getID() {
+        return $this->item_id;
+    }
 }
