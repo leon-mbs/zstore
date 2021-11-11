@@ -120,8 +120,10 @@ class Export extends \App\Pages\Base
         $header['E1'] = "Артикул";
         $header['F1'] = "Штрих код";
         $header['G1'] = "Цена";
+        
         if ($t == 1) {
-            $header['H1'] = "Кол.";
+            $header['H1'] = "Ячейка";
+            $header['I1'] = "Кол.";
         }
 
 
@@ -136,10 +138,11 @@ class Export extends \App\Pages\Base
             $data['F' . $i] = $item->bar_code;
             $price = H::fa($item->getPrice($pt));
             $data['G' . $i] = array('value' => H::fa($price), 'format' => 'number', 'align' => 'right');
-
+            
             if ($t == 1) {
+                $data['H' . $i] = $item->cell;
                 $qty = H::fqty($item->getQuantity($store));
-                $data['H' . $i] = array('value' => H::fqty($qty), 'format' => 'number', 'align' => 'right');
+                $data['I' . $i] = array('value' => H::fqty($qty), 'format' => 'number', 'align' => 'right');
             }
         }
 
