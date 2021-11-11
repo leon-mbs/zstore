@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9921d2f9ae0c8bcac74886d24735bbbd",
+    "content-hash": "b134ea3c906f8b1fc6379f58313990f9",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -1563,7 +1563,7 @@
                 "shasum": ""
             },
             "require": {
-                "php": "^7.4 || ^8.0",
+                "php": "^7.2 || ^8.0",
                 "sabberworm/php-css-parser": "^8.3"
             },
             "require-dev": {
