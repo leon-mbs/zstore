@@ -75,6 +75,7 @@ class PayList extends \App\Pages\Base
         $doc = $row->getDataItem();
 
         $row->add(new Label('number', $doc->document_number));
+        $row->add(new Label('docdate', H::fd(strtotime($doc->document_date))));
 
         $row->add(new Label('date', H::fd($doc->paydate)));
         $row->add(new Label('notes', $doc->notes));
@@ -216,7 +217,7 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
         $conn = \ZDB\DB::getConnect();
 
         //$where = "   d.customer_id in(select  customer_id from  customers  where  status=0)";
-        $where = "  1=1 ";
+        $where = " paydate>= DATE_ADD(NOW(), INTERVAL -400 DAY) ";
 
         $author = $this->page->filter->fuser->getValue();
 
@@ -260,7 +261,7 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
         $conn = \ZDB\DB::getConnect();
-        $sql = "select  p.*,d.`customer_name`,d.`meta_id`  from documents_view  d join `paylist_view` p on d.`document_id` = p.`document_id` where " . $this->getWhere() . " order  by  pl_id desc   ";
+        $sql = "select  p.*,d.`customer_name`,d.`meta_id`,d.`document_date`  from documents_view  d join `paylist_view` p on d.`document_id` = p.`document_id` where " . $this->getWhere() . " order  by  pl_id desc   ";
         if ($count > 0) {
             $sql .= " limit {$start},{$count}";
         }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b134ea3c906f8b1fc6379f58313990f9",
+    "content-hash": "5cb049739c538b415bdbd49a3876c207",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -976,16 +976,16 @@
         },
         {
             "name": "leon-mbs/zippy",
-            "version": "2.5.4",
+            "version": "2.5.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/zippy.git",
-                "reference": "372aaed96e504ea7899ff52f99fdca2594553699"
+                "reference": "3f7075707d3b2254e3dc124fe62e6e33c25f1be3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/372aaed96e504ea7899ff52f99fdca2594553699",
-                "reference": "372aaed96e504ea7899ff52f99fdca2594553699",
+                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/3f7075707d3b2254e3dc124fe62e6e33c25f1be3",
+                "reference": "3f7075707d3b2254e3dc124fe62e6e33c25f1be3",
                 "shasum": ""
             },
             "require": {
@@ -1017,9 +1017,9 @@
             ],
             "support": {
                 "issues": "https://github.com/leon-mbs/zippy/issues",
-                "source": "https://github.com/leon-mbs/zippy/tree/2.5.4"
+                "source": "https://github.com/leon-mbs/zippy/tree/2.5.5"
             },
-            "time": "2021-11-08T16:41:15+00:00"
+            "time": "2021-11-12T20:01:50+00:00"
         },
         {
             "name": "lis-dev/nova-poshta-api-2",
@@ -1563,7 +1563,7 @@
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2 || ^8.0",
+                "php": "^7.4 || ^8.0",
                 "sabberworm/php-css-parser": "^8.3"
             },
             "require-dev": {
