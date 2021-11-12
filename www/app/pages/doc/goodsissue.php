@@ -309,7 +309,7 @@ class GoodsIssue extends \App\Pages\Base
     public function detailOnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new Label('num', $row->getRowNumber()));
+        $row->add(new Label('num', $row->getNumber()));
         $row->add(new Label('tovar', $item->itemname));
 
         $row->add(new Label('code', $item->item_code));
