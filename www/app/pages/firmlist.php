@@ -55,6 +55,7 @@ class FirmList extends \App\Pages\Base
         $this->add(new Form('keyform'))->setVisible(false);        
         $this->keyform->add(new SubmitButton('send'))->onClick($this,'onSend',true)  ;
         $this->keyform->add(new Button('cancelppo'))->onClick($this, 'cancelOnClick');
+        $this->keyform->add(new Button('delppo'))->onClick($this, 'delOnClick');
         $this->keyform->add(new TextInput('password'));
         $this->keyform->add(new File('keyfile'));
         $this->keyform->add(new File('certfile'));
@@ -148,7 +149,21 @@ class FirmList extends \App\Pages\Base
       $this->keyform->setVisible(true);
       $this->firmtable->setVisible(false);
       $this->keyform->password->setText('') ;
+      $this->keyform->delppo->setVisible(strlen($this->_firm->ppoowner)>0) ;
+      
     } 
+    public function delOnClick($sender) {
+         
+         $this->_firm->ppoowner =  ''  ;
+         $this->_firm->ppocert = ''  ;
+         $this->_firm->ppokey =  ''  ;
+         $this->_firm->save();  
+        $this->firmtable->setVisible(true);
+        $this->firmdetail->setVisible(false);
+        $this->keyform->setVisible(false);
+        $this->firmtable->firmlist->Reload();         
+               
+    }
     public function onSend($sender) {
 
        $password = $this->keyform->password->getText() ;

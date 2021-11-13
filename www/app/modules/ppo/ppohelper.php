@@ -333,8 +333,8 @@ class PPOHelper
         $xml = $report->generate($header);
 
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
-
-        return self::send($xml, 'doc', $firm['pposerver'], $firm['pposerverport'], true);
+        $firm = \App\Entity\Firm::load($pos->firm_id) ;
+        return self::send($xml, 'doc', $firm );
     }
 
     /**
@@ -454,8 +454,9 @@ class PPOHelper
         $xml = $report->generate($header);
 
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
-
-        return self::send($xml, 'doc', $firm['pposerver'], $firm['pposerverport'], true);
+        $firm = \App\Entity\Firm::load($pos->firm_id) ;
+ 
+        return self::send($xml, 'doc', $firm );
     }
 
 
@@ -607,8 +608,9 @@ class PPOHelper
 
         $xml = $report->generate($header);
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
-
-        $ret = self::send($xml, 'doc', $firm['pposerver'], $firm['pposerverport'], true);
+         $firm = \App\Entity\Firm::load($pos->firm_id) ;
+ 
+        $ret = self::send($xml, 'doc' ,$firm);
         if ($ret['success'] == true) {
 
             self::insertStat($pos->pos_id, 1, $amount0, $amount1, $amount2, $amount3, $doc->document_number);
@@ -671,8 +673,9 @@ class PPOHelper
         $xml = $report->generate($header);
 
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
-
-        $ret = self::send($xml, 'doc', $firm['pposerver'], $firm['pposerverport'], true);
+           $firm = \App\Entity\Firm::load($pos->firm_id) ;
+ 
+        $ret = self::send($xml, 'doc', $firm );
         if ($ret['success'] == true) {
 
 
@@ -752,8 +755,9 @@ class PPOHelper
         $xml = $report->generate($header);
 
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
-
-        $ret = self::send($xml, 'doc', $firm['pposerver'], $firm['pposerverport'], true);
+          $firm = \App\Entity\Firm::load($pos->firm_id) ;
+ 
+        $ret = self::send($xml, 'doc', $firm);
         if ($ret['success'] == true) {
 
 
