@@ -87,6 +87,7 @@ class ZForm extends \App\Pages\Base
             } else {
                 \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id);
                 $this->setSuccess('Смена  закрыта');
+                $this->stat->clean();
             }
 
         };

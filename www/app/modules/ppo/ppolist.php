@@ -232,9 +232,10 @@ class PPOList extends \App\Pages\Base
             return;
         }
 
-
-        // $res = mb_convert_encoding($res , "utf-8" ,"windows-1251" )  ;
-        $this->docpan->docshow->setText($res['data']);
+        $decrypted  = PPOHelper::decrypt($res['data'] ) ;
+        
+         $decrypted = mb_convert_encoding($decrypted , "utf-8" ,"windows-1251" )  ;
+        $this->docpan->docshow->setText($decrypted);
         $this->docpan->docshow->setVisible(true);
         $this->goAnkor('docshow');
     }

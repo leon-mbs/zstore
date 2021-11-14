@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5cb049739c538b415bdbd49a3876c207",
+    "content-hash": "b3c626d8e3935930304db1db3219b3ed",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -889,16 +889,16 @@
         },
         {
             "name": "leon-mbs/ppolib",
-            "version": "1.1.0",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/ppolib.git",
-                "reference": "c22ab80e245772543ded54f5b7b8c2e17c08086b"
+                "reference": "eb05625ea47e895fbc011f832d9a05418f59eda2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/ppolib/zipball/c22ab80e245772543ded54f5b7b8c2e17c08086b",
-                "reference": "c22ab80e245772543ded54f5b7b8c2e17c08086b",
+                "url": "https://api.github.com/repos/leon-mbs/ppolib/zipball/eb05625ea47e895fbc011f832d9a05418f59eda2",
+                "reference": "eb05625ea47e895fbc011f832d9a05418f59eda2",
                 "shasum": ""
             },
             "require": {
@@ -924,9 +924,9 @@
             "homepage": "https://github.com/leon-mbs/ppolib",
             "support": {
                 "issues": "https://github.com/leon-mbs/ppolib/issues",
-                "source": "https://github.com/leon-mbs/ppolib/tree/1.1.0"
+                "source": "https://github.com/leon-mbs/ppolib/tree/1.1.2"
             },
-            "time": "2021-11-11T15:21:05+00:00"
+            "time": "2021-11-14T16:27:53+00:00"
         },
         {
             "name": "leon-mbs/zdb",
@@ -976,16 +976,16 @@
         },
         {
             "name": "leon-mbs/zippy",
-            "version": "2.5.5",
+            "version": "2.5.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/zippy.git",
-                "reference": "3f7075707d3b2254e3dc124fe62e6e33c25f1be3"
+                "reference": "4d0657aa0be574d24753f5475de66af9b2663d2b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/3f7075707d3b2254e3dc124fe62e6e33c25f1be3",
-                "reference": "3f7075707d3b2254e3dc124fe62e6e33c25f1be3",
+                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/4d0657aa0be574d24753f5475de66af9b2663d2b",
+                "reference": "4d0657aa0be574d24753f5475de66af9b2663d2b",
                 "shasum": ""
             },
             "require": {
@@ -1017,9 +1017,9 @@
             ],
             "support": {
                 "issues": "https://github.com/leon-mbs/zippy/issues",
-                "source": "https://github.com/leon-mbs/zippy/tree/2.5.5"
+                "source": "https://github.com/leon-mbs/zippy/tree/2.5.6"
             },
-            "time": "2021-11-12T20:01:50+00:00"
+            "time": "2021-11-12T20:20:33+00:00"
         },
         {
             "name": "lis-dev/nova-poshta-api-2",
