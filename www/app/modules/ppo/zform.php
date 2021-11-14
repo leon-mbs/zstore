@@ -117,7 +117,7 @@ class ZForm extends \App\Pages\Base
             //повторяем для  нового номера
             $this->pos->fiscdocnumber = $ret['docnumber'];
             $this->pos->save();
-            $ret = \App\Modules\PPO\PPOHelper::zformmanual($this->pos->pos_id, $stat, $rstat);
+            $ret = \App\Modules\PPO\PPOHelper::zform($this->pos->pos_id, $stat, $rstat);
         }
         if ($ret['success'] == false) {
             $this->setError($ret['data']);
