@@ -70,7 +70,7 @@ class PPOList extends \App\Pages\Base
             return;
         }
         $firm = Firm::load($cid);
-        $res = PPOHelper::send(json_encode(array('Command' => 'Objects')), 'cmd', $firm->pposerver, $firm->pposerverport, false);
+        $res = PPOHelper::send(json_encode(array('Command' => 'Objects')), 'cmd', $firm );
         if ($res['success'] == false) {
             $this->setError($res['data']);
             return;
@@ -131,7 +131,7 @@ class PPOList extends \App\Pages\Base
         $cid = $this->opan->filter->searchcomp->getValue();
         $firm = Firm::load($cid);
 
-        $res = PPOHelper::send(json_encode(array('Command' => 'Shifts', 'NumFiscal' => $this->ppo->tr->NumFiscal, 'From' => $from, 'To' => $to)), 'cmd', $firm->pposerver, $firm->pposerverport, false);
+        $res = PPOHelper::send(json_encode(array('Command' => 'Shifts', 'NumFiscal' => $this->ppo->tr->NumFiscal, 'From' => $from, 'To' => $to)), 'cmd', $firm);
         if ($res['success'] == false) {
             $this->setError($res['data']);
             return;
@@ -176,7 +176,7 @@ class PPOList extends \App\Pages\Base
         $cid = $this->opan->filter->searchcomp->getValue();
         $firm = Firm::load($cid);
 
-        $res = PPOHelper::send(json_encode(array('Command' => 'Documents', 'NumFiscal' => $this->ppo->tr->NumFiscal, 'ShiftId' => $sh->ShiftId)), 'cmd', $firm->pposerver, $firm->pposerverport, false);
+        $res = PPOHelper::send(json_encode(array('Command' => 'Documents', 'NumFiscal' => $this->ppo->tr->NumFiscal, 'ShiftId' => $sh->ShiftId)), 'cmd', $firm);
         if ($res['success'] == false) {
             $this->setError($res['data']);
             return;
@@ -226,15 +226,16 @@ class PPOList extends \App\Pages\Base
         $cid = $this->opan->filter->searchcomp->getValue();
         $firm = Firm::load($cid);
 
-        $res = PPOHelper::send(json_encode(array('Command' => $doc->DocClass, 'RegistrarNumFiscal' => $this->ppo->tr->NumFiscal, 'NumFiscal' => $doc->NumFiscal)), 'cmd', $firm->pposerver, $firm->pposerverport, true);
+        $res = PPOHelper::send(json_encode(array('Command' => $doc->DocClass, 'RegistrarNumFiscal' => $this->ppo->tr->NumFiscal, 'NumFiscal' => $doc->NumFiscal)), 'cmd', $firm);
         if ($res['success'] == false) {
             $this->setError($res['data']);
             return;
         }
 
-
-        // $res = mb_convert_encoding($res , "utf-8" ,"windows-1251" )  ;
-        $this->docpan->docshow->setText($res['data']);
+        $decrypted  = PPOHelper::decrypt($res['data'] ) ;
+        
+         $decrypted = mb_convert_encoding($decrypted , "utf-8" ,"windows-1251" )  ;
+        $this->docpan->docshow->setText($decrypted);
         $this->docpan->docshow->setVisible(true);
         $this->goAnkor('docshow');
     }

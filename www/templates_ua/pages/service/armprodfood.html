@@ -9,6 +9,9 @@
                 </div>   
 
             </div>
+           <div class="col-12 col-md-4 col-xl-3   " >
+             <i style="cursor:pointer"  onclick="onBell(this)" title="Звукове  повiдомлення" class="fa fa-bell-slash text-secondary"></i>  
+            </div>  
             <div class="w-100">
                 <div class="col-12 col-md-10 col-lg-8" >
 
@@ -38,6 +41,10 @@
 
 
             <script>
+                function onBell(el){
+                    $(el).attr('class','fa fa-bell  text-success')
+                }
+            
                 window.setInterval(onNewOrder, 5000);
 
              
@@ -51,8 +58,11 @@
                                 if (answer.cnt > 0) {
                                     $('#newordersalert').show();
                                     $('#neworderscnt').text('Нових замовлень ' + answer.cnt);
-
-
+                                    beep()
+                                    window.setTimeout(function(){
+                                                  
+                                        $('#btnupdate').trigger('click') ;
+                                        }, 5000); 
                                 }
 
 

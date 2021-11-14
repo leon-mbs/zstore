@@ -367,17 +367,16 @@ class Document extends \ZCL\DB\Entity
         $oldstate = $this->state;
         $this->state = $state;
         $this->insertLog($state);
-
+    
+        $this->save();
 
         if ($oldstate != $state) {
             $doc = $this->cast();
             $doc->onState($state);
 
             \App\Entity\Subscribe::onDocumentState($doc->document_id, $state);
-        }
-
-        $this->save();
-
+        }        
+        
         return true;
     }
 
@@ -745,7 +744,7 @@ class Document extends \ZCL\DB\Entity
             }
 
         }
-        $this->headerdata["__Ssearchdata__"] = serialize($s);
+        $this->headerdata["__searchdata__"] = serialize($s);
     }
 
     /**
@@ -930,4 +929,7 @@ class Document extends \ZCL\DB\Entity
         return "";
     }
 
+     public   function getID() {
+        return $this->document_id;
+    }  
 }

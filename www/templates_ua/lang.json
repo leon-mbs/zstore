@@ -463,17 +463,19 @@
     "modocstoreitems": "Товари (Опенкарт)" ,   
     "modwcorders": "Замовлення (WC)"  ,  
     "modwcitems": "Товари (WC)" ,   
-    "modissueslist": "Завдання (Проекты)"  ,
+    "modissueslist": "Завдання (Проекти)"  ,
     "noselpart": "Не обрана  партiя"  ,    
     "thesamestock": "Однаковi партiї"  ,    
     "diffitem": "Рiзнi  ТМЦ" ,
     "stpp_new": "Новий",    
-    "stpp_inprocess": "Выконуєтся",    
+    "stpp_inprocess": "Виконуєтся",    
     "stpp_stopped": "Призупинений",    
     "stpp_finished": "Виконаний",    
     "stpp_canceled": "Скасований",     
     "noselparea": "Не вибрано виробничу дiльницю"  ,   
     "stpp_intersect_this": "Iнтервал перетинаєтся з iснуючим для цього етапу",
     "stpp_intersect_other": "Iнтервал перетинаєтся з iснуючим на цiй дiлянцi для iншого етапу", 
-    "repbybrand": "По брендах"     
+    "repbybrand": "По брендах"     ,
+    "ppokeyloaded": "Ключ завантажений успiшно"  ,
+    "ppokeynotloaded": "Не завантажено ключ або  сертифiкат"
 }

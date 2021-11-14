@@ -89,7 +89,10 @@ class ArmProdFood extends \App\Pages\Base
         $item = $sender->getOwner()->getDataItem();
         $doc = Document::load($item->document_id);
         $items = $doc->unpackDetails('detaildata');
-        $items[$item->item_id]->foodstate = 1;
+        if(isset($items[$item->item_id]))  {
+           $items[$item->item_id]->foodstate = 1;    
+        }
+        
         $doc->packDetails('detaildata', $items);
         $doc->save();
         $hasinproces = false;

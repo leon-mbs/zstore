@@ -74,7 +74,7 @@ class POSCheck extends Document
                         "time"            => H::fdt($this->headerdata["time"]),
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount),
-                        "payed"           => H::fa($this->payed),
+                        "payed"           => H::fa($this->headerdata['payed']),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
                         "prepaid"         => $this->headerdata['payment'] == 0,
@@ -144,7 +144,7 @@ class POSCheck extends Document
                         "exchange"        => $this->headerdata["exchange"] > 0 ? H::fa($this->headerdata["exchange"]) : false,
                         "docbarcode"      => $this->getBarCodeImage(),
                         "docqrcode"       => $this->getQRCodeImage(),
-                        "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
+                        "payed"           => $this->headerdata['payed'] > 0 ? H::fa($this->headerdata['payed']) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
         );
 

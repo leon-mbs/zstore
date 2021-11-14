@@ -69,7 +69,8 @@ class ProductList extends \App\Pages\Base
         $this->listpanel->add(new Form('searchform'))->onSubmit($this, 'searchformOnSubmit');
         $this->listpanel->searchform->add(new TextInput('skeyword'));
 
-        $this->listpanel->searchform->add(new DropDownChoice('smanuf', \App\Modules\Shop\Helper::getManufacturers()));
+        $this->listpanel->searchform->add(new TextInput('smanuf' ));
+         
         $this->listpanel->searchform->add(new ClickLink('sclear'))->onClick($this, 'onSClear');
 
         $this->listpanel->add(new ClickLink('addnew'))->onClick($this, 'addnewOnClick');
@@ -110,6 +111,7 @@ class ProductList extends \App\Pages\Base
 
     public function onGroup($sender) {
         $this->group = $sender->getOwner()->getDataItem();
+        $this->listpanel->searchform->smanuf->setDataList(\App\Modules\Shop\Helper::getManufacturers($this->group->cat_id));
 
         $this->grouplist->Reload(false);
         $this->editpanel->setVisible(false);

@@ -10,6 +10,7 @@ use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\File;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
@@ -34,6 +35,7 @@ class FirmList extends \App\Pages\Base
         $this->firmtable->add(new DataView('firmlist', new \ZCL\DB\EntityDataSource('\App\Entity\Firm', '', 'disabled,firm_name'), $this, 'firmlistOnRow'))->Reload();
         $this->firmtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
 
+      
         $this->add(new Form('firmdetail'))->setVisible(false);
         $this->firmdetail->add(new TextInput('editfirm_name'));
         $this->firmdetail->add(new TextInput('editinn'));
@@ -45,17 +47,28 @@ class FirmList extends \App\Pages\Base
         $this->firmdetail->add(new TextInput('editlogo'));
         $this->firmdetail->add(new TextInput('editstamp'));
         $this->firmdetail->add(new TextInput('editsign'));
-        $this->firmdetail->add(new TextInput('editpposerv'));
-        $this->firmdetail->add(new TextInput('editpposervport'));
+      
+        
         $this->firmdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->firmdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
+        
+        $this->add(new Form('keyform'))->setVisible(false);        
+        $this->keyform->add(new SubmitButton('send'))->onClick($this,'onSend',true)  ;
+        $this->keyform->add(new Button('cancelppo'))->onClick($this, 'cancelOnClick');
+        $this->keyform->add(new Button('delppo'))->onClick($this, 'delOnClick');
+        $this->keyform->add(new TextInput('password'));
+        $this->keyform->add(new File('keyfile'));
+        $this->keyform->add(new File('certfile'));
+     
     }
 
     public function firmlistOnRow($row) {
         $item = $row->getDataItem();
 
         $row->add(new Label('firm_name', $item->firm_name));
+        $row->add(new Label('ppoowner', $item->ppoowner));
 
+        $row->add(new ClickLink('ppo'))->onClick($this, 'ppoOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
@@ -72,6 +85,7 @@ class FirmList extends \App\Pages\Base
         $this->firmtable->firmlist->Reload();
     }
 
+
     public function editOnClick($sender) {
         $this->_firm = $sender->owner->getDataItem();
         $this->firmtable->setVisible(false);
@@ -85,8 +99,6 @@ class FirmList extends \App\Pages\Base
         $this->firmdetail->editlogo->setText($this->_firm->logo);
         $this->firmdetail->editstamp->setText($this->_firm->stamp);
         $this->firmdetail->editsign->setText($this->_firm->sign);
-        $this->firmdetail->editpposerv->setText($this->_firm->pposerver);
-        $this->firmdetail->editpposervport->setText($this->_firm->pposerverport);
 
         $this->firmdetail->editdisabled->setChecked($this->_firm->disabled);
     }
@@ -111,8 +123,6 @@ class FirmList extends \App\Pages\Base
         $this->_firm->logo = $this->firmdetail->editlogo->getText();
         $this->_firm->stamp = $this->firmdetail->editstamp->getText();
         $this->_firm->sign = $this->firmdetail->editsign->getText();
-        $this->_firm->pposerver = trim($this->firmdetail->editpposerv->getText());
-        $this->_firm->pposerverport = trim($this->firmdetail->editpposervport->getText());
 
         if ($this->_firm->firm_name == '') {
             $this->setError("entername");
@@ -121,7 +131,7 @@ class FirmList extends \App\Pages\Base
 
         $this->_firm->disabled = $this->firmdetail->editdisabled->isChecked() ? 1 : 0;
 
-        $this->_firm->Save();
+        $this->_firm->save();
         $this->firmdetail->setVisible(false);
         $this->firmtable->setVisible(true);
         $this->firmtable->firmlist->Reload();
@@ -130,6 +140,62 @@ class FirmList extends \App\Pages\Base
     public function cancelOnClick($sender) {
         $this->firmtable->setVisible(true);
         $this->firmdetail->setVisible(false);
+        $this->keyform->setVisible(false);
+        $this->firmtable->firmlist->Reload();
     }
+    public function ppoOnClick($sender) {
 
+       $this->_firm = $sender->owner->getDataItem();
+      $this->keyform->setVisible(true);
+      $this->firmtable->setVisible(false);
+      $this->keyform->password->setText('') ;
+      $this->keyform->delppo->setVisible(strlen($this->_firm->ppoowner)>0) ;
+      
+    } 
+    public function delOnClick($sender) {
+         
+         $this->_firm->ppoowner =  ''  ;
+         $this->_firm->ppocert = ''  ;
+         $this->_firm->ppokey =  ''  ;
+         $this->_firm->save();  
+        $this->firmtable->setVisible(true);
+        $this->firmdetail->setVisible(false);
+        $this->keyform->setVisible(false);
+        $this->firmtable->firmlist->Reload();         
+               
+    }
+    public function onSend($sender) {
+
+       $password = $this->keyform->password->getText() ;
+       $keyfile = $this->keyform->keyfile->getFile() ;
+       $certfile = $this->keyform->certfile->getFile() ;
+
+       $keydata =  @file_get_contents($keyfile['tmp_name']);
+       $certdata =  @file_get_contents($certfile['tmp_name']);
+       
+       if(strlen($password)==0  || strlen($keydata)==0  || strlen($certdata)==0 )  {
+         $this->updateAjax(array(),"   $('#progress').text('Не введены все  данные...');   $('#send').attr('disabled',null);            ") ;
+         return;
+       }
+       
+       try{
+         $cert =    \PPOLib\Cert::load($certdata) ;
+   
+         $key =   \PPOLib\KeyStore::load($keydata,$password,$cert ) ;
+         
+
+         $this->_firm->ppoowner =  $cert->getOwner()   ;
+         $this->_firm->ppocert = base64_encode(serialize($cert) )  ;
+         $this->_firm->ppokey =  base64_encode(serialize($key) )  ;
+         $this->_firm->save();
+         
+       } catch(\Exception $ee){
+         $msg = $ee->getMessage() ; 
+         $this->updateAjax(array(),"   $('#progress').text('{$msg}');   $('#send').attr('disabled',null);            ") ;
+         return;
+           
+       }      
+       $kl = \App\Helper::l("ppokeyloaded");
+       $this->updateAjax(array(),"   $('#progress').text('{$kl}')") ;
+    }
 }

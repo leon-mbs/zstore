@@ -64,7 +64,7 @@
 
         <ROW ROWNUM="1">
 
-            <NAME>Доплата по чеку {{parentcheck}}</NAME>
+            <NAME>{{parentcheck}}</NAME>
 
             <AMOUNT>1</AMOUNT>
             <PRICE>{{amount}}</PRICE>

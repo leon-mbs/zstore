@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="windows-1251"?>
-<ZREP xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="check01.xsd">
+<ZREP >
 
     <ZREPHEAD>
 
@@ -39,8 +39,7 @@
         <ORDERSCNT>{{cnt}}</ORDERSCNT>
         <PAYFORMS>
             {{#pays}}
-            <ROW>
-            {{{num}}}>
+            <ROW        {{{num}}}>
 
             <PAYFORMCD>{{formcode}}</PAYFORMCD>
 
@@ -61,8 +60,7 @@
 <ORDERSCNT>{{cntr}}</ORDERSCNT>
 <PAYFORMS>
     {{#paysr}}
-    <ROW
-    {{{num}}}>
+    <ROW {{{num}}}>
 
     <PAYFORMCD>{{formcode}}</PAYFORMCD>
 

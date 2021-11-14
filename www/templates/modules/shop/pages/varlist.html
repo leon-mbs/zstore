@@ -1,0 +1,116 @@
+<html>
+
+    <body>
+        <style>
+            .list-group-item {
+                padding: 04px;
+            }
+        </style>
+        <div class="row">
+            <div class="col-12">
+                <h3>Вариации товаров</h3>
+                <small>Показываются  только  категории у  которых есть товары</small>
+            </div>
+            <div class="col-12 col-md-6  ">
+                <table class="table table-sm">
+                    <tr zippy="grouplist">
+                        <td ><a zippy="groupname"></a></td>
+                    </tr> 
+
+                </table>
+            </div>
+
+            <div class="col-12  col-md-6  ">
+
+
+
+                <div zippy="varpanel" class="row">
+                    <div  zippy="varlistpanel" class="col-12    col-xl-10 ">
+                        <h4>Список вариаций</h4>
+                        <a zippy="addvar" class="btn btn-sm  btn-primary">Новая  вариация</a><br>
+                        <table class="   table    table-sm ">
+                            <tr>
+                                <th>Наименование</th>
+                                <th>Атрибут</th>
+                                <th >&nbsp;</th>
+                            </tr>
+                            <tr zippy="varlist">
+                                <td zippy="varname"></td>
+                                <td zippy="attrname"></td>
+                                
+                                <td>  <a zippy="varitems">Товары <label style="cursor:pointer" class="badge badge-info badge-pill " zippy="cnt"></label></a> 
+                                 &nbsp;&nbsp;&nbsp;<a zippy="varedit"><i class="fa fa-edit"></i></a> 
+                                &nbsp;&nbsp;&nbsp;<a zippy="vardel"><i  class="fa fa-trash"></i></a></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <form zippy="vareditform" class="col-12 col-md-6 ">
+                       
+                        <div class="form-group">
+                            <label for="editvarname">Групповое  наименование </label>
+                            <input required="required" zippy="editvarname" class="form-control">
+                            
+                            
+                            
+                        </div>
+                        <div class="form-group">
+                            <label for="editattrtype">Атрибут типа  список</label>
+                            <select zippy="editattrtype" class="form-control"></select>
+                            <small>Смена  атрибута  очистит список  товаров в  вариации</small>
+                            
+                            
+                        </div>
+                       
+
+
+                        <div class="form-group">
+
+                            <input type="submit" class="btn   btn-success" value="Сохранить"/>
+                            <input zippy="cancelvar" type="button" class="btn btn-outline-success " value="Отменить"/>
+                        </div>
+                        
+                    </form>
+                    
+                    <div zippy="itemspanel">
+                        <h4>Список  товаров   </h4>
+                        <a zippy="backvar" ><i class="fa fa-arrow-circle-left"> к  списку</i> </a>
+                        <h5 zippy="vartitle"> </h5>
+                        <div class="navbar nav">
+
+                            <form zippy="itemform" class="form-inline">
+                           <label for="itemsel">Товар</label>
+                            <select zippy="itemsel" class="form-control select2 ">
+                                <option value="0">Не выбран</option>
+                            </select>
+                           <input class="btn btn-outline-success ml-2  " type="submit" value="Добавить">
+
+
+                            </form>
+                            
+                        </div>
+                        <small>Выбираются  товары  с непустым значением  атрибута вариации </small>
+                   
+                    <table class="table table-sm"  >
+                     <tr zippy="varitemslist">
+                        <td zippy="varitemname"></td>
+                        <td zippy="varitemcode"></td>
+                        <td zippy="varattrval"></td>
+                        <td ><a zippy="delitem" ><i class="fa fa-trash"></i></a></td>
+                     
+                     </tr>
+                    </table>
+                    </div> 
+                    
+                </div>
+
+
+            </div>
+        </div>
+        <script>
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            });
+        </script>
+    </body>
+</html>

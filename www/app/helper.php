@@ -241,6 +241,7 @@ class Helper
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10101, 'meta_name' => "/Tecdoc/Search", 'meta_type' => 6, 'description' => self::l('modtecdocsearch')));
             }
         }
+         
         return $mdata;
     }
 

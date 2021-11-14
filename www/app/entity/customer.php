@@ -230,5 +230,7 @@ class Customer extends \ZCL\DB\Entity
 
     }
     
-    
+    public   function getID() {
+        return $this->customer_id;
+    }    
 }

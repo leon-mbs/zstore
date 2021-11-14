@@ -61,7 +61,7 @@
 
     <CHECKBODY>
         {{#details}}
-        <ROW>
+        <ROW
             {{{num}}}>
 
             <NAME>{{name}}</NAME>

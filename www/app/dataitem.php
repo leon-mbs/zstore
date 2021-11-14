@@ -10,7 +10,9 @@ class DataItem implements \Zippy\Interfaces\DataItem
     protected $fields = array();
 
     function __construct($row = null) {
-
+        if(is_integer($row))  {
+            $this->id = $row;
+        }
         if (is_array($row)) {
             $this->fields = array_merge($this->fields, $row);
         }
@@ -26,6 +28,10 @@ class DataItem implements \Zippy\Interfaces\DataItem
 
     public function getID() {
         return $this->id;
+    }
+    
+    public function setID($id) {
+        $this->id = $id;
     }
 
     /**

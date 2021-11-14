@@ -14,6 +14,10 @@
 
 
             </div>
+            
+  <div class="col-12 col-md-4 col-xl-3   " >
+             <i style="cursor:pointer"  onclick="onBell(this)" title="Звуковое уведомление" class="fa fa-bell-slash text-secondary"></i>  
+            </div>            
         </div>
 
         <form zippy="setupform">
@@ -548,12 +552,12 @@
                             if (answer.cntorder > 0) {
                                 $('#newordersalert').show();
                                 $('#neworderscnt').text('Новых заказов ' + answer.cntorder);
-
+                                beep()
                             }
                             if (answer.cntprod > 0) {
                                 $('#newprodalert').show();
                                 $('#newprodcnt').text('Готово  в производстве ' + answer.cntprod);
-
+                                beep()
                             }
 
 
@@ -561,7 +565,9 @@
             }
 
 
-
+       function onBell(el){
+                    $(el).attr('class','fa fa-bell  text-success')
+                }
 
         </script>
 
