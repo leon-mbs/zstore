@@ -22,39 +22,31 @@
             <div>
                 {{#doctabp}}
                 <div>
+                  <div style="font-size:larger;"> 
                     &nbsp; &nbsp; &nbsp;
                     {{^usemobileprinter}}
-                    <a zippy="print" onclick=" printform()" title="Печать"><img class="icon20"
-                                                                                src="/assets/images/print_32.png"></a>
+                    <a zippy="print" onclick=" printform()" title="Друк"><i class="fa fa-print mr-2"></i></a>
                     {{/usemobileprinter}}
                     {{#usemobileprinter}}
-                    <a zippy="printmob" target="_blank"   title="Печать"><img class="icon20"
-                                                                              src="/assets/images/print_32.png"></a>
+                    <a zippy="printmob" target="_blank"   title="Друк"><i class="fa fa-print mr-2"></i></a>
                     {{/usemobileprinter}}
 
-                    <a zippy="html" target="_blank" title="Експорт в HTML"><img class="icon20"
-                                                                                src="/assets/images/html.png"></a>
-                    <a zippy="word" target="_blank" title="Експорт в Word"><img class="icon20"
-                                                                                src="/assets/images/word_32.png"></a>
-                    <a zippy="excel" target="_blank" title="Експорт в Excel"><img class="icon20"
-                                                                                  src="/assets/images/excel_32.png"></a>
-                    <a zippy="pdf" target="_blank" title="Експорт в PDF"><img class="icon20"
-                                                                              src="/assets/images/pdf_32.png"></a>
-                    <a zippy="email" title="Вiдправка  почтою"><img class="icon20"
-                                                                    src="/assets/images/email_32.png"></a>
+                    <a zippy="html" target="_blank" title="Експорт в HTML"><i class="fa fa-code mr-2"></a>
+                    <a zippy="word" target="_blank" title="Експорт в Word"><i class="fa fa-file-word mr-2"></a>
+                    <a zippy="excel" target="_blank" title="Експорт в Excel"><i class="fa fa-file-excel mr-2"></a>
+                    <a zippy="pdf" target="_blank" title="Експорт в PDF"><i class="fa fa-file-pdf mr-2"></i></a>
+                    <a zippy="email" title="Вiдправка  поштою"><i class="fa fa-envelope mr-2"></a>
                     {{^usemobileprinter}}
 
-                    <a zippy="pos" onclick=" printpos()" title="Печать на  чековом принтере"><img class="icon20"
-                                                                                                  src="/assets/images/pos-terminal-50.png"></a>
+                    <a zippy="pos" onclick=" printpos()" title="Друк на  чековомк принтерi"><i class="fas fa-cash-register mr-1"></i></a>
                     {{/usemobileprinter}}
                     {{#usemobileprinter}}
 
-                    <a zippy="posmob" target="_blank" title="Печать на  чековом принтере"><img class="icon20"
-                                                                                               src="/assets/images/pos-terminal-50.png"></a>
+                    <a zippy="posmob" target="_blank" title="Друк на  чековомк принтерi"><i class="fas fa-cash-register mr-1"></i></a>
                     {{/usemobileprinter}}
 
 
-                    <br>
+                      </div>
                     <br>
 
                     <div zippy="preview" class="table-responsive-sm">
