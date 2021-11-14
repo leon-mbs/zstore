@@ -263,28 +263,30 @@ class PayBayList extends \App\Pages\Base
 
         if ($pos_id > 0) {
             $pos = \App\Entity\Pos::load($pos_id);
+            if ($pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
 
-            $ret = \App\Modules\PPO\PPOHelper::checkpay($this->_doc, $pos_id, $amount, $form->payment->getValue());
-            if ($ret['success'] == false && $ret['docnumber'] > 0) {
-                //повторяем для  нового номера
-                $pos->fiscdocnumber = $ret['docnumber'];
-                $pos->save();
-                $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
-            }
-            if ($ret['success'] == false) {
-                $this->setError($ret['data']);
-                return;
-            } else {
-
-                if ($ret['docnumber'] > 0) {
-                    $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                $ret = \App\Modules\PPO\PPOHelper::checkpay($this->_doc, $pos_id, $amount, $form->payment->getValue());
+                if ($ret['success'] == false && $ret['docnumber'] > 0) {
+                    //повторяем для  нового номера
+                    $pos->fiscdocnumber = $ret['docnumber'];
                     $pos->save();
-                    $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
-                } else {
-                    $this->setError("ppo_noretnumber");
-                    return;
+                    $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
                 }
-            }
+                if ($ret['success'] == false) {
+                    $this->setError($ret['data']);
+                    return;
+                } else {
+
+                    if ($ret['docnumber'] > 0) {
+                        $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                        $pos->save();
+                        $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+                    } else {
+                        $this->setError("ppo_noretnumber");
+                        return;
+                    }
+                }
+           }
         }
 
 
