@@ -27,8 +27,8 @@ class PPOHelper
         $request = curl_init();
 
         curl_setopt_array($request, [
-            CURLOPT_PORT           => $port,
-            CURLOPT_URL            => "{$server}:{$port}/sign",
+            CURLOPT_PORT           => 3000,
+            CURLOPT_URL            => "127.0.0.1:3000/sign",
             CURLOPT_POST           => true,
             CURLOPT_ENCODING       => "",
             CURLOPT_MAXREDIRS      => 10,
@@ -104,8 +104,17 @@ class PPOHelper
                  return array('success' => false, 'data' => $msg);    
             }
             
-            
+              file_put_contents(  "z:/home/local.ppolib/www/data/beforesign.xml",$data);
+          //   $data =   file_get_contents(  "z:/home/local.ppolib/www/data/beforesign");
+     
             $signed =    PPO::sign($data,$key,$cert) ;
+          
+              file_put_contents(  "z:/home/local.ppolib/www/data/aftersign",$signed);
+       
+          // $signed =   file_get_contents(  "z:/home/local.ppolib/www/data/shiftsigned");
+        //  $decrypted  = PPO::decrypt($signed) ;
+        // file_put_contents(  "z:/home/local.ppolib/www/data/shiftdec",$decrypted);
+          
             $return = PPO::send($signed,$type) ;
             if (strpos($return, 'Номер документа повинен дорівнювати') > 0) {
                 $arr = explode(' ', $return);

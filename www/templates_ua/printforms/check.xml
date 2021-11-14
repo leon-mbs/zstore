@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="windows-1251"?>
 <CHECK xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="check01.xsd">
 
     <CHECKHEAD>
@@ -49,7 +48,7 @@
     {{#pay}}
     <CHECKPAY>
         {{#pays}}
-        <ROW>
+        <ROW
             {{{num}}}>
 
             <PAYFORMCD>{{formcode}}</PAYFORMCD>
@@ -71,7 +70,7 @@
 
     <CHECKBODY>
         {{#details}}
-        <ROW>
+        <ROW
             {{{num}}}>
 
             <NAME>{{name}}</NAME>

@@ -5,6 +5,7 @@ namespace App\Modules\PPO;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\CheckBox;
 
 class ZForm extends \App\Pages\Base
 {
@@ -27,6 +28,7 @@ class ZForm extends \App\Pages\Base
         $this->stat->add(new TextInput('retbnal'));
         $this->stat->add(new TextInput('cnt'));
         $this->stat->add(new TextInput('retcnt'));
+        $this->stat->add(new CheckBox('onlyshift'));
         $this->stat->setVisible(false);
     }
 
@@ -61,8 +63,11 @@ class ZForm extends \App\Pages\Base
 
     public function OnClose($sender) {
 
-
-        $ret = $this->zform();
+        $ret=true;
+        if($this->stat->onlyshift->isChecked()==false){
+           $ret = $this->zform();    
+        }
+        
         if ($ret == true) {
             //$this->closeshift();
             $pos = \App\Entity\Pos::load($this->pos->pos_id);
@@ -71,7 +76,7 @@ class ZForm extends \App\Pages\Base
 
             if ($ret['success'] == false && $ret['docnumber'] > 0) {
                 //повторяем для  нового номера
-                $this->pos->fiscalnumber = $ret['docnumber'];
+                $this->pos->fiscdocnumber = $ret['docnumber'];
                 $this->pos->save();
                 $ret = \App\Modules\PPO\PPOHelper::shift( $this->pos->pos_id, false);
 
