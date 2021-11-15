@@ -495,7 +495,19 @@
                     $('#addcode').click()
                 }
             }
-
+            function check_save(ele) {
+                $('#save').attr('disabled', 'disabled');
+                return true;
+            }
+            function check_openshift(ele) {
+                
+                $('#openshift').attr('disabled', 'disabled');
+                return true;
+            }
+            function check_closeshift(ele) {
+                $('#closeshift').attr('disabled', 'disabled');
+                return true;
+            }
 
         </script>
 
