@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b3c626d8e3935930304db1db3219b3ed",
+    "content-hash": "e1c8bafd31a93f07e7e8e096d0340ce1",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -889,27 +889,27 @@
         },
         {
             "name": "leon-mbs/ppolib",
-            "version": "1.1.2",
+            "version": "1.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/ppolib.git",
-                "reference": "eb05625ea47e895fbc011f832d9a05418f59eda2"
+                "reference": "91f554db32b2306579d4f183c3c3facb26ef70b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/ppolib/zipball/eb05625ea47e895fbc011f832d9a05418f59eda2",
-                "reference": "eb05625ea47e895fbc011f832d9a05418f59eda2",
+                "url": "https://api.github.com/repos/leon-mbs/ppolib/zipball/91f554db32b2306579d4f183c3c3facb26ef70b6",
+                "reference": "91f554db32b2306579d4f183c3c3facb26ef70b6",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.2",
-                "sop/asn1": "*"
+                "sop/asn1": "4.1.0"
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "PPOLib\\": "src/"
-                }
+                "files": [
+                    "src/autoload.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -924,9 +924,9 @@
             "homepage": "https://github.com/leon-mbs/ppolib",
             "support": {
                 "issues": "https://github.com/leon-mbs/ppolib/issues",
-                "source": "https://github.com/leon-mbs/ppolib/tree/1.1.2"
+                "source": "https://github.com/leon-mbs/ppolib/tree/1.1.4"
             },
-            "time": "2021-11-14T16:27:53+00:00"
+            "time": "2021-11-15T12:01:54+00:00"
         },
         {
             "name": "leon-mbs/zdb",
