@@ -230,7 +230,7 @@ class VarList extends \App\Pages\Base
         
         $this->varpanel->varlistpanel->setVisible(true);
         $this->varpanel->itemspanel->setVisible(false); 
-        
+        $this->UpdateVarList() ;   
          
     }
     

@@ -591,7 +591,7 @@ class docs extends \App\API\Base\JsonRPC
         if (is_array($args['items']) && count($args['items']) > 0) {
             foreach ($args['items'] as $it) {
 
-                $item = \App\Entity\Service::load($it['service_id']));
+                $item = \App\Entity\Service::load($it['service_id']);
 
                 if ($item instanceof \App\Entity\Service) {
 
