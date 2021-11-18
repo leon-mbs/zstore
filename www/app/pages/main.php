@@ -109,9 +109,9 @@ class Main extends Base
         if ($this->_tvars['wrdoc'] == true) {
             $data = array();
 
-            $sql = "SELECT u.username,d.document_number,d.amount,d.meta_desc,d.state,l.md  FROM (SELECT     document_id,user_id,MAX(createdon) AS md from docstatelog where  1=1 {$br} and createdon >  " . $conn->DBDate(strtotime("-1 week", time())) . " GROUP BY document_id,user_id      ) l 
+            $sql = "SELECT u.username,d.document_number,d.amount,d.meta_desc,d.state,l.md  FROM (SELECT     document_id,user_id,MAX(createdon) AS md from docstatelog where     createdon >  " . $conn->DBDate(strtotime("-1 week", time())) . " GROUP BY document_id,user_id      ) l 
                       join documents_view d  on l.document_id= d.document_id  
-                      join users_view u  on l.user_id= u.user_id  ORDER  BY  md desc";
+                      join users_view u  on l.user_id= u.user_id where  1=1 {$br} ORDER  BY  md desc";
 
 
             $rc = $conn->Execute($sql);
