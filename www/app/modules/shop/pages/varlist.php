@@ -96,7 +96,8 @@ class VarList extends \App\Pages\Base
 
         $this->grouplist->Reload(false);
         $this->UpdateVarList();
-        
+         $this->varpanel->varlistpanel->setVisible(true);
+     
         $this->varpanel->itemspanel->setVisible(false); 
      
         $this->varpanel->vareditform->setVisible(false);
