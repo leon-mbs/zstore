@@ -111,9 +111,9 @@ class ProductView extends Base
         $vars = $product->getVarList($options['defpricetype']);
         
         $this->add(new Panel('varpan'))->setVisible(count($vars)>0);
-        $this->add(new DataView('varlist', new ArrayDataSource($vars), $this, 'varlistOnRow'))->Reload();
+        $this->varpan->add(new DataView('varlist', new ArrayDataSource($vars), $this, 'varlistOnRow'))->Reload();
         $this->varpan->add(new Label("vattrname",$product->vattrname))  ;
-        
+   
         $recently = \App\Session::getSession()->recently;
         if (!is_array($recently)) {
             $recently = array();
