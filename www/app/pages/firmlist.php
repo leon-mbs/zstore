@@ -165,7 +165,7 @@ class FirmList extends \App\Pages\Base
                
     }
     public function onSend($sender) {
-
+          $die;
        $password = $this->keyform->password->getText() ;
        $keyfile = $this->keyform->keyfile->getFile() ;
        $certfile = $this->keyform->certfile->getFile() ;
@@ -174,7 +174,7 @@ class FirmList extends \App\Pages\Base
        $certdata =  @file_get_contents($certfile['tmp_name']);
        
        if(strlen($password)==0  || strlen($keydata)==0  || strlen($certdata)==0 )  {
-         $this->updateAjax(array(),"   $('#progress').text('Не введены все  данные...');   $('#send').attr('disabled',null);            ") ;
+         $this->updateAjax(array(),"   $('#progress').text('". H::l("pponotloaddata") ."');   $('#send').attr('disabled',null);            ") ;
          return;
        }
        

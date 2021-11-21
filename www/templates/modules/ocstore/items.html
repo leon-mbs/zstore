@@ -88,9 +88,20 @@
                 <h3>Импорт товаров с магазина </h3>
 
                 <div class="navbar nav">
-                    <a zippy="getitems" class="  btn btn-outline-success  ">Загрузить</a>
-                    <img id="loader6" style="display:none" src="/assets/images/ajax-loader.gif">
+                     <form zippy="importform" class="form-inline ">
 
+                         <div class="form-check">
+
+                            <input   class="form-check-input" type="checkbox" zippy="createcat">
+                            <label class="form-check-label mr-3" for="createcat">Создавать категорию как  магазине</label>
+                        </div>
+
+
+                        <input onclick="$('#loader6').removeAttr('style')" zippy="getitems" type="submit" class=" mr-2 btn btn-outline-success  "
+                               value="Завантажити">
+                        <img id="loader6" style="display:none" src="/assets/images/ajax-loader.gif">
+
+                    </form>
 
                 </div>
             </div>
@@ -107,10 +118,7 @@
                 $('#loader4').removeAttr('style');
             }
 
-            function check_getitems() {
-
-                $('#loader6').removeAttr('style');
-            }
+          
 
             function chclick() {
                 var ch = $("#chall").prop('checked');

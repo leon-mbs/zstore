@@ -48,8 +48,14 @@ class Items extends \App\Pages\Base
 
         $this->add(new ClickLink('updateqty'))->onClick($this, 'onUpdateQty');
         $this->add(new ClickLink('updateprice'))->onClick($this, 'onUpdatePrice');
-        $this->add(new ClickLink('getitems'))->onClick($this, 'onGetItems');
         $this->add(new ClickLink('checkconn'))->onClick($this, 'onCheck');
+        
+        
+ 
+        $this->add(new Form('importform'))->onSubmit($this, 'importOnSubmit');
+        $this->importform->add(new CheckBox('createcat'));
+   
+        
     }
 
     public function onCheck($sender) {
@@ -225,10 +231,19 @@ class Items extends \App\Pages\Base
         $this->setSuccess('refreshed');
     }
 
-    public function onGetItems($sender) {
+    public function importOnSubmit($sender) {
         $modules = System::getOptions("modules");
         $common = System::getOptions("common");
 
+        $cats = System::getSession()->cats;
+        if (is_array($cats) == false) {
+            $cats = array();
+            $this->setWarn('do_connect');
+            return;
+        }        
+        
+        
+        
         $elist = array();
 
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/getproducts&' . System::getSession()->octoken;
@@ -298,6 +313,25 @@ class Items extends \App\Pages\Base
                     $item->image_id = $image->image_id;
                 }
             }
+            
+            if($sender->createcat->isChecked() && $product['cat_id'] >0) {
+                $cat_name = $cats[$product['cat_id']];
+                if(strlen($cat_name)>0) {
+                    
+                   $cat = \App\Entity\Category::getFirst("cat_name=" . \App\Entity\Category::qstr($cat_name) ) ;
+                   
+                   if($cat == null) {
+                       $cat = new   \App\Entity\Category();
+                       $cat->cat_name = $cat_name; 
+                       $cat->save();
+                       
+                   }    
+                    
+                   $item->cat_id=$cat->cat_id; 
+                }
+            }           
+            
+            
             $item->save();
             $i++;
         }

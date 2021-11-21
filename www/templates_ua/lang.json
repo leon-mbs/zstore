@@ -477,5 +477,6 @@
     "stpp_intersect_other": "Iнтервал перетинаєтся з iснуючим на цiй дiлянцi для iншого етапу", 
     "repbybrand": "По брендах"     ,
     "ppokeyloaded": "Ключ завантажений успiшно"  ,
-    "ppokeynotloaded": "Не завантажено ключ або  сертифiкат"
+    "ppokeynotloaded": "Не завантажено ключ або  сертифiкат",
+    "pponotloaddata": "Не введенi необхiднi  данi" 
 }
