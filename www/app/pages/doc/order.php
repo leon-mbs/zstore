@@ -535,8 +535,8 @@ class Order extends \App\Pages\Base
     }
 
     public function OnDelivery($sender) {
-
-        if ($sender->getValue() == Document::DEL_NP || Document::DEL_BOY || $sender->getValue() == Document::DEL_SERVICE) {
+        $dt = $sender->getValue() ;
+        if ($dt == Document::DEL_NP || $dt== Document::DEL_BOY || $dt == Document::DEL_SERVICE) {
             $this->docform->address->setVisible(true);
         } else {
             $this->docform->address->setVisible(false);
