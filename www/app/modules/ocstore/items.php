@@ -315,9 +315,14 @@ class Items extends \App\Pages\Base
             }
             
             if($sender->createcat->isChecked() && $product['cat_id'] >0) {
-                $cat_name = $cats[$product['cat_id']];
+                $cat_name =trim( $cats[$product['cat_id']]);
                 if(strlen($cat_name)>0) {
-                    
+                   $cat_name = str_replace('&nbsp;','',$cat_name) ;
+                   if(strpos($cat_name,'&gt;')>0) {
+                       $ar = explode('&gt;',$cat_name) ;
+                       $cat_name = trim($ar[count($ar)-1] );
+                       
+                   }
                    $cat = \App\Entity\Category::getFirst("cat_name=" . \App\Entity\Category::qstr($cat_name) ) ;
                    
                    if($cat == null) {
