@@ -136,8 +136,8 @@ class Orders extends \App\Pages\Base
                 $neworder->headerdata['wcclient'] = $wcorder->shipping->first_name . ' ' . $wcorder->shipping->last_name;
                 $neworder->amount = round($wcorder->total);
                 $neworder->payamount = $neworder->amount;
-                $neworder->headerdata['payed'] = $neworder->amount;
-                $neworder->headerdata['payment'] = \App\Helper::getDefMF();
+                
+                
                
                 $neworder->document_date = time();
                 $neworder->notes = "WC номер:{$wcorder->id};";

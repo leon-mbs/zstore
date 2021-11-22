@@ -166,8 +166,6 @@ class Orders extends \App\Pages\Base
             $neworder->headerdata['outnumber'] = $shoporder->order_id;
             $neworder->headerdata['ocorder'] = $shoporder->order_id;
             $neworder->headerdata['ocorderback'] = 0;
-            $neworder->headerdata['payment'] = \App\Helper::getDefMF();
-            $neworder->headerdata['payed'] = $neworder->amount;
             $neworder->payamount = $neworder->amount;
 
             $neworder->notes = "OC номер:{$shoporder->order_id};";
