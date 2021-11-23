@@ -48,18 +48,16 @@
         <div   zippy="docpanel">
 
             <h4>Оформлення  чеку</h4>
-            <a zippy="tochecklist"><i class="fa fa-list"></i> Список  чекiв</a>
-
-            <form zippy="form2">
-                {{#ppo}}
-                <div class="row">
-                    <div class="col-12 col-md-10 col-lg-8 col-xl-7">
+            <a zippy="tochecklist"><i class="fa fa-list"></i> Список  чекiв</a>    &nbsp;  &nbsp; &nbsp;  &nbsp; 
+             {{#ppo}}
+                
                         <a zippy="openshift"><i class="fa fa-bullhorn"/> Вiдкрити змiну</a>
-                        &nbsp; <a zippy="closeshift"><i class="fa fa-gavel"/> Закрити змiну</a>
-                        <br><br>
-                    </div>
-                </div>
+                        &nbsp;  &nbsp; <a zippy="closeshift"><i class="fa fa-gavel"/> Закрити змiну</a>
+                        
+             
                 {{/ppo}}
+            <form zippy="form2" class="mt-2">
+             
                 <div class="row">
                     <div class="col-12 col-md-10 col-lg-8 col-xl-7">
                         {{#usescanner}}
@@ -285,7 +283,7 @@
 
                         <div class="form-group">
                             <input type="submit" zippy="submitrow" value="Зберегти" class="btn btn-outline-primary ">
-                            &nbsp; <input type="button" zippy="cancelrow" value="Скасувати" class="btn btn-light ">
+                            &nbsp; <input type="button" zippy="cancelrow" value="До списку" class="btn btn-light ">
                         </div>
 
                     </form>
@@ -337,7 +335,7 @@
         </div>  
         <div class="row" zippy="checklistpan"  >
 
-            <div class="col-12 col-md-8 xl-6" >
+            <div class="col-12 col-md-10 xl-8" >
                 <h4>Список  чекiв</h4>
                 <a  class="btn btn-success" zippy="newcheck">Новий чек</a>   
 

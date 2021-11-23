@@ -509,6 +509,21 @@ class ARMPos extends \App\Pages\Base
 
         if ($this->_rowid > 0) {
             $item->rowid = $this->_rowid;
+            
+                    
+                $this->docpanel->editdetail->setVisible(false);
+                $this->docpanel->form2->setVisible(true);
+
+                $this->docpanel->editdetail->edittovar->setKey(0);
+                $this->docpanel->editdetail->edittovar->setText('');
+
+                $this->docpanel->editdetail->editquantity->setText("1");
+
+                $this->docpanel->editdetail->editprice->setText("");
+                $this->docpanel->editdetail->editserial->setText("");
+                $this->docpanel->wselitem->setVisible(false);           
+            
+            
         } else {
             $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
             $item->rowid = $next + 1;
@@ -517,19 +532,10 @@ class ARMPos extends \App\Pages\Base
 
         $this->_rowid = 0;
 
-        $this->docpanel->editdetail->setVisible(false);
-        $this->docpanel->form2->setVisible(true);
 
         $this->docpanel->form2->detail->Reload();
-        //очищаем  форму
-        $this->docpanel->editdetail->edittovar->setKey(0);
-        $this->docpanel->editdetail->edittovar->setText('');
-
-        $this->docpanel->editdetail->editquantity->setText("1");
-
-        $this->docpanel->editdetail->editprice->setText("");
-        $this->docpanel->editdetail->editserial->setText("");
-        $this->docpanel->wselitem->setVisible(false);
+       
+    
 
         $this->calcTotal();
     }
@@ -574,6 +580,9 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->editserdetail->setVisible(false);
         $this->docpanel->form2->setVisible(true);
         $this->docpanel->wselitem->setVisible(false);
+        
+        $this->docpanel->form2->detail->Reload();        
+        
         //очищаем  форму
         $this->docpanel->editdetail->edittovar->setKey(0);
         $this->docpanel->editdetail->edittovar->setText('');

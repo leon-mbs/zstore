@@ -428,13 +428,15 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editdetail->editprice->setText("");
         $this->editdetail->editsnumber->setText("");
         $this->editdetail->editsdate->setText("");
-        $this->goAnkor("lankor");
+        $this->editdetail->editsellprice->setText("");
+        
     }
 
     public function cancelrowOnClick($sender) {
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->wselitem->setVisible(false);
+        $this->goAnkor("lankor");        
     }
 
     public function savedocOnClick($sender) {
