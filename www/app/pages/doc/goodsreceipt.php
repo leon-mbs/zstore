@@ -401,6 +401,10 @@ class GoodsReceipt extends \App\Pages\Base
 
         if ($this->_rowid > 0) {
             $item->rowid = $this->_rowid;
+            
+            $this->editdetail->setVisible(false);
+            $this->docform->setVisible(true);            
+            $this->wselitem->setVisible(false);           
         } else {
             $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
             $item->rowid = $next + 1;
@@ -409,13 +413,12 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->_rowid = 0;
 
-        $this->editdetail->setVisible(false);
-        $this->docform->setVisible(true);
+
         $this->docform->detail->Reload();
         $this->calcTotal();
         $this->calcPay();
 
-        $this->wselitem->setVisible(false);
+        
         //очищаем  форму
         $this->editdetail->edititem->setKey(0);
         $this->editdetail->edititem->setText('');
