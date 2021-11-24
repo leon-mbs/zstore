@@ -128,6 +128,9 @@ class Orders extends \App\Pages\Base
 
                     $itlist[] = $tovar;
                 }
+            if(count($itlist)==0)  {
+                return;
+            }                
                 $neworder->packDetails('detaildata', $itlist);
 
                 $neworder->headerdata['wcorder'] = $wcorder->id;
@@ -135,7 +138,10 @@ class Orders extends \App\Pages\Base
                 $neworder->headerdata['wcorderback'] = 0;
                 $neworder->headerdata['wcclient'] = $wcorder->shipping->first_name . ' ' . $wcorder->shipping->last_name;
                 $neworder->amount = round($wcorder->total);
-                  
+                if($modules['wcsetpayamount']==1){
+                   $neworder->payamount = $neworder->amount;
+                 
+                }              
                 
                
                 $neworder->document_date = time();

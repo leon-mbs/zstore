@@ -33,6 +33,7 @@ class Options extends \App\Pages\Base
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['wcpricetype']));
         $form->add(new DropDownChoice('api', array('v3' => 'v3', 'v2' => 'v2', 'v1' => 'v1'), $modules['wcapi']));
         $form->add(new CheckBox('ssl', $modules['wcssl']));
+        $form->add(new CheckBox('setpayamount', $modules['wcsetpayamount']));
 
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
 
@@ -45,6 +46,7 @@ class Options extends \App\Pages\Base
         $keys = $this->cform->keys->getText();
         $api = $this->cform->api->getValue();
         $ssl = $this->cform->ssl->isChecked() ? 1 : 0;
+        $setpayamount = $this->cform->setpayamount->isChecked() ? 1 : 0;
         $customer_id = $this->cform->defcust->getValue();
         $pricetype = $this->cform->defpricetype->getValue();
         if ($customer_id == 0) {
@@ -67,6 +69,7 @@ class Options extends \App\Pages\Base
         $modules['wccustomer_id'] = $customer_id;
         $modules['wcpricetype'] = $pricetype;
         $modules['wcssl'] = $ssl;
+        $modules['wcsetpayamount'] = $setpayamount;
 
         System::setOptions("modules", $modules);
         $this->setSuccess('saved');
