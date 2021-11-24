@@ -161,8 +161,17 @@ class Orders extends \App\Pages\Base
 
                 $tlist[] = $tovar;
             }
+            if(count($tlist)==0)  {
+                return;
+            }
             $neworder->packDetails('detaildata', $tlist);
             $neworder->amount = round($shoporder->total);
+            
+            if($modules['ocsetpayamount']==1){
+               $neworder->payamount = $neworder->amount;
+             
+            }
+            
             $neworder->headerdata['outnumber'] = $shoporder->order_id;
             $neworder->headerdata['ocorder'] = $shoporder->order_id;
             $neworder->headerdata['ocorderback'] = 0;

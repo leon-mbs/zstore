@@ -32,6 +32,7 @@ class Options extends \App\Pages\Base
         $form->add(new CheckBox('ssl', $modules['ocssl']));
         $form->add(new CheckBox('outcome', $modules['ocoutcome']));
         $form->add(new CheckBox('insertcust', $modules['ocinsertcust']));
+        $form->add(new CheckBox('setpayamount', $modules['ocsetpayamount']));
         $form->add(new TextArea('key', $modules['ockey']));
         $form->add(new DropDownChoice('defcust', \App\Entity\Customer::getList(), $modules['occustomer_id'] > 0 ? $modules['occustomer_id'] : 0));
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['ocpricetype']));
@@ -49,6 +50,7 @@ class Options extends \App\Pages\Base
         $outcome = $this->cform->outcome->isChecked() ? 1 : 0;
         $ssl = $this->cform->ssl->isChecked() ? 1 : 0;
         $insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
+        $setpayamount = $this->cform->setpayamount->isChecked() ? 1 : 0;
         if ($customer_id == 0) {
 
             $this->setError('noselcust');
@@ -72,6 +74,7 @@ class Options extends \App\Pages\Base
         $modules['ocssl'] = $ssl;
         $modules['ocinsertcust'] = $insertcust;
         $modules['ocoutcome'] = $outcome;
+        $modules['ocsetpayamount'] = $setpayamount;
 
         System::setOptions("modules", $modules);
 
