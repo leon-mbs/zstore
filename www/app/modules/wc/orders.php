@@ -135,8 +135,7 @@ class Orders extends \App\Pages\Base
                 $neworder->headerdata['wcorderback'] = 0;
                 $neworder->headerdata['wcclient'] = $wcorder->shipping->first_name . ' ' . $wcorder->shipping->last_name;
                 $neworder->amount = round($wcorder->total);
-                $neworder->payamount = $neworder->amount;
-                
+                  
                 
                
                 $neworder->document_date = time();
