@@ -174,7 +174,7 @@ class Util
 define('M2S_KOPS_DIGITS', 0x01);    // digital copecks
 define('M2S_KOPS_MANDATORY', 0x02);    // mandatory copecks
 define('M2S_KOPS_SHORT', 0x04);    // shorten copecks
-
+                                                      
 function money2str_rugr($money, $options = 0) {
              
     $money = preg_replace('/[\,\-\=]/', '.', $money);
@@ -558,7 +558,7 @@ function money2str_ua($money, $options = 0) {
 // service function to select the group of digits
 function dec_digits_group($number, $power, $digits = 1) {
                  
-    if (function_exists('gmp_init')  ) {
+    if (function_exists('gmp_init') && $power >0 ) {
        return   gmp_intval( gmp_mod(gmp_div((int)$number, gmp_pow(10,(int) $power * $digits )), gmp_pow(10, (int)$digits )));
     }
     return    intval(   ( $number/pow(10, $power * $digits) ) % pow(10,    $digits) ) ;

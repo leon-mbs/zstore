@@ -508,6 +508,11 @@ class GoodsIssue extends \App\Pages\Base
 
         if ($this->_rowid > 0) {
             $item->rowid = $this->_rowid;
+            
+            $this->editdetail->setVisible(false);
+            $this->wselitem->setVisible(false);
+            $this->docform->setVisible(true);            
+            
         } else {
             $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
             $item->rowid = $next + 1;
@@ -516,9 +521,7 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->_rowid = 0;
 
-        $this->editdetail->setVisible(false);
-        $this->wselitem->setVisible(false);
-        $this->docform->setVisible(true);
+
         $this->docform->detail->Reload();
 
         //очищаем  форму

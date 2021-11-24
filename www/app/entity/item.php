@@ -214,7 +214,7 @@ class Item extends \ZCL\DB\Entity
         if (strpos($_price, '%') > 0) {
 
             $ret = doubleval(str_replace('%', '', $_price));
-            if ($ret > 0) {
+            if (is_numeric($ret) ) {
                 if ($partion == 0) {
                     //ищем последнюю закупочную  цену 
                     $partion = $this->getLastPartion($store);
