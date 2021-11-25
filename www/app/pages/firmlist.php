@@ -254,85 +254,83 @@ class FirmList extends \App\Pages\Base
        }
        
        if($signtype==1 || $signtype==2 ) {       
-         if(strlen($serhost)==0  || strlen($serport)==0   )  {
-             $this->updateAjax(array(),"   $('#progress').text('". H::l("pponotloaddata") ."');   $('#send').attr('disabled',null);            ") ;
-             return;
-         }         
-         
-         $req = array();
-         $req['serversidekey'] = $signtype==2;
-         
-         if($signtype==1) {
+             if(strlen($serhost)==0  || strlen($serport)==0   )  {
+                 $this->updateAjax(array(),"   $('#progress').text('". H::l("pponotloaddata") ."');   $('#send').attr('disabled',null);            ") ;
+                 return;
+             }         
              
-           if(strlen($password)==0  || strlen($keydata)==0  || strlen($certdata)==0 )  {
-               $this->updateAjax(array(),"   $('#progress').text('". H::l("pponotloaddata") ."');   $('#send').attr('disabled',null);            ") ;
-               return;
-           }             
-           $req['password'] = $password ;
-           $req['key'] = base64_encode($keydata);
-           $req['cert'] = base64_encode($certdata);
-           
+             $req = array();
+             $req['serversidekey'] = $signtype==2;
+             
+             if($signtype==1) {
+                 
+               if(strlen($password)==0  || strlen($keydata)==0  || strlen($certdata)==0 )  {
+                   $this->updateAjax(array(),"   $('#progress').text('". H::l("pponotloaddata") ."');   $('#send').attr('disabled',null);            ") ;
+                   return;
+               }             
+               $req['password'] = $password ;
+               $req['key'] = base64_encode($keydata);
+               $req['cert'] = base64_encode($certdata);
+               
+              
+                 
+             }
+             
+             $json = json_encode($req)   ;
+             
+             $serhost = rtrim($serhost, '/');
+
+            $request = curl_init();
+
+            curl_setopt_array($request, [
+                CURLOPT_PORT           => $serport,
+                CURLOPT_URL            => $serhost. ":" .$serport ."/check",
+                CURLOPT_POST           => true,
+                CURLOPT_ENCODING       => "",
+                CURLOPT_MAXREDIRS      => 10,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_CONNECTTIMEOUT => 20,
+                CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+                CURLOPT_SSL_VERIFYPEER   => $usessl==1,
+                CURLOPT_POSTFIELDS     => $json
+            ]);
+
+            $ret = curl_exec($request);
+            if (curl_errno($request) > 0) {
+                 $msg = curl_error($request) ; 
+                 $this->updateAjax(array(),"   $('#progress').text('{$msg}');   $('#send').attr('disabled',null);            ") ;
+                 return;            
+            }
+
+            curl_close($request);
+            $ret = json_decode($ret);
+            if ($ret->success==false) {
+                 $msg = $ret->message; 
+                 $this->updateAjax(array(),"   $('#progress').text('{$msg}');   $('#send').attr('disabled',null);            ") ;
+                 return;            
+            }  
+             
+            if($signtype==1) {   //send  key
+                 
+               
+               $this->_firm->ppopassword = $password ;
+               $this->_firm->ppokey = base64_encode($keydata);
+               $this->_firm->ppocert = base64_encode($certdata);
+                
+                 
+            }          
+            $this->_firm->ppoowner =  $ret->owner   ;
+            $this->_firm->ppohost =  $serhost  ;
+            $this->_firm->ppoport =  $serport   ;
+            $this->_firm->ppousessl =  $usessl   ;
           
-             
-         }
-         
-         $json = json_encode($req)   ;
-         
-         $serhost = rtrim($serhost, '/');
+               
+           }
+             $this->_firm->pposigntype =  $signtype   ;
+             $this->_firm->save();      
 
-        $request = curl_init();
-
-        curl_setopt_array($request, [
-            CURLOPT_PORT           => $serport,
-            CURLOPT_URL            => $serhost. ":" .$serport ."/check",
-            CURLOPT_POST           => true,
-            CURLOPT_ENCODING       => "",
-            CURLOPT_MAXREDIRS      => 10,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CONNECTTIMEOUT => 20,
-            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-            CURLOPT_SSL_VERIFYPEER   => $usessl==1,
-            CURLOPT_POSTFIELDS     => $json
-        ]);
-
-        $ret = curl_exec($request);
-        if (curl_errno($request) > 0) {
-             $msg = curl_error($request) ; 
-             $this->updateAjax(array(),"   $('#progress').text('{$msg}');   $('#send').attr('disabled',null);            ") ;
-             return;            
-        }
-
-        curl_close($request);
-        $ret = json_decode($ret);
-        if ($ret->success==false) {
-             $msg = $ret->message; 
-             $this->updateAjax(array(),"   $('#progress').text('{$msg}');   $('#send').attr('disabled',null);            ") ;
-             return;            
-        }  
-         
-        if($signtype==1) {   //send  key
-             
-           
-           $this->_firm->ppopassword = $password ;
-           $this->_firm->ppokey = base64_encode($keydata);
-           $this->_firm->ppocert = base64_encode($certdata);
-           
-          
-             
-        }          
-        $this->_firm->ppoowner =  $ret->owner   ;
-        $this->_firm->ppohost =  $serhost  ;
-        $this->_firm->ppoport =  $serport   ;
-        $this->_firm->ppousessl =  $usessl   ;
- 
-     
-           
-       }
-         $this->_firm->pposigntype =  $signtype   ;
-         $this->_firm->save();      
-
-         $kl = \App\Helper::l("ppokeyloaded");
-         $this->updateAjax(array(),"   $('#progress').text('{$kl}')") ;
+             $kl = \App\Helper::l("ppokeyloaded");
+             $this->updateAjax(array(),"   $('#progress').text('{$kl}')") ;
          
          
     }
