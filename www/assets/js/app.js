@@ -90,14 +90,5 @@ $(document).ready(function() {
 
     
    
-function getMethodUrl(method,params=null){
-        
-       var p='';
-       if(Array.isArray(params))  {
-           p =   params.join(':');
-       }
-       var url = window._baseurl+'::'+method+':'+p+'&ajax=true'
-       return url;
-        
-}    
+   
   
