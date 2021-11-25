@@ -31,6 +31,10 @@ class Firm extends \ZCL\DB\Entity
         $this->ppoowner = (string)($xml->ppoowner[0]);
         $this->ppokey = (string)($xml->ppokey[0]);
         $this->ppocert = (string)($xml->ppocert[0]);
+        $this->ppopassword = (string)($xml->ppopassword[0]);
+        $this->ppohost = (string)($xml->ppohost[0]);
+        $this->ppoport = (string)($xml->ppoport[0]);
+        $this->ppousessl = (string)($xml->ppousessl[0]);
 
         parent::afterLoad();
     }
@@ -46,6 +50,10 @@ class Firm extends \ZCL\DB\Entity
         $this->details .= "<ppoowner><![CDATA[{$this->ppoowner}]]></ppoowner>";
         $this->details .= "<ppocert><![CDATA[{$this->ppocert}]]></ppocert>";
         $this->details .= "<ppokey><![CDATA[{$this->ppokey}]]></ppokey>";
+        $this->details .= "<ppopassword>{$this->ppopassword}</ppopassword>";
+        $this->details .= "<ppohost>{$this->ppohost}</ppohost>";
+        $this->details .= "<ppoport>{$this->ppoport}</ppoport>";
+        $this->details .= "<ppousessl>{$this->ppousessl}</ppousessl>";
         $this->details .= "<inn>{$this->inn}</inn>";
 
         $this->details .= "<phone>{$this->phone}</phone>";
