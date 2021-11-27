@@ -38,8 +38,7 @@ class PPOHelper
                 $req = array();
                 $req['serversidekey'] = $pposigntype == 2;
                 $req['data'] = base64_encode($data);
-                $req['type'] = $type;
-
+                
                 if ($pposigntype == 1) {
 
                     if (strlen($password) == 0 || strlen($keydata) == 0 || strlen($certdata) == 0) {
@@ -129,8 +128,7 @@ class PPOHelper
                     $req = array();
                     $req['serversidekey'] = $pposigntype == 2;
                     $req['data'] = base64_encode($return);
-                    $req['type'] = $type;
-
+              
 
                     $json = json_encode($req);
 

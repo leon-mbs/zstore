@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d1cc24c658dff6a9647c79c4495763ea",
+    "content-hash": "a1f95a65dc63b285e87bba45322ee1f2",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -889,16 +889,16 @@
         },
         {
             "name": "leon-mbs/ppolib",
-            "version": "1.1.6",
+            "version": "1.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/ppolib.git",
-                "reference": "4999745386c5b699246d81400699ab54bbdc8e87"
+                "reference": "9c8e2beb8b55fb2070691e14b047bf55a89dae23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/ppolib/zipball/4999745386c5b699246d81400699ab54bbdc8e87",
-                "reference": "4999745386c5b699246d81400699ab54bbdc8e87",
+                "url": "https://api.github.com/repos/leon-mbs/ppolib/zipball/9c8e2beb8b55fb2070691e14b047bf55a89dae23",
+                "reference": "9c8e2beb8b55fb2070691e14b047bf55a89dae23",
                 "shasum": ""
             },
             "require": {
@@ -924,9 +924,9 @@
             "homepage": "https://github.com/leon-mbs/ppolib",
             "support": {
                 "issues": "https://github.com/leon-mbs/ppolib/issues",
-                "source": "https://github.com/leon-mbs/ppolib/tree/1.1.6"
+                "source": "https://github.com/leon-mbs/ppolib/tree/1.1.7"
             },
-            "time": "2021-11-25T20:49:10+00:00"
+            "time": "2021-11-27T19:23:09+00:00"
         },
         {
             "name": "leon-mbs/zdb",
