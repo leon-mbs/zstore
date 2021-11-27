@@ -298,6 +298,7 @@ class FirmList extends \App\Pages\Base
             $ret = curl_exec($request);
             if (curl_errno($request) > 0) {
                  $msg = curl_error($request) ; 
+                  $msg = str_replace("'","\"",$msg) ;
                  $this->updateAjax(array(),"   $('#progress').text('{$msg}');   $('#send').attr('disabled',null);            ") ;
                  return;            
             }
@@ -305,7 +306,11 @@ class FirmList extends \App\Pages\Base
             curl_close($request);
             $ret = json_decode($ret);
             if ($ret->success==false) {
-                 $msg = $ret->message; 
+                 $msg = $ret->error; 
+                 if(strlen($ret->message)>0){
+                    $msg = $ret->message  ; 
+                 }; 
+                   $msg = str_replace("'","\"",$msg) ;  
                  $this->updateAjax(array(),"   $('#progress').text('{$msg}');   $('#send').attr('disabled',null);            ") ;
                  return;            
             }  

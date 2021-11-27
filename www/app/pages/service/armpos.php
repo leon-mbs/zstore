@@ -845,6 +845,7 @@ class ARMPos extends \App\Pages\Base
                 }
                 if ($ret['success'] == false) {
                     $this->setError($ret['data']);
+                     $conn->RollbackTrans();
                     return;
                 } else {
                     //  $this->setSuccess("Выполнено") ;
@@ -854,6 +855,7 @@ class ARMPos extends \App\Pages\Base
                         $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
                     } else {
                         $this->setError("ppo_noretnumber");
+                         $conn->RollbackTrans();
                         return;
                     }
                 }

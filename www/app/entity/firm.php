@@ -35,6 +35,7 @@ class Firm extends \ZCL\DB\Entity
         $this->ppohost = (string)($xml->ppohost[0]);
         $this->ppoport = (string)($xml->ppoport[0]);
         $this->ppousessl = (string)($xml->ppousessl[0]);
+        $this->pposigntype = (string)($xml->pposigntype[0]);
 
         parent::afterLoad();
     }
@@ -54,6 +55,7 @@ class Firm extends \ZCL\DB\Entity
         $this->details .= "<ppohost>{$this->ppohost}</ppohost>";
         $this->details .= "<ppoport>{$this->ppoport}</ppoport>";
         $this->details .= "<ppousessl>{$this->ppousessl}</ppousessl>";
+        $this->details .= "<pposigntype>{$this->pposigntype}</pposigntype>";
         $this->details .= "<inn>{$this->inn}</inn>";
 
         $this->details .= "<phone>{$this->phone}</phone>";
