@@ -684,7 +684,9 @@ class ARMFood extends \App\Pages\Base
             return;
         }
 
-        $this->createdoc();
+        if ($this->createdoc() == false) {
+            return;
+        }
         if ($this->_worktype == 0) {
             $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
             $conn = \ZDB\DB::getConnect();
@@ -732,7 +734,9 @@ class ARMFood extends \App\Pages\Base
     public function toprodOnClick($sender) {
 
 
-        $this->createdoc();
+        if ($this->createdoc() == false) {
+            return;
+        }
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
@@ -902,7 +906,7 @@ class ARMFood extends \App\Pages\Base
 
         if (count($this->_itemlist) == 0) {
             $this->setError('noenterpos');
-            return false;
+            return false;  
         }
         if ($idnew) {
             $this->_doc->document_number = $this->_doc->nextNumber();
@@ -912,7 +916,7 @@ class ARMFood extends \App\Pages\Base
                 $this->_doc->document_number = $next;
                 if (strlen($next) == 0) {
                     $this->setError('docnumbercancreated');
-                    return false;
+                    return false;   
                 }
             }
         }

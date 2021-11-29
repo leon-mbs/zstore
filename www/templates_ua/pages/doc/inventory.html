@@ -336,15 +336,20 @@
         }
 
 
-        if (mobileCheck()) {
-            $('#mobilescanner').show();
-        } else {
-            $('#mobilescanner').hide();
-        }
-
+     
     </script>
 
+       {{#usemobilescanner}}       
+     <script>      
+        
+            if (mobileCheck()) {
+                $('#mobilescanner').show();
+            } else {
+                $('#mobilescanner').hide();
+            }
 
+        </script>     
+         {{/usemobilescanner}}  
 </body>
 
 </html>

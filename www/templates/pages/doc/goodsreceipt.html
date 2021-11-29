@@ -638,16 +638,21 @@
             }
 
 
+           
+        </script>
+
+        {{/usescanner}}
+
+      {{#usemobilescanner}}       
+     <script>      
+        
             if (mobileCheck()) {
                 $('#mobilescanner').show();
             } else {
                 $('#mobilescanner').hide();
             }
 
-        </script>
-
-        {{/usescanner}}
-
-
+        </script>     
+         {{/usemobilescanner}}  
     </body>
 </html>

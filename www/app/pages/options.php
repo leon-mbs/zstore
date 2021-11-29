@@ -56,6 +56,7 @@ class Options extends \App\Pages\Base
 
         $this->common->add(new CheckBox('useimages'));
         $this->common->add(new CheckBox('usescanner'));
+        $this->common->add(new CheckBox('usemobilescanner'));
         $this->common->add(new CheckBox('usebranch'));
         $this->common->add(new CheckBox('usecattree'));
         $this->common->add(new CheckBox('showactiveusers'));
@@ -113,6 +114,7 @@ class Options extends \App\Pages\Base
         $this->common->showchat->setChecked($common['showchat']);
         $this->common->usecattree->setChecked($common['usecattree']);
         $this->common->usescanner->setChecked($common['usescanner']);
+        $this->common->usemobilescanner->setChecked($common['usemobilescanner']);
         $this->common->useimages->setChecked($common['useimages']);
         $this->common->usebranch->setChecked($common['usebranch']);
         $this->common->noallowfiz->setChecked($common['noallowfiz']);
@@ -286,6 +288,7 @@ class Options extends \App\Pages\Base
 
         $common['usesnumber'] = $this->common->usesnumber->isChecked() ? 1 : 0;
         $common['usescanner'] = $this->common->usescanner->isChecked() ? 1 : 0;
+        $common['usemobilescanner'] = $this->common->usemobilescanner->isChecked() ? 1 : 0;
         $common['useimages'] = $this->common->useimages->isChecked() ? 1 : 0;
 
         $common['printoutqrcode'] = $this->common->printoutqrcode->isChecked() ? 1 : 0;
