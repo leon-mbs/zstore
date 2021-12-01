@@ -5,7 +5,9 @@ namespace App\Pages\Service;
 use App\Entity\Customer;
 use App\Entity\Doc\Document;
 use App\Entity\Item;
+use App\Entity\Category;
 use App\Entity\Service;
+use Zippy\Html\Image;
 use App\Helper as H;
 use App\System;
 use Zippy\Html\DataList\DataView;
@@ -37,6 +39,8 @@ class ARMPos extends \App\Pages\Base
     private $_pt         = 0;
     private $_store_id   = 0;
     private $_salesource = 0;
+    public  $_catlist  = array();
+    public  $_prodlist = array();
 
     public $_doclist = array();
 
@@ -140,12 +144,24 @@ class ARMPos extends \App\Pages\Base
 
         $this->docpanel->editdetail->add(new Label('qtystock'));
         $this->docpanel->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
-
+        $this->docpanel->editdetail->add(new ClickLink('opencatpan', $this, 'onOpenCatPan'));
+        
+        
+        
         $this->docpanel->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->docpanel->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
 
         $this->docpanel->add(new \App\Widgets\ItemSel('wselitem', $this, 'onSelectItem'))->setVisible(false);
+        $this->docpanel->add(new Panel('catpan'))->setVisible(false);
+        $this->docpanel->catpan->add(new DataView('catlist', new ArrayDataSource($this, '_catlist'), $this, 'onCatRow'));
 
+        $this->docpanel->add(new Panel('prodpan'))->setVisible(false);
+        $this->docpanel->prodpan->add(new DataView('prodlist', new ArrayDataSource($this, '_prodlist'), $this, 'onProdRow'));
+        
+        
+        
+        
+        
         $this->docpanel->add(new Form('editserdetail'))->setVisible(false);
         $this->docpanel->editserdetail->add(new TextInput('editserquantity'))->setText("1");
         $this->docpanel->editserdetail->add(new TextInput('editserprice'));
@@ -186,6 +202,8 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->formcheck->setVisible(false);
         $this->docpanel->editserdetail->setVisible(false);
         $this->docpanel->wselitem->setVisible(false);
+        $this->docpanel->catpan->setVisible(false);
+        $this->docpanel->prodpan->setVisible(false);
         $this->docpanel->editdetail->setVisible(false);
 
         $this->checklistpan->setVisible(true);
@@ -317,8 +335,8 @@ class ARMPos extends \App\Pages\Base
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docpanel->form2->barcode->getText());
-            $code = ltrim($code,'0');
-    $store = $this->form1->store->getValue();
+        $code = ltrim($code,'0');
+        $store = $this->form1->store->getValue();
         $this->docpanel->form2->barcode->setText('');
         if ($code == '') {
             return;
@@ -461,6 +479,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->editdetail->qtystock->setText("");
         $this->docpanel->form2->setVisible(false);
         $this->_rowid = 0;
+        $this->docpanel->tochecklist->setVisible(false);        
     }
 
     public function addserOnClick($sender) {
@@ -522,6 +541,8 @@ class ARMPos extends \App\Pages\Base
                 $this->docpanel->editdetail->editprice->setText("");
                 $this->docpanel->editdetail->editserial->setText("");
                 $this->docpanel->wselitem->setVisible(false);           
+        $this->docpanel->catpan->setVisible(false);
+        $this->docpanel->prodpan->setVisible(false);
             
             
         } else {
@@ -538,6 +559,17 @@ class ARMPos extends \App\Pages\Base
     
 
         $this->calcTotal();
+        
+       //очищаем  форму
+        $this->docpanel->editdetail->edittovar->setKey(0);
+        $this->docpanel->editdetail->edittovar->setText('');
+
+        $this->docpanel->editdetail->editquantity->setText("1");
+
+        $this->docpanel->editdetail->editprice->setText("");
+        $this->docpanel->editdetail->qtystock->setText("");
+        
+        
     }
 
     public function saveserOnClick($sender) {
@@ -580,6 +612,8 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->editserdetail->setVisible(false);
         $this->docpanel->form2->setVisible(true);
         $this->docpanel->wselitem->setVisible(false);
+        $this->docpanel->catpan->setVisible(false);
+        $this->docpanel->prodpan->setVisible(false);
         
         $this->docpanel->form2->detail->Reload();        
         
@@ -590,10 +624,18 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->editdetail->editquantity->setText("1");
 
         $this->docpanel->editdetail->editprice->setText("");
+        $this->docpanel->editdetail->qtystock->setText("");
+        $this->docpanel->tochecklist->setVisible(true);
+        
     }
 
+    
+    //справочник
     public function onOpenItemSel($sender) {
         $this->docpanel->wselitem->setVisible(true);
+        $this->docpanel->catpan->setVisible(false);
+        $this->docpanel->prodpan->setVisible(false);
+        
         $this->docpanel->wselitem->setPriceType($this->getPriveType());
         $this->docpanel->wselitem->Reload();
     }
@@ -602,7 +644,70 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->editdetail->edittovar->setKey($item_id);
         $this->docpanel->editdetail->edittovar->setText($itemname);
         $this->OnChangeItem($this->docpanel->editdetail->edittovar);
+    }    
+    //  панель категорий
+   public function onOpenCatPan($sender) {
+        $this->docpanel->wselitem->setVisible(false);
+        $this->docpanel->catpan->setVisible(true);
+        $this->docpanel->prodpan->setVisible(false);
+        $this->_catlist = Category::find(" coalesce(parent_id,0)=0  ");
+       
+        $this->docpanel->catpan->catlist->Reload();
     }
+     //категории
+    public function onCatRow($row) {
+        $cat = $row->getDataItem();
+        $row->add(new ClickLink('catbtn'))->onClick($this, 'onCatBtnClick');
+        $row->catbtn->add(new Label('catname', $cat->cat_name));
+        $row->catbtn->add(new Image('catimage', "/loadimage.php?id=" . $cat->image_id));
+    }
+
+    //товары
+    public function onProdRow($row) {
+        //  $store_id = $this->setupform->store->getValue();
+
+        $prod = $row->getDataItem();
+        $prod->price = $prod->getPrice($this->getPriveType() );
+        $row->add(new ClickLink('prodbtn'))->onClick($this, 'onProdBtnClick');
+        $row->prodbtn->add(new Label('prodname', $prod->itemname));
+        $row->prodbtn->add(new Label('prodprice', H::fa($prod->price)));
+        $row->prodbtn->add(new Image('prodimage', "/loadimage.php?id=" . $prod->image_id));
+    }
+
+    //выбрана  группа
+    public function onCatBtnClick($sender) {
+        $cat = $sender->getOwner()->getDataItem();
+        $catlist = Category::find("  detail  not  like '%<nofastfood>1</nofastfood>%' and   coalesce(parent_id,0)= " . $cat->cat_id);
+        if (count($catlist) > 0) {
+            $this->_catlist = $catlist;
+            $this->docpanel->catpan->catlist->Reload();
+        } else {
+            $this->_prodlist = Item::find('disabled<>1  and  item_type in (1,4 )  and cat_id=' . $cat->cat_id);
+            $this->docpanel->catpan->setVisible(false);
+            $this->docpanel->prodpan->setVisible(true);
+            $this->docpanel->prodpan->prodlist->Reload();
+        }
+
+    }
+
+    // выбран  товар
+    public function onProdBtnClick($sender) {
+        $item = $sender->getOwner()->getDataItem();
+        $this->docpanel->editdetail->edittovar->setKey($item->item_id);
+        $this->docpanel->editdetail->edittovar->setText($item->itemname);
+        $this->OnChangeItem($this->docpanel->editdetail->edittovar);
+
+ 
+        $this->_catlist = Category::find(" coalesce(parent_id,0)=0  ");
+        $this->docpanel->catpan->catlist->Reload();
+
+
+        $this->docpanel->catpan->setVisible(true);
+        $this->docpanel->prodpan->setVisible(false);
+
+    }
+
+
 
     private function calcTotal() {
 
@@ -845,6 +950,7 @@ class ARMPos extends \App\Pages\Base
                 }
                 if ($ret['success'] == false) {
                     $this->setError($ret['data']);
+                     $conn->RollbackTrans();
                     return;
                 } else {
                     //  $this->setSuccess("Выполнено") ;
@@ -854,6 +960,7 @@ class ARMPos extends \App\Pages\Base
                         $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
                     } else {
                         $this->setError("ppo_noretnumber");
+                         $conn->RollbackTrans();
                         return;
                     }
                 }

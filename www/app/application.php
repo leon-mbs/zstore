@@ -127,6 +127,7 @@ class Application extends \Zippy\WebApplication
          //   "delivery" => "\\App\\Modules\\Shop\\Pages\\Delivery",
         //    "contact"  => "\\App\\Modules\\Shop\\Pages\\Contact",
         //    "news"     => "\\App\\Modules\\Shop\\Pages\\News",
+            "showreport"     => "\\App\\Pages\\ShowReport",
             "scat"     => "\\App\\Modules\\Shop\\Pages\\Main",
             "pcat"     => "\\App\\Modules\\Shop\\Pages\\Catalog",
             "project"  => "\\App\\Modules\\Issue\\Pages\\ProjectList",

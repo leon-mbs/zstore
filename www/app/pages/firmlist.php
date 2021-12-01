@@ -10,6 +10,8 @@ use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+
+use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\File;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
@@ -29,7 +31,7 @@ class FirmList extends \App\Pages\Base
             \App\Application::RedirectError();
             return false;
         }
-
+        
 
         $this->add(new Panel('firmtable'))->setVisible(true);
         $this->firmtable->add(new DataView('firmlist', new \ZCL\DB\EntityDataSource('\App\Entity\Firm', '', 'disabled,firm_name'), $this, 'firmlistOnRow'))->Reload();
@@ -57,6 +59,10 @@ class FirmList extends \App\Pages\Base
         $this->keyform->add(new Button('cancelppo'))->onClick($this, 'cancelOnClick');
         $this->keyform->add(new Button('delppo'))->onClick($this, 'delOnClick');
         $this->keyform->add(new TextInput('password'));
+        $this->keyform->add(new DropDownChoice('signtype'))->onChange($this,'onSignType');
+        $this->keyform->add(new TextInput('serhost'));
+        $this->keyform->add(new TextInput('serport'));
+        $this->keyform->add(new CheckBox('usessl'));
         $this->keyform->add(new File('keyfile'));
         $this->keyform->add(new File('certfile'));
      
@@ -145,11 +151,19 @@ class FirmList extends \App\Pages\Base
     }
     public function ppoOnClick($sender) {
 
-       $this->_firm = $sender->owner->getDataItem();
+      $this->_firm = $sender->owner->getDataItem();
       $this->keyform->setVisible(true);
       $this->firmtable->setVisible(false);
       $this->keyform->password->setText('') ;
+      $this->keyform->serhost->setText($this->_firm->ppohost) ;  
+      $this->keyform->serport->setText($this->_firm->ppoport) ;  
+      $this->keyform->usessl->setChecked($this->_firm->ppousessl) ;  
+      
       $this->keyform->delppo->setVisible(strlen($this->_firm->ppoowner)>0) ;
+      
+      $this->keyform->signtype->setValue($this->_firm->signtype) ;
+         
+      $this->onSignType($this->keyform->signtype);
       
     } 
     public function delOnClick($sender) {
@@ -164,38 +178,165 @@ class FirmList extends \App\Pages\Base
         $this->firmtable->firmlist->Reload();         
                
     }
+   
+    public function onSignType($sender) {
+           $this->keyform->password->setVisible(false);
+           $this->keyform->keyfile->setVisible(false);
+           $this->keyform->certfile->setVisible(false);
+           $this->keyform->serhost->setVisible(false);
+           $this->keyform->serport->setVisible(false);
+           $this->keyform->usessl->setVisible(false);
+       
+           if($sender->getValue()==0) {
+                 $this->keyform->password->setVisible(true);
+                 $this->keyform->keyfile->setVisible(true);
+                 $this->keyform->certfile->setVisible(true);
+        
+           }
+           if($sender->getValue()==1) {
+                 $this->keyform->serhost->setVisible(true);
+                 $this->keyform->serport->setVisible(true);
+                 $this->keyform->usessl->setVisible(true);
+                 $this->keyform->password->setVisible(true);
+                 $this->keyform->keyfile->setVisible(true);
+                 $this->keyform->certfile->setVisible(true);
+        
+           }
+           if($sender->getValue()==2) {
+                 $this->keyform->serhost->setVisible(true);
+                 $this->keyform->serport->setVisible(true);
+                 $this->keyform->usessl->setVisible(true);
+        
+           }
+           
+           
+    }
     public function onSend($sender) {
-          $die;
+       $signtype =  $this->keyform->signtype->getValue()  ;
+         
+       $serhost = $this->keyform->serhost->getText() ;
+       $serport = $this->keyform->serport->getText() ;
+       $usessl  = $this->keyform->usessl->isChecked() ;
        $password = $this->keyform->password->getText() ;
        $keyfile = $this->keyform->keyfile->getFile() ;
        $certfile = $this->keyform->certfile->getFile() ;
-
-       $keydata =  @file_get_contents($keyfile['tmp_name']);
-       $certdata =  @file_get_contents($certfile['tmp_name']);
+        
+     
+       if($signtype==0 || $signtype==1) {
+           $keydata =  @file_get_contents($keyfile['tmp_name']);
+           $certdata =  @file_get_contents($certfile['tmp_name']);
+           
+           if(strlen($password)==0  || strlen($keydata)==0  || strlen($certdata)==0 )  {
+               $this->updateAjax(array(),"   $('#progress').text('". H::l("pponotloaddata") ."');   $('#send').attr('disabled',null);            ") ;
+               return;
+           }
+       }
+       if($signtype==0  ) {   //ppolib
+      
+           try{
+             $cert =  \PPOLib\Cert::load($certdata) ;
        
-       if(strlen($password)==0  || strlen($keydata)==0  || strlen($certdata)==0 )  {
-         $this->updateAjax(array(),"   $('#progress').text('". H::l("pponotloaddata") ."');   $('#send').attr('disabled',null);            ") ;
-         return;
+             $key =   \PPOLib\KeyStore::load($keydata,$password,$cert ) ;
+             
+
+             $this->_firm->ppoowner =  $cert->getOwner()   ;
+             $this->_firm->ppocert = base64_encode(serialize($cert) )  ;
+             $this->_firm->ppokey =  base64_encode(serialize($key) )  ;
+  
+               
+           } catch(\Exception $ee){
+             $msg = $ee->getMessage() ; 
+             $this->updateAjax(array(),"   $('#progress').text('{$msg}');   $('#send').attr('disabled',null);            ") ;
+             return;
+               
+           }      
+       
        }
        
-       try{
-         $cert =    \PPOLib\Cert::load($certdata) ;
-   
-         $key =   \PPOLib\KeyStore::load($keydata,$password,$cert ) ;
-         
+       if($signtype==1 || $signtype==2 ) {       
+             if(strlen($serhost)==0  || strlen($serport)==0   )  {
+                 $this->updateAjax(array(),"   $('#progress').text('". H::l("pponotloaddata") ."');   $('#send').attr('disabled',null);            ") ;
+                 return;
+             }         
+             
+             $req = array();
+             $req['serversidekey'] = $signtype==2;
+             
+             if($signtype==1) {
+                 
+               if(strlen($password)==0  || strlen($keydata)==0  || strlen($certdata)==0 )  {
+                   $this->updateAjax(array(),"   $('#progress').text('". H::l("pponotloaddata") ."');   $('#send').attr('disabled',null);            ") ;
+                   return;
+               }             
+               $req['password'] = $password ;
+               $req['key'] = base64_encode($keydata);
+               $req['cert'] = base64_encode($certdata);
+               
+              
+                 
+             }
+             
+             $json = json_encode($req)   ;
+             
+             $serhost = rtrim($serhost, '/');
 
-         $this->_firm->ppoowner =  $cert->getOwner()   ;
-         $this->_firm->ppocert = base64_encode(serialize($cert) )  ;
-         $this->_firm->ppokey =  base64_encode(serialize($key) )  ;
-         $this->_firm->save();
+            $request = curl_init();
+
+            curl_setopt_array($request, [
+                CURLOPT_PORT           => $serport,
+                CURLOPT_URL            => $serhost. ":" .$serport ."/check",
+                CURLOPT_POST           => true,
+                CURLOPT_ENCODING       => "",
+                CURLOPT_MAXREDIRS      => 10,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_CONNECTTIMEOUT => 20,
+                CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+                CURLOPT_SSL_VERIFYPEER   => $usessl==1,
+                CURLOPT_POSTFIELDS     => $json
+            ]);
+
+            $ret = curl_exec($request);
+            if (curl_errno($request) > 0) {
+                 $msg = curl_error($request) ; 
+                  $msg = str_replace("'","\"",$msg) ;
+                 $this->updateAjax(array(),"   $('#progress').text('{$msg}');   $('#send').attr('disabled',null);            ") ;
+                 return;            
+            }
+
+            curl_close($request);
+            $ret = json_decode($ret);
+            if ($ret->success==false) {
+                 $msg = $ret->error; 
+                 if(strlen($ret->message)>0){
+                    $msg = $ret->message  ; 
+                 }; 
+                   $msg = str_replace("'","\"",$msg) ;  
+                 $this->updateAjax(array(),"   $('#progress').text('{$msg}');   $('#send').attr('disabled',null);            ") ;
+                 return;            
+            }  
+             
+            if($signtype==1) {   //send  key
+                 
+               
+               $this->_firm->ppopassword = $password ;
+               $this->_firm->ppokey = base64_encode($keydata);
+               $this->_firm->ppocert = base64_encode($certdata);
+                
+                 
+            }          
+            $this->_firm->ppoowner =  $ret->owner   ;
+            $this->_firm->ppohost =  $serhost  ;
+            $this->_firm->ppoport =  $serport   ;
+            $this->_firm->ppousessl =  $usessl   ;
+          
+               
+           }
+             $this->_firm->pposigntype =  $signtype   ;
+             $this->_firm->save();      
+
+             $kl = \App\Helper::l("ppokeyloaded");
+             $this->updateAjax(array(),"   $('#progress').text('{$kl}')") ;
          
-       } catch(\Exception $ee){
-         $msg = $ee->getMessage() ; 
-         $this->updateAjax(array(),"   $('#progress').text('{$msg}');   $('#send').attr('disabled',null);            ") ;
-         return;
-           
-       }      
-       $kl = \App\Helper::l("ppokeyloaded");
-       $this->updateAjax(array(),"   $('#progress').text('{$kl}')") ;
+         
     }
 }

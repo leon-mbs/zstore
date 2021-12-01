@@ -1,4 +1,10 @@
 <html>
+    <head>
+     <script src="/assets/js/vue.min.js"  ></script>
+
+       
+
+    </head>
     <body>
         <div class="row"  >
 
@@ -10,41 +16,32 @@
                 </div>   
             </div>
             <div class="col-12 col-md-4 col-xl-3   " >
-             <i style="cursor:pointer"  onclick="onBell(this)" title="Звуковое уведомление" class="fa fa-bell-slash text-secondary"></i>  
+             <i id="bell"  style="cursor:pointer"  onclick="onBell( )" title="Звуковое уведомление" class="fa fa-bell-slash text-secondary"></i>  
             </div>
             
-            <div class="w-100">
-                <div class="col-12 col-md-10 col-lg-8" >
-
-
-                    <a zippy="btnupdate" class="btn btn-info">Обновить</a>
-                    <table class="table table-striped">
-
-                        <tr zippy="itemlist">
-
-
-                            <td zippy="docnumber"> </td>
-                            <td zippy="name">  </td>
-                            <td zippy="qty" class="text-right">  </td>
-
-                            <td zippy="notes">  </td>
-
-
-                            <td zippy="docnotes"></td>
-                            <td  ><a zippy="ready" class="btn btn-success">Готово</a></td>
-                        </tr>
-
-                    </table> 
-                    <a id="dankor"></a>
-                </div>
-
-            </div> 
-
-
+      
+             <div class="w-100">
+    {{={| |}=}}             
+  <div  id="vapp" class="col-12 col-md-10 col-lg-8" >
+        <a onclick="updateItems()"   class="btn btn-info">Обновить</a>
+        
+        <table class="table table-striped">
+    <tr v-for="item, index in itemlist">
+        <td>{{item.ordern}}</td>
+        <td>{{item.name}}</td> 
+        <td>{{item.qty}}</td> 
+        <td>{{item.notes}}</td> 
+        <td><a    v-on:click="onReady(item.document_id,item.item_id, index) " class="btn btn-success">Готово</a></td> 
+    </tr>    
+        </table>
+        
+      
+  </div> 
+ {|={{ }}=|}  
             <script>
             
-                function onBell(el){
-                    $(el).attr('class','fa fa-bell  text-success')
+                function onBell(){
+                    $("#bell").attr('class','fa fa-bell  text-success')
                 }
                
             
@@ -60,7 +57,7 @@
                                 
                                 if (answer.update==true ) {
                                   
-                                      $('#btnupdate').trigger('click') ;
+                                      updateItems() 
                                       return;
                                 }
                              
@@ -71,7 +68,7 @@
                                    beep()
                                   window.setTimeout(function(){
                                                   
-                                        $('#btnupdate').trigger('click') ;
+                                        updateItems() 
                                         }, 5000); 
                                            
                                  }
@@ -81,8 +78,45 @@
                 }
 
 
-                                   
-            </script>
+    var vapp = new Vue({
+      el: '#vapp',
+      data: {
+          itemlist:[]
+      }  ,
+    
+        methods: {
+             onReady( document_id,item_id, index) {
+                  onBell()
+               
+                  callPageMethod('onReady',[document_id,item_id],null,(data)=> 
+                  {
+                      updateItems() ;
+                  });     
+             
+           }
+        }      
+      
+    })      
+
+
+      function updateItems(){
+          callPageMethod('getItems',null,null,(data)=> 
+          {
+                   
+              vapp.itemlist= JSON.parse(data)  
+              
+          
+          });
+            
+      }
+      
+      
+  $(document).ready(function () {
+      
+      updateItems() ;
+ });                          
+     </script>
 
     </body>
 </html>
+ 

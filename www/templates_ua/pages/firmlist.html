@@ -92,7 +92,16 @@
             
             <form class="col-6 col-md-4" zippy="keyform" enctype="multipart/form-data">
                 <h5>Завантаження  ключа  та сертифiкату</h5>
-               <small> <i class="fa fa-exclamation-triangle"></i> Завантаження ключа може тривати кілька хвилин.</small>
+            <small>Опис  роботи з ключами <a  target="_blank" href="https://zippy.com.ua/ua/ext#6">тут</a> </small>
+                  <div class="form-group">
+                    <label for="signtype">Метод  пiдпису </label>
+                    <select   class="form-control" type="text" zippy="signtype">
+                      <option value="0">Внутрiшня  бiблiотека</option>
+                      <option value="1">Сервер  з передачею ключа</option>
+                      <option value="2">Сервер з встроєним  ключем</option>
+                    </select>
+                    
+                </div>    
                 <div class="form-group">
                     <label for="password">Пароль </label>
                     <input required="required" class="form-control" type="text" zippy="password">
@@ -105,10 +114,22 @@
                     <label for="certfile">Файл сертифiкату </label>
                     <input class="form-control" type="file" zippy="certfile">
                 </div>
-               
+                           <div class="form-group">
+                    <label for="serhost">Адреса  серверу пiдпису </label>
+                    <input class="form-control"   zippy="serhost">
+                </div>
+                <div class="form-group">
+                    <label for="serport">Порт  серверу </label>
+                    <input class="form-control"   zippy="serport">
+                </div>
+                <div class="form-check">
+                    <input zippy="usessl" type="checkbox" class="form-check-input">
+                    <label class="form-check-label text-bold" for="usessl">Перевiряти SSL сертифiкат</label>
+                    
+                </div>    
                 <span style="display:block" id="progress"></span>
                 <input zippy="send" type="button" value="Завантажити" class="btn btn-primary  ">&nbsp;&nbsp;
-                <input zippy="cancelppo" type="button" value="Скасувати" class="btn btn-outline-primary  ">
+                <input zippy="cancelppo" type="button" value="Закрити" class="btn btn-outline-primary  ">
                 <input zippy="delppo" type="button" value="Видалити" class="btn btn-outline-danger  "> &nbsp;&nbsp; 
       
 

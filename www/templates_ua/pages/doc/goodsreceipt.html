@@ -626,15 +626,20 @@
                 $('#addcode').click()
             }
 
+      
 
+        </script>
+       {{#usemobilescanner}}       
+     <script>      
+        
             if (mobileCheck()) {
                 $('#mobilescanner').show();
             } else {
                 $('#mobilescanner').hide();
             }
 
-        </script>
-
+        </script>     
+         {{/usemobilescanner}}  
         {{/usescanner}}
     </body>
 </html>

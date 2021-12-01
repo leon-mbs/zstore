@@ -280,6 +280,8 @@ class CustomerList extends \App\Pages\Base
         }
 
         $this->_customer->customer_name = $this->customerdetail->editcustomername->getText();
+        $this->_customer->customer_name = trim($this->_customer->customer_name);
+         
         if ($this->_customer->customer_name == '') {
             $this->setError("entername");
             return;
