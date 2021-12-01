@@ -30,7 +30,7 @@
         "myclabs/php-enum": "1.7.7",
         "phenx/php-svg-lib": "^0.3.3",           
  
-        "leon-mbs/zippy": "2.5.8",
+        "leon-mbs/zippy": "2.5.9",
         "leon-mbs/ppolib": "1.1.7",   
         "ext-json": "*",
         "ext-curl": "*",       
