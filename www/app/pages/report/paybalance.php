@@ -36,13 +36,9 @@ class PayBalance extends \App\Pages\Base
         $this->filter->add(new CheckBox('showdet' ));
 
         $this->add(new Panel('detail'))->setVisible(false);
-        $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
-
-        $this->detail->add(new RedirectLink('word', "mfreport"));
-        $this->detail->add(new RedirectLink('excel', "mfreport"));
-        $this->detail->add(new RedirectLink('pdf', "mfreport"));
+  
         $this->detail->add(new Label('preview'));
-        \App\Session::getSession()->issubmit = false;
+        
     }
 
     public function OnSubmit($sender) {
@@ -52,20 +48,11 @@ class PayBalance extends \App\Pages\Base
         $this->detail->preview->setText($html, true);
         \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
 
-        $reportpage = "App/Pages/ShowReport";
-        $reportname = "mfreport";
-
-        $this->detail->word->pagename = $reportpage;
-        $this->detail->word->params = array('doc', $reportname);
-        $this->detail->excel->pagename = $reportpage;
-        $this->detail->excel->params = array('xls', $reportname);
-        $this->detail->pdf->pagename = $reportpage;
-        $this->detail->pdf->params = array('pdf', $reportname);
+ 
 
         $this->detail->setVisible(true);
 
-        \App\Session::getSession()->printform = "";
-        \App\Session::getSession()->issubmit = true;
+ 
     }
 
     private function generateReport() {
