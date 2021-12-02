@@ -1,8 +1,6 @@
 <html>
     <head>
-     <script src="/assets/js/vue.min.js"  ></script>
-
-       
+  <script src="/assets/js/vue.js"></script>     
 
     </head>
     <body>
@@ -77,12 +75,14 @@
                             });
                 }
 
-
-    var vapp = new Vue({
-      el: '#vapp',
-      data: {
-          itemlist:[]
-      }  ,
+    
+   var vapp= Vue.createApp({
+   
+data() {
+    return {
+      itemlist: []
+    }
+  }  ,
     
         methods: {
              onReady( document_id,item_id, index) {
@@ -96,7 +96,7 @@
            }
         }      
       
-    })      
+    }).mount('#vapp')     
 
 
       function updateItems(){
