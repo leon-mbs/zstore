@@ -6,7 +6,7 @@ CHANGELOG
 * Выбор  товара  по  категориям  в  АРМ кассира
 * Исправления  и дополнения  после  предыдущего релиза 
 
- Для  обновления  версии  обновить папки  assets, app, templates, templates_ua.
+ Для  обновления  версии  обновить папки  assets, app, templates, templates_ua, index.php .
  Обновить папку  vendor, или  обновить  composer.json и выполнить  composer  update
 
 
