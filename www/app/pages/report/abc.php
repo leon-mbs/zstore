@@ -39,10 +39,7 @@ class ABC extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('type', $this->typelist, 1));
 
         $this->add(new Panel('detail'))->setVisible(false);
-        $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
-
-        $this->detail->add(new RedirectLink('excel', "abc"));
-        $this->detail->add(new RedirectLink('pdf', "abc"));
+ 
         $this->detail->add(new Label('preview'));
 
         $brids = \App\ACL::getBranchIDsConstraint();
@@ -56,14 +53,7 @@ class ABC extends \App\Pages\Base
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
         \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
-
-        $reportpage = "App/Pages/ShowReport";
-        $reportname = "abc";
-
-        $this->detail->excel->pagename = $reportpage;
-        $this->detail->excel->params = array('xls', $reportname);
-        $this->detail->pdf->pagename = $reportpage;
-        $this->detail->pdf->params = array('pdf', $reportname);
+      
 
         $this->detail->setVisible(true);
     }
