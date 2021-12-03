@@ -281,7 +281,10 @@ class OutcomeItem extends \App\Pages\Base
                             $indoc->branch_id = $st->branch_id;
                         }
                         $indoc->document_number = $indoc->nextNumber($indoc->branch_id);
-                        $indoc->user_id = 0;
+                        
+                        $admin  =\App\Entity\User::getByLogin('admin') ;
+                        $indoc->user_id = $admin->user_id;
+                        
                         $indoc->notes = H::l('incomebasedon', $this->_doc->document_number, $this->_doc->headerdata['storename']);
                         if ($this->_doc->branch_id > 0) {
                             $br = \App\Entity\Branch::load($this->_doc->branch_id);
