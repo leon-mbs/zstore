@@ -40,10 +40,7 @@ class ItemActivity extends \App\Pages\Base
         $this->filter->item->onChange($this, "onItem");
 
         $this->add(new Panel('detail'))->setVisible(false);
-        $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
-        $this->detail->add(new RedirectLink('word', "movereport"));
-        $this->detail->add(new RedirectLink('excel', "movereport"));
-        $this->detail->add(new RedirectLink('pdf', "movereport"));
+ 
         $this->detail->add(new Label('preview'));
         \App\Session::getSession()->issubmit = false;
     }
@@ -75,16 +72,7 @@ class ItemActivity extends \App\Pages\Base
 
     public function OnSubmit($sender) {
 
-        $reportpage = "App/Pages/ShowReport";
-        $reportname = "movereport";
-
-        $this->detail->word->pagename = $reportpage;
-        $this->detail->word->params = array('doc', $reportname);
-        $this->detail->excel->pagename = $reportpage;
-        $this->detail->excel->params = array('xls', $reportname);
-        $this->detail->pdf->pagename = $reportpage;
-        $this->detail->pdf->params = array('pdf', $reportname);
-
+ 
         $this->detail->setVisible(true);
 
         $html = $this->generateReport();
