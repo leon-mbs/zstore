@@ -33,10 +33,7 @@ class SalTypeRep extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('emp', Employee::findArray('emp_name', 'disabled<>1', 'emp_name')));
 
         $this->add(new Panel('detail'))->setVisible(false);
-        $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
-
-        $this->detail->add(new RedirectLink('excel', "sltreport"));
-        $this->detail->add(new RedirectLink('pdf', "sltreport"));
+ 
         $this->detail->add(new Label('preview'));
     }
 
@@ -46,15 +43,7 @@ class SalTypeRep extends \App\Pages\Base
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
 
-        // \ZippyERP\System\Session::getSession()->storereport = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
-        $reportpage = "App/Pages/ShowReport";
-        $reportname = "sltreport";
-
-        $this->detail->excel->pagename = $reportpage;
-        $this->detail->excel->params = array('xls', $reportname);
-        $this->detail->pdf->pagename = $reportpage;
-        $this->detail->pdf->params = array('pdf', $reportname);
-
+   
         $this->detail->setVisible(true);
 
         $this->detail->preview->setText($html, true);
