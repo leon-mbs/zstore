@@ -31,8 +31,8 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->add($form);
         $this->setError('');
 
-        
-        $this->_tvars['curversion'] = CURRENT_VERSION;
+        $version =  "v5.6.2";
+        $this->_tvars['curversion'] = $version ;
 
         //проверка  новой версии        
         $this->_tvars['isnewversion'] = false;
@@ -40,7 +40,7 @@ class UserLogin extends \Zippy\Html\WebPage
         $v = @file_get_contents("https://zippy.com.ua/version.json?t=" . time());
         $v = @json_decode($v, true);
         if (strlen($v['version']) > 0) {
-            $c = (int)str_replace(".", "", str_replace("v", "", CURRENT_VERSION));
+            $c = (int)str_replace(".", "", str_replace("v", "", $version));
             $n = (int)str_replace(".", "", str_replace("v", "", $v['version']));
             if ($n > $c) {
                 $this->_tvars['isnewversion'] = true;

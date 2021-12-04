@@ -1,6 +1,6 @@
 <?php
  
- const CURRENT_VERSION='v5.6.1' ;
+ 
 
  require_once 'init.php';
 
