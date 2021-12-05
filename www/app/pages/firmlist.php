@@ -288,7 +288,6 @@ class FirmList extends \App\Pages\Base
                 CURLOPT_POST           => true,
                 CURLOPT_ENCODING       => "",
                 CURLOPT_MAXREDIRS      => 10,
-              //  CURLOPT_CAINFO => "z:/file.crt",
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_CONNECTTIMEOUT => 20,
                 CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
@@ -296,6 +295,13 @@ class FirmList extends \App\Pages\Base
                 CURLOPT_POSTFIELDS     => $json
             ]);
 
+            //самоплписаный сертификат
+            $fileselfsert = _ROOT . "config/ssl.ser";
+            if( file_exists($fileselfsert) )  {
+                 curl_setopt($request,CURLOPT_CAINFO, $fileselfsert) ;    
+            }
+            
+            
             $ret = curl_exec($request);
             if (curl_errno($request) > 0) {
                  $msg = curl_error($request) ; 
