@@ -115,7 +115,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->add(new Form('editcust'))->setVisible(false);
         $this->editcust->add(new TextInput('editcustname'));
         $this->editcust->add(new TextInput('editphone'));
-        $this->editcust->add(new TextInput('editaddress'));
+        $this->editcust->add(new TextInput('editemail'));
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
@@ -858,7 +858,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->setVisible(false);
 
         $this->editcust->editcustname->setText('');
-        $this->editcust->editaddress->setText('');
+        $this->editcust->editemail->setText('');
         $this->editcust->editphone->setText('');
     }
 
@@ -870,7 +870,7 @@ class GoodsIssue extends \App\Pages\Base
         }
         $cust = new Customer();
         $cust->customer_name = $custname;
-        $cust->address = $this->editcust->editaddress->getText();
+        $cust->email = $this->editcust->editemail->getText();
         $cust->phone = $this->editcust->editphone->getText();
         $cust->phone = \App\Util::handlePhone($cust->phone);
 
