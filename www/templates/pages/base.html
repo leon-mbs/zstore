@@ -27,7 +27,8 @@
         <script src="/assets/js/summernote/lang/summernote-ru-RU.js" type="text/javascript"></script>
 
         <script src="/assets/js/adminlte.js" type="text/javascript"></script>
-        <script src="/assets/js/vue/vue.js"></script>     
+        <script src="/assets/js/vue/vue.min.js"></script>     
+        <script src="/assets/js/vue/httpvueloader.js"></script>     
     
         <script src="/assets/js/app.js" type="text/javascript"></script>
         
@@ -805,16 +806,17 @@
                                 </ul>
 
                             </li>
-                            {{/isadmins}}
+                           
                             <li class="nav-item   ">
                                 <a href="https://zippy.com.ua/aboutus#contact" class="nav-link">
                                     <i class="nav-icon fas fa-phone-alt"></i>
                                     <p>
-                                        Тех. поддержка
+                                        Тех. поддержка  Zippy
 
                                     </p>
                                 </a>
                             </li>
+                             {{/isadmins}}
 
                         </ul>
                     </nav>

@@ -29,8 +29,8 @@
         <td><a    v-on:click="onReady(item.document_id,item.item_id, index) " class="btn btn-success">Готово</a></td> 
     </tr>    
         </table>
-        
-      
+        <paginator></paginator>
+   
   </div> 
  {|={{ }}=|}  
             <script>
@@ -73,14 +73,14 @@
                 }
 
     
-   var vapp= Vue.createApp({
-   
-    data() {
-        return {
-          itemlist: []
-        }
+    var vapp = new Vue({
+      el: '#vapp',
+      data: {
+          itemlist:[]
       }  ,
-    
+     components: {
+            'paginator': httpVueLoader('/assets/js/vue/paginator.vue')
+        }, 
         methods: {
              onReady( document_id,item_id, index) {
                   onBell()
@@ -93,7 +93,7 @@
            }
         }      
       
-    }).mount('#vapp')     
+    })      
 
 
       function updateItems(){
