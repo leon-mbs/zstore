@@ -1,23 +1,48 @@
 <template>
 <nav  >
   <ul class="pagination">
-    <li class="page-item "><a class="page-link" href="#">Previous</a></li>
-    <li class="page-item"><a class="page-link" href="#">1</a></li>
-    <li class="page-item"><a class="page-link" href="#">2</a></li>
-    <li class="page-item"><a class="page-link" href="#">3</a></li>
-    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+    
+    <li  v-for="item in items" class="page-item">
+    
+        <a v-if="item.link" v-on:click.prevent="onbtn(item.pageno)" class="page-link" href="#">{{item.pageno}}</a>
+        <span v-if="item.nolink">...<span>
+    </li>
+    
   </ul>
+ 
 </nav>
 </template>
 
 <script>
 module.exports = {
-    data: function() {
-        return {
-            who: 'world'
-        }
-    } ,
-    props:['pr']
+         watch:   { 
+              rows(newVal, oldVal) { 
+                  
+                   this.refresh()
+                } 
+           }  
+         ,   
+         methods: {
+            refresh:function(){
+                console.log(this.test);
+                
+            } ,
+            
+            onbtn:function(i){
+              this.onpage(i)
+            }   
+        } ,
+       
+         data: function() {
+            return {
+                
+         
+             
+                items: [{"pageno":1,"link":true,"nolink":false},{"pageno":2,"link":false,"nolink":true},{"pageno":3,"link":true,"nolink":false}]
+            }
+        } ,
+   
+    props:['rows' ,'pagesize','buttons','onpage' ]
 }
 </script>
 
