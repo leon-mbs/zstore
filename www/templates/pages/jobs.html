@@ -127,56 +127,7 @@
             </div>  
             </div>  
 
-      {{={| |}=}}             
-  <div  id="vapp" class="col-12 col-md-10 col-lg-8" >
-        <a onclick="updateItems()"   class="btn btn-info">Обновить</a>
-        
-        <table class="table table-sm">
-    <tr v-for="item, index in itemlist">
-        <td>{{item.number}}</td>
-        <td>{{item.amount}}</td> 
 
-    </tr>    
-        </table>
-        <paginator   :onpage="change"  v-bind:rows="rowscnt" pagesize="5" buttons="15"></paginator>
-      
-      
- 
-  </div> 
- {|={{ }}=|}  
- 
- <script>
-        
-    var vapp = new Vue({
-      el: '#vapp',
-      data: {
-          itemlist:[] ,
-          rowscnt:10
-      }  ,
-     components: {
-            'paginator': httpVueLoader('/assets/js/vue/paginator.vue')
-        }, 
-        methods: {
-            change:function( i){
-               console.log(i);
-            }
-        }      
-      
-    })   
- 
-  
- 
-    function updateItems(){
-          callPageMethod('getItems',null,null,(data)=> 
-          {
-                   
-              vapp.itemlist= JSON.parse(data)  
-              vapp.rowscnt=56
-          
-          });
-            
-      } 
- </script>   
     </body>
 </html>
  

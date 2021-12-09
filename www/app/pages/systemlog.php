@@ -66,5 +66,17 @@ class SystemLog extends \App\Pages\Base
         $this->nlist->Reload();
     }
 
-
+     public function getItems($args, $post) {
+        
+        
+        $itemlist = array();
+        foreach(\App\Entity\Doc\Document::find("","",10,0) as $doc) {
+           $item = new \App\DateTime() ;
+           $item->number = $doc->document_number;
+           $item->amount = $doc->amount;
+           $itemlist[]=$item;    
+        }
+    
+        return json_encode($itemlist, JSON_UNESCAPED_UNICODE);     
+    } 
 }
