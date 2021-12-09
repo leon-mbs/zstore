@@ -414,7 +414,8 @@ class ARMFood extends \App\Pages\Base
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docpanel->navform->barcode->getText());
-                $code = ltrim($code,'0');
+         $code0 = $code;
+               $code = ltrim($code,'0');
 
         $this->docpanel->navform->barcode->setText('');
         if ($code == '') {
@@ -422,7 +423,7 @@ class ARMFood extends \App\Pages\Base
         }
 
         foreach ($this->_itemlist as $ri => $_item) {
-            if ($_item->bar_code == $code || $_item->item_code == $code) {
+            if ($_item->bar_code == $code || $_item->item_code == $code || $_item->bar_code == $code0 || $_item->item_code == $code0) {
                 $this->_itemlist[$ri]->quantity += 1;
                 $this->docpanel->listsform->itemlist->Reload();
                 $this->calcTotal();

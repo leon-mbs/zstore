@@ -706,7 +706,8 @@ class POSCheck extends \App\Pages\Base
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
-                $code = ltrim($code,'0');
+         $code0 = $code;
+               $code = ltrim($code,'0');
 
         if ($code == '') {
             return;
@@ -717,9 +718,10 @@ class POSCheck extends \App\Pages\Base
             return;
         }
 
+        $code0 = Item::qstr($code0);
 
         $code_ = Item::qstr($code);
-        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and  (item_code = {$code_} or bar_code = {$code_})");
+        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and  (item_code = {$code_} or bar_code = {$code_}  or item_code = {$code0} or bar_code = {$code0}  )");
 
         if ($item == null) {
             $this->setError("noitemcode", $code);

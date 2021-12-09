@@ -402,6 +402,7 @@ class OutcomeItem extends \App\Pages\Base
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
+        $code0 = $code;
                $code = ltrim($code,'0');
       $this->docform->barcode->setText('');
         $store_id = $this->docform->store->getValue();
@@ -411,8 +412,9 @@ class OutcomeItem extends \App\Pages\Base
         }
 
         $code = Item::qstr($code);
+         $code0 = Item::qstr($code0);
 
-        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and     (item_code = {$code} or bar_code = {$code})");
+        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and     (item_code = {$code} or bar_code = {$code} or item_code = {$code0} or bar_code = {$code0} )");
         if ($item == null) {
             $this->setError('noitem');
             return;
