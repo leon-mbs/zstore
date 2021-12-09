@@ -318,13 +318,15 @@ class Inventory extends \App\Pages\Base
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
+        $code0 = $code;
         $code = ltrim($code,'0');
 
         $store = $this->docform->store->getValue();
         $code_ = Item::qstr($code);
+        $code0 = Item::qstr($code0);
 
         $cat_id = $this->docform->category->getValue();
-        $w = "item_code={$code_} or bar_code={$code_}";
+        $w = "item_code={$code_} or bar_code={$code_} or  item_code={$code0} or bar_code={$code0} ";
         if ($cat_id > 0) {
             $w = $w . "  and cat_id=" . $cat_id;
         }

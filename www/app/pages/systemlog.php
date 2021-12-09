@@ -18,8 +18,7 @@ use Zippy\WebApplication as App;
 class SystemLog extends \App\Pages\Base
 {
 
-    public $user = null;
-    public $ds;
+ 
 
 
     public function __construct() {
@@ -29,42 +28,34 @@ class SystemLog extends \App\Pages\Base
             App::Redirect("\\App\\Pages\\Userlogin");
         }
 
-        $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
-        $this->filter->add(new TextInput('searchtext'));
-
-        $this->ds = new EntityDataSource("\\App\\Entity\\Notify", "dateshow <= now() and user_id=" . Notify::SYSTEM, " dateshow desc");
-
-        $this->add(new DataView("nlist", $this->ds, $this, 'OnRow'));
-        $this->nlist->setPageSize(H::getPG());
-        $this->add(new \Zippy\Html\DataList\Pager("pag", $this->nlist));
-        $this->nlist->Reload();
-
-        \App\Entity\Notify::markRead($user->user_id);
-
-
+  
     }
 
-    public function OnRow($row) {
-        $notify = $row->getDataItem();
+  
 
-
-        $row->add(new Label("msg"))->setText($notify->message, true);
-        $row->add(new Label("ndate", \App\Helper::fdt($notify->dateshow)));
-        $row->add(new Label("newn"))->setVisible($notify->checked == 0);
-    }
-
-    public function filterOnSubmit($sender) {
-        $where = 'user_id=' . System::getUser()->user_id;
-
-        $text = trim($sender->searchtext->getText());
-        if (strlen($text) > 0) {
-            $text = Notify::qstr('%' . $text . '%');
-            $where = "   message like {$text}  and user_id=" . Notify::SYSTEM;
+     public function getItems($args, $post) {
+        
+         
+        $f = json_decode($post) ;
+         
+        $where =   "dateshow <= now() and user_id=" . Notify::SYSTEM;
+        
+         if (strlen($f->search ) > 0) {
+             $text = Notify::qstr('%' . $f->search . '%');
+             $where .= " and    message like {$text}   "  ;
+         }        
+        
+        $cnt =   Notify::findCnt($where) ;
+        $itemlist = array();
+        foreach( Notify::find($where,"dateshow desc",$f->count,$f->start ) as $n) {
+           $item = array() ;
+           $item['message'] = $n->message;
+           $item['date'] =  \App\Helper::fdt($n->dateshow);
+           $item['isnew'] =  $n->checked == 0;
+           
+           $itemlist[]=$item;    
         }
-
-        $this->ds->setWhere($where);
-        $this->nlist->Reload();
-    }
-
-
+        Notify::markRead(Notify::SYSTEM); 
+        return json_encode(array('items'=>$itemlist,'cnt'=>$cnt), JSON_UNESCAPED_UNICODE);     
+    } 
 }

@@ -115,7 +115,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->add(new Form('editcust'))->setVisible(false);
         $this->editcust->add(new TextInput('editcustname'));
         $this->editcust->add(new TextInput('editphone'));
-        $this->editcust->add(new TextInput('editaddress'));
+        $this->editcust->add(new TextInput('editemail'));
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
@@ -357,6 +357,7 @@ class GoodsIssue extends \App\Pages\Base
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
+        $code0 = $code;
         $code = ltrim($code,'0');
         
         if ($code == '') {
@@ -364,7 +365,7 @@ class GoodsIssue extends \App\Pages\Base
         }
 
         foreach ($this->_itemlist as $ri => $_item) {
-            if ($_item->bar_code == $code || $_item->item_code == $code) {
+            if ($_item->bar_code == $code || $_item->item_code == $code  || $_item->bar_code == $code0 || $_item->item_code == $code0 ) {
                 $this->_itemlist[$ri]->quantity += 1;
                 $this->docform->detail->Reload();
                 $this->calcTotal();
@@ -858,7 +859,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->setVisible(false);
 
         $this->editcust->editcustname->setText('');
-        $this->editcust->editaddress->setText('');
+        $this->editcust->editemail->setText('');
         $this->editcust->editphone->setText('');
     }
 
@@ -870,7 +871,7 @@ class GoodsIssue extends \App\Pages\Base
         }
         $cust = new Customer();
         $cust->customer_name = $custname;
-        $cust->address = $this->editcust->editaddress->getText();
+        $cust->email = $this->editcust->editemail->getText();
         $cust->phone = $this->editcust->editphone->getText();
         $cust->phone = \App\Util::handlePhone($cust->phone);
 

@@ -227,4 +227,8 @@ class Jobs extends \App\Pages\Base
         $this->ds->setWhere($where);
         $this->listpan->nlist->Reload();
     }
+    
+    
+     
+    
 }

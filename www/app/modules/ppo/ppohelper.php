@@ -71,6 +71,11 @@ class PPOHelper
                     CURLOPT_SSL_VERIFYPEER => $usessl == 1,
                     CURLOPT_POSTFIELDS     => $json
                 ]);
+             //самоплписаный сертификат
+            $fileselfsert = _ROOT . "config/ssl.ser";
+            if( file_exists($fileselfsert) )  {
+                 curl_setopt($request,CURLOPT_CAINFO, $fileselfsert) ;    
+            }
 
                 $ret = curl_exec($request);
                 if (curl_errno($request) > 0) {
@@ -149,6 +154,13 @@ class PPOHelper
                         CURLOPT_POSTFIELDS     => $json
                     ]);
 
+           //самоплписаный сертификат
+            $fileselfsert = _ROOT . "config/ssl.ser";
+            if( file_exists($fileselfsert) )  {
+                 curl_setopt($request,CURLOPT_CAINFO, $fileselfsert) ;    
+            }
+                    
+                    
                     $ret = curl_exec($request);
                     if (curl_errno($request) > 0) {
                         $msg = curl_error($request);
