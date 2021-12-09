@@ -31,7 +31,7 @@
                     </tr>
                 </table>
               
-                <paginator   :onpage="change"  v-bind:rows="rowscnt" v-bind:pagesize="pagesize" buttons="15"></paginator>
+                <paginator   :onpage="change"  v-bind:rows="rowscnt" v-bind:pagesize="pagesize" buttons="10"></paginator>
       
             </div>
 
@@ -60,6 +60,7 @@
         }, 
         methods: {
             change:function( page){    //кнопка  пагинатора
+                
                  this.loaddata( (page-1) * this.pagesize );
             }   ,
             loaddata: function(start=0){

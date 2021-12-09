@@ -4,8 +4,8 @@
     
     <li  v-for="item in items" v-bind:class="item.class">
     
-        <a v-if="item.link" v-on:click.prevent="onbtn(item.pageno)" class="page-link" href="void(0);">{{item.title}}</a>
-        <a v-else   class="page-link">{{item.title}}<a>
+        <a  v-on:click.prevent="onbtn(item.pageno)" class="page-link" href="void(0);">{{item.title}}</a>
+        
     </li>
     
   </ul>
@@ -40,48 +40,48 @@ module.exports = {
                   if(pages <= iRight + iRight + 1){
                       for (i = 1; i <= pages; i++) {
                            if (this.currentpage == i) {
-                                this.items.push({"pageno":i,"link":true,"title":i,class:"page-item active"}) 
+                                this.items.push({"pageno":i,"title":i,class:"page-item active"}) 
                            }else {
-                                this.items.push({"pageno":i,"link":true,"title":i,class:"page-item "}) 
+                                this.items.push({"pageno":i,"title":i,class:"page-item "}) 
                            
                            }
                       
                       }
                   } else {
-                    /*     if (this.currentpage > iLeft && this.currentpage < (pages - iRight)) {
+                         if (this.currentpage > iLeft && this.currentpage < (pages - iRight)) {
                             
-                            this.items.push({"pageno":i,"link":true,"title":"&laquo;",class:"page-item "}) 
+                            this.items.push({"pageno":1,"title":"<<",class:"page-item "}) 
      
                             for (i = this.currentpage - iLeft; i <= this.currentpage + iRight; i++) {
 
                                 if (this.currentpage == i) {
-                                    this.items.push({"pageno":i,"link":true,"title":i,class:"page-item active"}) 
+                                    this.items.push({"pageno":i,"title":i,class:"page-item active"}) 
                                     
                                 } else {
-                                    this.items.push({"pageno":i,"link":true,"title":i,class:"page-item "}) 
+                                    this.items.push({"pageno":i,"title":i,class:"page-item "}) 
                                 }
 
                             }
-                            this.items.push({"pageno":pages,"link":true,"title":"&raquo;",class:"page-item "}) 
+                            this.items.push({"pageno":pages,"title":">>",class:"page-item "}) 
                             
 
-                        } elseif (this.currentpage <= iLeft) {
+                        } else if (this.currentpage <= iLeft) {
 
                             var iSlice = 1 + iLeft - this.currentpage;
                             for (i = 1; i <= this.currentpage + (iRight + iSlice); i++) {
                                 if (this.currentpage == i) {
-                                       this.items.push({"pageno":i,"link":true,"title":i,class:"page-item active"}) 
+                                       this.items.push({"pageno":i,"title":i,class:"page-item active"}) 
   
                                 } else {
-                                       this.items.push({"pageno":i,"link":true,"title":i,class:"page-item "}) 
+                                       this.items.push({"pageno":i,"title":i,class:"page-item "}) 
                                 }
 
                             }
                             
-                              this.items.push({"pageno":pages,"link":true,"title":"&raquo;",class:"page-item "}) 
+                              this.items.push({"pageno":pages,"title":">>",class:"page-item "}) 
  
                         } else {
-                            this.items.push({"pageno":i,"link":true,"title":"&laquo;",class:"page-item "}) 
+                            this.items.push({"pageno":1,"title":"<<",class:"page-item "}) 
                            
 
                             var iSlice = iRight - (pages - this.currentpage);
@@ -89,23 +89,23 @@ module.exports = {
                             for (i = this.currentpage - (iLeft + iSlice); i <= pages; i++) {
                                 if (this.currentpage == i) {
                                     
-                                    this.items.push({"pageno":i,"link":true,"title":i,class:"page-item active"}) 
+                                    this.items.push({"pageno":i,"title":i,class:"page-item active"}) 
                                       
                                 } else {
-                                   this.items.push({"pageno":i,"link":true,"title":i,class:"page-item "}) 
+                                   this.items.push({"pageno":i,"title":i,class:"page-item "}) 
   
                                 }
                             }
 
                         }   
-                   */   }
+                   }
          
                     
             } ,
             
             onbtn:function(i){
               this.currentpage=i;
-              this.refresh()
+              this.refresh()    
               this.onpage(i)
             }   
         } ,
