@@ -4,18 +4,9 @@
       {{={| |}=}}   
         <div class="row">
         
-            <div class="col-12 col-md-3" id="vapp">
-                <h4>Журнал системних уведомлений</h4>
-                <form    >
-                   <div class="form-group">
-                      <label for="testah">Test</label>
-                      
-                      <typeahead    :onquery="ontext"  :onhit="selectdoc" placeholder="Помск"></typeahead>   
-                       <small>test</small>
-                   </div>
-                       
-                </form>
-                
+            <div class="col-12 col-md-8 col-xl-6" id="vapp">
+                <h4>Журнал системных уведомлений</h4>
+ 
                 <div class="navbar nav">
                     <form   class="form-inline ">
 
@@ -67,8 +58,8 @@
           pagesize:25
       }  ,
      components: {
-            'paginator': httpVueLoader('/assets/js/vue/paginator.vue'),
-            'typeahead': httpVueLoader('/assets/js/vue/typeahead.vue')
+            'paginator': httpVueLoader('/assets/js/vue/paginator.vue') 
+            
         }, 
         methods: {
             change:function( page){    //кнопка  пагинатора
@@ -87,17 +78,7 @@
             onsearch:function (){
                 this.rowscnt=0;
                 this.loaddata();
-            } ,
-            selectdoc: function (id){
-                alert(id);
-            },
-            ontext: async function (query){
-                var url  = getMethodUrl('getDocs',[query])
-                let response = await fetch(url);
-         
-                return  await response.json()  ;
- 
-            }  
+            } 
             
         }  ,
         mounted: function(){

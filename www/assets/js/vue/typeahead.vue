@@ -117,7 +117,7 @@ module.exports = {
       if (this.current !== -1) {
           var item = this.items[this.current]
           
-          this.query=item.name
+          this.reset()
           this.onhit(item.id);
           
       }
@@ -140,9 +140,16 @@ module.exports = {
         this.current = -1
       }
     } 
-  }  
+  }  ,
+  watch : {
+      inputtext(n,o){
+          
+         this.query = ''
+          
+      }
+  }
   ,
-  props:['placeholder','onhit','onquery','limit','minchars']
+  props:['placeholder','onhit','onquery','limit','minchars','clean','inputtext']
 }
 </script>
 

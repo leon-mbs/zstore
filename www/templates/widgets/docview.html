@@ -297,7 +297,9 @@
   </div>
   
   <div class="tab-pane  " id="tdocs">
-              <table class="table table-sm" style="width:400px;">
+              <div class="row">
+              <div class="col-12 col-md-4 col-xl-3">
+              <table class="table table-sm"  ">
                 <tr>
                     <td colspan="2" v-show="docdata.pdoc_id>0">
                        <b>Родительский документ:</b>  <a v-on:click="opendoc(docdata.pdoc_id)" href="javascript:void(0)"  >{{docdata.pdoc_name}}</a>
@@ -309,17 +311,19 @@
                 </tr>
             </table>
             <hr>
-            <form  >
+            <form onsubmit="return  false"     >
 
                 <label for="addrel">Добавить дочерний документ:</label>
                 <div class="form-group">
-                    <input class="form-control" placeholder="Начните ввод номера " style="width:200px"
-                           type="text"
-                           required="required" zippy="addrel">
+                    <typeahead :inputtext="cleartext"  :onquery="ontext"  :onhit="selectdoc" placeholder="Начните вводить номер..."></typeahead>   
+
                 </div>
 
-                <input class="btn btn-light  " type="submit" value="Добавить">
+               
+                <input v-on:click="onadddoc" class="btn btn-success  " type="button" value="Добавить">
             </form>
+      </div>
+      </div>
   </div>
  <div class="tab-pane  " id="tcomm">
  
@@ -437,7 +441,9 @@
                   docdata:{
                       exports:{}
                   } ,
-                  reldocs:[]
+                  reldocs:[] ,
+                  childdocid:0,
+                  cleartext:''
                      
               }             
     ,
@@ -513,13 +519,37 @@
                               });
                }  ,
                delchilddoc:function( id){
-                    alert(id)
+                    
                    callPageMethod('docview::delchilddoc',[ id], null,(data)=> 
                               {
                                   this.loaddocs() 
                               });
-               } 
-          }
+               } ,
+                selectdoc: function (id){
+            
+                    this.childdocid = id 
+                },
+                ontext: async function (query){
+                   
+                    var url  = getMethodUrl('docview::getDocs',[query])
+                    let response = await fetch(url);
+             
+                    return  await response.json()  ;
+     
+                }  ,
+                onadddoc:function (){
+                    
+                    
+                    this.cleartext = new Date().getTime()   //чтобы  сработал  watch
+                     
+                    this.childdocid = 0 
+                }
+              
+               
+          } ,
+ components: {   
+                   'typeahead': httpVueLoader('/assets/js/vue/typeahead.vue')
+               }            
         }) 
         
         
@@ -530,4 +560,4 @@
         </script>
     </body>
 </html>
-
+   
