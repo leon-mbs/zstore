@@ -140,16 +140,10 @@ module.exports = {
         this.current = -1
       }
     } 
-  }  ,
-  watch : {
-      inputtext(n,o){
-          
-         this.query = ''
-          
-      }
+  }   
   }
   ,
-  props:['placeholder','onhit','onquery','limit','minchars','clean','inputtext']
+  props:['placeholder','onhit','onquery','limit','minchars'  ]
 }
 </script>
 

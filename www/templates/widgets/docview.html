@@ -315,7 +315,7 @@
 
                 <label for="addrel">Добавить дочерний документ:</label>
                 <div class="form-group">
-                    <typeahead :inputtext="cleartext"  :onquery="ontext"  :onhit="selectdoc" placeholder="Начните вводить номер..."></typeahead>   
+                    <typeahead  ref="docth"  :onquery="ontext"  :onhit="selectdoc" placeholder="Начните вводить номер..."></typeahead>   
 
                 </div>
 
@@ -546,7 +546,9 @@
                    });                    
                    
                    this.childdocid = 0  
-                   this.cleartext = new Date().getTime()   //чтобы  сработал  watch                   
+                   //this.cleartext = new Date().getTime()   //чтобы  сработал  watch                   
+                 //  this.$children[0].query=''
+                   this.$refs.docth.query=''
                 }
               
                
