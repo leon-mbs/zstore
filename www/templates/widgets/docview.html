@@ -6,16 +6,10 @@
 
             <div class="mb-1" style="font-size: 1.3rem">
                 <a zippy="doctabp"><span class="{{{doctabpbadge}}}"><i class="fa fa-print"></i> Печатная форма</span> </a>
-                <a zippy="doctabd"><span class="{{{doctabdbadge}}}"><i
-                            class="fa fa-project-diagram"></i> Связанные документы  <span zippy="hdocs"
-                            class="badge badge-pill badge-info"></span></span>
-                </a>
-                <a zippy="doctabc"><span class="{{{doctabcbadge}}}"><i class="fa fa-comments"></i> Комментарии  <span
-                            zippy="hmessages" class="badge badge-pill badge-info"></span></span></a>
-                <a zippy="doctabf"><span class="{{{doctabfbadge}}}"><i class="fa fa-paperclip"></i> Прикрепленные файлы    <span
-                            zippy="hfiles" class="badge badge-pill badge-info"></span></span></a>
-                <a zippy="doctabh"><span class="{{{doctabhbadge}}}"><i class="fa fa-calendar-alt"></i> История изменений </span>
-                </a>
+                <a zippy="doctabd"><span class="{{{doctabdbadge}}}"><i                            class="fa fa-project-diagram"></i> Связанные документы  <span zippy="hdocs"                            class="badge badge-pill badge-info"></span></span>                </a>
+                <a zippy="doctabc"><span class="{{{doctabcbadge}}}"><i class="fa fa-comments"></i> Комментарии  <span    zippy="hmessages" class="badge badge-pill badge-info"></span></span></a>
+                <a zippy="doctabf"><span class="{{{doctabfbadge}}}"><i class="fa fa-paperclip"></i> Прикрепленные файлы    <span                            zippy="hfiles" class="badge badge-pill badge-info"></span></span></a>
+                <a zippy="doctabh"><span class="{{{doctabhbadge}}}"><i class="fa fa-calendar-alt"></i> История изменений </span>                </a>
                 {{#isscan}}
                 <a zippy="doctabs"><span class="{{{doctabsbadge}}}"><i class="fa fa-image"></i> Скан оригинала </span> </a>
                 {{/isscan}}
@@ -246,10 +240,181 @@
                 {{/doctabs}}
             </div>
 
-        </div>
+        </div>   
+        <span zippy="_docid_"  ></span>   
+          {{={| |}=}}   
+        <div   id="vdocview" class="   p-3 mb-3    ">
+          
+<ul class="nav nav-tabs">
+  
+  <li class="nav-item">
+    <a class="nav-link active" data-toggle="tab" href="#tprint"><i class="fa fa-print"></i> Печатная форма</a>
+  </li>
+  
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#tdocs"><i class="fa fa-project-diagram"></i> Связанные документы <span   class="badge badge-pill badge-info">2</span></a>
+  </li>
+ <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#tcomm"><i class="fa fa-comments"></i> Комментарии</a>
+  </li>
+ <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#tfiles"><i class="fa fa-paperclip"></i> Прикрепленные файлы</a>
+  </li>
+ <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#thist"><i class="fa fa-calendar-alt"></i> История изменений</a>
+  </li>
+<li class="nav-item" v-show="docdata.isscan">
+    <a class="nav-link" data-toggle="tab" href="#tscan"><i class="fa fa-image"></i> Скан оригинала</a>
+  </li>
+ 
+</ul>  
+<div class="tab-content" v-show="loaded">
+  
+  <div class="tab-pane   show active" id="tprint"> 
+       
+       <a   v-if="docdata.usemobileprinter" :href="printmob" target="_blank"   title="Печать"><i class="fa fa-print mr-2"></i> </a>
+       <a v-else  href="javascript:void(0)"   onclick="printform()" title="Печать"><i class="fa fa-print mr-2"></i></a>   
+    
+        
+        <a v-show="docdata.exports.word" :href="word"  target="_blank" title="Экспорт в Word"><i class="fa fa-file-word mr-2"></i>   </a>
+        <a v-show="docdata.exports.excel"  :href="excel"   target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></i>  </a>
+        <a v-show="docdata.exports.pdf"   :href="pdf"  target="_blank" title="Экспорт в PDF"> <i class="fa fa-file-pdf mr-2"></i>  </a>
+        <a v-show="docdata.exports.email" v-on:click="sendmail"   href="javascript:void(0)"  title="Отправка  по  почте"> <i class="fa fa-envelope mr-2"></i>  </a>
+    
+        <span v-show="docdata.exports.pos">
+       
+       <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="Печать на  чековом принтере"> <i class="fas fa-cash-register mr-1"></i></a>
+       <a v-else   onclick=" printpos()" title="Печать на  чековом принтере"><i class="fas fa-cash-register mr-1"></i> </a>
+         </span>            
+       
+       <br>
+                    
 
+        <div id="preview" v-html="docdata.html" >  
+        </div>
+        <div id="previewpos" style="display:none;" v-html="docdata.htmlpos" >
+        </div> 
+  </div>
+  
+  <div class="tab-pane  " id="tdocs">
+              <table class="table table-sm" style="width:400px;">
+                <tr>
+                    <td colspan="2" v-show="docdata.pdoc_id>0">
+                       <b>Родительский документ:</b>  <a v-on:click="opendoc(docdata.pdoc_id)" href="javascript:void(0)"  >{{docdata.pdoc_name}}</a>
+                    </td>
+                </tr>
+                <tr v-for="item   in  reldocs" >
+                    <td><a v-on:click="opendoc(item.id)"  >{{item.name}}</a></td>
+                    <td><a v-show="item.candel"   v-on:click="delchilddoc(item.id)" href="javascript:void(0)"><i class="fa fa-trash"></i></a></td>
+                </tr>
+            </table>
+            <hr>
+            <form  >
+
+                <label for="addrel">Добавить дочерний документ:</label>
+                <div class="form-group">
+                    <input class="form-control" placeholder="Начните ввод номера " style="width:200px"
+                           type="text"
+                           required="required" zippy="addrel">
+                </div>
+
+                <input class="btn btn-light  " type="submit" value="Добавить">
+            </form>
+  </div>
+ <div class="tab-pane  " id="tcomm">
+ 
+  </div>
+ <div class="tab-pane  " id="tfiles">
+ 
+  </div>
+ <div class="tab-pane  " id="thist">
+             <div class="row">
+
+                        <div class="col-auto ">
+                            <h5>История изменений статусов</h5>
+                            <table class="table table-sm">
+                                <tr>
+                                    <th>Статус</th>
+                                    <th>Дата</th>
+                                    <th>Изменил</th>
+
+
+                                </tr>
+                                <tr  v-for="item   in docdata.loglist"  >
+                                    <td >{{item.statename}}</td>
+                                    <td class="text-nowrap "  >{{item.statedate}}</td>
+                                    <td zippy="stateuser">{{item.stateuser}}</td>
+
+
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-auto ">
+                            <h5>История оплат</h5>
+                            <table class="table table-sm">
+                                <tr>
+                                    <th>Дата</th>
+                                    <th>Счет</th>
+                                    <th class="text-right">Приход</th>
+                                    <th class="text-right">Расход</th>
+                                  
+
+
+                                </tr>
+                                <tr v-for="item   in docdata.paylist">
+                                    <td class="text-nowrap " zippy="paydate">{{item.paydate}}</td>
+                                    <td zippy="paymf">{{item.paymf}}</td>
+                                    <td class="text-right " zippy="payamountp">{{item.payamountp}}</td>
+                                    <td class="text-right " zippy="payamountm">{{item.payamountm}}</td>
+                                
+
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-auto ">
+                            <h5>Проводки по складу</h5>
+                            <table class="table table-sm">
+                                <tr>
+                                    <th>ТМЦ</th>
+                                    <th>Код</th>
+                                    <th class="text-right">Кол.</th>
+                                    
+                                    <th v-show="docdata.showpartion" class="text-right">Уч. цена</th>
+                                  
+                                    <th class="text-right">Цена</th>
+                                    <th class="text-right">Сумма</th>
+
+                                </tr>
+                                <tr v-for="item   in docdata.entrylist" >
+                                    <td  >{{item.itname}}</td>
+                                    <td  >{{item.itcode}}</td>
+                                    <td class="text-right "  >{{item.itcode}}</td>
+                                    
+                                    <td v-show="docdata.showpartion" class="text-right "  >{{item.itpartion}}</td>
+                                   
+                                    <td class="text-right "  >{{item.itprice}}</td>
+                                    <td class="text-right "  >{{item.itamount}}</td>
+
+
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+  </div>
+  <div class="tab-pane  " id="tscan" v-show="docdata.isscan">
+       <img   :src="docdata.scanimage"  />
+
+  </div>
+ 
+</div>
+
+  
+        </div>
+      {|={{ }}=|}  
         <script>
 
+        
+        
             function printform() {
                 $('#previewpos').attr('style', 'display:none');
                 $('#preview').attr('style', 'display:block');
@@ -262,7 +427,107 @@
                 $('#previewpos').printThis();
             }
 
-   
+               
+        var vdocview = new Vue({
+            el: '#vdocview',
+              data: {
+                   
+                  docid:0,
+                  loaded:false,
+                  docdata:{
+                      exports:{}
+                  } ,
+                  reldocs:[]
+                     
+              }             
+    ,
+     computed:{
+         printmob:function(){
+              return '/showdoc/print/'+this.docid  
+         } ,
+         printpos:function(){
+              return '/showdoc/pos/'+this.docid  
+         } ,
+         word:function(){
+              
+              return '/showdoc/word/'+this.docid  
+         } ,
+         excel:function(){
+              return '/showdoc/excel/'+this.docid  
+         } ,
+         pdf:function(){
+              return '/showdoc/pdf/'+this.docid  
+         }  ,
+         showprintposmob:function(){
+              return   docdata.pos== true && docdata.usemobileprinter== true
+         }  ,
+         showprintpos:function(){
+              return  docdata.pos== true && docdata.usemobileprinter== false  
+         }   
+         
+     },
+          watch:   { 
+              docid(newVal, oldVal) { 
+                   
+                   this.load()
+                  
+                } 
+           }  
+         ,   
+         mounted: function(){
+              
+              this.docid=  $('#_docid_').attr('docid')         
+             
+        }  ,      
+          methods: {
+                load:function(){
+                 
+                   callPageMethod('docview::loaddata',[this.docid], null,(data)=> 
+                  {
+                    
+                      let tmp =   JSON.parse(data)  
+                      this.loaded = true;
+                      this.docdata = tmp;
+                      this.loaddocs()  
+                      
+                  
+                  });
+                            
+                            
+                }
+               ,
+               sendmail:function(){
+                   //toastr.success('Отправлено','',{'timeOut':'2000'})   
+               } 
+               ,
+               opendoc:function(id){
+                   
+                  this.docid = id 
+               }   ,
+               loaddocs:function( ){
+                   
+                   callPageMethod('docview::loaddocs',[this.docid], null,(data)=> 
+                              {
+                                  this.reldocs = JSON.parse(data) ;
+                                   
+                              });
+               }  ,
+               delchilddoc:function( id){
+                    alert(id)
+                   callPageMethod('docview::delchilddoc',[ id], null,(data)=> 
+                              {
+                                  this.loaddocs() 
+                              });
+               } 
+          }
+        }) 
+        
+        
+        function setdocid(id){   
+              vdocview.docid= id
+        }
+         
         </script>
     </body>
 </html>
+

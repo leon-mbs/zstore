@@ -35,6 +35,8 @@ class DocView extends \Zippy\Html\PageFragment
     public function __construct($id) {
         parent::__construct($id);
 
+        $this->add(new Label('_docid_')) ;
+        
         $this->add(new BookmarkableLink('print', ""));
         $this->add(new RedirectLink('printmob', ""));
         $this->add(new RedirectLink('html', ""))->setVisible(false);
@@ -45,6 +47,7 @@ class DocView extends \Zippy\Html\PageFragment
         $this->add(new RedirectLink('posmob', ""));
         $this->add(new ClickLink('email', $this, "onMail"));
 
+        
         $this->add(new Label('preview'));
         $this->add(new Label('previewpos'));
 
@@ -87,6 +90,10 @@ class DocView extends \Zippy\Html\PageFragment
 
     // Устанавливаем  документ  для  просмотра
     public function setDoc(\App\Entity\Doc\Document $doc) {
+        $this->_docid_->setAttribute('docid',$doc->document_id);
+      
+     
+       
         $this->_doc = $doc;
         $doc = $this->_doc->cast();
         // if (false == \App\ACL::checkShowDoc($doc, false)) {
@@ -408,4 +415,126 @@ class DocView extends \Zippy\Html\PageFragment
         $page->goDocView();
     }
 
+    //vue
+    
+    public function loaddata($arg,$post){
+        $docid =  $arg[0] ;
+        
+        $user = \App\System::getUser() ;
+        $common = \App\System::getOptions('common') ;
+        
+        $doc = Document::load($docid);
+       
+        $doc = $doc->cast();
+     
+      
+        $html = $doc->generateReport();
+    
+        $htmlpos = $doc->generatePosReport();
+        
+        $ret = array();
+        $ret['usemobileprinter']=   $common['usemobileprinter'] ==1  ;
+        $ret['showpartion']=   $user->noshowpartion ==0  ;
+     //   $ret['user_id']=   $user->user_id   ;
+      //  $ret['userlogin']=  $user->userlogin   ;
+      //  $ret['userrole']=   $user->rolename   ;
+       //  $ret['isadmin']=   $user->rolename  =='admins' ;
+        
+        $ret['exports']=  array() ;
+        
+        $exportlist = $doc->supportedExport();
+        
+        $ret['exports']['word']  =  in_array(Document::EX_WORD, $exportlist) ;
+        $ret['exports']['excel'] =  in_array(Document::EX_EXCEL, $exportlist) ;
+        $ret['exports']['pdf']   =  in_array(Document::EX_PDF, $exportlist) ;
+        $ret['exports']['pos']   =   in_array(Document::EX_POS, $exportlist) ;
+        $ret['exports']['email'] =  in_array(Document::EX_MAIL, $exportlist) ;
+          
+        $ret['html'] = $html   ;
+        $ret['htmlpos'] = $htmlpos   ;
+        
+        $ret['isscan'] = false   ;
+         
+        if ( is_numeric($doc->headerdata['scan'] )) {
+            $ret['scanimage'] = '/loadfile.php?im=1&id=' . $doc->headerdata['scan']   ;
+            $ret['isscan'] = true  ;
+        }     
+        
+        //статусы
+        $ret['loglist'] = array();
+        foreach($doc->getLogList() as $st){
+           $ret['loglist'][]= array('statedate'=> \App\Helper::fdt($st->createdon),'stateuser'=>$st->username,'statename'=>Document::getStateName($st->docstate)) ;
+        }
+        
+        //оплаты
+        $ret['paylist'] = array();
+        foreach( \App\Entity\Pay::getPayments($doc->document_id) as $p){
+           $ret['paylist'][]= array('paydate'=> \App\Helper::fd($p->paydate),
+                                   'paymf'=>$p->mf_name,
+                                   'payamountp'=>H::fa($p->amount > 0 ? $p->amount : "") ,
+                                   'payamountm'=>H::fa($p->amount < 0 ? 0 - $p->amount : "")
+                                   ) ;
+        }
+        
+        //склад
+        $ret['entrylist'] = array();
+        $sql = " select e.entry_id, s.stock_id, s.partion,s.itemname,s.item_code,e.quantity,e.outprice  from  entrylist e join store_stock_view  s on e.stock_id = s.stock_id  where  coalesce(e.quantity,0) <> 0  and document_id=" . $this->_doc->document_id . " order  by e.entry_id";
+          
+        foreach(\App\Entity\Entry::findBySql($sql) as $entry){
+           $ret['entrylist'][]= array(
+               'itname'=> $entry->itemname,
+               'itcode'=>$entry->item_code,
+               'itqty'=>H::fqty($entry->quantity),
+               'itpartion'=>H::fa($entry->partion),
+               'itprice'=>H::fa($entry->outprice),
+               'itamount'=>H::fa($entry->outprice * $entry->quantity)
+             ) ;
+        }
+        
+        
+        $ret['pdoc_id'] = 0;
+        $ret['pdoc_name'] = 0;
+        $p = Document::load($doc->parent_id);
+        if($p instanceof Document) {
+           $ret['pdoc_id'] = $doc->parent_id;
+           $ret['pdoc_name'] = $this->_p->meta_desc . ' ' . $this->_p->document_number;
+               
+        }
+             
+        $ret['reldocs'] = array();
+           
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);     
+        
+    }
+    
+    public function loaddocs($arg,$post){
+         $user = \App\System::getUser() ;
+  
+        $docid =  $arg[0] ;
+        
+        $doc = Document::load($docid);
+        
+ 
+        $docs = array();
+        foreach($doc->getChildren() as $d) {
+           $docs[]=array('id'=>$d->document_id,'name'=>$d->meta_desc . ' ' . $d->document_number,'candel'=>($user->user_id == $d->user_id || $user->rolename  =='admins' )); 
+        }
+        
+             
+        return json_encode($docs, JSON_UNESCAPED_UNICODE);     
+       
+    }
+  public function delchilddoc($arg,$post){
+          
+        $chid =  $arg[0] ;
+ 
+        
+        $conn = \ZDB\DB::getConnect();
+        $conn->Execute("update documents set parent_id=0 where  document_id=" . $chid);
+    
+             
+        
+       
+    }
+    
 }

@@ -58,4 +58,20 @@ class SystemLog extends \App\Pages\Base
         Notify::markRead(Notify::SYSTEM); 
         return json_encode(array('items'=>$itemlist,'cnt'=>$cnt), JSON_UNESCAPED_UNICODE);     
     } 
+    
+    
+    public function getDocs($args, $post) {
+        
+         $q = $args[0];
+         $q= \App\Entity\Doc\Document::qstr('%'.$q.'%') ;
+         $data = array(); 
+         foreach(\App\Entity\Doc\Document::findArray('document_number','document_number like '.$q) as $id=>$v ) {
+              $data[]=array('name'=>$v,'id'=>$id); 
+         }
+       
+       return json_encode($data, JSON_UNESCAPED_UNICODE);     
+        
+    }
+        
+  
 }
