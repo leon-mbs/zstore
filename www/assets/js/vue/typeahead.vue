@@ -116,7 +116,7 @@ module.exports = {
     hit () {
       if (this.current !== -1) {
           var item = this.items[this.current]
-          
+          this.query = item.name
           this.reset()
           this.onhit(item.id);
           

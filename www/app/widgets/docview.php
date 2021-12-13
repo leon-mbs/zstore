@@ -507,7 +507,7 @@ class DocView extends \Zippy\Html\PageFragment
         
     }
     
-    public function loaddocs($arg,$post){
+    public function loadchilddocs($arg,$post){
          $user = \App\System::getUser() ;
   
         $docid =  $arg[0] ;
@@ -524,24 +524,34 @@ class DocView extends \Zippy\Html\PageFragment
         return json_encode($docs, JSON_UNESCAPED_UNICODE);     
        
     }
-  public function delchilddoc($arg,$post){
+   
+    public function delchilddoc($arg,$post){
           
         $chid =  $arg[0] ;
- 
-        
+         
         $conn = \ZDB\DB::getConnect();
         $conn->Execute("update documents set parent_id=0 where  document_id=" . $chid);
-    
-             
         
-       
     }
+ 
+    public function addchilddoc($arg,$post){
+          
+        
+        $child = Document::load($arg[0]);
+        if ($child instanceof Document) {
+            $child->parent_id = $arg[1];
+            $child->save();
+        }
+        
+    }
+    
+    
     public function getDocs($args, $post) {
         
          $q = $args[0];
          $q= \App\Entity\Doc\Document::qstr('%'.$q.'%') ;
          $data = array(); 
-         foreach(\App\Entity\Doc\Document::findArray('document_number','document_number like '.$q) as $id=>$v ) {
+         foreach(\App\Entity\Doc\Document::findArray('document_number',"parent_id <> {$args[1]} and document_number like ".$q) as $id=>$v ) {
               $data[]=array('name'=>$v,'id'=>$id); 
          }
        

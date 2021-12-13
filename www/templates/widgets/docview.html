@@ -512,7 +512,7 @@
                }   ,
                loaddocs:function( ){
                    
-                   callPageMethod('docview::loaddocs',[this.docid], null,(data)=> 
+                   callPageMethod('docview::loadchilddocs',[this.docid], null,(data)=> 
                               {
                                   this.reldocs = JSON.parse(data) ;
                                    
@@ -531,7 +531,7 @@
                 },
                 ontext: async function (query){
                    
-                    var url  = getMethodUrl('docview::getDocs',[query])
+                    var url  = getMethodUrl('docview::getDocs',[query, this.docid])
                     let response = await fetch(url);
              
                     return  await response.json()  ;
@@ -540,9 +540,13 @@
                 onadddoc:function (){
                     
                     
-                    this.cleartext = new Date().getTime()   //чтобы  сработал  watch
-                     
-                    this.childdocid = 0 
+                   callPageMethod('docview::addchilddoc',[this.childdocid, this.docid], null,(data)=> 
+                   {
+                      this.loaddocs() 
+                   });                    
+                   
+                   this.childdocid = 0  
+                   this.cleartext = new Date().getTime()   //чтобы  сработал  watch                   
                 }
               
                
