@@ -66,7 +66,7 @@
                     </td>
                 </tr>
                 <tr v-for="item   in  reldocs" >
-                    <td><a v-on:click="opendoc(item.id)"  >{{item.name}}</a></td>
+                    <td><a v-on:click="opendoc(item.id)"  href="javascript:void(0)">{{item.name}}</a></td>
                     <td><a v-show="item.candel"   v-on:click="delchilddoc(item.id)" href="javascript:void(0)"><i class="fa fa-trash"></i></a></td>
                 </tr>
             </table>
