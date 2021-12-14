@@ -253,9 +253,9 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars['taskcnt'] = \App\Entity\Event::isNotClosedTask($user->user_id);
         $this->_tvars['alerterror'] = "";
         if (strlen(System::getErrorMsg()) > 0) {
-            $this->_tvars['alerterror'] = System::getErrorMsg();
+          //  $this->_tvars['alerterror'] = System::getErrorMsg();
 
-            $this->goAnkor('topankor');
+          //  $this->goAnkor('topankor');
 
 
         }
@@ -264,6 +264,9 @@ class Base extends \Zippy\Html\WebPage
     protected function afterRender() {
 
         $user = System::getUser();
+        if (strlen(System::getErrorMsg()) > 0) {
+            $this->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{'timeOut':'12000'})        ", true);
+        }
 
         if (strlen(System::getWarnMsg()) > 0) {
             $this->addJavaScript("toastr.warning('" . System::getWarnMsg() . "','',{'timeOut':'6000'})        ", true);

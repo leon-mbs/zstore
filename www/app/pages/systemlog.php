@@ -58,4 +58,9 @@ class SystemLog extends \App\Pages\Base
         Notify::markRead(Notify::SYSTEM); 
         return json_encode(array('items'=>$itemlist,'cnt'=>$cnt), JSON_UNESCAPED_UNICODE);     
     } 
+    
+    
+
+        
+  
 }

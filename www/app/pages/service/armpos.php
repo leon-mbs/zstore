@@ -335,7 +335,9 @@ class ARMPos extends \App\Pages\Base
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docpanel->form2->barcode->getText());
+        $code0 = $code;
         $code = ltrim($code,'0');
+
         $store = $this->form1->store->getValue();
         $this->docpanel->form2->barcode->setText('');
         if ($code == '') {
@@ -344,7 +346,8 @@ class ARMPos extends \App\Pages\Base
 
 
         $code_ = Item::qstr($code);
-        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store}) and  (item_code = {$code_} or bar_code = {$code_})");
+        $code0 = Item::qstr($code0);
+        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store}) and  (item_code = {$code_} or bar_code = {$code_} or item_code = {$code0} or bar_code = {$code0}  )");
 
         if ($item == null) {
             $this->setError("noitemcode", $code);

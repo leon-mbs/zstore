@@ -3,15 +3,17 @@
     <body>
       {{={| |}=}}   
         <div class="row">
+        
             <div class="col-12 col-md-8 col-xl-6" id="vapp">
-                <h4>Журнал системних уведомлений</h4>
+                <h4>Журнал системных уведомлений</h4>
+ 
                 <div class="navbar nav">
                     <form   class="form-inline ">
 
 
                         <input v-model="searchtext" class="form-control mr-2" type="text" zippy="searchtext" placeholder="Поиск по контенту">
 
-                        <input v-on:click.prevent="onsearch" type="button" class="  btn btn-outline-success  " value="Искать">
+                        <input v-on:click.prevent="onsearch" type="submit" class="  btn btn-outline-success  " value="Искать">
 
 
                     </form>
@@ -53,10 +55,11 @@
           itemlist:[] ,
           rowscnt:0  ,
           searchtext:'' ,
-          pagesize:5
+          pagesize:25
       }  ,
      components: {
-            'paginator': httpVueLoader('/assets/js/vue/paginator.vue')
+            'paginator': httpVueLoader('/assets/js/vue/paginator.vue') 
+            
         }, 
         methods: {
             change:function( page){    //кнопка  пагинатора
@@ -68,14 +71,14 @@
                     search:this.searchtext,
                     start:start,
                     count:this.pagesize 
-                };
+                } 
                 
                 updateItems(body);
             }  ,
             onsearch:function (){
                 this.rowscnt=0;
                 this.loaddata();
-            }
+            } 
             
         }  ,
         mounted: function(){
