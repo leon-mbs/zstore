@@ -14,7 +14,7 @@
            @blur="reset"
            @input="update" />
 
-    <ul   v-show="hasItems">
+    <ul    v-show="hasItems">
       <li v-for="(item, $item) in items" :class="activeClass($item)" @mousedown="hit" @mousemove="setActive($item)">
         <span class="name" v-text="item.name"></span>
         <span class="screen-name" v-text="item.screen_name"></span>
@@ -141,9 +141,8 @@ module.exports = {
       }
     } 
   }   
-  }
   ,
-  props:['placeholder','onhit','onquery','limit','minchars'  ]
+  props:['placeholder','onhit','onquery','limit','minchars' ]
 }
 </script>
 
@@ -167,7 +166,7 @@ ul {
   z-index: 1000;
 }
 li {
-  padding: 10px 16px;
+  padding: 6px 12px;
   border-bottom: 1px solid #ccc;
   cursor: pointer;
 }
@@ -184,6 +183,10 @@ span {
   display: block;
   color: #2c3e50;
 }
+span {
+  display: block;
+  color: #2c3e50;
+}
 .active {
   background-color: #3aa373;
 }
@@ -191,8 +194,8 @@ span {
   color: white;
 }
 .name {
-  font-weight: 700;
-  font-size: 18px;
+  font-weight: 400;
+  font-size: 16px;
 }
 .screen-name {
   font-style: italic;

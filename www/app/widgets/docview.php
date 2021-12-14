@@ -557,5 +557,118 @@ class DocView extends \Zippy\Html\PageFragment
        
        return json_encode($data, JSON_UNESCAPED_UNICODE);     
         
-    }    
+    }   
+    
+    
+  public function loadmessages($arg,$post){
+         $user = \App\System::getUser() ;
+    
+        $docid =  $arg[0] ;
+        
+   
+        $msglist = array();
+        foreach( \App\Entity\Message::getMessages(1, $docid) as $msg) {
+           $msglist[]=array(
+           'id'=>$msg->message_id,
+           'msgdata'=>nl2br($msg->message),
+           'msgdate'=>\App\Helper::fdt($msg->created)  ,
+           'msguser'=>$msg->username ,
+           'candel'=>($user->user_id == $msg->user_id || $user->rolename  =='admins' )           
+           ) ; 
+        }
+        
+             
+        return json_encode($msglist, JSON_UNESCAPED_UNICODE);     
+       
+    }
+   public function delmsg($arg,$post){
+          
+           
+        \App\Entity\Message::delete($arg[0] );
+        
+    }
+    public function addmsg($arg,$post){
+        if(strlen($post['msgtext'])==0)  return; 
+        $user = System::getUser();
+        $doc = Document::load($arg[0]);
+
+        $msg = new \App\Entity\Message();
+        $msg->message = $post['msgtext'];
+        $msg->created = time();
+        $msg->user_id = $user->user_id;
+        $msg->item_id = $arg[0];
+        $msg->item_type = \App\Entity\Message::TYPE_DOC;
+ 
+        $msg->save();
+ 
+        $conn = \ZDB\DB::getConnect();
+        $ids = $conn->GetCol("select distinct  user_id from  docstatelog where document_id = {$arg[0]} and  user_id <> {$user->user_id} ") ;
+
+        foreach ($ids as $id) {
+
+            $n = new \App\Entity\Notify();
+            $n->user_id = $id;
+            $n->message = "<b>" . H::l("newdoccomment") . ":</b> {$doc->meta_desc} {$doc->document_number}  ";
+            $n->message .= "<br> {$msg->message} ";
+            $n->message .= "<br>  <a href=\"/index.php?p=App/Pages/Register/DocList&arg={$doc->document_id}\">" . H::l("toanswer") . "</a> ";
+            $n->sender_id = $user->user_id;
+            $n->save();
+        }         
+        
+        
+    }
+  
+  
+  public function loadfiles($arg,$post){
+         $user = \App\System::getUser() ;
+    
+        $docid =  $arg[0] ;
+        $doc = Document::load($docid);
+      
+   
+        $filelist = array();
+        foreach( H::getFileList($docid, \App\Entity\Message::TYPE_DOC) as $f) {
+          
+          
+        $url = _BASEURL . 'loadfile.php?id=' . $f->file_id;
+        if (strlen($f->mime) > 0) {
+            $url = $url . '&im=1';
+        }
+ 
+  
+            
+           $filelist[]=array(
+           'id'=>$f->file_id,
+           'url'=>$url,
+           'filename'=>$f->filename,
+           'title'=>$f->description,
+  
+           'candel'=>($user->user_id == $doc->user_id || $user->rolename  =='admins' )           
+           ) ; 
+        }
+        
+             
+        return json_encode($filelist, JSON_UNESCAPED_UNICODE);     
+       
+    } 
+    
+    
+    public function delfile($arg,$post){
+          
+        H::deleteFile($arg[0]);    
+       
+        
+    } 
+    public function addfile($arg,$post){
+          
+    
+        $file =  @$_FILES['addfile']  ;
+     
+        if(strlen($file['tmp_name'])==0 ) return;
+    
+         H::addFile($file, $arg[0], $post['adddescfile'], \App\Entity\Message::TYPE_DOC);
+     
+    } 
+    
+           
 }
