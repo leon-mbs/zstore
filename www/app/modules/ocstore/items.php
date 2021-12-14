@@ -107,6 +107,8 @@ class Items extends \App\Pages\Base
             $this->exportform->newitemlist->Reload();
             $this->exportform->ecat->setValue(0);
         } else {
+            $data['error']  = str_replace("'","`",$data['error']) ;
+            
             $this->setError($data['error']);
         }
     }
@@ -158,6 +160,8 @@ class Items extends \App\Pages\Base
         $data = json_decode($json, true);
 
         if ($data['error'] != "") {
+            $data['error']  = str_replace("'","`",$data['error']) ;
+            
             $this->setError($data['error']);
             return;
         }
@@ -194,6 +198,8 @@ class Items extends \App\Pages\Base
         $data = json_decode($json, true);
 
         if ($data['error'] != "") {
+            $data['error']  = str_replace("'","`",$data['error']) ;
+            
             $this->setError($data['error']);
             return;
         }
@@ -225,6 +231,8 @@ class Items extends \App\Pages\Base
         $data = json_decode($json, true);
 
         if ($data['error'] != "") {
+            $data['error']  = str_replace("'","`",$data['error']) ;
+            
             $this->setError($data['error']);
             return;
         }
@@ -234,7 +242,7 @@ class Items extends \App\Pages\Base
     public function importOnSubmit($sender) {
         $modules = System::getOptions("modules");
         $common = System::getOptions("common");
-
+      
         $cats = System::getSession()->cats;
         if (is_array($cats) == false) {
             $cats = array();
@@ -254,6 +262,8 @@ class Items extends \App\Pages\Base
         $data = json_decode($json, true);
 
         if ($data['error'] != "") {
+            $data['error']  = str_replace("'","`",$data['error']) ;
+            
             $this->setError($data['error']);
             return;
         }
