@@ -278,7 +278,7 @@ class Discounts extends \App\Pages\Base
                 return;
             }
             $i->save();
-            $this->itab->ilist->Reload();
+            $this->itab->itform->ilist->Reload();
         }
 
         $sender->isearchdisc->setText("");
@@ -366,7 +366,7 @@ class Discounts extends \App\Pages\Base
                 $item->todate = $g->todate;
                 $item->save();
             }
-            $this->itab->ilist->Reload();
+            $this->itab->itform->ilist->Reload();
         }
 
         $sender->gsearchdisc->setText("");

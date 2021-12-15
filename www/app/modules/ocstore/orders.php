@@ -103,6 +103,8 @@ class Orders extends \App\Pages\Base
 
             $this->neworderslist->Reload();
         } else {
+            $data['error']  = str_replace("'","`",$data['error']) ;
+            
             $this->setError($data['error']);
         }
     }
@@ -389,6 +391,8 @@ class Orders extends \App\Pages\Base
         $data = json_decode($json, true);
 
         if ($data['error'] != "") {
+            $data['error']  = str_replace("'","`",$data['error']) ;
+            
             $this->setError($data['error']);
             return;
         }
