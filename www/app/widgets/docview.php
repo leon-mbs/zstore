@@ -45,8 +45,15 @@ class DocView extends \Zippy\Html\PageFragment
         $this->_docid_->setAttribute('docid',$doc->document_id);
       
          $this->setvisible(true);
-       
-  
+        $path = $this->id;
+        $owner =  $this->getOwner() ;
+        while(($owner    instanceof \Zippy\Html\WebPage )==false) {
+             $path = $owner->id.'::'.$path ;
+             $owner =  $owner->getOwner() ; 
+        }                                   
+        $this->_docid_->setAttribute('path',$path);
+                                        
+        
     }
   
     
@@ -67,8 +74,8 @@ class DocView extends \Zippy\Html\PageFragment
         $htmlpos = $doc->generatePosReport();
         
         $ret = array();
-        $ret['usemobileprinter']=   $common['usemobileprinter'] ==1  ;
-        $ret['showpartion']=   $user->noshowpartion ==0  ;
+        $ret['usemobileprinter']=   $user->usemobileprinter ==1  ;
+        $ret['showpartion']=   $user->noshowpartion  ==0  ;
      //   $ret['user_id']=   $user->user_id   ;
       //  $ret['userlogin']=  $user->userlogin   ;
       //  $ret['userrole']=   $user->rolename   ;
