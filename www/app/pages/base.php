@@ -270,11 +270,11 @@ class Base extends \Zippy\Html\WebPage
 
         $user = System::getUser();
         if (strlen(System::getErrorMsg()) > 0) {
-            $this->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{'timeOut':'12000'})        ", true);
+            $this->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{'timeOut':'8000'})        ", true);
         }
 
         if (strlen(System::getWarnMsg()) > 0) {
-            $this->addJavaScript("toastr.warning('" . System::getWarnMsg() . "','',{'timeOut':'6000'})        ", true);
+            $this->addJavaScript("toastr.warning('" . System::getWarnMsg() . "','',{'timeOut':'4000'})        ", true);
         }
         if (strlen(System::getSuccesMsg()) > 0) {
             $this->addJavaScript("toastr.success('" . System::getSuccesMsg() . "','',{'timeOut':'2000'})        ", true);
