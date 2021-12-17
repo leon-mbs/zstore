@@ -49,6 +49,7 @@ class ItemSel extends \Zippy\Html\PageFragment
         $table->setPageSize(H::getPG());
         $table->AddColumn(new Column('itemname', H::l('name'), true, true, true));
         $table->AddColumn(new Column('item_code', H::l('code'), true, true, false));
+        $table->AddColumn(new Column('bar_code', H::l('barcode'), true, true, false));
         $table->AddColumn(new Column('manufacturer', H::l('brand'), true, true, false));
 
         $table->setCellClickEvent($this, 'OnSelect');

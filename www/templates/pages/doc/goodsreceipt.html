@@ -102,7 +102,7 @@
 
                         &nbsp; &nbsp; &nbsp; &nbsp; <i id="mobilescanner" data-toggle="modal" data-target="#modalscanner"
                                                        title="Сканировать  мобильным  устройством"
-                                                       style="cursor:pointer;font-size:28px" class="fa fa-mobile-alt"></i>
+                                                       style="display:none;cursor:pointer;font-size:28px" class="fa fa-mobile-alt"></i>
 
 
                     </div>
@@ -113,7 +113,8 @@
 
                             <th></th>
                             <th>Наименование</th>
-                            <th>Код</th>
+                            <th>Артикул</th>
+                            <th>Штрих-код</th>
                             <th>Ед.</th>
                             {{#usesnumber}}
                             <th>Серия</th>
@@ -130,6 +131,7 @@
                             <td zippy="num"></td>
                             <td zippy="item"></td>
                             <td zippy="code"></td>
+                            <td zippy="barcode"></td>
                             <td zippy="msr"></td>
                             {{#usesnumber}}
                             <td zippy="snumber"></td>
@@ -637,7 +639,7 @@
                 $('#addcode').click()
             }
 
-
+           
            
         </script>
 
@@ -645,7 +647,7 @@
 
       {{#usemobilescanner}}       
      <script>      
-        
+       
             if (mobileCheck()) {
                 $('#mobilescanner').show();
             } else {
