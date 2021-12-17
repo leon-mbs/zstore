@@ -96,7 +96,7 @@
                         &nbsp; &nbsp; &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
                         &nbsp; &nbsp; &nbsp; &nbsp; <i id="mobilescanner" data-toggle="modal" data-target="#modalscanner"
                                                        title="Сканувати  мобiльним пристроєм"
-                                                       style="cursor:pointer;font-size:28px" class="fa fa-mobile-alt"></i>
+                                                       style="display:none;cursor:pointer;font-size:28px" class="fa fa-mobile-alt"></i>
 
                     </div>
                     {{/usescanner}}
@@ -105,7 +105,8 @@
                         <tr>
                             <th></th>
                             <th>Найменування</th>
-                            <th>Код</th>
+                            <th>Артикул</th>
+                            <th>Штрих-код</th>
                             <th>Од.</th>
                             {{#usesnumber}}
                             <th>Серія</th>
@@ -122,6 +123,7 @@
                             <td zippy="num"></td>
                             <td zippy="item"></td>
                             <td zippy="code"></td>
+                            <td zippy="barcode"></td>
                             <td zippy="msr"></td>
                             {{#usesnumber}}
                             <td zippy="snumber"></td>

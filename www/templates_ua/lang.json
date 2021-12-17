@@ -478,5 +478,7 @@
     "repbybrand": "По брендах"     ,
     "ppokeyloaded": "Ключ завантажений успiшно"  ,
     "ppokeynotloaded": "Не завантажено ключ або  сертифiкат",
-    "pponotloaddata": "Не введенi необхiднi  данi" 
+    "pponotloaddata": "Не введенi необхiднi  данi" ,
+    "barcode": "Штрих-код" 
+    
 }

@@ -29,6 +29,7 @@ class GoodsReceipt extends Document
                               "itemname" => $name,
                               "snumber"  => $item->snumber,
                               "itemcode" => $item->item_code,
+                              "barcode" => $item->bar_code,
                               "quantity" => H::fqty($item->quantity),
                               "price"    => H::fa($item->price),
                               "msr"      => $item->msr,

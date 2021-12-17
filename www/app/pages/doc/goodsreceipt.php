@@ -247,6 +247,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         $row->add(new Label('item', $item->itemname));
         $row->add(new Label('code', $item->item_code));
+        $row->add(new Label('barcode', $item->bar_code));
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));
         $row->add(new Label('msr', $item->msr));
