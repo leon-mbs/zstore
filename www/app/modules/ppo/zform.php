@@ -74,9 +74,9 @@ class ZForm extends \App\Pages\Base
   
             $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, false);
 
-            if ($ret['success'] == false && $ret['docnumber'] > 0) {
+            if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
                 //повторяем для  нового номера
-                $this->pos->fiscdocnumber = $ret['docnumber'];
+                $this->pos->fiscdocnumber = $ret['doclocnumber'];
                 $this->pos->save();
                 $ret = \App\Modules\PPO\PPOHelper::shift( $this->pos->pos_id, false);
 

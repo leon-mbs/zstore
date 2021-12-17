@@ -254,6 +254,7 @@ class Import extends \App\Pages\Base
                     $cat->cat_name = $catname;
                     $cat->save();
                     $cat_id = $cat->cat_id;
+                    $catlist[$catname]  = $cat_id;
                 }
             }
             $item = null;

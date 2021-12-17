@@ -225,7 +225,7 @@ class Base extends \Zippy\Html\WebPage
 
     public function setError($msg, $p1 = "", $p2 = "") {
         $msg = str_replace("'","`",$msg) ;
-            
+ 
         $msg = Helper::l($msg, $p1, $p2);
         System::setErrorMsg($msg);
     }
@@ -270,7 +270,10 @@ class Base extends \Zippy\Html\WebPage
 
         $user = System::getUser();
         if (strlen(System::getErrorMsg()) > 0) {
-            $this->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{'timeOut':'8000'})        ", true);
+ 
+            
+           // $this->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{'timeOut':'8000'})        ", true);
+ 
         }
 
         if (strlen(System::getWarnMsg()) > 0) {

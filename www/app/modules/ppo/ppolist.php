@@ -49,7 +49,7 @@ class PPOList extends \App\Pages\Base
 
         $this->opan->add(new Paginator('pagp', $this->opan->ppolist));
 
-        $this->opan->ppolist->setPageSize(2000); //H::getPG()
+        $this->opan->ppolist->setPageSize(100); //H::getPG()
 
         $this->add(new Panel('shpan'))->setVisible(false);
         $this->shpan->add(new ClickLink('backo', $this, 'onBacko'));
@@ -202,7 +202,7 @@ class PPOList extends \App\Pages\Base
         $this->shpan->setVisible(true);
         $this->docpan->setVisible(false);
         $this->docpan->docshow->setVisible(false);
-        $this->updateShifts();
+         $this->updateShifts();
     }
 
     public function docOnRow($row) {
