@@ -7,30 +7,30 @@
     "prefer-stable" : true,
   
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.4",
          
         "phpmailer/phpmailer": "~6.1",
-        "monolog/monolog": "1.25.4",
+        "monolog/monolog": "1.26.1",
          
       
-        "dompdf/dompdf": "v0.8.5",
-        "firebase/php-jwt": "v5.0.0",
+        "dompdf/dompdf": "v1.1.1",
+        "firebase/php-jwt": "v5.5.1",
         "roave/security-advisories": "dev-master",
-        "picqer/php-barcode-generator": "v2.0.1",
-         "endroid/qr-code": "3.9.6",
+        "picqer/php-barcode-generator": "v2.2.0",
+         "endroid/qr-code": "4.4.1",
 
         "masterexploder/phpthumb" :"2.1",
         "lemmon/fetch" :"v0.3.0",
         "lis-dev/nova-poshta-api-2" :"0.1.6",
-        "phpoffice/phpspreadsheet" :"^1.15.0",
+        "phpoffice/phpspreadsheet" :"1.20.0",
        
         "automattic/woocommerce": "3.0.0",
-        "symfony/polyfill-mbstring": "v1.22.0",
-        "symfony/polyfill-uuid": "v1.22.0",
-        "myclabs/php-enum": "1.7.7",
-        "phenx/php-svg-lib": "^0.3.3",           
+        "symfony/polyfill-mbstring": "v1.23.1",
+        "symfony/polyfill-uuid": "v1.23.0",
+       
+           
  
-        "leon-mbs/zippy": "2.5.9",
+        "leon-mbs/zippy": "2.5.11",
         "leon-mbs/ppolib": "1.1.7",   
         "ext-json": "*",
         "ext-curl": "*",       
