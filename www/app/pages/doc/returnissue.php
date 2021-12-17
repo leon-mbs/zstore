@@ -303,9 +303,9 @@ class ReturnIssue extends \App\Pages\Base
                 $this->_doc->headerdata["pos"] = $pos->pos_id;
 
                 $ret = \App\Modules\PPO\PPOHelper::checkback($this->_doc);
-                if ($ret['success'] == false && $ret['docnumber'] > 0) {
+                if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
                     //повторяем для  нового номера
-                    $pos->fiscdocnumber = $ret['docnumber'];
+                    $pos->fiscdocnumber = $ret['doclocnumber'];
                     $pos->save();
                     $ret = \App\Modules\PPO\PPOHelper::checkback($this->_doc);
                 }

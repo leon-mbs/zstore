@@ -517,9 +517,9 @@ class POSCheck extends \App\Pages\Base
 
 
             $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
-            if ($ret['success'] == false && $ret['docnumber'] > 0) {
+            if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
                 //повторяем для  нового номера
-                $pos->fiscdocnumber = $ret['docnumber'];
+                $pos->fiscdocnumber = $ret['doclocnumber'];
                 $pos->save();
                 $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
             }

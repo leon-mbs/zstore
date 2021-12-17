@@ -945,9 +945,9 @@ class ARMPos extends \App\Pages\Base
 
 
                 $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
-                if ($ret['success'] == false && $ret['docnumber'] > 0) {
+                if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
                     //повторяем для  нового номера
-                    $this->pos->fiscdocnumber = $ret['docnumber'];
+                    $this->pos->fiscdocnumber = $ret['doclocnumber'];
                     $this->pos->save();
                     $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
                 }
@@ -996,9 +996,9 @@ class ARMPos extends \App\Pages\Base
 
     public function OnOpenShift() {
         $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, true);
-        if ($ret['success'] == false && $ret['docnumber'] > 0) {
+        if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
             //повторяем для  нового номера
-            $this->pos->fiscdocnumber = $ret['docnumber'];
+            $this->pos->fiscdocnumber = $ret['doclocnumber'];
             $this->pos->save();
             $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, true);
         }
@@ -1007,14 +1007,11 @@ class ARMPos extends \App\Pages\Base
             return false;
         } else {
             $this->setSuccess("ppo_shiftopened");
-            if ($ret['docnumber'] > 0) {
+            if ($ret['doclocnumber'] > 0) {
                 $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                 $this->pos->save();
-                $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
-            } else {
-                $this->setError("ppo_noretnumber");
-                return;
-            }
+             //   $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+            }  
             \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id);
         }
 
@@ -1039,9 +1036,9 @@ class ARMPos extends \App\Pages\Base
         if (strpos($ret['data'], 'ZRepAlreadyRegistered')) {
             return true;
         }
-        if ($ret['success'] == false && $ret['docnumber'] > 0) {
+        if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
             //повторяем для  нового номера
-            $this->pos->fiscdocnumber = $ret['docnumber'];
+            $this->pos->fiscdocnumber = $ret['doclocnumber'];
             $this->pos->save();
             $ret = \App\Modules\PPO\PPOHelper::zform($this->pos->pos_id, $stat, $rstat);
         }
@@ -1050,7 +1047,7 @@ class ARMPos extends \App\Pages\Base
             return false;
         } else {
 
-            if ($ret['docnumber'] > 0) {
+            if ($ret['doclocnumber'] > 0) {
                 $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                 $this->pos->save();
             } else {
@@ -1065,9 +1062,9 @@ class ARMPos extends \App\Pages\Base
 
     public function closeshift() {
         $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, false);
-        if ($ret['success'] == false && $ret['docnumber'] > 0) {
+        if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
             //повторяем для  нового номера
-            $this->pos->fiscdocnumber = $ret['docnumber'];
+            $this->pos->fiscdocnumber = $ret['doclocnumber'];
             $this->pos->save();
             $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, false);
         }
@@ -1076,13 +1073,10 @@ class ARMPos extends \App\Pages\Base
             return false;
         } else {
             $this->setSuccess("ppo_shiftclosed");
-            if ($ret['docnumber'] > 0) {
+            if ($ret['doclocnumber'] > 0) {
                 $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                 $this->pos->save();
-            } else {
-                $this->setError("ppo_noretnumber");
-                return;
-            }
+            }  
             \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id);
         }
 
