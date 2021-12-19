@@ -701,7 +701,7 @@ class ARMFood extends \App\Pages\Base
             } catch(\Throwable $ee) {
                 global $logger;
                 $conn->RollbackTrans();
-                $this->setError($ee->getMessage());
+                $this->setErrorTopPage($ee->getMessage());
 
                 $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
                 return;
@@ -768,7 +768,7 @@ class ARMFood extends \App\Pages\Base
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
-            $this->setError($ee->getMessage());
+            $this->setErrorTopPage($ee->getMessage());
 
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
             return;
@@ -881,7 +881,7 @@ class ARMFood extends \App\Pages\Base
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
-            $this->setError($ee->getMessage());
+            $this->setErrorTopPage($ee->getMessage());
 
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
             return;

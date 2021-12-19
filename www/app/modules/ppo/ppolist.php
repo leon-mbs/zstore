@@ -72,7 +72,7 @@ class PPOList extends \App\Pages\Base
         $firm = Firm::load($cid);
         $res = PPOHelper::send(json_encode(array('Command' => 'Objects')), 'cmd', $firm );
         if ($res['success'] == false) {
-            $this->setError($res['data']);
+            $this->setErrorTopPage($res['data']);
             return;
         }
         $this->_ppolist = array();
@@ -133,7 +133,7 @@ class PPOList extends \App\Pages\Base
 
         $res = PPOHelper::send(json_encode(array('Command' => 'Shifts', 'NumFiscal' => $this->ppo->tr->NumFiscal, 'From' => $from, 'To' => $to)), 'cmd', $firm);
         if ($res['success'] == false) {
-            $this->setError($res['data']);
+            $this->setErrorTopPage($res['data']);
             return;
         }
         $res = json_decode($res['data']);
@@ -178,7 +178,7 @@ class PPOList extends \App\Pages\Base
 
         $res = PPOHelper::send(json_encode(array('Command' => 'Documents', 'NumFiscal' => $this->ppo->tr->NumFiscal, 'ShiftId' => $sh->ShiftId)), 'cmd', $firm);
         if ($res['success'] == false) {
-            $this->setError($res['data']);
+            $this->setErrorTopPage($res['data']);
             return;
         }
         $res = json_decode($res['data']);
@@ -228,7 +228,7 @@ class PPOList extends \App\Pages\Base
 
         $res = PPOHelper::send(json_encode(array('Command' => $doc->DocClass, 'RegistrarNumFiscal' => $this->ppo->tr->NumFiscal, 'NumFiscal' => $doc->NumFiscal)), 'cmd', $firm);
         if ($res['success'] == false) {
-            $this->setError($res['data']);
+            $this->setErrorTopPage($res['data']);
             return;
         }
 

@@ -310,7 +310,7 @@ class ReturnIssue extends \App\Pages\Base
                     $ret = \App\Modules\PPO\PPOHelper::checkback($this->_doc);
                 }
                 if ($ret['success'] == false) {
-                    $this->setError($ret['data']);
+                    $this->setErrorTopPage($ret['data']);
                     return;
                 } else {
 

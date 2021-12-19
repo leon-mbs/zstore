@@ -105,7 +105,7 @@ class Orders extends \App\Pages\Base
         } else {
             $data['error']  = str_replace("'","`",$data['error']) ;
             
-            $this->setError($data['error']);
+            $this->setErrorTopPage($data['error']);
         }
     }
 
@@ -393,7 +393,7 @@ class Orders extends \App\Pages\Base
         if ($data['error'] != "") {
             $data['error']  = str_replace("'","`",$data['error']) ;
             
-            $this->setError($data['error']);
+            $this->setErrorTopPage($data['error']);
             return;
         }
 
