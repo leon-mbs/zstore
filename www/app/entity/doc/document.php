@@ -909,13 +909,17 @@ class Document extends \ZCL\DB\Entity
         if ($print == 0) {
             return '';
         }
+        $writer = new \Endroid\QrCode\Writer\PngWriter();
+        
         $url = _BASEURL . "?p=App/Pages/Register/DocList&arg=" . $this->document_id;
         $qrCode = new \Endroid\QrCode\QrCode($url);
         $qrCode->setSize(100);
         $qrCode->setMargin(5);
-        $qrCode->setWriterByName('png');
+       // $qrCode->setWriterByName('png');
 
-        $dataUri = $qrCode->writeDataUri();
+        $result = $writer->write($qrCode );
+     
+        $dataUri = $result->getDataUri();
         $img = "<img   src=\"{$dataUri}\"  />";
 
         return $img;
