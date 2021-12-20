@@ -952,7 +952,7 @@ class ARMPos extends \App\Pages\Base
                     $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
                 }
                 if ($ret['success'] == false) {
-                    $this->setError($ret['data']);
+                    $this->setErrorTopPage($ret['data']);
                      $conn->RollbackTrans();
                     return;
                 } else {
@@ -978,7 +978,7 @@ class ARMPos extends \App\Pages\Base
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
-            $this->setError($ee->getMessage());
+            $this->setErrorTopPage($ee->getMessage());
 
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
             return;
@@ -1003,7 +1003,7 @@ class ARMPos extends \App\Pages\Base
             $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, true);
         }
         if ($ret['success'] == false) {
-            $this->setError($ret['data']);
+            $this->setErrorTopPage($ret['data']);
             return false;
         } else {
             $this->setSuccess("ppo_shiftopened");
@@ -1043,7 +1043,7 @@ class ARMPos extends \App\Pages\Base
             $ret = \App\Modules\PPO\PPOHelper::zform($this->pos->pos_id, $stat, $rstat);
         }
         if ($ret['success'] == false) {
-            $this->setError($ret['data']);
+            $this->setErrorTopPage($ret['data']);
             return false;
         } else {
 
@@ -1069,7 +1069,7 @@ class ARMPos extends \App\Pages\Base
             $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, false);
         }
         if ($ret['success'] == false) {
-            $this->setError($ret['data']);
+            $this->setErrorTopPage($ret['data']);
             return false;
         } else {
             $this->setSuccess("ppo_shiftclosed");

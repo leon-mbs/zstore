@@ -109,7 +109,7 @@ class Items extends \App\Pages\Base
         } else {
             $data['error']  = str_replace("'","`",$data['error']) ;
             
-            $this->setError($data['error']);
+            $this->setErrorTopPage($data['error']);
         }
     }
 
@@ -162,7 +162,7 @@ class Items extends \App\Pages\Base
         if ($data['error'] != "") {
             $data['error']  = str_replace("'","`",$data['error']) ;
             
-            $this->setError($data['error']);
+            $this->setErrorTopPage($data['error']);
             return;
         }
         $this->setSuccess('exported_items', count($elist));
@@ -200,7 +200,7 @@ class Items extends \App\Pages\Base
         if ($data['error'] != "") {
             $data['error']  = str_replace("'","`",$data['error']) ;
             
-            $this->setError($data['error']);
+            $this->setErrorTopPage($data['error']);
             return;
         }
         $this->setSuccess('refreshed');
@@ -233,7 +233,7 @@ class Items extends \App\Pages\Base
         if ($data['error'] != "") {
             $data['error']  = str_replace("'","`",$data['error']) ;
             
-            $this->setError($data['error']);
+            $this->setErrorTopPage($data['error']);
             return;
         }
         $this->setSuccess('refreshed');
@@ -264,7 +264,7 @@ class Items extends \App\Pages\Base
         if ($data['error'] != "") {
             $data['error']  = str_replace("'","`",$data['error']) ;
             
-            $this->setError($data['error']);
+            $this->setErrorTopPage($data['error']);
             return;
         }
         //  $this->setInfo($json);

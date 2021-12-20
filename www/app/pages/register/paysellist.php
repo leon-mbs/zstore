@@ -270,7 +270,7 @@ class PaySelList extends \App\Pages\Base
                 $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
             }
             if ($ret['success'] == false) {
-                $this->setError($ret['data']);
+                $this->setErrorTopPage($ret['data']);
                 return;
             } else {
 

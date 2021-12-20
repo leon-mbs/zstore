@@ -122,12 +122,19 @@ class System
         return Session::getSession()->smsg;
     }
 
-    public static function setErrorMsg($msg) {
-        Session::getSession()->emsg = $msg;
+  
+    public static function setErrorMsg($msg,$toppage=false) {
+       if($toppage) 
+          Session::getSession()->emsgtp = $msg;
+       else 
+          Session::getSession()->emsg = $msg;   
     }
 
-    public static function getErrorMsg($popup = false) {
+    public static function getErrorMsg( ) {
         return Session::getSession()->emsg;
+    }
+    public static function getErrorMsgTopPage( ) {
+        return Session::getSession()->emsgtp;
     }
 
     public static function setWarnMsg($msg) {
@@ -138,7 +145,7 @@ class System
         return Session::getSession()->wmsg;
     }
 
-    public static function setInfoMsg($msg, $popup = false) {
+    public static function setInfoMsg($msg ) {
         Session::getSession()->imsg = $msg;
     }
 

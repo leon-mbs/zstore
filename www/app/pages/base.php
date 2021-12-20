@@ -229,6 +229,12 @@ class Base extends \Zippy\Html\WebPage
         $msg = Helper::l($msg, $p1, $p2);
         System::setErrorMsg($msg);
     }
+    //вывод  как  bootstrap alert  (для сообщений что  могут  вызвать  ошибку  javascript)
+    public function setErrorTopPage($msg ) {
+        $msg = str_replace("'","`",$msg) ;
+    
+        System::setErrorMsg($msg,true);
+    }
 
     public function setSuccess($msg, $p1 = "", $p2 = "") {
         $msg = str_replace("'","`",$msg) ;
@@ -257,8 +263,8 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars['notcnt'] = \App\Entity\Notify::isNotify($user->user_id);
         $this->_tvars['taskcnt'] = \App\Entity\Event::isNotClosedTask($user->user_id);
         $this->_tvars['alerterror'] = "";
-        if (strlen(System::getErrorMsg()) > 0) {
-            $this->_tvars['alerterror'] = System::getErrorMsg();
+        if (strlen(System::getErrorMsgTopPage()) > 0) {
+            $this->_tvars['alerterror'] = System::getErrorMsgTopPage();
 
             $this->goAnkor('topankor');
 
@@ -271,7 +277,7 @@ class Base extends \Zippy\Html\WebPage
         $user = System::getUser();
         if (strlen(System::getErrorMsg()) > 0) {
             
-           // $this->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{'timeOut':'8000'})        ", true);
+            $this->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{'timeOut':'8000'})        ", true);
         }
 
         if (strlen(System::getWarnMsg()) > 0) {
@@ -286,6 +292,7 @@ class Base extends \Zippy\Html\WebPage
 
 
         $this->setError('');
+        $this->setErrorTopPage('');
         $this->setSuccess('');
         $this->setInfo('');
         $this->setWarn('');

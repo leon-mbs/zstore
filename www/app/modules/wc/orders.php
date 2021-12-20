@@ -71,7 +71,7 @@ class Orders extends \App\Pages\Base
             try {
                 $data = $client->get('orders', $fields);
             } catch(\Exception $ee) {
-                $this->setError($ee->getMessage());
+                $this->setErrorTopPage($ee->getMessage());
                 return;
             }
             $fields = array(
@@ -81,7 +81,7 @@ class Orders extends \App\Pages\Base
             try {
                 $data2 = $client->get('orders', $fields);
             } catch(\Exception $ee) {
-                $this->setError($ee->getMessage());
+                $this->setErrorTopPage($ee->getMessage());
                 return;
             }
             if (is_array($data) && is_array($data2)) {
@@ -232,7 +232,7 @@ class Orders extends \App\Pages\Base
             try {
                 $data = $client->put('orders/' . $order->headerdata['wcorder'], $fields);
             } catch(\Exception $ee) {
-                $this->setError($ee->getMessage());
+                $this->setErrorTopPage($ee->getMessage());
                 return;
             }
 

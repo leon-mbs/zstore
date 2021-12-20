@@ -65,7 +65,7 @@ class Items extends \App\Pages\Base
         try {
             $data = $client->get('products', array('status' => 'publish'));
         } catch(\Exception $ee) {
-            $this->setError($ee->getMessage());
+            $this->setErrorTopPage($ee->getMessage());
             return;
         }
           $qty =  count($data);
@@ -143,7 +143,7 @@ class Items extends \App\Pages\Base
                 $data = $client->post('products', $p);
             }
         } catch(\Exception $ee) {
-            $this->setError($ee->getMessage());
+            $this->setErrorTopPage($ee->getMessage());
             return;
         }
 
@@ -166,7 +166,7 @@ class Items extends \App\Pages\Base
             try {
                 $data = $client->get('products', array('status' => 'publish' , 'page' => $page, 'per_page' => 100));
             } catch(\Exception $ee) {
-                $this->setError($ee->getMessage());
+                $this->setErrorTopPage($ee->getMessage());
                 return;
             }
              $c = count($data);
@@ -229,7 +229,7 @@ class Items extends \App\Pages\Base
             try {
                 $client->post('products/batch', $data);
             } catch(\Exception $ee) {
-                $this->setError($ee->getMessage());
+                $this->setErrorTopPage($ee->getMessage());
                 return;
             }
              
@@ -260,7 +260,7 @@ class Items extends \App\Pages\Base
             try {
                 $data = $client->get('products', array('status' => 'publish'));
             } catch(\Exception $ee) {
-                $this->setError($ee->getMessage());
+                $this->setErrorTopPage($ee->getMessage());
                 return;
             }
               $c = count($data);
@@ -312,7 +312,7 @@ class Items extends \App\Pages\Base
             try {
                 $client->post('products/batch', $data);
             } catch(\Exception $ee) {
-                $this->setError($ee->getMessage());
+                $this->setErrorTopPage($ee->getMessage());
                 return;
             }
             
@@ -344,7 +344,7 @@ class Items extends \App\Pages\Base
             try {
                 $data = $client->get('products', array('status' => 'publish', 'page' => $page, 'per_page' => 100));
             } catch(\Exception $ee) {
-                $this->setError($ee->getMessage());
+                $this->setErrorTopPage($ee->getMessage());
                 return;
             }
             $page++;

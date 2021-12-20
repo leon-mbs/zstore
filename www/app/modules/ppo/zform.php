@@ -83,7 +83,7 @@ class ZForm extends \App\Pages\Base
             }
 
             if ($ret['success'] != true) {
-                $this->setError($ret['data']);
+                $this->setErrorTopPage($ret['data']);
             } else {
                 \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id);
                 $this->setSuccess('Смена  закрыта');
@@ -121,7 +121,7 @@ class ZForm extends \App\Pages\Base
             $ret = \App\Modules\PPO\PPOHelper::zform($this->pos->pos_id, $stat, $rstat);
         }
         if ($ret['success'] == false) {
-            $this->setError($ret['data']);
+            $this->setErrorTopPage($ret['data']);
             return false;
         } else {
 
@@ -150,7 +150,7 @@ class ZForm extends \App\Pages\Base
             $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, false);
         }
         if ($ret['success'] == false) {
-            $this->setError($ret['data']);
+            $this->setErrorTopPage($ret['data']);
             return false;
         } else {
             $this->setSuccess("ppo_shiftclosed");
