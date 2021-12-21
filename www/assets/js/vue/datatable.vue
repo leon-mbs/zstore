@@ -1,41 +1,24 @@
 <template>
-<nav  >
-  <ul class="pagination">
-    
-    <li  v-for="btn in buttons" v-bind:class="btn.class">
-    
-        <a  v-on:click.prevent="onbtn(btn.pageno)" class="page-link" href="void(0);">{{btn.title}}</a>
-        
-    </li>
-    
-  </ul>
  
-</nav>
 </template>
 
 <script>
 module.exports = {
-         watch:   { 
-              rows(newVal, oldVal) { 
-                   if(newVal==0) this.currentpage=1;
-                   this.refresh()
-                  
-                } 
-           }  
-         ,   
+     
          methods: {
             refresh:function(){
                  
                   this.buttons= []
-                  if(this.pagesize == undefined)  this.pagesize = 25  
-                  if(this.buttonscnt == undefined)  this.buttonscnt = 10  
+                  if(this.buttons==undefined) this.buttonscnt = 10;
+                  if(this.pagesize==undefined) this.pagesize = 10;
+                  
                   var pages = Math.ceil(this.rows / this.pagesize)
                   
                   if( pages < 2 ) return;
                   if( pages < this.currentpage ) this.currentpage =1;
 
                   var i
-                  var iLeft = Math.floor(this.buttonscnt / 2)
+                  var iLeft = Math.floor(this.buttons / 2)
                   var iRight =  iLeft 
                    
                   if(pages <= iRight + iRight + 1){
@@ -107,7 +90,7 @@ module.exports = {
             onbtn:function(i){
               this.currentpage=i;
               this.refresh()    
-              this.onpage(i)
+              this.ondata()
             }   
         } ,
        
@@ -120,7 +103,7 @@ module.exports = {
             }
         } ,
    
-    props:['rows' ,'pagesize','buttonscnt','onpage' ]
+    props:['options' ,'ondata' ]
 }
 </script>
 
