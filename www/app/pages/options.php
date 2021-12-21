@@ -134,6 +134,7 @@ class Options extends \App\Pages\Base
         $this->valform->add(new TextInput('valusd'));
         $this->valform->add(new TextInput('valeuro'));
         $this->valform->add(new TextInput('valrub'));
+        $this->valform->add(new TextInput('valmdl'));
         $this->valform->add(new CheckBox('valprice'));
 
         $val = System::getOptions("val");
@@ -144,6 +145,7 @@ class Options extends \App\Pages\Base
         $this->valform->valusd->setText($val['valusd']);
         $this->valform->valeuro->setText($val['valeuro']);
         $this->valform->valrub->setText($val['valrub']);
+        $this->valform->valmdl->setText($val['valmdl']);
         $this->valform->valprice->setChecked($val['valprice']);
 
         //печать
@@ -320,6 +322,7 @@ class Options extends \App\Pages\Base
         $val['valusd'] = $this->valform->valusd->getText();
         $val['valeuro'] = $this->valform->valeuro->getText();
         $val['valrub'] = $this->valform->valrub->getText();
+        $val['valmdl'] = $this->valform->valmdl->getText();
         $val['valprice'] = $this->valform->valprice->isChecked() ? 1 : 0;
 
         System::setOptions("val", $val);
