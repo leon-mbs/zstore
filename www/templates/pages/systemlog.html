@@ -35,10 +35,17 @@
               
                 <paginator   :onpage="change"  v-bind:rows="rowscnt" v-bind:pagesize="pagesize" buttonscnt="10"></paginator>
       
+      
+                
+      
             </div>
 
 
-
+        <div class="col-12 col-md-8 col-xl-6" id="vapp2">
+        
+            
+             <datatable :init="inittable()" :ondata="this.loaddata" ref="dt"></datatable>
+        </div>
         </div>
  
       
@@ -101,8 +108,57 @@
             
       } 
       
+  </script>
+  
+   <script>     
+  var vapp2 = new Vue({
+      el: '#vapp2',
+      data: {
+           
+      }  ,
+     components: {
+            'datatable': httpVueLoader('/assets/js/vue/datatable.vue') 
+            
+        }, 
+        methods: {
+         
+             loaddata: async function (){
+                  
+                    var url  = getMethodUrl('getItems2',[1])
+                    let response = await fetch(url);
+             
+                    return  await response.json()  ;
+            
+          }    
+                
+                
+        }  ,
+        mounted: function(){
+           
+        }
       
-   //   updateItems();
+    })   
+ 
+  
+   
+    function inittable(){
+           
+           return {
+               headers:[
+                 {"title":"test","field":"message","thclass":"","tdclass":"","sortable":false,"clickable"},
+                 {"title":"testw","field":"message"}
+               ]
+           }
+        
+        
+      } 
+      
+   
+     
+ 
+      
+      
+
       
  </script>   
  

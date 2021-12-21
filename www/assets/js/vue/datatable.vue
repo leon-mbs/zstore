@@ -1,109 +1,47 @@
 <template>
+     Datatable
+     <table class="table table-sm table-hover">
+        <tr >
+          <th  v-for="(header ) in init.headers" >  {{header.title}}  </th>
+        </tr>
+       <tr v-for="(item ) in items" >
+          <td v-for="(header ) in init.headers" > {{item[header.field]}}  </td>
+        </tr>   
+     
+     </table>
+ 
  
 </template>
 
 <script>
 module.exports = {
-     
+         mounted: function(){
+            this.refresh()   
+        } 
+           ,
          methods: {
-            refresh:function(){
-                 
-                  this.buttons= []
-                  if(this.buttons==undefined) this.buttonscnt = 10;
-                  if(this.pagesize==undefined) this.pagesize = 10;
+             refresh:function(){
                   
-                  var pages = Math.ceil(this.rows / this.pagesize)
-                  
-                  if( pages < 2 ) return;
-                  if( pages < this.currentpage ) this.currentpage =1;
-
-                  var i
-                  var iLeft = Math.floor(this.buttons / 2)
-                  var iRight =  iLeft 
-                   
-                  if(pages <= iRight + iRight + 1){
-                      for (i = 1; i <= pages; i++) {
-                           if (this.currentpage == i) {
-                                this.buttons.push({"pageno":i,"title":i,class:"page-item active"}) 
-                           }else {
-                                this.buttons.push({"pageno":i,"title":i,class:"page-item "}) 
-                           
-                           }
-                      
-                      }
-                  } else {
-                         if (this.currentpage > iLeft && this.currentpage < (pages - iRight)) {
-                            
-                            this.buttons.push({"pageno":1,"title":"<<",class:"page-item "}) 
-     
-                            for (i = this.currentpage - iLeft; i <= this.currentpage + iRight; i++) {
-
-                                if (this.currentpage == i) {
-                                    this.buttons.push({"pageno":i,"title":i,class:"page-item active"}) 
-                                    
-                                } else {
-                                    this.buttons.push({"pageno":i,"title":i,class:"page-item "}) 
-                                }
-
-                            }
-                            this.buttons.push({"pageno":pages,"title":">>",class:"page-item "}) 
-                            
-
-                        } else if (this.currentpage <= iLeft) {
-
-                            var iSlice = 1 + iLeft - this.currentpage;
-                            for (i = 1; i <= this.currentpage + (iRight + iSlice); i++) {
-                                if (this.currentpage == i) {
-                                       this.buttons.push({"pageno":i,"title":i,class:"page-item active"}) 
-  
-                                } else {
-                                       this.buttons.push({"pageno":i,"title":i,class:"page-item "}) 
-                                }
-
-                            }
-                            
-                              this.buttons.push({"pageno":pages,"title":">>",class:"page-item "}) 
- 
-                        } else {
-                            this.buttons.push({"pageno":1,"title":"<<",class:"page-item "}) 
-                           
-
-                            var iSlice = iRight - (pages - this.currentpage);
-
-                            for (i = this.currentpage - (iLeft + iSlice); i <= pages; i++) {
-                                if (this.currentpage == i) {
-                                    
-                                    this.buttons.push({"pageno":i,"title":i,class:"page-item active"}) 
-                                      
-                                } else {
-                                   this.buttons.push({"pageno":i,"title":i,class:"page-item "}) 
-  
-                                }
-                            }
-
-                        }   
-                   }
-         
+               var getdata  = this.ondata( )
+                       
                     
-            } ,
+                 getdata.then(data => {
+                     
+                     this.items = data.items 
+                       
+                 })       
+            }     
             
-            onbtn:function(i){
-              this.currentpage=i;
-              this.refresh()    
-              this.ondata()
-            }   
+            
         } ,
        
          data: function() {
             return {
-                
-                currentpage:1,
-             
-                buttons: []
+                items:[]
             }
         } ,
    
-    props:['options' ,'ondata' ]
+    props:[  'init' ,'ondata' ]
 }
 </script>
 

@@ -60,7 +60,27 @@ class SystemLog extends \App\Pages\Base
     } 
     
     
-
+public function getItems2($args, $post) {
+        
+           
+        $where =   "dateshow <= now() and user_id=" . Notify::SYSTEM;
+        
+            
+        
+        $cnt =   Notify::findCnt($where) ;
+        $itemlist = array();
+        foreach( Notify::find($where,"dateshow desc" ) as $n) {
+           $item = array() ;
+           $item['message'] = $n->message;
+        
+           
+           $itemlist[]=$item;    
+        }
+         
+        return json_encode(array('items'=>$itemlist,'cnt'=>$cnt), JSON_UNESCAPED_UNICODE);     
+    } 
+    
+    
         
   
 }
