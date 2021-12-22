@@ -63,15 +63,22 @@ class SystemLog extends \App\Pages\Base
 public function getItems2($args, $post) {
         
         $sort ="";
-        if($args[1] =="asc" ||$args[1] =="desc" ) $sort = $args[0].' '.$args[1];
+        $pageno = -1;  
+        $pagesize = -1;         
+        
+        if($args[3] =="asc" || $args[3] =="desc" ) $sort = $args[2].' '.$args[3];
+        if( is_numeric($args[1] ) && $args[1] >0 ){
+            $pageno = $args[0];  
+            $pagesize = $args[1];  
+        } 
        
         
-        $where =   "dateshow <= now() and user_id=" . Notify::SYSTEM;
+        $where =   "dateshow <= now() and user_id<>" . Notify::SYSTEM;
           
         $cnt =   Notify::findCnt($where) ;
         $itemlist = array();
-        foreach( Notify::find($where,$sort ) as $n) {
-           $item = array() ;
+        foreach( Notify::find($where,$sort, $pagesize,$pageno) as $n) {
+           $item = array() ;    
            $item['notify_id'] = "<i class='fa fa-eye'></i>";
            $item['message'] = $n->message;
            $item['dateshow'] = \App\Helper::fdt($n->dateshow); 
@@ -80,7 +87,7 @@ public function getItems2($args, $post) {
            $itemlist[]=$item;    
         }
          
-        return json_encode(array('items'=>$itemlist,'cnt'=>$cnt), JSON_UNESCAPED_UNICODE);     
+        return json_encode(array('items'=>$itemlist,'allrows'=>$cnt), JSON_UNESCAPED_UNICODE);     
     } 
     
     

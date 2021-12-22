@@ -40,12 +40,14 @@
       
             </div>
 
-
-        <div class="col-12 col-md-8 col-xl-6" id="vapp2">
-        
+            <!--
+            <div class="col-12 col-md-8 col-xl-6" id="vapp2">
             
-             <datatable :init="inittable()" :ondata="this.loaddata" ref="dt"></datatable>
-        </div>
+                
+                 <datatable :init="inittable()" :ondata="this.loaddata" ref="dt"></datatable>
+            </div>
+            
+            -->
         </div>
  
       
@@ -109,7 +111,7 @@
       } 
       
   </script>
-  
+   <!--
    <script>     
   var vapp2 = new Vue({
       el: '#vapp2',
@@ -122,14 +124,15 @@
         }, 
         methods: {
          
-             loaddata: async function (field,sort){
-                  
-                    var url  = getMethodUrl('getItems2',[field,sort])
+             loaddata: async function (page,pagesize,field,sort){
+                     
+                    var url  = getMethodUrl('getItems2',[page,pagesize,field,sort])
+                
                     let response = await fetch(url);
              
                     return  await response.json()  ;
             
-          }    
+             }    
                 
                 
         }  ,
@@ -149,21 +152,17 @@
                  {"title":"id","sortable":true,"field":"notify_id"} ,
                  {"title":"Сообщение","field":"message","tdclass":"text-right" }
                ] ,
-               pagination:true
+               pagination:true,pagesize:5,buttonscnt:4
            }
         
         
       } 
       
-   
-     
- 
-      
-      
+        
 
       
  </script>   
- 
+   -->
           
     </body>
 

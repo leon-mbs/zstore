@@ -25,7 +25,11 @@
         </tr>   
         <tr v-show="pagination" ><td :colspan="headers.length">
         <ul class="pagination">
-                   
+             <li  v-for="btn in buttons" v-bind:class="btn.class">
+        
+               <a  v-on:click.prevent="onbtn(btn.pageno)" class="page-link" href="void(0);">{{btn.title}}</a>
+            
+           </li>              
         </ul>
         </td></tr>
      </table>
@@ -38,20 +42,32 @@ module.exports = {
          mounted: function(){
             this.headers = this.init.headers 
             this.pagination = this.init.pagination 
+             if(Number.isInteger(this.init.pagesize)) this.pagesize = this.init.pagesize 
+             if(Number.isInteger(this.init.buttonscnt)) this.buttonscnt = this.init.buttonscnt 
+            
             
             this.refresh()   
         } 
            ,
          methods: {
              refresh:function(){
-               this.isloading=true;   
-               var getdata  = this.ondata(this.sortfield, this.sort)
+               this.isloading=true; 
+               var getdata
+               if(this.pagination)    {
+                  getdata  = this.ondata(this.currentpage-1,this.pagesize,this.sortfield, this.sort)    
+               } else {
+                  getdata  = this.ondata(-1,-1,this.sortfield, this.sort)    
+               }
+               
+               
                        
                     
                  getdata.then(data => {
                      
                      this.items = data.items 
-                     this.isloading=false;     
+                     this.isloading=false      
+                     this.allrows=data.allrows       
+                     this.renderpag()       
                  })       
             }     
             ,click:function (field,item){
@@ -62,11 +78,100 @@ module.exports = {
                 else   this.sort='asc'
                
                 this.sortfield = field;
+                this.currentpage=1;
+                
                 this.refresh();
                // this.$forceUpdate();
                 
             }
+        ,
             
+            onbtn:function(i){
+              this.currentpage=i;
+              this.refresh()    
+               
+            } ,
+            
+            renderpag:function(){
+                  this.buttons= []
+                  
+                  var pages = Math.ceil(this.allrows / this.pagesize)
+                  
+                  if( pages < 2 ) return;
+                  if( pages < this.currentpage ) this.currentpage =1;
+
+                  var i
+                  var iLeft = Math.floor(this.buttonscnt / 2)
+                  var iRight =  iLeft 
+                   
+                  if(pages <= iRight + iRight + 1){
+                      for (i = 1; i <= pages; i++) {
+                           if (this.currentpage == i) {
+                                this.buttons.push({"pageno":i,"title":i,class:"page-item active"}) 
+                           }else {
+                                this.buttons.push({"pageno":i,"title":i,class:"page-item "}) 
+                           
+                           }
+                      
+                      }
+                  } else {
+                         if (this.currentpage > iLeft && this.currentpage < (pages - iRight)) {
+                            
+                            this.buttons.push({"pageno":1,"title":"<<",class:"page-item "}) 
+     
+                            for (i = this.currentpage - iLeft; i <= this.currentpage + iRight; i++) {
+
+                                if (this.currentpage == i) {
+                                    this.buttons.push({"pageno":i,"title":i,class:"page-item active"}) 
+                                    
+                                } else {
+                                    this.buttons.push({"pageno":i,"title":i,class:"page-item "}) 
+                                }
+
+                            }
+                            this.buttons.push({"pageno":pages,"title":">>",class:"page-item "}) 
+                            
+
+                        } else if (this.currentpage <= iLeft) {
+
+                            var iSlice = 1 + iLeft - this.currentpage;
+                            for (i = 1; i <= this.currentpage + (iRight + iSlice); i++) {
+                                if (this.currentpage == i) {
+                                       this.buttons.push({"pageno":i,"title":i,class:"page-item active"}) 
+  
+                                } else {
+                                       this.buttons.push({"pageno":i,"title":i,class:"page-item "}) 
+                                }
+
+                            }
+                            
+                              this.buttons.push({"pageno":pages,"title":">>",class:"page-item "}) 
+ 
+                        } else {
+                            this.buttons.push({"pageno":1,"title":"<<",class:"page-item "}) 
+                           
+
+                            var iSlice = iRight - (pages - this.currentpage);
+
+                            for (i = this.currentpage - (iLeft + iSlice); i <= pages; i++) {
+                                if (this.currentpage == i) {
+                                    
+                                    this.buttons.push({"pageno":i,"title":i,class:"page-item active"}) 
+                                      
+                                } else {
+                                   this.buttons.push({"pageno":i,"title":i,class:"page-item "}) 
+  
+                                }
+                            }
+
+                        }   
+                   }
+           
+               
+            }  
+            
+            
+                 
         } ,
        
          data: function() {
@@ -76,7 +181,14 @@ module.exports = {
                 sortfield:'' ,
                 sort:'' ,
                 pagination:false ,
-                isloading:false
+                isloading:false,
+                currentpage:1,
+                buttons: [] ,
+                pagesize:25 ,
+                buttonscnt:10 ,
+                allrows:0 
+                 
+                               
             }
         } ,
    
