@@ -62,16 +62,19 @@ class SystemLog extends \App\Pages\Base
     
 public function getItems2($args, $post) {
         
-           
+        $sort ="";
+        if($args[1] =="asc" ||$args[1] =="desc" ) $sort = $args[0].' '.$args[1];
+       
+        
         $where =   "dateshow <= now() and user_id=" . Notify::SYSTEM;
-        
-            
-        
+          
         $cnt =   Notify::findCnt($where) ;
         $itemlist = array();
-        foreach( Notify::find($where,"dateshow desc" ) as $n) {
+        foreach( Notify::find($where,$sort ) as $n) {
            $item = array() ;
+           $item['notify_id'] = "<i class='fa fa-eye'></i>";
            $item['message'] = $n->message;
+           $item['dateshow'] = \App\Helper::fdt($n->dateshow); 
         
            
            $itemlist[]=$item;    

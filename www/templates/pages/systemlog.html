@@ -122,9 +122,9 @@
         }, 
         methods: {
          
-             loaddata: async function (){
+             loaddata: async function (field,sort){
                   
-                    var url  = getMethodUrl('getItems2',[1])
+                    var url  = getMethodUrl('getItems2',[field,sort])
                     let response = await fetch(url);
              
                     return  await response.json()  ;
@@ -145,9 +145,11 @@
            
            return {
                headers:[
-                 {"title":"test","field":"message","thclass":"","tdclass":"","sortable":false,"clickable"},
-                 {"title":"testw","field":"message"}
-               ]
+                 {"title":"Дата","field":"dateshow","thclass":"text-center","sortable":true,"clickable":true},
+                 {"title":"id","sortable":true,"field":"notify_id"} ,
+                 {"title":"Сообщение","field":"message","tdclass":"text-right" }
+               ] ,
+               pagination:true
            }
         
         
