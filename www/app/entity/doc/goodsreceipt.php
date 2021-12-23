@@ -82,22 +82,33 @@ class GoodsReceipt extends Document
         if ($this->amount == 0) {
             // return;
         }
+        
+        $total = $this->amount; 
+        if ($this->headerdata["disc"] > 0) {
+            $total = $total - $this->headerdata["disc"];
+        }
+        if ($this->headerdata["nds"] > 0) {
+            $total = $total + $this->headerdata["nds"];
+        }
+        if (($this->headerdata["rate"] != 0) && ($this->headerdata["rate"] != 1)) {
+            $total = $total * $this->headerdata["rate"];
+        }
+        
+        if($this->headerdata['zatr'] > 0 && $this->headerdata['zatrself'] ==1 ) {
+            $total = $total + $this->headerdata["zatr"];  
+        }
+        
+        
+        $k = $total / $this->amount;   
+        
+             
         //аналитика
         foreach ($this->unpackDetails('detaildata') as $item) {
 
 
-            $total = $this->amount;
+            
             if ($total > 0) {
-                if ($this->headerdata["disc"] > 0) {
-                    $total = $total - $this->headerdata["disc"];
-                }
-                if ($this->headerdata["nds"] > 0) {
-                    $total = $total + $this->headerdata["nds"];
-                }
-                if (($this->headerdata["rate"] != 0) && ($this->headerdata["rate"] != 1)) {
-                    $total = $total * $this->headerdata["rate"];
-                }
-                $k = $total / $this->amount;
+
                 $item->price = H::fa($item->price * $k); //пересчитываем  учетную цену
             } else {
                 $item->price = 0;
@@ -131,6 +142,9 @@ class GoodsReceipt extends Document
             \App\Entity\IOState::addIOState($this->document_id, 0 - $this->payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
 
 
+        }
+        if($this->headerdata['zatr'] > 0 && $this->headerdata['zatrself'] !=1 ) {
+            \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata['zatr'], \App\Entity\IOState::TYPE_NAKL);
         }
 
         return true;

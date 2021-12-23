@@ -33,7 +33,8 @@ class IOState extends \ZCL\DB\Entity
     const TYPE_DIVIDEND_OUTCOME = 58;   //распределение прибыли
     const TYPE_INV              = 59;   //Инвестиции
     const TYPE_BANK             = 60;   //Банковское  обслуживание
-    const TYPE_CANCEL           = 58;    //отмена  платежа  продажи
+    const TYPE_CANCEL           = 61;    //отмена  платежа  продажи
+    const TYPE_NAKL           = 62;    //накладные  расходы
 
     //потери ТМЦ
     const TYPE_LOST  = 80;     //потери при инвентаризации
@@ -91,6 +92,7 @@ class IOState extends \ZCL\DB\Entity
             $list[self::TYPE_INV] = \App\Helper::l('pt_inv');
             $list[self::TYPE_BANK] = \App\Helper::l('pt_bank');
             $list[self::TYPE_CANCEL] = \App\Helper::l('pt_cancel');
+            $list[self::TYPE_NAKL] = \App\Helper::l('pt_nakl');
             $list[self::TYPE_OTHER_OUTCOME] = \App\Helper::l('pt_outother');
         }
 
