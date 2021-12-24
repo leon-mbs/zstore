@@ -798,6 +798,9 @@ class Helper
         if ($val['valrub'] > 0 && $val['valrub'] != 1) {
             $list['valrub'] = self::l('valrub');
         }
+        if ($val['valmdl'] > 0 && $val['valmdl'] != 1) {
+            $list['valmdl'] = self::l('valmdl');
+        }
 
         return $list;
     }
@@ -814,6 +817,9 @@ class Helper
         }
         if ($vn == 'valrub') {
             return 'RUB';
+        }
+        if ($vn == 'valmdl') {
+            return 'MDL';
         }
     }
 

@@ -2,9 +2,9 @@
 <nav  >
   <ul class="pagination">
     
-    <li  v-for="item in items" v-bind:class="item.class">
+    <li  v-for="btn in buttons" v-bind:class="btn.class">
     
-        <a  v-on:click.prevent="onbtn(item.pageno)" class="page-link" href="void(0);">{{item.title}}</a>
+        <a  v-on:click.prevent="onbtn(btn.pageno)" class="page-link" href="void(0);">{{btn.title}}</a>
         
     </li>
     
@@ -26,23 +26,24 @@ module.exports = {
          methods: {
             refresh:function(){
                  
-                  this.items= []
-                      
+                  this.buttons= []
+                  if(this.pagesize == undefined)  this.pagesize = 25  
+                  if(this.buttonscnt == undefined)  this.buttonscnt = 10  
                   var pages = Math.ceil(this.rows / this.pagesize)
                   
                   if( pages < 2 ) return;
                   if( pages < this.currentpage ) this.currentpage =1;
 
                   var i
-                  var iLeft = Math.floor(this.buttons / 2)
+                  var iLeft = Math.floor(this.buttonscnt / 2)
                   var iRight =  iLeft 
                    
                   if(pages <= iRight + iRight + 1){
                       for (i = 1; i <= pages; i++) {
                            if (this.currentpage == i) {
-                                this.items.push({"pageno":i,"title":i,class:"page-item active"}) 
+                                this.buttons.push({"pageno":i,"title":i,class:"page-item active"}) 
                            }else {
-                                this.items.push({"pageno":i,"title":i,class:"page-item "}) 
+                                this.buttons.push({"pageno":i,"title":i,class:"page-item "}) 
                            
                            }
                       
@@ -50,19 +51,19 @@ module.exports = {
                   } else {
                          if (this.currentpage > iLeft && this.currentpage < (pages - iRight)) {
                             
-                            this.items.push({"pageno":1,"title":"<<",class:"page-item "}) 
+                            this.buttons.push({"pageno":1,"title":"<<",class:"page-item "}) 
      
                             for (i = this.currentpage - iLeft; i <= this.currentpage + iRight; i++) {
 
                                 if (this.currentpage == i) {
-                                    this.items.push({"pageno":i,"title":i,class:"page-item active"}) 
+                                    this.buttons.push({"pageno":i,"title":i,class:"page-item active"}) 
                                     
                                 } else {
-                                    this.items.push({"pageno":i,"title":i,class:"page-item "}) 
+                                    this.buttons.push({"pageno":i,"title":i,class:"page-item "}) 
                                 }
 
                             }
-                            this.items.push({"pageno":pages,"title":">>",class:"page-item "}) 
+                            this.buttons.push({"pageno":pages,"title":">>",class:"page-item "}) 
                             
 
                         } else if (this.currentpage <= iLeft) {
@@ -70,18 +71,18 @@ module.exports = {
                             var iSlice = 1 + iLeft - this.currentpage;
                             for (i = 1; i <= this.currentpage + (iRight + iSlice); i++) {
                                 if (this.currentpage == i) {
-                                       this.items.push({"pageno":i,"title":i,class:"page-item active"}) 
+                                       this.buttons.push({"pageno":i,"title":i,class:"page-item active"}) 
   
                                 } else {
-                                       this.items.push({"pageno":i,"title":i,class:"page-item "}) 
+                                       this.buttons.push({"pageno":i,"title":i,class:"page-item "}) 
                                 }
 
                             }
                             
-                              this.items.push({"pageno":pages,"title":">>",class:"page-item "}) 
+                              this.buttons.push({"pageno":pages,"title":">>",class:"page-item "}) 
  
                         } else {
-                            this.items.push({"pageno":1,"title":"<<",class:"page-item "}) 
+                            this.buttons.push({"pageno":1,"title":"<<",class:"page-item "}) 
                            
 
                             var iSlice = iRight - (pages - this.currentpage);
@@ -89,10 +90,10 @@ module.exports = {
                             for (i = this.currentpage - (iLeft + iSlice); i <= pages; i++) {
                                 if (this.currentpage == i) {
                                     
-                                    this.items.push({"pageno":i,"title":i,class:"page-item active"}) 
+                                    this.buttons.push({"pageno":i,"title":i,class:"page-item active"}) 
                                       
                                 } else {
-                                   this.items.push({"pageno":i,"title":i,class:"page-item "}) 
+                                   this.buttons.push({"pageno":i,"title":i,class:"page-item "}) 
   
                                 }
                             }
@@ -115,11 +116,11 @@ module.exports = {
                 
                 currentpage:1,
              
-                items: []
+                buttons: []
             }
         } ,
    
-    props:['rows' ,'pagesize','buttons','onpage' ]
+    props:['rows' ,'pagesize','buttonscnt','onpage' ]
 }
 </script>
 

@@ -203,7 +203,13 @@
                                 <input zippy="printoutqrcode" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="printoutqrcode">Друкувати QR коди  на  видаткових документах</label>
                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Дозволяе за допомогою сканера мобiльного  пристрою   знайти  документ по  посиланню (користувач  мае  бути залогiненим)"></i>
+                                   title="Дозволяє за допомогою сканера мобiльного  пристрою   знайти  документ по  посиланню (користувач  мае  бути залогiненим)"></i>
+                            </div>
+                           <div class="form-check">
+                                <input zippy="exportxlsx" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="exportxlsx">Екcпорт  документiв и звiтiв в  xlsx замiсть xls </label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Формує більш коректний і переносимий формат  файлу Ексель але втрачається розмітка (шрифти, бордери, кольори)"></i>
                             </div>
               
                             <div class="form-group  "><br>
@@ -278,6 +284,12 @@
                                        class="form-control" type="text">
 
                             </div>
+                            <div class="form-group">
+                                <label for="valmdl">Лей</label>
+                                <input zippy="valmdl" style="width:100px" pattern="[0-9\.]+"
+                                       class="form-control" type="text">
+
+                            </div>                            
                             <div class="form-check">
                                 <input zippy="valprice" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="valprice">Враховувати курсову рiзницю
@@ -422,7 +434,15 @@
                     </div>
                 </div>
 
-                <div class="card">
+                
+                
+
+
+
+            </div>
+            <div class="col-12  col-md-5 col-xl-4  ">
+            
+<div class="card">
                     <div class="card-body">
                         <h4>Налаштування  сервiсу SMS повiдомлень</h4>
                         <form zippy="sms">    
@@ -491,13 +511,8 @@
                             </div>
                         </form>
                     </div>
-                </div>
-                
-
-
-
-            </div>
-            <div class="col-12  col-md-5 col-xl-4  ">
+                </div>            
+            
 <div class="card">
                     <div class="card-body">
                         <h4>Джерела  продаж</h4>

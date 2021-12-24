@@ -18,6 +18,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
@@ -85,6 +86,8 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new Label('payamount', 0));
         $this->docform->add(new Label('total'));
         $this->docform->add(new \Zippy\Html\Form\File('scan'));
+        $this->docform->add(new TextInput('zatr'));
+        $this->docform->add(new CheckBox('zatrself'));
 
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutoItem');
@@ -140,6 +143,8 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->editrate->setText($this->_doc->headerdata['rate']);
             $this->docform->disc->setText(H::fa($this->_doc->headerdata['disc']));
             $this->docform->editdisc->setText(H::fa($this->_doc->headerdata['disc']));
+             $this->docform->zatr->setText($this->_doc->headerdata['zatr']);
+            $this->docform->zatrself->setChecked($this->_doc->headerdata['zatrself']);
 
             if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
                 $this->_doc->payed = $this->_doc->headerdata['payed'];
@@ -460,6 +465,8 @@ class GoodsReceipt extends \App\Pages\Base
         if ($this->_doc->firm_id > 0) {
             $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();
         }
+           $this->_doc->headerdata['zatr'] = $this->docform->zatr->getText();
+        $this->_doc->headerdata['zatrself'] = $this->docform->zatrself->isChecked()?1:0;
 
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();

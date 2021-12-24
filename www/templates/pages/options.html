@@ -209,6 +209,12 @@
                                    title="Используется  например  в  учете  автозапчастей,  где  идентификация  товара  идет  по  артикулу  производителя  и имени  производителя.
                                    Не  следует  включать  без необходимости - неверно  будет работать подбор  со  сканером штрих кода. "></i>
                             </div>
+                            <div class="form-check">
+                                <input zippy="exportxlsx" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="exportxlsx">Экcпорт  документов и отчетов в  xlsx вместо xls </label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Формирует более  коректный и переносимый формат файла  Ексель  но  теряется  разметка (шрифты, бордеры, цвета)"></i>
+                            </div>
 
 
                             <div class="form-group  "><br>
@@ -271,6 +277,11 @@
                                 <label for="valrub">Рубль</label>
                                 <input zippy="valrub" style="width:100px" pattern="[0-9\.]+"
                                        class="form-control" type="text">
+                            </div>
+                            <div class="form-group">
+                                <label for="valmdl">Лей</label>
+                                <input zippy="valmdl" style="width:100px" pattern="[0-9\.]+"
+                                       class="form-control" type="text">
 
                             </div>
                             <div class="form-check">
@@ -295,7 +306,7 @@
                         </small>
                         <form zippy="printer">
                             <div class="form-group">
-                                <label style="font-size:larger">Параметры для притера чеков</label>
+                                <label style="font-size:larger">Параметры для принтера чеков</label>
                             </div>
                             <div class="form-group  ">
                                 <label for="pdocfontsize">Размер шрифта</label>
@@ -413,7 +424,14 @@
                         </form>
                     </div>
                 </div>
+               
 
+
+        
+
+            </div>
+            <div class="col-12  col-md-5 col-xl-4  ">
+           
                 <div class="card">
                     <div class="card-body">
                         <h4>Настройка  сервиса SMS уведомлений</h4>
@@ -483,13 +501,9 @@
                             </div>
                         </form>
                     </div>
-                </div>
-
-        
-
-            </div>
-            <div class="col-12  col-md-5 col-xl-4  ">
-        <div class="card">
+                </div>           
+           
+                <div class="card">
                     <div class="card-body">
                         <h4>Источники  продаж</h4>
                         <form zippy="salesourcesform">

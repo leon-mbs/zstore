@@ -47,7 +47,7 @@
                         <input readonly class="form-control plaintext " type="text" zippy="basedoc">
 
                     </div>
-
+             
                 </div>
                 <div class="col-12 col-md-3">
 
@@ -76,13 +76,21 @@
                     </div>
                     {{/useval}}
 
+                  
                     <div class="form-group  ">
+                        <label for="zatr">Накладные  расходы </label>
+
+                        <input style="width:100px" pattern="[0-9]+" class="form-control" type="text" zippy="zatr">
+                      
+                        <input zippy="zatrself" type="checkbox"> Распределить на себестоимость товара
+                   
+                    </div>
+                   <div class="form-group  ">
                         <label for="notes">Примечание </label>
 
                         <input class="form-control" type="text" zippy="notes">
 
                     </div>
-               
                     <div class="form-group">
                         <label for="scan"> Скан документа</label>
                         <input class="form-control" type="file" zippy="scan">

@@ -71,8 +71,8 @@ module.exports = {
       }
 
       
-      var gatdata = this.onquery(this.query)
-        gatdata.then(data => {
+      var getdata = this.onquery(this.query)
+        getdata.then(data => {
              
               this.items = this.limit ? data.slice(0, this.limit) : data.slice(0, 8) 
               this.current = -1
