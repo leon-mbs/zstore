@@ -9,6 +9,7 @@ class ShowReport extends \Zippy\Html\WebPage
     public function __construct($type, $filename="") {
         parent::__construct();
 
+        $common = \App\System::getOptions('common');
         $user = \App\System::getUser();
         if ($user->user_id == 0) {
             die;
@@ -29,10 +30,34 @@ class ShowReport extends \Zippy\Html\WebPage
             header("Content-Transfer-Encoding: binary");
         }
         if ($type == "xls") {
-            header("Content-type: application/vnd.ms-excel");
-            header("Content-Disposition: attachment;Filename={$filename}.xls");
-            header("Content-Transfer-Encoding: binary");
-            //echo '<meta http-equiv=Content-Type content="text/html; charset=windows-1251">';
+           
+           
+            if($common['exportxlsx'] ==1)  {
+           
+            
+                $file = tempnam(sys_get_temp_dir() );
+             
+                $handle = fopen($file, "w");
+                fwrite($handle, $html);
+                $reader =  new \PhpOffice\PhpSpreadsheet\Reader\Html()  ;
+                $spreadsheet = $reader->load($file);
+                fclose($handle);
+                unlink($file);              
+            
+                $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                 header("Content-Disposition: attachment;Filename={$filename}.xlsx");
+                $writer->save('php://output');
+                die;      
+            } else {
+                header("Content-type: application/vnd.ms-excel");
+                header("Content-Disposition: attachment;Filename={$filename}.xls");
+                header("Content-Transfer-Encoding: binary");
+                //echo '<meta http-equiv=Content-Type content="text/html; charset=windows-1251">';
+                echo $html;            
+            }
+            
         }
         if ($type == "html") {
             header("Content-type: text/plain");
