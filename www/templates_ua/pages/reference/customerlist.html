@@ -598,7 +598,7 @@
                                     window.onload = function() {
 
 
-                                    new Chart($('#statusesg').get(0).getContext('2d'), {
+                                    new Chart(document.querySelector('#statusesg'), {
                                     type: 'pie',
                                             data: pieData1,
                                             options: pieOptions1
@@ -607,7 +607,7 @@
 
 
 
-                                            new Chart($('#sourcesg').get(0).getContext('2d'), {
+                                            new Chart(document.querySelector('#sourcesg'), {
                                             type: 'pie',
                                                     data: pieData2,
                                                     options: pieOptions2
@@ -615,7 +615,7 @@
 
 
 
-                                            new Chart($('#sourcescustg').get(0).getContext('2d'), {
+                                            new Chart(document.querySelector('#sourcescustg'), {
                                             type: 'pie',
                                                     data: pieData3,
                                                     options: pieOptions3
