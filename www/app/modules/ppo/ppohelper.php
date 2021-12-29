@@ -47,8 +47,8 @@ class PPOHelper
 
                     }
                     $req['password'] = $password;
-                    $req['key'] = base64_encode($keydata);
-                    $req['cert'] = base64_encode($certdata);
+                    $req['key'] =  ($keydata);
+                    $req['cert'] =  ($certdata);
 
 
                 }
@@ -154,7 +154,7 @@ class PPOHelper
                         CURLOPT_POSTFIELDS     => $json
                     ]);
 
-           //самоплписаный сертификат
+           //самоподписаный сертификат
             $fileselfsert = _ROOT . "config/ssl.ser";
             if( file_exists($fileselfsert) )  {
                  curl_setopt($request,CURLOPT_CAINFO, $fileselfsert) ;    
