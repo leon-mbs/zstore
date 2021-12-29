@@ -357,7 +357,20 @@ display: true,
         title: {
         display: true,      fontColor: fontcolor,
                 text: 'Доходы  и расходы'
-        }
+        }  ,
+        
+        scales: {
+        xAxes: [{
+             ticks: { 
+                   fontColor: fontcolor 
+             } 
+        }],
+                yAxes: [{    ticks: { 
+                   fontColor: fontcolor 
+             } 
+                }]
+        }        
+        
 }
 
 
@@ -403,11 +416,18 @@ legend: {
         
         scales: {
         xAxes: [{
+             ticks: { 
+                   fontColor: fontcolor 
+             },
+            
+            
         gridLines : {
         display : false,
         }
         }],
-                yAxes: [{
+                yAxes: [{    ticks: { 
+                   fontColor: fontcolor 
+             },
                 gridLines : {
                 display : false,
                 }
@@ -418,19 +438,19 @@ legend: {
 window.onload = function() {
 
 
-new Chart($('#paystructure').get(0).getContext('2d'), {
+new Chart(document.querySelector('#paystructure'), {
 type: 'pie',
         data: pieData,
         options: pieOptions
         })
 
-        new Chart($('#paycompare').get(0).getContext('2d'), {
+        new Chart(document.querySelector('#paycompare'), {
         type: 'bar',
                 data: barData,
                 options: barOptions
         })
 
-        new Chart($('#sellstat').get(0).getContext('2d'), {
+        new Chart(document.querySelector('#sellstat'), {
         type: 'line',
                 data: sellData,
                 options: sellOptions

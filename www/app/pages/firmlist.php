@@ -161,7 +161,7 @@ class FirmList extends \App\Pages\Base
       
       $this->keyform->delppo->setVisible(strlen($this->_firm->ppoowner)>0) ;
       
-      $this->keyform->signtype->setValue($this->_firm->signtype) ;
+      $this->keyform->signtype->setValue($this->_firm->pposigntype) ;
          
       $this->onSignType($this->keyform->signtype);
       
