@@ -246,6 +246,7 @@ class FirmList extends \App\Pages\Base
                
            } catch(\Exception $ee){
              $msg = $ee->getMessage() ; 
+             $msg = str_replace("'","`",$msg) ;
              $this->updateAjax(array(),"   $('#progress').text('{$msg}');   $('#send').attr('disabled',null);            ") ;
              return;
                
