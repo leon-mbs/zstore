@@ -665,7 +665,7 @@ class Document extends \ZCL\DB\Entity
     }
 
     /**
-     * возвращает  сумму  оптлат
+     * возвращает  сумму  оплат
      *
      */
     public function getPayAmount() {
@@ -936,4 +936,15 @@ class Document extends \ZCL\DB\Entity
      public   function getID() {
         return $this->document_id;
     }  
+    
+    
+    public  function getAmountReg(){
+        $am=$this->amount;
+        if($this->payamount <> 0) {
+           $am=$this->payamount;    
+        }
+        
+        return  $am;
+    }
+    
 }
