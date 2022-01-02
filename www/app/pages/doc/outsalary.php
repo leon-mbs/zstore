@@ -205,7 +205,10 @@ class OutSalary extends \App\Pages\Base
 
                 $rows = EmpAcc::getBalance();
                 foreach ($rows as $row) {
-                    $this->_list[$row['emp_id']]->amount = H::fa($row['am']);
+                   if($this->_list[$row['emp_id']] instanceof  Employee) {
+                      $this->_list[$row['emp_id']]->amount = H::fa($row['am']);    
+                   }
+                   
                 }
 
             }

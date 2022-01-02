@@ -39,16 +39,7 @@ class Application extends \Zippy\WebApplication
         }
         $template = @file_get_contents($path);
 
-        if (strpos($name, "CalcSalary") > 0) {  //костыль для  заплат
-            $inputs = "";
-
-            foreach (\App\Entity\SalType::find("disabled<>1", "salcode") as $c => $n) {
-                $inputs .= "<td><input class=\"form-control\" style=\"width:85px\" zippy=\"v{$n->salcode}\"  pattern=\"[0-9\\.]+\"  ></td>";
-            }
-
-
-            $template = str_replace("<templateinputs/>", $inputs, $template);
-        }
+ 
 
 
         return $template;

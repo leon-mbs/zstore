@@ -59,13 +59,10 @@ class CalcSalary extends \App\Pages\Base
         $this->calcform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->calcform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->calcform->add(new SubmitButton('todoc'))->onClick($this, 'todocOnClick');
-        $this->calcform->add(new SubmitLink('edel'))->onClick($this, 'delOnClick');
-        $this->calcform->add(new SubmitLink('addemp'))->onClick($this, 'addOnClick');
-        $this->calcform->add(new DropDownChoice('newemp'));
-        $this->calcform->add(new TextInput('total'));
+        $this->calcform->add(new TextInput('elist'));
 
 
-        if ($docid > 0) {    //загружаем   содержимок  документа на страницу
+        if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
@@ -83,15 +80,14 @@ class CalcSalary extends \App\Pages\Base
         }
 
 
-        $this->calcform->add(new DataView('elist', new ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_list')), $this, 'employeelistOnRow'));
-
+ 
         $this->_stlist = SalType::find("disabled<>1", "salcode");
 
         $opt = System::getOptions("salary");
 
 
-        $this->_tvars['colemps'] = count($this->_list);
-        $this->_tvars['totst'] = $opt['coderesult'];
+     //   $this->_tvars['colemps'] = count($this->_list);
+      //  $this->_tvars['totst'] = $opt['coderesult'];
 
 
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
@@ -104,8 +100,11 @@ class CalcSalary extends \App\Pages\Base
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
+        
+        $opt = System::getOptions("salary");
+        
         $this->_doc->notes = $this->docform->notes->getText();
-
+   
         $this->_doc->headerdata['year'] = $this->docform->year->getValue();
         $this->_doc->headerdata['month'] = $this->docform->month->getValue();
         $this->_doc->headerdata['monthname'] = $this->docform->month->getValueName();
@@ -114,21 +113,30 @@ class CalcSalary extends \App\Pages\Base
         $this->_doc->document_number = trim($this->docform->document_number->getText());
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
 
-        $this->_doc->packDetails('detaildata', $this->_list);
-        $this->_doc->amount = $this->calcform->total->getText();
-        foreach ($this->_list as $emp) {
-            if ($emp->amount > 0) {
-                //  $this->_doc->amount += $emp->amount;
-            }
-        }
-        if ($this->_doc->amount == 0) {
-            $this->setError("noentersum");
-            return;
-        }
-        if ($this->checkForm() == false) {
-            return;
-        }
+     //   $this->_doc->amount = $this->calcform->total->getText();
+          $elist = $this->calcform->elist->getText();
+          $elist = json_decode($elist,true) ;
+          $this->_doc->amount = 0 ;
+          $this->_list = array();
+          
+          $emps = Employee::find('disabled<>1', 'emp_name');
 
+          
+          foreach($elist as $e)  {
+             $emp = $emps[$e['id']];
+             $this->_doc->amount +=  $e['_c'.$opt['coderesult']]   ;
+             
+               foreach ($this->_stlist as $st) {
+                  $c   = "_c".$st->salcode ;
+                  $emp->{$c} = $e[$c];
+               }       
+             
+             
+             $this->_list[]= $emp; 
+          }
+  
+        $this->_doc->packDetails('detaildata', $this->_list);
+ 
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -193,12 +201,28 @@ class CalcSalary extends \App\Pages\Base
     }
 
     public function tocalcOnClick($sender) {
-        $this->calcform->setVisible(true);
+       $this->_doc->document_number = trim($this->docform->document_number->getText());
+       $this->_doc->document_date = strtotime($this->docform->document_date->getText());
+    
+      if ($this->checkForm() == false) {
+            return;
+      }      
+      
+       $this->calcform->setVisible(true);
         $this->docform->setVisible(false);
 
+        $opt = System::getOptions("salary");
 
         if ($this->_doc->document_id == 0) {
-            $opt = System::getOptions("salary");
+            
+             foreach ($this->_list as $emp) {
+               foreach ($this->_stlist as $st) {
+                  $c   = "_c".$st->salcode ;
+                  $emp->{$c} = 0;
+               }
+             }
+            
+            
 
             if ($opt['codeadvance'] > 0) { //аванс
 
@@ -208,7 +232,7 @@ class CalcSalary extends \App\Pages\Base
                     $this->_list[$row['emp_id']]->{$c} = 0 - H::fa($row['am']);
                 }
             }
-            if ($opt['codebaseincom'] > 0) {
+            if ($opt['codebaseincom'] > 0) {  //основная  зарплата
                 $c = '_c' . $opt['codebaseincom'];
                 foreach ($this->_list as $emp) {
                     $emp->{$c} = 0;
@@ -217,103 +241,57 @@ class CalcSalary extends \App\Pages\Base
 
 
         }
-
-
-        $this->Reload();
+        
+        $calc = "var daysmon =". $this->docform->dayscnt->getText() .";\n ";
+        //  var vin  =  parseFloat(emp["vin"] );
+           
+        foreach($this->_stlist as $st){
+               $ret['stlist'][]  = array("salname"=>$st->salshortname,"salcode"=>'_c'.$st->salcode);    
+               
+               $calc .= "var v{$st->salcode} =  parseFloat(emp['_c{$st->salcode}'] ) ;\n ";
+                     
+               $calc .= "var invalid = emp.invalid==1  ;\n" ;
+        };     
+        
+        $calc .= "\n\n";
+        $calc .= $opt['calc'];  //формулы
+        $calc .= "\n\n";
+        
+        foreach($this->_stlist as $st){
+               
+               $calc .= "emp['_c{$st->salcode}']  =  v{$st->salcode}.toFixed(0) ;\n ";
+               
+        };  
+        
+        $this->_tvars['calcs'] = $calc;
+        $this->_tvars['calctotal'] = " tot +=  parseFloat(emp['_c" . $opt['coderesult']."'] );  ";
+        
+                 
 
     }
-
-    public function delOnClick($sender) {
-        $_list = array();
-        foreach ($this->_list as $id => $e) {
-            if ($e->_ch == TRUE) {
-                continue;
+  
+ 
+  
+   
+    public  function loaddata($args,$post){
+            $ret['stlist'] = array() ;
+            $ret['emps'] = array() ;
+            
+            foreach($this->_stlist as $st){
+               $ret['stlist'][]  = array("salname"=>$st->salshortname,"salcode"=>'_c'.$st->salcode);    
+            };
+            foreach ($this->_list as  $emp) {
+                
+                $e = array('emp_name'=>$emp->emp_name,'id'=>$emp->employee_id);
+                 
+            
+                   foreach($this->_stlist as $st){
+                       $e['_c'.$st->salcode]=  $emp->{'_c'.$st->salcode};    
+                   };
+        
+                $ret['emps'][] = $e;  
             }
-            $_list[$id] = $e;
-        }
-
-        $this->_list = $_list;
-        $this->Reload();
-
+       
+            return json_encode($ret, JSON_UNESCAPED_UNICODE);   
     }
-
-    public function addOnClick($sender) {
-        $id = $this->calcform->newemp->getValue();
-        if ($id > 0) {
-            $this->_list[$id] = Employee::load($id);
-
-            $opt = System::getOptions("salary");
-
-            if ($opt['codeadvance'] > 0) { //аванс
-
-                $rows = EmpAcc::getAmountByType($this->_doc->headerdata['year'], $this->_doc->headerdata['month'], EmpAcc::ADVANCE);
-                foreach ($rows as $row) {
-                    $c = '_c' . $opt['codeadvance'];
-                    if ($id == $row['emp_id']) {
-                        $this->_list[$row['emp_id']]->{$c} = 0 - H::fa($row['am']);
-                    }
-                }
-            }
-
-            if ($opt['codebaseincom'] > 0) {
-                $c = '_c' . $opt['codebaseincom'];
-                $this->_list[$id]->{$c} = 0;
-            }
-
-        }
-        $this->Reload();
-    }
-
-    public function updateAddList() {
-
-        $ids = array_keys($this->_list);
-        $list = array();
-        foreach (Employee::findArray('emp_name', 'disabled<>1', 'emp_name') as $id => $name) {
-            if (in_array($id, $ids) == false) {
-                $list[$id] = $name;
-            }
-        }
-        $this->calcform->newemp->setOptionList($list);
-        $this->calcform->newemp->setValue(0);
-    }
-
-    public function employeelistOnRow($row) {
-        $emp = $row->getDataItem();
-        $row->add(new Label('emp_name', $emp->emp_name));
-        $row->add(new CheckBox('emp_ch', new Bind($emp, '_ch')));
-
-        foreach ($this->_stlist as $c => $n) {
-
-            $ti = $row->add(new TextInput('v' . $n->salcode, new Bind($emp, '_c' . $n->salcode)));
-            $ti->setAttribute("r-n", $row->getNumber());
-            $ti->setAttribute("onblur", "onCalc(" . $row->getNumber() . ")");
-        }
-
-        $row->add(new TextInput('invalid', $emp->invalid));
-
-    }
-
-    public function Reload() {
-        $opt = System::getOptions("salary");
-
-        $this->_tvars['stnums'] = array();
-        $this->_tvars['stnames'] = array();
-        $this->_tvars['colemps'] = count($this->_list);
-        $this->_tvars['totst'] = $opt['coderesult'];
-        $this->_tvars['calc'] = $opt['calc'];
-
-
-        foreach ($this->_stlist as $c => $n) {
-            $this->_tvars['stnames'][] = array('name' => $n->salshortname);
-            $this->_tvars['stcodes'][] = array('code' => $n->salcode);
-
-        }
-
-
-        $this->calcform->elist->Reload();
-        $this->updateAddList();
-
-
-    }
-
 }

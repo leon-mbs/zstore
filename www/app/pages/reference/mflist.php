@@ -127,10 +127,7 @@ class MFList extends \App\Pages\Base
         }
         $this->_mf->beznal = $this->mfdetail->editbeznal->isChecked() ? 1 : 0;
         $this->_mf->branch_id = $this->mfdetail->editbranch->getValue();
-        //  if ($this->_tvars['usebranch'] == true && $this->_mf->branch_id == 0) {
-        //      $this->setError('Не выбран  филиал');
-        //      return;
-        //   }
+ 
 
         $this->_mf->save();
         $this->mfdetail->setVisible(false);

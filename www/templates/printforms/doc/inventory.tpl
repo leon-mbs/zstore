@@ -12,9 +12,10 @@
     </tr>
 
 
+
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Название</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"></th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"> </th>
 
 
         <th align="right" width="50px" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Кол.</th>
@@ -40,7 +41,7 @@
 
 
         <td align="right">{{quantity}}</td>
-        <td align="right" style="color:green">{{qfact}}</td>
+        <td align="right"  >{{qfact}}</td>
     </tr>
     {{/_detailover}}
     {{#_detail}}
@@ -54,6 +55,30 @@
         <td align="right">{{qfact}}</td>
     </tr>
     {{/_detail}}
+ 
+       {{#summinus}}  
+   <tr>
+        <td  >
+            <b> Недостача на  сумму:   </b>
+        </td>
+      <td colspan="3" align="right" style="color:red">
+            <b>  {{summinus}}   </b>
+        </td>
+
+    </tr>  
+     {{/summinus}}   
+   
+   {{#sumplus}} 
+   <tr>
+        <td  >
+           <b>  Излишки на  сумму:  </b>
+        </td>    <td colspan="3" align="right" >
+             <b>  {{sumplus}}   </b>
+        </td>
+
+    </tr>
+       {{/sumplus}} 
+  
 </table>
 
 

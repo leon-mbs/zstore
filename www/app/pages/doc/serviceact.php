@@ -86,6 +86,7 @@ class ServiceAct extends \App\Pages\Base
         $this->add(new Form('editcust'))->setVisible(false);
         $this->editcust->add(new TextInput('editcustname'));
         $this->editcust->add(new TextInput('editphone'));
+        $this->editcust->add(new TextInput('editemail'));
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
@@ -137,6 +138,15 @@ class ServiceAct extends \App\Pages\Base
                     
                 }
                 if ($basedoc->meta_name == 'Invoice') {
+                    $this->docform->customer->setKey($basedoc->customer_id);
+                    $this->docform->customer->setText($basedoc->customer_name);
+
+                    $this->_servicelist = array();
+                    foreach($basedoc->unpackDetails('detaildata') as $v ) {
+                       $this->_servicelist[$v->service_id]= $v ;    
+                    }
+                }
+                if ($basedoc->meta_name == 'ServiceAct') {
                     $this->docform->customer->setKey($basedoc->customer_id);
                     $this->docform->customer->setText($basedoc->customer_name);
 
@@ -500,6 +510,7 @@ class ServiceAct extends \App\Pages\Base
         $cust->customer_name = $custname;
         $cust->phone = $this->editcust->editphone->getText();
         $cust->phone = \App\Util::handlePhone($cust->phone);
+        $cust->email = $this->editcust->editemail->getText();
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
             $this->setError("tel10", H::PhoneL());
