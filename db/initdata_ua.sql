@@ -101,6 +101,9 @@ INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `
  INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Вир. процеси', 'ProdProcList', 'Виробництво', 0);
  INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Вир. етапи', 'ProdStageList', 'Виробництво', 0);
  INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 1, 'Перемiщення  партiй ТМЦ', 'MovePart', 'Склад', 0);
+INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Повернення  покупцiв', 'Returnselled', 'Продажi', 0);
+INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Повернення  постачальникам', 'Returnbayed', 'Закупки', 0);
+INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  1, 'Надані послуги', 'IncomeService', 'Послуги', 0);
   
 
 
