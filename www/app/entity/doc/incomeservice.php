@@ -33,12 +33,8 @@ class IncomeService extends Document
                         "_detail"         => $detail,
                         "customer_name"   => $this->customer_name,
                         "firm_name"       => $firm['firm_name'],
-                        "gar"             => $this->headerdata['gar'],
-                        "isdevice"        => strlen($this->headerdata["device"]) > 0,
-                        "device"          => $this->headerdata["device"],
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
-                        "devsn"           => $this->headerdata["devsn"],
                         "document_number" => $this->document_number,
                         "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false,
@@ -70,9 +66,7 @@ class IncomeService extends Document
             $sc->setOutPrice($ser->price);
             $sc->save();
         }
-    }
-
-    public function Pay() {
+        
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
             $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_INCOME);
             if ($payed > 0) {
@@ -80,8 +74,12 @@ class IncomeService extends Document
             }
             \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
 
-        }
+        }        
+        
+        
     }
+
+ 
 
     public function supportedExport() {
         return array(self::EX_EXCEL, self::EX_PDF );

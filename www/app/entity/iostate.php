@@ -112,6 +112,14 @@ class IOState extends \ZCL\DB\Entity
             $list[self::TYPE_OTHER_OUTCOME] = \App\Helper::l('pt_outother');
 
         }
+        if ($type == 5 ) {
+            $list[self::TYPE_BASE_OUTCOME] = \App\Helper::l('pt_outprod');
+            $list[self::TYPE_COMMON_OUTCOME] = \App\Helper::l('pt_outcommon');
+            $list[self::TYPE_ADMIN_OUTCOME] = \App\Helper::l('pt_outadm');
+            $list[self::TYPE_OTHER_OUTCOME] = \App\Helper::l('pt_outother');
+            $list[self::TYPE_SALE_OUTCOME] = \App\Helper::l('pt_outsell');
+ 
+        }
 
         return $list;
     }

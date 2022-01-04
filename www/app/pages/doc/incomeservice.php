@@ -43,6 +43,7 @@ class IncomeService extends \App\Pages\Base
 
         $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), H::getDefFirm()))->onChange($this, 'OnCustomerFirm');
         $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);;
+        $this->docform->add(new DropDownChoice('mtype', \App\Entity\IOState::getTypeList(5)));
 
         $this->docform->add(new TextInput('notes'));
  
@@ -92,6 +93,7 @@ class IncomeService extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->notes->setText($this->_doc->notes);
          
+            $this->docform->mtype->setValue($this->_doc->headerdata['mtype']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
@@ -263,8 +265,8 @@ class IncomeService extends \App\Pages\Base
             $customer = Customer::load($this->_doc->customer_id);
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         }
-        $this->_doc->headerdata['device'] = $this->docform->device->getText();
-        $this->_doc->headerdata['devsn'] = $this->docform->devsn->getText();
+      
+        $this->_doc->headerdata['mtype'] = $this->docform->mtype->getValue();
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
         $this->_doc->firm_id = $this->docform->firm->getValue();
         if ($this->_doc->firm_id > 0) {
@@ -308,13 +310,10 @@ class IncomeService extends \App\Pages\Base
                 if ($sender->id == 'execdoc') {
                     $this->_doc->updateStatus(Document::STATE_EXECUTED);
                     $this->_doc->updateStatus(Document::STATE_CLOSED);
-                    $this->_doc->Pay();
+                     
                 }
 
-                if ($sender->id == 'inprocdoc') {
-                    $this->_doc->updateStatus(Document::STATE_INPROCESS);
-                    $this->_doc->Pay();
-                }
+               
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }

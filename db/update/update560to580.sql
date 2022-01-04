@@ -1,3 +1,3 @@
-INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Возвраты  покупателей', 'Returnselled', 'Продажи', 0);
-INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Возвраты  поставщикам', 'Returnbayed', 'Закупки', 0);
-INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  1, 'Оказанные услуги', 'IncomeService', 'Услуги', 0);
+INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Р’РѕР·РІСЂР°С‚С‹  РїРѕРєСѓРїР°С‚РµР»РµР№', 'Returnselled', 'РџСЂРѕРґР°Р¶Рё', 0);
+INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Р’РѕР·РІСЂР°С‚С‹  РїРѕСЃС‚Р°РІС‰РёРєР°Рј', 'Returnbayed', 'Р—Р°РєСѓРїРєРё', 0);
+INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  1, 'РћРєР°Р·Р°РЅРЅС‹Рµ СѓСЃР»СѓРіРё', 'IncomeService', 'РЈСЃР»СѓРіРё', 0);

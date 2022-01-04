@@ -1,7 +1,7 @@
 <table class="ctable" border="0" cellpadding="2" cellspacing="0">
     <tr>
         <td colspan="5">
-            Заказчик: {{customer_name}}
+            Исполнитель: {{customer_name}}
         </td>
 
 
@@ -10,7 +10,7 @@
     {{#isfirm}}
     <tr>
         <td colspan="5">
-            Исполнитель: {{firm_name}}
+            Заказчик: {{firm_name}}
         </td>
 
     </tr>
@@ -23,17 +23,10 @@
 
     </tr>
     {{/iscontract}}
-    {{#isdevice}}
-    <tr>
-        <td colspan="5">
-            Изделие, материалы: {{device}} с/н: {{devsn}}
-        </td>
-
-    </tr>
-    {{/isdevice}}
+ 
     <tr style="font-weight: bolder;">
         <td colspan="5" align="center">
-            Акт выполненых работ № {{document_number}} от {{date}}
+           Оказанные  услуги от № {{document_number}} от {{date}}
         </td>
     </tr>
 
@@ -76,11 +69,7 @@
         <td align="right">{{payed}}</td>
     </tr>
         {{/payed}}  
-    <tr>
-        <td colspan="5"><br>
-            Гарантия: {{gar}}
-        </td>
-    </tr>
+ 
 
 </table>
 
