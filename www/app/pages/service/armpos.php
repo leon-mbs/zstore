@@ -1088,8 +1088,9 @@ class ARMPos extends \App\Pages\Base
     public function onDocRow($row) {
         $doc = $row->getDataItem();
         $row->add(new ClickLink('rownumber', $this, 'OnDocViewClick'))->setValue($doc->document_number);
+        $row->add(new Label('rowamount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
 
-        $row->add(new Label('rowamount', H::fa($doc->amount)));
+      
         $row->add(new Label('rowdate', H::fd($doc->document_date)));
         $row->add(new Label('rownotes', $doc->notes));
 

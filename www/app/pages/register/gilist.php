@@ -135,7 +135,7 @@ class GIList extends \App\Pages\Base
 
         $row->add(new Label('date', H::fd($doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));
-        $row->add(new Label('amount', H::fa($doc->amount)));
+        $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
         $row->add(new Label('order', $doc->headerdata['order']));
         $row->add(new Label('customer', $doc->headerdata['customer_name']));
 

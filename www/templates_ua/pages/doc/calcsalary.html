@@ -61,129 +61,170 @@
 
         </form>
         
+       {{={| |}=}}   
+        <div   id="vapp">    
         <form zippy="calcform">
-            <input type="hidden"  zippy="total">
+          
             <div class="form-group row">
                 <div class="col-auto pt-2">
                   <label   > Спiвробiтник</label>
                 </div>
                <div class="col-auto">
-                  <select class="form-control"  zippy="newemp" >
+                  <select  v-model="selectednewemp" class="form-control"  id="newemp" name="newemp" >
                      <option value="0">Не вибраний</option>
-                        </select>
+                        <option v-for=" e in deleted "  v-bind:value="e.id">
+                            {{e.emp_name}}
+                         </option>     
+                     </select>
                 </div>
-               <div class="col-auto pt-2">
-                     <a zippy="addemp"  >Додати</a>
+               <div class="col-auto  ">
+                     <button class="btn btn-info btn-sm" v-on:click.prevent="add"  >Додати</button>
                 </div>
                 
                 
                 
             </div>
-
-             <table class="table table-sm">
-                   <tr>
-                      <th></th>
-                      <th>ПIБ</th>
-                       {{#stnames}}
-                          <th>{{name}}</th>
-                       {{/stnames}}
-                   </tr>
-                  <tr zippy="elist">
-                      <td style="width:20px" >
-                       <input  type="checkbox" zippy="emp_ch">
-                      </td>
-                      <td zippy="emp_name"></td>
-                     
-                        <templateinputs/>
-                      
-                      
-                           <input  type="hidden" zippy="invalid">     
+      
+           <table class="table table-sm">
+                <tr>
+                 <th>
+                 ФИО
+                 </th>
+                 <th v-for=" v in stlist ">
+                    {{v.salname}}
+                 </th>
+                 <th>
+                  
+                 </th>  
+                </tr>
+              <tr v-for="  emp in emps">
+                 <td >
+                   {{emp.emp_name}}  
+                 </td>
+                 <td v-for=" v in stlist  ">
+                  
+                    <input  v-on:blur="calc(emp)"  v-model="emp[v.salcode]" class="form-control" style="width:85px" pattern="[0-9\\.]+" >
                     
-                          
-                  </tr>
-             </table>
+                 </td>
+                 <td><a href="javascript:return false" v-on:click="del(emp )"><i class="fa fa-trash"></i></a></td>
+                </tr>
+                
+                
+                
+              </table>
+               <b>  Всего: {{total}}</b>
+               <input zippy="elist" type="hidden"   v-model="this.totallist" />
+ 
              
-             <div class="col-12 col-md-6   mt-4">
-                <a zippy="edel" title="Удалить" ><i class="fa fa-trash text-danger" ></i></a>  
-               &nbsp; &nbsp; &nbsp; &nbsp;<i title="Перерахувати" style="cursor:pointer" onclick="recalc();return false" class="fa fa-sync" ></i>&nbsp;&nbsp;  <b>Всього: </b>  <b id="totsal"> </b>   &nbsp;&nbsp;
-               
-             </div>
+        
              <div class="col-12 col-md-6 mt-4">
                     <input type="submit" value="Назад" zippy="todoc" class="btn   btn-light">
-                    &nbsp; <input zippy="savedoc" type="submit" value="Збарегти" class="btn   btn-info">
+                    &nbsp; <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-info">
                     &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
 
              </div>
-     
+            
         </form>
-        
+      
+                 
+        </div>
+          {|={{ }}=|}  
+      
+       
         
         
           </div>
        </div>
-          
-        
-         
-        
+    
         <script>
-
-           var colemps={{colemps}}
         
-           function recalc(){
-              
-              for( var i=1;i<=colemps;i++) {
-               
-                  onCalc(i); 
-              } 
-              
-             
-           }
-           
-           function onCalc(rnum){
-              
-              {{#stcodes}}
-                  var attr = 'v{{code}}_'+rnum 
-                  var v  =parseFloat($('#'+attr).val()); 
-                  var v{{code}}  = 0 ;
-                  if(Number.isNaN(v)==false) v{{code}}  = v ;
-              {{/stcodes}}
-         
-             var invalid= $('#invalid_'+rnum).val() ==1 ? true : false
-              
-              
-              {{calc}}
-              
-              
-              {{#stcodes}}
-                var attr = 'v{{code}}_'+rnum 
-                $('#'+attr).val( v{{code}}  ); 
-              {{/stcodes}}
-              
-              
-              
-               onTotal() ; 
-                
-           }
-           
-           function onTotal(){
-                
-             var  totsal =0;
-              for(var i=1;i<=colemps;i++) {
-                  var attr = 'v{{totst}}_'+i 
-                  
-                  var v = parseFloat($('#'+attr).val())  ;
+      var vapp = new Vue({
+      el: '#vapp',
+      data: {
+          stlist:[] ,
+          emps : [] ,
+          deleted : [] ,
+          selectednewemp:0
+          
+      }  ,
+       computed:{
+            total:function(){
+                  var tot=0
+                     for(var emp  of this.emps) {
+                    
+                         
+                       {{{calctotal}}}
+                     }
+                  return tot 
+             } ,
+             totallist:function(){
+                  return  JSON.stringify(this.emps)
+             } 
+        }  ,    
+       
+        methods: {
+             calc:function (emp){
+                  calcemp(emp)
                  
-                  if(Number.isNaN(v)==false) totsal = totsal+ v;
-                  
-              }  
+             }  ,
              
-              $('#totsal').text(totsal);
-              $('#total').val(totsal);
-           }
-           
-           recalc();
-           
+             del:function(emp ){
+                 
+                  const index = this.emps.indexOf(emp);
+                 
+                  this.emps.splice(index,1)
+                  
+                  this.deleted.push(emp)
+             }  ,
+             add:function(  ){
+                  for(var e of  this.deleted ) {
+                      if(e.id == this.selectednewemp)  {
+                           const index = this.deleted.indexOf(e);
+                           this.deleted.splice(index,1)
+                           this.emps.push(e)
+                           this.selectednewemp = 0;
+                           return
+                      }
+                  }
+                  
+             }   
+            
+        }   ,   
+        mounted: function  (){
+            
+           callPageMethod('loaddata',[ ], null,(data)=> 
+                  {
+                       var d =   JSON.parse(data)
+                       this.stlist = d.stlist 
+                       this.emps = d.emps 
+                       this.emps.forEach(function (e) {
+                        calcemp(e)
+                      });        
+                        
+                  });
+              
+                   
+                          
+        }  
+    })      
+    
+ 
+      
+              
+ //вычисления  по строеке  
+ function     calcemp  (emp){
+                     
+               
+                {{{calcs}}}
+                 
+             }   
+             
+             
+               
         </script>
+         
+        
+   
        
     </body>
 

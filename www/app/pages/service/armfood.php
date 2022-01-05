@@ -294,7 +294,9 @@ class ARMFood extends \App\Pages\Base
         $row->add(new ClickLink('docnumber', $this, 'OnDocViewClick'))->setValue($doc->document_number);
         $row->add(new Label('state', Document::getStateName($doc->state)));
         $row->add(new Label('docdate', H::fd($doc->document_date)));
-        $row->add(new Label('docamount', H::fa($doc->amount)));
+
+        $row->add(new Label('docamount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
+        
         $row->add(new Label('docnotes', $doc->notes));
         $row->add(new Label('tablenumber', $doc->headerdata['table']));
         $row->add(new Label('wp'))->setVisible($doc->payamount > $doc->payed);

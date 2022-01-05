@@ -4,7 +4,12 @@
 
     <body>
         <div class="row">
-            <div class="col-12 col-md-8 col-xl-6">
+             {{^ppo}}
+               <div class="col-12 col-md-8 col-xl-6">
+             {{/ppo}}
+             {{#ppo}}
+               <div class="col-12   col-xl-10">
+             {{/ppo}}
                 <div zippy="firmtable">
                     <h3>Список компанiй </h3>
 
@@ -12,30 +17,36 @@
                     <table class="table table-bordered   table-sm">
                         <tr>
                             <th>Назва</th>
-                           {{#ppo}}
-                            <th  >ПРРО</th>
-                            {{/ppo}}
+                         
                             <th></th>
+   {{#ppo}}
+                            <th  > </th>
+                            <th  >Власник сертифiкату</th>
+                            <th  >Iдентифiкатор  ключа</th>
+                            
+                            
+                            {{/ppo}}                               
                         </tr>
                         <tr zippy="firmlist">
                             <td zippy="firm_name"></td>
-                              {{#ppo}}
-                            <td  >
-                            
-                            <a  zippy="ppo" title="Загрузить ключ  и сертификат" ><i class="fa fa-key"></a>
-                            &nbsp;<span zippy="ppoowner"></span> 
-                            </td>
-                            {{/ppo}}
+                           
 
-                            <td style="width:75px"><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> <a
-                                    zippy="delete" title="Видалити"><i class="fa fa-trash"></i></a></td>
+                            <td style="width:100px"><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a>
+                             &nbsp;&nbsp; <a                                    zippy="delete" title="Видалити"><i class="fa fa-trash"></i></a></td>
+    {{#ppo}}
+                            <td  >
+                               <a  zippy="ppo" title="Загрузить ключ  и сертификат" ><i class="fa fa-key"></a>
+                            </td>
+                            <td zippy="ppoowner"> </td>
+                            <td zippy="ppokeyid"> </td>
+                            {{/ppo}}                                      
                         </tr>
                     </table>
                 </div>
             </div>
         </div>
         <div class="row">
-            <form class="col-6 col-md-4" zippy="firmdetail">
+            <form class="col-6 col-md-4  col-xl-3" zippy="firmdetail">
                 <div class="form-group">
                     <label for="editfirm_name">Назва</label>
                     <input required="required" class="form-control" zippy="editfirm_name"/>
@@ -90,7 +101,7 @@
         </div>
           <div class="row">
             
-            <form class="col-6 col-md-4" zippy="keyform" enctype="multipart/form-data">
+            <form class="col-6 col-md-4  col-xl-3" zippy="keyform" enctype="multipart/form-data">
                 <h5>Завантаження  ключа  та сертифiкату</h5>
             <small>Опис  роботи з ключами <a  target="_blank" href="https://zippy.com.ua/ua/ext#6">тут</a> </small>
                   <div class="form-group">
@@ -109,14 +120,14 @@
                 <div class="form-group">
                     <label for="keyfile">Файл ключа </label>
                     <input class="form-control" type="file" zippy="keyfile">
-<small>Файл Приватбанку (*.jks) та iнших банкiв  необхiдно конвертувати  в  key-6.dat 
-або отримати ключ та  сертефiкат  в  особистому  кабiнатi податковоi<small>                    
+                  
                 </div>
                 <div class="form-group">
                     <label for="certfile">Файл сертифiкату </label>
                     <input class="form-control" type="file" zippy="certfile">
                 </div>
-                           <div class="form-group">
+   <small>Для jks ключiв (ПриватБанк) необов'язково</small>                      
+                <div class="form-group">
                     <label for="serhost">Адреса  серверу пiдпису </label>
                     <input class="form-control"   zippy="serhost">
                 </div>

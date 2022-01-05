@@ -6,7 +6,7 @@ use App\Entity\Entry;
 use App\Helper as H;
 
 /**
- * Класс-сущность  локумент акт  о  выполненных работах
+ * Класс-сущность  документ акт  о  выполненных работах
  *
  *
  */
@@ -152,6 +152,7 @@ class ServiceAct extends Document
         $list['Task'] = self::getDesc('Task');
         $list['ProdIssue'] = self::getDesc('ProdIssue');
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
+        $list['ServiceAct'] = self::getDesc('ServiceAct');
 
         return $list;
     }

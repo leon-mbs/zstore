@@ -32,6 +32,7 @@ class PPOHelper
             $password = $firm->ppopassword;
             $keydata = $firm->ppokey;
             $certdata = $firm->ppocert;
+            $isjks = $firm->ppoisjks;
 
             if ($pposigntype == 1 || $pposigntype == 2) {     //server
 
@@ -41,7 +42,13 @@ class PPOHelper
                 
                 if ($pposigntype == 1) {
 
-                    if (strlen($password) == 0 || strlen($keydata) == 0 || strlen($certdata) == 0) {
+                    if (strlen($password) == 0 || strlen($keydata) == 0  ) {
+                        return array('success' => false, 'data' => 'Не задано  ключ');
+
+
+                    }
+
+                    if ( $isjks != 1 &&  strlen($certdata) == 0) {
                         return array('success' => false, 'data' => 'Не задано  ключ');
 
 
@@ -58,10 +65,11 @@ class PPOHelper
                 $serhost = rtrim($serhost, '/');
 
                 $request = curl_init();
+                $url =   $serhost. ":" .$serport . ($isjks == 1 ? "/signjks": "/sign" )  ;
 
                 curl_setopt_array($request, [
                     CURLOPT_PORT           => $serport,
-                    CURLOPT_URL            => $serhost . ":" . $serport . "/sign",
+                    CURLOPT_URL            => $url,
                     CURLOPT_POST           => true,
                     CURLOPT_ENCODING       => "",
                     CURLOPT_MAXREDIRS      => 10,
@@ -71,7 +79,7 @@ class PPOHelper
                     CURLOPT_SSL_VERIFYPEER => $usessl == 1,
                     CURLOPT_POSTFIELDS     => $json
                 ]);
-             //самоплписаный сертификат
+             //самоподписаный сертификат
             $fileselfsert = _ROOT . "config/ssl.ser";
             if( file_exists($fileselfsert) )  {
                  curl_setopt($request,CURLOPT_CAINFO, $fileselfsert) ;    

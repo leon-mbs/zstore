@@ -22,9 +22,9 @@ use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
 
 /**
- * Страница  ввода  акта выполненных работ
+ * Страница  ввода  оказанных услуг
  */
-class ServiceAct extends \App\Pages\Base
+class IncomeService extends \App\Pages\Base
 {
 
     public  $_servicelist = array();
@@ -43,11 +43,10 @@ class ServiceAct extends \App\Pages\Base
 
         $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), H::getDefFirm()))->onChange($this, 'OnCustomerFirm');
         $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);;
+        $this->docform->add(new DropDownChoice('mtype', \App\Entity\IOState::getTypeList(5)));
 
         $this->docform->add(new TextInput('notes'));
-        $this->docform->add(new TextInput('gar'));
-        $this->docform->add(new TextInput('device'));
-        $this->docform->add(new TextInput('devsn'));
+ 
 
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), 0));
 
@@ -59,7 +58,7 @@ class ServiceAct extends \App\Pages\Base
         $this->docform->add(new Label('payed', 0));
         $this->docform->add(new Label('payamount', 0));
 
-        $this->docform->add(new Label('discount'));
+        
         $this->docform->add(new TextInput('editpaydisc'));
         $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
         $this->docform->add(new Label('paydisc', 0));
@@ -69,8 +68,7 @@ class ServiceAct extends \App\Pages\Base
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
-        $this->docform->add(new SubmitButton('inprocdoc'))->onClick($this, 'savedocOnClick');
-
+     
         $this->docform->add(new Label('total'));
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new DropDownChoice('editservice', Service::findArray("service_name", "disabled<>1", "service_name")))->onChange($this, 'OnChangeServive', true);
@@ -94,8 +92,8 @@ class ServiceAct extends \App\Pages\Base
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->notes->setText($this->_doc->notes);
-            $this->docform->gar->setText($this->_doc->headerdata['gar']);
-
+         
+            $this->docform->mtype->setValue($this->_doc->headerdata['mtype']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
@@ -107,8 +105,6 @@ class ServiceAct extends \App\Pages\Base
             $this->docform->editpayed->setText(H::fa($this->_doc->payed));
             $this->docform->payed->setText(H::fa($this->_doc->payed));
 
-            $this->docform->device->setText($this->_doc->device);
-            $this->docform->devsn->setText($this->_doc->devsn);
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
 
@@ -123,30 +119,13 @@ class ServiceAct extends \App\Pages\Base
 
             $this->_servicelist = $this->_doc->unpackDetails('detaildata');
         } else {
-            $this->_doc = Document::create('ServiceAct');
+            $this->_doc = Document::create('IncomeService');
             $this->docform->document_number->setText($this->_doc->nextNumber());
             if ($basedocid > 0) {  //создание на  основании
                 $basedoc = Document::load($basedocid);
 
-                if ($basedoc->meta_name == 'Task') {
-                    $this->docform->customer->setKey($basedoc->customer_id);
-                    $this->docform->customer->setText($basedoc->customer_name);
-                    $this->_servicelist = array();
-                    foreach($basedoc->unpackDetails('detaildata') as $v ) {
-                       $this->_servicelist[$v->service_id]= $v ;    
-                    }
-                    
-                }
-                if ($basedoc->meta_name == 'Invoice') {
-                    $this->docform->customer->setKey($basedoc->customer_id);
-                    $this->docform->customer->setText($basedoc->customer_name);
-
-                    $this->_servicelist = array();
-                    foreach($basedoc->unpackDetails('detaildata') as $v ) {
-                       $this->_servicelist[$v->service_id]= $v ;    
-                    }
-                }
-                if ($basedoc->meta_name == 'ServiceAct') {
+ 
+                if ($basedoc->meta_name == 'IncomeService') {
                     $this->docform->customer->setKey($basedoc->customer_id);
                     $this->docform->customer->setText($basedoc->customer_name);
 
@@ -286,8 +265,8 @@ class ServiceAct extends \App\Pages\Base
             $customer = Customer::load($this->_doc->customer_id);
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         }
-        $this->_doc->headerdata['device'] = $this->docform->device->getText();
-        $this->_doc->headerdata['devsn'] = $this->docform->devsn->getText();
+      
+        $this->_doc->headerdata['mtype'] = $this->docform->mtype->getValue();
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
         $this->_doc->firm_id = $this->docform->firm->getValue();
         if ($this->_doc->firm_id > 0) {
@@ -296,7 +275,7 @@ class ServiceAct extends \App\Pages\Base
 
         $this->calcTotal();
 
-        $this->_doc->headerdata['gar'] = $this->docform->gar->getText();
+        
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
 
@@ -331,19 +310,16 @@ class ServiceAct extends \App\Pages\Base
                 if ($sender->id == 'execdoc') {
                     $this->_doc->updateStatus(Document::STATE_EXECUTED);
                     $this->_doc->updateStatus(Document::STATE_CLOSED);
-                    $this->_doc->Pay();
+                     
                 }
 
-                if ($sender->id == 'inprocdoc') {
-                    $this->_doc->updateStatus(Document::STATE_INPROCESS);
-                    $this->_doc->Pay();
-                }
+               
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
 
             $conn->CommitTrans();
-            App::Redirect("\\App\\Pages\\Register\\SerList");
+            App::Redirect("\\App\\Pages\\Register\\DocList");
 
         } catch(\Throwable $ee) {
             global $logger;
@@ -372,28 +348,7 @@ class ServiceAct extends \App\Pages\Base
         }
         $this->docform->total->setText(H::fa($total));
 
-        $disc = 0;
-
-        $customer_id = $this->docform->customer->getKey();
-        if ($customer_id > 0) {
-            $customer = Customer::load($customer_id);
-
-            if ($customer->discount > 0) {
-                $disc = round($total * ($customer->discount / 100));
-            } else {
-                $bonus = $customer->getBonus();
-                if ($bonus > 0) {
-                    if ($total >= $bonus) {
-                        $disc = $bonus;
-                    } else {
-                        $disc = $total;
-                    }
-                }
-            }
-        }
-
-        $this->docform->paydisc->setText(H::fa($disc));
-        $this->docform->editpaydisc->setText(H::fa($disc));
+ 
     }
 
 
@@ -449,7 +404,7 @@ class ServiceAct extends \App\Pages\Base
     }
 
     public function OnAutoCustomer($sender) {
-        return Customer::getList($sender->getText(), 1);
+        return Customer::getList($sender->getText(), 2);
     }
 
     public function OnChangeServive($sender) {
@@ -476,19 +431,7 @@ class ServiceAct extends \App\Pages\Base
             $this->docform->contract->setVisible(false);
             $this->docform->contract->setValue(0);
         }
-
-        $cust = Customer::load($c);
-
-        $disctext = "";
-        if (doubleval($cust->discount) > 0) {
-            $disctext = H::l("custdisc") . " {$cust->discount}%";
-        } else {
-            $bonus = $cust->getBonus();
-            if ($bonus > 0) {
-                $disctext = H::l("custbonus") . " {$bonus} ";
-            }
-        }
-        $this->docform->discount->setText($disctext);
+ 
     }
 
     //добавление нового контрагента
@@ -537,7 +480,7 @@ class ServiceAct extends \App\Pages\Base
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
     }
-     public function onPayDisc() {
+      public function onPayDisc() {
         $this->docform->paydisc->setText($this->docform->editpaydisc->getText());
         $this->calcPay();
         $this->goAnkor("tankor");

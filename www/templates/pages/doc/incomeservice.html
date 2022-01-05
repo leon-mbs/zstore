@@ -4,11 +4,9 @@
 
 
         <form zippy="docform">
-            <h3> Заказ (услуги)
+            <h3> Оказанные  услуги
                 <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover"
-                   data-html="true" data-placement="bottom" data-content="Документ  ввода работ или услуг,  которые  оказываются  заказчику.
-                   На основании заказа может быть  создан Наряд на выполнение  работ.  Работа с  документами типа акт производится  в журнале  Услуги. 
-                   <br>Есть  возможность печати  квитанций  на  узком (чековом)  принтере. "></i>
+                   data-html="true" data-placement="bottom" data-content="Документ  ввода входящих работ  или услуг  "></i>
 
             </h3>
 
@@ -19,19 +17,19 @@
                         <input class="form-control" type="text" zippy="document_number" required="required">
                     </div>
                     <div class="form-group  ">
-                        <label for="customer">Заказчик</label>
+                        <label for="customer">Исполнитель</label>
 
                         <input placeholder="Начните вводить..." class="form-control " zippy="customer"/>
-                        <span zippy="discount" style="display:block;font-size:smaller"></span>
                         <a style="font-size:smaller" zippy="addcust">Добавить нового</a>
                     </div>
-
                     <div class="form-group  ">
-                        <label for="firm">Исполнитель</label>
+                        <label for="firm">Заказчик</label>
                         <select class="form-control" zippy="firm">
-                            <option value="0">Не выбрана</option>
+                            <option value="0">Не выбран</option>
                         </select>
                     </div>
+
+                  
 
                     <div class="form-group  ">
                         <label for="contract" data-label="contract">Договор</label>
@@ -39,20 +37,15 @@
                             <option value="0">Не выбран</option>
                         </select>
 
+                    </div>
+                   <div class="form-group  ">
+                        <label for="notes">Примечание</label>
+
+                        <input class="form-control" type="text" zippy="notes">
 
                     </div>
 
-
-                    <div class="form-group">
-                        <label for="device"> Изделие, материалы принятые от заказчика</label>
-                        <input class="form-control" type="text" zippy="device"/>
-                        <small>Заполняется в cервисных центрах, мастерских, СТО...</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="devsn">Серийный номер изделия</label>
-                        <input class="form-control" type="text" zippy="devsn"/>
-
-                    </div>
+                
 
                 </div>
                 <div class="col-6 col-md-4 col-lg-3">
@@ -61,12 +54,7 @@
                         <input class="form-control" type="text" zippy="document_date" required="required">
                     </div>
 
-                    <div class="form-group  ">
-                        <label for="gar">Гарантийный срок</label>
-
-                        <input class="form-control" type="text" zippy="gar">
-
-                    </div>
+                
                     <div class="form-group  ">
                         <label for="payment">Касса, счет</label>
                         <select class="form-control" zippy="payment">
@@ -74,18 +62,18 @@
                         </select>
                     </div>
                     <div class="form-group  ">
-                        <label for="notes">Примечание</label>
-
-                        <input class="form-control" type="text" zippy="notes">
-
-                    </div>
+                        <label for="mtype">Тип расхода</label>
+                        <select class="form-control" zippy="mtype">
+                            <option value="0">Не выбран</option>
+                        </select>
+                    </div>           
                 </div>
 
             </div>
             <div class="row">
                 <div class="col-10 col-lg-8">
                     <a zippy="addrow" class="btn btn-info">Добавить работу</a> <br>
-                    <small>Документ может  быть  сохранен  без  позиций,  если объем работ еще неизвестен  а  нужно распечатать (из  журнала  услуг)  квитанцию о приеме  у  заказчика  изделия</small>
+                    
                     <table class="table  table-sm">
                         <tr>
                             <th>Название</th>
@@ -145,7 +133,6 @@
                 <div class="col-6">
                     <input type="button" value="Отменить" zippy="backtolist" class="btn btn-light  ">
                     <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
-                    &nbsp;<input zippy="inprocdoc" type="submit" value="На выполнение" class="btn btn-outline-primary  ">
                     &nbsp;<input zippy="execdoc" type="submit" value="Выполнен" class="btn btn-outline-primary  ">
 
                 </div>
