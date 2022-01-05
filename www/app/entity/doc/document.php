@@ -901,7 +901,7 @@ class Document extends \ZCL\DB\Entity
     }
 
     /**
-     * возвращает  тэг <img> со QR кодом ссылки на  документ
+     * возвращает  тэг <img> со QR кодом ссылки на  сайт налоговой
      *
      */
     protected function getQRCodeImage() {
@@ -909,9 +909,17 @@ class Document extends \ZCL\DB\Entity
         if ($print == 0) {
             return '';
         }
+        $pos = \App\Entity\Pos::load($this->headerdata['pos']);
+        $firm = \App\Helper::getFirmData($this->firm_id);
+
         $writer = new \Endroid\QrCode\Writer\PngWriter();
+        // https://cabinet.tax.gov.ua/cashregs/check?fn=4000191957&id=165093488&date=20220105&time=132430&sum=840
+        $url = "https://cabinet.tax.gov.ua/cashregs/check?" ;
         
-        $url = _BASEURL . "?p=App/Pages/Register/DocList&arg=" . $this->document_id;
+        $url .=  "id=". $firm->tin;
+        if(strlen($firm->inn)>0)   $url .=  "id=". $firm->inn;
+        $url .=  "&fn=". $pos->fiscalnumber ;
+        $url .=   $this->headerdata["fisdt"] ;
         $qrCode = new \Endroid\QrCode\QrCode($url);
         $qrCode->setSize(100);
         $qrCode->setMargin(5);

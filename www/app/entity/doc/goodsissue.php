@@ -74,7 +74,7 @@ class GoodsIssue extends Document
                         "style"           => $style,
 
                         "docbarcode" => $this->getBarCodeImage(),
-                        "docqrcode"  => $this->getQRCodeImage(),
+                        
                         "payed"      => $this->payed > 0 ? H::fa($this->payed) : false,
                         "payamount"  => $this->payamount > 0 ? H::fa($this->payamount) : false
 
@@ -246,7 +246,7 @@ class GoodsIssue extends Document
                         "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
                         "document_number" => $this->document_number,
                         "docbarcode"      => $this->getBarCodeImage(),
-                        "docqrcode"       => $this->getQRCodeImage(),
+                     
                         "total"           => H::fa($this->amount)
         );
         if (strlen($this->headerdata["customer_name"]) == 0) {

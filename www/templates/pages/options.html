@@ -196,12 +196,14 @@
                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                                    title="Позволяет с  помощью сканера  найти  документ в  журнале  документов"></i>
                             </div>
+                                 {{#ppo}}
                             <div class="form-check">
                                 <input zippy="printoutqrcode" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="printoutqrcode">Печатать QR коды  на  расходных документах</label>
+                                <label class="form-check-label" for="printoutqrcode">Печатать QR коды  на  фискальних чеках</label>
                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Позволяет с  помощью сканера мобильного устройства найти  документ по  ссылке (пользователь должен  быть залогинен)"></i>
+                                   title="Позволяет с  помощью сканера QR кода  найти  документ на  сайте налоговой  "></i>
                             </div>
+                                 {{/ppo}}
                            <div class="form-check">
                                 <input zippy="nocheckarticle" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="nocheckarticle">Не  проверять  уникальность артикулов</label>

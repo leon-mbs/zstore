@@ -199,12 +199,14 @@
                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                                    title="Дозволяе за допомогою сканера  знайти  документ в  журналi  документiв"></i>
                             </div>
+                              {{#ppo}} 
                             <div class="form-check">
                                 <input zippy="printoutqrcode" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="printoutqrcode">Друкувати QR коди  на  видаткових документах</label>
+                                <label class="form-check-label" for="printoutqrcode">Друкувати QR коди  на  фiскальних чеках</label>
                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Дозволяє за допомогою сканера мобiльного  пристрою   знайти  документ по  посиланню (користувач  мае  бути залогiненим)"></i>
+                                   title="Дозволяє за допомогою сканера QR кода  знайти  документ на  сайтi податковоi "></i>
                             </div>
+                               {{/ppo}}
                            <div class="form-check">
                                 <input zippy="exportxlsx" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="exportxlsx">Екcпорт  документiв и звiтiв в  xlsx замiсть xls </label>

@@ -532,7 +532,8 @@ class PPOHelper
 
             self::insertStat($pos->pos_id, 1, $amount0, $amount1, $amount2, $amount3, $doc->document_number);
         }
-
+        $doc->headerdata["fiscdts"] = "&date={$header['date']}&time={$header['time']}&sum={$header['amount']}";
+ 
         return $ret;
     }
 

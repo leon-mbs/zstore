@@ -264,7 +264,8 @@ class PayBayList extends \App\Pages\Base
         if ($pos_id > 0) {
             $pos = \App\Entity\Pos::load($pos_id);
             if ($pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
-
+                 $this->_doc->headerdata["fiscalnumberpos"]  =  $pos->fisc;
+ 
                 $ret = \App\Modules\PPO\PPOHelper::checkpay($this->_doc, $pos_id, $amount, $form->payment->getValue());
                 if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
                     //повторяем для  нового номера
