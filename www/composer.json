@@ -31,7 +31,7 @@
            
  
         "leon-mbs/zippy": "2.5.11",
-        "leon-mbs/ppolib": "1.3.2",   
+        "leon-mbs/ppolib": "1.3.3",   
         "ext-json": "*",
         "ext-curl": "*",       
         "ext-simplexml": "*" 

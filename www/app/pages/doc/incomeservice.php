@@ -58,7 +58,7 @@ class IncomeService extends \App\Pages\Base
         $this->docform->add(new Label('payed', 0));
         $this->docform->add(new Label('payamount', 0));
 
-        $this->docform->add(new Label('discount'));
+        
         $this->docform->add(new TextInput('editpaydisc'));
         $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
         $this->docform->add(new Label('paydisc', 0));
@@ -480,5 +480,9 @@ class IncomeService extends \App\Pages\Base
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
     }
-
+      public function onPayDisc() {
+        $this->docform->paydisc->setText($this->docform->editpaydisc->getText());
+        $this->calcPay();
+        $this->goAnkor("tankor");
+    }
 }

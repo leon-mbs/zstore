@@ -537,5 +537,9 @@ class ServiceAct extends \App\Pages\Base
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
     }
-
+     public function onPayDisc() {
+        $this->docform->paydisc->setText($this->docform->editpaydisc->getText());
+        $this->calcPay();
+        $this->goAnkor("tankor");
+    }
 }
