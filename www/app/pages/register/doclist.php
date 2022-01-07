@@ -394,6 +394,13 @@ class DocList extends \App\Pages\Base
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
             return;
         }
+        if(strlen($doc->headerdata["fiscalnumber"])>0) {
+            $this->setWarn('closedfiscal') ;
+            
+        }
+     
+        
+        
         $this->doclist->setSelectedRow($sender->getOwner());
         $this->doclist->Reload(false);
         $this->resetURL();

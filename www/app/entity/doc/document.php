@@ -909,17 +909,13 @@ class Document extends \ZCL\DB\Entity
         if ($print == 0) {
             return '';
         }
-        $pos = \App\Entity\Pos::load($this->headerdata['pos']);
-        $firm = \App\Helper::getFirmData($this->firm_id);
+        $url =$this->getFiscUrl( );
+        if(strlen($url)==0)  return '';
+       // $firm = \App\Entity\Firm::load($this->firm_id);
 
         $writer = new \Endroid\QrCode\Writer\PngWriter();
-        // https://cabinet.tax.gov.ua/cashregs/check?fn=4000191957&id=165093488&date=20220105&time=132430&sum=840
-        $url = "https://cabinet.tax.gov.ua/cashregs/check?" ;
-        
-        $url .=  "id=". $firm->tin;
-        if(strlen($firm->inn)>0)   $url .=  "id=". $firm->inn;
-        $url .=  "&fn=". $pos->fiscalnumber ;
-        $url .=   $this->headerdata["fisdt"] ;
+ 
+      
         $qrCode = new \Endroid\QrCode\QrCode($url);
         $qrCode->setSize(100);
         $qrCode->setMargin(5);
@@ -933,6 +929,24 @@ class Document extends \ZCL\DB\Entity
         return $img;
     }
 
+    
+    /**
+    *    возвращает ссылку  на чек в  налоговой
+    *    https://cabinet.tax.gov.ua/cashregs/check?fn=4000191957&id=165093488&date=20220105&time=132430&sum=840
+    */
+      public function getFiscUrl( ) {
+        if(strlen($this->headerdata["fiscalnumber"])==0) return "";
+        
+        $pos = \App\Entity\Pos::load($this->headerdata['pos']);
+        
+        $url = "https://cabinet.tax.gov.ua/cashregs/check?" ;
+        $url .=  "fn=". $pos->fiscalnumber ;
+        $url .=  "&id=". $this->headerdata["fiscalnumber"] ;
+        $url .=   $this->headerdata["fiscdts"] ;
+    
+        return $url;
+      }
+    
     /**
      * проверка  может  ли  быть  отменен
      * Возвращает  текст ошибки если  нет

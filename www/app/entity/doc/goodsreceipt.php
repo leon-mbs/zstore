@@ -160,6 +160,7 @@ class GoodsReceipt extends Document
         $list['RetCustIssue'] = self::getDesc('RetCustIssue');
         $list['GoodsReceipt'] = self::getDesc('GoodsReceipt');
         $list['ProdIssue'] = self::getDesc('ProdIssue');
+        $list['GoodsIssue'] = self::getDesc('GoodsIssue');
 
         return $list;
     }
