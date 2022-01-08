@@ -85,7 +85,7 @@ class ReturnIssue extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ВК-000000';
+        return 'BK-000000';
     }
 
 }

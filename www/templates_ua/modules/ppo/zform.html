@@ -2,7 +2,7 @@
 
     <body>
         <div class="row">
-            <div class="col-12 col-md-6 col-xl-4" zippy="filter">
+            <div class="col-12 col-md-6 col-xl-4"  >
 
                 <h3>Закриття змiни</h3>
                 <small>Сторiнка для ручного закриття змiни</small>
@@ -19,6 +19,12 @@
                     </form>
 
                 </div>
+   </div>
+   </div>
+   
+    <div class="row">
+            <div class="col-12 col-md-6 col-xl-4"  >
+  
                 <form zippy="stat">
                     <div class="form-group  ">
                         <label for="nal">Готiвка</label>
@@ -59,6 +65,37 @@
 
                 </form>
             </div>
+            <div class="col-12 col-md-6 col-xl-8"  >
+            <div class="col-12 col-md-6 col-lg-8 col-xl-6"  >
+                Документи  в  z-звiтi
+                <table class="table table-sm">
+                    <tr>
+                        <th>Документ</th>
+                        <th class="text-right">Нал</th>
+                        <th class="text-right">Безнал</th>
+                        <th class="text-right">Кредит</th>
+                        <th class="text-right">Передплата</th>
+                        <th class="text-right">Пов. нал</th>
+                        <th class="text-right">Пов. безнал</th>
+                        <th> </th>
+                    </tr>
+                    <tr  zippy="list">
+                        <td zippy="docnumber"> </td>
+                        <td zippy="amount0" class="text-right" > </td>
+                        <td zippy="amount1" class="text-right" > </td>
+                        <td zippy="amount2" class="text-right"> </td>
+                        <td zippy="amount3" class="text-right"> </td>
+                        <td zippy="amount0r" class="text-right"> </td>
+                        <td zippy="amount1r" class="text-right"> </td>
+                        <td> <a zippy="del"> <i class="fa fa-trash"></i> </a> </td>
+                    </tr>
+                    
+                </table>
+                
+           </div>
+                
+           </div>
+            
 
         </div>
 
