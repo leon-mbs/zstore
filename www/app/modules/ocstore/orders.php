@@ -270,6 +270,7 @@ class Orders extends \App\Pages\Base
             }
 
             //товары
+            $j=0;
             $totalpr = 0;
             $tlist = array();
             foreach ($shoporder->_products_ as $product) {
@@ -289,7 +290,7 @@ class Orders extends \App\Pages\Base
                 $tovar->price = round($product['price']);
                 $totalpr += ($tovar->quantity * $tovar->price);
 
-                $tlist[] = $tovar;
+                $tlist[++$j] = $tovar;
             }
             $neworder->packDetails('detaildata', $tlist);
 

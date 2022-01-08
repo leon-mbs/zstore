@@ -294,6 +294,16 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
                     }
+                    if ($basedoc->meta_name == 'GoodsReceipt') {
+
+                         
+                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
+                            $item->price = $item->getPrice( ); //последние  цены
+                            $this->_itemlist[$item->item_id] = $item;
+                        }
+                        $this->calcTotal();
+                        $this->calcPay();                     
+                    }
                 }
             }
         }

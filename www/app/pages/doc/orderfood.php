@@ -327,7 +327,8 @@ class OrderFood extends \App\Pages\Base
         $pos = \App\Entity\Pos::load($this->_doc->headerdata['pos']);
 
         if ($this->_tvars["ppo"] == true && $pos->usefisc == 1 && $sender->id == 'execdoc') {
-
+            $this->_doc->headerdata["fiscalnumberpos"]  =  $pos->fisc;
+ 
 
             $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
             if ($ret['success'] == false && $ret['doclocnumber'] > 0) {

@@ -134,6 +134,7 @@ class POSCheck extends Document
                         "checkslogan"   => $common["checkslogan"],
                         "customer_name" => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
                         "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
+                        "fiscalnumberpos"  => strlen($this->headerdata["fiscalnumberpos"]) > 0 ? $this->headerdata["fiscalnumberpos"] : false,
 
                         "pos_name"        => $this->headerdata["pos_name"],
                         "time"            => H::fdt($this->headerdata["time"]),
@@ -257,7 +258,7 @@ class POSCheck extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'К-000000';
+        return 'K-000000';
     }
 
     public function supportedExport() {

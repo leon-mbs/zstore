@@ -109,6 +109,7 @@ class Orders extends \App\Pages\Base
                 $neworder->customer_id = $modules['wccustomer_id'];
 
                 //товары
+                $j=0;
                 $itlist = array();
                 foreach ($wcorder->line_items as $product) {
                     //ищем по артикулу 
@@ -126,7 +127,7 @@ class Orders extends \App\Pages\Base
                     $tovar->quantity = $product->quantity;
                     $tovar->price = round($product->price);
 
-                    $itlist[] = $tovar;
+                    $itlist[++$j] = $tovar;
                 }
             if(count($itlist)==0)  {
                 return;

@@ -91,11 +91,12 @@ class Main extends Base
         //минимальное количество  
         if ($this->_tvars['wminqty'] == true) {
             $data = array();
-            $sql = "select t.qty, i.`minqty`,i.`itemname`,i.`item_code`   from (select  item_id, coalesce(sum( `qty`),0) as qty   from  store_stock 
-            where  {$cstr} 1=1 group by item_id    ) t
+            $sql = "select t.qty,s.storename, t.store_id, i.`minqty`,i.`itemname`,i.`item_code`   from (select store_id, item_id, coalesce(sum( `qty`),0) as qty   from  store_stock
+            where  {$cstr} 1=1 group by store_id, item_id    ) t
             join items  i  on t.item_id = i.item_id
+              join stores  s  on t.store_id = s.store_id
            
-            where i.disabled  <> 1 and  t.qty < i.`minqty` and i.`minqty`>0 ";
+            where i.disabled  <> 1 and  t.qty < i.`minqty` and i.`minqty`>0 order  by  s.storename ";
             $rs = $conn->Execute($sql);
 
             foreach ($rs as $row) {
@@ -335,6 +336,7 @@ class Main extends Base
         $item = $row->getDataItem();
 
         
+        $row->add(new Label('wmq_storename', $item->storename));
         $row->add(new Label('wmq_itemname', $item->itemname));
         $row->add(new Label('wmq_item_code', $item->item_code));
         $row->add(new Label('wmq_qty', H::fqty($item->qty)));
@@ -463,11 +465,13 @@ class Main extends Base
         }
         $conn = $conn = \ZDB\DB::getConnect();
 
-        $sql = "select t.qty, i.`minqty`,i.`itemname`,i.`item_code`   from (select  item_id ,coalesce(sum( `qty`),0) as qty   from  store_stock where  
-            {$cstr} 1=1 group by item_id,store_id   ) t
+        $sql = "select t.qty,s.storename, t.store_id, i.`minqty`,i.`itemname`,i.`item_code`   from (select store_id, item_id, coalesce(sum( `qty`),0) as qty   from  store_stock
+            where  {$cstr} 1=1 group by store_id, item_id    ) t
             join items  i  on t.item_id = i.item_id
+              join stores  s  on t.store_id = s.store_id
            
-            where i.disabled  <> 1 and  t.qty < i.`minqty` and i.`minqty`>0 ";
+            where i.disabled  <> 1 and  t.qty < i.`minqty` and i.`minqty`>0 order  by  s.storename ";
+
         $rc = $conn->Execute($sql);
         $header = array();
         $data = array();
@@ -475,11 +479,12 @@ class Main extends Base
         $i = 0;
         foreach ($rc as $row) {
             $i++;
-            $data['A' . $i] = $row['itemname'];
-            $data['B' . $i] = $row['item_code'];
-            $data['C' . $i] = H::fd($row['sdate']);
-            $data['D' . $i] = array('value' => H::fqty($row['qty']), 'format' => 'number');
-            $data['E' . $i] = array('value' => H::fqty($row['minqty']), 'format' => 'number');
+            $data['A' . $i] = $row['storename'];
+            $data['B' . $i] = $row['itemname'];
+            $data['C' . $i] = $row['item_code'];
+            $data['D' . $i] = H::fd($row['sdate']);
+            $data['E' . $i] = array('value' => H::fqty($row['qty']), 'format' => 'number');
+            $data['F' . $i] = array('value' => H::fqty($row['minqty']), 'format' => 'number');
         }
         H::exportExcel($data, $header, 'minqty.xlsx');
     }

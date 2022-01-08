@@ -231,6 +231,7 @@ class Subscribe extends \ZCL\DB\Entity
             }
             
         }
+        $header['taxurl'] = $doc->getFiscUrl();
 
         $table = array();
         foreach ($doc->unpackDetails('detaildata') as $item) {

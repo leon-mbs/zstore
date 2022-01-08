@@ -6,11 +6,18 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Form\CheckBox;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Binding\PropertyBinding as Prop;
+use \App\Helper as H;
 
 class ZForm extends \App\Pages\Base
 {
 
-    private $pos;
+    private $_pos;
+    public $_list;
 
     public function __construct() {
         parent::__construct();
@@ -30,6 +37,10 @@ class ZForm extends \App\Pages\Base
         $this->stat->add(new TextInput('retcnt'));
         $this->stat->add(new CheckBox('onlyshift'));
         $this->stat->setVisible(false);
+     
+        $this->add(new DataView('list', new ArrayDataSource(new Prop($this, '_list')), $this, 'OnRow'));
+       
+        
     }
 
     public function OnRefresh($sender) {
@@ -37,7 +48,7 @@ class ZForm extends \App\Pages\Base
         if ($pos_id == 0) {
             return;
         }
-        $this->pos = \App\Entity\Pos::load($pos_id);
+        $this->_pos = \App\Entity\Pos::load($pos_id);
 
         $this->stat->setVisible(true);
 
@@ -53,14 +64,62 @@ class ZForm extends \App\Pages\Base
 
        
         $data = \App\Modules\PPO\PPOHelper::getStat($pos_id, true);
-
-  
+   
 
         $this->stat->retnal->setText($data['amount0']);
         $this->stat->retbnal->setText($data['amount1']);
         $this->stat->retcnt->setText($data['cnt']);
+        
+        
+        $this->_list =  \App\Modules\PPO\PPOHelper::getStatList($pos_id );
+        $this->list->Reload() ;
+        
     }
 
+    public  function onRow($row){
+        $item = $row->getDataItem();
+        
+        
+        $amount0=0;
+        $amount1=0;
+        $amount0r=0;
+        $amount1r=0;
+        $amount2=$item->amount2;
+        $amount3=$item->amount3;
+
+        if($item->checktype == "3" ){
+          $amount0r=$item->amount0;
+          $amount1r=$item->amount1;
+            
+        } else {
+          $amount0=$item->amount0;
+          $amount1=$item->amount1;
+            
+        }
+
+        
+          
+        
+        $row->add(new Label("docnumber",$item->document_number));
+        $row->add(new Label("amount0", H::fa($amount0)) );
+        $row->add(new Label("amount1",H::fa($amount1)));
+        $row->add(new Label("amount2",H::fa($amount2)));
+        $row->add(new Label("amount3",H::fa($amount3)));
+        $row->add(new Label("amount0r",H::fa($amount0r)));
+        $row->add(new Label("amount1r",H::fa($amount1r)));
+        $row->add(new Label("del", $this,"onDel" ));
+        
+        
+    }
+    
+    
+    public function onDel($sender) {
+           $item = $sender->getOwner->getDataItem();
+           \App\Modules\PPO\PPOHelper::delStat($item->zf_id );
+   
+           $this->OnRefresh($this->filter) ;       
+        
+    }
     public function OnClose($sender) {
 
         $ret=true;
@@ -70,24 +129,26 @@ class ZForm extends \App\Pages\Base
         
         if ($ret == true) {
             //$this->closeshift();
-            $pos = \App\Entity\Pos::load($this->pos->pos_id);
+            $pos = \App\Entity\Pos::load($this->_pos->pos_id);
   
-            $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, false);
+            $ret = \App\Modules\PPO\PPOHelper::shift($this->_pos->pos_id, false);
 
-            if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
+            if ($ret['success'] == false && $ret['docnumber'] > 0) {
                 //повторяем для  нового номера
-                $this->pos->fiscdocnumber = $ret['doclocnumber'];
-                $this->pos->save();
-                $ret = \App\Modules\PPO\PPOHelper::shift( $this->pos->pos_id, false);
+                $this->_pos->fiscdocnumber = $ret['docnumber'];
+                $this->_pos->save();
+                $ret = \App\Modules\PPO\PPOHelper::shift( $this->_pos->pos_id, false);
 
             }
 
             if ($ret['success'] != true) {
                 $this->setErrorTopPage($ret['data']);
             } else {
-                \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id);
+                \App\Modules\PPO\PPOHelper::clearStat($this->_pos->pos_id);
                 $this->setSuccess('Смена  закрыта');
                 $this->stat->clean();
+                $this->OnRefresh($this->filter) ;
+                
             }
 
         };
@@ -110,15 +171,15 @@ class ZForm extends \App\Pages\Base
         $rstat['amount3'] = 0;
         $rstat['cnt'] = $this->stat->retcnt->getText();
 
-        $ret = \App\Modules\PPO\PPOHelper::zform($this->pos->pos_id, $stat, $rstat);
+        $ret = \App\Modules\PPO\PPOHelper::zform($this->_pos->pos_id, $stat, $rstat);
         if (strpos($ret['data'], 'ZRepAlreadyRegistered')) {
             return true;
         }
         if ($ret['success'] == false && $ret['docnumber'] > 0) {
             //повторяем для  нового номера
-            $this->pos->fiscdocnumber = $ret['docnumber'];
-            $this->pos->save();
-            $ret = \App\Modules\PPO\PPOHelper::zform($this->pos->pos_id, $stat, $rstat);
+            $this->_pos->fiscdocnumber = $ret['docnumber'];
+            $this->_pos->save();
+            $ret = \App\Modules\PPO\PPOHelper::zform($this->_pos->pos_id, $stat, $rstat);
         }
         if ($ret['success'] == false) {
             $this->setErrorTopPage($ret['data']);
@@ -126,8 +187,8 @@ class ZForm extends \App\Pages\Base
         } else {
 
             if ($ret['docnumber'] > 0) {
-                $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                $this->pos->save();
+                $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                $this->_pos->save();
                 return true;
             } else {
                 $this->setError("ppo_noretnumber");
@@ -138,16 +199,16 @@ class ZForm extends \App\Pages\Base
 
 
     }
-
+    /*
     public function closeshift() {
 
 
-        $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, false);
+        $ret = \App\Modules\PPO\PPOHelper::shift($this->_pos->pos_id, false);
         if ($ret['success'] == false && $ret['docnumber'] > 0) {
             //повторяем для  нового номера
             $pos->fiscdocnumber = $ret['docnumber'];
             $pos->save();
-            $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, false);
+            $ret = \App\Modules\PPO\PPOHelper::shift($this->_pos->pos_id, false);
         }
         if ($ret['success'] == false) {
             $this->setErrorTopPage($ret['data']);
@@ -155,17 +216,17 @@ class ZForm extends \App\Pages\Base
         } else {
             $this->setSuccess("ppo_shiftclosed");
             if ($ret['docnumber'] > 0) {
-                $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                $this->pos->save();
+                $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                $this->_pos->save();
             } else {
                 $this->setError("ppo_noretnumber");
                 return;
             }
-            \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id);
+            \App\Modules\PPO\PPOHelper::clearStat($this->_pos->pos_id);
         }
 
 
         return true;
     }
-
+    */
 }

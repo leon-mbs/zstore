@@ -4,9 +4,14 @@
     </tr>
     {{#fiscalnumber}}
     <tr>
-        <td colspan="3">Фиск. номер {{fiscalnumber}}</td>
+        <td colspan="3">ФН чека {{fiscalnumber}}</td>
     </tr>
     {{/fiscalnumber}}
+    {{#fiscalnumberpos}}
+    <tr>
+        <td colspan="3">ФН РРО {{fiscalnumberpos}}</td>
+    </tr>
+    {{/fiscalnumberpos}}
     <tr>
 
         <td colspan="3">от {{time}}</td>
@@ -42,9 +47,7 @@
 
     {{/customer_name}}
 
-    <tr>
-        <td colspan="3">Терминал: {{pos_name}}</td>
-    </tr>
+ 
     <tr>
         <td colspan="3">Кассир:</td>
     </tr>

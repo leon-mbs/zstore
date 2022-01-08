@@ -901,7 +901,7 @@ class Document extends \ZCL\DB\Entity
     }
 
     /**
-     * возвращает  тэг <img> со QR кодом ссылки на  документ
+     * возвращает  тэг <img> со QR кодом ссылки на  сайт налоговой
      *
      */
     protected function getQRCodeImage() {
@@ -909,9 +909,13 @@ class Document extends \ZCL\DB\Entity
         if ($print == 0) {
             return '';
         }
+        $url =$this->getFiscUrl( );
+        if(strlen($url)==0)  return '';
+       // $firm = \App\Entity\Firm::load($this->firm_id);
+
         $writer = new \Endroid\QrCode\Writer\PngWriter();
-        
-        $url = _BASEURL . "?p=App/Pages/Register/DocList&arg=" . $this->document_id;
+ 
+      
         $qrCode = new \Endroid\QrCode\QrCode($url);
         $qrCode->setSize(100);
         $qrCode->setMargin(5);
@@ -925,6 +929,24 @@ class Document extends \ZCL\DB\Entity
         return $img;
     }
 
+    
+    /**
+    *    возвращает ссылку  на чек в  налоговой
+    *    https://cabinet.tax.gov.ua/cashregs/check?fn=4000191957&id=165093488&date=20220105&time=132430&sum=840
+    */
+      public function getFiscUrl( ) {
+        if(strlen($this->headerdata["fiscalnumber"])==0) return "";
+        
+        $pos = \App\Entity\Pos::load($this->headerdata['pos']);
+        
+        $url = "https://cabinet.tax.gov.ua/cashregs/check?" ;
+        $url .=  "fn=". $pos->fiscalnumber ;
+        $url .=  "&id=". $this->headerdata["fiscalnumber"] ;
+        $url .=   $this->headerdata["fiscdts"] ;
+    
+        return $url;
+      }
+    
     /**
      * проверка  может  ли  быть  отменен
      * Возвращает  текст ошибки если  нет

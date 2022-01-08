@@ -138,6 +138,7 @@ class ReturnIssue extends \App\Pages\Base
                     }
                     if ($basedoc->meta_name == 'POSCheck') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
+                        $this->docform->pos->setValue($basedoc->headerdata['pos']);
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
@@ -289,7 +290,8 @@ class ReturnIssue extends \App\Pages\Base
         if ($pos_id > 0 && $sender->id == 'execdoc') {
             $pos = \App\Entity\Pos::load($pos_id);
             if ($pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
-
+                $this->_doc->headerdata["fiscalnumberpos"]  =  $pos->fisc;
+ 
                 if ($this->_basedocid > 0) {
                     $basedoc = Document::load($this->_basedocid);
                     $this->_doc->headerdata["docnumberback"] = $basedoc->headerdata["fiscalnumber"];

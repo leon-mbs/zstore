@@ -121,7 +121,7 @@ class PPOHelper
             if (strpos($return, 'Номер документа повинен дорівнювати') > 0) {
                 $arr = explode(' ', $return);
                 if ($arr[count($arr) - 1] > 0) {
-                    return array('success' => false, 'docnumber' => $arr[count($arr) - 1], 'data' => $return);
+                    return array('success' => false, 'doclocnumber' => $arr[count($arr) - 1], 'data' => $return);
 
                 }
             }
@@ -532,7 +532,8 @@ class PPOHelper
 
             self::insertStat($pos->pos_id, 1, $amount0, $amount1, $amount2, $amount3, $doc->document_number);
         }
-
+        $doc->headerdata["fiscdts"] = "&date=".date('Ymd')."&time={$header['time']}&sum={$header['amount']}";
+ 
         return $ret;
     }
 
@@ -701,6 +702,11 @@ class PPOHelper
 
         $conn->Execute("delete from ppo_zformstat where  pos_id=" . $pos_id);
     }
+    public static function delStat($id) {
+        $conn = \ZDB\DB::getConnect();
+
+        $conn->Execute("delete from ppo_zformstat where  zf_id=" . $id);
+    }
 
     public static function getStat($pos_id, $ret = false) {
         $conn = \ZDB\DB::getConnect();
@@ -714,6 +720,20 @@ class PPOHelper
 
 
         return $conn->GetRow($sql);
+    }
+   public static function getStatList($pos_id ) {
+        $conn = \ZDB\DB::getConnect();
+
+        $sql = "select  * from  ppo_zformstat where  pos_id=" . $pos_id;
+    
+        $list = array();
+        foreach($conn->Execute($sql) as $row) {
+            $item = new \App\DataItem($row) ;
+            $list[]= $item;
+           
+        }
+        
+        return $list;
     }
 
     public static function decrypt($data) {

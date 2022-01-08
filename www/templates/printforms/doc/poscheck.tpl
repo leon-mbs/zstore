@@ -22,7 +22,7 @@
         <td></td>
         <td valign="top"><b>Телефон</b></td>
         <td colspan="5">{{phone}}</td>
-    </tr>
+    </tr>   
     <tr>
         <td></td>
         <td valign="top"><b>Терминал</b></td>
@@ -93,7 +93,7 @@
                         <td colspan="3" > 
                             {{{docbarcode}}}
                         </td>
-                        <td colspan="4"> 
+                         <td colspan="4"> 
                             {{{docqrcode}}}
                         </td>
 

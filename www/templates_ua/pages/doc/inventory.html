@@ -76,6 +76,7 @@
                     <table class="table table-sm">
                         <tr>
                             <th>Назва</th>
+                            <th>Артикул</th>
 
                             {{#usesnumber}}
                             <th>Серія</th>
@@ -90,6 +91,7 @@
                         </tr>
                         <tr zippy="detail">
                             <td zippy="item"></td>
+                                                   <td zippy="item_code"></td>
 
                             {{#usesnumber}}
                             <td zippy="snumber"></td>
@@ -103,7 +105,7 @@
                             </td>
 
 
-                            <td><a zippy="delete"><i class="fa fa-trash"></i></a></td>
+                            <td><a tabindex="-1" zippy="delete"><i class="fa fa-trash"></i></a></td>
 
 
                         </tr>
