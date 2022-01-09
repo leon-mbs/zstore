@@ -90,16 +90,30 @@
         <td colspan="2" align="right">Сдача:</td>
         <td align="right">{{exchange}}</td>
     </tr>
+    
+    
+    <tr>
+               <td colspan="3" > 
+    {{#nal}}
+    Форма оплаты: наличные
+    {{/nal}}
+    {{^nal}}
+    Форма оплаты: банковская карта
+    {{/nal}}
+
+             </td>
+       </tr>       
+    
     {{/prepaid}}
+
+
+              
+
+   
     <tr  >
         <td colspan="3"><br>{{checkslogan}}</td>
 
     </tr>
-    <tr>
-                        <td colspan="3" > 
-                            {{{docbarcode}}}
-                        </td>
-       </tr>                 
        <tr>                    
                         <td colspan="3"> 
                             {{{docqrcode}}}

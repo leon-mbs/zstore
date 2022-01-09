@@ -78,11 +78,14 @@ class POSCheck extends Document
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
                         "prepaid"         => $this->headerdata['payment'] == 0,
-                        "docbarcode"      => $this->getBarCodeImage(),
+            
                         "docqrcode"       => $this->getQRCodeImage(),
                         "payamount"       => H::fa($this->payamount)
         );
-
+        if($this->headerdata['payment']  >0){
+            $mf = \App\Entity\MoneyFund::load($this->headerdata['payment'] );
+            $header['nal']  = $mf->beznal!=1;
+        }
         $report = new \App\Report('doc/poscheck.tpl');
 
         $html = $report->generate($header);
@@ -143,7 +146,7 @@ class POSCheck extends Document
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
                         "exchange"        => $this->headerdata["exchange"] > 0 ? H::fa($this->headerdata["exchange"]) : false,
-                        "docbarcode"      => $this->getBarCodeImage(),
+                        
                         "docqrcode"       => $this->getQRCodeImage(),
                         "payed"           => $this->headerdata['payed'] > 0 ? H::fa($this->headerdata['payed']) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false

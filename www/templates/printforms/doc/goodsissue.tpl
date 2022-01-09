@@ -151,11 +151,9 @@
 
                     </tr>
                         <tr>
-                        <td colspan="3" > 
+                        <td colspan="7" > 
                             {{{docbarcode}}}
-                        </td>
-                        <td colspan="4"> 
-                            {{{docqrcode}}}
+                
                         </td>
 
                     </tr>

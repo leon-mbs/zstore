@@ -73,8 +73,7 @@ class GoodsIssue extends Document
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
                         "style"           => $style,
 
-                        "docbarcode" => $this->getBarCodeImage(),
-                        
+                       
                         "payed"      => $this->payed > 0 ? H::fa($this->payed) : false,
                         "payamount"  => $this->payamount > 0 ? H::fa($this->payamount) : false
 
@@ -245,8 +244,7 @@ class GoodsIssue extends Document
                         "phone"           => $firm["phone"],
                         "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
                         "document_number" => $this->document_number,
-                        "docbarcode"      => $this->getBarCodeImage(),
-                     
+                         
                         "total"           => H::fa($this->amount)
         );
         if (strlen($this->headerdata["customer_name"]) == 0) {
