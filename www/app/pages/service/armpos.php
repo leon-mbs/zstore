@@ -176,6 +176,7 @@ class ARMPos extends \App\Pages\Base
         $this->add(new Form('editcust'))->setVisible(false);
         $this->editcust->add(new TextInput('editcustname'));
         $this->editcust->add(new TextInput('editphone'));
+        $this->editcust->add(new TextInput('editemail'));
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
@@ -825,6 +826,7 @@ class ARMPos extends \App\Pages\Base
 
         $this->editcust->editcustname->setText('');
         $this->editcust->editphone->setText('');
+        $this->editcust->editemail->setText('');
     }
 
     public function savecustOnClick($sender) {
@@ -835,6 +837,7 @@ class ARMPos extends \App\Pages\Base
         }
         $cust = new Customer();
         $cust->customer_name = $custname;
+        $cust->email = $this->editcust->editemail->getText();
         $cust->phone = $this->editcust->editphone->getText();
         $cust->phone = \App\Util::handlePhone($cust->phone);
 

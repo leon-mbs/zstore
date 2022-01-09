@@ -86,10 +86,8 @@
     </tr>
      {{/exchange}}  
                         <tr>
-                        <td colspan="3" > 
-                            {{{docbarcode}}}
-                        </td>
-                        <td colspan="4"> 
+                        <td colspan="7" > 
+                 
                             {{{docqrcode}}}
                         </td>
 

@@ -183,7 +183,7 @@ class TransItem extends \App\Pages\Base
             return Stock::findArrayAC($store_id, $text);
         } else {
             $text = Item::qstr('%' . $sender->getText() . '%');
-            return Item::findArray('itemname', "(itemname like {$text} or item_code like {$text})  and disabled <> 1");
+            return Item::findArray("concat(itemname,', ',item_code)", "(itemname like {$text} or item_code like {$text})  and disabled <> 1");
         }
     }
 

@@ -63,7 +63,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new CheckBox('showchat'));
 
 
-        $this->common->add(new CheckBox('printoutbarcode'));
+        
         $this->common->add(new CheckBox('printoutqrcode'));
         $this->common->add(new CheckBox('nocheckarticle'));
         $this->common->add(new CheckBox('exportxlsx'));
@@ -108,7 +108,7 @@ class Options extends \App\Pages\Base
         $this->common->usesnumber->setChecked($common['usesnumber']);
 
 
-        $this->common->printoutbarcode->setChecked($common['printoutbarcode']);
+        
         $this->common->printoutqrcode->setChecked($common['printoutqrcode']);
         $this->common->nocheckarticle->setChecked($common['nocheckarticle']);
         $this->common->exportxlsx->setChecked($common['exportxlsx']);
@@ -296,7 +296,7 @@ class Options extends \App\Pages\Base
         $common['useimages'] = $this->common->useimages->isChecked() ? 1 : 0;
 
         $common['printoutqrcode'] = $this->common->printoutqrcode->isChecked() ? 1 : 0;
-        $common['printoutbarcode'] = $this->common->printoutbarcode->isChecked() ? 1 : 0;
+        
         $common['nocheckarticle'] = $this->common->nocheckarticle->isChecked() ? 1 : 0;
         $common['exportxlsx'] = $this->common->exportxlsx->isChecked() ? 1 : 0;
 
