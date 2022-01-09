@@ -126,8 +126,10 @@ class Orders extends \App\Pages\Base
                     }
                     $tovar->quantity = $product->quantity;
                     $tovar->price = round($product->price);
+                    $j++;
+                    $tovar->rowid = $j;
 
-                    $itlist[++$j] = $tovar;
+                    $itlist[$j] = $tovar;
                 }
             if(count($itlist)==0)  {
                 return;

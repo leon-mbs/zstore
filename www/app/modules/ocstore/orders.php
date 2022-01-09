@@ -134,8 +134,7 @@ class Orders extends \App\Pages\Base
                 $neworder->document_number = 'OC00001';
             }
             $neworder->customer_id = $modules['occustomer_id'];
-
-            //товары
+            $j=0;           //товары
             $tlist = array();
             foreach ($shoporder->_products_ as $product) {
                 //ищем по артикулу 
@@ -160,8 +159,10 @@ class Orders extends \App\Pages\Base
                 }
                 //$tovar->octoreoptions = serialize($product['_options_']);
                 $tovar->desc = $desc;
+                $j++;
+                $tovar->rowid = $j;
 
-                $tlist[] = $tovar;
+                $tlist[$j] = $tovar;
             }
             if(count($tlist)==0)  {
                 return;
@@ -289,8 +290,10 @@ class Orders extends \App\Pages\Base
                 $tovar->quantity = $product['quantity'];
                 $tovar->price = round($product['price']);
                 $totalpr += ($tovar->quantity * $tovar->price);
+                $j++;
+                $tovar->rowid = $j;
 
-                $tlist[++$j] = $tovar;
+                $tlist[$j] = $tovar;
             }
             $neworder->packDetails('detaildata', $tlist);
 
