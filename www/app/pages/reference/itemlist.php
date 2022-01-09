@@ -585,6 +585,8 @@ class ItemList extends \App\Pages\Base
                 $header['name'] = $item->itemname;
             }
         }
+        $header['name'] = str_replace("'","`", $header['name'])  ;
+        
         $header['action'] = $item->actionprice > 0;
         $header['actionprice'] = $item->actionprice;
         $header['isap'] = false;
@@ -675,6 +677,7 @@ class ItemList extends \App\Pages\Base
                     $header['name'] = $item->itemname;
                 }
             }
+            $header['name'] = str_replace("'","`", $header['name'])  ;
             if ($printer['pcode'] == 1) {
                 $header['article'] = $item->item_code;
                 $header['isap'] = true;
