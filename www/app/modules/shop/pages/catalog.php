@@ -413,8 +413,12 @@ class FilterAttributeComponent extends \Zippy\Html\CustomComponent implements \Z
 
     //Вынимаем данные формы  после  сабмита
     public function getRequestData() {
-
-        $this->value = @array_values($_POST[$this->id]);
+        $this->value = array();
+        
+        if(is_array(@$_POST[$this->id])) {
+           $this->value = array_values($_POST[$this->id]);    
+        }
+        
         if (!is_array($this->value)) {
             $this->value = array();
         }
