@@ -95,6 +95,7 @@ class docs extends \App\API\Base\JsonRPC
                     $item->quantity = $it['quantity'];
                     $item->price = $it['price'];
                     $item->desc = $it['desc'];
+                    $item->rowid = $item->item_id;
                     $item->amount = $item->quantity * $item->price;
                     $total = $total + $item->quantity * $item->price;
                     $details[$item->item_id] = $item;
@@ -173,10 +174,11 @@ class docs extends \App\API\Base\JsonRPC
                 $item = Item::getFirst("disabled<> 1 and item_code=" . Item::qstr($it['item_code']));
 
                 if ($item instanceof Item) {
-
+                 
                     $item->quantity = $it['quantity'];
                     $item->price = $it['price'];
-                    $item->amount = $item->quantity * $item->price;
+                      $item->rowid = $item->item_id;
+                  $item->amount = $item->quantity * $item->price;
                     $total = $total + $item->quantity * $item->price;
                     $details[$item->item_id] = $item;
                 } else {
@@ -257,7 +259,8 @@ class docs extends \App\API\Base\JsonRPC
                     $item->quantity = $it['quantity'];
                     $item->price = $it['price'];
                     $item->amount = $item->quantity * $item->price;
-                    $total = $total + $item->quantity * $item->price;
+                   $item->rowid = $item->item_id;
+                     $total = $total + $item->quantity * $item->price;
                     $details[$item->item_id] = $item;
                 } else {
                     throw new \Exception(H::l("apiitemnotfound", $it['code']));
@@ -343,6 +346,7 @@ class docs extends \App\API\Base\JsonRPC
 
                     $item->quantity = $it['quantity'];
                     $item->price = $it['price'];
+                    $item->rowid = $item->item_id;
                     $item->amount = $item->quantity * $item->price;
                     $total = $total + $item->quantity * $item->price;
                     $details[$item->item_id] = $item;
@@ -420,7 +424,8 @@ class docs extends \App\API\Base\JsonRPC
 
                     $item->quantity = $it['quantity'];
                     $item->price = $it['price'];
-                    $item->amount = $item->quantity * $item->price;
+                   $item->rowid = $item->item_id;
+                     $item->amount = $item->quantity * $item->price;
                     $total = $total + $item->quantity * $item->price;
                     $details[$item->item_id] = $item;
                 } else {
@@ -529,7 +534,8 @@ class docs extends \App\API\Base\JsonRPC
                 if ($item instanceof Item) {
 
                     $item->quantity = $it['quantity'];
-
+                          $item->rowid = $item->item_id;
+ 
                     $details[$item->item_id] = $item;
                 } else {
                     throw new \Exception(H::l("apiitemnotfound", $it['code']));
@@ -597,6 +603,7 @@ class docs extends \App\API\Base\JsonRPC
 
                     $item->quantity = $it['quantity'];
                     $item->price = $it['price'];
+                    $item->rowid = $item->item_id;
                     $item->amount = $item->quantity * $item->price;
                     $total = $total + $item->quantity * $item->price;
                     $details[$item->service_id] = $item;

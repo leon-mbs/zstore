@@ -138,7 +138,7 @@ class OrderList extends \App\Pages\Base
         }
 
         $state = $this->_doc->state;
-
+         
         //проверяем  что есть ТТН
         $list = $this->_doc->getChildren('TTN');
         $ttn = count($list) > 0;
@@ -198,9 +198,17 @@ class OrderList extends \App\Pages\Base
 
         if ($sender->id == "bclose") {
 
-            //  $this->_doc->payamount = $this->_doc->amount;
-            // $this->_doc->save();
+             
+            
+            if($this->_doc->payamount >0 && $this->_doc->payamount>$this->_doc->payed ) {
+                $this->setWarn('ord_closed_nopay');
+            }       
+            
+            if($ttn== false && $gi == false) {
+                $this->setWarn('ord_closed_nodel');
+            }
 
+            
             $this->_doc->updateStatus(Document::STATE_CLOSED);
             $this->statuspan->setVisible(false);
         }
