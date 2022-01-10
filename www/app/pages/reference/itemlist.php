@@ -252,6 +252,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->edittype->setValue($this->_item->item_type);
 
         $this->itemdetail->editurl->setText($this->_item->url);
+        $this->itemdetail->editweight->setText($this->_item->weight);
         $this->itemdetail->editcell->setText($this->_item->cell);
         $this->itemdetail->editminqty->setText(\App\Helper::fqty($this->_item->minqty));
         $this->itemdetail->editzarp->setText(\App\Helper::fqty($this->_item->zarp));
