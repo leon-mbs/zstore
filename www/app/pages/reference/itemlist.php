@@ -584,8 +584,10 @@ class ItemList extends \App\Pages\Base
             } else {
                 $header['name'] = $item->itemname;
             }
+            $header['name'] = str_replace("'","`", $header['name'])  ;
+            $header['name'] = str_replace("\"'","`", $header['name'])  ;
         }
-        $header['name'] = str_replace("'","`", $header['name'])  ;
+       
         
         $header['action'] = $item->actionprice > 0;
         $header['actionprice'] = $item->actionprice;
