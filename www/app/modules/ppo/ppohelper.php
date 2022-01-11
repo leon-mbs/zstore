@@ -457,7 +457,10 @@ class PPOHelper
             $n++;
             $amount3 = $pay['paysum'];
         } else {
-            if ($mf != null && $mf->beznal == 1) {
+            
+            
+            
+            if (  $mf->beznal == 1) {
                 $pay = array(
                     'formname' => H::l('ppo_bnal'),
                     'formcode' => 1,
@@ -568,8 +571,9 @@ class PPOHelper
         $amount1 = 0;
         $amount2 = 0;
         $amount3 = 0;
-
-        if ($mf != null && $mf->beznal == 1) {
+         
+ 
+        if (  $mf->beznal == 1) {
             $header['formname'] = H::l('ppo_bnal');
             $header['formcode'] = 1;
             $amount1 = number_format($payed, 2, '.', '');
@@ -635,8 +639,9 @@ class PPOHelper
         $amount1 = 0;
         $amount2 = 0;
         $amount3 = 0;
-
-        if ($mf != null && $mf->beznal == 1) {
+           
+ 
+        if (  $mf->beznal == 1) {
             $header['formname'] = H::l('ppo_bnal');
             $header['formcode'] = 1;
             $amount1 = number_format($doc->payed, 2, '.', '');
