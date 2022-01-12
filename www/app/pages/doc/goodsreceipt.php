@@ -252,7 +252,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         $row->add(new Label('item', $item->itemname));
         $row->add(new Label('code', $item->item_code));
-        $row->add(new Label('barcode', $item->bar_code));
+        $row->add(new Label('bar_code', $item->bar_code));
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));
         $row->add(new Label('msr', $item->msr));
@@ -288,8 +288,8 @@ class GoodsReceipt extends \App\Pages\Base
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
-         $code0 = $code;
-       $code = ltrim($code,'0');
+         
+        $code = ltrim($code,'0');
 
         $this->docform->barcode->setText('');
         if ($code == '') {

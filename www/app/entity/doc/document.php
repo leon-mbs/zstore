@@ -917,14 +917,14 @@ class Document extends \ZCL\DB\Entity
  
       
         $qrCode = new \Endroid\QrCode\QrCode($url);
-        $qrCode->setSize(100);
+        $qrCode->setSize(200);
         $qrCode->setMargin(5);
        // $qrCode->setWriterByName('png');
 
         $result = $writer->write($qrCode );
      
         $dataUri = $result->getDataUri();
-        $img = "<img   src=\"{$dataUri}\"  />";
+        $img = "<img style=\"width:80%\"  src=\"{$dataUri}\"  />";
 
         return $img;
     }

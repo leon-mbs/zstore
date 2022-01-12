@@ -4,6 +4,9 @@
     </tr>
     {{#fiscalnumber}}
     <tr>
+        <td colspan="3">Фискальный чек</td>
+    </tr>
+    <tr>
         <td colspan="3">ФН чека {{fiscalnumber}}</td>
     </tr>
     {{/fiscalnumber}}
