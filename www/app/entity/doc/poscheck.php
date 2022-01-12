@@ -151,7 +151,10 @@ class POSCheck extends Document
                         "payed"           => $this->headerdata['payed'] > 0 ? H::fa($this->headerdata['payed']) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
         );
-
+        if($this->headerdata['payment']  >0){
+            $mf = \App\Entity\MoneyFund::load($this->headerdata['payment'] );
+            $header['nal']  = $mf->beznal!=1;
+        }
         $report = new \App\Report('doc/poscheck_bill.tpl');
 
         $html = $report->generate($header);

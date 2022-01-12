@@ -55,14 +55,14 @@ class ShowDoc extends \Zippy\Html\WebPage
                 if($common['exportxlsx'] == 1)  {
                
                 
-                    $file = tempnam(sys_get_temp_dir() );
+                    $file = tempnam(sys_get_temp_dir(),""+time() );
                  
                     $handle = fopen($file, "w");
                     fwrite($handle, $html);
                     $reader =  new \PhpOffice\PhpSpreadsheet\Reader\Html()  ;
                     $spreadsheet = $reader->load($file);
                     fclose($handle);
-                    unlink($file);              
+                    @unlink($file);              
                 
                     $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
 

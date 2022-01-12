@@ -58,7 +58,7 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('binp'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('brd'))->onClick($this, 'statusOnSubmit');
 
-        $this->statuspan->statusform->add(new SubmitButton('binv'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bpos'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bgi'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bco'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
@@ -144,8 +144,10 @@ class OrderList extends \App\Pages\Base
         $ttn = count($list) > 0;
         $list = $this->_doc->getChildren('GoodsIssue');
         $gi = count($list) > 0;
-        $list = $this->_doc->getChildren('Invoice');
-        $invoice = count($list) > 0;
+      //  $list = $this->_doc->getChildren('Invoice');
+     //   $invoice = count($list) > 0;
+        $list = $this->_doc->getChildren('POSCheck');
+        $pos = count($list) > 0;
 
         if ($sender->id == "binp") {
             $this->_doc->updateStatus(Document::STATE_INPROCESS);
@@ -174,11 +176,11 @@ class OrderList extends \App\Pages\Base
             App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
             return;
         }
-        if ($sender->id == "binv") {
-            if ($invoice) {
-                $this->setWarn('invoice_exists');
+        if ($sender->id == "bpos") {
+            if ($pos) {
+                $this->setWarn('pos_exists');
             }
-            App::Redirect("\\App\\Pages\\Doc\\Invoice", 0, $this->_doc->document_id);
+            App::Redirect("\\App\\Pages\\Doc\\POSCheck", 0, $this->_doc->document_id);
             return;
         }
 
@@ -240,7 +242,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bclose->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
-            $this->statuspan->statusform->binv->setVisible(false);
+            $this->statuspan->statusform->bpos->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(false);
             $this->statuspan->statusform->bco->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(true);
@@ -259,7 +261,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bclose->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
-            $this->statuspan->statusform->binv->setVisible(false);
+            $this->statuspan->statusform->bpos->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(false);
             $this->statuspan->statusform->brd->setVisible(false);
         }
@@ -268,27 +270,27 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->brd->setVisible(true);
 
             $this->statuspan->statusform->bttn->setVisible(true);
-            $this->statuspan->statusform->binv->setVisible(true);
+            $this->statuspan->statusform->bpos->setVisible(true);
             $this->statuspan->statusform->bgi->setVisible(true);
         }
         if ($state == Document::STATE_INSHIPMENT) {
 
             $this->statuspan->statusform->bttn->setVisible(false);
-            $this->statuspan->statusform->binv->setVisible(false);
+            $this->statuspan->statusform->bpos->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
         }
         if ($state == Document::STATE_READYTOSHIP) {
 
             $this->statuspan->statusform->bttn->setVisible(true);
-            $this->statuspan->statusform->binv->setVisible(false);
+            $this->statuspan->statusform->bpos->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(true);
             $this->statuspan->statusform->btask->setVisible(false);
         }
         if ($state == Document::STATE_DELIVERED) {
 
             $this->statuspan->statusform->bttn->setVisible(false);
-            $this->statuspan->statusform->binv->setVisible(false);
+            $this->statuspan->statusform->bpos->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
@@ -298,7 +300,7 @@ class OrderList extends \App\Pages\Base
 
             $this->statuspan->statusform->bclose->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
-            $this->statuspan->statusform->binv->setVisible(false);
+            $this->statuspan->statusform->bpos->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
@@ -333,7 +335,7 @@ class OrderList extends \App\Pages\Base
 
         $list = $this->_doc->getChildren('Invoice');
         if (count($list) > 0) {
-            $this->statuspan->statusform->binv->setVisible(false);
+            $this->statuspan->statusform->bpos->setVisible(false);
         }
     }
 
