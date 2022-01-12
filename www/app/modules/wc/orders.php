@@ -125,7 +125,7 @@ class Orders extends \App\Pages\Base
                         continue;
                     }
                     $tovar->quantity = $product->quantity;
-                    $tovar->price = round($product->price);
+                    $tovar->price = \App\Helper::fa($product->price);
                     $j++;
                     $tovar->rowid = $j;
 
