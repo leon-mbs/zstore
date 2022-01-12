@@ -374,20 +374,29 @@ class Item extends \ZCL\DB\Entity
      * @param mixed $store_id
      * @param mixed $snumber партия проиводителя
      */
-    public function getQuantity($store_id = 0, $snumber = "") {
+    public function getQuantity($store_id = 0, $snumber = "",$date=0) {
         $cstr = \App\Acl::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "    store_id in ({$cstr})  and   ";
         }
 
         $conn = \ZDB\DB::getConnect();
-        $sql = "  select coalesce(sum(qty),0) as totqty  from  store_stock_view where {$cstr}  item_id = {$this->item_id} ";
+        $where = "   {$cstr}  item_id = {$this->item_id} ";
         if ($store_id > 0) {
             $sql .= " and store_id = " . $store_id;
         }
         if (strlen($snumber) > 0) {
             $sql .= " and  snumber = " . $conn->qstr($snumber);
         }
+
+        if($date > 0){
+            
+            $sql = "  select  coalesce(sum(quantity),0)  as totqty  from  entrylist_view where document_date <= ". $conn->DBDate($date) ." and  stock_id in (select  stock_id from  store_stock_view where {$where} )" ;    
+     
+        }   else{
+            $sql = "  select coalesce(sum(qty),0) as totqty  from  store_stock_view where ". $where;    
+        }
+          
         $cnt = $conn->GetOne($sql);
         return $cnt;
     }

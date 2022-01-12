@@ -141,7 +141,8 @@ class Inventory extends \App\Pages\Base
         $store = $this->docform->store->getValue();
         $sn = trim($this->editdetail->editserial->getText());
 
-        $item->quantity = $item->getQuantity($store, $sn);
+
+        $item->quantity = $item->getQuantity($store, $sn,$this->docform->document_date->getDate(0));
         $item->qfact = $this->editdetail->editquantity->getText();
         $item->snumber = $sn;
 
@@ -198,7 +199,7 @@ class Inventory extends \App\Pages\Base
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
 
         foreach ($this->_itemlist as $item) {
-            $item->quantity = $item->getQuantity($this->_doc->headerdata['store'], $item->snumber);
+            $item->quantity = $item->getQuantity($this->_doc->headerdata['store'], $item->snumber,$this->docform->document_date->getDate(0));
         }
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
