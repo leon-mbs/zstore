@@ -126,8 +126,9 @@ module.exports = {
           var item = this.items[this.current]
           this.query = item.name
           this.reset()
+          this.onhit(item.id)
           
-          this.selected = item.id
+         
           
       }
     },

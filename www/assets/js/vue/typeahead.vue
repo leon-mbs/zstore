@@ -50,7 +50,7 @@ module.exports = {
                     this.onhit(newVal);
                      
                   
-                }  ,
+                }   
                 
            }  
          ,   

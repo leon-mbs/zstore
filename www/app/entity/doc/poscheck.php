@@ -204,7 +204,7 @@ class POSCheck extends Document
             }
 
             if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
-                throw new \Exception(\App\Helper::l("nominus", $item->quantity, $item->itemname));
+                throw new \Exception(\App\Helper::l("nominus", $item->getQuantity($this->headerdata['store']), $item->itemname));
             }
 
 

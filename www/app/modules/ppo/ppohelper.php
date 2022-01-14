@@ -403,7 +403,8 @@ class PPOHelper
         $header['docnumber'] = $pos->fiscdocnumber;
         $header['posinner'] = $pos->fiscallocnumber;
         $header['posnumber'] = $pos->fiscalnumber;
-        $header['username'] = $doc->username;
+        $user = \App\Entity\User::load($doc->user_id);
+        $header['username'] = $user->username;
         $header['guid'] = \App\Util::guid();
 
         $header['disc'] = $doc->headerdata["paydisc"] > 0 ? number_format($doc->headerdata["paydisc"], 2, '.', '') : false;
@@ -633,7 +634,8 @@ class PPOHelper
         $header['docnumber'] = $pos->fiscdocnumber;
         $header['posinner'] = $pos->fiscallocnumber;
         $header['posnumber'] = $pos->fiscalnumber;
-        $header['username'] = $doc->username;
+        $user = \App\Entity\User::load($doc->user_id);
+        $header['username'] = $user->username;
         $header['guid'] = \App\Util::guid();
         $amount0 = 0;
         $amount1 = 0;

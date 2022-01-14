@@ -297,7 +297,7 @@
           searchtext:'' ,
           currpage:0,
            
-          pagesize:3
+          pagesize:25
       }  ,
       components: {
             'paginator': httpVueLoader('/assets/js/vue/paginator.vue') ,
@@ -351,7 +351,7 @@
                     this.$refs.custth.id=0
                     this.$refs.custth.query=''
                     this.loaddata();
-
+                  this.loadinit(); 
                     this.edited = false  
                     
                   });           
@@ -365,6 +365,7 @@
               {
               //  this.$refs.prpag.reset = Date.now()  //сброс  пагинатора
                 this.edited = false  
+                this.loadinit(); 
                 this.loaddata();
               });        
               
@@ -394,6 +395,19 @@
             } ,
               
                  
+       loadinit: function( start ){
+    
+          callPageMethod('loadinit',null,null ,(data)=> 
+          {
+              let tmp =   JSON.parse(data)  
+              this.fsstist=  tmp.stlist
+              this.fscustist=  tmp.custlist
+              
+          
+          });               
+            } ,
+              
+                 
                
         onfilter:function (){
                 this.rowscnt=0;
@@ -408,14 +422,8 @@
          
       },          
        mounted: function(){
-           callPageMethod('loadinit',null,null ,(data)=> 
-          {
-              let tmp =   JSON.parse(data)  
-              this.fsstist=  tmp.stlist
-              this.fscustist=  tmp.custlist
-              
-          
-          });   
+ 
+          this.loadinit(); 
           this.loaddata(); 
               
         }
