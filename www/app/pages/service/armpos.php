@@ -104,8 +104,8 @@ class ARMPos extends \App\Pages\Base
 
         $this->docpanel->form2->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'));
         $this->docpanel->form2->add(new DataView('detailser', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_serlist')), $this, 'serOnRow'));
-        $this->docpanel->form2->add(new ClickLink('openshift', $this, 'OnOpenShift'));
-        $this->docpanel->form2->add(new ClickLink('closeshift', $this, 'OnCloseShift'));
+        $this->docpanel->add(new ClickLink('openshift', $this, 'OnOpenShift'));
+        $this->docpanel->add(new ClickLink('closeshift', $this, 'OnCloseShift'));
 
         //оплата
         $this->docpanel->add(new Form('form3'))->setVisible(false);
@@ -991,6 +991,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form3->customer->setText('');
         $this->docpanel->form3->payment->setValue(H::getDefMF());
         $this->docpanel->form3->setVisible(false);
+        $this->docpanel->form2->setVisible(false);
         $this->docpanel->formcheck->setVisible(true);
         $this->docpanel->form3->notes->setText('');
         $check = $this->_doc->generatePosReport();

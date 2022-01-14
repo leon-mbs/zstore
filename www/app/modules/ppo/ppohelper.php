@@ -187,7 +187,7 @@ class PPOHelper
                     $decrypted = base64_decode($ret->data);
 
                 } else {
-                    $decrypted = PPO::decrypt($return);
+                    $decrypted = PPO::decrypt($return,true);
 
                 }
 
