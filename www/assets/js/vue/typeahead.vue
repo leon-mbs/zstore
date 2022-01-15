@@ -38,12 +38,22 @@ module.exports = {
       current: -1,
        
       selectFirst: false,
-   
+      id:-1,name:''
      
       
     }
   },
-
+         watch:   { 
+             
+                id(newVal, oldVal) { 
+                    this.current = -1;
+                    this.onhit(newVal);
+                     
+                  
+                }   
+                
+           }  
+         ,   
   computed: {
     hasItems () {
       return this.items.length > 0
@@ -60,7 +70,7 @@ module.exports = {
 
   methods: {
     update () {
-      this.cancel()
+      //this.cancel()
       
       if (!this.query) {
         return this.reset()
@@ -87,16 +97,8 @@ module.exports = {
       
     },
   
-    fetch () {
+   
     
-
-       
-    },
-
-    cancel () {
-      // used to 'cancel' previous searches
-    },
-
     reset () {
       this.items = []
     //  this.query = ''
@@ -118,8 +120,8 @@ module.exports = {
           var item = this.items[this.current]
           this.query = item.name
           this.reset()
-          this.onhit(item.id);
-          
+          //this.onhit(item.id);
+          this.id= item.id
       }
     },
 
@@ -142,7 +144,7 @@ module.exports = {
     } 
   }   
   ,
-  props:['placeholder','onhit','onquery','limit','minchars' ]
+  props:['placeholder','onhit','onquery','limit','minchars'  ]
 }
 </script>
 

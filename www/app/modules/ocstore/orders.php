@@ -168,7 +168,7 @@ class Orders extends \App\Pages\Base
                 return;
             }
             $neworder->packDetails('detaildata', $tlist);
-            $neworder->amount = round($shoporder->total);
+            $neworder->amount = \App\Helper::fa($shoporder->total);
             
             if($modules['ocsetpayamount']==1){
                $neworder->payamount = $neworder->amount;

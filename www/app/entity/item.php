@@ -383,10 +383,10 @@ class Item extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $where = "   {$cstr}  item_id = {$this->item_id} ";
         if ($store_id > 0) {
-            $sql .= " and store_id = " . $store_id;
+            $where .= " and store_id = " . $store_id;
         }
         if (strlen($snumber) > 0) {
-            $sql .= " and  snumber = " . $conn->qstr($snumber);
+            $where .= " and  snumber = " . $conn->qstr($snumber);
         }
 
         if($date > 0){

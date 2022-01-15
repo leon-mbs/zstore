@@ -90,9 +90,13 @@
       {{/exchange}}  
 
           <tr>
-                        <td colspan="7" > 
+                            <td colspan="2" > 
                   
                             {{{docqrcode}}}
+                        </td>
+                       <td colspan="5" > 
+                  
+                           
                         </td>
 
                     </tr>    

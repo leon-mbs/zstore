@@ -4,21 +4,124 @@
     </head>
 
     <body>
-
-
-        <div class="row" zippy="projectpanel">
+    <!--
+     {{={| |}=}}  
+        <div id="vapp">
+          <div class="row" v-show="this.edited==false && this.showed==false" >
             <div class="col-12  ">
                 <h2>Проекты</h2>
+                <div class="navbar nav  ">
+                    <form id="filterform"  class="form-inline ">
+                        <input   placeholder="Поиск..." class="form-control mr-2" type="text" name="searchnumber">
+
+                        <label for="searchstate">статус </label>
+                        <select class="form-control  mr-2   " name="searchstate">
+                            <option value="0">Открытые</option>
+                            <option v-for="st   in fsstist"   :value="st.id">{{st.name}}</option>
+                            
+                        </select>
+                        <label for="searchcust">заказчик </label>
+                        <select class="form-control     " name="searchcust">
+                            <option value="0">Не выбран</option>
+                            <option v-for="c   in fscustist"   :value="c.id">{{c.name}}</option>
+                        </select>
+
+
+                        <input v-on:click.prevent="onfilter" type="button" class=" ml-2   btn btn-outline-success  " value="ОК">
+                    </form>
+
+                </div>
+                
+                
+            </div>
+            <div class="col-12 col-xl-10 ">
+                <a v-on:click.prevent="onadd"  href="javascript:return false;" class="btn btn-primary  ">Новый проект</a>
+                <table class="table table-bordered  table-sm">
+                    <tr>
+                        <th>Название</th>
+                        <th>Заказчик</th>
+                        <th>Статус</th>
+                        <th colspan="3" class="text-center">Задачи</th>
+
+                        <th></th>
+                    </tr>
+                    <tr v-for="pr,index in prlist" >
+                    
+                        <td   >{{pr.project_name}}</td>
+                        <td   >{{pr.customer_name}}</td>
+                        <td  >{{pr.status}}</td>
+                        <td style="width:40px"><span   title="Новые" class="badge badge-success  " v-show="pr.inew>0">{{pr.inew}}</span></td>
+                        <td style="width:40px"><span   title="В работе" class="badge badge-primary" v-show="pr.iproc>0">{{pr.iproc}}</span></td>
+                        <td style="width:40px"><span   title="Закрытые" class="badge badge-secondary" v-show="pr.iclose>0">{{pr.iclose}}</span></td>
+
+                        <td>
+                            <a v-on:click.prevent="onshow(index)"  href="javascript:return false;"  title="Просмотр"><i  class="fa fa-eye"/></a>
+                            &nbsp;&nbsp;  &nbsp;&nbsp;
+                            <a v-on:click.prevent="onedit(index)"   href="javascript:return false;"  title="Редактировать"><i class="fa fa-edit"></i></a>
+
+                            
+                    </tr>
+                </table>
+                   <paginator  ref="prpag"  :onpage="onpage"  v-bind:rows="rowscnt" v-bind:pagesize="pagesize" buttonscnt="10"></paginator>
+                  </div>
+           
+        </div>
+         <div class="row" v-show="this.edited">
+            <div class="col-12">
+                <form  id="custform">
+                    <div class="row">
+                        <div class="col-12 col-md-6  col-xl-4">
+
+                            <div class="form-group">
+                                <label for="project_name"> Название</label>
+                                <input v-model="curritem.project_name" class="form-control" type="text"   required="required">
+                            </div>
+                            <div class="form-group">
+                                <label for="cust"> Заказчик </label>
+                                <typeahead  ref="custth"  :onquery="ontextcust"  :onhit="selectcust" placeholder="Начните вводить номер..."></typeahead>   
+
+                            </div>
+                            <div class="form-group">
+                                <label for="editdesc"> Описание </label>
+                                <textarea v-model="curritem.desc" style="height:200px;" v-model="name" class="form-control mr-2"  ></textarea>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4  col-xl-3">
+                            <div class="form-group">
+                                <label> Список участников </label>
+                                <div  ></div>
+                            </div>
+                        </div>
+                        <div class="col-12  ">
+                            <div class="form-group">
+                                <input  v-on:click.prevent ="onsave" type="button" value="Сохранить" class="btn btn-outline-primary  "> &nbsp;&nbsp;
+                                <input v-on:click.prevent ="oncancel"   type="button" value="Отменить" class="btn btn-outline-secondary ">  &nbsp;&nbsp;
+                                <input v-show="showdelete" v-on:click.prevent ="ondel"   type="button" value="Удалить" class="btn btn-danger ">  
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            
+        </div> 
+   </div>
+        
+     {|={{ }}=|}    
+         -->
+        <div class="row" zippy="projectpanel">
+            <div class="col-12  ">
+                <h2>Проекты 2</h2>
                 <div class="navbar nav  ">
                     <form zippy="filter" class="form-inline ">
                         <input placeholder="Поиск..." class="form-control mr-2" type="text" zippy="searchnumber">
 
                         <label for="searchstate">статус </label>
-                        <select class="form-control  mr-2   " zippy="searchstate">
+                        <select  class="form-control  mr-2   " zippy="searchstate">
                             <option value="0">Открытые</option>
                         </select>
                         <label for="searchcust">заказчик </label>
-                        <select class="form-control     " zippy="searchcust">
+                        <select  class="form-control     " zippy="searchcust">
                             <option value="0">Не выбран</option>
                         </select>
 
@@ -56,7 +159,7 @@
                             <a zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a></td>
                     </tr>
                 </table>
-                <div zippy="pag"></div>
+                <div  zippy="pag"></div>
             </div>
 
         </div>
@@ -90,7 +193,7 @@
                         <div class="col-12 col-md-4  col-xl-4">
                             <div class="form-group">
                                 <input zippy="save" type="submit" value="Сохранить" class="btn btn-outline-primary  "> &nbsp;
-                                <input zippy="cancel" type="button" value="Отменить" class="btn btn-light ">
+                                <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-secondary ">
                             </div>
                         </div>
                     </div>
@@ -174,8 +277,166 @@
         </div>
 
 
-        <script>
-            $(function () {
+  
+        
+        
+            <script> 
+  
+     /*
+      const vapp = new Vue({
+      el: '#vapp',
+      data: {
+          prlist:[] ,
+          fsstist:[] ,
+          fscustist:[] ,
+
+          curritem:{"project_id":0,"status":0,"project_name":''}  ,
+      
+          rowscnt:0  ,
+          edited:false  ,
+          showed:false  ,
+          searchtext:'' ,
+          currpage:0,
+           
+          pagesize:25
+      }  ,
+      components: {
+            'paginator': httpVueLoader('/assets/js/vue/paginator.vue') ,
+            'typeahead': httpVueLoader('/assets/js/vue/typeahead.vue') 
+            
+      }, 
+      methods: {
+            
+                selectcust: function (id){
+            
+                    this.curritem.customer_id = id 
+                },
+                ontextcust: async function (query){
+                   
+                    var url  = getMethodUrl( 'ontextCustomers',[query ])
+                    let response = await fetch(url);
+             
+                    return  await response.json()  ;
+     
+                }  ,            
+            
+          onshow:function(   ){    
+             this.showed = true   
+            
+            }   ,    
+          onedit:function( index ){    
+                
+               this.edited = true
+               this.curritem = this.prlist[index]  
+               
+               this.$refs.custth.id=this.curritem.customer_id
+               this.$refs.custth.query=this.curritem.customer_name
+               
+                  
+            }   ,    
+          onadd:function(  ){    
+               this.edited = true
+              this.curritem ={"project_id":0,"status":0} 
+                    
+            }   ,    
+          onsave:function(  ){    
+               if(!this.curritem.project_name ) {
+                  toastr.error('Не  введено имя  проекта' );    
+                  return
+               }
+               
+          
+              callPageMethod('savepr',[ ], JSON.stringify(this.curritem) ,(data)=> 
+                  {
+                    this.rowscnt =0; //сброс  пагинатора
+                    this.$refs.custth.id=0
+                    this.$refs.custth.query=''
+                    this.loaddata();
+                  this.loadinit(); 
+                    this.edited = false  
+                    
+                  });           
+                    
+          }   ,    
+         ondel:function(  ){ 
+    
+              if(!confirm('Удалить  проект?')  ) return
+       
+              callPageMethod('delpr',[this.curritem.project_id ], null,(data)=> 
+              {
+              //  this.$refs.prpag.reset = Date.now()  //сброс  пагинатора
+                this.edited = false  
+                this.loadinit(); 
+                this.loaddata();
+              });        
+              
+        }   ,    
+        oncancel:function( ){   
+               this.edited = false
+               this.showed = false
+                   
+               
+            }   ,    
+        onpage:function( page){    //кнопка  пагинатора
+                 this.currpage  = page;
+                 this.loaddata( (page-1) * this.pagesize );
+            }   ,    
+        loaddata: function( start ){
+    
+                let fd  = new  FormData(document.getElementById('filterform'))
+                
+                 callPageMethod('loaddata',[''+start,this.pagesize ],fd ,(data)=> 
+                  {
+                       
+                     let ret =  JSON.parse(data) 
+                     this.prlist=  ret.prlist
+                     this.rowscnt=  ret.allcnt
+                  
+                  });               
+            } ,
+              
+                 
+       loadinit: function( start ){
+    
+          callPageMethod('loadinit',null,null ,(data)=> 
+          {
+              let tmp =   JSON.parse(data)  
+              this.fsstist=  tmp.stlist
+              this.fscustist=  tmp.custlist
+              
+          
+          });               
+            } ,
+              
+                 
+               
+        onfilter:function (){
+                this.rowscnt=0;
+                this.loaddata();
+            }  
+                 
+        }  ,
+      computed: {
+        showdelete() {
+          return this.curritem.project_id > 0 &&  this.curritem.status != 12 //существует и  не  хакрыт
+        } 
+         
+      },          
+       mounted: function(){
+ 
+          this.loadinit(); 
+          this.loaddata(); 
+              
+        }
+      
+    }) 
+        
+      */   
+      
+      
+      //summernote
+      
+          function  snopen() {
                 // Summernote
 
                 $('#editdesc').summernote({
@@ -198,7 +459,12 @@
                     }
                 });
 
-            })
+            } 
+            
+          function    snclose() {
+                $('#editdesc').summernote('destroy');
+          }
+            
         </script>
     </body>
 </html>

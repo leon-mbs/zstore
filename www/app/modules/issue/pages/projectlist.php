@@ -32,7 +32,7 @@ class ProjectList extends \App\Pages\Base
     public function __construct($id = 0) {
         parent::__construct();
         $this->_user = System::getUser();
-        $this->_stlist = Project::getStatusList();
+        
         $allow = (strpos($this->_user->modules, 'issue') !== false || $this->_user->rolename == 'admins');
         if (!$allow) {
             System::setErrorMsg(H::l('noaccesstopage'));
@@ -40,6 +40,8 @@ class ProjectList extends \App\Pages\Base
             return;
         }
 
+        $this->_stlist = Project::getStatusList();
+        
         $projectpanel = $this->add(new Panel('projectpanel'));
 
         $projectpanel->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
@@ -85,7 +87,7 @@ class ProjectList extends \App\Pages\Base
 
         if ($id > 0) {
             $this->open($id);
-        }
+        }   
     }
 
     public function listOnRow($row) {
@@ -332,6 +334,97 @@ class ProjectList extends \App\Pages\Base
         App::Redirect("\\App\\Modules\\Issue\\Pages\\IssueList", 0, $this->_project->project_id, true);
     }
 
+    
+      //vue
+    public function ontextCustomers($args,$post) {
+ 
+        
+         $text = $args[0];
+         $text= Customer::qstr('%'.$text.'%') ;
+ 
+       $list = H::kv2o(Customer::findArray("customer_name", "status=0 and customer_name like " . $text));
+     
+       return json_encode($list, JSON_UNESCAPED_UNICODE);          
+        
+    }
+  
+      public function delpr($args, $post ){
+          if($args[0] > 0) {
+             Project::delete($args[0] );     
+          }  
+          return json_encode(array('success'=>true ), JSON_UNESCAPED_UNICODE);     
+            
+      }
+      public function savepr($args, $post ){
+        
+        $data = @json_decode($post) ;        
+        
+        
+        $project = Project::load($data->project_id);
+        if($project== null)$project = new Project();
+        $user = System::getUser();
+        $project->creator_id = $user->user_id;
+        $project->creator = $user->username;
+        $project->project_name =   $data->project_name   ;
+        $project->customer_id =   $data->customer_id   ;
+        $project->desc =   $data->desc   ;
+     
+     
+        $project->save();
+          
+         return json_encode(array('success'=>true ), JSON_UNESCAPED_UNICODE);     
+      
+    }  
+    
+    public function loadinit($args, $post=null){
+           
+         $stlist = H::kv2o(Project::getStatusList());
+         $custlist =  H::kv2o( Customer::findArray('customer_name', 'customer_id in (select customer_id from issue_projectlist )', 'customer_name') );
+   
+         return json_encode(array('stlist'=>$stlist,'custlist'=>$custlist), JSON_UNESCAPED_UNICODE);     
+      
+    }
+     public function loaddata($args, $post){
+        $number = trim($post['searchnumber']);
+        $cust = $post['searchcust'];    
+        $status = $post['searchstate'];
+      
+        if ($status == 0) {
+            $where = " status <>  " . Project::STATUS_CLOSED;
+        } else {
+            $where = " status= " . $status;
+        }
+
+        if ($cust > 0) {
+            $where .= " and customer_id = " . $cust;
+        }
+        $user = System::getUser();
+
+        if ($user->rolename != 'admins') {
+            $where .= " and project_id in (select project_id from issue_projectacc where user_id = {$user->user_id} )   ";
+        }
+
+        if (strlen($number) > 0) {
+            $s = Project::qstr('%' . $number . '%');
+
+            $where = "   (details like {$s} or project_name like {$s}  )  ";
+        }  
+        $stlist = Project::getStatusList() ;
+     
+        $prlist = array();
+        foreach(Project::find($where, "project_id desc", $args[1], $args[0]) as $p)  {
+           $pa = $p->getData() ;
+           $pa['status_id']  = $p->status;
+           $pa['status']  = $stlist[$p->status];
+           unset($pa['details']);
+           $prlist[]=  $pa;  
+        }
+            
+         return json_encode(array('prlist'=>$prlist,'allcnt'=> Project::findCnt($where)  ), JSON_UNESCAPED_UNICODE);     
+      
+    }
+    
+    
 }
 
 class ProjectDS implements \Zippy\Interfaces\DataSource

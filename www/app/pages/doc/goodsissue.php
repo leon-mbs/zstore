@@ -181,7 +181,7 @@ class GoodsIssue extends \App\Pages\Base
                         $this->_orderid = $basedocid;
                         $this->docform->order->setText($basedoc->document_number);
                         $this->docform->paydisc->setText($basedoc->headerdata['paydisc']);
-                        $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
+                        $this->docform->editpaydisc->setText($basedoc->headerdata['paydisc']);
 
                         $notfound = array();
                         $order = $basedoc->cast();
@@ -242,6 +242,7 @@ class GoodsIssue extends \App\Pages\Base
 
                         $this->OnChangeCustomer($this->docform->customer);
                         $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
+                        $this->docform->editpaydisc->setText($basedoc->headerdata['paydisc']);
                         $this->docform->paydisc->setText($basedoc->headerdata['paydisc']);
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');

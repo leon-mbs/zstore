@@ -139,7 +139,7 @@ class GoodsIssue extends Document
                         $itemp->quantity = $item->quantity * $part->qty;
 
                         if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
-                            throw new \Exception(\App\Helper::l("nominus", $itemp->quantity, $itemp->itemname));
+                            throw new \Exception(H::l("nominus", H::fqty($itemp->getQuantity($this->headerdata['store'])), $itemp->itemname));
                         }
 
                         $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
@@ -168,7 +168,7 @@ class GoodsIssue extends Document
             }
 
             if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
-                throw new \Exception(\App\Helper::l("nominus", $item->quantity, $item->itemname));
+                throw new \Exception(H::l("nominus", H::fqty($item->getQuantity($this->headerdata['store'])), $item->itemname));
             }
 
             //продажа

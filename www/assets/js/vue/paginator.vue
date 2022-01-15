@@ -12,13 +12,19 @@
  
 </nav>
 </template>
-
+    
 <script>
 module.exports = {
          watch:   { 
               rows(newVal, oldVal) { 
                    if(newVal==0) this.currentpage=1;
+                
                    this.refresh()
+                  
+                } ,
+                reset(newVal, oldVal) { 
+                    
+                    this.onbtn(1)
                   
                 } 
            }  
@@ -113,7 +119,7 @@ module.exports = {
        
          data: function() {
             return {
-                
+                reset:0,
                 currentpage:1,
              
                 buttons: []

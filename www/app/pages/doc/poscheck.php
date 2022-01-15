@@ -180,6 +180,8 @@ class POSCheck extends \App\Pages\Base
                         //  $this->docform->pos->setValue($basedoc->headerdata['pos']);
                         $this->_orderid = $basedocid;
                         $this->docform->order->setText($basedoc->document_number);
+                        $this->docform->paydisc->setText($basedoc->headerdata['paydisc']);
+                        $this->docform->editpaydisc->setText($basedoc->headerdata['paydisc']);
 
                         $notfound = array();
                         $order = $basedoc->cast();

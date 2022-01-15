@@ -128,7 +128,7 @@ class POSCheck extends Document
         $header = array('date'          => H::fd($this->document_date),
                         "_detail"       => $detail,
                         "style"         => $style,
-                        "username"      => System::getUser()->username,
+                        "username"      => $this->username,
                         "firm_name"     => $firm["firm_name"],
                         "shopname"      => strlen($common["shopname"]) > 0 ? $common["shopname"] : false,
                         "address"       => $firm["address"],
@@ -204,7 +204,7 @@ class POSCheck extends Document
             }
 
             if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
-                throw new \Exception(\App\Helper::l("nominus", $item->quantity, $item->itemname));
+                throw new \Exception(\App\Helper::l("nominus", $item->getQuantity($this->headerdata['store']), $item->itemname));
             }
 
 
