@@ -920,7 +920,7 @@ class Helper
                    
        foreach($in as $k=>$v)     
        {
-           $out[] = array('id'=>$k,'name'=>$v) ;
+           $out[] = array('id'=>$k,'name'=>$v ) ;
        }            
        return $out  ;          
                        
