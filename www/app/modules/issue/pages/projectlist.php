@@ -182,7 +182,8 @@ class ProjectList extends \App\Pages\Base
 
 
         $this->_project->save();
-        $this->_project->setUsers($users);
+        $this->_project->set
+        sers($users);
 
         $this->projectform->setVisible(false);
         $this->projectpanel->setVisible(true);
@@ -424,7 +425,20 @@ class ProjectList extends \App\Pages\Base
       
     }
     
-    
+     public function getusers() {
+        $user = System::getUsers($args, $post=null);
+        $this->projectform->userlist->clean();
+
+        $pusers = $this->_project->getUsers();
+        $users = \App\Entity\User::find(" user_id <>" . $user->user_id, 'username');
+        foreach ($users as $k => $v) {
+            if ($v->rolename != 'admins' && strpos($v->modules, 'issue') === false) {
+                continue;
+            }
+            $inlist = in_array($k, $pusers);
+            $this->projectform->userlist->AddCheckBox($k, $inlist, $v->username);
+        }
+    }   
 }
 
 class ProjectDS implements \Zippy\Interfaces\DataSource

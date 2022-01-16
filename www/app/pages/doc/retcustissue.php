@@ -197,10 +197,9 @@ class RetCustIssue extends \App\Pages\Base
 
         unset($this->_itemlist[$this->_rowid]);
         $this->_itemlist[$item->item_id] = $item;
-        $this->editdetail->setVisible(false);
-        $this->docform->setVisible(true);
-        $this->docform->detail->Reload();
-
+      //  $this->editdetail->setVisible(false);
+     //   $this->docform->setVisible(true);
+ 
         //очищаем  форму
         $this->editdetail->edittovar->setKey(0);
         $this->editdetail->edittovar->setText('');
@@ -208,7 +207,7 @@ class RetCustIssue extends \App\Pages\Base
         $this->editdetail->editquantity->setText("1");
 
         $this->editdetail->editprice->setText("");
-        $this->calcTotal();
+        
     }
 
     public function cancelrowOnClick($sender) {
@@ -221,6 +220,9 @@ class RetCustIssue extends \App\Pages\Base
         $this->editdetail->editquantity->setText("1");
 
         $this->editdetail->editprice->setText("");
+        $this->docform->detail->Reload();
+       
+        $this->calcTotal();        
     }
 
     public function savedocOnClick($sender) {

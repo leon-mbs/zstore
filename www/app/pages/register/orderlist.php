@@ -122,7 +122,7 @@ class OrderList extends \App\Pages\Base
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('pay', $this, 'payOnClick'))->setVisible($doc->payamount > 0 && $doc->payamount > $doc->payed);
         $row->pay->setVisible(false); //убрана оплата в  расчеты с контрагентами
-        if ($doc->state < Document::STATE_EXECUTED) {
+        if ($doc->state < Document::STATE_EXECUTED || $doc->state == Document::STATE_INPROCESS) {
             $row->edit->setVisible(true);
         } else {
             $row->edit->setVisible(false);

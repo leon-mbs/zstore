@@ -1,0 +1,66 @@
+<html>
+    <head>
+
+    </head>
+    <body>
+        <div class="row">
+            <div class="col-12   ">
+                <h3>Сосояние  складов</h3>
+                <small>Количества  по  складам</small>
+                <div class="navbar nav">
+                    <form zippy="filter" class="form-inline">
+
+                       <div class="form-check   mr-2">
+                            <input class="form-check-input" type="checkbox" zippy="fminus">
+                            <label class="form-check-label" for="fminus">
+                               В минусе
+                            </label>
+                        </div>
+                       <div class="form-check   mr-2">
+                            <input class="form-check-input" type="checkbox" zippy="fmin">
+                            <label class="form-check-label" for="fmin">
+                                Меньше  минимального
+                            </label>
+                        </div>
+                        <input class="btn btn-outline-primary  " type="submit" value="ОК">
+
+
+                    </form>
+                </div>
+
+                
+                <div zippy="detail">
+                    <div>
+                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Печать"><i class="fa fa-print mr-2"></i></a>
+                        <a href="/showreport/xls/storeitems" target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></a>
+                        <a href="/showreport/pdf/storeitems" target="_blank" title="Экспорт в PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
+
+                    </div>
+
+
+                    <div zippy="preview" class="table-responsive-sm">
+                     <div class="spinner-border m-3" role="status">
+  <span class="sr-only">Loading...</span>
+</div>                 
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        
+        <script>
+                    function loadRep(){
+                        
+                        callPageMethod('getData',null,null,(data)=> 
+                        {
+                           
+                              
+                               $('#preview').html(data);  
+
+
+                        });
+                    }
+        </script>
+    </body>
+</html>
+                
