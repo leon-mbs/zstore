@@ -180,14 +180,14 @@ class PPOHelper
                     $ret = json_decode($ret);
                     if ($ret->success == false) {
                         $msg = $ret->error;
-       $msg = str_replace("'","\"",$msg) ;
+                        $msg = str_replace("'","\"",$msg) ;
                         return array('success' => false, 'data' => $ret->error);
                     }
 
                     $decrypted = base64_decode($ret->data);
 
                 } else {
-                    $decrypted = PPO::decrypt($return,true);
+                    $decrypted = PPO::decrypt($return,true );
 
                 }
 

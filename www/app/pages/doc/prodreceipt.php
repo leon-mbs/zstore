@@ -229,10 +229,9 @@ class ProdReceipt extends \App\Pages\Base
         $this->_itemlist = $tarr;
         $this->_rowid = 0;
 
-        $this->editdetail->setVisible(false);
-        $this->docform->setVisible(true);
-        $this->docform->detail->Reload();
-        $this->calcTotal();
+      //  $this->editdetail->setVisible(false);
+      //  $this->docform->setVisible(true);
+
         //очищаем  форму
         $this->editdetail->edititem->setValue(0);
 
@@ -246,6 +245,8 @@ class ProdReceipt extends \App\Pages\Base
     public function cancelrowOnClick($sender) {
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
+        $this->docform->detail->Reload();
+        $this->calcTotal();        
     }
 
     public function savedocOnClick($sender) {

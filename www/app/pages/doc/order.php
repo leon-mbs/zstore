@@ -258,11 +258,9 @@ class Order extends \App\Pages\Base
 
         $this->_rowid = 0;
 
-        $this->editdetail->setVisible(false);
-        $this->docform->setVisible(true);
-        $this->docform->detail->Reload();
-        $this->calcTotal();
-        $this->calcPay();
+      //  $this->editdetail->setVisible(false);
+     //   $this->docform->setVisible(true);
+
         //очищаем  форму
         $this->editdetail->edittovar->setKey(0);
         $this->editdetail->edittovar->setText('');
@@ -284,6 +282,10 @@ class Order extends \App\Pages\Base
 
         $this->editdetail->editprice->setText("");
         $this->wselitem->setVisible(false);
+        $this->docform->detail->Reload();
+        $this->calcTotal();
+        $this->calcPay();        
+        
     }
 
     public function savedocOnClick($sender) {

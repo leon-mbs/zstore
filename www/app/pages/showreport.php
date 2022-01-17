@@ -35,7 +35,7 @@ class ShowReport extends \Zippy\Html\WebPage
             if($common['exportxlsx'] ==1)  {
            
             
-                $file = tempnam(sys_get_temp_dir() );
+                $file = tempnam(sys_get_temp_dir(),'xls' );
              
                 $handle = fopen($file, "w");
                 fwrite($handle, $html);

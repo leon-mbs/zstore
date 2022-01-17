@@ -895,20 +895,21 @@ icon: 'fa fa-exclamation-triangle text-warning',
                             "hideMethod": "fadeOut"
                     };
             $(function () {
-            $('[data-toggle="popover"]').popover();
-            $('[data-toggle="tooltip"]').tooltip();
-            $('.select2').select2();
+                $('[data-toggle="popover"]').popover();
+                $('[data-toggle="tooltip"]').tooltip();
+                $('.select2').select2({theme:'bootstarp4'});
+  
             });
             $(window).scroll(function () {
-            if ($(this).scrollTop() > 600) {
-            if ($('#upbutton').is(':hidden')) {
-            $('#upbutton').css({
-            opacity: 0.7
-            }).fadeIn('slow');
-            }
-            } else {
-            $('#upbutton').stop(true, false).fadeOut('fast');
-            }
+                if ($(this).scrollTop() > 600) {
+                if ($('#upbutton').is(':hidden')) {
+                $('#upbutton').css({
+                opacity: 0.7
+                }).fadeIn('slow');
+                }
+                } else {
+                $('#upbutton').stop(true, false).fadeOut('fast');
+                }
             });
             
             

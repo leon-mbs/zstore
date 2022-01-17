@@ -4,7 +4,7 @@
     </head>
 
     <body>
-    <!--
+   <!--
      {{={| |}=}}  
         <div id="vapp">
           <div class="row" v-show="this.edited==false && this.showed==false" >
@@ -15,18 +15,17 @@
                         <input   placeholder="Поиск..." class="form-control mr-2" type="text" name="searchnumber">
 
                         <label for="searchstate">статус </label>
-                        <select class="form-control  mr-2   " name="searchstate">
+                        <select class="form-control    mr-2   " name="searchstate">
                             <option value="0">Открытые</option>
                             <option v-for="st   in fsstist"   :value="st.id">{{st.name}}</option>
                             
                         </select>
                         <label for="searchcust">заказчик </label>
-                        <select class="form-control     " name="searchcust">
+                        <select style="min-width:200px" class="form-control     " id="searchcust" name="searchcust">
                             <option value="0">Не выбран</option>
                             <option v-for="c   in fscustist"   :value="c.id">{{c.name}}</option>
                         </select>
-
-
+                        
                         <input v-on:click.prevent="onfilter" type="button" class=" ml-2   btn btn-outline-success  " value="ОК">
                     </form>
 
@@ -108,7 +107,8 @@
    </div>
         
      {|={{ }}=|}    
-         -->
+            -->
+            
         <div class="row" zippy="projectpanel">
             <div class="col-12  ">
                 <h2>Проекты 2</h2>
@@ -117,7 +117,7 @@
                         <input placeholder="Поиск..." class="form-control mr-2" type="text" zippy="searchnumber">
 
                         <label for="searchstate">статус </label>
-                        <select  class="form-control  mr-2   " zippy="searchstate">
+                        <select  class="form-control select2 mr-2   " zippy="searchstate">
                             <option value="0">Открытые</option>
                         </select>
                         <label for="searchcust">заказчик </label>
@@ -346,16 +346,16 @@
                }
                
           
-              callPageMethod('savepr',[ ], JSON.stringify(this.curritem) ,(data)=> 
-                  {
-                    this.rowscnt =0; //сброс  пагинатора
-                    this.$refs.custth.id=0
-                    this.$refs.custth.query=''
-                    this.loaddata();
-                  this.loadinit(); 
-                    this.edited = false  
-                    
-                  });           
+          callPageMethod('savepr',[ ], JSON.stringify(this.curritem) ,(data)=> 
+              {
+                this.rowscnt =0; //сброс  пагинатора
+                this.$refs.custth.id=0
+                this.$refs.custth.query=''
+                this.loaddata();
+                this.loadinit(); 
+                this.edited = false  
+                
+              });           
                     
           }   ,    
          ondel:function(  ){ 
@@ -402,8 +402,10 @@
           {
               let tmp =   JSON.parse(data)  
               this.fsstist=  tmp.stlist
+              $("#searchcust").removeClass('select2')
+        
               this.fscustist=  tmp.custlist
-              
+                        
           
           });               
             } ,
@@ -427,11 +429,16 @@
           this.loadinit(); 
           this.loaddata(); 
               
+        }  ,
+        updated: function(){
+ 
+          $("#searchcust").addClass('select2')
+              
         }
       
     }) 
         
-      */   
+     */
       
       
       //summernote
