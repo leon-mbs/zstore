@@ -6,6 +6,7 @@ use App\Application as App;
 use App\Entity\Item;
 use App\Entity\Stock;
 use App\Entity\Store;
+use App\Entity\Category;
 use App\Helper as H;
 use Zippy\Html\Form\AutocompleteTextInput;
 use Zippy\Html\Form\Date;
@@ -32,6 +33,7 @@ class StoreItems extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new CheckBox('fminus'));
         $this->filter->add(new CheckBox('fmin'));
+        $this->filter->add(new DropDownChoice('searchcat', Category::getList(), 0));
 
         $this->add(new Panel('detail'))->setVisible(false);
  
@@ -58,8 +60,9 @@ class StoreItems extends \App\Pages\Base
 
         $fmin = $this->filter->fmin->isChecked();
         $fminus = $this->filter->fminus->isChecked();
-      
-        $itemlist = Item::find('disabled<>1','itemname asc') ;
+        $cat = $this->filter->searchcat->getValue();
+     
+        $itemlist = Item::find('disabled<>1 ' . ($cat>0 ? ' and cat_id=' . $cat :  '' ) ,'itemname asc') ;
         $storelist = Store::findArray('storename','','store_id') ;
         $siqty = array();
         $stlist = array();

@@ -87,7 +87,7 @@ class PPOHelper
 
                 $ret = curl_exec($request);
                 if (curl_errno($request) > 0) {
-                    $msg = curl_error($request);
+                    $msg = "sign server error: ".curl_error($request);
                     $msg = str_replace("'","\"",$msg) ;
                     return array('success' => false, 'data' => $msg);
                 }
@@ -171,7 +171,7 @@ class PPOHelper
                     
                     $ret = curl_exec($request);
                     if (curl_errno($request) > 0) {
-                        $msg = curl_error($request);
+                        $msg = "sign server error: ".curl_error($request);
                       $msg = str_replace("'","\"",$msg) ;
                         return array('success' => false, 'data' => $msg);
                     }
@@ -744,10 +744,11 @@ class PPOHelper
     }
 
     public static function decrypt($data) {
-        return PPO::decrypt($data, true);
+        return PPO::decrypt($data, true);    
     }
-
-
+   
+    
+    
     /*
        public static function sign($data, $server, $port) {
 
