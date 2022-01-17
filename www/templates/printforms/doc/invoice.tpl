@@ -125,10 +125,12 @@
     </tr>
         {{/payed}}   
        {{#payamount}}
-        <tr>
-        <td colspan="9">На сумму <b>{{totalstr}}<b></td>
-
-                    </tr>  
+   {{#totalstr}}
+    <tr>
+        <td colspan="7">На сумму <b>{{totalstr}}<b></td>
+   </tr>
+   {{/totalstr}}                    
+ 
                          {{/payamount}}
                     <tr>
                         <td colspan="5">
