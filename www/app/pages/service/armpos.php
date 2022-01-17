@@ -916,6 +916,7 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['pricetype'] = $this->getPriveType();
 
         $this->_doc->firm_id = $this->pos->firm_id;
+        $this->_doc->username =System::getUser()->username;
 
         $firm = H::getFirmData($this->_doc->firm_id);
         $this->_doc->headerdata["firm_name"] = $firm['firm_name'];

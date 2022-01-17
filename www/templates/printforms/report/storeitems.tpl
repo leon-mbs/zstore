@@ -10,7 +10,7 @@
     <tr style="font-weight: bolder;">
 
         <th style="border: solid black 1px">Наименование</th>
-        <th style="border: solid black 1px">Код</th>
+        <th style="border: solid black 1px">Артикул</th>
         {{#stores}}
         <th style="border: solid black 1px">{{name}} </th>
         {{/stores}}
