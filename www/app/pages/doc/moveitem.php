@@ -30,7 +30,7 @@ class MoveItem extends \App\Pages\Base
     private $_doc;
     private $_rowid    = 0;
 
-    public function __construct($docid = 0) {
+    public function __construct($docid = 0,$basedocid=0) {
         parent::__construct();
 
         $this->add(new Form('docform'));
@@ -74,6 +74,22 @@ class MoveItem extends \App\Pages\Base
         } else {
             $this->_doc = Document::create('MoveItem');
             $this->docform->document_number->setText($this->_doc->nextNumber());
+            if ($basedocid > 0) {  //создание на  основании
+                $basedoc = Document::load($basedocid);
+                if ($basedoc instanceof Document) {
+                    $this->_basedocid = $basedocid;
+                    if ($basedoc->meta_name == 'ProdReceipt') {
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
+
+                    
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                    }
+                }
+                 
+            }
+        
+        
+        
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();

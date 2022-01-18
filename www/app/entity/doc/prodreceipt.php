@@ -96,6 +96,7 @@ class ProdReceipt extends Document
 
     public function getRelationBased() {
         $list = array();
+        $list['MoveItem'] = self::getDesc('MoveItem');
         $list['ProdReceipt'] = self::getDesc('ProdReceipt');
         $list['ProdIssue'] = self::getDesc('ProdIssue'); //для  формирования  комплектубщих  по  готовой продукции
 
