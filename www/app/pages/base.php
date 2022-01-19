@@ -17,9 +17,9 @@ class Base extends \Zippy\Html\WebPage
 
     public function __construct($params = null) {
         global $_config;
-
+         $this->lang = 'ru';
         if (strlen($_config['common']['lang']) > 0) {
-            $this->lang = 'ua';
+            $this->lang = $_config['common']['lang'] ;
         }
 
         \Zippy\Html\WebPage::__construct();

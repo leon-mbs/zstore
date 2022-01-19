@@ -762,22 +762,21 @@ class Helper
     public static function sumstr($amount) {
         global $_config;
         $curr = \App\System::getOption('common', 'curr');
-
-        $totalstr = \App\Util::money2str_rugr($amount);
-        if ($curr == 'ru') {
-            $totalstr = \App\Util::money2str_ru($amount);
-        }
-        if ($curr == 'eu') {
-            $totalstr = \App\Util::money2str_eu($amount);
-        }
-        if ($curr == 'us') {
-            $totalstr = \App\Util::money2str_us($amount);
-        }
-
-
-        if ($_config['common']['lang'] == 'ua') {
+        $totalstr=false;
+    
+        if ($_config['common']['lang'] == 'ua' && $curr=='ua') {
             $totalstr = \App\Util::money2str_ua($amount);
+        }       
+        else {
+            if ($curr == 'ru') {
+                $totalstr = \App\Util::money2str_ru($amount);
+            }           
+            if ($curr == 'gr') {
+                $totalstr = \App\Util::money2str_rugr($amount);
+            }           
         }
+       
+       
 
 
         return $totalstr;

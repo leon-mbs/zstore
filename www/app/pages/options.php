@@ -40,7 +40,13 @@ class Options extends \App\Pages\Base
         $this->common->add(new DropDownChoice('qtydigits'));
         $this->common->add(new DropDownChoice('amdigits'));
         $this->common->add(new DropDownChoice('dateformat'));
-        $this->common->add(new DropDownChoice('curr', array('gr' => 'Гривня', 'ru' => 'Рубль', 'eu' => 'EURO', 'us' => 'USD'), 'gr'));
+        
+        $v = array('-'=>'Не выводить','gr' => 'Гривня', 'ru' => 'Рубль' );
+        if($this->lang == 'ua') {
+           $v = array('-'=>'Не виводити', 'gr' => 'Гривня' );
+        }
+        $this->common->add(new DropDownChoice('curr', $v, 'gr'));
+        
         $this->common->add(new DropDownChoice('phonel', array('10' => '10', '12' => '12'), '10'));
         $pt = array(
             "1" => H::l('opt_lastprice'),

@@ -101,7 +101,7 @@ class StoreItems extends \App\Pages\Base
                      if($qty <0) $flag = false; 
                      
                  }
-                 if($fmin && $item->minqty) {
+                 if($fmin && $item->minqty>0) {
                      if($qty < $item->minqty) $flag = false; 
                      
                   
