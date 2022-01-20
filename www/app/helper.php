@@ -785,20 +785,8 @@ class Helper
     public static function getValList() {
         $val = \App\System::getOptions("val");
         $list = array();
-        if ($val['valuan'] > 0 && $val['valuan'] != 1) {
-            $list['valuan'] = self::l('valuan');
-        }
-        if ($val['valusd'] > 0 && $val['valusd'] != 1) {
-            $list['valusd'] = self::l('valusd');
-        }
-        if ($val['valeuro'] > 0 && $val['valeuro'] != 1) {
-            $list['valeuro'] = self::l('valeuro');
-        }
-        if ($val['valrub'] > 0 && $val['valrub'] != 1) {
-            $list['valrub'] = self::l('valrub');
-        }
-        if ($val['valmdl'] > 0 && $val['valmdl'] != 1) {
-            $list['valmdl'] = self::l('valmdl');
+        foreach($val['vallist'] as $v){
+            $list[$v->code]= $v->name   ;
         }
 
         return $list;

@@ -138,7 +138,7 @@ class Options extends \App\Pages\Base
         $this->common->checkslogan->setText($common['checkslogan']);
 
         //валюты
-        $row->add(new CliclLink('valadd' , $this,'onValAdd'));
+        $this->add(new ClickLink('valadd' , $this,'onValAdd'));
 
         $this->add(new Form('valform'))->onSubmit($this, 'saveValOnClick');
  
@@ -148,6 +148,7 @@ class Options extends \App\Pages\Base
         if (!is_array($val)) {
             $val = array();
         }
+        $this->_vallist = $val['vallist'] ;
         $this->valform->add(new \Zippy\Html\DataList\DataView('vallist', new \Zippy\Html\DataList\ArrayDataSource($this, '_vallist'), $this, "onValRow"));
         $this->valform->vallist->Reload();
       
@@ -454,22 +455,31 @@ class Options extends \App\Pages\Base
     }
     
     
-    public function onRow($row) {
+    public function onValRow($row) {
         $val = $row->getDataitem();
-        $row->add(new InputText('valcode', new Bind($val, 'code') ));
-        $row->add(new InputText('valname', new Bind($val, 'name')));
-        $row->add(new InputText('valrate', new Bind($val, 'rate')));
-        $row->add(new CliclLink('valdel' , $this,'onValDel'));
+        $row->add(new TextInput('valcode', new Bind($val, 'code') ));
+        $row->add(new TextInput('valname', new Bind($val, 'name')));
+        $row->add(new TextInput('valrate', new Bind($val, 'rate')));
+        $row->add(new ClickLink('valdel' , $this,'onValDel'));
  
     }    
   
     public function onValDel($sender) {
+        $val = $sender->getOwner()->getDataItem() ;
+        $this->_vallist = array_diff_key($this->_vallist, array($val->id => $this->_vallist[$val->id]));
     
         $this->valform->vallist->Reload();
     
     }
     public function onValAdd($sender) {
-    
+        $val=new  \App\DataItem() ;
+        $val->code='';
+        $val->name='';
+        $val->rate='';
+        $val->id=time();
+        
+        
+        $this->_vallist[$val->id] = $val;
         $this->valform->vallist->Reload();
     
     }
@@ -477,6 +487,7 @@ class Options extends \App\Pages\Base
     public function saveValOnClick($sender) {
         $val = array();
  
+        $val['vallist'] = $this->_vallist;
         $val['valprice'] = $this->valform->valprice->isChecked() ? 1 : 0;
 
         System::setOptions("val", $val);

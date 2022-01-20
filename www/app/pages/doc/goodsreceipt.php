@@ -696,12 +696,14 @@ class GoodsReceipt extends \App\Pages\Base
 
     public function OnVal($sender) {
         $val = $sender->getValue();
+        $rate = 1;
         if (strlen($val) > 1) {
             $optval = \App\System::getOptions("val");
-            $rate = $optval[$val];
-        } else {
-            $rate = 1;
-        }
+            foreach($optval['vallist'] as $v){
+                 if($v->code == $val) $rate=$v->rate;   
+            }
+            
+        } 
         $this->docform->rate->setText($rate);
         $this->docform->editrate->setText($rate);
         $this->CalcPay();
