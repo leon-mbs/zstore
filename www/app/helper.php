@@ -784,6 +784,7 @@ class Helper
 
     public static function getValList() {
         $val = \App\System::getOptions("val");
+        if(!is_array($val['vallist'])) $val['vallist'] = array();
         $list = array();
         foreach($val['vallist'] as $v){
             $list[$v->code]= $v->name   ;

@@ -63,37 +63,37 @@
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
-        <td style="border-top:1px #000 solid;" colspan="7" align="right">Итого:</td>
+        <td style="border-top:1px #000 solid;" colspan="8" align="right">Итого:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
    
     {{#isdisc}}
     <tr style="font-weight: bolder;">
-        <td colspan="7" align="right">Скидка:</td>
+        <td colspan="8" align="right">Скидка:</td>
         <td align="right">{{disc}}</td>
     </tr>
     {{/isdisc}}
     {{#isnds}}
     <tr style="font-weight: bolder;">
-        <td colspan="7" align="right">НДС:</td>
+        <td colspan="8" align="right">НДС:</td>
         <td align="right">{{nds}}</td>
     </tr>
     {{/isnds}}
     {{#isval}}
     <tr style="font-weight: bolder;">
-        <td colspan="7" align="right">Курс {{val}}:</td>
+        <td colspan="8" align="right">Курс {{val}}:</td>
         <td align="right">{{rate}}</td>
     </tr>
     {{/isval}}
    {{#payamount}}
     <tr style="font-weight: bolder;">
-        <td colspan="7" align="right">К оплате:</td>
+        <td colspan="8" align="right">К оплате:</td>
         <td align="right">{{payamount}}</td>
     </tr>
     {{/payamount}}
     {{#payed}}
     <tr style="font-weight: bolder;">
-        <td colspan="7" align="right">Оплата:</td>
+        <td colspan="8" align="right">Оплата:</td>
         <td align="right">{{payed}}</td>
     </tr>
     {{/payed}}

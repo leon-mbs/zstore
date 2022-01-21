@@ -138,16 +138,19 @@ class Options extends \App\Pages\Base
         $this->common->checkslogan->setText($common['checkslogan']);
 
         //валюты
-        $this->add(new ClickLink('valadd' , $this,'onValAdd'));
+  
+        $this->add(new Form('valform'));
+        $this->valform->add(new SubmitLink('valadd' , $this,'onValAdd'));
+        $this->valform->add(new SubmitButton('saveval'  ))->onClick($this, 'saveValOnClick');
 
-        $this->add(new Form('valform'))->onSubmit($this, 'saveValOnClick');
- 
         $this->valform->add(new CheckBox('valprice'));
 
         $val = System::getOptions("val");
         if (!is_array($val)) {
             $val = array();
         }
+        if(!is_array($val['vallist'])) $val['vallist'] = array();
+        
         $this->_vallist = $val['vallist'] ;
         $this->valform->add(new \Zippy\Html\DataList\DataView('vallist', new \Zippy\Html\DataList\ArrayDataSource($this, '_vallist'), $this, "onValRow"));
         $this->valform->vallist->Reload();

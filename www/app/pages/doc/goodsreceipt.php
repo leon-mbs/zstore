@@ -192,7 +192,9 @@ class GoodsReceipt extends \App\Pages\Base
                         
                         $this->docform->nds->setText($invoice->headerdata['nds']);
                         $this->docform->editnds->setText($invoice->headerdata['nds']);
-                        $this->docform->rate->setText($invoice->headerdata['rate']);
+                        $this->docform->val->setValue($invoice->_doc->headerdata['val']);
+                        $this->docform->rate->setText($invoice->_doc->headerdata['rate']);
+                        $this->docform->editrate->setText($invoice->_doc->headerdata['rate']);
                         $this->docform->editrate->setText($invoice->headerdata['rate']);
                         $this->docform->disc->setText($invoice->headerdata['disc']);
                         $this->docform->editdisc->setText($invoice->headerdata['disc']);
@@ -224,6 +226,10 @@ class GoodsReceipt extends \App\Pages\Base
                         $basedoc = $basedoc->cast();
                         $this->docform->firm->setValue($basedoc->firm_id);
                         $this->OnCustomerFirm($this->docform->customer);
+                        $this->docform->val->setValue($basedoc->_doc->headerdata['val']);
+                        $this->docform->rate->setText($basedoc->_doc->headerdata['rate']);
+                        $this->docform->editrate->setText($basedoc->_doc->headerdata['rate']);
+                        $this->docform->editrate->setText($basedoc->headerdata['rate']);
 
                         $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
 
