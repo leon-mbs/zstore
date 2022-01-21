@@ -1,7 +1,7 @@
 <table class="ctable" border="0" cellpadding="2" cellspacing="0">
     <tr>
         <td colspan="5">
-            Исполнитель: {{customer_name}}
+           Заказчик: {{customer_name}}
         </td>
 
 
@@ -10,7 +10,7 @@
     {{#isfirm}}
     <tr>
         <td colspan="5">
-            Заказчик: {{firm_name}}
+            Исполнитель: {{firm_name}}
         </td>
 
     </tr>
