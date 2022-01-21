@@ -182,8 +182,7 @@ class ProjectList extends \App\Pages\Base
 
 
         $this->_project->save();
-        $this->_project->set
-        sers($users);
+        $this->_project->setUsers($users);
 
         $this->projectform->setVisible(false);
         $this->projectpanel->setVisible(true);

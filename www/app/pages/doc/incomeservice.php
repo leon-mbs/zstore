@@ -353,13 +353,13 @@ class IncomeService extends \App\Pages\Base
 
 
     public function onPayAmount($sender) {
-        $this->docform->payamount->setText($this->docform->editpayamount->getText());
-        $this->docform->payed->setText($this->docform->editpayamount->getText());
-        $this->docform->editpayed->setText($this->docform->editpayamount->getText());
+        $this->docform->payamount->setText(H::fa($this->docform->editpayamount->getText()));
+        $this->docform->payed->setText(H::fa($this->docform->editpayamount->getText()));
+        $this->docform->editpayed->setText(H::fa($this->docform->editpayamount->getText()));
     }
 
     public function onPayed($sender) {
-        $this->docform->payed->setText($this->docform->editpayed->getText());
+        $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
     }
 
     private function CalcPay() {
