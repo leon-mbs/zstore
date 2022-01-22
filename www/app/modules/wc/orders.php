@@ -93,11 +93,14 @@ class Orders extends \App\Pages\Base
             if ($c == 0) {
                 break;
             }
-
+                    $conn = \ZDB\DB::getConnect();
+ 
             foreach ($data as $wcorder) {
 
-                $isorder = Document::findCnt("meta_name='Order' and content like '%<wcorder>{$wcorder->id}</wcorder>%'");
-                if ($isorder > 0) { //уже импортирован
+                   $cnt  = $conn->getOne("select count(*) from documents_view where meta_name='Order' and content like '%<wcorder>{$wcorder->id}</wcorder>%' ")  ;
+
+               // $isorder = Document::findCnt("meta_name='Order' and content like '%<wcorder>{$wcorder->id}</wcorder>%'");
+                if (  intval($cnt) > 0) { //уже импортирован
                     continue;
                 }
 

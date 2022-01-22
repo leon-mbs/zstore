@@ -80,13 +80,16 @@ class Orders extends \App\Pages\Base
             return;
         }
         if ($data['error'] == "") {
-
+            $conn = \ZDB\DB::getConnect();
+ 
 
             foreach ($data['orders'] as $ocorder) {
 
 
-                $isorder = Document::findCnt(" (meta_name='Order' or meta_name='TTN') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'");
-                if ($isorder > 0) { //уже импортирован
+              $cnt  = $conn->getOne("select count(*) from documents_view where (meta_name='Order' or meta_name='TTN') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'")  ;
+
+             //   $isorder = Document::findCnt(" (meta_name='Order' or meta_name='TTN') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'");
+                if ( intval($cnt) > 0) { //уже импортирован
                     continue;
                 }
                 foreach ($ocorder['_products_'] as $product) {
