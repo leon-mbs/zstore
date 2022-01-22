@@ -69,6 +69,7 @@ class ServiceAct extends Document
             //  $sc->setExtCode($ser->price); //Для АВС
             //$sc->setCustomer($this->customer_id);
             $sc->setOutPrice($ser->price);
+       
             $sc->save();
         }
     }

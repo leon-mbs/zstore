@@ -101,10 +101,11 @@
                         Штрих-код &nbsp;<input style="width:150px;" autocomplete="off" autofocus type="text" zippy="barcode"
                                                onkeydown="onBarCode()">
                         &nbsp; &nbsp; &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
+                      {{#usemobilescanner}}  
                         &nbsp; &nbsp; &nbsp; &nbsp; <i id="mobilescanner" data-toggle="modal" data-target="#modalscanner"
                                                        title="Сканувати  мобiльним пристроєм"
-                                                       style="display:none;cursor:pointer;font-size:28px" class="fa fa-mobile-alt"></i>
-
+                                                       style="cursor:pointer;font-size:28px" class="fa fa-mobile-alt"></i>
+                      {{/usemobilescanner}}  
                     </div>
                     {{/usescanner}}
                     &nbsp;<a class="btn btn-info btn-sm" zippy="addrow">Додати позицію</a>
@@ -638,17 +639,7 @@
       
 
         </script>
-       {{#usemobilescanner}}       
-     <script>      
-        
-            if (mobileCheck()) {
-                $('#mobilescanner').show();
-            } else {
-                $('#mobilescanner').hide();
-            }
-
-        </script>     
-         {{/usemobilescanner}}  
+ 
         {{/usescanner}}
     </body>
 </html>

@@ -70,6 +70,7 @@ class ProdReceipt extends Document
                         $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                         $sc->setStock($st->stock_id);
                         $sc->setOutPrice($st->partion);
+                        $sc->tag=-3;
 
                         $sc->save();
                     }
@@ -82,6 +83,7 @@ class ProdReceipt extends Document
             $sc = new Entry($this->document_id, $item->quantity * $item->price, $item->quantity);
             $sc->setStock($stock->stock_id);
             $sc->setOutPrice($stock->partion);
+            $sc->tag=-4;
 
             $sc->save();
         }

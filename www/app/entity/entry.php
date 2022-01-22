@@ -26,6 +26,7 @@ class Entry extends \ZCL\DB\Entity
         // $this->amount = $amount;
 
         $this->quantity = $quantity;
+        $this->tag = 0;  // -1 продажи   -2 закупки   -3 списание в  прод   -4 оприходование с  прод
     }
 
     protected function init() {
