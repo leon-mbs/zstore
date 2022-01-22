@@ -237,7 +237,7 @@ class Import extends \App\Pages\Base
             $itemname = trim($row[$colname]);
             $itembarcode = trim($row[$colbarcode]);
             $cell = trim($row[$colcell]);
-            $msr = trim($row[$colcell]);
+            $msr = trim($row[$colmsr]);
             $desc = trim($row[$coldesc]);
             $catname = trim($row[$colcat]);
             $inprice = str_replace(',', '.', trim($row[$colinprice]));

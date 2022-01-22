@@ -284,7 +284,7 @@ class GoodsIssue extends \App\Pages\Base
 
                         foreach ($basedoc->unpackDetails('detaildata') as $item) {
                             $item->price = $item->getPrice($basedoc->headerdata['pricetype']); //последние  цены
-                            $this->_itemlist[$item->item_id] = $item;
+                            $this->_itemlist[$item->rowid] = $item;
                         }
                         $this->calcTotal();
                         $this->calcPay();
@@ -300,7 +300,7 @@ class GoodsIssue extends \App\Pages\Base
                          
                         foreach ($basedoc->unpackDetails('detaildata') as $item) {
                             $item->price = $item->getPrice( ); //последние  цены
-                            $this->_itemlist[$item->item_id] = $item;
+                            $this->_itemlist[$item->rowid] = $item;
                         }
                         $this->calcTotal();
                         $this->calcPay();                     

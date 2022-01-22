@@ -283,6 +283,24 @@ class Item extends \ZCL\DB\Entity
             }
         }
 
+         
+        //если  не  зажана  наценка и цена  то  берем  закупочную
+        if ( intval($common['defprice']) == 0 && $price == 0) {
+
+            if ($partion == 0) {
+                //ищем последнюю закупочную  цену 
+                $partion = $this->getLastPartion($store);
+            }
+            $price =  $partion;
+            
+            //курсовая разница
+            $opv = \App\System::getOptions("val");
+            if (strlen($this->val) > 1 && $opv['valprice'] == 1) {
+                $k = $opv[$this->val] / $this->rate;
+                $price = $price * $k;
+            }
+        }
+
 
         return $price;
     }
