@@ -222,10 +222,16 @@
 
 
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-12">
                         <div class="form-group  ">
                             <input type="button" value="< назад" zippy="cancel2" class="btn  btn-outline-info">
                             &nbsp;&nbsp;<input type="submit" value="Сохранить  " zippy="save" class="btn  btn-info">
+                            {{#ppo}}
+                            &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Отложить  фискализацию  
+                           <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="На  случай  сбоя  интернета фискализацию  можно пропустить. Чек  может  быть фискализирован ДО  закрытия сменыв на странице  ручного  закрытия смены в  модуле РРО "></i>
+                                              
+                            {{/ppo}}
                         </div>
 
                     </div>

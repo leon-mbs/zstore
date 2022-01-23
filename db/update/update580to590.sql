@@ -29,4 +29,4 @@ FROM ((`entrylist`
     ON ((`entrylist`.`document_id` = `documents`.`document_id`)));
     
     
-ALTER TABLE `ppo_zformstat` ADD `document_id` INT NULL , ADD `tag` INT NULL DEFAULT '0' `;    
+ALTER TABLE `ppo_zformstat` ADD   `tag` INT NULL DEFAULT '0' `;    

@@ -156,7 +156,8 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->payform->add(new TextInput('pfpayed'));
         $this->docpanel->payform->add(new TextInput('pfrest'));
 
-
+        $this->docpanel->payform->add(new CheckBox('passfisc'));
+ 
         $bind = new  \Zippy\Binding\PropertyBinding($this, '_pt');
         $this->docpanel->payform->add(new \Zippy\Html\Form\RadioButton('pfnal', $bind, 1));
         $this->docpanel->payform->add(new \Zippy\Html\Form\RadioButton('pfbeznal', $bind, 2));
@@ -792,7 +793,8 @@ class ARMFood extends \App\Pages\Base
         if ($this->createdoc() == false) {
             return;
         }
-
+        $this->docpanel->payform->passfisc->setChecked(false);
+ 
         $this->docpanel->payform->setVisible(true);
         $this->docpanel->listsform->setVisible(false);
         $this->docpanel->navform->setVisible(false);
@@ -880,7 +882,13 @@ class ARMFood extends \App\Pages\Base
             }
             //если  оплачен и  закончен   закрываем
             if ($this->_doc->payamount <= $this->_doc->payed && ($this->_doc->state == Document::STATE_EXECUTED || $this->_doc->state == Document::STATE_DELIVERED || $this->_doc->state == Document::STATE_FINISHED)) {
-         
+                    if($this->docpanel->payform->passfisc->isChecked()) {
+                      $ret = \App\Modules\PPO\PPOHelper::check($this->_doc,true);
+  
+                    }   else {
+
+                
+                
                       if ($this->_pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
                         $this->_doc->headerdata["fiscalnumberpos"]  =  $this->_pos->fiscalnumber;
          
@@ -910,7 +918,7 @@ class ARMFood extends \App\Pages\Base
                         }
                     }
      
-         
+                }
          
                 $this->_doc->updateStatus(Document::STATE_CLOSED);
             }

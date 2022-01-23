@@ -341,7 +341,13 @@
                             <div class="form-group   ">
                                 <a zippy="bbackitems" class="btn btn-outline-info"> &lt; Назад</a>
 
-                                &nbsp;&nbsp; <input zippy="btocheck" type="submit" value="Печать чека > "   class="btn btn-success">
+                                &nbsp;&nbsp; <input zippy="btocheck" type="submit" value="Друкувати  чек > "   class="btn btn-success">
+                                     {{#ppo}}
+                            &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Вiдкласти  фiскализацiю  
+                           <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="На випадок збою інтернету фіскалізацію можна пропустити. Чек може бути фіскалізований ДО закриття зміни на сторінці ручного закриття зміни в модулі РРО "></i>
+                                              
+                            {{/ppo}}                             
                             </div>
                         </div>
 
