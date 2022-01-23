@@ -108,6 +108,7 @@ class InvoiceCust extends \App\Pages\Base
 
             $this->docform->nds->setText($this->_doc->headerdata['nds']);
             $this->docform->editnds->setText($this->_doc->headerdata['nds']);
+            $this->docform->val->setValue($this->_doc->headerdata['val']);
             $this->docform->rate->setText($this->_doc->headerdata['rate']);
             $this->docform->editrate->setText($this->_doc->headerdata['rate']);
             $this->docform->disc->setText($this->_doc->headerdata['disc']);
@@ -285,6 +286,8 @@ class InvoiceCust extends \App\Pages\Base
         $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
 
+        $this->_doc->headerdata['val'] = $this->docform->val->getValue();
+        $this->_doc->headerdata['valname'] = $this->docform->val->getValueName();
         $this->_doc->headerdata['rate'] = $this->docform->rate->getText();
         $this->_doc->headerdata['nds'] = $this->docform->nds->getText();
         $this->_doc->headerdata['disc'] = $this->docform->disc->getText();
@@ -441,12 +444,14 @@ class InvoiceCust extends \App\Pages\Base
 
     public function OnVal($sender) {
         $val = $sender->getValue();
+        $rate = 1;
         if (strlen($val) > 1) {
             $optval = \App\System::getOptions("val");
-            $rate = $optval[$val];
-        } else {
-            $rate = 1;
-        }
+            foreach($optval['vallist'] as $v){
+                 if($v->code == $val) $rate=$v->rate;   
+            }
+            
+        } 
         $this->docform->rate->setText($rate);
         $this->docform->editrate->setText($rate);
         $this->CalcPay();

@@ -290,7 +290,7 @@ class ReturnIssue extends \App\Pages\Base
         if ($pos_id > 0 && $sender->id == 'execdoc') {
             $pos = \App\Entity\Pos::load($pos_id);
             if ($pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
-                $this->_doc->headerdata["fiscalnumberpos"]  =  $pos->fisc;
+                $this->_doc->headerdata["fiscalnumberpos"]  =  $pos->fiscalnumber;
  
                 if ($this->_basedocid > 0) {
                     $basedoc = Document::load($this->_basedocid);

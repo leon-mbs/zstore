@@ -183,6 +183,7 @@ class POSCheck extends Document
                         foreach ($listst as $st) {
                             $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                             $sc->setStock($st->stock_id);
+                            $sc->tag=-3;
 
                             $sc->save();
                         }
@@ -199,6 +200,7 @@ class POSCheck extends Document
 
                 $sc = new Entry($this->document_id, $item->quantity * $price, $item->quantity);
                 $sc->setStock($stock->stock_id);
+                $sc->tag=-4;
 
                 $sc->save();
             }
@@ -220,6 +222,7 @@ class POSCheck extends Document
                 $sc->setStock($st->stock_id);
                 //   $sc->setExtCode($item->price * $k - $st->partion); //Для АВС
                 $sc->setOutPrice($item->price * $k);
+                $sc->tag=-1;
                 $sc->save();
             }
         }
@@ -248,7 +251,7 @@ class POSCheck extends Document
             $sc->setService($ser->service_id);
             // $sc->setExtCode(0 - ($ser->price * $k)); //Для АВС
             $sc->setOutPrice(0 - $item->price * $k);
-
+    
             $sc->save();
         }
         if ($this->headerdata['payment'] > 0 && $payed > 0) {

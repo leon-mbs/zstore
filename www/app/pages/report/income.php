@@ -79,7 +79,7 @@ class Income extends \App\Pages\Base
 
               join `items` i on e.`item_id` = i.`item_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
-               where e.`item_id` >0  and e.`quantity` <>0
+               where e.`item_id` >0  and (e.`tag` = 0 or e.`tag` = -2 ) 
                and d.`meta_name` in ('GoodsReceipt','RetCustIssue')
                {$br}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
@@ -95,7 +95,7 @@ class Income extends \App\Pages\Base
 
          join `customers`  c on c.`customer_id` = e.`customer_id`
          join `documents_view`  d on d.`document_id` = e.`document_id`
-           where e.`customer_id` >0  and e.`quantity` <>0
+           where e.`customer_id` >0  and (e.`tag` = 0 or e.`tag` = -2 ) 
            and d.`meta_name` in ('GoodsReceipt','RetCustIssue')
            {$br}
 
@@ -113,7 +113,7 @@ class Income extends \App\Pages\Base
 
               join `items` i on e.`item_id` = i.`item_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
-               where e.`item_id` >0  and e.`quantity` <>0
+               where e.`item_id` >0  and (e.`tag` = 0 or e.`tag` = -2 ) 
                and d.`meta_name` in ('GoodsReceipt','RetCustIssue')
                 {$br}
 

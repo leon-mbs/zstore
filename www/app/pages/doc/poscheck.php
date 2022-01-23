@@ -530,6 +530,30 @@ class POSCheck extends \App\Pages\Base
         $this->_doc->amount = $this->docform->total->getText();
         $this->_doc->headerdata['pos'] = $this->docform->pos->getValue();
 
+        
+        
+        
+        if ($sender->id == 'execdoc') {
+                // проверка на минус  в  количестве
+                $allowminus = System::getOption("common", "allowminus");
+                if ($allowminus != 1) {
+
+                    foreach ($this->_itemlist as $item) {
+                        $qty = $item->getQuantity($this->_doc->headerdata['store']);
+                        if ($qty < $item->quantity) {
+                            $this->setError("nominus", H::fqty($qty), $item->item_name);
+                            return;
+                        }
+                    }
+                }       
+        
+        }        
+        
+        
+        
+        
+        
+        
         $pos = \App\Entity\Pos::load($this->_doc->headerdata['pos']);
 
         if ($this->_tvars["ppo"] == true && $pos->usefisc == 1 && $sender->id == 'execdoc') {
@@ -579,18 +603,7 @@ class POSCheck extends \App\Pages\Base
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
 
-                // проверка на минус  в  количестве
-                $allowminus = System::getOption("common", "allowminus");
-                if ($allowminus != 1) {
 
-                    foreach ($this->_itemlist as $item) {
-                        $qty = $item->getQuantity($this->_doc->headerdata['store']);
-                        if ($qty < $item->quantity) {
-                            $this->setError("nominus", H::fqty($qty), $item->item_name);
-                            return;
-                        }
-                    }
-                }
 
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);

@@ -70,6 +70,7 @@ class ReturnIssue extends Document
             //  $sc->setExtCode(($item->price - $stock->partion)); //Для АВС
             //  $sc->setCustomer($this->customer_id);
             $sc->setOutPrice($item->price);
+            
             $sc->save();
         }
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {

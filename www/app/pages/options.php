@@ -26,6 +26,7 @@ class Options extends \App\Pages\Base
 
     private $metadatads;
     public  $pricelist        = array();
+    public  $_vallist       = array();
     public  $_salesourceslist = array();
 
     public function __construct() {
@@ -137,23 +138,23 @@ class Options extends \App\Pages\Base
         $this->common->checkslogan->setText($common['checkslogan']);
 
         //валюты
-        $this->add(new Form('valform'))->onSubmit($this, 'saveValOnClick');
-        $this->valform->add(new TextInput('valuan'));
-        $this->valform->add(new TextInput('valusd'));
-        $this->valform->add(new TextInput('valeuro'));
-        $this->valform->add(new TextInput('valrub'));
-        $this->valform->add(new TextInput('valmdl'));
+  
+        $this->add(new Form('valform'));
+        $this->valform->add(new SubmitLink('valadd' , $this,'onValAdd'));
+        $this->valform->add(new SubmitButton('saveval'  ))->onClick($this, 'saveValOnClick');
+
         $this->valform->add(new CheckBox('valprice'));
 
         $val = System::getOptions("val");
         if (!is_array($val)) {
             $val = array();
         }
-        $this->valform->valuan->setText($val['valuan']);
-        $this->valform->valusd->setText($val['valusd']);
-        $this->valform->valeuro->setText($val['valeuro']);
-        $this->valform->valrub->setText($val['valrub']);
-        $this->valform->valmdl->setText($val['valmdl']);
+        if(!is_array($val['vallist'])) $val['vallist'] = array();
+        
+        $this->_vallist = $val['vallist'] ;
+        $this->valform->add(new \Zippy\Html\DataList\DataView('vallist', new \Zippy\Html\DataList\ArrayDataSource($this, '_vallist'), $this, "onValRow"));
+        $this->valform->vallist->Reload();
+      
         $this->valform->valprice->setChecked($val['valprice']);
 
         //печать
@@ -325,19 +326,7 @@ class Options extends \App\Pages\Base
         System::setCache('labels', null);
     }
 
-    public function saveValOnClick($sender) {
-        $val = array();
-        $val['valuan'] = $this->valform->valuan->getText();
-        $val['valusd'] = $this->valform->valusd->getText();
-        $val['valeuro'] = $this->valform->valeuro->getText();
-        $val['valrub'] = $this->valform->valrub->getText();
-        $val['valmdl'] = $this->valform->valmdl->getText();
-        $val['valprice'] = $this->valform->valprice->isChecked() ? 1 : 0;
-
-        System::setOptions("val", $val);
-        $this->setSuccess('saved');
-    }
-
+ 
     public function savePrinterOnClick($sender) {
         $printer = array();
         $printer['pheight'] = $this->printer->pheight->getText();
@@ -365,7 +354,7 @@ class Options extends \App\Pages\Base
         $this->api->aexp->setVisible($type == 1);
         $this->api->akey->setVisible($type == 1);
 
-        $this->goAnkor('atype');
+      //  $this->goAnkor('atype');
     }
 
     public function saveApiOnClick($sender) {
@@ -467,4 +456,45 @@ class Options extends \App\Pages\Base
 
         $this->setSuccess('saved');
     }
+    
+    
+    public function onValRow($row) {
+        $val = $row->getDataitem();
+        $row->add(new TextInput('valcode', new Bind($val, 'code') ));
+        $row->add(new TextInput('valname', new Bind($val, 'name')));
+        $row->add(new TextInput('valrate', new Bind($val, 'rate')));
+        $row->add(new ClickLink('valdel' , $this,'onValDel'));
+ 
+    }    
+  
+    public function onValDel($sender) {
+        $val = $sender->getOwner()->getDataItem() ;
+        $this->_vallist = array_diff_key($this->_vallist, array($val->id => $this->_vallist[$val->id]));
+    
+        $this->valform->vallist->Reload();
+    
+    }
+    public function onValAdd($sender) {
+        $val=new  \App\DataItem() ;
+        $val->code='';
+        $val->name='';
+        $val->rate='';
+        $val->id=time();
+        
+        
+        $this->_vallist[$val->id] = $val;
+        $this->valform->vallist->Reload();
+    
+    }
+    
+    public function saveValOnClick($sender) {
+        $val = array();
+ 
+        $val['vallist'] = $this->_vallist;
+        $val['valprice'] = $this->valform->valprice->isChecked() ? 1 : 0;
+
+        System::setOptions("val", $val);
+        $this->setSuccess('saved');
+    }
+    
 }

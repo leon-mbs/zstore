@@ -261,7 +261,7 @@ class PaySelList extends \App\Pages\Base
 
         if ($pos_id > 0) {
             $pos = \App\Entity\Pos::load($pos_id);
-            $this->_doc->headerdata["fiscalnumberpos"]  =  $pos->fisc;
+            $this->_doc->headerdata["fiscalnumberpos"]  =  $pos->fiscalnumber;
  
             $ret = \App\Modules\PPO\PPOHelper::checkpay($this->_doc, $pos_id, $amount, $form->payment->getValue());
             if ($ret['success'] == false && $ret['doclocnumber'] > 0) {

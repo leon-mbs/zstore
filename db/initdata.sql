@@ -20,9 +20,9 @@ INSERT INTO `options` (`optname`, `optvalue`) VALUES('api', 'a:3:{s:3:"exp";N;s:
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('printer', 'a:8:{s:6:"pwidth";s:4:"100%";s:9:"pricetype";s:6:"price1";s:11:"barcodetype";s:4:"C128";s:9:"pfontsize";s:2:"16";s:5:"pname";i:1;s:5:"pcode";i:0;s:8:"pbarcode";i:1;s:6:"pprice";i:0;}');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('shop', 'a:8:{s:7:"defcust";s:1:"2";s:12:"defpricetype";s:6:"price1";s:5:"email";s:0:"";s:8:"shopname";s:17:"Наш магаз";s:12:"currencyname";s:6:"грн";s:8:"uselogin";i:0;s:9:"usefilter";i:1;s:11:"usefeedback";i:1;}');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('sms', 'a:7:{s:13:"turbosmstoken";s:0:"";s:12:"smssemytoken";s:0:"";s:12:"smssemydevid";s:0:"";s:11:"flysmslogin";s:0:"";s:10:"flysmspass";s:0:"";s:8:"flysmsan";s:0:"";s:7:"smstype";s:1:"0";}');
-INSERT INTO `options` (`optname`, `optvalue`) VALUES('val', 'a:5:{s:6:"valuan";s:0:"";s:6:"valusd";s:2:"28";s:7:"valeuro";s:0:"";s:6:"valrub";s:0:"";s:8:"valprice";i:0;}');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('salary', 'a:4:{s:13:\"codebaseincom\";s:3:\"105\";s:10:\"coderesult\";s:3:\"900\";s:4:\"calc\";s:212:\"v200 = v105\r\n//налоги\r\nv220 =  v200 * 0.18\r\nv300 =  v200 * 0.22\r\n//всего  удержано\r\nv600 =v200  - v220- v300\r\n//на руки\r\nv900 =v200 - v600-v850\r\n\r\n\r\n//пример\r\nif(invalid){\r\n   \r\n}  \";s:11:\"codeadvance\";s:3:\"850\";}');
- 
+INSERT INTO `options` (`optname`, `optvalue`) VALUES('val', 'a:2:{s:7:\"vallist\";a:2:{i:1642675955;O:12:\"App\\DataItem\":2:{s:2:\"id\";i:1642675955;s:9:\"\0*\0fields\";a:3:{s:4:\"code\";s:3:\"USD\";s:4:\"name\";s:12:\"Доллар\";s:4:\"rate\";s:2:\"28\";}}i:1642676126;O:12:\"App\\DataItem\":2:{s:2:\"id\";i:1642676126;s:9:\"\0*\0fields\";a:3:{s:4:\"code\";s:4:\"EURO\";s:4:\"name\";s:8:\"Евро\";s:4:\"rate\";s:2:\"33\";}}}s:8:\"valprice\";i:0;}');;
+
   
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(1, 4, 'Склады', 'StoreList', 'ТМЦ', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(2, 4, 'Номенклатура', 'ItemList', 'ТМЦ', 0);
@@ -103,7 +103,8 @@ INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `
  INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 1, 'Перемещение  партий ТМЦ', 'MovePart', 'Склад', 0);
  INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Возвраты  покупателей', 'Returnselled', 'Продажи', 0);
 INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Возвраты  поставщикам', 'Returnbayed', 'Закупки', 0);
-INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  1, 'Оказанные услуги', 'IncomeService', 'Услуги', 0);
+INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  1, 'Полученные услуги', 'IncomeService', 'Услуги', 0);
+INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Состояние  складов', 'StoreItems', 'Склад', 0);
  
 
 

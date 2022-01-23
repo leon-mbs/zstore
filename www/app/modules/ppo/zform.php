@@ -107,14 +107,59 @@ class ZForm extends \App\Pages\Base
         $row->add(new Label("amount3",H::fa($amount3)));
         $row->add(new Label("amount0r",H::fa($amount0r)));
         $row->add(new Label("amount1r",H::fa($amount1r)));
-        $row->add(new Label("del", $this,"onDel" ));
-        
+        $row->add(new ClickLink("del", $this,"onDel" ));
+      
+        $row->add(new ClickLink("fisc", $this,"onFisc" ))->setVisible($item->tag==1);
+        if($item->tag==1) {
+            $this->setWarn('ppo_isnofisc')  ;
+        }
         
     }
     
     
-    public function onDel($sender) {
-           $item = $sender->getOwner->getDataItem();
+    public function onFisc($sender) {
+           $item = $sender->getOwner()->getDataItem();
+           $doc=\App\Entity\Doc\Document::getFirst("document_number=" . \App\Entity\Doc\Document::qstr($item->document_number) ) ;
+           if($doc==null){
+              
+              return ; 
+           }
+            $doc->headerdata["fiscalnumberpos"]  = $this->_pos->fiscalnumber;
+     
+ 
+            $ret = \App\Modules\PPO\PPOHelper::check($doc);    
+       
+            
+            if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
+                //повторяем для  нового номера
+                $this->_pos->fiscdocnumber = $ret['doclocnumber'];
+                $this->_pos->save();
+                $ret = \App\Modules\PPO\PPOHelper::check($doc);
+            }
+            if ($ret['success'] == false) {
+                $this->setErrorTopPage($ret['data']);
+                 
+                return;
+            } else {                                  
+                
+                if ($ret['docnumber'] > 0) {
+                    $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                    $this->_pos->save();
+                    $doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+                } else {
+                    $this->setError("ppo_noretnumber");
+                 
+                    return;
+                }
+            }   
+            $doc->save();
+   
+   
+           $this->OnRefresh($this->filter) ;       
+        
+    }
+   public function onDel($sender) {
+           $item = $sender->getOwner()->getDataItem();
            \App\Modules\PPO\PPOHelper::delStat($item->zf_id );
    
            $this->OnRefresh($this->filter) ;       

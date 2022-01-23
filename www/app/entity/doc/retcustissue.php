@@ -71,6 +71,7 @@ class RetCustIssue extends Document
                 $sc->setStock($st->stock_id);
                 //   $sc->setExtCode($item->price - $st->partion); //Для АВС
                 $sc->setOutPrice($item->price);
+                $sc->tag=-2;
                 $sc->save();
             }
         }

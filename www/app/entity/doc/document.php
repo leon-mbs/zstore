@@ -930,6 +930,32 @@ class Document extends \ZCL\DB\Entity
     }
 
     
+   protected function _getQRCodeImage() {
+        $print = System::getOption('common', 'printoutqrcode');
+        if ($print == 0) {
+            return '';
+        }
+        $url =$this->getFiscUrl( );
+        if(strlen($url)==0)  return '';
+       // $firm = \App\Entity\Firm::load($this->firm_id);
+
+     
+      
+        $qrCode = new \Endroid\QrCode\QrCode($url);
+        $qrCode->setSize(120);
+        $qrCode->setMargin(5);
+       
+      //  $qrCode->setEncoding('UTF-8'); 
+   
+        $qr = 'data:image/png;base64,' . base64_encode($qrCode->writeString()) ;            
+         
+        $img = "<img   src=\"{$qr}\"  />";
+
+        return $img;
+    }
+    
+    
+    
     /**
     *    возвращает ссылку  на чек в  налоговой
     *    https://cabinet.tax.gov.ua/cashregs/check?fn=4000191957&id=165093488&date=20220105&time=132430&sum=840

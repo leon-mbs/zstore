@@ -138,8 +138,16 @@
                                                    onkeydown="onBarCode()"> &nbsp;<a zippy="addcode" class="btn btn-info btn-sm mr-4">+</a>
 
                             {{/usescanner}}
+                                 {{#ppo}}
+           
+                        <a zippy="openshift"><i class="fa fa-bullhorn"/> Открыть смену</a>
 
+                        &nbsp; &nbsp; <a zippy="closeshift"><i class="fa fa-gavel"/> Закрыть смену</a>
+                      
+                  
+                {{/ppo}} 
                         </form> 
+              
                     </div>           
 
                     <form zippy="listsform" >  
@@ -339,6 +347,12 @@
                                 <a zippy="bbackitems" class="btn btn-outline-info"> &lt; Назад</a>
 
                                 &nbsp;&nbsp; <input zippy="btocheck" type="submit" value="Печать чека > "   class="btn btn-success">
+                  {{#ppo}}
+                            &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Вiдклвсти  фiскализацiю  
+                           <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="На випадок збою інтернету фіскалізацію можна пропустити. Чек може бути фіскалізований ДО закриття зміни на сторінці ручного закриття зміни в модулі РРО "></i>
+                                              
+                            {{/ppo}}                                
                             </div>
                         </div>
 

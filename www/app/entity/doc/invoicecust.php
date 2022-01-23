@@ -35,7 +35,8 @@ class InvoiceCust extends Document
                         "document_number" => $this->document_number,
                         "firm_name"       => $firm['firm_name'],
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
-                        "iscontract"      => $this->headerdata["contract_id"] > 0,
+                         "isval"           => ($this->headerdata['val']) > 1,
+                       "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "total"           => H::fa($this->amount),
                         "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
@@ -48,10 +49,16 @@ class InvoiceCust extends Document
 
         $header['isdisc'] = $this->headerdata["disc"] > 0;
         $header['isnds'] = $this->headerdata["nds"] > 0;
-        $header['israte'] = ($this->headerdata["rate"] != 0) && ($this->headerdata["rate"] != 1);
+        
         $header['disc'] = H::fa($this->headerdata["disc"]);
         $header['nds'] = H::fa($this->headerdata["nds"]);
+        
         $header['rate'] = $this->headerdata["rate"];
+        if ($header['rate'] == 0 || $header['rate'] == 1) {
+            $header['isval'] = false;
+        }
+        $val = H::getValList();
+        $header['val'] = $val[$this->headerdata['val']];
 
         $report = new \App\Report('doc/invoicecust.tpl');
 

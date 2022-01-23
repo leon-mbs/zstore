@@ -64,6 +64,7 @@ class ProdIssue extends Document
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
                 $sc->setOutPrice($st->partion);
+                $sc->tag=-3;
 
                 $sc->save();
             }

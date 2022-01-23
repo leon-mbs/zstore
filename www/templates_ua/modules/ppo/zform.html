@@ -65,8 +65,8 @@
 
                 </form>
             </div>
-            <div class="col-12 col-md-6 col-xl-8"  >
-            <div class="col-12 col-md-6 col-lg-8 col-xl-6"  >
+            
+            <div class="col-12 col-md-6 col-lg-8  "  >
                 Документи  в  z-звiтi
                 <table class="table table-sm">
                     <tr>
@@ -78,6 +78,7 @@
                         <th class="text-right">Пов. нал</th>
                         <th class="text-right">Пов. безнал</th>
                         <th> </th>
+                        <th> </th>
                     </tr>
                     <tr  zippy="list">
                         <td zippy="docnumber"> </td>
@@ -87,17 +88,22 @@
                         <td zippy="amount3" class="text-right"> </td>
                         <td zippy="amount0r" class="text-right"> </td>
                         <td zippy="amount1r" class="text-right"> </td>
-                        <td> <a zippy="del"> <i class="fa fa-trash"></i> </a> </td>
+                        <td> <a zippy="fisc"> Фискалiзувати </a> </td>
+                        <td> &nbsp;&nbsp;<a zippy="del"> <i class="fa fa-trash"></i> </a> </td>
                     </tr>
                     
                 </table>
                 
-           </div>
+            </div>
                 
-           </div>
+          
             
 
         </div>
-
+      <script>  
+            function check_del() {
+                return confirm("Видалити  документ?")
+            }
+        </script>
     </body>
 </html>
