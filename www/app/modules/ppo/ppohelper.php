@@ -381,8 +381,9 @@ class PPOHelper
      * отправка  чека
      *
      * @param mixed $doc
+     * @param mixed $delayfisc  отложить  фискализацию
      */
-    public static function check($doc) {
+    public static function check($doc,$delayfisc=false) {
 
 
         $pos = \App\Entity\Pos::load($doc->headerdata['pos']);
@@ -530,13 +531,18 @@ class PPOHelper
         $xml = $report->generate($header);
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
         $firm = \App\Entity\Firm::load($pos->firm_id);
+        if($delayfisc) {
+             self::insertStat($pos->pos_id, 1, $amount0, $amount1, $amount2, $amount3, $doc->document_number, $doc->document_id,1);
+             $ret['success'] = true ;
+        } else {
+            $ret = self::send($xml, 'doc', $firm);
+            if ($ret['success'] == true) {
 
-        $ret = self::send($xml, 'doc', $firm);
-        if ($ret['success'] == true) {
-
-            self::insertStat($pos->pos_id, 1, $amount0, $amount1, $amount2, $amount3, $doc->document_number);
+                self::insertStat($pos->pos_id, 1, $amount0, $amount1, $amount2, $amount3, $doc->document_number, $doc->document_id);
+            }
+            $doc->headerdata["fiscdts"] = "&date=".date('Ymd')."&time={$header['time']}&sum={$header['amount']}";
+                
         }
-        $doc->headerdata["fiscdts"] = "&date=".date('Ymd')."&time={$header['time']}&sum={$header['amount']}";
  
         return $ret;
     }
@@ -693,13 +699,13 @@ class PPOHelper
     }
 
     //функции работы  со статистикой  для  z-отчета 
-    public static function insertStat($pos_id, $checktype, $amount0, $amount1, $amount2, $amount3, $document_number = '') {
+    public static function insertStat($pos_id, $checktype, $amount0, $amount1, $amount2, $amount3, $document_number = '',$document_id = 0,$tag=0) {
         $conn = \ZDB\DB::getConnect();
         $amount0 = number_format($amount0, 2, '.', '');
         $amount1 = number_format($amount1, 2, '.', '');
         $amount2 = number_format($amount2, 2, '.', '');
         $amount3 = number_format($amount3, 2, '.', '');
-        $sql = "insert into ppo_zformstat (pos_id,checktype,  amount0,amount1,amount2,amount3,document_number,createdon) values ({$pos_id},{$checktype}, {$amount0}, {$amount1},{$amount2},{$amount3}," . $conn->qstr($document_number) . "," . $conn->DBDate(time()) . ")";
+        $sql = "insert into ppo_zformstat (pos_id,checktype,  amount0,amount1,amount2,amount3,document_number,createdon,document_id,tag) values ({$pos_id},{$checktype}, {$amount0}, {$amount1},{$amount2},{$amount3}," . $conn->qstr($document_number) . "," . $conn->DBDate(time()) . ",{$document_id},{$tag})";
 
         $conn->Execute($sql);
     }

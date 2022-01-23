@@ -27,3 +27,6 @@ FROM ((`entrylist`
     ON ((`entrylist`.`stock_id` = `store_stock`.`stock_id`)))
   JOIN `documents`
     ON ((`entrylist`.`document_id` = `documents`.`document_id`)));
+    
+    
+ALTER TABLE `ppo_zformstat` ADD `document_id` INT NULL , ADD `tag` INT NULL DEFAULT '0' `;    

@@ -946,7 +946,7 @@ class ARMPos extends \App\Pages\Base
             }
 
             if ($this->pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
-                $this->_doc->headerdata["fiscalnumberpos"]  =  $pos->fiscalnumber;
+                $this->_doc->headerdata["fiscalnumberpos"]  = $this->pos->fiscalnumber;
  
 
                 $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);

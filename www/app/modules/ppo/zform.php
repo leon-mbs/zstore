@@ -107,14 +107,14 @@ class ZForm extends \App\Pages\Base
         $row->add(new Label("amount3",H::fa($amount3)));
         $row->add(new Label("amount0r",H::fa($amount0r)));
         $row->add(new Label("amount1r",H::fa($amount1r)));
-        $row->add(new Label("del", $this,"onDel" ));
+        $row->add(new ClickLink("del", $this,"onDel" ));
         
         
     }
     
     
     public function onDel($sender) {
-           $item = $sender->getOwner->getDataItem();
+           $item = $sender->getOwner()->getDataItem();
            \App\Modules\PPO\PPOHelper::delStat($item->zf_id );
    
            $this->OnRefresh($this->filter) ;       
