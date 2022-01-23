@@ -116,6 +116,7 @@ class OrderFood extends Document
                         "payed"           => H::fa($this->payed),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
+                        "docqrcode"       => $this->getQRCodeImage(),
 
                         "payamount" => H::fa($this->payamount)
         );
