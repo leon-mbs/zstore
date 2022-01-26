@@ -137,8 +137,12 @@ class PosList extends \App\Pages\Base
             $this->setError("selbranch");
             return;
         }
+        $fn = intval($this->_pos->fiscdocnumber);
 
-
+        if( ($fn >0) == false) {
+           $this->_pos->fiscdocnumber = 1;
+        }
+        
         $this->_pos->comment = $this->posdetail->editcomment->getText();
 
         $this->_pos->save();

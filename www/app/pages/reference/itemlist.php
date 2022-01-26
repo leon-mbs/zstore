@@ -686,13 +686,18 @@ class ItemList extends \App\Pages\Base
                 $header['isap'] = true;
             }
             if ($printer['pqrcode'] == 1 && strlen($item->url) > 0) {
+                $writer = new \Endroid\QrCode\Writer\PngWriter();
+ 
+      
                 $qrCode = new \Endroid\QrCode\QrCode($item->url);
+                 
                 $qrCode->setSize(500);
                 $qrCode->setMargin(5);
-                $qrCode->setWriterByName('png');
-
-                $dataUri = $qrCode->writeDataUri();
-                $header['qrcode'] = "<img style=\"width:100px\" src=\"{$dataUri}\"  />";
+              
+                 $result = $writer->write($qrCode );
+     
+                 $dataUri = $result->getDataUri();
+                 $header['qrcode'] = "<img style=\"width:100px\" src=\"{$dataUri}\"  />";
 
             }
             if ($printer['pbarcode'] == 1) {
