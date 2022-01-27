@@ -31,7 +31,7 @@ class Outcome extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-        $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username', "user_id in (select user_id from documents_view  where  meta_name  in('GoodsIssue','ServiceAct','Task','Order','POSCheck','TTN')  {$br}  )", 'username'), 0));
+        $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username', "user_id in (select user_id from documents_view  where  meta_name  in('GoodsIssue','ServiceAct','Task','Order','POSCheck','TTN','OrderFood')  {$br}  )", 'username'), 0));
         $this->filter->add(new DropDownChoice('cat', \App\Entity\Category::getList(false,false), 0))->setVisible(false);
         $this->filter->add(new DropDownChoice('salesource', H::getSaleSources(), 0))->setVisible(false);
 
@@ -165,7 +165,7 @@ class Outcome extends \App\Pages\Base
               join `items_view` i on e.`item_id` = i.`item_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
                where e.partion  is  not null and  e.`item_id` >0  and (e.`tag` = 0 or e.`tag` = -1 )   {$cat}   {$cust}  
-               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN' )
+               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood' )
                {$br}  {$u}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
@@ -182,7 +182,7 @@ class Outcome extends \App\Pages\Base
         left  join `customers`  c on c.`customer_id` = e.`customer_id`
          join `documents_view`  d on d.`document_id` = e.`document_id`
            where  e.partion  is  not null and  (e.`tag` = 0 or e.`tag` = -1 )     
-             and d.`meta_name` in ('GoodsIssue',    'POSCheck','ReturnIssue','TTN' )         AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
+             and d.`meta_name` in ('GoodsIssue',    'POSCheck','ReturnIssue','TTN','OrderFood' )         AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               {$br} {$u}   AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
              AND c.detail not like '%<isholding>1</isholding>%'               
           group by  c.`customer_name`,c.`customer_id`
@@ -228,7 +228,7 @@ class Outcome extends \App\Pages\Base
               join `items_view` i on e.`item_id` = i.`item_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
                where  e.partion  is  not null and  e.`item_id` >0  and (e.`tag` = 0 or e.`tag` = -1 ) 
-               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN' )
+               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood' )
                 {$br} {$u}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
@@ -259,7 +259,7 @@ class Outcome extends \App\Pages\Base
                
                  join `documents_view`  d on d.`document_id` = e.`document_id`
                    where e.partion  is  not null and (e.`tag` = 0 or e.`tag` = -1 ) 
-                     and d.`meta_name` in ('GoodsIssue', 'ServiceAct' , 'POSCheck','ReturnIssue','TTN' )    
+                     and d.`meta_name` in ('GoodsIssue', 'ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderFood' )    
                       {$br} {$u}  AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
                       AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                       and d.customer_id in({$custlist})
@@ -282,7 +282,7 @@ class Outcome extends \App\Pages\Base
              
              join `documents_view` d on d.`document_id` = e.`document_id`
                where  e.partion  is  not null and  d.`firm_id` >0  and (e.`tag` = 0 or e.`tag` = -1 ) 
-               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN')
+               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood')
                 {$br} {$u}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
@@ -301,7 +301,7 @@ class Outcome extends \App\Pages\Base
                 
              join `documents_view` d on d.`document_id` = e.`document_id`
                where   e.partion  is  not null and  (e.`tag` = 0 or e.`tag` = -1 ) 
-               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN')
+               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood')
                 {$br} {$u}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
@@ -320,7 +320,7 @@ class Outcome extends \App\Pages\Base
               
              join `documents_view` d on d.`document_id` = e.`document_id`
                where  e.partion  is  not null and (e.`tag` = 0 or e.`tag` = -1 )   and ExtractValue(d.content, '//doc/header/salesource') = {$salesource}  
-               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN')
+               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood')
                 {$br} {$u}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
@@ -346,7 +346,7 @@ class Outcome extends \App\Pages\Base
              join `documents_view` d on d.`document_id` = e.`document_id`
                where  e.partion  is  not null and  e.`item_id` >0  and (e.`tag` = 0 or e.`tag` = -1 ) 
                and  manufacturer = {$man}       
-               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN' )
+               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood' )
                 {$br} {$u}
                 
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "

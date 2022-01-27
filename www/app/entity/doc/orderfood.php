@@ -195,6 +195,7 @@ class OrderFood extends Document
                         foreach ($listst as $st) {
                             $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                             $sc->setStock($st->stock_id);
+                            $sc->tag=-3;
 
                             $sc->save();
                             if ($lost > 0) {
@@ -221,6 +222,7 @@ class OrderFood extends Document
 
                 $sc = new Entry($this->document_id, $item->quantity * $price, $item->quantity);
                 $sc->setStock($stock->stock_id);
+                $sc->tag=-4;
 
                 $sc->save();
             }
@@ -244,6 +246,8 @@ class OrderFood extends Document
                 $sc->setStock($st->stock_id);
                 //   $sc->setExtCode($item->price * $k - $st->partion); //Для АВС
                 $sc->setOutPrice($item->price * $k);
+                 $sc->tag=-1;
+                
                 $sc->save();
             }
         }
