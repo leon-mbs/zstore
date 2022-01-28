@@ -39,6 +39,9 @@ class ArmProdFood extends \App\Pages\Base
     public function onReady($args, $post) {
         
         $doc = Document::load($args[0]);
+        $doc = $doc->cast();
+        
+        
         $items = $doc->unpackDetails('detaildata');
         if(isset($items[$args[1]]))  {
            $items[$args[1]]->foodstate = 1;    
@@ -46,6 +49,8 @@ class ArmProdFood extends \App\Pages\Base
         
         $doc->packDetails('detaildata', $items);
         $doc->save();
+        
+
         $hasinproces = false;
         foreach ($items as $it) {
             if ($it->foodstate !== 1) {
@@ -53,6 +58,7 @@ class ArmProdFood extends \App\Pages\Base
             }
         }
         if ($hasinproces == false) {
+            $doc->DoStore();
             $doc->updateStatus(Document::STATE_FINISHED);
 
             if ($doc->headerdata['delivery'] > 0) {

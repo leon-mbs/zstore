@@ -364,7 +364,15 @@ class OrderList extends \App\Pages\Base
         if (false == \App\ACL::checkEditDoc($doc, true)) {
             return;
         }
+        $cc = $doc->canCanceled();
+        if (strlen($cc) > 0) {
+            $this->setError($cc);
 
+            return;
+        }   
+            $doc->updateStatus(Document::STATE_CANCELED);
+            $doc->payed = 0;
+            $doc->save();           
         App::Redirect("\\App\\Pages\\Doc\\Order", $doc->document_id);
     }
 

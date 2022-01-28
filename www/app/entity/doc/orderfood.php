@@ -48,7 +48,12 @@ class OrderFood extends Document
             $deliverydata = $deliverydata . ', ' . $this->headerdata["ship_address"];
         }
         $deliverydata = $deliverydata . ', ' . date("Y-m-d H:i", $this->headerdata["deltime"]);
-
+        $cname = false;
+        if($this->customer_id >0){
+            $c = \App\Entity\Customer::load($this->customer_id) ;
+            $cname = $c->customer_name;
+            if(strlen($c->phone)>0) $cname = $cname . " ({$c->phone})";
+        }
         $header = array('date'         => H::fd($this->document_date),
                         "_detail"      => $detail,
                         "firm_name"    => $firm["firm_name"],
@@ -57,7 +62,8 @@ class OrderFood extends Document
                         "deliverydata" => $deliverydata,
 
 
-                        "customer_name"   => strlen($this->customer_name) > 0 ? $this->customer_name : false,
+                        "notes"   => strlen($this->notes) > 0 ? $this->notes : false ,
+                        "customer_name"   => $cname,
                         "exchange"        => H::fa($this->headerdata["exchange"]),
                         "pos_name"        => $this->headerdata["pos_name"],
                         "time"            => H::fdt($this->headerdata["time"]),
@@ -195,6 +201,7 @@ class OrderFood extends Document
                         foreach ($listst as $st) {
                             $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                             $sc->setStock($st->stock_id);
+                            $sc->tag=-3;
 
                             $sc->save();
                             if ($lost > 0) {
@@ -221,6 +228,7 @@ class OrderFood extends Document
 
                 $sc = new Entry($this->document_id, $item->quantity * $price, $item->quantity);
                 $sc->setStock($stock->stock_id);
+                $sc->tag=-4;
 
                 $sc->save();
             }
@@ -244,6 +252,8 @@ class OrderFood extends Document
                 $sc->setStock($st->stock_id);
                 //   $sc->setExtCode($item->price * $k - $st->partion); //Для АВС
                 $sc->setOutPrice($item->price * $k);
+                 $sc->tag=-1;
+                
                 $sc->save();
             }
         }

@@ -29,6 +29,13 @@
         <td colspan="5">{{deliverydata}}</td>
     </tr>
     {{/isdelivery}}
+  {{#notes}}
+    <tr>
+        <td></td>
+        <td valign="top"><b>Коментарий</b></td>
+        <td colspan="5">{{notes}}</td>
+    </tr>
+    {{/notes}}
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Наименование</th>

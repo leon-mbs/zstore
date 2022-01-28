@@ -562,7 +562,7 @@ class ARMFood extends \App\Pages\Base
         if ($this->_doc->payamount > $this->_doc->payed && $this->_doc->state > 4 && $this->_doc->state != Document::STATE_CLOSED && $this->_doc->state != Document::STATE_FAIL) { //к  оплате
             $sf->bpay->setVisible(true);
         }
-        if ($this->_doc->payamount == $this->_doc->payed) { //оплачено
+        if ($this->_doc->hasPayments()  || $this->_doc->hasPayments() ) { //оплачено
             $sf->bedit->setVisible(false);
             $sf->brefuse->setVisible(false);
         }
@@ -701,6 +701,8 @@ class ARMFood extends \App\Pages\Base
             $conn->BeginTrans();
             //списываем  со  склада
             try {
+                $this->_doc = $this->_doc->cast();
+                
                 $this->_doc->DoStore();
                 $this->_doc->save();
 
@@ -765,6 +767,7 @@ class ARMFood extends \App\Pages\Base
 
                 $n->save();
             }
+            $this->_doc = $this->_doc->cast();
 
             $this->_doc->DoStore();
             $this->_doc->save();
