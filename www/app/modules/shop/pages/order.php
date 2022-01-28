@@ -222,7 +222,7 @@ class Order extends Base
                     $c->phone = $phone;
                     $c->type == \App\Entity\Customer::TYPE_BAYER;
                     $c->save();
-                    $order->customer_id = $c->customer_id;
+                    $order->customer_id = $c->customer_id; 
                 }
             }
             $order->headerdata['pricetype'] = $shop["defpricetype"];

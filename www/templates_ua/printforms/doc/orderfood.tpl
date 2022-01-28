@@ -15,13 +15,13 @@
         <td colspan="5">{{pos_name}}</td>
     </tr>
 
-    {{#customer_name}}
+    {{#contact}}
     <tr>
         <td></td>
-        <td valign="top"><b>Покупець</b></td>
-        <td colspan="5">{{customer_name}}</td>
+        <td valign="top"><b>Контакт</b></td>
+        <td colspan="5">{{contact}}</td>
     </tr>
-    {{/customer_name}}
+    {{/contact}}
    {{#isdelivery}}
     <tr>
         <td></td>
@@ -32,7 +32,7 @@
   {{#notes}}
     <tr>
         <td></td>
-        <td valign="top"><b>Коментарий</b></td>
+        <td valign="top"><b>Коментар</b></td>
         <td colspan="5">{{notes}}</td>
     </tr>
     {{/notes}}    
