@@ -170,6 +170,8 @@ class OrderFood extends Document
     }
 
     public function DoStore() {
+        if($this->hasStore()) return;
+        
         foreach ($this->unpackDetails('detaildata') as $item) {
 
 
