@@ -48,12 +48,7 @@ class OrderFood extends Document
             $deliverydata = $deliverydata . ', ' . $this->headerdata["ship_address"];
         }
         $deliverydata = $deliverydata . ', ' . date("Y-m-d H:i", $this->headerdata["deltime"]);
-        $cname = false;
-        if($this->customer_id >0){
-            $c = \App\Entity\Customer::load($this->customer_id) ;
-            $cname = $c->customer_name;
-            if(strlen($c->phone)>0) $cname = $cname . " ({$c->phone})";
-        }
+ 
         $header = array('date'         => H::fd($this->document_date),
                         "_detail"      => $detail,
                         "firm_name"    => $firm["firm_name"],
@@ -61,9 +56,9 @@ class OrderFood extends Document
                         "isdelivery"   => $this->headerdata["delivery"] > 0,
                         "deliverydata" => $deliverydata,
 
-
+                                                              
                         "notes"   => strlen($this->notes) > 0 ? $this->notes : false ,
-                        "customer_name"   => $cname,
+                        "contact"   => $this->headerdata["contact"],
                         "exchange"        => H::fa($this->headerdata["exchange"]),
                         "pos_name"        => $this->headerdata["pos_name"],
                         "time"            => H::fdt($this->headerdata["time"]),
@@ -170,6 +165,8 @@ class OrderFood extends Document
     }
 
     public function DoStore() {
+        if($this->hasStore()) return;
+        
         foreach ($this->unpackDetails('detaildata') as $item) {
 
 
