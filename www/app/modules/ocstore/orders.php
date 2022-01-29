@@ -181,6 +181,7 @@ class Orders extends \App\Pages\Base
             $neworder->headerdata['outnumber'] = $shoporder->order_id;
             $neworder->headerdata['ocorder'] = $shoporder->order_id;
             $neworder->headerdata['ocorderback'] = 0;
+            $neworder->headerdata['pricetype'] = 'price1';
         
             $neworder->notes = "OC номер:{$shoporder->order_id};";
 

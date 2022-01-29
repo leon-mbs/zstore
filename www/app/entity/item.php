@@ -333,7 +333,7 @@ class Item extends \ZCL\DB\Entity
 
     //цена  со  скидками (если  есть)
     public function getPrice($_price_ = 'price1', $store = 0, $partion = 0) {
-
+        if(strlen($_price_)==0) $_price_ = 'price1';
         $price = $this->getPurePrice($_price_, $store, $partion);
         if ($this->hasAction()) {
             $price = $this->getActionPrice($price);
