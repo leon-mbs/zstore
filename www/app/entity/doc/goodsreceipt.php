@@ -120,7 +120,7 @@ class GoodsReceipt extends Document
             $sc->setStock($stock->stock_id);
             // $sc->setExtCode($item->price); //Для АВС
             $sc->setOutPrice($item->price);
-            $sc->tag=-2;
+            $sc->tag=Entry::TAG_BAY;
 
             $sc->save();
 

@@ -12,6 +12,15 @@ namespace App\Entity;
 class Entry extends \ZCL\DB\Entity
 {
 
+   const TAG_SELL = -1;   //продажа
+   const TAG_BAY = -2;   //закупка
+   const TAG_RSELL = -4;   //возврат  покупателя
+   const TAG_RBAY = -8;   //возврат  поставщику
+   const TAG_TOPROD = -16;   //списание в  производство
+   const TAG_FROMPROD = -32;   //оприходование  с  производства
+    
+    
+    
     /**
      *
      *
@@ -26,7 +35,7 @@ class Entry extends \ZCL\DB\Entity
         // $this->amount = $amount;
 
         $this->quantity = $quantity;
-        $this->tag = 0;  // -1 продажи   -2 закупки   -3 списание в  прод   -4 оприходование с  прод
+        $this->tag = 0;  
     }
 
     protected function init() {
