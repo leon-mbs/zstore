@@ -543,18 +543,13 @@ class ItemList extends \App\Pages\Base
     }
 
     public function printQrOnClick($sender) {
+      
+        
         $item = $sender->getOwner()->getDataItem();
 
-        $writer = new \Endroid\QrCode\Writer\PngWriter();
-        
-        $qrCode = new \Endroid\QrCode\QrCode($item->url);
-        $qrCode->setSize(100);
-        $qrCode->setMargin(5);
-     //   $qrCode->setWriterByName('png');
+  
+        $dataUri = \App\Util::generateQR($item->url,100,5)  ;
 
-        $result = $writer->write($qrCode );
-     
-        $dataUri = $result->getDataUri();
         $html = "<img src=\"{$dataUri}\"  />";
         $this->updateAjax(array(), "  $('#tag').html('{$html}') ; $('#pform').modal()");
 
