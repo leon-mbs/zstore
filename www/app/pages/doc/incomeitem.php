@@ -63,7 +63,21 @@ class IncomeItem extends \App\Pages\Base
 
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
+        $this->editdetail->add(new SubmitLink('addnewitem'))->onClick($this, 'addnewitemOnClick');
 
+        
+       //добавление нового товара
+        $this->add(new Form('editnewitem'))->setVisible(false);
+        $this->editnewitem->add(new TextInput('editnewitemname'));
+        $this->editnewitem->add(new TextInput('editnewitemcode'));
+        $this->editnewitem->add(new TextInput('editnewbrand'));
+        $this->editnewitem->add(new TextInput('editnewmsr'));
+        $this->editnewitem->add(new Button('cancelnewitem'))->onClick($this, 'cancelnewitemOnClick');
+        $this->editnewitem->add(new DropDownChoice('editnewcat', \App\Entity\Category::getList(), 0));
+        $this->editnewitem->add(new SubmitButton('savenewitem'))->onClick($this, 'savenewitemOnClick');
+        
+        
+        
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
@@ -407,5 +421,54 @@ class IncomeItem extends \App\Pages\Base
             $this->docform->exmf->setVisible(false);
         }
     }
+     //добавление нового товара
+    public function addnewitemOnClick($sender) {
+        $this->editnewitem->setVisible(true);
+        $this->editdetail->setVisible(false);
 
+        $this->editnewitem->clean();
+        $this->editnewitem->editnewbrand->setDataList(Item::getManufacturers());
+    }
+
+    public function savenewitemOnClick($sender) {
+        $itemname = trim($this->editnewitem->editnewitemname->getText());
+        if (strlen($itemname) == 0) {
+            $this->setError("entername");
+            return;
+        }
+        $item = new Item();
+        $item->itemname = $itemname;
+        $item->item_code = $this->editnewitem->editnewitemcode->getText();
+        $item->msr = $this->editnewitem->editnewmsr->getText();
+
+        if (strlen($item->item_code) > 0) {
+            $code = Item::qstr($item->item_code);
+            $cnt = Item::findCnt("  item_code={$code} ");
+            if ($cnt > 0) {
+                $this->setError('itemcode_exists');
+                return;
+            }
+
+        } else {
+            if (\App\System::getOption("common", "autoarticle") == 1) {
+
+                $item->item_code = Item::getNextArticle();
+            }
+        }
+
+
+        $item->manufacturer = $this->editnewitem->editnewbrand->getText();
+        $item->cat_id = $this->editnewitem->editnewcat->getValue();
+        $item->save();
+        $this->editdetail->edititem->setText($item->itemname);
+        $this->editdetail->edititem->setKey($item->item_id);
+
+        $this->editnewitem->setVisible(false);
+        $this->editdetail->setVisible(true);
+    }
+
+    public function cancelnewitemOnClick($sender) {
+        $this->editnewitem->setVisible(false);
+        $this->editdetail->setVisible(true);
+    }
 }

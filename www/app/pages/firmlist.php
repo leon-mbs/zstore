@@ -251,6 +251,11 @@ class FirmList extends \App\Pages\Base
             
              }  
                
+             if($key==null){
+                $this->updateAjax(array(),"   $('#progress').text('Invalid  key');   $('#send').attr('disabled',null);            ") ;
+                return;
+                  
+             }
              
 
              $this->_firm->ppoowner =  $cert->getOwner()   ;
