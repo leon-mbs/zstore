@@ -905,6 +905,7 @@ class Document extends \ZCL\DB\Entity
      *
      */
     protected function getQRCodeImage() {
+        
         $print = System::getOption('common', 'printoutqrcode');
         if ($print == 0) {
             return '';
@@ -912,48 +913,15 @@ class Document extends \ZCL\DB\Entity
         $url =$this->getFiscUrl( );
         if(strlen($url)==0)  return '';
        // $firm = \App\Entity\Firm::load($this->firm_id);
-
-        $writer = new \Endroid\QrCode\Writer\PngWriter();
- 
-      
-        $qrCode = new \Endroid\QrCode\QrCode($url);
-        $qrCode->setSize(200);
-        $qrCode->setMargin(5);
-       // $qrCode->setWriterByName('png');
-
-        $result = $writer->write($qrCode );
-     
-        $dataUri = $result->getDataUri();
+   
+        $dataUri = \App\Util::generateQR($url,200,5)  ;
         $img = "<img style=\"width:80%\"  src=\"{$dataUri}\"  />";
 
         return $img;
     }
 
     
-   protected function _getQRCodeImage() {
-        $print = System::getOption('common', 'printoutqrcode');
-        if ($print == 0) {
-            return '';
-        }
-        $url =$this->getFiscUrl( );
-        if(strlen($url)==0)  return '';
-       // $firm = \App\Entity\Firm::load($this->firm_id);
-
-     
-      
-        $qrCode = new \Endroid\QrCode\QrCode($url);
-        $qrCode->setSize(120);
-        $qrCode->setMargin(5);
-       
-      //  $qrCode->setEncoding('UTF-8'); 
-   
-        $qr = 'data:image/png;base64,' . base64_encode($qrCode->writeString()) ;            
-         
-        $img = "<img   src=\"{$qr}\"  />";
-
-        return $img;
-    }
-    
+  
     
     
     /**

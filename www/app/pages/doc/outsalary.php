@@ -61,7 +61,7 @@ class OutSalary extends \App\Pages\Base
 
         $this->_list = Employee::find('disabled<>1', 'emp_name');
 
-        if ($docid > 0) {    //загружаем   содержимок  документа на страницу
+        if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);

@@ -59,7 +59,7 @@ class Prod extends \App\Pages\Base
         if ($parea > 0) {
             $wparea = " and content like '%<parea>{$parea}</parea>%' ";
         }
-
+         //списано
         $sql = "
           select i.`itemname`,i.`item_code`,0-sum(e.`quantity`) as qty, 0-sum((partion )*quantity) as summa
               from `entrylist_view`  e
@@ -67,7 +67,7 @@ class Prod extends \App\Pages\Base
               join `items` i on e.`item_id` = i.`item_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
                where e.`item_id` >0  and e.`quantity` < 0
-               and d.`meta_name` in ('ProdIssue','ProdReceipt')
+               and d.`meta_name` in ('TTN','GoodsIssue','ProdIssue','ProdReceipt','POSCheck','OrderFood')  and  (e.`tag` = 0 or e.`tag` = -16   ) 
                {$wparea}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
@@ -86,15 +86,15 @@ class Prod extends \App\Pages\Base
             );
             $sum1 += $row['summa'];
         }
-
+        //оприходовано
         $sql = "
           select i.`itemname`,i.`item_code`,sum(e.`quantity`) as qty, sum((partion  )*quantity) as summa
               from `entrylist_view`  e
 
               join `items` i on e.`item_id` = i.`item_id`
-             join `documents_view` d on d.`document_id` = e.`document_id`
+              join `documents_view` d on d.`document_id` = e.`document_id`
                where e.`item_id` >0  and e.`quantity`  >0
-               and d.`meta_name` in ('GoodsIssue','ProdIssue','ProdReceipt')
+               and d.`meta_name` in ('TTN','GoodsIssue','ProdIssue','ProdReceipt','POSCheck','OrderFood')   and  (e.`tag` = 0 or e.`tag` = -32   ) 
  
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "

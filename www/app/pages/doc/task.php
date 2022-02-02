@@ -92,7 +92,7 @@ class Task extends \App\Pages\Base
         $this->editdetail4->add(new Button('cancelrow4'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail4->add(new SubmitButton('saverow4'))->onClick($this, 'saverow4OnClick');
 
-        if ($docid > 0) {    //загружаем   содержимок  документа настраницу
+        if ($docid > 0) {    //загружаем   содержимое  документа настраницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->notes->setText($this->_doc->notes);

@@ -728,7 +728,7 @@ class POSCheck extends \App\Pages\Base
     private function calcPay() {
         $total = $this->docform->total->getText();
         $disc = $this->docform->paydisc->getText();
-
+        $disc = doubleval($disc) ;
         $this->docform->editpayamount->setText(H::fa($total - $disc));
         $this->docform->payamount->setText(H::fa($total - $disc));
         $this->docform->editpayed->setText(H::fa($total - $disc));

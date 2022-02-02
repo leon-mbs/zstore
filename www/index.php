@@ -21,6 +21,7 @@ try {
         }
 
         if ($user instanceof \App\Entity\User) {
+            \App\Session::getSession()->clean();
 
             \App\System::setUser($user);
 

@@ -138,6 +138,7 @@ class Orders extends \App\Pages\Base
                 return;
             }                
                 $neworder->packDetails('detaildata', $itlist);
+                $neworder->headerdata['pricetype'] = 'price1';
 
                 $neworder->headerdata['wcorder'] = $wcorder->id;
                 $neworder->headerdata['outnumber'] = $wcorder->id;

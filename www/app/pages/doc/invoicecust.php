@@ -88,6 +88,7 @@ class InvoiceCust extends \App\Pages\Base
         $this->add(new Form('editnewitem'))->setVisible(false);
         $this->editnewitem->add(new TextInput('editnewitemname'));
         $this->editnewitem->add(new TextInput('editnewitemcode'));
+        $this->editnewitem->add(new TextInput('editnewitemmsr'));
         $this->editnewitem->add(new Button('cancelnewitem'))->onClick($this, 'cancelnewitemOnClick');
         $this->editnewitem->add(new DropDownChoice('editnewcat', \App\Entity\Category::getList(), 0));
         $this->editnewitem->add(new SubmitButton('savenewitem'))->onClick($this, 'savenewitemOnClick');
@@ -510,6 +511,7 @@ class InvoiceCust extends \App\Pages\Base
     public function addnewitemOnClick($sender) {
         $this->editnewitem->setVisible(true);
         $this->editdetail->setVisible(false);
+        $this->editnewitem->editnewitemmsr->setText('');
 
         $this->editnewitem->editnewitemname->setText('');
         $this->editnewitem->editnewitemcode->setText('');
@@ -524,7 +526,8 @@ class InvoiceCust extends \App\Pages\Base
         $item = new Item();
         $item->itemname = $itemname;
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
-
+        $item->msr = $this->editnewitem->editnewitemmsr->getText();
+ 
         if (strlen($item->item_code) > 0) {
             $code = Item::qstr($item->item_code);
             $cnt = Item::findCnt("  item_code={$code} ");

@@ -12,6 +12,41 @@ use Symfony\Polyfill\Uuid\Uuid;
 class Util
 {
 
+  /**
+  * генерация QR кода  *   
+  * @param mixed $data
+  * @param mixed $size
+  * @param mixed $margin
+  */
+  public static function generateQR($data,$size,$margin=5){
+       $v = phpversion() ;
+       if(strpos($v,'7.2')===0){
+            $qrCode = new \Endroid\QrCode\QrCode($url);
+            $qrCode->setSize(120);
+            $qrCode->setMargin(5);
+           
+          //  $qrCode->setEncoding('UTF-8'); 
+       
+            $dataUri = 'data:image/png;base64,' . base64_encode($qrCode->writeString()) ;            
+               
+            return $dataUri;
+           
+       }
+        $writer = new \Endroid\QrCode\Writer\PngWriter();
+ 
+      
+        $qrCode = new \Endroid\QrCode\QrCode($data);
+        $qrCode->setSize($size);
+        $qrCode->setMargin($margin);
+       // $qrCode->setWriterByName('png');
+
+        $result = $writer->write($qrCode );
+     
+        $dataUri = $result->getDataUri();
+       
+        return $dataUri;
+  }  
+  
     /**
      * генерация  GUID
      *

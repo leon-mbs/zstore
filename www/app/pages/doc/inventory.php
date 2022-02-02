@@ -323,6 +323,17 @@ class Inventory extends \App\Pages\Base
         $code0 = $code;
         $code = ltrim($code,'0');
 
+        foreach($this->_itemlist as $it){
+          if($it->item_code==$code || $it->bar_code==$code ){
+              $this->_itemlist[$it->item_id]->qfact += 1;
+                                           
+              $this->docform->detail->Reload();
+              return;
+          }                
+        }
+        
+        
+        
         $store = $this->docform->store->getValue();
         $code_ = Item::qstr($code);
         $code0 = Item::qstr($code0);

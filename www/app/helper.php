@@ -811,6 +811,15 @@ class Helper
         }
     }
 
+    public static function exportXML($xml, $filename) {
+                header("Content-type: text/xml");
+                header("Content-Disposition: attachment;Filename={$filename}");
+                header("Content-Transfer-Encoding: binary");
+
+                echo $xml;
+        die;      
+    } 
+    
     public static function exportExcel($data, $header, $filename) {
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
 
