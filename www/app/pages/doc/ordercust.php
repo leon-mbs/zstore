@@ -78,7 +78,7 @@ class OrderCust extends \App\Pages\Base
         $this->editnewitem->add(new DropDownChoice('editnewcat', \App\Entity\Category::getList(), 0));
         $this->editnewitem->add(new SubmitButton('savenewitem'))->onClick($this, 'savenewitemOnClick');
 
-        if ($docid > 0) {    //загружаем   содержимок  документа настраницу
+        if ($docid > 0) {    //загружаем   содержимое  документа настраницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
 
@@ -373,6 +373,7 @@ class OrderCust extends \App\Pages\Base
 
         $this->editnewitem->editnewitemname->setText('');
         $this->editnewitem->editnewitemcode->setText('');
+        $this->editnewitem->editnewitemmsr->setText('');
     }
 
     public function savenewitemOnClick($sender) {

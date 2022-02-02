@@ -113,6 +113,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editnewitem->add(new TextInput('editnewitemsnumber'));
         $this->editnewitem->add(new Date('editnewitemsdate'));
         $this->editnewitem->add(new TextInput('editnewmanufacturer'));
+        $this->editnewitem->add(new TextInput('editnewmsr'));
         $this->editnewitem->add(new DropDownChoice('editnewcat', \App\Entity\Category::getList(), 0));
         $this->editnewitem->add(new Button('cancelnewitem'))->onClick($this, 'cancelnewitemOnClick');
         $this->editnewitem->add(new SubmitButton('savenewitem'))->onClick($this, 'savenewitemOnClick');
@@ -125,7 +126,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
-        if ($docid > 0) {    //загружаем   содержимок  документа настраницу
+        if ($docid > 0) {    //загружаем   содержимое  документа настраницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
 
@@ -740,6 +741,7 @@ class GoodsReceipt extends \App\Pages\Base
         $item = new Item();
         $item->itemname = $itemname;
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
+        $item->msr = $this->editnewitem->editnewmsr->getText();
 
         if (strlen($item->item_code) > 0) {
             $code = Item::qstr($item->item_code);
