@@ -44,6 +44,7 @@ class ReturnIssue extends Document
                         "firm_name"       => $this->headerdata["firm_name"],
                         "customer_name"   => $this->customer_name,
                         "document_number" => $this->document_number,
+                        "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
                         "total"           => H::fa($this->amount),
                         "payed"           => H::fa($this->payed)
         );

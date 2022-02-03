@@ -66,15 +66,14 @@ class StoreItems extends \App\Pages\Base
         $where = 'disabled<>1 ' . ($cat>0 ? ' and cat_id=' . $cat :  '' ) ;
         if(strlen($searchkey)>0) {
             $t = Item::qstr($searchkey)  ;
-            $where .= " and (itemname= {$t} or item_code={$t} ) "; 
+            $where .= " and (itemname  like ". Item::qstr('%'.$searchkey.'%') ." or item_code=".Item::qstr($searchkey)." ) "; 
         }
         
         $itemlist = Item::find( $where,'itemname asc') ;
         $storelist = Store::findArray('storename','','store_id') ;
         $siqty = array();
         $stlist = array();
-
-        
+          
         
         $conn = \ZDB\DB::getConnect();
 
