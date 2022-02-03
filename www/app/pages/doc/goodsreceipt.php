@@ -57,6 +57,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
+        $this->docform->add(new TextInput('rate','1'))->setVisible(false);
 
         $this->docform->add(new DropDownChoice('val', H::getValList(), '0'))->onChange($this, 'OnVal');
 
@@ -73,14 +74,12 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->docform->add(new TextInput('editnds', "0"));
         $this->docform->add(new SubmitButton('bnds'))->onClick($this, 'onNds');
-        $this->docform->add(new TextInput('editrate', "1"));
-        $this->docform->add(new SubmitButton('brate'))->onClick($this, 'onRate');
         $this->docform->add(new TextInput('editdisc', "0"));
         $this->docform->add(new SubmitButton('bdisc'))->onClick($this, 'onDisc');
 
       
         $this->docform->add(new Label('nds', 0));
-        $this->docform->add(new Label('rate', 1));
+        
         $this->docform->add(new Label('disc', 0));
 
         $this->docform->add(new Label('payed', 0));
@@ -142,7 +141,6 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->editnds->setText(H::fa($this->_doc->headerdata['nds']));
             $this->docform->val->setValue($this->_doc->headerdata['val']);
             $this->docform->rate->setText($this->_doc->headerdata['rate']);
-            $this->docform->editrate->setText($this->_doc->headerdata['rate']);
             $this->docform->disc->setText(H::fa($this->_doc->headerdata['disc']));
             $this->docform->editdisc->setText(H::fa($this->_doc->headerdata['disc']));
              $this->docform->zatr->setText($this->_doc->headerdata['zatr']);
@@ -194,10 +192,8 @@ class GoodsReceipt extends \App\Pages\Base
                         
                         $this->docform->nds->setText($invoice->headerdata['nds']);
                         $this->docform->editnds->setText($invoice->headerdata['nds']);
-                        $this->docform->val->setValue($invoice->_doc->headerdata['val']);
-                        $this->docform->rate->setText($invoice->_doc->headerdata['rate']);
-                        $this->docform->editrate->setText($invoice->_doc->headerdata['rate']);
-                        $this->docform->editrate->setText($invoice->headerdata['rate']);
+                        $this->docform->val->setValue($invoice->headerdata['val']);
+                        $this->docform->rate->setText($invoice->headerdata['rate']);
                         $this->docform->disc->setText($invoice->headerdata['disc']);
                         $this->docform->editdisc->setText($invoice->headerdata['disc']);
                         $this->docform->firm->setValue($invoice->firm_id);
@@ -206,7 +202,9 @@ class GoodsReceipt extends \App\Pages\Base
                         $this->docform->contract->setValue($invoice->headerdata['contract_id']);
                         
                         $this->_doc->headerdata['prepaid']  = abs($invoice->getPayAmount());
-                                
+                        if(strlen($invoice->headerdata['val'])>1) {
+                                $this->_doc->headerdata['prepaid']  =  $invoice->headerdata['payed'];
+                        }       
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                         $this->CalcTotal();
                         $this->CalcPay();
@@ -222,10 +220,8 @@ class GoodsReceipt extends \App\Pages\Base
                         $basedoc = $basedoc->cast();
                         $this->docform->firm->setValue($basedoc->firm_id);
                         $this->OnCustomerFirm($this->docform->customer);
-                        $this->docform->val->setValue($basedoc->_doc->headerdata['val']);
-                        $this->docform->rate->setText($basedoc->_doc->headerdata['rate']);
-                        $this->docform->editrate->setText($basedoc->_doc->headerdata['rate']);
-                        $this->docform->editrate->setText($basedoc->headerdata['rate']);
+                        $this->docform->val->setValue($basedoc->headerdata['val']);
+                        $this->docform->rate->setText($basedoc->headerdata['rate']);
 
                         $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
 
@@ -244,6 +240,10 @@ class GoodsReceipt extends \App\Pages\Base
 
         
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
+        
+        $this->OnVal($this->docform->val);
+        
+        
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
@@ -470,7 +470,7 @@ class GoodsReceipt extends \App\Pages\Base
         if ($this->_doc->firm_id > 0) {
             $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();
         }
-           $this->_doc->headerdata['zatr'] = $this->docform->zatr->getText();
+        $this->_doc->headerdata['zatr'] = $this->docform->zatr->getText();
         $this->_doc->headerdata['zatrself'] = $this->docform->zatrself->isChecked()?1:0;
 
         $this->_doc->payamount = $this->docform->payamount->getText();
@@ -530,7 +530,7 @@ class GoodsReceipt extends \App\Pages\Base
 
                     } else {
                         $order = Document::load($this->_doc->parent_id);
-                        if ($order->state == Document::STATE_INPROCESS) {
+                        if ($order->meta_name =="OrderCust" && $order->state == Document::STATE_INPROCESS) {
                             $order->updateStatus(Document::STATE_CLOSED);
 
                             $this->setSuccess("order_closed", $order->document_number);
@@ -640,12 +640,9 @@ class GoodsReceipt extends \App\Pages\Base
         $total = $this->docform->total->getText();
         $disc = doubleval($this->docform->disc->getText());
         $nds = doubleval($this->docform->nds->getText()) ;
-        $rate = doubleval($this->docform->rate->getText());
-
+     
         $total = $total + $nds - $disc;
-        if ($rate != 1 && $rate > 0) {
-         //   $total = $total * $rate;
-        }
+ 
         if(doubleval( $this->_doc->headerdata['prepaid'])>0) {
            $total = $total - $this->_doc->headerdata['prepaid'];  
         }
@@ -683,7 +680,17 @@ class GoodsReceipt extends \App\Pages\Base
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
             $this->setError("noselmf");
         }
-
+        $val = $sender->getValue();
+        if (strlen($val) > 1) {
+            if($this->_doc->payamount  > $this->_doc->payed )  {
+                $this->setError("nocreditval");
+             
+                
+                return;
+            }
+            
+            
+        }
         return !$this->isError();
     }
 
@@ -703,17 +710,17 @@ class GoodsReceipt extends \App\Pages\Base
 
     public function OnVal($sender) {
         $val = $sender->getValue();
+        $this->docform->rate->setVisible(false);        
         $rate = 1;
         if (strlen($val) > 1) {
             $optval = \App\System::getOptions("val");
             foreach($optval['vallist'] as $v){
                  if($v->code == $val) $rate=$v->rate;   
             }
-            
+            $this->docform->rate->setVisible(true);            
         } 
         $this->docform->rate->setText($rate);
-        $this->docform->editrate->setText($rate);
-        $this->CalcPay();
+        
     }
 
     //добавление нового товара

@@ -26,6 +26,15 @@
 
     </tr>
     {{/iscontract}}
+    {{#isval}}
+    <tr style="font-weight: bolder;">
+       <td></td>
+        <td><b>Валюта</b></td>
+        <td colspan="5">{{val}}   ({{rate}})</td>
+        
+        
+    </tr>
+    {{/isval}}        
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
             <br> Рахунок вхідний № {{document_number}} від {{date}} <br><br>
@@ -70,12 +79,7 @@
         <td colspan="7" align="right">ПДВ:</td>
         <td align="right">{{nds}}</td>
     </tr>
-    {{#isval}}
-    <tr style="font-weight: bolder;">
-        <td colspan="7" align="right">Курс {{val}}:</td>
-        <td align="right">{{rate}}</td>
-    </tr>
-    {{/isval}}
+     {{/isnds}}
 
 
    {{#payamount}}

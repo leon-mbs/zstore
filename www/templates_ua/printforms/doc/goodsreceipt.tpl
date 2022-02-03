@@ -31,7 +31,15 @@
         <td>Підстава</td>
         <td colspan="6">{{basedoc}}</td>
     </tr>
-
+     {{#isval}}
+    <tr style="font-weight: bolder;">
+       <td></td>
+        <td><b>Валюта</b></td>
+        <td colspan="6">{{val}}   ({{rate}})</td>
+        
+        
+    </tr>
+    {{/isval}}    
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="6" valign="middle">
             <br> Накладна № {{document_number}} від {{date}} <br><br>
@@ -81,12 +89,7 @@
         <td align="right">{{nds}}</td>
     </tr>
     {{/isnds}}
-    {{#isval}}
-    <tr style="font-weight: bolder;">
-        <td colspan="8" align="right">Курс {{val}}:</td>
-        <td align="right">{{rate}}</td>
-    </tr>
-    {{/isval}}
+ 
    {{#payamount}}
     <tr style="font-weight: bolder;">
         <td colspan="8" align="right">До оплати:</td>

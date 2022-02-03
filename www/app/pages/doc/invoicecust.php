@@ -45,6 +45,7 @@ class InvoiceCust extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);;
 
         $this->docform->add(new TextInput('notes'));
+        $this->docform->add(new TextInput('rate','1'))->setVisible(false);
         $this->docform->add(new DropDownChoice('val', H::getValList(), '0'))->onChange($this, 'OnVal');
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
@@ -60,13 +61,12 @@ class InvoiceCust extends \App\Pages\Base
 
         $this->docform->add(new TextInput('editnds', "0"));
         $this->docform->add(new SubmitButton('bnds'))->onClick($this, 'onNds');
-        $this->docform->add(new TextInput('editrate', "1"));
-        $this->docform->add(new SubmitButton('brate'))->onClick($this, 'onRate');
+        
+        
         $this->docform->add(new TextInput('editdisc', "0"));
         $this->docform->add(new SubmitButton('bdisc'))->onClick($this, 'onDisc');
 
         $this->docform->add(new Label('nds', 0));
-        $this->docform->add(new Label('rate', 1));
         $this->docform->add(new Label('disc', 0));
 
         $this->docform->add(new Label('payed', 0));
@@ -111,7 +111,6 @@ class InvoiceCust extends \App\Pages\Base
             $this->docform->editnds->setText($this->_doc->headerdata['nds']);
             $this->docform->val->setValue($this->_doc->headerdata['val']);
             $this->docform->rate->setText($this->_doc->headerdata['rate']);
-            $this->docform->editrate->setText($this->_doc->headerdata['rate']);
             $this->docform->disc->setText($this->_doc->headerdata['disc']);
             $this->docform->editdisc->setText($this->_doc->headerdata['disc']);
 
@@ -149,7 +148,7 @@ class InvoiceCust extends \App\Pages\Base
                 }
             }
         }
-
+        $this->OnVal($this->docform->val);
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
@@ -409,15 +408,12 @@ class InvoiceCust extends \App\Pages\Base
 
     private function CalcPay() {
         $total = $this->docform->total->getText();
-        $rate = $this->docform->rate->getText();
+        
 
         $nds = $this->docform->nds->getText();
         $disc = $this->docform->disc->getText();
         $total = $total + $nds - $disc;
-        $rate = $this->docform->rate->getText();
-        if ($rate != 1 && $rate > 0) {
-            $total = $total * $rate;
-        }
+ 
 
         $this->docform->editpayamount->setText(H::fa($total));
         $this->docform->payamount->setText(H::fa($total));
@@ -437,25 +433,21 @@ class InvoiceCust extends \App\Pages\Base
         $this->goAnkor("tankor");
     }
 
-    public function onRate($sender) {
-        $this->docform->rate->setText(H::fa($this->docform->editrate->getText()));
-        $this->CalcPay();
-        $this->goAnkor("tankor");
-    }
+ 
 
     public function OnVal($sender) {
         $val = $sender->getValue();
+        $this->docform->rate->setVisible(false);        
         $rate = 1;
         if (strlen($val) > 1) {
             $optval = \App\System::getOptions("val");
             foreach($optval['vallist'] as $v){
                  if($v->code == $val) $rate=$v->rate;   
             }
-            
+            $this->docform->rate->setVisible(true);            
         } 
         $this->docform->rate->setText($rate);
-        $this->docform->editrate->setText($rate);
-        $this->CalcPay();
+        
     }
 
     /**
@@ -484,10 +476,18 @@ class InvoiceCust extends \App\Pages\Base
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
             $this->setError("noselmf");
         }
-        $c = $this->docform->customer->getKey();
-        if ($c == 0) {
-            $this->setError("mustsel_cust");
+        $val = $sender->getValue();
+        if (strlen($val) > 1) {
+            if($this->_doc->payamount  > $this->_doc->payed )  {
+                $this->setError("nocreditval");
+             
+                
+                return;
+            }
+            
+            
         }
+       
 
         return !$this->isError();
     }

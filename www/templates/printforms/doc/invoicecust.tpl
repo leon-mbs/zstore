@@ -24,6 +24,17 @@
 
     </tr>
     {{/iscontract}}
+    
+    {{#isval}}
+    <tr style="font-weight: bolder;">
+       <td></td>
+        <td><b>Валюта</b></td>
+        <td colspan="5">{{val}}   ({{rate}})</td>
+        
+        
+    </tr>
+    {{/isval}}    
+    
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
             <br> Счет входящий № {{document_number}} от {{date}} <br><br>
@@ -69,12 +80,7 @@
         <td align="right">{{nds}}</td>
     </tr>
     {{/isnds}}
-    {{#isval}}
-    <tr style="font-weight: bolder;">
-        <td colspan="7" align="right">Курс {{val}}:</td>
-        <td align="right">{{rate}}</td>
-    </tr>
-    {{/isval}}
+
 
      {{#payamount}}
     <tr style="font-weight: bolder;">
