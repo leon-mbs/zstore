@@ -147,9 +147,11 @@
                 <div class="form-group">
                     <label for="edititem">Наименование</label>
                     <input class="form-control" zippy="edititem" placeholder="Начните вводить  ">
-
+                     <a   zippy="addnewitem">Добавить новый</a>
 
                 </div>
+                
+                
                 {{#usesnumber}}
                 <div class="form-group">
                     <label for="editsnumber">Партия поставщика</label>
@@ -186,6 +188,47 @@
         </div>
 
     </form>
+    
+      <form zippy="editnewitem">
+            <h3>&nbsp;Новый товар </h3>
+            <div class="row">
+                <div class="col-12 col-md-4 col-xl-3">
+
+                    <div class="form-group">
+                        <label for="editnewitemname">Название </label>
+                        <input class="form-control " zippy="editnewitemname" required="required"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="editnewitemcode">Код</label>
+                        <input class="form-control" type="text" zippy="editnewitemcode"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="editnewbrand">Производитель, бренд</label>
+                        <input autocomplete="off"   class="form-control" type="text" zippy="editnewbrand"/>
+
+
+                    </div>
+                    <div class="form-group  ">
+                        <label for="editnewcat">Категория</label>
+
+                        <select class="form-control" zippy="editnewcat">
+                            <option value="0">Не задана</option>
+                        </select>
+
+                    </div>
+                     <div class="form-group">
+                        <label for="editnewmsr">Ед. изм.</label>
+                        <input class="form-control" type="text" zippy="editnewmsr"/>
+                    </div>
+
+                    <div class="form-group">
+                        <input zippy="savenewitem" type="submit" value="Сохранить" class="btn btn-outline-primary">
+                        <input type="button" zippy="cancelnewitem" value="Отменить" class="btn btn-outline-secondary ">
+                    </div>
+                </div>
+            </div>
+        </form>
+    
     <script>
         $(document).ready(function () {
 

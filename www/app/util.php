@@ -21,9 +21,9 @@ class Util
   public static function generateQR($data,$size,$margin=5){
        $v = phpversion() ;
        if(strpos($v,'7.2')===0){
-            $qrCode = new \Endroid\QrCode\QrCode($url);
-            $qrCode->setSize(120);
-            $qrCode->setMargin(5);
+            $qrCode = new \Endroid\QrCode\QrCode($data);
+            $qrCode->setSize($size);
+            $qrCode->setMargin($margin);
            
           //  $qrCode->setEncoding('UTF-8'); 
        

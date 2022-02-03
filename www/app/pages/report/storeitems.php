@@ -34,7 +34,8 @@ class StoreItems extends \App\Pages\Base
         $this->filter->add(new CheckBox('fminus'));
         $this->filter->add(new CheckBox('fmin'));
         $this->filter->add(new DropDownChoice('searchcat', Category::getList(), 0));
-
+       $this->filter->add(new TextInput('searchkey'));
+ 
         $this->add(new Panel('detail'))->setVisible(false);
  
         $this->detail->add(new Label('preview'));
@@ -61,13 +62,18 @@ class StoreItems extends \App\Pages\Base
         $fmin = $this->filter->fmin->isChecked();
         $fminus = $this->filter->fminus->isChecked();
         $cat = $this->filter->searchcat->getValue();
-     
-        $itemlist = Item::find('disabled<>1 ' . ($cat>0 ? ' and cat_id=' . $cat :  '' ) ,'itemname asc') ;
+        $searchkey = trim($this->filter->searchkey->getText());
+        $where = 'disabled<>1 ' . ($cat>0 ? ' and cat_id=' . $cat :  '' ) ;
+        if(strlen($searchkey)>0) {
+            $t = Item::qstr($searchkey)  ;
+            $where .= " and (itemname  like ". Item::qstr('%'.$searchkey.'%') ." or item_code=".Item::qstr($searchkey)." ) "; 
+        }
+        
+        $itemlist = Item::find( $where,'itemname asc') ;
         $storelist = Store::findArray('storename','','store_id') ;
         $siqty = array();
         $stlist = array();
-
-        
+          
         
         $conn = \ZDB\DB::getConnect();
 

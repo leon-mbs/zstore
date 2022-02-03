@@ -14,7 +14,16 @@
         <td valign="top"><b>Терминал</b></td>
         <td colspan="5">{{pos_name}}</td>
     </tr>
-
+    {{#fiscalnumber}}
+ 
+    <tr>
+        <td></td>
+        <td valign="top"><b>ФН чека</b></td>
+        <td colspan="5">{{fiscalnumber}}</td>    
+    
+        
+    </tr>
+    {{/fiscalnumber}}
     {{#contact}}
     <tr>
         <td></td>

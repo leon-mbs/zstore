@@ -55,6 +55,7 @@ class OrderFood extends Document
                         "shopname"     => $common["shopname"],
                         "isdelivery"   => $this->headerdata["delivery"] > 0,
                         "deliverydata" => $deliverydata,
+                        "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
 
                                                               
                         "notes"   => strlen($this->notes) > 0 ? $this->notes : false ,
