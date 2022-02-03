@@ -40,7 +40,7 @@ class GoodsReceipt extends \App\Pages\Base
         $common = System::getOptions("common");
 
         $this->_tvars["colspan"] = $common['usesnumber'] == 1 ? 8 : 6;
-
+   
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date'))->setDate(time());
@@ -78,6 +78,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new TextInput('editdisc', "0"));
         $this->docform->add(new SubmitButton('bdisc'))->onClick($this, 'onDisc');
 
+      
         $this->docform->add(new Label('nds', 0));
         $this->docform->add(new Label('rate', 1));
         $this->docform->add(new Label('disc', 0));
@@ -201,23 +202,17 @@ class GoodsReceipt extends \App\Pages\Base
                         $this->docform->editdisc->setText($invoice->headerdata['disc']);
                         $this->docform->firm->setValue($invoice->firm_id);
                         $this->OnCustomerFirm($this->docform->customer);
-
+                        
                         $this->docform->contract->setValue($invoice->headerdata['contract_id']);
                         
+                        $this->_doc->headerdata['prepaid']  = abs($invoice->getPayAmount());
+                                
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                         $this->CalcTotal();
                         $this->CalcPay();
-                        //предоплата
-                            $this->docform->payment->setValue(0);  
-                            $this->docform->editpayed->setText(H::fa(0));
-                            $this->docform->payed->setText(H::fa(0));
-                            $this->docform->editpayamount->setText(H::fa(0));
-                            $this->docform->payamount->setText(H::fa(0));
-                            $this->docform->editdisc->setText(H::fa(0));
-                            $this->docform->disc->setText(H::fa(0));
-                          
+ 
                     }
-                    $this->calcTotal();
+                  //  $this->calcTotal();
                     if ($basedoc->meta_name == 'GoodsReceipt') {
 
                         $this->docform->store->setValue($this->docform->store->getValue());
@@ -245,6 +240,9 @@ class GoodsReceipt extends \App\Pages\Base
             }
         }
 
+        $this->_tvars["prepaid"] = (doubleval($this->_doc->headerdata['prepaid'])>0) ?  H::fa($this->_doc->headerdata['prepaid']) : false;
+
+        
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
@@ -640,15 +638,17 @@ class GoodsReceipt extends \App\Pages\Base
 
     private function CalcPay() {
         $total = $this->docform->total->getText();
-        $disc = $this->docform->disc->getText();
-        $nds = $this->docform->nds->getText();
-        $rate = $this->docform->rate->getText();
+        $disc = doubleval($this->docform->disc->getText());
+        $nds = doubleval($this->docform->nds->getText()) ;
+        $rate = doubleval($this->docform->rate->getText());
 
         $total = $total + $nds - $disc;
         if ($rate != 1 && $rate > 0) {
-            $total = $total * $rate;
+         //   $total = $total * $rate;
         }
-
+        if(doubleval( $this->_doc->headerdata['prepaid'])>0) {
+           $total = $total - $this->_doc->headerdata['prepaid'];  
+        }
         $this->docform->editpayamount->setText(H::fa($total));
         $this->docform->payamount->setText(H::fa($total));
         $this->docform->editpayed->setText(H::fa($total));

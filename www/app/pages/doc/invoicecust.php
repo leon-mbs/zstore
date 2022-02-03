@@ -499,7 +499,8 @@ class InvoiceCust extends \App\Pages\Base
     public function OnAutoItem($sender) {
 
         $text = Item::qstr('%' . $sender->getText() . '%');
-        return Item::findArray('itemname', "(itemname like {$text} or item_code like {$text}) or bar_code like {$text})  and disabled <> 1");
+        return  Item::findArray('itemname', "(itemname like {$text} or item_code like {$text} or bar_code like {$text})  and disabled <> 1");
+        
     }
 
     public function OnAutoCustomer($sender) {

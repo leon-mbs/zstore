@@ -180,6 +180,14 @@
                                         class="fa fa-edit"></i></a></td>
                         </tr>
                         {{/useval}}
+                        {{#prepaid}}
+                       <tr style="font-weight: bolder;">
+                            <td data-label="prepaid" colspan={{colspan}} class="text-right">Предоплата:</td>
+                            <td   class="text-right">  {{prepaid}}</td>
+                            <td>  </td>
+                        </tr>
+                        {{/prepaid}}
+
                         <tr style="font-weight: bolder;">
                             <td data-label="payamount" colspan={{colspan}} class="text-right">К оплате:</td>
                             <td zippy="payamount" class="text-right"></td>
