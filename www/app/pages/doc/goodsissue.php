@@ -209,20 +209,13 @@ class GoodsIssue extends \App\Pages\Base
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                         // $this->calcTotal();
                         $this->calcPay();
+                        $this->_doc->headerdata['prepaid']  = abs($basedoc->getPayAmount());
 
-                        if ($order->headerdata['payment'] > 0) {
-                            $this->docform->payment->setValue(0); // предоплата
-                            $this->docform->editpayed->setText(H::fa(0));
-                            $this->docform->payed->setText(H::fa(0));
-                            $this->docform->editpayamount->setText(H::fa(0));
-                            $this->docform->payamount->setText(H::fa(0));
-                            $this->docform->editpaydisc->setText(H::fa(0));
-                            $this->docform->paydisc->setText(H::fa(0));
-                        } else {
-                            $this->docform->editpayed->setText($this->docform->editpayamount->getText());
-                            $this->docform->payed->setText($this->docform->payamount->getText());
+ 
+                        $this->docform->editpayed->setText($this->docform->editpayamount->getText());
+                        $this->docform->payed->setText($this->docform->payamount->getText());
 
-                        }
+                 
 
 
                     }
@@ -244,6 +237,7 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
                         $this->docform->editpaydisc->setText($basedoc->headerdata['paydisc']);
                         $this->docform->paydisc->setText($basedoc->headerdata['paydisc']);
+                        $this->_doc->headerdata['prepaid']  = abs($basedoc->getPayAmount());
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                         $this->calcTotal();
@@ -308,6 +302,8 @@ class GoodsIssue extends \App\Pages\Base
                 }
             }
         }
+       
+        $this->_tvars["prepaid"] = (doubleval($this->_doc->headerdata['prepaid'])>0) ?  H::fa($this->_doc->headerdata['prepaid']) : false;
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
@@ -733,9 +729,13 @@ class GoodsIssue extends \App\Pages\Base
     private function calcPay() {
         $total = $this->docform->total->getText();
         $disc = $this->docform->paydisc->getText();
+        $prepaid = doubleval($this->_doc->headerdata['prepaid'] ) ;
 
         if ($disc > 0) {
             $total -= $disc;
+        }
+        if ($prepaid > 0) {
+            $total -= $prepaid;
         }
 
         $this->docform->editpayamount->setText(H::fa($total));

@@ -175,6 +175,8 @@ class GoodsReceipt extends \App\Pages\Base
 
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
+                        $this->docform->val->setValue(0);
+                        $this->docform->rate->setText(1);
 
                         $order = $basedoc->cast();
                         $this->docform->basedoc->setText('Заказ ' . $order->document_number);
@@ -640,8 +642,9 @@ class GoodsReceipt extends \App\Pages\Base
         $total = $this->docform->total->getText();
         $disc = doubleval($this->docform->disc->getText());
         $nds = doubleval($this->docform->nds->getText()) ;
+        $prepaid = doubleval($this->_doc->headerdata['prepaid'] ) ;
      
-        $total = $total + $nds - $disc;
+        $total = $total + $nds - $disc - $prepaid;
  
         if(doubleval( $this->_doc->headerdata['prepaid'])>0) {
            $total = $total - $this->_doc->headerdata['prepaid'];  

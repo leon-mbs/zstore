@@ -166,6 +166,13 @@
                             <td><a data-label="paydisc" href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i
                                         class="fa fa-edit"></i></a></td>
                         </tr>
+                       {{#prepaid}}
+                       <tr style="font-weight: bolder;">
+                            <td data-label="prepaid" colspan={{colspan}} class="text-right">Предоплата:</td>
+                            <td   class="text-right">  {{prepaid}}</td>
+                            <td>  </td>
+                        </tr>
+                        {{/prepaid}}
 
                         <tr style="font-weight: bolder;">
 
