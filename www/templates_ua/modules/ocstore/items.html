@@ -73,13 +73,20 @@
                 <h3>Оновлення цін і кількості</h3>
 
                 <div class="navbar nav">
+                            
+                  <form zippy="upd" class="form-inline ">
+                      <label for="updcat">Категорiя</label>
+
+                        <select class="form-control mr-sm-2" zippy="updcat">
+                            <option value="0">Всi</option>
+                        </select>
                     <a zippy="updateqty" class="  btn btn-outline-success  ">Оновити кількість</a>
                     <img id="loader3" style="display:none" src="/assets/images/ajax-loader.gif">
                     &nbsp;&nbsp;
                     <a zippy="updateprice" class="  btn btn-outline-success  ">Оновити ціни</a>
                     <img id="loader4" style="display:none" src="/assets/images/ajax-loader.gif">
 
-
+                     </form>
                 </div>
             </div>
 

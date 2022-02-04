@@ -156,7 +156,7 @@
                             <td zippy="total" class="text-right"></td>
                             <td></td>
                         </tr>
-
+                         {{^prepaid}}
                         <tr style="font-weight: bolder;">
 
                             <td colspan={{colspan}} class="text-right"><span data-label="paydisc">Скидка:</span></td>
@@ -166,6 +166,7 @@
                             <td><a data-label="paydisc" href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i
                                         class="fa fa-edit"></i></a></td>
                         </tr>
+                       {{/prepaid}}
                        {{#prepaid}}
                        <tr style="font-weight: bolder;">
                             <td data-label="prepaid" colspan={{colspan}} class="text-right">Предоплата:</td>

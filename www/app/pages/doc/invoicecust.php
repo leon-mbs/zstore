@@ -476,7 +476,7 @@ class InvoiceCust extends \App\Pages\Base
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
             $this->setError("noselmf");
         }
-        $val = $sender->getValue();
+        $val = $this->docform->val->getValue();
         if (strlen($val) > 1) {
             if($this->_doc->payamount  > $this->_doc->payed )  {
                 $this->setError("nocreditval");

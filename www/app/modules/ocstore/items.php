@@ -13,6 +13,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\SubmitLink;
 use Zippy\WebApplication as App;
 
 class Items extends \App\Pages\Base
@@ -46,8 +47,13 @@ class Items extends \App\Pages\Base
         $this->exportform->add(new \Zippy\Html\DataList\Paginator('pag', $this->exportform->newitemlist));
         $this->exportform->add(new DropDownChoice('ecat', $cats, 0));
 
-        $this->add(new ClickLink('updateqty'))->onClick($this, 'onUpdateQty');
-        $this->add(new ClickLink('updateprice'))->onClick($this, 'onUpdatePrice');
+        $this->add(new Form('upd'));
+        $this->upd->add(new DropDownChoice('updcat', \App\Entity\Category::getList(), 0));
+        
+        $this->upd->add(new SubmitLink('updateqty'))->onClick($this, 'onUpdateQty');
+        $this->upd->add(new SubmitLink('updateprice'))->onClick($this, 'onUpdatePrice');
+     
+     
         $this->add(new ClickLink('checkconn'))->onClick($this, 'onCheck');
         
         
@@ -173,9 +179,10 @@ class Items extends \App\Pages\Base
 
     public function onUpdateQty($sender) {
         $modules = System::getOptions("modules");
-
+        $cat = $this->upd->updcat->getValue();
+        
         $elist = array();
-        $items = Item::find("disabled <> 1  ");
+        $items = Item::find("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : ""));
         foreach ($items as $item) {
             if (strlen($item->item_code) == 0) {
                 continue;
@@ -208,10 +215,11 @@ class Items extends \App\Pages\Base
 
     public function onUpdatePrice($sender) {
         $modules = System::getOptions("modules");
-
+        $cat = $this->upd->updcat->getValue();
+ 
         $elist = array();
-        $items = Item::find("disabled <> 1  ");
-        foreach ($items as $item) {
+        $items = Item::find("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : ""));
+         foreach ($items as $item) {
             if (strlen($item->item_code) == 0) {
                 continue;
             }

@@ -158,6 +158,8 @@
                             <td zippy="total" class="text-right"></td>
                             <td></td>
                         </tr>
+                        {{^prepaid}}
+                        
                         <tr style="font-weight: bolder;">
                             <td data-label="nds" colspan={{colspan}} class="text-right">ПДВ:</td>
                             <td zippy="nds" class="text-right"></td>
@@ -170,6 +172,7 @@
                             <td data-label="disc"><a href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i
                                         class="fa fa-edit"></i></a></td>
                         </tr>
+                       {{/prepaid}}
 
  
                        {{#prepaid}}
