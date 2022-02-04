@@ -33,7 +33,7 @@
     {{/isdevice}}
     <tr style="font-weight: bolder;">
         <td colspan="5" align="center">
-            Акт виконаних робіт № {{document_number}} від {{date}}
+            Отриманi послуги № {{document_number}} від {{date}}
         </td>
     </tr>
 
