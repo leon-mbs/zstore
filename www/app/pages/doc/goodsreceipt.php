@@ -196,14 +196,21 @@ class GoodsReceipt extends \App\Pages\Base
                         $this->docform->editnds->setText($invoice->headerdata['nds']);
                         $this->docform->val->setValue($invoice->headerdata['val']);
                         $this->docform->rate->setText($invoice->headerdata['rate']);
-                        $this->docform->disc->setText($invoice->headerdata['disc']);
-                        $this->docform->editdisc->setText($invoice->headerdata['disc']);
                         $this->docform->firm->setValue($invoice->firm_id);
                         $this->OnCustomerFirm($this->docform->customer);
                         
                         $this->docform->contract->setValue($invoice->headerdata['contract_id']);
                         
-                        $this->_doc->headerdata['prepaid']  = abs($invoice->getPayAmount());
+                        $this->_doc->headerdata['prepaid']  = $invoice->payamount ;
+                        if($this->_doc->headerdata['prepaid'] ==0) {
+                           $this->docform->disc->setText($invoice->headerdata['disc']);
+                           $this->docform->editdisc->setText($invoice->headerdata['disc']);
+                            
+                           $this->OnChangeCustomer($this->docform->customer);
+                        }
+                    
+                    
+                    
                         if(strlen($invoice->headerdata['val'])>1) {
                                 $this->_doc->headerdata['prepaid']  =  $invoice->headerdata['payed'];
                         }       
@@ -642,12 +649,13 @@ class GoodsReceipt extends \App\Pages\Base
         $total = $this->docform->total->getText();
         $disc = doubleval($this->docform->disc->getText());
         $nds = doubleval($this->docform->nds->getText()) ;
-        $prepaid = doubleval($this->_doc->headerdata['prepaid'] ) ;
-     
-        $total = $total + $nds - $disc - $prepaid;
+        
+        
  
         if(doubleval( $this->_doc->headerdata['prepaid'])>0) {
            $total = $total - $this->_doc->headerdata['prepaid'];  
+        }  else {
+           $total = $total + $nds - $disc  ;    
         }
         $this->docform->editpayamount->setText(H::fa($total));
         $this->docform->payamount->setText(H::fa($total));

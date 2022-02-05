@@ -102,6 +102,12 @@
         <td align="right">{{payed}}</td>
     </tr>
      {{/payed}}  
+     {{#isprep}}  
+    <tr style="font-weight: bolder;">
+        <td colspan="8" align="right">Передплата:</td>
+        <td align="right">{{prepaid}}</td>
+    </tr>
+     {{/isprep}}  
      
 </table>
 

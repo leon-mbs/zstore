@@ -56,10 +56,12 @@ class GoodsReceipt extends Document
             $header['createdon'] = H::fd($contract->createdon);
         }
 
+        $header['isprep'] = $this->headerdata["prepaid"] > 0;
         $header['isdisc'] = $this->headerdata["disc"] > 0;
         $header['isnds'] = $this->headerdata["nds"] > 0;
         $header['isval'] = strlen($this->headerdata['val']) > 1;
 
+        $header['prepaid'] = H::fa($this->headerdata["prepaid"]);
         $header['disc'] = H::fa($this->headerdata["disc"]);
         $header['nds'] = H::fa($this->headerdata["nds"]);
         $header['rate'] = $this->headerdata["rate"];

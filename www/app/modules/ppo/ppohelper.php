@@ -11,7 +11,7 @@ use \PPOLib\PPO as PPO;
 class PPOHelper
 {
 
-    //  const DPI = "http://80.91.165.208:8609/fs/";
+    //  const DPI = "http://fs.tax.gov.ua:8609/fs/";
 
 
     /**
