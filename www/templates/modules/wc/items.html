@@ -67,13 +67,20 @@
                 <h3>Обновление цен и количеств</h3>
 
                 <div class="navbar nav">
+                  <form zippy="upd" class="form-inline ">
+                      <label for="updcat">Категория</label>
+
+                        <select class="form-control mr-sm-2" zippy="updcat">
+                            <option value="0">Все</option>
+                        </select>
+                
                     <a zippy="updateqty" class="  btn btn-outline-success  ">Обновить количества</a>
                     <div id="loader3" style="display:none" class="spinner-border spinner-border-sm"></div>
 
                     &nbsp;&nbsp;
                     <a zippy="updateprice" class="  btn btn-outline-success  ">Обновить цены</a>
                     <div id="loader4" style="display:none" class="spinner-border spinner-border-sm"></div>
-
+                 </form>
 
                 </div>
             </div>

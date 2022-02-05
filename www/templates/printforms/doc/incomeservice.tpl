@@ -1,7 +1,7 @@
 <table class="ctable" border="0" cellpadding="2" cellspacing="0">
     <tr>
         <td colspan="5">
-           Заказчик: {{customer_name}}
+    Исполнитель: {{customer_name}}
         </td>
 
 
@@ -10,7 +10,7 @@
     {{#isfirm}}
     <tr>
         <td colspan="5">
-            Исполнитель: {{firm_name}}
+            Заказчик: {{firm_name}}
         </td>
 
     </tr>
@@ -26,7 +26,7 @@
  
     <tr style="font-weight: bolder;">
         <td colspan="5" align="center">
-           Оказанные  услуги от № {{document_number}} от {{date}}
+           Полученные  услуги   № {{document_number}} от {{date}}
         </td>
     </tr>
 

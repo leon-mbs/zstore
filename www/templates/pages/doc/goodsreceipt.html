@@ -74,6 +74,11 @@
                         </select>
 
                     </div>
+                    <div class="form-group  ">
+                        <label for="rate">Курс </label>
+                        <input pattern="[0-9\.]+" class="form-control" type="text" zippy="rate">
+                        <small for="rate">Проводки  по  кассе и складу будут  выполнены  в  национальной валюте  по  курсу</small>
+                    </div>                       
                     {{/useval}}
 
                   
@@ -160,6 +165,9 @@
                             <td zippy="total" class="text-right"></td>
                             <td></td>
                         </tr>
+                        {{^prepaid}}
+                        
+                        
                         <tr style="font-weight: bolder;">
                             <td data-label="nds" colspan={{colspan}} class="text-right">НДС:</td>
                             <td zippy="nds" class="text-right"></td>
@@ -172,14 +180,16 @@
                             <td data-label="disc"><a href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i
                                         class="fa fa-edit"></i></a></td>
                         </tr>
-                        {{#useval}}
-                        <tr style="font-weight: bolder;">
-                            <td data-label="rate" colspan={{colspan}} class="text-right">Курс валюты:</td>
-                            <td zippy="rate" class="text-right"></td>
-                            <td data-label="rate"><a href="javascript:void(0);" data-toggle="modal" data-target="#modalrate"><i
-                                        class="fa fa-edit"></i></a></td>
+                         {{/prepaid}}
+
+                        {{#prepaid}}
+                       <tr style="font-weight: bolder;">
+                            <td data-label="prepaid" colspan={{colspan}} class="text-right">Предоплата:</td>
+                            <td   class="text-right">  {{prepaid}}</td>
+                            <td>  </td>
                         </tr>
-                        {{/useval}}
+                        {{/prepaid}}
+
                         <tr style="font-weight: bolder;">
                             <td data-label="payamount" colspan={{colspan}} class="text-right">К оплате:</td>
                             <td zippy="payamount" class="text-right"></td>
@@ -281,30 +291,7 @@
             </div>
 
 
-            <div id="modalrate" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog modal-sm">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Курс валюты</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="input-group  ">
-                                <input class="form-control" type="text" zippy="editrate" pattern="[0-9\.]+">
-                                <div class="input-group-append">
-                                    <input type="submit" value="OK" zippy="brate" class="ml-2 btn btn-info  ">
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
+         
 
             <div id="modalpayed" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                  aria-hidden="true">

@@ -27,7 +27,7 @@ class Income extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-        $this->filter->add(new DropDownChoice('type', array(1 => H::l('repbyitems'), 2 => H::l('repbysellers'), 3 => H::l('repbydates')), 1));
+        $this->filter->add(new DropDownChoice('type', array(1 => H::l('repbyitems'), 2 => H::l('repbysellers'), 3 => H::l('repbydates'),4 => H::l('repbyservices')) , 1));
 
         $this->add(new Panel('detail'))->setVisible(false);
  
@@ -123,7 +123,20 @@ class Income extends \App\Pages\Base
   order  by e.`document_date`
         ";
         }
+         if ($type == 4  ) {    //по сервисам
+            $sql = "
+         select s.`service_name` as itemname, sum(0-e.`quantity`) as qty, sum(0-e.`outprice`*e.`quantity`) as summa    ,0 as navar
+              from `entrylist_view`  e
 
+              join `services` s on e.`service_id` = s.`service_id`
+             join `documents_view` d on d.`document_id` = e.`document_id`
+               where e.`service_id` >0  and e.`quantity` <>0      {$cust}  
+              and d.`meta_name` in (  'IncomeService'  )
+               {$br} {$u} AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
+              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+                   group by s.`service_name`
+               order  by s.`service_name`      ";
+        }
         $total = 0;
         $rs = $conn->Execute($sql);
 
@@ -150,17 +163,26 @@ class Income extends \App\Pages\Base
             $header['_type1'] = true;
             $header['_type2'] = false;
             $header['_type3'] = false;
+            $header['_type4'] = false;
         }
         if ($type == 2) {
             $header['_type1'] = false;
             $header['_type2'] = true;
             $header['_type3'] = false;
+            $header['_type4'] = false;
         }
         if ($type == 3) {
             $header['_type1'] = false;
             $header['_type2'] = false;
             $header['_type3'] = true;
-        }
+              $header['_type4'] = false;
+      }
+        if ($type == 4) {
+            $header['_type1'] = false;
+            $header['_type2'] = false;
+            $header['_type3'] = false;
+            $header['_type4'] = true;
+      }
         $report = new \App\Report('report/income.tpl');
 
         $html = $report->generate($header);

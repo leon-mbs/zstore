@@ -35,7 +35,7 @@ class InvoiceCust extends Document
                         "document_number" => $this->document_number,
                         "firm_name"       => $firm['firm_name'],
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
-                         "isval"           => ($this->headerdata['val']) > 1,
+                         "isval"           => strlen($this->headerdata['val']) > 1,
                        "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "total"           => H::fa($this->amount),
                         "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
@@ -68,9 +68,13 @@ class InvoiceCust extends Document
     }
 
     public function Execute() {
-
-        if ($this->headerdata['payment'] > 0 && $this->payed) {
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->payed, $this->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_OUTCOME);
+        $payed = $this->payed;
+        $rate= doubleval($this->headerdata["rate"]);
+        if ($rate != 0 && $rate != 1) {
+            $payed = $payed * $rate; 
+        }
+        if ($this->headerdata['payment'] > 0 && $payed >0) {
+            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_OUTCOME);
             if ($payed > 0) {
                 $this->payed = $payed;
             }

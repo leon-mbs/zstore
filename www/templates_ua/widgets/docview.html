@@ -253,7 +253,8 @@
               data: {
                    
                   docid:0,
-                  loaded:false,
+                   path:'',
+                   loaded:false,
                   docdata:{
                       exports:{}
                   } ,
@@ -308,14 +309,15 @@
            }  
          ,   
          mounted: function(){
-              
+             
               this.docid=  $('#_docid_').attr('docid')         
+              this.path=  $('#_docid_').attr('path')         
              
         }  ,      
            methods: {
                 load:function(){
                  
-                   callPageMethod('docview::loaddata',[this.docid], null,(data)=> 
+                   callPageMethod(this.path+'::loaddata',[this.docid], null,(data)=> 
                   {
                     
                       let tmp =   JSON.parse(data)  

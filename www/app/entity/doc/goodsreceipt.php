@@ -56,10 +56,12 @@ class GoodsReceipt extends Document
             $header['createdon'] = H::fd($contract->createdon);
         }
 
+        $header['isprep'] = $this->headerdata["prepaid"] > 0;
         $header['isdisc'] = $this->headerdata["disc"] > 0;
         $header['isnds'] = $this->headerdata["nds"] > 0;
         $header['isval'] = strlen($this->headerdata['val']) > 1;
 
+        $header['prepaid'] = H::fa($this->headerdata["prepaid"]);
         $header['disc'] = H::fa($this->headerdata["disc"]);
         $header['nds'] = H::fa($this->headerdata["nds"]);
         $header['rate'] = $this->headerdata["rate"];
@@ -82,7 +84,12 @@ class GoodsReceipt extends Document
         if ($this->amount == 0) {
             // return;
         }
-        
+        $rate= doubleval($this->headerdata["rate"]);
+  
+        if ($rate == 0 || $rate == 1) {
+            $rate =1;
+        }    
+      
         $total = $this->amount; 
         if ($this->headerdata["disc"] > 0) {
             $total = $total - $this->headerdata["disc"];
@@ -90,9 +97,9 @@ class GoodsReceipt extends Document
         if ($this->headerdata["nds"] > 0) {
             $total = $total + $this->headerdata["nds"];
         }
-        if (($this->headerdata["rate"] != 0) && ($this->headerdata["rate"] != 1)) {
-            $total = $total * $this->headerdata["rate"];
-        }
+        
+        $total = $total * $rate;
+        
         
         if($this->headerdata['zatr'] > 0 && $this->headerdata['zatrself'] ==1 ) {
             $total = $total + $this->headerdata["zatr"];  
@@ -133,9 +140,15 @@ class GoodsReceipt extends Document
             }
         }
 
+        $payed = $this->payed;
 
-        if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->payed, $this->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_OUTCOME);
+        $payed = $payed * $rate; 
+     
+        if ($this->headerdata['payment'] > 0 && $payed > 0) {
+          
+        
+          
+            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_OUTCOME);
             if ($payed > 0) {
                 $this->payed = $payed;
             }

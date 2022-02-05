@@ -101,5 +101,36 @@
     <td> </td>    <td> </td>     </tr>
 </table>
 {{/_type3}}
+{{#_type4}}
+<tr style="font-size:larger; font-weight: bolder;">
+    <td align="center" colspan="5">
+        Услуги и работы <br><br>
+    </td>
+</tr>
+<tr style="font-weight: bolder;">
+    <th colspan="2" style="border: solid black 1px">Наименование</th>
 
+    
+    <th align="right" style="border: solid black 1px;width:60px;">Кол.</th>
+    <th align="right" style="border: solid black 1px;width:100px;">На сумму</th>
+    
+ 
+</tr>
+{{#_detail}}
+<tr>
+
+
+    <td colspan="2">{{name}}</td>
+
+
+    <td align="right">{{qty}}</td>
+    <td align="right">{{summa}}</td>
+ 
+</tr>
+{{/_detail}}
+<tr><td colspan="3" ></td> <td align="right" ><b>{{totsumma}}</b></td>  </tr>
+
+</table>
+
+{{/_type4}}
 

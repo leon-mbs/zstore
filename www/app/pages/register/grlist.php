@@ -80,7 +80,21 @@ class GRList extends \App\Pages\Base
         $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
 
         $row->add(new Label('customer', $doc->customer_name));
+        $row->add(new Label('ispay'   ))->setVisible(false) ;
+        $row->add(new Label('istruck' ))->setVisible(false) ;
 
+        if($doc->state >=4){
+           if($doc->payamount > 0 &&  $doc->payamount > $doc->payed)  {
+               $row->ispay->setVisible(true);
+           }
+           if($doc->meta_name=='InvoiceCust') {
+               $n = $doc->getChildren('GoodsReceipt');
+               $row->istruck->setVisible(count($n)==0);
+               
+           }
+        }
+        
+        
         $row->add(new Label('state', Document::getStateName($doc->state)));
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');

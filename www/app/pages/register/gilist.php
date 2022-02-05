@@ -141,7 +141,18 @@ class GIList extends \App\Pages\Base
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
         $row->add(new Label('firm', $doc->firm_name));
-
+        $row->add(new Label('ispay'   ))->setVisible(false) ;
+        $row->add(new Label('istruck' ))->setVisible(false) ;
+        if($doc->state >=4){
+           if($doc->payamount > 0 &&  $doc->payamount > $doc->payed)  {
+               $row->ispay->setVisible(true);
+           }
+           if($doc->meta_name=='Invoice') {
+               $n = $doc->getChildren('GoodsIssue')+$doc->getChildren('TTN');
+               $row->istruck->setVisible(count($n)==0);
+               
+           }
+        }
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         if ($doc->state < Document::STATE_EXECUTED) {

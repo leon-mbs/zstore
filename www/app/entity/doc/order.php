@@ -80,7 +80,7 @@ class Order extends \App\Entity\Doc\Document
         $list = array();
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
         $list['ProdReceipt'] = self::getDesc('ProdReceipt');
-        $list['Invoice'] = self::getDesc('Invoice');
+        if($this->payed==0) $list['Invoice'] = self::getDesc('Invoice');
         $list['POSCheck'] = self::getDesc('POSCheck');
         $list['Task'] = self::getDesc('Task');
         $list['TTN'] = self::getDesc('TTN');
