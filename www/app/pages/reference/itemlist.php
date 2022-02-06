@@ -196,7 +196,12 @@ class ItemList extends \App\Pages\Base
         $row->add(new ClickLink('printqr'))->onClick($this, 'printQrOnClick', true);
         $row->printqr->setVisible(strlen($item->url) > 0);
 
-        $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?id={$item->image_id}");
+        
+        $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?t=t&id={$item->image_id}");
+        if(strlen($item->thumb)>0) {
+           $row->imagelistitem->setValue($item->thumb);    
+        }
+        
         $row->imagelistitem->setAttribute('href', "/loadimage.php?id={$item->image_id}");
         $row->imagelistitem->setAttribute('data-gallery', $item->image_id);
         if ($item->image_id == 0) {
@@ -411,6 +416,7 @@ class ItemList extends \App\Pages\Base
                 \App\Entity\Image::delete($this->_item->image_id);
             }
             $this->_item->image_id = 0;
+            $this->_item->thumb = "";
         }
 
         if ($this->_item->image_id > 0 && $this->_copy == true) {
@@ -418,7 +424,7 @@ class ItemList extends \App\Pages\Base
             $image->image_id = 0;
             $image->save();
             $this->_item->image_id = $image->image_id;
-
+            $this->_item->thumb="";
         }
 
         $this->_item->save();
@@ -455,14 +461,19 @@ class ItemList extends \App\Pages\Base
                 $image->content = $thumb->getImageAsString();
                 $thumb->resize(256, 256);
                 $image->thumb = $thumb->getImageAsString();
+                $thumb->resize(64, 64);
+                
+                $this->_item->thumb = "data:{$image->mime};base64," . base64_encode($thumb->getImageAsString());
             }
 
-            $this->filter->searchbrand->setDataList(Item::getManufacturers());
 
 
             $image->save();
             $this->_item->image_id = $image->image_id;
             $this->_item->save();
+
+            $this->filter->searchbrand->setDataList(Item::getManufacturers());
+        
         }
 
         $this->itemtable->listform->itemlist->Reload(false);
