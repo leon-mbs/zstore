@@ -446,6 +446,8 @@ class PPOHelper
         $header['pays'] = array();
         $n = 1;
 
+        
+        //
         if ($doc->headerdata['payment'] == 0) {
             $pay = array(
                 'formname' => H::l('ppo_prepaid'),
@@ -518,7 +520,82 @@ class PPOHelper
 
             $amount2 = $pay['paysum'];
         }
+        //
+        
+        
+        /*  исправление
+        
+        if ($doc->payamount == 0) {
+            $pay = array(
+                'formname' => H::l('ppo_prepaid'),
+                'formcode' => 3,
+                'paysum'   => number_format($header['amount'], 2, '.', ''),
+                'payed'    => number_format($header['amount'], 2, '.', ''),
+                'num'      => "ROWNUM=\"{$n}\""
+            );
 
+            $header['pays'][] = $pay;
+            $n++;
+            $amount3 = $pay['paysum'];
+        } else {
+            
+            if($ms != null &&   $doc->payed  >0){ 
+            
+                if (  $mf->beznal == 1) {
+                    $pay = array(
+                        'formname' => H::l('ppo_bnal'),
+                        'formcode' => 1,
+                        'paysum'   => number_format($doc->payed, 2, '.', ''),
+                        'payed'    => number_format($doc->payed, 2, '.', ''),
+                        'num'      => "ROWNUM=\"{$n}\""
+                    );
+                
+                    $header['pays'][] = $pay;
+                    $n++;
+                    $amount1 = $pay['paysum'];
+                } else {
+
+                    $pay = array(
+                        'formname' => H::l('ppo_nal'),
+                        'formcode' => 0,
+                        'paysum'   => number_format($doc->payed, 2, '.', ''),
+                        'payed'    => number_format($doc->payed, 2, '.', ''),
+                        'rest'     => false,
+                        'num'      => "ROWNUM=\"{$n}\""
+                    );
+                    //сдача
+                    if ($doc->headerdata["exchange"] > 0) {
+                        $pay['rest'] = number_format($doc->headerdata["exchange"], 2, '.', '');
+                      //  $pay['paysum']  = number_format($doc->payed -$pay['exchange'], 2, '.', '') ;
+                   }
+                
+
+                    $header['pays'][] = $pay;
+                    $n++;
+                    $amount0 = $pay['paysum'];
+                }
+            }
+            
+                
+       // в долг
+            if ($doc->payed < $doc->payamount) {
+                $pay = array(
+                    'formname' => H::l('ppo_credit'),
+                    'formcode' => 2,
+                    'paysum'   => number_format($doc->payamount - $doc->payed, 2, '.', ''),
+                    'payed'    => number_format($doc->payamount - $doc->payed, 2, '.', ''),
+                    'rest'     => false,
+                    'num'      => "ROWNUM=\"{$n}\""
+                );
+                $header['pays'][] = $pay;
+                $n++;
+
+                $amount2 = $pay['paysum'];
+            }
+            
+        }        
+        
+        */
         $header['pay'] = count($header['pays']) > 0;
         $header['disc'] = false;
 

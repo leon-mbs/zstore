@@ -46,6 +46,7 @@ class Item extends \ZCL\DB\Entity
         $this->rate = (string)($xml->rate[0]);
         $this->val = (string)($xml->val[0]);
         $this->zarp = (string)($xml->zarp[0]);
+        $this->thumb = (string)($xml->thumb[0]);
 
         $this->noprice = (int)$xml->noprice[0];
         $this->noshop = (int)$xml->noshop[0];
@@ -129,6 +130,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<val>{$this->val}</val>";
         $this->detail .= "<rate>{$this->rate}</rate>";
         $this->detail .= "<zarp>{$this->zarp}</zarp>";
+        $this->detail .= "<thumb>{$this->thumb}</thumb>";
 
         $this->detail .= "<image_id>{$this->image_id}</image_id>";
         $this->detail .= "<weight>{$this->weight}</weight>";

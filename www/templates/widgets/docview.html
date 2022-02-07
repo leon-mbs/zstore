@@ -323,11 +323,13 @@
                       let tmp =   JSON.parse(data)  
                       this.loaded = true;
                       this.docdata = tmp;
-                      console.log(this.docdata)
+                    //  console.log(this.docdata)
                       this.loaddocs()  
                       this.loadmessages()  
                       this.loadfiles()  
-                      
+        
+                      $('a[href="#tprint"]').tab('show') 
+           
                   
                   });
                             

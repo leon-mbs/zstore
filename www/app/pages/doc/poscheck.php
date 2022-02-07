@@ -855,6 +855,11 @@ class POSCheck extends \App\Pages\Base
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
             $this->setError("noselmf");
         }
+        
+        //изза  фискализации
+        if ($this->docform->payment->getValue() == 0 && $this->_doc->payamount > 0) {
+            $this->setError("noselmf");
+        }
 
 
         return !$this->isError();
