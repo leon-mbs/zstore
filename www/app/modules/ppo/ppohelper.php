@@ -236,7 +236,8 @@ class PPOHelper
         $header['inn'] = strlen($firm['inn']) > 0 ? $firm['inn'] : false;
         $header['tin'] = $firm['tin'];
         $header['address'] = $pos->address;
-        $header['pointname'] = $pos->pointname;
+         $header['testing'] = $pos->testing==1;
+       $header['pointname'] = $pos->pointname;
         $header['date'] = date('dmY');
         $header['time'] = date('His');
         $header['docnumber'] = $pos->fiscdocnumber;
@@ -272,7 +273,8 @@ class PPOHelper
         $header['inn'] = strlen($firm['inn']) > 0 ? $firm['inn'] : false;
         $header['tin'] = $firm['tin'];
         $header['address'] = $pos->address;
-        $header['pointname'] = $pos->pointname;
+         $header['testing'] = $pos->testing==1;
+       $header['pointname'] = $pos->pointname;
         $header['date'] = date('dmY');
         $header['time'] = date('His');
         $header['docnumber'] = $pos->fiscdocnumber;
@@ -397,6 +399,7 @@ class PPOHelper
         $header['firmname'] = $firm['firm_name'];
         $header['inn'] = strlen($firm['inn']) > 0 ? $firm['inn'] : false;
         $header['tin'] = $firm['tin'];
+        $header['testing'] = $pos->testing==1;
         $header['address'] = $pos->address;
         $header['pointname'] = $pos->pointname;
         $header['date'] = date('dmY');
@@ -642,7 +645,8 @@ class PPOHelper
         $header['inn'] = strlen($firm['inn']) > 0 ? $firm['inn'] : false;
         $header['tin'] = $firm['tin'];
         $header['address'] = $pos->address;
-        $header['pointname'] = $pos->pointname;
+         $header['testing'] = $pos->testing==1;
+       $header['pointname'] = $pos->pointname;
         $header['date'] = date('dmY');
         $header['time'] = date('His');
         $header['docnumber'] = $pos->fiscdocnumber;
@@ -710,7 +714,8 @@ class PPOHelper
         $header['inn'] = strlen($firm['inn']) > 0 ? $firm['inn'] : false;;
         $header['tin'] = $firm['tin'];
         $header['address'] = $pos->address;
-        $header['pointname'] = $pos->pointname;
+          $header['testing'] = $pos->testing==1;
+      $header['pointname'] = $pos->pointname;
         $header['date'] = date('dmY');
         $header['time'] = date('His');
         $header['docnumberback'] = $doc->headerdata["docnumberback"];

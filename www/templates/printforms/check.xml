@@ -35,6 +35,10 @@
         <CASHIER>{{username}}</CASHIER>
 
         <VER>1</VER>
+        {{#testing}}
+        <TESTING>1</TESTING>
+        {{/testing}}
+        
     </CHECKHEAD>
 
     <CHECKTOTAL>

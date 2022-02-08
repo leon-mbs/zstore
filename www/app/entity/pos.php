@@ -30,6 +30,7 @@ class Pos extends \ZCL\DB\Entity
         $this->details .= "<fiscdocnumber>{$this->fiscdocnumber}</fiscdocnumber>";
 
         $this->details .= "<usefisc>{$this->usefisc}</usefisc>";
+        $this->details .= "<testing>{$this->testing}</testing>";
         $this->details .= "<firm_id>{$this->firm_id}</firm_id>";
         $this->details .= "</details>";
 
@@ -48,6 +49,7 @@ class Pos extends \ZCL\DB\Entity
         $this->fiscdocnumber = (int)($xml->fiscdocnumber[0]);
         $this->firm_id = (int)($xml->firm_id[0]);
 
+        $this->testing = (int)($xml->testing[0]);
         $this->usefisc = (int)($xml->usefisc[0]);
         if (strlen($this->fiscdocnumber) == 0) {
             $this->fiscdocnumber = 1;
