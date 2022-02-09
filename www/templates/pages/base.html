@@ -570,6 +570,40 @@
 
                                     </li>
                                     {{/woocomerce}}
+                    {{#promua}}
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Обмен с PromUa
+                                                <i class="right fas fa-angle-left"></i>
+                                            </p>
+
+                                        </a>
+                                        <ul class="nav nav-treeview">
+                                              {{#isadmins}}
+                                            <li class="nav-item">
+                                                <a href="/index.php?p=App/Modules/PU/Options" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>
+                                                    <p>&nbsp;&nbsp;Настройки</p>
+                                                </a>
+                                            </li>
+                                              {{/isadmins}}
+                                            <li>
+                                                <a href="/index.php?p=App/Modules/PU/Orders" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>
+                                                    <p>&nbsp;&nbsp;Заказы</p>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="/index.php?p=App/Modules/PU/Items" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>
+                                                    <p>&nbsp;&nbsp;Товары</p>
+                                                </a>
+                                            </li>
+                                        </ul>
+
+                                    </li>
+                                    {{/promua}}
 
                                          {{#note}}
                                     <li class="nav-item  has-treeview">

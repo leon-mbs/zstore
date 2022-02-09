@@ -158,6 +158,7 @@ class GoodsReceipt extends Document
 
         }
         if($this->headerdata['zatr'] > 0 && $this->headerdata['zatrself'] !=1 ) {
+            \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->headerdata['zatr'], $this->headerdata['payment'], \App\Entity\IOState::TYPE_NAKL);     
             \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata['zatr'], \App\Entity\IOState::TYPE_NAKL);
         }
 
