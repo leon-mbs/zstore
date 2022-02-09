@@ -278,6 +278,37 @@ class TTN extends \App\Pages\Base
                         }
                         $this->calcTotal();
                     }
+
+                    if ($basedoc->meta_name == 'POSCheck') {
+
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        if ($basedoc->customer_id > 0) {
+                            $this->docform->customer->setText($basedoc->customer_name);
+                        } else {
+                            $this->docform->customer->setText($basedoc->headerdata['customer_name']);
+                        }
+
+
+                        $this->docform->salesource->setValue($basedoc->headerdata['salesource']);
+                        $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
+
+                        $this->docform->firm->setValue($basedoc->firm_id);
+
+                        $this->OnChangeCustomer($this->docform->customer);
+                        $k = 1;      //учитываем  скидку
+                        if ($basedoc->headerdata["paydisc"] > 0 && $basedoc->amount > 0) {
+                            $k = ($basedoc->amount - $basedoc->headerdata["paydisc"]) / $basedoc->amount;
+                        }
+
+                        $i = 1;
+                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
+                            // $item->price = $item->getPrice($basedoc->headerdata['pricetype']);
+                            $item->price = $item->price * $k;
+                            $this->_itemlist[$i++] = $item;
+                        }
+                        $this->calcTotal();
+                    }
                 }
             }
         }

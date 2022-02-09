@@ -279,6 +279,7 @@ class POSCheck extends Document
         $list = array();
         $list['Warranty'] = self::getDesc('Warranty');
         $list['ReturnIssue'] = self::getDesc('ReturnIssue');
+        $list['TTN'] = self::getDesc('TTN');
 
         return $list;
     }
