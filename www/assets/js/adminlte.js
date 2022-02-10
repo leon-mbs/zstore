@@ -1,6 +1,6 @@
 /*!
- * AdminLTE v3.2.0-rc (https://adminlte.io)
- * Copyright 2014-2021 Colorlib <https://colorlib.com>
+ * AdminLTE v3.2.0 (https://adminlte.io)
+ * Copyright 2014-2022 Colorlib <https://colorlib.com>
  * Licensed under MIT (https://github.com/ColorlibHQ/AdminLTE/blob/master/LICENSE)
  */
 (function (global, factory) {
@@ -468,13 +468,12 @@
       var _this = this;
 
       var $body = $__default["default"]('body');
-      var $html = $__default["default"]('html');
-      var target = this._config.target; // Show the control sidebar
+      var $html = $__default["default"]('html'); // Show the control sidebar
 
       if (this._config.controlsidebarSlide) {
         $html.addClass(CLASS_NAME_CONTROL_SIDEBAR_ANIMATE);
         $body.removeClass(CLASS_NAME_CONTROL_SIDEBAR_SLIDE).delay(300).queue(function () {
-          $__default["default"](target).hide();
+          $__default["default"](SELECTOR_CONTROL_SIDEBAR).hide();
           $html.removeClass(CLASS_NAME_CONTROL_SIDEBAR_ANIMATE);
           $__default["default"](this).dequeue();
         });
@@ -488,9 +487,18 @@
       }, this._config.animationSpeed);
     };
 
-    _proto.show = function show() {
+    _proto.show = function show(toggle) {
+      if (toggle === void 0) {
+        toggle = false;
+      }
+
       var $body = $__default["default"]('body');
-      var $html = $__default["default"]('html'); // Collapse the control sidebar
+      var $html = $__default["default"]('html');
+
+      if (toggle) {
+        $__default["default"](SELECTOR_CONTROL_SIDEBAR).hide();
+      } // Collapse the control sidebar
+
 
       if (this._config.controlsidebarSlide) {
         $html.addClass(CLASS_NAME_CONTROL_SIDEBAR_ANIMATE);
@@ -514,14 +522,17 @@
 
     _proto.toggle = function toggle() {
       var $body = $__default["default"]('body');
+      var target = this._config.target;
+      var notVisible = !$__default["default"](target).is(':visible');
       var shouldClose = $body.hasClass(CLASS_NAME_CONTROL_SIDEBAR_OPEN$1) || $body.hasClass(CLASS_NAME_CONTROL_SIDEBAR_SLIDE);
+      var shouldToggle = notVisible && ($body.hasClass(CLASS_NAME_CONTROL_SIDEBAR_OPEN$1) || $body.hasClass(CLASS_NAME_CONTROL_SIDEBAR_SLIDE));
 
-      if (shouldClose) {
+      if (notVisible || shouldToggle) {
+        // Open the control sidebar
+        this.show(notVisible);
+      } else if (shouldClose) {
         // Close the control sidebar
         this.collapse();
-      } else {
-        // Open the control sidebar
-        this.show();
       }
     } // Private
     ;
@@ -981,6 +992,15 @@
 
     _proto.toggleRow = function toggleRow() {
       var $element = this._element;
+
+      if ($element[0].nodeName !== 'TR') {
+        $element = $element.parent();
+
+        if ($element[0].nodeName !== 'TR') {
+          $element = $element.parent();
+        }
+      }
+
       var time = 500;
       var $type = $element.attr(SELECTOR_ARIA_ATTR);
       var $body = $element.next(SELECTOR_EXPANDABLE_BODY).children().first().children();
@@ -1312,7 +1332,7 @@
         return;
       }
 
-      var uniqueName = link.replace('./', '').replace(/["#&'./:=?[\]]/gi, '-').replace(/(--)/gi, '');
+      var uniqueName = unescape(link).replace('./', '').replace(/["#&'./:=?[\]]/gi, '-').replace(/(--)/gi, '');
       var navId = "tab-" + uniqueName;
 
       if (!this._config.allowDuplicates && $__default["default"]("#" + navId).length > 0) {
@@ -1723,7 +1743,7 @@
 
       var heights = {
         window: $__default["default"](window).height(),
-        header: $__default["default"](SELECTOR_HEADER).length > 0 && !$__default["default"]('body').hasClass('layout-navbar-fixed') ? $__default["default"](SELECTOR_HEADER).outerHeight() : 0,
+        header: $__default["default"](SELECTOR_HEADER).length > 0 ? $__default["default"](SELECTOR_HEADER).outerHeight() : 0,
         footer: $__default["default"](SELECTOR_FOOTER).length > 0 ? $__default["default"](SELECTOR_FOOTER).outerHeight() : 0,
         sidebar: $__default["default"](SELECTOR_SIDEBAR$1).length > 0 ? $__default["default"](SELECTOR_SIDEBAR$1).height() : 0,
         controlSidebar: controlSidebar
@@ -2324,7 +2344,7 @@
       }
 
       var groupItemElement = $__default["default"]('<a/>', {
-        href: link,
+        href: decodeURIComponent(link),
         class: 'list-group-item'
       });
       var searchTitleElement = $__default["default"]('<div/>', {

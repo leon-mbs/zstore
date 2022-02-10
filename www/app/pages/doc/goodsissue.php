@@ -207,13 +207,19 @@ class GoodsIssue extends \App\Pages\Base
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                         
                         $this->_doc->headerdata['prepaid']  = abs($basedoc->payamount);
-                        if($this->_doc->headerdata['prepaid'] ==0) {
-                           $this->docform->editpaydisc->setText($basedoc->headerdata['paydisc']);
-                           $this->docform->paydisc->setText($basedoc->headerdata['paydisc']);
+
+                           if($basedoc->headerdata['paydisc']>0) {
+                             $this->docform->editpaydisc->setText($basedoc->headerdata['paydisc']);
+                             $this->docform->paydisc->setText($basedoc->headerdata['paydisc']);
+                           } else {
+                             // $this->OnChangeCustomer($this->docform->customer);    
+                           }
                             
-                           $this->OnChangeCustomer($this->docform->customer);
-                        }
-                        $this->calcTotal();
+                           
+
+                       // $this->calcTotal();
+                        $this->docform->total->setText($basedoc->amount);
+
                         $this->calcPay();
                         
 
@@ -246,13 +252,16 @@ class GoodsIssue extends \App\Pages\Base
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                         $this->_doc->headerdata['prepaid']  = $basedoc->payamount ;
          
-                        if($this->_doc->headerdata['prepaid'] ==0) {
-                           $this->docform->editpaydisc->setText($basedoc->headerdata['paydisc']);
-                           $this->docform->paydisc->setText($basedoc->headerdata['paydisc']);
-                            
-                           $this->OnChangeCustomer($this->docform->customer);
-                        }
-                        $this->calcTotal();
+                           if($basedoc->headerdata['paydisc']>0) {
+                             $this->docform->editpaydisc->setText($basedoc->headerdata['paydisc']);
+                             $this->docform->paydisc->setText($basedoc->headerdata['paydisc']);
+                           } else {
+                             // $this->OnChangeCustomer($this->docform->customer);    
+                           }
+                      
+                        $this->docform->total->setText($basedoc->amount);
+                      
+                    //    $this->calcTotal();
                         $this->calcPay();
 
                    
@@ -273,19 +282,23 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->salesource->setValue($basedoc->headerdata['salesource']);
                         $this->docform->paydisc->setText($basedoc->headerdata['paydisc']);
+                        $this->docform->editpaydisc->setText($basedoc->headerdata['paydisc']);
 
                         $this->docform->firm->setValue($basedoc->firm_id);
-
+                        $this->OnCustomerFirm(null);
                         
                         $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
+                      
 
                         foreach ($basedoc->unpackDetails('detaildata') as $item) {
                             $item->price = $item->getPrice($basedoc->headerdata['pricetype']); //последние  цены
                             $this->_itemlist[$item->rowid] = $item;
                         }
-                        $this->OnChangeCustomer($this->docform->customer);                        
+                       // $this->OnChangeCustomer($this->docform->customer);                        
                         //$this->calcTotal();
                         //$this->calcPay();
+                       $this->docform->total->setText($basedoc->amount);
+                         
                     }
                     if ($basedoc->meta_name == 'ServiceAct') {
 
@@ -733,15 +746,16 @@ class GoodsIssue extends \App\Pages\Base
     private function calcPay() {
         $total = $this->docform->total->getText();
         $disc = $this->docform->paydisc->getText();
+        if($disc >0){
+           $total -= $disc; 
+        }
         $prepaid = doubleval($this->_doc->headerdata['prepaid'] ) ;
         if ($prepaid > 0) {
-            $disc =0;
+          //  $disc =0;
+            
             $total -= $prepaid;
         }
-        else {
-              $total -= $disc;
-        }
-
+        
 
         $this->docform->editpayamount->setText(H::fa($total));
         $this->docform->payamount->setText(H::fa($total));
