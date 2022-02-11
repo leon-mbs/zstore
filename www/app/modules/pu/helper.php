@@ -18,14 +18,16 @@ class Helper
         $modules = System::getOptions("modules");
   
         try {
-         // $ret =   $this->make_request();
+          $ret =   self::make_request("GET","/api/v1/orders/list",null);
         } catch(\Exception $ee) {
             System::setErrorMsg($ee->getMessage());
             return;
         }
 
-
-        System::setSuccessMsg(H::l('connected'));
+        if(!is_array($ret)) {
+           //System::setSuccessMsg(H::l('connected'));    
+        }
+        
 
 
     }
@@ -42,7 +44,7 @@ class Helper
         );
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://' . $modules['pusite'] . $url);
+        curl_setopt($ch, CURLOPT_URL, 'https://my.prom.ua'  . $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
         if (strtoupper($method) == 'POST') {
@@ -54,11 +56,18 @@ class Helper
         }
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-     //   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $ssl);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $ssl);
 
         $result = curl_exec($ch);
+        if (curl_errno($request) > 0) {
+            throw new  \Exception(curl_error($request));     
+        }
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if($httpcode >=300) {
+            throw new  \Exception("http code ".$httpcode);     
+        }
         curl_close($ch);
-
+         
         return json_decode($result, true);
     }    
     

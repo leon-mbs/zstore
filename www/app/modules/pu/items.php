@@ -3,7 +3,6 @@
 namespace App\Modules\PU;
 
 use App\Entity\Item;
-use App\Entity\Category;
 use App\Helper as H;
 use App\System;
 use Zippy\Binding\PropertyBinding as Prop;
@@ -32,78 +31,86 @@ class Items extends \App\Pages\Base
             return;
         }
         $modules = System::getOptions("modules");
-
+  
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
-        $this->filter->add(new DropDownChoice('searchcat', Category::getList(), 0));
+        $this->filter->add(new DropDownChoice('searchcat', \App\Entity\Category::getList(), 0));
 
         $this->add(new Form('exportform'))->onSubmit($this, 'exportOnSubmit');
 
         $this->exportform->add(new DataView('newitemlist', new ArrayDataSource(new Prop($this, '_items')), $this, 'itemOnRow'));
         $this->exportform->newitemlist->setPageSize(H::getPG());
         $this->exportform->add(new \Zippy\Html\DataList\Paginator('pag', $this->exportform->newitemlist));
+      //  $this->exportform->add(new DropDownChoice('ecat', $cats, 0));
 
         $this->add(new Form('upd'));
         $this->upd->add(new DropDownChoice('updcat', \App\Entity\Category::getList(), 0));
         
         $this->upd->add(new SubmitLink('updateqty'))->onClick($this, 'onUpdateQty');
         $this->upd->add(new SubmitLink('updateprice'))->onClick($this, 'onUpdatePrice');
-      
-        $this->add(new ClickLink('getitems'))->onClick($this, 'onGetItems');
-
+     
+     
         $this->add(new ClickLink('checkconn'))->onClick($this, 'onCheck');
-
+        
+        
+ 
+        $this->add(new Form('importform'))->onSubmit($this, 'importOnSubmit');
+        $this->importform->add(new CheckBox('createcat'));
+   
+        
     }
 
     public function onCheck($sender) {
 
         Helper::connect();
-        \App\Application::Redirect("\\App\\Modules\\WC\\Items");
+        \App\Application::Redirect("\\App\\Modules\\PU\\Items");
     }
+
 
     public function filterOnSubmit($sender) {
         $this->_items = array();
         $modules = System::getOptions("modules");
 
-        $client = \App\Modules\WC\Helper::getClient();
-        $skus = array();
-
-        try {
-            $data = $client->get('products', array('status' => 'publish'));
-        } catch(\Exception $ee) {
-            $this->setErrorTopPage($ee->getMessage());
+        $json = Helper::do_curl_request($url);
+        if ($json === false) {
             return;
         }
-          $qty =  count($data);
-        foreach ($data as $p) {
-            if (strlen($p->sku) > 0) {
-                $skus[] = $p->sku;
-            }
+        $data = json_decode($json, true);
+        if (!isset($data)) {
+
+            $this->setError("invalidresponse");
+            \App\Helper::log($json);
+            return;
         }
-        unset($data);
-        $cat_id = $sender->searchcat->getValue();
+        if ($data['error'] == "") {
 
-        $w = "disabled <> 1";
-        if ($cat_id > 0) {
-            $w .= " and cat_id=" . $cat_id;
-        }
-        $items = Item::find($w, "itemname");
-        foreach ($items as $item) {
-            if (strlen($item->item_code) == 0) {
-                continue;
+            $cat = $this->filter->searchcat->getValue();
+            $where = "disabled <> 1   ";
+            if ($cat > 0) {
+                $where .= " and cat_id=" . $cat;
             }
-            if (in_array($item->item_code, $skus)) {
-                continue;
-            } //уже  в  магазине
+            $items = Item::find($where, "itemname");
+            foreach ($items as $item) {
+                if (strlen($item->item_code) == 0) {
+                    continue;
+                }
+                if (in_array($item->item_code, $data['articles'])) {
+                    continue;
+                } //уже  в  магазине
+                $item->qty = $item->getQuantity();
 
-            $item->qty = $item->getQuantity();
-
-            if (strlen($item->qty) == 0) {
-                $item->qty = 0;
+                if (strlen($item->qty) == 0) {
+                    $item->qty = 0;
+                }
+                $this->_items[] = $item;
             }
-            $this->_items[] = $item;
-        }
 
-        $this->exportform->newitemlist->Reload();
+            $this->exportform->newitemlist->Reload();
+            $this->exportform->ecat->setValue(0);
+        } else {
+            $data['error']  = str_replace("'","`",$data['error']) ;
+            
+            $this->setErrorTopPage($data['error']);
+        }
     }
 
     public function itemOnRow($row) {
@@ -118,368 +125,214 @@ class Items extends \App\Pages\Base
         $row->add(new Label('desc', $item->desription));
     }
 
-    //экспорт товара  в  магазин
     public function exportOnSubmit($sender) {
         $modules = System::getOptions("modules");
-        $client = \App\Modules\WC\Helper::getClient();
+        $cat = $this->exportform->ecat->getValue();
 
         $elist = array();
         foreach ($this->_items as $item) {
             if ($item->ch == false) {
                 continue;
             }
-            $elist[] = array('name'           => $item->itemname,
-                //  'short_description' => $item->description,
-                             'sku'            => $item->item_code,
-                             'manage_stock'   => true,
-                             'stock_quantity' => (string)\App\Helper::fqty($item->qty),
-                             'price'          => (string)$item->getPrice($modules['wcpricetype']),
-                             'regular_price'  => (string)$item->getPrice($modules['wcpricetype'])
+            $elist[] = array('name'     => $item->itemname,
+                             'sku'      => $item->item_code,
+                             'quantity' => \App\Helper::fqty($item->qty),
+                             'price'    => $item->getPrice($modules['ocpricetype'])
             );
         }
         if (count($elist) == 0) {
+
             $this->setError('noselitem');
             return;
         }
+        $data = json_encode($elist);
 
-        try {
-            foreach ($elist as $p) {
+        $fields = array(
+            'data' => $data,
+            'cat'  => $cat
+        );
 
-                $data = $client->post('products', $p);
-            }
-        } catch(\Exception $ee) {
-            $this->setErrorTopPage($ee->getMessage());
+        $url = $modules['ocsite'] . '/index.php?route=api/zstore/addproducts&' . System::getSession()->octoken;
+        $json = Helper::do_curl_request($url, $fields);
+        if ($json === false) {
             return;
         }
+        $data = json_decode($json, true);
 
-
-        $this->setSuccess("exported_items", count($elist));
+        if ($data['error'] != "") {
+            $data['error']  = str_replace("'","`",$data['error']) ;
+            
+            $this->setErrorTopPage($data['error']);
+            return;
+        }
+        $this->setSuccess('exported_items', count($elist));
 
         //обновляем таблицу
-        $this->filterOnSubmit($this->filter);
+        $this->filterOnSubmit(null);
     }
 
-    //обновление  количества в  магазине
     public function onUpdateQty($sender) {
         $modules = System::getOptions("modules");
-        $client = \App\Modules\WC\Helper::getClient();
         $cat = $this->upd->updcat->getValue();
- 
-        $page=1;
-        $cnt =1;       
-        while(true) {
-     
-            try {
-                $data = $client->get('products', array('status' => 'publish' , 'page' => $page, 'per_page' => 100));
-            } catch(\Exception $ee) {
-                $this->setErrorTopPage($ee->getMessage());
-                return;
-            }
-             $c = count($data);
-             
-             \App\Helper::log($page*$c); ;            
-             
-                if ($c == 0) {
-                    break;
-                }
-                $page++;
-                
-            $skulist = array();
-            $skuvarlist = array();
-     
-            foreach ($data as $p) {
-                if (strlen($p->sku) == 0) {
-                    continue;
-                }
-                $skulist[$p->sku] = $p->id;
-                  if(is_array($p->variations)) {
-                        foreach($p->variations as $vid){
-                            $var = $client->get("products/{$p->id}/variations/{$vid}", array('status' => 'publish'));
-       
-                            if (strlen($var->sku) == 0) {
-                                continue;
-                            }
-                            $skuvarlist[$var->sku]=array("pid"=>$p->id,"vid"=>$vid);
-                            
-                        }
-                  }            
-            }
-            unset($data);
-
-               
-            
-            
-            $qty =  count($skulist);
-            $qty =  count($skuvarlist);
-            
-            $elist = array();
-           $items = Item::find("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : ""));
-           foreach ($items as $item) {
-                if (strlen($item->item_code) == 0) {
-                    continue;
-                }
-                if ($skulist[$item->item_code] > 0) {
-                    $qty = $item->getQuantity();
-                    if ($qty > 0) {
-                        $elist[$item->item_code] = $qty;
-                    }
-                }
-            }
-            $data = array('update' => array());
-            foreach ($elist as $sku => $qty) {
-
-                $data['update'][] = array('id' => $skulist[$sku], 'stock_quantity' => (string)$qty);
-                $cnt++;
-            }
-
-            try {
-                $client->post('products/batch', $data);
-            } catch(\Exception $ee) {
-                $this->setErrorTopPage($ee->getMessage());
-                return;
-            }
-             
-            
-            foreach ($skuvarlist as $sku => $arr) {
-                 $qty =  $elist[$sku];
-                 if(strlen($qty)==0)$qty=0;
-                 $client->put("products/{$arr['pid']}/variations/{$arr['vid']}", array(  'stock_quantity' => (string)$qty ));
-                 $cnt++;
-            }      
-        }
         
-        $this->setSuccess("refreshed_items", $cnt);
+        $elist = array();
+        $items = Item::find("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : ""));
+        foreach ($items as $item) {
+            if (strlen($item->item_code) == 0) {
+                continue;
+            }
+
+            $qty = $item->getQuantity();
+            $elist[$item->item_code] = round($qty);
+        }
+
+        $data = json_encode($elist);
+
+        $fields = array(
+            'data' => $data
+        );
+        $url = $modules['ocsite'] . '/index.php?route=api/zstore/updatequantity&' . System::getSession()->octoken;
+        $json = Helper::do_curl_request($url, $fields);
+        if ($json === false) {
+            return;
+        }
+        $data = json_decode($json, true);
+
+        if ($data['error'] != "") {
+            $data['error']  = str_replace("'","`",$data['error']) ;
+            
+            $this->setErrorTopPage($data['error']);
+            return;
+        }
+        $this->setSuccess('refreshed');
     }
 
-    //обновление цен в  магазине    
     public function onUpdatePrice($sender) {
         $modules = System::getOptions("modules");
-        $client = \App\Modules\WC\Helper::getClient();
-          $cat = $this->upd->updcat->getValue();
-    
-       $page=1;
-        $cnt =1;       
-        while(true) {
-           
-           
-            $skulist = array();
-            $skuvarlist = array();
-            try {
-                $data = $client->get('products', array('status' => 'publish'));
-            } catch(\Exception $ee) {
-                $this->setErrorTopPage($ee->getMessage());
-                return;
+        $cat = $this->upd->updcat->getValue();
+ 
+        $elist = array();
+        $items = Item::find("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : ""));
+         foreach ($items as $item) {
+            if (strlen($item->item_code) == 0) {
+                continue;
             }
-              $c = count($data);
-                if ($c == 0) {
-                    break;
-                }
-                $page++;
-
-            $sku = array();
-            foreach ($data as $p) {
-                if (strlen($p->sku) == 0) {
-                    continue;
-                }
-                $skulist[$p->sku] = $p->id;
-                  if(is_array($p->variations)) {
-                        foreach($p->variations as $vid){
-                            $var = $client->get("products/{$p->id}/variations/{$vid}", array('status' => 'publish'));
-       
-                            if (strlen($var->sku) == 0) {
-                                continue;
-                            }
-                            $skuvarlist[$var->sku]=array("pid"=>$p->id,"vid"=>$vid);
-                            
-                        }
-                  }
-                
-            }
-            unset($data);
-
-            $elist = array();
-            $items = Item::find("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : ""));
-            foreach ($items as $item) {
-                if (strlen($item->item_code) == 0) {
-                    continue;
-                }
-                if ($skulist[$item->item_code] > 0 || is_array($skuvarlist[$item->item_code]) ) {
-                    $price = $item->getPrice($modules['wcpricetype']);
-                    if ($price > 0) {
-                        $elist[$item->item_code] = $price;
-                    }
-                }
-            }
-            $data = array('update' => array());
-            foreach ($elist as $sku => $price) {
-                 $cnt++;
-                $data['update'][] = array('id' => $skulist[$sku], 'price' => (string)$price, 'regular_price' => (string)$price);
-            }
-
-            try {
-                $client->post('products/batch', $data);
-            } catch(\Exception $ee) {
-                $this->setErrorTopPage($ee->getMessage());
-                return;
-            }
-            
-           
-            
-            foreach ($skuvarlist as $sku => $arr) {
-                 $price =  $elist[$sku];
-                 $client->put("products/{$arr['pid']}/variations/{$arr['vid']}", array(  'price' => (string)$price, 'regular_price' => (string)$price));
-                 $cnt++;
-            }      
-        
+            $elist[$item->item_code] = $item->getPrice($modules['ocpricetype']);
         }
-        
-        $this->setSuccess("refreshed_items", $cnt);
+
+        $data = json_encode($elist);
+
+        $fields = array(
+            'data' => $data
+        );
+        $url = $modules['ocsite'] . '/index.php?route=api/zstore/updateprice&' . System::getSession()->octoken;
+        $json = Helper::do_curl_request($url, $fields);
+        if ($json === false) {
+            return;
+        }
+        $data = json_decode($json, true);
+
+        if ($data['error'] != "") {
+            $data['error']  = str_replace("'","`",$data['error']) ;
+            
+            $this->setErrorTopPage($data['error']);
+            return;
+        }
+        $this->setSuccess('refreshed');
     }
 
-    //импорт товара с  магазина
-    public function onGetItems($sender) {
+    public function importOnSubmit($sender) {
         $modules = System::getOptions("modules");
         $common = System::getOptions("common");
-
-        $client = \App\Modules\WC\Helper::getClient();
+           
+        
+        $elist = array();
+        try {
+          $data = Helper::make_request("GET","/api/v1/products/list",null);
+        } catch(\Exception $ee) {
+            System::setErrorMsg($ee->getMessage());
+            return;
+        }      
+        if ($data === false) {
+            return;
+        }
+       
+    
+        //  $this->setInfo($json);
         $i = 0;
+        foreach ($data['products'] as $product) {
 
-        $page = 1;
-        while(true) {
-
-
-            try {
-                $data = $client->get('products', array('status' => 'publish', 'page' => $page, 'per_page' => 100));
-            } catch(\Exception $ee) {
-                $this->setErrorTopPage($ee->getMessage());
-                return;
+            if (strlen($product['sku']) == 0) {
+                continue;
             }
-            $page++;
+            $cnt = Item::findCnt("item_code=" . Item::qstr($product['sku']));
+            if ($cnt > 0) {
+                continue;
+            } //уже  есть с  таким  артикулом
 
-            $c = count($data);
-            if ($c == 0) {
-                break;
+            $product['name'] = str_replace('&quot;', '"', $product['name']);
+            $item = new Item();
+            $item->item_code = $product['sku'];
+            $item->itemname = $product['name'];
+              // $item->description = $product['description'];
+   
+            if ($modules['pupricetype'] == 'price1') {
+                $item->price1 = $product['price'];
             }
-            foreach ($data as $product) {
+            if ($modules['pupricetype'] == 'price2') {
+                $item->price2 = $product['price'];
+            }
+            if ($modules['pupricetype'] == 'price3') {
+                $item->price3 = $product['price'];
+            }
+            if ($modules['pupricetype'] == 'price4') {
+                $item->price4 = $product['price'];
+            }
+            if ($modules['pupricetype'] == 'price5') {
+                $item->price5 = $product['price'];
+            }
 
-                if (strlen($product->sku) == 0) {
-                    continue;
+
+            if ($common['useimages'] == 1) {
+                $im =    $product['main_image'];
+                $im = @file_get_contents($im);
+                if (strlen($im) > 0) {
+                    $imagedata = getimagesizefromstring($im);
+                    $image = new \App\Entity\Image();
+                    $image->content = $im;
+                    $image->mime = $imagedata['mime'];
+
+                    $image->save();
+                    $item->image_id = $image->image_id;
                 }
-                $cnt = Item::findCnt("item_code=" . Item::qstr($product->sku));
-                if ($cnt > 0) {
-                    continue;
-                } //уже  есть с  таким  артикулом
-
-                $product->name = str_replace('&quot;', '"', $product->name);
-                $item = new Item();
-                $item->item_code = $product->sku;
-                $item->itemname = $product->name;
-                //   $item->description = $product->short_description;
-
-                if ($modules['wcpricetype'] == 'price1') {
-                    $item->price1 = $product->price;
-                }
-                if ($modules['wcpricetype'] == 'price2') {
-                    $item->price2 = $product->price;
-                }
-                if ($modules['wcpricetype'] == 'price3') {
-                    $item->price3 = $product->price;
-                }
-                if ($modules['wcpricetype'] == 'price4') {
-                    $item->price4 = $product->price;
-                }
-                if ($modules['wcpricetype'] == 'price5') {
-                    $item->price5 = $product->price;
-                }
-
-
-                if ($common['useimages'] == 1) {
-                    foreach ($product->images as $im) {
-
-                        $im = @file_get_contents($im->src);
-                        if (strlen($im) > 0) {
-                            $imagedata = getimagesizefromstring($im);
-                            $image = new \App\Entity\Image();
-                            $image->content = $im;
-                            $image->mime = $imagedata['mime'];
-
-                            $image->save();
-                            $item->image_id = $image->image_id;
-                            break;
-                        }
-                    }
-                }
-
-                $item->save();
-                $i++;
-
-                //вариации
-                if(is_array($product->variations)) {
-                    foreach($product->variations as $vid){
-                        $var = $client->get("products/{$product->id}/variations/{$vid}", array('status' => 'publish', 'page' => $page, 'per_page' => 100));
-                        if (strlen($var->sku) == 0) {
-                            continue;
-                        }
-                        $cnt = Item::findCnt("item_code=" . Item::qstr($var->sku));
-                        if ($cnt > 0) {
-                            continue;
-                        } //уже  есть с  таким  артикулом
-
-                        
-                        $item = new Item();
-                      //  $item->wcvar = 1;
-                        $item->item_code = $var->sku;
-                        $item->itemname = $product->name ." (var {$vid})";
-                        //   $item->description = $product->short_description;
-
-                        if ($modules['wcpricetype'] == 'price1') {
-                            $item->price1 = $var->price;
-                        }
-                        if ($modules['wcpricetype'] == 'price2') {
-                            $item->price2 = $var->price;
-                        }
-                        if ($modules['wcpricetype'] == 'price3') {
-                            $item->price3 = $var->price;
-                        }
-                        if ($modules['wcpricetype'] == 'price4') {
-                            $item->price4 = $var->price;
-                        }
-                        if ($modules['wcpricetype'] == 'price5') {
-                            $item->price5 = $var->price;
-                        }
-
-
-                        if ($common['useimages'] == 1 && $var->image !=null ) {
+            }
+            
+            $cat_name =trim( $product['category']['caption']);
+            if($sender->createcat->isChecked() && strlen($cat_name)>0) {
+                
+                 
+                   $cat_name = str_replace('&nbsp;','',$cat_name) ;
+                   if(strpos($cat_name,'&gt;')>0) {
+                       $ar = explode('&gt;',$cat_name) ;
+                       $cat_name = trim($ar[count($ar)-1] );
                        
-                                $im = @file_get_contents($var->image->src);
-                                if (strlen($im) > 0) {
-                                    $imagedata = getimagesizefromstring($im);
-                                    $image = new \App\Entity\Image();
-                                    $image->content = $im;
-                                    $image->mime = $imagedata['mime'];
-
-                                    $image->save();
-                                    $item->image_id = $image->image_id;
-                                    break;
-                                }
-                            
-                        }
-
-                         $item->save();
-                        $i++;                    
-                        
-                        
-                        
-                        
-                        
-                    }
+                   }
+                   $cat = \App\Entity\Category::getFirst("cat_name=" . \App\Entity\Category::qstr($cat_name) ) ;
+                   
+                   if($cat == null) {
+                       $cat = new   \App\Entity\Category();
+                       $cat->cat_name = $cat_name; 
+                       $cat->save();
+                       
+                   }    
                     
-                }
-                
-                
-                
-                
-            }
+                   $item->cat_id=$cat->cat_id; 
+                 
+            }           
+            
+            
+            $item->save();
+            $i++;
         }
 
         $this->setSuccess("loaded_items", $i);

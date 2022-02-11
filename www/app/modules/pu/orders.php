@@ -51,7 +51,7 @@ class Orders extends \App\Pages\Base
     public function onCheck($sender) {
 
         Helper::connect();
-        \App\Application::Redirect("\\App\\Modules\\WC\\Orders");
+        \App\Application::Redirect("\\App\\Modules\\PU\\Orders");
     }
 
     public function filterOnSubmit($sender) {
@@ -107,7 +107,7 @@ class Orders extends \App\Pages\Base
                 $neworder = Document::create('Order');
                 $neworder->document_number = $neworder->nextNumber();
                 if (strlen($neworder->document_number) == 0) {
-                    $neworder->document_number = 'WC00001';
+                    $neworder->document_number = 'PU00001';
                 }
                 $neworder->customer_id = $modules['wccustomer_id'];
 

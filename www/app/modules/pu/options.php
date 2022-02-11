@@ -25,8 +25,9 @@ class Options extends \App\Pages\Base
 
         $modules = System::getOptions("modules");
 
+        
         $form = $this->add(new Form("cform"));
-        $form->add(new TextInput('site', $modules['pusite']));
+      
         $form->add(new TextInput('apitoken', $modules['puapitoken']));
         
         $form->add(new DropDownChoice('defcust', \App\Entity\Customer::getList(), $modules['pucustomer_id'] > 0 ? $modules['pucustomer_id'] : 0));
@@ -37,10 +38,10 @@ class Options extends \App\Pages\Base
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
 
     }
-
+    //584ac4cc9096eb799cf6664ce977b22c6f463cba
 
     public function saveOnClick($sender) {
-        $site = $this->cform->site->getText();
+       
         $apitoken = $this->cform->apitoken->getText();
         $setpayamount = $this->cform->setpayamount->isChecked() ? 1 : 0;
         $customer_id = $this->cform->defcust->getValue();
@@ -58,7 +59,7 @@ class Options extends \App\Pages\Base
 
         $modules = System::getOptions("modules");
 
-        $modules['pusite'] = $site;
+       // $modules['pusite'] = "http://my.prom.ua/";
         $modules['puapitoken'] = $apitoken;
         $modules['pucustomer_id'] = $customer_id;
         $modules['pupricetype'] = $pricetype;
@@ -67,7 +68,7 @@ class Options extends \App\Pages\Base
         System::setOptions("modules", $modules);
         $this->setSuccess('saved');
 
-      //  \App\Modules\PU\Helper::connect();
+         \App\Modules\PU\Helper::connect();
 
 
     }

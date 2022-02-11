@@ -75,7 +75,6 @@ class Items extends \App\Pages\Base
         $this->_items = array();
         $modules = System::getOptions("modules");
 
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/articles&' . System::getSession()->octoken;
         $json = Helper::do_curl_request($url);
         if ($json === false) {
             return;
