@@ -91,7 +91,10 @@ class OrderList extends \App\Pages\Base
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
 
-        $row->add(new Label('number', $doc->document_number));
+        $n = $doc->document_number;
+        if(strlen($doc->headerdata['ocorder'])>0)  $n = $n . " (OC '{$doc->headerdata['ocorder']}')"  ;
+        if(strlen($doc->headerdata['wcorder'])>0)  $n = $n . " (WC '{$doc->headerdata['wcorder']}')"  ;
+        $row->add(new Label('number', $n));
 
         $row->add(new Label('date', H::fd($doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));
