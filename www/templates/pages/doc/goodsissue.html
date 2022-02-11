@@ -116,7 +116,7 @@
                             <th class="text-right">Цена</th>
 
                             <th class="text-right">Сумма</th>
-                            <th width="70"></th>
+                            <th  ></th>
                         </tr>
                         <tr zippy="detail">
                             <td zippy="num"></td>
@@ -156,7 +156,7 @@
                             <td zippy="total" class="text-right"></td>
                             <td></td>
                         </tr>
-                         {{^prepaid}}
+                         
                         <tr style="font-weight: bolder;">
 
                             <td colspan={{colspan}} class="text-right"><span data-label="paydisc">Скидка:</span></td>
@@ -166,7 +166,7 @@
                             <td><a data-label="paydisc" href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i
                                         class="fa fa-edit"></i></a></td>
                         </tr>
-                       {{/prepaid}}
+                       
                        {{#prepaid}}
                        <tr style="font-weight: bolder;">
                             <td data-label="prepaid" colspan={{colspan}} class="text-right">Предоплата:</td>
@@ -209,7 +209,7 @@
             </div>
             <div id="modaldisc" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                  aria-hidden="true">
-                <div class="modal-dialog modal-sm">
+                <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Скидка</h5>
@@ -233,7 +233,7 @@
 
             <div id="modalpayamount" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                  aria-hidden="true">
-                <div class="modal-dialog modal-sm">
+                <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">К оплате</h5>
@@ -256,7 +256,7 @@
             </div>
             <div id="modalpayed" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                  aria-hidden="true">
-                <div class="modal-dialog modal-sm">
+                <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Оплата</h5>
@@ -358,7 +358,7 @@
             </div>
         </form>
         <div id="modalscanner" class="modal  ">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-dialog-centered  modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Сканирование</h5>
