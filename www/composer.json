@@ -13,24 +13,24 @@
         "monolog/monolog": "1.26.1",
          
       
-        "dompdf/dompdf": "v1.1.1",
+        "dompdf/dompdf": "v1.2.0",
         "firebase/php-jwt": "v5.5.1",
         "roave/security-advisories": "dev-master",
-        "picqer/php-barcode-generator": "v2.2.0",
-         "endroid/qr-code": "4.4.1",
+        "picqer/php-barcode-generator": "v2.2.1",
+         "endroid/qr-code": "4.4.7",
 
         "masterexploder/phpthumb" :"2.1",
         "lemmon/fetch" :"v0.3.0",
         "lis-dev/nova-poshta-api-2" :"0.1.6",
-        "phpoffice/phpspreadsheet" :"1.20.0",
+        "phpoffice/phpspreadsheet" :"1.21.0",
        
         "automattic/woocommerce": "3.0.0",
-        "symfony/polyfill-mbstring": "v1.23.1",
+        "symfony/polyfill-mbstring": "v1.24.0",
         "symfony/polyfill-uuid": "v1.23.0",
        
            
  
-        "leon-mbs/zippy": "2.5.12",
+        "leon-mbs/zippy": "2.5.13",
         "leon-mbs/ppolib": "1.3.6",   
         "ext-json": "*",
         "ext-curl": "*",       
