@@ -60,6 +60,10 @@ class Orders extends \App\Pages\Base
     }
 
     public function filterOnSubmit($sender) {
+        
+        if(strlen(System::getSession()->octoken)==0) {
+            Helper::connect();
+        }
         $modules = System::getOptions("modules");
 
         $status = $this->filter->status->getValue();

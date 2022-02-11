@@ -159,16 +159,18 @@ class TTN extends Document
         //$conn = \ZDB\DB::getConnect();
 
 
+        if ($this->headerdata['nostore'] == 1) {
+            return;
+        }
+
+
         if ($this->parent_id > 0) {
             $parent = Document::load($this->parent_id);
-            if ($parent->meta_name == 'GoodsIssue') {
+            if ($parent->meta_name == 'GoodsIssue' || $parent->meta_name == 'POSCheck') {
                 return; //проводки выполняются  в  РН 
             }
         }
 
-        if ($this->headerdata['nostore'] == 1) {
-            return;
-        }
 
 
         foreach ($this->unpackDetails('detaildata') as $item) {
