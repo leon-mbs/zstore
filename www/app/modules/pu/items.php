@@ -47,10 +47,6 @@ class Items extends \App\Pages\Base
         
         $this->upd->add(new SubmitLink('updateqty'))->onClick($this, 'onUpdateQty');
         $this->upd->add(new SubmitLink('updateprice'))->onClick($this, 'onUpdatePrice');
-     
-     
-        $this->add(new ClickLink('checkconn'))->onClick($this, 'onCheck');
-        
         
  
         $this->add(new Form('importform'))->onSubmit($this, 'importOnSubmit');
@@ -59,12 +55,7 @@ class Items extends \App\Pages\Base
         
     }
 
-    public function onCheck($sender) {
-
-        Helper::connect();
-        \App\Application::Redirect("\\App\\Modules\\PU\\Items");
-    }
-
+ 
 
     public function filterOnSubmit($sender) {
         $this->_items = array();

@@ -144,7 +144,7 @@ class Orders extends \App\Pages\Base
                 $neworder->headerdata['outnumber'] = $wcorder->id;
                 $neworder->headerdata['wcorderback'] = 0;
                 $neworder->headerdata['wcclient'] = $wcorder->shipping->first_name . ' ' . $wcorder->shipping->last_name;
-                $neworder->amount = round($wcorder->total);
+                $neworder->amount = H::fa($wcorder->total);
                 if($modules['wcsetpayamount']==1){
                    $neworder->payamount = $neworder->amount;
                  
@@ -174,7 +174,7 @@ class Orders extends \App\Pages\Base
 
         $row->add(new Label('number', $order->headerdata['wcorder']));
         $row->add(new Label('customer', $order->headerdata['wcclient']));
-        $row->add(new Label('amount', round($order->amount)));
+        $row->add(new Label('amount', H::fa($order->amount)));
         $row->add(new Label('comment', $order->notes));
         $row->add(new Label('date', \App\Helper::fdt(strtotime($order->document_date))));
     }

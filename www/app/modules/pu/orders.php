@@ -44,62 +44,35 @@ class Orders extends \App\Pages\Base
         $this->add(new Form('updateform'))->onSubmit($this, 'exportOnSubmit');
         $this->updateform->add(new DataView('orderslist', new ArrayDataSource(new Prop($this, '_eorders')), $this, 'expRow'));
         $this->updateform->add(new DropDownChoice('estatus', array('completed' => 'Выполнен', 'shipped' => 'Доставлен', 'canceled' => 'Отменен'), 'completed'));
-        $this->add(new ClickLink('checkconn'))->onClick($this, 'onCheck');
+
 
     }
 
-    public function onCheck($sender) {
-
-        Helper::connect();
-        \App\Application::Redirect("\\App\\Modules\\PU\\Orders");
-    }
-
+    
     public function filterOnSubmit($sender) {
         $modules = System::getOptions("modules");
 
         $client = \App\Modules\WC\Helper::getClient();
 
         $this->_neworders = array();
-        $page = 1;
-        while(true) {
-
-
-            $fields = array(
-                'status' => 'pending', 'per_page' => 100, 'page' => $page
-            );
-
-            try {
-                $data = $client->get('orders', $fields);
-            } catch(\Exception $ee) {
-                $this->setErrorTopPage($ee->getMessage());
-                return;
-            }
-            $fields = array(
-                'status' => 'on-hold', 'per_page' => 100, 'page' => $page
-            );
-
-            try {
-                $data2 = $client->get('orders', $fields);
-            } catch(\Exception $ee) {
-                $this->setErrorTopPage($ee->getMessage());
-                return;
-            }
-            if (is_array($data) && is_array($data2)) {
-                $data = array_merge($data, $data2);
-            }
-            $page++;
-
-            $c = count($data);
-            if ($c == 0) {
-                break;
-            }
-                    $conn = \ZDB\DB::getConnect();
+       
  
-            foreach ($data as $wcorder) {
+            try {
+               $data = Helper::make_request("GET","/api/v1/orders/list?status=delivered",null);
+ 
+            } catch(\Exception $ee) {
+                $this->setErrorTopPage($ee->getMessage());
+                return;
+            }
+ 
+       
+           $conn = \ZDB\DB::getConnect();
+ 
+            foreach ($data['orders'] as $puorder) {
 
-                   $cnt  = $conn->getOne("select count(*) from documents_view where meta_name='Order' and content like '%<wcorder>{$wcorder->id}</wcorder>%' ")  ;
+               $cnt  = $conn->getOne("select count(*) from documents_view where meta_name='Order' and content like '%<puorder>{$puorder['id']}</wcorder>%' ")  ;
 
-               // $isorder = Document::findCnt("meta_name='Order' and content like '%<wcorder>{$wcorder->id}</wcorder>%'");
+               // $isorder = Document::findCnt("meta_name='Order' and content like '%<wcorder>{$puorder->id}</wcorder>%'");
                 if (  intval($cnt) > 0) { //уже импортирован
                     continue;
                 }
@@ -109,63 +82,74 @@ class Orders extends \App\Pages\Base
                 if (strlen($neworder->document_number) == 0) {
                     $neworder->document_number = 'PU00001';
                 }
-                $neworder->customer_id = $modules['wccustomer_id'];
+                $neworder->customer_id = $modules['pucustomer_id'];
 
                 //товары
                 $j=0;
                 $itlist = array();
-                foreach ($wcorder->line_items as $product) {
+                foreach ($puorder['products'] as $product) {
                     //ищем по артикулу 
-                    if (strlen($product->sku) == 0) {
+                    if (strlen($product['sku']) == 0) {
                         continue;
                     }
-                    $code = Item::qstr($product->sku);
+                    $code = Item::qstr($product['sku']);
 
                     $tovar = Item::getFirst('item_code=' . $code);
                     if ($tovar == null) {
 
-                        $this->setWarn("nofoundarticle_inorder", $product->name, $wcorder->order_id);
+                        $this->setWarn("nofoundarticle_inorder", $product['name'], $puorder['order_id']);
                         continue;
                     }
-                    $tovar->quantity = $product->quantity;
-                    $tovar->price = \App\Helper::fa($product->price);
+                    $tovar->quantity = H::fqty($product['quantity']);
+                    $tovar->price = H::fa($product['price']);
                     $j++;
                     $tovar->rowid = $j;
 
                     $itlist[$j] = $tovar;
                 }
+           
             if(count($itlist)==0)  {
-                return;
+                 return;
             }                
                 $neworder->packDetails('detaildata', $itlist);
                 $neworder->headerdata['pricetype'] = 'price1';
 
-                $neworder->headerdata['wcorder'] = $wcorder->id;
-                $neworder->headerdata['outnumber'] = $wcorder->id;
-                $neworder->headerdata['wcorderback'] = 0;
-                $neworder->headerdata['wcclient'] = $wcorder->shipping->first_name . ' ' . $wcorder->shipping->last_name;
-                $neworder->amount = round($wcorder->total);
-                if($modules['wcsetpayamount']==1){
+                $neworder->headerdata['puorder'] = $puorder['id'];
+                $neworder->headerdata['outnumber'] = $puorder['id'];
+                $neworder->headerdata['puorderback'] = 0;
+                $neworder->headerdata['puclient'] = $puorder['client_first_name'] . ' ' . $puorder['client_last_name'];
+                
+                $neworder->amount = H::fa($puorder['full_price']);
+                if($modules['pusetpayamount']==1){
                    $neworder->payamount = $neworder->amount;
                  
                 }              
                 
                
                 $neworder->document_date = time();
-                $neworder->notes = "WC номер:{$wcorder->id};";
-                $neworder->notes .= " Клиент:" . $wcorder->shipping->first_name . ' ' . $wcorder->shipping->last_name . ";";
-                if (strlen($wcorder->billing->email) > 0) {
-                    $neworder->notes .= " Email:" . $wcorder->billing->email . ";";
+                $neworder->notes = "PU номер:{$puorder['id']};";
+                $neworder->notes .= " Клиент:" .$puorder['client_first_name'] . ' ' . $puorder['client_last_name'].';';
+                if (strlen($puorder['email']) > 0) {
+                    $neworder->notes .= " Email:" . $puorder['email'] . ";";
                 }
-                if (strlen($wcorder->billing->phone) > 0) {
-                    $neworder->notes .= " Тел:" . $wcorder->billing->phone . ";";
+                if (strlen($puorder['phone']) > 0) {
+                    $neworder->notes .= " Тел:" . str_replace('+','',$puorder['phone'] ). ";";
                 }
-                $neworder->notes .= " Адрес:" . $wcorder->shipping->city . ' ' . $wcorder->shipping->address_1 . ";";
-                $neworder->notes .= " Комментарий:" . $wcorder->customer_note . ";";
+                if (strlen($puorder['delivery_option']['name']) > 0) {
+                    $neworder->notes .= " Доставка:" . $puorder['delivery_option']['name'] . ";";
+                }
 
+                if (strlen($puorder['delivery_address']) > 0) {
+                    $neworder->notes .= " Адрес:" . $puorder['delivery_address'] . ";";
+                }
+                if (strlen($puorder['client_notes']) > 0) {
+                    $neworder->notes .= " Комментарий:" . $puorder['client_notes'] . ";";
+                }
+
+           
                 $this->_neworders[] = $neworder;
             }
-        }
+        
         $this->neworderslist->Reload();
     }
 

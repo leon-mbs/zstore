@@ -105,7 +105,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["tecdoc"] = $_config['modules']['tecdoc'] == 1;
         $this->_tvars["ppo"] = $_config['modules']['ppo'] == 1;
         $this->_tvars["np"] = $_config['modules']['np'] == 1;
-        $this->_tvars["promua"] = true;
+        $this->_tvars["promua"] = $_config['modules']['promua'] == 1;
 
 
         //доступы к  модулям
