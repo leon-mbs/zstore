@@ -10,11 +10,14 @@
         
                 <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
+                        <label for="status">Статус в магазине </label>
 
+                        <select class="form-control mr-2" zippy="status">
+                            
+                        </select>
                         <input onclick="$('#loader1').removeAttr('style')" type="submit" class=" mr-2 btn btn-outline-success  "
                                value="Загрузить">           
-                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Заказы должны  быть  в  статусе Pending"></i>
+                               
                   
 
                         <div id="loader1" style="display:none" class="spinner-border spinner-border-sm"></div>
@@ -95,7 +98,7 @@
                         <label for="estatus">Статус в магазине </label>
 
                         <select class="  mr-2" zippy="estatus">
-                            <option value="0">Не выбран</option>
+                            
                         </select>
 
                         <input onclick="$('#loader3').removeAttr('style')" type="submit" class="  btn btn-outline-success  "

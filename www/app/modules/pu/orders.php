@@ -34,7 +34,10 @@ class Orders extends \App\Pages\Base
 
         $modules = System::getOptions("modules");
 
+        $statuses = Helper::connect() ;
+        
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
+        $this->filter->add(new DropDownChoice('status', $statuses,'pending'));
 
         $this->add(new DataView('neworderslist', new ArrayDataSource(new Prop($this, '_neworders')), $this, 'noOnRow'));
 
@@ -43,7 +46,7 @@ class Orders extends \App\Pages\Base
         $this->add(new ClickLink('refreshbtn'))->onClick($this, 'onRefresh');
         $this->add(new Form('updateform'))->onSubmit($this, 'exportOnSubmit');
         $this->updateform->add(new DataView('orderslist', new ArrayDataSource(new Prop($this, '_eorders')), $this, 'expRow'));
-        $this->updateform->add(new DropDownChoice('estatus', array('completed' => 'Выполнен', 'shipped' => 'Доставлен', 'canceled' => 'Отменен'), 'completed'));
+        $this->updateform->add(new DropDownChoice('estatus',  $statuses, 'delivered'));
 
 
     }
@@ -58,7 +61,7 @@ class Orders extends \App\Pages\Base
        
  
             try {
-               $data = Helper::make_request("GET","/api/v1/orders/list?status=delivered",null);
+               $data = Helper::make_request("GET","/api/v1/orders/list?status=". $this->filter->status->getValue(),null);
  
             } catch(\Exception $ee) {
                 $this->setErrorTopPage($ee->getMessage());
@@ -180,7 +183,7 @@ class Orders extends \App\Pages\Base
 
     public function onRefresh($sender) {
 
-        $this->_eorders = Document::find("meta_name='Order' and content like '%<wcorderback>0</wcorderback>%' and state <> " . Document::STATE_NEW);
+        $this->_eorders = Document::find("meta_name='Order' and content like '%<puorderback>0</puorderback>%' and state <> " . Document::STATE_NEW);
         $this->updateform->orderslist->Reload();
     }
 
@@ -188,10 +191,10 @@ class Orders extends \App\Pages\Base
         $order = $row->getDataItem();
         $row->add(new CheckBox('ch', new Prop($order, 'ch')));
         $row->add(new Label('number2', $order->document_number));
-        $row->add(new Label('number3', $order->headerdata['wcorder']));
+        $row->add(new Label('number3', $order->headerdata['puorder']));
         $row->add(new Label('date2', \App\Helper::fdt($order->document_date)));
         $row->add(new Label('amount2', $order->amount));
-        $row->add(new Label('customer2', $order->headerdata['wcclient']));
+        $row->add(new Label('customer2', $order->headerdata['puclient']));
         $row->add(new Label('state', Document::getStateName($order->state)));
     }
 
@@ -199,8 +202,7 @@ class Orders extends \App\Pages\Base
         $modules = System::getOptions("modules");
         $st = $this->updateform->estatus->getValue();
 
-        $client = \App\Modules\WC\Helper::getClient();
-
+       
         $elist = array();
         foreach ($this->_eorders as $order) {
             if ($order->ch == false) {
@@ -216,25 +218,29 @@ class Orders extends \App\Pages\Base
         $fields = array(
             'status' => $st
         );
-
+         
         foreach ($elist as $order) {
 
 
             try {
-                $data = $client->put('orders/' . $order->headerdata['wcorder'], $fields);
+                $json="{
+                \"status\":\"pending\",
+                \"ids\":[{$order->headerdata['ocorder']}]
+                }" ;
+                Helper::make_request("POST","/api/v1/orders/set_status",$json);
             } catch(\Exception $ee) {
                 $this->setErrorTopPage($ee->getMessage());
                 return;
             }
 
-            $order->headerdata['wcorderback'] = 1;
+            $order->headerdata['puorderback'] = 1;
             $order->save();
         }
 
 
         $this->setSuccess("refrehed_orders", count($elist));
 
-        $this->_eorders = Document::find("meta_name='Order' and content like '%<wcorderback>0</wcorderback>%' and state <> " . Document::STATE_NEW);
+        $this->_eorders = Document::find("meta_name='Order' and content like '%<puorderback>0</puorderback>%' and state <> " . Document::STATE_NEW);
         $this->updateform->orderslist->Reload();
     }
 

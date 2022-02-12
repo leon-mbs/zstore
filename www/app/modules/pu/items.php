@@ -61,18 +61,20 @@ class Items extends \App\Pages\Base
         $this->_items = array();
         $modules = System::getOptions("modules");
 
-        $json = Helper::do_curl_request($url);
-        if ($json === false) {
+        try {
+          $data = Helper::make_request("GET","/api/v1/products/list",null);
+        } catch(\Exception $ee) {
+            System::setErrorMsg($ee->getMessage());
             return;
-        }
-        $data = json_decode($json, true);
-        if (!isset($data)) {
+        }      
+      $sku = array();
+      foreach ($data['products'] as $product) {
 
-            $this->setError("invalidresponse");
-            \App\Helper::log($json);
-            return;
-        }
-        if ($data['error'] == "") {
+            if (strlen($product['sku']) == 0) {
+                continue;
+            }
+            $sku[]= $product['sku'];
+      }    
 
             $cat = $this->filter->searchcat->getValue();
             $where = "disabled <> 1   ";
@@ -84,7 +86,7 @@ class Items extends \App\Pages\Base
                 if (strlen($item->item_code) == 0) {
                     continue;
                 }
-                if (in_array($item->item_code, $data['articles'])) {
+                if (in_array($item->item_code, $sku)) {
                     continue;
                 } //уже  в  магазине
                 $item->qty = $item->getQuantity();
@@ -96,12 +98,8 @@ class Items extends \App\Pages\Base
             }
 
             $this->exportform->newitemlist->Reload();
-            $this->exportform->ecat->setValue(0);
-        } else {
-            $data['error']  = str_replace("'","`",$data['error']) ;
-            
-            $this->setErrorTopPage($data['error']);
-        }
+            //$this->exportform->ecat->setValue(0);
+      
     }
 
     public function itemOnRow($row) {
@@ -244,9 +242,7 @@ class Items extends \App\Pages\Base
             System::setErrorMsg($ee->getMessage());
             return;
         }      
-        if ($data === false) {
-            return;
-        }
+      
        
     
         //  $this->setInfo($json);

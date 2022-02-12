@@ -18,7 +18,7 @@ class Helper
         $modules = System::getOptions("modules");
   
         try {
-          $ret =   self::make_request("GET","/api/v1/orders/list",null);
+          $ret =   self::make_request("GET","/api/v1/order_status_options/list",null);
         } catch(\Exception $ee) {
             System::setErrorMsg($ee->getMessage());
             return;
@@ -26,10 +26,16 @@ class Helper
 
         if(!is_array($ret)) {
            //System::setSuccessMsg(H::l('connected'));    
+           return;
         }
         
+        $list = array();
+        foreach($ret['order_status_options'] as $st) {
+           $list[$st['name']]=$st['title'] ;           
+        }
 
-
+        return $list;
+        
     }
     
     public function make_request($method, $url, $body) {
