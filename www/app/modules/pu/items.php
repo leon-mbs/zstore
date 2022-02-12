@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\OCStore;
+namespace App\Modules\PU;
 
 use App\Entity\Item;
 use App\Helper as H;
@@ -24,19 +24,14 @@ class Items extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
 
-        if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules, 'promua') === false && System::getUser()->rolename != 'admins') {
             System::setErrorMsg(H::l('noaccesstopage'));
 
             App::RedirectError();
             return;
         }
         $modules = System::getOptions("modules");
-        $cats = System::getSession()->cats;
-        if (is_array($cats) == false) {
-            $cats = array();
-            $this->setWarn('do_connect');
-        }
-
+  
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new DropDownChoice('searchcat', \App\Entity\Category::getList(), 0));
 
@@ -45,17 +40,13 @@ class Items extends \App\Pages\Base
         $this->exportform->add(new DataView('newitemlist', new ArrayDataSource(new Prop($this, '_items')), $this, 'itemOnRow'));
         $this->exportform->newitemlist->setPageSize(H::getPG());
         $this->exportform->add(new \Zippy\Html\DataList\Paginator('pag', $this->exportform->newitemlist));
-        $this->exportform->add(new DropDownChoice('ecat', $cats, 0));
+      //  $this->exportform->add(new DropDownChoice('ecat', $cats, 0));
 
         $this->add(new Form('upd'));
         $this->upd->add(new DropDownChoice('updcat', \App\Entity\Category::getList(), 0));
         
         $this->upd->add(new SubmitLink('updateqty'))->onClick($this, 'onUpdateQty');
         $this->upd->add(new SubmitLink('updateprice'))->onClick($this, 'onUpdatePrice');
-     
-     
-        $this->add(new ClickLink('checkconn'))->onClick($this, 'onCheck');
-        
         
  
         $this->add(new Form('importform'))->onSubmit($this, 'importOnSubmit');
@@ -64,12 +55,7 @@ class Items extends \App\Pages\Base
         
     }
 
-    public function onCheck($sender) {
-
-        Helper::connect();
-        \App\Application::Redirect("\\App\\Modules\\OCStore\\Items");
-    }
-
+ 
 
     public function filterOnSubmit($sender) {
         $this->_items = array();
@@ -249,31 +235,20 @@ class Items extends \App\Pages\Base
     public function importOnSubmit($sender) {
         $modules = System::getOptions("modules");
         $common = System::getOptions("common");
-      
-        $cats = System::getSession()->cats;
-        if (is_array($cats) == false) {
-            $cats = array();
-            $this->setWarn('do_connect');
-            return;
-        }        
-        
-        
+           
         
         $elist = array();
-
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/getproducts&' . System::getSession()->octoken;
-        $json = Helper::do_curl_request($url);
-        if ($json === false) {
+        try {
+          $data = Helper::make_request("GET","/api/v1/products/list",null);
+        } catch(\Exception $ee) {
+            System::setErrorMsg($ee->getMessage());
+            return;
+        }      
+        if ($data === false) {
             return;
         }
-        $data = json_decode($json, true);
-
-        if ($data['error'] != "") {
-            $data['error']  = str_replace("'","`",$data['error']) ;
-            
-            $this->setErrorTopPage($data['error']);
-            return;
-        }
+       
+    
         //  $this->setInfo($json);
         $i = 0;
         foreach ($data['products'] as $product) {
@@ -290,35 +265,27 @@ class Items extends \App\Pages\Base
             $item = new Item();
             $item->item_code = $product['sku'];
             $item->itemname = $product['name'];
-            // $item->description = $product['description'];
-            $item->manufacturer = $product['manufacturer'];
-            $w = $product['weight'];
-            $w = str_replace(',', '.', $w);
-            if ($product['weight_class_id'] == 2) {
-                $w = $w / 1000;
-            } //граммы
-            if ($w > 0) {
-                $item->weight = floatval($w);
-            }
-            if ($modules['ocpricetype'] == 'price1') {
+              // $item->description = $product['description'];
+   
+            if ($modules['pupricetype'] == 'price1') {
                 $item->price1 = $product['price'];
             }
-            if ($modules['ocpricetype'] == 'price2') {
+            if ($modules['pupricetype'] == 'price2') {
                 $item->price2 = $product['price'];
             }
-            if ($modules['ocpricetype'] == 'price3') {
+            if ($modules['pupricetype'] == 'price3') {
                 $item->price3 = $product['price'];
             }
-            if ($modules['ocpricetype'] == 'price4') {
+            if ($modules['pupricetype'] == 'price4') {
                 $item->price4 = $product['price'];
             }
-            if ($modules['ocpricetype'] == 'price5') {
+            if ($modules['pupricetype'] == 'price5') {
                 $item->price5 = $product['price'];
             }
 
 
             if ($common['useimages'] == 1) {
-                $im = $modules['ocsite'] . '/image/' . $product['image'];
+                $im =    $product['main_image'];
                 $im = @file_get_contents($im);
                 if (strlen($im) > 0) {
                     $imagedata = getimagesizefromstring($im);
@@ -331,9 +298,10 @@ class Items extends \App\Pages\Base
                 }
             }
             
-            if($sender->createcat->isChecked() && $product['cat_id'] >0) {
-                $cat_name =trim( $cats[$product['cat_id']]);
-                if(strlen($cat_name)>0) {
+            $cat_name =trim( $product['category']['caption']);
+            if($sender->createcat->isChecked() && strlen($cat_name)>0) {
+                
+                 
                    $cat_name = str_replace('&nbsp;','',$cat_name) ;
                    if(strpos($cat_name,'&gt;')>0) {
                        $ar = explode('&gt;',$cat_name) ;
@@ -350,7 +318,7 @@ class Items extends \App\Pages\Base
                    }    
                     
                    $item->cat_id=$cat->cat_id; 
-                }
+                 
             }           
             
             
