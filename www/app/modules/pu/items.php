@@ -125,8 +125,8 @@ class Items extends \App\Pages\Base
             }
             $elist[] = array('name'     => $item->itemname,
                              'sku'      => $item->item_code,
-                             'quantity' => \App\Helper::fqty($item->qty),
-                             'price'    => $item->getPrice($modules['ocpricetype'])
+                             'quantity_in_stock' => \App\Helper::fqty($item->qty),
+                             'price'    => \App\Helper::fa($item->getPrice($modules['pupricetype']))
             );
         }
         if (count($elist) == 0) {
@@ -136,24 +136,14 @@ class Items extends \App\Pages\Base
         }
         $data = json_encode($elist);
 
-        $fields = array(
-            'data' => $data,
-            'cat'  => $cat
-        );
+    
 
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/addproducts&' . System::getSession()->octoken;
-        $json = Helper::do_curl_request($url, $fields);
-        if ($json === false) {
+        try {
+          $data = Helper::make_request("GET","/api/v1/products/edit",$data);
+        } catch(\Exception $ee) {
+            System::setErrorMsg($ee->getMessage());
             return;
-        }
-        $data = json_decode($json, true);
-
-        if ($data['error'] != "") {
-            $data['error']  = str_replace("'","`",$data['error']) ;
-            
-            $this->setErrorTopPage($data['error']);
-            return;
-        }
+        }   
         $this->setSuccess('exported_items', count($elist));
 
         //обновляем таблицу
@@ -162,8 +152,7 @@ class Items extends \App\Pages\Base
 
     public function onUpdateQty($sender) {
         $modules = System::getOptions("modules");
-        $cat = $this->upd->updcat->getValue();
-        
+          
         $elist = array();
         $items = Item::find("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : ""));
         foreach ($items as $item) {
@@ -172,62 +161,107 @@ class Items extends \App\Pages\Base
             }
 
             $qty = $item->getQuantity();
-            $elist[$item->item_code] = round($qty);
+            $elist[$item->item_code] = H::fqty($qty);
         }
 
         $data = json_encode($elist);
 
-        $fields = array(
-            'data' => $data
-        );
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/updatequantity&' . System::getSession()->octoken;
-        $json = Helper::do_curl_request($url, $fields);
-        if ($json === false) {
+        try {
+          $data = Helper::make_request("GET","/api/v1/products/list",null);
+        } catch(\Exception $ee) {
+            System::setErrorMsg($ee->getMessage());
             return;
-        }
-        $data = json_decode($json, true);
+        }      
+      $sku = array();
+      foreach ($data['products'] as $product) {
 
-        if ($data['error'] != "") {
-            $data['error']  = str_replace("'","`",$data['error']) ;
-            
-            $this->setErrorTopPage($data['error']);
-            return;
+            if (strlen($product['sku']) == 0) {
+                continue;
+            }
+            $sku[$product['sku']]= $product['id'];
+      }    
+    
+         $list = array();
+         foreach ($elist as $code=>$qty) {
+        
+            if($sku[$code]>0)  {
+                $list[] = array('id'     => $sku[$code],
+                                 
+                                 'quantity_in_stock' =>$elist[$code]
+                                 
+                );
+            }
         }
-        $this->setSuccess('refreshed');
+  
+        $data = json_encode($elist);
+
+    
+
+        try {
+          $data = Helper::make_request("POST","/api/v1/products/edit",$data);
+        } catch(\Exception $ee) {
+            System::setErrorMsg($ee->getMessage());
+            return;
+        }       
+    
+      $this->setSuccess('refreshed');
     }
 
     public function onUpdatePrice($sender) {
         $modules = System::getOptions("modules");
-        $cat = $this->upd->updcat->getValue();
- 
+          
         $elist = array();
         $items = Item::find("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : ""));
-         foreach ($items as $item) {
+        foreach ($items as $item) {
             if (strlen($item->item_code) == 0) {
                 continue;
             }
-            $elist[$item->item_code] = $item->getPrice($modules['ocpricetype']);
+
+            $elist[$item->item_code] = \App\Helper::fa($item->getPrice($modules['pupricetype']));
         }
 
         $data = json_encode($elist);
 
-        $fields = array(
-            'data' => $data
-        );
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/updateprice&' . System::getSession()->octoken;
-        $json = Helper::do_curl_request($url, $fields);
-        if ($json === false) {
+        try {
+          $data = Helper::make_request("GET","/api/v1/products/list",null);
+        } catch(\Exception $ee) {
+            System::setErrorMsg($ee->getMessage());
             return;
-        }
-        $data = json_decode($json, true);
+        }      
+      $sku = array();
+      foreach ($data['products'] as $product) {
 
-        if ($data['error'] != "") {
-            $data['error']  = str_replace("'","`",$data['error']) ;
-            
-            $this->setErrorTopPage($data['error']);
-            return;
+            if (strlen($product['sku']) == 0) {
+                continue;
+            }
+            $sku[$product['sku']]= $product['id'];
+      }    
+    
+         $list = array();
+         foreach ($elist as $code=>$price) {
+        
+            if($sku[$code]>0)  {
+                $list[] = array('id'     => $sku[$code],
+                                 
+                                 
+                                 'price'    =>$price
+                                  
+                );
+            }
         }
-        $this->setSuccess('refreshed');
+  
+        $data = json_encode($elist);
+
+    
+
+        try {
+          $data = Helper::make_request("POST","/api/v1/products/edit",$data);
+        } catch(\Exception $ee) {
+            System::setErrorMsg($ee->getMessage());
+            return;
+        }       
+    
+      $this->setSuccess('refreshed');
     }
 
     public function importOnSubmit($sender) {
@@ -294,7 +328,7 @@ class Items extends \App\Pages\Base
                 }
             }
             
-            $cat_name =trim( $product['category']['caption']);
+            $cat_name =trim( $product['group']['name']);
             if($sender->createcat->isChecked() && strlen($cat_name)>0) {
                 
                  

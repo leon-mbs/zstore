@@ -1,0 +1,81 @@
+<html>
+    <head>
+
+    </head>
+    <body>
+        <div class="row">
+            <div class="col-12  col-xl-10  ">
+                <h3>Журнал  Z-отчетов</h3>
+                <div class="navbar nav">
+                    <form zippy="filter" class="form-inline">
+
+                        <label for="from">С</label>
+                        <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="from">
+
+                        <label for="to">по</label>
+                        <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="to">
+
+                        <label for="pos">ФН терминала</label>
+                        <input class="form-control mr-sm-2"  type="text" zippy="pos">
+                         
+                        <label for="doc">ФН отчета</label>
+                        <input class="form-control mr-sm-2"   type="text" zippy="doc">
+
+                        <input class="btn btn-outline-primary  " type="submit" value="ОК">
+
+
+                    </form>
+                </div>
+           </div>
+           <div class="col-12  col-lg-10  col-xl-8">
+                 
+                <a  zippy="export">Экспорт в Ексель</a>
+                <table class="table  table-sm">
+                
+                  <tr> 
+                    <th>Дата</th>
+                    <th>ФН. терминала</th>
+                    <th>ФН. отчета</th>
+                    <th colspan="2" class="text-center">Реализация</th>
+                    <th colspan="2" class="text-center">Возврат</th>
+                    <th ></th>
+                  </tr>
+                  <tr> 
+                    <th> </th>
+                    <th> </th>
+                    <th> </th>
+                    <th  class="text-right">Чеков</th>
+                    <th  class="text-right">Сумма</th>
+                    <th  class="text-right">Чеков</th>
+                    <th  class="text-right">Сумма</th>
+                    <th > </th>
+                  </tr>
+                  
+                  <tr zippy="list">  
+                     <td></td>
+                     <td></td>
+                     <td></td>
+                     <td class="text-right"></td>
+                     <td class="text-right"></td>
+                     <td class="text-right"></td>
+                     <td class="text-right"></td>
+                     <td><i class="fa fa-eye"></i></td>
+                  </tr>
+                  <tr  >  
+                    <th> </th>
+                    <th> </th>
+                    <th class="text-right">Всего: </th>
+                    <th  class="text-right"> </th>
+                    <th  class="text-right"> </th>
+                    <th  class="text-right"> </th>
+                    <th  class="text-right"> </th>
+                    <th > </th>
+                  </tr>
+                
+                </table>
+            
+            </div>
+         </div>
+      
+    </body>
+</html>

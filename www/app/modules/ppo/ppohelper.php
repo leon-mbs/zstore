@@ -273,8 +273,8 @@ class PPOHelper
         $header['inn'] = strlen($firm['inn']) > 0 ? $firm['inn'] : false;
         $header['tin'] = $firm['tin'];
         $header['address'] = $pos->address;
-         $header['testing'] = $pos->testing==1;
-       $header['pointname'] = $pos->pointname;
+        $header['testing'] = $pos->testing==1;
+        $header['pointname'] = $pos->pointname;
         $header['date'] = date('dmY');
         $header['time'] = date('His');
         $header['docnumber'] = $pos->fiscdocnumber;
@@ -371,11 +371,25 @@ class PPOHelper
         $report = new \App\Report('zform.xml');
 
         $xml = $report->generate($header);
-
+        $_xml = $xml;
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
         $firm = \App\Entity\Firm::load($pos->firm_id);
 
-        return self::send($xml, 'doc', $firm);
+        $ret =  self::send($xml, 'doc', $firm);
+        if($ret['success']==true) {
+            $r = new ZRecord();
+            $r->createdon = time();
+            $r->amount = $amount;
+            $r->fndoc = $pos->fiscdocnumber;
+            $r->fnpos = $pos->fiscalnumber;
+            $r->ramount = $amountr;
+            $r->cnt = $cnt;
+            $r->rcnt = $cntr;
+            $r->sentxml =  $_xml;
+            $r->taxanswer =  $ret['data'];
+            $r->save();
+        }
+        return  $ret;
     }
 
 
@@ -981,3 +995,4 @@ class PPOHelper
 
        */
 }
+
