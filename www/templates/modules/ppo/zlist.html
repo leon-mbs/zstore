@@ -29,7 +29,7 @@
            </div>
            <div class="col-12  col-lg-10  col-xl-8">
                  
-                <a  zippy="export">Экспорт в Ексель</a>
+                <a  zippy="csv">Экспорт  </a>
                 <table class="table  table-sm">
                 
                   <tr> 
@@ -52,23 +52,23 @@
                   </tr>
                   
                   <tr zippy="list">  
-                     <td></td>
-                     <td></td>
-                     <td></td>
-                     <td class="text-right"></td>
-                     <td class="text-right"></td>
-                     <td class="text-right"></td>
-                     <td class="text-right"></td>
-                     <td><i class="fa fa-eye"></i></td>
+                     <td zippy="createdon"></td>
+                     <td zippy="fnpos"></td>
+                     <td zippy="fndoc"></td>
+                     <td zippy="cnt" class="text-right"></td>
+                     <td zippy="amount" class="text-right"></td>
+                     <td zippy="rcnt" class="text-right"></td>
+                     <td zippy="ramount" class="text-right"></td>
+                     <td> <a zippy="view"> <i class="fa fa-eye"></i> </a> </td>
                   </tr>
                   <tr  >  
                     <th> </th>
                     <th> </th>
                     <th class="text-right">Всего: </th>
-                    <th  class="text-right"> </th>
-                    <th  class="text-right"> </th>
-                    <th  class="text-right"> </th>
-                    <th  class="text-right"> </th>
+                    <th zippy="tcnt" class="text-right"> </th>
+                    <th zippy="tamount" class="text-right"> </th>
+                    <th zippy="trcnt" class="text-right"> </th>
+                    <th zippy="tramount" class="text-right"> </th>
                     <th > </th>
                   </tr>
                 
@@ -76,6 +76,28 @@
             
             </div>
          </div>
-      
+        <div class="col-12  col-lg-10  col-xl-8">
+         <ul class="nav nav-tabs">
+  
+          <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#tprint">  Печатная форма</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#txml">  Отправленный XML</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#tanswer">  Ответ  фискального сервера</a>
+          </li>
+          
+          </ul>
+         <div class="tab-content"  >
+          
+          <div class="tab-pane   show active" id="tprint"> 
+         
+                 
+                </div>
+        </div>
+    
+      </div>
     </body>
 </html>
