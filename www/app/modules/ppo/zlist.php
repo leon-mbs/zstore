@@ -23,7 +23,7 @@ class ZList extends \App\Pages\Base
 {
    public $_list=array();
    public $_tcnt=0,$_tamount=0,$_trcnt=0,$_tramount=0;
-   
+   public $_doc;
     public function __construct() {
         parent::__construct();
      
@@ -41,7 +41,13 @@ class ZList extends \App\Pages\Base
    
         $this->add(new DataView('list', new ArrayDataSource(new Prop($this, '_list')), $this, 'OnRow'));
         $this->add(new ClickLink('csv', $this, 'oncsv'));
-    
+        
+        $this->add(new Panel('detail'))->setVisible(false);
+        $this->detail->add(new Label('vxml'));
+        $this->detail->add(new Label('axml'));
+        $this->detail->add(new Label('preview'));
+        $this->detail->add(new ClickLink('download', $this, 'onfile'));
+        
     }
   
     public  function onRow($row){
@@ -64,24 +70,93 @@ class ZList extends \App\Pages\Base
     }
 
     public function OnSubmit($sender) {
+          $conn = \ZDB\DB::getConnect();
 
         $this->_tcnt=0;
         $this->_tamount=0;
         $this->_trcnt=0;
         $this->_tramount=0;
-        
-        $this->_list = ZRecord::find("","createdon") ;
+        $from = $this->filter->from->getDate();
+        $to = $this->filter->to->getDate();
+     
+     
+        $where = " DATE(createdon) >= " . $conn->DBDate($from) . "               AND DATE(createdon) <= " . $conn->DBDate($to)  ;
+        $fnpos =  $sender->pos->getText();
+        $fndoc =  $sender->doc->getText();
+        if(strlen($fnpos)>0) $where .=  " and fnpos=". ZRecord::qstr($fnpos); 
+        if(strlen($fndoc)>0) $where .=  " and fndoc=". ZRecord::qstr($fndoc); 
+     
+     
+         
+        $this->_list = ZRecord::find($where,"createdon") ;
         $this->list->Reload();
   
     }
 
     public function onView($sender) {
 
-         $item = $sender->getOwner()->getDataItem();
+         $this->_doc = $sender->getOwner()->getDataItem();
+         $this->detail->setVisible(true);
+    
+    
+    
+         $this->detail->vxml->setText($this->_doc->sentxml);
+         
+         $answer = PPOHelper::decrypt($this->_doc->taxanswer) ;
+          
+         $this->detail->axml->setText($answer );
+         $xml = str_replace("<?xml version=\"1.0\" encoding=\"windows-1251\"?>","",$this->_doc->sentxml) ;
+         $xml = new \SimpleXMLElement($xml);
+ 
+         $header = array();
+         $header['date']  = date('Y-m-d',$this->_doc->createdon) ;
+         $header['fnpos']  =   $this->_doc->fnpos;
+         $header['fndoc']  =   $this->_doc->fndoc;
+         $header['cnt']  =   $this->_doc->cnt;
+         $header['rcnt']  =   $this->_doc->rcnt;
+         $header['amount']  = H::fa( $this->_doc->amount);
+         $header['ramount']  = H::fa( $this->_doc->ramount);
+         $header['inn']  = (string)  $xml->ZREPHEAD->IPN;
+         $header['address']  = (string)  $xml->ZREPHEAD->POINTADDR;
+         
+         if(strlen($header['inn'])==0) {
+            $header['inn']  = (string)  $xml->ZREPHEAD->TIN;   
+         }
+
+         $header['firm']  = (string)  $xml->ZREPHEAD->POINTNM;
+         if(strlen($header['firm'])==0) {
+            $header['firm']  = (string)  $xml->ZREPHEAD->ORGNM;   
+         }
+
+         
+      
+         $report = new \App\Report('zrep.tpl');
+
+         $html = $report->generate($header);
+    
+         
+         $this->detail->preview->setText($html,true);
+         
+         \App\Session::getSession()->printform  = $html;
          
   
     }
 
+    public function onfile($sender) {
+         header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename=zreport'. date('_Y_m_d')  );
+        header('Content-Transfer-Encoding: binary');
+    
+
+        header('Expires: 0');
+     
+        header('Content-Length: ' . strlen($this->_doc->taxanswer));
+        echo $this->_doc->taxanswer; 
+        flush();
+              
+    }
+    
+    
     public function oncsv($sender) {
         $csv = "";
 
@@ -89,30 +164,21 @@ class ZList extends \App\Pages\Base
         $data = array();
 
         $i = 0;
-
-        if ($sender->id == 'csv') {
-            $list = $this->clist->custlist->getDataSource()->getItems(-1, -1, 'customer_name');
-
-            foreach ($list as $c) {
+    
+            foreach ($this->_list as $c) {
                 $i++;
-                $data['A' . $i] = $c->customer_name;
-                $data['B' . $i] = $c->phone;
-                $data['C' . $i] = H::fa($c->sam);
+                $data['A' . $i] = H::fd($c->createdon);
+                $data['B' . $i] = $c->fnpos;
+                $data['C' . $i] = $c->fndoc;
+                $data['D' . $i] = $c->cnt;
+                $data['E' . $i] = H::fa($c->amount);
+                $data['F' . $i] = $c->rcnt;
+                $data['G' . $i] = H::fa($c->ramount);
             }
-        }
-        if ($sender->id == 'csv2') {
-            $list = $this->plist->doclist->getDataSource()->getItems(-1, -1, 'document_id');
+       
+ 
 
-            foreach ($list as $d) {
-                $i++;
-                $data['A' . $i] = H::fd($d->document_date);
-                $data['B' . $i] = $d->document_number;
-                $data['C' . $i] = H::fa($d->amount);
-                $data['D' . $i] = $d->notes;
-            }
-        }
-
-        H::exportExcel($data, $header, 'baylist.xlsx');
+        H::exportExcel($data, $header, 'zlist'. date('_Y_m_d').'.xlsx');
     }
   
 

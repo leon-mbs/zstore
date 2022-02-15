@@ -380,7 +380,7 @@ class PPOHelper
             $r = new ZRecord();
             $r->createdon = time();
             $r->amount = $amount;
-            $r->fndoc = $pos->fiscdocnumber;
+            $r->fndoc = $ret['docnumber'];
             $r->fnpos = $pos->fiscalnumber;
             $r->ramount = $amountr;
             $r->cnt = $cnt;

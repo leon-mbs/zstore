@@ -5,20 +5,20 @@
     <body>
         <div class="row">
             <div class="col-12  col-xl-10  ">
-                <h3>Журнал  Z-отчетов</h3>
+                <h3>Журнал  Z-звiтiв</h3>
                 <div class="navbar nav">
                     <form zippy="filter" class="form-inline">
 
-                        <label for="from">С</label>
+                        <label for="from">З</label>
                         <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="from">
 
                         <label for="to">по</label>
                         <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="to">
 
-                        <label for="pos">ФН терминала</label>
+                        <label for="pos">ФН термiналу</label>
                         <input class="form-control mr-sm-2"  type="text" zippy="pos">
                          
-                        <label for="doc">ФН отчета</label>
+                        <label for="doc">ФН звiту</label>
                         <input class="form-control mr-sm-2"   type="text" zippy="doc">
 
                         <input class="btn btn-outline-primary  " type="submit" value="ОК">
@@ -29,25 +29,25 @@
            </div>
            <div class="col-12  col-lg-10  col-xl-8">
                  
-                <a  zippy="csv">Экспорт  </a>
+                <a  zippy="csv">Експорт  </a>
                 <table class="table  table-sm">
                 
                   <tr> 
                     <th>Дата</th>
-                    <th>ФН. терминала</th>
-                    <th>ФН. отчета</th>
-                    <th colspan="2" class="text-center">Реализация</th>
-                    <th colspan="2" class="text-center">Возврат</th>
+                    <th>ФН. термiналу</th>
+                    <th>ФН. звiту</th>
+                    <th colspan="2" class="text-center">Реалiзацiя</th>
+                    <th colspan="2" class="text-center">Повернення</th>
                     <th ></th>
                   </tr>
                   <tr> 
                     <th> </th>
                     <th> </th>
                     <th> </th>
-                    <th  class="text-right">Чеков</th>
-                    <th  class="text-right">Сумма</th>
-                    <th  class="text-right">Чеков</th>
-                    <th  class="text-right">Сумма</th>
+                    <th  class="text-right">Чекiв</th>
+                    <th  class="text-right">Сума</th>
+                    <th  class="text-right">Чекiв</th>
+                    <th  class="text-right">Сума</th>
                     <th > </th>
                   </tr>
                   
@@ -64,7 +64,7 @@
                   <tr  >  
                     <th> </th>
                     <th> </th>
-                    <th class="text-right">Всего: </th>
+                    <th class="text-right">Всьго: </th>
                     <th zippy="tcnt" class="text-right"> </th>
                     <th zippy="tamount" class="text-right"> </th>
                     <th zippy="trcnt" class="text-right"> </th>
@@ -80,13 +80,13 @@
          <ul class="nav nav-tabs">
   
           <li class="nav-item">
-            <a class="nav-link active" data-toggle="tab" href="#tprint">  Печатная форма</a>
+            <a class="nav-link active" data-toggle="tab" href="#tprint">  Друкована форма</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link  " data-toggle="tab" href="#txml">  Отправленный XML</a>
+            <a class="nav-link  " data-toggle="tab" href="#txml">  Вiдправлений XML</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link  " data-toggle="tab" href="#tanswer">  Ответ  фискального сервера</a>
+            <a class="nav-link  " data-toggle="tab" href="#tanswer">  Вiдповiдь  фiскального серверу</a>
           </li>
           
           </ul>
@@ -94,10 +94,10 @@
           
                 <div class="tab-pane   show active" id="tprint"> 
                    {{^usemobileprinter}}
-                   <a href="javascript:void(0)"   onclick="printform()">Печать</a>
+                   <a href="javascript:void(0)"   onclick="printform()">Друк</a>
                    {{/usemobileprinter}}
                    {{#usemobileprinter}}
-                   <a href="/showreport/print/zreport" target="_blank">Печать</a>
+                   <a href="/showreport/print/zreport" target="_blank">Друк</a>
                    {{/usemobileprinter}}
                    <div zippy="preview" >
                   </div>
@@ -111,7 +111,7 @@
          
                  <div zippy="axml" >
                   </div> 
-                 <A zippy="download" >Скачать</A>
+                 <A zippy="download" >Зкачати</A>
                 </div>
                 
                 
