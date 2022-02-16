@@ -3,7 +3,11 @@
     <tr>
         <td colspan="2" style="font-weight:bolder;text-align:center" >Z-звiт</td>
     </tr>
- 
+     {{#test}}
+   <tr>
+        <td colspan="2" style=" text-align:center" >Тестовий режим</td>
+    </tr>
+   {{/test}}
     
     <tr>
 

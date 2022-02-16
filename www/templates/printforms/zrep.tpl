@@ -3,7 +3,12 @@
     <tr>
         <td colspan="2" style="font-weight:bolder;text-align:center" >Z-звiт</td>
     </tr>
- 
+   
+   {{#test}}
+   <tr>
+        <td colspan="2" style=" text-align:center" >Тестовый режим</td>
+    </tr>
+   {{/test}}
     
     <tr>
 
@@ -61,10 +66,13 @@
         <td  >Кiлькiсть чекiв</td>
         <td  style="text-align:right" > {{rcnt}} </td>
     </tr>
-  <tr>
+   <tr>
 
         <td  >Сума</td>
         <td style="text-align:right"  > {{ramount}}  </td>
-    </tr>    
+    </tr> 
+    
+    
+       
     </table>
  

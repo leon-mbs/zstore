@@ -97,7 +97,8 @@ class ZList extends \App\Pages\Base
 
          $this->_doc = $sender->getOwner()->getDataItem();
          $this->detail->setVisible(true);
-    
+          $printer = \App\System::getOptions('printer');
+  
     
     
          $this->detail->vxml->setText($this->_doc->sentxml);
@@ -109,6 +110,12 @@ class ZList extends \App\Pages\Base
          $xml = new \SimpleXMLElement($xml);
  
          $header = array();
+         $wp = 'style="width:40mm"';
+        if (strlen($printer['pwidth']) > 0) {
+            $wp = 'style="width:' . $printer['pwidth'] . '"';
+        }       
+         
+         $header['printw']  = $wp;
          $header['date']  = date('Y-m-d',$this->_doc->createdon) ;
          $header['fnpos']  =   $this->_doc->fnpos;
          $header['fndoc']  =   $this->_doc->fndoc;
@@ -116,9 +123,11 @@ class ZList extends \App\Pages\Base
          $header['rcnt']  =   $this->_doc->rcnt;
          $header['amount']  = H::fa( $this->_doc->amount);
          $header['ramount']  = H::fa( $this->_doc->ramount);
-         $header['inn']  = (string)  $xml->ZREPHEAD->IPN;
-         $header['address']  = (string)  $xml->ZREPHEAD->POINTADDR;
          
+         $header['address']  = (string)  $xml->ZREPHEAD->POINTADDR;
+         $header['test']  = "1" == (string)  $xml->ZREPHEAD->TESTING;
+         
+         $header['inn']  = (string)  $xml->ZREPHEAD->IPN;
          if(strlen($header['inn'])==0) {
             $header['inn']  = (string)  $xml->ZREPHEAD->TIN;   
          }
