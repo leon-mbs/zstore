@@ -29,7 +29,7 @@ class Options extends \App\Pages\Base
         $form->add(new TextInput('site', $modules['wcsite']));
         $form->add(new TextInput('keyc', $modules['wckeyc']));
         $form->add(new TextInput('keys', $modules['wckeys']));
-        $form->add(new DropDownChoice('defcust', \App\Entity\Customer::getList(), $modules['wccustomer_id'] > 0 ? $modules['occustomer_id'] : 0));
+        $form->add(new DropDownChoice('defcust', \App\Entity\Customer::getList(), $modules['wccustomer_id'] > 0 ? $modules['wccustomer_id'] : 0));
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['wcpricetype']));
         $form->add(new DropDownChoice('api', array('v3' => 'v3', 'v2' => 'v2', 'v1' => 'v1'), $modules['wcapi']));
         $form->add(new CheckBox('ssl', $modules['wcssl']));

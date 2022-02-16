@@ -121,7 +121,7 @@ class Orders extends \App\Pages\Base
 
         $row->add(new Label('number', $order->order_id));
         $row->add(new Label('customer', $order->firstname . ' ' . $order->lastname));
-        $row->add(new Label('amount', round($order->total)));
+        $row->add(new Label('amount', H::fa($order->total)));
         $row->add(new Label('comment', $order->comment));
         $row->add(new Label('date', \App\Helper::fdt(strtotime($order->date_modified))));
     }
@@ -296,7 +296,7 @@ class Orders extends \App\Pages\Base
                     continue;
                 }
                 $tovar->quantity = $product['quantity'];
-                $tovar->price = round($product['price']);
+                $tovar->price = H::fa($product['price']);
                 $totalpr += ($tovar->quantity * $tovar->price);
                 $j++;
                 $tovar->rowid = $j;
@@ -311,7 +311,7 @@ class Orders extends \App\Pages\Base
 
             $neworder->customer_id = $modules['occustomer_id'];
 
-            $neworder->amount = round($totalpr);
+            $neworder->amount = H::fa($totalpr);
 
             if ($shoporder->total > $totalpr) {
                 $neworder->headerdata['ship_amount'] = $shoporder->total - $totalpr;

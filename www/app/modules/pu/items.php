@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\OCStore;
+namespace App\Modules\PU;
 
 use App\Entity\Item;
 use App\Helper as H;
@@ -24,19 +24,14 @@ class Items extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
 
-        if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules, 'promua') === false && System::getUser()->rolename != 'admins') {
             System::setErrorMsg(H::l('noaccesstopage'));
 
             App::RedirectError();
             return;
         }
         $modules = System::getOptions("modules");
-        $cats = System::getSession()->cats;
-        if (is_array($cats) == false) {
-            $cats = array();
-            $this->setWarn('do_connect');
-        }
-
+  
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new DropDownChoice('searchcat', \App\Entity\Category::getList(), 0));
 
@@ -45,17 +40,13 @@ class Items extends \App\Pages\Base
         $this->exportform->add(new DataView('newitemlist', new ArrayDataSource(new Prop($this, '_items')), $this, 'itemOnRow'));
         $this->exportform->newitemlist->setPageSize(H::getPG());
         $this->exportform->add(new \Zippy\Html\DataList\Paginator('pag', $this->exportform->newitemlist));
-        $this->exportform->add(new DropDownChoice('ecat', $cats, 0));
+      //  $this->exportform->add(new DropDownChoice('ecat', $cats, 0));
 
         $this->add(new Form('upd'));
         $this->upd->add(new DropDownChoice('updcat', \App\Entity\Category::getList(), 0));
         
         $this->upd->add(new SubmitLink('updateqty'))->onClick($this, 'onUpdateQty');
         $this->upd->add(new SubmitLink('updateprice'))->onClick($this, 'onUpdatePrice');
-     
-     
-        $this->add(new ClickLink('checkconn'))->onClick($this, 'onCheck');
-        
         
  
         $this->add(new Form('importform'))->onSubmit($this, 'importOnSubmit');
@@ -64,29 +55,26 @@ class Items extends \App\Pages\Base
         
     }
 
-    public function onCheck($sender) {
-
-        Helper::connect();
-        \App\Application::Redirect("\\App\\Modules\\OCStore\\Items");
-    }
-
+ 
 
     public function filterOnSubmit($sender) {
         $this->_items = array();
         $modules = System::getOptions("modules");
 
-        $json = Helper::do_curl_request($url);
-        if ($json === false) {
+        try {
+          $data = Helper::make_request("GET","/api/v1/products/list",null);
+        } catch(\Exception $ee) {
+            System::setErrorMsg($ee->getMessage());
             return;
-        }
-        $data = json_decode($json, true);
-        if (!isset($data)) {
+        }      
+      $sku = array();
+      foreach ($data['products'] as $product) {
 
-            $this->setError("invalidresponse");
-            \App\Helper::log($json);
-            return;
-        }
-        if ($data['error'] == "") {
+            if (strlen($product['sku']) == 0) {
+                continue;
+            }
+            $sku[]= $product['sku'];
+      }    
 
             $cat = $this->filter->searchcat->getValue();
             $where = "disabled <> 1   ";
@@ -98,7 +86,7 @@ class Items extends \App\Pages\Base
                 if (strlen($item->item_code) == 0) {
                     continue;
                 }
-                if (in_array($item->item_code, $data['articles'])) {
+                if (in_array($item->item_code, $sku)) {
                     continue;
                 } //уже  в  магазине
                 $item->qty = $item->getQuantity();
@@ -110,12 +98,8 @@ class Items extends \App\Pages\Base
             }
 
             $this->exportform->newitemlist->Reload();
-            $this->exportform->ecat->setValue(0);
-        } else {
-            $data['error']  = str_replace("'","`",$data['error']) ;
-            
-            $this->setErrorTopPage($data['error']);
-        }
+            //$this->exportform->ecat->setValue(0);
+      
     }
 
     public function itemOnRow($row) {
@@ -141,8 +125,8 @@ class Items extends \App\Pages\Base
             }
             $elist[] = array('name'     => $item->itemname,
                              'sku'      => $item->item_code,
-                             'quantity' => \App\Helper::fqty($item->qty),
-                             'price'    => $item->getPrice($modules['ocpricetype'])
+                             'quantity_in_stock' => \App\Helper::fqty($item->qty),
+                             'price'    => \App\Helper::fa($item->getPrice($modules['pupricetype']))
             );
         }
         if (count($elist) == 0) {
@@ -152,24 +136,14 @@ class Items extends \App\Pages\Base
         }
         $data = json_encode($elist);
 
-        $fields = array(
-            'data' => $data,
-            'cat'  => $cat
-        );
+    
 
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/addproducts&' . System::getSession()->octoken;
-        $json = Helper::do_curl_request($url, $fields);
-        if ($json === false) {
+        try {
+          $data = Helper::make_request("GET","/api/v1/products/edit",$data);
+        } catch(\Exception $ee) {
+            System::setErrorMsg($ee->getMessage());
             return;
-        }
-        $data = json_decode($json, true);
-
-        if ($data['error'] != "") {
-            $data['error']  = str_replace("'","`",$data['error']) ;
-            
-            $this->setErrorTopPage($data['error']);
-            return;
-        }
+        }   
         $this->setSuccess('exported_items', count($elist));
 
         //обновляем таблицу
@@ -178,8 +152,7 @@ class Items extends \App\Pages\Base
 
     public function onUpdateQty($sender) {
         $modules = System::getOptions("modules");
-        $cat = $this->upd->updcat->getValue();
-        
+          
         $elist = array();
         $items = Item::find("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : ""));
         foreach ($items as $item) {
@@ -188,92 +161,124 @@ class Items extends \App\Pages\Base
             }
 
             $qty = $item->getQuantity();
-            $elist[$item->item_code] = round($qty);
+            $elist[$item->item_code] = H::fqty($qty);
         }
 
         $data = json_encode($elist);
 
-        $fields = array(
-            'data' => $data
-        );
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/updatequantity&' . System::getSession()->octoken;
-        $json = Helper::do_curl_request($url, $fields);
-        if ($json === false) {
+        try {
+          $data = Helper::make_request("GET","/api/v1/products/list",null);
+        } catch(\Exception $ee) {
+            System::setErrorMsg($ee->getMessage());
             return;
-        }
-        $data = json_decode($json, true);
+        }      
+      $sku = array();
+      foreach ($data['products'] as $product) {
 
-        if ($data['error'] != "") {
-            $data['error']  = str_replace("'","`",$data['error']) ;
-            
-            $this->setErrorTopPage($data['error']);
-            return;
+            if (strlen($product['sku']) == 0) {
+                continue;
+            }
+            $sku[$product['sku']]= $product['id'];
+      }    
+    
+         $list = array();
+         foreach ($elist as $code=>$qty) {
+        
+            if($sku[$code]>0)  {
+                $list[] = array('id'     => $sku[$code],
+                                 
+                                 'quantity_in_stock' =>$elist[$code]
+                                 
+                );
+            }
         }
-        $this->setSuccess('refreshed');
+  
+        $data = json_encode($elist);
+
+    
+
+        try {
+          $data = Helper::make_request("POST","/api/v1/products/edit",$data);
+        } catch(\Exception $ee) {
+            System::setErrorMsg($ee->getMessage());
+            return;
+        }       
+    
+      $this->setSuccess('refreshed');
     }
 
     public function onUpdatePrice($sender) {
         $modules = System::getOptions("modules");
-        $cat = $this->upd->updcat->getValue();
- 
+          
         $elist = array();
         $items = Item::find("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : ""));
-         foreach ($items as $item) {
+        foreach ($items as $item) {
             if (strlen($item->item_code) == 0) {
                 continue;
             }
-            $elist[$item->item_code] = $item->getPrice($modules['ocpricetype']);
+
+            $elist[$item->item_code] = \App\Helper::fa($item->getPrice($modules['pupricetype']));
         }
 
         $data = json_encode($elist);
 
-        $fields = array(
-            'data' => $data
-        );
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/updateprice&' . System::getSession()->octoken;
-        $json = Helper::do_curl_request($url, $fields);
-        if ($json === false) {
+        try {
+          $data = Helper::make_request("GET","/api/v1/products/list",null);
+        } catch(\Exception $ee) {
+            System::setErrorMsg($ee->getMessage());
             return;
-        }
-        $data = json_decode($json, true);
+        }      
+      $sku = array();
+      foreach ($data['products'] as $product) {
 
-        if ($data['error'] != "") {
-            $data['error']  = str_replace("'","`",$data['error']) ;
-            
-            $this->setErrorTopPage($data['error']);
-            return;
+            if (strlen($product['sku']) == 0) {
+                continue;
+            }
+            $sku[$product['sku']]= $product['id'];
+      }    
+    
+         $list = array();
+         foreach ($elist as $code=>$price) {
+        
+            if($sku[$code]>0)  {
+                $list[] = array('id'     => $sku[$code],
+                                 
+                                 
+                                 'price'    =>$price
+                                  
+                );
+            }
         }
-        $this->setSuccess('refreshed');
+  
+        $data = json_encode($elist);
+
+    
+
+        try {
+          $data = Helper::make_request("POST","/api/v1/products/edit",$data);
+        } catch(\Exception $ee) {
+            System::setErrorMsg($ee->getMessage());
+            return;
+        }       
+    
+      $this->setSuccess('refreshed');
     }
 
     public function importOnSubmit($sender) {
         $modules = System::getOptions("modules");
         $common = System::getOptions("common");
-      
-        $cats = System::getSession()->cats;
-        if (is_array($cats) == false) {
-            $cats = array();
-            $this->setWarn('do_connect');
-            return;
-        }        
-        
-        
+           
         
         $elist = array();
-
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/getproducts&' . System::getSession()->octoken;
-        $json = Helper::do_curl_request($url);
-        if ($json === false) {
+        try {
+          $data = Helper::make_request("GET","/api/v1/products/list",null);
+        } catch(\Exception $ee) {
+            System::setErrorMsg($ee->getMessage());
             return;
-        }
-        $data = json_decode($json, true);
-
-        if ($data['error'] != "") {
-            $data['error']  = str_replace("'","`",$data['error']) ;
-            
-            $this->setErrorTopPage($data['error']);
-            return;
-        }
+        }      
+      
+       
+    
         //  $this->setInfo($json);
         $i = 0;
         foreach ($data['products'] as $product) {
@@ -290,35 +295,27 @@ class Items extends \App\Pages\Base
             $item = new Item();
             $item->item_code = $product['sku'];
             $item->itemname = $product['name'];
-            // $item->description = $product['description'];
-            $item->manufacturer = $product['manufacturer'];
-            $w = $product['weight'];
-            $w = str_replace(',', '.', $w);
-            if ($product['weight_class_id'] == 2) {
-                $w = $w / 1000;
-            } //граммы
-            if ($w > 0) {
-                $item->weight = floatval($w);
-            }
-            if ($modules['ocpricetype'] == 'price1') {
+              // $item->description = $product['description'];
+   
+            if ($modules['pupricetype'] == 'price1') {
                 $item->price1 = $product['price'];
             }
-            if ($modules['ocpricetype'] == 'price2') {
+            if ($modules['pupricetype'] == 'price2') {
                 $item->price2 = $product['price'];
             }
-            if ($modules['ocpricetype'] == 'price3') {
+            if ($modules['pupricetype'] == 'price3') {
                 $item->price3 = $product['price'];
             }
-            if ($modules['ocpricetype'] == 'price4') {
+            if ($modules['pupricetype'] == 'price4') {
                 $item->price4 = $product['price'];
             }
-            if ($modules['ocpricetype'] == 'price5') {
+            if ($modules['pupricetype'] == 'price5') {
                 $item->price5 = $product['price'];
             }
 
 
             if ($common['useimages'] == 1) {
-                $im = $modules['ocsite'] . '/image/' . $product['image'];
+                $im =    $product['main_image'];
                 $im = @file_get_contents($im);
                 if (strlen($im) > 0) {
                     $imagedata = getimagesizefromstring($im);
@@ -331,9 +328,10 @@ class Items extends \App\Pages\Base
                 }
             }
             
-            if($sender->createcat->isChecked() && $product['cat_id'] >0) {
-                $cat_name =trim( $cats[$product['cat_id']]);
-                if(strlen($cat_name)>0) {
+            $cat_name =trim( $product['group']['name']);
+            if($sender->createcat->isChecked() && strlen($cat_name)>0) {
+                
+                 
                    $cat_name = str_replace('&nbsp;','',$cat_name) ;
                    if(strpos($cat_name,'&gt;')>0) {
                        $ar = explode('&gt;',$cat_name) ;
@@ -350,7 +348,7 @@ class Items extends \App\Pages\Base
                    }    
                     
                    $item->cat_id=$cat->cat_id; 
-                }
+                 
             }           
             
             

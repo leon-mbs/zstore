@@ -101,7 +101,7 @@ class ServiceAct extends Document
 
         $wp = 'style="width:40mm"';
         if (strlen($printer['pwidth']) > 0) {
-            $wp = 'style="width:' . $printer['pwidth'] . 'mm"';
+            $wp = 'style="width:' . $printer['pwidth'] . '"';
         }
 
         $header = array('printw'          => $wp, 'date' => H::fd(time()),

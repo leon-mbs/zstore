@@ -599,32 +599,7 @@
 
                                     </li>
                                     {{/issue}}
-                                    {{#tecdoc}}
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>Автозапчастини
-                                                <i class="right fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                            <li class="nav-item">
-                                                <a href="/index.php?p=App/Modules/Tecdoc/Options" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Налаштування</p>
-                                                </a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a href="/index.php?p=App/Modules/Tecdoc/Search" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Пошук</p>
-                                                </a>
-                                            </li>
-                                        </ul>
-
-                                    </li>
-                                    {{/tecdoc}}
+                       
                                     {{#ppo}}
                                     <li class="nav-item">
                                         <a href="#" class="nav-link">
@@ -639,15 +614,23 @@
                                             <li class="nav-item">
                                                 <a href="/index.php?p=App/Modules/PPO/PPOList" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Зареестрованi РРО</p>
+                                                    <p>&nbsp;&nbsp;Зареєстровані РРО</p>
                                                 </a>
                                             </li>
+                                            <li class="nav-item">
+                                                <a href="/index.php?p=App/Modules/PPO/ZList" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>
+                                                    <p>&nbsp;&nbsp;Журнал  z-звiтiв</p>
+                                                </a>
+                                            </li>
+                                                   {{#isadmins}}                                            
                                             <li class="nav-item">
                                                 <a href="/index.php?p=App/Modules/PPO/ZForm" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
                                                     <p>&nbsp;&nbsp;Закриття змiни</p>
                                                 </a>
                                             </li>
+                                                   {{/isadmins}}
                                         </ul>
 
                                     </li>

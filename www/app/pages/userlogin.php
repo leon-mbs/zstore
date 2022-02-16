@@ -31,7 +31,7 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->add($form);
         $this->setError('');
 
-        $version =  "v5.9.2";
+        $version =  "v5.10.0";
         $this->_tvars['curversion'] = $version ;
 
         //проверка  новой версии        
