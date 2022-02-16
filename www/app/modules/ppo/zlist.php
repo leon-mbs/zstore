@@ -97,16 +97,21 @@ class ZList extends \App\Pages\Base
 
          $this->_doc = $sender->getOwner()->getDataItem();
          $this->detail->setVisible(true);
-          $printer = \App\System::getOptions('printer');
-  
-    
+         $printer = \App\System::getOptions('printer');
     
          $this->detail->vxml->setText($this->_doc->sentxml);
          
          $answer = PPOHelper::decrypt($this->_doc->taxanswer) ;
           
          $this->detail->axml->setText($answer );
-         $xml = str_replace("<?xml version=\"1.0\" encoding=\"windows-1251\"?>","",$this->_doc->sentxml) ;
+         
+         $xml = $this->_doc->sentxml;
+          
+         $p = strpos($xml,"?>") ;
+         if($p !== false)  {
+             $xml = substr($xml,$p+2) ;
+         }
+        
          $xml = new \SimpleXMLElement($xml);
  
          $header = array();
@@ -121,9 +126,20 @@ class ZList extends \App\Pages\Base
          $header['fndoc']  =   $this->_doc->fndoc;
          $header['cnt']  =   $this->_doc->cnt;
          $header['rcnt']  =   $this->_doc->rcnt;
-         $header['amount']  = H::fa( $this->_doc->amount);
-         $header['ramount']  = H::fa( $this->_doc->ramount);
+         $header['payments']  = array();
+         $header['rpayments'] = array();
          
+         if(  isset($xml->ZREPREALIZ->PAYFORMS) ){
+             foreach($xml->ZREPREALIZ->PAYFORMS->children() as $row) {
+                $header['payments'][]=array('forma'=>$row->PAYFORMNM,'amount'=>H::fa($row->SUM));    
+             }
+         }
+
+         if(  isset($xml->v->PAYFORMS) ){
+             foreach($xml->ZREPRETURN->PAYFORMS->children() as $row) {
+                $header['rpayments'][]=array('forma'=>$row->PAYFORMNM,'amount'=>H::fa($row->SUM));    
+             }
+         }         
          $header['address']  = (string)  $xml->ZREPHEAD->POINTADDR;
          $header['test']  = "1" == (string)  $xml->ZREPHEAD->TESTING;
          
