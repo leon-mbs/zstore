@@ -46,31 +46,37 @@
         <td  > <b>Продаж</b></td>
         <td  >  </td>
     </tr>
+    {{#payments}}
+      <tr>
+
+        <td  >{{forma}}</td>
+        <td style="text-align:right" > {{amount}} </td>
+    </tr> 
+    {{/payments}}
    <tr>
 
         <td  >Кiлькiсть чекiв</td>
         <td style="text-align:right" > {{cnt}} </td>
     </tr>
-  <tr>
-
-        <td  >Сума</td>
-        <td style="text-align:right" > {{amount}} </td>
-    </tr>  
+ 
    <tr>
 
         <td  > <b>Повернення</b></td>
         <td  >  </td>
     </tr>
+    {{#rpayments}}
+      <tr>
+
+        <td  >{{forma}}</td>
+        <td style="text-align:right" > {{amount}} </td>
+    </tr> 
+    {{/rpayments}}    
    <tr>
 
         <td  >Кiлькiсть чекiв</td>
         <td  style="text-align:right" > {{rcnt}} </td>
     </tr>
-   <tr>
-
-        <td  >Сума</td>
-        <td style="text-align:right"  > {{ramount}}  </td>
-    </tr> 
+ 
     
     
        

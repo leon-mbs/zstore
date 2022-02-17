@@ -129,7 +129,17 @@ class Options extends \App\Pages\Base
 
         $areas = array();
         $tmplist = $api->getAreas();
-
+        if($tmplist['success']==FALSE) {
+            if(count($tmplist['errors'])>0) {
+                $this->setError(array_pop($tmplist['errors'])) ;
+                return;
+            }
+            if(count($tmplist['warnings'])>0) {
+                $this->setWarn(array_pop($tmplist['warnings'])) ;
+                
+            }
+            
+        } 
         foreach ($tmplist['data'] as $a) {
             $areas[$a['Ref']] = $a['Description'];
         }

@@ -69,14 +69,14 @@ class TTNList extends \App\Pages\Base
         }
 
         $statuses = $api->check($tracks);
-
+        $cnt = 0;
         foreach ($docs as $ttn) {
 
             $decl = $ttn->headerdata['ship_number'];
             if (strlen($decl) == 0) {
                 continue;
             }
-            $cnt = 0;
+          
 
             $st = $statuses[$decl]['Status'];
             $code = $statuses[$decl]['StatusCode'];
@@ -97,14 +97,14 @@ class TTNList extends \App\Pages\Base
             if (in_array($code, array(102, 103, 104, 108, 105, 2, 3))) {
                 $errors[] = $ttn->headerdata['ship_number'] . " -  " . $st;
             }
-            if (count($errors) > 0) {
-                $this->setError(Implode('<br>', $errors));
-            } else {
-                $this->setSuccess("npupdated", $cnt);
-            }
+
 
             $this->_doclist[$ttn->document_id] = $ttn;
         }
+            if (count($errors) > 0) {
+                $this->setError(Implode('<br>', $errors));
+            } 
+            $this->setSuccess("npupdated", $cnt);
 
         $this->doclist->Reload();
     }
