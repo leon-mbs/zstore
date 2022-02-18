@@ -561,8 +561,8 @@ class Helper
             return '';
         }
         $qty = str_replace(',', '.', $qty);
-        $qty = preg_replace("/[^0-9\.]/", "",$qty);        
- 
+        $qty = preg_replace("/[^0-9\.\-]/", "",$qty);        
+        $qty = trim($qty);
         $common = System::getOptions("common");
         if ($common['qtydigits'] > 0) {
             return number_format($qty, $common['qtydigits'], '.', '');
@@ -583,8 +583,8 @@ class Helper
         }
         $am = str_replace(',', '.', $am);
 
-        $am = preg_replace("/[^0-9\.]/", "",$am);        
-        
+        $am = preg_replace("/[^0-9\.\-]/", "",$am);        
+        $am = trim($am);
         $common = System::getOptions("common");
         if ($common['amdigits'] == 1) {
             return number_format($am, 2, '.', '');
