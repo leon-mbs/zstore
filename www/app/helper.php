@@ -230,17 +230,24 @@ class Helper
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10010, 'meta_name' => "/WC/Items", 'meta_type' => 6, 'description' => self::l('modwcitems')));
             }
         }
-
         if ($_config['modules']['issue'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'issue') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10014, 'meta_name' => "/Issue/Pages/IssueList", 'meta_type' => 6, 'description' => self::l('modissueslist')));
             }
         }
-        if ($_config['modules']['tecdoc'] == 1) {
-            if ($role->rolename == 'admins' || strpos($role->modules, 'tecdoc') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10101, 'meta_name' => "/Tecdoc/Search", 'meta_type' => 6, 'description' => self::l('modtecdocsearch')));
+
+        if ($_config['modules']['promua'] == 1) {
+            if ($role->rolename == 'admins' || strpos($role->modules, 'pu') !== false) {
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10015, 'meta_name' => "/PU/Orders", 'meta_type' => 6, 'description' => self::l('modpuorders')));
             }
         }
+        if ($_config['modules']['promua'] == 1) {
+            if ($role->rolename == 'admins' || strpos($role->modules, 'pu') !== false) {
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10016, 'meta_name' => "/PU/Items", 'meta_type' => 6, 'description' => self::l('modpuitems')));
+            }
+        }
+
+     
          
         return $mdata;
     }

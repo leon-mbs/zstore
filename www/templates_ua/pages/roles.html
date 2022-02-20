@@ -174,7 +174,7 @@
                                             <label class="form-check-label mr-sm-2" for="editwrdoc"> Недавні документи </label>
                                         </td>
                                     </tr>
-                                                          <tr>
+                                    <tr>
                                         <td>
                                             <input class="form-check-input" type="checkbox" zippy="editwmdoc">
                                             <label class="form-check-label mr-sm-2" for="editwmdoc"> Мої документи </label>
@@ -236,15 +236,6 @@
                                         </td>
                                     </tr>
                                     {{/issue}}
-                                    {{#tecdoc}}
-                                    <tr>
-                                        <td>
-
-                                            <input class="form-check-input" type="checkbox" zippy="edittecdoc">
-                                            <label class="form-check-label mr-sm-2" for="edittecdoc"> Автозапчастини </label>
-                                        </td>
-                                    </tr>
-                                    {{/tecdoc}}
                                     {{#ppo}}
                                     <tr>
                                         <td>
@@ -263,6 +254,15 @@
                                         </td>
                                     </tr>
                                     {{/np}}
+                                    {{#promua}}
+                                    <tr>
+                                        <td>
+
+                                            <input class="form-check-input" type="checkbox" zippy="editpu">
+                                            <label class="form-check-label mr-sm-2" for="editpu">PromUa</label>
+                                        </td>
+                                    </tr>
+                                    {{/promua}}
 
                                 </table>
                             </div>

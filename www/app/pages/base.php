@@ -102,7 +102,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["woocomerce"] = $_config['modules']['woocomerce'] == 1;
         $this->_tvars["note"] = $_config['modules']['note'] == 1;
         $this->_tvars["issue"] = $_config['modules']['issue'] == 1;
-        $this->_tvars["tecdoc"] = $_config['modules']['tecdoc'] == 1;
+
         $this->_tvars["ppo"] = $_config['modules']['ppo'] == 1;
         $this->_tvars["np"] = $_config['modules']['np'] == 1;
         $this->_tvars["promua"] = $_config['modules']['promua'] == 1;
@@ -124,14 +124,15 @@ class Base extends \Zippy\Html\WebPage
         if (strpos(System::getUser()->modules, 'woocomerce') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["woocomerce"] = false;
         }
-        if (strpos(System::getUser()->modules, 'tecdoc') === false && System::getUser()->rolename != 'admins') {
-            $this->_tvars["tecdoc"] = false;
-        }
+  
         if (strpos(System::getUser()->modules, 'ppo') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["ppo"] = false;
         }
         if (strpos(System::getUser()->modules, 'np') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["np"] = false;
+        }
+        if (strpos(System::getUser()->modules, 'promua') === false && System::getUser()->rolename != 'admins') {
+            $this->_tvars["promua"] = false;
         }
 
         if ($this->_tvars["shop"] ||
@@ -139,7 +140,7 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["woocomerce"] ||
             $this->_tvars["note"] ||
             $this->_tvars["issue"] ||
-            $this->_tvars["tecdoc"] ||
+            $this->_tvars["promua"] ||
             $this->_tvars["ppo"] ||
             $this->_tvars["np"]
         ) {
