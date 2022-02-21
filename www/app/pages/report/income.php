@@ -27,13 +27,31 @@ class Income extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-        $this->filter->add(new DropDownChoice('type', array(1 => H::l('repbyitems'), 2 => H::l('repbysellers'), 3 => H::l('repbydates'),4 => H::l('repbyservices')) , 1));
+        $this->filter->add(new DropDownChoice('type', array(1 => H::l('repbyitems'), 2 => H::l('repbysellers'), 3 => H::l('repbydates'),4 => H::l('repbyservices'),5 => H::l('repbysellersitem')) , 1))->onChange($this, "OnType");;
 
+        
+        $this->filter->add(new \Zippy\Html\Form\AutocompleteTextInput('cust'))->onText($this, 'OnAutoCustomer');
+        $this->filter->cust->setVisible(false);
+        
+        
         $this->add(new Panel('detail'))->setVisible(false);
  
         $this->detail->add(new Label('preview'));
     }
+   
+    public function OnAutoCustomer($sender) {
+        $text = \App\Entity\Customer::qstr('%' . $sender->getText() . '%');
+        return \App\Entity\Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} )");
+    }
+    
+    public function OnType($sender) {
+        $type = $this->filter->type->getValue();
+ 
+        $this->filter->cust->setVisible($type == 5);
+      
 
+    }    
+    
     public function OnAutoItem($sender) {
         $r = array();
 
@@ -62,6 +80,7 @@ class Income extends \App\Pages\Base
 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
+        $cust_id = $this->filter->cust->getKey();
 
         $br = "";
         $brids = \App\ACL::getBranchIDsConstraint();
@@ -72,14 +91,22 @@ class Income extends \App\Pages\Base
         $detail = array();
         $conn = \ZDB\DB::getConnect();
 
-        if ($type == 1) {    //по товарам
+        if ($type == 1 || $type==5) {    //по товарам
+        
+           $cust = "";
+    
+            if (($type == 5) && $cust_id > 0) {
+                $cust = " and d.customer_id=" . $cust_id;
+          
+            }        
+            
             $sql = "
-          select i.`itemname`,i.`item_code`,sum(e.`quantity`) as qty, sum(e.`outprice` * e.`quantity`) as summa
+             select i.`itemname`,i.`item_code`,sum(e.`quantity`) as qty, sum(e.`outprice` * e.`quantity`) as summa
               from `entrylist_view`  e
 
               join `items` i on e.`item_id` = i.`item_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
-               where e.`item_id` >0  and (e.`tag` = 0 or e.`tag` = -2 or e.`tag` = -8  ) 
+               where e.`item_id` >0  and (e.`tag` = 0 or e.`tag` = -2 or e.`tag` = -8  )  {$cust} 
                and d.`meta_name` in ('GoodsReceipt','RetCustIssue')
                {$br}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
@@ -159,7 +186,7 @@ class Income extends \App\Pages\Base
 
         $header['total'] = H::fa($total);
 
-        if ($type == 1) {
+        if ($type == 1 || $type==5) {
             $header['_type1'] = true;
             $header['_type2'] = false;
             $header['_type3'] = false;

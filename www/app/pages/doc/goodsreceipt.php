@@ -761,7 +761,7 @@ class GoodsReceipt extends \App\Pages\Base
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
         $item->msr = $this->editnewitem->editnewmsr->getText();
 
-        if (strlen($item->item_code) > 0) {
+        if (strlen($item->item_code) > 0 && System::getOption("common", "nocheckarticle") != 1) {
             $code = Item::qstr($item->item_code);
             $cnt = Item::findCnt("  item_code={$code} ");
             if ($cnt > 0) {
@@ -769,12 +769,12 @@ class GoodsReceipt extends \App\Pages\Base
                 return;
             }
 
-        } else {
-            if (System::getOption("common", "autoarticle") == 1) {
+        } 
+        if (strlen($item->item_code) == 0 &&  System::getOption("common", "autoarticle") == 1) {
 
-                $item->item_code = Item::getNextArticle();
-            }
+            $item->item_code = Item::getNextArticle();
         }
+ 
 
 
         $item->manufacturer = $this->editnewitem->editnewmanufacturer->getText();

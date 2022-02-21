@@ -367,24 +367,21 @@ class ItemList extends \App\Pages\Base
             $code = Item::qstr($this->_item->item_code);
             $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and item_code={$code} ");
             if ($cnt > 0) {
-                //пытаемся генерить еще раз 
-                if ($this->_item->item_id == 0 && System::getOption("common", "autoarticle") == 1) {
+ 
+                    $this->setError('itemcode_exists');
+                    return;
+                
+            }
+        }
+    
+    
+        if (strlen($this->_item->item_code) == 0 && System::getOption("common", "autoarticle") == 1) {
                     $this->_item->item_code = Item::getNextArticle();
                     $this->itemdetail->editcode->setText($this->_item->item_code);
 
-                    $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and item_code={$code} ");
-                    if ($cnt > 0) {
-
-                        $this->setError('itemcode_exists');
-                        return;
-                    }
-                } else {
-                    $this->setError('itemcode_exists');
-                    return;
-                }
-            }
-        }
-
+                     
+         }    
+    
         //проверка  уникальности штрих кода
         if (strlen($this->_item->bar_code) > 0) {
             $code = Item::qstr($this->_item->bar_code);
