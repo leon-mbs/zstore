@@ -104,8 +104,8 @@ class Orders extends \App\Pages\Base
                 }
 
                 $order = new \App\DataItem($ocorder);
-
-                $this->_neworders[] = $order;
+                      
+                $this->_neworders[$ocorder['order_id']] = $order;
             }
 
             $this->neworderslist->Reload();

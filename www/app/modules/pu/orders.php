@@ -150,7 +150,7 @@ class Orders extends \App\Pages\Base
                 }
 
            
-                $this->_neworders[] = $neworder;
+                $this->_neworders[$puorder['id']] = $neworder;
             }
         
         $this->neworderslist->Reload();
