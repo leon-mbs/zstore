@@ -63,9 +63,10 @@ class Roles extends \App\Pages\Base
         $this->editpan->editform->add(new CheckBox('editwoocomerce'));
         $this->editpan->editform->add(new CheckBox('editnote'));
         $this->editpan->editform->add(new CheckBox('editissue'));
-        $this->editpan->editform->add(new CheckBox('edittecdoc'));
+        
         $this->editpan->editform->add(new CheckBox('editppo'));
         $this->editpan->editform->add(new CheckBox('editnp'));
+        $this->editpan->editform->add(new CheckBox('editpu'));
 
         $this->editpan->editform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
@@ -174,14 +175,14 @@ class Roles extends \App\Pages\Base
         if (strpos($this->role->modules, 'issue') !== false) {
             $this->editpan->editform->editissue->setChecked(true);
         }
-        if (strpos($this->role->modules, 'tecdoc') !== false) {
-            $this->editpan->editform->edittecdoc->setChecked(true);
-        }
         if (strpos($this->role->modules, 'ppo') !== false) {
             $this->editpan->editform->editppo->setChecked(true);
         }
         if (strpos($this->role->modules, 'np') !== false) {
             $this->editpan->editform->editnp->setChecked(true);
+        }
+        if (strpos($this->role->modules, 'pu') !== false) {
+            $this->editpan->editform->editpu->setChecked(true);
         }
     }
 
@@ -298,14 +299,14 @@ class Roles extends \App\Pages\Base
         if ($this->editpan->editform->editissue->isChecked()) {
             $modules = $modules . ',issue';
         }
-        if ($this->editpan->editform->edittecdoc->isChecked()) {
-            $modules = $modules . ',tecdoc';
-        }
         if ($this->editpan->editform->editppo->isChecked()) {
             $modules = $modules . ',ppo';
         }
         if ($this->editpan->editform->editnp->isChecked()) {
             $modules = $modules . ',np';
+        }
+        if ($this->editpan->editform->editpu->isChecked()) {
+            $modules = $modules . ',pu';
         }
 
         $this->role->modules = trim($modules, ',');
