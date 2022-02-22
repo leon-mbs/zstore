@@ -115,7 +115,7 @@ class PPOHelper
                 $signed = PPO::sign($data, $key, $cert);
 
             }
-            file_put_contents("z:/signed",$signed) ;
+
             $return = PPO::send($signed, $type);
 
 
