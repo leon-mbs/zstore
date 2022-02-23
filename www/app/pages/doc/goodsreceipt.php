@@ -143,7 +143,7 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->rate->setText($this->_doc->headerdata['rate']);
             $this->docform->disc->setText(H::fa($this->_doc->headerdata['disc']));
             $this->docform->editdisc->setText(H::fa($this->_doc->headerdata['disc']));
-             $this->docform->zatr->setText($this->_doc->headerdata['zatr']);
+            $this->docform->zatr->setText($this->_doc->headerdata['zatr']);
             $this->docform->zatrself->setChecked($this->_doc->headerdata['zatrself']);
 
             if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
@@ -482,7 +482,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->_doc->headerdata['zatr'] = $this->docform->zatr->getText();
         $this->_doc->headerdata['zatrself'] = $this->docform->zatrself->isChecked()?1:0;
 
-        $this->_doc->payamount = $this->docform->payamount->getText();
+        
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         $this->_doc->headerdata['val'] = $this->docform->val->getValue();
@@ -491,11 +491,14 @@ class GoodsReceipt extends \App\Pages\Base
         $this->_doc->headerdata['nds'] = $this->docform->nds->getText();
         $this->_doc->headerdata['disc'] = $this->docform->disc->getText();
         $this->_doc->headerdata['basedoc'] = $this->docform->basedoc->getText();
-
+        
+        
+        $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->payed = $this->docform->payed->getText();
-
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
 
+        
+        
 
         if ($this->checkForm() == false) {
             return;
@@ -694,10 +697,10 @@ class GoodsReceipt extends \App\Pages\Base
         $val = $this->docform->val->getValue();
         if (strlen($val) > 1) {
             if($this->_doc->payamount  > $this->_doc->payed )  {
-                $this->setError("nocreditval");
+              //  $this->setError("nocreditval");
              
                 
-                return;
+              //  return;
             }
             
             
