@@ -33,7 +33,7 @@
     <tr style="font-weight: bolder;">
        <td></td>
         <td><b>Валюта</b></td>
-        <td colspan="6">{{val}}   ({{rate}})</td>
+        <td colspan="6">{{valname}}   ({{rate}})</td>
         
         
     </tr>

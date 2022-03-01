@@ -163,7 +163,7 @@ class Orders extends \App\Pages\Base
                 $neworder->notes .= " Адрес:" . $wcorder->shipping->city . ' ' . $wcorder->shipping->address_1 . ";";
                 $neworder->notes .= " Комментарий:" . $wcorder->customer_note . ";";
 
-                $this->_neworders[] = $neworder;
+                $this->_neworders[$wcorder->id] = $neworder;
             }
         }
         $this->neworderslist->Reload();

@@ -43,7 +43,9 @@ class GoodsReceipt extends Document
                         "firm_name"       => $firm['firm_name'],
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
-                        "isval"           => ($this->_doc->headerdata['val']) > 1,
+                        "isval"           => strlen($this->_doc->headerdata['val']) > 1,
+                        "valname"           => $this->_doc->headerdata['valname'],
+                        "rate"           => $this->_doc->headerdata['rate'],
                         "customer_name"   => $this->customer_name,
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount),
@@ -112,7 +114,6 @@ class GoodsReceipt extends Document
         //аналитика
         foreach ($this->unpackDetails('detaildata') as $item) {
 
-
             
             if ($total > 0) {
 
@@ -145,8 +146,7 @@ class GoodsReceipt extends Document
         $payed = $payed * $rate; 
      
         if ($this->headerdata['payment'] > 0 && $payed > 0) {
-          
-        
+       
           
             $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_OUTCOME);
             if ($payed > 0) {

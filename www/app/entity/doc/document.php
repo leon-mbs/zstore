@@ -155,19 +155,21 @@ class Document extends \ZCL\DB\Entity
      *
      */
     private function unpackData() {
-
+        global $logger;
         $this->headerdata = array();
         if (strlen($this->content) == 0) {
             return;
         }
 
-        try {
-            $xml = new \SimpleXMLElement($this->content);
-        } catch(\Exception $ee) {
-            global $logger;
-            $logger->error("Документ " . $this->document_number . " " . $ee->getMessage());
-            return;
+        $xml = @simplexml_load_string($this->content) ;
+        if($xml==false) {
+
+           $logger->error("Документ " . $this->document_id . " неверный  контент" );
+         //  $logger->error( $this->content );
+           return;
         }
+            
+            
         foreach ($xml->header->children() as $child) {
             $ch = (string)$child;
             /*   if(is_numeric($ch)) {
@@ -367,6 +369,25 @@ class Document extends \ZCL\DB\Entity
         $oldstate = $this->state;
         $this->state = $state;
         $this->insertLog($state);
+    
+    /*
+        if($this->state == self::STATE_NEW)          $this->priority = 100;
+        if($this->state == self::STATE_CLOSED)       $this->priority = 1;
+        if($this->state == self::STATE_EXECUTED)     $this->priority = 10;
+        if($this->state == self::STATE_FINISHED)     $this->priority = 20;
+        if($this->state == self::STATE_DELIVERED)    $this->priority = 30;
+        if($this->state == self::STATE_INPROCESS)    $this->priority = 50;
+        if($this->state == self::STATE_SHIFTED)      $this->priority = 40;
+        if($this->state == self::STATE_INSHIPMENT)   $this->priority = 50;
+        if($this->state == self::STATE_WA)           $this->priority = 90;
+        if($this->state == self::STATE_APPROVED)     $this->priority = 80;
+        if($this->state == self::STATE_CANCELED)     $this->priority = 70;
+        if($this->state == self::STATE_EDITED)       $this->priority = 80;
+        if($this->state == self::STATE_REFUSED)      $this->priority = 3;
+        if($this->state == self::STATE_DELETED)      $this->priority = 2;
+        if($this->state == self::STATE_FAIL)         $this->priority = 3;
+        if($this->state == self::STATE_READYTOSHIP)  $this->priority = 50;
+        */
     
         $this->save();
 
