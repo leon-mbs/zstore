@@ -35,7 +35,7 @@ class Invoice extends \App\Entity\Doc\Document
             }
         }
 
-        $totalstr = H::sumstr($this->payamount);
+        $totalstr =  \App\Util::money2str_ua($this->payamount);
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,

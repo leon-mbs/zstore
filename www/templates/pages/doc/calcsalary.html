@@ -5,14 +5,14 @@
     <body>
       <div class="row">
         <div class="col-12">
-             <h3> Начисление зарплаты</h3>
+             <h3> Нарахування зарплати</h3>
         
 
         <form zippy="docform">
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
-                        <label for="document_number">Номер документа</label>
+                        <label for="document_number">Номер документу</label>
                         <input class="form-control" type="text" zippy="document_number">
                     </div>
                     <div class="form-group">
@@ -22,7 +22,7 @@
 
 
                     <div class="form-group  ">
-                        <label for="notes">Примечание </label>
+                        <label for="notes">Примiтка </label>
 
                         <textarea class="form-control" type="text" zippy="notes"></textarea>
 
@@ -31,19 +31,19 @@
                 </div>
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group  ">
-                        <label for="year">Год</label>
+                        <label for="year">Рiк</label>
                         <select class="form-control" zippy="year">
                         </select>
                     </div>
                     <div class="form-group  ">
-                        <label for="month">Месяц</label>
+                        <label for="month">Мiсяць</label>
                         <select class="form-control" zippy="month">
                         </select>
                     </div>
                     <div class="form-group  ">
-                        <label for="dayscnt">Кол. раб. дней </label>
+                        <label for="dayscnt">Кiл. роб. днiв </label>
                         <input style="width:100px;" required="required" pattern="[0-9]+" class="form-control" type="text" zippy="dayscnt">
-                        <small>Количество рабочих дней в месяце</small>
+                        <small>Кiлькiсть робочих днiв в  мiсяцi</small>
                     </div>
  
                 </div>
@@ -52,32 +52,33 @@
 
             <div class="row">
                 <div class="col-12 col-md-6">
-                    <input type="button" value="Отменить" zippy="backtolist" class="btn   btn-outline-secondary">
-                    &nbsp; <input zippy="tocalc" type="submit" value="Далее " class="btn   btn-outline-primary">
+                    <input type="button" value="Скасуватии" zippy="backtolist" class="btn   btn-outline-secondary">
+                    &nbsp; <input zippy="tocalc" type="submit" value="Далi " class="btn   btn-outline-primary">
            
                 </div>
             </div>
 
 
         </form>
-         {{={| |}=}}   
+        
+       {{={| |}=}}   
         <div   id="vapp">    
         <form zippy="calcform">
           
             <div class="form-group row">
                 <div class="col-auto pt-2">
-                  <label   > Сотрудник</label>
+                  <label   > Спiвробiтник</label>
                 </div>
                <div class="col-auto">
                   <select  v-model="selectednewemp" class="form-control"  id="newemp" name="newemp" >
-                     <option value="0">Не выбран</option>
+                     <option value="0">Не вибраний</option>
                         <option v-for=" e in deleted "  v-bind:value="e.id">
                             {{e.emp_name}}
                          </option>     
                      </select>
                 </div>
                <div class="col-auto  ">
-                     <button class="btn btn-info btn-sm" v-on:click.prevent="add"  >Добавить</button>
+                     <button class="btn btn-info btn-sm" v-on:click.prevent="add"  >Додати</button>
                 </div>
                 
                 
@@ -118,7 +119,7 @@
         
              <div class="col-12 col-md-6 mt-4">
                     <input type="submit" value="Назад" zippy="todoc" class="btn   btn-outline-secondary">
-                    &nbsp; <input zippy="savedoc" type="submit" value="Сохранить" class="btn   btn-info">
+                    &nbsp; <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-info">
                     &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
 
              </div>

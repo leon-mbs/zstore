@@ -2,14 +2,14 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="9">
-            Состояние  складов
+            Стан  складiв
         </td>
     </tr>
  
 
     <tr style="font-weight: bolder;">
 
-        <th style="border: solid black 1px">Наименование</th>
+        <th style="border: solid black 1px">Найменування</th>
         <th style="border: solid black 1px">Артикул</th>
         {{#stores}}
         <th style="border: solid black 1px">{{name}} </th>

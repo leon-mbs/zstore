@@ -4,7 +4,7 @@
             <div class="col-12 col-xl-10">
                 <div class="card">
                     <div class="card-body">
-                        <h3>Журнал продаж </h3>
+                        <h3>Журнал продажів </h3>
 
 
                         <div class="navbar nav">
@@ -18,50 +18,45 @@
                                 <select class="form-control mr-2" zippy="status">
                                 </select>
 
-
-                                <label for="searchcomp">Продавец</label>
+                                <label for="searchcomp">Продавець</label>
                                 <select zippy="searchcomp" class="form-control mr-sm-2">
-                                    <option value="0">Не выбран</option>
+                                    <option value="0">Не вибраний</option>
                                 </select>
-                                <label for="salesource">Источник продаж</label>
+                                <label for="salesource">Джерело продаж</label>
                                 <select class="form-control mr-2" zippy="salesource">
-                                    <option value="0">Не  выбран</option>
+                                    <option value="0">Не  вибране</option>
                                 </select>
 
-
-
-                                <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Поиск по контенту">
-
+                                <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Пошук по контенту"
+                                       ]>
 
                                 <input type="submit" class="  btn btn-outline-success  " value="ОК">
 
                             </form>
                         </div>
-                        <a href="/index.php?p=App/Pages/Doc/GoodsIssue" class="btn btn-info mt-2 mb-3">Создать РН</a>&nbsp;
-                        <a href="/index.php?p=App/Pages/Doc/Invoice" class="btn btn-info mt-2 mb-3">Создать СФ</a>
-                        <a href="/index.php?p=App/Pages/Doc/TTN" class="btn btn-info mt-2 mb-3">Создать ТТН</a>
+                        <a href="/index.php?p=App/Pages/Doc/GoodsIssue" class="btn btn-info mt-2 mb-3">Створити ВН</a>&nbsp;
+                        <a href="/index.php?p=App/Pages/Doc/Invoice" class="btn btn-info mt-2 mb-3">Створити РФ</a>
+                        <a href="/index.php?p=App/Pages/Doc/TTN" class="btn btn-info mt-2 mb-3">Створити ТТН</a>
 
-                        <br> <a zippy="csv">Экспорт в Excel</a>
+                        <br> <a zippy="csv">Експорт в Excel</a>
 
                         <table class="table   table-sm   ">
                             <tr>
 
                                 <th>Номер</th>
                                 <th>Дата</th>
-                                <th>Заказ</th>
-                                <th>Клиент</th>
+                                <th>Замовлення</th>
+                                <th>Клієнт</th>
 
-                                <th>Продавец</th>
+                                <th>Продавець</th>
 
-
-                                <th class="text-right">Сумма</th>
+                                <th class="text-right">Сума</th>
 
                                 <th>Статус</th>
-                                <th> </th>
-                                <th> </th>
+                          <th> </th>
+                        <th> </th>
 
-
-                                <th>Примечание</th>
+                                <th>Примітка</th>
 
                                 <th></th>
 
@@ -78,18 +73,16 @@
 
                                 <td zippy="amount" class="text-right"></td>
 
-
                                 <td class="text-nowrap" zippy="state"></td>
-                                <td style="width:20px" ><i zippy="ispay" title="Ожидает  оплату" class="fa fa-credit-card"></i></td>
-                                <td style="width:20px" ><i zippy="istruck" title="Ожидает отправку" class="fa fa-truck"></i></td>
-                              
-                              
+                       <td style="width:20px" ><i zippy="ispay" title="Очiкуе  оплату" class="fa fa-credit-card"></i></td>
+                        <td style="width:20px" ><i zippy="istruck" title="Очiкуе вiдправку" class="fa fa-truck"></i></td>
+                                
                                 <td zippy="onotes"></td>
 
                                 <td class="text-nowrap">
-                                    <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i></a>
+                                    <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
 
-                                      &nbsp;&nbsp; &nbsp;&nbsp;  <a zippy="edit" title="Редактирование"><i class="fa fa-edit"></i></a>
+                                     &nbsp; &nbsp; &nbsp; &nbsp; <a zippy="edit" title="Редагування"><i class="fa fa-edit"></i></a>
 
                                 </td>
 
@@ -98,10 +91,8 @@
 
                         </table>
 
-                        <div zippy="pag">
-                        </div>
+                        <div zippy="pag"></div>
                         <a id="dankor"></a>
-
                     </div>
                 </div>
             </div>
@@ -116,26 +107,28 @@
                         <div class="navbar nav">
                             <form zippy="statusform" class="form-inline ">
                                 {{#np}}
-                                <button zippy="bnp" type="submit" class="  btn btn-success  mr-2 " title="Создать экспрес-накладную Новой Почты">Отправка НП</button>
+                                <button zippy="bnp" type="submit" class="  btn btn-success  mr-2 " title="Створити експрес-накладну">Доставка НП</button>
                                 {{/np}}
-                                <button zippy="bsend" type="submit" class="  btn btn-success  mr-2 ">Отправить</button>
-                                <button zippy="bdevivered" type="submit" class="  btn btn-success  mr-2 ">Доставлено</button>
-                                <input zippy="closeorder" type="checkbox" class="form-control "> <span data-label="closeorder">Закрыть заказ</span>
-                                &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-                                <button zippy="bttn" type="submit" class="  btn btn-success  mr-2 ">Создать ТТН</button>
-                                <button zippy="bgi" type="submit" class="  btn btn-success  mr-2 ">Создать РН</button>
-                                <button zippy="bgar" type="submit" class="  btn btn-success  mr-2 ">Гарантийный талон</button>
-                                <button zippy="bret" type="submit" class="  btn btn-success  mr-2 ">Возврат</button>
-                                &nbsp;&nbsp;&nbsp;<span data-label="ship_number" > № декларации </span> <i data-label="ship_number"  class="fa fa-info-circle " data-toggle="tooltip" data-placement="top" title="Номер  декларации  службы доставки."></i> 
-                                <input zippy="ship_number" style="width:250px;"   class="form-control mr-sm-2"> <input class="btn btn-outline-info" zippy="bdecl"  type="submit" value="OK">
 
+                                <button zippy="bsend" type="submit" class="  btn btn-success  mr-2 ">Відправити</button>
+                                <button zippy="bdevivered" type="submit" class="  btn btn-success  mr-1 ">Доставлено</button>
+                                <input zippy="closeorder" type="checkbox" class="form-control "> <span data-label="closeorder">Закрити ордер</span>
+                                &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+                                <button zippy="bttn" type="submit" class="  btn btn-success  mr-2 ">Створити ТТН</button>
+                                <button zippy="bgi" type="submit" class="  btn btn-success  mr-2 ">Створити РН</button>
+                                <button zippy="bgar" type="submit" class="  btn btn-success  mr-2 ">Гарантійний талон</button>
+                                <button zippy="bret" type="submit" class="  btn btn-success  mr-2 ">Повернення</button>
+                                &nbsp;&nbsp;&nbsp;<span data-label="ship_number" > № декларацiї </span> <i data-label="ship_number"  class="fa fa-info-circle " data-toggle="tooltip" data-placement="top" title="Номер  декларацiї  служби доставки."></i> 
+                                <input zippy="ship_number" style="width:250px;"  class="form-control mr-sm-2"> <input class="btn btn-outline-info" zippy="bdecl"  type="submit" value="OK">
 
                             </form>
                         </div>
                     </div>
                 </div>
+
                 <div class="card">
                     <div class="card-body">
+
                         <div zippy="docview"></div>
 
                     </div>
@@ -144,37 +137,37 @@
         </div>
 
         <div zippy="nppan">
-            <h4>Создание экспресс-накладной НП</h4>
+            <h4>Створення експрес-накладної НП</h4>
             <form zippy="npform">
                 <div class="row">
                     <div class="col-12 col-md-6 col-xl-4">
                         <div class="form-group  ">
-                            <label for="npw">Вес</label>
+                            <label for="npw">Вага</label>
 
                             <input pattern="[0-9\.]+" type="text" zippy="npw" class="form-control"/>
 
                         </div>
                         <div class="form-group  ">
-                            <label for="npplaces">Кол.мест</label>
+                            <label for="npplaces">Кiл.мiсць</label>
 
                             <input pattern="[0-9]+" type="text" zippy="npplaces" class="form-control"/>
 
                         </div>
                         <div class="form-group  ">
-                            <label for="npcost">Оценка, грн</label>
+                            <label for="npcost">Оцiнка, грн</label>
 
                             <input pattern="[0-9]+" type="text" zippy="npcost" class="form-control"/>
 
                         </div>
                         <div class="form-group  ">
-                            <label for="npdate">Дата отправки</label>
+                            <label for="npdate">Дата вiдправки</label>
 
                             <input type="text" zippy="npdate" class="form-control"/>
 
                         </div>
 
                         <div class="form-group  ">
-                            <label for="nppt">Кто оплачивает</label>
+                            <label for="nppt">Хто сплачує</label>
 
                             <select zippy="nppt" class="form-control   ">
 
@@ -182,7 +175,7 @@
 
                         </div>
                         <div class="form-group  ">
-                            <label for="nppm">Тип оплаты</label>
+                            <label for="nppm">Тип оплати</label>
 
                             <select zippy="nppm" class="form-control   ">
 
@@ -190,13 +183,13 @@
 
                         </div>
                         <div class="form-group  ">
-                            <label for="npback">Обратная доставка,грн </label>
+                            <label for="npback">Зворотня доставка,грн </label>
 
                             <input pattern="[0-9]+" type="text" zippy="npback" class="form-control"/>
 
                         </div>
                         <div class="form-group  ">
-                            <label for="nppmback">Тип оплаты  обратной доставки</label>
+                            <label for="nppmback">Тип оплати зворотньоi доставки</label>
 
                             <select zippy="nppmback" class="form-control   ">
 
@@ -206,7 +199,7 @@
 
 
                         <div class="form-group  ">
-                            <label for="npdesc">Описание</label>
+                            <label for="npdesc">Опис </label>
 
                             <textarea zippy="npdesc" class="form-control"></textarea>
 
@@ -218,27 +211,27 @@
                     <div class="col-12 col-md-4 col-xl-3">
 
                         <div class="form-group">
-                            <label for="seltel">Тел. отправителя</label>
+                            <label for="seltel">Тел. вiдправника</label>
                             <input type="text" zippy="seltel" class="form-control"/>
                         </div>
 
 
                         <div class="form-group">
-                            <label for="selarea">Область отправителя</label>
+                            <label for="selarea">Область вiдправника</label>
                             <select zippy="selarea" class="form-control   ">
-                                <option value="0">Не выбрано</option>
+                                <option value="0">Не вибрана</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="selcity">Город отправителя</label>
+                            <label for="selcity">Мiсто вiдправника</label>
                             <select zippy="selcity" class="form-control  ">
-                                <option value="0">Не выбрано</option>
+                                <option value="0">Не вибрано</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label data-label="selpoint" for="selpoint">Отделение отправителя</label>
+                            <label data-label="selpoint" for="selpoint">Вiддiлення вiдправника</label>
                             <select zippy="selpoint" class="form-control  ">
-                                <option value="0">Не выбрано</option>
+                                <option value="0">Не вибрано</option>
                             </select>
                         </div>
 
@@ -247,37 +240,37 @@
                     <div class="col-12 col-md-4 col-xl-3">
 
                         <div class="form-group">
-                            <label for="baylastname">Фамилия получателя</label>
+                            <label for="baylastname">Прiзвище отримувача</label>
                             <input type="text" zippy="baylastname" class="form-control"/>
                         </div>
                         <div class="form-group">
-                            <label for="bayfirstname">Имя получателя</label>
+                            <label for="bayfirstname">Iм'я отримувача</label>
                             <input type="text" zippy="bayfirstname" class="form-control"/>
                         </div>
                         <div class="form-group">
-                            <label for="baymiddlename">Отчество получателя</label>
+                            <label for="baymiddlename">По батьковi отримувача</label>
                             <input type="text" zippy="baymiddlename" class="form-control"/>
                         </div>
                         <div class="form-group">
-                            <label for="baytel">Тел. получателя</label>
+                            <label for="baytel">Тел. отримувача</label>
                             <input type="text" zippy="baytel" class="form-control"/>
                         </div>
                         <div class="form-group">
-                            <label for="bayarea">Область</label>
+                            <label for="bayarea">Область отримувача</label>
                             <select zippy="bayarea" class="form-control   ">
-                                <option value="0">Не выбрано</option>
+                                <option value="0">Не вибрана</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="baycity">Город</label>
+                            <label for="baycity">Мiсто отримувача</label>
                             <select zippy="baycity" class="form-control  ">
-                                <option value="0">Не выбрано</option>
+                                <option value="0">Не вибрано</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label data-label="baypoint" for="baypoint">Отделение</label>
+                            <label data-label="baypoint" for="baypoint">Вiддiлення отримувача</label>
                             <select zippy="baypoint" class="form-control  ">
-                                <option value="0">Не выбрано</option>
+                                <option value="0">Не вибрано</option>
                             </select>
                         </div>
 
@@ -285,23 +278,23 @@
                     </div>
 
                     <div class="col-12  col-md-8 col-xl-6 pb-4 pt-4">
-                        <h4>Данные по ТТН</h4>
+                        <h4>Данi по ТТН</h4>
                         <table class="table   table-sm">
                             <tr>
-                                <td>Покупатель</td>
+                                <td>Покупець</td>
                                 <td zippy="npttncust"></td>
                             </tr>
                             <tr>
-                                <td>Адрес доставки</td>
+                                <td>Адреса доставки</td>
                                 <td zippy="npttaddress"></td>
                             </tr>
                             <tr>
-                                <td>Примечание</td>
+                                <td>Примiтка</td>
                                 <td zippy="npttnnotes"></td>
                             </tr>
                         </table>
                         <a data-toggle="collapse" href="#collapsettn" aria-expanded="false" aria-controls="collapseExample">
-                            <h5>Список товаров <i style="font-size:smaller" class="fa fa-angle-down"></i></h5>
+                            <h5>Перелiк товарiв <i style="font-size:smaller" class="fa fa-angle-down"></i></h5>
                         </a>
                         <div class="collapse" id="collapsettn">
                             <div class="card  card-body" zippy="printform"></div>
@@ -310,8 +303,8 @@
                     </div>
                     <div class="col-12  ">
                         <div class="form-group">
-                            <a zippy="npcancel" class="btn btn-outline-primary ">Отмена</a>
-                            &nbsp;&nbsp;<input type="submit" value="Создать" class="btn   btn-primary  "/>
+                            <a zippy="npcancel" class="btn btn-outline-primary ">Скасувати</a>
+                            &nbsp;&nbsp;<input type="submit" value="Створити" class="btn   btn-primary  "/>
 
                         </div>
                     </div>
@@ -319,7 +312,5 @@
                 </div>
             </form>
         </div>
-
-
     </body>
 </html>

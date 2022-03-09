@@ -10,6 +10,7 @@
 
             </div>
             <div class="w-100">
+
                 <div class="col-12 col-md-10 col-xl-8" >
                     <div class="card">
                         <div class="card-body">
@@ -20,7 +21,7 @@
                                     <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
 
 
-                                    <input type="submit" class="  btn btn-outline-success  " value="Искать">
+                                    <input type="submit" class="  btn btn-outline-success  " value="Шукати">
 
 
                                 </form>
@@ -38,11 +39,11 @@
                             <th>Номер</th>
 
                             <th >Статус</th>
-                            <th >Время доставки</th>
-                            <th >Адрес </th>
+                            <th >Час доставки</th>
+                            <th >Адреса </th>
                             <th >Контакт </th>
-                            <th >Ответственный </th>
-                            <th class="text-right">Сумма</th>
+                            <th >Вiдповiдальний </th>
+                            <th class="text-right">Сума</th>
 
                             <th ></th>
                             <th ></th>
@@ -51,7 +52,7 @@
                             <td zippy="docdate"  >   </td>
 
                             <td ><a zippy="docnumber"></a></td>
-                            <td zippy="state"> </td>
+                   <td zippy="state"> </td>
 
                             <td class="text-nowrap  " zippy="deltime">  </td>
                             <td  zippy="address">   </td>
@@ -77,21 +78,21 @@
                                     <form zippy="statusform" class="form-inline ">
                                         <button zippy="bdelivered" type="submit" class="  btn btn-success  mr-2 ">Доставлено</button>   
 
-                                        <label data-label="emp" for="emp">Ответственный</label>
+                                        <label data-label="emp" for="emp">Вiдповiдальний</label>
                                         <select zippy="emp" class="form-control mr-2">
-                                            <option value="0">Не указан</option>
+                                            <option value="0">Не вказано</option>
                                         </select>
-                                        <button zippy="bsend" type="submit" class="  btn btn-success ml-2  mr-2 ">Отправить</button>   
+                                        <button zippy="bsend" type="submit" class="  btn btn-success ml-2  mr-2 ">Вiдправити</button>   
 
                                     </form>
 
                                     <form zippy="payform" class="form-inline ">
-                                        <label data-label="payamount" for="payamount">К оплате</label>
+                                        <label data-label="payamount" for="payamount">До сплати</label>
                                         <input   style="width:100px;" pattern="[0-9\.]+" zippy="payamount" class="form-control mr-2">
 
-                                        <label data-label="mf" for="mf">Счет</label>
+                                        <label data-label="mf" for="mf">Рахунок</label>
                                         <select zippy="mf" class="form-control">
-                                            <option value="0">Не указан</option>
+                                            <option value="0">Не вказано</option>
                                         </select>
 
                                         <button zippy="bpay" type="submit" class="  btn btn-primary ml-2  mr-2 ">Внести оплату</button>
@@ -114,10 +115,7 @@
                 </div>
 
 
-
-
             </div> 
-
             <script>
                 window.setInterval(onNewOrder, 5000);
 
@@ -130,7 +128,7 @@
                               
                                 if (answer.cnt > 0) {
                                     $('#newordersalert').show();
-                                    $('#neworderscnt').text('Новых доставок ' + answer.cnt);
+                                    $('#neworderscnt').text('Нових доставок ' + answer.cnt);
 
                                 }       
                             
@@ -141,5 +139,6 @@
                 }
 
             </script>              
+                     
     </body>
 </html>

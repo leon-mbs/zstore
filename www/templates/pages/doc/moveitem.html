@@ -6,11 +6,11 @@
 
 
         <form zippy="docform" enctype="multipart/form-data">
-            <h3> Перемещение ТМЦ</h3>
+            <h3> Перемiщення ТМЦ</h3>
             <div class="row">
                 <div class="col-12 col-md-3">
                     <div class="form-group">
-                        <label for="document_number">Номер документа</label>
+                        <label for="document_number">Номер документу</label>
                         <input class="form-control" type="text" zippy="document_number">
                     </div>
                     <div class="form-group">
@@ -18,21 +18,20 @@
                         <input class="form-control" type="text" zippy="document_date" required="required">
                     </div>
                     <div class="form-group  ">
-                        <label for="store">Со склада</label>
+                        <label for="store">Зi складу</label>
                         <select class="form-control" zippy="store">
-                            <option value="0">Не выбран</option>
+                            <option value="0">Не обрано</option>
                         </select>
                     </div>
                     <div class="form-group  ">
                         <label for="tostore">На склад</label>
                         <select class="form-control" zippy="tostore">
-                            <option value="0">Не выбран</option>
+                            <option value="0">Не обрано</option>
                         </select>
 
                     </div>
-
                     <div class="form-group  ">
-                        <label for="notes">Примечание </label>
+                        <label for="notes">Примітка </label>
 
                         <input class="form-control" type="text" zippy="notes">
 
@@ -44,23 +43,22 @@
                 <div class="col-12 col-md-8 col-xl-6">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих-код &nbsp;<input style="width:150px;" autocomplete="off" autofocus type="text" zippy="barcode"
-                                               onkeydown="onBarCode()">
+                        Штрих-код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
                         &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
 
 
                     </div>
                     {{/usescanner}}
-                    <a class="btn btn-info btn-sm" zippy="addrow">Добавить позицию</a>
+                    <a class="btn btn-info btn-sm" zippy="addrow">Додати позицію</a>
                     <table class="table table-sm">
                         <tr>
-                            <th>Название</th>
-                            <th>Ед.</th>
+                            <th>Назва</th>
+                            <th>Од.</th>
                             {{#usesnumber}}
-                            <th>Серия</th>
+                            <th>Серія</th>
 
                             {{/usesnumber}}
-                            <th width="40" class="text-right">Кол.</th>
+                            <th width="40" class="text-right">Кіл.</th>
 
                             <th  ></th>
                         </tr>
@@ -73,7 +71,7 @@
                             {{/usesnumber}}
                             <td zippy="quantity" class="text-right"></td>
                             <td zippy="price" class="text-right"></td>
-                            <td><a zippy="edit"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp; <a zippy="delete"><i class="fa fa-trash"></i></a>
+                            <td><a zippy="edit"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;&nbsp;<a zippy="delete"><i class="fa fa-trash"></i></a>
                             </td>
 
 
@@ -87,8 +85,8 @@
 
             <div class="row">
                 <div class="col-12 col-md-6">
-                    <input type="button" value="Отменить" zippy="backtolist" class="btn   btn-outline-secondary">
-                    &nbsp; <input zippy="savedoc" type="submit" value="Сохранить" class="btn   btn-outline-primary">
+                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-outline-secondary">
+                    &nbsp; <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-outline-primary">
                     &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
 
                 </div>
@@ -99,29 +97,28 @@
 
     </form>
     <form zippy="editdetail">
-        <h4>Ввод товара </h4>
+        <h4>Введення товару </h4>
         <div class="row">
             <div class="col-12 col-md-4">
 
                 <div class="form-group">
-                    <label for="edititem">Наименование</label>
-                    <input class="form-control" zippy="edititem" placeholder="Начните вводить  ">
+                    <label for="edititem">Найменування</label>
+                    <input class="form-control" zippy="edititem" placeholder="Почніть вводити... ">
 
-
-                    Наличие <span zippy="qtystock"></span>
+                    Наявність <span zippy="qtystock"></span>
 
 
                 </div>
                 {{#usesnumber}}
                 <div class="form-group">
-                    <label for="editsnumber">Партия поставщика</label>
+                    <label for="editsnumber">Партія постачальника</label>
 
                     <input type="text" zippy="editsnumber" class="form-control"/>
 
                 </div>
                 {{/usesnumber}}
                 <div class="form-group">
-                    <label for="editquantity">Количество</label>
+                    <label for="editquantity">Кількість</label>
 
                     <input onkeydown="onItem()" style="width:100px;" type="text" zippy="editquantity" class="form-control"
                            required="required" pattern="[0-9\.]+"/>
@@ -129,8 +126,8 @@
                 </div>
 
                 <div class="form-group">
-                    <input zippy="saverow" type="submit" value="Сохранить" class="btn  btn-outline-primary">&nbsp;<input
-                        type="button" zippy="cancelrow" value="Отменить" class="btn   btn-outline-secondary">
+                    <input zippy="saverow" type="submit" value="Зберегти" class="btn  btn-outline-primary">&nbsp;<input
+                        type="button" zippy="cancelrow" value="Скасувати" class="btn   btn-outline-secondary">
                 </div>
             </div>
         </div>

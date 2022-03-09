@@ -42,12 +42,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new DropDownChoice('amdigits'));
         $this->common->add(new DropDownChoice('dateformat'));
         
-        $v = array('-'=>'Не выводить','gr' => 'Гривня', 'ru' => 'Рубль' );
-        if($this->lang == 'ua') {
-           $v = array('-'=>'Не виводити', 'gr' => 'Гривня' );
-        }
-        $this->common->add(new DropDownChoice('curr', $v, 'gr'));
-        
+  
         $this->common->add(new DropDownChoice('phonel', array('10' => '10', '12' => '12'), '10'));
         $pt = array(
             "1" => H::l('opt_lastprice'),
@@ -99,7 +94,7 @@ class Options extends \App\Pages\Base
         $this->common->amdigits->setValue($common['amdigits']);
         $this->common->dateformat->setValue($common['dateformat']);
         $this->common->partiontype->setValue($common['partiontype']);
-        $this->common->curr->setValue($common['curr']);
+        
         $this->common->phonel->setValue($common['phonel']);
 
         $this->common->price1->setText($common['price1']);
@@ -280,7 +275,7 @@ class Options extends \App\Pages\Base
         $common['amdigits'] = $this->common->amdigits->getValue();
         $common['dateformat'] = $this->common->dateformat->getValue();
         $common['partiontype'] = $this->common->partiontype->getValue();
-        $common['curr'] = $this->common->curr->getValue();
+        
         $common['phonel'] = $this->common->phonel->getValue();
 
         $common['price1'] = $this->common->price1->getText();

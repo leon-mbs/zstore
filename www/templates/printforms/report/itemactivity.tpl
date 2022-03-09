@@ -1,14 +1,14 @@
-<table class="ctable" border="0" cellpadding="2" cellspacing="0">
+<table class="ctable" border="0" class="ctable" cellpadding="2" cellspacing="0">
 
     <tr style="font-size:larger; font-weight: bolder;">
-        <td align="center" colspan="9">
-            Движение по складу
+        <td align="center" colspan="8">
+            Рух по складу
         </td>
     </tr>
     <tr>
 
-        <td align="center" colspan="9">
-            Период с {{datefrom}} по {{dateto}}&nbsp;&nbsp;&nbsp;&nbsp; 
+        <td align="center" colspan="8">
+            Період з {{datefrom}} по {{dateto}}&nbsp;&nbsp;&nbsp;&nbsp; 
         </td>
     </tr>
 
@@ -17,15 +17,15 @@
         <th style="border: solid black 1px">Дата</th>
         <th style="border: solid black 1px">Склад</th>
         <th style="border: solid black 1px">Код</th>
-        <th style="border: solid black 1px">Наименование</th>
+        <th style="border: solid black 1px">Найменування</th>
 
-        <th align="right" style="border: solid black 1px">Нач.</th>
+        <th align="right" style="border: solid black 1px">Поч.</th>
         <th style="border: solid black 1px">Прих.</th>
-        <th align="right" style="border: solid black 1px">Расх.</th>
-        <th align="right" style="border: solid black 1px">Кон.</th>
-        <th style="border: solid black 1px">Документы</th>
+        <th align="right" style="border: solid black 1px">Витр.</th>
+        <th align="right" style="border: solid black 1px">Кін.</th>
+        <th style="border: solid black 1px">Документи</th>
     </tr>
-    {{#_detail}}       
+    {{#_detail}}
     <tr>
 
         <td>{{date}}</td>
@@ -40,13 +40,13 @@
         <td> {{{documents}}}</td>
     </tr>
     {{/_detail}}
-    {{^noshowpartion}}
+     {{^noshowpartion}} 
     <tr>
 
         <td></td>
         <td></td>
         <td></td>
-        <td align="right"><b>На сумму</b></td>
+        <td align="right"><b>На суму</b></td>
 
         <td align="right"><b>{{ba}}</b></td>
         <td align="right"><b>{{bain}}</b></td>
@@ -54,7 +54,7 @@
         <td align="right"><b>{{baend}}</b></td>
         <td> </td>
     </tr>
-  {{/noshowpartion}}    
+   {{/noshowpartion}}    
 </table>
 
 

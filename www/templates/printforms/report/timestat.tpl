@@ -2,13 +2,13 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="2">
-            Отчет по рабочему времени
+            Звiт по робочому часi
         </td>
     </tr>
     <tr>
 
         <td align="center">
-            <b> Период с {{from}} по {{to}}   </b>
+            <b> Перiод з {{from}} по {{to}}   </b>
         </td>
     </tr>
     <tr>
@@ -29,7 +29,7 @@
     {{/_detail}}
     <tr style="font-weight: bolder;">
 
-        <td class="text-right">Итого:</td>
+        <td class="text-right">Всього:</td>
 
         <td class="text-right">{{total}}</td>
 

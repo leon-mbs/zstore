@@ -4,75 +4,72 @@
 
         <div class="row  ">
             <div class="col-12  col-sm-10 col-md-6    col-xl-4  ">
-                <h4>Настройки соединения</h4>
+                <h4>Налаштування підключення</h4>
                 <form zippy="cform">
                     <div class="form-group">
-                        <label for="site">Адрес сайта</label>
+                        <label for="site">Адреса сайту</label>
                         <input type="text" zippy="site" class="form-control" required="required"/>
-                        <small>Нужно  ввводить  полный  адрес</small>
+                         <small>Потрiбно  вводити повну адресу</small>
                     </div>
                     <div class="form-group">
-                        <label for="apiname">Имя API</label>
+                        <label for="apiname">Ім'я API</label>
                         <input type="text" zippy="apiname" class="form-control" required="required"/>
                     </div>
                     <div class="form-group">
                         <label for="key">Код API</label>
                         <textarea style="height:150px;" zippy="key" class="form-control" required="required"></textarea>
-                        <small class="form-text text-muted"><i class="fa fa-exclamation-triangle"> В настройках API опенкарта
-                                должен быть добавлен IP адрес сайта учетной системы.</i></small>
                     </div>
                     <div class="form-check">
                         <input zippy="ssl" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="ssl">Проверка SSL сертификата </label>
+                        <label class="form-check-label" for="ssl">Перевiрка SSL сертифiкату </label>
 
                     </div>
+
                     <div class="form-group  ">
-                        <label for="defcust">Покупатель по умолчанию</label>
+                        <label for="defcust">Покупець за замовчуванням</label>
 
                         <select class="form-control select2" zippy="defcust">
 
-                            <option value='0'>Не выбран</option>
+                            <option value='0'>Не обрано</option>
                         </select>
-                        <small class="form-text text-muted">Условный контрагент от имени котрого будут формироватся
-                            заказы</small>
+                        <small class="form-text text-muted">Умовний контрагент від імені якого будуть формуватись
+                            замовлення</small>
 
                     </div>
                     <div class="form-group   ">
-                        <label for="defpricetype">Тип цены </label>
+                        <label for="defpricetype">Тип ціни </label>
 
                         <select class="form-control" zippy="defpricetype">
-                            <option value='0'>Не выбран</option>
+                            <option value='0'>Не обрано</option>
 
                         </select>
-                        <small class="form-text text-muted">Цена для обновления в магазине </small>
+                        <small class="form-text text-muted">Ціна для оновлення в магазині </small>
+
                     </div>
                     <div class="form-check">
                         <input zippy="outcome" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="outcome">Только списание </label>
-                        <small class="form-text text-muted">Вместо заказа формировать и автоматически проводить расходную
-                            накладную.
-                            Используется если заказы обрабатываются на стороне ИМ.</small>
-                        <br>
-                    </div>
+                        <label class="form-check-label" for="outcome">Тільки списання </label>
+                        <small class="form-text text-muted"> Замість замовлення створювати і автоматично проводити видаткову
+                            накладну.
+                            Використовуеться якщо замовлення обробляються на стороні IМ.</small>
+                        <br></div>
                     <div class="form-check">
                         <input zippy="insertcust" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="insertcust">Импортировать контрангентов </label>
-                        <small class="form-text text-muted">Импортировать зарегистрированых клиентов из ИМ в справочник
-                             .</small>
-                        <br>
-                      </div>
+                        <label class="form-check-label" for="insertcust">Iмпортувати контрангентiв </label>
+                        <small class="form-text text-muted">Iмпортувати клiентiв з IМ в довiдник контрагентiв.</small>
+                        <br></div>
+
                     <div class="form-check">
                         <input zippy="setpayamount" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="setpayamount">Ставить сумму  К оплате  в заказах </label>
-                        <small class="form-text text-muted">В  этом  случае  заказ  будет в  списке  расчетов  с  долгом покупателя
-                            контрагентов.</small>
+                        <label class="form-check-label" for="setpayamount">Ставити суму  До сплати  в замовленнях </label>
+                        <small class="form-text text-muted">У цьому випадку замовлення буде у журналi розрахунків із боргом покупця
+                              .</small>
                         <br>
                       </div>
-
-                    <div class="form-group">
-                        <input type="submit" value="Сохранить" zippy="save" class="btn   btn-primary mr-2"/>
                         
-                        <img id="loader" style="display:none" src="/assets/images/ajax-loader.gif">
+                    <div class="form-group">
+                        <input type="submit" value="Зберегти" zippy="save" class="btn   btn-primary mr-2"/>
+                          <img id="loader" style="display:none" src="/assets/images/ajax-loader.gif">
 
                     </div>
                 </form>

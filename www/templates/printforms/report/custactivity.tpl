@@ -2,25 +2,25 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="6">
-            Движение по контрагентам
+            Рух по контрагентах
         </td>
     </tr>
     <tr>
 
         <td align="center" colspan="6">
-            Период с {{datefrom}} по {{dateto}}&nbsp;&nbsp;&nbsp;&nbsp; Контрагент: <strong>{{cust_name}}</strong>
+            Період з {{datefrom}} по {{dateto}}&nbsp;&nbsp;&nbsp;&nbsp; Контрагент: <strong>{{cust_name}}</strong>
         </td>
     </tr>
 
     <tr style="font-weight: bolder;">
 
-        <th style="border: solid black 1px">Документ</th>
         <th style="border: solid black 1px">Дата</th>
 
 
-        <th style="border: solid black 1px">Приход</th>
-        <th align="right" style="border: solid black 1px">Расход</th>
-
+        <th align="right" style="border: solid black 1px">Поч.</th>
+        <th style="border: solid black 1px">Прих.</th>
+        <th align="right" style="border: solid black 1px">Витр.</th>
+        <th align="right" style="border: solid black 1px">Кін.</th>
 
     </tr>
     {{#_detail}}
@@ -39,7 +39,7 @@
     <tr style="font-weight: bolder;">
 
         <td align="right"></td>
-        <td align="right">Итого:</td>
+        <td align="right">Разом:</td>
 
 
         <td align="right">{{tin}}</td>

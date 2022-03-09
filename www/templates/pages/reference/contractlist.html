@@ -6,26 +6,26 @@
         <div class="row">
             <div class="col-12   col-xl-10">
                 <div zippy="contracttable">
-                    <h3>Договора </h3>
+                    <h3>Контракти </h3>
                     <div class="navbar nav">
 
                         <form zippy="filter" class="form-inline">
 
-                            <label for="searchkey">Поиск</label>
+                            <label for="searchkey">Пошук</label>
                             <input class="form-control mr-sm-2" type="text" zippy="searchkey">
                             <label for="searchcust">Контрагент</label>
                             <input placeholder="Начните вводить..." class="form-control mr-sm-2" zippy="searchcust"/>
 
 
-                            <label for="searchcomp">Компания</label>
+                            <label for="searchcomp">Компанiя</label>
                             <select zippy="searchcomp" class="form-control mr-sm-2">
-                                <option value="0">Не выбрана</option>
+                                <option value="0">Не вказана</option>
                             </select>
 
                             <div class="form-check">
 
                                 <input title="Показать неактуальные" class="form-check-input" type="checkbox" zippy="showdis">
-                                <label class="form-check-label mr-sm-3" for="showdis">Все</label>
+                                <label class="form-check-label mr-sm-3" for="showdis">Всi</label>
                             </div>
 
                             <input class="btn btn-outline-success  " type="submit" value="ОК">
@@ -39,15 +39,16 @@
                             <th>Срок</th>
                             <th>Контрагент</th>
 
-                            <th>Компания</th>
-                            <th>Ответственный</th>
+                            <th>Компанiя</th>
+                            <th>Вiдповiдальний</th>
 
 
-                            <th>К оплате</th>
+                            <th>До сплати</th>
                             <th></th>
                             <th></th>
                             <th></th>
                             <th></th>
+
 
 
                             <th></th>
@@ -62,15 +63,15 @@
                             <td zippy="dolg" class="text-right"></td>
 
 
+
                             <td zippy="shortdesc"></td>
                             <td><i zippy="hasnotes" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i>
                             </td>
-                            <td><a zippy="scanlink" title="Скачать скан"> <i class="fa fa-paperclip"></i> </a></td>
-                            <td><a zippy="show" title="Документы"><i class="fa fa-eye"></i> </a></td>
+                            <td><a zippy="scanlink" title="Зкачати скан"> <i class="fa fa-paperclip"></i> </a></td>
+                            <td><a zippy="show" title="Документи"><i class="fa fa-eye"></i> &nbsp;&nbsp;</a></td>
 
-
-                            <td><a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a>
-                                &nbsp;&nbsp;<a zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a></td>
+                            <td><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;
+                                <a zippy="delete" title="Видалити"><i class="fa fa-trash"></i></a></td>
                         </tr>
                     </table>
                     <div zippy="pag"></div>
@@ -89,26 +90,26 @@
                         <input required="required" class="form-control" zippy="editcontract_number"/>
                     </div>
                     <div class="form-group">
-                        <label for="editcreatedon">Дата начала</label>
+                        <label for="editcreatedon">Дата початку</label>
                         <input style="width: 120px;" required="required" class="form-control" zippy="editcreatedon"/>
                     </div>
                     <div class="form-group">
-                        <label for="editenddate">Дата окончания</label>
+                        <label for="editenddate">Дата закiнчення</label>
                         <input style="width: 120px;" required="required" class="form-control" zippy="editenddate"/>
                     </div>
                     <div class="form-group">
-                        <label required="required" for="editshortdesc">Краткое описание, назначение</label>
+                        <label required="required" for="editshortdesc">Короткий опис, призначення</label>
                         <input class="form-control" zippy="editshortdesc"/>
                     </div>
                     <div class="form-group">
-                        <label for="editdesc">Детальная информация</label>
+                        <label for="editdesc">Детальний опис</label>
                         <textarea style="height:200px" class="form-control" zippy="editdesc"></textarea>
                     </div>
 
 
                     <div class="form-check">
                         <input zippy="editdisabled" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="editdisabled">Закрыт</label>
+                        <label class="form-check-label" for="editdisabled">Закритий</label>
                     </div>
                 </div>
                 <div class="col-12 col-md-4 col-xl-3">
@@ -118,76 +119,83 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="editcomp">Компания</label>
+                        <label for="editcomp">Компанiя</label>
                         <select zippy="editcomp" class="form-control">
-                            <option value="0">Не выбрана</option>
+                            <option value="0">Не вказана</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="editctype">Тип  договора</label>
+                        <label for="editctype">Тип Угоди</label>
                         <select zippy="editctype" class="form-control  ">
-                            <option value="0">Не выбран</option>
-                            <option value="1">Договор  с  клиентом</option>
-                            <option value="2">Договор  с  поставщиком</option>
+                            <option value="0">Не вибрано</option>
+                            <option value="1">Угода з  клiентом</option>
+                            <option value="2">Угода з  постачальником</option>
                         </select>
                     </div>
+
                     <div class="form-group">
-                        <label for="editemp">Ответственный</label>
+                        <label for="editemp">Вiдповiдальний</label>
                         <select zippy="editemp" class="form-control  ">
-                            <option value="0">Не выбран</option>
+                            <option value="0">Не вказаний</option>
                         </select>
                     </div>
-
                     <div class="form-group">
 
-                        <label for="scan"> &nbsp; &nbsp;Скан документа</label>
+                        <label for="scan"> &nbsp; &nbsp;Скан документу</label>
 
                         <input class="form-control" type="file" zippy="scan">
 
                     </div>
-
+                    <div class="form-group">
+                        <label for="editpay">Форма оплати</label>
+                        <select zippy="editpay" class="form-control">
+                            <option value="0">Не вказана</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="col-12">
-                    <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  ">&nbsp;&nbsp;
-                    <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary  ">
+                    <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">&nbsp;&nbsp;
+                    <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary  ">
                 </div>
             </div>
         </form>
 
         <div zippy="docpan" class="row">
+
             <div class="col-12 ">  
                 <h5 zippy="cname"></h5>
-                <a zippy="back">К списку</a>
-            </div>    
-            <div class="col-12 col-md-8 col-xl-6 card">    
-                <h4>Документы</h4>
+                <a zippy="back">До списку</a>
+            </div>
+            <div class="col-12 col-md-8 col-xl-6">    
+                <h4>Документи</h4>                
                 <table class="table table-sm">
                     <tr>
                         <th>Тип</th>
                         <th>Номер</th>
                         <th>Дата</th>
-                        <th class="text-right">Сумма</th>
+                        <th class="text-right">Сума</th>
 
                     </tr>
+
                     <tr zippy="dtable">
                         <td zippy="dtype"></td>
                         <td zippy="dnum"></td>
-
                         <td zippy="ddate" class="text-nowrap"></td>
                         <td zippy="dsumma" class="text-right"></td>
+
                     </tr>
 
                 </table>
                 <div zippy="dpag"></div>
-            </div>
-            <div class="col-12 col-md-4 col-xl-3 card">  
+            </div>     
+            <div class="col-12 col-md-4 col-xl-3">  
                 <h4>Платежи</h4> 
                 <table class="table table-sm">
                     <tr>
-                        <th>Счет</th>
+                        <th>Рахунок</th>
                         <th>Дата</th>
-                        <th class="text-right">Сумма</th>
+                        <th class="text-right">Сума</th>
                         <th> </th>
                     </tr>
                     <tr zippy="ptable">
@@ -201,9 +209,10 @@
                 </table>
                 <div zippy="ppag"></div>    
             </div>
-
         </div>
 
+    </div>
 
-    </body>
+
+</body>
 </html>

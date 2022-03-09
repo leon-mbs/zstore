@@ -18,13 +18,10 @@ class Application extends \Zippy\WebApplication
         $path = '';
         $name = ltrim($name, '\\');
 
-        $lang = $_config['common']['lang'];
-
+       
         $templatepath = 'templates/';
 
-        if (strlen($lang) > 0 && $lang != 'ru') {
-            $templatepath = 'templates_' . $lang . '/';
-        }
+     
 
         $className = str_replace("\\", "/", ltrim($name, '\\'));
 
@@ -38,9 +35,7 @@ class Application extends \Zippy\WebApplication
             throw new \Exception('Invalid template path: ' . $path);
         }
         $template = @file_get_contents($path);
-
  
-
 
         return $template;
     }
