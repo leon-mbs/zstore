@@ -7,7 +7,7 @@
 global $_config;
 
 if (strpos($_SERVER['REQUEST_URI'], 'index.php') > 1) {
-    die('Сайт размещен не в  корневой папке');
+    die('Сайт розміщено не в кореневій папці');
 }
         
 try {
