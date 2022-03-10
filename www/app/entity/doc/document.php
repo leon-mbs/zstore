@@ -370,7 +370,7 @@ class Document extends \ZCL\DB\Entity
         $this->state = $state;
         $this->insertLog($state);
     
-    /*
+  
         if($this->state == self::STATE_NEW)          $this->priority = 100;
         if($this->state == self::STATE_CLOSED)       $this->priority = 1;
         if($this->state == self::STATE_EXECUTED)     $this->priority = 10;
@@ -387,7 +387,7 @@ class Document extends \ZCL\DB\Entity
         if($this->state == self::STATE_DELETED)      $this->priority = 2;
         if($this->state == self::STATE_FAIL)         $this->priority = 3;
         if($this->state == self::STATE_READYTOSHIP)  $this->priority = 50;
-        */
+      
     
         $this->save();
 

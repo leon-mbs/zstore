@@ -86,7 +86,7 @@ class DocList extends \App\Pages\Base
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
         $this->doclist->setCurrentPage($filter->page);
-        $this->doclist->setSorting('document_date desc,document_id desc', '');
+        $this->doclist->setSorting('priority desc,document_id desc', '');
         $doclist->Reload();
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
         if ($docid > 0) {
@@ -153,6 +153,7 @@ class DocList extends \App\Pages\Base
 
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
+       
         $doc = $doc->cast();
         $row->add(new Label('name', $doc->meta_desc));
         $row->add(new Label('number', $doc->document_number));
@@ -217,6 +218,7 @@ class DocList extends \App\Pages\Base
         if ($doc->document_id == $this->_doc->document_id) {
             $row->setAttribute('class', 'table-success');
         }
+          H::log("---");
     }
 
     public function onSort($sender) {
