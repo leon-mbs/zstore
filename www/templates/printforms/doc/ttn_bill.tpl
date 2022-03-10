@@ -7,7 +7,7 @@
         <td colspan="3">от {{date}}</td>
     </tr>
     <tr>
-        <td colspan="3"> Продавец:</td>
+        <td colspan="3"> Продавець:</td>
     </tr>
     <tr>
 
@@ -20,7 +20,7 @@
     </tr>
     {{#customer_name}}
     <tr>
-        <td colspan="3"> Покупатель:</td>
+        <td colspan="3"> Покупець</td>
     </tr>
     <tr>
         <td colspan="3"> {{customer_name}}</td>
@@ -29,7 +29,7 @@
     {{/customer_name}}
     {{#order}}
     <tr>
-        <td colspan="3"> Заказ:</td>
+        <td colspan="3"> Замовлення</td>
     </tr>
     <tr>
 
@@ -54,13 +54,13 @@
     </tr>
     {{/_detail}}
     <tr>
-        <td colspan="2" align="right">Всего:</td>
+        <td colspan="2" align="right">Всього:</td>
         <td align="right">{{total}}</td>
     </tr>
 
 
     <tr>
-        <td colspan="3"> Дата отправки</td>
+        <td colspan="3"> Дата відправки</td>
     </tr>
     <tr>
 
@@ -68,7 +68,7 @@
     </tr>
     {{#ship_number}}
     <tr>
-        <td colspan="3"> № декларации</td>
+        <td colspan="3"> № декларацii</td>
     </tr>
     <tr>
 

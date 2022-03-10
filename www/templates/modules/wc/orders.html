@@ -3,21 +3,20 @@
     </head>
     <body>
         <div class="row">
-            <div class="col-12 col-xl-10 shadow-sm      ">
+            <div class="col-12 col-xl-10 shadow-sm    bg-white ">
 
-                <h3>Импорт заказов</h3>
+                <h3>Імпорт замовлень</h3>
+                <a zippy="checkconn"><i class="fa fa fa-sync"></i> Перевiрити  з'єднання</a>
+ 
 
-                      <a zippy="checkconn"><i class="fa fa fa-sync"></i> Проверить cоединение</a>
-       
                 <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
 
                         <input onclick="$('#loader1').removeAttr('style')" type="submit" class=" mr-2 btn btn-outline-success  "
-                               value="Загрузить">           
-                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Заказы должны  быть  в  статусе Pending"></i>
+                               value="Завантажити">
+                         <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Замовлення  мають  бути в  статусi Pending"></i>
                   
-
                         <div id="loader1" style="display:none" class="spinner-border spinner-border-sm"></div>
                     </form>
                 </div>
@@ -30,9 +29,9 @@
                         <th>Номер</th>
                         <th>Дата</th>
 
-                        <th>Клиент</th>
-                        <th class="text-right">Сумма</th>
-                        <th> Комментарий</th>
+                        <th>Клієнт</th>
+                        <th class="text-right">Сума</th>
+                        <th> Коментар</th>
 
 
                     </tr>
@@ -51,15 +50,15 @@
 
                 </table>
                 <div class="navbar nav">
-                    <a zippy="importbtn" class="  btn btn-outline-success  ">Импортировать</a>
+                    <a zippy="importbtn" class="  btn btn-outline-success  ">Імпортувати</a>
 
                 </div>
             </div>
-            <div class="col-12 col-xl-10   shadow-sm    ">
+            <div class="col-12 col-xl-10   shadow-sm    bg-white">
 
-                <h3>Экспорт статусов в магазин</h3>
+                <h3>Експорт статусів в магазин</h3>
                 <div class="navbar nav">
-                    <a zippy="refreshbtn" class="  btn btn-outline-success  ">Обновить</a>
+                    <a zippy="refreshbtn" class="  btn btn-outline-success  ">Оновити</a>
 
                 </div>
                 <form zippy="updateform">
@@ -70,8 +69,8 @@
                             <th>WC Номер</th>
                             <th>Дата</th>
 
-                            <th>Клиент</th>
-                            <th class="text-right">Сумма</th>
+                            <th>Клієнт</th>
+                            <th class="text-right">Сума</th>
                             <th>Статус</th>
 
 
@@ -93,14 +92,14 @@
 
 
                     <div class="ml-2 form-group row  ">
-                        <label for="estatus">Статус в магазине </label>
+                        <label for="estatus">Статус в магазині </label>
 
                         <select class="  mr-2" zippy="estatus">
-                            <option value="0">Не выбран</option>
+                            <option value="0">Не обрано</option>
                         </select>
 
                         <input onclick="$('#loader3').removeAttr('style')" type="submit" class="  btn btn-outline-success  "
-                               value="Отправить">
+                               value="Відправити">
                         <div id="loader3" style="display:none" class="spinner-border spinner-border-sm"></div>
 
                     </div>

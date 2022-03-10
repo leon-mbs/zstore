@@ -1,31 +1,31 @@
 <html>
     <head>
-
         <link rel="stylesheet" type="text/css" href="/assets/js/fullcalendar/main.css"/>
 
-
+        <script language="javascript" src="/assets/js/moment/moment.min.js"></script>
+        <script language="javascript" src="/assets/js/moment/locale/ua.js"></script>
         <script language="javascript" src="/assets/js/fullcalendar/main.js"></script>
-        <script language="javascript" src="/assets/js/fullcalendar/locales/ru.js"></script>
+        <script language="javascript" src="/assets/js/fullcalendar/locales/ua.js"></script>
 
 
     </head>
     <body>
         <div class="row">
             <div class="col-12 col-lg-10">
-                <h3>Табель учета рабочего времени</h3>
+                <h3>Табель облiку робочого часу</h3>
                 <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
 
-                        <label for="from">С</label>
+                        <label for="from">З</label>
                         <input class="form-control mr-sm-2" style="width: 120px" type="text" zippy="from">
 
                         <label for="to">по</label>
                         <input class="form-control mr-sm-2" style="width: 120px" type="text" zippy="to">
 
 
-                        <label for="parea">Сотрудник</label>
+                        <label for="parea">Спiвробiтник</label>
                         <select class="form-control mr-sm-2" zippy="emp">
-                            <option value="0">Не выбран</option>
+                            <option value="0">Не вибраний</option>
                         </select>
 
                         <input type="submit" class="  btn btn-outline-success  " value="ОК">
@@ -37,9 +37,9 @@
                 <div zippy="tpanel">
 
 
-                    <a zippy="addnew" class="btn  btn-success">Добавить</a>
+                    <a zippy="addnew" class="btn  btn-success">Додати</a>
                     <div class="mt-1" style="font-size: 1.5rem">
-                        <a zippy="tabc"><span class="{{{tabcbadge}}}">  Календарь</span> </a> &nbsp;&nbsp;
+                        <a zippy="tabc"><span class="{{{tabcbadge}}}">  Календар</span> </a> &nbsp;&nbsp;
                         <a zippy="taba"><span class="{{{tababadge}}}">  Список   </span> </a> &nbsp;&nbsp;
                         <a zippy="tabs"><span class="{{{tabsbadge}}}">  Статистика   </span></a>
                     </div>
@@ -56,16 +56,16 @@
                                 <td zippy="lto" style="width:50px;"></td>
                                 <td style="width:50px;"><span zippy="ldur"></span></td>
                                 <td zippy="ltypename"></td>
-                                {{#usebranch}}    <td zippy="lbranch"></td>     {{/usebranch}}
+                                {{#usebranch}}     <td zippy="lbranch"></td>     {{/usebranch}}
                                 <td zippy="ldesc"></td>
 
                                 <td aling="center">
 
-                                    <a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a>
-                                    &nbsp;<a zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a>
+                                    <a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a>
+                                    &nbsp;<a zippy="delete" title="Видалити"><i class="fa fa-trash"></i></a>
                                 </td>
                             </tr>
-                        </table> 
+                        </table>
                     </div>
                     <div zippy="tstat">
                         <table class="table table-sm" style="width:30%">
@@ -85,19 +85,19 @@
         <div class="row mt-2">
             <div class="col-12 col-md-6 col-lg-4 ">
                 <form zippy="editform">
-                    <h4>Редактирование</h4>
+                    <h4>Редагування</h4>
                     <div class="form-group">
                         <label for="editdate">Дата</label>
                         <input required="required" class="form-control" zippy="editdate"/>
                     </div>
                     <div class="form-group">
-                        <label for="editfrom">С</label>
+                        <label for="editfrom">З</label>
                         <input required="required"   
                                class="form-control" zippy="editfrom"/>
                     </div>
                     <div class="form-group">
                         <label for="editto">По</label>
-                        <input required="required"   
+                        <input required="required"  
                                class="form-control" zippy="editto"/>
                     </div>
                     <div class="form-group">
@@ -107,16 +107,16 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="editbreak">Перерыв,мин</label>
+                        <label for="editbreak">Перерва, хв</label>
                         <input required="required" style="width:75px;" pattern="[0-9]+" class="form-control" zippy="editbreak"/>
                     </div>
                     <div class="form-group">
-                        <label for="editnote">Примечание</label>
+                        <label for="editnote">Примiтка</label>
                         <input class="form-control" zippy="editnote"/>
                     </div>
 
-                    <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary  ">
-                    <input type="submit" value="Сохранить" class="btn btn-primary  ">&nbsp;&nbsp;
+                    <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary  ">
+                    <input type="submit" value="Зберегти" class="btn btn-primary  ">&nbsp;&nbsp;
 
                 </form>
             </div>

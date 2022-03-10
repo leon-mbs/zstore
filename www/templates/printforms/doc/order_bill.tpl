@@ -1,13 +1,13 @@
-<table class="ctable"  border="0" cellpadding="1" cellspacing="0" {{{style}}}>
+<table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{style}}}>
     <tr>
-        <td colspan="3">Заказ {{document_number}}</td>
+        <td colspan="3">Замовлення {{document_number}}</td>
     </tr>
     <tr>
 
-        <td colspan="3">от {{date}}</td>
+        <td colspan="3">вiд {{date}}</td>
     </tr>
     <tr>
-        <td colspan="3"> Продавец:</td>
+        <td colspan="3"> Продавець:</td>
     </tr>
     <tr>
 
@@ -20,7 +20,7 @@
     </tr>
 
     <tr>
-        <td colspan="3"> Покупатель:</td>
+        <td colspan="3"> Покупець:</td>
     </tr>
     <tr>
         <td colspan="3"> {{customer_name}}</td>
@@ -34,7 +34,6 @@
     <tr>
         <td colspan="3">{{ship_address}}</td>
     </tr>
-
     {{#_detail}}
     <tr>
         <td colspan="3">{{tovar_name}}</td>
@@ -50,7 +49,7 @@
     </tr>
     {{/_detail}}
     <tr>
-        <td colspan="2" align="right">Всего:</td>
+        <td colspan="2" align="right">Всього:</td>
         <td align="right">{{total}}</td>
     </tr>
 

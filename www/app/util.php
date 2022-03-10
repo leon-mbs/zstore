@@ -121,21 +121,8 @@ class Util
         return $list;
     }
 
-    /**
-     * Выводит  сумму  прописью
-     *
-     * @param mixed $number
-     */
-    public static function money2str_ru($number) {
-
-        return money2str_ru($number, M2S_KOPS_MANDATORY + M2S_KOPS_DIGITS + M2S_KOPS_SHORT);
-    }
-
-//гривна на  русском    
-    public static function money2str_rugr($number) {
-
-        return money2str_rugr($number, M2S_KOPS_MANDATORY + M2S_KOPS_DIGITS + M2S_KOPS_SHORT);
-    }
+ 
+ 
 
     public static function money2str_ua($number) {
 

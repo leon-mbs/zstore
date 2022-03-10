@@ -9,39 +9,38 @@
         <link rel="stylesheet" type="text/css" href="/assets/js/fullcalendar/main.css"/>
 
         <script language="javascript" src="/assets/js/fullcalendar/main.js"></script>
-        <script language="javascript" src="/assets/js/fullcalendar/locales/ru.js"></script>
-
+        <script language="javascript" src="/assets/js/fullcalendar/locales/ua.js"></script>
 
 
     </head>
     <body>
         <div class="row">
             <div class="col-12  col-xl-10">
-                <h3>Журнал нарядов</h3>
+                <h3>Журнал нарядів</h3>
                 <div class="navbar nav">
                     <form zippy="filterform" class="form-inline">
 
 
-                        <label for="filterassignedto">Исполнитель</label>
+                        <label for="filterassignedto">Виконавець</label>
 
                         <select class="form-control  mr-sm-2" zippy="filterassignedto">
-                            <option value="0">Все</option>
+                            <option value="0">Усе</option>
                         </select>
-                        <label for="filterpa">Пр. участок</label>
+                        <label for="filterpa">Вир. ділянка</label>
 
                         <select class="form-control  mr-sm-2" zippy="filterpa">
-                            <option value="0">Все</option>
+                            <option value="0">Усе</option>
                         </select>
 
 
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="filterfinished">
-                            <label class="form-check-label mr-sm-3" for="filterfinished">Закрытые</label>
+                            <label class="form-check-label mr-sm-3" for="filterfinished">Закриті</label>
                         </div>
 
                         <button type="submit" class="btn btn-primary  ">ОК</button>
-                        &nbsp;<a title="Очистить фильтр" zippy="eraser"><i class="fa fa-eraser"></i></a>
+                        &nbsp;<a title="Очистити фільтр" zippy="eraser"><i class="fa fa-eraser"></i></a>
 
                     </form>
                 </div>
@@ -54,18 +53,17 @@
 
 
                 <div class="mt-1" style="font-size: 1.5rem">
-                    <a zippy="tabs"><span class="{{{tabsbadge}}}">  Список</span> </a> &nbsp;&nbsp;
-                    <a zippy="tabc"><span class="{{{tabcbadge}}}">  Календарь   </span> </a>
+                    <a zippy="tabs"><span class="{{{tabcbadge}}}">  Перелік</span> </a> &nbsp;&nbsp;
+                    <a zippy="tabc"><span class="{{{tababadge}}}">  Календар   </span> </a> &nbsp;&nbsp;
 
                 </div>
 
-
-                <div zippy="tasktab">
-                    <a href="/index.php?p=App/Pages/Doc/Task" class="btn btn-info mt-2 mb-3">Создать</a>
+                <div zippy="tasktab" class="tab-pane  active ">
+                    <a href="/index.php?p=App/Pages/Doc/Task" class="btn btn-info mt-2 mb-3">Створити</a>
 
                     <div class="row">
                         <div class="col-12    table-responsive">
-                            <a zippy="csv">Экспорт в Excel</a>
+                            <a zippy="csv">Експорт в Excel</a>
 
                             <table class="table   table-sm table-hover">
                                 <tr>
@@ -73,14 +71,14 @@
                                     <th>Номер</th>
 
 
-                                    <th>Начало</th>
+                                    <th>Початок</th>
 
                                     <th style="text-align: right;">Час.</th>
 
-                                    <th>Исполнитель</th>
-                                    <th>Работа</th>
+                                    <th>Виконавець</th>
+                                    <th>Робота</th>
                                     <th>Статус</th>
-                                    <th>Описание</th>
+                                    <th>Опис</th>
 
 
                                     <th style="width:75px;"></th>
@@ -101,8 +99,8 @@
                                     <td zippy="taskdesc"></td>
 
                                     <td>
-                                        <a zippy="taskshow" title="Просмотр"><i class="fa fa-eye"></i></a>
-                                        &nbsp;&nbsp; &nbsp;&nbsp; <a zippy="taskedit" title="Редактировать"><i class="fa fa-edit"></i></a>
+                                        <a zippy="taskshow" title="Перегляд"><i class="fa fa-eye"></i></a>
+                                        &nbsp; &nbsp; &nbsp; &nbsp;<a zippy="taskedit" title="Редагувати"><i class="fa fa-edit"></i></a>
 
                                     </td>
 
@@ -121,25 +119,23 @@
                             <div class="navbar nav">
                                 <form zippy="statusform" class="form-inline ">
                                     <button zippy="binprocess" type="submit" class="  btn btn-primary  mr-2 "><i
-                                            class="fas fa-wrench"></i> На выполнение
+                                            class="fas fa-wrench"></i> На виконання
                                     </button>
                                     <button zippy="bshifted" type="submit" class="  btn btn-warning  mr-2 "><i
-                                            class="fas fa-clock"></i> Отложить
+                                            class="fas fa-clock"></i> Відкласти
                                     </button>
                                     <button zippy="bclosed" type="submit" class="  btn btn-success  mr-2 "><i
-                                            class="fa fa-gavel"></i> Закончен
+                                            class="fa fa-gavel"></i> Закінчено
                                     </button>
                                     <button zippy="bitems" type="submit" class="  btn btn-secondary  mr-2 "><i
-                                            title="Списание  на производство  комплектующих  и материалов"
-                                            class="fa fa-cogs"></i> Расходные материалы
+                                            class="fa fa-cogs"></i> Витратні матеріали
                                     </button>
+
                                     <button zippy="bgoods" type="submit" class="  btn btn-secondary  mr-2 "><i
-                                            title="Оприходование  готовой продукции" class="fa fa-box"></i> Готовая
-                                        продукция
+                                            class="fa fa-box"></i> Готова продукція
                                     </button>
                                     <button zippy="bact" type="submit" class="  btn btn-secondary  mr-2 "><i
-                                            title="Акт выполненых работ для  заказчика" class="fa fa-tools"></i> Акт
-                                        выполненых работ
+                                            class="fa fa-tools"></i> Акт виконаних робіт
                                     </button>
 
 
@@ -154,7 +150,7 @@
                     </div>
 
                 </div> <!-- tasktab -->
-                <div zippy="caltab">
+                <div zippy="caltab" class="tab-pane    ">
 
                     <div zippy='calendar'></div>
 
@@ -164,5 +160,6 @@
 
             </div>
         </div>
+
     </body>
 </html>

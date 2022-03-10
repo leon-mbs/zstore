@@ -1,24 +1,24 @@
-<table class="ctable" border="0" cellpadding="2" cellspacing="0">
+<table class="ctable" border="0" class="ctable" cellpadding="2" cellspacing="0">
 
 
     <tr>
 
         <td align="center" colspan="4">
-            Период с {{datefrom}} по {{dateto}} <br> <br>
+            Період з{{datefrom}} по {{dateto}} <br> <br>
         </td>
     </tr>
     {{#_type1}}
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="4">
-            Закупки по товарам <br><br>
+            Закупівлі по товарах <br><br>
         </td>
     </tr>
     <tr style="font-weight: bolder;">
-        <th style="border: solid black 1px">Наименование</th>
+        <th style="border: solid black 1px">Найменування</th>
         <th style="border: solid black 1px">Код</th>
 
-        <th align="right" style="border: solid black 1px">Кол.</th>
-        <th align="right" style="border: solid black 1px">На сумму</th>
+        <th align="right" style="border: solid black 1px">Кіл.</th>
+        <th align="right" style="border: solid black 1px">На суму</th>
 
     </tr>
     {{#_detail}}
@@ -37,20 +37,20 @@
         <td> </td>
 
         <td  > </td>
-        <td align="right"><b>{{total}}</b></td>    </tr>      
+        <td align="right"><b>{{total}}</b></td>    </tr>   
 </table>
 {{/_type1}}
 {{#_type2}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="4">
-        Закупки по поставщикам <br> <br>
+        Закупівлі по постачальниках <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
-    <th colspan="2" style="border: solid black 1px">Наименование</th>
+    <th colspan="2" style="border: solid black 1px">Найменування</th>
 
 
-    <th align="right" style="border: solid black 1px;width:100px;">На сумму</th>
+    <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
     <th></th>
 </tr>
 {{#_detail}}
@@ -72,13 +72,13 @@
 {{#_type3}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="4">
-        Закупки по датам <br> <br>
+        Закупівлі по датах <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
     <th style="border: solid black 1px;width:120px;">Дата</th>
 
-    <th align="right" style="border: solid black 1px;width:100px;">На сумму</th>
+    <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
     <th></th>
     <th></th>
 
@@ -104,15 +104,15 @@
 {{#_type4}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="5">
-        Услуги и работы <br><br>
+         Послуги та роботи <br><br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
-    <th colspan="2" style="border: solid black 1px">Наименование</th>
+    <th colspan="2" style="border: solid black 1px">Найменування</th>
 
     
-    <th align="right" style="border: solid black 1px;width:60px;">Кол.</th>
-    <th align="right" style="border: solid black 1px;width:100px;">На сумму</th>
+    <th align="right" style="border: solid black 1px;width:60px;">Кіл.</th>
+    <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
     
  
 </tr>

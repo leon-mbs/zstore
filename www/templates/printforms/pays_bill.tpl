@@ -1,10 +1,10 @@
 <table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{printw}}}>
     <tr>
-        <td colspan="2"><b>Квитанция об оплате </b></td>
+        <td colspan="2"> <b>Квитанцiя про  оплату </b></td>
     </tr>
     <tr>
 
-        <td colspan="2">Основание {{document_number}}</td>
+        <td colspan="2">Пiдстава {{document_number}}</td>
     </tr>
     <tr>
 
@@ -19,7 +19,7 @@
 
 
     <tr>
-        <td colspan="2"><b>Оплаты:</b></td>
+        <td colspan="2">Оплати:</td>
     </tr>
     {{#plist}}
     <tr>
@@ -30,9 +30,10 @@
     {{/plist}}
 
     <tr>
-        <td  align="right"> <b> Всего:</b></td>
+        <td  align="right"> <b> Всього:</b></td>
         <td  align="right"><b> {{pall}}</b></td>
 
     </tr>
 
-</table><br>
+</table>
+<br>

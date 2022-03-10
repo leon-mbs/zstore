@@ -149,14 +149,15 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["showmodmenu"] = false;
         }
 
-        if ($this->_tvars["isadmins"]) {  //для  роли админов  видные все  разделы  меню
+        /*
+        if ($this->_tvars["isadmins"]) {  //для  роли админов  видны  все  разделы  меню
             $this->_tvars["showdocmenu"] = true;
             $this->_tvars["showrepmenu"] = true;
             $this->_tvars["showregmenu"] = true;
             $this->_tvars["showrefmenu"] = true;
             $this->_tvars["showsermenu"] = true;
             $this->_tvars["showmodmenu"] = true;
-        }
+        }   */
 
         //скрыть  боковое  меню
         $this->_tvars["hidesidebar"] = $user->hidesidebar == 1 ? 'hold-transition   sidebar-collapse' : 'hold-transition sidebar-mini sidebar-collapse';

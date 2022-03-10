@@ -6,10 +6,10 @@
 
         <div class="row ">
             <div class="col-12    col-md-6 col-lg-4 col-xl-3   ">
-                <h4>Настройка</h4>
+                <h4>Налаштування</h4>
                 <form zippy="shop" enctype="multipart/form-data">
                     <div class="form-group   ">
-                        <label  for="shopname">Название магазина</label>
+                        <label  for="shopname">Назва магазину</label>
                      
                             <input required="required" class="form-control " zippy="shopname"/>
                          
@@ -25,63 +25,63 @@
 
 
                     <div class="form-group    ">
-                        <label   for="shopdefpricetype">Тип цены </label>
+                        <label   for="shopdefpricetype">Тип цiни </label>
                       
                             <select class="form-control" zippy="shopdefpricetype">
                             </select>
                          
                     </div>
                     <div class="form-group   ">
-                        <label   for="shopordertype">Формировать  по  заказу</label>
+                        <label   for="shopordertype">Формувати  по  замовленню</label>
                       
                             <select class="form-control " zippy="shopordertype">
 
-                                <option value='0'>Обычный заказ</option>
-                                <option value='1'>Кассовый чек</option>
-                                <option value='2'>Заказ общепит</option> 
+                                <option value='0'>Звичайне замовлення</option>
+                                <option value='1'>Касовий чек</option>
+                                <option value='2'>Замовлення кафе</option> 
 
                             </select>
-                            <small>В кассовом  чеке нет  доставки.</small><br>
-                            <small>В общепите не показываются фильтры и отзывы. В доставке только адрес
-                                   в городе, заданом  в  настройках  общепита</small>
+                            <small>В касовому  чеку нема  доставки.</small><br>
+                            <small>В кафе не показуются  фiльтри та  вiдгуки. В доставцi тiльки адреса
+                                   в мiстi, заданому в  налаштуваннях кафе</small>
                        
                     </div>
                     {{#usebranch}}
                     <div class="form-group   ">
-                        <label   for="shopdefbranch">Филиал </label>
+                        <label   for="shopdefbranch">Фiлiя </label>
                         
                             <select class="form-control" zippy="shopdefbranch">
-                                <option value="0">Не выбран</option>
+                                <option value="0">Не вибрана</option>
                             </select>
-                            <small>Филиал,  с  которым  создаются документы</small>
+                            <small>Фiлiя , з  якою створюются  документи</small>
                       
                     </div>
                     {{/usebranch}}
                     <div class="form-group   ">
-                        <label   for="shopdefcust">Покупатель по умолчанию</label>
+                        <label   for="shopdefcust">Покупець за замовяанням</label>
                         
                             <input placeholder="Начните  вводить..." class="form-control  " zippy="shopdefcust">
 
-                            <small class="form-text text-muted">Условный контрагент от имени которого будут формироваться   заказы
-                                если не  указан  конкретный  контрагент</small>
+                            <small class="form-text text-muted">Умовний контрагент від імені якого будуть формуватися замовлення
+                                 якщо не вказано конкретний контрагент</small>
                         
                     </div>
 
                     <div class="form-group   ">
-                        <label   for="email">Email для обратной связи</label>
+                        <label   for="email">Email для зворотнього зв'язку</label>
                   
                             <input class="form-control " zippy="email"/>
                        
                     </div>
                     <div class="form-group   ">
-                        <label   for="currencyname">Денежная единица</label>
+                        <label   for="currencyname">Грошова одиниця</label>
           
                             <input class="form-control " zippy="currencyname"/>
                       
                     </div>
 
                   <div class="form-group   ">
-                        <label   for="phone">Телефон  для  заказов</label>
+                        <label   for="phone">Телефон  для  замовлень</label>
                         
                             <input class="form-control " zippy="phone"/>
                         
@@ -90,33 +90,33 @@
 
                     <div class="form-check">
                         <input zippy="usefilter" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="usefilter">Показывать  фильтр отбора </label>
+                        <label class="form-check-label" for="usefilter">Показувати фiльтр вiдбору </label>
 
                     </div>
                     <div class="form-check">
                         <input zippy="usefeedback" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="usefeedback">Показывать отзывы </label>
+                        <label class="form-check-label" for="usefeedback">Показувати  вiдгуки </label>
 
                     </div>
                     <div class="form-check">
                         <input zippy="createnewcust" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="createnewcust">Создавать нового контрагента при заказе </label>
-                        <br><small>Создавать  нового  контрагента по  номеру  телефона  или  email</small>
+                        <label class="form-check-label" for="createnewcust">Створювати нового контрагента при замовленні </label>
+                        <br><small>Створювати  нового  контрагента по  номеру  телефона  або  email</small>
                     </div>
                     <div class="form-check">
                         <input zippy="uselogin" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="uselogin">Вход в каталог через страницу логина </label>
-                        <br><small>Каталог недоступен для незалогиненого  пользователя</small>
+                        <label class="form-check-label" for="uselogin">Вхід в каталог через сторінку логінае </label>
+                        <br><small>Каталог недоступний для незалогіненого користувача</small>
                     </div>
                     <div class="form-check">
                         <input zippy="usemainpage" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="usemainpage">Выставить каталог  как  главную страницу </label>
-                        <br><small>Каталог будет  открываться  при  переходе  на  главную страницу  сайта. Переход  в  учетную  систему  по  адресу /store</small>
+                        <label class="form-check-label" for="usemainpage">Виставити каталог як головну сторінку </label>
+                        <br><small>Каталог буде відкриватися при переході на головну сторінку сайту. Перехід в облікову систему за адресою /store</small>
                     </div>
 
                     <div class="form-group  row">
                         <div class="col-sm-4">
-                            <button class="btn btn-primary" type="submit">Сохранить</button>
+                            <button class="btn btn-primary" type="submit">Зберегти</button>
                        
                         </div>
                     </div>
@@ -127,11 +127,11 @@
             <div class="col-12 col-md-6 col-lg-8     ">
               <div class="row">
                <div class="col-12 col-md-10   col-xl-8 " zippy="adminpan">
-                <h4>Администрирование</h4>
-                <a zippy="updatesitemap" class="btn btn-outline-info"> Обновить sitemap.xml</a>
+                <h4>Адмiнiстрування</h4>
+                <a zippy="updatesitemap" class="btn btn-outline-info"> Оновити sitemap.xml</a>
                
-                <h4>Пользовательские  страницы</h4>
-                <a class="btn btn-info" zippy="padd">Добавить</a>
+                <h4>Користувацькi сторiнки   </h4>
+                <a class="btn btn-info" zippy="padd">Додати</a>
                 <table class="table table-sm">
                    <tr zippy="plist">
                      <td zippy="ptitle"></td>
@@ -152,39 +152,39 @@
                  
                  <form zippy="pageform">
                   <input type="hidden" zippy="oldlink">
-                <h4>Редактирование страницы</h4>  
+                <h4>Редагування сторiнки</h4>  
                     <div class="form-group   ">
-                        <label for="pagetitle">Название    </label>
+                        <label for="pagetitle">Назва    </label>
                         <input required="required" style="width:300px;" zippy="pagetitle" class="form-control ">
                         </input>
-                    <small>Для отображения в  меню</small>
+                    <small>Для вiдображення в  меню</small>
                 </div> 
                   <div class="form-group   ">
-                        <label for="pagelink">Относительная ссылка    </label>
+                        <label for="pagelink">Вiдносне  посилання    </label>
                         <input pattern=[0-9a-z_]+ required="required" style="width:200px;" zippy="pagelink" class="form-control ">
                         </input>
-                        <small>Не включая  адрес сайта. Допускаются  только  латиница  и подчеркивание. Например  news  about_us  dostavka</small>
+                        <small>Не включаючи адресу сайту. Допускаются тiльки  латиничнi символи. Наприклад  news  about_us  dostavka</small>
                         
                     </div> 
                <div class="form-group   ">
-                        <label for="pageorder">Порядковый  номер    </label>
+                        <label for="pageorder">Порядковий  номер    </label>
                         <input pattern=[0-9]+ required="required" style="width:40px;" zippy="pageorder" class="form-control ">
                         </input>
-                        <small> Номер  порядка  вывода  в  меню</small>
+                        <small>Номер  порядку виводу  в  меню</small>
                         
                     </div> 
                     <div class="form-group   ">
-                        <label for="pagetext">Содержание  </label>
+                        <label for="pagetext">Змiст  </label>
                         <textarea zippy="pagetext" class="form-control ">
                         </textarea>
-                <small>Изображения должны  быть  как   можно меньше  размера.</small>
+                <small>Зображення повинні бути якомога меншого розміру.</small>
                         
                     </div>      
      
                   <div class="form-group   ">
 
-                        <a class="btn btn-outline-primary" zippy="pcancel">Отменить</a>
-                        <button class="btn btn-primary" type="submit">Сохранить</button>
+                        <a class="btn btn-outline-primary" zippy="pcancel">Скасувати</a>
+                        <button class="btn btn-primary" type="submit">Зберегти</button>
 
                     </div>
                 </form>      

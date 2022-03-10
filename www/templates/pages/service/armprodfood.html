@@ -11,14 +11,14 @@
                 </div>   
             </div>
             <div class="col-12 col-md-4 col-xl-3   " >
-             <i id="bell"  style="cursor:pointer"  onclick="onBell( )" title="Звуковое уведомление" class="fa fa-bell-slash text-secondary"></i>  
+             <i id="bell"  style="cursor:pointer"  onclick="onBell( )" title="Звукове повiдомлення" class="fa fa-bell-slash text-secondary"></i>  
             </div>
             
       
              <div class="w-100">
     {{={| |}=}}             
   <div  id="vapp" class="col-12 col-md-10 col-lg-8" >
-        <a onclick="updateItems()"   class="btn btn-info">Обновить</a>
+        <a onclick="updateItems()"   class="btn btn-info">Оновити</a>
         
         <table class="table table-striped">
     <tr v-for="item, index in itemlist">
@@ -29,8 +29,8 @@
         <td><a    v-on:click="onReady(item.document_id,item.item_id, index) " class="btn btn-success">Готово</a></td> 
     </tr>    
         </table>
-        <paginator></paginator>
-   
+        
+      
   </div> 
  {|={{ }}=|}  
             <script>
@@ -72,15 +72,14 @@
                             });
                 }
 
-    
-    var vapp = new Vue({
-      el: '#vapp',
-      data: {
-          itemlist:[]
+    var vapp= Vue.createApp({
+   
+    data() {
+        return {
+          itemlist: []
+        }
       }  ,
-     components: {
-            'paginator': httpVueLoader('/assets/js/vue/paginator.vue')
-        }, 
+    
         methods: {
              onReady( document_id,item_id, index) {
                   onBell()
@@ -93,7 +92,7 @@
            }
         }      
       
-    })      
+    }).mount('#vapp')       
 
 
       function updateItems(){

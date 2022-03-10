@@ -8,8 +8,8 @@
             </tr>
             {{#isap}}
             <tr  >
-                <td {{{fsize}}} > {{article}} &nbsp; &nbsp; </td>
-                <td align="right" {{{fsizep}}} >
+                <td {{{fsize}}} > {{article}} &nbsp; &nbsp;</td>
+               <td align="right" {{{fsizep}}} >
                   {{^action}}
                   <b  >{{price}}</b> 
                   {{/action}}
@@ -21,10 +21,10 @@
                    {{^iscolor}}
                     <b  >{{actionprice}}</b>  
                    {{/iscolor}}
-                   
+                  
                   {{/action}}
                 </td>
-                  
+                
             </tr>
             {{/isap}}
             <tr style="font-size:18px">

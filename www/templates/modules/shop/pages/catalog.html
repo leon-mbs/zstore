@@ -12,7 +12,7 @@
                 <ol class="breadcrumb" >
                     <li>
                         <a zippy="filterbtn" class="btn btn-success"    href="javascript:void(0);" data-toggle="modal"
-                           data-target="#modalfilter"><i class="fa fa-filter"></i> Фильтр</a>
+                           data-target="#modalfilter"><i class="fa fa-filter"></i> Фiльтр</a>
                     </li>
                 </ol>
                 {{/usefilter}}  
@@ -28,15 +28,15 @@
                         <form zippy="sortform" class="form-inline">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
-                                    <label class="input-group-text" for="sortorder">Сортировать</label>
+                                    <label class="input-group-text" for="sortorder">Сортувати</label>
                                 </div>
                                 <select class="custom-select form-control" zippy="sortorder">
-                                    <option value="-1">По наименованию</option>
-                                    <option value="0">По возрастанию цены</option>
-                                    <option value="1">По убыванию цены</option>
+                                    <option value="-1">По найменуванню</option>
+                                    <option value="0">По збiльшенню цiни</option>
+                                    <option value="1">По зменшенню цiни</option>
                                     <option value="2">По рейтингу</option>
-                                    <option value="3">По количеству отзывов</option>
-                                    <option value="4">По продажам</option>
+                                    <option value="3">По кiлькостi вiдгукiв</option>
+                                    <option value="4">По продажах</option>
                                 </select>
                             </div>
                         </form>
@@ -50,7 +50,7 @@
                         <div class="card card-custom-card">
 
                             <div class="ribbon-wrap" zippy="saction">
-                                <div class="ribbon bg-warning">Акция</div>
+                                <div class="ribbon bg-warning">Акцiя</div>
                             </div>
 
                             <a zippy="simage" data-toggle="lightbox" data-gallery="simage">
@@ -68,10 +68,10 @@
                                     </div> 
                                     {{/usefeedback}}   
 
-                                    <div colspan="2" class="mt-1" style="font-size:larger">
+                                    <div colspan="2" class="mt-1" style="font-size:larger;">
                                         <b zippy="sprice"></b>&nbsp; <b class="text-danger" zippy="sactionprice"></b> 
                                     </div> 
-                                    <a zippy="sbuy" class="btn btn-success btn-sm mt-2">В  корзину</a>
+                                    <a zippy="sbuy" class="btn btn-success btn-sm mt-2">До кошика</a>
                                 </div>
                             </div >
                         </div>
@@ -81,7 +81,7 @@
                     </div>
                 </div>
                 <div zippy="recentlyp">
-                    <h4 class="mb-3 mt-2">Недавно просмотренные</h4>
+                    <h4 class="mb-3 mt-2">Недавно переглянутi</h4>
                     <div class="row">
                         <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" zippy="rlist">
                             <div class="card h-100">
@@ -100,7 +100,7 @@
             <div class="modal-dialog  modal-sm">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Фильтр отбора</h5>
+                        <h5 class="modal-title">Фiльтр </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -119,7 +119,7 @@
                             </div>
 
                             <div class="mt-2"  >
-                                <input class="btn btn-info btn-sm  " type="submit" value="Применить">&nbsp;<a class="btn btn-outline-secondary  btn-sm " zippy="sclear">Сбросить</a>
+                                <input class="btn btn-info btn-sm  " type="submit" value="Застосувати">&nbsp;<a class="btn btn-outline-secondary  btn-sm " zippy="sclear">Скинути</a>
                             </div>
                         </form>
                     </div>

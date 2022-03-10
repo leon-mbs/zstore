@@ -4,20 +4,20 @@
     </tr>
     {{#fiscalnumber}}
     <tr>
-        <td colspan="3">Фискальный чек</td>
+        <td colspan="3">Фiскальний чек</td>
     </tr>
     <tr>
         <td colspan="3">ФН чека {{fiscalnumber}}</td>
     </tr>
     {{/fiscalnumber}}
-    {{#fiscalnumberpos}}
+   {{#fiscalnumberpos}}
     <tr>
         <td colspan="3">ФН РРО {{fiscalnumberpos}}</td>
     </tr>
     {{/fiscalnumberpos}}
     <tr>
 
-        <td colspan="3">от {{time}}</td>
+        <td colspan="3">від {{time}}</td>
     </tr>
     <tr>
 
@@ -25,7 +25,7 @@
     </tr>
     <tr>
 
-        <td colspan="3">ИНН {{inn}}</td>
+        <td colspan="3">ІПН {{inn}}</td>
     </tr>
     {{#shopname}}
     <tr>
@@ -42,7 +42,7 @@
     </tr>
     {{#customer_name}}
     <tr>
-        <td colspan="3"> Покупатель:</td>
+        <td colspan="3"> Покупець:</td>
     </tr>
     <tr>
         <td colspan="3"> {{customer_name}}</td>
@@ -51,10 +51,10 @@
     {{/customer_name}}
 
     <tr>
-        <td colspan="3">Терминал: {{pos_name}}</td>
+        <td colspan="3">Термінал: {{pos_name}}</td>
     </tr>
     <tr>
-        <td colspan="3">Кассир:</td>
+        <td colspan="3">Касир:</td>
     </tr>
     <tr>
         <td colspan="3"> {{username}}</td>
@@ -75,19 +75,19 @@
     </tr>
     {{/_detail}}
     <tr>
-        <td colspan="2" align="right">Всего:</td>
+        <td colspan="2" align="right">Всього:</td>
         <td align="right">{{total}}</td>
     </tr>
 
     {{^prepaid}}
     {{#isdisc}}
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">Скидка:</td>
+        <td colspan="2" align="right">Знижка:</td>
         <td align="right">{{paydisc}}</td>
     </tr>
     {{/isdisc}}
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">К оплате:</td>
+        <td colspan="2" align="right">До сплати:</td>
         <td align="right">{{payamount}}</td>
     </tr>
     <tr style="font-weight: bolder;">
@@ -95,7 +95,7 @@
         <td align="right">{{payed}}</td>
     </tr>
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">Сдача:</td>
+        <td colspan="2" align="right">Решта:</td>
         <td align="right">{{exchange}}</td>
     </tr>
     {{/prepaid}}

@@ -1,25 +1,25 @@
-<table class="ctable" border="0" cellpadding="2" cellspacing="0">
+<table class="ctable" border="0" class="ctable" cellpadding="2" cellspacing="0">
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="3">
-            Товары в пути на {{date}}
+            Товари в дорозі на {{date}}
         </td>
     </tr>
     {{#cust}}
     <tr>
 
         <td colspan="3">
-            <b> Поставщик:</b> {{customer_name}}
+            <b> Постачальник:</b> {{customer_name}}
         </td>
     </tr>
     {{/cust}}
     <tr style="font-weight: bolder;">
 
 
-        <th style="border: solid black 1px"> Наименование</th>
+        <th style="border: solid black 1px"> Найменування</th>
 
-        <th style="border: solid black 1px">Ед.</th>
-        <th align="right" style="border: solid black 1px">Кол.</th>
+        <th style="border: solid black 1px">Од.</th>
+        <th align="right" style="border: solid black 1px">Кіл.</th>
 
 
     </tr>
@@ -40,7 +40,7 @@
     <tr>
 
         <td colspan="3">
-            <b> На сумму:</b> {{total}}
+            <b> На суму:</b> {{total}}
         </td>
     </tr>
 

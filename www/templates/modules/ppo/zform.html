@@ -4,33 +4,34 @@
         <div class="row">
             <div class="col-12 col-md-6 col-xl-4"  >
 
-                <h3>Закрытие смены</h3>
-                <small>Страница для ручного закрытия смены</small>
+                <h3>Закриття змiни</h3>
+                <small>Сторiнка для ручного закриття змiни</small>
                 <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
 
-                        <label for="pos">POS терминал</label>
+                        <label for="pos">POS термiнал</label>
                         <select zippy="pos" class="form-control mr-sm-2">
-                            <option value="0">Не выбран</option>
+                            <option value="0">Не вибраний</option>
                         </select>
 
-                        <input type="submit" class="  btn btn-outline-success  " value="Обновить">
+                        <input type="submit" class="  btn btn-outline-success  " value="Оновити">
 
                     </form>
 
                 </div>
    </div>
    </div>
-      <div class="row">
+   
+    <div class="row">
             <div class="col-12 col-md-6 col-xl-4"  >
-                
+  
                 <form zippy="stat">
                     <div class="form-group  ">
-                        <label for="nal">Наличные</label>
+                        <label for="nal">Готiвка</label>
                         <input style="width:100px" zippy="nal" pattern="[0-9\.]+" class="form-control  ">
                     </div>
                     <div class="form-group  ">
-                        <label for="bnal">Банковская карта</label>
+                        <label for="bnal">Банкiвська картка</label>
                         <input style="width:100px" zippy="bnal" pattern="[0-9\.]+" class="form-control  ">
                     </div>
                     <div class="form-group  ">
@@ -38,43 +39,44 @@
                         <input style="width:100px" zippy="credit" pattern="[0-9\.]+" class="form-control  ">
                     </div>
                     <div class="form-group  ">
-                        <label for="prepaid">Предоплата</label>
+                        <label for="prepaid">Передплата</label>
                         <input style="width:100px" zippy="prepaid" pattern="[0-9\.]+" class="form-control  ">
                     </div>
                     <div class="form-group  ">
-                        <label for="cnt">Количество чеков</label>
+                        <label for="cnt">Кiлькiсть чекiв</label>
                         <input style="width:100px" zippy="cnt" pattern="[0-9]+" class="form-control  ">
                     </div>
 
                     <div class="form-group  ">
-                        <label for="retnal">Возврат, наличные</label>
+                        <label for="retnal">Повернення, готiвка</label>
                         <input style="width:100px" zippy="retnal" pattern="[0-9\.]+" class="form-control  ">
                     </div>
                     <div class="form-group  ">
-                        <label for="retbnal">Возврат, банковская карта</label>
+                        <label for="retbnal">Повернення, банкiвська картка</label>
                         <input style="width:100px" zippy="retbnal" pattern="[0-9\.]+" class="form-control  ">
                     </div>
                     <div class="form-group  ">
-                        <label for="retcnt">Возврат, количество чеков</label>
+                        <label for="retcnt">Повернення, кiлькiсть чекiв</label>
                         <input style="width:100px" zippy="retcnt" pattern="[0-9]+" class="form-control  ">
                     </div>
 
 
-                    <input type="submit" class="  btn btn-outline-success  " value="Закрыть">  <input zippy="onlyshift" type="checkbox"> Не посылать  z-отчет
+                    <input type="submit" class="  btn btn-outline-success  " value="Закрити">     <input zippy="onlyshift" type="checkbox"> Не посилати  z-звiт
 
                 </form>
             </div>
+            
             <div class="col-12 col-md-6 col-lg-8  "  >
-                Документы  в  z-отчете 
+                Документи  в  z-звiтi
                 <table class="table table-sm">
                     <tr>
                         <th>Документ</th>
                         <th class="text-right">Нал</th>
                         <th class="text-right">Безнал</th>
                         <th class="text-right">Кредит</th>
-                        <th class="text-right">Предоплата</th>
-                        <th class="text-right">Возвр. нал</th>
-                        <th class="text-right">Возвр. безнал</th>
+                        <th class="text-right">Передплата</th>
+                        <th class="text-right">Пов. нал</th>
+                        <th class="text-right">Пов. безнал</th>
                         <th> </th>
                         <th> </th>
                     </tr>
@@ -86,20 +88,21 @@
                         <td zippy="amount3" class="text-right"> </td>
                         <td zippy="amount0r" class="text-right"> </td>
                         <td zippy="amount1r" class="text-right"> </td>
-                        <td> <a zippy="fisc"> Фискализировать </a> </td>
+                        <td> <a zippy="fisc"> Фискалiзувати </a> </td>
                         <td> &nbsp;&nbsp;<a zippy="del"> <i class="fa fa-trash"></i> </a> </td>
                     </tr>
                     
                 </table>
                 
-           </div>
+            </div>
+                
+          
             
 
         </div>
-      
       <script>  
             function check_del() {
-                return confirm("Удалить  документ?")
+                return confirm("Видалити  документ?")
             }
         </script>
     </body>

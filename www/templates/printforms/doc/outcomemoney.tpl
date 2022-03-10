@@ -1,24 +1,24 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
     <tr>
         <td colspan="4" align="center">
-            <b> Расходный ордер № {{document_number}} от {{date}}</b> <br>
+            <b> Видатковий ордер № {{document_number}} від {{date}}</b> <br>
         </td>
     </tr>
 
 
     <tr>
         <td colspan="4">
-            <b>Со счета:</b> {{from}}
+            <b>З рахунку:</b> {{from}}
         </td>
     </tr>
     <tr>
         <td colspan="4">
-            <b>Сумма:</b> {{amount}}
+            <b>Сума:</b> {{amount}}
         </td>
     </tr>
     <tr>
         <td colspan="4">
-            <b>Тип расхода:</b> {{type}}
+            <b>Тип витрати:</b> {{type}}
         </td>
     </tr>
     {{#customer}}
@@ -31,14 +31,14 @@
     {{#contract}}
     <tr>
         <td colspan="4">
-            <b>Договор:</b> {{contract}}
+            <b>Угодв:</b> {{contract}}
         </td>
     </tr>
     {{/contract}}
     {{#emp}}
     <tr>
         <td colspan="4">
-            <b>Сотрудник:</b> {{emp}}
+            <b>Спiвробiтник:</b> {{emp}}
         </td>
     </tr>
     {{/emp}}

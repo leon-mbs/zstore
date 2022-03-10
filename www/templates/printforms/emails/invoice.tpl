@@ -1,10 +1,10 @@
-Здраствуйте, {{customer_name}}
+Добрий день, {{customer_name}}
+<br>
+<br>
+Рахунок на оплату {{number}}  вiд {{date}} на суму {{amount}}.
+<br>
+<br>
 
-<br>
-<br>
-Во вложении счёт на оплату {{number}}   от {{date}} на сумму {{amount}}.
-<br>
-<br>
-С уважением,
+З повагою,
 {{firm_name}}
 
