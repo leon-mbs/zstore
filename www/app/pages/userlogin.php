@@ -42,7 +42,7 @@ class UserLogin extends \Zippy\Html\WebPage
         if (strlen($v['version']) > 0) {
             $c = (int)str_replace(".", "", str_replace("v", "", $version));
             $n = (int)str_replace(".", "", str_replace("v", "", $v['version']));
-            if($n == 5100) $n=512;
+
             if ($n > $c) {
                 $this->_tvars['isnewversion'] = true;
             }
