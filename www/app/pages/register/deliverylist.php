@@ -184,7 +184,7 @@ class DeliveryList extends \App\Pages\Base
         $where .= " and meta_name='OrderFood'   ";
 
 
-        $this->_doclist = Document::find($where, 'document_id desc');
+        $this->_doclist = Document::find($where, 'priority desc, document_id desc');
         $this->orderlist->Reload();
         $this->statuspan->setVisible(false);
 
