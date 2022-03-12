@@ -60,15 +60,29 @@ class Items extends \App\Pages\Base
     public function filterOnSubmit($sender) {
         $this->_items = array();
         $modules = System::getOptions("modules");
-
+        $products = array();
         try {
-          $data = Helper::make_request("GET","/api/v1/products/list",null);
+           $last_id=0;
+           while(true){
+               $data = Helper::make_request("GET","/api/v1/products/list?last_id=".$last_id,null);
+               if(count($data['products'])==0) {
+                   break;
+               }
+               foreach ($data['products'] as $product) {
+                  $products[]=$product; 
+                  $last_id = $product['id']  ;
+               }            
+           } 
+
+          
+          
+          
         } catch(\Exception $ee) {
             System::setErrorMsg($ee->getMessage());
             return;
         }      
       $sku = array();
-      foreach ($data['products'] as $product) {
+      foreach ($products as $product) {
 
             if (strlen($product['sku']) == 0) {
                 continue;
@@ -164,16 +178,30 @@ class Items extends \App\Pages\Base
             $elist[$item->item_code] = H::fqty($qty);
         }
 
-        $data = json_encode($elist);
-
+       
+        $products = array();
         try {
-          $data = Helper::make_request("GET","/api/v1/products/list",null);
+           $last_id=0;
+           while(true){
+               $data = Helper::make_request("GET","/api/v1/products/list?last_id=".$last_id,null);
+               if(count($data['products'])==0) {
+                   break;
+               }
+               foreach ($data['products'] as $product) {
+                  $products[]=$product; 
+                  $last_id = $product['id']  ;
+               }            
+           } 
+
+          
+          
+          
         } catch(\Exception $ee) {
             System::setErrorMsg($ee->getMessage());
             return;
-        }      
+        }       
       $sku = array();
-      foreach ($data['products'] as $product) {
+      foreach ($products as $product) {
 
             if (strlen($product['sku']) == 0) {
                 continue;
@@ -220,16 +248,29 @@ class Items extends \App\Pages\Base
             $elist[$item->item_code] = \App\Helper::fa($item->getPrice($modules['pupricetype']));
         }
 
-        $data = json_encode($elist);
-
+        $products = array();
         try {
-          $data = Helper::make_request("GET","/api/v1/products/list",null);
+           $last_id=0;
+           while(true){
+               $data = Helper::make_request("GET","/api/v1/products/list?last_id=".$last_id,null);
+               if(count($data['products'])==0) {
+                   break;
+               }
+               foreach ($data['products'] as $product) {
+                  $products[]=$product; 
+                  $last_id = $product['id']  ;
+               }            
+           } 
+
+          
+          
+          
         } catch(\Exception $ee) {
             System::setErrorMsg($ee->getMessage());
             return;
-        }      
+        }     
       $sku = array();
-      foreach ($data['products'] as $product) {
+      foreach ($products as $product) {
 
             if (strlen($product['sku']) == 0) {
                 continue;
@@ -270,18 +311,32 @@ class Items extends \App\Pages\Base
            
         
         $elist = array();
+        $products = array();
         try {
-          $data = Helper::make_request("GET","/api/v1/products/list",null);
+           $last_id=0;
+           while(true){
+               $data = Helper::make_request("GET","/api/v1/products/list?last_id=".$last_id,null);
+               if(count($data['products'])==0) {
+                   break;
+               }
+               foreach ($data['products'] as $product) {
+                  $products[]=$product; 
+                  $last_id = $product['id']  ;
+               }            
+           } 
+
+          
+          
+          
         } catch(\Exception $ee) {
             System::setErrorMsg($ee->getMessage());
             return;
-        }      
+        }     
       
-       
-    
+     
         //  $this->setInfo($json);
         $i = 0;
-        foreach ($data['products'] as $product) {
+        foreach ($products as $product) {
 
             if (strlen($product['sku']) == 0) {
                 continue;
