@@ -13,14 +13,10 @@ class Base extends \Zippy\Html\WebPage
 {
 
     public $branch_id = 0;
-    public $lang      = 'ru';
-
+    
     public function __construct($params = null) {
         global $_config;
-         $this->lang = 'ru';
-        if (strlen($_config['common']['lang']) > 0) {
-            $this->lang = $_config['common']['lang'] ;
-        }
+ 
 
         \Zippy\Html\WebPage::__construct();
 

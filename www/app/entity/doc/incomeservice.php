@@ -86,7 +86,7 @@ class IncomeService extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ВУ-000000';
+        return 'ВП-000000';
     }
 
  

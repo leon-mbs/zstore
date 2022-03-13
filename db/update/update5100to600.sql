@@ -78,3 +78,8 @@ SELECT
     WHERE ((`e`.`customer_id` = `customers`.`customer_id`)
     AND (`e`.`eventdate` >= NOW()))) AS `ecnt`
 FROM `customers`;
+
+
+
+UPDATE documents SET  priority = 1  WHERE  state =9;
+UPDATE documents SET  priority = 10  WHERE  state =5;

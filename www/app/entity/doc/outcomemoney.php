@@ -56,7 +56,7 @@ class OutcomeMoney extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'РКО-000000';
+        return 'ВКО-000000';
     }
 
 }
