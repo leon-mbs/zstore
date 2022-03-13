@@ -83,11 +83,11 @@ class Export extends \App\Pages\Base
         $header = array();
         $data = array();
 
-        $header['A1'] = "Наименование";
+        $header['A1'] = "Найменування";
         $header['B1'] = "Телефон";
         $header['C1'] = "Email";
-        $header['D1'] = "Город";
-        $header['E1'] = "Адрес";
+        $header['D1'] = "Місто";
+        $header['E1'] = "Адреса";
         $root="<root>";
         $i = 1;
         foreach ($list as $item) {
@@ -136,17 +136,17 @@ class Export extends \App\Pages\Base
         $header = array();
         $data = array();
 
-        $header['A1'] = "Наименование";
-        $header['B1'] = "Ед.";
-        $header['C1'] = "Группа";
+        $header['A1'] = "Найменуванння";
+        $header['B1'] = "Од.";
+        $header['C1'] = "Група";
         $header['D1'] = "Бренд";
         $header['E1'] = "Артикул";
         $header['F1'] = "Штрих код";
-        $header['G1'] = "Цена";
+        $header['G1'] = "Ціна";
         
         if ($t == 1) {
-            $header['H1'] = "Ячейка";
-            $header['I1'] = "Кол.";
+            $header['H1'] = "Комірка";
+            $header['I1'] = "Кіл.";
         }
 
         $root="<root>";

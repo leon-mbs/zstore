@@ -93,7 +93,7 @@ class ProdReceipt extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ОП-000000';
+        return 'ОВ-000000';
     }
 
     public function getRelationBased() {

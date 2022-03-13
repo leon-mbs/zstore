@@ -137,7 +137,7 @@ class OrderFood extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ЗО-000000';
+        return 'ЗК-000000';
     }
 
     public function supportedExport() {

@@ -211,7 +211,7 @@ class GoodsIssue extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'РН-000000';
+        return 'ВН-000000';
     }
 
     public function generatePosReport() {

@@ -7,7 +7,7 @@ use App\Entity\Stock;
 use App\Helper as H;
 
 /**
- * Класс-сущность  Инвентаризация    склада
+ * Класс-сущность  Инвентаризация    склада    
  *
  */
 class Inventory extends Document
@@ -140,7 +140,7 @@ class Inventory extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ИН-000000';
+        return 'ІН-000000';
     }
 
 }

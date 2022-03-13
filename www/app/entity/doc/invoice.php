@@ -122,7 +122,7 @@ class Invoice extends \App\Entity\Doc\Document
     }
 
     protected function getNumberTemplate() {
-        return 'СФ-000000';
+        return 'РФ-000000';
     }
 
     public function getRelationBased() {
