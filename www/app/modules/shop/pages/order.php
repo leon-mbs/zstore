@@ -195,6 +195,7 @@ class Order extends Base
                 'phone'         => $phone,
                 'ship_address'  => $address,
                 'ship_name'     => $name,
+                'shoporder'     => 1,
                 'total'         => $amount
             );
             $order->packDetails('detaildata', $itlist);

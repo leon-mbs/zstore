@@ -4,6 +4,7 @@ namespace App\Modules\Shop\Pages;
 
 use App\Application as App;
 use App\Entity\User;
+use App\Entity\Customer;
 use App\Helper;
 use App\System;
 use Zippy\Html\Form\TextInput as TextInput;
@@ -15,7 +16,7 @@ class UserLogin extends \Zippy\Html\WebPage
         parent::__construct();
 
         $form = new \Zippy\Html\Form\Form('loginform');
-        $form->add(new TextInput('userlogin'));
+        $form->add(new TextInput('userphone'));
         $form->add(new TextInput('userpassword'));
         $form->add(new \Zippy\Html\Form\CheckBox('remember'));
         $form->onSubmit($this, 'onsubmit');
@@ -28,58 +29,42 @@ class UserLogin extends \Zippy\Html\WebPage
         global $logger, $_config;
 
         $this->setError('');
-        $login = $sender->userlogin->getText();
+        $phone = $sender->userphone->getText();
         $password = $sender->userpassword->getText();
-        if ($login == '') {
-
-            $this->setError('enterlogin');
-        } else {
-            if ($password == '') {
-
-                $this->setError('enterpassword');
-            }
-        }
-
-
-        if (strlen($login) > 0 && strlen($password) > 0) {
-
-            $user = Helper::login($login, $password);
-
-            if ($user instanceof User) {
-
-                if (strpos($user->modules, 'shop') === false && $user->rolename != 'admins') {
-                    System::setErrorMsg('invalidlogin');
-                    App::RedirectHome();
-                    return;
-                }
-
-                $user->lastlogin = time();
-                $user->save();
-
-                System::setUser($user);
-                $_SESSION['user_id'] = $user->user_id; //для  использования  вне  Application
-                $_SESSION['userlogin'] = $user->userlogin; //для  использования  вне  Application
-                //App::$app->getResponse()->toBack();
-                if ($this->loginform->remember->isChecked()) {
-
-                    setcookie("remember", $user->user_id . '_' . md5($user->user_id . $_config['common']['salt']), time() + 60 * 60 * 24 * 30);
-                }
-
-                App::RedirectHome();
-            } else {
-
-                $this->setError('invalidlogin');
-            }
-        }
-
+        $phone = \App\Util::handlePhone($phone);
         $sender->userpassword->setText('');
+        
+        if (  strlen($phone) != Helper::PhoneL()) {
+            $this->setError("tel10", Helper::PhoneL());
+            return;
+        }
+        $c = Customer::getByPhone($phone);
+        if (  $c == null) {
+            $this->setError("invalidlogin" );
+            return;
+        }
+        if ( strlen($password)==0 ||  $c->passw != $password) {
+            $this->setError("enterpassword" );
+            return;
+        }
+
+        System::setCustomer($c->customer_id)  ;
+        System::getSession()->custname = $c->customer_name;
+        if ($sender->remember->isChecked()) {
+
+               setcookie("remembercust", $c->customer_id . '_' . md5($c->customer_id . $_config['common']['salt']), time() + 60 * 60 * 24 * 30);
+        }
+        App::Redirect("\\App\\Modules\\Shop\\Pages\\Main",0);
+
+        
     }
 
     public function beforeRequest() {
         parent::beforeRequest();
 
-        if (System::getUser()->user_id > 0) {
-            App::RedirectHome();
+        if (System::getCustomer()  > 0) {
+          App::Redirect("\\App\\Modules\\Shop\\Pages\\Main",0);
+
         }
     }
 

@@ -2,10 +2,11 @@
 
 namespace App\Modules\Shop\Pages;
 
-use App\Application as App;
-use App\Helper;
-use App\System;
+use \App\Application as App;
+use \App\Helper;
+use \App\System;
 use \App\Modules\Shop\Entity\Product;
+use \Zippy\Html\Link\ClickLink;
 
 class Base extends \Zippy\Html\WebPage
 {
@@ -19,16 +20,40 @@ class Base extends \Zippy\Html\WebPage
         if (!is_array($shop)) {
             $shop = array();
         }
-        $user = System::getUser();
+        $customer_id =   System::getCustomer();
+        
+        
+        if ($_COOKIE['remembercust'] && $customer_id == 0) {
+            $arr = explode('_', $_COOKIE['remembercust']);
+            $_config = parse_ini_file(_ROOT . 'config/config.ini', true);
+            if ($arr[0] > 0 && $arr[1] === md5($arr[0] . $_config['common']['salt'])) {
+                $customer = \App\Entity\Customer::load($arr[0]);
+                 \App\System::setCustomer($customer->customer_id)  ;
+                 \App\System::getSession()->custname = $customer->customer_name;
+            
+            }
+
+            if ($customer instanceof \App\Entity\User) {
+                \App\Session::getSession()->clean();
+
+                \App\System::setUser($user);
+        
+            }
+        }        
+        
         if ($shop["uselogin"] == 1) {
-            if ($user->user_id == 0) {
+            if ($customer_id == 0) {
                 App::Redirect("\\App\\Modules\\Shop\\Pages\\Userlogin");
                 return;
             }
         }
 
 
-        //  $this->_tvars["islogined"] = $user->user_id > 0;
+        $this->_tvars["islogined"] = $customer_id > 0;
+ 
+        $this->_tvars["custname"] = System::getSession()->custname;
+        
+        
         $this->_tvars["currencyname"] = $shop["currencyname"];
         $this->_tvars["basketcnt"] = false;
         $this->_tvars["comparecnt"] = false;
@@ -42,7 +67,8 @@ class Base extends \Zippy\Html\WebPage
 
         $this->op = System::getOptions("shop");
 
-
+        $this->add(new ClickLink('logout', $this, 'LogoutClick'));
+ 
         $this->add(new \Zippy\Html\Link\BookmarkableLink('logo', "/"))->setVisible(strlen($this->op['logo']) > 0);
         $this->logo->setValue($this->op['logo']);
         $this->_tvars["shopname"] = $this->op['shopname'];
@@ -156,4 +182,11 @@ class Base extends \Zippy\Html\WebPage
         \App\Application::$app->setReloadPage();
     }
 
+    public function LogoutClick($sender) {
+        System::setCustomer(0);
+        App::Redirect("\\App\\Modules\\Shop\\Pages\\Main",0);
+       
+    }
+    
+    
 }
