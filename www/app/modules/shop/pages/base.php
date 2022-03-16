@@ -33,12 +33,7 @@ class Base extends \Zippy\Html\WebPage
             
             }
 
-            if ($customer instanceof \App\Entity\User) {
-                \App\Session::getSession()->clean();
-
-                \App\System::setUser($user);
-        
-            }
+           
         }        
         
         if ($shop["uselogin"] == 1) {

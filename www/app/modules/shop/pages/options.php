@@ -35,7 +35,7 @@ class Options extends \App\Pages\Base
         $this->add(new Form('shop'))->onSubmit($this, 'saveShopOnClick');
 
         $this->shop->add(new DropDownChoice('shopordertype', array(), 0));
-        $this->shop->add(new AutocompleteTextInput('shopdefcust'))->onText($this, 'OnAutoCustomer');
+        
 
         $this->shop->add(new DropDownChoice('shopdefpricetype', \App\Entity\Item::getPriceTypeList()));
         $this->shop->add(new DropDownChoice('shopdefbranch', \App\Entity\Branch::getList()));
@@ -48,8 +48,7 @@ class Options extends \App\Pages\Base
         $this->shop->add(new CheckBox('usefilter'));
         $this->shop->add(new CheckBox('usefeedback'));
         $this->shop->add(new CheckBox('usemainpage'));
-        $this->shop->add(new CheckBox('createnewcust'));
-          
+           
         
         
         
@@ -80,14 +79,12 @@ class Options extends \App\Pages\Base
         }   
 
         $this->shop->shopdefbranch->setValue($shop['defbranch']);
-        $this->shop->shopdefcust->setKey($shop['defcust']);
-        $this->shop->shopdefcust->setText($shop['defcustname']);
         $this->shop->shopordertype->setValue($shop['ordertype']);
         $this->shop->shopdefpricetype->setValue($shop['defpricetype']);
         $this->shop->currencyname->setText($shop['currencyname']);
         $this->shop->uselogin->setChecked($shop['uselogin']);
         $this->shop->usefilter->setChecked($shop['usefilter']);
-        $this->shop->createnewcust->setChecked($shop['createnewcust']);
+        
         $this->shop->usefeedback->setChecked($shop['usefeedback']);
         $this->shop->usemainpage->setChecked($shop['usemainpage']);
         $this->shop->shopname->setText($shop['shopname']);
@@ -105,8 +102,6 @@ class Options extends \App\Pages\Base
             $shop = array();
         }
 
-        $shop['defcust'] = $this->shop->shopdefcust->getKey();
-        $shop['defcustname'] = $this->shop->shopdefcust->getText();
 
         $shop['defbranch'] = $this->shop->shopdefbranch->getValue();
         $shop['ordertype'] = $this->shop->shopordertype->getValue();
@@ -117,7 +112,7 @@ class Options extends \App\Pages\Base
         $shop['phone'] = $this->shop->phone->getText();
         $shop['uselogin'] = $this->shop->uselogin->isChecked() ? 1 : 0;
         $shop['usefilter'] = $this->shop->usefilter->isChecked() ? 1 : 0;
-        $shop['createnewcust'] = $this->shop->createnewcust->isChecked() ? 1 : 0;
+        
         $shop['usefeedback'] = $this->shop->usefeedback->isChecked() ? 1 : 0;
         $shop['usemainpage'] = $this->shop->usemainpage->isChecked() ? 1 : 0;
 
@@ -165,9 +160,7 @@ class Options extends \App\Pages\Base
     }
 
  
-    public function OnAutoCustomer($sender) {
-        return \App\Entity\Customer::getList($sender->getText(), 1);
-    }
+   
     public function plistOnRow($row) {
         $p = $row->getDataItem();
         $row->add(new Label("ptitle",$p->title));

@@ -4,6 +4,7 @@ namespace App\Modules\Shop\Pages;
 
 use App\Application as App;
 use App\Entity\Doc\Document;
+use App\Entity\Customer;
 use App\Modules\Shop\Basket;
 use App\System;
 use Zippy\Html\Form\DropDownChoice;
@@ -48,6 +49,14 @@ class Order extends Base
         $form->add(new TextArea('notes'));
         $form->onSubmit($this, 'OnSave');
 
+        $cid = System::getCustomer() ;
+        if($cid > 0) {
+            $c =  Customer::load($cid);
+            $form->phone = $c->phone;
+            $form->email = $c->email;
+            $form->address = $c->address;
+        }        
+        
         $this->OnDelivery($form->delivery);
 
     }
@@ -119,28 +128,11 @@ class Order extends Base
             $this->setError("enteraddress");
             return;
         }
-        if (($delivery == 2 || $delivery == 3) && strlen($phone) == 0) {
-
-            $this->setError("enterteldeliv");
-            return;
-        }
+  
 
 
-        if ($this->_tvars["isfood"] == true) {
-
-            if (strlen($phone) == 0) {
-
-                $this->setError("entertelemail");
-                return;
-            }
-        } else {
-            if (strlen($phone) == 0 && strlen($email) == 0) {
-
-                $this->setError("entertelemail");
-                return;
-            }
-        }
-        if (strlen($phone) > 0 && strlen($phone) != \App\Helper::PhoneL()) {
+ 
+        if (  strlen($phone) != \App\Helper::PhoneL()) {
             $this->setError("tel10", \App\Helper::PhoneL());
             return;
         }
@@ -200,31 +192,29 @@ class Order extends Base
             );
             $order->packDetails('detaildata', $itlist);
 
-            $cust = \App\Entity\Customer::getByEmail($email);
-            if ($cust instanceof \App\Entity\Customer) {
-                $order->customer_id = $cust->customer_id;
+            $cid = System::getCustomer() ;
+            if($cid > 0) {
+                $order->customer_id = $cid;
             }
-            $cust = \App\Entity\Customer::getByPhone($phone);
-            if ($cust instanceof \App\Entity\Customer) {
-                $order->customer_id = $cust->customer_id;
-            }
-
-            if ($order->customer_id == 0) {
-                $cust = \App\Entity\Customer::load($op["defcust"]);
+            else {
+                $cust =  Customer::getByPhone($phone);
                 if ($cust instanceof \App\Entity\Customer) {
                     $order->customer_id = $cust->customer_id;
                 }
+                
+            }
 
-                if ($shop['createnewcust'] == 1) {
-
-                    $c = new \App\Entity\Customer();
-                    $c->customer_name = $name;
-                    $c->email = $email;
-                    $c->phone = $phone;
-                    $c->type == \App\Entity\Customer::TYPE_BAYER;
-                    $c->save();
-                    $order->customer_id = $c->customer_id; 
-                }
+            if ($order->customer_id == 0) {
+           
+                $c = new  Customer();
+                $c->customer_name = $name;
+                $c->email = $email;
+                $c->phone = $phone;
+                $c->address = $address;
+                $c->type ==  Customer::TYPE_BAYER;
+                $c->save();
+                $order->customer_id = $c->customer_id; 
+                 
             }
             $order->headerdata['pricetype'] = $shop["defpricetype"];
             $order->headerdata['contact'] = $name . ', ' . $phone;
