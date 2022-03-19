@@ -29,7 +29,8 @@ class Document extends \ZCL\DB\Entity
     const STATE_FINISHED    = 18; // Закончен
     const STATE_APPROVED    = 19;      //  Готов к выполнению
     const STATE_READYTOSHIP = 20; // готов к отправке   
-
+    const STATE_WP          = 21; // ждет оплату
+ 
     // типы  экспорта
     const EX_WORD  = 1; //  Word
     const EX_EXCEL = 2;    //  Excel
@@ -387,6 +388,7 @@ class Document extends \ZCL\DB\Entity
         if($this->state == self::STATE_DELETED)      $this->priority = 2;
         if($this->state == self::STATE_FAIL)         $this->priority = 3;
         if($this->state == self::STATE_READYTOSHIP)  $this->priority = 50;
+        if($this->state == self::STATE_WP)           $this->priority = 90;
       
     
         $this->save();
@@ -453,6 +455,8 @@ class Document extends \ZCL\DB\Entity
                 return Helper::l('st_inprocess');
             case Document::STATE_READYTOSHIP:
                 return Helper::l('st_rdshipment');
+            case Document::STATE_WP:
+                return Helper::l('st_wp');
 
             default:
                 return Helper::l('st_unknow');

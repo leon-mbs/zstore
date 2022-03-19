@@ -33,6 +33,7 @@ class Order extends Base
         $this->OnUpdate($this);
         $form = $this->add(new Form('orderform'));
         $form->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np'] == 1)))->onChange($this, 'OnDelivery');
+        $form->add(new DropDownChoice('payment', array( ) ,0 )) ;
 
         if ($this->_tvars["isfood"]) {
             $form->delivery->setValue(Document::DEL_BOY);
