@@ -8,20 +8,33 @@ use App\Entity\Customer;
 use App\Helper;
 use App\System;
 use Zippy\Html\Form\TextInput as TextInput;
+use Zippy\Html\Link\ClickLink;
 
 class UserLogin extends \Zippy\Html\WebPage
 {
 
     public function __construct() {
         parent::__construct();
-
+   
         $form = new \Zippy\Html\Form\Form('loginform');
         $form->add(new TextInput('userphone'));
         $form->add(new TextInput('userpassword'));
         $form->add(new \Zippy\Html\Form\CheckBox('remember'));
+        $form->add(new ClickLink('recall',$this,'onRecall'));
+        $form->add(new ClickLink('signup',$this,'onSignup'));
         $form->onSubmit($this, 'onsubmit');
 
         $this->add($form);
+
+        $form = new \Zippy\Html\Form\Form('recallform');
+        $form->setVisible(false);
+        $this->add($form);
+
+        $form = new \Zippy\Html\Form\Form('signinform');
+        $form->setVisible(false);
+        $this->add($form);
+ 
+ 
         $this->setError('');
     }
 
@@ -72,6 +85,19 @@ class UserLogin extends \Zippy\Html\WebPage
 
 
         $this->_tvars['alerterror'] = $msg;
+    }
+    
+    public function onRecall($sender) {
+
+        $this->loginform->setVisible(false) ;
+        $this->recallform->setVisible(true) ;
+    }
+    
+    public function onSignup($sender) {
+         $this->loginform->setVisible(false) ;
+        $this->signinform->setVisible(true) ;
+
+
     }
 
 }

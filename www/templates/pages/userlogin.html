@@ -48,21 +48,15 @@
                 <div class="card-body login-card-body">
 
                     <form zippy="loginform">
-                        <div class="input-group mb-3">
-                            <input zippy="userlogin" required="required" class="form-control" type="text" placeholder="Логін">
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <span class="fas fa-user"></span>
-                                </div>
-                            </div>
+                        <div class="form-group  ">
+                            <label for="userlogin">Логін</label>
+                            <input zippy="userlogin" required="required" class="form-control"  >
+                           
                         </div>
-                        <div class="input-group mb-3">
-                            <input zippy="userpassword" required="required" type="password" class="form-control"    placeholder="Пароль">
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <span class="fas fa-lock"></span>
-                                </div>
-                            </div>
+                        <div class="form-group  ">
+                          <label for="userpassword">Пароль</label>
+                          <input zippy="userpassword" required="required" type="password" class="form-control"     >
+                         
                         </div>
                         {{#capcha}}
                         <div class="input-group mb-3">

@@ -79,7 +79,7 @@ class DocList extends \App\Pages\Base
         $this->add(new SortLink("sortdate", "document_id", $this, "onSort"));
         $this->add(new SortLink("sortcust", "customer_name", $this, "onSort"));
         $this->add(new SortLink("sortamount", "amount", $this, "onSort"));
-        $this->add(new SortLink("sortstatus", "state", $this, "onSort"));
+        $this->add(new SortLink("sortid", "document_id", $this, "onSort"));
 
         $doclist = $this->add(new DataView('doclist', new DocDataSource(), $this, 'doclistOnRow'));
 
@@ -155,6 +155,7 @@ class DocList extends \App\Pages\Base
         $doc = $row->getDataItem();
        
         $doc = $doc->cast();
+        $row->add(new Label('id', $doc->document_id));
         $row->add(new Label('name', $doc->meta_desc));
         $row->add(new Label('number', $doc->document_number));
 
@@ -230,7 +231,7 @@ class DocList extends \App\Pages\Base
         $this->sortdate->Reset();
         $this->sortcust->Reset();
         $this->sortamount->Reset();
-        $this->sortstatus->Reset();
+        $this->sortid->Reset();
 
         $this->doclist->setSorting($sortfield, $sortdir);
 
@@ -515,9 +516,9 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
 
         if (strlen($sn) > 1) {
             // игнорируем другие поля
-            $sn = $conn->qstr('%' . $sn . '%');
+           
 
-            $where = "   document_number like  {$sn}    ";
+            $where = "   document_number like ".$conn->qstr('%' . $sn . '%')." or document_id =   ".$conn->qstr( $sn );
         }
 
 

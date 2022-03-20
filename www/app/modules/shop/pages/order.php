@@ -33,7 +33,7 @@ class Order extends Base
         $this->OnUpdate($this);
         $form = $this->add(new Form('orderform'));
         $form->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np'] == 1)))->onChange($this, 'OnDelivery');
-        $form->add(new DropDownChoice('payment', array( ) ,0 )) ;
+        
 
         if ($this->_tvars["isfood"]) {
             $form->delivery->setValue(Document::DEL_BOY);
@@ -53,9 +53,9 @@ class Order extends Base
         $cid = System::getCustomer() ;
         if($cid > 0) {
             $c =  Customer::load($cid);
-            $form->phone = $c->phone;
-            $form->email = $c->email;
-            $form->address = $c->address;
+            $form->phone->setText($c->phone) ;
+            $form->email->setText($c->email)  ;
+            $form->address->setText($c->address)  ;
         }        
         
         $this->OnDelivery($form->delivery);
@@ -117,6 +117,7 @@ class Order extends Base
         $phone = trim($this->orderform->phone->getText());
         $name = trim($this->orderform->name->getText());
         $delivery = $this->orderform->delivery->getValue();
+        
         $address = $this->orderform->address->getValue();
 
         if ($delivery == 0) {
@@ -232,7 +233,9 @@ class Order extends Base
             
             $order->save();
             $order->updateStatus(Document::STATE_NEW);
-            if ($shop['ordertype'] == 1) {  //Кассовый чек
+            $order->updateStatus(Document::STATE_WP);
+               
+            if ($shop['ordertype'] == 1  ) {  //Кассовый чек
                 $order->updateStatus(Document::STATE_EXECUTED);
             }
 
@@ -246,13 +249,14 @@ class Order extends Base
 
                 $n->save();
             }
+         
 
 
             $this->setSuccess("shopneworder", $order->document_number);
 
-            if (strlen($phone) > 0) {
-                \App\Entity\Subscribe::sendSMS($phone, \App\Helper::l("shopyoursorder", $order->document_number));
-            }
+            
+            \App\Entity\Subscribe::sendSMS($phone, \App\Helper::l("shopyoursorder", $order->document_id));
+             
         } catch(\Exception $ee) {
             $this->setError($ee->getMessage());
             return;
