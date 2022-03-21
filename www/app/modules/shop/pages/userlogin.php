@@ -27,17 +27,69 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->add($form);
 
         $form = new \Zippy\Html\Form\Form('recallform');
+        $form->add(new TextInput('rcuserphone'));
         $form->setVisible(false);
+        $form->onSubmit($this, 'onrcsubmit');
         $this->add($form);
 
         $form = new \Zippy\Html\Form\Form('signinform');
         $form->setVisible(false);
+        $form->add(new TextInput('suserphone'));
+        $form->add(new TextInput('sname'));
+        $form->add(new TextInput('suserpassword'));
+        $form->add(new TextInput('sconfirm'));
+        $form->onSubmit($this, 'onsisubmit');
         $this->add($form);
  
  
-        $this->setError('');
+        $this->setInfo('');
     }
 
+    public function onrcsubmit($sender) {
+        $phone = $sender->rcuserphone->getText();
+        if (  strlen($phone) != Helper::PhoneL()) {
+            $this->setError("tel10", Helper::PhoneL());
+            return;
+        }       
+        $c = Customer::getByPhone($phone);
+        if (  $c == null) {
+            $this->setError("phonenotfound" );
+            return;
+        } 
+        $p= substr(base64_encode(md5(time())),0,8);
+        $c->passw = $p;
+        $c->save();
+        \App\Entity\Subscribe::sendSMS($phone, \App\Helper::l("recoverypass", $p));
+        $this->setSuccess("passsent")  ;
+        $this->loginform->setVisible(true) ;
+        $this->recallform->setVisible(false) ;
+       
+    }
+    
+    public function onsisubmit($sender) {
+        $phone = $sender->suserphone->getText();
+        $name = $sender->sname->getText();
+        if (  strlen($phone) != Helper::PhoneL()) {
+            $this->setError("tel10", Helper::PhoneL());
+            return;
+        }       
+        $c = Customer::getByPhone($phone);
+        if (  $c != null) {
+            $this->setError("phonefound" );
+            return;
+        }   
+        $c = new  Customer();
+        $c->customer_name = $name;
+        
+        $c->phone = $phone;
+      
+        $c->type ==  Customer::TYPE_BAYER;
+        $c->save();
+        $this->loginform->setVisible(true) ;
+        $this->signinform->setVisible(false) ;
+                   
+    }        
+        
     public function onsubmit($sender) {
         global $logger, $_config;
 
@@ -53,7 +105,7 @@ class UserLogin extends \Zippy\Html\WebPage
         }
         $c = Customer::getByPhone($phone);
         if (  $c == null) {
-            $this->setError("invalidlogin" );
+            $this->setError("phonenotfound" );
             return;
         }
         if ( strlen($password)==0 ||  $c->passw != $password) {
@@ -81,10 +133,16 @@ class UserLogin extends \Zippy\Html\WebPage
         }
     }
 
-    public function setError($msg) {
-
+    public function setError($msg,$p) {
+        $msg = Helper::l($msg,$p) ;
 
         $this->_tvars['alerterror'] = $msg;
+    }
+   public function setSuccess($msg) {
+
+        $msg = Helper::l($msg ) ;
+
+        $this->_tvars['alertsuccess'] = $msg;
     }
     
     public function onRecall($sender) {
