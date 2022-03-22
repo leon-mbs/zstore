@@ -222,7 +222,7 @@ class Catalog extends Base
         $row->add(new TextInput('srated'))->setText($item->getRating());
         $row->add(new Label('scomments'))->setText(\App\Helper::l("shopfeedbaks", $item->comments));
         $row->add(new ClickLink('sbuy', $this, 'OnBuy'));
-        if ($item->getQuantity($options['defstore']) > 0) {
+        if ($item->getQuantity() > 0) {
 
             $row->sbuy->setValue(\App\Helper::l('tobay'));
         } else {

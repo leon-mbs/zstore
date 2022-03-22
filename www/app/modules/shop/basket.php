@@ -44,6 +44,10 @@ class Basket implements \Zippy\Interfaces\DataSource
         return count($this->list) == 0;
     }
 
+    public function Empty() {
+        return $this->list = array();
+    }
+
     // реализация  DataSource
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
