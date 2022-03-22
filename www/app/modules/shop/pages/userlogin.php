@@ -42,7 +42,8 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->add($form);
  
  
-        $this->setInfo('');
+        $this->setError('');
+        $this->setSuccess('');
     }
 
     public function onrcsubmit($sender) {
@@ -69,8 +70,18 @@ class UserLogin extends \Zippy\Html\WebPage
     public function onsisubmit($sender) {
         $phone = $sender->suserphone->getText();
         $name = $sender->sname->getText();
+        $pass = $sender->suserpassword->getText();
+        $conf = $sender->sconfirm->getText();
         if (  strlen($phone) != Helper::PhoneL()) {
             $this->setError("tel10", Helper::PhoneL());
+            return;
+        }       
+        if (  strlen($pass) ==0  ) {
+            $this->setError("enterpassword") ;
+            return;
+        }       
+        if (  $pass != $conf) {
+            $this->setError("invalidconfirm") ;
             return;
         }       
         $c = Customer::getByPhone($phone);
@@ -82,6 +93,7 @@ class UserLogin extends \Zippy\Html\WebPage
         $c->customer_name = $name;
         
         $c->phone = $phone;
+        $c->passw = $pass;
       
         $c->type ==  Customer::TYPE_BAYER;
         $c->save();
@@ -133,12 +145,13 @@ class UserLogin extends \Zippy\Html\WebPage
         }
     }
 
-    public function setError($msg,$p) {
+    public function setError($msg,$p=null) {
         $msg = Helper::l($msg,$p) ;
 
         $this->_tvars['alerterror'] = $msg;
     }
-   public function setSuccess($msg) {
+  
+    public function setSuccess($msg) {
 
         $msg = Helper::l($msg ) ;
 
