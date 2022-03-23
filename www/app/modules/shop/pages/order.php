@@ -14,12 +14,15 @@ use Zippy\Html\Form\TextInput;
 use Zippy\Html\Form\Date;
 use Zippy\Html\Image;
 use Zippy\Html\Label;
+use Zippy\Html\Panel;
+use Zippy\Html\Link\ClickLink;
 
 //страница формирования заказа  пользователя
 class Order extends Base
 {
 
     public $sum = 0;
+    public $orderid = 0;
     public $basketlist;
 
     public function __construct() {
@@ -31,6 +34,7 @@ class Order extends Base
         $form->add(new \Zippy\Html\DataList\DataView('pitem', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, 'basketlist')), $this, 'OnAddRow'))->Reload();
         $form->add(new Label('summa', new \Zippy\Binding\PropertyBinding($this, 'sum')));
         $this->OnUpdate($this);
+        
         $form = $this->add(new Form('orderform'));
         $form->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np'] == 1)))->onChange($this, 'OnDelivery');
         
@@ -45,7 +49,8 @@ class Order extends Base
 
         $form->add(new TextInput('email'));
         $form->add(new TextInput('phone'));
-        $form->add(new TextInput('name'));
+        $form->add(new TextInput('firstname'));
+        $form->add(new TextInput('lastname'));
         $form->add(new TextArea('address'))->setVisible(false);
         $form->add(new TextArea('notes'));
         $form->onSubmit($this, 'OnSave');
@@ -57,6 +62,9 @@ class Order extends Base
             $form->email->setText($c->email)  ;
             $form->address->setText($c->address)  ;
         }        
+        
+        $this->add(new Panel('preview'))->setVisible(false);     
+        $this->preview->add(new  ClickLink("pay",$this,"onPay"))  ;
         
         $this->OnDelivery($form->delivery);
 
@@ -92,6 +100,7 @@ class Order extends Base
         
     }
 
+    
     public function OnDelete($sender) {
         $item_id = $sender->owner->getDataItem()->item_id;
         Basket::getBasket()->deleteProduct($item_id);
@@ -115,7 +124,8 @@ class Order extends Base
         $time = trim($this->orderform->deltime->getDateTime($time));
         $email = trim($this->orderform->email->getText());
         $phone = trim($this->orderform->phone->getText());
-        $name = trim($this->orderform->name->getText());
+        $firstname = trim($this->orderform->firstname->getText());
+        $lastname = trim($this->orderform->lastname->getText());
         $delivery = $this->orderform->delivery->getValue();
         
         $address = $this->orderform->address->getValue();
@@ -209,7 +219,9 @@ class Order extends Base
             if ($order->customer_id == 0) {
            
                 $c = new  Customer();
-                $c->customer_name = $name;
+                $c->firstname = $firstname;
+                $c->lastname= $lastname;
+                $c->customer_name = $firstname.' '.$lastname;
                 $c->email = $email;
                 $c->phone = $phone;
                 $c->address = $address;
@@ -232,9 +244,9 @@ class Order extends Base
             }
             
             $order->save();
+            $this->orderid = $order->document_id;
             $order->updateStatus(Document::STATE_NEW);
-            $order->updateStatus(Document::STATE_WP);
-               
+                
             if ($shop['ordertype'] == 1  ) {  //Кассовый чек
                 $order->updateStatus(Document::STATE_EXECUTED);
             }
@@ -252,7 +264,7 @@ class Order extends Base
          
 
 
-            $this->setSuccess("shopneworder", $order->document_number);
+         //   $this->setSuccess("shopneworder", $order->document_number);
 
             
             \App\Entity\Subscribe::sendSMS($phone, \App\Helper::l("shopyoursorder", $order->document_id));
@@ -269,8 +281,9 @@ class Order extends Base
 
         $this->orderform->setVisible(false);
         $this->listform->setVisible(false);
+        $this->preview->setVisible(true);
 
-        App::RedirectURI("/shop");
+        
     }
 
     public function OnAddRow(\Zippy\Html\DataList\DataRow $datarow) {
@@ -283,4 +296,8 @@ class Order extends Base
         $datarow->add(new Image('photo', "/loadshopimage.php?id={$item->image_id}&t=t"));
     }
 
+    public function onPay($sender) {
+        
+    }
+    
 }

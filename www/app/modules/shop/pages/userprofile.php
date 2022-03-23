@@ -35,7 +35,8 @@ class UserProfile extends Base
         $form->onSubmit($this, 'onsubmit');
         $form->add(new TextInput('email', $this->c->email));
         $form->add(new TextInput('phone', $this->c->phone));
-        $form->add(new TextInput('name', $this->c->customer_name));
+        $form->add(new TextInput('firstname', $this->c->firstname));
+        $form->add(new TextInput('lastname', $this->c->lastname));
         $form->add(new TextArea('address', $this->c->address));
         $this->add($form); 
  
@@ -56,7 +57,9 @@ class UserProfile extends Base
         $this->c->email = $sender->email->getText();
         $this->c->phone = $sender->phone->getText();
         $this->c->address = $sender->address->getText();
-        $this->c->customer_name = $sender->name->getText();
+        $this->c->firstname = $sender->firstname->getText();
+        $this->c->lastname = $sender->lastname->getText();
+        $this->c->customer_name = $this->c->firstname.' '.$this->c->lastname;
         if (strlen($this->c->phone) > 0 && strlen($this->c->phone) != H::PhoneL()) {
             $this->setError("tel10", H::PhoneL());
             return;

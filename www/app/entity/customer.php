@@ -50,6 +50,8 @@ class Customer extends \ZCL\DB\Entity
         $this->detail .= "<pricetype>{$this->pricetype}</pricetype>";
 
         $this->detail .= "<holding_name><![CDATA[{$this->holding_name}]]></holding_name>";
+        $this->detail .= "<firstname><![CDATA[{$this->firstname}]]></firstname>";
+        $this->detail .= "<lastname><![CDATA[{$this->lastname}]]></lastname>";
         $this->detail .= "<address><![CDATA[{$this->address}]]></address>";
         $this->detail .= "<comment><![CDATA[{$this->comment}]]></comment>";
         $this->detail .= "</detail>";
@@ -78,6 +80,8 @@ class Customer extends \ZCL\DB\Entity
         $this->comment = (string)($xml->comment[0]);
         $this->viber = (string)($xml->viber[0]);
         $this->edrpou = (string)($xml->edrpou[0]);
+        $this->firstname = (string)($xml->firstname[0]);
+        $this->lastname = (string)($xml->lastname[0]);
 
         $this->createdon = strtotime($this->createdon);
 
