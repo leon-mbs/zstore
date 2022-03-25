@@ -16,7 +16,11 @@ use Zippy\Html\Image;
 use Zippy\Html\Label;
 use Zippy\Html\Panel;
 use Zippy\Html\Link\ClickLink;
-
+use WayForPay\SDK\Collection\ProductCollection;
+use WayForPay\SDK\Credential\AccountSecretTestCredential;
+use WayForPay\SDK\Domain\Client;
+use WayForPay\SDK\Domain\Product;
+use WayForPay\SDK\Wizard\PurchaseWizard;
 //страница формирования заказа  пользователя
 class Order extends Base
 {
@@ -35,8 +39,10 @@ class Order extends Base
         $form->add(new Label('summa', new \Zippy\Binding\PropertyBinding($this, 'sum')));
         $this->OnUpdate($this);
         
+        
         $form = $this->add(new Form('orderform'));
         $form->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np'] == 1)))->onChange($this, 'OnDelivery');
+        $form->add(new DropDownChoice('payment', array(),0)) ;
         
 
         if ($this->_tvars["isfood"]) {
@@ -61,13 +67,42 @@ class Order extends Base
             $form->phone->setText($c->phone) ;
             $form->email->setText($c->email)  ;
             $form->address->setText($c->address)  ;
+            $form->firstname->setText($c->firstname)  ;
+            $form->lastname->setText($c->lastname)  ;
         }        
         
         $this->add(new Panel('preview'))->setVisible(false);     
-        $this->preview->add(new  ClickLink("pay",$this,"onPay"))  ;
+        $this->preview->add(new Panel('ppayment'))->setVisible(false);
         
         $this->OnDelivery($form->delivery);
 
+        
+$credential = new AccountSecretTestCredential();
+//$credential = new AccountSecretCredential('account', 'secret');
+
+$widget = PurchaseWizard::get($credential)
+    ->setOrderReference(sha1(microtime(true)))
+    ->setAmount(0.01)
+    ->setCurrency('UAH')
+    ->setLanguage('UA')
+    ->setOrderDate(new \DateTime())
+    ->setMerchantDomainName('https://google.com')
+    ->setClient(new Client(
+        'John',
+        'Dou',
+        null,
+        '+12025550152' 
+         
+    ))
+    ->setProducts(new ProductCollection(array(
+        new Product('test', 0.01, 1)
+    )))
+ //   ->setReturnUrl('http://local.zstore/index.php?p=/App/Modules/Shop/Pages/Order')
+ //   ->setServiceUrl('http://local.zstore/index.php?p=/App/Modules/Shop/Pages/Order')
+    ->getForm()
+    ->getWidget('onPay','Оплатити');        
+        
+ $this->_tvars["pay"]  = $widget;      
     }
 
     public function OnDelivery($sender) {
@@ -127,12 +162,18 @@ class Order extends Base
         $firstname = trim($this->orderform->firstname->getText());
         $lastname = trim($this->orderform->lastname->getText());
         $delivery = $this->orderform->delivery->getValue();
+        $payment = $this->orderform->payment->getValue();
         
         $address = $this->orderform->address->getValue();
 
         if ($delivery == 0) {
 
             $this->setError("enterdelivery");
+            return;
+        }
+        if ($payment == 0) {
+
+            $this->setError("enterpayment");
             return;
         }
         if (($delivery == 2 || $delivery == 3) && strlen($address) == 0) {
@@ -282,7 +323,12 @@ class Order extends Base
         $this->orderform->setVisible(false);
         $this->listform->setVisible(false);
         $this->preview->setVisible(true);
-
+        $this->_tvars['orderid']  =  $order->document_id;
+        
+        if($payment==2) {
+           $this->preview->ppayment->setVisible(true) ;    
+        }
+        
         
     }
 
@@ -296,8 +342,6 @@ class Order extends Base
         $datarow->add(new Image('photo', "/loadshopimage.php?id={$item->image_id}&t=t"));
     }
 
-    public function onPay($sender) {
-        
-    }
+   
     
 }

@@ -1,6 +1,7 @@
 <html>
+ 
     <body>
-        <div class="row">
+        <div class="row" style="min-height:400px;">
             <div class="col-12 col-md-8 col-lg-6">
                 <h3 class="mt-2 mb-3">Формування замовленя</h3>
                 <form zippy="listform" method="post">
@@ -67,7 +68,18 @@
                        <input zippy="email" class="form-control">
                     </div>
                     </div>
-        
+                    <div class="form-group  row">
+                    
+                            <label class="col-5 col-form-label" for="payment">Оплата</label>
+                      
+                       <div class="col-7">
+                       <select class="form-control" zippy="payment">
+                            <option value="0">Вибрати</option>
+                            <option value="1">Готiвкою при  отриманнi</option>
+                            <option value="2">Онлайн оплата</option>
+                        </select>
+                      </div>
+                    </div>       
                     <div class="form-group  row">
                     
                             <label class="col-5 col-form-label" for="delivery">Доставка</label>
@@ -78,6 +90,7 @@
                         </select>
                       </div>
                     </div>
+
 
                     <div class="form-group  row">
              
@@ -114,13 +127,36 @@
                     </div>
                 </form>
             </div>
-            <div zippy="preview" >
-             <a zippy="pay">Оплатить</a>
+            <div class="w-100"></div> 
+            <div zippy="preview" class="col-12 col-md-8   col-xl-6">
+              <h5>Замовлення  номер {{orderid}} прийнято  в  обробку</h5>
+              
+              <div zippy="ppayment">
+              Оплата онлайн<br>
+              
+    
+ 
+              </div>
+               
             </div>
          
         </div>
-
+        {{{pay}}}
         <script>
+       function onPay(event)
+                    {
+                        
+                        
+                        if(event.data == "WfpWidgetEventClose"       // при закрытии виджета пользователем
+                           || event.data == "WfpWidgetEventApproved" // при успешном завершении операции
+                           || event.data == "WfpWidgetEventDeclined" // при неуспешном завершении
+                           || event.data == "WfpWidgetEventPending"  // транзакция на обработке
+                        ) {
+                            console.log(event.data);
+                        }
+                    }     
+        
+        
             $("._number").bind('  change  ', function () {
                 $("#listform").submit();
             });

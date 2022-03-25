@@ -3,7 +3,7 @@
     </head>
     <body>
         <div class="row">
-            <div class="col-12 col-xl-10 shadow-sm    bg-white ">
+            <div class="col-12 col-xl-10    ">
 
                 <h3>Імпорт замовлень</h3>
                   <a zippy="checkconn"><i class="fa fa fa-sync"></i> Перевiрити  з'єднання</a>
@@ -65,7 +65,7 @@
                         <select class="form-control mr-2" zippy="store">
                             <option value="0">Не обрано</option>
                         </select>
-                        <label for="kassa" data-label="store">каса </label>
+                        <label for="kassa" data-label="kassa">каса </label>
 
                         <select class="form-control mr-2" zippy="kassa">
                             <option value="0">Не обрана</option>
@@ -73,14 +73,14 @@
 
 
                         <input type="submit" class=" mr-2 btn btn-outline-success  "
-                               value="Списать">
+                               value="Списати">
 
 
                     </form>
 
                 </div>
             </div>
-            <div class="col-12 col-xl-10   shadow-sm    bg-white">
+            <div class="col-12 col-xl-10       ">
 
                 <h3>Експорт статусів в магазин</h3>
                 <div class="navbar nav">
@@ -123,11 +123,7 @@
                         <select class="  mr-2" zippy="estatus">
                             <option value="0">Не обрано</option>
                         </select>
-                        <label for="store" data-label="store">оприходувати на </label>
-
-                        <select class="form-control mr-2" zippy="store">
-                            <option value="0">Не обрано</option>
-                        </select>
+              
 
                         <input onclick="$('#loader3').removeAttr('style')" type="submit" class="  btn btn-outline-success  "
                                value="Відправити">

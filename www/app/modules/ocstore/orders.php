@@ -43,7 +43,7 @@ class Orders extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('status', $statuses, 0));
         $this->add(new Form('filter2'))->onSubmit($this, 'onOutcome');
         $this->filter2->add(new DropDownChoice('store', \App\Entity\Store::getList(), 0));
-        $this->filter2->add(new DropDownChoice('kassa', \App\Entity\MoneyFund::getList(), \App\Helper::getDefMF()));
+        $this->filter2->add(new DropDownChoice('kassa', \App\Entity\MoneyFund::getList(),\App\Helper::getDefMF()));
         $this->filter2->setVisible($modules['ocoutcome'] == 1);
 
         $this->add(new DataView('neworderslist', new ArrayDataSource(new Prop($this, '_neworders')), $this, 'noOnRow'));
@@ -237,6 +237,10 @@ class Orders extends \App\Pages\Base
         $kassa = $this->filter2->kassa->getValue();
         if ($store == 0) {
             $this->setError("noselstore");
+            return;
+        }
+        if ($kassa == 0) {
+            $this->setError("noselmf");
             return;
         }
         $allowminus = \App\System::getOption("common", "allowminus");
