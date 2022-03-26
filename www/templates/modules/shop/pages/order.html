@@ -2,7 +2,7 @@
  
     <body>
         <div class="row" style="min-height:400px;">
-            <div class="col-12 col-md-8 col-lg-6">
+            <div class="col-12 col-md-8  ">
                 <h3 class="mt-2 mb-3">Формування замовленя</h3>
                 <form zippy="listform" method="post">
                     <table class="table table-bordered" style="border-bottom: none;">
@@ -34,9 +34,9 @@
 
                 </form>
             </div>
-            <div class="w-100"></div>
             
-            <div class="col-12 col-md-8   col-xl-6">
+            
+            <div class="col-12 col-md-8   ">
                 <form zippy="orderform" method="post">
                     <div class="form-group  row">
                        
@@ -127,25 +127,25 @@
                     </div>
                 </form>
             </div>
-            <div class="w-100"></div> 
+           
             <div zippy="preview" class="col-12 col-md-8   col-xl-6">
               <h5>Замовлення  номер {{orderid}} прийнято  в  обробку</h5>
               
               <div zippy="ppayment">
               Оплата онлайн<br>
               
-    
+                {{{pay}}}
  
               </div>
                
             </div>
          
         </div>
-        {{{pay}}}
+      
         <script>
        function onPay(event)
                     {
-                        
+          
                         
                         if(event.data == "WfpWidgetEventClose"       // при закрытии виджета пользователем
                            || event.data == "WfpWidgetEventApproved" // при успешном завершении операции
@@ -153,6 +153,22 @@
                            || event.data == "WfpWidgetEventPending"  // транзакция на обработке
                         ) {
                             console.log(event.data);
+                            if(event.data == "WfpWidgetEventApproved") {
+                                toastr.success('Замовлення оплачено');
+                                  callPageMethod('onPayed',null,null,(data)=> 
+                                  {
+                                           
+                                      
+                                  });     
+                            }  
+                            if(event.data == "WfpWidgetEventDeclined") {
+                                toastr.error('Помилка оплати');
+                                
+                            }
+                            if(event.data == "WfpWidgetEventPending") {
+                                toastr.info('Оплата  в  обробцi');
+                                
+                            }
                         }
                     }     
         

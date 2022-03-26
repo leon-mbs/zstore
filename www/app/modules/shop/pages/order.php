@@ -77,33 +77,7 @@ class Order extends Base
         $this->OnDelivery($form->delivery);
 
         
-$credential = new AccountSecretTestCredential();
-//$credential = new AccountSecretCredential('account', 'secret');
-
-$widget = PurchaseWizard::get($credential)
-    ->setOrderReference(sha1(microtime(true)))
-    ->setAmount(0.01)
-    ->setCurrency('UAH')
-    ->setLanguage('UA')
-    ->setOrderDate(new \DateTime())
-    ->setMerchantDomainName('https://google.com')
-    ->setClient(new Client(
-        'John',
-        'Dou',
-        null,
-        '+12025550152' 
-         
-    ))
-    ->setProducts(new ProductCollection(array(
-        new Product('test', 0.01, 1)
-    )))
- //   ->setReturnUrl('http://local.zstore/index.php?p=/App/Modules/Shop/Pages/Order')
- //   ->setServiceUrl('http://local.zstore/index.php?p=/App/Modules/Shop/Pages/Order')
-    ->getForm()
-    ->getWidget('onPay','Оплатити');        
-        
- $this->_tvars["pay"]  = $widget;      
-    }
+ }
 
     public function OnDelivery($sender) {
 
@@ -290,6 +264,9 @@ $widget = PurchaseWizard::get($credential)
                 
             if ($shop['ordertype'] == 1  ) {  //Кассовый чек
                 $order->updateStatus(Document::STATE_EXECUTED);
+            }  else {
+                $order->updateStatus(Document::STATE_INPROCESS);
+              
             }
 
 
@@ -326,7 +303,38 @@ $widget = PurchaseWizard::get($credential)
         $this->_tvars['orderid']  =  $order->document_id;
         
         if($payment==2) {
-           $this->preview->ppayment->setVisible(true) ;    
+           $this->preview->ppayment->setVisible(true) ; 
+           
+           
+$credential = new AccountSecretTestCredential();
+//$credential = new AccountSecretCredential('account', 'secret');
+
+$widget = PurchaseWizard::get($credential)
+    ->setOrderReference($order->document_id)
+    ->setAmount($order->amount)
+    ->setCurrency('UAH')
+    ->setLanguage('UA')
+    ->setOrderDate(new \DateTime())
+    ->setMerchantDomainName('https://google.com')
+    ->setClient(new Client(
+        'John',
+        'Dou',
+        null,
+        '+12025550152' 
+         
+    ))
+    ->setProducts(new ProductCollection(array(
+        new Product('test', 0.01, 1)
+    )))
+ //   ->setReturnUrl('http://local.zstore/index.php?p=/App/Modules/Shop/Pages/Order')
+ //   ->setServiceUrl('http://local.zstore/index.php?p=/App/Modules/Shop/Pages/Order')
+    ->getForm()
+    ->getWidget('onPay','Оплатити');        
+        
+     $this->_tvars["pay"]  = $widget;      
+              
+           
+              
         }
         
         
@@ -342,6 +350,18 @@ $widget = PurchaseWizard::get($credential)
         $datarow->add(new Image('photo', "/loadshopimage.php?id={$item->image_id}&t=t"));
     }
 
-   
+    public  function onPayed($args, $post) {
+         $order= Document::load($this->orderid) ;
+           
+                $payed = \App\Entity\Pay::addPayment($order->document_id, $order->document_date, $order->payed, $order->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_INCOME,'WayForPay');
+                if ($payed > 0) {
+                    $order->payed = $payed;
+            
+                }
+                \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+               $order->save();
+                   
+         return json_encode(array(), JSON_UNESCAPED_UNICODE);
+    }
     
 }
