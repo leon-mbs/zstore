@@ -1,41 +1,52 @@
-ALTER TABLE `documents` ADD `priority` SMALLINT NULL DEFAULT 100 ;
+INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  5, 'Постачальники', 'SupplierList', 'Дропшипінг', 0);
+INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  5, 'Товари', 'SupItems', 'Дропшипінг', 0);
+
+CREATE TABLE  suppliers (
+  sup_id int(11) NOT NULL AUTO_INCREMENT,
+  sup_name varchar(255) NOT NULL,
+  disabled tinyint(1) NOT NULL DEFAULT 0,
+  detail text NOT NULL, 
+ 
+  PRIMARY KEY (sup_id)
+)
+ENGINE = InnoDB,
+CHARACTER SET utf8 ;
 
 
-DROP VIEW documents_view;
+CREATE TABLE  supitems (
+  supitem_id int(11) NOT NULL AUTO_INCREMENT,
+  item_id int(11) NOT NULL,
+  sup_id int(11) NOT NULL,
+  quantity decimal(10, 3) NOT NULL DEFAULT 0,
+  price decimal(10, 2) NOT NULL DEFAULT 0,
+  sup_code varchar(255) DEFAULT NULL,
+  comment varchar(255) DEFAULT NULL,
+  PRIMARY KEY (supitem_id)
+)
+ENGINE = InnoDB,
+COLLATE utf8_general_ci;
 
-CREATE VIEW documents_view
+
+
+DROP VIEW supitems_view  ;
+
+CREATE
+VIEW supitems_view
 AS
 SELECT
-  `d`.`document_id` AS `document_id`,
-  `d`.`document_number` AS `document_number`,
-  `d`.`document_date` AS `document_date`,
-  `d`.`user_id` AS `user_id`,
-  `d`.`content` AS `content`,
-  `d`.`amount` AS `amount`,
-  `d`.`meta_id` AS `meta_id`,
-  `u`.`username` AS `username`,
-  `c`.`customer_id` AS `customer_id`,
-  `c`.`customer_name` AS `customer_name`,
-  `d`.`state` AS `state`,
-  `d`.`notes` AS `notes`,
-  `d`.`payamount` AS `payamount`,
-  `d`.`payed` AS `payed`,
-  `d`.`parent_id` AS `parent_id`,
-  `d`.`branch_id` AS `branch_id`,
-  `b`.`branch_name` AS `branch_name`,
-  `d`.`firm_id` AS `firm_id`,
-  `d`.`priority` AS `priority`,
-  `f`.`firm_name` AS `firm_name`,
-  `metadata`.`meta_name` AS `meta_name`,
-  `metadata`.`description` AS `meta_desc`
-FROM (((((`documents` `d`
-  LEFT JOIN `users_view` `u`
-    ON ((`d`.`user_id` = `u`.`user_id`)))
-  LEFT JOIN `customers` `c`
-    ON ((`d`.`customer_id` = `c`.`customer_id`)))
-  JOIN `metadata`
-    ON ((`metadata`.`meta_id` = `d`.`meta_id`)))
-  LEFT JOIN `branches` `b`
-    ON ((`d`.`branch_id` = `b`.`branch_id`)))
-  LEFT JOIN `firms` `f`
-    ON
+  `s`.`supitem_id` AS `supitem_id`,
+  `s`.`item_id` AS `item_id`,
+  `s`.`sup_id` AS `sup_id`,
+  `s`.`quantity` AS `quantity`,
+  `s`.`price` AS `price`,
+  `s`.`sup_code` AS `sup_code`,
+  `s`.`comment` AS `comment`,
+  `i`.`itemname` AS `itemname`,
+  `i`.`item_code` AS `item_code`,
+  `i`.`detail` AS `detail`,
+  `sp`.`sup_name` AS `sup_name`
+FROM ((`supitems` `s`
+  JOIN `items` `i`
+    ON ((`s`.`item_id` = `i`.`item_id`)))
+  JOIN `suppliers` `sp`
+    ON ((`s`.`sup_id` = `sp`.`sup_id`)));

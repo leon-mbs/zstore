@@ -95,7 +95,7 @@ class Customer extends \ZCL\DB\Entity
         $sql = "  select count(*)  from  documents where   customer_id = {$this->customer_id}  ";
         $cnt = $conn->GetOne($sql);
         if ($cnt > 0) {
-            return "На  контрагента есть  ссылки  в  документах";
+            return  \App\Helper::l("custisuseddoc");   
         }
         return "";
     }
