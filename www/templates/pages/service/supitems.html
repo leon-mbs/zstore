@@ -9,12 +9,7 @@
         <div class="row">
 
             <div class="col-12  " zippy="itemtable">
-                <h3>Довідник номенклатури
-                    <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
-                       data-toggle="popover"
-                       data-html="true" data-placement="bottom" data-content="Довiдник ТМЦ, з можливістю створення нових одиниць їх редагування, видалення та пошуком.
-                       <br><br>В списку відображаються активні товари. Для відображення товарів з статусом<b> 'Більше не використовується' </b>потрібно встановити галочку<b> 'Усе' </b>біля кнопки<b> 'ОК' </b>"></i>
-                </h3>
+                <h3>Товари в постачальникiв               </h3>
 
                 <div class="navbar nav">
 
@@ -27,112 +22,49 @@
                         <select class="form-control mr-2" zippy="searchcat">
                             <option value="0">Не вказано</option>
                         </select>
-                        <label for="searchbrand">Бренд </label>
-                        <input autocomplete="off"   class="form-control mr-2" zippy="searchbrand"/>
-
-
-                        <div class="form-check">
-
-                            <input title="Показати неактуальні" class="form-check-input" type="checkbox" zippy="showdis">
-                            <label class="form-check-label mr-3" for="showdis">Усе</label>
-                        </div>
-                        <label for="searchsort">Сортування</label>
-
-                        <select class="form-control mr-2" zippy="searchsort">
-                            <option value="0">Найменування</option>
-                            <option value="1">Артикул</option>
-                            <option value="2">Спочатку новi</option>
-                        </select>
+                      
+            
    
                         <input class="btn btn-outline-success  " type="submit" value="ОК">
 
                     </form>
                 </div>
                 <a zippy="addnew" class="btn btn-primary  ">Додати</a>
-                <form zippy="listform">
+                  <form zippy="listform">
                     <table class="table table-hover  table-sm  ">
                         <tr>
                             <th><i onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
                                 style="width:30px;cursor:pointer" title="Зняти/виставити галки"
                                     class="fa fa-check-double "></i></th>                    
-                            {{#useimages}}
-                            <th></th>
-                            {{/useimages}}
+                   
                             <th>Найменування</th>
 
                             <th>Артикул</th>
-                            <th>Категорія</th>
-                            <th>Бренд</th>
-                            <th>Од.</th>
-                              <th> </th>
-                            {{#hp1}}<th class="text-right  ">{{hp1}}</th>{{/hp1}}
-                            {{#hp2}}<th class="text-right  ">{{hp2}}</th>{{/hp2}}
-                            {{#hp3}}<th class="text-right  ">{{hp3}}</th>{{/hp3}}
-                            {{#hp4}}<th class="text-right  ">{{hp4}}</th>{{/hp4}}
-                            {{#hp5}}<th class="text-right  ">{{hp5}}</th>{{/hp5}}
-
-                            <th>Комірка</th>
-                            <th><i title="В прайсi" class="fa fa-list-alt"></i></th>
-                            {{#usesnumber}}
-                            <th><i title="Облiк серiй виробника" class="fa fa-calendar-check"></i></th>
-                            {{/usesnumber}}
+                            <th>Код в постачальника</th>
+                            <th>Постачальник</th>
+                            <th class="text-right  ">Кiл.</th>
+                            <th class="text-right  ">Цiна </th>
+                         
                             <th></th>
-                            <th></th>
-                            <th></th>
-
-
-                            <th  ></th>
+                           
                         </tr>
                         <tr zippy="itemlist">
                             <td><input  zippy="seldel" class="seldel" type="checkbox"></td>
-                            {{#useimages}}
-                            <td>
-                                <a zippy="imagelistitem" data-type="image" data-toggle="lightbox"  > <img
-                                        style="float:left; width:64px"></a>
-
-                            </td>
-                            {{/useimages}}
-
+                
                             <td zippy="itemname"></td>
 
                             <td zippy="code"></td>
-                            <td zippy="cat_name"></td>
-                            <td zippy="manufacturer"></td>
-                            <td zippy="msr"></td>
-                              <td  class="text-right"><i title="Акцiя" zippy="hasaction" class="fa fa-gift"/></td>
-
-                            {{#hp1}}<td zippy="price1" class="text-right  "></td>{{/hp1}}
-                            {{#hp2}}<td zippy="price2" class="text-right  "></td>{{/hp2}}
-                            {{#hp3}}<td zippy="price3" class="text-right  "></td>{{/hp3}}
-                            {{#hp4}}<td zippy="price4" class="text-right  "></td>{{/hp4}}
-                            {{#hp5}}<td zippy="price5" class="text-right  "></td>{{/hp5}}
-
-                            <td zippy="cell"></td>
-                            <td><i zippy="inprice" class="fa fa-check"></i></td>
-                            {{#usesnumber}}
-                            <td><i zippy="inseria" class="fa fa-check"></i></td>
-                            {{/usesnumber}}
-                            <td><i zippy="hasnotes" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"
-                                   data-html="true"></i></td>
-
-                            <td><a zippy="set" title="Комплекти"><i class="fa fa-cogs"></i></a> &nbsp;</td>
-                            <td  >
-                                <a zippy="printqr" title="Друк QR коду"><i class="fa fa-qrcode"></i></a>
-                            </td>
-                            <td aling="center">
-
-                                <a zippy="copy" title="Корiювати"><i class="fa fa-copy"></i></a> &nbsp;&nbsp;&nbsp;
-
-
-                                <a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> &nbsp;
-
-                            </td>
+                            <td zippy="sup_code"></td>
+                            <td zippy="sup_name"></td>
+                            <td zippy="qty"></td>
+                            <td zippy="price"></td>
+            
+                            <td zippy="comment">  </td>
                         </tr>
-                        <tr><td colspan="9">
-                                <a class="text-danger" zippy="deleteall" title="Удалить(деактивировать)"><i class="fa fa-trash"></i></a>&nbsp;&nbsp;
-                                <a  zippy="printall" title="Друк маркування"><i class="fa fa-print"></i></a>&nbsp;&nbsp;  &nbsp;&nbsp;
-                                в категорiю  <select   zippy="allcat"><option value="0">Не вказана</select>
-                            </td> </tr>                 
+                        <tr><td colspan="8">
+                                <a class="text-danger" zippy="deleteall" title="Видалити"><i class="fa fa-trash"></i></a>&nbsp;&nbsp;
+                              </td>
+                        </tr>                 
                     </table>
                     <div zippy="pag"></div>   
                 </form>
@@ -140,7 +72,7 @@
 
 
             <div class="col-12  ">
-                <form zippy="itemdetail" enctype="multipart/form-data">
+                <form zippy="itemdetail"  >
                     <h4>Редагування   </h4>
                     <div class="row">
                         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
@@ -381,80 +313,16 @@
             </div>
         </div>
 
-        <div class="row">
-
-            <div class="col-12 col-md-8 col-xl-6" zippy="setpanel">
-                <a zippy="backtolist"><i class="fa fa-arrow-alt-circle-left"></i> До довідника</a>
-                <h4 zippy="stitle"></h4>
-                <form zippy="setform" class="form-inline mt-2 mb-2">
-                    <label for="editsname">Назва</label>
-                    <input placeholder="Почніть вводити.." class="form-control  mr-sm-2" zippy="editsname"/>
-
-                    <label for="editsqty">Кіл.</label>
-                    <input autocomplete="off" class="form-control  mr-sm-2" type="text" zippy="editsqty" required="required"
-                           pattern="[0-9\.]+" style="width:60px">
-                    <input class="btn btn-outline-success  " type="submit" value="Додати">
-                </form>
-                <table class="table   table-sm  ">
-                    <tr>
-                        <th>Найменування</th>
-                        <th>Код</th>
-                        <th class="text-right">Кіл.</th>
-                        <th></th>
-                    </tr>
-                    <tr zippy="setlist">
-                        <td zippy="sname"></td>
-                        <td zippy="scode"></td>
-                        <td class="text-right" zippy="sqty"></td>
-                        <td><a zippy="sdel"><i class="fa fa-trash"></i></a></td>
-                    </tr>
-                </table>
-            </div>
-
-        </div>
-
-        <div id="pform" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog  ">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <table>
-                            <tr>
-                                <td align="center" id="tag"></td>
-                            <tr>
-                            <tr>
-                                <td align="center"><a href="javascript:void(0)"
-                                                      onclick="$('#tag').printThis();$('#pform').modal('hide')"
-                                                      class="btn btn-success btn-sm">Друк</a></td>
-                            <tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+    
 
 
         <script>
-            $(document).ready(function () {
+     
 
-                $(document).on('click', '[data-toggle="lightbox"]', function (event) {
-                    event.preventDefault();
-                    $(this).ekkoLightbox({'alwaysShowClose': true});
-                });
-
-
-            });
-
-            function onSearch(ele) {
-
-                if (event.key === 'Enter' || event.keyCode == 13) {
-                    // alert($('#barcode').val());
-                    $('#filter').Submit();
-                }
-            }
+       
 
             function check_deleteall() {
-                return confirm("Видалити  ТМЦ?")
+                return confirm("Видалити?")
             }
 
         </script>

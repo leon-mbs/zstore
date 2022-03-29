@@ -2,9 +2,9 @@
 
 namespace App\Pages\Service;
 
-use App\Entity\Category;
+use App\Entity\Supplier;
 use App\Entity\Item;
-use App\Entity\ItemSet;
+use App\Entity\SupItem;
 use App\Helper as H;
 use App\System;
 use Zippy\Html\DataList\ArrayDataSource;
@@ -26,56 +26,36 @@ class SupItems extends \App\Pages\Base
 {
 
     private $_item;
-    private $_copy     = false;
-    private $_pitem_id = 0;
-    public  $_itemset  = array();
+ 
 
     public function __construct($add = false) {
         parent::__construct();
-        if (false == \App\ACL::checkShowRef('ItemList')) {
+        if (false == \App\ACL::checkShowRef('SupItems')) {
             return;
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
-        $this->filter->add(new CheckBox('showdis'));
-        $this->filter->add(new TextInput('searchbrand'));
-        $this->filter->searchbrand->setDataList(Item::getManufacturers());
-
-
-        $this->filter->add(new TextInput('searchkey'));
-        $catlist = array();
-        $catlist[-1] = H::l("withoutcat");
-        foreach (Category::getList() as $k => $v) {
-            $catlist[$k] = $v;
-        }
-        $this->filter->add(new DropDownChoice('searchcat', $catlist, 0));
-        $this->filter->add(new DropDownChoice('searchsort', array(), 0));
-
+ 
+        $this->filter->add(new TextInput('searchitem'));
+       
+        $this->filter->add(new DropDownChoice('searchsup', Supplier::findArray("sup_name","disabled<>1","sup_name"), 0));
+      
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
 
         $this->itemtable->add(new Form('listform'));
 
-        $this->itemtable->listform->add(new DataView('itemlist', new ItemDataSource($this), $this, 'itemlistOnRow'));
+        $this->itemtable->listform->add(new DataView('itemlist', new SupItemDataSource($this), $this, 'itemlistOnRow'));
         $this->itemtable->listform->itemlist->setPageSize(H::getPG());
         $this->itemtable->listform->add(new \Zippy\Html\DataList\Paginator('pag', $this->itemtable->listform->itemlist));
-        $this->itemtable->listform->itemlist->setSelectedClass('table-success');
         $this->itemtable->listform->add(new SubmitLink('deleteall'))->onClick($this, 'OnDelAll');
-        $this->itemtable->listform->add(new SubmitLink('printall'))->onClick($this, 'OnPrintAll', true);
-
-        $catlist = Category::findArray("cat_name", "cat_id not in (select COALESCE(parent_id,0) from item_cat )", "cat_name");
-
-
-        $this->itemtable->listform->add(new DropDownChoice('allcat', $catlist, 0))->onChange($this, 'onAllCat');
-
+     
+ 
         $this->add(new Form('itemdetail'))->setVisible(false);
         $this->itemdetail->add(new TextInput('editname'));
         $this->itemdetail->add(new TextInput('editshortname'));
         $this->itemdetail->add(new TextInput('editprice1'));
-        $this->itemdetail->add(new TextInput('editprice2'));
-        $this->itemdetail->add(new TextInput('editprice3'));
-        $this->itemdetail->add(new TextInput('editprice4'));
-        $this->itemdetail->add(new TextInput('editprice5'));
+ 
         $this->itemdetail->add(new TextInput('editmanufacturer'));
         $this->itemdetail->add(new TextInput('editurl'));
         $common = System::getOptions('common');
@@ -139,28 +119,7 @@ class SupItems extends \App\Pages\Base
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
-        $this->add(new Panel('setpanel'))->setVisible(false);
-        $this->setpanel->add(new DataView('setlist', new ArrayDataSource($this, '_itemset'), $this, 'itemsetlistOnRow'));
-        $this->setpanel->add(new Form('setform'))->onSubmit($this, 'OnAddSet');
-        $this->setpanel->setform->add(new AutocompleteTextInput('editsname'))->onText($this, 'OnAutoSet');
-        $this->setpanel->setform->add(new TextInput('editsqty', 1));
-
-        $this->setpanel->add(new Label('stitle'));
-        $this->setpanel->add(new ClickLink('backtolist', $this, "onback"));
-
-
-        $this->_tvars['hp1'] = strlen($common['price1']) > 0 ? $common['price1'] : false;
-        $this->_tvars['hp2'] = strlen($common['price2']) > 0 ? $common['price2'] : false;
-        $this->_tvars['hp3'] = strlen($common['price3']) > 0 ? $common['price3'] : false;
-        $this->_tvars['hp4'] = strlen($common['price4']) > 0 ? $common['price4'] : false;
-        $this->_tvars['hp5'] = strlen($common['price5']) > 0 ? $common['price5'] : false;
-
-
-        if ($add == false) {
-            $this->itemtable->listform->itemlist->Reload();
-        } else {
-            $this->addOnClick(null);
-        }
+   
     }
 
     public function itemlistOnRow(\Zippy\Html\DataList\DataRow $row) {
@@ -212,18 +171,7 @@ class SupItems extends \App\Pages\Base
 
     }
 
-
-    public function copyOnClick($sender) {
-        $this->editOnClick($sender);
-        $this->_copy = true;
-        $this->_item->item_id = 0;
-        $this->itemdetail->editcode->setText('');
-        $this->itemdetail->editbarcode->setText('');
-        if (System::getOption("common", "autoarticle") == 1) {
-            $this->itemdetail->editcode->setText(Item::getNextArticle());
-        }
-    }
-
+ 
     public function editOnClick($sender) {
         $this->_copy = false;
         $item = $sender->owner->getDataItem();
@@ -316,7 +264,7 @@ class SupItems extends \App\Pages\Base
     }
 
     public function OnSubmit($sender) {
-        if (false == \App\ACL::checkEditRef('ItemList')) {
+        if (false == \App\ACL::checkEditRef('SupItems')) {
             return;
         }
 
@@ -479,302 +427,8 @@ class SupItems extends \App\Pages\Base
         $this->itemdetail->setVisible(false);
     }
 
-    //комплекты
-    public function onback($sender) {
-        $this->setpanel->setVisible(false);
-        $this->itemtable->setVisible(true);
-    }
-
-    public function setOnClick($sender) {
-        $item = $sender->owner->getDataItem();
-        $item = Item::load($item->item_id);
-
-        $this->_pitem_id = $item->item_id;
-        $this->_itemset = ItemSet::find("pitem_id=" . $item->item_id, "itemname");
-        $this->setpanel->setVisible(true);
-        $this->itemtable->setVisible(false);
-
-        $this->setpanel->stitle->setText($item->itemname);
-
-        $this->setpanel->setlist->Reload();
-    }
-
-    public function itemsetlistOnRow(\Zippy\Html\DataList\DataRow $row) {
-        $item = $row->getDataItem();
-        $row->add(new Label('sname', $item->itemname));
-        $row->add(new Label('scode', $item->item_code));
-        $row->add(new Label('sqty', H::fqty($item->qty)));
-        $row->add(new ClickLink('sdel'))->onClick($this, 'ondelset');
-    }
-
-    public function OnAutoSet($sender) {
-        $text = Item::qstr('%' . $sender->getText() . '%');
-        $in = "(" . $this->_pitem_id;
-        foreach ($this->_itemset as $is) {
-            $in .= "," . $is->item_id;
-        }
-
-        $in .= ")";
-        return Item::findArray('itemname', " item_type    in (2,5) and  item_id not in {$in} and (itemname like {$text} or item_code like {$text}) and disabled <> 1", 'itemname');
-    }
-
-    public function OnAddSet($sender) {
-        $id = $sender->editsname->getKey();
-        if ($id == 0) {
-            $this->setError("noselitem");
-            return;
-        }
-
-        $qty = $sender->editsqty->getText();
-
-        $set = new ItemSet();
-        $set->pitem_id = $this->_pitem_id;
-        $set->item_id = $id;
-        $set->qty = $qty;
-
-        $set->save();
-
-        $this->_itemset = ItemSet::find("pitem_id=" . $this->_pitem_id, "itemname");
-
-        $this->setpanel->setlist->Reload();
-        $sender->clean();
-    }
-
-    public function ondelset($sender) {
-        $item = $sender->owner->getDataItem();
-
-        ItemSet::delete($item->set_id);
-
-        $this->_itemset = ItemSet::find("pitem_id=" . $this->_pitem_id, "itemname");
-
-        $this->setpanel->setlist->Reload();
-    }
-
-    public function printQrOnClick($sender) {
-      
-        
-        $item = $sender->getOwner()->getDataItem();
-
-  
-        $dataUri = \App\Util::generateQR($item->url,100,5)  ;
-
-        $html = "<img src=\"{$dataUri}\"  />";
-        $this->updateAjax(array(), "  $('#tag').html('{$html}') ; $('#pform').modal()");
-
-    }
-
-    public function printOnClick($sender) {
-        $item = $sender->getOwner()->getDataItem();
-        $printer = \App\System::getOptions('printer');
-        $pwidth = 'style="width:40mm;"';
-        $pfs = 'style="font-size:16px;"';
-        $pfsp = 'style="font-size:24px;"';
-
-        if (strlen($printer['pwidth']) > 0) {
-            $pwidth = 'style="width:' . $printer['pwidth'] . ' ";';
-        }
-        if (strlen($printer['pfontsize']) > 0) {
-            $pfs = 'style="font-size:' . $printer['pfontsize'] . 'px";';
-            $pfsp = 'style="font-size:' . intval(($printer['pfontsize'] * 1.5)) . 'px";';
-        }
-
-
-        $report = new \App\Report('item_tag.tpl');
-        $header = array('width' => $pwidth, 'fsize' => $pfs, 'fsizep' => $pfsp);
-        if ($printer['pname'] == 1) {
-
-            if (strlen($item->shortname) > 0) {
-                $header['name'] = $item->shortname;
-            } else {
-                $header['name'] = $item->itemname;
-            }
-            $header['name'] = str_replace("'","`", $header['name'])  ;
-            $header['name'] = str_replace("\"'","`", $header['name'])  ;
-        }
-       
-        
-        $header['action'] = $item->actionprice > 0;
-        $header['actionprice'] = $item->actionprice;
-        $header['isap'] = false;
-        if ($printer['pprice'] == 1) {
-            $header['price'] = number_format($item->getPrice($printer['pricetype']), 2, '.', '');
-            $header['isap'] = true;
-        }
-        if ($printer['pcode'] == 1) {
-            $header['article'] = $item->item_code;
-            $header['isap'] = true;
-        }
-
-        if ($printer['pqrcode'] == 1 && strlen($item->url) > 0) {
-            $qrCode = new \Endroid\QrCode\QrCode($item->url);
-            $qrCode->setSize(100);
-            $qrCode->setMargin(5);
-            $qrCode->setWriterByName('png');
-
-            $dataUri = $qrCode->writeDataUri();
-            $header['qrcode'] = "<img src=\"{$dataUri}\"  />";
-
-        }
-        if ($printer['pbarcode'] == 1) {
-            $barcode = $item->bar_code;
-            if (strlen($barcode) == 0) {
-                $barcode = $item->item_code;
-            }
-
-            $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-            $img = '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($barcode, $printer['barcodetype'])) . '">';
-            $header['img'] = $img;
-            $header['barcode'] = \App\Util::addSpaces($barcode);
-        }
-        $header['iscolor'] = $printer['pcolor'] == 1;
-
-        $html = $report->generate($header);
-
-
-        $this->updateAjax(array(), "  $('#tag').html('{$html}') ; $('#pform').modal()");
-    }
-
-
-    public function OnPrintAll($sender) {
-
-        $items = array();
-        foreach ($this->itemtable->listform->itemlist->getDataRows() as $row) {
-            $item = $row->getDataItem();
-            if ($item->seldel == true) {
-                $items[] = $item;
-            }
-        }
-        if (count($items) == 0) {
-            return;
-        }
-
-        $printer = \App\System::getOptions('printer');
-        $pwidth = "width:70mm;";
-        $pheight = "height:40mm;";
-        $pfs = 'style="font-size:16px;"';
-        $pfs = 'style="font-size:24px;"';
-
-        if (strlen($printer['pwidth']) > 0) {
-            $pwidth = "width:" . $printer['pwidth'] . ";";
-        }
-        if (strlen($printer['pheight']) > 0) {
-            $pheight = "height:" . $printer['pheight'] . ";";
-        }
-        $style = "style=\"";
-        $style .= $pwidth;
-        $style .= $pheight;
-        $style .= "\"";
-
-        if (strlen($printer['pfontsize']) > 0) {
-            $pfs = 'style="font-size:' . $printer['pfontsize'] . 'px";';
-            $pfsp = 'style="font-size:' . intval(($printer['pfontsize'] * 1.5)) . 'px";';
-        }
-
-        $htmls = "";
-
-        foreach ($items as $item) {
-            $report = new \App\Report('item_tag.tpl');
-            $header = array('style' => $style, 'fsize' => $pfs, 'fsizep' => $pfsp);
-            if ($printer['pname'] == 1) {
-
-                if (strlen($item->shortname) > 0) {
-                    $header['name'] = $item->shortname;
-                } else {
-                    $header['name'] = $item->itemname;
-                }
-            }
-            $header['name'] = str_replace("'","`", $header['name'])  ;
-            if ($printer['pcode'] == 1) {
-                $header['article'] = $item->item_code;
-                $header['isap'] = true;
-            }
-            if ($printer['pqrcode'] == 1 && strlen($item->url) > 0) {
-                $writer = new \Endroid\QrCode\Writer\PngWriter();
  
-      
-                $qrCode = new \Endroid\QrCode\QrCode($item->url);
-                 
-                $qrCode->setSize(500);
-                $qrCode->setMargin(5);
-              
-                 $result = $writer->write($qrCode );
-     
-                 $dataUri = $result->getDataUri();
-                 $header['qrcode'] = "<img style=\"width:100px\" src=\"{$dataUri}\"  />";
-
-            }
-            if ($printer['pbarcode'] == 1) {
-                $barcode = $item->bar_code;
-                if (strlen($barcode) == 0) {
-                    $barcode = $item->item_code;
-                }
-                if (strlen($barcode) == 0) {
-                    continue;
-                }
-
-                $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-                $img = '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($barcode, $printer['barcodetype'])) . '">';
-                $header['img'] = $img;
-                $header['barcode'] = \App\Util::addSpaces($barcode);
-            }
-
-            $header['isap'] = false;
-            if ($printer['pprice'] == 1) {
-                $header['price'] = H::fa($item->getPurePrice($printer['pricetype']));
-                $header['isap'] = true;
-            }
-
-            $header['action'] = $item->hasAction();;
-            if ($header['action']) {
-                $header['actionprice'] = $item->getActionPrice($header['price']);
-            }
-            $header['iscolor'] = $printer['pcolor'] == 1;
-
-
-            $htmls = $htmls . $report->generate($header);
-
-        }
-        $htmls = str_replace("\'", "", $htmls);
-        
-        if( \App\System::getUser()->usemobileprinter == 1) {
-            \App\Session::getSession()->printform =  $htmls;
-            $this->updateAjax(array(), "   $('.seldel').prop('checked',null); window.open('/index?p=App/Pages/ShowReport&arg=print')");
-        }
-        else {
-          $this->updateAjax(array(), "  $('#tag').html('{$htmls}') ;$('.seldel').prop('checked',null); $('#pform').modal()");
-             
-        }
-
-    }
-
-    public function onAllCat($sender) {                                                               
-        $cat_id = $sender->getValue();
-        if ($cat_id == 0) {
-            return;
-        }
-
-        $items = array();
-        foreach ($this->itemtable->listform->itemlist->getDataRows() as $row) {
-            $item = $row->getDataItem();
-            if ($item->seldel == true) {
-                $items[] = $item;
-            }
-        }
-        if (count($items) == 0) {
-            return;
-        }
-        $conn = \ZDB\DB::getConnect();
-
-
-        foreach ($items as $item) {
-
-            $conn->Execute("update items set  cat_id={$cat_id} where  item_id={$item->item_id}");
-        }
-
-        $this->itemtable->listform->itemlist->Reload();
-        $sender->setValue(0);
-    }
-
+ 
     public function OnDelAll($sender) {
         if (false == \App\ACL::checkDelRef('ItemList')) {
             return;
@@ -817,7 +471,7 @@ class SupItems extends \App\Pages\Base
 
 }
 
-class ItemDataSource implements \Zippy\Interfaces\DataSource
+class SupItemDataSource implements \Zippy\Interfaces\DataSource
 {
 
     private $page;
@@ -830,11 +484,8 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
 
         $form = $this->page->filter;
         $where = "1=1";
-        $text = trim($form->searchkey->getText());
-        $brand = trim($form->searchbrand->getText());
         $cat = $form->searchcat->getValue();
-        $showdis = $form->showdis->isChecked();
-
+       
         if ($cat != 0) {
             if ($cat == -1) {
                 $where = $where . " and cat_id=0";
@@ -843,27 +494,10 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
             }
         }
 
-        if (strlen($brand) > 0) {
+     
 
-            $brand = Item::qstr($brand);
-            $where = $where . " and  manufacturer like {$brand}      ";
-        }
-
-
-        if ($showdis == true) {
-
-        } else {
-            $where = $where . " and disabled <> 1";
-        }
-        if (strlen($text) > 0) {
-            if ($p == false) {
-                $text = Item::qstr('%' . $text . '%');
-                $where = $where . " and (itemname like {$text} or item_code like {$text}  or bar_code like {$text} )  ";
-            } else {
-                $text = Item::qstr($text);
-                $where = $where . " and (itemname = {$text} or item_code = {$text}  or bar_code like {$text} )  ";
-            }
-        }
+    
+ 
         return $where;
     }
 
@@ -873,16 +507,9 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
         $sortfield = "itemname asc";
-        $sort = $this->page->filter->searchsort->getValue();
-        
-        if($sort==1)  $sortfield = "item_code asc";
-        if($sort==2)  $sortfield = "item_id desc";
-        
-        $l = Item::find($this->getWhere(true), $sortfield, $count, $start);
-        $f = Item::find($this->getWhere(), $sortfield, $count, $start);
-        foreach ($f as $k => $v) {
-            $l[$k] = $v;
-        }
+     
+        $l = Item::find($this->getWhere(), $sortfield, $count, $start);
+   
         return $l;
     }
 

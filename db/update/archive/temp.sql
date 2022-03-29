@@ -49,4 +49,5 @@ FROM ((`supitems` `s`
   JOIN `items` `i`
     ON ((`s`.`item_id` = `i`.`item_id`)))
   JOIN `suppliers` `sp`
-    ON ((`s`.`sup_id` = `sp`.`sup_id`)));
+    ON ((`s`.`sup_id` = `sp`.`sup_id`)))
+WHERE (`i`.`disabled` <> 1 AND sp.disabled <>1);

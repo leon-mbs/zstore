@@ -140,7 +140,7 @@ class Subscribe extends \ZCL\DB\Entity
                     $phone = $u->phone;
                     //  $viber = $u->viber;   
                     $email = $u->email;
-                    $notify = $doc->user_id;
+                    $notify = $sub->user_id;
                 }
             }
             $text = $sub->getText($doc);

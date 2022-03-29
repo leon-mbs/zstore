@@ -71,7 +71,7 @@ class TaskList extends \App\Pages\Base
 
         $this->tasktab->statuspan->add(new \App\Widgets\DocView('docview'));
 
-        $this->caltab->add(new \ZCL\Calendar\Calendar('calendar', $this->lang))->setEvent($this, 'OnCal');
+        $this->caltab->add(new \ZCL\Calendar\Calendar('calendar', 'ua'))->setEvent($this, 'OnCal');
 
         $this->updateTasks();
         $this->updateCal();

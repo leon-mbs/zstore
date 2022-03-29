@@ -99,7 +99,7 @@ class ProdStageList extends \App\Pages\Base
 
         $this->add(new Panel("calendarpan"))->setVisible(false);
         $this->calendarpan->add(new ClickLink("backcal", $this, "backOnClick"));
-        $this->calendarpan->add(new \ZCL\Calendar\Calendar('calendar', $this->lang))->setEvent($this, 'OnCal');
+        $this->calendarpan->add(new \ZCL\Calendar\Calendar('calendar', 'ua'))->setEvent($this, 'OnCal');
         $this->calendarpan->add(new Form('calfilter'));
         $this->calendarpan->calfilter->add(new SubmitButton('filterok'))->onClick($this, "onCalFilter");
         $this->calendarpan->calfilter->add(new DropDownChoice('calfilterpa', \App\Entity\ProdArea::findArray('pa_name', '', 'pa_name'), 0));
