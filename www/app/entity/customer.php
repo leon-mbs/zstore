@@ -44,6 +44,7 @@ class Customer extends \ZCL\DB\Entity
         $this->detail .= "<holding>{$this->holding}</holding>";
         $this->detail .= "<viber>{$this->viber}</viber>";
         $this->detail .= "<nosubs>{$this->nosubs}</nosubs>";
+        $this->detail .= "<allowedshop>{$this->allowedshop}</allowedshop>";
         $this->detail .= "<edrpou>{$this->edrpou}</edrpou>";
 
         $this->detail .= "<user_id>{$this->user_id}</user_id>";
@@ -73,6 +74,7 @@ class Customer extends \ZCL\DB\Entity
         $this->pricetype = (string)($xml->pricetype[0]);
         $this->fromlead = (int)($xml->fromlead[0]);
 
+        $this->allowedshop = (int)($xml->allowedshop[0]);
         $this->nosubs = (int)($xml->nosubs[0]);
         $this->holding = (int)($xml->holding[0]);
         $this->holding_name = (string)($xml->holding_name[0]);

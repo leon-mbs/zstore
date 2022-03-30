@@ -104,7 +104,8 @@ class UserLogin extends \Zippy\Html\WebPage
         
     public function onsubmit($sender) {
         global $logger, $_config;
-
+        $shop = System::getOptions("shop");
+ 
         $this->setError('');
         $phone = $sender->userphone->getText();
         $password = $sender->userpassword->getText();
@@ -124,7 +125,13 @@ class UserLogin extends \Zippy\Html\WebPage
             $this->setError("enterpassword" );
             return;
         }
-
+        if ($shop["uselogin"] == 1) {
+            if ($c->allowedshop != 1) {
+                
+                $this->setError("notallowedshop" );
+                return;
+            }
+        }
         System::setCustomer($c->customer_id)  ;
         System::getSession()->custname = $c->customer_name;
         if ($sender->remember->isChecked()) {
