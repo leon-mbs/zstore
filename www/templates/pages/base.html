@@ -986,7 +986,9 @@ icon: 'fa fa-exclamation-triangle text-warning',
             }
             {{/twodigit}}        
               
-               
+       $(document).on('shown.bs.modal', '.modal', function() {
+          $(this).find('input:visible:first').focus();
+       });            
             
         </script>
         {{#usemobilescanner}}

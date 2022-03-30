@@ -15,6 +15,7 @@ class Customer extends \ZCL\DB\Entity
     const STATUS_ACTUAL   = 0;  //актуальный
     const STATUS_DISABLED = 1; //не используется
     const STATUS_LEAD     = 2; //лид
+   
     const TYPE_BAYER      = 1; //покупатель
     const TYPE_SELLER     = 2; //поставщик
 
@@ -43,12 +44,15 @@ class Customer extends \ZCL\DB\Entity
         $this->detail .= "<holding>{$this->holding}</holding>";
         $this->detail .= "<viber>{$this->viber}</viber>";
         $this->detail .= "<nosubs>{$this->nosubs}</nosubs>";
+        $this->detail .= "<allowedshop>{$this->allowedshop}</allowedshop>";
         $this->detail .= "<edrpou>{$this->edrpou}</edrpou>";
 
         $this->detail .= "<user_id>{$this->user_id}</user_id>";
         $this->detail .= "<pricetype>{$this->pricetype}</pricetype>";
 
         $this->detail .= "<holding_name><![CDATA[{$this->holding_name}]]></holding_name>";
+        $this->detail .= "<firstname><![CDATA[{$this->firstname}]]></firstname>";
+        $this->detail .= "<lastname><![CDATA[{$this->lastname}]]></lastname>";
         $this->detail .= "<address><![CDATA[{$this->address}]]></address>";
         $this->detail .= "<comment><![CDATA[{$this->comment}]]></comment>";
         $this->detail .= "</detail>";
@@ -70,6 +74,7 @@ class Customer extends \ZCL\DB\Entity
         $this->pricetype = (string)($xml->pricetype[0]);
         $this->fromlead = (int)($xml->fromlead[0]);
 
+        $this->allowedshop = (int)($xml->allowedshop[0]);
         $this->nosubs = (int)($xml->nosubs[0]);
         $this->holding = (int)($xml->holding[0]);
         $this->holding_name = (string)($xml->holding_name[0]);
@@ -77,6 +82,8 @@ class Customer extends \ZCL\DB\Entity
         $this->comment = (string)($xml->comment[0]);
         $this->viber = (string)($xml->viber[0]);
         $this->edrpou = (string)($xml->edrpou[0]);
+        $this->firstname = (string)($xml->firstname[0]);
+        $this->lastname = (string)($xml->lastname[0]);
 
         $this->createdon = strtotime($this->createdon);
 
@@ -90,7 +97,7 @@ class Customer extends \ZCL\DB\Entity
         $sql = "  select count(*)  from  documents where   customer_id = {$this->customer_id}  ";
         $cnt = $conn->GetOne($sql);
         if ($cnt > 0) {
-            return "На  контрагента есть  ссылки  в  документах";
+            return  \App\Helper::l("custisuseddoc");   
         }
         return "";
     }

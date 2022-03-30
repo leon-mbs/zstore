@@ -44,6 +44,15 @@ class System
     public static function setBranch(int $branch_id) {
         Session::getSession()->branch_id = $branch_id;
     }
+  
+    public static function getCustomer() {
+
+        return (int)Session::getSession()->customer_id;
+    }
+
+    public static function setCustomer(int $customer_id) {
+        Session::getSession()->customer_id = $customer_id;
+    }
 
     /**
      * Возвращает  сессию

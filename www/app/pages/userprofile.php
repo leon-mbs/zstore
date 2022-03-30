@@ -26,6 +26,7 @@ class UserProfile extends \App\Pages\Base
 
         if ($this->user->user_id == 0) {
             App::Redirect("\\App\\Pages\\Userlogin");
+            return;
         }
 
         $form = new Form('profileform');

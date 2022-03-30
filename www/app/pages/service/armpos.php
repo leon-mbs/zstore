@@ -1132,7 +1132,7 @@ class ARMPos extends \App\Pages\Base
 
 
         }
-        $this->_doclist = Document::find($where, 'document_id desc');
+        $this->_doclist = Document::find($where, 'priority desc,document_id desc');
         $this->checklistpan->checklist->Reload();
     }
 

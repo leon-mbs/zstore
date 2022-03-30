@@ -182,10 +182,26 @@
                         <option value="0">Не обрано</option>
                     </select>
                 </div>
+                {{#shop}}        
+                <div class="form-group">
+                    <label for="editpassword">Пароль логiна для  каталогу</label>
+                    <input class="form-control" zippy="editpassword"  type="password"/>
+                    <small>Залиште  порожнiм  якщо пароль не  змiнюється</small>
+                </div>
+                 <div class="form-group">
+                    <label for="editconfirm">Пiдтвердити пароль</label>
+                    <input class="form-control" zippy="editconfirm" type="password"/>
+                </div>
+           
+               <div class="form-check">
+                    <input zippy="editallowedshop" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="editallowedshop" for="editallowedshop" data-label="editallowedshop">Дозвiл на  перегляд онлайн-каталогу</label>
+                </div>        
+                {{/shop}}        
                 <div class="form-check">
                     <input zippy="editnosubs" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="editnosubs">Не враховувати  в  пiдписках</label>
-                </div>        
+                </div>
                 <div class="form-check">
                     <input zippy="editdisabled" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="editdisabled">Більше не використовуєтся</label>
@@ -401,7 +417,7 @@
         <form zippy="leadsourcesform">
             <div class="row">
                 <div class="col-12  col-md-6 col-xl-4">
-                    <h5>Редагування джерел лілів</h5>
+                    <h5>Редагування джерел лідів</h5>
                     <small>Джерела лідів наприклад 'інстаграм', 'звінок'...</small>  <br>
                     <a  zippy="addnewsource">Додати</a>
 
@@ -631,7 +647,7 @@
         <script>
             function check_deleteall() {
 
-            return confirm("Удалить?")
+            return confirm("Видалити?")
 
             }
         </script>

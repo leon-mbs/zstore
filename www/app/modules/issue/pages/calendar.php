@@ -46,7 +46,7 @@ class Calendar extends \App\Pages\Base
 
         $this->listpan->add(new Panel('caltab'));
 
-        $this->listpan->caltab->add(new \ZCL\Calendar\Calendar('calendar', $this->lang))->setEvent($this, 'OnCal');
+        $this->listpan->caltab->add(new \ZCL\Calendar\Calendar('calendar', 'ua'))->setEvent($this, 'OnCal');
         $this->updateCal();
 
         $this->add(new Form('editform'))->onSubmit($this, 'OnSave');

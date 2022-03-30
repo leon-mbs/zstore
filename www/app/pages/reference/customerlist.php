@@ -43,7 +43,8 @@ class CustomerList extends \App\Pages\Base
             return;
         }
 
-
+        $shop = System::getOptions("shop");
+ 
         $this->add(new Form('leadf'));
         $this->leadf->add(new CheckBox('chleads'))->onChange($this, 'OnLeadMode');
 
@@ -80,6 +81,8 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->add(new TextInput('editcustomername'));
         $this->customerdetail->add(new TextInput('editphone'));
         $this->customerdetail->add(new TextInput('editviber'));
+        $this->customerdetail->add(new TextInput('editpassword'));
+        $this->customerdetail->add(new TextInput('editconfirm'));
         $this->customerdetail->add(new TextInput('editemail'));
         $this->customerdetail->add(new TextInput('editedrpou'));
         $this->customerdetail->add(new CheckBox('editjurid'));
@@ -88,6 +91,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->add(new DropDownChoice('edittype', array(1 => Helper::l("bayer"), 2 => Helper::l("seller")), 0));
         $this->customerdetail->add(new DropDownChoice('editpricetype', \App\Entity\Item::getPriceTypeList(), Helper::getDefPriceType()));
 
+        $this->customerdetail->add(new CheckBox('editallowedshop'))->setVisible($shop["uselogin"] == 1);
         $this->customerdetail->add(new CheckBox('editnosubs'));
         $this->customerdetail->add(new CheckBox('editdisabled'));
 
@@ -242,6 +246,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->editholding->setValue($this->_customer->holding);
         $this->customerdetail->editpricetype->setValue($this->_customer->pricetype);
         $this->customerdetail->editnosubs->setChecked($this->_customer->nosubs == 1);
+        $this->customerdetail->editallowedshop->setChecked($this->_customer->allowedshop == 1);
         $this->customerdetail->editdisabled->setChecked($this->_customer->status == 1);
         $this->customerdetail->editjurid->setChecked($this->_customer->jurid);
         $this->customerdetail->editisholding->setChecked($this->_customer->isholding);
@@ -317,6 +322,7 @@ class CustomerList extends \App\Pages\Base
         }
         $this->_customer->jurid = $this->customerdetail->editjurid->isChecked() ? 1 : 0;
         $this->_customer->nosubs = $this->customerdetail->editnosubs->isChecked() ? 1 : 0;
+        $this->_customer->allowedshop = $this->customerdetail->editallowedshop->isChecked() ? 1 : 0;
 
         $this->_customer->isholding = $this->customerdetail->editisholding->isChecked() ? 1 : 0;
 
@@ -351,6 +357,28 @@ class CustomerList extends \App\Pages\Base
             $this->_customer->createdon = time();
             $this->_customer->user_id = System::getUser()->user_id;
         }
+        
+        
+        $pass = $this->customerdetail->editpassword->getText();
+        $confirm = $this->customerdetail->editconfirm->getText();
+
+        if ( strlen($pass)>0 ) {
+            if ($confirm == '') {
+                $this->setError('confirmpass');
+                return;
+            } else {
+                if ($confirm != $pass) {
+
+                    $this->setError('invalidconfirm');
+                    return;
+                }
+            }
+            
+            $this->_customer->passw = $pass;
+            
+        }        
+        
+        
         $this->_customer->save();
         $this->customerdetail->setVisible(false);
         $this->customertable->setVisible(true);

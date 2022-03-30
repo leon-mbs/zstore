@@ -1,7 +1,8 @@
 <html>
+ 
     <body>
-        <div class="row">
-            <div class="col-12 col-md-8 col-lg-6">
+        <div class="row" style="min-height:400px;">
+            <div class="col-12 col-md-8  ">
                 <h3 class="mt-2 mb-3">Формування замовленя</h3>
                 <form zippy="listform" method="post">
                     <table class="table table-bordered" style="border-bottom: none;">
@@ -33,15 +34,22 @@
 
                 </form>
             </div>
-            <div class="w-100"></div>
-            <div class="col-12 col-md-8 col-xl-7">
-    <div class="col-12 col-md-8   col-xl-6">
+            
+            
+            <div class="col-12 col-md-8   ">
                 <form zippy="orderform" method="post">
                     <div class="form-group  row">
                        
-                     <label class="col-5 col-form-label" for="name" >Iм'я та/або прiзвище</label>
+                     <label class="col-5 col-form-label" for="firstname" >Iм'я  </label>
                       <div class="col-7">
-                         <input required="required" zippy="name" class="form-control">
+                         <input required="required" zippy="firstname" class="form-control">
+                      </div>
+                    </div>
+                   <div class="form-group  row">
+                       
+                     <label class="col-5 col-form-label" for="lastname" > Прiзвище</label>
+                      <div class="col-7">
+                         <input required="required" zippy="lastname" class="form-control">
                       </div>
                     </div>
                     <div class="form-group  row">
@@ -58,9 +66,22 @@
                        
                        <div class="col-7">
                        <input zippy="email" class="form-control">
+                     </div>
                     </div>
-                    </div>
-
+                    <!-->
+                    <div class="form-group  row">
+                    
+                            <label class="col-5 col-form-label" for="payment"for="payment">Оплата</label>
+                      
+                       <div class="col-7">
+                       <select class="form-control" zippy="payment">
+                            <option value="0">Вибрати</option>
+                            <option value="1">Готiвкою при  отриманнi</option>
+                            <option value="2">Онлайн оплата</option>
+                        </select>
+                      </div>
+                    </div> 
+                    -->      
                     <div class="form-group  row">
                     
                             <label class="col-5 col-form-label" for="delivery">Доставка</label>
@@ -69,8 +90,9 @@
                        <select class="form-control" zippy="delivery">
                             <option value="0">Вибрати</option>
                         </select>
+                      </div>
                     </div>
-                    </div>
+
 
                     <div class="form-group  row">
              
@@ -107,10 +129,52 @@
                     </div>
                 </form>
             </div>
+           
+            <div zippy="preview" class="col-12 col-md-8   col-xl-6">
+              <h5>Замовлення  номер {{orderid}} прийнято  в  обробку</h5>
+              
+              <div zippy="ppayment">
+              Оплата онлайн<br>
+              
+                {{{pay}}}
+ 
+              </div>
+               
             </div>
+         
         </div>
-
+      
         <script>
+       function onPay(event)
+                    {
+          
+                        
+                        if(event.data == "WfpWidgetEventClose"       // при закрытии виджета пользователем
+                           || event.data == "WfpWidgetEventApproved" // при успешном завершении операции
+                           || event.data == "WfpWidgetEventDeclined" // при неуспешном завершении
+                           || event.data == "WfpWidgetEventPending"  // транзакция на обработке
+                        ) {
+                            console.log(event.data);
+                            if(event.data == "WfpWidgetEventApproved") {
+                                toastr.success('Замовлення оплачено');
+                                  callPageMethod('onPayed',null,null,(data)=> 
+                                  {
+                                           
+                                      
+                                  });     
+                            }  
+                            if(event.data == "WfpWidgetEventDeclined") {
+                                toastr.error('Помилка оплати');
+                                
+                            }
+                            if(event.data == "WfpWidgetEventPending") {
+                                toastr.info('Оплата  в  обробцi');
+                                
+                            }
+                        }
+                    }     
+        
+        
             $("._number").bind('  change  ', function () {
                 $("#listform").submit();
             });

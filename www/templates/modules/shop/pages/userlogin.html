@@ -30,6 +30,8 @@
     </head>
 
     <body class="hold-transition login-page">
+    
+       
         <div class="row justify-content-center mt-2 mb-1">
             <div class="col-12   ">
 
@@ -38,34 +40,31 @@
                     {{{alerterror}}}
                 </div>
                 {{/alerterror}}
+                {{#alertsuccess}}
+                <div class="alert alert-success" role="alert">
+                    {{{alertsuccess}}}
+                </div>
+                {{/alertsuccess}}
 
             </div>
         </div>
-        <div class="login-box">
-            <div class="login-logo">
-                <a href="/"><b> Zippy Склад</b> </a>
-            </div>
+        <div class="login-box  ">
+         
             <!-- /.login-logo -->
             <div class="card">
                 <div class="card-body login-card-body">
 
                     <form zippy="loginform">
-                        <div class="input-group mb-3">
-                            <input zippy="userlogin" required="required" class="form-control" type="text" placeholder="Логин">
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <span class="fas fa-user"></span>
-                                </div>
-                            </div>
+                        <div class="form-group  ">
+                             <label for="userphone">Телефон</label>
+                           <input zippy="userphone" required="required" class="form-control" type="text"  >
+                          
                         </div>
-                        <div class="input-group mb-3">
-                            <input zippy="userpassword" required="required" type="password" class="form-control"
-                                   placeholder="Пароль">
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <span class="fas fa-lock"></span>
-                                </div>
-                            </div>
+                        <div class="form-group  ">
+                              <label for="userpassword">Пароль</label>
+                              <input zippy="userpassword" required="required" type="password" class="form-control"                                    >
+                           
+                           
                         </div>
                         <div class="row">
                             <div class="col-8">
@@ -76,15 +75,66 @@
                                     </label>
                                 </div>
                             </div>
-                            <!-- /.col -->
+                           
                             <div class="col-4">
                                 <button type="submit" class="btn btn-primary btn-block btn-flat">Ввiйти</button>
                             </div>
-                            <!-- /.col -->
+                          <div class="col-12">
+                               <a zippy="recall">Нагадати пароль</a>
+                            </div>
+                         <div class="col-12">
+                                <a zippy="signup">Зареєструватись</a>
+                            </div>
+                            
                         </div>
+                           <a href="/">На головну</a>
+
                     </form>
+                     <form zippy="recallform">
+                        <div class="form-group  ">
+                             <label for="rcuserphone">Телефон</label>
+                           <input zippy="rcuserphone" required="required" class="form-control" type="text"  >
+                          
+                        </div>
+                        <div class="form-group  ">
+                          <button type="submit" class="btn btn-primary  ">Вiдправити</button>
+                    
+                        </div>
+                        <a href="/">На головну</a>
+                
+                   </form>
+                   <form zippy="signinform">
+                       <div class="form-group">
+                              <label for="sname">Iм'я та/або прiзвище</label>
+                              <input   class="form-control" zippy="sname" required="required">
+                        </div>
+                        <div class="form-group  ">
+                             <label for="suserphone">Телефон</label>
+                             <input zippy="suserphone" required="required" class="form-control" type="text"  >
+                          
+                        </div>
+                        <div class="input-group  ">
+                              <label for="suserpassword">Пароль</label>
+                              <input zippy="suserpassword" required="required" type="password" class="form-control"                                    >
+                           
+                           
+                        </div>
+                      <div class="input-group  ">
+                              <label for="sconfirm">Підтвердження</label>
+                              <input zippy="sconfirm" required="required" type="password" class="form-control"                                    >
+                           
+                           
+                        </div>
+         
+ 
+                        <div class="form-group  ">
+                          <button type="submit" class="btn btn-primary  ">Зареєструватись</button>
+                    
+                        </div>
+                     <a href="/">На головну</a>
 
-
+                
+                   </form>
                 </div>
                 <!-- /.login-card-body -->
             </div>
