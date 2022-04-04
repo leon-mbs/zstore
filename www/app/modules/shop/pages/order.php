@@ -259,7 +259,7 @@ class Order extends Base
             }
             
             $order->save();
-            $this->orderid = $order->document_id;
+            $this->orderid = intvalue( preg_replace('/[^0-9]/', '', $order->document_number));
             $order->updateStatus(Document::STATE_NEW);
                 
             if ($shop['ordertype'] == 1  ) {  //Кассовый чек
