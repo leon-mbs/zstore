@@ -9,13 +9,13 @@ namespace App\Entity;
  * @view=supitems_view
  * @keyfield=supitem_id
  */
-class SupItem extends \ZCL\DB\Entity
+class CustItem extends \ZCL\DB\Entity
 {
 
  
 
     protected function init() {
-        $this->supitem_id = 0;
+        $this->custitem_id = 0;
     
     }
 

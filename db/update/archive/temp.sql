@@ -1,53 +1,43 @@
-INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  5, 'Постачальники', 'SupplierList', 'Дропшипінг', 0);
-INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  5, 'Товари', 'SupItems', 'Дропшипінг', 0);
-
-CREATE TABLE  suppliers (
-  sup_id int(11) NOT NULL AUTO_INCREMENT,
-  sup_name varchar(255) NOT NULL,
-  disabled tinyint(1) NOT NULL DEFAULT 0,
-  detail text NOT NULL, 
+INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  3, 'Товари у  постачальникIв', 'CustItems', '', 0);
  
-  PRIMARY KEY (sup_id)
-)
-ENGINE = InnoDB,
-CHARACTER SET utf8 ;
 
 
-CREATE TABLE  supitems (
-  supitem_id int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE custitems (
+  custitem_id int(11) NOT NULL AUTO_INCREMENT,
   item_id int(11) NOT NULL,
-  sup_id int(11) NOT NULL,
-  quantity decimal(10, 3) NOT NULL DEFAULT 0,
-  price decimal(10, 2) NOT NULL DEFAULT 0,
-  sup_code varchar(255) DEFAULT NULL,
+  customer_id int(11) NOT NULL,
+  quantity decimal(10, 3) NOT NULL DEFAULT 0.000,
+  price decimal(10, 2) NOT NULL DEFAULT 0.00,
+  cust_code varchar(255) DEFAULT NULL,
   comment varchar(255) DEFAULT NULL,
-  PRIMARY KEY (supitem_id)
+  PRIMARY KEY (custitem_id)
 )
 ENGINE = InnoDB,
 COLLATE utf8_general_ci;
 
 
 
-DROP VIEW supitems_view  ;
+DROP VIEW custitems_view  ;
 
 CREATE
-VIEW supitems_view
+VIEW custitems_view
 AS
 SELECT
-  `s`.`supitem_id` AS `supitem_id`,
+  `s`.`custitem_id` AS `custitem_id`,
   `s`.`item_id` AS `item_id`,
-  `s`.`sup_id` AS `sup_id`,
+  `s`.`customer_id` AS `customer_id`,
   `s`.`quantity` AS `quantity`,
   `s`.`price` AS `price`,
-  `s`.`sup_code` AS `sup_code`,
+  `s`.`cust_code` AS `cust_code`,
   `s`.`comment` AS `comment`,
   `i`.`itemname` AS `itemname`,
   `i`.`item_code` AS `item_code`,
   `i`.`detail` AS `detail`,
-  `sp`.`sup_name` AS `sup_name`
-FROM ((`supitems` `s`
+  `c`.`customer_name` AS `customer_name`
+FROM ((`custitems` `s`
   JOIN `items` `i`
     ON ((`s`.`item_id` = `i`.`item_id`)))
-  JOIN `suppliers` `sp`
-    ON ((`s`.`sup_id` = `sp`.`sup_id`)))
-WHERE (`i`.`disabled` <> 1 AND sp.disabled <>1);
+  JOIN `customers` `c`
+    ON ((`s`.`customer_id` = `c`.`customer_id`)))
+WHERE ((`i`.`disabled` <> 1)
+AND (`c`.`status` <> 1));

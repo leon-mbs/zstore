@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Pages\Service;
+namespace App\Pages\Register;
 
-use App\Entity\Supplier;
+use App\Entity\Customer;
 use App\Entity\Item;
-use App\Entity\SupItem;
+use App\Entity\CustItem;
 use App\Helper as H;
 use App\System;
 use Zippy\Html\DataList\ArrayDataSource;
@@ -22,7 +22,7 @@ use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
 use Zippy\Html\Link\SubmitLink;
 
-class SupItems extends \App\Pages\Base
+class CustItems extends \App\Pages\Base
 {
 
     private $_item;
@@ -30,7 +30,7 @@ class SupItems extends \App\Pages\Base
 
     public function __construct($add = false) {
         parent::__construct();
-        if (false == \App\ACL::checkShowRef('SupItems')) {
+        if (false == \App\ACL::checkShowRef('CustItems')) {
             return;
         }
 
@@ -38,7 +38,7 @@ class SupItems extends \App\Pages\Base
  
         $this->filter->add(new TextInput('searchitem'));
        
-        $this->filter->add(new DropDownChoice('searchsup', Supplier::findArray("sup_name","disabled<>1","sup_name"), 0));
+        $this->filter->add(new DropDownChoice('searchsup', Customer::findArray("customer_name","status=0 and  (detail like '%<type>2</type>%'  or detail like '%<type>0</type>%' )","customer_name"), 0));
       
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
@@ -264,7 +264,7 @@ class SupItems extends \App\Pages\Base
     }
 
     public function OnSubmit($sender) {
-        if (false == \App\ACL::checkEditRef('SupItems')) {
+        if (false == \App\ACL::checkEditRef('CustItems')) {
             return;
         }
 
