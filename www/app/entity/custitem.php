@@ -5,9 +5,9 @@ namespace App\Entity;
 /**
  * Класс-сущность  товар  поставщика
  *
- * @table=supitems
- * @view=supitems_view
- * @keyfield=supitem_id
+ * @table=custitems
+ * @view=custitems_view
+ * @keyfield=custitem_id
  */
 class CustItem extends \ZCL\DB\Entity
 {
