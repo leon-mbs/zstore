@@ -8,6 +8,7 @@ CREATE TABLE custitems (
   customer_id int(11) NOT NULL,
   quantity decimal(10, 3) NOT NULL DEFAULT 0.000,
   price decimal(10, 2) NOT NULL DEFAULT 0.00,
+   date NOT NULL,
   cust_code varchar(255) DEFAULT NULL,
   comment varchar(255) DEFAULT NULL,
   PRIMARY KEY (custitem_id)
@@ -30,6 +31,7 @@ SELECT
   `s`.`price` AS `price`,
   `s`.`cust_code` AS `cust_code`,
   `s`.`comment` AS `comment`,
+  `s`.`updatedon` AS `updatedon`,  
   `i`.`itemname` AS `itemname`,
   `i`.`cat_id` AS `cat_id`,
   `i`.`item_code` AS `item_code`,

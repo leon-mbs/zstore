@@ -78,6 +78,7 @@ class CustItems extends \App\Pages\Base
 
         $row->add(new Label('price', $item->price));
  
+        $row->add(new Label('updatedon',H::fd($item->updatedon) ));
         $row->add(new Label('comment', $item->comment));
  
         $row->add(new CheckBox('seldel', new \Zippy\Binding\PropertyBinding($item, 'seldel')));
@@ -136,6 +137,7 @@ class CustItems extends \App\Pages\Base
         $this->_item->quantity = $this->itemdetail->editqty->getText();
         $this->_item->cust_code = $this->itemdetail->editcustcode->getText();
         $this->_item->comment = $this->itemdetail->editdescription->getText();
+        $this->_item->updatedon = time();
     
         
         if ( $this->_item->item_id == 0) {

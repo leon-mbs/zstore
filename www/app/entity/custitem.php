@@ -22,6 +22,10 @@ class CustItem extends \ZCL\DB\Entity
  
 
     protected function afterLoad() {
+        
+        $this->updatedon = strtotime($this->updatedon);
+         
+        
         //распаковываем  данные из item detail
         $xml = simplexml_load_string($this->detail);
         $this->itemprice = (string)($xml->price1[0]);
