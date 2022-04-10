@@ -2,7 +2,7 @@ INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, 
  
 
 
-CREATE TABLE zstore.custitems (
+CREATE TABLE custitems (
   custitem_id int(11) NOT NULL AUTO_INCREMENT,
   item_id int(11) NOT NULL,
   customer_id int(11) NOT NULL,
