@@ -44,6 +44,7 @@ class CustItems extends \App\Pages\Base
       
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
+        $this->itemtable->add(new ClickLink('imports'))->onClick($this, 'onImport');
 
         $this->itemtable->add(new Form('listform'));
 
@@ -52,6 +53,7 @@ class CustItems extends \App\Pages\Base
         $this->itemtable->listform->add(new \Zippy\Html\DataList\Paginator('pag', $this->itemtable->listform->itemlist));
         $this->itemtable->listform->add(new SubmitLink('deleteall'))->onClick($this, 'OnDelAll');
    
+        
         $this->add(new Form('itemdetail'))->setVisible(false);
         $this->itemdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutoItem');
         $this->itemdetail->add(new TextInput('editprice'));
@@ -63,7 +65,23 @@ class CustItems extends \App\Pages\Base
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
-   
+        
+        $this->add(new Form('importform'))->setVisible(false);        
+        $this->importform->add(new ClickLink('back'))->onClick($this, 'cancelOnClick');
+        $this->importform->onSubmit($this, 'onLoad');
+        
+        
+        $this->importform->add(new \Zippy\Html\Form\File("filename"));
+        $cols = array(0 => '-', 'A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E');
+        $this->importform->add(new DropDownChoice("colcustcode", $cols));
+        $this->importform->add(new DropDownChoice("colitemcode", $cols));
+        $this->importform->add(new DropDownChoice("colqty", $cols));
+        $this->importform->add(new DropDownChoice("colprice", $cols));
+        $this->importform->add(new DropDownChoice("colcomment", $cols));
+        $this->importform->add(new CheckBox("passfirst"));
+        $this->importform->add(new DropDownChoice("icust", Customer::findArray("customer_name","status=0 and  (detail like '%<type>2</type>%'  or detail like '%<type>0</type>%' )","customer_name"), 0));
+       
+  
     }
 
     public function itemlistOnRow(\Zippy\Html\DataList\DataRow $row) {
@@ -120,6 +138,7 @@ class CustItems extends \App\Pages\Base
     public function cancelOnClick($sender) {
         $this->itemtable->setVisible(true);
         $this->itemdetail->setVisible(false);
+        $this->importform->setVisible(false);
     }
 
     public function OnFilter($sender) {
@@ -199,6 +218,101 @@ class CustItems extends \App\Pages\Base
 
         return Item::findArray("itemname"," (itemname like {$stext} or item_code = {$text}    ) ");
     }
+    
+    
+    
+    public function onImport($sender) {
+        $this->itemtable->setVisible(false);
+        $this->itemdetail->setVisible(false);
+        $this->importform->setVisible(true);
+    }
+    
+   public function onLoad($sender) {
+      $cust = $sender->icust->getValue();
+      $passfirst = $sender->passfirst->isChecked();
+      $colcustcode = $sender->colcustcode->getValue();
+      $colitemcode = $sender->colitemcode->getValue();
+      $colprice = $sender->colprice->getValue();
+      $colqty = $sender->colqty->getValue();
+      $colcomment = $sender->colcomment->getValue();
+      if ($colcustcode === '0') {
+            $this->setError('noselcolcustcode');
+            return;
+      }
+      if ($colitemcode === '0') {
+            $this->setError('noselcolitemcode');
+            return;
+      }
+      if ($colprice === '0') {
+            $this->setError('noselcolprice');
+            return;
+      }
+      if ( $cust == 0) {
+            $this->setError('noselsender');
+            return;
+      }
+    
+      $file = $sender->filename->getFile();
+      if (strlen($file['tmp_name']) == 0) {
+
+            $this->setError('noselfile');
+            return;
+      }
+
+ 
+       $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']); // Вариант и для xls и xlsX
+
+        $data = array();
+ 
+        $oCells = $oSpreadsheet->getActiveSheet()->getCellCollection();
+
+        for ($iRow = ($passfirst ? 2 : 1); $iRow <= $oCells->getHighestRow(); $iRow++) {
+
+            $row = array();
+            for ($iCol = 'A'; $iCol <= $oCells->getHighestColumn(); $iCol++) {
+                $oCell = $oCells->get($iCol . $iRow);
+                if ($oCell) {
+                    $row[$iCol] = $oCell->getValue();
+                }
+            }
+            $data[$iRow] = $row;
+             
+             
+
+        }
+
+        unset($oSpreadsheet);
+     
+        foreach ($data as $row) {
+            $price = doubleval(str_replace(',', '.', trim($row[$colprice1])))   ;
+            if($price==0) continue;
+            $qty = doubleval(str_replace(',', '.', trim($row[$colqty])))   ;
+            if($qty==0) $qty=null;
+            $comment =  trim($row[$colcomment])   ;
+            $itemcode =  trim($row[$colitemcode])   ;
+            $custcode =  trim($row[$colcustcode])   ;
+
+            if(strlen($itemcode)==0) continue;
+            if(strlen($custcode)==0) continue;
+            
+            $item = new CustItem();
+            $item->customer_id = $cust;
+            $item->price = $price;
+            $item->quantity = $qty;
+            $item->cust_code = $custcode);
+            $item->comment =$comment;
+            $item->updatedon = time();
+    
+           
+            $item->save();
+            
+            
+        }
+      
+   }
+    
+    
+    
 
 }
 

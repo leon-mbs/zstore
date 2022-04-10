@@ -353,7 +353,7 @@ $widget = PurchaseWizard::get($credential)
     public  function onPayed($args, $post) {
          $order= Document::load($this->orderid) ;
            
-                $payed = \App\Entity\Pay::addPayment($order->document_id, $order->document_date, $order->payed, $order->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_INCOME,'WayForPay');
+                $payed = \App\Entity\Pay::addPayment($order->document_id, $order->document_date, $order->payed, $order->headerdata['payment'],   'WayForPay');
                 if ($payed > 0) {
                     $order->payed = $payed;
             

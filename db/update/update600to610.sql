@@ -2,15 +2,15 @@ INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, 
  
 
 
-CREATE TABLE custitems (
+CREATE TABLE zstore.custitems (
   custitem_id int(11) NOT NULL AUTO_INCREMENT,
   item_id int(11) NOT NULL,
   customer_id int(11) NOT NULL,
-  quantity decimal(10, 3) NOT NULL DEFAULT 0.000,
+  quantity decimal(10, 3)  DEFAULT NULL,
   price decimal(10, 2) NOT NULL DEFAULT 0.00,
-   date NOT NULL,
-  cust_code varchar(255) DEFAULT NULL,
+  cust_code varchar(255) NOT NULL,
   comment varchar(255) DEFAULT NULL,
+  updatedon date NOT NULL,
   PRIMARY KEY (custitem_id)
 )
 ENGINE = InnoDB ;

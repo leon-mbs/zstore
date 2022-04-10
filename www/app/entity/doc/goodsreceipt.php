@@ -104,7 +104,7 @@ class GoodsReceipt extends Document
         
         
         if($this->headerdata['zatr'] > 0 && $this->headerdata['zatrself'] ==1 ) {
-            $total = $total + $this->headerdata["zatr"];  
+            $total = $total + $this->headerdata["zatr"];  // распределяем накладные  затраты  на  себестоимость
         }
         
         
@@ -148,7 +148,7 @@ class GoodsReceipt extends Document
         if ($this->headerdata['payment'] > 0 && $payed > 0) {
        
           
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment'], \App\Entity\IOState::TYPE_BASE_OUTCOME);
+            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment']);
             if ($payed > 0) {
                 $this->payed = $payed;
             }
@@ -158,7 +158,9 @@ class GoodsReceipt extends Document
 
         }
         if($this->headerdata['zatr'] > 0 && $this->headerdata['zatrself'] !=1 ) {
-            \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->headerdata['zatr'], $this->headerdata['payment'], \App\Entity\IOState::TYPE_NAKL);     
+            \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->headerdata['zatr'], $this->headerdata['payment']);     
+        }
+        if($this->headerdata['zatr'] > 0  ) {
             \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata['zatr'], \App\Entity\IOState::TYPE_NAKL);
         }
 

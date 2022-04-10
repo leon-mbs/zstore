@@ -36,7 +36,7 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("store", Store::getList(), H::getDefStore()));
 
         $form->add(new \Zippy\Html\Form\File("filename"));
-        $cols = array(0 => '-', 'A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F', 'G' => 'G', 'H' => 'H', 'I' => 'I', 'J' => 'J', 'K' => 'K', 'L' => 'L', 'M' => 'M',);
+        $cols = array(0 => '-', 'A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F', 'G' => 'G', 'H' => 'H', 'I' => 'I', 'J' => 'J', 'K' => 'K', 'L' => 'L', 'M' => 'M' );
         $form->add(new DropDownChoice("colname", $cols));
         $form->add(new DropDownChoice("colcode", $cols));
         $form->add(new DropDownChoice("colbarcode", $cols));
