@@ -260,7 +260,7 @@ class CustItems extends \App\Pages\Base
       }
 
  
-       $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']); // Вариант и для xls и xlsX
+        $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']); 
 
         $data = array();
  
@@ -282,7 +282,7 @@ class CustItems extends \App\Pages\Base
         }
 
         unset($oSpreadsheet);
-     
+        $cnt=0;
         foreach ($data as $row) {
             $price = doubleval(str_replace(',', '.', trim($row[$colprice1])))   ;
             if($price==0) continue;
@@ -292,23 +292,40 @@ class CustItems extends \App\Pages\Base
             $itemcode =  trim($row[$colitemcode])   ;
             $custcode =  trim($row[$colcustcode])   ;
 
-            if(strlen($itemcode)==0) continue;
             if(strlen($custcode)==0) continue;
             
-            $item = new CustItem();
-            $item->customer_id = $cust;
+            
+            $item = CustItem::getFirst("customer_id={$cust} and cust_code=".CustItem::qstr($custcode))   ;
+            
+            if($item == null){
+              if(strlen($itemcode)==0) continue;
+              $it = Item::getFirst('item_code='. Item::qstr($itemcode)) ; 
+              if($it==null) continue;
+                
+                
+              $item = new CustItem();
+              $item->customer_id = $cust;
+              $item->cust_code = $custcode);
+              $item->item_id = $it->item_id;
+            }
             $item->price = $price;
             $item->quantity = $qty;
-            $item->cust_code = $custcode);
             $item->comment =$comment;
             $item->updatedon = time();
     
            
             $item->save();
-            
+            $cnt++;
             
         }
-      
+        $this->setSuccess("imported_items", $cnt);
+        $this->itemtable->listform->itemlist->Reload();
+  
+        $this->itemtable->setVisible(true);
+        $this->itemdetail->setVisible(false);
+        $this->importform->setVisible(false);
+   
+     
    }
     
     
