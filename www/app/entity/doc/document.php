@@ -371,23 +371,7 @@ class Document extends \ZCL\DB\Entity
         $this->insertLog($state);
     
   
-        if($this->state == self::STATE_NEW)          $this->priority = 100;
-        if($this->state == self::STATE_CLOSED)       $this->priority = 1;
-        if($this->state == self::STATE_EXECUTED)     $this->priority = 10;
-        if($this->state == self::STATE_FINISHED)     $this->priority = 20;
-        if($this->state == self::STATE_DELIVERED)    $this->priority = 30;
-        if($this->state == self::STATE_INPROCESS)    $this->priority = 50;
-        if($this->state == self::STATE_SHIFTED)      $this->priority = 40;
-        if($this->state == self::STATE_INSHIPMENT)   $this->priority = 50;
-        if($this->state == self::STATE_WA)           $this->priority = 90;
-        if($this->state == self::STATE_APPROVED)     $this->priority = 80;
-        if($this->state == self::STATE_CANCELED)     $this->priority = 70;
-        if($this->state == self::STATE_EDITED)       $this->priority = 80;
-        if($this->state == self::STATE_REFUSED)      $this->priority = 3;
-        if($this->state == self::STATE_DELETED)      $this->priority = 2;
-        if($this->state == self::STATE_FAIL)         $this->priority = 3;
-        if($this->state == self::STATE_READYTOSHIP)  $this->priority = 50;
-        
+        $this->priority = $this->getPriorytyByState($this->state) ;
       
     
         $this->save();
@@ -410,6 +394,26 @@ class Document extends \ZCL\DB\Entity
      */
     protected function onState($state) {
 
+    }
+    public function getPriorytyByState($state) {
+        if($state == self::STATE_NEW)          return 100;
+        if($state == self::STATE_CLOSED)       return 1;
+        if($state == self::STATE_EXECUTED)     return 10;
+        if($state == self::STATE_FINISHED)     return 20;
+        if($state == self::STATE_DELIVERED)    return 30;
+        if($state == self::STATE_INPROCESS)    return 50;
+        if($state == self::STATE_SHIFTED)      return 40;
+        if($state == self::STATE_INSHIPMENT)   return 50;
+        if($state == self::STATE_WA)           return 90;
+        if($state == self::STATE_APPROVED)     return 80;
+        if($state == self::STATE_CANCELED)     return 70;
+        if($state == self::STATE_EDITED)       return 80;
+        if($state == self::STATE_REFUSED)      return 3;
+        if($state == self::STATE_DELETED)      return 2;
+        if($state == self::STATE_FAIL)         return 3;
+        if($state == self::STATE_READYTOSHIP)  return 50;
+ 
+        return 0;
     }
 
     /**

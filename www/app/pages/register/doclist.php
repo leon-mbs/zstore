@@ -185,6 +185,8 @@ class DocList extends \App\Pages\Base
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('cancel'))->onClick($this, 'cancelOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+        $row->add(new ClickLink('tofav',$this, 'favOnClick'))->setVisible($doc->priority != 1000)  ;
+        $row->add(new ClickLink('fromfav',$this, 'favOnClick'))->setVisible($doc->priority == 1000);
 
         //список документов   которые   могут  быть созданы  на  основании  текущего
         $row->add(new Panel('basedon'));
@@ -340,6 +342,15 @@ class DocList extends \App\Pages\Base
         $this->resetURL();
     }
 
+    public function favOnClick($sender) {
+        $doc = $sender->owner->getDataItem();
+        if(strpos($sender->id,"tofav") !==false)  $doc->priority = 1000;
+        if(strpos($sender->id,"fromfav") !==false)   $doc->priority = $doc->getPriorytyByState($doc->state) ;
+
+        $doc->save();
+        $this->doclist->Reload(true);
+      
+    }
     public function cancelOnClick($sender) {
         $this->docview->setVisible(false);
 
