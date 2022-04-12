@@ -52,6 +52,8 @@
                 <a zippy="csv">Експорт в Excel</a>
                 <table class="table   table-sm  table-hover   ">
                     <tr>
+                        <th></th>
+
                          <th class="text-nowrap  "><a zippy="sortdoc">Тип  документу</a></th>
                         <th class="text-nowrap  "><a zippy="sortnum">Номер</a></th>
                         <th class="text-nowrap  "><a zippy="sortdate">Дата</a></th>
@@ -67,8 +69,7 @@
                         <th></th>
 
                         <th></th>
-                        <th></th>
-
+                      
                         <th></th>
                         <th></th>
                         <th></th>
@@ -76,6 +77,11 @@
                     </tr>
                     <tbody>
                         <tr zippy="doclist">
+                            <td>
+                           <a  zippy="tofav"><i title="Додати в вибране" zippy="top" class="far fa-star"  ></i></a>
+                            <a  zippy="fromfav"><i title="Видалити  з  вибраного" zippy="nottop" class="fas fa-star"  ></i></a>
+                            </td>
+                           
                             <td zippy="name"></td>
                             <td zippy="number"></td>
                             <td style="white-space:   nowrap" zippy="date"></td>
@@ -93,10 +99,6 @@
 
                             <td><i zippy="isplanned" class="fa fa-calendar-alt" title="Запланований"></i></td>
                             <td><i zippy="waitapp" class="fa fa-gavel" title="Очікує затвердження "></i></td>
-                            <td>
-                           <a title="Позначити  як вибраний" zippy="tofav"><i zippy="top" class="far fa-star"  ></i></a>
-                            <a title="Позначити  як вибраний" zippy="fromfav"><i zippy="nottop" class="fas fa-star"  ></i></a>
-                            </td>
 
 
                             <td style="white-space:   nowrap"> &nbsp;&nbsp;
