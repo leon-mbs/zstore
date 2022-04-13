@@ -569,12 +569,12 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
            $favs = array();  
         }
     
-    
-        if(count($favs)==0) {
+        $fav =  trim(implode(',',$favs),',');
+        
+        if(strlen($fav)==0) {
            $docs = Document::find($this->getWhere(), $sortfield . " " . $asc, $count, $start);    
         }  else {
-           $fav =  trim(implode(',',$favs),',');
-           
+            
           $docs = Document::find("document_id in ({$fav}) and "  . $this->getWhere(false), $sortfield . " " . $asc, $count, $start);    
           foreach(Document::find("document_id not in ({$fav}) and "  . $this->getWhere(), $sortfield . " " . $asc, $count, $start) as $d){
               $docs[$d->document_id] = $d;   
