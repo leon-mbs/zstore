@@ -94,8 +94,10 @@ class ProdReceipt extends \App\Pages\Base
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'Order') {
-
-                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                      foreach ($basedoc->unpackDetails('detaildata') as $item) {
+                        $this->_itemlist[$item->item_id] = $item;
+                      }
+                        
                     }
                 }
                 if ($basedoc->meta_name == 'Task') {

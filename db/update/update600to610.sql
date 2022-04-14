@@ -18,7 +18,7 @@ ENGINE = InnoDB ;
 ALTER TABLE custitems
 ADD INDEX item_id (item_id);
 
-DROP VIEW custitems_view  ;
+ 
 
 CREATE
 VIEW custitems_view
