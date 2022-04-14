@@ -305,7 +305,7 @@ class CustItems extends \App\Pages\Base
                 
               $item = new CustItem();
               $item->customer_id = $cust;
-              $item->cust_code = $custcode);
+              $item->cust_code = $custcode;
               $item->item_id = $it->item_id;
             }
             $item->price = $price;
