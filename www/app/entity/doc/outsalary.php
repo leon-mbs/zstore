@@ -26,7 +26,7 @@ class OutSalary extends Document
                 $eacc->save();
             }
         }
-        $payed = Pay::addPayment($this->document_id, $this->document_date, 0 - $this->amount, $this->headerdata['payment'], \App\Entity\IOState::TYPE_SALARY_OUTCOME, $this->notes);
+        $payed = Pay::addPayment($this->document_id, $this->document_date, 0 - $this->amount, $this->headerdata['payment'],  $this->notes);
         if ($payed > 0) {
             $this->payed = $payed;
         }

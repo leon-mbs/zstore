@@ -5,23 +5,27 @@ namespace App\Entity;
 /**
  * Класс-сущность  товар  поставщика
  *
- * @table=supitems
- * @view=supitems_view
- * @keyfield=supitem_id
+ * @table=custitems
+ * @view=custitems_view
+ * @keyfield=custitem_id
  */
-class SupItem extends \ZCL\DB\Entity
+class CustItem extends \ZCL\DB\Entity
 {
 
  
 
     protected function init() {
-        $this->supitem_id = 0;
+        $this->custitem_id = 0;
     
     }
 
  
 
     protected function afterLoad() {
+        
+        $this->updatedon = strtotime($this->updatedon);
+         
+        
         //распаковываем  данные из item detail
         $xml = simplexml_load_string($this->detail);
         $this->itemprice = (string)($xml->price1[0]);

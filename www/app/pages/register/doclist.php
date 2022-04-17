@@ -29,6 +29,7 @@ class DocList extends \App\Pages\Base
 {
 
     public $_doc;
+    private $_favs=array();
 
     /**
      *
@@ -40,7 +41,12 @@ class DocList extends \App\Pages\Base
         if (false == \App\ACL::checkShowReg('DocList')) {
             return;
         }
-
+        $user = System::getUser() ;
+        $this->_favs = explode(',',$user->favs) ;
+        if(is_array($this->_favs)==false)  {
+           $this->_favs = array();  
+        }
+        
         $filter = Filter::getFilter("doclist");
         if ($filter->isEmpty()) {
             $filter->to = time() + (3 * 24 * 3600);
@@ -79,7 +85,7 @@ class DocList extends \App\Pages\Base
         $this->add(new SortLink("sortdate", "document_id", $this, "onSort"));
         $this->add(new SortLink("sortcust", "customer_name", $this, "onSort"));
         $this->add(new SortLink("sortamount", "amount", $this, "onSort"));
-        $this->add(new SortLink("sortid", "document_id", $this, "onSort"));
+        
 
         $doclist = $this->add(new DataView('doclist', new DocDataSource(), $this, 'doclistOnRow'));
 
@@ -155,7 +161,7 @@ class DocList extends \App\Pages\Base
         $doc = $row->getDataItem();
        
         $doc = $doc->cast();
-        $row->add(new Label('id', $doc->document_id));
+  
         $row->add(new Label('name', $doc->meta_desc));
         $row->add(new Label('number', $doc->document_number));
 
@@ -185,6 +191,8 @@ class DocList extends \App\Pages\Base
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('cancel'))->onClick($this, 'cancelOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+        $row->add(new ClickLink('tofav',$this, 'favOnClick'))->setVisible(false==in_array( $doc->document_id,$this->_favs))  ;
+        $row->add(new ClickLink('fromfav',$this, 'favOnClick'))->setVisible(true==in_array( $doc->document_id,$this->_favs))  ;
 
         //список документов   которые   могут  быть созданы  на  основании  текущего
         $row->add(new Panel('basedon'));
@@ -231,7 +239,7 @@ class DocList extends \App\Pages\Base
         $this->sortdate->Reset();
         $this->sortcust->Reset();
         $this->sortamount->Reset();
-        $this->sortid->Reset();
+        
 
         $this->doclist->setSorting($sortfield, $sortdir);
 
@@ -340,6 +348,27 @@ class DocList extends \App\Pages\Base
         $this->resetURL();
     }
 
+    public function favOnClick($sender) {
+        $doc = $sender->owner->getDataItem();
+        if(strpos($sender->id,"tofav") !==false) {
+           $this->_favs[]=$doc->document_id;
+        } 
+        if(strpos($sender->id,"fromfav") !==false) {
+           $ar = array();
+           foreach($this->_favs as $v) {
+             if($v==$doc->document_id) continue; 
+             $ar[]=$v;  
+           }
+           $this->_favs = $ar;
+
+        } 
+        $user = System::getUser() ;
+        $user->favs  = implode(',', $this->_favs);
+        $user->save();
+
+        $this->doclist->Reload(true);
+      
+    }
     public function cancelOnClick($sender) {
         $this->docview->setVisible(false);
 
@@ -484,13 +513,16 @@ class DocList extends \App\Pages\Base
 class DocDataSource implements \Zippy\Interfaces\DataSource
 {
 
-    private function getWhere() {
+    private function getWhere($usedate=true) {
         //$user = System::getUser();
 
         $conn = \ZDB\DB::getConnect();
         $filter = Filter::getFilter("doclist");
-        $where = " date(document_date) >= " . $conn->DBDate($filter->from) . " and  date(document_date) <= " . $conn->DBDate($filter->to);
-
+        if($usedate){
+          $where = " date(document_date) >= " . $conn->DBDate($filter->from) . " and  date(document_date) <= " . $conn->DBDate($filter->to);
+        } else {
+          $where = " 1=1 ";  
+        }
         if ($filter->doctype > 0) {
             $where .= " and meta_id  ={$filter->doctype} ";
         }
@@ -530,7 +562,27 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
-        $docs = Document::find($this->getWhere(), $sortfield . " " . $asc, $count, $start);
+    
+        $user = System::getUser() ;
+        $favs = explode(',',$user->favs) ;
+        if(is_array($favs)==false)  {
+           $favs = array();  
+        }
+    
+        $fav =  trim(implode(',',$favs),',');
+        
+        if(strlen($fav)==0) {
+           $docs = Document::find($this->getWhere(), $sortfield . " " . $asc, $count, $start);    
+        }  else {
+            
+          $docs = Document::find("document_id in ({$fav}) and "  . $this->getWhere(false), $sortfield . " " . $asc, $count, $start);    
+          foreach(Document::find("document_id not in ({$fav}) and "  . $this->getWhere(), $sortfield . " " . $asc, $count, $start) as $d){
+              $docs[$d->document_id] = $d;   
+          };    
+           
+     
+        }
+        
 
         return $docs;
     }

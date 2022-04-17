@@ -47,7 +47,7 @@ class Pay extends \ZCL\DB\Entity
      * @param mixed $mf денежный счет
      * @param mixed $comment коментарий
      */
-    public static function addPayment($document_id, $paydate, $amount, $mf_id, $type, $comment = '') {
+    public static function addPayment($document_id, $paydate, $amount, $mf_id,   $comment = '') {
         if (0 == (float)$amount || 0 == (int)$document_id || 0 == $mf_id) {
             return;
         }
@@ -61,7 +61,7 @@ class Pay extends \ZCL\DB\Entity
         $pay->mf_id = $mf_id;
         $pay->document_id = $document_id;
         $pay->amount = $amount;
-        $pay->paytype = $type;
+        $pay->paytype = 0;
         $pay->paydate = $paydate;
         $pay->notes = $comment;
         $pay->user_id = \App\System::getUser()->user_id;

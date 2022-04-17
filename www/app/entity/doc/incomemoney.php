@@ -14,7 +14,7 @@ class IncomeMoney extends Document
 
     public function Execute() {
 
-        $payed = Pay::addPayment($this->document_id, $this->document_date, $this->amount, $this->headerdata['payment'], $this->headerdata['type'], $this->notes);
+        $payed = Pay::addPayment($this->document_id, $this->document_date, $this->amount, $this->headerdata['payment'],   $this->notes);
         if ($payed > 0) {
             $this->payed = $payed;
         }

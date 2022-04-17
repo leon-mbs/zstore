@@ -120,8 +120,47 @@
 
 
         <div class="row" zippy="statuspan">
-            <div class="col-12 col-xl-10">
-
+            <div class="col-12   col-xl-10">
+                <details>
+                  <summary>Наявнiсть товарiв на  складi та/або у постачальника</summary>
+                  
+                 
+           
+              <table class="table table-sm">
+                     {{#citems}}
+                     <tr>
+                        <td>{{itemname}}</td>
+                        <td>{{itemcode}}</td>
+                        <td>
+                          <table class="ctable">
+                              {{#citemsstore}}
+                              <tr>
+                                 <td>{{itstore}}</td>
+                                 <td class="text-right">{{itqty}}</td>
+                              </tr>
+                             {{/citemsstore}} 
+                          </table>
+                        </td>
+                        <td>
+                          <table class="ctable">
+                              {{#citemscust}}
+                              <tr>
+                                 <td>{{itcust}}</td>
+                                 <td>{{itcustcode}}</td>
+                                 <td class="text-right">{{itcustprice}}</td>
+                                 <td class="text-right">{{itcustqty}}</td>
+                                 <td >{{itcustupdated}}</td>
+                                 <td >{{itcustcomment}}</td>
+                              </tr>
+                             {{/citemscust}} 
+                          </table>
+                        </td>
+                     </tr>
+                     {{/citems}} 
+                  </table>
+                </details>
+            </div>
+             <div class="col-12 col-xl-10">      
                 <div class="navbar nav">
                     <form zippy="statusform" class="form-inline ">
 

@@ -103,6 +103,7 @@ class User extends \ZCL\DB\Entity
         $this->hidesidebar = (int)$options['hidesidebar'];
         $this->usemobileprinter = (int)$options['usemobileprinter'];
         $this->mainpage = $options['mainpage'];
+        $this->favs = $options['favs'];
 
         parent::afterLoad();
     }
@@ -137,6 +138,7 @@ class User extends \ZCL\DB\Entity
         $options['mainpage'] = $this->mainpage;
         $options['phone'] = $this->phone;
         $options['viber'] = $this->viber;
+        $options['favs'] = $this->favs   ;
 
         $this->options = serialize($options);
 
