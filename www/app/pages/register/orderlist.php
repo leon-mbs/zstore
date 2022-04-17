@@ -78,7 +78,7 @@ class OrderList extends \App\Pages\Base
         $this->payform->add(new CheckBox('closeorder'));
         $this->payform->add(new Date('pdate', time()));
         $this->payform->setVisible(false);
-    }
+     }
 
     public function filterOnSubmit($sender) {
 
@@ -361,6 +361,38 @@ class OrderList extends \App\Pages\Base
         $this->updateStatusButtons();
         $this->goAnkor('dankor');
         $this->_tvars['askclose'] = false;
+        
+        $this->_tvars['citems'] = array();
+        foreach($this->_doc->unpackDetails('detaildata') as $it) {
+            $ait=array('itemname'=>$it->itemname,'itemcode'=>$it->item_code);
+            
+            $ait['citemsstore']  =  array();
+            
+            foreach(\App\Entity\Store::find("") as $st){
+                $qty=$it->getQuantity($st->store_id);
+                if(0 <> doubleval($qty)) {
+                   $ait['citemsstore'][]=array('itstore'=>$st->storename,'itqty'=>H::fqty($qty));     
+                }
+            }
+            $ait['citemscust']  =  array();
+            foreach(\App\Entity\CustItem::find("item_id={$it->item_id} ") as $ci ){
+                $cer = array('itcust'=>$ci->customer_name,'itcustcode'=>$ci->cust_code,'itcustcomment'=>$ci->comment);
+                $cer['itcustprice']  = H::fa($ci->price);
+                $cer['itcustupdated']  = H::fd($ci->updatedon);
+                
+                $cer['itcustqty']  = doubleval($ci->quantity)> 0 ? H::fqty($ci->quantity) : "";
+                
+                
+                $ait['citemscust'][]=$cer;
+            }
+   
+
+
+            $this->_tvars['citems'][]=$ait;    
+            
+            
+        }
+        
     }
 
     public function editOnClick($sender) {

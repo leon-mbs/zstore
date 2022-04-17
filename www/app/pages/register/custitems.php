@@ -278,9 +278,7 @@ class CustItems extends \App\Pages\Base
                 }
             }
             $data[$iRow] = $row;
-             
-             
-
+  
         }
 
         unset($oSpreadsheet);
@@ -303,7 +301,6 @@ class CustItems extends \App\Pages\Base
               if(strlen($itemcode)==0) continue;
               $it = Item::getFirst('item_code='. Item::qstr($itemcode)) ; 
               if($it==null) continue;
-                
                 
               $item = new CustItem();
               $item->customer_id = $cust;

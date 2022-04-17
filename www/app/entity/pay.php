@@ -61,7 +61,7 @@ class Pay extends \ZCL\DB\Entity
         $pay->mf_id = $mf_id;
         $pay->document_id = $document_id;
         $pay->amount = $amount;
-        $pay->paytype = $type;
+        $pay->paytype = 0;
         $pay->paydate = $paydate;
         $pay->notes = $comment;
         $pay->user_id = \App\System::getUser()->user_id;
