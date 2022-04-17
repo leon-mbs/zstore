@@ -6,6 +6,7 @@ use App\Application as App;
 use App\Entity\Customer;
 use App\Entity\Doc\Document;
 use App\Entity\Item;
+use App\Entity\CustItem;
 use App\Helper as H;
 use App\System;
 use Zippy\Html\DataList\DataView;
@@ -438,16 +439,31 @@ class OrderCust extends \App\Pages\Base
 
         $this->calcTotal();
     }
+   
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $item = Item::load($id);
 
+        $cust = $this->docform->customer->getKey();
         $qty = $item->getQuantity();
 
         $this->editdetail->qtystock->setText(H::fqty($qty));
+        //ищем  в товарах поставщиков
+        
+        $custitem = CustItem::getFirst("customer_id={$cust} and item_id=".$item->item_id,"updatedon desc")   ;
+        if($custitem==null){
+          $this->updateAjax(array('qtystock'));    
+        }   else {
+          $this->editdetail->editcustcode->setText($custitem->cust_code);
+          $this->editdetail->editprice->setText(H::fa($custitem->price));
+
+          $this->updateAjax(array('qtystock','editcustcode','editprice'));  
+        }
+        
+        
 
 
-        $this->updateAjax(array('qtystock'));
+        
     }
     
     public function onSelectItem($item_id, $itemname) {

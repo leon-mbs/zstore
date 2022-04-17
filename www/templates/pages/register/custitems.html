@@ -34,7 +34,7 @@
                     </form>
                 </div>
                 <a zippy="addnew" class="btn btn-success  ">Додати</a>
-                <a zippy="imports" class="btn btn-info  ">Iмпорт</a>
+               <br> <a zippy="csv">Експорт в Excel</a>&nbsp;&nbsp;&nbsp;&nbsp;                  <a zippy="imports" >Iмпорт</a>
                   <form zippy="listform">
                     <table class="table table-hover  table-sm  ">
                         <tr>
@@ -149,7 +149,7 @@
             <div class="col-12 col-md-6 col-lg-4 col-xl-3  " >
                 <form zippy="importform" enctype="multipart/form-data"  >
                 <h4>Iмпорт з  Excel</h4>
-                    <a zippy="back" class="btn btn-info  ">До  списку</a>
+                    <a zippy="back"  >До  списку</a>
                         <div class="form-group  ">
                             <label data-label="icust" for="icust">Постачальник</label>
                             <select zippy="icust" class="form-control select2 ">
@@ -170,19 +170,19 @@
                             <label><b>Номери стовпців Excel файлу</b> </label>
 
                         </div>
-                        <div class="form-group row">
-                            <label  class="col-8 col-form-label" for="colcustcode">Код  постачальника</label>
-                            <div class="col-4">
-                                <select style="width:100px;" zippy="colcustcode" class="form-control  ">
-                            </select>   </div> 
-                        </div>                                                                                
-                        <div class="form-group row">
+                          <div class="form-group row">
                             <label  class="col-8 col-form-label" for="colitemcode">Артикул</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colitemcode" class="form-control  ">
                             </select>  
                              </div> 
+                        </div>                        <div class="form-group row">
+                            <label  class="col-8 col-form-label" for="colcustcode">Код  постачальника</label>
+                            <div class="col-4">
+                                <select style="width:100px;" zippy="colcustcode" class="form-control  ">
+                            </select>   </div> 
                         </div>                                                                                
+                                                                              
                         <div class="form-group row">
                             <label  class="col-8 col-form-label" for="colprice">Цiна</label>
                             <div class="col-4">
@@ -206,7 +206,7 @@
                         </div>                                                                                
 
                         <input   type="submit" value="Iмпортувати" class="btn btn-primary  "> 
-               
+                        
                  </form>
             </div>
             

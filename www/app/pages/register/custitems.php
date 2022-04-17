@@ -45,6 +45,7 @@ class CustItems extends \App\Pages\Base
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->itemtable->add(new ClickLink('imports'))->onClick($this, 'onImport');
+        $this->itemtable->add(new ClickLink('csv', $this, 'oncsv'));
 
         $this->itemtable->add(new Form('listform'));
 
@@ -72,7 +73,7 @@ class CustItems extends \App\Pages\Base
         
         
         $this->importform->add(new \Zippy\Html\Form\File("filename"));
-        $cols = array(0 => '-', 'A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E');
+        $cols = array(0 => '-', 'A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F', 'G' => 'G');
         $this->importform->add(new DropDownChoice("colcustcode", $cols));
         $this->importform->add(new DropDownChoice("colitemcode", $cols));
         $this->importform->add(new DropDownChoice("colqty", $cols));
@@ -225,9 +226,10 @@ class CustItems extends \App\Pages\Base
         $this->itemtable->setVisible(false);
         $this->itemdetail->setVisible(false);
         $this->importform->setVisible(true);
+        $this->importform->clean();
     }
     
-   public function onLoad($sender) {
+    public function onLoad($sender) {
       $cust = $sender->icust->getValue();
       $passfirst = $sender->passfirst->isChecked();
       $colcustcode = $sender->colcustcode->getValue();
@@ -284,7 +286,7 @@ class CustItems extends \App\Pages\Base
         unset($oSpreadsheet);
         $cnt=0;
         foreach ($data as $row) {
-            $price = doubleval(str_replace(',', '.', trim($row[$colprice1])))   ;
+            $price = doubleval(str_replace(',', '.', trim($row[$colprice])))   ;
             if($price==0) continue;
             $qty = doubleval(str_replace(',', '.', trim($row[$colqty])))   ;
             if($qty==0) $qty=null;
@@ -328,7 +330,27 @@ class CustItems extends \App\Pages\Base
      
    }
     
-    
+    public function oncsv($sender) {
+        $list = $this->itemtable->listform->itemlist->getDataSource()->getItems(-1, -1 );
+        $header = array();
+        $data = array();
+
+        $i = 0;
+        foreach ($list as $item) {
+            $i++;
+           
+            $data['A' . $i] = $item->itemname;
+            $data['B' . $i] = $item->item_code;
+            $data['C' . $i] = $item->cust_code;
+            $data['D' . $i] = $item->customer_name;
+            $data['E' . $i] = $item->quantity;
+            $data['F' . $i] = $item->price;
+            $data['G' . $i] = $item->comment;
+        }
+
+        H::exportExcel($data, $header, 'custitems.xlsx');
+    }
+   
     
 
 }
