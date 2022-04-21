@@ -63,7 +63,7 @@ class VarList extends \App\Pages\Base
 
         //$this->UpdateAttrList();
 
-        $varpanel->add(new ClickLink('addvar'))->onClick($this, 'OnAddVar');
+        $varpanel->varlistpanel->add(new ClickLink('addvar'))->onClick($this, 'OnAddVar');
         
         $form = $varpanel->add(new Form('vareditform'));
         $form->setVisible(false);
