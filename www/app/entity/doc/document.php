@@ -130,10 +130,12 @@ class Document extends \ZCL\DB\Entity
 
         foreach ($this->headerdata as $key => $value) {
 
-
+           $value= str_replace('<![CDATA[','',$value) ;
+           $value= str_replace(']]>','',$value) ;
+ 
             if (strpos($value, '[CDATA[') !== false) {
-                \App\System::setWarnMsg('CDATA в  поле  обьекта');
-                \App\Helper::log(' CDATA в  поле  обьекта');
+              //  \App\System::setWarnMsg('CDATA в  поле  обьекта');
+             //   \App\Helper::log(' CDATA в  поле  обьекта');
                 continue;
             }
 
