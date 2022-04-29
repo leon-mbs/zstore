@@ -250,6 +250,7 @@ class Options extends \App\Pages\Base
         $this->food->add(new CheckBox('foodpack', $food['pack']));
 
         //источники  продаж
+        
         $this->add(new Form('salesourcesform'));
         $this->salesourcesform->add(new SubmitButton('salesourcesave'))->onClick($this, 'OnSaveSaleSource');
         $this->salesourcesform->add(new SubmitLink('addnewsalesource'))->onClick($this, 'OnAddSaleSource');
@@ -263,6 +264,20 @@ class Options extends \App\Pages\Base
 
         $this->salesourcesform->salesourceslist->Reload();
 
+        //модули
+        $modules = System::getOptions("modules");
+         
+        $this->add(new Form('modules'))->onSubmit($this, 'onModules');
+        $this->modules->add(new CheckBox('modocstore', $modules['ocstore']));
+        $this->modules->add(new CheckBox('modshop', $modules['shop']));
+        $this->modules->add(new CheckBox('modnote', $modules['note']));
+        $this->modules->add(new CheckBox('modissue', $modules['issue']));
+        $this->modules->add(new CheckBox('modwoocomerce', $modules['woocomerce']));
+        $this->modules->add(new CheckBox('modppo', $modules['ppo']));
+        $this->modules->add(new CheckBox('modnp', $modules['np']));
+       
+        
+        
     }
 
     public function saveCommonOnClick($sender) {
@@ -403,6 +418,8 @@ class Options extends \App\Pages\Base
         }
     }
 
+
+    
     public function onFood($sender) {
         $food = array();
         $food['worktype'] = $sender->foodworktype->getValue();
@@ -491,5 +508,19 @@ class Options extends \App\Pages\Base
         System::setOptions("val", $val);
         $this->setSuccess('saved');
     }
+    
+    public function onModules($sender) {
+         $modules = array();
+         $modules['ocstore'] = $sender->modocstore->isChecked() ? 1:0;
+         $modules['shop'] = $sender->modshop->isChecked() ? 1:0;
+         $modules['woocomerce'] = $sender->modwoocomerce->isChecked() ? 1:0;
+         $modules['ppo'] = $sender->modppo->isChecked() ? 1:0;
+         $modules['np'] = $sender->modnp->isChecked() ? 1:0;
+         $modules['issue'] = $sender->modissue->isChecked() ? 1:0;
+         $modules['note'] = $sender->modnote->isChecked() ? 1:0;
+         
+         System::setOptions("modules", $modules);
+         $this->setSuccess('saved');      
+    }    
     
 }

@@ -92,16 +92,17 @@ class Base extends \Zippy\Html\WebPage
         }
         $this->_tvars["smart"] = Helper::generateSmartMenu();
         //модули
+        $modules = System::getOptions('modules');
 
-        $this->_tvars["shop"] = $_config['modules']['shop'] == 1;
-        $this->_tvars["ocstore"] = $_config['modules']['ocstore'] == 1;
-        $this->_tvars["woocomerce"] = $_config['modules']['woocomerce'] == 1;
-        $this->_tvars["note"] = $_config['modules']['note'] == 1;
-        $this->_tvars["issue"] = $_config['modules']['issue'] == 1;
+        $this->_tvars["shop"] = $modules['shop'] == 1;
+        $this->_tvars["ocstore"] = $modules['ocstore'] == 1;
+        $this->_tvars["woocomerce"] = $modules['woocomerce'] == 1;
+        $this->_tvars["note"] = $modules['note'] == 1;
+        $this->_tvars["issue"] = $modules['issue'] == 1;
 
-        $this->_tvars["ppo"] = $_config['modules']['ppo'] == 1;
-        $this->_tvars["np"] = $_config['modules']['np'] == 1;
-        $this->_tvars["promua"] = $_config['modules']['promua'] == 1;
+        $this->_tvars["ppo"] = $modules['ppo'] == 1;
+        $this->_tvars["np"] = $modules['np'] == 1;
+        $this->_tvars["promua"] = $modules['promua'] == 1;
 
 
         //доступы к  модулям

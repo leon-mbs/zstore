@@ -249,6 +249,55 @@
                 </div>
             </div>
             <div class="col-12  col-md-5 col-xl-4  ">
+              <div class="card">
+                    <div class="card-body">
+                        <h4>Підключення  модулів</h4>
+                           <form zippy="modules">
+
+                            <div class="form-check">
+                                <input zippy="modocstore" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="modocstore"> Iнтеграція з опенкарт
+                                <a href="https://zippy.com.ua/ua/ext#1" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="modshop" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="modshop"> Онлайн каталог
+                                <a href="https://zippy.com.ua/ua/ext#3" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="modnote" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="modnote"> Органайзер (база знань)
+                                <a href="https://zippy.com.ua/ua/ext#2" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="modissue" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="modissue"> Проекти та завдання
+                                <a href="https://zippy.com.ua/ua/ext#4" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="modwoocomerce" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="modwoocomerce"> Iнтеграція з woocomerce
+                                <a href="https://zippy.com.ua/ua/ext#5" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="modppo" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="modppo"> Фіскалізація (ПРРО)
+                                <a href="https://zippy.com.ua/ua/ext#6" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="modnp" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="modnp"> Iнтеграція з Нова Пошта
+                                <a href="https://zippy.com.ua/ua/ext#8" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
+                            </div>
+
+                          
+                        
+                            <div class="form-group">
+                                <button class="btn btn-primary" type="submit">Зберегти</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
 
                 {{#useval}}
                 <div class="card">
@@ -379,37 +428,7 @@
                 </div>
 
 
-                <div class="card">
-                    <div class="card-body">
-                        <h4>Налаштування API</h4>
-                        <small>Налаштування API для доступу до даних з iнших систем</small>
-                        <form zippy="api">
-
-                            <div class="form-group  ">
-                                <label for="atype">Тип авторизацii</label>
-                                <select class="form-control" zippy="atype">
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label data-label="akey" for="akey">Ключ</label>
-                                <input zippy="akey" pattern="[a-zA-Z0-9]+" class="form-control">
-                                <small data-label="akey">Довiльне латиничне слово для шифрування
-                                    токену</small>
-                            </div>
-                            <div class="form-group">
-                                <label data-label="aexp" for="aexp">Час життя токену в хв.</label>
-                                <input zippy="aexp" pattern="[0-9]+" class="form-control" value="0">
-
-                            </div>
-
-
-                            <div class="form-group">
-                                <button class="btn btn-primary" type="submit">Зберегти</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
+              
                 
                 
 
@@ -546,6 +565,36 @@
                                 <br><small>Ставиться якщо є обидва варіанти (з собою і на місці) і потрібно уточнювати в замовленні</small>
                             </div>
 
+
+
+                            <div class="form-group">
+                                <button class="btn btn-primary" type="submit">Зберегти</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+       <div class="card">
+                    <div class="card-body">
+                        <h4>Налаштування API</h4>
+                        <small>Налаштування API для доступу до даних з iнших систем</small>
+                        <form zippy="api">
+
+                            <div class="form-group  ">
+                                <label for="atype">Тип авторизацii</label>
+                                <select class="form-control" zippy="atype">
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label data-label="akey" for="akey">Ключ</label>
+                                <input zippy="akey" pattern="[a-zA-Z0-9]+" class="form-control">
+                                <small data-label="akey">Довiльне латиничне слово для шифрування
+                                    токену</small>
+                            </div>
+                            <div class="form-group">
+                                <label data-label="aexp" for="aexp">Час життя токену в хв.</label>
+                                <input zippy="aexp" pattern="[0-9]+" class="form-control" value="0">
+
+                            </div>
 
 
                             <div class="form-group">
