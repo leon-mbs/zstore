@@ -74,7 +74,7 @@ class ARMPos extends \App\Pages\Base
 
 
         $this->add(new Panel('checklistpan'))->setVisible(false);
-        $this->add(new ClickLink('newcheck', $this, 'newdoc'));
+        $this->checklistpan->add(new ClickLink('newcheck', $this, 'newdoc'));
         $this->checklistpan->add(new DataView('checklist', new ArrayDataSource($this, '_doclist'), $this, 'onDocRow'));
 
         //панель статуса,  просмотр
