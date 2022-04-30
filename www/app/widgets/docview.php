@@ -36,6 +36,7 @@ class DocView extends \Zippy\Html\PageFragment
         parent::__construct($id);
 
         $this->add(new Label('_docid_')) ;
+        $this->add(new Label('_path_')) ;
         
  
     }
@@ -43,6 +44,14 @@ class DocView extends \Zippy\Html\PageFragment
     // Устанавливаем  документ  для  просмотра
     public function setDoc(\App\Entity\Doc\Document $doc) {
         $this->_docid_->setAttribute('docid',$doc->document_id);
+        $owner = $this->getOwner() ;
+        
+        if($owner instanceof \Zippy\Html\WebPage )  {
+           $path = ''  ;  
+        }   else {
+           $path = $owner->id.'::' ;
+        }
+        $this->_path_->setAttribute('path',$path);
       
          $this->setvisible(true);
         $path = $this->id;
