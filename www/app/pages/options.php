@@ -510,7 +510,7 @@ class Options extends \App\Pages\Base
     }
     
     public function onModules($sender) {
-         $modules = array();
+         $modules = System::getOptions("modules");
          $modules['ocstore'] = $sender->modocstore->isChecked() ? 1:0;
          $modules['shop'] = $sender->modshop->isChecked() ? 1:0;
          $modules['woocomerce'] = $sender->modwoocomerce->isChecked() ? 1:0;

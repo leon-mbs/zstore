@@ -352,7 +352,9 @@ class Base extends \Zippy\Html\WebPage
             }
         }
         if (count($this->_tvars["toasts"]) == 0) {
-            $this->_tvars["toasts"][] = array('title' => '');
+           // $this->_tvars["toasts"][] = array('title' => '');
+           \App\Session::getSession()->toasts = false;
+           return;
         }
         \App\Session::getSession()->toasts = true;
     }

@@ -2,6 +2,7 @@
     <body>
        
         <span zippy="_docid_"  ></span>   
+        <span zippy="_path_"  ></span>   
           {{={| |}=}}   
         <div   id="vdocview" class="   p-3 mb-3    ">
           
@@ -320,9 +321,9 @@
                    callPageMethod(this.path+'::loaddata',[this.docid], null,(data)=> 
                   {
                     
-                      let tmp =   JSON.parse(data)  
+                        
                       this.loaded = true;
-                      this.docdata = tmp;
+                      this.docdata = JSON.parse(data) ;
                       this.loaddocs()  
                       this.loadmessages()  
                       this.loadfiles()  
@@ -347,15 +348,15 @@
              
                loaddocs:function( ){
                    
-                   callPageMethod('docview::loadchilddocs',[this.docid], null,(data)=> 
-                              {
+                   callPageMethod($('#_path_').attr('path') +'docview::loadchilddocs',[this.docid], null,(data)=> 
+                              {    
                                   this.reldocs = JSON.parse(data) ;
                                    
                               });
                }  ,
                delchilddoc:function( id){
                     
-                   callPageMethod('docview::delchilddoc',[ id], null,(data)=> 
+                   callPageMethod($('#_path_').attr('path') +'docview::delchilddoc',[ id], null,(data)=> 
                               {
                                   this.loaddocs() 
                               });
@@ -375,7 +376,7 @@
                 onadddoc:function (){
                     
                     
-                   callPageMethod('docview::addchilddoc',[this.childdocid, this.docid], null,(data)=> 
+                   callPageMethod($('#_path_').attr('path') +'docview::addchilddoc',[this.childdocid, this.docid], null,(data)=> 
                    {
                       this.loaddocs() 
                    });                    
@@ -389,7 +390,7 @@
              
                 delmsg:function( id){
                     
-                   callPageMethod('docview::delmsg',[ id], null,(data)=> 
+                   callPageMethod($('#_path_').attr('path') +'docview::delmsg',[ id], null,(data)=> 
                      {
                         this.loadmessages() 
                      });
@@ -398,7 +399,7 @@
                    var el = document.getElementById('msgform') ;
                    var f = new  FormData(el)  
                     
-                   callPageMethod('docview::addmsg',[  this.docid], f,(data)=> 
+                   callPageMethod($('#_path_').attr('path') +'docview::addmsg',[  this.docid], f,(data)=> 
                    {
                         this.loadmessages() 
                    });                    
@@ -408,7 +409,7 @@
                 } ,               
                loadmessages:function( ){
                    
-                   callPageMethod('docview::loadmessages',[this.docid], null,(data)=> 
+                   callPageMethod($('#_path_').attr('path') +'docview::loadmessages',[this.docid], null,(data)=> 
                       {
                           
                           this.msglist = JSON.parse(data) ;
@@ -420,7 +421,7 @@
                    var el = document.getElementById('fileaddform') ;
                    var f = new  FormData(el)  
                     
-                   callPageMethod('docview::addfile',[  this.docid], f,(data)=> 
+                   callPageMethod($('#_path_').attr('path') +'docview::addfile',[  this.docid], f,(data)=> 
                    {
                         this.loadfiles() 
                    });                    
@@ -430,14 +431,14 @@
                 } ,  
                 delfile:function( id){
                     
-                   callPageMethod('docview::delfile',[ id], null,(data)=> 
+                   callPageMethod($('#_path_').attr('path') +'docview::delfile',[ id], null,(data)=> 
                      {
                         this.loadfiles() 
                      });
                } ,  
                   loadfiles:function( ){
                    
-                   callPageMethod('docview::loadfiles',[this.docid], null,(data)=> 
+                   callPageMethod($('#_path_').attr('path') +'docview::loadfiles',[this.docid], null,(data)=> 
                       {
                           
                           this.fileslist = JSON.parse(data) ;
