@@ -227,6 +227,7 @@ class OrderCust extends \App\Pages\Base
 
         $this->editdetail->editprice->setText("");
         $this->editdetail->editcustcode->setText("");
+        $this->wselitem->setVisible(false);        
     }
 
     public function cancelrowOnClick($sender) {

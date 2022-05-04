@@ -100,8 +100,9 @@ class UserLogin extends \Zippy\Html\WebPage
                 if ($_COOKIE['branch_id'] > 0) {
                     System::getSession()->defbranch = $_COOKIE['branch_id'];
                 }
+                $modules = \App\System::getOptions("modules");
 
-                if ($_config['modules']['shop'] == 1) {
+                if ($modules['shop'] == 1) {
                     App::Redirect('\App\Pages\Main');
                 } else {
                     App::RedirectHome();

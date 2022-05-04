@@ -42,6 +42,7 @@ class Base extends \Zippy\Html\WebPage
                 return;
             }
         }
+          $modules = \App\System::getOptions("modules");
 
 
         $this->_tvars["islogined"] = $customer_id > 0;
@@ -71,7 +72,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["usefeedback"] = strlen($this->op['usefeedback']) > 0;
         $this->_tvars["isfood"] = $this->op['ordertype'] == 2;
 
-        $this->_tvars["np"] = $_config['modules']['np'] == 1 && $this->op['ordertype'] != 2;
+        $this->_tvars["np"] = $modules['np'] == 1 && $this->op['ordertype'] != 2;
 
         if ($this->op['ordertype'] == 1) {
             $this->_tvars["delivery"] = false;

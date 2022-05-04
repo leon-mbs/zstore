@@ -30,10 +30,7 @@ class Report
         global $_config;
 
         $dir = 'templates';
-        if ($_config['common']['lang'] == 'ua') {
-            $dir = 'templates_ua';
-        }
-
+    
         $template = @file_get_contents(_ROOT . $dir . '/printforms/' . $this->_template);
         if (strlen($template) == 0) {
             return "Файл  печатной формы " . $this->_template . " не найден";
