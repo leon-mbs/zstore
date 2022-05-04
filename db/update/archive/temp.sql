@@ -1291,7 +1291,9 @@ AS
       "a"."startdate" AS "startdate",
       "a"."enddate" AS "enddate",
       "pv"."stagename" AS "stagename",
-     ( date_part('minute', "a"."startdate"::timezone, "a"."enddate"::timezone)   / 60) AS "hours",
+     ( EXTRACT(EPOCH FROM "a"."enddate" - "a"."startdate")   / 3600) AS "hours",
+     
+   
       "pv"."pa_id" AS "pa_id",
       "pv"."pp_id" AS "pp_id"
     FROM ("prodstageagenda" "a"
