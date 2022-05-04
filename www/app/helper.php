@@ -193,55 +193,56 @@ class Helper
 
     //метаданные   модулей
     public static function modulesMetaData($role) {
-        global $_config;
+        
+        $modules = \App\System::getOptions("modules");
 
         $mdata = array();
-        if ($_config['modules']['note'] == 1) {
+        if ($modules['note'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'note') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10000, 'meta_name' => "/Note/Pages/Main", 'meta_type' => 6, 'description' => self::l('modnotemain')));
             }
         }
 
 
-        if ($_config['modules']['shop'] == 1) {
+        if ($modules['shop'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'shop') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10002, 'meta_name' => "/Shop/Pages/ProductList", 'meta_type' => 6, 'description' => self::l('modshopprlist')));
             }
         }
 
 
-        if ($_config['modules']['ocstore'] == 1) {
+        if ($modules['ocstore'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'ocstore') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10005, 'meta_name' => "/OCStore/Orders", 'meta_type' => 6, 'description' => self::l('modocstoreorders')));
             }
         }
-        if ($_config['modules']['ocstore'] == 1) {
+        if ($modules['ocstore'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'ocstore') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10006, 'meta_name' => "/OCStore/Items", 'meta_type' => 6, 'description' => self::l('modocstoreitems')));
             }
         }
-        if ($_config['modules']['wc'] == 1) {
+        if ($modules['wc'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'wc') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10009, 'meta_name' => "/WC/Orders", 'meta_type' => 6, 'description' => self::l('modwcorders')));
             }
         }
-        if ($_config['modules']['wc'] == 1) {
+        if ($modules['wc'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'wc') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10010, 'meta_name' => "/WC/Items", 'meta_type' => 6, 'description' => self::l('modwcitems')));
             }
         }
-        if ($_config['modules']['issue'] == 1) {
+        if ($modules['issue'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'issue') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10014, 'meta_name' => "/Issue/Pages/IssueList", 'meta_type' => 6, 'description' => self::l('modissueslist')));
             }
         }
 
-        if ($_config['modules']['promua'] == 1) {
+        if ($modules['promua'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'pu') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10015, 'meta_name' => "/PU/Orders", 'meta_type' => 6, 'description' => self::l('modpuorders')));
             }
         }
-        if ($_config['modules']['promua'] == 1) {
+        if ($modules['promua'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'pu') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10016, 'meta_name' => "/PU/Items", 'meta_type' => 6, 'description' => self::l('modpuitems')));
             }
