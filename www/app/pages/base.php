@@ -13,7 +13,7 @@ class Base extends \Zippy\Html\WebPage
 {
 
     public $branch_id = 0;
-    protected $ispg = false; //postgres
+     
     
     public function __construct($params = null) {
         global $_config;
@@ -27,7 +27,6 @@ class Base extends \Zippy\Html\WebPage
             return;
         }
 
-        $this->ispg = $_config['db']['driver'] =='postgres';
         
         $options = System::getOptions('common');
 

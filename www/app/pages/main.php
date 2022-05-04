@@ -142,7 +142,7 @@ class Main extends Base
         
         
         $limit ="limit  0,25";
-        if($this->ispg) {
+        if($conn->dataProvider=="postgres") {
             $limit =" limit 25";
         }
         //мои  документы
