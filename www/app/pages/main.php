@@ -91,12 +91,12 @@ class Main extends Base
         //минимальное количество  
         if ($this->_tvars['wminqty'] == true) {
             $data = array();
-            $sql = "select t.qty,s.storename, t.store_id, i.`minqty`,i.`itemname`,i.`item_code`   from (select store_id, item_id, coalesce(sum( `qty`),0) as qty   from  store_stock
+            $sql = "select t.qty,s.storename, t.store_id, i.minqty,i.itemname,i.item_code   from (select store_id, item_id, coalesce(sum( qty),0) as qty   from  store_stock
             where  {$cstr} 1=1 group by store_id, item_id    ) t
             join items  i  on t.item_id = i.item_id
               join stores  s  on t.store_id = s.store_id
            
-            where i.disabled  <> 1 and  t.qty < i.`minqty` and i.`minqty`>0 order  by  s.storename ";
+            where i.disabled  <> 1 and  t.qty < i.minqty and i.minqty>0 order  by  s.storename ";
             $rs = $conn->Execute($sql);
 
             foreach ($rs as $row) {
@@ -139,11 +139,17 @@ class Main extends Base
             $doclist->Reload();
         }
 
+        
+        
+        $limit ="limit  0,25";
+        if($this->ispg) {
+            $limit =" limit 25";
+        }
         //мои  документы
         if ($this->_tvars['wmdoc'] == true) {
             $data = array();
 
-            $sql = "select    d.document_id,d.meta_desc,d.document_number,d.document_date,d.amount from   documents_view d  where 1=1   {$br}  and  d.user_id={$user->user_id}   order  by  document_id desc  limit  0,25";
+            $sql = "select    d.document_id,d.meta_desc,d.document_number,d.document_date,d.amount from   documents_view d  where 1=1   {$br}  and  d.user_id={$user->user_id}   order  by  document_id desc  ". $limit;
 
             $rc = $conn->Execute($sql);
 
@@ -246,12 +252,12 @@ class Main extends Base
 
             $sql = "
            select  coalesce(sum(0-(e.outprice*e.quantity))) as summa 
-              from `entrylist_view`  e
+              from entrylist_view  e
 
-              join `items_view` i on e.`item_id` = i.`item_id`
-             join `documents_view` d on d.`document_id` = e.`document_id`
-               where e.`item_id` >0  and e.`quantity` <> 0   
-               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN')
+              join items_view i on e.item_id = i.item_id
+             join documents_view d on d.document_id = e.document_id
+               where e.item_id >0  and e.quantity <> 0   
+               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN')
                {$br}  
               AND DATE(e.document_date) >= " . $conn->DBDate($m['start']) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($m['end']) . "
@@ -263,12 +269,12 @@ class Main extends Base
 
             $sql = "
            select  coalesce( sum(0-(e.outprice*e.quantity)) ) as summa     
-              from `entrylist_view`  e
+              from entrylist_view  e
 
-              join `services` s on e.`service_id` = s.`service_id`
-             join `documents_view` d on d.`document_id` = e.`document_id`
-               where e.`service_id` >0  and e.`quantity` <>0      {$cust}  
-              and d.`meta_name` in (  'ServiceAct' ,'POSCheck' )
+              join services s on e.service_id = s.service_id
+             join documents_view d on d.document_id = e.document_id
+               where e.service_id >0  and e.quantity <>0      {$cust}  
+              and d.meta_name in (  'ServiceAct' ,'POSCheck' )
                {$br}   AND DATE(e.document_date) >= " . $conn->DBDate($m['start']) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($m['end']) . "
                     
@@ -291,7 +297,7 @@ class Main extends Base
 
          //ожидается  оплата
         $sql = "select coalesce(  sum(case when  ( meta_name='OutcomeMoney' or meta_name='ReturnIssue' ) then  (payed - payamount )   else  (payamount - payed)  end) ,0) as sam 
-            from `documents_view` d  
+            from documents_view d  
             where     (payamount >0  or  payed >0) {$br} and
              ( meta_name in('GoodsIssue','Invoice' ,'PosCheck','ServiceAct','Order','ReturnIssue')  or  (meta_name='IncomeMoney'  and content like '%<detail>1</detail>%'  )  or  (meta_name='OutcomeMoney'  and content like '%<detail>2</detail>%'  )) 
               and state not in (1,2,3,17,8)  and customer_id >0  and  ( (meta_name <>'POSCheck' and payamount <> payed) or(meta_name = 'POSCheck'              and payamount > payed  ))
@@ -300,7 +306,7 @@ class Main extends Base
         $this->_tvars['bidebet'] = H::fa($conn->GetOne($sql));
         //к оплате
         $sql = " select   coalesce( sum(case when  ( meta_name='IncomeMoney' or meta_name='RetCustIssue') then  (payed - payamount )   else  (payamount - payed)  end),0) as sam   
-              from `documents_view`   d 
+              from documents_view   d 
             where   customer_id > 0  {$br} 
              and ( meta_name in('GoodsReceipt','InvoiceCust','RetCustIssue' )  or  (meta_name='OutcomeMoney'  and content like '%<detail>1</detail>%'  )  or  (meta_name='IncomeMoney'  and content like '%<detail>2</detail>%'  )) 
                   and state > 3      and payamount <> payed  
@@ -408,7 +414,7 @@ class Main extends Base
         $conn = $conn = \ZDB\DB::getConnect();
         $user = System::getUser();
 
-        $sql = "select    d.document_id,d.meta_desc,d.document_number,d.document_date,d.amount from   documents_view d  where 1=1   {$br}  and  d.user_id={$user->user_id}   order  by  document_id desc  limit  0,25";
+        $sql = "select    d.document_id,d.meta_desc,d.document_number,d.document_date,d.amount from   documents_view d  where 1=1   {$br}  and  d.user_id={$user->user_id}   order  by  document_id desc  ".$limit;
 
         $rc = $conn->Execute($sql);
 
@@ -465,12 +471,12 @@ class Main extends Base
         }
         $conn = $conn = \ZDB\DB::getConnect();
 
-        $sql = "select t.qty,s.storename, t.store_id, i.`minqty`,i.`itemname`,i.`item_code`   from (select store_id, item_id, coalesce(sum( `qty`),0) as qty   from  store_stock
+        $sql = "select t.qty,s.storename, t.store_id, i.minqty,i.itemname,i.item_code   from (select store_id, item_id, coalesce(sum( qty),0) as qty   from  store_stock
             where  {$cstr} 1=1 group by store_id, item_id    ) t
             join items  i  on t.item_id = i.item_id
               join stores  s  on t.store_id = s.store_id
            
-            where i.disabled  <> 1 and  t.qty < i.`minqty` and i.`minqty`>0 order  by  s.storename ";
+            where i.disabled  <> 1 and  t.qty < i.minqty and i.minqty>0 order  by  s.storename ";
 
         $rc = $conn->Execute($sql);
         $header = array();
