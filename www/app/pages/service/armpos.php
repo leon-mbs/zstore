@@ -909,7 +909,7 @@ class ARMPos extends \App\Pages\Base
             return;
         }
         if ($this->docpanel->form3->payment->getValue() == 0 && $this->_doc->payed > 0) {
-            $this->setError("noselmf");
+            $this->setError("noselmfp");
             return;
         }
 

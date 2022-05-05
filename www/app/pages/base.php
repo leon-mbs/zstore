@@ -13,6 +13,7 @@ class Base extends \Zippy\Html\WebPage
 {
 
     public $branch_id = 0;
+     
     
     public function __construct($params = null) {
         global $_config;
@@ -26,6 +27,7 @@ class Base extends \Zippy\Html\WebPage
             return;
         }
 
+        
         $options = System::getOptions('common');
 
         //опции

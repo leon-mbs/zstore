@@ -359,8 +359,11 @@ class Item extends \ZCL\DB\Entity
         if (strlen($snumber) > 0) {
             $sql .= "  and  st.snumber =  " . $conn->qstr($snumber);
         }
-
-        $sql = $sql . " order  by  e.document_id desc limit 0,1";
+        $limit =" limit 0,1";
+        if($conn->dataProvider=="postgres") {
+            $limit =" limit 1";
+        }
+        $sql = $sql . " order  by  e.document_id desc  ".$limit;
 
         return $conn->GetOne($sql);
     }
@@ -498,7 +501,12 @@ class Item extends \ZCL\DB\Entity
         if ($store_id > 0) {
             $sql .= " and store_id = " . $store_id;
         }
-        $sql .= " order  by  sdate  desc limit 0,1";
+        
+      $limit =" limit 0,1";
+            if($conn->dataProvider=="postgres") {
+                $limit =" limit 1";
+            }          
+        $sql .= " order  by  sdate  desc ". $limit;
 
 
         return $conn->GetOne($sql);

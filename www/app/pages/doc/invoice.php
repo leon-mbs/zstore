@@ -538,7 +538,7 @@ class Invoice extends \App\Pages\Base
             $this->setError("noselstore");
         }
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
-            $this->setError("noselmf");
+            $this->setError("noselmfp");
         }
         $c = $this->docform->customer->getKey();
         if ($c == 0) {

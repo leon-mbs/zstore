@@ -49,6 +49,7 @@ class GoodsIssue extends Document
         $totalstr =  \App\Util::money2str_ua($this->payamount);
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $mf = \App\Entity\MoneyFund::load($this->headerdata["payment"]);
 
         $printer = System::getOptions('printer');
 
@@ -72,7 +73,10 @@ class GoodsIssue extends Document
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
                         "style"           => $style,
-
+                        "bank"            => @$mf->bank,
+                        "bankacc"         => @$mf->bankacc,
+                        "isbank"          => (strlen($mf->bankacc) > 0 && strlen($mf->bank) > 0),
+ 
                        
                         "payed"      => $this->payed > 0 ? H::fa($this->payed) : false,
                         "payamount"  => $this->payamount > 0 ? H::fa($this->payamount) : false
@@ -83,6 +87,8 @@ class GoodsIssue extends Document
         $header["phone"] = false;
         $header["address"] = false;
         $header["edrpou"] = false;
+         $header["fedrpou"] = false;
+        $header["finn"] = false;
 
         if ($this->customer_id > 0) {
             $cust = \App\Entity\Customer::load($this->customer_id);
@@ -96,8 +102,16 @@ class GoodsIssue extends Document
             if (strlen($cust->edrpou) > 0) {
                 $header["edrpou"] = $cust->edrpou;
             }
+           
 
         }
+        if (strlen($firm['tin']) > 0) {
+            $header["fedrpou"] = $firm['tin'];
+        }
+        if (strlen($firm['inn']) > 0) {
+            $header["finn"] = $firm['inn'];
+        }
+
 
         if (strlen($this->headerdata["customer_name"]) == 0) {
             $header["customer_name"] = false;

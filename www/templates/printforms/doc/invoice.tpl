@@ -54,7 +54,21 @@
         <td colspan="7">{{firm_address}}</td>
 
     </tr>
-
+    {{#fedrpou}}
+    <tr>
+        <td></td>
+        <td valign="top">ЄДРПОУ</td>
+        <td colspan="7">{{fedrpou}}</td>
+    </tr>
+     {{/fedrpou}}     
+     {{#finn}}
+    <tr>
+        <td></td>
+        <td valign="top">IПН</td>
+        <td colspan="7">{{finn}}</td>
+    </tr>
+     {{/finn}}     
+  
     {{/isfirm}}
     {{#iscontract}}
     <tr>
@@ -70,7 +84,7 @@
 
         <td></td>
         <td> р/р</td>
-        <td colspan="7">{{bankacc}} в {{bank}}</td>
+        <td colspan="7">{{bankacc}}    {{bank}}</td>
 
     </tr>
     {{/isbank}}

@@ -340,7 +340,7 @@ class Items extends \App\Pages\Base
     public function onGetItems($sender) {
         $modules = System::getOptions("modules");
         $common = System::getOptions("common");
-
+        $conn =   \ZDB\DB::getConnect();
         $client = \App\Modules\WC\Helper::getClient();
         $i = 0;
 
@@ -402,7 +402,12 @@ class Items extends \App\Pages\Base
                             $image = new \App\Entity\Image();
                             $image->content = $im;
                             $image->mime = $imagedata['mime'];
-
+                            
+                            if($conn->dataProvider=='postgres') {
+                              $image->thumb = pg_escape_bytea($image->thumb);
+                              $image->content = pg_escape_bytea($image->content);
+                                
+                            }
                             $image->save();
                             $item->image_id = $image->image_id;
                             break;
@@ -457,6 +462,11 @@ class Items extends \App\Pages\Base
                                     $image = new \App\Entity\Image();
                                     $image->content = $im;
                                     $image->mime = $imagedata['mime'];
+                                    if($conn->dataProvider=='postgres') {
+                                      $image->thumb = pg_escape_bytea($image->thumb);
+                                      $image->content = pg_escape_bytea($image->content);
+                                        
+                                    }
 
                                     $image->save();
                                     $item->image_id = $image->image_id;

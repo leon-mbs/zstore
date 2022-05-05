@@ -39,7 +39,16 @@ $logger->pushProcessor(new \Monolog\Processor\IntrospectionProcessor());
 
 //  phpQuery::$debug = true;
 //Параметры   соединения  с  БД
-\ZDB\DB::config($_config['db']['host'], $_config['db']['name'], $_config['db']['user'], $_config['db']['pass']);
+if($_config['db']['driver'] =='postgres') {
+  
+  \ZDB\DB::config($_config['db']['host'], $_config['db']['name'], $_config['db']['user'], $_config['db']['pass'],"postgres");    
+   $ADODB_QUOTE_FIELDNAMES = false;
+   
+}
+else {
+  \ZDB\DB::config($_config['db']['host'], $_config['db']['name'], $_config['db']['user'], $_config['db']['pass']);    
+}
+
 
 //проверяем соединение
 try {

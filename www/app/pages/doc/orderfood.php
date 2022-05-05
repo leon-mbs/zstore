@@ -542,7 +542,7 @@ class OrderFood extends \App\Pages\Base
             $this->setError("mustsel_cust");
         }
         if ($p == 0 && $this->_doc->payed > 0) {
-            $this->setError("noselmf");
+            $this->setError("noselmfp");
         }
 
 
