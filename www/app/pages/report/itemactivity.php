@@ -104,14 +104,16 @@ class ItemActivity extends \App\Pages\Base
         $i = 1;
         $detail = array();
         $conn = \ZDB\DB::getConnect();
-
+        $gd = " GROUP_CONCAT(distinct dc.document_number) ";
+        if($conn->dataProvider=="postgres")  $gd = " string_agg(  dc.document_number,',') ";
+        
         $sql = "
          SELECT  t.*,
           
          (
         SELECT  
           
-          COALESCE(SUM(sc2.`quantity`), 0)  
+          COALESCE(SUM(sc2.quantity), 0)  
          FROM entrylist_view sc2
           JOIN store_stock_view st2
             ON sc2.stock_id = st2.stock_id
@@ -153,7 +155,7 @@ class ItemActivity extends \App\Pages\Base
           SUM(CASE WHEN quantity < 0 THEN 0 - quantity ELSE 0 END) AS obout,
           SUM(CASE WHEN (st.partion*sc.quantity ) > 0 THEN (st.partion*sc.quantity ) ELSE 0 END) AS obinamount,
           SUM(CASE WHEN (st.partion*sc.quantity )< 0 THEN 0 - (st.partion*sc.quantity ) ELSE 0 END) AS oboutamount,
-          GROUP_CONCAT(distinct dc.document_number) AS docs
+          {$gd} AS docs
         FROM entrylist_view sc
           JOIN store_stock_view st
             ON sc.stock_id = st.stock_id
@@ -165,7 +167,7 @@ class ItemActivity extends \App\Pages\Base
               AND DATE(sc.document_date) <= " . $conn->DBDate($to) . "
               GROUP BY st.store_id,st.item_id,
           st.itemname,
-          st.item_code,
+          st.item_code,  st.storename,
           st.snumber,
                        DATE(sc.document_date) ) t
               ORDER BY t.dt  

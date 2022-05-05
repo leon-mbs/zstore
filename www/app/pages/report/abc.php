@@ -124,7 +124,7 @@ class ABC extends \App\Pages\Base
         $conn = \ZDB\DB::getConnect();
         $sql = "SELECT * FROM (
                     SELECT items.itemname as name, ABS( SUM( (outprice-partion )*quantity ) ) AS value
-                    FROM  `entrylist_view` 
+                    FROM  entrylist_view 
                        join items on entrylist_view.item_id = items.item_id 
                        join documents_view  on entrylist_view.document_id = documents_view.document_id 
                        
@@ -151,7 +151,7 @@ class ABC extends \App\Pages\Base
         $conn = \ZDB\DB::getConnect();
         $sql = "SELECT * FROM (
                     SELECT customers.customer_name as name, SUM( ABS( partion *quantity ) ) AS value
-                    FROM  `entrylist_view` 
+                    FROM  entrylist_view 
                     join customers on entrylist_view.customer_id = customers.customer_id 
                     join documents_view  on entrylist_view.document_id = documents_view.document_id 
                     WHERE  partion  is  not null and   entrylist_view.quantity  >0 and meta_name in('GoodsReceipt','RetCustIssue') 
@@ -177,7 +177,7 @@ class ABC extends \App\Pages\Base
         $conn = \ZDB\DB::getConnect();
         $sql = "SELECT * FROM (
                     SELECT customers.customer_name as name, SUM( ABS( partion *quantity ) ) AS value
-                    FROM  `entrylist_view` 
+                    FROM  entrylist_view 
                     join customers on entrylist_view.customer_id = customers.customer_id 
                     join documents_view  on entrylist_view.document_id = documents_view.document_id 
                     WHERE   partion  is  not null and  entrylist_view.quantity <0 and meta_name in('GoodsIssue',    'POSCheck','ReturnIssue','TTN','OrderFood' )  
@@ -203,7 +203,7 @@ class ABC extends \App\Pages\Base
         $conn = \ZDB\DB::getConnect();
         $sql = "SELECT * FROM (
                     SELECT services.service_name as name, SUM( ABS( entrylist_view.outprice *entrylist_view.quantity ) ) AS value
-                    FROM  `entrylist_view` 
+                    FROM  entrylist_view 
                        join services on entrylist_view.service_id = services.service_id 
                        join documents_view  on entrylist_view.document_id = documents_view.document_id 
                        
@@ -229,7 +229,7 @@ class ABC extends \App\Pages\Base
         $conn = \ZDB\DB::getConnect();
         $sql = "SELECT * FROM (
                     SELECT customers.customer_name as name, SUM( ABS( (outprice-partion )*quantity  ) ) AS value
-                    FROM  `entrylist_view` 
+                    FROM   entrylist_view  
                     join customers on entrylist_view.customer_id = customers.customer_id 
                     join documents_view  on entrylist_view.document_id = documents_view.document_id 
                     WHERE   entrylist_view.quantity <0 and meta_name in('GoodsIssue',    'POSCheck','ReturnIssue','TTN','OrderFood' )  

@@ -461,7 +461,7 @@ class Options extends \App\Pages\Base
     }
 
     public function OnSaveSaleSource($sender) {
-
+        
         $options = System::getOptions('common');
         $options['salesources'] = $this->_salesourceslist;
         System::setOptions('common', $options);
