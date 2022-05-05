@@ -263,7 +263,13 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
         $conn = \ZDB\DB::getConnect();
         $sql = "select  p.*,d.`customer_name`,d.`meta_id`,d.`document_date`  from documents_view  d join `paylist_view` p on d.`document_id` = p.`document_id` where " . $this->getWhere() . " order  by  pl_id desc   ";
         if ($count > 0) {
-            $sql .= " limit {$start},{$count}";
+            $limit =" limit {$start},{$count}";
+            if($conn->dataProvider=="postgres") {
+                $limit =" limit {$count} offset {$start}";
+            }
+                  
+           
+            $sql .= $limit;
         }
 
         $docs = \App\Entity\Pay::findBySql($sql);

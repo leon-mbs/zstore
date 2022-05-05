@@ -153,7 +153,14 @@ class StockListDataSource implements \Zippy\Interfaces\DataSource
         $sql .= " join `store_stock` s on s.`stock_id` = e.`stock_id` ";
         $sql .= " where " . $this->getWhere() . " order  by  entry_id     ";
         if ($count > 0) {
-            $sql .= " limit {$start},{$count}";
+           
+            $limit =" limit {$start},{$count}";
+            if($conn->dataProvider=="postgres") {
+                $limit =" limit {$count} offset {$start}";
+            }
+                  
+           
+            $sql .= $limit;
         }
 
         $docs = \App\Entity\Entry::findBySql($sql);
