@@ -87,7 +87,7 @@ class CategoryList extends \App\Pages\Base
     }
 
     public function Reload() {
-        $this->_catlist = Category::find('', 'cat_name', -1, -1, "item_cat.*,    coalesce((  select     count(0)   from     `items` `i`   where     (`i`.`cat_id` = `item_cat`.`cat_id`)),0) AS `qty`");
+        $this->_catlist = Category::find('', 'cat_name', -1, -1, "item_cat.*,    coalesce((  select     count(*)   from     items i   where     (i.cat_id = item_cat.cat_id)),0) AS qty");
         foreach (Category::findFullData() as $c) {
             $this->_catlist[$c->cat_id]->full_name = $c->full_name;
             $this->_catlist[$c->cat_id]->parents = $c->parents;

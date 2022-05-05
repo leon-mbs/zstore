@@ -67,7 +67,7 @@ class Main extends Base
             $cstr = "    store_id in ({$cstr})  and   ";
         }
 
-        $conn = $conn = \ZDB\DB::getConnect();
+        $conn =   \ZDB\DB::getConnect();
 
         //просроченые товары
         if ($this->_tvars['wsdate'] == true) {
@@ -141,17 +141,14 @@ class Main extends Base
 
         
         
-        $limit ="limit  0,25";
-        if($conn->dataProvider=="postgres") {
-            $limit =" limit 25";
-        }
+       
         //мои  документы
         if ($this->_tvars['wmdoc'] == true) {
             $data = array();
 
-            $sql = "select    d.document_id,d.meta_desc,d.document_number,d.document_date,d.amount from   documents_view d  where 1=1   {$br}  and  d.user_id={$user->user_id}   order  by  document_id desc  ". $limit;
+            $sql = "select    d.document_id,d.meta_desc,d.document_number,d.document_date,d.amount from   documents_view d  where 1=1   {$br}  and  d.user_id={$user->user_id}   order  by  document_id desc  ";
 
-            $rc = $conn->Execute($sql);
+            $rc = $conn->SelectLimit($sql,25,0);
 
             foreach ($rc as $row) {
                 $data[] = new \App\DataItem($row);
@@ -414,9 +411,8 @@ class Main extends Base
         $conn = $conn = \ZDB\DB::getConnect();
         $user = System::getUser();
 
-        $sql = "select    d.document_id,d.meta_desc,d.document_number,d.document_date,d.amount from   documents_view d  where 1=1   {$br}  and  d.user_id={$user->user_id}   order  by  document_id desc  ".$limit;
-
-        $rc = $conn->Execute($sql);
+        $sql = "select    d.document_id,d.meta_desc,d.document_number,d.document_date,d.amount from   documents_view d  where 1=1   {$br}  and  d.user_id={$user->user_id}   order  by  document_id desc  ";
+        $rc = $conn->SelectLimit($sql,25,0);
 
         $header = array();
         $data = array();
