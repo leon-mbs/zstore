@@ -853,12 +853,12 @@ class POSCheck extends \App\Pages\Base
             $this->setError("mustsel_cust");
         }
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
-            $this->setError("noselmf");
+            $this->setError("noselmfp");
         }
         
         //изза  фискализации
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payamount > 0) {
-            $this->setError("noselmf");
+            $this->setError("noselmfp");
         }
 
 

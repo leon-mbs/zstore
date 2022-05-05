@@ -423,7 +423,7 @@ class ReturnIssue extends \App\Pages\Base
 
 
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
-            $this->setError("noselmf");
+            $this->setError("noselmfp");
         }
 
 

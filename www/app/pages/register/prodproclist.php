@@ -53,7 +53,7 @@ class ProdProcList extends \App\Pages\Base
         $this->listpan->add(new Paginator('pag', $proclist));
         $proclist->setPageSize(H::getPG());
 
-        $this->add(new ClickLink('addnewproc', $this, "OnAddProc"));
+        $this->listpan->add(new ClickLink('addnewproc', $this, "OnAddProc"));
 
         $this->add(new Form('editproc'))->setVisible(false);
         $this->editproc->add(new TextInput('editname'));
@@ -63,7 +63,7 @@ class ProdProcList extends \App\Pages\Base
 
         $this->editproc->add(new SubmitButton('save'))->onClick($this, 'OnSave');
         $this->editproc->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
-        $this->editproc->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+      //  $this->editproc->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
 
         //продукция
         $this->add(new Panel("prodspan"))->setVisible(false);

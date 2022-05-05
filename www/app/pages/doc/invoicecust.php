@@ -474,7 +474,7 @@ class InvoiceCust extends \App\Pages\Base
             $this->setError("noselsender");
         }
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
-            $this->setError("noselmf");
+            $this->setError("noselmfp");
         }
         $val = $this->docform->val->getValue();
         if (strlen($val) > 1) {
