@@ -30,7 +30,10 @@
                             <option value="0">Не вибрано</option>
                         </select>
                     </div>
-
+                    <div class="form-group">
+                      <label for="scan"> Скан документу</label>
+                      <input class="form-control" type="file" zippy="scan">
+                   </div>
                     <div class="form-group  ">
                         <label for="notes">Примітка </label>
 
@@ -44,7 +47,7 @@
                         <label for="emp">Спiвробiтник</label>
                         <select class="form-control  " zippy="emp">
                             <option value="0">Не обраний</option>
-                        </select> Обирается якщо оприбуткування виконуется як авансовий звIт</small>
+                        </select> Обирается якщо оприбуткування виконуется як авансовий звiт</small>
                     </div>
                     <div class="form-group  ">
                         <label data-label="exmf" for="exmf">Каса</label>
@@ -168,14 +171,9 @@
                            pattern="[0-9\.]+"
                            style="width: 100px;">
                 </div>
-                <div class="row">
-                    <div class="col-12 col-md-4">
-                        <div class="form-group">
-                            <label for="scan"> &nbsp; &nbsp;Скан документу</label>
-                            <input class="form-control" type="file" zippy="scan">
-                        </div>
-                    </div>
-                </div>
+         
+            
+            
                 <div class="form-group">
                     <input zippy="saverow" type="submit" value="Зберегти" class="btn  btn-outline-primary">&nbsp;<input
                         type="button" zippy="cancelrow" value="Скасувати" class="btn   btn-outline-secondary">

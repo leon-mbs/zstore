@@ -253,7 +253,12 @@ class CategoryList extends \App\Pages\Base
                 $thumb->resize(256, 256);
                 $image->content = $thumb->getImageAsString();
             }
-
+            $conn =   \ZDB\DB::getConnect();
+            if($conn->dataProvider=='postgres') {
+              $image->thumb = pg_escape_bytea($image->thumb);
+              $image->content = pg_escape_bytea($image->content);
+                
+            }
 
             $image->save();
             $this->_category->image_id = $image->image_id;

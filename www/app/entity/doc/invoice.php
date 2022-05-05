@@ -71,6 +71,8 @@ class Invoice extends \App\Entity\Doc\Document
         $header["phone"] = false;
         $header["address"] = false;
         $header["edrpou"] = false;
+        $header["fedrpou"] = false;
+        $header["finn"] = false;
         $cust = \App\Entity\Customer::load($this->customer_id);
 
         if (strlen($cust->phone) > 0) {
@@ -81,6 +83,12 @@ class Invoice extends \App\Entity\Doc\Document
         }
         if (strlen($cust->edrpou) > 0) {
             $header["edrpou"] = $cust->edrpou;
+        }
+        if (strlen($firm['tin']) > 0) {
+            $header["fedrpou"] = $firm['tin'];
+        }
+        if (strlen($firm['inn']) > 0) {
+            $header["finn"] = $firm['inn'];
         }
 
 

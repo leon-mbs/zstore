@@ -281,7 +281,7 @@ class IncomeItem extends \App\Pages\Base
         }
 
         $isEdited = $this->_doc->document_id > 0;
-
+ 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
