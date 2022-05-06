@@ -84,14 +84,14 @@ class Catalog extends Base
         $this->_list = array();
 
         $fields = "items_view.*";
-        $fields .= ",coalesce((  select     count(0)   from  shop_prod_comments `c`   where     `c`.`item_id` = items_view.item_id ),0) AS `comments`";
-        $fields .= ",coalesce((  select     sum(`r`.`rating`)   from  shop_prod_comments `r`   where    `r`.`item_id` = items_view.item_id),0) AS `ratings`";
+        $fields .= ",coalesce((  select     count(0)   from  shop_prod_comments c   where     c.item_id = items_view.item_id ),0) AS comments";
+        $fields .= ",coalesce((  select     sum(r.rating)   from  shop_prod_comments r   where    r.item_id = items_view.item_id),0) AS ratings";
         $store = "";
         if ($options['defstore'] > 0) {
             $store = " s.store_id={$options['defstore']}  and ";
         }
-        $fields .= ",coalesce((  select     sum(`s`.`qty`)   from  store_stock `s`  where  {$store}  `s`.`item_id` = items_view.item_id) ,0) AS `qty`";
-        $fields .= ",coalesce((  select     sum(0-`e`.`quantity`)   from  entrylist_view `e`     where   `e`.`quantity` < 0 and  `e`.`item_id` = items_view.item_id),0) AS `sold`";
+        $fields .= ",coalesce((  select     sum(s.qty)   from  store_stock s  where  {$store}  s.item_id = items_view.item_id) ,0) AS qty";
+        $fields .= ",coalesce((  select     sum(0-e.quantity)   from  entrylist_view e     where   e.quantity < 0 and  e.item_id = items_view.item_id),0) AS sold";
 
         $where = "cat_id = {$this->cat_id} and disabled <> 1 and detail  not  like '%<noshop>1</noshop>%' ";
 

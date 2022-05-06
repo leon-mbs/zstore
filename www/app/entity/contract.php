@@ -134,7 +134,7 @@ class Contract extends \ZCL\DB\Entity
 
             $sql .= "
         select   sum((case when   meta_name='OutcomeMoney' then  (payed - payamount )   else  (payamount - payed)  end) ) as sam 
-            from `documents_view`  
+            from documents_view  
             where   {$where} and   (payamount >0  or  payed >0) {$_docs}  and state not in (1,2,3,17,8)   and  ( (meta_name <>'POSCheck' and payamount <> payed) or(meta_name = 'POSCheck' and payamount > payed  ))
             
             ";
@@ -144,7 +144,7 @@ class Contract extends \ZCL\DB\Entity
 
                 $sql .= "
         select   sum((case when   meta_name='IncomeMoney' then  (payed - payamount )   else  (payamount - payed)  end) ) as sam 
-            from `documents_view`  
+            from documents_view  
             where   {$where} and   (payamount >0  or  payed >0) {$_docs}  and state not in (1,2,3,17,8)   and payamount <> payed 
             
             ";

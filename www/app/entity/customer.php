@@ -228,7 +228,7 @@ class Customer extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
      $sql = "select  coalesce(sum(sam),0) as sam  from (
         select   (case when  ( meta_name='OutcomeMoney' or meta_name='ReturnIssue' ) then  (payed - payamount )   else  (payamount - payed)  end) as sam 
-            from `documents_view`  
+            from documents_view  
             where {$br}   customer_id={$this->customer_id} and (payamount >0  or  payed >0) {$docs}  and state not in (1,2,3,17,8)   and  ( (meta_name <>'POSCheck' and payamount <> payed) or(meta_name = 'POSCheck' and payamount > payed  ))
             ) t    ";
 
