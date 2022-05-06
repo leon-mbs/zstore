@@ -77,9 +77,13 @@ class System
 
         $rs = $conn->GetOne("select optvalue from options where optname='{$group}' ");
         if (strlen($rs) > 0) {
-            self::$_options[$group] = @unserialize($rs);
+            $d =    @unserialize(@base64_decode($rs) );
+            if(!is_array($d) ) {
+               $d =  @unserialize( $rs );; //для  совместивости   
+            }
+            self::$_options[$group] = $d;
         }
-
+         
         return @self::$_options[$group];
     }
 
@@ -105,8 +109,8 @@ class System
     public static function setOptions($group, $options) {
         self::$_options[$group] = $options;
         $options = serialize($options);
+        $options = base64_encode($options) ;    
         $conn = \ZDB\DB::getConnect();
-
         $conn->Execute(" delete from options where  optname='{$group}' ");
         $conn->Execute(" insert into options (optname,optvalue) values ('{$group}'," . $conn->qstr($options) . " ) ");
     }

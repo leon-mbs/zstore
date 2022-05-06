@@ -88,14 +88,14 @@ class PaySelList extends \App\Pages\Base
             $hold = " where  c.detail like '%<holding>{$holding}</holding>%'";
         }
 
-        $sql = "select c.customer_name,c.phone, c.customer_id,coalesce(sum(sam),0)  as sam  from (
-        select customer_id,   (case when  ( meta_name='IncomeMoney' or meta_name='RetCustIssue') then  (payed - payamount )   else  (payamount - payed)  end) as sam   
-              from `documents_view`  
+        $sql = "select  * from(select c.customer_name,c.phone, c.customer_id,coalesce(sum(tsam),0)  as sam  from (
+        select customer_id,   (case when  ( meta_name='IncomeMoney' or meta_name='RetCustIssue') then  (payed - payamount )   else  (payamount - payed)  end) as tsam   
+              from documents_view  
             where {$br}   customer_id > 0  {$this->_docs}      and state > 3  and (payamount >0  or  payed >0)   and payamount <> payed  
             ) t join customers c  on t.customer_id = c.customer_id and c.status=0     {$hold}
-             group by c.customer_name,c.phone, c.customer_id 
-             having sam <> 0 
-             order by c.customer_name ";
+             group by c.customer_name,c.phone, c.customer_id    ) tt  
+             where tt.sam <>0
+             order by tt.customer_name ";
 
         $this->_custlist = \App\DataItem::query($sql);
 

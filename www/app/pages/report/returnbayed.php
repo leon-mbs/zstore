@@ -54,17 +54,17 @@ class Returnbayed extends \App\Pages\Base
             $sql = "
             select itemname,item_code,buyqty,rqty,(0-rqty)/buyqty as pr from (
             select * from (
-          select i.`itemname`,i.`item_code`,
-              sum( case when e.`quantity` > 0 then e.`quantity`  else 0 end ) as buyqty,    
-              sum( case when e.`quantity` < 0 then e.`quantity`  else 0 end ) as rqty    
-              from `entrylist_view`  e
+          select i.itemname,i.item_code,
+              sum( case when e.quantity > 0 then e.quantity  else 0 end ) as buyqty,    
+              sum( case when e.quantity < 0 then e.quantity  else 0 end ) as rqty    
+              from entrylist_view  e
 
-              join `items_view` i on e.`item_id` = i.`item_id`  and i.disabled<> 1  
-              join `documents_view` d on d.`document_id` = e.`document_id`
-               where e.partion  is  not null and  e.`item_id` >0  and e.`quantity` <> 0    
-               and d.`meta_name` in ('GoodsReceipt','RetCustIssue' )
+              join items_view i on e.item_id = i.item_id  and i.disabled<> 1  
+              join documents_view d on d.document_id = e.document_id
+               where e.partion  is  not null and  e.item_id >0  and e.quantity <> 0    
+               and d.meta_name in ('GoodsReceipt','RetCustIssue' )
                {$br}   
-               group by  i.`itemname`,i.`item_code`
+               group by  i.itemname,i.item_code
                )  t where  t.rqty <0  ) t2   where (0-rqty)/buyqty >= 0.01 order  by (0-rqty)/buyqty desc 
         ";
      

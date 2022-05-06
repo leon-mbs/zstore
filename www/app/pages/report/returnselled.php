@@ -56,17 +56,17 @@ class Returnselled extends \App\Pages\Base
             $sql = "
             select itemname,item_code,sellqty,rqty,rqty/(0-sellqty) as pr from (
             select * from (
-          select i.`itemname`,i.`item_code`,
-              sum( case when e.`quantity` < 0 then e.`quantity`  else 0 end ) as sellqty,    
-              sum( case when e.`quantity` > 0 then e.`quantity`  else 0 end ) as rqty    
-              from `entrylist_view`  e
+          select i.itemname,i.item_code,
+              sum( case when e.quantity < 0 then e.quantity  else 0 end ) as sellqty,    
+              sum( case when e.quantity > 0 then e.quantity  else 0 end ) as rqty    
+              from entrylist_view  e
 
-              join `items_view` i on e.`item_id` = i.`item_id`    and i.disabled<> 1 
-              join `documents_view` d on d.`document_id` = e.`document_id`
-               where e.partion  is  not null and  e.`item_id` >0  and e.`quantity` <> 0    
-               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN' )
+              join items_view i on e.item_id = i.item_id    and i.disabled<> 1 
+              join documents_view d on d.document_id = e.document_id
+               where e.partion  is  not null and  e.item_id >0  and e.quantity <> 0    
+               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN' )
                {$br}   
-               group by  i.`itemname`,i.`item_code`
+               group by  i.itemname,i.item_code
                )  t where  t.rqty >0  ) t2   where  rqty/(0-sellqty) >= 0.01 order  by rqty/(0-sellqty) desc 
         ";
      

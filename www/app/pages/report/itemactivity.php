@@ -105,7 +105,9 @@ class ItemActivity extends \App\Pages\Base
         $detail = array();
         $conn = \ZDB\DB::getConnect();
         $gd = " GROUP_CONCAT(distinct dc.document_number) ";
-        if($conn->dataProvider=="postgres")  $gd = " string_agg(  dc.document_number,',') ";
+        if($conn->dataProvider=="postgres") {
+           $gd = " string_agg(  dc.document_number,',') ";  
+        } 
         
         $sql = "
          SELECT  t.*,

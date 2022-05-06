@@ -217,8 +217,9 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
         $conn = \ZDB\DB::getConnect();
 
         //$where = "   d.customer_id in(select  customer_id from  customers  where  status=0)";
-        $where = " paydate>= DATE_ADD(NOW(), INTERVAL -400 DAY) ";
-
+          
+        $where = " paydate>=  ". $conn->DBDate(strtotime("-400 day") );
+    
         $author = $this->page->filter->fuser->getValue();
 
         $cust = $this->page->filter->fcustomer->getKey();
@@ -254,14 +255,14 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
 
     public function getItemCount() {
         $conn = \ZDB\DB::getConnect();
-        $sql = "select coalesce(count(*),0) from documents_view  d join `paylist_view` p on d.`document_id` = p.`document_id` where " . $this->getWhere();
+        $sql = "select coalesce(count(*),0) from documents_view  d join paylist_view p on d.document_id = p.document_id where " . $this->getWhere();
         return $conn->GetOne($sql);
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
         $conn = \ZDB\DB::getConnect();
-        $sql = "select  p.*,d.`customer_name`,d.`meta_id`,d.`document_date`  from documents_view  d join `paylist_view` p on d.`document_id` = p.`document_id` where " . $this->getWhere() . " order  by  pl_id desc   ";
+        $sql = "select  p.*,d.customer_name,d.meta_id,d.document_date  from documents_view  d join paylist_view p on d.document_id = p.document_id where " . $this->getWhere() . " order  by  pl_id desc   ";
         if ($count > 0) {
             $limit =" limit {$start},{$count}";
             if($conn->dataProvider=="postgres") {

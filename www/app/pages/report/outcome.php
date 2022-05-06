@@ -311,15 +311,15 @@ class Outcome extends \App\Pages\Base
         }
 
         if ($type == 11) {    //по источникам
-            if(strlen($salesource)==0)  $salesource="''";
+            if(strlen($salesource)==0)  $salesource="0";
             $sql = "
             select i.itemname,  sum(0-e.quantity) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
               from entrylist_view  e
 
-                 join items i on e.item_id = i.item_id
+                 join items i on e.item_id = i.item_id                                          
               
              join documents_view d on d.document_id = e.document_id
-               where  e.partion  is  not null and (e.tag = 0 or e.tag = -1  or e.tag = -4)   and ExtractValue(d.content, '//doc/header/salesource') = {$salesource}  
+               where  e.partion  is  not null and (e.tag = 0 or e.tag = -1  or e.tag = -4)   and  d.content like '%<salesource>{$salesource}</salesource>%'    
                and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood')
                 {$br} {$u}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "

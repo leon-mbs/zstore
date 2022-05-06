@@ -413,16 +413,16 @@ class ProdProcList extends \App\Pages\Base
 
 
         $sql = "
-          select i.item_type,i.item_id,i.`itemname`  , sum(e.`quantity`) as qty,  sum((partion )*quantity) as summa
-              from `entrylist_view`  e
+          select i.item_type,i.item_id,i.itemname  , sum(e.quantity) as qty,  sum((partion )*quantity) as summa
+              from entrylist_view  e
 
-              join `items` i on e.`item_id` = i.`item_id`
-             join `documents_view` d on d.`document_id` = e.`document_id`
-               where e.`item_id` >0   
-               and d.`meta_name` in ('ProdIssue','ProdReceipt')
+              join items i on e.item_id = i.item_id
+             join documents_view d on d.document_id = e.document_id
+               where e.item_id >0   
+               and d.meta_name in ('ProdIssue','ProdReceipt')
                and d.content like '%<pp_id>{$this->_proc->pp_id}</pp_id>%'  
-               group by i.item_type,i.item_id, i.`itemname` 
-               order  by i.`itemname`
+               group by i.item_type,i.item_id, i.itemname 
+               order  by i.itemname
         ";
 
         $items = $conn->Execute($sql);

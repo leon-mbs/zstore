@@ -74,7 +74,7 @@ class PayActivity extends \App\Pages\Base
          (
         SELECT  
           
-          COALESCE(SUM(sc2.`amount`), 0)  
+          COALESCE(SUM(sc2.amount), 0)  
          FROM paylist_view sc2
            
               WHERE 

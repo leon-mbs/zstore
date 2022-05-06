@@ -327,7 +327,7 @@ class ProdStageList extends \App\Pages\Base
     public function updateCal() {
 
         $tasks = array();
-        $where = "pp_id in (select pp_id from prodproc where  state=1) and st_id in (select st_id from `prodstage` where  state <>2 )";
+        $where = "pp_id in (select pp_id from prodproc where  state=1) and st_id in (select st_id from prodstage where  state <>2 )";
         $emp_id = $this->calendarpan->calfilter->calfilteremp->getValue();
         $stemps = array(0);
         if ($emp_id > 0) {

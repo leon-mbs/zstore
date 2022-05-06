@@ -139,8 +139,8 @@ class StockListDataSource implements \Zippy\Interfaces\DataSource
     public function getItemCount() {
         $conn = \ZDB\DB::getConnect();
         $sql = "select  count(*)  from documents   d ";
-        $sql .= " join `entrylist` e on d.`document_id` = e.`document_id` ";
-        $sql .= " join `store_stock` s on s.`stock_id` = e.`stock_id` ";
+        $sql .= " join entrylist e on d.document_id = e.document_id ";
+        $sql .= " join store_stock s on s.stock_id = e.stock_id ";
         $sql .= " where " . $this->getWhere();
         return $conn->GetOne($sql);
     }
@@ -149,8 +149,8 @@ class StockListDataSource implements \Zippy\Interfaces\DataSource
 
         $conn = \ZDB\DB::getConnect();
         $sql = "select e.outprice,e.entry_id, e.quantity,  (s.partion*e.quantity) as amount  , d.document_id, d.document_number,d.document_date,s.partion,s.snumber,d.customer_name from documents_view   d ";
-        $sql .= " join `entrylist` e on d.`document_id` = e.`document_id` ";
-        $sql .= " join `store_stock` s on s.`stock_id` = e.`stock_id` ";
+        $sql .= " join entrylist e on d.document_id = e.document_id ";
+        $sql .= " join store_stock s on s.stock_id = e.stock_id ";
         $sql .= " where " . $this->getWhere() . " order  by  entry_id     ";
         if ($count > 0) {
            
