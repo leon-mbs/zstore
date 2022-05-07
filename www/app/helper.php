@@ -275,7 +275,10 @@ class Helper
         global $_config;
 
         $emailfrom = $_config['smtp']['emailfrom'];
-
+        if(strlen($emailfrom)==0) {
+            $emailfrom = $_config['smtp']['user'];
+            
+        }
 
         try {
 
