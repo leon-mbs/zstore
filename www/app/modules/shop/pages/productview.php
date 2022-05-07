@@ -250,9 +250,9 @@ class ProductView extends Base
 
         $product = Product::load($this->item_id);
 
-        $product->rating = $conn->GetOne("select sum(rating)/count(*) from `shop_prod_comments`where  item_id ={$this->item_id} and moderated <> 1 and  rating >0");
+        $product->rating = $conn->GetOne("select sum(rating)/count(*) from shop_prod_comments where  item_id ={$this->item_id} and moderated <> 1 and  rating >0");
         $product->rating = round($product->rating);
-        $product->comments = $conn->GetOne("select count(*) from `shop_prod_comments`where  item_id ={$this->item_id} and moderated <> 1");
+        $product->comments = $conn->GetOne("select count(*) from shop_prod_comments where  item_id ={$this->item_id} and moderated <> 1");
         $product->save();
         $this->rated->setText($product->rating);
         $this->comments->setText("Отзывов({$product->comments})");

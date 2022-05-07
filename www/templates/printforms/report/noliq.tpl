@@ -2,7 +2,7 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="3">
-            Товари в дорозі на {{date}}
+            Неліквідні товари
         </td>
     </tr>
     {{#cust}}
@@ -19,7 +19,7 @@
         <th style="border: solid black 1px"> Найменування</th>
 
         <th style="border: solid black 1px">Од.</th>
-        <th align="right" style="border: solid black 1px">На кладi</th>
+        <th align="right" style="border: solid black 1px">На складi</th>
 
 
     </tr>
@@ -27,7 +27,7 @@
     <tr>
 
 
-        <td>{{name}}</td>
+        <td>{{itemname}}</td>
 
         <td>{{msr}}</td>
         <td align="right">{{qty}}</td>

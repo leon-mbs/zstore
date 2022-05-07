@@ -853,7 +853,7 @@ class Document extends \ZCL\DB\Entity
                     $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
                 }
             }
-            $mail->setFrom($_config['smtp']['user'], '');
+            $mail->setFrom($_config['smtp']['emailfrom'], '');
             $mail->addAddress($customer->email);
             $mail->Subject = $doc->getEmailSubject();
             $mail->msgHTML($doc->getEmailBody());

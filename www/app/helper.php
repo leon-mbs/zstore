@@ -271,11 +271,11 @@ class Helper
         return $template;
     }
 
-    public static function sendLetter($template, $emailfrom, $emailto, $subject = "") {
+    public static function sendLetter($emailto, $text,    $subject = "") {
         global $_config;
-        if (strlen($emailfrom) == 0) {
-            $emailfrom = $_config['smtp']['user'];
-        }
+
+        $emailfrom = $_config['smtp']['emailfrom'];
+
 
         try {
 
@@ -293,13 +293,14 @@ class Helper
                 }
             }
 
-
+             
             $mail->setFrom($emailfrom);
             $mail->addAddress($emailto);
             $mail->Subject = $subject;
-            $mail->msgHTML($template);
+            $mail->msgHTML($text);
             $mail->CharSet = "UTF-8";
             $mail->IsHTML(true);
+            $d = $mail->send() ;
             if ($mail->send() === false) {
                 System::setErrorMsg($mail->ErrorInfo);
             } else {
@@ -313,10 +314,10 @@ class Helper
           $from_name = '=?utf-8?B?' . base64_encode("Онлайн каталог") . '?=';
           $subject = '=?utf-8?B?' . base64_encode($subject) . '?=';
           mail(
-          $email,
+          $emailto,
           $subject,
-          $template,
-          "From: " . $from_name." <{$_config['common']['emailfrom']}>\r\n".
+          $text,
+          "From: " . $from_name." <{$_config['smtp']['emailfrom']}>\r\n".
           "Content-type: text/html; charset=\"utf-8\""
           );
          */

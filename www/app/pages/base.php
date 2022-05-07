@@ -178,8 +178,12 @@ class Base extends \Zippy\Html\WebPage
             $conn = \ZDB\DB::getConnect();
             $conn->Execute("update users  set  lastactive = now() where  user_id= " . $user->user_id);
 
-
+   
             $w = "     TIME_TO_SEC(timediff(now(),lastactive)) <300  ";
+            if($conn->dataProvider=="postgres") {
+                $w = "     EXTRACT(EPOCH FROM now() - lastactive) <300  ";
+            }            
+            
             if ($this->branch_id > 0) {
                 $w .= "  and  employee_id  in (select employee_id from employees where branch_id ={$this->branch_id}) ";
             }
@@ -207,7 +211,8 @@ class Base extends \Zippy\Html\WebPage
 
         }
         $this->generateToasts();
-    }
+        
+     }
 
     public function LogoutClick($sender) {
         \App\Helper::logout();

@@ -102,6 +102,7 @@ class IncomeMoney extends \App\Pages\Base
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->customer_id = $this->docform->customer->getKey();
         $this->_doc->payed = $this->_doc->amount;
+        $this->_doc->headerdata['payed'] = $this->_doc->amount;        
         $this->_doc->payment = 0;
 
         if ($this->checkForm() == false) {

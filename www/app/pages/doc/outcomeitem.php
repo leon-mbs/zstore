@@ -42,7 +42,7 @@ class OutcomeItem extends \App\Pages\Base
         $tostore = array();
         $conn = \ZDB\DB::getConnect();
         if ($this->_tvars["usebranch"]) {
-            $rs = $conn->Execute("select  s.store_id,s.`storename`,b.branch_id ,b.`branch_name` from stores s join branches b on s.`branch_id` = b.`branch_id` where b.`disabled` <>  1   order  by branch_name, storename");
+            $rs = $conn->Execute("select  s.store_id,s.storename,b.branch_id ,b.branch_name from stores s join branches b on s.branch_id = b.branch_id where b.disabled <>  1   order  by branch_name, storename");
             foreach ($rs as $it) {
                 $tostore[$it['store_id']] = $it['branch_name'] . ", " . $it['storename'];
             }

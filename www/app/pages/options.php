@@ -461,10 +461,11 @@ class Options extends \App\Pages\Base
     }
 
     public function OnSaveSaleSource($sender) {
+        
+        $common = System::getOptions('common');
+        $common['salesources']  = $this->_salesourceslist;
+        System::setOptions("common", $common);
 
-        $options = System::getOptions('common');
-        $options['salesources'] = $this->_salesourceslist;
-        System::setOptions('common', $options);
 
         $this->setSuccess('saved');
     }

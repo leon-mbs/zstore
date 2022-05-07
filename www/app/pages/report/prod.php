@@ -61,18 +61,18 @@ class Prod extends \App\Pages\Base
         }
          //списано
         $sql = "
-          select i.`itemname`,i.`item_code`,0-sum(e.`quantity`) as qty, 0-sum((partion )*quantity) as summa
-              from `entrylist_view`  e
+          select i.itemname,i.item_code,0-sum(e.quantity) as qty, 0-sum((partion )*quantity) as summa
+              from entrylist_view  e
 
-              join `items` i on e.`item_id` = i.`item_id`
-             join `documents_view` d on d.`document_id` = e.`document_id`
-               where e.`item_id` >0  and e.`quantity` < 0
-               and d.`meta_name` in ('TTN','GoodsIssue','ProdIssue','ProdReceipt','POSCheck','OrderFood')  and  (e.`tag` = 0 or e.`tag` = -16   ) 
+              join items i on e.item_id = i.item_id
+             join documents_view d on d.document_id = e.document_id
+               where e.item_id >0  and e.quantity < 0
+               and d.meta_name in ('TTN','GoodsIssue','ProdIssue','ProdReceipt','POSCheck','OrderFood')  and  (e.tag = 0 or e.tag = -16   ) 
                {$wparea}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
-                group by  i.`itemname`,i.`item_code`
-               order  by i.`itemname`
+                group by  i.itemname,i.item_code
+               order  by i.itemname
         ";
 
         $rs = $conn->Execute($sql);
@@ -88,18 +88,18 @@ class Prod extends \App\Pages\Base
         }
         //оприходовано
         $sql = "
-          select i.`itemname`,i.`item_code`,sum(e.`quantity`) as qty, sum((partion  )*quantity) as summa
-              from `entrylist_view`  e
+          select i.itemname,i.item_code,sum(e.quantity) as qty, sum((partion  )*quantity) as summa
+              from entrylist_view  e
 
-              join `items` i on e.`item_id` = i.`item_id`
-              join `documents_view` d on d.`document_id` = e.`document_id`
-               where e.`item_id` >0  and e.`quantity`  >0
-               and d.`meta_name` in ('TTN','GoodsIssue','ProdIssue','ProdReceipt','POSCheck','OrderFood')   and  (e.`tag` = 0 or e.`tag` = -32   ) 
+              join items i on e.item_id = i.item_id
+              join documents_view d on d.document_id = e.document_id
+               where e.item_id >0  and e.quantity  >0
+               and d.meta_name in ('TTN','GoodsIssue','ProdIssue','ProdReceipt','POSCheck','OrderFood')   and  (e.tag = 0 or e.tag = -32   ) 
  
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
-                group by  i.`itemname`,i.`item_code`
-               order  by i.`itemname`
+                group by  i.itemname,i.item_code
+               order  by i.itemname
         ";
 
         $rs = $conn->Execute($sql);

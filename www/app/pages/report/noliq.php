@@ -56,7 +56,7 @@ class NoLiq extends \App\Pages\Base
         $this->data = array();
         $date = strtotime('-' . $mqty . ' month');
 
-        $sql = "select  st.item_id, st.itemname,st.item_code,st.storename from  store_stock_view  st where st.itemdisabled <> 1  and  st.qty >0 
+        $sql = "select st.msr, st.item_id, st.itemname,st.item_code,st.storename from  store_stock_view  st where st.itemdisabled <> 1  and  st.qty >0 
                {$cstr} and   st.stock_id not  in(select   stock_id    
                from  entrylist_view  
                where    document_date >" . $conn->DBDate($date) . "  and  quantity < 0 ) 
@@ -64,7 +64,7 @@ class NoLiq extends \App\Pages\Base
                from  entrylist_view  
                where    document_date <" . $conn->DBDate($date) . "  and  quantity > 0 ) 
                 
-               group by st.item_id, st.itemname,st.item_code,st.storename 
+               group by st.item_id, st.itemname,st.item_code,st.storename ,st.msr
                order by st.storename
                  ";
 

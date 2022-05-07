@@ -398,7 +398,7 @@
     "noselcontract": "Не вибраний контракт",
     "bycontract": "Оплата по  контракту %s",
     "noselctype": "Не вибраний тип контракту", 
-    "sb_docstate": "Зміни  статусу  документу",
+    "sb_docstate": "Зміна  статусу  документу",
     "sb_msgnotify": "Системне повідомлення",
     "sb_msgemail": "E-mail",
     "sb_msgsms": "SMS",

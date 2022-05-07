@@ -38,7 +38,7 @@ class Notify extends \ZCL\DB\Entity
         if ($this->user_id > 0) {
             $user = User::load($this->user_id);
             if ($user->emailnotify == 1 && strlen($user->email) > 0) {
-                \App\Helper::sendLetter($this->message, null, $user->email, \App\Helper::l("newnotify"));
+                \App\Helper::sendLetter($user->email,$this->message,    \App\Helper::l("newnotify"));
             }
         }
     }
