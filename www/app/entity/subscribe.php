@@ -259,9 +259,9 @@ class Subscribe extends \ZCL\DB\Entity
     }
 
     public static function sendEmail($email, $text, $subject) {
-        $common = System::getOptions("common");
+       // $common = System::getOptions("common");
 
-        H::sendLetter($text, '', $email, $subject);
+        H::sendLetter($email,$text,    $subject);
     }
 
     public static function sendViber($viber, $text) {
