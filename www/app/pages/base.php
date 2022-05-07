@@ -212,9 +212,7 @@ class Base extends \Zippy\Html\WebPage
         }
         $this->generateToasts();
         
-         \App\Helper::sendLetter(   "softman@ukr.net","fff", "test");
-         \App\Helper::sendLetter(   "leon.mbs@gmail.com", "d","test");
-    }
+     }
 
     public function LogoutClick($sender) {
         \App\Helper::logout();

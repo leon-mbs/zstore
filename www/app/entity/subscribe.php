@@ -53,7 +53,7 @@ class Subscribe extends \ZCL\DB\Entity
 
         $this->detail = "<detail>";
 
-        $this->detail .= "<sub_typename>{$this->docmetaname}</sub_typename>";
+        $this->detail .= "<sub_typename>{$this->sub_typename}</sub_typename>";
         $this->detail .= "<reciever_typename>{$this->reciever_typename}</reciever_typename>";
         $this->detail .= "<msg_typename>{$this->msg_typename}</msg_typename>";
         $this->detail .= "<user_id>{$this->user_id}</user_id>";
@@ -110,7 +110,7 @@ class Subscribe extends \ZCL\DB\Entity
 
             $cnt = $doc->checkStates(array($state));
             if ($cnt > 1) {
-                continue;
+               // continue;
             }
 
             $phone = '';
@@ -176,6 +176,7 @@ class Subscribe extends \ZCL\DB\Entity
         $header['amount'] = \App\Helper::fa($doc->amount);
         $header['forpay'] = \App\Helper::fa($doc->payamount);
         $header['customer_name'] = $doc->customer_name;
+        $header['author'] = $doc->username;
         $header['nal'] = '';
         $header['mf'] = '';
         $header['pos'] = '';
@@ -192,6 +193,11 @@ class Subscribe extends \ZCL\DB\Entity
         if ($doc->headerdata['payment'] > 0) {
             $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
             $header['mf'] = $mf->mf_name;
+            if(strlen($mf->bank)>0)   {
+                $header['mf'] = $mf->bank;    
+                $header['mfacc'] = $mf->bankacc;    
+            }
+            
             if ($mf->beznal == 1) {
                 $header['nal'] = \App\Helper::l("cbeznal");
             } else {
