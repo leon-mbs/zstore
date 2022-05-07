@@ -177,6 +177,7 @@ class Subscribe extends \ZCL\DB\Entity
         $header['forpay'] = \App\Helper::fa($doc->payamount);
         $header['customer_name'] = $doc->customer_name;
         $header['author'] = $doc->username;
+        $header['notes'] = $doc->notes;
         $header['nal'] = '';
         $header['mf'] = '';
         $header['pos'] = '';
