@@ -21,6 +21,7 @@ class Pay extends \ZCL\DB\Entity
     protected function init() {
         $this->pl_id = 0;
         $this->paytype = 0;
+        $this->amount = 0;
         $this->paydate = time();
     }
 
@@ -99,10 +100,9 @@ class Pay extends \ZCL\DB\Entity
 
 
         }
-
-        if ($amount > 0) {
-            self::addBonus($document_id, $amount);
-        }
+   
+        self::addBonus($document_id );
+      
 
         $conn = \ZDB\DB::getConnect();
 
@@ -136,10 +136,8 @@ class Pay extends \ZCL\DB\Entity
     }
 
     //начисление  (списание)  бонусов
-    public static function addBonus($document_id, $amount) {
-        if (0 == (int)$amount) {
-            return;
-        }
+    public static function addBonus($document_id  ) {
+    
         $conn = \Zdb\DB::getConnect();
 
         $customer_id = (int)$conn->GetOne("select  customer_id  from  documents where  document_id=" . $document_id);
@@ -149,21 +147,30 @@ class Pay extends \ZCL\DB\Entity
             return;
         }
 
-        $cnt = (int)$conn->GetOne("select  count(*)  from paylist_view where  customer_id=" . $customer_id);
+      //  $cnt = (int)$conn->GetOne("select  count(*)  from paylist_view where  customer_id=" . $customer_id);
 
 
         if (doubleval($c->discount) > 0) { //если  постоянная скидка бонусы  не  начисляем
             return;
         }
-
-        if (0 > (int)$amount) { //списание
+        $doc = \App\Entity\Doc\Document::load($document_id);
+        $bonus = $c->getBonus();
+        
+        if ($doc->headerdata['paydisc'] > 0 && $bonus > 0) { //списание
+        
+            if($doc->headerdata['paydisc'] < $bonus ) {
+                $bonus =   $doc->headerdata['paydisc']  ;
+            }
+            
+        
             $pay = new \App\Entity\Pay();
 
             $pay->document_id = $document_id;
-            $pay->bonus = (int)$amount;
+            $pay->bonus = 0 -  $bonus;
             $pay->paytype = self::PAY_BONUS;
             $pay->paydate = time();
-
+            $pay->user_id = \App\System::getUser()->user_id;
+         
             $pay->save();
 
             return;

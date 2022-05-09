@@ -32,7 +32,7 @@ class ItemActivity extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-        $this->filter->add(new CheckBox('showdoc'));
+       
         $this->filter->add(new TextInput('snumber'))->setVisible(false);
         $this->filter->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
 
@@ -156,8 +156,8 @@ class ItemActivity extends \App\Pages\Base
           SUM(CASE WHEN quantity > 0 THEN quantity ELSE 0 END) AS obin,
           SUM(CASE WHEN quantity < 0 THEN 0 - quantity ELSE 0 END) AS obout,
           SUM(CASE WHEN (st.partion*sc.quantity ) > 0 THEN (st.partion*sc.quantity ) ELSE 0 END) AS obinamount,
-          SUM(CASE WHEN (st.partion*sc.quantity )< 0 THEN 0 - (st.partion*sc.quantity ) ELSE 0 END) AS oboutamount,
-          {$gd} AS docs
+          SUM(CASE WHEN (st.partion*sc.quantity )< 0 THEN 0 - (st.partion*sc.quantity ) ELSE 0 END) AS oboutamount
+          
         FROM entrylist_view sc
           JOIN store_stock_view st
             ON sc.stock_id = st.stock_id
@@ -179,6 +179,9 @@ class ItemActivity extends \App\Pages\Base
         $ba = 0;
         $bain = 0;
         $baout = 0;
+        $bq = 0;
+        $bqin = 0;
+        $bqout = 0;
 
 
         foreach ($rs as $row) {
@@ -199,13 +202,14 @@ class ItemActivity extends \App\Pages\Base
                 "out"       => H::fqty($row['begin_quantity'] + $row['obin'] - $row['obout'])
             );
 
-            if ($this->filter->showdoc->isChecked()) {
-                $r["documents"] = $row['docs'];
-            }
+          
             $detail[] = $r;
             $ba = $ba + $row['begin_amount'];
             $bain = $bain + $row['obinamount'];
             $baout = $baout + $row['oboutamount'];
+            $bq = $bq + $row['begin_quantity'];
+            $bqin = $bqin + $row['obin'];
+            $bqout = $bqout + $row['obout'];
         }
 
 
@@ -219,6 +223,11 @@ class ItemActivity extends \App\Pages\Base
         $header['bain'] = H::fa($bain);
         $header['baout'] = H::fa($baout);
         $header['baend'] = H::fa($ba + $bain - $baout);
+        $header['bq'] = H::fqty($bq);
+        $header['bqin'] = H::fqty($bqin);
+        $header['bqout'] = H::fqty($bqout);
+        $header['bqend'] = H::fqty($bq + $bqin - $bqout);
+        $header['showqty'] =$itemid >0 ;
 
         $report = new \App\Report('report/itemactivity.tpl');
 

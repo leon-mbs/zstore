@@ -76,7 +76,6 @@ class GoodsIssue extends Document
                         "bank"            => @$mf->bank,
                         "bankacc"         => @$mf->bankacc,
                         "isbank"          => (strlen($mf->bankacc) > 0 && strlen($mf->bank) > 0),
- 
                        
                         "payed"      => $this->payed > 0 ? H::fa($this->payed) : false,
                         "payamount"  => $this->payamount > 0 ? H::fa($this->payamount) : false
@@ -87,7 +86,7 @@ class GoodsIssue extends Document
         $header["phone"] = false;
         $header["address"] = false;
         $header["edrpou"] = false;
-         $header["fedrpou"] = false;
+        $header["fedrpou"] = false;
         $header["finn"] = false;
 
         if ($this->customer_id > 0) {
