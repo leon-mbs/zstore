@@ -23,7 +23,7 @@
         <th style="border: solid black 1px">Прих.</th>
         <th align="right" style="border: solid black 1px">Витр.</th>
         <th align="right" style="border: solid black 1px">Кін.</th>
-        <th style="border: solid black 1px">Документи</th>
+       
     </tr>
     {{#_detail}}
     <tr>
@@ -37,10 +37,26 @@
         <td align="right">{{obin}}</td>
         <td align="right">{{obout}}</td>
         <td align="right">{{out}}</td>
-        <td> {{{documents}}}</td>
+ 
     </tr>
     {{/_detail}}
-     {{^noshowpartion}} 
+     {{#showqty}} 
+    <tr>
+
+        <td></td>
+        <td></td>
+        <td></td>
+        <td align="right"><b><div>Всього</div></b></td>
+
+        <td align="right"><b>{{bq}}</b></td>
+        <td align="right"><b>{{bqin}}</b></td>
+        <td align="right"><b>{{bqout}}</b></td>
+        <td align="right"><b>{{bqend}}</b></td>
+    
+    </tr>
+   {{/showqty}} 
+   
+   {{^noshowpartion}} 
     <tr>
 
         <td></td>
@@ -52,7 +68,7 @@
         <td align="right"><b>{{bain}}</b></td>
         <td align="right"><b>{{baout}}</b></td>
         <td align="right"><b>{{baend}}</b></td>
-        <td> </td>
+    
     </tr>
    {{/noshowpartion}}    
 </table>
