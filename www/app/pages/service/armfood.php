@@ -85,7 +85,7 @@ class ARMFood extends \App\Pages\Base
         //список  заказов
         $this->add(new Panel('orderlistpan'))->setVisible(false);
 
-        $this->add(new ClickLink('neworder', $this, 'onNewOrder'));
+        $this->orderlistpan->add(new ClickLink('neworder', $this, 'onNewOrder'));
         $this->orderlistpan->add(new DataView('orderlist', new ArrayDataSource($this, '_doclist'), $this, 'onDocRow'));
 
         $this->orderlistpan->add(new Form('searchform'))->onSubmit($this, 'updateorderlist');

@@ -4,7 +4,7 @@
         <div class="row"  >
 
             <div class="col-12 col-md-4 col-xl-3   " >
-                <h3>АРМ кухня</h3>
+                <h3>АРМ кухнi</h3>
                 
                 <div id="newordersalert" style="display:none;"  class="alert alert-success  ml-4"  >
                     <span id="neworderscnt"></span>
@@ -29,8 +29,8 @@
         <td><a    v-on:click="onReady(item.document_id,item.item_id, index) " class="btn btn-success">Готово</a></td> 
     </tr>    
         </table>
-        
-      
+        <paginator></paginator>
+   
   </div> 
  {|={{ }}=|}  
             <script>
@@ -72,14 +72,15 @@
                             });
                 }
 
-    var vapp= Vue.createApp({
-   
-    data() {
-        return {
-          itemlist: []
-        }
-      }  ,
     
+    var vapp = new Vue({
+      el: '#vapp',
+      data: {
+          itemlist:[]
+      }  ,
+     components: {
+            'paginator': httpVueLoader('/assets/js/vue/paginator.vue')
+        }, 
         methods: {
              onReady( document_id,item_id, index) {
                   onBell()
@@ -92,7 +93,7 @@
            }
         }      
       
-    }).mount('#vapp')       
+    })      
 
 
       function updateItems(){

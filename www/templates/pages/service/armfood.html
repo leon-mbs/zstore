@@ -33,7 +33,7 @@
                         </div>
                     </div>
                     <div class="form-group row  ">
-                        <label class="col-6 col-form-label" for="beznal">Безготiвковий счет</label>
+                        <label class="col-6 col-form-label" for="beznal">Безготiвковий рахунок</label>
                         <div class="col-6">
                             <select class="form-control" zippy="beznal">
                                 <option value="0">Не вибраний</option>
@@ -170,7 +170,7 @@
                                     <td zippy="itemname"></td>
                                     <td zippy="item_code"></td>
                                     <td class="text-right text-nowrap">
-                                        <a zippy="qtymin" class="btn btn-info btn-sm mr-1">-</a>
+                    k                    <a zippy="qtymin" class="btn btn-info btn-sm mr-1">-</a>
                                         <span zippy="qty"></span>
                                         <a zippy="qtyplus" class="btn btn-info  btn-sm ml-1">+</a>
                                     </td>
@@ -254,8 +254,11 @@
                                     <label   for="time" >Час доставки</label>
 
 
-                                    <input  style="width:200px" zippy="time" class="form-control">
-
+                                       <div class="input-group">
+                                        <input   class="form-control"   zippy="dt"  >
+                                        <span class="input-group-text">:</span>
+                                        <input   zippy="time" class="form-control">
+                                    </div> 
                                 </div>                        
 
 
