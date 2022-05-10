@@ -173,10 +173,11 @@ class Pay extends \ZCL\DB\Entity
          
             $pay->save();
 
-            return;
+           // return;
         }
 
-
+        $bonus = 0;
+        
         $disc = \App\System::getOptions("discount");
 
 

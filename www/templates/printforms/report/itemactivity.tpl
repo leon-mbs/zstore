@@ -48,10 +48,10 @@
         <td></td>
         <td align="right"><b><div>Всього</div></b></td>
 
-        <td align="right"><b>{{bq}}</b></td>
+        <td align="right"> </td>
         <td align="right"><b>{{bqin}}</b></td>
         <td align="right"><b>{{bqout}}</b></td>
-        <td align="right"><b>{{bqend}}</b></td>
+        <td align="right"> </td>
     
     </tr>
    {{/showqty}} 
@@ -64,10 +64,10 @@
         <td></td>
         <td align="right"><b>На суму</b></td>
 
-        <td align="right"><b>{{ba}}</b></td>
+        <td align="right"><b> </b></td>
         <td align="right"><b>{{bain}}</b></td>
         <td align="right"><b>{{baout}}</b></td>
-        <td align="right"><b>{{baend}}</b></td>
+        <td align="right"><b> </b></td>
     
     </tr>
    {{/noshowpartion}}    
