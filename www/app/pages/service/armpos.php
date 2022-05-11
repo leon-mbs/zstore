@@ -665,7 +665,7 @@ class ARMPos extends \App\Pages\Base
      //категории
     public function onCatRow($row) {
         $cat = $row->getDataItem();
-        $row->add(new ClickLink('catbtn'))->onClick($this, 'onCatBtnClick');
+        $row->add(new Panel('catbtn'))->onClick($this, 'onCatBtnClick');
         $row->catbtn->add(new Label('catname', $cat->cat_name));
         $row->catbtn->add(new Image('catimage', "/loadimage.php?id=" . $cat->image_id));
     }
@@ -676,7 +676,7 @@ class ARMPos extends \App\Pages\Base
 
         $prod = $row->getDataItem();
         $prod->price = $prod->getPrice($this->getPriveType() );
-        $row->add(new ClickLink('prodbtn'))->onClick($this, 'onProdBtnClick');
+        $row->add(new Panel('prodbtn'))->onClick($this, 'onProdBtnClick');
         $row->prodbtn->add(new Label('prodname', $prod->itemname));
         $row->prodbtn->add(new Label('prodprice', H::fa($prod->price)));
         $row->prodbtn->add(new Image('prodimage', "/loadimage.php?id=" . $prod->image_id));
