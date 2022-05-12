@@ -334,6 +334,8 @@ class Options extends \App\Pages\Base
 
         $this->setSuccess('saved');
         System::setCache('labels', null);
+        App::Redirect("\\App\\Pages\\Options");
+        
     }
 
  
@@ -522,6 +524,8 @@ class Options extends \App\Pages\Base
          
          System::setOptions("modules", $modules);
          $this->setSuccess('saved');      
+         App::Redirect("\\App\\Pages\\Options");
+         
     }    
     
 }

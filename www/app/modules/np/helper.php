@@ -12,10 +12,10 @@ class Helper extends \LisDev\Delivery\NovaPoshtaApi2
 
     public function __construct() {
 
-        global $_config;
+      
         $modules = \App\System::getOptions("modules");
 
-        parent::__construct($modules['npapikey'], $_config['common']['lang']);
+        parent::__construct($modules['npapikey'] );
     }
 
     public function getAreaList() {

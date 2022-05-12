@@ -131,7 +131,7 @@ class OrderList extends \App\Pages\Base
         } else {
             $row->edit->setVisible(false);
         }
-        if ($doc->document_id == $this->_doc->document_id) {
+        if ($doc->document_id == @$this->_doc->document_id) {
             $row->setAttribute('class', 'table-success');
         }
     }

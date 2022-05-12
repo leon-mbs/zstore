@@ -15,8 +15,7 @@ class UserLogin extends \Zippy\Html\WebPage
 
     public function __construct() {
         parent::__construct();
-        global $_config;
-
+     
         $common = System::getOptions('common');
         \App\Session::getSession()->clipboard = null;
 

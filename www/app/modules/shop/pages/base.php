@@ -25,7 +25,7 @@ class Base extends \Zippy\Html\WebPage
         
         if ($_COOKIE['remembercust'] && $customer_id == 0) {
             $arr = explode('_', $_COOKIE['remembercust']);
-            $_config = parse_ini_file(_ROOT . 'config/config.ini', true);
+          
             if ($arr[0] > 0 && $arr[1] === md5($arr[0] . $_config['common']['salt'])) {
                 $customer = \App\Entity\Customer::load($arr[0]);
                  \App\System::setCustomer($customer->customer_id)  ;
