@@ -506,7 +506,7 @@ class OrderList extends \App\Pages\Base
         }
 
         Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(),  $form->pcomment->getText());
-        \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+        \App\Entity\IOState::addIOState($this->_doc->document_id, $amount, \App\Entity\IOState::TYPE_BASE_INCOME);
 
         $this->setSuccess('payment_added');
 
