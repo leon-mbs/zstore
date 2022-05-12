@@ -131,7 +131,7 @@ class ProdProcList extends \App\Pages\Base
       $row->add(new Label('hasnotes'))->setVisible(strlen($p->notes) > 0);
       $row->hasnotes->setAttribute('title', $p->notes);
  
-          if ($p->pp_id == $this->_proc->pp_id) {
+          if ($p->pp_id == @$this->_proc->pp_id) {
               $row->setAttribute('class', 'table-success');
           }
            

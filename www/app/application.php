@@ -13,7 +13,7 @@ class Application extends \Zippy\WebApplication
      * Возвращает  шаблон  страницы
      */
     public function getTemplate($name) {
-        global $_config;
+        
 
         $path = '';
         $name = ltrim($name, '\\');

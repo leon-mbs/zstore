@@ -176,7 +176,7 @@ class PaySelList extends \App\Pages\Base
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('pay'))->onClick($this, 'payOnClick');
         $row->pay->setVisible($doc->payamount > 0);
-        if ($doc->document_id == $this->_doc->document_id) {
+        if ($doc->document_id == @$this->_doc->document_id) {
             $row->setAttribute('class', 'table-success');
         }
     }
@@ -288,7 +288,7 @@ class PaySelList extends \App\Pages\Base
 
 
         Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(),  $form->pcomment->getText());
-        \App\Entity\IOState::addIOState($this->document_id, $this->payed, $type);
+        \App\Entity\IOState::addIOState($this->_doc->document_id, $this->_doc->document_id->payed, $type);
 
         $this->setSuccess('payment_added');
 

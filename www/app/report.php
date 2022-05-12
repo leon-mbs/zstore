@@ -27,8 +27,7 @@ class Report
      * @param mixed $summary Список  полей  по  которым  вычисляются  итоговые  данные табличной части
      */
     public function generate(array $header) {
-        global $_config;
-
+      
         $dir = 'templates';
     
         $template = @file_get_contents(_ROOT . $dir . '/printforms/' . $this->_template);
