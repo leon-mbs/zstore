@@ -101,7 +101,7 @@ class Pay extends \ZCL\DB\Entity
 
         }
    
-        self::addBonus($document_id );
+        self::addBonus($document_id,$amount );
       
 
         $conn = \ZDB\DB::getConnect();
@@ -136,7 +136,7 @@ class Pay extends \ZCL\DB\Entity
     }
 
     //начисление  (списание)  бонусов
-    public static function addBonus($document_id  ) {
+    public static function addBonus($document_id ,$amount ) {
     
         $conn = \Zdb\DB::getConnect();
 
