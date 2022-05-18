@@ -985,10 +985,19 @@ icon: 'fa fa-exclamation-triangle text-warning',
                $('#'+id).val( v.toFixed(0) );         
             }
             {{/twodigit}}        
-              
+        
+       //автофокус на  модальном  окне
        $(document).on('shown.bs.modal', '.modal', function() {
           $(this).find('input:visible:first').focus();
        });            
+   
+       //замена  запятой
+        $(document).on('change', 'input.qtyprice', function() {
+          $(this).val($(this).val().replace(/,/g, '.'))
+        });    
+                   
+   
+   
             
         </script>
         {{#usemobilescanner}}

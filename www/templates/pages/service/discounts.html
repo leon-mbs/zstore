@@ -27,7 +27,7 @@
                             <form zippy="commonform">
                                 <div class="form-group">
                                     <label for="firstbay">Бонуси від суми першої покупки, % від суми</label>
-                                    <input zippy="firstbay"  pattern="[0-9\.]+" style="width:100px"  class="form-control" type="text">
+                                    <input zippy="firstbay"  pattern="[0-9\.\,]+" style="width:100px"  class="form-control qtyprice" type="text">
                                 </div>
                                 <div class="form-group">
                                     <label ><b>Бонуси від від суми</b></label>
@@ -38,7 +38,7 @@
                                         <span class="input-group-text"> Більше</span>
                                         <input   class="form-control"   zippy="summa1"   pattern="[0-9]+">
                                         <span class="input-group-text"> бонус,%</span>
-                                        <input   class="form-control"   zippy="bonus1"   pattern="[0-9\.]+">
+                                        <input   class="form-control qtyprice"   zippy="bonus1"   pattern="[0-9\.\,]+">
                                     </div>      
                                     <small>Перший рівень</small>
                                 </div>
@@ -47,7 +47,7 @@
                                         <span class="input-group-text"> Більше</span>
                                         <input   class="form-control"   zippy="summa2"   pattern="[0-9]+">
                                         <span class="input-group-text"> бонус,%</span>
-                                        <input   class="form-control"   zippy="bonus2"   pattern="[0-9\.]+">
+                                        <input   class="form-control qtyprice"   zippy="bonus2"   pattern="[0-9\.\,]+">
                                     </div>      
 
                                     <small>Другий рівень</small>
@@ -71,7 +71,7 @@
                                     <label for="csearchkey">Iм'я</label>
                                     <input placeholder="Почнiть вводити..." class="form-control mr-sm-2" type="text" zippy="csearchkey">
                                     <label for="csearchdisc">знижка,%</label>
-                                    <input   class="form-control mr-sm-2" type="text" zippy="csearchdisc" pattern="[0-9\.]+" style="width:50px;">
+                                    <input   class="form-control qtyprice mr-sm-2" type="text" zippy="csearchdisc" pattern="[0-9\.\,]+" style="width:50px;">
 
                                     <input class="btn btn-outline-success   " type="submit" value="Додати"  >
 
@@ -92,7 +92,7 @@
                                         <td zippy="cname"></td>
                                         <td zippy="cphone"></td>
                                         <td >
-                                            <input style="width:50px;" zippy="cdisc"    pattern="[0-9\.]+">
+                                            <input class=" qtyprice" style="width:50px;" zippy="cdisc"    pattern="[0-9\.\,]+">
                                         </td>
 
                                         <td  ><a zippy="сdel"><i class="fa fa-trash"/></a></td>
@@ -118,7 +118,7 @@
                                     <input  placeholder="Начните вводить..."  class="form-control  "   zippy="isearchkey"> 
 
                                     <label for="isearchdisc">акц. цiна</label>
-                                    <input   class="form-control mr-sm-2" type="text" zippy="isearchdisc" pattern="[0-9\.]+" style="width:50px;">
+                                    <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchdisc" pattern="[0-9\.\,]+" style="width:50px;">
                                     <label for="isearchfrom">з</label>
                                     <input  class="form-control mr-sm-2"   zippy="isearchfrom"  style="width:100px;">
                                     <label  for="isearchto">по</label>
@@ -136,7 +136,7 @@
                                     <select   class="form-control  "   zippy="gsearchkey"></select>
                                     &nbsp;   &nbsp;
                                     <label for="gsearchdisc">знижка,%</label>
-                                    <input   class="form-control mr-sm-2" type="text" zippy="gsearchdisc" pattern="[0-9\.]+" style="width:50px;">
+                                    <input   class="form-control qtyprice mr-sm-2" type="text" zippy="gsearchdisc" pattern="[0-9\.\,]+" style="width:50px;">
                                     <label for="gsearchfrom">з</label>
                                     <input  class="form-control mr-sm-2"   zippy="gsearchfrom"  style="width:100px;">
                                     <label  for="gsearchto">по</label>
@@ -197,7 +197,7 @@
                                     <select   class="form-control select2"   zippy="ssearchkey"></select>
                                     &nbsp;   &nbsp;
                                     <label for="ssearchdisc">акц. ціна</label>
-                                    <input   class="form-control mr-sm-2" type="text" zippy="ssearchdisc" pattern="[0-9\.]+" style="width:50px;">
+                                    <input   class="form-control qtyprice mr-sm-2" type="text" zippy="ssearchdisc" pattern="[0-9\.\,]+" style="width:50px;">
                                     <label for="ssearchfrom">з</label>
                                     <input  class="form-control mr-sm-2"   zippy="ssearchfrom"  style="width:100px;">
                                     <label  for="sgsearchto">по</label>
