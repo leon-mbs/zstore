@@ -68,6 +68,8 @@
             
             <div class="col-12 col-md-6 col-lg-8  "  >
                 Документи  в  z-звiтi
+               <br><a zippy="sync"><b>Синхронизацiя  с  фiскальним  сервером</b></a>  <img id="aloader" style="display:none" src="/assets/images/ajax-loader.gif">
+                          
                 <table class="table table-sm">
                     <tr>
                         <th>Документ</th>
@@ -88,8 +90,8 @@
                         <td zippy="amount3" class="text-right"> </td>
                         <td zippy="amount0r" class="text-right"> </td>
                         <td zippy="amount1r" class="text-right"> </td>
-                        <td> <a zippy="fisc"> Фискалiзувати </a> </td>
-                        <td> &nbsp;&nbsp;<a zippy="del"> <i class="fa fa-trash"></i> </a> </td>
+                        <td> <a zippy="fisc"> Фiскалiзувати </a> </td>
+                        
                     </tr>
                     
                 </table>
@@ -100,10 +102,10 @@
             
 
         </div>
-      <script>  
-            function check_del() {
-                return confirm("Видалити  документ?")
-            }
-        </script>
+         <script>
+         function check_sync(){
+              $("#aloader").show()      
+         }
+         </script>
     </body>
 </html>
