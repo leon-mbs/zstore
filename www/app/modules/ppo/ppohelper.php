@@ -915,7 +915,9 @@ class PPOHelper
           }
           
            
-          
+         
+          $conn->Execute("delete from  zformstat where pos_id=".$pos_id." and  fiscnumber is  null ") ;
+        
           $fdocs = array_keys($docs)  ;//номера  в  налоговой
           $floc = array_keys($fd)  ;//номера  локально
           
