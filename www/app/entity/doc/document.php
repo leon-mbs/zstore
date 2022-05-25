@@ -150,8 +150,7 @@ class Document extends \ZCL\DB\Entity
 
         $this->content .= "</doc>";
     }
-    //   select ExtractValue(@xml, '//doc/header/customer_id') from  documents
-
+  
     /**
      * распаковка из  XML
      *

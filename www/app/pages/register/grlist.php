@@ -43,6 +43,7 @@ class GRList extends \App\Pages\Base
         $this->filter->add(new TextInput('searchtext'));
         $this->filter->add(new DropDownChoice('status', array(0 => H::l('opened'), 1 => H::l('notexecuted'), 2 => H::l('notpayed'), 3 => H::l('all')), 0));
         $this->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
+        $this->filter->add(new DropDownChoice('fstore', \App\Entity\Store::getList(), H::getDefStore()));
 
         $doclist = $this->add(new DataView('doclist', new GoodsReceiptDataSource($this), $this, 'doclistOnRow'));
 
@@ -221,7 +222,7 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource
         $user = System::getUser();
 
         $conn = \ZDB\DB::getConnect();
-
+ 
         $where = "   meta_name  in('GoodsReceipt','InvoiceCust',  'RetCustIssue' )  ";
 
         $status = $this->page->filter->status->getValue();
@@ -245,6 +246,11 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource
             $where = $where . " and firm_id = " . $comp;
         }
 
+        $store_id = $this->page->filter->fstore->getValue();
+        if ($store_id > 0) {
+           $where .= " and   content like '%<store>{$store_id}</store>%' ";
+        }
+        
         $st = trim($this->page->filter->searchtext->getText());
         if (strlen($st) > 2) {
             $st = $conn->qstr('%' . $st . '%');

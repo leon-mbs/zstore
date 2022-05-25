@@ -543,7 +543,8 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
 
         $salesource = $this->page->filter->salesource->getValue();
         if ($salesource > 0) {
-            $where .= " and  ExtractValue(content, '//doc/header/salesource') = " . $salesource;
+            $where .= " and   content like '%<salesource>{$salesource}</salesource>%' ";
+            
         }
 
         $status = $this->page->filter->status->getValue();
