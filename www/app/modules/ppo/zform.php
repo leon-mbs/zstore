@@ -111,6 +111,7 @@ class ZForm extends \App\Pages\Base
         $row->add(new Label("amount1r",H::fa($amount1r)));
         
         $row->add(new ClickLink("fisc", $this,"onFisc" ))->setVisible( strlen($item->fiscnumber) == 0 );
+        $row->add(new ClickLink("del", $this,"onDel" ))->setVisible( strlen($item->fiscnumber) == 0 );
     
         
     }

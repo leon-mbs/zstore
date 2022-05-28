@@ -857,7 +857,7 @@ class PPOHelper
    
     
     public static function sync($pos_id    ) {
-          $pos = \App\Entity\Pos::load($pos_id);
+        $pos = \App\Entity\Pos::load($pos_id);
         
         
         if ($pos == 0) {
@@ -867,8 +867,8 @@ class PPOHelper
         $company = \App\Entity\Company::load($branch->company_id);
         
 
-      $from = \Carbon\Carbon::now()->addMonth(-1)->startOfMonth()->format('c');
-      $to = \Carbon\Carbon::now()->format('c');
+       $from = \Carbon\Carbon::now()->addMonth(-1)->startOfMonth()->format('c');
+       $to = \Carbon\Carbon::now()->format('c');
     
        $res = PPOHelper::send(json_encode(array('Command' => 'Shifts', 'NumFiscal' => $pos->fisc, 'From' => $from, 'To' => $to)), 'cmd', $company);
      
@@ -900,8 +900,6 @@ class PPOHelper
                             $docs[$doc->NumFiscal] = $doc;
                         }
                     }                
-             
-                                        
                 }
             }
         }        
