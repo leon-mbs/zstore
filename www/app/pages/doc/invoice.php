@@ -510,7 +510,7 @@ class Invoice extends \App\Pages\Base
         $this->docform->payamount->setText(H::fa($total - $disc));
 
         $this->docform->editpayed->setText(H::fa($total - $disc));
-        $this->docform->payed->setText(H::fa($total - $disc));
+       // $this->docform->payed->setText(H::fa($total - $disc));
 
     }
 
