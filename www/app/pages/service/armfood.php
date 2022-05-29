@@ -155,6 +155,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->payform->add(new TextInput('pfforpay'));
         $this->docpanel->payform->add(new TextInput('pfpayed'));
         $this->docpanel->payform->add(new TextInput('pfrest'));
+        $this->docpanel->payform->add(new TextInput('pftrans'));
 
         $this->docpanel->payform->add(new CheckBox('passfisc'));
  
@@ -341,7 +342,7 @@ class ARMFood extends \App\Pages\Base
     //категории
     public function onCatRow($row) {
         $cat = $row->getDataItem();
-        $row->add(new ClickLink('catbtn'))->onClick($this, 'onCatBtnClick');
+        $row->add(new Panel('catbtn'))->onClick($this, 'onCatBtnClick');
         $row->catbtn->add(new Label('catname', $cat->cat_name));
         $row->catbtn->add(new Image('catimage', "/loadimage.php?id=" . $cat->image_id));
     }
@@ -352,7 +353,7 @@ class ARMFood extends \App\Pages\Base
 
         $prod = $row->getDataItem();
         $prod->price = $prod->getPrice($this->_pricetype, $this->_store);
-        $row->add(new ClickLink('prodbtn'))->onClick($this, 'onProdBtnClick');
+        $row->add(new Panel('prodbtn'))->onClick($this, 'onProdBtnClick');
         $row->prodbtn->add(new Label('prodname', $prod->itemname));
         $row->prodbtn->add(new Label('prodprice', H::fa($prod->price)));
         $row->prodbtn->add(new Image('prodimage', "/loadimage.php?id=" . $prod->image_id));
@@ -854,6 +855,7 @@ class ARMFood extends \App\Pages\Base
             $this->_doc->headerdata['exchange'] = $this->docpanel->payform->pfrest->getText();
             $this->_doc->headerdata['payed'] = $this->docpanel->payform->pfpayed->getText();
             $this->_doc->headerdata['paydisc'] = $this->docpanel->payform->pfdisc->getText();
+            $this->_doc->headerdata['trans'] = $this->docpanel->payform->pftrans->getText();
             if ($this->_pt == 2) {
                 $this->_doc->headerdata['payment'] = $this->setupform->beznal->getValue();
             } else {

@@ -271,17 +271,12 @@
 
 
                         <div class="  w-100 ">
-
-
-
                             <input zippy="btopay" type="submit" value="До спрлати"   class="btn btn-success mr-4">
 
                             <input zippy="btodel" type="submit" value="В доставку"   class="btn btn-success mr-4">
 
                             <input zippy="btoprod" type="submit" value="До  виробництва"   class="btn btn-success mr-4">
-
-
-
+   
                         </div>
                     </form>  
                 </div>
@@ -304,7 +299,7 @@
 
                             </div>
                             <div class="form-group   ">
-                                <label  for="pfforpay" >До сплати</label>
+                                <label  for="pfforpay" >До оплати</label>
 
                                 <input zippy="pfforpay" readonly="readonly" style="width:100px;" class="form-control  qtyprice "  pattern="[0-9\.\,]+">
 
@@ -327,6 +322,14 @@
 
 
                             </div>
+                        <div class="form-group  ">
+                            <label data-label="pftrans"  for="trans">№ транзакції</label>
+                            <input zippy="pftrans" class="form-control "  />
+                            <small  data-label="pftrans" >Код з банківського терміналу при оплаті карткою</small>
+                            
+
+                        </div>
+                            
                             <div class="form-group   ">
                                 <label for="pfpayed"  >Внесена  оплата</label>
 
@@ -364,7 +367,7 @@
                         <div zippy="checktext"></div> 
                         <br>
                         <a onclick=" printcheck()"  zippy="btoprint"  class="btn  btn-info">Друк</a>&nbsp;&nbsp;&nbsp;
-                        <a zippy="bnewcheck"  class="btn  btn-success">Новый заказ</a> &nbsp;&nbsp;&nbsp;
+                        <a zippy="bnewcheck"  class="btn  btn-success">Нове замовлення</a> &nbsp;&nbsp;&nbsp;
 
                     </div>
                 </div> 
@@ -436,7 +439,7 @@
                         <td >   </td>
 
                         <td   ><i title="Доставка" zippy="isdel" class="fa fa-truck" /></td>
-                        <td   ><i title="Ждет оплату" zippy="wp" class="fa fa-credit-card" /></td>
+                        <td   ><i title="Чекає оплату" zippy="wp" class="fa fa-credit-card" /></td>
                         <td class="text-right" zippy="docamount"></td>
 
 
@@ -457,10 +460,10 @@
                                 <form zippy="statusform" class="form-inline ">
                                     <button zippy="bedit" type="submit" class="  btn btn-info  mr-2 ">Редагувати</button>
 
-                                    <button zippy="bpay" type="submit" class="  btn btn-primary  mr-2 ">Сплатити</button>
+                                    <button zippy="bpay" type="submit" class="  btn btn-primary  mr-2 ">Оплатити</button>
 
 
-                                    <button zippy="bclose" type="submit" class="  btn btn-success  mr-2 ">Закрыть</button>
+                                    <button zippy="bclose" type="submit" class="  btn btn-success  mr-2 ">Закрить</button>
                                     <button zippy="brefuse" type="submit" class="  btn btn-danger  mr-2 ">Аннулировать</button>
 
 
@@ -488,7 +491,7 @@
         </div>
 
         <form zippy="editcust">
-            <h3>&nbsp;Новый покупець </h3>
+            <h3>&nbsp;Новий покупець </h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 
@@ -562,7 +565,7 @@
       
                             if (answer.cntorder > 0) {
                                 $('#newordersalert').show();
-                                $('#neworderscnt').text('Новых заказов ' + answer.cntorder);
+                                $('#neworderscnt').text('Нових заказов ' + answer.cntorder);
                                 beep()
                             }
                             if (answer.cntprod > 0) {

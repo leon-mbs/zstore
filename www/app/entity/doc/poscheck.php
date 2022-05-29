@@ -147,6 +147,7 @@ class POSCheck extends Document
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
                         "exchange"        => $this->headerdata["exchange"] > 0 ? H::fa($this->headerdata["exchange"]) : false,
+                        "trans"        => $this->headerdata["trans"] > 0 ? $this->headerdata["trans"] : false,
                         
                         "docqrcode"       => $this->getQRCodeImage(),
                         "payed"           => $this->headerdata['payed'] > 0 ? H::fa($this->headerdata['payed']) : false,

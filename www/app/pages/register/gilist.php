@@ -448,7 +448,19 @@ class GIList extends \App\Pages\Base
         }
         $this->nppan->npform->seltel->setText($modules['nptel']);
         $this->nppan->npform->npdesc->setText($this->_doc->notes);
+      
         $list = $this->_doc->unpackDetails('detaildata');
+      
+        if(strlen($this->_doc->notes)==0) {
+             $desc = "";
+             foreach ($list as $it) {
+                 $desc .= $it->itemname.","   ;     
+             }
+
+             $this->nppan->npform->npdesc->setText(trim($desc,","));
+             
+        }
+        
         $w = 0;
         $p = 0;
         foreach ($list as $it) {

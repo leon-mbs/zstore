@@ -6,7 +6,7 @@
    
    {{#test}}
    <tr>
-        <td colspan="2" style=" text-align:center" >Тестовый режим</td>
+        <td colspan="2" style=" text-align:center" >Тестовий режим</td>
     </tr>
    {{/test}}
     
