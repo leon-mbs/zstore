@@ -51,9 +51,9 @@ class Helper
         $data = json_decode($result, true);
         if ($data === null) {
             if (strlen($result) > 0) {
-                \App\System::getErrorMsgTopPage($result);
+                \App\System::setErrorMsg($result,true);
             } else {
-                \App\System::getErrorMsgTopPage(\App\Helper::l("nodataresponse"));
+                \App\System::setErrorMsg(H::l("nodataresponse",true));
             }
 
 

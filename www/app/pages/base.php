@@ -262,7 +262,7 @@ class Base extends \Zippy\Html\WebPage
     }
 
     final protected function isError() {
-        return (strlen(System::getErrorMsg()) > 0 || strlen(System::getErrorMsg(true)) > 0);
+        return (strlen(System::getErrorMsg()) > 0 || strlen(System::getErrorMsg( )) > 0);
     }
 
     public function beforeRender() {

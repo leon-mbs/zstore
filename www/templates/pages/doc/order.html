@@ -142,6 +142,15 @@
                             <td><a data-label="paydisc" href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i
                                         class="fa fa-edit"></i></a></td>
                         </tr>
+                       <tr style="font-weight: bolder;">
+
+                            <td colspan="6" class="text-right"><span data-label="bonus">Бонуси:</span></td>
+
+
+                            <td zippy="bonus" class="text-right"></td>
+                            <td><a data-label="bonus" href="javascript:void(0);" data-toggle="modal" data-target="#modalbonus"><i
+                                        class="fa fa-edit"></i></a></td>
+                        </tr>
 
                         <tr style="font-weight: bolder;">
 
@@ -175,8 +184,7 @@
                 </div>
             </div>
 
-            <div id="modaldisc" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-                 aria-hidden="true">
+            <div id="modaldisc" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"                  aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -198,9 +206,30 @@
                     </div>
                 </div>
             </div>
+          <div id="modalbonus" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered  modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Знижка</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group  ">
+                                <input class="form-control qtyprice" type="text" zippy="editbonus" pattern="[0-9\.\,]+">
+                                <div class="input-group-append">
+                                    <input type="submit" value="OK" zippy="bbonus" class="ml-2 btn btn-info  ">
 
-            <div id="modalpayamount" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-                 aria-hidden="true">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="modalpayamount" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"                 aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -222,8 +251,7 @@
                     </div>
                 </div>
             </div>
-            <div id="modalpayed" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-                 aria-hidden="true">
+            <div id="modalpayed" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"                  aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">

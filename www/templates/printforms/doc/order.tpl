@@ -73,6 +73,12 @@
         <td align="right">{{paydisc}}</td>
     </tr>
     {{/isdisc}}
+    {{#delbonus}}
+    <tr style="font-weight: bolder;">
+        <td colspan="9" align="right">Списано бонусiв::</td>
+        <td align="right">{{delbonus}}</td>
+    </tr>
+    {{/delbonus}}
 
 
    {{#payamount}}
@@ -88,6 +94,18 @@
     </tr>
      {{/payed}}  
 
+     {{#addbonus}}
+    <tr style="font-weight: bolder;">
+        <td colspan="9" align="right">Нараховано бонусiв::</td>
+        <td align="right">{{addbonus}}</td>
+    </tr>
+    {{/addbonus}}
+    {{#allbonus}}
+    <tr style="font-weight: bolder;">
+        <td colspan="9" align="right">Всього бонусiв::</td>
+        <td align="right">{{allbonus}}</td>
+    </tr>
+    {{/allbonus}}
 
 
     <tr>

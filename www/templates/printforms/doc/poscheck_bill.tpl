@@ -79,6 +79,12 @@
         <td align="right">{{paydisc}}</td>
     </tr>
     {{/isdisc}}
+    {{#delbonus}}
+    <tr style="font-weight: bolder;">
+        <td colspan="2" align="right">Списано бонусiв:</td>
+        <td align="right">{{delbonus}}</td>
+    </tr>
+    {{/delbonus}}
     <tr style="font-weight: bolder;">
         <td colspan="2" align="right">До оплати:</td>
         <td align="right">{{payamount}}</td>
@@ -91,8 +97,7 @@
         <td colspan="2" align="right">Решта:</td>
         <td align="right">{{exchange}}</td>
     </tr>
-    
-    
+  
     <tr>
        <td colspan="3" > 
         {{#nal}}
@@ -103,7 +108,7 @@
         {{/nal}}
 
        </td>
-    </tr>       
+    </tr>  
     <tr>
        <td colspan="3" > 
         {{#trans}}
@@ -112,6 +117,19 @@
        
        </td>
     </tr>       
+   {{#addbonus}}
+   <tr  >
+        <td colspan="2" align="right">Нараховано бонусiв:</td>
+        <td align="right">{{addbonus}}</td>
+    </tr>
+   {{/addbonus}}    
+  {{#allbonus}}
+   <tr  >
+        <td colspan="2" align="right">Всього бонусiв:</td>
+        <td align="right">{{allbonus}}</td>
+    </tr>
+   {{/allbonus}}          
+     
   
     {{/prepaid}}
     

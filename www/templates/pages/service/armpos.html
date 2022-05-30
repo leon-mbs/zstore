@@ -207,6 +207,10 @@
                             <input autocomplete="off" class="form-control" type="text" zippy="paydisc">
                         </div>
                         <div class="form-group">
+                            <label for="bonus" data-label="paydisc">Бонуси</label>
+                            <input autocomplete="off" class="form-control" type="text" zippy="bonus">
+                        </div>
+                        <div class="form-group">
                             <label for="payamount" data-label="payamount">До оплати</label>
                             <input autocomplete="off" class="form-control" type="text" zippy="payamount">
                         </div>
@@ -531,10 +535,20 @@
                 $("#paydisc").change(function () {
                     var total2 = $("#total2").val();
                     var paydisc = $("#paydisc").val();
-                    var payamount = parseFloat(total2) - parseFloat(paydisc);
+                    var bonus = $("#bonus").val();
+                    var payamount = parseFloat(total2) - parseFloat(paydisc) - parseFloat(bonus);
                     $("#payamount").val(payamount.toFixed(2));
                      $("#payed").val(payamount.toFixed(2));
-            });
+                });
+               $("#bonus").change(function () {
+                    var total2 = $("#total2").val();
+                    var paydisc = $("#paydisc").val();
+                    var bonus = $("#bonus").val();
+                    var payamount = parseFloat(total2) - parseFloat(paydisc) - parseFloat(bonus);
+                    $("#payamount").val(payamount.toFixed(2));
+                     $("#payed").val(payamount.toFixed(2));
+                });
+                
                 $("#payed").change(function () {
                     var payed = $("#payed").val();  
                     var payamount = $("#payamount").val();

@@ -156,6 +156,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->payform->add(new TextInput('pfpayed'));
         $this->docpanel->payform->add(new TextInput('pfrest'));
         $this->docpanel->payform->add(new TextInput('pftrans'));
+        $this->docpanel->payform->add(new TextInput('pfbonus'));
 
         $this->docpanel->payform->add(new CheckBox('passfisc'));
  
@@ -630,6 +631,7 @@ class ARMFood extends \App\Pages\Base
             $amount = $this->_doc->payamount;
             $this->docpanel->payform->pfamount->setText(H::fa($amount));
             $disc = 0;
+            $bonus = 0;
             if ($this->_doc->customer_id > 0) {
                 $customer = \App\Entity\Customer::load($this->_doc->customer_id);
                 if ($customer->discount > 0) {
@@ -637,18 +639,19 @@ class ARMFood extends \App\Pages\Base
                 } else {
                     $bonus = $customer->getBonus();
                     if ($bonus > 0) {
-                        if ($amount >= $bonus) {
-                            $disc = $bonus;
-                        } else {
-                            $disc = $amount;
-                        }
+                       if ($amount < $bonus) {
+                           $bonus = $bonus - $amount; 
+                       }
+
+                        
                     }
                 }
 
             }
 
             $this->docpanel->payform->pfdisc->setText(H::fa($disc));
-            $this->docpanel->payform->pfforpay->setText(H::fa($amount - $disc));
+            $this->docpanel->payform->pfbonus->setText(H::fa($bonus));
+            $this->docpanel->payform->pfforpay->setText(H::fa($amount - $disc - $bonus));
             //  $this->docpanel->payform->pfpayed->setText(H::fa($amount))  ;
             $this->docpanel->payform->pfrest->setText(H::fa(0));
             $this->docpanel->payform->bbackitems->setVisible(false);
@@ -814,10 +817,10 @@ class ARMFood extends \App\Pages\Base
             } else {
                 $bonus = $customer->getBonus();
                 if ($bonus > 0) {
-                    if ($amount >= $bonus) {
-                        $disc = $bonus;
-                    } else {
-                        $disc = $amount;
+                    if ($amount < $bonus) {
+
+                        $bonus = $amount;
+
                     }
                 }
             }
@@ -827,6 +830,7 @@ class ARMFood extends \App\Pages\Base
 
 
         $this->docpanel->payform->pfdisc->setText(H::fa($disc));
+        $this->docpanel->payform->pfbonus->setText(H::fa($bonus));
         $this->docpanel->payform->pfforpay->setText(H::fa($amount - $disc));
         //  $this->docpanel->payform->pfpayed->setText(H::fa($amount))  ;
         $this->docpanel->payform->pfrest->setText(H::fa(0));
@@ -854,6 +858,7 @@ class ARMFood extends \App\Pages\Base
             $this->_doc->payed = $this->docpanel->payform->pfpayed->getText();
             $this->_doc->headerdata['exchange'] = $this->docpanel->payform->pfrest->getText();
             $this->_doc->headerdata['payed'] = $this->docpanel->payform->pfpayed->getText();
+            $this->_doc->headerdata['bonus'] = $this->docpanel->payform->pfbonus->getText();
             $this->_doc->headerdata['paydisc'] = $this->docpanel->payform->pfdisc->getText();
             $this->_doc->headerdata['trans'] = $this->docpanel->payform->pftrans->getText();
             if ($this->_pt == 2) {
@@ -891,8 +896,6 @@ class ARMFood extends \App\Pages\Base
                       $ret = \App\Modules\PPO\PPOHelper::check($this->_doc,true);
   
                     }   else {
-
-                
                 
                       if ($this->_pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
                         $this->_doc->headerdata["fiscalnumberpos"]  =  $this->_pos->fiscalnumber;

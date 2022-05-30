@@ -293,11 +293,16 @@
 
                             </div>
                             <div class="form-group   ">
-                                <label  for="pfdisc"  >Скидка</label>
+                                <label  for="pfdisc"  >Знижеа</label>
 
                                 <input readonly="readonly" zippy="pfdisc"  class="form-control  qtyprice " style="width:100px;" pattern="[0-9\.\,]+">
 
                             </div>
+                       <div class="form-group">
+                            <label for="pfbonus" data-label="paydisc">Бонуси</label>
+                            <input autocomplete="off" class="form-control" type="text" zippy="pfbonus">
+                        </div>
+                            
                             <div class="form-group   ">
                                 <label  for="pfforpay" >До оплати</label>
 
@@ -525,7 +530,16 @@
                 $("#pfdisc").change(function () {
                     var amount = $("#pfamount").val();
                     var paydisc = $("#pfdisc").val();
-                    var payamount = parseFloat(amount) - parseFloat(paydisc);
+                    var bonus = $("#pfbonus").val();
+                    var payamount = parseFloat(amount) - parseFloat(paydisc) - parseFloat(bonus);
+                    $("#pfforpay").val(payamount.toFixed(2));
+
+                });
+                $("#pfbonus").change(function () {
+                    var amount = $("#pfamount").val();
+                    var paydisc = $("#pfdisc").val();
+                    var bonus = $("#pfbonus").val();
+                    var payamount = parseFloat(amount) - parseFloat(paydisc) - parseFloat(bonus);
                     $("#pfforpay").val(payamount.toFixed(2));
 
                 });

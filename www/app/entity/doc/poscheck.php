@@ -125,7 +125,15 @@ class POSCheck extends Document
         }
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
-
+        $addbonus = $this->getBonus() ;
+        $delbonus = $this->getBonus(false) ;
+        $allbonus = 0 ;
+        if($this->customer_id >0) {
+            $c=\App\Entity\Customer::load($this->customer_id);    
+            $allbonus = $c->getBonus();
+        }
+        
+        
         $header = array('date'          => H::fd($this->document_date),
                         "_detail"       => $detail,
                         "style"         => $style,
@@ -147,7 +155,10 @@ class POSCheck extends Document
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
                         "exchange"        => $this->headerdata["exchange"] > 0 ? H::fa($this->headerdata["exchange"]) : false,
-                        "trans"        => $this->headerdata["trans"] > 0 ? $this->headerdata["trans"] : false,
+                        "addbonus"           => $addbonus > 0 ? H::fa($addbonus) : false,
+                        "delbonus"           => $delbonus > 0 ? H::fa($delbonus) : false,
+                        "allbonus"           => $allbonus > 0 ? H::fa($allbonus) : false,
+                        "trans"           => $this->headerdata["trans"] > 0 ? $this->headerdata["trans"] : false,
                         
                         "docqrcode"       => $this->getQRCodeImage(),
                         "payed"           => $this->headerdata['payed'] > 0 ? H::fa($this->headerdata['payed']) : false,

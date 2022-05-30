@@ -95,7 +95,7 @@ class UserLogin extends \Zippy\Html\WebPage
         $c->phone = $phone;
         $c->passw = $pass;
       
-        $c->type ==  Customer::TYPE_BAYER;
+        $c->type =  Customer::TYPE_BAYER;
         $c->save();
         $this->loginform->setVisible(true) ;
         $this->signinform->setVisible(false) ;

@@ -136,7 +136,7 @@ class Pay extends \ZCL\DB\Entity
     }
 
     //начисление  (списание)  бонусов
-    public static function addBonus($document_id ,$amount ) {
+    public static function addBonus($document_id ,$amount  ) {
     
         $conn = \Zdb\DB::getConnect();
 
@@ -150,23 +150,16 @@ class Pay extends \ZCL\DB\Entity
       //  $cnt = (int)$conn->GetOne("select  count(*)  from paylist_view where  customer_id=" . $customer_id);
 
 
-        if (doubleval($c->discount) > 0) { //если  постоянная скидка бонусы  не  начисляем
-            return;
-        }
         $doc = \App\Entity\Doc\Document::load($document_id);
-        $bonus = $c->getBonus();
+        //$bonus = $c->getBonus();
         
-        if ($doc->headerdata['paydisc'] > 0 && $bonus > 0) { //списание
+        if ($doc->headerdata['bonus'] > 0 ) { //списание
         
-            if($doc->headerdata['paydisc'] < $bonus ) {
-                $bonus =   $doc->headerdata['paydisc']  ;
-            }
-            
-        
+          
             $pay = new \App\Entity\Pay();
 
             $pay->document_id = $document_id;
-            $pay->bonus = 0 -  $bonus;
+            $pay->bonus = 0 -  $doc->headerdata['bonus'];
             $pay->paytype = self::PAY_BONUS;
             $pay->paydate = time();
             $pay->user_id = \App\System::getUser()->user_id;
@@ -175,11 +168,13 @@ class Pay extends \ZCL\DB\Entity
 
            // return;
         }
+        if (doubleval($c->discount) > 0) { //если  постоянная скидка бонусы  не  начисляем
+            return;
+        }
 
         $bonus = 0;
-        
+    
         $disc = \App\System::getOptions("discount");
-
 
         $cnt = (int)$conn->GetOne("select  count(*)  from paylist_view where  customer_id=" . $customer_id);
 
@@ -210,6 +205,7 @@ class Pay extends \ZCL\DB\Entity
             $pay->paydate = time();
 
             $pay->save();
+            
         }
     }
 

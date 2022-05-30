@@ -45,6 +45,13 @@ class Order extends \App\Entity\Doc\Document
                 );
             }
         }
+        $addbonus = $this->getBonus() ;
+        $delbonus = $this->getBonus(false) ;
+        $allbonus = 0 ;
+        if($this->customer_id >0) {
+            $c=\App\Entity\Customer::load($this->customer_id);    
+            $allbonus = $c->getBonus();
+        }
 
 
         $header = array('date'            => H::fd($this->document_date),
@@ -61,7 +68,10 @@ class Order extends \App\Entity\Doc\Document
                         "total"           => H::fa($this->amount),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
-                        "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
+                         "addbonus"           => $addbonus > 0 ? H::fa($addbonus) : false,
+                        "delbonus"           => $delbonus > 0 ? H::fa($delbonus) : false,
+                        "allbonus"           => $allbonus > 0 ? H::fa($allbonus) : false,
+                       "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
         );
 
