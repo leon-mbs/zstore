@@ -146,17 +146,7 @@ class Order extends \App\Entity\Doc\Document
     protected function onState($state) {
 
         if ($state == self::STATE_INPROCESS) {
-            //списываем бонусы
-            if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
-                $customer = \App\Entity\Customer::load($this->customer_id);
-                if ($customer->discount > 0) {
-                    ; //процент
-                } else {
-                    $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0);
-                    $customer->save();
-                }
-            }
-
+          
 
             if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
                 $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment']);

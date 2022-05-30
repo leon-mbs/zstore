@@ -134,8 +134,10 @@ class Order extends \App\Pages\Base
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
-            $this->docform->paybonus->setText($this->_doc->headerdata['bonus']);
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
+            $this->docform->bonus->setText($this->_doc->headerdata['bonus']);
+            $this->docform->editbonus->setText($this->_doc->headerdata['bonus']);
+            
             if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
                 $this->_doc->payed = $this->_doc->headerdata['payed'];
             }

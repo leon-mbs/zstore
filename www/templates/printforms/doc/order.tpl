@@ -93,19 +93,7 @@
         <td align="right">{{payed}}</td>
     </tr>
      {{/payed}}  
-
-     {{#addbonus}}
-    <tr style="font-weight: bolder;">
-        <td colspan="9" align="right">Нараховано бонусiв::</td>
-        <td align="right">{{addbonus}}</td>
-    </tr>
-    {{/addbonus}}
-    {{#allbonus}}
-    <tr style="font-weight: bolder;">
-        <td colspan="9" align="right">Всього бонусiв::</td>
-        <td align="right">{{allbonus}}</td>
-    </tr>
-    {{/allbonus}}
+ 
 
 
     <tr>

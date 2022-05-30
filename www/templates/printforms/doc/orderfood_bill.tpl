@@ -86,6 +86,14 @@
         <td align="right">{{paydisc}}</td>
     </tr>
     {{/isdisc}}
+   {{#delbonus}}
+    <tr style="font-weight: bolder;">
+        <td colspan="2" align="right">Списано бонусiв::</td>
+        <td align="right">{{delbonus}}</td>
+    </tr>
+    {{/delbonus}}
+
+    
     <tr style="font-weight: bolder;">
         <td colspan="2" align="right">До сплати:</td>
         <td align="right">{{payamount}}</td>
@@ -99,6 +107,19 @@
         <td align="right">{{exchange}}</td>
     </tr>
     {{/prepaid}}
+    {{#addbonus}}
+    <tr >
+        <td colspan="2" align="right">Нараховано бонусiв::</td>
+        <td align="right">{{addbonus}}</td>
+    </tr>
+    {{/addbonus}}
+    {{#allbonus}}
+    <tr >
+        <td colspan="2" align="right">Всього бонусiв::</td>
+        <td align="right">{{allbonus}}</td>
+    </tr>
+    {{/allbonus}}
+    
     <tr style="font-weight: bolder;">
         <td colspan="3"><br>{{checkslogan}}</td>
 
