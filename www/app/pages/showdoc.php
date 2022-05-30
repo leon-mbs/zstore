@@ -55,7 +55,7 @@ class ShowDoc extends \Zippy\Html\WebPage
                 if($common['exportxlsx'] == 1)  {
                
                 
-                    $file = tempnam(sys_get_temp_dir(),""+time() );
+                    $file = tempnam(sys_get_temp_dir(),"".time() );
                  
                     $handle = fopen($file, "w");
                     fwrite($handle, $html);

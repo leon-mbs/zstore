@@ -38,7 +38,7 @@ class Helper
         
     }
     
-    public function make_request($method, $url, $body) {
+    public static function make_request($method, $url, $body) {
       
         $modules = System::getOptions("modules");
 
@@ -65,7 +65,7 @@ class Helper
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $ssl);
 
         $result = curl_exec($ch);
-        if (curl_errno($request) > 0) {
+        if (curl_errno($ch) > 0) {
             throw new  \Exception(curl_error($request));     
         }
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);

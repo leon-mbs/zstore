@@ -127,6 +127,8 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form3->add(new TextInput('payamount'));
         $this->docpanel->form3->add(new TextInput('payed'));
         $this->docpanel->form3->add(new TextInput('exchange'));
+        $this->docpanel->form3->add(new TextInput('bonus'));
+        $this->docpanel->form3->add(new TextInput('trans'));
 
         $this->docpanel->form3->add(new Label('discount'));
         $this->docpanel->form3->add(new CheckBox('passfisc'));
@@ -283,6 +285,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form3->customer->setKey(0);
         $this->docpanel->form3->customer->setText('');
         $this->docpanel->form3->paydisc->setText('0');
+        $this->docpanel->form3->bonus->setText('0');
         $this->docpanel->form3->payamount->setText('0');
         $this->docpanel->form3->payed->setText('0');
         $this->docpanel->form3->exchange->setText('0');
@@ -790,6 +793,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form3->discount->setVisible(false);
         $total = $this->docpanel->form3->total2->getText();
         $disc = 0;
+        $bonus = 0;
 
         $customer_id = $this->docpanel->form3->customer->getKey();
 
@@ -800,27 +804,28 @@ class ARMPos extends \App\Pages\Base
             if (doubleval($cust->discount) > 0) {
                 $disctext = H::l("custdisc") . " {$cust->discount}%";
                 $disc = round($total * ($customer->discount / 100));
+                
+                $this->docpanel->form3->discount->setText($disctext);
+                $this->docpanel->form3->discount->setVisible(true);
+                
+                
             } else {
                 $bonus = $cust->getBonus();
                 if ($bonus > 0) {
-                    $disctext = H::l("custbonus") . " {$bonus} ";
-
+                    
                     $total = $this->docpanel->form2->total->getText();
 
 
-                    if ($total >= $bonus) {
-                        $disc = $bonus;
-                    } else {
-                        $disc = $total;
+                    if ($total < $bonus) {
+                        $bonus = $bonus - $total; 
                     }
                 }
             }
-            $this->docpanel->form3->discount->setText($disctext);
-            $this->docpanel->form3->discount->setVisible(true);
-
+ 
         }
         $this->docpanel->form3->paydisc->setText(H::fa($disc));
-        $this->docpanel->form3->payamount->setText(H::fa($total - $disc));
+        $this->docpanel->form3->bonus->setText(H::fa($bonus));
+        $this->docpanel->form3->payamount->setText(H::fa($total - $disc - $bonus));
     }
 
     //добавление нового контрагента
@@ -901,8 +906,10 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->payed = $this->docpanel->form3->payed->getText();
         $this->_doc->headerdata['payed'] = $this->docpanel->form3->payed->getText();
         $this->_doc->headerdata['exchange'] = $this->docpanel->form3->exchange->getText();
+        $this->_doc->headerdata['trans'] = $this->docpanel->form3->trans->getText();
         $this->_doc->headerdata['paydisc'] = $this->docpanel->form3->paydisc->getText();
         $this->_doc->headerdata['payment'] = $this->docpanel->form3->payment->getValue();
+        $this->_doc->headerdata['bonus'] = $this->docpanel->form3->bonus->getText();
 
         if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $this->_doc->customer_id == 0) {
             $this->setError("mustsel_cust");

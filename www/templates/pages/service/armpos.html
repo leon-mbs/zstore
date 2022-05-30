@@ -1,5 +1,6 @@
 <html>
     <head>
+        <title> АРМ касира  </title>
 
     </head>
     <body>
@@ -32,7 +33,7 @@
                     <div class="form-group  ">
                         <label for="salesource">Джерело продаж</label>
                         <select class="form-control" zippy="salesource">
-                            <option value="0">Не выбрано</option>
+                            <option value="0">Не вибрано</option>
                         </select>
                     </div>
 
@@ -71,7 +72,7 @@
 
                         <a class="btn btn-info  " zippy="addrow">Додати товар</a>
                         &nbsp;&nbsp;<a class="btn btn-info  " zippy="addser">Додати послугу</a>
-                        &nbsp;&nbsp;<input type="submit" value="Перейти к оплате >" zippy="topay" class="btn  btn-info">
+                        &nbsp;&nbsp;<input type="submit" value="Перейти до  оплати >" zippy="topay" class="btn  btn-info">
 
 
                         <table class="table table-sm">
@@ -184,6 +185,13 @@
 
                             </select>
                         </div>
+                         <div class="form-group  ">
+                            <label data-label="trans"  for="trans">№ транзакції</label>
+                            <input zippy="trans" class="form-control "  />
+                            <small  data-label="trans" >Код з банківського терміналу при оплаті карткою</small>
+                            
+
+                        </div>
 
 
                     </div>
@@ -197,6 +205,10 @@
                         <div class="form-group">
                             <label for="paydisc" data-label="paydisc">Знижка</label>
                             <input autocomplete="off" class="form-control" type="text" zippy="paydisc">
+                        </div>
+                        <div class="form-group">
+                            <label for="bonus" data-label="paydisc">Бонуси</label>
+                            <input autocomplete="off" class="form-control" type="text" zippy="bonus">
                         </div>
                         <div class="form-group">
                             <label for="payamount" data-label="payamount">До оплати</label>
@@ -222,7 +234,7 @@
                             <input type="button" value="< назад" zippy="cancel2" class="btn  btn-outline-info">
                             &nbsp;&nbsp;<input type="submit" value="Зберегти  " zippy="save" class="btn  btn-info">
                             {{#ppo}}
-                            &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Вiдкласти  фiскализацiю  
+                            &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Вiдкласти  фiскалiзацiю  
                            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                                    title="На випадок збою інтернету фіскалізацію можна пропустити. Чек може бути фіскалізований ДО закриття зміни на сторінці ручного закриття зміни в модулі РРО "></i>
                                               
@@ -275,7 +287,7 @@
                         {{/usesnumber}}
                         <div class="form-group">
                             <label for="editquantity">Кількість</label>
-                            <input class="form-control" type="text" zippy="editquantity" required="required" pattern="[0-9\.]+"
+                            <input class="form-control qtyprice" type="text" zippy="editquantity" required="required" pattern="[0-9\.\,]+"
                                    style="width: 70px;">
 
                         </div>
@@ -361,7 +373,7 @@
 
                         <div class="form-group">
                             <label for="editserquantity">Кількість</label>
-                            <input class="form-control" type="text" zippy="editserquantity" required="required" pattern="[0-9\.]+"
+                            <input class="form-control qtyprice" type="text" zippy="editserquantity" required="required" pattern="[0-9\.\,]+"
                                    style="width: 70px;">
 
                         </div>
@@ -523,10 +535,20 @@
                 $("#paydisc").change(function () {
                     var total2 = $("#total2").val();
                     var paydisc = $("#paydisc").val();
-                    var payamount = parseFloat(total2) - parseFloat(paydisc);
+                    var bonus = $("#bonus").val();
+                    var payamount = parseFloat(total2) - parseFloat(paydisc) - parseFloat(bonus);
                     $("#payamount").val(payamount.toFixed(2));
                      $("#payed").val(payamount.toFixed(2));
-            });
+                });
+               $("#bonus").change(function () {
+                    var total2 = $("#total2").val();
+                    var paydisc = $("#paydisc").val();
+                    var bonus = $("#bonus").val();
+                    var payamount = parseFloat(total2) - parseFloat(paydisc) - parseFloat(bonus);
+                    $("#payamount").val(payamount.toFixed(2));
+                     $("#payed").val(payamount.toFixed(2));
+                });
+                
                 $("#payed").change(function () {
                     var payed = $("#payed").val();  
                     var payamount = $("#payamount").val();

@@ -169,11 +169,11 @@ class TransItem extends \App\Pages\Base
 
     public function OnChangeStore($sender) {
         $this->docform->fromitem->setText('');
-        $this->docform->fromitem->setValue(0);
-        $this->docform->fromquantity->setText(0);
+        $this->docform->fromitem->setKey(0);
+        $this->docform->fromquantity->setText('');
         $this->docform->toitem->setText('');
-        $this->docform->toitem->setValue(0);
-        $this->docform->toquantity->setText(0);
+        $this->docform->toitem->setKey(0);
+        $this->docform->toquantity->setText('');
     }
 
     public function OnAutocompleteItem($sender) {

@@ -1,0 +1,1 @@
+ALTER TABLE `ppo_zformstat` ADD `fiscnumber` VARCHAR(255) NULL ;

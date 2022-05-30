@@ -150,8 +150,7 @@ class Document extends \ZCL\DB\Entity
 
         $this->content .= "</doc>";
     }
-    //   select ExtractValue(@xml, '//doc/header/customer_id') from  documents
-
+  
     /**
      * распаковка из  XML
      *
@@ -980,7 +979,7 @@ class Document extends \ZCL\DB\Entity
         return "";
     }
 
-     public   function getID() {
+    public   function getID() {
         return $this->document_id;
     }  
     
@@ -993,5 +992,23 @@ class Document extends \ZCL\DB\Entity
         
         return  $am;
     }
+
+    /**
+    * бонусы,  начисленные по  документу
+    * 
+    * @param mixed $add  начисленые  иначе  списаные
+    */
+    public function getBonus($add=true) {
+        $conn = \ZDB\DB::getConnect();
+        if($add){
+           $sql = "select coalesce(sum(bonus),0) as bonus from paylist where bonus > 0 and document_id =" . $this->document_id;   
+        } else {
+           $sql = "select coalesce(sum(0-bonus),0) as bonus from paylist where bonus < 0 and document_id =" . $this->document_id;     
+        }
+
+        return $conn->GetOne($sql);
+      
+    }
+ 
     
 }

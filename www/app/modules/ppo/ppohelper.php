@@ -633,7 +633,7 @@ class PPOHelper
             $ret = self::send($xml, 'doc', $firm);
             if ($ret['success'] == true) {
 
-                self::insertStat($pos->pos_id, 1, $amount0, $amount1, $amount2, $amount3, $doc->document_number );
+                self::insertStat($pos->pos_id, 1, $amount0, $amount1, $amount2, $amount3, $doc->document_number,$ret['docnumber'] );
             }
             $doc->headerdata["fiscdts"] = "&date=".date('Ymd')."&time={$header['time']}&sum={$header['amount']}";
                 
@@ -796,7 +796,7 @@ class PPOHelper
     }
 
     //функции работы  со статистикой  для  z-отчета 
-    public static function insertStat($pos_id, $checktype, $amount0, $amount1, $amount2, $amount3, $document_number = '', $tag=0) {
+    public static function insertStat($pos_id, $checktype, $amount0, $amount1, $amount2, $amount3, $document_number = '', $fiscnumber='') {
         $conn = \ZDB\DB::getConnect();
         
         if(strlen($document_number) >0) {
@@ -807,7 +807,7 @@ class PPOHelper
         $amount1 = number_format($amount1, 2, '.', '');
         $amount2 = number_format($amount2, 2, '.', '');
         $amount3 = number_format($amount3, 2, '.', '');
-        $sql = "insert into ppo_zformstat (pos_id,checktype,  amount0,amount1,amount2,amount3,document_number,createdon,tag) values ({$pos_id},{$checktype}, {$amount0}, {$amount1},{$amount2},{$amount3}," . $conn->qstr($document_number) . "," . $conn->DBDate(time()) . ",{$tag})";
+        $sql = "insert into ppo_zformstat (pos_id,checktype,  amount0,amount1,amount2,amount3,document_number,createdon,fiscnumber) values ({$pos_id},{$checktype}, {$amount0}, {$amount1},{$amount2},{$amount3}," . $conn->qstr($document_number) . "," . $conn->DBDate(time()) . ",'{$fiscnumber}')";
 
         $conn->Execute($sql);
     }
@@ -826,7 +826,7 @@ class PPOHelper
     public static function getStat($pos_id, $ret = false) {
         $conn = \ZDB\DB::getConnect();
 
-        $sql = "select count(*) as cnt, coalesce(sum(amount0),0)  as amount0, coalesce(sum(amount1),0)  as amount1, coalesce(sum(amount2),0) as amount2, coalesce(sum(amount3),0) as amount3 from  ppo_zformstat where tag = 0 and  pos_id=" . $pos_id;
+        $sql = "select count(*) as cnt, coalesce(sum(amount0),0)  as amount0, coalesce(sum(amount1),0)  as amount1, coalesce(sum(amount2),0) as amount2, coalesce(sum(amount3),0) as amount3 from  ppo_zformstat where    pos_id=" . $pos_id;
         if ($ret == true) {
             $sql = $sql . "  and checktype =3"; //возврат
         } else {
@@ -856,6 +856,115 @@ class PPOHelper
     }
    
     
+    public static function sync($pos_id    ) {
+        $pos = \App\Entity\Pos::load($pos_id);
+        
+        
+        if ($pos == 0) {
+            return;
+        }   
+        $branch = \App\Entity\Branch::load($pos->branch_id);
+        $company = \App\Entity\Company::load($branch->company_id);
+        
+
+       $from = \Carbon\Carbon::now()->addMonth(-1)->startOfMonth()->format('c');
+       $to = \Carbon\Carbon::now()->format('c');
+    
+       $res = PPOHelper::send(json_encode(array('Command' => 'Shifts', 'NumFiscal' => $pos->fisc, 'From' => $from, 'To' => $to)), 'cmd', $company);
+     
+        if($res['success']==false)  {
+           \App\system::setErrorMsg($res['data']);
+            return;
+        }
+        $res = json_decode($res['data']); 
+        $docs = array();
+        if(is_array($res->Shifts)) {
+            foreach ($res->Shifts as $sh) {
+                if(strlen($sh->CloseName)==0) {
+             
+                  
+                    $res = PPOHelper::send(json_encode(array('Command' => 'Documents', 'NumFiscal' => $pos->fisc, 'ShiftId' => $sh->ShiftId)), 'cmd', $company);
+                  
+                    
+                    if($res['success']==false)  {
+                        \App\system::setErrorMsg($res['data']);
+                        return;
+                    }
+                    $res = json_decode($res['data']);
+                    if(is_array($res->Documents)) {
+ 
+                        foreach ($res->Documents as $doc) {
+                            if($doc->DocClass=='ZRep') continue;
+                            if($doc->CheckDocType=='OpenShift') continue;
+                            if($doc->CheckDocType=='CloseShift') continue;
+                            $docs[$doc->NumFiscal] = $doc;
+                        }
+                    }                
+                }
+            }
+        }        
+        
+          $conn = \ZDB\DB::getConnect();
+          
+          $sql = "select  zf_id,fiscnumber   from  zformstat where  pos_id=".$pos_id;
+          $fd = array();
+          foreach($conn->Execute($sql) as $d) {
+             $fd[$d['fiscnumber']]= $d['zf_id'];
+          }
+          
+           
+         
+          $conn->Execute("delete from  zformstat where pos_id=".$pos_id." and  fiscnumber is  null ") ;
+        
+          $fdocs = array_keys($docs)  ;//номера  в  налоговой
+          $floc = array_keys($fd)  ;//номера  локально
+          
+          //удаляем лишние
+          foreach($floc as $l){
+              if(in_array($l,$fdocs)==false)  {
+                  $conn->Execute("delete from  zformstat where pos_id=".$pos_id." and  fiscnumber=".$conn->qstr($l)) ;
+              }
+          }
+          //добавляем недостающие
+          
+          $amount0=0;
+          $amount1=0;
+          $amount2=0;
+          $amount3=0;
+          
+          
+          foreach($fdocs as $d){
+              if(in_array($d,$floc)==false)  {
+                 
+ 
+                $res = PPOHelper::send(json_encode(array('Command' => 'Check', 'RegistrarNumFiscal' => $pos->fisc, 'NumFiscal' =>  $d )), 'cmd', $company);
+              
+                if($res['success']==false)  {
+                    continue;
+                }              
+                $xml = mb_convert_encoding($res['data'] ,"windows-1251" , "utf-8"  )  ;       
+     
+                $xml = simplexml_load_string($xml) ;
+                if($xml==false)  continue;
+                $st =  (string)$xml->CHECKHEAD->DOCSUBTYPE;
+                
+                foreach ($xml->CHECKPAY->children() as $row) {
+                   $fc =  (string)$row->PAYFORMCD;
+                   $sum =  (string)$row->SUM;
+                   if($fc=="0")  $amount0 += $sum;
+                   if($fc=="1")  $amount1 += $sum;
+                   if($fc=="2")  $amount2 += $sum;
+                   if($fc=="3")  $amount3 += $sum; 
+               }
+                  
+                 
+              \App\Modules\PPO\PPOHelper::insertStat($pos_id,$st=="1"?2:0,$amount0,$amount1,$amount2,$amount3,'',$d);
+   
+              
+            }
+          
+          }  
+    }    
     
     /*
        public static function sign($data, $server, $port) {

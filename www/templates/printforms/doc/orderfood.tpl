@@ -79,7 +79,15 @@
         <td colspan="6" align="right">Знижка:</td>
         <td align="right">{{paydisc}}</td>
     </tr>
-    {{/isdisc}}
+    {{/isdisc}}  
+         {{#delbonus}}
+    <tr style="font-weight: bolder;">
+        <td colspan="6" align="right">Списано бонусiв::</td>
+        <td align="right">{{delbonus}}</td>
+    </tr>
+    {{/delbonus}}
+
+
     <tr style="font-weight: bolder;">
         <td colspan="6" align="right">До сплати:</td>
         <td align="right">{{payamount}}</td>

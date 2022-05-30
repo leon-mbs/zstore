@@ -632,7 +632,7 @@ CREATE TABLE ppo_zformstat (
   amount1 DECIMAL(10, 2) NOT NULL,
   amount2 DECIMAL(10, 2) NOT NULL,
   amount3 DECIMAL(10, 2) NOT NULL,
-  tag INT DEFAULT 0,
+  fiscnumber CHARACTER VARYING(255),
   document_number CHARACTER VARYING(255) DEFAULT NULL,
   CONSTRAINT PK_ppo_zformstat PRIMARY KEY (zf_id)
 );

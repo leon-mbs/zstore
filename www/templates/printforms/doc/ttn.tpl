@@ -75,7 +75,7 @@
         <td><b>Вартiсть доставки</b></td>
         <td colspan="5"> {{ship_amount}}</td>
     </tr>
-    {{/ship_amount}}="5"> {{ship_amount}}</td>
+    {{/ship_amount}}
 </tr>
 
 

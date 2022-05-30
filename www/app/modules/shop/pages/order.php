@@ -240,7 +240,7 @@ class Order extends Base
                 $c->email = $email;
                 $c->phone = $phone;
                 $c->address = $address;
-                $c->type ==  Customer::TYPE_BAYER;
+                $c->type =  Customer::TYPE_BAYER;
                 $c->save();
                 $order->customer_id = $c->customer_id; 
                  

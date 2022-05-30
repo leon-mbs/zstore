@@ -37,7 +37,8 @@ class ZForm extends \App\Pages\Base
         $this->stat->add(new TextInput('retcnt'));
         $this->stat->add(new CheckBox('onlyshift'));
         $this->stat->setVisible(false);
-     
+        $this->add(new  ClickLink("sync",$this,"onSync"))->setVisible(false) ;
+    
         $this->add(new DataView('list', new ArrayDataSource(new Prop($this, '_list')), $this, 'OnRow'));
        
         
@@ -52,7 +53,8 @@ class ZForm extends \App\Pages\Base
 
         $this->stat->setVisible(true);
 
-        
+       // $this->sync->setVisible(true);
+   
         $data = \App\Modules\PPO\PPOHelper::getStat($pos_id, false);
     
 
@@ -107,12 +109,10 @@ class ZForm extends \App\Pages\Base
         $row->add(new Label("amount3",H::fa($amount3)));
         $row->add(new Label("amount0r",H::fa($amount0r)));
         $row->add(new Label("amount1r",H::fa($amount1r)));
-        $row->add(new ClickLink("del", $this,"onDel" ));
-      
-        $row->add(new ClickLink("fisc", $this,"onFisc" ))->setVisible($item->tag==1);
-        if($item->tag==1) {
-            $this->setWarn('ppo_isnofisc')  ;
-        }
+        
+        $row->add(new ClickLink("fisc", $this,"onFisc" ))->setVisible( strlen($item->fiscnumber) == 0 );
+        $row->add(new ClickLink("del", $this,"onDel" ))->setVisible( strlen($item->fiscnumber) == 0 );
+    
         
     }
     
@@ -244,6 +244,20 @@ class ZForm extends \App\Pages\Base
 
 
     }
+    
+    public function onSync($sender) {
+        
+        $pos_id = $this->filter->pos->getValue();
+        if ($pos_id == 0) {
+            return;
+        }
+  
+        \App\Modules\PPO\PPOHelper::sync($pos_id)  ;
+          
+        $this->OnRefresh($this->filter)   ;
+            
+    }    
+    
     /*
     public function closeshift() {
 

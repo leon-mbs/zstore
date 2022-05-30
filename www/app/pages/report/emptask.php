@@ -79,8 +79,8 @@ class EmpTask extends \App\Pages\Base
             foreach ($doc->unpackDetails('detaildata') as $service) {
                 $ser = \App\Entity\Service::load($service->service_id);
 
-                $total += $ser->cost * $service->quantity;
-                $hours += $ser->hours * $service->quantity;
+                $total += (doubleval($ser->cost) * doubleval($service->quantity) ) ;
+                $hours += (doubleval($ser->hours) * doubleval($service->quantity) );
             }
             if ($doc->headerdata['hours'] > 0) {
                 $hours = $doc->headerdata['hours'];

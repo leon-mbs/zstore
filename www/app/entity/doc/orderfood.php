@@ -48,7 +48,8 @@ class OrderFood extends Document
             $deliverydata = $deliverydata . ', ' . $this->headerdata["ship_address"];
         }
         $deliverydata = $deliverydata . ', ' . date("Y-m-d H:i", $this->headerdata["deltime"]);
- 
+           $delbonus = $this->getBonus(false) ;
+
         $header = array('date'         => H::fd($this->document_date),
                         "_detail"      => $detail,
                         "firm_name"    => $firm["firm_name"],
@@ -67,6 +68,7 @@ class OrderFood extends Document
                         "total"           => H::fa($this->amount),
                         "payed"           => H::fa($this->payed),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
+                        "delbonus"           => $delbonus > 0 ? H::fa($delbonus) : false,
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
                         "payamount"       => H::fa($this->payamount)
         );
@@ -97,6 +99,13 @@ class OrderFood extends Document
         $common = \App\System::getOptions('common');
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $addbonus = $this->getBonus() ;
+        $delbonus = $this->getBonus(false) ;
+        $allbonus = 0 ;
+        if($this->customer_id >0) {
+            $c=\App\Entity\Customer::load($this->customer_id);    
+            $allbonus = $c->getBonus();
+        }
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
@@ -118,7 +127,10 @@ class OrderFood extends Document
                         "payed"           => H::fa($this->payed),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
-                        "docqrcode"       => $this->getQRCodeImage(),
+                         "addbonus"           => $addbonus > 0 ? H::fa($addbonus) : false,
+                        "delbonus"           => $delbonus > 0 ? H::fa($delbonus) : false,
+                        "allbonus"           => $allbonus > 0 ? H::fa($allbonus) : false,
+                       "docqrcode"       => $this->getQRCodeImage(),
 
                         "payamount" => H::fa($this->payamount)
         );

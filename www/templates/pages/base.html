@@ -786,7 +786,7 @@
                                     <li class="nav-item">
                                         <a href="/index.php?p=App/Pages/SystemLog" class="nav-link">
                                             <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;Системный лог</p>
+                                            <p>&nbsp;&nbsp;Системний лог</p>
                                         </a>
                                     </li>
                                 </ul>
@@ -829,7 +829,7 @@
 
                             {{#smart}}
 
-                            <div class=" card navbar nav justify-content-start d-none d-md-block">
+                            <div class=" card navbar nav justify-content-start d-none d-sm-block">
                                 {{{smart}}}
                             </div>
 
@@ -985,10 +985,19 @@ icon: 'fa fa-exclamation-triangle text-warning',
                $('#'+id).val( v.toFixed(0) );         
             }
             {{/twodigit}}        
-              
+        
+       //автофокус на  модальном  окне
        $(document).on('shown.bs.modal', '.modal', function() {
           $(this).find('input:visible:first').focus();
        });            
+   
+       //замена  запятой
+        $(document).on('change', 'input.qtyprice', function() {
+          $(this).val($(this).val().replace(/,/g, '.'))
+        });    
+                   
+   
+   
             
         </script>
         {{#usemobilescanner}}

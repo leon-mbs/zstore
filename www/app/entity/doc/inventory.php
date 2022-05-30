@@ -127,7 +127,6 @@ class Inventory extends Document
             "_detail"         => $detail,
             'date'            => H::fd($this->document_date),
             "store"           => $this->headerdata["storename"],
-            "store"           => $this->headerdata["storename"],
             "summinus"           => $summinus > 0 ? $summinus : false,
             "sumplus"           => $sumplus > 0 ? $sumplus : false ,
             "document_number" => $this->document_number
