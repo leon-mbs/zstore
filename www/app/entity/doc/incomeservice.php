@@ -72,7 +72,7 @@ class IncomeService extends Document
             if ($payed > 0) {
                 $this->payed = $payed;
             }
-            \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+            \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
 
         }        
         
