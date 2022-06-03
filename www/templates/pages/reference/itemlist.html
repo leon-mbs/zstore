@@ -387,8 +387,9 @@
             <div class="col-12 col-md-8 col-xl-6" zippy="setpanel">
                 <a zippy="backtolist"><i class="fa fa-arrow-alt-circle-left"></i> До довідника</a>
                 <h4 zippy="stitle"></h4>
+                <small>Комплекти(складовi частини) для  готової продукцiї та  напiвфабрикатiв</small>
                 <form zippy="setform" class="form-inline mt-2 mb-2">
-                    <label for="editsname">Назва</label>
+                    <label for="editsname">ТМЦ</label>
                     <input placeholder="Почніть вводити.." class="form-control  mr-sm-2" zippy="editsname"/>
 
                     <label for="editsqty">Кіл.</label>
@@ -410,8 +411,35 @@
                         <td><a zippy="sdel"><i class="fa fa-trash"></i></a></td>
                     </tr>
                 </table>
-            </div>
+           
+                 <form zippy="setыform" class="form-inline mt-2 mb-2">
+                    <label for="editsыname">Робота, послуга</label>
+                    <select class="form-control  select2" zippy="editsыname">
+                      <option value="0">Не вибрано</option>
+                    </select>
 
+                    <label class="ml-sm-2" for="editsыqty">Кіл.</label>
+                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsыqty" required="required"
+                           pattern="[0-9\.\,]+" style="width:60px">
+                           
+                    <input class="btn btn-outline-success  " type="submit" value="Додати">
+                </form>
+                 <table class="table   table-sm  ">
+                    <tr>
+                        <th>Найменування</th>
+                        
+                        <th class="text-right">Вартість</th>
+                        <th></th>
+                    </tr>
+                    <tr zippy="ыsetlist">
+                        <td zippy="ыsname"></td>
+                        
+                        <td class="text-right" zippy="sыcost"></td>
+                        <td><a zippy="sdel"><i class="fa fa-trash"></i></a></td>
+                    </tr>
+                </table>
+                <b>Всього  собIвартiсть: </b> <b>0</b>
+            </div>
         </div>
 
         <div id="pform" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"

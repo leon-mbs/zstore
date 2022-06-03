@@ -83,7 +83,7 @@ class ItemSel extends \Zippy\Html\PageFragment
         $this->_pricetype = $pricetype;
         $this->_store = $store;
         if (strlen($this->_pricetype) > 0) {
-            $this->witempan->witemselt->AddColumn(new Column('price', 'Цена', true, true, false, "text-right", "text-right"));
+            $this->witempan->witemselt->AddColumn(new Column('price', 'Цiна', true, true, false, "text-right", "text-right"));
         }
     }
 

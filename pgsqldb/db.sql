@@ -1169,6 +1169,8 @@ SELECT
   item_set.item_id AS item_id,
   item_set.pitem_id AS pitem_id,
   item_set.qty AS qty,
+  item_set.service_id AS service_id,
+  item_set.cost AS cost,
   items.itemname AS itemname,
   items.item_code AS item_code
 FROM (item_set

@@ -1,1 +1,0 @@
-ALTER TABLE ppo_zformstat  ADD fiscnumber CHARACTER VARYING(255) NULL ;

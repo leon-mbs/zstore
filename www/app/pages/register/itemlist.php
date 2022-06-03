@@ -225,13 +225,13 @@ class ItemList extends \App\Pages\Base
         $header = array();
         $data = array();
 
-        $header['A1'] = "Наименование";
+        $header['A1'] = "Наименуваня";
         $header['B1'] = "Артикул";
         $header['C1'] = "Штрих-код";
-        $header['D1'] = "Ед.";
-        $header['E1'] = "Категория";
-        $header['F1'] = "Кол.";
-        $header['G1'] = "Цена";
+        $header['D1'] = "Од.";
+        $header['E1'] = "Категорiя";
+        $header['F1'] = "Кiл.";
+        $header['G1'] = "Цiна";
 
         $i = 1;
         foreach ($list as $item) {
