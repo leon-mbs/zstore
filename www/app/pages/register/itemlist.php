@@ -222,6 +222,9 @@ class ItemList extends \App\Pages\Base
         $store = $this->filter->searchstore->getValue();
         $list = $this->itempanel->itemlist->getDataSource()->getItems(-1, -1, 'itemname');
 
+        $common = System::getOptions('common') ;
+        
+        
         $header = array();
         $data = array();
 
@@ -231,8 +234,14 @@ class ItemList extends \App\Pages\Base
         $header['D1'] = "Од.";
         $header['E1'] = "Категорiя";
         $header['F1'] = "Кiл.";
-        $header['G1'] = "Цiна";
-
+        
+        if(strlen($common['price1'])) $header['G1'] = $common['price1'];
+        if(strlen($common['price2'])) $header['H1'] = $common['price2'];
+        if(strlen($common['price3'])) $header['I1'] = $common['price3'];
+        if(strlen($common['price4'])) $header['J1'] = $common['price4'];
+        if(strlen($common['price5'])) $header['K1'] = $common['price5'];
+        
+        
         $i = 1;
         foreach ($list as $item) {
             $i++;
@@ -243,25 +252,27 @@ class ItemList extends \App\Pages\Base
             $data['E' . $i] = $item->cat_name;
             $qty = $item->getQuantity($store);
             $data['F' . $i] = H::fqty($qty);
-
-            $plist = array();
+            
+             
             if ($item->price1 > 0) {
-                $plist[] = $item->getPrice('price1', $store);
+                $data['G' . $i] = $item->getPrice('price1', $store);
             }
             if ($item->price2 > 0) {
-                $plist[] = $item->getPrice('price2', $store);
+                $data['H' . $i] = $item->getPrice('price2', $store);
             }
             if ($item->price3 > 0) {
-                $plist[] = $item->getPrice('price3', $store);
+                $data['I' . $i] = $item->getPrice('price3', $store);
             }
             if ($item->price4 > 0) {
-                $plist[] = $item->getPrice('price4', $store);
-            }
+                $data['J' . $i] = $item->getPrice('price4', $store);
+            }               
             if ($item->price5 > 0) {
-                $plist[] = $item->getPrice('price5', $store);
+                $data['K' . $i] = $item->getPrice('price5', $store);
             }
-            $data['G' . $i] = implode(' ', $plist);
+        
+        
         }
+        
 
         H::exportExcel($data, $header, 'itemlist.xlsx');
     }

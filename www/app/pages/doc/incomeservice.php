@@ -154,10 +154,14 @@ class IncomeService extends \App\Pages\Base
         $row->add(new Label('price', H::fa($service->price)));
         $row->add(new Label('amount', H::fa($service->price * $service->quantity)));
 
+        $row->add(new ClickLink('iset'))->onClick($this, 'isetOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
 
+    public function isetOnClick($sender) {
+        
+    }
     public function editOnClick($sender) {
         $service = $sender->getOwner()->getDataItem();
         $this->editdetail->setVisible(true);

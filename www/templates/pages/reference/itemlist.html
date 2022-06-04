@@ -412,14 +412,14 @@
                     </tr>
                 </table>
            
-                 <form zippy="setыform" class="form-inline mt-2 mb-2">
-                    <label for="editsыname">Робота, послуга</label>
-                    <select class="form-control  select2" zippy="editsыname">
+                 <form zippy="setsform" class="form-inline mt-2 mb-2">
+                    <label for="editssname">Робота, послуга</label>
+                    <select class="form-control  select2" zippy="editssname">
                       <option value="0">Не вибрано</option>
                     </select>
 
-                    <label class="ml-sm-2" for="editsыqty">Кіл.</label>
-                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsыqty" required="required"
+                    <label class="ml-sm-2" for="editscost">Вартість</label>
+                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editscost" required="required"
                            pattern="[0-9\.\,]+" style="width:60px">
                            
                     <input class="btn btn-outline-success  " type="submit" value="Додати">
@@ -431,14 +431,14 @@
                         <th class="text-right">Вартість</th>
                         <th></th>
                     </tr>
-                    <tr zippy="ыsetlist">
-                        <td zippy="ыsname"></td>
+                    <tr zippy="ssetlist">
+                        <td zippy="ssname"></td>
                         
-                        <td class="text-right" zippy="sыcost"></td>
-                        <td><a zippy="sdel"><i class="fa fa-trash"></i></a></td>
+                        <td class="text-right" zippy="sscost"></td>
+                        <td><a zippy="ssdel"><i class="fa fa-trash"></i></a></td>
                     </tr>
                 </table>
-                <b>Всього  собIвартiсть: </b> <b>0</b>
+                <b>Всього  собIвартiсть: </b> <b zippy="stotal"></b>
             </div>
         </div>
 

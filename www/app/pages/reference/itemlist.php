@@ -29,6 +29,7 @@ class ItemList extends \App\Pages\Base
     private $_copy     = false;
     private $_pitem_id = 0;
     public  $_itemset  = array();
+    public  $_serviceset  = array();
 
     public function __construct($add = false) {
         parent::__construct();
@@ -144,17 +145,21 @@ class ItemList extends \App\Pages\Base
         $this->setpanel->add(new Form('setform'))->onSubmit($this, 'OnAddSet');
         $this->setpanel->setform->add(new AutocompleteTextInput('editsname'))->onText($this, 'OnAutoSet');
         $this->setpanel->setform->add(new TextInput('editsqty', 1));
+       
+        $this->setpanel->add(new DataView('ssetlist', new ArrayDataSource($this, '_serviceset'), $this, 'itemsetslistOnRow'));
+        $this->setpanel->add(new Form('setsform'))->onSubmit($this, 'OnAddSSet');
+        $this->setpanel->setsform->add(new DropDownChoice('editssname',\App\Entity\Service::findArray("service_name", "disabled<>1", "service_name")));
+        $this->setpanel->setsform->add(new TextInput('editscost'));
 
         $this->setpanel->add(new Label('stitle'));
+        $this->setpanel->add(new Label('stotal'));
         $this->setpanel->add(new ClickLink('backtolist', $this, "onback"));
-
 
         $this->_tvars['hp1'] = strlen($common['price1']) > 0 ? $common['price1'] : false;
         $this->_tvars['hp2'] = strlen($common['price2']) > 0 ? $common['price2'] : false;
         $this->_tvars['hp3'] = strlen($common['price3']) > 0 ? $common['price3'] : false;
         $this->_tvars['hp4'] = strlen($common['price4']) > 0 ? $common['price4'] : false;
         $this->_tvars['hp5'] = strlen($common['price5']) > 0 ? $common['price5'] : false;
-
 
         if ($add == false) {
             $this->itemtable->listform->itemlist->Reload();
@@ -494,15 +499,35 @@ class ItemList extends \App\Pages\Base
         $item = Item::load($item->item_id);
 
         $this->_pitem_id = $item->item_id;
-        $this->_itemset = ItemSet::find("pitem_id=" . $item->item_id, "itemname");
         $this->setpanel->setVisible(true);
         $this->itemtable->setVisible(false);
 
         $this->setpanel->stitle->setText($item->itemname);
 
-        $this->setpanel->setlist->Reload();
+        $this->setupdate() ;
     }
 
+    private function setupdate(){
+        $this->_itemset = ItemSet::find("item_id > 0  and pitem_id=" . $this->_pitem_id, "itemname");
+        $this->_serviceset = ItemSet::find("service_id > 0  and pitem_id=" . $this->_pitem_id, "service_name");
+
+        $this->setpanel->setlist->Reload();
+        $this->setpanel->ssetlist->Reload();
+        
+        $total = 0;
+        foreach($this->_itemset as $i) {
+             $item = Item::load($i->item_id);
+             $total += $item->getLastPartion() ;
+
+        }
+        foreach($this->_serviceset as $s) {
+             $total  += $s->cost;
+        }
+    
+        $this->setpanel->stotal->setText(H::fa($total));
+          
+    }
+    
     public function itemsetlistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
         $row->add(new Label('sname', $item->itemname));
@@ -537,10 +562,7 @@ class ItemList extends \App\Pages\Base
         $set->qty = $qty;
 
         $set->save();
-
-        $this->_itemset = ItemSet::find("pitem_id=" . $this->_pitem_id, "itemname");
-
-        $this->setpanel->setlist->Reload();
+        $this->setupdate() ;
         $sender->clean();
     }
 
@@ -549,11 +571,41 @@ class ItemList extends \App\Pages\Base
 
         ItemSet::delete($item->set_id);
 
-        $this->_itemset = ItemSet::find("pitem_id=" . $this->_pitem_id, "itemname");
+        $this->setupdate() ;
+    }
+ 
+    
+    public function itemsetslistOnRow(\Zippy\Html\DataList\DataRow $row) {
+        $item = $row->getDataItem();
+        $row->add(new Label('ssname', $item->service_name));
+        $row->add(new Label('sscost', H::fa($item->cost)));
+        $row->add(new ClickLink('ssdel'))->onClick($this, 'ondelset');
+    }
+    
+    public function OnAddSSet($sender) {
+        $id = $sender->editssname->getValue();
+        if ($id == 0) {
+            $this->setError("noselservice");
+            return;
+        }
 
-        $this->setpanel->setlist->Reload();
+        $cost = $sender->editscost->getText();
+
+        $set = new ItemSet();
+        $set->pitem_id = $this->_pitem_id;
+        $set->service_id = $id;
+        $set->cost = $cost;
+
+        $set->save();
+
+ 
+        $this->setupdate() ;
+        $sender->clean();
     }
 
+ 
+   
+    
     public function printQrOnClick($sender) {
       
         

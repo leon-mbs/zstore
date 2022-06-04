@@ -346,7 +346,7 @@ class Item extends \ZCL\DB\Entity
     }
 
 
-    //последняя  партия true по  приходной  false по расходной
+    //последняя  партия true по  приходу  false по расходу
     public function getLastPartion($store = 0, $snumber = "", $gi = true) {
         $conn = \ZDB\DB::getConnect();
         $q = $gi == true ? "e.quantity >0" : "e.quantity <0";
