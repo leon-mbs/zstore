@@ -863,14 +863,15 @@ class PPOHelper
         if ($pos == 0) {
             return;
         }   
-        $branch = \App\Entity\Branch::load($pos->branch_id);
-        $company = \App\Entity\Company::load($branch->company_id);
+        //$branch = \App\Entity\Branch::load($pos->firm_id);
+        $company = \App\Entity\Firm::load($pos->firm_id);
         
-
-       $from = \Carbon\Carbon::now()->addMonth(-1)->startOfMonth()->format('c');
-       $to = \Carbon\Carbon::now()->format('c');
+       //"2022-05-01T00:00:00+03:00"
+       
+       $from = date('c',strtotime('-1 month'));
+       $to = date('c');
     
-       $res = PPOHelper::send(json_encode(array('Command' => 'Shifts', 'NumFiscal' => $pos->fisc, 'From' => $from, 'To' => $to)), 'cmd', $company);
+       $res = PPOHelper::send(json_encode(array('Command' => 'Shifts', 'NumFiscal' => $pos->fiscalnumber, 'From' => $from, 'To' => $to)), 'cmd', $company);
      
         if($res['success']==false)  {
            \App\system::setErrorMsg($res['data']);
@@ -883,7 +884,7 @@ class PPOHelper
                 if(strlen($sh->CloseName)==0) {
              
                   
-                    $res = PPOHelper::send(json_encode(array('Command' => 'Documents', 'NumFiscal' => $pos->fisc, 'ShiftId' => $sh->ShiftId)), 'cmd', $company);
+                    $res = PPOHelper::send(json_encode(array('Command' => 'Documents', 'NumFiscal' => $pos->fiscalnumber, 'ShiftId' => $sh->ShiftId)), 'cmd', $company);
                   
                     
                     if($res['success']==false)  {
@@ -906,7 +907,7 @@ class PPOHelper
         
           $conn = \ZDB\DB::getConnect();
           
-          $sql = "select  zf_id,fiscnumber   from  zformstat where  pos_id=".$pos_id;
+          $sql = "select  zf_id,fiscnumber   from  ppo_zformstat where  pos_id=".$pos_id;
           $fd = array();
           foreach($conn->Execute($sql) as $d) {
              $fd[$d['fiscnumber']]= $d['zf_id'];
@@ -914,7 +915,7 @@ class PPOHelper
           
            
          
-          $conn->Execute("delete from  zformstat where pos_id=".$pos_id." and  fiscnumber is  null ") ;
+          $conn->Execute("delete from  ppo_zformstat where pos_id=".$pos_id." and  fiscnumber is  null ") ;
         
           $fdocs = array_keys($docs)  ;//номера  в  налоговой
           $floc = array_keys($fd)  ;//номера  локально
@@ -922,7 +923,7 @@ class PPOHelper
           //удаляем лишние
           foreach($floc as $l){
               if(in_array($l,$fdocs)==false)  {
-                  $conn->Execute("delete from  zformstat where pos_id=".$pos_id." and  fiscnumber=".$conn->qstr($l)) ;
+                  $conn->Execute("delete from  ppo_zformstat where pos_id=".$pos_id." and  fiscnumber=".$conn->qstr($l)) ;
               }
           }
           //добавляем недостающие
@@ -937,14 +938,16 @@ class PPOHelper
               if(in_array($d,$floc)==false)  {
                  
  
-                $res = PPOHelper::send(json_encode(array('Command' => 'Check', 'RegistrarNumFiscal' => $pos->fisc, 'NumFiscal' =>  $d )), 'cmd', $company);
+                $res = PPOHelper::send(json_encode(array('Command' => 'Check', 'RegistrarNumFiscal' => $pos->fiscalnumber, 'NumFiscal' =>  $d )), 'cmd', $company);
               
                 if($res['success']==false)  {
                     continue;
                 }              
-                $xml = mb_convert_encoding($res['data'] ,"windows-1251" , "utf-8"  )  ;       
-     
-                $xml = simplexml_load_string($xml) ;
+            $decrypted  = PPOHelper::decrypt($res['data'] ) ;
+        
+       //  $decrypted = mb_convert_encoding($decrypted , "utf-8" ,"windows-1251" )  ;
+  
+                $xml = simplexml_load_string($decrypted) ;
                 if($xml==false)  continue;
                 $st =  (string)$xml->CHECKHEAD->DOCSUBTYPE;
                 
@@ -958,7 +961,7 @@ class PPOHelper
                }
                   
                  
-              \App\Modules\PPO\PPOHelper::insertStat($pos_id,$st=="1"?2:0,$amount0,$amount1,$amount2,$amount3,'',$d);
+               \App\Modules\PPO\PPOHelper::insertStat($pos_id,$st=="1"?2:0,$amount0,$amount1,$amount2,$amount3,'',$d);
    
               
             }

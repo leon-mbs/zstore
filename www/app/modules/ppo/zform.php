@@ -37,7 +37,7 @@ class ZForm extends \App\Pages\Base
         $this->stat->add(new TextInput('retcnt'));
         $this->stat->add(new CheckBox('onlyshift'));
         $this->stat->setVisible(false);
-        $this->add(new  ClickLink("sync",$this,"onSync"))->setVisible(false) ;
+        $this->add(new  ClickLink("sync",$this,"onSync")) ;
     
         $this->add(new DataView('list', new ArrayDataSource(new Prop($this, '_list')), $this, 'OnRow'));
        
