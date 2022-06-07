@@ -288,7 +288,7 @@ class Main extends Base
 
         $this->_tvars['biorders'] = $conn->GetOne($sql);
 
-        $sql = " select coalesce(sum(partion*qty),0) as cnt  from  store_stock_view  where {$cstr} qty >0  and item_id in (select item_id from items where disabled<>1 )                     ";
+        $sql = " select coalesce(sum(partion*qty),0) as cnt  from  store_stock_view  where {$cstr} qty <>0  and item_id in (select item_id from items where disabled<>1 )                     ";
 
         $this->_tvars['biitemscnt'] = H::fa($conn->GetOne($sql));
 

@@ -120,7 +120,7 @@ class ItemList extends \App\Pages\Base
         }
 
         $conn = \ZDB\DB::getConnect();
-        $sql = "select  coalesce(sum(qty*partion),0) from store_stock_view where {$cstr} qty >0 and item_id in (select item_id from items where disabled<>1 ) ";
+        $sql = "select  coalesce(sum(qty*partion),0) from store_stock_view where {$cstr} qty <>0 and item_id in (select item_id from items where disabled<>1 ) ";
 
 
         $cat = $this->filter->searchcat->getValue();
