@@ -57,7 +57,10 @@ class IncomeService extends Document
     public function Execute() {
         $conn = \ZDB\DB::getConnect();
 
-        foreach ($this->unpackDetails('detaildata') as $ser) {
+
+        $itemset =    $this->unpackDetails('setdata');
+
+        foreach ($this->unpackDetails('detaildata') as $r=>$ser) {
 
             $sc = new Entry($this->document_id, 0 - ($ser->price * $ser->quantity), 0 - $ser->quantity);
             $sc->setService($ser->service_id);
@@ -65,7 +68,20 @@ class IncomeService extends Document
     
             $sc->setOutPrice($ser->price);
             $sc->save();
+            
+            if( @is_array($itemset[$r]) )  {
+                 
+                foreach($itemset[$r] as $it) {
+                    $ss = \App\Entity\ItemSet::getFirst("service_id={$ser->service_id}  and  pitem_id={$it->item_id}")  ;
+                    if($ss instanceof \App\Entity\ItemSet ) {
+                       $ss->cost = $ser->amount/$it->qty; 
+                       $ss->save(); 
+                    }
+                }
+            }
+            
         }
+        
         
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
             $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment']);
