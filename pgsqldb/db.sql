@@ -99,6 +99,7 @@ CREATE TABLE documents (
   branch_id INTEGER DEFAULT '0',
   parent_id INTEGER DEFAULT '0',
   firm_id INTEGER DEFAULT NULL,
+  lastupdate TIMESTAMP DEFAULT NULL,
   priority SMALLINT DEFAULT '100',
   CONSTRAINT PK_documents PRIMARY KEY (document_id),
   CONSTRAINT documents_ibfk_1 FOREIGN KEY (user_id) REFERENCES users (user_id)
@@ -871,6 +872,7 @@ SELECT
   d.payed AS payed,
   d.parent_id AS parent_id,
   d.branch_id AS branch_id,
+  d.lastupdate AS lastupdate,  
   b.branch_name AS branch_name,
   d.firm_id AS firm_id,
   d.priority AS priority,

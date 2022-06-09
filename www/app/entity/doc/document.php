@@ -102,10 +102,13 @@ class Document extends \ZCL\DB\Entity
 
     protected function afterLoad() {
         $this->document_date = strtotime($this->document_date);
+        $this->lastupdate = strtotime($this->lastupdate);
+        
         $this->unpackData();
     }
 
     protected function beforeSave() {
+        $this->lastupdate=time();
 
 
         if (false == $this->checkUniqueNumber()) {
@@ -117,6 +120,16 @@ class Document extends \ZCL\DB\Entity
             $this->headerdata['parent_number'] = $p->document_number;
         }
         $this->packData();
+        
+        
+        
+        $prev = Document::getFirst(" document_id <> {$this->document_id} and user_id = {$this->user_id} and  meta_id={$this->meta_id}","document_id  desc");
+        $diff = time() - $prev->lastupdate ;
+        if($diff <= 10 && $prev != false && $this->amount==$prev->amount) {
+           throw new \Exception(Helper::l("doubledoc"));  
+        }
+        
+        
     }
 
     /**

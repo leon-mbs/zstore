@@ -135,7 +135,7 @@ CREATE TABLE `docstatelog` (
   `hostname` varchar(64) NOT NULL,
   PRIMARY KEY (`log_id`),
   KEY `document_id` (`document_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2797 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2813 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `docstatelog_view`;
 /*!50001 DROP VIEW IF EXISTS `docstatelog_view`*/;
@@ -173,6 +173,7 @@ CREATE TABLE `documents` (
   `parent_id` bigint(20) DEFAULT '0',
   `firm_id` int(11) DEFAULT NULL,
   `priority` smallint(6) DEFAULT '100',
+  `lastupdate` datetime DEFAULT NULL,
   PRIMARY KEY (`document_id`),
   UNIQUE KEY `unuqnumber` (`meta_id`,`document_number`,`branch_id`),
   KEY `document_date` (`document_date`),
@@ -180,7 +181,7 @@ CREATE TABLE `documents` (
   KEY `user_id` (`user_id`),
   KEY `branch_id` (`branch_id`),
   CONSTRAINT `documents_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=823 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=824 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `documents_view`;
 /*!50001 DROP VIEW IF EXISTS `documents_view`*/;
@@ -207,6 +208,7 @@ SET character_set_client = utf8;
  1 AS `firm_id`,
  1 AS `priority`,
  1 AS `firm_name`,
+ 1 AS `lastupdate`,
  1 AS `meta_name`,
  1 AS `meta_desc`*/;
 SET character_set_client = @saved_cs_client;
@@ -269,7 +271,7 @@ CREATE TABLE `entrylist` (
   KEY `stock_id` (`stock_id`),
   CONSTRAINT `entrylist_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`document_id`),
   CONSTRAINT `entrylist_ibfk_2` FOREIGN KEY (`stock_id`) REFERENCES `store_stock` (`stock_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1283 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1302 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -280,7 +282,7 @@ CREATE TABLE `entrylist` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017  */ /*!50003 TRIGGER `entrylist_after_ins_tr` AFTER INSERT ON `entrylist`
+/*!50003 CREATE*/ /*!50017 */ /*!50003 TRIGGER `entrylist_after_ins_tr` AFTER INSERT ON `entrylist`
 
   FOR EACH ROW
 
@@ -315,7 +317,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017  */ /*!50003 TRIGGER `entrylist_after_del_tr` AFTER DELETE ON `entrylist`
+/*!50003 CREATE*/ /*!50017 */ /*!50003 TRIGGER `entrylist_after_del_tr` AFTER DELETE ON `entrylist`
 
   FOR EACH ROW
 
@@ -453,7 +455,7 @@ CREATE TABLE `iostate` (
   `amount` decimal(10,2) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `document_id` (`document_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=165 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=169 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `iostate_view`;
 /*!50001 DROP VIEW IF EXISTS `iostate_view`*/;
@@ -602,7 +604,7 @@ CREATE TABLE `item_set` (
   `service_id` int(11) DEFAULT '0',
   `cost` decimal(10,2) DEFAULT '0.00',
   PRIMARY KEY (`set_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `item_set_view`;
 /*!50001 DROP VIEW IF EXISTS `item_set_view`*/;
@@ -857,7 +859,7 @@ CREATE TABLE `paylist` (
   PRIMARY KEY (`pl_id`),
   KEY `document_id` (`document_id`),
   CONSTRAINT `paylist_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`document_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=687 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=697 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `paylist_view`;
 /*!50001 DROP VIEW IF EXISTS `paylist_view`*/;
@@ -922,7 +924,7 @@ CREATE TABLE `ppo_zformstat` (
   `document_number` varchar(255) DEFAULT NULL,
   `fiscnumber` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`zf_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `prodproc`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1344,7 +1346,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = latin1 */;
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `contracts_view` AS select `co`.`contract_id` AS `contract_id`,`co`.`customer_id` AS `customer_id`,`co`.`firm_id` AS `firm_id`,`co`.`createdon` AS `createdon`,`co`.`contract_number` AS `contract_number`,`co`.`disabled` AS `disabled`,`co`.`details` AS `details`,`cu`.`customer_name` AS `customer_name`,`f`.`firm_name` AS `firm_name` from ((`contracts` `co` join `customers` `cu` on((`co`.`customer_id` = `cu`.`customer_id`))) left join `firms` `f` on((`co`.`firm_id` = `f`.`firm_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1357,7 +1359,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `custitems_view` AS select `s`.`custitem_id` AS `custitem_id`,`s`.`item_id` AS `item_id`,`s`.`customer_id` AS `customer_id`,`s`.`quantity` AS `quantity`,`s`.`price` AS `price`,`s`.`updatedon` AS `updatedon`,`s`.`cust_code` AS `cust_code`,`s`.`comment` AS `comment`,`i`.`itemname` AS `itemname`,`i`.`cat_id` AS `cat_id`,`i`.`item_code` AS `item_code`,`i`.`detail` AS `detail`,`c`.`customer_name` AS `customer_name` from ((`custitems` `s` join `items` `i` on((`s`.`item_id` = `i`.`item_id`))) join `customers` `c` on((`s`.`customer_id` = `c`.`customer_id`))) where ((`i`.`disabled` <> 1) and (`c`.`status` <> 1)) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1370,7 +1372,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `customers_view` AS select `customers`.`customer_id` AS `customer_id`,`customers`.`customer_name` AS `customer_name`,`customers`.`detail` AS `detail`,`customers`.`email` AS `email`,`customers`.`phone` AS `phone`,`customers`.`status` AS `status`,`customers`.`city` AS `city`,`customers`.`leadsource` AS `leadsource`,`customers`.`leadstatus` AS `leadstatus`,`customers`.`country` AS `country`,`customers`.`passw` AS `passw`,(select count(0) from `messages` `m` where ((`m`.`item_id` = `customers`.`customer_id`) and (`m`.`item_type` = 2))) AS `mcnt`,(select count(0) from `files` `f` where ((`f`.`item_id` = `customers`.`customer_id`) and (`f`.`item_type` = 2))) AS `fcnt`,(select count(0) from `eventlist` `e` where ((`e`.`customer_id` = `customers`.`customer_id`) and (`e`.`eventdate` >= now()))) AS `ecnt` from `customers` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1383,7 +1385,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = latin1 */;
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `docstatelog_view` AS select `dl`.`log_id` AS `log_id`,`dl`.`user_id` AS `user_id`,`dl`.`document_id` AS `document_id`,`dl`.`docstate` AS `docstate`,`dl`.`createdon` AS `createdon`,`dl`.`hostname` AS `hostname`,`u`.`username` AS `username`,`d`.`document_number` AS `document_number`,`d`.`meta_desc` AS `meta_desc`,`d`.`meta_name` AS `meta_name` from ((`docstatelog` `dl` join `users_view` `u` on((`dl`.`user_id` = `u`.`user_id`))) join `documents_view` `d` on((`d`.`document_id` = `dl`.`document_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1396,8 +1398,8 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE  */
-/*!50013  */
-/*!50001 VIEW `documents_view` AS select `d`.`document_id` AS `document_id`,`d`.`document_number` AS `document_number`,`d`.`document_date` AS `document_date`,`d`.`user_id` AS `user_id`,`d`.`content` AS `content`,`d`.`amount` AS `amount`,`d`.`meta_id` AS `meta_id`,`u`.`username` AS `username`,`c`.`customer_id` AS `customer_id`,`c`.`customer_name` AS `customer_name`,`d`.`state` AS `state`,`d`.`notes` AS `notes`,`d`.`payamount` AS `payamount`,`d`.`payed` AS `payed`,`d`.`parent_id` AS `parent_id`,`d`.`branch_id` AS `branch_id`,`b`.`branch_name` AS `branch_name`,`d`.`firm_id` AS `firm_id`,`d`.`priority` AS `priority`,`f`.`firm_name` AS `firm_name`,`metadata`.`meta_name` AS `meta_name`,`metadata`.`description` AS `meta_desc` from (((((`documents` `d` left join `users_view` `u` on((`d`.`user_id` = `u`.`user_id`))) left join `customers` `c` on((`d`.`customer_id` = `c`.`customer_id`))) join `metadata` on((`metadata`.`meta_id` = `d`.`meta_id`))) left join `branches` `b` on((`d`.`branch_id` = `b`.`branch_id`))) left join `firms` `f` on((`d`.`firm_id` = `f`.`firm_id`))) */;
+/*!50013   */
+/*!50001 VIEW `documents_view` AS select `d`.`document_id` AS `document_id`,`d`.`document_number` AS `document_number`,`d`.`document_date` AS `document_date`,`d`.`user_id` AS `user_id`,`d`.`content` AS `content`,`d`.`amount` AS `amount`,`d`.`meta_id` AS `meta_id`,`u`.`username` AS `username`,`c`.`customer_id` AS `customer_id`,`c`.`customer_name` AS `customer_name`,`d`.`state` AS `state`,`d`.`notes` AS `notes`,`d`.`payamount` AS `payamount`,`d`.`payed` AS `payed`,`d`.`parent_id` AS `parent_id`,`d`.`branch_id` AS `branch_id`,`b`.`branch_name` AS `branch_name`,`d`.`firm_id` AS `firm_id`,`d`.`priority` AS `priority`,`f`.`firm_name` AS `firm_name`,`d`.`lastupdate` AS `lastupdate`,`metadata`.`meta_name` AS `meta_name`,`metadata`.`description` AS `meta_desc` from (((((`documents` `d` left join `users_view` `u` on((`d`.`user_id` = `u`.`user_id`))) left join `customers` `c` on((`d`.`customer_id` = `c`.`customer_id`))) join `metadata` on((`metadata`.`meta_id` = `d`.`meta_id`))) left join `branches` `b` on((`d`.`branch_id` = `b`.`branch_id`))) left join `firms` `f` on((`d`.`firm_id` = `f`.`firm_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -1409,7 +1411,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `empacc_view` AS select `e`.`ea_id` AS `ea_id`,`e`.`emp_id` AS `emp_id`,`e`.`document_id` AS `document_id`,`e`.`optype` AS `optype`,`e`.`notes` AS `notes`,`e`.`amount` AS `amount`,`d`.`document_date` AS `document_date`,`d`.`document_number` AS `document_number`,`em`.`emp_name` AS `emp_name` from ((`empacc` `e` join `documents` `d` on((`d`.`document_id` = `e`.`document_id`))) join `employees` `em` on((`em`.`employee_id` = `e`.`emp_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1422,7 +1424,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `entrylist_view` AS select `entrylist`.`entry_id` AS `entry_id`,`entrylist`.`document_id` AS `document_id`,`entrylist`.`quantity` AS `quantity`,`documents`.`customer_id` AS `customer_id`,`entrylist`.`stock_id` AS `stock_id`,`entrylist`.`service_id` AS `service_id`,`entrylist`.`tag` AS `tag`,`store_stock`.`item_id` AS `item_id`,`store_stock`.`partion` AS `partion`,`documents`.`document_date` AS `document_date`,`entrylist`.`outprice` AS `outprice` from ((`entrylist` left join `store_stock` on((`entrylist`.`stock_id` = `store_stock`.`stock_id`))) join `documents` on((`entrylist`.`document_id` = `documents`.`document_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1435,7 +1437,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `eventlist_view` AS select `e`.`user_id` AS `user_id`,`e`.`eventdate` AS `eventdate`,`e`.`title` AS `title`,`e`.`description` AS `description`,`e`.`event_id` AS `event_id`,`e`.`customer_id` AS `customer_id`,`e`.`isdone` AS `isdone`,`c`.`customer_name` AS `customer_name` from (`eventlist` `e` left join `customers` `c` on((`e`.`customer_id` = `c`.`customer_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1448,7 +1450,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `iostate_view` AS select `s`.`id` AS `id`,`s`.`document_id` AS `document_id`,`s`.`iotype` AS `iotype`,`s`.`amount` AS `amount`,`d`.`document_date` AS `document_date`,`d`.`branch_id` AS `branch_id` from (`iostate` `s` join `documents` `d` on((`s`.`document_id` = `d`.`document_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1461,7 +1463,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = latin1 */;
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `issue_issuelist_view` AS select `i`.`issue_id` AS `issue_id`,`i`.`issue_name` AS `issue_name`,`i`.`details` AS `details`,`i`.`status` AS `status`,`i`.`priority` AS `priority`,`i`.`user_id` AS `user_id`,`i`.`lastupdate` AS `lastupdate`,`i`.`project_id` AS `project_id`,`u`.`username` AS `username`,`p`.`project_name` AS `project_name` from ((`issue_issuelist` `i` left join `users_view` `u` on((`i`.`user_id` = `u`.`user_id`))) join `issue_projectlist` `p` on((`i`.`project_id` = `p`.`project_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1474,7 +1476,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = latin1 */;
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `issue_projectlist_view` AS select `p`.`project_id` AS `project_id`,`p`.`project_name` AS `project_name`,`p`.`details` AS `details`,`p`.`customer_id` AS `customer_id`,`p`.`status` AS `status`,`c`.`customer_name` AS `customer_name`,(select coalesce(sum((case when (`i`.`status` = 0) then 1 else 0 end)),0) from `issue_issuelist` `i` where (`i`.`project_id` = `p`.`project_id`)) AS `inew`,(select coalesce(sum((case when (`i`.`status` > 1) then 1 else 0 end)),0) from `issue_issuelist` `i` where (`i`.`project_id` = `p`.`project_id`)) AS `iproc`,(select coalesce(sum((case when (`i`.`status` = 1) then 1 else 0 end)),0) from `issue_issuelist` `i` where (`i`.`project_id` = `p`.`project_id`)) AS `iclose` from (`issue_projectlist` `p` left join `customers` `c` on((`p`.`customer_id` = `c`.`customer_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1487,7 +1489,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = latin1 */;
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `issue_time_view` AS select `t`.`id` AS `id`,`t`.`issue_id` AS `issue_id`,`t`.`createdon` AS `createdon`,`t`.`user_id` AS `user_id`,`t`.`duration` AS `duration`,`t`.`notes` AS `notes`,`u`.`username` AS `username`,`i`.`issue_name` AS `issue_name`,`i`.`project_id` AS `project_id`,`i`.`project_name` AS `project_name` from ((`issue_time` `t` join `users_view` `u` on((`t`.`user_id` = `u`.`user_id`))) join `issue_issuelist_view` `i` on((`t`.`issue_id` = `i`.`issue_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1500,7 +1502,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `item_set_view` AS select `item_set`.`set_id` AS `set_id`,`item_set`.`item_id` AS `item_id`,`item_set`.`pitem_id` AS `pitem_id`,`item_set`.`qty` AS `qty`,`item_set`.`service_id` AS `service_id`,`item_set`.`cost` AS `cost`,`items`.`itemname` AS `itemname`,`items`.`item_code` AS `item_code`,`services`.`service_name` AS `service_name` from ((`item_set` left join `items` on(((`item_set`.`item_id` = `items`.`item_id`) and (`items`.`disabled` <> 1)))) left join `services` on(((`item_set`.`service_id` = `services`.`service_id`) and (`services`.`disabled` <> 1)))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1513,7 +1515,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `items_view` AS select `items`.`item_id` AS `item_id`,`items`.`itemname` AS `itemname`,`items`.`description` AS `description`,`items`.`detail` AS `detail`,`items`.`item_code` AS `item_code`,`items`.`bar_code` AS `bar_code`,`items`.`cat_id` AS `cat_id`,`items`.`msr` AS `msr`,`items`.`disabled` AS `disabled`,`items`.`minqty` AS `minqty`,`items`.`item_type` AS `item_type`,`items`.`manufacturer` AS `manufacturer`,`item_cat`.`cat_name` AS `cat_name` from (`items` left join `item_cat` on((`items`.`cat_id` = `item_cat`.`cat_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1526,7 +1528,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = latin1 */;
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `messages_view` AS select `messages`.`message_id` AS `message_id`,`messages`.`user_id` AS `user_id`,`messages`.`created` AS `created`,`messages`.`message` AS `message`,`messages`.`item_id` AS `item_id`,`messages`.`item_type` AS `item_type`,`users_view`.`username` AS `username` from (`messages` join `users_view` on((`messages`.`user_id` = `users_view`.`user_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1539,7 +1541,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = latin1 */;
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `note_nodesview` AS select `note_nodes`.`node_id` AS `node_id`,`note_nodes`.`pid` AS `pid`,`note_nodes`.`title` AS `title`,`note_nodes`.`mpath` AS `mpath`,`note_nodes`.`user_id` AS `user_id`,`note_nodes`.`ispublic` AS `ispublic`,(select count(`note_topicnode`.`topic_id`) AS `Count(topic_id)` from `note_topicnode` where (`note_topicnode`.`node_id` = `note_nodes`.`node_id`)) AS `tcnt` from `note_nodes` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1552,7 +1554,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = latin1 */;
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `note_topicnodeview` AS select `note_topicnode`.`topic_id` AS `topic_id`,`note_topicnode`.`node_id` AS `node_id`,`note_topicnode`.`tn_id` AS `tn_id`,`note_topics`.`title` AS `title`,`note_nodes`.`user_id` AS `user_id`,`note_topics`.`content` AS `content` from ((`note_topics` join `note_topicnode` on((`note_topics`.`topic_id` = `note_topicnode`.`topic_id`))) join `note_nodes` on((`note_nodes`.`node_id` = `note_topicnode`.`node_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1565,7 +1567,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = latin1 */;
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `note_topicsview` AS select `t`.`topic_id` AS `topic_id`,`t`.`title` AS `title`,`t`.`content` AS `content`,`t`.`acctype` AS `acctype`,`t`.`user_id` AS `user_id` from `note_topics` `t` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1578,7 +1580,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `paylist_view` AS select `pl`.`pl_id` AS `pl_id`,`pl`.`document_id` AS `document_id`,`pl`.`amount` AS `amount`,`pl`.`mf_id` AS `mf_id`,`pl`.`notes` AS `notes`,`pl`.`user_id` AS `user_id`,`pl`.`paydate` AS `paydate`,`pl`.`paytype` AS `paytype`,`pl`.`bonus` AS `bonus`,`d`.`document_number` AS `document_number`,`u`.`username` AS `username`,`m`.`mf_name` AS `mf_name`,`d`.`customer_id` AS `customer_id`,`d`.`customer_name` AS `customer_name` from (((`paylist` `pl` join `documents_view` `d` on((`pl`.`document_id` = `d`.`document_id`))) join `users_view` `u` on((`pl`.`user_id` = `u`.`user_id`))) left join `mfund` `m` on((`pl`.`mf_id` = `m`.`mf_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1591,7 +1593,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `prodproc_view` AS select `p`.`pp_id` AS `pp_id`,`p`.`procname` AS `procname`,`p`.`basedoc` AS `basedoc`,`p`.`snumber` AS `snumber`,`p`.`state` AS `state`,coalesce((select min(`ps`.`startdate`) from `prodstage_view` `ps` where (`ps`.`pp_id` = `p`.`pp_id`)),NULL) AS `startdate`,coalesce((select max(`ps`.`enddate`) from `prodstage_view` `ps` where (`ps`.`pp_id` = `p`.`pp_id`)),NULL) AS `enddate`,coalesce((select count(0) from `prodstage` `ps` where (`ps`.`pp_id` = `p`.`pp_id`)),NULL) AS `stagecnt`,`p`.`detail` AS `detail` from `prodproc` `p` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1604,7 +1606,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `prodstage_view` AS select `ps`.`st_id` AS `st_id`,`ps`.`pp_id` AS `pp_id`,`ps`.`pa_id` AS `pa_id`,`ps`.`state` AS `state`,`ps`.`stagename` AS `stagename`,coalesce((select min(`pag`.`startdate`) from `prodstageagenda` `pag` where (`pag`.`st_id` = `ps`.`st_id`)),NULL) AS `startdate`,coalesce((select max(`pag`.`enddate`) from `prodstageagenda` `pag` where (`pag`.`st_id` = `ps`.`st_id`)),NULL) AS `enddate`,coalesce((select max(`pag`.`hours`) from `prodstageagenda_view` `pag` where (`pag`.`st_id` = `ps`.`st_id`)),NULL) AS `hours`,`ps`.`detail` AS `detail`,`pr`.`procname` AS `procname`,`pr`.`snumber` AS `snumber`,`pr`.`state` AS `procstate`,`pa`.`pa_name` AS `pa_name` from ((`prodstage` `ps` join `prodproc` `pr` on((`pr`.`pp_id` = `ps`.`pp_id`))) join `parealist` `pa` on((`pa`.`pa_id` = `ps`.`pa_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1617,7 +1619,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `prodstageagenda_view` AS select `a`.`sta_id` AS `sta_id`,`a`.`st_id` AS `st_id`,`a`.`startdate` AS `startdate`,`a`.`enddate` AS `enddate`,`pv`.`stagename` AS `stagename`,(timestampdiff(MINUTE,`a`.`startdate`,`a`.`enddate`) / 60) AS `hours`,`pv`.`pa_id` AS `pa_id`,`pv`.`pp_id` AS `pp_id` from (`prodstageagenda` `a` join `prodstage` `pv` on((`a`.`st_id` = `pv`.`st_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1630,7 +1632,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `roles_view` AS select `roles`.`role_id` AS `role_id`,`roles`.`rolename` AS `rolename`,`roles`.`acl` AS `acl`,(select coalesce(count(0),0) from `users` where (`users`.`role_id` = `roles`.`role_id`)) AS `cnt` from `roles` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1643,7 +1645,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = latin1 */;
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `shop_attributes_view` AS select `shop_attributes`.`attribute_id` AS `attribute_id`,`shop_attributes`.`attributename` AS `attributename`,`shop_attributes`.`cat_id` AS `cat_id`,`shop_attributes`.`attributetype` AS `attributetype`,`shop_attributes`.`valueslist` AS `valueslist`,`shop_attributes_order`.`ordern` AS `ordern` from (`shop_attributes` join `shop_attributes_order` on(((`shop_attributes`.`attribute_id` = `shop_attributes_order`.`attr_id`) and (`shop_attributes`.`cat_id` = `shop_attributes_order`.`pg_id`)))) order by `shop_attributes_order`.`ordern` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1656,7 +1658,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = latin1 */;
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `shop_products_view` AS select `i`.`item_id` AS `item_id`,`i`.`itemname` AS `itemname`,`i`.`description` AS `description`,`i`.`detail` AS `detail`,`i`.`item_code` AS `item_code`,`i`.`bar_code` AS `bar_code`,`i`.`cat_id` AS `cat_id`,`i`.`msr` AS `msr`,`i`.`disabled` AS `disabled`,`i`.`minqty` AS `minqty`,`i`.`item_type` AS `item_type`,`i`.`manufacturer` AS `manufacturer`,`i`.`cat_name` AS `cat_name`,coalesce((select sum(`store_stock`.`qty`) from `store_stock` where (`store_stock`.`item_id` = `i`.`item_id`)),0) AS `qty`,coalesce((select count(0) from `shop_prod_comments` `c` where (`c`.`item_id` = `i`.`item_id`)),0) AS `comments`,coalesce((select sum(`c`.`rating`) from `shop_prod_comments` `c` where (`c`.`item_id` = `i`.`item_id`)),0) AS `ratings` from `items_view` `i` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1669,7 +1671,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `shop_varitems_view` AS select `shop_varitems`.`varitem_id` AS `varitem_id`,`shop_varitems`.`var_id` AS `var_id`,`shop_varitems`.`item_id` AS `item_id`,`sv`.`attr_id` AS `attr_id`,`sa`.`attributevalue` AS `attributevalue`,`it`.`itemname` AS `itemname`,`it`.`item_code` AS `item_code` from (((`shop_varitems` join `shop_vars` `sv` on((`shop_varitems`.`var_id` = `sv`.`var_id`))) join `shop_attributevalues` `sa` on(((`sa`.`item_id` = `shop_varitems`.`item_id`) and (`sv`.`attr_id` = `sa`.`attribute_id`)))) join `items` `it` on((`shop_varitems`.`item_id` = `it`.`item_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1682,7 +1684,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `shop_vars_view` AS select `shop_vars`.`var_id` AS `var_id`,`shop_vars`.`attr_id` AS `attr_id`,`shop_vars`.`varname` AS `varname`,`shop_attributes`.`attributename` AS `attributename`,`shop_attributes`.`cat_id` AS `cat_id`,(select count(0) from `shop_varitems` where (`shop_varitems`.`var_id` = `shop_vars`.`var_id`)) AS `cnt` from ((`shop_vars` join `shop_attributes` on((`shop_vars`.`attr_id` = `shop_attributes`.`attribute_id`))) join `item_cat` on((`shop_attributes`.`cat_id` = `item_cat`.`cat_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1695,7 +1697,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `store_stock_view` AS select `st`.`stock_id` AS `stock_id`,`st`.`item_id` AS `item_id`,`st`.`partion` AS `partion`,`st`.`store_id` AS `store_id`,`i`.`itemname` AS `itemname`,`i`.`item_code` AS `item_code`,`i`.`cat_id` AS `cat_id`,`i`.`msr` AS `msr`,`i`.`item_type` AS `item_type`,`i`.`bar_code` AS `bar_code`,`i`.`cat_name` AS `cat_name`,`i`.`disabled` AS `itemdisabled`,`stores`.`storename` AS `storename`,`st`.`qty` AS `qty`,`st`.`snumber` AS `snumber`,`st`.`sdate` AS `sdate` from ((`store_stock` `st` join `items_view` `i` on(((`i`.`item_id` = `st`.`item_id`) and (`i`.`disabled` <> 1)))) join `stores` on((`stores`.`store_id` = `st`.`store_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1708,7 +1710,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `timesheet_view` AS select `t`.`time_id` AS `time_id`,`t`.`emp_id` AS `emp_id`,`t`.`description` AS `description`,`t`.`t_start` AS `t_start`,`t`.`t_end` AS `t_end`,`t`.`t_type` AS `t_type`,`t`.`t_break` AS `t_break`,`e`.`emp_name` AS `emp_name`,`b`.`branch_name` AS `branch_name`,`e`.`disabled` AS `disabled`,`t`.`branch_id` AS `branch_id` from ((`timesheet` `t` join `employees` `e` on((`t`.`emp_id` = `e`.`employee_id`))) left join `branches` `b` on((`t`.`branch_id` = `b`.`branch_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1721,7 +1723,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE  */
-/*!50013  */
+/*!50013   */
 /*!50001 VIEW `users_view` AS select `users`.`user_id` AS `user_id`,`users`.`userlogin` AS `userlogin`,`users`.`userpass` AS `userpass`,`users`.`createdon` AS `createdon`,`users`.`email` AS `email`,`users`.`acl` AS `acl`,`users`.`options` AS `options`,`users`.`disabled` AS `disabled`,`users`.`lastactive` AS `lastactive`,`roles`.`rolename` AS `rolename`,`users`.`role_id` AS `role_id`,`roles`.`acl` AS `roleacl`,coalesce(`employees`.`employee_id`,0) AS `employee_id`,(case when isnull(`employees`.`emp_name`) then `users`.`userlogin` else `employees`.`emp_name` end) AS `username` from ((`users` left join `employees` on(((`users`.`userlogin` = `employees`.`login`) and (`employees`.`disabled` <> 1)))) left join `roles` on((`users`.`role_id` = `roles`.`role_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
