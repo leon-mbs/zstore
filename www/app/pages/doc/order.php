@@ -91,7 +91,8 @@ class Order extends \App\Pages\Base
         $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
         $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
         $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
-
+        $this->editdetail->add(new ClickLink('opencatpan', $this, 'onOpenCatPan'));
+  
         $this->editdetail->add(new Label('qtystock'));
         $this->editdetail->add(new SubmitLink('addnewitem'))->onClick($this, 'addnewitemOnClick');
 
@@ -645,6 +646,11 @@ class Order extends \App\Pages\Base
         $this->wselitem->setVisible(true);
         $this->wselitem->setPriceType($this->docform->pricetype->getValue());
         $this->wselitem->Reload();
+    }
+    public function onOpenCatPan($sender) {
+        $this->wselitem->setVisible(true);
+        $this->wselitem->setPriceType($this->docform->pricetype->getValue());
+        $this->wselitem->Reload(true);
     }
 
     //добавление нового товара

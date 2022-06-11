@@ -90,6 +90,7 @@
 
 
                             <th  ></th>
+                            <th  ></th>
                         </tr>
                         <tr zippy="detail">
                             <td zippy="item"></td>
@@ -99,32 +100,39 @@
                             <td zippy="price" class="text-right"></td>
                             <td zippy="amount" class="text-right"></td>
 
+                            
 
-                            <td><a zippy="edit"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp; <a zippy="delete"><i
-                                        class="fa fa-trash"></i></a>
+                            <td><a zippy="edit"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp; <a zippy="delete"><i                                        class="fa fa-trash"></i></a>
                             </td>
+                            
+                            <td>   <a zippy="iset"><i class="fa fa-cogs" title="Комплекти"></i></a>   </a>                            
+                            
                         </tr>
                         <tr style="font-weight: bolder;">
                             <td colspan="4" class="text-right">Всього:</td>
                             <td zippy="total" class="text-right"></td>
+                            <td></td>
                             <td></td>
                         </tr>
                         <tr style="font-weight: bolder;">
                             <td colspan="4" class="text-right"><span data-label="paydisc">Знижка:</span></td>
                             <td zippy="paydisc" class="text-right"></td>
                             <td><a data-label="paydisc" href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i                                         class="fa fa-edit"></i></a></td>
+                            <td></td>
                         </tr>
                         <tr style="font-weight: bolder;">
                             <td colspan="4" class="text-right"><span data-label="payamount">До  сплати:</span></td>
                             <td zippy="payamount" class="text-right"></td>
                             <td><a data-label="payamount" href="javascript:void(0);" data-toggle="modal"
                                    data-target="#modalpayamount"><i class="fa fa-edit"></i></a></td>
+                                   <td></td>
                         </tr>
                         <tr style="font-weight: bolder;">
                             <td colspan="4" class="text-right"><span data-label="payed">Внесена оплата:</span></td>
                             <td zippy="payed" class="text-right"></td>
                             <td><a data-label="payed" href="javascript:void(0);" data-toggle="modal"
                                    data-target="#modalpayed"><i class="fa fa-edit"></i></a></td>
+                            <td></td>                                   
                         </tr>
 
 
@@ -276,5 +284,42 @@
                 </div>
             </div>
         </form>
+        
+      <div class="row">
+
+            <div class="col-12 col-md-8 col-xl-6" zippy="setpanel">
+                <a zippy="backtolist"><i class="fa fa-arrow-alt-circle-left"></i> До списку</a>
+                <h4 zippy="stitle"></h4>
+                <small>Готова продукцiя та  напiвфабрикати. При проведеннi документу буде  оновлена  вартiсть в  вiдповiдних  комплектах.</small>
+                <form zippy="setform" class="form-inline mt-2 mb-2">
+                    <label for="editsname">ТМЦ</label>
+                    <input placeholder="Почніть вводити.." class="form-control  mr-sm-2" zippy="editsname"/>
+
+                    <label for="editsqty">Кіл.</label>
+                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsqty" required="required"
+                           pattern="[0-9\.\,]+" style="width:60px">
+                    <input class="btn btn-outline-success  " type="submit" value="Додати">
+                </form>
+                <table class="table   table-sm  ">
+                    <tr>
+                        <th>Найменування</th>
+                        <th>Код</th>
+                        <th class="text-right">Кіл.</th>
+                        <th></th>
+                    </tr>
+                    <tr zippy="setlist">
+                        <td zippy="sname"></td>
+                        <td zippy="scode"></td>
+                        <td class="text-right" zippy="sqty"></td>
+                        <td><a zippy="sdel"><i class="fa fa-trash"></i></a></td>
+                    </tr>
+                </table>
+           
+               
+               
+            </div>
+        </div>
+       
+        
     </body>
 </html>

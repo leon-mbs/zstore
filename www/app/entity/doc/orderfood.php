@@ -191,6 +191,7 @@ class OrderFood extends Document
                     foreach ($set as $part) {
 
                         $itemp = \App\Entity\Item::load($part->item_id);
+                        if($itemp == null)  continue;
                         $itemp->quantity = $item->quantity * $part->qty;
                         if ($itemp->checkMinus($itemp->quantity, $this->headerdata['store']) == false) {
                             throw new \Exception(\App\Helper::l("nominus", H::fqty($itemp->getQuantity($this->headerdata['store'])), $itemp->itemname));

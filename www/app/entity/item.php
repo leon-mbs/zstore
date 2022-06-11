@@ -346,7 +346,7 @@ class Item extends \ZCL\DB\Entity
     }
 
 
-    //последняя  партия true по  приходной  false по расходной
+    //последняя  партия true по  приходу  false по расходу
     public function getLastPartion($store = 0, $snumber = "", $gi = true) {
         $conn = \ZDB\DB::getConnect();
         $q = $gi == true ? "e.quantity >0" : "e.quantity <0";
@@ -365,7 +365,7 @@ class Item extends \ZCL\DB\Entity
         }
         $sql = $sql . " order  by  e.document_id desc  ".$limit;
 
-        return $conn->GetOne($sql);
+        return doubleval($conn->GetOne($sql));
     }
 
     public static function getPriceTypeList() {
@@ -616,9 +616,16 @@ class Item extends \ZCL\DB\Entity
 
         if (count($ilist) > 0) {
             foreach ($ilist as $iset) {
-                $it = \App\Entity\Item::load($iset->item_id);
-                $pr = $it->getLastPartion(0);
-                $price += ($iset->qty * $pr);
+                
+                if($iset->item_id > 0) {
+                    $it = \App\Entity\Item::load($iset->item_id);
+                    $pr = $it->getLastPartion(0);
+                    $price += ($iset->qty * $pr);
+                }
+                if($iset->service_id >0) {
+                    $price += ($iset->cost);
+        
+                }                    
             }
         }
         if ($price == 0) {  //ищем  последнюю  партию

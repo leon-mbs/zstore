@@ -40,9 +40,7 @@ class ARMPos extends \App\Pages\Base
     private $_pt         = 0;
     private $_store_id   = 0;
     private $_salesource = 0;
-    public  $_catlist  = array();
-    public  $_prodlist = array();
-
+   
     public $_doclist = array();
 
     public function __construct() {
@@ -156,13 +154,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
 
         $this->docpanel->add(new \App\Widgets\ItemSel('wselitem', $this, 'onSelectItem'))->setVisible(false);
-        $this->docpanel->add(new Panel('catpan'))->setVisible(false);
-        $this->docpanel->catpan->add(new DataView('catlist', new ArrayDataSource($this, '_catlist'), $this, 'onCatRow'));
-
-        $this->docpanel->add(new Panel('prodpan'))->setVisible(false);
-        $this->docpanel->prodpan->add(new DataView('prodlist', new ArrayDataSource($this, '_prodlist'), $this, 'onProdRow'));
-        
-        
+ 
         
         
         
@@ -207,8 +199,6 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->formcheck->setVisible(false);
         $this->docpanel->editserdetail->setVisible(false);
         $this->docpanel->wselitem->setVisible(false);
-        $this->docpanel->catpan->setVisible(false);
-        $this->docpanel->prodpan->setVisible(false);
         $this->docpanel->editdetail->setVisible(false);
 
         $this->checklistpan->setVisible(true);
@@ -378,7 +368,7 @@ class ARMPos extends \App\Pages\Base
         }
 
 
-        $price = $item->getPrice($this->getPriveType(), $store);
+        $price = $item->getPrice($this->getPriceType(), $store);
         $item->price = $price;
         $item->quantity = 1;
 
@@ -552,8 +542,6 @@ class ARMPos extends \App\Pages\Base
                 $this->docpanel->editdetail->editprice->setText("");
                 $this->docpanel->editdetail->editserial->setText("");
                 $this->docpanel->wselitem->setVisible(false);           
-        $this->docpanel->catpan->setVisible(false);
-        $this->docpanel->prodpan->setVisible(false);
             
             
         } else {
@@ -623,8 +611,6 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->editserdetail->setVisible(false);
         $this->docpanel->form2->setVisible(true);
         $this->docpanel->wselitem->setVisible(false);
-        $this->docpanel->catpan->setVisible(false);
-        $this->docpanel->prodpan->setVisible(false);
         
         $this->docpanel->form2->detail->Reload();        
         
@@ -644,11 +630,15 @@ class ARMPos extends \App\Pages\Base
     //справочник
     public function onOpenItemSel($sender) {
         $this->docpanel->wselitem->setVisible(true);
-        $this->docpanel->catpan->setVisible(false);
-        $this->docpanel->prodpan->setVisible(false);
         
-        $this->docpanel->wselitem->setPriceType($this->getPriveType());
+        $this->docpanel->wselitem->setPriceType($this->getPriceType());
         $this->docpanel->wselitem->Reload();
+    }
+     public function onOpenCatPan($sender) {
+        $this->docpanel->wselitem->setVisible(true);
+        
+        $this->docpanel->wselitem->setPriceType($this->getPriceType());
+        $this->docpanel->wselitem->Reload(true);
     }
 
     public function onSelectItem($item_id, $itemname) {
@@ -656,69 +646,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->editdetail->edittovar->setText($itemname);
         $this->OnChangeItem($this->docpanel->editdetail->edittovar);
     }    
-    //  панель категорий
-   public function onOpenCatPan($sender) {
-        $this->docpanel->wselitem->setVisible(false);
-        $this->docpanel->catpan->setVisible(true);
-        $this->docpanel->prodpan->setVisible(false);
-        $this->_catlist = Category::find(" coalesce(parent_id,0)=0  ");
-       
-        $this->docpanel->catpan->catlist->Reload();
-    }
-     //категории
-    public function onCatRow($row) {
-        $cat = $row->getDataItem();
-        $row->add(new Panel('catbtn'))->onClick($this, 'onCatBtnClick');
-        $row->catbtn->add(new Label('catname', $cat->cat_name));
-        $row->catbtn->add(new Image('catimage', "/loadimage.php?id=" . $cat->image_id));
-    }
-
-    //товары
-    public function onProdRow($row) {
-        //  $store_id = $this->setupform->store->getValue();
-
-        $prod = $row->getDataItem();
-        $prod->price = $prod->getPrice($this->getPriveType() );
-        $row->add(new Panel('prodbtn'))->onClick($this, 'onProdBtnClick');
-        $row->prodbtn->add(new Label('prodname', $prod->itemname));
-        $row->prodbtn->add(new Label('prodprice', H::fa($prod->price)));
-        $row->prodbtn->add(new Image('prodimage', "/loadimage.php?id=" . $prod->image_id));
-    }
-
-    //выбрана  группа
-    public function onCatBtnClick($sender) {
-        $cat = $sender->getOwner()->getDataItem();
-        $catlist = Category::find("  detail  not  like '%<nofastfood>1</nofastfood>%' and   coalesce(parent_id,0)= " . $cat->cat_id);
-        if (count($catlist) > 0) {
-            $this->_catlist = $catlist;
-            $this->docpanel->catpan->catlist->Reload();
-        } else {
-            $this->_prodlist = Item::find('disabled<>1  and  item_type in (1,4 )  and cat_id=' . $cat->cat_id);
-            $this->docpanel->catpan->setVisible(false);
-            $this->docpanel->prodpan->setVisible(true);
-            $this->docpanel->prodpan->prodlist->Reload();
-        }
-
-    }
-
-    // выбран  товар
-    public function onProdBtnClick($sender) {
-        $item = $sender->getOwner()->getDataItem();
-        $this->docpanel->editdetail->edittovar->setKey($item->item_id);
-        $this->docpanel->editdetail->edittovar->setText($item->itemname);
-        $this->OnChangeItem($this->docpanel->editdetail->edittovar);
-
  
-        $this->_catlist = Category::find(" coalesce(parent_id,0)=0  ");
-        $this->docpanel->catpan->catlist->Reload();
-
-
-        $this->docpanel->catpan->setVisible(true);
-        $this->docpanel->prodpan->setVisible(false);
-
-    }
-
-
 
     private function calcTotal() {
 
@@ -745,7 +673,7 @@ class ARMPos extends \App\Pages\Base
         $item = Item::load($id);
         $store = $this->form1->store->getValue();
 
-        $price = $item->getPrice($this->getPriveType(), $store);
+        $price = $item->getPrice($this->getPriceType(), $store);
         $qty = $item->getQuantity($store);
 
         $this->docpanel->editdetail->qtystock->setText(H::fqty($qty));
@@ -924,7 +852,7 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['pos_name'] = $this->pos->pos_name;
         $this->_doc->headerdata['store'] = $this->_store_id;
         $this->_doc->headerdata['salesource'] = $this->_salesource;
-        $this->_doc->headerdata['pricetype'] = $this->getPriveType();
+        $this->_doc->headerdata['pricetype'] = $this->getPriceType();
 
         $this->_doc->firm_id = $this->pos->firm_id;
         $this->_doc->username =System::getUser()->username;
@@ -1159,7 +1087,7 @@ class ARMPos extends \App\Pages\Base
     }
 
     //тип  цены с  учетом  контрагента
-    private function getPriveType() {
+    private function getPriceType() {
         $id = $this->docpanel->form3->customer->getKey();
         if ($id > 0) {
             $cust = \App\Entity\Customer::load($id);

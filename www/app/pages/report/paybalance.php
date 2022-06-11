@@ -223,8 +223,8 @@ class PayBalance extends \App\Pages\Base
             }
         }
         $sql = " 
-         SELECT   coalesce(  sum(partion),0)     FROM store_stock 
-             WHERE qty <> 0    {$brst}
+         SELECT   coalesce(  sum(partion*qty),0)     FROM store_stock_view 
+             WHERE qty <> 0    {$brst}  and item_id in (select item_id from items where disabled<>1 ) 
               
                          
         ";

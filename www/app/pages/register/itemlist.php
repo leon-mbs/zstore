@@ -120,7 +120,7 @@ class ItemList extends \App\Pages\Base
         }
 
         $conn = \ZDB\DB::getConnect();
-        $sql = "select  coalesce(sum(qty*partion),0) from store_stock_view where {$cstr} qty >0 and item_id in (select item_id from items where disabled<>1 ) ";
+        $sql = "select  coalesce(sum(qty*partion),0) from store_stock_view where {$cstr} qty <>0 and item_id in (select item_id from items where disabled<>1 ) ";
 
 
         $cat = $this->filter->searchcat->getValue();
@@ -222,17 +222,26 @@ class ItemList extends \App\Pages\Base
         $store = $this->filter->searchstore->getValue();
         $list = $this->itempanel->itemlist->getDataSource()->getItems(-1, -1, 'itemname');
 
+        $common = System::getOptions('common') ;
+        
+        
         $header = array();
         $data = array();
 
-        $header['A1'] = "Наименование";
+        $header['A1'] = "Наименуваня";
         $header['B1'] = "Артикул";
         $header['C1'] = "Штрих-код";
-        $header['D1'] = "Ед.";
-        $header['E1'] = "Категория";
-        $header['F1'] = "Кол.";
-        $header['G1'] = "Цена";
-
+        $header['D1'] = "Од.";
+        $header['E1'] = "Категорiя";
+        $header['F1'] = "Кiл.";
+        
+        if(strlen($common['price1'])) $header['G1'] = $common['price1'];
+        if(strlen($common['price2'])) $header['H1'] = $common['price2'];
+        if(strlen($common['price3'])) $header['I1'] = $common['price3'];
+        if(strlen($common['price4'])) $header['J1'] = $common['price4'];
+        if(strlen($common['price5'])) $header['K1'] = $common['price5'];
+        
+        
         $i = 1;
         foreach ($list as $item) {
             $i++;
@@ -243,25 +252,27 @@ class ItemList extends \App\Pages\Base
             $data['E' . $i] = $item->cat_name;
             $qty = $item->getQuantity($store);
             $data['F' . $i] = H::fqty($qty);
-
-            $plist = array();
+            
+             
             if ($item->price1 > 0) {
-                $plist[] = $item->getPrice('price1', $store);
+                $data['G' . $i] = $item->getPrice('price1', $store);
             }
             if ($item->price2 > 0) {
-                $plist[] = $item->getPrice('price2', $store);
+                $data['H' . $i] = $item->getPrice('price2', $store);
             }
             if ($item->price3 > 0) {
-                $plist[] = $item->getPrice('price3', $store);
+                $data['I' . $i] = $item->getPrice('price3', $store);
             }
             if ($item->price4 > 0) {
-                $plist[] = $item->getPrice('price4', $store);
-            }
+                $data['J' . $i] = $item->getPrice('price4', $store);
+            }               
             if ($item->price5 > 0) {
-                $plist[] = $item->getPrice('price5', $store);
+                $data['K' . $i] = $item->getPrice('price5', $store);
             }
-            $data['G' . $i] = implode(' ', $plist);
+        
+        
         }
+        
 
         H::exportExcel($data, $header, 'itemlist.xlsx');
     }

@@ -78,8 +78,26 @@ class Application extends \Zippy\WebApplication
 
                 //  RESTFul
                 if ($page instanceof \App\API\Base\RestFul) {
-                    $params = array_slice($api, 2);
-                    $page->Execute($params);
+                    $_params = array_slice($api, 2);
+                    $i=1;
+                    if( is_array($_params) ) {
+                        foreach($_params as $v) {
+                           $params[$i++]=$v;        
+                        }
+                    }
+                    if( is_array($_REQUEST) ) {
+                        foreach($_REQUEST as $k=>$v) {
+                           $params[$k]=$v;        
+                        }
+                    }
+                    
+                    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                         $post =  file_get_contents('php://input');   
+                         $page->{$method}($params,$post);
+                         die;
+                    };
+               
+                    $page->{$method}($params);
                     die;
                 }
                 // JSON-RPC

@@ -149,6 +149,8 @@ class GoodsIssue extends Document
                     foreach ($set as $part) {
 
                         $itemp = \App\Entity\Item::load($part->item_id);
+                        if($itemp == null)  continue;
+                        
                         $itemp->quantity = $item->quantity * $part->qty;
 
                         if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {

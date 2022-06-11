@@ -858,7 +858,7 @@ class TTN extends \App\Pages\Base
 
             $this->docform->ship_address->setVisible(true);
             $this->docform->ship_number->setVisible($sender->getValue() == 3);
-            $this->docform->ship_amount->setVisible($sender->getValue() == 3);
+            $this->docform->ship_amount->setVisible(true);
             $this->docform->sent_date->setVisible(true);
             $this->docform->delivery_date->setVisible(true);
             $this->docform->emp->setVisible(true);

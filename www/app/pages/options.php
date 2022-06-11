@@ -293,11 +293,11 @@ class Options extends \App\Pages\Base
         
         $common['phonel'] = $this->common->phonel->getValue();
 
-        $common['price1'] = $this->common->price1->getText();
-        $common['price2'] = $this->common->price2->getText();
-        $common['price3'] = $this->common->price3->getText();
-        $common['price4'] = $this->common->price4->getText();
-        $common['price5'] = $this->common->price5->getText();
+        $common['price1'] = trim($this->common->price1->getText() );
+        $common['price2'] = trim($this->common->price2->getText() );
+        $common['price3'] = trim($this->common->price3->getText() );
+        $common['price4'] = trim($this->common->price4->getText() );
+        $common['price5'] = trim($this->common->price5->getText() );
         $common['defprice'] = $this->common->defprice->getText();
         $common['shopname'] = $this->common->shopname->getText();
         $common['ts_break'] = $this->common->ts_break->getText();
