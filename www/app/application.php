@@ -73,13 +73,14 @@ class Application extends \Zippy\WebApplication
                 require_once($file);
 
                 $class = "\\App\\API\\" . $class;
+                $method = $api[2];
 
                 $page = new $class;
 
                 //  RESTFul
                 if ($page instanceof \App\API\Base\RestFul) {
-                    $_params = array_slice($api, 2);
-                    $i=1;
+                    $_params = array_slice($api, 3);
+                    $i=0;
                     if( is_array($_params) ) {
                         foreach($_params as $v) {
                            $params[$i++]=$v;        
