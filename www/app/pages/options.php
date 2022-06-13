@@ -275,6 +275,7 @@ class Options extends \App\Pages\Base
         $this->modules->add(new CheckBox('modwoocomerce', $modules['woocomerce']));
         $this->modules->add(new CheckBox('modppo', $modules['ppo']));
         $this->modules->add(new CheckBox('modnp', $modules['np']));
+        $this->modules->add(new CheckBox('modpromua', $modules['promua']));
        
         
         
@@ -519,6 +520,7 @@ class Options extends \App\Pages\Base
          $modules['woocomerce'] = $sender->modwoocomerce->isChecked() ? 1:0;
          $modules['ppo'] = $sender->modppo->isChecked() ? 1:0;
          $modules['np'] = $sender->modnp->isChecked() ? 1:0;
+         $modules['promua'] = $sender->modpromua->isChecked() ? 1:0;
          $modules['issue'] = $sender->modissue->isChecked() ? 1:0;
          $modules['note'] = $sender->modnote->isChecked() ? 1:0;
          
