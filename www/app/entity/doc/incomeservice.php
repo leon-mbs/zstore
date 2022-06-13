@@ -74,7 +74,7 @@ class IncomeService extends Document
                 foreach($itemset[$r] as $it) {
                     $ss = \App\Entity\ItemSet::getFirst("service_id={$ser->service_id}  and  pitem_id={$it->item_id}")  ;
                     if($ss instanceof \App\Entity\ItemSet ) {
-                       $ss->cost = $ser->amount/$it->qty; 
+                       $ss->cost = $it->price; 
                        $ss->save(); 
                     }
                 }
