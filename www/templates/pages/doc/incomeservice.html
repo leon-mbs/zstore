@@ -298,6 +298,9 @@
                     <label for="editsqty">Кіл.</label>
                     <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsqty" required="required"
                            pattern="[0-9\.\,]+" style="width:60px">
+                    <label for="editsprice">Ціна</label>
+                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsprice" required="required"
+                           pattern="[0-9\.\,]+" style="width:60px">
                     <input class="btn btn-outline-success  " type="submit" value="Додати">
                 </form>
                 <table class="table   table-sm  ">
@@ -305,12 +308,14 @@
                         <th>Найменування</th>
                         <th>Код</th>
                         <th class="text-right">Кіл.</th>
+                        <th class="text-right">Ціна</th>
                         <th></th>
                     </tr>
                     <tr zippy="setlist">
                         <td zippy="sname"></td>
                         <td zippy="scode"></td>
                         <td class="text-right" zippy="sqty"></td>
+                        <td class="text-right" zippy="sprice"></td>
                         <td><a zippy="sdel"><i class="fa fa-trash"></i></a></td>
                     </tr>
                 </table>

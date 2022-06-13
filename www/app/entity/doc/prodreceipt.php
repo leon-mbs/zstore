@@ -63,7 +63,7 @@ class ProdReceipt extends Document
                 foreach ($set as $part) {
 
                     $itemp = \App\Entity\Item::load($part->item_id);
-                    $itemp->quantity = $item->quantity * $part->qty;
+                    $itemp->quantity = $part->quantity * $part->qty;
                     $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
 
                     foreach ($listst as $st) {

@@ -100,6 +100,7 @@ class IncomeService extends \App\Pages\Base
         $this->setpanel->add(new Form('setform'))->onSubmit($this, 'OnAddSet');
         $this->setpanel->setform->add(new AutocompleteTextInput('editsname'))->onText($this, 'OnAutoSet');
         $this->setpanel->setform->add(new TextInput('editsqty', 1));
+        $this->setpanel->setform->add(new TextInput('editsprice', 0));
         $this->setpanel->add(new Label('stitle'));
         $this->setpanel->add(new ClickLink('backtolist', $this, "onback"));
           
@@ -539,6 +540,15 @@ class IncomeService extends \App\Pages\Base
     public function onback($sender) {
         $this->setpanel->setVisible(false);
         $this->docform->setVisible(true);
+        
+        $ser = $this->_servicelist[$this->_rowid];
+        $a = 0;
+        foreach($this->_itemlist   as $it) {
+            $a  += doubleval($it->qty*$it->price) ;
+        }
+        if($ser->quantity*$ser->price  != $a  ) {
+            $this->setWarn("seritemdiff") ;
+        }
     }
   
     public function itemlistOnRow(\Zippy\Html\DataList\DataRow $row) {
@@ -546,6 +556,7 @@ class IncomeService extends \App\Pages\Base
         $row->add(new Label('sname', $item->itemname));
         $row->add(new Label('scode', $item->item_code));
         $row->add(new Label('sqty', H::fqty($item->qty)));
+        $row->add(new Label('sprice', H::fa($item->price)));
         $row->add(new ClickLink('sdel'))->onClick($this, 'ondelset');
     }
 
@@ -559,11 +570,13 @@ class IncomeService extends \App\Pages\Base
         }
         $it = Item::load($id);
         $qty = $sender->editsqty->getText();
+        $price = $sender->editsprice->getText();
 
         $set = new \App\DataItem();
      
         $set->item_id = $id;
         $set->qty = $qty;
+        $set->price = $price;
         $set->itemname = $it->itemname;
         $set->item_code = $it->item_code;
 
