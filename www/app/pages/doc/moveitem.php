@@ -84,6 +84,12 @@ class MoveItem extends \App\Pages\Base
                     
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                     }
+                    if ($basedoc->meta_name == 'GoodsReceipt') {
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
+
+                    
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                    }
                 }
                  
             }

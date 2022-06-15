@@ -46,17 +46,35 @@
         <th style="border: 1px solid black;">Опис</th>
         <th style="border: 1px solid black;" align="right">Вартість</th>
         <th style="border: 1px solid black;" align="right">Сума</th>
-
+        {{#hasitems}}
+        <th style="border: 1px solid black;" align="right">ТМЦ</th>
+            
+        {{/hasitems}}
     </tr>
     {{#_detail}}
     <tr>
-        <td>{{no}}</td>
-        <td>{{service_name}}</td>
+        <td valign="top">{{no}}</td>
+        <td valign="top">{{service_name}}</td>
 
-        <td>{{desc}}</td>
+        <td  valign="top">{{desc}}</td>
 
-        <td align="right">{{price}}</td>
-        <td align="right">{{amount}}</td>
+        <td valign="top" align="right">{{price}}</td>
+        <td valign="top" align="right">{{amount}}</td>
+         {{#hasitems}}  
+           <td  > 
+           <table  >
+               <tr> <td >Наименование</td>
+                <td align="right">&nbsp;Кол.&nbsp;</td>
+                <td align="right">Цена.</td></tr>
+             {{#items}}
+                <td  >{{itemname}}</td>
+                <td align="right">{{qty}}</td>
+                <td align="right">{{price}}</td>
+           
+             {{/items}}
+             </table>
+           </td>
+         {{/hasitems}}
 
     </tr>
     {{/_detail}}

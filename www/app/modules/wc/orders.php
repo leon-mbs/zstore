@@ -14,7 +14,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
-use Zippy\WebApplication as App;
+use \App\Application as App;
 
 class Orders extends \App\Pages\Base
 {
