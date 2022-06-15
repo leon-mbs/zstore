@@ -93,6 +93,7 @@ class PosList extends \App\Pages\Base
         $this->posdetail->editfisc->setText($this->_pos->fiscalnumber);
         $this->posdetail->editfiscalnumber->setText($this->_pos->fiscdocnumber);
         $this->posdetail->edittesting->setChecked($this->_pos->testing);
+        $this->posdetail->editusefisc->setChecked($this->_pos->usefisc);
 
         $this->posdetail->editcomment->setText($this->_pos->comment);
     }
@@ -124,6 +125,7 @@ class PosList extends \App\Pages\Base
         $this->_pos->fiscalnumber = $this->posdetail->editfisc->getText();
         $this->_pos->fiscdocnumber = $this->posdetail->editfiscalnumber->getText();
         $this->_pos->testing = $this->posdetail->edittesting->isChecked() ? 1 : 0;
+        $this->_pos->usefisc = $this->posdetail->editusefisc->isChecked() ? 1 : 0;
 
         if ($this->_pos->pos_name == '') {
             $this->setError("entername");
