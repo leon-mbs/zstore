@@ -36,7 +36,7 @@ class Task extends Document
                               "desc"         => $ser->desc,
                               "quantity"     => H::fqty($ser->quantity),
                               "cost"         => H::fa($ser->cost * $ser->quantity),
-                              "hours"        => $ser->hours * $ser->qty
+                              "hours"        => $ser->hours * $ser->quantity
             );
         }
 
