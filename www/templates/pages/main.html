@@ -464,21 +464,17 @@ type: 'pie',
 };
  
  
- $.ajax({
- type: 'GET',
- url: 'http://local.next/api/app/getmyap?DBGSESSID=447277729341600014;d=1,p=0,c=1',
-  
- }).success(function (data) {
- 
- console.log(data);
- 
- }).fail(function (data) {
- 
- console.log(JSON.stringify(data));
- });
- 
- 
+            /*
+ fetch('http://local.next/api/app/updatemyapp?DBGSESSID=447288196838100024;d=1,p=0,c=1', { 
+    method: 'post', 
+    headers: new Headers({
+        'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMiIsImlhdCI6MTY1NTM5ODY3OSwiZXhwIjoxNjU1NDg1MDc5fQ.yEgrNIfwxLlAQUtl6B1KTzSjJpZ82WdXKRiwVgPKTpQ' 
+        
+    }), 
+    body: '{"test":"xxx"}'
+});
+          */
         </script>
-
+     
     </body>
 </html>

@@ -32,7 +32,7 @@ class Stock extends \ZCL\DB\Entity
     public static function findArrayAC($store, $partname = "") {
         $partiontype = \App\System::getOption('common', 'partiontype');
 
-        $criteria = "qty <> 0 and itemdisabled <> 1 and store_id=" . $store;
+        $criteria = "qty > 0 and itemdisabled <> 1 and store_id=" . $store;
         if (strlen($partname) > 0) {
             $like = self::qstr('%' . $partname . '%');
             $partname = self::qstr($partname);

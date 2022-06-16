@@ -629,7 +629,7 @@ class Item extends \ZCL\DB\Entity
             }
         }
         if ($price == 0) {  //ищем  последнюю  партию
-            $pr = $this->getLastPartion(0);
+            $price = $this->getLastPartion(0);
         }
 
         return $price;
