@@ -68,7 +68,7 @@ class Options extends \App\Pages\Base
         
         $this->common->add(new CheckBox('printoutqrcode'));
         $this->common->add(new CheckBox('nocheckarticle'));
-        $this->common->add(new CheckBox('exportxlsx'));
+        
         $this->common->add(new CheckBox('allowminus'));
         $this->common->add(new CheckBox('noallowfiz'));
         $this->common->add(new CheckBox('capcha'));
@@ -113,7 +113,7 @@ class Options extends \App\Pages\Base
         
         $this->common->printoutqrcode->setChecked($common['printoutqrcode']);
         $this->common->nocheckarticle->setChecked($common['nocheckarticle']);
-        $this->common->exportxlsx->setChecked($common['exportxlsx']);
+        
         $this->common->showactiveusers->setChecked($common['showactiveusers']);
         $this->common->showchat->setChecked($common['showchat']);
         $this->common->usecattree->setChecked($common['usecattree']);
@@ -316,7 +316,7 @@ class Options extends \App\Pages\Base
         $common['printoutqrcode'] = $this->common->printoutqrcode->isChecked() ? 1 : 0;
         
         $common['nocheckarticle'] = $this->common->nocheckarticle->isChecked() ? 1 : 0;
-        $common['exportxlsx'] = $this->common->exportxlsx->isChecked() ? 1 : 0;
+        
 
 
         $common['showactiveusers'] = $this->common->showactiveusers->isChecked() ? 1 : 0;

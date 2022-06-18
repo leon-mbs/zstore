@@ -83,7 +83,7 @@ abstract class RestFul
             try{
               $decoded = \Firebase\JWT\JWT::decode($jwt, $key, array('HS256'));    
             } catch(\Exception $e) {
-              $this->FailAnswer($e->getMessage());
+              $this->code401();  
             }
             
             

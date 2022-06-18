@@ -93,7 +93,7 @@ class ItemSel extends \Zippy\Html\PageFragment
      */
     public function Reload($cat = false) {
         
-        if($cat==екгу){
+        if($cat==true){
             $this->witempan->setvisible(false);            
             $this->wcatpan->setvisible(true);
             $this->wprodpan->setvisible(true);

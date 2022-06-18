@@ -52,7 +52,7 @@ class ShowDoc extends \Zippy\Html\WebPage
                 echo $html;
             }
             if ($type == "xls") {  
-                if($common['exportxlsx'] == 1)  {
+               
                
                 
                     $file = tempnam(sys_get_temp_dir(),"".time() );
@@ -70,13 +70,7 @@ class ShowDoc extends \Zippy\Html\WebPage
                     header("Content-Disposition: attachment;Filename={$filename}.xlsx");
                     $writer->save('php://output');
                     die;      
-                } else {
-                    header("Content-type: application/vnd.ms-excel");
-                    header("Content-Disposition: attachment;Filename={$filename}.xls");
-                    header("Content-Transfer-Encoding: binary");
-                    //echo '<meta http-equiv=Content-Type content="text/html; charset=windows-1251">';
-                    echo $html;            
-                }
+             
             }
             if ($type == "html") {
                 header("Content-type: text/plain");
