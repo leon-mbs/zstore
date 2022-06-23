@@ -31,7 +31,13 @@ class ItemList extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new TextInput('searchkey'));
         $this->filter->add(new DropDownChoice('searchcat', Category::getList(), 0));
-        $this->filter->add(new DropDownChoice('searchstore', Store::getList(), 0));
+        $storelist = Store::getList() ;
+        
+        if(\App\System::getUser()->showotherstores) {
+            $storelist = Store::getListAll() ;
+            
+        }         
+        $this->filter->add(new DropDownChoice('searchstore', $storelist, 0));
 
         $this->add(new Panel('itempanel'));
 
@@ -297,7 +303,10 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         if (strlen($cstr) > 0) {
             $cstr = "    store_id in ({$cstr})  and   ";
         }
-
+        if(\App\System::getUser()->showotherstores) {
+            $cstr =""; ;
+            
+        }   
         $cat = $form->searchcat->getValue();
         $store = $form->searchstore->getValue();
 

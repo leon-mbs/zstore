@@ -48,6 +48,7 @@ class Roles extends \App\Pages\Base
 
 
         $this->editpan->editform->add(new CheckBox('editnoshowpartion'));
+        $this->editpan->editform->add(new CheckBox('editshowotherstores'));
 
         //виджеты
         $this->editpan->editform->add(new CheckBox('editwminqty'));
@@ -138,6 +139,7 @@ class Roles extends \App\Pages\Base
 
 
         $this->editpan->editform->editnoshowpartion->setChecked($this->role->noshowpartion);
+        $this->editpan->editform->editshowotherstores->setChecked($this->role->showotherstores);
 
 
         if (strpos($this->role->widgets, 'wminqty') !== false) {
@@ -223,6 +225,7 @@ class Roles extends \App\Pages\Base
     public function saveaclOnClick($sender) {
 
         $this->role->noshowpartion = $this->editpan->editform->editnoshowpartion->isChecked() ? 1 : 0;
+        $this->role->showotherstores = $this->editpan->editform->editshowotherstores->isChecked() ? 1 : 0;
 
         $varr = array();
         $earr = array();
