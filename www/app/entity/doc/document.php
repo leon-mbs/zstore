@@ -36,7 +36,7 @@ class Document extends \ZCL\DB\Entity
     const EX_PDF   = 3;    //  PDF
     const EX_POS   = 4;    //  POS терминал
     const EX_MAIL  = 5;    //  Отправка  email
-    // const EX_XML_GNAU = 4;
+
     //доставка
     const DEL_SELF    = 1;    //  самовывоз
     const DEL_BOY     = 2;    //  курьер
@@ -73,7 +73,7 @@ class Document extends \ZCL\DB\Entity
      */
     protected function init() {
         $this->document_id = 0;
-        $this->state = 0;
+        $this->state = self::STATE_NEW;
         $this->customer_id = 0;
         $this->branch_id = 0;
         $this->parent_id = 0;
