@@ -118,14 +118,7 @@ class Invoice extends \App\Entity\Doc\Document
             }
         }
 
-        if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment']);
-            if ($payed > 0) {
-                $this->payed = $payed;
-            }
-            \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
-
-        }
+ 
         return true;
     }
 
@@ -136,7 +129,7 @@ class Invoice extends \App\Entity\Doc\Document
     public function getRelationBased() {
         $list = array();
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
-        $list['Invoice'] = self::getDesc('Invoice');
+      //  $list['Invoice'] = self::getDesc('Invoice');
         $list['TTN'] = self::getDesc('TTN');
         $list['ServiceAct'] = self::getDesc('ServiceAct');
 

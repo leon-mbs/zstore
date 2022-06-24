@@ -221,7 +221,8 @@ class GoodsIssue extends Document
         $list['ReturnIssue'] = self::getDesc('ReturnIssue');
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
         $list['TTN'] = self::getDesc('TTN');
-
+        $list['Invoice'] = self::getDesc('Invoice');
+ 
         return $list;
     }
 
