@@ -343,6 +343,10 @@ class Order extends \App\Pages\Base
                 $this->_doc->parent_id = $this->_basedocid;
                 $this->_basedocid = 0;
             }
+               $this->_doc->payed = 0;
+               $this->_doc->headerdata['payed'] = 0;
+               $this->_doc->headerdata['payment'] = 0;
+                  
             if ($sender->id == 'paydoc') {
                $this->_doc->payed = $this->docform->payed->getText();
                $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
@@ -354,7 +358,7 @@ class Order extends \App\Pages\Base
                     $this->setError('inserted_extrasum');
                     return;
                }               
-               if ($this->_doc->payed ==0) {
+               if ($this->_doc->payed == 0) {
                     return;
                }               
                if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {

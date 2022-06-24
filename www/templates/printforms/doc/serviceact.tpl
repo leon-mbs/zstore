@@ -64,6 +64,12 @@
         <td colspan="4" style="border-top: 1px solid black;" align="right">Всього:</td>
         <td style="border-top: 1px solid black;" align="right">{{total}}</td>
     </tr>
+    {{#isdisc}}
+    <tr style="font-weight: bolder;">
+        <td colspan="4" align="right">Знижка:</td>
+        <td align="right">{{paydisc}}</td>
+    </tr>
+    {{/isdisc}}    
    {{#payamount}}
     <tr style="font-weight: bolder;">
         <td colspan="4" align="right">До оплати:</td>

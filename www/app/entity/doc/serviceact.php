@@ -38,6 +38,8 @@ class ServiceAct extends Document
                         "device"          => $this->headerdata["device"],
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
+                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
+                        "isdisc"          => $this->headerdata["paydisc"] > 0,
                         "devsn"           => $this->headerdata["devsn"],
                         "document_number" => $this->document_number,
                         "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
@@ -73,17 +75,22 @@ class ServiceAct extends Document
             $sc->save();
         }
     }
+     protected function onState($state) {
 
-    public function Pay() {
-        if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment']   );
-            if ($payed > 0) {
-                $this->payed = $payed;
+        if ($state == self::STATE_INPROCESS) {
+          
+
+            if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
+                $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment']);
+                if ($payed > 0) {
+                    $this->payed = $payed;
+                }
+                \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+
             }
-            \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
-
         }
     }
+ 
 
     public function supportedExport() {
         return array(self::EX_EXCEL, self::EX_PDF, self::EX_POS);
