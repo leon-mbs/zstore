@@ -153,15 +153,15 @@ class Orders extends \App\Pages\Base
                
                 $neworder->document_date = time();
                 $neworder->notes = "WC номер:{$wcorder->id};";
-                $neworder->notes .= " Клиент:" . $wcorder->shipping->first_name . ' ' . $wcorder->shipping->last_name . ";";
+                $neworder->notes .= " Клієнт:" . $wcorder->shipping->first_name . ' ' . $wcorder->shipping->last_name . ";";
                 if (strlen($wcorder->billing->email) > 0) {
                     $neworder->notes .= " Email:" . $wcorder->billing->email . ";";
                 }
                 if (strlen($wcorder->billing->phone) > 0) {
                     $neworder->notes .= " Тел:" . $wcorder->billing->phone . ";";
                 }
-                $neworder->notes .= " Адрес:" . $wcorder->shipping->city . ' ' . $wcorder->shipping->address_1 . ";";
-                $neworder->notes .= " Комментарий:" . $wcorder->customer_note . ";";
+                $neworder->notes .= " Адреса:" . $wcorder->shipping->city . ' ' . $wcorder->shipping->address_1 . ";";
+                $neworder->notes .= " Комментар:" . $wcorder->customer_note . ";";
 
                 $this->_neworders[$wcorder->id] = $neworder;
             }

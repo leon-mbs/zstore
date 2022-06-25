@@ -73,7 +73,7 @@ class Orders extends \App\Pages\Base
  
             foreach ($data['orders'] as $puorder) {
 
-               $cnt  = $conn->getOne("select count(*) from documents_view where meta_name='Order' and content like '%<puorder>{$puorder['id']}</wcorder>%' ")  ;
+               $cnt  = $conn->getOne("select count(*) from documents_view where meta_name='Order' and content like '%<puorder>{$puorder['id']}</puorder>%' ")  ;
 
                // $isorder = Document::findCnt("meta_name='Order' and content like '%<wcorder>{$puorder->id}</wcorder>%'");
                 if (  intval($cnt) > 0) { //уже импортирован
@@ -131,7 +131,7 @@ class Orders extends \App\Pages\Base
                
                 $neworder->document_date = time();
                 $neworder->notes = "PU номер:{$puorder['id']};";
-                $neworder->notes .= " Клиент:" .$puorder['client_first_name'] . ' ' . $puorder['client_last_name'].';';
+                $neworder->notes .= " Клієнт:" .$puorder['client_first_name'] . ' ' . $puorder['client_last_name'].';';
                 if (strlen($puorder['email']) > 0) {
                     $neworder->notes .= " Email:" . $puorder['email'] . ";";
                 }
@@ -143,10 +143,10 @@ class Orders extends \App\Pages\Base
                 }
 
                 if (strlen($puorder['delivery_address']) > 0) {
-                    $neworder->notes .= " Адрес:" . $puorder['delivery_address'] . ";";
+                    $neworder->notes .= " Адреса:" . $puorder['delivery_address'] . ";";
                 }
                 if (strlen($puorder['client_notes']) > 0) {
-                    $neworder->notes .= " Комментарий:" . $puorder['client_notes'] . ";";
+                    $neworder->notes .= " Комментар:" . $puorder['client_notes'] . ";";
                 }
 
            
