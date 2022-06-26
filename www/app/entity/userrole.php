@@ -35,6 +35,7 @@ class UserRole extends Entity
         }
 
         $this->noshowpartion = $acl['noshowpartion'];
+        $this->showotherstores = $acl['showotherstores'];
         $this->aclview = $acl['aclview'];
         $this->acledit = $acl['acledit'];
         $this->aclexe = $acl['aclexe'];
@@ -59,6 +60,7 @@ class UserRole extends Entity
         $acl = array();
 
         $acl['noshowpartion'] = $this->noshowpartion;
+        $acl['showotherstores'] = $this->showotherstores;
         $acl['aclview'] = $this->aclview;
         $acl['acledit'] = $this->acledit;
         $acl['aclexe'] = $this->aclexe;

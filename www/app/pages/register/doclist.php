@@ -50,7 +50,9 @@ class DocList extends \App\Pages\Base
         $filter = Filter::getFilter("doclist");
         if ($filter->isEmpty()) {
             $filter->to = time() + (3 * 24 * 3600);
-            $filter->from = time() - (7 * 24 * 3600);
+            $d = new \App\DateTime() ;
+            $d = $d->startOfMonth()->subMonth(1) ;
+            $filter->from = $d->getTimestamp();
             $filter->page = 1;
             $filter->doctype = 0;
             $filter->customer = 0;

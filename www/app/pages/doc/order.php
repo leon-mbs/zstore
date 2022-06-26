@@ -60,9 +60,8 @@ class Order extends \App\Pages\Base
 
         $this->docform->add(new TextInput('editpayamount'));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
-        $this->docform->add(new TextInput('editpayed', "0"));
-        $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
-        $this->docform->add(new Label('payed', 0));
+
+        $this->docform->add(new TextInput('payed', 0));
         $this->docform->add(new Label('payamount', 0));
 
         $this->docform->add(new Label('discount'))->setVisible(false);
@@ -78,6 +77,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
+        $this->docform->add(new SubmitButton('paydoc'))->onClick($this, 'savedocOnClick');
 
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
@@ -142,7 +142,7 @@ class Order extends \App\Pages\Base
             if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
                 $this->_doc->payed = $this->_doc->headerdata['payed'];
             }
-            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
+
             $this->docform->payed->setText(H::fa($this->_doc->payed));
 
             $this->docform->notes->setText($this->_doc->notes);
@@ -325,13 +325,10 @@ class Order extends \App\Pages\Base
 
         $this->_doc->payamount = $this->docform->payamount->getText();
 
-        $this->_doc->payed = $this->docform->payed->getText();
-        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
         $this->_doc->headerdata['bonus'] = $this->docform->bonus->getText();
 
-        $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-        $this->_doc->headerdata['salesource'] = $this->docform->salesource->getValue();
+         $this->_doc->headerdata['salesource'] = $this->docform->salesource->getValue();
 
 
         if ($this->checkForm() == false) {
@@ -346,6 +343,32 @@ class Order extends \App\Pages\Base
                 $this->_doc->parent_id = $this->_basedocid;
                 $this->_basedocid = 0;
             }
+               $this->_doc->payed = 0;
+               $this->_doc->headerdata['payed'] = 0;
+               $this->_doc->headerdata['payment'] = 0;
+                  
+            if ($sender->id == 'paydoc') {
+               $this->_doc->payed = $this->docform->payed->getText();
+               $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+               $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
+               
+               $payamount = $this->docform->payamount->getText();
+
+               if ($this->_doc->payed > $payamount) {
+                    $this->setError('inserted_extrasum');
+                    return;
+               }               
+               if ($this->_doc->payed == 0) {
+                    return;
+               }               
+               if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
+                    $this->setError("noselmfp");
+                    return;
+               }             
+               
+              
+            }
+            
             $this->_doc->save();
 
             if ($sender->id == 'savedoc') {
@@ -353,9 +376,10 @@ class Order extends \App\Pages\Base
             }
 
 
-            if ($sender->id == 'execdoc') {
+            if ($sender->id == 'execdoc' || $sender->id == 'paydoc') {
                 $this->_doc->updateStatus(Document::STATE_INPROCESS);
             }
+
 
 
             $conn->CommitTrans();
@@ -448,9 +472,7 @@ class Order extends \App\Pages\Base
         if ($c == 0) {
             $this->setError("noselcust");
         }
-        if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
-            $this->setError("noselmfp");
-        }
+   
 
 
         return !$this->isError();
@@ -579,24 +601,13 @@ class Order extends \App\Pages\Base
 
     public function onPayAmount($sender) {
         $this->docform->payamount->setText($this->docform->editpayamount->getText());
-        $this->docform->editpayed->setText($this->docform->editpayamount->getText());
+
         $this->docform->payed->setText($this->docform->editpayamount->getText());
 
         $this->goAnkor("tankor");
     }
 
-    public function onPayed($sender) {
-        $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
-        $payed = $this->docform->payed->getText();
-        $payamount = $this->docform->payamount->getText();
-        if ($payed > $payamount) {
-
-            $this->setWarn('inserted_extrasum');
-        } else {
-            $this->goAnkor("tankor");
-        }
-
-    }
+ 
 
     public function onPayDisc() {
         $this->docform->paydisc->setText($this->docform->editpaydisc->getText());
@@ -624,12 +635,11 @@ class Order extends \App\Pages\Base
             $total -= $bonus;
         }
 
-        $p = $this->docform->payment->getValue();
-
+        
 
         $this->docform->editpayamount->setText(H::fa($total));
         $this->docform->payamount->setText(H::fa($total));
-        $this->docform->editpayed->setText(H::fa($total));
+
         $this->docform->payed->setText(H::fa($total));
 
 

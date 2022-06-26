@@ -53,10 +53,9 @@ class ServiceAct extends \App\Pages\Base
 
         $this->docform->add(new TextInput('editpayamount'));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
-        $this->docform->add(new TextInput('editpayed', "0"));
-        $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
 
-        $this->docform->add(new Label('payed', 0));
+
+        $this->docform->add(new TextInput('payed', 0));
         $this->docform->add(new Label('payamount', 0));
 
         $this->docform->add(new Label('discount'));
@@ -69,7 +68,7 @@ class ServiceAct extends \App\Pages\Base
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
-        $this->docform->add(new SubmitButton('inprocdoc'))->onClick($this, 'savedocOnClick');
+        $this->docform->add(new SubmitButton('paydoc'))->onClick($this, 'savedocOnClick');
 
         $this->docform->add(new Label('total'));
         $this->add(new Form('editdetail'))->setVisible(false);
@@ -104,7 +103,7 @@ class ServiceAct extends \App\Pages\Base
             if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
                 $this->_doc->payed = $this->_doc->headerdata['payed'];
             }
-            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
+
             $this->docform->payed->setText(H::fa($this->_doc->payed));
 
             $this->docform->device->setText($this->_doc->device);
@@ -320,7 +319,31 @@ class ServiceAct extends \App\Pages\Base
                 $this->_doc->parent_id = $this->_basedocid;
                 $this->_basedocid = 0;
             }
+               $this->_doc->payed = 0;
+               $this->_doc->headerdata['payed'] = 0;
+               $this->_doc->headerdata['payment'] = 0;
+            
+            if ($sender->id == 'paydoc') {
+               $this->_doc->payed = $this->docform->payed->getText();
+               $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+               $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
+               
+               $payamount = $this->docform->payamount->getText();
 
+               if ($this->_doc->payed > $payamount) {
+                    $this->setError('inserted_extrasum');
+                    return;
+               }               
+               if ($this->_doc->payed == 0) {
+                    return;
+               }               
+               if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
+                    $this->setError("noselmfp");
+                    return;
+               }             
+
+              
+            }
             $this->_doc->save();
 
             if ($sender->id != 'savedoc') {
@@ -328,15 +351,10 @@ class ServiceAct extends \App\Pages\Base
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
 
-                if ($sender->id == 'execdoc') {
-                    $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                    $this->_doc->updateStatus(Document::STATE_CLOSED);
-                    $this->_doc->Pay();
-                }
 
-                if ($sender->id == 'inprocdoc') {
+                if ($sender->id == 'execdoc' || $sender->id == 'paydoc') {
                     $this->_doc->updateStatus(Document::STATE_INPROCESS);
-                    $this->_doc->Pay();
+                     
                 }
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
@@ -400,20 +418,17 @@ class ServiceAct extends \App\Pages\Base
     public function onPayAmount($sender) {
         $this->docform->payamount->setText($this->docform->editpayamount->getText());
         $this->docform->payed->setText($this->docform->editpayamount->getText());
-        $this->docform->editpayed->setText($this->docform->editpayamount->getText());
+
     }
 
-    public function onPayed($sender) {
-        $this->docform->payed->setText($this->docform->editpayed->getText());
-    }
-
+   
     private function CalcPay() {
         $total = $this->docform->total->getText();
         $disc = $this->docform->paydisc->getText();
 
         $this->docform->editpayamount->setText(H::fa($total - $disc));
         $this->docform->payamount->setText(H::fa($total - $disc));
-        $this->docform->editpayed->setText(H::fa($total - $disc));
+
         $this->docform->payed->setText(H::fa($total - $disc));
     }
 
@@ -437,9 +452,7 @@ class ServiceAct extends \App\Pages\Base
             //  $this->setError("noenterpos");
         }
 
-        if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
-            $this->setError("noselmfp");
-        }
+        
 
         return !$this->isError();
     }
@@ -476,19 +489,20 @@ class ServiceAct extends \App\Pages\Base
             $this->docform->contract->setVisible(false);
             $this->docform->contract->setValue(0);
         }
+        if($c>0) {
+            $cust = Customer::load($c);
 
-        $cust = Customer::load($c);
-
-        $disctext = "";
-        if (doubleval($cust->discount) > 0) {
-            $disctext = H::l("custdisc") . " {$cust->discount}%";
-        } else {
-            $bonus = $cust->getBonus();
-            if ($bonus > 0) {
-                $disctext = H::l("custbonus") . " {$bonus} ";
+            $disctext = "";
+            if (doubleval($cust->discount) > 0) {
+                $disctext = H::l("custdisc") . " {$cust->discount}%";
+            } else {
+                $bonus = $cust->getBonus();
+                if ($bonus > 0) {
+                    $disctext = H::l("custbonus") . " {$bonus} ";
+                }
             }
+            $this->docform->discount->setText($disctext);
         }
-        $this->docform->discount->setText($disctext);
     }
 
     //добавление нового контрагента

@@ -22,7 +22,7 @@ class Store extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $sql = "  select count(*)  from  store_stock where   store_id = {$this->store_id}";
         $cnt = $conn->GetOne($sql);
-        return ($cnt > 0) ? "Нельзя удалять используемый склад" : '';
+        return ($cnt > 0) ?  \App\Helper::l("nodelusedstore") : '';
     }
 
     /**
@@ -30,7 +30,22 @@ class Store extends \ZCL\DB\Entity
      *
      */
     public static function getList() {
-        return Store::findArray("storename", "");
+        return Store::findArray('storename','','store_id');
+    }
+    /**
+    * без ограничений по  фииалам
+    * 
+    */
+    public static function getListAll() {
+        $conn = \ZDB\DB::getConnect();
+        $sql = "  select storename,store_id  from  stores ";
+        $list = array();
+        foreach($conn->Execute($sql) as $row){
+           $list[$row['store_id']]  = $row['storename'];   
+        };
+
+        
+        return $list;
     }
 
     public static function getConstraint() {
