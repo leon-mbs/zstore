@@ -731,7 +731,7 @@ class ARMPos extends \App\Pages\Base
             $disctext = "";
             if (doubleval($cust->discount) > 0) {
                 $disctext = H::l("custdisc") . " {$cust->discount}%";
-                $disc = round($total * ($customer->discount / 100));
+                $disc = round($total * ($cust->discount / 100));
                 
                 $this->docpanel->form3->discount->setText($disctext);
                 $this->docpanel->form3->discount->setVisible(true);

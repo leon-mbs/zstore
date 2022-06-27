@@ -183,7 +183,7 @@ class Roles extends \App\Pages\Base
         if (strpos($this->role->modules, 'np') !== false) {
             $this->editpan->editform->editnp->setChecked(true);
         }
-        if (strpos($this->role->modules, 'pu') !== false) {
+        if (strpos($this->role->modules, 'promua') !== false) {
             $this->editpan->editform->editpu->setChecked(true);
         }
     }
@@ -309,7 +309,7 @@ class Roles extends \App\Pages\Base
             $modules = $modules . ',np';
         }
         if ($this->editpan->editform->editpu->isChecked()) {
-            $modules = $modules . ',pu';
+            $modules = $modules . ',promua';
         }
 
         $this->role->modules = trim($modules, ',');
