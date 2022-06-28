@@ -51,6 +51,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
         $this->docform->add(new TextInput('notes'));
+        $this->docform->add(new TextInput('outnumber'));
         $this->docform->add(new TextInput('basedoc'));
 
         $this->docform->add(new TextInput('barcode'));
@@ -141,6 +142,7 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->editnds->setText(H::fa($this->_doc->headerdata['nds']));
             $this->docform->val->setValue($this->_doc->headerdata['val']);
             $this->docform->rate->setText($this->_doc->headerdata['rate']);
+            $this->docform->outnumber->setText($this->_doc->headerdata['outnumber']);
             $this->docform->disc->setText(H::fa($this->_doc->headerdata['disc']));
             $this->docform->editdisc->setText(H::fa($this->_doc->headerdata['disc']));
             $this->docform->zatr->setText($this->_doc->headerdata['zatr']);
@@ -490,6 +492,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->_doc->headerdata['rate'] = $this->docform->rate->getText();
         $this->_doc->headerdata['nds'] = $this->docform->nds->getText();
         $this->_doc->headerdata['disc'] = $this->docform->disc->getText();
+        $this->_doc->headerdata['outnumber'] = $this->docform->outnumber->getText();
         $this->_doc->headerdata['basedoc'] = $this->docform->basedoc->getText();
         
         

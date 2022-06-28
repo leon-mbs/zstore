@@ -74,6 +74,7 @@ class Order extends \App\Entity\Doc\Document
                        "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
         );
+        $header['outnumber'] = strlen($this->headerdata['outnumber']) > 0 ? $this->headerdata['outnumber'] : false;
 
         $report = new \App\Report('doc/order.tpl');
 

@@ -29,6 +29,16 @@
         <td colspan="5">{{order}}</td>
     </tr>
     {{/order}}
+   {{#outnumber}}
+    <tr>
+        <td></td>
+
+        <td valign="top"><b>Зовн. номер</b></td>
+        <td colspan="6">{{outnumber}}</td>
+
+    </tr>
+    {{/outnumber}}
+    
     <tr>
         <td></td>
         <td><b>Телефон</b></td>

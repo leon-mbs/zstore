@@ -313,6 +313,7 @@ class Orders extends \App\Pages\Base
             $neworder->headerdata['store'] = $store;
             $neworder->headerdata['store_name'] = $this->filter2->store->getValueName();
             $neworder->headerdata['ocorder'] = $shoporder->order_id;
+            $neworder->headerdata['outnumber'] = $shoporder->order_id;
 
             $neworder->customer_id = $modules['occustomer_id'];
 
