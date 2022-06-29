@@ -359,7 +359,7 @@ class Discounts extends \App\Pages\Base
             }
 
             $items = Item::find("disabled <> 1 and cat_id=" . $g->cat_id);
-            foreach ($items as $item) {
+            foreach ($items as $item) {   
                 $item->actionprice = 0;
                 $item->actiondisc = $d;
                 $item->fromdate = $g->fromdate;

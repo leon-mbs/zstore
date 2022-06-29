@@ -31,7 +31,7 @@ class Customer extends \ZCL\DB\Entity
         parent::beforeSave();
         //упаковываем  данные в detail
         $this->detail = "<detail><code>{$this->code}</code>";
-        if ($this->discount > 0) {
+        if ( doubleval( $this->discount) > 0) {
             $this->detail .= "<discount>{$this->discount}</discount>";
         }
 
@@ -217,6 +217,40 @@ class Customer extends \ZCL\DB\Entity
         $sql = "select coalesce(sum(bonus),0) as bonus from paylist where  document_id in (select  document_id  from  documents where  customer_id={$this->customer_id})";
 
         return $conn->GetOne($sql);
+
+    }
+    /**
+    *  список  бонусов по  контрагентам
+    *     
+    */
+    public static function getBonusAll() {
+        $conn = \ZDB\DB::getConnect();
+        $sql = "select coalesce(sum(bonus),0) as bonus, d.customer_id from paylist p join documents d ON  p.document_id = d.document_id group by  d.customer_id having bonus <> 0";
+        $ret = array();
+        foreach($conn->Execute($sql) as $row ){
+           $ret[$row['customer_id']] = $row['bonus'] ;               
+        }
+        return $ret;
+
+    }
+    /**
+    * история бонусов
+    * 
+    */
+    public   function getBonuses() {
+        $conn = \ZDB\DB::getConnect();
+        $sql = "select bonus, paydate,d.document_number  from paylist p join documents d ON  p.document_id = d.document_id where d.customer_id={$this->customer_id} and coalesce(p.bonus,0) <> 0 order  by  pl_id ";
+        $ret = array();
+        foreach($conn->Execute($sql) as $row ){
+           
+           $b = new \App\DataItem() ;
+           $b->paydate = strtotime($row['paydate'] ) ;
+           $b->document_number = $row['document_number']  ;
+           $b->bonus = $row['bonus']  ;
+                         
+           $ret[]=$b;            
+        }
+        return $ret;
 
     }
     

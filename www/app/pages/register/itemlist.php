@@ -323,7 +323,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
 
             $text = Stock::qstr('%' . $text . '%');
 
-            $where = "   disabled <> 1 and  ( select sum(st1.qty) from store_stock st1 where st1.item_id= item_id ) <>0 ";
+          //  $where = "   disabled <> 1 and  ( select sum(st1.qty) from store_stock st1 where st1.item_id= item_id ) <>0 ";
 
             $where .= " and   (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  )  ";
         }

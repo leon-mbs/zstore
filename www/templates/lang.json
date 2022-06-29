@@ -503,6 +503,10 @@
     "passsent": "Пароль відправлено" ,
     "doubledoc": "Дублювання документу"  ,
     "nodelusedstore": "Не можна  видаляти використовуваний склад"  ,
-    "seritemdiff": "Сума по  ТМЦ  не  співпадає з вартістю послуги" 
+    "seritemdiff": "Сума по  ТМЦ  не  співпадає з вартістю послуги" ,
+    "actiondiscounttitile": "Постійна знижка %s%%"   ,
+    "actionbonustitile": "Бонуси %s"   ,
+    "actionpricetitile": "Акційна ціна %s"   ,
+    "actiondisctitile": "Акційна знижка %s%%" 
     
 }

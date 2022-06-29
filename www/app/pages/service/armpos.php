@@ -295,7 +295,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->setVisible(false);
         $this->docpanel->form3->setVisible(true);
         $this->docpanel->form3->passfisc->setChecked(false);
-        
+        $this->OnChangeCustomer($this->docpanel->form3->customer);
     }
 
     public function detailOnRow($row) {
@@ -754,6 +754,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form3->paydisc->setText(H::fa($disc));
         $this->docpanel->form3->bonus->setText(H::fa($bonus));
         $this->docpanel->form3->payamount->setText(H::fa($total - $disc - $bonus));
+        $this->docpanel->form3->payed->setText(H::fa($total - $disc - $bonus));
     }
 
     //добавление нового контрагента

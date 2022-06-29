@@ -311,7 +311,7 @@ class Item extends \ZCL\DB\Entity
     public function hasAction() {
         if (doubleval($this->actionprice) > 0 || doubleval($this->actiondisc > 0)) {
 
-            if ($this->fromdate < time() && $this->todate > time()) {
+            if ( intval($this->fromdate) < time() && intval($this->todate) > time()) {
                 return true;
             }
 
