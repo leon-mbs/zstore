@@ -526,7 +526,7 @@ class ItemList extends \App\Pages\Base
         $total = 0;
         foreach($this->_itemset as $i) {
              $item = Item::load($i->item_id);
-             $total += $item->getLastPartion() ;
+             $total += ($i->qty  * $item->getLastPartion() );
 
         }
         foreach($this->_serviceset as $s) {
