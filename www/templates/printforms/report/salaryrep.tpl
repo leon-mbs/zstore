@@ -2,13 +2,13 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="2">
-            Отчет по зарплате
+            Звіт по заробітній платі
         </td>
     </tr>
     <tr>
 
         <td align="center" colspan="2">
-            Период с {{mfrom}} {{yfrom}} по {{mto}} {{yto}}
+            Перiод з {{mfrom}} {{yfrom}} по {{mto}} {{yto}}
         </td>
     </tr>
     {{#isemp}}
@@ -30,7 +30,7 @@
     {{/_detail}}
     <tr style="font-weight: bolder;">
 
-        <td class="text-right">Итого:</td>
+        <td class="text-right">Всього:</td>
 
         <td class="text-right">{{total}}</td>
 

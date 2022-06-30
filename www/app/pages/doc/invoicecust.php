@@ -104,6 +104,9 @@ class InvoiceCust extends \App\Pages\Base
             if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
                 $this->_doc->payed = $this->_doc->headerdata['payed'];
             }
+           if (  $this->_doc->headerdata['payamount'] > 0) {
+                $this->_doc->payamount = $this->_doc->headerdata['payamount'];
+            }
             $this->docform->editpayed->setText($this->_doc->payed);
             $this->docform->payed->setText($this->_doc->payed);
 
@@ -283,7 +286,8 @@ class InvoiceCust extends \App\Pages\Base
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->payamount = $this->docform->payamount->getText();
-        $this->_doc->payed = $this->docform->payed->getText();
+         $this->_doc->headerdata['payamount'] = $this->docform->payamount->getText();
+       $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
 
         $this->_doc->headerdata['val'] = $this->docform->val->getValue();

@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 /**
- * Клас-сущность  личный счет  сотрудника
+ * Клас-сущность  лицевой счет  сотрудника
  *
  * @table=empacc
  * @view=empacc_view

@@ -120,7 +120,10 @@ class IncomeService extends \App\Pages\Base
             if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
                 $this->_doc->payed = $this->_doc->headerdata['payed'];
             }
-            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
+            if (  $this->_doc->headerdata['payamount'] > 0) {
+                $this->_doc->payamount = $this->_doc->headerdata['payamount'];
+            }
+           $this->docform->editpayed->setText(H::fa($this->_doc->payed));
             $this->docform->payed->setText(H::fa($this->_doc->payed));
 
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
@@ -305,6 +308,7 @@ class IncomeService extends \App\Pages\Base
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
 
         $this->_doc->payamount = $this->docform->payamount->getText();
+        $this->_doc->headerdata['payamount'] = $this->docform->payamount->getText();
         $this->_doc->payed = $this->docform->payed->getText();
 
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
