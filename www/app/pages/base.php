@@ -170,6 +170,10 @@ class Base extends \Zippy\Html\WebPage
         //для скрытия блока разметки  в  шаблоне страниц                           
         $this->_tvars["hideblock"] = false;
 
+        
+        
+        
+        
         //активные   пользователий
         if ($options['showactiveusers'] == 1) {
             $this->_tvars["showactiveusers"] = true;
