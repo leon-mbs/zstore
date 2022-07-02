@@ -118,10 +118,7 @@ class Invoice extends \App\Pages\Base
               if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
                 $this->_doc->payed = $this->_doc->headerdata['payed'];
             }
-            if (  $this->_doc->headerdata['payamount'] > 0) {
-                $this->_doc->payamount = $this->_doc->headerdata['payamount'];
-            }
-
+         
 
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
@@ -396,9 +393,7 @@ class Invoice extends \App\Pages\Base
 
 
         $this->_doc->payamount = $this->docform->payamount->getText();
-         $this->_doc->headerdata['payamount'] = $this->docform->payamount->getText();
-
-
+     
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
         $this->_doc->headerdata['email'] = $this->docform->email->getText();
         $this->_doc->headerdata['phone'] = $this->docform->phone->getText();

@@ -110,6 +110,7 @@ class Customer extends \ZCL\DB\Entity
         $conn->Execute("delete from messages where item_type=" . \App\Entity\Message::TYPE_CUST . " and item_id=" . $this->customer_id);
         $conn->Execute("delete from files where item_type=" . \App\Entity\Message::TYPE_CUST . " and item_id=" . $this->customer_id);
         $conn->Execute("delete from filesdata where   file_id not in (select file_id from files)");
+ 
     }
 
     public static function getByPhone($phone) {

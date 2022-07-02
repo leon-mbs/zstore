@@ -608,6 +608,7 @@ class TTN extends \App\Pages\Base
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->amount = $this->docform->total->getText();
+        $this->_doc->payamount = $this->docform->total->getText();
 
         $isEdited = $this->_doc->document_id > 0;
 

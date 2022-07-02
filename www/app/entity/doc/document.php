@@ -20,7 +20,7 @@ class Document extends \ZCL\DB\Entity
     const STATE_DELETED     = 6;       //  Удален
     const STATE_INPROCESS   = 7; // в  работе
     const STATE_WA          = 8; // ждет подтверждения
-    const STATE_CLOSED      = 9; // Закрыт , доставлен, выполнен
+    const STATE_CLOSED      = 9; // Закрыт (выполнен и оплачен)
     const STATE_INSHIPMENT  = 11; // В доставке
     const STATE_DELIVERED   = 14; // доставлен
     const STATE_REFUSED     = 15; // отклонен
@@ -29,6 +29,7 @@ class Document extends \ZCL\DB\Entity
     const STATE_FINISHED    = 18; // Закончен
     const STATE_APPROVED    = 19;      //  Готов к выполнению
     const STATE_READYTOSHIP = 20; // готов к отправке   
+    const STATE_WP = 21; // ждет  оплату   
     
     // типы  экспорта
     const EX_WORD  = 1; //  Word
@@ -288,6 +289,7 @@ class Document extends \ZCL\DB\Entity
 
             //отменяем оплаты   
             $conn->Execute("delete from paylist where document_id = " . $this->document_id);
+            //лицевые счета  контрагентов
 
 
             $conn->Execute("delete from iostate where document_id=" . $this->document_id);
@@ -426,6 +428,7 @@ class Document extends \ZCL\DB\Entity
         if($state == self::STATE_DELETED)      return 2;
         if($state == self::STATE_FAIL)         return 3;
         if($state == self::STATE_READYTOSHIP)  return 50;
+        if($state == self::STATE_WP)           return 75;
  
         return 0;
     }
@@ -495,6 +498,7 @@ class Document extends \ZCL\DB\Entity
         $list[Document::STATE_FAIL] = Helper::l('st_fail');
         $list[Document::STATE_INPROCESS] = Helper::l('st_inprocess');
         $list[Document::STATE_READYTOSHIP] = Helper::l('st_rdshipment');
+        $list[Document::STATE_WP] = Helper::l('st_wp');
 
         return $list;
     }

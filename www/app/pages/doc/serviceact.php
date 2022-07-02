@@ -96,9 +96,6 @@ class ServiceAct extends \App\Pages\Base
             $this->docform->gar->setText($this->_doc->headerdata['gar']);
 
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
-            if (  $this->_doc->headerdata['payamount'] > 0) {
-                $this->_doc->payamount = $this->_doc->headerdata['payamount'];
-            }
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
@@ -303,7 +300,7 @@ class ServiceAct extends \App\Pages\Base
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
 
         $this->_doc->payamount = $this->docform->payamount->getText();
-        $this->_doc->headerdata['payamount'] = $this->docform->payamount->getText();
+
         $this->_doc->payed = $this->docform->payed->getText();
 
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();

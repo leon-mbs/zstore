@@ -3,40 +3,7 @@ delete from  metadata  where  meta_name='EmpAccRep'    ;
 delete from  metadata  where  meta_name='SalTypeRep'   ;
 
 
-CREATE TABLE  custacc (
-  ca_id int(11) NOT NULL AUTO_INCREMENT,
-  customer_id int(11) NOT NULL,
-  document_id int(11) DEFAULT NULL,
-  optype int(11) NOT NULL,
-  notes varchar(255) DEFAULT NULL,
-  amount decimal(10, 2) NOT NULL,
-  createdon date DEFAULT NULL,
-  KEY `document_id` (`document_id`) ,
-  KEY `customer_id` (`customer_id`),
-  PRIMARY KEY (ca_id)
-) ENGINE=InnoDB;
-
-
-CREATE VIEW custacc_view
-AS
-SELECT
-  `a`.`ca_id` AS `ca_id`,
-  `a`.`customer_id` AS `customer_id`,
-  `a`.`document_id` AS `document_id`,
-  `a`.`optype` AS `optype`,
-  `a`.`notes` AS `notes`,
-  `a`.`amount` AS `amount`,
-  `a`.`createdon` AS `createdon`,
-  `c`.`customer_name` AS `customer_name`,
-  `d`.`document_number` AS `document_number`
-FROM ((`custacc` `a`
-  JOIN `documents` `d`
-    ON ((`d`.`document_id` = `a`.`document_id`)))
-  JOIN `customers` `c`
-    ON ((`c`.`customer_id` = `a`.`customer_id`)));
-    
-
-    
+  
     
 ALTER TABLE `empacc` ADD `createdon` date NULL  ;
 
@@ -59,3 +26,17 @@ FROM ((`empacc` `e`
     ON ((`d`.`document_id` = `e`.`document_id`)))
   JOIN `employees` `em`
     ON ((`em`.`employee_id` = `e`.`emp_id`)));    
+    
+    
+    
+    const  B_OUT_ITEMS = 1; //  товары  покупателю
+    const  B_IN_PAY = 2; //  оплата от  покупателя
+    const  B_IN_ITEMS_RET = 3; //  товары от покупателя (возврат)
+    const  B_OUT_PAY_RET = 4; //  оплата покупателю (возврат)
+    const  B_OUT_SER = 5; //  услуги
+  
+    const  S_IN_ITEMS = 51; //  товары от  поставщика
+    const  S_OUT_PAY = 52; //  оплата поставщику
+    const  S_OUT_ITEMS_RET = 53; //  товары поставщику (возврат)
+    const  S_IN_PAY_RET = 54; //  оплата от  поставщика (возврат)
+    const  S_IN_SER = 55; //  услуги    
