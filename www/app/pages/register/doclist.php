@@ -109,7 +109,9 @@ class DocList extends \App\Pages\Base
         $this->add(new Form('statusform'))->SetVisible(false);
         $this->statusform->add(new SubmitButton('bap'))->onClick($this, 'statusOnSubmit');
         $this->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
+        $this->statusform->add(new SubmitButton('bstatus'))->onClick($this, 'statusOnSubmit');
         $this->statusform->add(new TextInput('refcomment'));
+        $this->statusform->add(new DropDownChoice('mstates',Document::getStateListMan()));
 
         $this->add(new ClickLink('csv', $this, 'oncsv'));
     }
@@ -276,7 +278,17 @@ class DocList extends \App\Pages\Base
 
         $this->doclist->Reload(false);
         $this->goAnkor('dankor');
-        $this->statusform->setVisible($this->_doc->state == Document::STATE_WA);
+        $this->statusform->setVisible($this->_doc->state > 3);
+        $this->statusform->bap->setVisible($this->_doc->state == Document::STATE_WA);
+        $this->statusform->bref->setVisible($this->_doc->state == Document::STATE_WA);
+        $this->statusform->refcomment->setVisible($this->_doc->state == Document::STATE_WA);
+        $this->statusform->mstates->setValue(0);
+
+        $ch = \App\ACL::checkExeDoc($this->_doc) ;
+        $this->statusform->mstates->setVisible($ch==true && $this->_doc->state != Document::STATE_WA  );
+        $this->statusform->bstatus->setVisible($ch==true && $this->_doc->state != Document::STATE_WA);
+        
+
     }
 
     //редактирование
@@ -482,6 +494,16 @@ class DocList extends \App\Pages\Base
             $this->statusform->refcomment->setText('');
         }
 
+        
+       if ($sender->id == "bstatus") {
+           $newst =   $this->statusform->mstates->getValue() ;
+           if($newst >0  && $newst != $this->_doc->state ) {
+              $this->_doc->updateStatus($newst); 
+           }
+           
+           
+       }        
+        
         $this->statusform->setVisible(false);
         $this->docview->setVisible(false);
         $this->doclist->Reload(false);

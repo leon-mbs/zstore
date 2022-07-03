@@ -254,7 +254,7 @@ class Main extends Base
               join items_view i on e.item_id = i.item_id
              join documents_view d on d.document_id = e.document_id
                where e.item_id >0  and e.quantity <> 0   
-               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN')
+               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood')
                {$br}  
               AND DATE(e.document_date) >= " . $conn->DBDate($m['start']) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($m['end']) . "
@@ -293,21 +293,11 @@ class Main extends Base
         $this->_tvars['biitemscnt'] = H::fa($conn->GetOne($sql));
 
          //ожидается  оплата
-        $sql = "select coalesce(  sum(case when  ( meta_name='OutcomeMoney' or meta_name='ReturnIssue' ) then  (payed - payamount )   else  (payamount - payed)  end) ,0) as sam 
-            from documents_view d  
-            where     (payamount >0  or  payed >0) {$br} and
-             ( meta_name in('GoodsIssue','Invoice' ,'PosCheck','ServiceAct','Order','ReturnIssue')  or  (meta_name='IncomeMoney'  and content like '%<detail>1</detail>%'  )  or  (meta_name='OutcomeMoney'  and content like '%<detail>2</detail>%'  )) 
-              and state not in (1,2,3,17,8)  and customer_id >0  and  ( (meta_name <>'POSCheck' and payamount <> payed) or(meta_name = 'POSCheck'              and payamount > payed  ))
-            ";
+        $sql = "SELECT COALESCE( SUM( s_passive - s_active) +SUM( b_passive - b_active ),0) AS d   FROM cust_acc_view  WHERE  s_active < s_passive OR  b_active < b_passive";
 
-        $this->_tvars['bidebet'] = H::fa($conn->GetOne($sql));
+        $this->_tvars['bidebet'] = H::fa(0-$conn->GetOne($sql));
         //к оплате
-        $sql = " select   coalesce( sum(case when  ( meta_name='IncomeMoney' or meta_name='RetCustIssue') then  (payed - payamount )   else  (payamount - payed)  end),0) as sam   
-              from documents_view   d 
-            where   customer_id > 0  {$br} 
-             and ( meta_name in('GoodsReceipt','InvoiceCust','RetCustIssue' )  or  (meta_name='OutcomeMoney'  and content like '%<detail>1</detail>%'  )  or  (meta_name='IncomeMoney'  and content like '%<detail>2</detail>%'  )) 
-                  and state > 3      and payamount <> payed  
-            ";
+        $sql = " SELECT COALESCE( SUM(s_active - s_passive) +SUM(b_active - b_passive),0) AS d   FROM cust_acc_view  WHERE  s_active > s_passive OR  b_active > b_passive";
 
         $this->_tvars['bicredit'] = H::fa($conn->GetOne($sql));
 

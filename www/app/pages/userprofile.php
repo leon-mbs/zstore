@@ -147,13 +147,9 @@ class UserProfile extends \App\Pages\Base
 
             if ($this->user->userlogin != 'admin') {
 
-                $n = new \App\Entity\Notify();
-                $n->user_id = \App\Entity\Notify::SYSTEM;
-
-                $n->dateshow = time();
-                $n->message = H::l('passchanged', $this->user->username, $pass);
-
-                $n->save();
+                
+                \App\Entity\Notify::toSystenLog(H::l('passchanged', $this->user->username, $pass)) ;
+                
             }
 
             \App\Helper::logout();

@@ -62,15 +62,15 @@
         <td valign="top" align="right">{{amount}}</td>
          {{#hasitems}}  
            <td  > 
-           <table  >
-               <tr> <td >Наименование</td>
-                <td align="right">&nbsp;Кол.&nbsp;</td>
-                <td align="right">Цена.</td></tr>
+           <table style="font-size:smaller"  >
+               <tr> <td >Найменування</td>
+                <td align="right">&nbsp;Кіл.&nbsp;</td>
+                <td align="right">Ціна.</td></tr>
              {{#items}}
-                <td  >{{itemname}}</td>
+               <tr> <td  >{{itemname}}</td>
                 <td align="right">{{qty}}</td>
                 <td align="right">{{price}}</td>
-           
+                </tr>
              {{/items}}
              </table>
            </td>

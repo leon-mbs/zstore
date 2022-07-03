@@ -502,6 +502,26 @@ class Document extends \ZCL\DB\Entity
 
         return $list;
     }
+    
+    /**
+    * список  для  произвольного перевода  статуса
+    * 
+    */
+    public static function getStateListMan() {
+        $list = array();
+        $list[Document::STATE_CLOSED] = Helper::l('st_closed');
+        $list[Document::STATE_INSHIPMENT] = Helper::l('st_inshipment');
+        $list[Document::STATE_FINISHED] = Helper::l('st_finished');
+        $list[Document::STATE_DELIVERED] = Helper::l('st_delivered');
+
+        $list[Document::STATE_SHIFTED] = Helper::l('st_shifted');
+        $list[Document::STATE_FAIL] = Helper::l('st_fail');
+        $list[Document::STATE_INPROCESS] = Helper::l('st_inprocess');
+        $list[Document::STATE_READYTOSHIP] = Helper::l('st_rdshipment');
+        $list[Document::STATE_WP] = Helper::l('st_wp');
+
+        return $list;
+    }
 
     /**
      * проверка  номера  на  уникальность
