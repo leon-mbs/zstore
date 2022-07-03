@@ -22,13 +22,15 @@
                     </form>
                 </div>
 
-                <br><a zippy="csv">Завантажити CSV</a>
+
                 <table class="table   table-sm   ">
                     <tr>
 
                         <th>Ім'я</th>
                         <th>Тел.</th>
-                        <th class="text-right">До сплати</th>
+                        <th class="text-right">Деб. борг</th>
+                        <th class="text-right">Кред. борг</th>
+
 
                         <th></th>
                         <th></th>
@@ -39,8 +41,9 @@
 
                         <td><a zippy="customer_name" title="Відкрити профіль"></a></td>
                         <td zippy="phone"></td>
+                        <td zippy="amountd" class="text-right"></td>
+                        <td zippy="amountc" class="text-right"></td>
 
-                        <td zippy="amount" class="text-right"></td>
                         <td><a zippy="createpay">Створити  КО</a></td>
                         <td><a zippy="showdocs">Документи</a></td>
 
@@ -50,8 +53,9 @@
 
                         <td></td>
                         <td class="text-right text-bold">Всього:</td>
+                        <td zippy="totamountd" class="text-right text-bold"></td>
+                        <td zippy="totamountc" class="text-right text-bold"></td>
 
-                        <td zippy="totamount" class="text-right text-bold"></td>
 
                         <td></td>
 
@@ -66,7 +70,7 @@
                 <a zippy="back"><i class="fa fa-arrow-alt-circle-left"></i> до списку</a>
                 <h3 zippy="cname"></h3>
                 <small><i class="fa fa-exclamation-circle"></i> Для  оплати  по  угодам  а  не окремих документах  використовуются  кассовi  ордери</small>
-                <br><a zippy="csv2">Експорт в Excel</a>
+
                 <table class="table   table-sm   ">
                     <tr>
 

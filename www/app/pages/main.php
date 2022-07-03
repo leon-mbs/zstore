@@ -284,7 +284,7 @@ class Main extends Base
 
         //инфоблоки
         $sql = " select coalesce(count(*),0) as cnt  from  documents_view d where  meta_name in ('Order')  
-         {$br}   and d.state in (7)      ";
+         {$br}   and d.state in (7,21)      ";
 
         $this->_tvars['biorders'] = $conn->GetOne($sql);
 
@@ -292,14 +292,22 @@ class Main extends Base
 
         $this->_tvars['biitemscnt'] = H::fa($conn->GetOne($sql));
 
+
+        //к оплате         
+        $sql = "SELECT COALESCE( SUM(   s_active - s_passive    ) ,0) AS d   FROM cust_acc_view where  s_active > s_passive   ";
+        $sum = doubleval($conn->GetOne($sql));
+        $sql = "SELECT COALESCE( SUM(   b_active - b_passive    ) ,0) AS d   FROM cust_acc_view where  b_active > b_passive   ";
+        $sum += doubleval($conn->GetOne($sql));
+        
+        
+        $this->_tvars['bicredit'] = H::fa($sum);
          //ожидается  оплата
-        $sql = "SELECT COALESCE( SUM( s_passive - s_active) +SUM( b_passive - b_active ),0) AS d   FROM cust_acc_view  WHERE  s_active < s_passive OR  b_active < b_passive";
-
-        $this->_tvars['bidebet'] = H::fa(0-$conn->GetOne($sql));
-        //к оплате
-        $sql = " SELECT COALESCE( SUM(s_active - s_passive) +SUM(b_active - b_passive),0) AS d   FROM cust_acc_view  WHERE  s_active > s_passive OR  b_active > b_passive";
-
-        $this->_tvars['bicredit'] = H::fa($conn->GetOne($sql));
+        $sql = "SELECT COALESCE( SUM( s_passive -  s_active      ) ,0) AS d   FROM cust_acc_view where  s_active < s_passive   ";
+        $sum = doubleval($conn->GetOne($sql));
+        $sql = "SELECT COALESCE( SUM(  b_passive -  b_active      ) ,0) AS d   FROM cust_acc_view where  b_active < b_passive   ";
+        $sum += doubleval($conn->GetOne($sql));
+        
+        $this->_tvars['bidebet'] = H::fa($sum);
 
         $sql = "select coalesce(sum(amount),0)  from paylist where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail not like '%<beznal>1</beznal>%' {$brf})";
 

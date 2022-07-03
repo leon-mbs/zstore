@@ -26,10 +26,9 @@ class PaySelList extends \App\Pages\Base
     public  $_custlist  = array();
     public  $_doclist   = array();
     public  $_pays      = array();
-    public  $_totamount = 0;
-    private $_docs      = " and ( meta_name in('GoodsReceipt','InvoiceCust','RetCustIssue' )  or  (meta_name='OutcomeMoney'  and content like '%<detail>1</detail>%'  )  or  (meta_name='IncomeMoney'  and content like '%<detail>2</detail>%'  ))  ";
-    private $_state     = "1,2,3,17,8";
-
+    public  $_totamountd = 0;
+    public  $_totamountc = 0;
+   
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('PaySelList')) {
@@ -40,7 +39,8 @@ class PaySelList extends \App\Pages\Base
 
         $this->add(new Panel("clist"));
 
-        $this->clist->add(new Label("totamount"));
+        $this->clist->add(new Label("totamountd"));
+        $this->clist->add(new Label("totamountc"));
 
         $this->clist->add(new DataView('custlist', new ArrayDataSource($this, '_custlist'), $this, 'custlistOnRow'));
 
@@ -63,8 +63,6 @@ class PaySelList extends \App\Pages\Base
 
         $this->paypan->add(new DataView('paylist', new ArrayDataSource($this, '_pays'), $this, 'payOnRow'))->Reload();
 
-        $this->clist->add(new ClickLink('csv', $this, 'oncsv'));
-        $this->plist->add(new ClickLink('csv2', $this, 'oncsv'));
 
         $this->updateCust();
     }
@@ -85,41 +83,48 @@ class PaySelList extends \App\Pages\Base
         $hold = "";
         $holding = $this->filter->holdlist->getValue();
         if ($holding > 0) {
-            $hold = " where  c.detail like '%<holding>{$holding}</holding>%'";
+            $hold = "  and   c.detail like '%<holding>{$holding}</holding>%'";
         }
 
-        $sql = "select  * from(select c.customer_name,c.phone, c.customer_id,coalesce(sum(tsam),0)  as sam  from (
-        select customer_id,   (case when  ( meta_name='IncomeMoney' or meta_name='RetCustIssue') then  (payed - payamount )   else  (payamount - payed)  end) as tsam   
-              from documents_view  
-            where {$br}   customer_id > 0  {$this->_docs}      and state > 3  and (payamount >0  or  payed >0)   and payamount <> payed  
-            ) t join customers c  on t.customer_id = c.customer_id and c.status=0     {$hold}
-             group by c.customer_name,c.phone, c.customer_id    ) tt  
-             where tt.sam <>0
-             order by tt.customer_name ";
+ 
+     
+         $sql = "SELECT c.customer_name,c.phone, c.customer_id, COALESCE( SUM( a.s_passive),0) as  pas, coalesce(SUM( a.s_active ),0) AS act
+            FROM cust_acc_view a  join customers c  on a.customer_id = c.customer_id and c.status=0    
+             WHERE  a.s_active <> a.s_passive     {$hold}
+             group by c.customer_name,c.phone, c.customer_id
+             order by c.customer_name
+             ";
 
         $this->_custlist = \App\DataItem::query($sql);
 
-        $this->_totamount = 0;
+        $this->_totamountc = 0;
+        $this->_totamountd = 0;
 
         $this->clist->custlist->Reload();
-        $this->clist->totamount->setText(H::fa($this->_totamount));
+        $this->clist->totamountd->setText( $this->_totamountd <0 ? H::fa(0-$this->_totamountd):'');
+        $this->clist->totamountc->setText( $this->_totamountc >0 ? H::fa($this->_totamountc):'');
+
+        
     }
 
     public function custlistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $cust = $row->getDataItem();
         $row->add(new RedirectLink('customer_name', "\\App\\Pages\\Reference\\CustomerList", array($cust->customer_id)))->setValue($cust->customer_name);
         $row->add(new Label('phone', $cust->phone));
-        $row->add(new Label('amount', H::fa($cust->sam)));
+        $diff = $cust->act - $cust->pas;   //плюс - наш долг
+        $row->add(new Label('amountc',$diff >0 ? H::fa($diff):''));
+        $row->add(new Label('amountd',$diff <0 ? H::fa(0-$diff):''));
 
-        $row->add(new RedirectLink('createpay'))->setVisible(false);
-        if ($cust->sam > 0) {
-            $row->createpay->setLink("\\App\\Pages\\Doc\\OutcomeMoney", array(0, $cust->customer_id, $cust->sam));
+        $row->add(new RedirectLink('createpay'))->setVisible($diff>0);
+        if ($diff>0) {
+            $row->createpay->setLink("\\App\\Pages\\Doc\\OutcomeMoney", array(0, $cust->customer_id, $diff ));
             $row->createpay->setVisible(true);
         }
 
         $row->add(new ClickLink('showdocs'))->onClick($this, 'showdocsOnClick');
 
-        $this->_totamount += $cust->sam;
+        $this->_totamountd += ($diff<0 ? $diff:0 );
+        $this->_totamountc += ($diff>0 ? $diff:0 );
     }
 
     //список документов
@@ -297,37 +302,5 @@ class PaySelList extends \App\Pages\Base
         $this->onBack(null);
     }
 
-    public function oncsv($sender) {
-        $csv = "";
-
-        $header = array();
-        $data = array();
-
-        $i = 0;
-
-        if ($sender->id == 'csv') {
-            $list = $this->clist->custlist->getDataSource()->getItems(-1, -1, 'customer_name');
-
-            foreach ($list as $c) {
-                $i++;
-                $data['A' . $i] = $c->customer_name;
-                $data['B' . $i] = $c->phone;
-                $data['C' . $i] = H::fa($c->sam);
-            }
-        }
-        if ($sender->id == 'csv2') {
-            $list = $this->plist->doclist->getDataSource()->getItems(-1, -1, 'document_id');
-
-            foreach ($list as $d) {
-                $i++;
-                $data['A' . $i] = H::fd($d->document_date);
-                $data['B' . $i] = $d->document_number;
-                $data['C' . $i] = H::fa($d->amount);
-                $data['D' . $i] = $d->notes;
-            }
-        }
-
-        H::exportExcel($data, $header, 'sellist.xlsx');
-    }
-
+    
 }

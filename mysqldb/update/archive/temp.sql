@@ -1,9 +1,6 @@
 delete from  metadata  where  meta_name='CustActivity' ;
 delete from  metadata  where  meta_name='EmpAccRep'    ;
 delete from  metadata  where  meta_name='SalTypeRep'   ;
-INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 1, 'Ввод  початккових залишків', 'BeginData', '', 0);
-
-
   
     
 ALTER TABLE `empacc` ADD `createdon` date NULL  ;
@@ -43,99 +40,11 @@ SELECT
       (`d`.`content` LIKE '%<detail>1</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'ReturnIssue') THEN `d`.`payamount` ELSE 0 END)), 0) AS `b_active`,
   `d`.`customer_id` AS `customer_id`
 FROM `documents_view` `d`
-WHERE ((`d`.`state` > 3)
+WHERE ((`d`.`state` NOT IN (0, 1, 2, 3, 15, 8))
 AND (`d`.`customer_id` > 0))
 GROUP BY `d`.`customer_id`; 
 
-    
-  оплата поставщику
-    
-    invoicecust          payed     +
-    goodsreceipt         payed     +
-    IncomeService         payed    +
-    OutcomeMoney         payed     +    '%<detail>2</detail>%'
-
-  товар  поставщику
-    retcust      payamoyunt   +
-    
-    
-
-  товар  от поставщика
-    goodsreceipt         payamount  -
-    
-  оплата  от  поставщика
-    
-    retcust      payed              -
-    IncomeMoneay   payed     -  '%<detail>2</detail>%'
-    
-    
-
- товар  покупателю    +
-   
-   GoodsIssue  payAmount 
-   TTN  payAmount 
-   PosCheck  payAmount 
-   OrderFood   payAmount     -
-     
-  
-   оплата  покупателю   +
-    
-    OutcomeMoney         payed     +    '%<detail>1</detail>%'
-    retissue payed   
-   
- товар  от покупателя
-   
-   retissue   payamount
-   
- оплата  от покупателя
-    
-   IncomeMoneay   payed     -  '%<detail>1</detail>%'
-   Order   payed     -
-   OrderFood   payed     -
-   Invoice   payed     -
-   GoodsIssue   payed     -
-   ServiceAct   payed     -
-   PosCheck   payed     -
-   
-    
-    
-    
-SELECT
-coalesce(
-SUM(
-CASE  when  meta_name IN('InvoiceCust','GoodsReceipt','IncomeService','OutcomeMoney') THEN  payed
-   when  meta_name = 'OutcomeMoney' and    content like '%<detail>2</detail>%'   THEN  payed
-   when  meta_name IN('RetCustIssue') THEN  payamount
-ELSE  0 END 
-
-),0) as  s_passive,
-
-coalesce(SUM(
-CASE  when  meta_name IN('GoodsReceipt') THEN  payamount
-   when  meta_name = 'IncomeMoney' and    content like '%<detail>2</detail>%'   THEN  payed
-   when  meta_name IN('RetCustIssue') THEN  payed
-ELSE  0 END 
-
-),0) as  s_active,
-
-
-coalesce(SUM(
-CASE  when  meta_name IN('GoodsIssue','TTN','PosCheck','OrderFood') THEN  payamount
-   when  meta_name = 'OutcomeMoney' and    content like '%<detail>1</detail>%'   THEN  payed
-   when  meta_name IN('ReturnIssue') THEN  payed
-ELSE  0 END 
-
-),0) as  b_passive,
-
-coalesce(SUM(
-CASE  when  meta_name IN('GoodsIssue','Order','PosCheck','OrderFood','Invoice','ServiceAct') THEN  payed
-   when  meta_name = 'IncomeMoney' and    content like '%<detail>1</detail>%'   THEN  payed
-   when  meta_name IN('ReturnIssue') THEN  payamount
-ELSE  0 END 
-
-),0) as  b_active,
-
-
-
- customer_id FROM  documents_view d  where state  > 3 and  customer_id >0   GROUP BY   customer_id  
+ 
+delete  from  options where  optname='version' ;
+insert  into options (optname,optvalue) values('version','6.3.0');
  
