@@ -507,6 +507,7 @@
     "actiondiscounttitile": "Постійна знижка %s%%"   ,
     "actionbonustitile": "Бонуси %s"   ,
     "actionpricetitile": "Акційна ціна %s"   ,
-    "actiondisctitile": "Акційна знижка %s%%" 
+    "actiondisctitile": "Акційна знижка %s%%" ,
+    "changedposlist": "У докумнта %s, створеного на  підставі %s, користувачем  %s  був відредагований список  ТМЦ " 
     
 }

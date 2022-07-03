@@ -148,7 +148,7 @@ class UserProfile extends \App\Pages\Base
             if ($this->user->userlogin != 'admin') {
 
                 
-                \App\Entity\Notify::toSystenLog(H::l('passchanged', $this->user->username, $pass)) ;
+                \App\Entity\Notify::toSystemLog(H::l('passchanged', $this->user->username, $pass)) ;
                 
             }
 

@@ -141,7 +141,7 @@ class UserLogin extends \Zippy\Html\WebPage
         //    $admin = \App\Entity\User::getByLogin('admin');
 
 
-            \App\Entity\Notify::toSystenLog($msg) ;
+            \App\Entity\Notify::toSystemLog($msg) ;
             \App\Entity\Notify::toAdmin($msg) ;
             
             

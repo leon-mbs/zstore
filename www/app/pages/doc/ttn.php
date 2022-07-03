@@ -36,6 +36,7 @@ class TTN extends \App\Pages\Base
     private $_basedocid = 0;
     private $_rowid     = 0;
     private $_orderid   = 0;
+    private $_changedpos  = false;    
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -229,7 +230,8 @@ class TTN extends \App\Pages\Base
 
                         $this->docform->total->setText($invoice->amount);
                         $this->docform->firm->setValue($basedoc->firm_id);
-
+                        $this->_doc->headerdata['prepaid']  = $basedoc->payamount ;
+  
                         $this->OnChangeCustomer($this->docform->customer);
 
                         $itemlist = $basedoc->unpackDetails('detaildata');
@@ -269,7 +271,8 @@ class TTN extends \App\Pages\Base
                         if ($basedoc->headerdata["paydisc"] > 0 && $basedoc->amount > 0) {
                             $k = ($basedoc->amount - $basedoc->headerdata["paydisc"]) / $basedoc->amount;
                         }
-
+                        $this->_doc->headerdata['prepaid']  = $basedoc->payamount ;
+  
                         $i = 1;
                         foreach ($basedoc->unpackDetails('detaildata') as $item) {
                             // $item->price = $item->getPrice($basedoc->headerdata['pricetype']);
@@ -300,7 +303,7 @@ class TTN extends \App\Pages\Base
                         if ($basedoc->headerdata["paydisc"] > 0 && $basedoc->amount > 0) {
                             $k = ($basedoc->amount - $basedoc->headerdata["paydisc"]) / $basedoc->amount;
                         }
-
+  
                         $i = 1;
                         foreach ($basedoc->unpackDetails('detaildata') as $item) {
                             // $item->price = $item->getPrice($basedoc->headerdata['pricetype']);
@@ -359,6 +362,8 @@ class TTN extends \App\Pages\Base
 
         $this->docform->detail->Reload();
         $this->calcTotal();
+        $this->_changedpos = true;
+        
     }
 
     public function addcodeOnClick($sender) {
@@ -543,6 +548,8 @@ class TTN extends \App\Pages\Base
         $this->editdetail->editprice->setText("");
         $this->editdetail->editserial->setText("");
         $this->calcTotal();
+        $this->_changedpos = true;
+        
     }
 
     public function cancelrowOnClick($sender) {
@@ -644,6 +651,17 @@ class TTN extends \App\Pages\Base
                     }
                 }
 
+                   if ($this->_doc->parent_id > 0) {    
+                    $basedoc = Document::load($this->_doc->parent_id);
+
+                    if($this->_changedpos) {
+                        if($this->_changedpos) {
+                            $msg= H::l("changedposlist",$this->_doc->document_number,$basedoc->document_number,\App\System::getUser()->username); ;
+                            \App\Entity\Notify::toSystemLog($msg) ;
+                        }
+               
+                    }
+                 }
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
                 $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
@@ -655,6 +673,20 @@ class TTN extends \App\Pages\Base
                         $this->_doc->updateStatus(Document::STATE_NEW);
                     }
 
+                    
+                 if ($this->_doc->parent_id > 0) {    
+                    $basedoc = Document::load($this->_doc->parent_id);
+
+                    if($this->_changedpos) {
+                        if($this->_changedpos) {
+                            $msg= H::l("changedposlist",$this->_doc->document_number,$basedoc->document_number,\App\System::getUser()->username); ;
+                            \App\Entity\Notify::toSystemLog($msg) ;
+                        }
+               
+                    }
+                 }
+                    
+                    
                     $this->_doc->updateStatus(Document::STATE_EXECUTED);
                     if ($sender->id == 'senddoc') {
                         $this->_doc->updateStatus(Document::STATE_INSHIPMENT);

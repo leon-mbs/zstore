@@ -133,6 +133,10 @@ class GoodsIssue extends Document
     }
 
     public function Execute() {
+        
+        
+  
+        
         $parts = array();
         $k = 1;   //учитываем  скидку
         if ($this->headerdata["paydisc"] > 0 && $this->amount > 0) {

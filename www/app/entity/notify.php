@@ -56,7 +56,7 @@ class Notify extends \ZCL\DB\Entity
         $conn->Execute($sql);
     }
    
-    public static function toSystenLog($message) {
+    public static function toSystemLog($message) {
             $n = new  Notify();
             $n->user_id =  Notify::SYSTEM;
 
