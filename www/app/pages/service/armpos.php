@@ -927,6 +927,12 @@ class ARMPos extends \App\Pages\Base
             $this->_doc->updateStatus(Document::STATE_NEW);
 
             $this->_doc->updateStatus(Document::STATE_EXECUTED);
+            
+            if ($this->_doc->payamount > $this->_doc->payed) {
+                $this->_doc->updateStatus(Document::STATE_WP);
+            }
+            
+            
             $conn->CommitTrans();
         } catch(\Throwable $ee) {
             global $logger;

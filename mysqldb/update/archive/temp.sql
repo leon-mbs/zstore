@@ -32,7 +32,7 @@ AS
 SELECT
   COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService', 'OutcomeMoney')) THEN `d`.`payed` WHEN ((`d`.`meta_name` = 'OutcomeMoney') AND
       (`d`.`content` LIKE '%<detail>2</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'RetCustIssue') THEN `d`.`payamount` ELSE 0 END)), 0) AS `s_passive`,
-  COALESCE(SUM((CASE WHEN (`d`.`meta_name` = 'GoodsReceipt') THEN `d`.`payamount` WHEN ((`d`.`meta_name` = 'IncomeMoney') AND
+  COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('GoodsReceipt') ) THEN `d`.`payamount` WHEN ((`d`.`meta_name` = 'IncomeMoney') AND
       (`d`.`content` LIKE '%<detail>2</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'RetCustIssue') THEN `d`.`payed` ELSE 0 END)), 0) AS `s_active`,
   COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('GoodsIssue', 'TTN', 'PosCheck', 'OrderFood')) THEN `d`.`payamount` WHEN ((`d`.`meta_name` = 'OutcomeMoney') AND
       (`d`.`content` LIKE '%<detail>1</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'ReturnIssue') THEN `d`.`payed` ELSE 0 END)), 0) AS `b_passive`,

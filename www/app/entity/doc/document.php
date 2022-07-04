@@ -354,8 +354,9 @@ class Document extends \ZCL\DB\Entity
      * Обновляет состояние  документа
      *
      * @param mixed $state
+     * @param mixed $nodata   только  смен  статуса  без  проводок    
      */
-    public function updateStatus($state) {
+    public function updateStatus($state,$nodata = false) {
 
 
         if ($this->document_id == 0) {
@@ -373,10 +374,15 @@ class Document extends \ZCL\DB\Entity
             $state = self::STATE_WA;   //переводим на   ожидание  утверждения
         } else {
             if ($state == self::STATE_CANCELED) {
-                $this->Cancel();
+              if($nodata == false) {
+                $this->Cancel();  
+              } 
             } else {
                 if ($state == self::STATE_EXECUTED) {
-                    $this->Execute();
+                    if($nodata == false) {
+                       $this->Execute();                        
+                    }
+
                 }
             }
         }
@@ -475,6 +481,8 @@ class Document extends \ZCL\DB\Entity
                 return Helper::l('st_inprocess');
             case Document::STATE_READYTOSHIP:
                 return Helper::l('st_rdshipment');
+            case Document::STATE_WP:
+                return Helper::l('st_wp');
 
             default:
                 return Helper::l('st_unknow');
@@ -513,6 +521,7 @@ class Document extends \ZCL\DB\Entity
         $list[Document::STATE_INSHIPMENT] = Helper::l('st_inshipment');
         $list[Document::STATE_FINISHED] = Helper::l('st_finished');
         $list[Document::STATE_DELIVERED] = Helper::l('st_delivered');
+        $list[Document::STATE_EXECUTED] = Helper::l('st_executed');
 
         $list[Document::STATE_SHIFTED] = Helper::l('st_shifted');
         $list[Document::STATE_FAIL] = Helper::l('st_fail');
@@ -677,9 +686,10 @@ class Document extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $rc = $conn->Execute("select * from docstatelog_view where document_id={$this->document_id} order  by  log_id");
         $states = array();
+        $i=0;
         foreach ($rc as $row) {
             $row['createdon'] = strtotime($row['createdon']);
-            $states[] = new \App\DataItem($row);
+            $states[$i++] = new \App\DataItem($row);
         }
 
         return $states;

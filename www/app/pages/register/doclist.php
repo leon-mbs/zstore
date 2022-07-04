@@ -464,7 +464,7 @@ class DocList extends \App\Pages\Base
         $this->_doc = $this->_doc->cast();
         if ($sender->id == "bap") {
             $newstate = $this->_doc->headerdata['_state_before_approve_'] > 0 ? $this->_doc->headerdata['_state_before_approve_'] : Document::STATE_APPROVED;
-            $this->_doc->updateStatus($newstate);
+            $this->_doc->updateStatus($newstate,true);
 
             $user = System::getUser();
 

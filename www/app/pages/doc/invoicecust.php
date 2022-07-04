@@ -342,6 +342,9 @@ class InvoiceCust extends \App\Pages\Base
                 }
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
+             if ($this->_doc->payamount > $this->_doc->payed) {
+                $this->_doc->updateStatus(Document::STATE_WP);
+            }
 
                 //обновляем  курс
                 if (strlen($this->_doc->headerdata['val']) > 1) {

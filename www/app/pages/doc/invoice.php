@@ -424,7 +424,9 @@ class Invoice extends \App\Pages\Base
                 if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
-                $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                $this->_doc->updateStatus(Document::STATE_EXECUTED);                    
+                $this->_doc->updateStatus(Document::STATE_WP);                    
+
             }
 
 

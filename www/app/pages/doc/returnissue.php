@@ -342,6 +342,9 @@ class ReturnIssue extends \App\Pages\Base
                 if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
+            if ($this->_doc->payamount > $this->_doc->payed) {
+                $this->_doc->updateStatus(Document::STATE_WP);
+            }
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
             } else {

@@ -285,6 +285,10 @@ class RetCustIssue extends \App\Pages\Base
                 }
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
+           if ($this->_doc->payamount > $this->_doc->payed) {
+                $this->_doc->updateStatus(Document::STATE_WP);
+            }
+                
             } else {
 
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);

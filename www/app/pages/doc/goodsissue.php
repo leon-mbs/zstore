@@ -650,6 +650,9 @@ class GoodsIssue extends \App\Pages\Base
 
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                if($this->_doc->payamount > $this->_doc->payed) {
+                      $this->_doc->updateStatus(Document::STATE_WP);                    
+                }
                 if ($this->_doc->parent_id > 0) {   //закрываем заказ
                     $order = Document::load($this->_doc->parent_id);
 

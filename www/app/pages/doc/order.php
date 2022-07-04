@@ -329,7 +329,7 @@ class Order extends \App\Pages\Base
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
         $this->_doc->headerdata['bonus'] = $this->docform->bonus->getText();
 
-         $this->_doc->headerdata['salesource'] = $this->docform->salesource->getValue();
+        $this->_doc->headerdata['salesource'] = $this->docform->salesource->getValue();
 
 
         if ($this->checkForm() == false) {
@@ -339,6 +339,8 @@ class Order extends \App\Pages\Base
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
+      
+         
         try {
             if ($this->_basedocid > 0) {
                 $this->_doc->parent_id = $this->_basedocid;
@@ -353,9 +355,7 @@ class Order extends \App\Pages\Base
                $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
                $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
                
-               $payamount = $this->docform->payamount->getText();
-
-               if ($this->_doc->payed > $payamount) {
+               if ($this->_doc->payed > $this->_doc->payamount) {
                     $this->setError('inserted_extrasum');
                     return;
                }               
@@ -379,6 +379,9 @@ class Order extends \App\Pages\Base
 
             if ($sender->id == 'execdoc' || $sender->id == 'paydoc') {
                 $this->_doc->updateStatus(Document::STATE_INPROCESS);
+            }
+            if ($this->_doc->payamount > $this->_doc->payed) {
+                $this->_doc->updateStatus(Document::STATE_WP);
             }
 
 
