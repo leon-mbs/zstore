@@ -479,7 +479,7 @@
     "thesamestock": "Однаковi партiї"  ,    
     "diffitem": "Рiзнi  ТМЦ" ,
     "stpp_new": "Новий",    
-    "stpp_inprocess": "Виконуєтся",    
+    "stpp_inprocess": "Виконується",    
     "stpp_stopped": "Призупинений",    
     "stpp_finished": "Виконаний",    
     "stpp_canceled": "Скасований",     
@@ -508,6 +508,6 @@
     "actionbonustitile": "Бонуси %s"   ,
     "actionpricetitile": "Акційна ціна %s"   ,
     "actiondisctitile": "Акційна знижка %s%%" ,
-    "changedposlist": "У докумнта %s, створеного на  підставі %s, користувачем  %s  був відредагований список  ТМЦ " 
+    "changedposlist": "У документа %s, створеного на  підставі %s, користувачем  %s  був відредагований список  ТМЦ " 
     
 }

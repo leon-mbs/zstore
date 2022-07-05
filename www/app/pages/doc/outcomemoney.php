@@ -34,6 +34,7 @@ class OutcomeMoney extends \App\Pages\Base
 
         $this->docform->add(new DropDownChoice('detail', array(),  2))->onChange($this, 'OnDetail');
         $this->docform->add(new DropDownChoice('mtype', \App\Entity\IOState::getTypeList(2), 0));
+        $this->docform->add(new DropDownChoice('begval', array(), 0));
         $this->docform->add(new DropDownChoice('contract', array(), 0));
         $this->docform->add(new DropDownChoice('emp', Employee::findArray('emp_name', 'disabled<>1', 'emp_name'), 0));
 
@@ -54,6 +55,7 @@ class OutcomeMoney extends \App\Pages\Base
             $this->docform->customer->setText($this->_doc->customer_name);
             $this->docform->detail->setValue($this->_doc->headerdata['detail']);
 
+            $this->docform->begval->setValue($this->_doc->headerdata['begval']);
             $this->docform->emp->setValue($this->_doc->headerdata['emp']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->mtype->setValue($this->_doc->headerdata['type']);
@@ -94,6 +96,7 @@ class OutcomeMoney extends \App\Pages\Base
         $this->_doc->headerdata['detail'] = $this->docform->detail->getValue();
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
         $this->_doc->headerdata['contract_number'] = $this->docform->contract->getValueName();
+        $this->_doc->headerdata['begval'] = $this->docform->begval->getValue();
         $this->_doc->headerdata['emp'] = $this->docform->emp->getValue();
         $this->_doc->headerdata['emp_name'] = $this->docform->emp->getValueName();
 
@@ -106,6 +109,9 @@ class OutcomeMoney extends \App\Pages\Base
         $this->_doc->payment = 0;
         if ($this->checkForm() == false) {
             return;
+        }
+        if($this->_doc->headerdata['begval']==2) {
+             $this->_doc->payed  =0;          
         }
 
         $isEdited = $this->_doc->document_id > 0;
@@ -161,20 +167,20 @@ class OutcomeMoney extends \App\Pages\Base
         if (($this->_doc->amount > 0) == false) {
             $this->setError("noentersum");
         }
-        if ($this->docform->mtype->getValue() == 0) {
+        if ($this->docform->mtype->getValue() == 0 &&  $this->_doc->headerdata['begval']==0) {
             $this->setError("noseloutcome");
         }
 
 
         if ($this->docform->detail->getValue() == 1 || $this->docform->detail->getValue() == 2) {
 
-            if ($this->_doc->customer_id == 0) {
+            if ($this->_doc->customer_id == 0 &&  $this->_doc->headerdata['begval']!=2) {
                 $this->setError("noselcust");
             }
         }
         if ($this->docform->detail->getValue() == 3) {
 
-            if ($this->_doc->headerdata['emp'] == 0) {
+            if ($this->_doc->headerdata['emp'] == 0 &&  $this->_doc->headerdata['begval']!=2) {
                 $this->setError("noempselected");
             }
         }
