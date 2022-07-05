@@ -49,6 +49,48 @@ SET character_set_client = utf8;
  1 AS `customer_name`,
  1 AS `firm_name`*/;
 SET character_set_client = @saved_cs_client;
+DROP TABLE IF EXISTS `cust_acc_view`;
+/*!50001 DROP VIEW IF EXISTS `cust_acc_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE VIEW `cust_acc_view` AS SELECT 
+ 1 AS `s_passive`,
+ 1 AS `s_active`,
+ 1 AS `b_passive`,
+ 1 AS `b_active`,
+ 1 AS `customer_id`*/;
+SET character_set_client = @saved_cs_client;
+DROP TABLE IF EXISTS `custacc`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `custacc` (
+  `ca_id` int(11) NOT NULL AUTO_INCREMENT,
+  `customer_id` int(11) NOT NULL,
+  `document_id` int(11) DEFAULT NULL,
+  `optype` int(11) NOT NULL,
+  `notes` varchar(255) DEFAULT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `createdon` date DEFAULT NULL,
+  PRIMARY KEY (`ca_id`),
+  KEY `document_id` (`document_id`),
+  KEY `customer_id` (`customer_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `custacc_view`;
+/*!50001 DROP VIEW IF EXISTS `custacc_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE VIEW `custacc_view` AS SELECT 
+ 1 AS `ca_id`,
+ 1 AS `customer_id`,
+ 1 AS `document_id`,
+ 1 AS `optype`,
+ 1 AS `notes`,
+ 1 AS `amount`,
+ 1 AS `createdon`,
+ 1 AS `customer_name`,
+ 1 AS `document_number`*/;
+SET character_set_client = @saved_cs_client;
 DROP TABLE IF EXISTS `custitems`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -63,7 +105,7 @@ CREATE TABLE `custitems` (
   `updatedon` date NOT NULL,
   PRIMARY KEY (`custitem_id`),
   KEY `item_id` (`item_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `custitems_view`;
 /*!50001 DROP VIEW IF EXISTS `custitems_view`*/;
@@ -135,7 +177,7 @@ CREATE TABLE `docstatelog` (
   `hostname` varchar(64) NOT NULL,
   PRIMARY KEY (`log_id`),
   KEY `document_id` (`document_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2813 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2959 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `docstatelog_view`;
 /*!50001 DROP VIEW IF EXISTS `docstatelog_view`*/;
@@ -181,7 +223,7 @@ CREATE TABLE `documents` (
   KEY `user_id` (`user_id`),
   KEY `branch_id` (`branch_id`),
   CONSTRAINT `documents_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=824 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=860 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `documents_view`;
 /*!50001 DROP VIEW IF EXISTS `documents_view`*/;
@@ -222,10 +264,11 @@ CREATE TABLE `empacc` (
   `optype` int(11) DEFAULT NULL,
   `notes` varchar(255) DEFAULT NULL,
   `amount` decimal(10,2) NOT NULL,
+  `createdon` date DEFAULT NULL,
   PRIMARY KEY (`ea_id`),
   KEY `emp_id` (`emp_id`),
   KEY `document_id` (`document_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `empacc_view`;
 /*!50001 DROP VIEW IF EXISTS `empacc_view`*/;
@@ -238,7 +281,7 @@ SET character_set_client = utf8;
  1 AS `optype`,
  1 AS `notes`,
  1 AS `amount`,
- 1 AS `document_date`,
+ 1 AS `createdon`,
  1 AS `document_number`,
  1 AS `emp_name`*/;
 SET character_set_client = @saved_cs_client;
@@ -271,7 +314,7 @@ CREATE TABLE `entrylist` (
   KEY `stock_id` (`stock_id`),
   CONSTRAINT `entrylist_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`document_id`),
   CONSTRAINT `entrylist_ibfk_2` FOREIGN KEY (`stock_id`) REFERENCES `store_stock` (`stock_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1302 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1294 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -455,7 +498,7 @@ CREATE TABLE `iostate` (
   `amount` decimal(10,2) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `document_id` (`document_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=169 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=182 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `iostate_view`;
 /*!50001 DROP VIEW IF EXISTS `iostate_view`*/;
@@ -604,7 +647,7 @@ CREATE TABLE `item_set` (
   `service_id` int(11) DEFAULT '0',
   `cost` decimal(10,2) DEFAULT '0.00',
   PRIMARY KEY (`set_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `item_set_view`;
 /*!50001 DROP VIEW IF EXISTS `item_set_view`*/;
@@ -700,7 +743,7 @@ CREATE TABLE `metadata` (
   `menugroup` varchar(255) DEFAULT NULL,
   `disabled` tinyint(4) NOT NULL,
   PRIMARY KEY (`meta_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=113 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=114 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `mfund`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -712,7 +755,7 @@ CREATE TABLE `mfund` (
   `branch_id` int(11) DEFAULT '0',
   `detail` longtext,
   PRIMARY KEY (`mf_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `note_fav`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -821,7 +864,7 @@ CREATE TABLE `notifies` (
   `sender_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`notify_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=296 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=305 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `options`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -855,11 +898,10 @@ CREATE TABLE `paylist` (
   `paytype` smallint(6) NOT NULL,
   `detail` longtext,
   `bonus` int(11) DEFAULT NULL,
-  `opertype` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`pl_id`),
   KEY `document_id` (`document_id`),
   CONSTRAINT `paylist_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`document_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=697 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=712 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `paylist_view`;
 /*!50001 DROP VIEW IF EXISTS `paylist_view`*/;
@@ -907,7 +949,7 @@ CREATE TABLE `ppo_zformrep` (
   `sentxml` longtext NOT NULL,
   `taxanswer` longblob NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `ppo_zformstat`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -924,7 +966,7 @@ CREATE TABLE `ppo_zformstat` (
   `document_number` varchar(255) DEFAULT NULL,
   `fiscnumber` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`zf_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `prodproc`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1204,7 +1246,7 @@ CREATE TABLE `store_stock` (
   KEY `store_id` (`store_id`),
   CONSTRAINT `store_stock_fk` FOREIGN KEY (`store_id`) REFERENCES `stores` (`store_id`),
   CONSTRAINT `store_stock_ibfk_1` FOREIGN KEY (`item_id`) REFERENCES `items` (`item_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=635 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=636 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `store_stock_view`;
 /*!50001 DROP VIEW IF EXISTS `store_stock_view`*/;
@@ -1351,6 +1393,32 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
+/*!50001 DROP VIEW IF EXISTS `cust_acc_view`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE  */
+/*!50013   */
+/*!50001 VIEW `cust_acc_view` AS select coalesce(sum((case when (`d`.`meta_name` in ('InvoiceCust','GoodsReceipt','IncomeService','OutcomeMoney')) then `d`.`payed` when ((`d`.`meta_name` = 'OutcomeMoney') and (`d`.`content` like '%<detail>2</detail>%')) then `d`.`payed` when (`d`.`meta_name` = 'RetCustIssue') then `d`.`payamount` else 0 end)),0) AS `s_passive`,coalesce(sum((case when (`d`.`meta_name` = 'GoodsReceipt') then `d`.`payamount` when ((`d`.`meta_name` = 'IncomeMoney') and (`d`.`content` like '%<detail>2</detail>%')) then `d`.`payed` when (`d`.`meta_name` = 'RetCustIssue') then `d`.`payed` else 0 end)),0) AS `s_active`,coalesce(sum((case when (`d`.`meta_name` in ('GoodsIssue','TTN','PosCheck','OrderFood')) then `d`.`payamount` when ((`d`.`meta_name` = 'OutcomeMoney') and (`d`.`content` like '%<detail>1</detail>%')) then `d`.`payed` when (`d`.`meta_name` = 'ReturnIssue') then `d`.`payed` else 0 end)),0) AS `b_passive`,coalesce(sum((case when (`d`.`meta_name` in ('GoodsIssue','Order','PosCheck','OrderFood','Invoice','ServiceAct')) then `d`.`payed` when ((`d`.`meta_name` = 'IncomeMoney') and (`d`.`content` like '%<detail>1</detail>%')) then `d`.`payed` when (`d`.`meta_name` = 'ReturnIssue') then `d`.`payamount` else 0 end)),0) AS `b_active`,`d`.`customer_id` AS `customer_id` from `documents_view` `d` where ((`d`.`state` not in (0,1,2,3,15,8)) and (`d`.`customer_id` > 0)) group by `d`.`customer_id` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+/*!50001 DROP VIEW IF EXISTS `custacc_view`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE  */
+/*!50013   */
+/*!50001 VIEW `custacc_view` AS select `a`.`ca_id` AS `ca_id`,`a`.`customer_id` AS `customer_id`,`a`.`document_id` AS `document_id`,`a`.`optype` AS `optype`,`a`.`notes` AS `notes`,`a`.`amount` AS `amount`,`a`.`createdon` AS `createdon`,`c`.`customer_name` AS `customer_name`,`d`.`document_number` AS `document_number` from ((`custacc` `a` join `documents` `d` on((`d`.`document_id` = `a`.`document_id`))) join `customers` `c` on((`c`.`customer_id` = `a`.`customer_id`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!50001 DROP VIEW IF EXISTS `custitems_view`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -1407,12 +1475,12 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE  */
 /*!50013   */
-/*!50001 VIEW `empacc_view` AS select `e`.`ea_id` AS `ea_id`,`e`.`emp_id` AS `emp_id`,`e`.`document_id` AS `document_id`,`e`.`optype` AS `optype`,`e`.`notes` AS `notes`,`e`.`amount` AS `amount`,`d`.`document_date` AS `document_date`,`d`.`document_number` AS `document_number`,`em`.`emp_name` AS `emp_name` from ((`empacc` `e` join `documents` `d` on((`d`.`document_id` = `e`.`document_id`))) join `employees` `em` on((`em`.`employee_id` = `e`.`emp_id`))) */;
+/*!50001 VIEW `empacc_view` AS select `e`.`ea_id` AS `ea_id`,`e`.`emp_id` AS `emp_id`,`e`.`document_id` AS `document_id`,`e`.`optype` AS `optype`,`e`.`notes` AS `notes`,`e`.`amount` AS `amount`,coalesce(`e`.`createdon`,`d`.`document_date`) AS `createdon`,`d`.`document_number` AS `document_number`,`em`.`emp_name` AS `emp_name` from ((`empacc` `e` left join `documents` `d` on((`d`.`document_id` = `e`.`document_id`))) join `employees` `em` on((`em`.`employee_id` = `e`.`emp_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
