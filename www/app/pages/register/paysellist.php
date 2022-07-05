@@ -26,10 +26,12 @@ class PaySelList extends \App\Pages\Base
     private $_cust      = null;
     public  $_custlist  = array();
     public  $_doclist   = array();
+    public  $_blist   = array();
     public  $_pays      = array();
     public  $_totamountd = 0;
     public  $_totamountc = 0;
-   
+ public  $_bal = 0;
+     
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('PaySelList')) {
@@ -51,6 +53,12 @@ class PaySelList extends \App\Pages\Base
 
         $doclist = $this->plist->add(new DataView('doclist', new ArrayDataSource($this, '_doclist'), $this, 'doclistOnRow'));
 
+       $this->add(new Panel("dlist"))->setVisible(false);
+        $this->dlist->add(new Label("cnamed"));
+        $this->dlist->add(new ClickLink("backd", $this, "onBack"));
+        $this->dlist->add(new DataView('blist', new ArrayDataSource($this, '_blist'), $this, 'blistOnRow'));
+       
+        
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
 
         $this->add(new Panel("paypan"))->setVisible(false);
@@ -112,7 +120,7 @@ class PaySelList extends \App\Pages\Base
 
         $ids = array_keys($this->_custlist)  ;
         foreach( \App\DataItem::query($sql) as $_c){
-            if(in_array($_c->customer_id)) {
+            if(in_array($_c->customer_id,$ids)) {
                  $this->_custlist[$_c->customer_id]->docs = $_c->docs;                                         
             } else {
                  $this->_custlist[$_c->customer_id] = $_c;                                                         
@@ -146,6 +154,7 @@ class PaySelList extends \App\Pages\Base
         }
 
         $row->add(new ClickLink('showdocs',$this, 'showdocsOnClick'))->setVisible($cust->docs>0);
+        $row->add(new ClickLink('showdet',$this, 'showdetOnClick'))->setVisible($diff != 0);
 
         $this->_totamountd += ($diff<0 ? $diff:0 );
         $this->_totamountc += ($diff>0 ? $diff:0 );
@@ -172,7 +181,7 @@ class PaySelList extends \App\Pages\Base
         }
         $this->_doclist = array();
 
-        $list = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id}  and  state > 3  and  (state = ". Document::STATE_WP  ."  or  payamount >payed)   and meta_name in('InvoiceCust','RetCustIssue','GoodsReceipt') ", "document_date desc, document_id desc");
+        $list = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id}  and  state NOT IN (0, 1, 2, 3, 15, 8)  and  (state = ". Document::STATE_WP  ."  or  payamount >payed)   and meta_name in('InvoiceCust','RetCustIssue','GoodsReceipt') ", "document_date desc, document_id desc");
   
 
         foreach ($list as $d) {
@@ -196,9 +205,7 @@ class PaySelList extends \App\Pages\Base
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('pay'))->onClick($this, 'payOnClick');
         $row->pay->setVisible($doc->payamount > 0);
-        if ($doc->document_id == @$this->_doc->document_id) {
-            $row->setAttribute('class', 'table-success');
-        }
+         
     }
 
     //просмотр
@@ -209,7 +216,7 @@ class PaySelList extends \App\Pages\Base
             return;
         }
 
-        $this->plist->doclist->Reload(false);
+      
         $this->docview->setVisible(true);
         $this->paypan->setVisible(false);
         $this->docview->setDoc($this->_doc);
@@ -218,6 +225,7 @@ class PaySelList extends \App\Pages\Base
 
     public function onBack($sender) {
         $this->clist->setVisible(true);
+        $this->dlist->setVisible(false);
         $this->plist->setVisible(false);
         $this->docview->setVisible(false);
         $this->paypan->setVisible(false);
@@ -327,4 +335,62 @@ class PaySelList extends \App\Pages\Base
         }         
         
     }       
+    
+    //детализация  баланса
+   public function showdetOnClick($sender) {
+
+        $this->_cust = $sender->owner->getDataItem();
+        $this->dlist->cnamed->setText($this->_cust->customer_name);
+        $this->_bal = 0;         
+        $this->updateDetDocs();
+ 
+
+        $this->clist->setVisible(false);
+        $this->dlist->setVisible(true);
+    }
+    public function updateDetDocs() {
+
+        
+        $br = "";
+        $c = \App\ACL::getBranchConstraint();
+        if (strlen($c) > 0) {
+            $br = " {$c} and ";
+        }
+
+        $this->_blist = array();
+
+        $list = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id} and    state NOT IN (0, 1, 2, 3, 15, 8) " , "document_date desc, document_id desc",-1,-1,"*,  COALESCE( ((CASE WHEN (meta_name IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService', 'OutcomeMoney')) THEN payed WHEN ((meta_name = 'OutcomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payamount ELSE 0 END)), 0) AS s_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsReceipt') ) THEN payamount WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payed ELSE 0 END)), 0) AS s_active ");
+   
+
+        foreach ($list as $id=>$d) {
+            if($d->s_active != $d->s_passive ){
+                 $this->_blist[] = $d;                
+            }
+
+            
+        }
+//        $this->_blist = array_reverse($this->_doclist);
+
+
+        $this->dlist->blist->Reload();
+    }
+
+    public function blistOnRow($row) {
+        $doc = $row->getDataItem();
+
+        $row->add(new Label('dname', $doc->meta_desc));
+        $row->add(new Label('dnumber', $doc->document_number));
+        $diff = $doc->s_passive - $doc->s_active;
+        
+        $this->_bal +=  $diff;
+
+        $row->add(new Label('out', $doc->s_passive > 0 ?  H::fa( $doc->s_passive):"" ));
+        $row->add(new Label('in', $doc->s_active>0 ? H::fa( $doc->s_active):"" ));
+        $row->add(new Label('bc', $this->_bal > 0? H::fa( $this->_bal):"" ));
+        $row->add(new Label('bd', $this->_bal < 0? H::fa( 0-$this->_bal):"" ));
+      
+        $row->add(new ClickLink('showdet'))->onClick($this, 'showOnClick');
+
+        
+    }   
 }
