@@ -280,7 +280,8 @@ class ReturnIssue extends \App\Pages\Base
 
         $this->_doc->amount = $this->docform->total->getText();
         $this->_doc->payamount = $this->docform->total->getText();
-        $this->_doc->payed = $this->docform->payed->getText();
+
+      $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
 
         $isEdited = $this->_doc->document_id > 0;
@@ -341,6 +342,9 @@ class ReturnIssue extends \App\Pages\Base
                 if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
+            if ($this->_doc->payamount > $this->_doc->payed) {
+                $this->_doc->updateStatus(Document::STATE_WP);
+            }
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
             } else {

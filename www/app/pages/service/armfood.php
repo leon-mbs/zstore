@@ -858,6 +858,7 @@ class ARMFood extends \App\Pages\Base
             $this->_doc->payed = $this->docpanel->payform->pfpayed->getText();
             $this->_doc->headerdata['exchange'] = $this->docpanel->payform->pfrest->getText();
             $this->_doc->headerdata['payed'] = $this->docpanel->payform->pfpayed->getText();
+
             $this->_doc->headerdata['bonus'] = $this->docpanel->payform->pfbonus->getText();
             $this->_doc->headerdata['paydisc'] = $this->docpanel->payform->pfdisc->getText();
             $this->_doc->headerdata['trans'] = $this->docpanel->payform->pftrans->getText();

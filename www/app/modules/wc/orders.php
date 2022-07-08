@@ -186,6 +186,7 @@ class Orders extends \App\Pages\Base
 
             $shoporder->save();
             $shoporder->updateStatus(Document::STATE_NEW);
+            $shoporder->updateStatus(Document::STATE_INPROCESS);
         }
 
         $this->setInfo('imported_orders', count($this->_neworders));

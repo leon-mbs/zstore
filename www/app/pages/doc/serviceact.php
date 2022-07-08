@@ -300,6 +300,7 @@ class ServiceAct extends \App\Pages\Base
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
 
         $this->_doc->payamount = $this->docform->payamount->getText();
+
         $this->_doc->payed = $this->docform->payed->getText();
 
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();

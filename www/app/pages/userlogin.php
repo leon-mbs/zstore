@@ -30,7 +30,7 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->add($form);
         $this->setError('');
 
-        $version =  "v6.2.2";
+        $version =  "v6.3.0";
         $this->_tvars['curversion'] = $version ;
 
         //проверка  новой версии        
@@ -138,21 +138,16 @@ class UserLogin extends \Zippy\Html\WebPage
             $msg = Helper::l("extralogin");
             $msg .= '<br>' . $this->loginform->userlogin->getText() . ', ';
             $msg .= $_SERVER['HTTP_HOST'] . ' ' . $_SERVER['SERVER_ADDR'];
-            $admin = \App\Entity\User::getByLogin('admin');
+        //    $admin = \App\Entity\User::getByLogin('admin');
 
-            $n = new \App\Entity\Notify();
-            $n->user_id = \App\Entity\Notify::SYSTEM;
-            $n->dateshow = time();
-            $n->message = $msg;
-            $n->save();
 
-            $n = new \App\Entity\Notify();
-            $n->user_id = $admin->user_id;
-            $n->sender_id = \App\Entity\Notify::SYSTEM;
-            $n->dateshow = time();
-            $n->message = $msg;
-            $n->save();
+            \App\Entity\Notify::toSystemLog($msg) ;
+            \App\Entity\Notify::toAdmin($msg) ;
+            
+            
+       
 
+            
             $this->setError('invalidloginalert');
             $this->loginform->setVisible(false);
             if (strlen($admin->email) > 0) {

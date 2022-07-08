@@ -283,7 +283,8 @@ class InvoiceCust extends \App\Pages\Base
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->payamount = $this->docform->payamount->getText();
-        $this->_doc->payed = $this->docform->payed->getText();
+
+       $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
 
         $this->_doc->headerdata['val'] = $this->docform->val->getValue();
@@ -341,6 +342,9 @@ class InvoiceCust extends \App\Pages\Base
                 }
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
+             if ($this->_doc->payamount > $this->_doc->payed) {
+                $this->_doc->updateStatus(Document::STATE_WP);
+            }
 
                 //обновляем  курс
                 if (strlen($this->_doc->headerdata['val']) > 1) {

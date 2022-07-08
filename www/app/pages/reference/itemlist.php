@@ -191,7 +191,16 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('cell', $item->cell));
         $row->add(new Label('inseria'))->setVisible($item->useserial);
         $row->add(new Label('hasaction'))->setVisible($item->hasAction());
-
+        if($item->hasAction() ) {
+            $title="";
+            if(doubleval($item->actionprice) > 0) {
+                 $title= H::l("actionpricetitile",H::fa($item->actionprice));                
+            }
+            if(doubleval($item->actiondisc) > 0) {
+                 $title= H::l("actiondisctitile",H::fa($item->actiondisc));                
+            }
+            $row->hasaction->setAttribute('title',$title)  ;          
+        }
         $row->add(new ClickLink('copy'))->onClick($this, 'copyOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
@@ -517,7 +526,7 @@ class ItemList extends \App\Pages\Base
         $total = 0;
         foreach($this->_itemset as $i) {
              $item = Item::load($i->item_id);
-             $total += $item->getLastPartion() ;
+             $total += ($i->qty  * $item->getLastPartion() );
 
         }
         foreach($this->_serviceset as $s) {

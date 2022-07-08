@@ -1,0 +1,122 @@
+<html>
+   <head>
+        <title>  Особовий рахунок  </title>
+
+    </head>
+    <body>
+        <div class="row">
+                   
+            <div class="col-12  col-lg-6  col-xl-5 ">
+                <h4>Звіт по заробітній платі</h4>   
+                <div class="navbar nav">
+                    <form zippy="filterz" class="form-inline">
+                                        
+                        <label for="from">З</label>
+                        <select class="form-control  " zippy="mfrom"> </select>
+                        <select class="form-control mr-sm-2" zippy="yfrom"> </select>
+
+                        <label for="to">по</label>
+                        <select class="form-control  " zippy="mto"> </select>
+                        <select class="form-control mr-sm-2" zippy="yto"> </select>
+                     
+
+                        <input class="btn btn-outline-primary  " type="submit" value="ОК">
+
+
+                    </form>
+                </div>
+
+  <table class="ctable">
+
+ 
+ 
+
+    {{#memsal}}
+    <tr>
+
+        <td> {{d}}</td>
+        <td class="text-right">{{v}}</td>
+  
+
+    </tr>
+    {{/memsal}}
+
+    <tr style="font-weight: bolder;">
+
+        <td class="text-right">Всього:</td>
+
+        <td class="text-right">{{memtotal}}</td>
+      
+    </tr>
+     <tr >
+
+        <td style="font-weight: bolder;" colspan="2">
+         <br>   Нарахування  та  утримання
+        </td>
+    </tr>
+    {{#mempst}}
+    <tr>
+        <td>{{name}}</td>
+
+        <td class="text-right">{{am}}</td>
+    
+    </tr>
+    {{/mempst}}    
+    
+    
+</table>
+         
+       
+                
+            </div>
+             <div class="col-12  col-lg-6 col-xl-4">
+                <h4>Рух по особовому рахунку</h4>   
+                   <div class="navbar nav">
+                    <form zippy="filters" class="form-inline">
+                                        
+                        <label for="from">З</label>
+                        <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="from">
+
+                        <label for="to">по</label>
+                        <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="to">
+
+                   
+                        <input class="btn btn-outline-primary  " type="submit" value="ОК">
+
+
+                    </form>
+                   </div>
+
+
+                   <table class="ctable">
+                   <tr>
+                     <th>Дата</th>
+                     <th class="text-right">Поч.</th>
+                     <th class="text-right">+ </th>
+                     <th class="text-right">- </th>
+                     <th class="text-right">Кiн.</th>
+                     <th>Документ</th>
+                     <th>Коментар</th>
+
+                   </tr>
+                   {{#mempacc}}
+                      <tr>
+                        <td >{{dt}}</td>
+                        <td class="text-right">{{begin}}</td>
+                        <td class="text-right">{{in}}</td>
+                        <td class="text-right">{{out}}</td>
+                        <td class="text-right">{{end}}</td>
+                        <td >{{doc}}</td>
+                        <td >{{notes}}</td>
+
+
+                      </tr>    
+                   {{/mempacc}}                 
+                   </table>
+ 
+            </div>
+                
+            </div>
+        </div>
+    </body>
+</html>

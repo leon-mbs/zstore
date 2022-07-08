@@ -36,13 +36,15 @@ class CustomerList extends \App\Pages\Base
     public  $_contrtlist      = array();
     public  $_leadstatuseslist = array();
     public  $_leadsourceslist = array();
+    public  $_bonuses = array(); // бонусы  по  контраоентам
+    public  $_bonuslist = array(); //история бонусов  контрагента
 
     public function __construct($id = 0) {
         parent::__construct();
         if (false == \App\ACL::checkShowRef('CustomerList')) {
             return;
         }
-
+        $this->_bonuses = Customer::getBonusAll()  ;
         $shop = System::getOptions("shop");
  
         $this->add(new Form('leadf'));
@@ -105,6 +107,7 @@ class CustomerList extends \App\Pages\Base
 
         $this->add(new Panel('contentview'))->setVisible(false);
         $this->contentview->add(new ClickLink('back'))->onClick($this, 'cancelOnClick');
+        $this->contentview->add(new Label('b_total'));
         $this->contentview->add(new Label('concname'));
         $this->contentview->add(new Label('concreated'));
         $this->contentview->add(new Label('conlastdoc'));
@@ -153,6 +156,7 @@ class CustomerList extends \App\Pages\Base
         $this->leadstatusesform->add(new DataView('leadstatuseslist', new ArrayDataSource(new Bind($this, '_leadstatuseslist')), $this, 'leadstatusListOnRow'));
 
         $this->contentview->add(new DataView('dw_contr', new ArrayDataSource(new Bind($this, '_contrlist')), $this, 'contrListOnRow'));
+        $this->contentview->add(new DataView('dw_bonus', new ArrayDataSource(new Bind($this, '_bonuslist')), $this, 'bonusListOnRow'));
 
         if ($id > 0) {
             $this->_customer = Customer::load($id);
@@ -203,6 +207,19 @@ class CustomerList extends \App\Pages\Base
         if ($item->customer_id == $this->_customer->customer_id) {
             $row->setAttribute('class', 'table-success');
         }
+        
+      
+            $title="";
+            if(doubleval($item->discount) > 0) {
+                  $title= Helper::l("actiondiscounttitile",Helper::fa($item->actionprice));                
+            }
+            if(intval( $this->_bonuses[$item->customer_id]  ) > 0) {
+                $title= Helper::l("actionbonustitile",$this->_bonuses[$item->customer_id]);                
+            }
+            $row->add(new Label('hasaction'))->setVisible(strlen($title)>0);
+            
+            $row->hasaction->setAttribute('title',$title)  ;          
+                 
     }
 
     public function onSort($sender) {
@@ -418,6 +435,7 @@ class CustomerList extends \App\Pages\Base
             $lastdoc = Helper::l('custlastdoc', $doc->document_number, Helper::fd($doc->document_date), $this->_customer->docs);
         }
 
+        $this->contentview->b_total->setText($this->_customer->getBonus());
         $this->contentview->concreated->setText($created);
         $this->contentview->conlastdoc->setText($lastdoc);
         $this->contentview->conphone->setText($this->_customer->phone);
@@ -430,6 +448,7 @@ class CustomerList extends \App\Pages\Base
         $this->updateMessages();
         $this->updateEvents();
         $this->updateContrs();
+        $this->updateBonus();
         // $this->goAnkor('contentviewlink');
     }
 
@@ -563,6 +582,10 @@ class CustomerList extends \App\Pages\Base
         $this->_contrlist = \App\Entity\Contract::find(' disabled<> 1 and  customer_id=' . $this->_customer->customer_id);
         $this->contentview->dw_contr->Reload();
     }
+    private function updateBonus() {
+        $this->_bonuslist = $this->_customer->getBonuses();
+        $this->contentview->dw_bonus->Reload();        
+    }
 
     //вывод строки  коментария
     public function eventListOnRow(DataRow $row) {
@@ -591,6 +614,14 @@ class CustomerList extends \App\Pages\Base
 
         $row->add(new ClickLink('contract'))->onClick($this, 'contractOnClick');
         $row->contract->setValue($contr->contract_number);
+    }
+  
+    public function bonusListOnRow(DataRow $row) {
+        $b = $row->getDataItem();
+        $row->add(new Label('b_date', Helper::fd($b->paydate) ));
+        $row->add(new Label('b_doc', $b->document_number));
+        $row->add(new Label('b_bonus', $b->bonus));
+
     }
 
     public function contractOnClick($sender) {

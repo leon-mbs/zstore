@@ -59,6 +59,18 @@ class EmployeeList extends \App\Pages\Base
         $this->employeedetail->add(new CheckBox('editinvalid'));
         $this->employeedetail->add(new CheckBox('editcoworker'));
 
+        
+        $this->add(new Panel("accp"))->setVisible(false);
+        $this->accp->add(new Label("accname"));                  
+        $this->accp->add(new ClickLink("accback"))->onClick($this, 'cancelOnClick');                  
+        
+       $this->accp->add(new Form('filters'))->onSubmit($this, 'OnSubmitS');
+
+        $d = new \App\DateTime() ;
+        $d = $d->startOfMonth()->subMonth(1) ;
+          
+        $this->accp->filters->add(new Date('from', $d->getTimestamp()));
+        $this->accp->filters->add(new Date('to', time()));
 
     }
 
@@ -79,6 +91,7 @@ class EmployeeList extends \App\Pages\Base
         //  $row->add(new Label('balance', $item->balance));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+        $row->add(new ClickLink('acc'))->onClick($this, 'accOnClick');
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
     }
 
@@ -91,6 +104,8 @@ class EmployeeList extends \App\Pages\Base
         $this->employeetable->employeelist->Reload();
     }
 
+
+   
     public function editOnClick($sender) {
         $this->_employee = $sender->owner->getDataItem();
         $this->employeetable->setVisible(false);
@@ -191,6 +206,53 @@ class EmployeeList extends \App\Pages\Base
     public function cancelOnClick($sender) {
         $this->employeetable->setVisible(true);
         $this->employeedetail->setVisible(false);
+        $this->accp->setVisible(false);
     }
 
+    public function accOnClick($sender) {
+        $this->_employee = $sender->owner->getDataItem();
+        $this->employeetable->setVisible(false);
+        $this->accp->setVisible(true);
+        $this->accp->accname->setText($this->_employee->emp_name)  ;
+    } 
+ 
+   public function OnSubmitS($sender) {
+        
+        $emp_id = $this->_employee->employee_id ;
+        $from =  $this->accp->filters->from->getDate();
+        $to =  $this->accp->filters->to->getDate();
+        
+        $conn = \Zdb\DB::getConnect();
+
+        $sql = "select coalesce(sum(amount),0) from empacc where optype < 100 and  emp_id = {$emp_id} and createdon < " . $conn->DBDate($from);
+
+        $b = $conn->GetOne($sql);
+
+
+        $sql =    $sql = "select * from empacc_view where optype < 100 and  emp_id = {$emp_id} and createdon <= " . $conn->DBDate($to) . " and createdon >= " . $conn->DBDate($from) ." order  by  ea_id ";
+        $rc = $conn->Execute($sql);
+
+        $detail = array();
+
+        foreach ($rc as $row) {
+            $in =   doubleval($row['amount']) > 0 ? $row['amount']  :0;
+            $out =   doubleval($row['amount']) < 0 ? 0-$row['amount']  :0;
+            $detail[] = array(
+                'notes'    => $row['notes'],
+                'dt'    => H::fd(strtotime($row['createdon'])),
+                'doc'   => $row['document_number'],
+                'begin' => H::fa($b),
+                'in'    => H::fa($in),
+                'out'   => H::fa($out),
+                'end'   => H::fa($b + $in - $out)
+            );
+
+
+            $b = $b + $in - $out;
+        }    
+        
+        $this->_tvars['mempacc']  =  $detail;
+       
+    }    
+    
 }

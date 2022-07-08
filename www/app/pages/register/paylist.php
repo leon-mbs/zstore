@@ -131,13 +131,8 @@ class PayList extends \App\Pages\Base
         $user = \App\System::getUser();
 
 
-        $n = new \App\Entity\Notify();
-        $n->user_id = \App\Entity\Notify::SYSTEM;
-        $n->dateshow = time();
-
-        $n->message = H::l('deletedpay', $user->username, $doc->document_number, $sender->notes->getText());
-        $n->save();
-
+        \App\Entity\Notify::toSystemLog(H::l('deletedpay', $user->username, $doc->document_number, $sender->notes->getText())) ;
+        
         $sender->notes->setText('');
         $this->setSuccess('payment_canceled');
         $this->resetURL();

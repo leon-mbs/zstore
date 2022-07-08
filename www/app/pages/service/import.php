@@ -364,6 +364,8 @@ class Import extends \App\Pages\Base
             $doc->notes = 'Импорт с Excel';
             $doc->headerdata['store'] = $store;
 
+            $doc->headerdata['payed'] = 0;
+
             $doc->save();
             $doc->updateStatus(\App\Entity\Doc\Document::STATE_NEW);
             $doc->updateStatus(\App\Entity\Doc\Document::STATE_EXECUTED);

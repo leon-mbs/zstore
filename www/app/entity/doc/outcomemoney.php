@@ -13,12 +13,26 @@ class OutcomeMoney extends Document
 {
 
     public function Execute() {
-
-        $payed = Pay::addPayment($this->document_id, $this->document_date, 0 - $this->amount, $this->headerdata['payment'],  $this->notes);
-        if ($payed > 0) {
-            $this->payed = $payed;
+        if($this->headerdata['begval']==2) {
+          $pay = new \App\Entity\Pay();
+          $pay->mf_id = $this->headerdata['payment'];
+          $pay->document_id = $this->document_id;
+          $pay->amount = 0-$this->amount;
+          $pay->paytype = 0;
+          $pay->paydate = $this->docunent_date;
+          $pay->notes = $this->notes;
+          $pay->user_id = \App\System::getUser()->user_id;
+          $pay->save();
+          
+          return;
         }
-        \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, $this->headerdata['type']);
+        if( intval($this->headerdata['begval'])==0) {
+           $payed = Pay::addPayment($this->document_id, $this->document_date, 0 - $this->amount, $this->headerdata['payment'],  $this->notes);
+           if ($payed > 0) {
+               $this->payed = $payed;
+           }
+           \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, $this->headerdata['type']);
+        }
 
         if ($this->headerdata['detail'] == 3) {  //перечисление  сотруднику
             $ua = new \App\Entity\EmpAcc();

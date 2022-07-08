@@ -77,15 +77,15 @@ INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 3, 'Товари на складі', 'ItemList', 'Склад', 0);
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 5, 'Експорт', 'Export', '', 0);
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 1, 'Виплата зарплати', 'OutSalary', 'Каса та платежі', 0);
-INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 2, 'Звіт по  зарплаті', 'SalaryRep', 'Каса та платежі', 0);
-INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 2, 'Рух по  контрагентах', 'CustActivity', 'Каса та платежі', 0);
+INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 2, 'Звіт по  зарплаті', 'SalaryRep', 'Зарплата', 0);
+
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 4, 'Контракти', 'ContractList', '', 0);
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 1, 'Перемiщення ТМЦ', 'MoveItem', 'Склад', 0);
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 2, 'Робочий час', 'Timestat', '', 0);
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 1, 'Товарно-транспортна накладна', 'TTN', 'Продажі', 0);
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 2, 'Нелiквiднi товари', 'NoLiq', 'Склад', 0);
-INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 3, 'Розрахунки с  поставщиками', 'PaySelList', 'Каса та платежі', 0);
-INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 3, 'Розрахунки с  покупателями', 'PayBayList', 'Каса та платежі', 0);
+INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 3, 'Розрахунки з  постачальниками', 'PaySelList', 'Каса та платежі', 0);
+INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 3, 'Розрахунки з  покупцями', 'PayBayList', 'Каса та платежі', 0);
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 1, 'Перемiщення грошей', 'MoveMoney', 'Каса та платежі', 0);
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 1, 'Замовленя кафе', 'OrderFood', 'Кафе', 0);
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 5, 'АРМ касира (кафе)', 'ARMFood', 'Кафе', 0);
@@ -94,10 +94,9 @@ INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 3, 'Прибутки та  видатки', 'IOState', '', 0);
 INSERT INTO "metadata" (  "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES(  2, 'Замовленi товари', 'ItemOrder', 'Закупки', 0);
 INSERT INTO "metadata" (  "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 5, 'Знижки та  акції', 'Discounts', '', 0);
-INSERT INTO "metadata" ("meta_type", "description", "meta_name", "menugroup", "disabled") VALUES(  1, 'Нарахування зарплати', 'CalcSalary', 'Каса та платежі', 0);
+INSERT INTO "metadata" ("meta_type", "description", "meta_name", "menugroup", "disabled") VALUES(  1, 'Нарахування зарплати', 'CalcSalary', 'Зарплата', 0);
 INSERT INTO "metadata" ("meta_type", "description", "meta_name", "menugroup", "disabled") VALUES(  4, 'Нарахування та утримання', 'SalaryTypeList', '', 0);
-INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 2, 'Нарахування та утримання', 'SalTypeRep', 'Зарплата', 0);
-INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 2, 'Рух  по особовому рахунку', 'EmpAccRep', 'Зарплата', 0);
+
  INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 3, 'Вир. процеси', 'ProdProcList', 'Виробництво', 0);
  INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 3, 'Вир. етапи', 'ProdStageList', 'Виробництво', 0);
  INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 1, 'Перемiщення  партiй ТМЦ', 'MovePart', 'Склад', 0);

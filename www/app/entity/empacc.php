@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 /**
- * Клас-сущность  личный счет  сотрудника
+ * Клас-сущность  лицевой счет  сотрудника
  *
  * @table=empacc
  * @view=empacc_view
@@ -27,9 +27,13 @@ class EmpAcc extends \ZCL\DB\Entity
     protected function init() {
 
         $this->ea_id = 0;
+        $this->createdon = time();
 
     }
 
+    protected function afterLoad() {
+        $this->createdon = strtotime($this->createdon);
+    }
 
     public static function getBalance() {
         $conn = \ZDB\DB::getConnect();
@@ -47,7 +51,7 @@ class EmpAcc extends \ZCL\DB\Entity
 
 
         $conn = \ZDB\DB::getConnect();
-        $sql = "select coalesce(sum(amount),0) as am,emp_id from  empacc_view  where  optype = {$t} and document_date >=" . $conn->DBDate($from) . " and document_date <=" . $conn->DBDate($to) . "  group by  emp_id   ";
+        $sql = "select coalesce(sum(amount),0) as am,emp_id from  empacc_view  where  optype = {$t} and createdon >=" . $conn->DBDate($from) . " and createdon <=" . $conn->DBDate($to) . "  group by  emp_id   ";
 
         return $conn->Execute($sql);
     }

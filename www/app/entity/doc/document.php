@@ -20,7 +20,7 @@ class Document extends \ZCL\DB\Entity
     const STATE_DELETED     = 6;       //  Удален
     const STATE_INPROCESS   = 7; // в  работе
     const STATE_WA          = 8; // ждет подтверждения
-    const STATE_CLOSED      = 9; // Закрыт , доставлен, выполнен
+    const STATE_CLOSED      = 9; // Закрыт (выполнен и оплачен)
     const STATE_INSHIPMENT  = 11; // В доставке
     const STATE_DELIVERED   = 14; // доставлен
     const STATE_REFUSED     = 15; // отклонен
@@ -29,6 +29,7 @@ class Document extends \ZCL\DB\Entity
     const STATE_FINISHED    = 18; // Закончен
     const STATE_APPROVED    = 19;      //  Готов к выполнению
     const STATE_READYTOSHIP = 20; // готов к отправке   
+    const STATE_WP = 21; // ждет  оплату   
     
     // типы  экспорта
     const EX_WORD  = 1; //  Word
@@ -288,6 +289,7 @@ class Document extends \ZCL\DB\Entity
 
             //отменяем оплаты   
             $conn->Execute("delete from paylist where document_id = " . $this->document_id);
+            //лицевые счета  контрагентов
 
 
             $conn->Execute("delete from iostate where document_id=" . $this->document_id);
@@ -352,8 +354,9 @@ class Document extends \ZCL\DB\Entity
      * Обновляет состояние  документа
      *
      * @param mixed $state
+     * @param mixed $nodata   только  смен  статуса  без  проводок    
      */
-    public function updateStatus($state) {
+    public function updateStatus($state,$nodata = false) {
 
 
         if ($this->document_id == 0) {
@@ -371,10 +374,15 @@ class Document extends \ZCL\DB\Entity
             $state = self::STATE_WA;   //переводим на   ожидание  утверждения
         } else {
             if ($state == self::STATE_CANCELED) {
-                $this->Cancel();
+              if($nodata == false) {
+                $this->Cancel();  
+              } 
             } else {
                 if ($state == self::STATE_EXECUTED) {
-                    $this->Execute();
+                    if($nodata == false) {
+                       $this->Execute();                        
+                    }
+
                 }
             }
         }
@@ -426,6 +434,7 @@ class Document extends \ZCL\DB\Entity
         if($state == self::STATE_DELETED)      return 2;
         if($state == self::STATE_FAIL)         return 3;
         if($state == self::STATE_READYTOSHIP)  return 50;
+        if($state == self::STATE_WP)           return 75;
  
         return 0;
     }
@@ -472,6 +481,8 @@ class Document extends \ZCL\DB\Entity
                 return Helper::l('st_inprocess');
             case Document::STATE_READYTOSHIP:
                 return Helper::l('st_rdshipment');
+            case Document::STATE_WP:
+                return Helper::l('st_wp');
 
             default:
                 return Helper::l('st_unknow');
@@ -495,6 +506,28 @@ class Document extends \ZCL\DB\Entity
         $list[Document::STATE_FAIL] = Helper::l('st_fail');
         $list[Document::STATE_INPROCESS] = Helper::l('st_inprocess');
         $list[Document::STATE_READYTOSHIP] = Helper::l('st_rdshipment');
+        $list[Document::STATE_WP] = Helper::l('st_wp');
+
+        return $list;
+    }
+    
+    /**
+    * список  для  произвольного перевода  статуса
+    * 
+    */
+    public static function getStateListMan() {
+        $list = array();
+        $list[Document::STATE_CLOSED] = Helper::l('st_closed');
+        $list[Document::STATE_INSHIPMENT] = Helper::l('st_inshipment');
+        $list[Document::STATE_FINISHED] = Helper::l('st_finished');
+        $list[Document::STATE_DELIVERED] = Helper::l('st_delivered');
+        $list[Document::STATE_EXECUTED] = Helper::l('st_executed');
+
+        $list[Document::STATE_SHIFTED] = Helper::l('st_shifted');
+        $list[Document::STATE_FAIL] = Helper::l('st_fail');
+        $list[Document::STATE_INPROCESS] = Helper::l('st_inprocess');
+        $list[Document::STATE_READYTOSHIP] = Helper::l('st_rdshipment');
+        $list[Document::STATE_WP] = Helper::l('st_wp');
 
         return $list;
     }
@@ -653,9 +686,10 @@ class Document extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $rc = $conn->Execute("select * from docstatelog_view where document_id={$this->document_id} order  by  log_id");
         $states = array();
+        $i=0;
         foreach ($rc as $row) {
             $row['createdon'] = strtotime($row['createdon']);
-            $states[] = new \App\DataItem($row);
+            $states[$i++] = new \App\DataItem($row);
         }
 
         return $states;
@@ -1023,5 +1057,5 @@ class Document extends \ZCL\DB\Entity
       
     }
  
-    
+ 
 }

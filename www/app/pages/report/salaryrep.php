@@ -9,7 +9,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
-
+use App\Entity\SalType;
 /**
  *  Отчет по  зарплате
  */
@@ -58,6 +58,7 @@ class SalaryRep extends \App\Pages\Base
         $yto = $this->filter->yto->getValue();
         $mto = $this->filter->mto->getValue();
         $mtoname = $this->filter->mto->getValueName();
+       $conn = \Zdb\DB::getConnect();
 
         $doclist = \App\Entity\Doc\Document::find("meta_name = 'OutSalary' and state >= 5 ");
 
@@ -106,9 +107,49 @@ class SalaryRep extends \App\Pages\Base
             $item['v'] = H::fa($item['v']);
         }
 
+        //типы начислний
+       $doclist = \App\Entity\Doc\Document::find("meta_name = 'CalcSalary' and state >= 5 and document_date >= " . $conn->DBDate($from) . " and document_date <= " . $conn->DBDate($to));
+
+        $stlist = SalType::find("disabled<>1", "salcode");
+
+        $stam = array();
+        foreach ($stlist as $st) {
+            $stam[$st->salcode] = 0;
+        }
+
+        foreach ($doclist as $doc) {
+
+
+            foreach ($doc->unpackDetails('detaildata') as $emp) {
+                if ($emp_id > 0 && $emp_id != $emp->employee_id) {
+                    continue;
+                }
+
+                foreach ($stlist as $st) {
+                    $code = '_c' . $st->salcode;
+                    $am = doubleval($emp->{$code});
+
+                    $stam[$st->salcode] += $am;
+
+                }
+
+
+            }
+        }
+        $detail2 = array();
+
+        foreach ($stlist as $st) {
+
+            $detail2[] = array('code' => $st->salcode,
+                              'name' => $st->salname, 'am' => H::fa($stam[$st->salcode])
+            );
+        }
+        
+        
 
         $header = array(
             "_detail"  => array_values($detail),
+            "_detail2"  => array_values($detail2),
             'yfrom'    => $yfrom,
             'mfrom'    => $mfromname,
             'yto'      => $yto,

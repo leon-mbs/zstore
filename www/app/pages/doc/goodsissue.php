@@ -36,6 +36,7 @@ class GoodsIssue extends \App\Pages\Base
     private $_rowid     = 0;
     private $_orderid   = 0;
     private $_prevcust  = 0;   // преыдущий контрагент
+    private $_changedpos  = false;    
  
 
     public function __construct($docid = 0, $basedocid = 0) {
@@ -368,6 +369,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->detail->Reload();
         $this->calcTotal();
         $this->calcPay();
+        $this->_changedpos = true;
     }
 
     public function addrowOnClick($sender) {
@@ -560,6 +562,8 @@ class GoodsIssue extends \App\Pages\Base
         $this->editdetail->editserial->setText("");
         $this->calcTotal();
         $this->calcPay();
+        $this->_changedpos = true;
+        
     }
 
     public function cancelrowOnClick($sender) {
@@ -599,7 +603,7 @@ class GoodsIssue extends \App\Pages\Base
         }
 
         $this->_doc->payamount = $this->docform->payamount->getText();
-
+  
         $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
 
@@ -646,11 +650,21 @@ class GoodsIssue extends \App\Pages\Base
 
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                if($this->_doc->payamount > $this->_doc->payed) {
+                      $this->_doc->updateStatus(Document::STATE_WP);                    
+                }
                 if ($this->_doc->parent_id > 0) {   //закрываем заказ
+                    $order = Document::load($this->_doc->parent_id);
+
+                    if($this->_changedpos) {
+                        $msg= H::l("changedposlist",$this->_doc->document_number,$order->document_number,\App\System::getUser()->username); ;
+                        \App\Entity\Notify::toSystemLog($msg) ;
+                    }
+                    
+                    
                     if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
 
                     } else {
-                        $order = Document::load($this->_doc->parent_id);
                         if ($order->state == Document::STATE_INPROCESS) {
                             $order->updateStatus(Document::STATE_CLOSED);
                         }

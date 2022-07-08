@@ -46,7 +46,7 @@ class Notify extends \ZCL\DB\Entity
     //количество непрочитанных уведомлений 
     public static function isNotify($user_id) {
         $conn = \ZCL\DB\DB::getConnect();
-        $cnt = Notify::findCnt("checked=0 and dateshow <= now() and user_id={$user_id} ");
+        $cnt = Notify::findCnt("checked = 0 and dateshow <= now() and user_id={$user_id} ");
         return $cnt;
     }
 
@@ -54,6 +54,25 @@ class Notify extends \ZCL\DB\Entity
         $conn = \ZCL\DB\DB::getConnect();
         $sql = "update notifies set checked = 1 where dateshow <= " . $conn->DBTimeStamp(time()) . " and user_id =" . $user_id;
         $conn->Execute($sql);
+    }
+   
+    public static function toSystemLog($message) {
+            $n = new  Notify();
+            $n->user_id =  Notify::SYSTEM;
+
+            $n->message = $message;
+            $n->save();
+    }
+    
+    public static function toAdmin($message) {
+            $admin = \App\Entity\User::getByLogin('admin');
+
+            $n = new  Notify();
+            $n->user_id =  $admin->user_id;
+            $n->sender_id =  Notify::SYSTEM;
+
+            $n->message = $message;
+            $n->save();
     }
 
 }

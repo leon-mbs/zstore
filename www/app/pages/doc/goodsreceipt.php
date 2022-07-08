@@ -51,6 +51,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
         $this->docform->add(new TextInput('notes'));
+        $this->docform->add(new TextInput('outnumber'));
         $this->docform->add(new TextInput('basedoc'));
 
         $this->docform->add(new TextInput('barcode'));
@@ -141,6 +142,7 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->editnds->setText(H::fa($this->_doc->headerdata['nds']));
             $this->docform->val->setValue($this->_doc->headerdata['val']);
             $this->docform->rate->setText($this->_doc->headerdata['rate']);
+            $this->docform->outnumber->setText($this->_doc->headerdata['outnumber']);
             $this->docform->disc->setText(H::fa($this->_doc->headerdata['disc']));
             $this->docform->editdisc->setText(H::fa($this->_doc->headerdata['disc']));
             $this->docform->zatr->setText($this->_doc->headerdata['zatr']);
@@ -149,7 +151,7 @@ class GoodsReceipt extends \App\Pages\Base
             if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
                 $this->_doc->payed = $this->_doc->headerdata['payed'];
             }
-            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
+           $this->docform->editpayed->setText(H::fa($this->_doc->payed));
             $this->docform->payed->setText(H::fa($this->_doc->payed));
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
@@ -490,10 +492,12 @@ class GoodsReceipt extends \App\Pages\Base
         $this->_doc->headerdata['rate'] = $this->docform->rate->getText();
         $this->_doc->headerdata['nds'] = $this->docform->nds->getText();
         $this->_doc->headerdata['disc'] = $this->docform->disc->getText();
+        $this->_doc->headerdata['outnumber'] = $this->docform->outnumber->getText();
         $this->_doc->headerdata['basedoc'] = $this->docform->basedoc->getText();
         
         
         $this->_doc->payamount = $this->docform->payamount->getText();
+
         $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
 
@@ -536,6 +540,9 @@ class GoodsReceipt extends \App\Pages\Base
                 }
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                if ($this->_doc->payamount > $this->_doc->payed) {
+                   $this->_doc->updateStatus(Document::STATE_WP);
+                }
 
                 if ($this->_doc->parent_id > 0) {   //закрываем заказ
                     if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {

@@ -5,7 +5,7 @@ namespace App\Entity\Doc;
 use App\Entity\Entry;
 use App\Entity\Item;
 use App\Helper as H;
-
+ 
 /**
  * Класс-сущность  документ приходная  накладая
  *
@@ -62,6 +62,7 @@ class GoodsReceipt extends Document
         $header['isdisc'] = $this->headerdata["disc"] > 0;
         $header['isnds'] = $this->headerdata["nds"] > 0;
         $header['isval'] = strlen($this->headerdata['val']) > 1;
+        $header['outnumber'] = strlen($this->headerdata['outnumber']) > 0 ? $this->headerdata['outnumber'] : false;
 
         $header['prepaid'] = H::fa($this->headerdata["prepaid"]);
         $header['disc'] = H::fa($this->headerdata["disc"]);
@@ -141,20 +142,19 @@ class GoodsReceipt extends Document
             }
         }
 
-        $payed = $this->payed;
+        $payed = $this->headerdata['payed'];
 
         $payed = $payed * $rate; 
      
         if ($this->headerdata['payment'] > 0 && $payed > 0) {
        
-          
+ 
+            \App\Entity\IOState::addIOState($this->document_id, 0 - $payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+                
             $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment']);
             if ($payed > 0) {
                 $this->payed = $payed;
             }
-
-            \App\Entity\IOState::addIOState($this->document_id, 0 - $this->payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
-
 
         }
         if($this->headerdata['zatr'] > 0 && $this->headerdata['zatrself'] !=1 ) {
@@ -163,6 +163,12 @@ class GoodsReceipt extends Document
         if($this->headerdata['zatr'] > 0  ) {
             \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata['zatr'], \App\Entity\IOState::TYPE_NAKL);
         }
+        
+       
+        $payamount = $thus->payamount * $rate; 
+          
+        
+ 
 
         return true;
     }

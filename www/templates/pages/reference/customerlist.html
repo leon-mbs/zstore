@@ -79,6 +79,7 @@
                                 {{#leadmode}}     <th><a zippy="sortleadstatus">стан ліда</a> </th>     {{/leadmode}} 
                                 <th> </th>
                                 <th> </th>
+                                <th> </th>
 
 
                                 <th> </th>
@@ -96,6 +97,9 @@
                                 {{#leadmode}}  
                                 <td zippy="leadstatus">  </td>  
                                 {{/leadmode}}    
+                                <td   ><i    zippy="hasaction" class="fa fa-gift"/></td>
+
+                                                     
                                 <td><i zippy="customercomment" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i></td>
 
                                 <td><i zippy="hasmsg" class="fa fa-comments" title="Комментарі"></i></td>
@@ -407,6 +411,21 @@
                                 <td><span zippy="contract_desc"></span></td>
 
                             </tr>
+                        </table>
+
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5> Бонуси </h5>
+                        <table class="table table-sm">
+                            <tr zippy="dw_bonus">
+                                <td zippy="b_date"></td>
+                                <td zippy="b_doc"></td>
+                                <td zippy="b_bonus" class="text-right"></td>
+
+                            </tr>
+                            <tr><td></td> <td class="text-right"><b>Всього:</b></td> <td class="text-right"><b zippy="b_total"></b></td>  </tr>
                         </table>
 
                     </div>

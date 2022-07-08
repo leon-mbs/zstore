@@ -3,7 +3,7 @@
 
     <tr>
         <td></td>
-        <td>Постачальник</td>
+        <td><b>Постачальник</b></td>
         <td colspan="6">{{customer_name}}</td>
     </tr>
     {{#isfirm}}
@@ -26,9 +26,19 @@
 
     </tr>
     {{/iscontract}}
+   {{#outnumber}}
     <tr>
         <td></td>
-        <td>Підстава</td>
+
+        <td valign="top"><b>Зовн. номер</b></td>
+        <td colspan="6">{{outnumber}}</td>
+
+    </tr>
+    {{/outnumber}}
+    
+    <tr>
+        <td></td>
+        <td><b>Підстава</b></td>
         <td colspan="6">{{basedoc}}</td>
     </tr>
      {{#isval}}

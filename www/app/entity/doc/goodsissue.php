@@ -4,6 +4,7 @@ namespace App\Entity\Doc;
 
 use App\Entity\Entry;
 use App\Entity\Item;
+ 
 use App\Helper as H;
 use App\System;
 
@@ -132,6 +133,10 @@ class GoodsIssue extends Document
     }
 
     public function Execute() {
+        
+        
+  
+        
         $parts = array();
         $k = 1;   //учитываем  скидку
         if ($this->headerdata["paydisc"] > 0 && $this->amount > 0) {
@@ -203,12 +208,14 @@ class GoodsIssue extends Document
         }
 
 
-        if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment']);
+ 
+        if ($this->headerdata['payment'] > 0 && $this->headerdata['payed'] > 0) {
+            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['payed'], $this->headerdata['payment']);
             if ($payed > 0) {
                 $this->payed = $payed;
             }
-            \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+            \App\Entity\IOState::addIOState($this->document_id, $this->headerdata['payed'], \App\Entity\IOState::TYPE_BASE_INCOME);
+ 
 
         }
 
