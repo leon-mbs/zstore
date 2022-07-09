@@ -89,6 +89,8 @@ class GoodsIssue extends Document
         $header["edrpou"] = false;
         $header["fedrpou"] = false;
         $header["finn"] = false;
+        $header['isprep'] = $this->headerdata["prepaid"] > 0;
+        $header['prepaid'] = H::fa($this->headerdata["prepaid"]);
 
         if ($this->customer_id > 0) {
             $cust = \App\Entity\Customer::load($this->customer_id);
