@@ -764,17 +764,17 @@ class GoodsIssue extends \App\Pages\Base
         if($disc >0){
            $total -= $disc; 
         }
+       
+        
+
+        $this->docform->editpayamount->setText(H::fa($total));
+        $this->docform->payamount->setText(H::fa($total));
         $prepaid = doubleval($this->_doc->headerdata['prepaid'] ) ;
         if ($prepaid > 0) {
           //  $disc =0;
             
             $total -= $prepaid;
         }
-        
-
-        $this->docform->editpayamount->setText(H::fa($total));
-        $this->docform->payamount->setText(H::fa($total));
-
 
         $this->docform->editpayed->setText(H::fa($total));
         $this->docform->payed->setText(H::fa($total));
