@@ -343,6 +343,9 @@ class PayBayList extends \App\Pages\Base
  
     private function markPayed(){
         if( $this->_doc->state == Document::STATE_WP ){
+            $this->_doc = Document::load($this->_doc->document_id);
+            
+            
             $states = $this->_doc->getLogList();
             
             $prev = intval( $states[count($states)-2]->docstate )        ;

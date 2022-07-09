@@ -123,7 +123,7 @@
     <tr style="font-weight: bolder;">
         <td style="border-top:1px #000 solid;" colspan="2">{{weight}}</td>
 
-        <td style="border-top:1px #000 solid;" colspan="4" align="right">Разом:</td>
+        <td style="border-top:1px #000 solid;" colspan="4" align="right">На суму:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
 
@@ -138,10 +138,16 @@
 
    {{#payamount}}
     <tr style="font-weight: bolder;">
-        <td colspan="6" align="right">До оплати:</td>
+        <td colspan="6" align="right">Всього:</td>
         <td align="right">{{payamount}}</td>
     </tr>
     {{/payamount}} 
+     {{#isprep}}  
+    <tr style="font-weight: bolder;">
+        <td colspan="8" align="right">Передплата:</td>
+        <td align="right">{{prepaid}}</td>
+    </tr>
+     {{/isprep}}      
    {{#payed}}  
     <tr style="font-weight: bolder;">
         <td colspan="6" align="right">Оплата:</td>
