@@ -660,15 +660,14 @@ class GoodsReceipt extends \App\Pages\Base
         $disc = doubleval($this->docform->disc->getText());
         $nds = doubleval($this->docform->nds->getText()) ;
         
-        
+        $total = $total + $nds - $disc  ;  
  
-        if(doubleval( $this->_doc->headerdata['prepaid'])>0) {
-           $total = $total - $this->_doc->headerdata['prepaid'];  
-        }  else {
-           $total = $total + $nds - $disc  ;    
-        }
         $this->docform->editpayamount->setText(H::fa($total));
         $this->docform->payamount->setText(H::fa($total));
+        if(doubleval( $this->_doc->headerdata['prepaid'])>0) {
+           $total = $total - $this->_doc->headerdata['prepaid'];  
+        }  
+        
         $this->docform->editpayed->setText(H::fa($total));
         $this->docform->payed->setText(H::fa($total));
     }

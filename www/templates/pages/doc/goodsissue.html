@@ -152,7 +152,7 @@
 
 
                             <td class="text-right"></td>
-                            <td class="text-right">Всього:</td>
+                            <td class="text-right">На суму:</td>
 
 
                             <td zippy="total" class="text-right"></td>
@@ -170,24 +170,25 @@
                                         class="fa fa-edit"></i></a></td>
                         </tr>
                   
-                      {{#prepaid}}
-                       <tr style="font-weight: bolder;">
-                            <td data-label="prepaid" colspan={{colspan}} class="text-right">Передплата:</td>
-                            <td zippy="prepaid" class="text-right">  {{prepaid}}</td>
-                            <td>  </td>
-                        </tr>
-                        {{/prepaid}}
+        
                         
 
                         <tr style="font-weight: bolder;">
 
-                            <td colspan={{colspan}} class="text-right"><span data-label="payamount">До оплати:</span></td>
+                            <td colspan={{colspan}} class="text-right"><span data-label="payamount">Всього:</span></td>
 
 
                             <td zippy="payamount" class="text-right"></td>
                             <td><a data-label="payamount" href="javascript:void(0);" data-toggle="modal"
                                    data-target="#modalpayamount"><i class="fa fa-edit"></i></a></td>
                         </tr>
+              {{#prepaid}}
+                       <tr style="font-weight: bolder;">
+                            <td data-label="prepaid" colspan={{colspan}} class="text-right">Передплата:</td>
+                            <td zippy="prepaid" class="text-right">  {{prepaid}}</td>
+                            <td>  </td>
+                        </tr>
+                        {{/prepaid}}                        
                         <tr style="font-weight: bolder;">
 
                             <td colspan={{colspan}} class="text-right"><span data-label="payed">Внесена оплата:</span></td>
@@ -239,7 +240,7 @@
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">До оплати</h5>
+                            <h5 class="modal-title">Всього</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
