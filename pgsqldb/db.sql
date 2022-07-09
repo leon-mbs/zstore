@@ -197,7 +197,7 @@ CREATE TABLE empacc (
   document_id INTEGER DEFAULT NULL,
   optype INTEGER DEFAULT NULL,
   createdon DATE DEFAULT NULL,
-  notes CHARACTER VARYING(255) DEFAULT NULL,
+
   amount DECIMAL(10, 2) NOT NULL,
   CONSTRAINT PK_empacc PRIMARY KEY (ea_id)
 
@@ -1000,7 +1000,7 @@ SELECT
   e.emp_id AS emp_id,
   e.document_id AS document_id,
   e.optype AS optype,
-  e.notes AS notes,
+  d.notes AS notes,
   e.amount AS amount,
   coalesce(e.createdon,d.document_date ) AS createdon,
   d.document_number AS document_number,
