@@ -14,7 +14,7 @@ SELECT
   e.emp_id AS emp_id,
   e.document_id AS document_id,
   e.optype AS optype,
-  e.notes AS notes,
+  d.notes AS notes,
   e.amount AS amount,
   coalesce(e.createdon,d.document_date ) AS createdon,
   d.document_number AS document_number,
