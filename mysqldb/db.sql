@@ -262,7 +262,7 @@ CREATE TABLE `empacc` (
   `emp_id` int(11) NOT NULL,
   `document_id` int(11) DEFAULT NULL,
   `optype` int(11) DEFAULT NULL,
-  `notes` varchar(255) DEFAULT NULL,
+
   `amount` decimal(10,2) NOT NULL,
   `createdon` date DEFAULT NULL,
   PRIMARY KEY (`ea_id`),
@@ -1480,7 +1480,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE  */
 /*!50013   */
-/*!50001 VIEW `empacc_view` AS select `e`.`ea_id` AS `ea_id`,`e`.`emp_id` AS `emp_id`,`e`.`document_id` AS `document_id`,`e`.`optype` AS `optype`,`e`.`notes` AS `notes`,`e`.`amount` AS `amount`,coalesce(`e`.`createdon`,`d`.`document_date`) AS `createdon`,`d`.`document_number` AS `document_number`,`em`.`emp_name` AS `emp_name` from ((`empacc` `e` left join `documents` `d` on((`d`.`document_id` = `e`.`document_id`))) join `employees` `em` on((`em`.`employee_id` = `e`.`emp_id`))) */;
+/*!50001 VIEW `empacc_view` AS select `e`.`ea_id` AS `ea_id`,`e`.`emp_id` AS `emp_id`,`e`.`document_id` AS `document_id`,`e`.`optype` AS `optype`,`d`.`notes` AS `notes`,`e`.`amount` AS `amount`,coalesce(`e`.`createdon`,`d`.`document_date`) AS `createdon`,`d`.`document_number` AS `document_number`,`em`.`emp_name` AS `emp_name` from ((`empacc` `e` left join `documents` `d` on((`d`.`document_id` = `e`.`document_id`))) join `employees` `em` on((`em`.`employee_id` = `e`.`emp_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
