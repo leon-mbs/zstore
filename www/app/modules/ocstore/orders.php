@@ -203,7 +203,7 @@ class Orders extends \App\Pages\Base
                     $cust->type = Customer::TYPE_BAYER;
                     $cust->phone = $shoporder->telephone;
                     $cust->email = $shoporder->email;
-                    $cust->comment = "Клиент ИМ";
+                    $cust->comment = "Клiєнт IМ";
                     $cust->save();
                 }
                 $neworder->customer_id = $cust->customer_id;
@@ -216,9 +216,9 @@ class Orders extends \App\Pages\Base
             if (strlen($shoporder->telephone) > 0) {
                 $neworder->notes .= " Тел:" . $shoporder->telephone . ";";
             }
-            $neworder->notes .= " Адрес:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
+            $neworder->notes .= " Адреса:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
             $neworder->notes .= " Оплата:" . $shoporder->payment_method . ";";
-            $neworder->notes .= " Комментарий:" . $shoporder->comment . ";";
+            $neworder->notes .= " Коментар:" . $shoporder->comment . ";";
             $neworder->save();
             $neworder->updateStatus(Document::STATE_NEW);
             $neworder->updateStatus(Document::STATE_INPROCESS);
@@ -328,15 +328,15 @@ class Orders extends \App\Pages\Base
             $neworder->payamount = 0;
             $neworder->payed = 0;
             $neworder->notes = "OC номер:{$shoporder->order_id};";
-            $neworder->notes .= " Клиент:" . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
+            $neworder->notes .= " Клiєнт:" . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
             if (strlen($shoporder->email) > 0) {
                 $neworder->notes .= " Email:" . $shoporder->email . ";";
             }
             if (strlen($shoporder->telephone) > 0) {
                 $neworder->notes .= " Тел:" . $shoporder->telephone . ";";
             }
-            $neworder->notes .= " Адрес:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
-            $neworder->notes .= " Комментарий:" . $shoporder->comment . ";";
+            $neworder->notes .= " Адреса:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
+            $neworder->notes .= " Коментар:" . $shoporder->comment . ";";
             $neworder->save();
             $neworder->updateStatus(Document::STATE_NEW);
             $neworder->updateStatus(Document::STATE_EXECUTED);

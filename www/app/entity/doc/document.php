@@ -354,7 +354,7 @@ class Document extends \ZCL\DB\Entity
      * Обновляет состояние  документа
      *
      * @param mixed $state
-     * @param mixed $nodata   только  смен  статуса  без  проводок    
+     * @param mixed $nodata   только  смена  статуса  без  проводок    
      */
     public function updateStatus($state,$nodata = false) {
 
@@ -751,15 +751,12 @@ class Document extends \ZCL\DB\Entity
         return $conn->GetOne("select coalesce(sum(amount),0) from paylist where   document_id = {$this->document_id}  ");
     }
 
-    /**
-     * put your comment there...
-     *
-     */
-    public function hasEntry() {
+   
+   /* public function hasEntry() {
         $conn = \ZDB\DB::getConnect();
 
         return $conn->GetOne("select coalesce(sum(amount),0) from paylist where   document_id = {$this->document_id}  ");
-    }
+    } */
 
     /**
      * список  дочерних

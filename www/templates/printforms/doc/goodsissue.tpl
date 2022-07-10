@@ -144,7 +144,7 @@
     {{/payamount}} 
      {{#isprep}}  
     <tr style="font-weight: bolder;">
-        <td colspan="8" align="right">Передплата:</td>
+        <td colspan="6" align="right">Передплата:</td>
         <td align="right">{{prepaid}}</td>
     </tr>
      {{/isprep}}      

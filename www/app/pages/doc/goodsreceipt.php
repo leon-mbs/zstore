@@ -181,7 +181,7 @@ class GoodsReceipt extends \App\Pages\Base
                         $this->docform->rate->setText(1);
 
                         $order = $basedoc->cast();
-                        $this->docform->basedoc->setText('Заказ ' . $order->document_number);
+                        $this->docform->basedoc->setText(  $order->document_number);
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                         $this->CalcTotal();
                         $this->CalcPay();
@@ -192,7 +192,7 @@ class GoodsReceipt extends \App\Pages\Base
                         $this->docform->customer->setText($basedoc->customer_name);
 
                         $invoice = $basedoc->cast();
-                        $this->docform->basedoc->setText('Счет ' . $invoice->document_number);
+                        $this->docform->basedoc->setText(  $invoice->document_number);
                         
                         $this->docform->nds->setText($invoice->headerdata['nds']);
                         $this->docform->editnds->setText($invoice->headerdata['nds']);
@@ -538,7 +538,10 @@ class GoodsReceipt extends \App\Pages\Base
                 if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
-
+                if($this->_doc->payamount > $this->_doc->payed && $this->_doc->payamount > doubleval($this->_doc->headerdata['prepaid'] ) ) {
+                      $this->_doc->updateStatus(Document::STATE_WP);                    
+                }
+ 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
                 if ($this->_doc->payamount > $this->_doc->payed) {
                    $this->_doc->updateStatus(Document::STATE_WP);
