@@ -24,6 +24,9 @@ class Main extends Base
     public function __construct() {
         parent::__construct();
 
+        $this->_tvars['curversion'] = CURR_VERSION;
+        $this->_tvars['curversionbd'] = System::getOptions('version',false);
+
         $user = System::getUser();
 
         $this->_docstatelist = \App\Entity\Doc\Document::getStateList();
