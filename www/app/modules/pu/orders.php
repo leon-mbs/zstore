@@ -123,10 +123,7 @@ class Orders extends \App\Pages\Base
                 $neworder->headerdata['puclient'] = $puorder['client_first_name'] . ' ' . $puorder['client_last_name'];
                 
                 $neworder->amount = H::fa($puorder['full_price']);
-                if($modules['pusetpayamount']==1){
-                   $neworder->payamount = $neworder->amount;
-                 
-                }              
+                $neworder->payamount = $neworder->amount;
                 
                
                 $neworder->document_date = time();
@@ -174,6 +171,11 @@ class Orders extends \App\Pages\Base
             $shoporder->save();
             $shoporder->updateStatus(Document::STATE_NEW);
             $shoporder->updateStatus(Document::STATE_INPROCESS);
+            if($modules['pusetpayamount']==1){
+                 $shoporder->updateStatus(Document::STATE_WP);
+            }              
+            
+            
         }
 
         $this->setInfo('imported_orders', count($this->_neworders));

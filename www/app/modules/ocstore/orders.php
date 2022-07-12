@@ -176,12 +176,8 @@ class Orders extends \App\Pages\Base
             }
             $neworder->packDetails('detaildata', $tlist);
             $neworder->amount = \App\Helper::fa($shoporder->total);
-            
-            if($modules['ocsetpayamount']==1){
-               $neworder->payamount = $neworder->amount;
-             
-            }
-            
+            $neworder->payamount = $neworder->amount;
+              
             $neworder->headerdata['salesource'] = \App\Helper::getDefSaleSource();
             $neworder->headerdata['outnumber'] = $shoporder->order_id;
             $neworder->headerdata['ocorder'] = $shoporder->order_id;
@@ -222,6 +218,9 @@ class Orders extends \App\Pages\Base
             $neworder->save();
             $neworder->updateStatus(Document::STATE_NEW);
             $neworder->updateStatus(Document::STATE_INPROCESS);
+            if($modules['ocsetpayamount']==1){
+                 $neworder->updateStatus(Document::STATE_WP);
+            }
 
             $i++;
         }

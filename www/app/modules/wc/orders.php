@@ -145,10 +145,7 @@ class Orders extends \App\Pages\Base
                 $neworder->headerdata['wcorderback'] = 0;
                 $neworder->headerdata['wcclient'] = $wcorder->shipping->first_name . ' ' . $wcorder->shipping->last_name;
                 $neworder->amount = H::fa($wcorder->total);
-                if($modules['wcsetpayamount']==1){
-                   $neworder->payamount = $neworder->amount;
-                 
-                }              
+                $neworder->payamount = $neworder->amount;
                 
                
                 $neworder->document_date = time();
@@ -187,6 +184,10 @@ class Orders extends \App\Pages\Base
             $shoporder->save();
             $shoporder->updateStatus(Document::STATE_NEW);
             $shoporder->updateStatus(Document::STATE_INPROCESS);
+            if($modules['wcsetpayamount']==1){
+                $shoporder->updateStatus(Document::STATE_WP);
+            }              
+            
         }
 
         $this->setInfo('imported_orders', count($this->_neworders));
