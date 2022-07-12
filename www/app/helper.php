@@ -303,7 +303,7 @@ class Helper
             $mail->msgHTML($text);
             $mail->CharSet = "UTF-8";
             $mail->IsHTML(true);
-            $d = $mail->send() ;
+          //  $d = $mail->send() ;
             if ($mail->send() === false) {
                 System::setErrorMsg($mail->ErrorInfo);
             } else {

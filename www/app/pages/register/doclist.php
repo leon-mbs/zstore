@@ -506,7 +506,7 @@ class DocList extends \App\Pages\Base
         
         $this->statusform->setVisible(false);
         $this->docview->setVisible(false);
-        $this->doclist->Reload(false);
+        $this->doclist->Reload($sender->id != "bstatus");
     }
 
     public function oncsv($sender) {

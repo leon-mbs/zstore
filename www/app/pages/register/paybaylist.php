@@ -117,7 +117,7 @@ class PayBayList extends \App\Pages\Base
                                     
         $sql = "SELECT c.customer_name,c.phone, c.customer_id, coalesce(count(*),0) as docs 
              FROM documents_view d  join customers c  on d.customer_id = c.customer_id and c.status=0    
-             WHERE   d.state > 3  and  (d.state = ". Document::STATE_WP  ."  or  d.payamount > d.payed)  and d.meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue')   {$hold}
+             WHERE  d.state = ". Document::STATE_WP  ." and d.meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue')   {$hold}
              group by c.customer_name,c.phone, c.customer_id
              order by c.customer_name
              ";
@@ -127,7 +127,7 @@ class PayBayList extends \App\Pages\Base
             if(in_array($_c->customer_id,$ids)) {
                  $this->_custlist[$_c->customer_id]->docs = $_c->docs;                                         
             } else {
-                 $this->_custlist[$_c->customer_id] = $_c;                                                         
+                // $this->_custlist[$_c->customer_id] = $_c;                                                         
             }
             
         };
@@ -344,8 +344,11 @@ class PayBayList extends \App\Pages\Base
     private function markPayed(){
         if( $this->_doc->state == Document::STATE_WP ){
             $this->_doc = Document::load($this->_doc->document_id);
-            
-            
+            if($this->_doc->meta_name=='Order' || $this->_doc->meta_name=='Invoice') {
+                $this->_doc->updateStatus(Document::STATE_PAYED);                            
+                return;
+            }
+            //предыдущий статус
             $states = $this->_doc->getLogList();
             
             $prev = intval( $states[count($states)-2]->docstate )        ;
