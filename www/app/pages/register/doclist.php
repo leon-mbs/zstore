@@ -275,19 +275,20 @@ class DocList extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
         }
-
+        $ch = \App\ACL::checkExeDoc($this->_doc,true,false) ;
         $this->docview->setVisible(true);
         $this->docview->setDoc($this->_doc);
 
         $this->doclist->Reload(false);
         $this->goAnkor('dankor');
         $this->statusform->setVisible($this->_doc->state > 3);
-        $this->statusform->bap->setVisible($this->_doc->state == Document::STATE_WA);
-        $this->statusform->bref->setVisible($this->_doc->state == Document::STATE_WA);
-        $this->statusform->refcomment->setVisible($this->_doc->state == Document::STATE_WA);
+        $this->statusform->bap->setVisible($ch==true && $this->_doc->state == Document::STATE_WA);
+        $this->statusform->bref->setVisible($ch==true && $this->_doc->state == Document::STATE_WA);
+        $this->statusform->refcomment->setVisible($ch==true && $this->_doc->state == Document::STATE_WA);
         $this->statusform->mstates->setValue(0);
 
-        $ch = \App\ACL::checkExeDoc($this->_doc) ;
+        
+        
         $this->statusform->mstates->setVisible($ch==true && $this->_doc->state != Document::STATE_WA  );
         $this->statusform->bstatus->setVisible($ch==true && $this->_doc->state != Document::STATE_WA);
         $this->statusform->bprint->setVisible($this->_doc->meta_name=='GoodsReceipt' || 
@@ -470,7 +471,7 @@ class DocList extends \App\Pages\Base
         $this->_doc = $this->_doc->cast();
         if ($sender->id == "bap") {
             $newstate = $this->_doc->headerdata['_state_before_approve_'] > 0 ? $this->_doc->headerdata['_state_before_approve_'] : Document::STATE_APPROVED;
-            $this->_doc->updateStatus($newstate,true);
+            $this->_doc->updateStatus($newstate);
 
             $user = System::getUser();
 

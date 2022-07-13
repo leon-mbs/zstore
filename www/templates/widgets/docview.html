@@ -269,20 +269,21 @@
     ,
      computed:{
          printmob:function(){
-              return '/showdoc/print/'+this.docid  
+              return '/index.php?p=App/Pages/ShowDoc&arg=print/'+this.docid  
          } ,
          printpos:function(){
-              return '/showdoc/pos/'+this.docid  
+              return '/index.php?p=App/Pages/ShowDoc&arg=pos/'+this.docid  
          } ,
          word:function(){
               
-              return '/showdoc/doc/'+this.docid  
+              return '/index.php?p=App/Pages/ShowDoc&arg=doc/'+this.docid  
          } ,
          excel:function(){
-              return '/showdoc/xls/'+this.docid  
+              return '/index.php?p=App/Pages/ShowDoc&arg=xls/'+this.docid  
          } ,
          pdf:function(){
-              return '/showdoc/pdf/'+this.docid  
+            //  return '/showdoc/pdf/'+this.docid  
+              return '/index.php?p=App/Pages/ShowDoc&arg=pdf/'+this.docid  
          }  ,
          showprintposmob:function(){
               return   docdata.pos== true && docdata.usemobileprinter== true
