@@ -113,7 +113,9 @@ class DocList extends \App\Pages\Base
         $this->statusform->add(new TextInput('refcomment'));
         $this->statusform->add(new DropDownChoice('mstates',Document::getStateListMan()));
 
+        $this->statusform->add(new ClickLink('bprint'))->onClick($this, 'printlabels',true);
         $this->add(new ClickLink('csv', $this, 'oncsv'));
+        
     }
 
     public function onErase($sender) {
@@ -263,7 +265,8 @@ class DocList extends \App\Pages\Base
 
     public function showOnClick($sender) {
         $doc = $sender->getOwner()->getDataItem();
-
+        $doc = Document::load($doc->document_id);
+        $doc = $doc->cast() ;
         $this->show($doc);
     }
 
@@ -287,6 +290,9 @@ class DocList extends \App\Pages\Base
         $ch = \App\ACL::checkExeDoc($this->_doc) ;
         $this->statusform->mstates->setVisible($ch==true && $this->_doc->state != Document::STATE_WA  );
         $this->statusform->bstatus->setVisible($ch==true && $this->_doc->state != Document::STATE_WA);
+        $this->statusform->bprint->setVisible($this->_doc->meta_name=='GoodsReceipt' || 
+                                              $this->_doc->meta_name=='IncomeItem' || 
+                                              $this->_doc->meta_name=='ProdReceipt'         );
         
 
     }
@@ -529,6 +535,10 @@ class DocList extends \App\Pages\Base
         H::exportExcel($data, $header, 'doclist.xlsx');
     }
 
+    public function printlabels($sender){
+        
+    }
+    
 }
 
 /**

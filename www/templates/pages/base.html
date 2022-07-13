@@ -1001,7 +1001,9 @@ icon: 'fa fa-exclamation-triangle text-warning',
    
        //замена  запятой
         $(document).on('change', 'input.qtyprice', function() {
-          $(this).val($(this).val().replace(/,/g, '.'))
+          var val =   $(this).val().replace(/,/g, '.');
+          var val =   $(this).val().replace(/\s/g, '');
+          $(this).val(val)
         });    
                    
    
