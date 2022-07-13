@@ -537,6 +537,20 @@ class DocList extends \App\Pages\Base
 
     public function printlabels($sender){
         
+        $items = $this->_doc->unpackDetails('detaildata')  ;
+               
+                     
+        
+        $htmls = H::printItems($items);
+        
+        if( \App\System::getUser()->usemobileprinter == 1) {
+            \App\Session::getSession()->printform =  $htmls;
+            $this->updateAjax(array(), "     window.open('/index?p=App/Pages/ShowReport&arg=print')");
+        }
+        else {
+          $this->updateAjax(array(), "  $('#tag').html('{$htmls}') ; $('#pform').modal()");
+             
+        }        
     }
     
 }

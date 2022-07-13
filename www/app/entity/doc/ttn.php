@@ -260,9 +260,9 @@ class TTN extends Document
                 }
                 if ($state == Document::STATE_READYTOSHIP && $order->state == Document::STATE_INPROCESS) {
                     $order->updateStatus(Document::STATE_READYTOSHIP);
-                }
+                }   
             }
-        }
+        }     
     }
 
     public function getRelationBased() {
@@ -280,28 +280,7 @@ class TTN extends Document
     public function supportedExport() {
         return array(self::EX_EXCEL, self::EX_PDF);
     }
-    protected function onState($state) {
-        if($state == Document::STATE_DELIVERED) {
-              
-               if($this->parent_id > 0)   {;
-                   $parent = Document::load($this->parent_id);              
-                   if($parent->meta_name == 'Order' || $parent->meta_name == 'Invoice') {   
-                     if($parent->state== Document::STATE_PAYED) {   //оплачено
-                         $this->updateStatus(Document::STATE_CLOSED) ;                                  
-                     }         
-                   }         
-               }
-              
-            
-        } 
-        if($state == Document::STATE_DELIVERED) {
-           if($this->parent_id > 0)   {;
-               $parent = Document::load($this->parent_id);              
-               if($parent->meta_name == 'Order' || $parent->meta_name == 'Invoice') {
-                   $parent->updateStatus(Document::STATE_CLOSED) ;                                  
-               }         
-           }
-       }        
-              
-    }    
+  
+  
+   
 }
