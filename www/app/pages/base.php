@@ -27,7 +27,9 @@ class Base extends \Zippy\Html\WebPage
             return;
         }
 
-        
+        $this->_tvars['curversion'] = CURR_VERSION ;
+    
+ 
         $options = System::getOptions('common');
 
         //опции

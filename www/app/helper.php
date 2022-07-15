@@ -303,7 +303,7 @@ class Helper
             $mail->msgHTML($text);
             $mail->CharSet = "UTF-8";
             $mail->IsHTML(true);
-            $d = $mail->send() ;
+          //  $d = $mail->send() ;
             if ($mail->send() === false) {
                 System::setErrorMsg($mail->ErrorInfo);
             } else {
@@ -918,5 +918,99 @@ class Helper
        }            
        return $out  ;          
                        
+    } 
+    
+    public  static  function printItems(array $items){
+        $printer = \App\System::getOptions('printer');
+        $pwidth = "width:70mm;";
+        $pheight = "height:40mm;";
+        $pfs = 'style="font-size:16px;"';
+        $pfs = 'style="font-size:24px;"';
+
+        if (strlen($printer['pwidth']) > 0) {
+            $pwidth = "width:" . $printer['pwidth'] . ";";
+        }
+        if (strlen($printer['pheight']) > 0) {
+            $pheight = "height:" . $printer['pheight'] . ";";
+        }
+        $style = "style=\"";
+        $style .= $pwidth;
+        $style .= $pheight;
+        $style .= "\"";
+
+        if (strlen($printer['pfontsize']) > 0) {
+            $pfs = 'style="font-size:' . $printer['pfontsize'] . 'px";';
+            $pfsp = 'style="font-size:' . intval(($printer['pfontsize'] * 1.5)) . 'px";';
+        }
+
+        $htmls = "";
+
+        foreach ($items as $item) {
+            $report = new \App\Report('item_tag.tpl');
+            $header = array('style' => $style, 'fsize' => $pfs, 'fsizep' => $pfsp);
+            if ($printer['pname'] == 1) {
+
+                if (strlen($item->shortname) > 0) {
+                    $header['name'] = $item->shortname;
+                } else {
+                    $header['name'] = $item->itemname;
+                }
+            }
+            $header['name'] = str_replace("'","`", $header['name'])  ;
+            if ($printer['pcode'] == 1) {
+                $header['article'] = $item->item_code;
+                $header['isap'] = true;
+            }
+            if ($printer['pqrcode'] == 1 && strlen($item->url) > 0) {
+                $writer = new \Endroid\QrCode\Writer\PngWriter();
+ 
+      
+                $qrCode = new \Endroid\QrCode\QrCode($item->url);
+                 
+                $qrCode->setSize(500);
+                $qrCode->setMargin(5);
+              
+                 $result = $writer->write($qrCode );
+     
+                 $dataUri = $result->getDataUri();
+                 $header['qrcode'] = "<img style=\"width:100px\" src=\"{$dataUri}\"  />";
+
+            }
+            if ($printer['pbarcode'] == 1) {
+                $barcode = $item->bar_code;
+                if (strlen($barcode) == 0) {
+                    $barcode = $item->item_code;
+                }
+                if (strlen($barcode) == 0) {
+                    continue;
+                }
+
+                $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+                $img = '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($barcode, $printer['barcodetype'])) . '">';
+                $header['img'] = $img;
+                $header['barcode'] = \App\Util::addSpaces($barcode);
+            }
+
+            $header['isap'] = false;
+            if ($printer['pprice'] == 1) {
+                $header['price'] = self::fa($item->getPurePrice($printer['pricetype']));
+                $header['isap'] = true;
+            }
+
+            $header['action'] = $item->hasAction();;
+            if ($header['action']) {
+                $header['actionprice'] = $item->getActionPrice($header['price']);
+            }
+            $header['iscolor'] = $printer['pcolor'] == 1;
+
+
+            $htmls = $htmls . $report->generate($header);
+
+        }
+        $htmls = str_replace("\'", "", $htmls);
+               
+        return $htmls;               
     }
+    
+    
 }

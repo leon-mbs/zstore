@@ -77,6 +77,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
+        $this->docform->add(new SubmitButton('topaydoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('paydoc'))->onClick($this, 'savedocOnClick');
 
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
@@ -376,11 +377,11 @@ class Order extends \App\Pages\Base
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
 
-
-            if ($sender->id == 'execdoc' || $sender->id == 'paydoc') {
+                                       
+            if ($sender->id == 'execdoc' || $sender->id == 'paydoc' || $sender->id == 'topaydoc') {
                 $this->_doc->updateStatus(Document::STATE_INPROCESS);
             }
-            if ($this->_doc->payamount > $this->_doc->payed) {
+            if ($sender->id == 'topaydoc') {
                 $this->_doc->updateStatus(Document::STATE_WP);
             }
 

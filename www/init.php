@@ -8,6 +8,7 @@ $http = @$_SERVER["HTTPS"] == 'on' ? 'https' : 'http';
 define('_BASEURL', $http . "://" . $_SERVER["HTTP_HOST"] . '/');
 
 define('UPLOAD_USERS', 'uploads/users/');
+define('CURR_VERSION', "6.3.1");
 
 date_default_timezone_set('Europe/Kiev');
 

@@ -67,8 +67,9 @@ class System
      * Возвращает набор  параметром  по  имени набора
      *
      * @param mixed $group
+     * @param mixed $isserialise
      */
-    public static function getOptions($group) {
+    public static function getOptions($group,$isserialise=true) {
 
         if (isset(self::$_options[$group])) {
             return self::$_options[$group];
@@ -77,6 +78,8 @@ class System
 
         $rs = $conn->GetOne("select optvalue from options where optname='{$group}' ");
         if (strlen($rs) > 0) {
+            if(!$isserialise) return $rs;  //неупакопано
+            
             $d =    @unserialize(@base64_decode($rs) );
             if(!is_array($d) ) {
                $d =  @unserialize( $rs );; //для  совместивости   

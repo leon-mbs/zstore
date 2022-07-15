@@ -163,8 +163,8 @@
                     <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-outline-secondary  ">
                     &nbsp; <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-outline-primary  ">
                     &nbsp;<input zippy="execdoc" type="submit" value="На обробку" class="btn btn-outline-primary  ">
-                    &nbsp;<a data-toggle="modal"
-                                   data-target="#modalpayed"  href="javascript:void(0);"  class="btn btn-outline-info  ">Оплата</a>
+                    &nbsp;<input zippy="topaydoc" type="submit" value="До сплати" class="btn btn-outline-info  ">
+                    &nbsp;<a data-toggle="modal"                                   data-target="#modalpayed"  href="javascript:void(0);"  class="btn btn-outline-info  ">Оплатити</a>
                
 
                 </div>
@@ -290,15 +290,12 @@
                     </div>
                     <div class="form-group">
                         <label for="editquantity">Кількість</label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity" required="required"
-                               pattern="[0-9\.\,]+" style="width: 70px;">
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity" required="required"                               pattern="[0-9\.\,\s]+" style="width: 70px;">
 
                     </div>
                     <div class="form-group">
                         <label for="editprice">Ціна </label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice" required="required"
-                               pattern="[0-9\.\,]+"
-                               style="width: 70px;">
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice" required="required"                               pattern="[0-9\.\,\s]+"                               style="width: 70px;">
 
                     </div>
 

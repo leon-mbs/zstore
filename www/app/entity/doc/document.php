@@ -30,6 +30,7 @@ class Document extends \ZCL\DB\Entity
     const STATE_APPROVED    = 19;      //  Готов к выполнению
     const STATE_READYTOSHIP = 20; // готов к отправке   
     const STATE_WP = 21; // ждет  оплату   
+    const STATE_PAYED = 22; // Оплачен
     
     // типы  экспорта
     const EX_WORD  = 1; //  Word
@@ -354,7 +355,7 @@ class Document extends \ZCL\DB\Entity
      * Обновляет состояние  документа
      *
      * @param mixed $state
-     * @param mixed $nodata   только  смен  статуса  без  проводок    
+     * @param mixed $nodata   только  смена  статуса  без  проводок    
      */
     public function updateStatus($state,$nodata = false) {
 
@@ -435,6 +436,7 @@ class Document extends \ZCL\DB\Entity
         if($state == self::STATE_FAIL)         return 3;
         if($state == self::STATE_READYTOSHIP)  return 50;
         if($state == self::STATE_WP)           return 75;
+        if($state == self::STATE_PAYED)        return 5;
  
         return 0;
     }
@@ -483,6 +485,8 @@ class Document extends \ZCL\DB\Entity
                 return Helper::l('st_rdshipment');
             case Document::STATE_WP:
                 return Helper::l('st_wp');
+            case Document::STATE_PAYED:
+                return Helper::l('st_payed');
 
             default:
                 return Helper::l('st_unknow');
@@ -507,6 +511,7 @@ class Document extends \ZCL\DB\Entity
         $list[Document::STATE_INPROCESS] = Helper::l('st_inprocess');
         $list[Document::STATE_READYTOSHIP] = Helper::l('st_rdshipment');
         $list[Document::STATE_WP] = Helper::l('st_wp');
+        $list[Document::STATE_PAYED] = Helper::l('st_payed');
 
         return $list;
     }
@@ -751,15 +756,12 @@ class Document extends \ZCL\DB\Entity
         return $conn->GetOne("select coalesce(sum(amount),0) from paylist where   document_id = {$this->document_id}  ");
     }
 
-    /**
-     * put your comment there...
-     *
-     */
-    public function hasEntry() {
+   
+   /* public function hasEntry() {
         $conn = \ZDB\DB::getConnect();
 
         return $conn->GetOne("select coalesce(sum(amount),0) from paylist where   document_id = {$this->document_id}  ");
-    }
+    } */
 
     /**
      * список  дочерних

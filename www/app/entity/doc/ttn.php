@@ -260,9 +260,9 @@ class TTN extends Document
                 }
                 if ($state == Document::STATE_READYTOSHIP && $order->state == Document::STATE_INPROCESS) {
                     $order->updateStatus(Document::STATE_READYTOSHIP);
-                }
+                }   
             }
-        }
+        }     
     }
 
     public function getRelationBased() {
@@ -280,5 +280,7 @@ class TTN extends Document
     public function supportedExport() {
         return array(self::EX_EXCEL, self::EX_PDF);
     }
-
+  
+  
+   
 }

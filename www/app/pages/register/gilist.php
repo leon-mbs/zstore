@@ -70,7 +70,6 @@ class GIList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bdecl'))->onClick($this, 'statusOnSubmit');
 
         $this->statuspan->statusform->add(new TextInput('ship_number'));
-        $this->statuspan->statusform->add(new CheckBox('closeorder'));
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
@@ -192,21 +191,7 @@ class GIList extends \App\Pages\Base
 
         if ($sender->id == "bdevivered") {
             $this->_doc->updateStatus(Document::STATE_DELIVERED);
-
-            if ($this->statuspan->statusform->closeorder->isChecked()) {   //закрываем заказ
-                $order = Document::load($this->_doc->parent_id);
-                if ($order instanceof \App\Entity\Doc\Document) {
-                    $order = $order->cast();
-                    if ($order->payamount > 0 && $order->payamount > $order->payed) {
-
-                    } else {    //оплачен
-                        if ($order->state == Document::STATE_INPROCESS) {
-                            $order->updateStatus(Document::STATE_CLOSED);
-                            $this->setSuccess("order_closed ", $order->document_number);
-                        }
-                    }
-                }
-            }
+  
 
             // $this->_doc->updateStatus(Document::STATE_CLOSED);
         }
@@ -255,24 +240,14 @@ class GIList extends \App\Pages\Base
         $this->statuspan->statusform->ship_number->setVisible(false);
         $this->statuspan->statusform->bdecl->setVisible(false);
 
-        $this->statuspan->statusform->closeorder->setVisible(false);
-        if ($this->_doc->headerdata['order_id'] > 0) {
-            $order = Document::load($this->_doc->headerdata['order_id']);
-            if ($order->payamount == $order->payed || $order->headerdata['payment'] == 0) {
-                $this->statuspan->statusform->closeorder->setVisible(true);
-            }
-        }
-
-
-        $this->statuspan->statusform->closeorder->setChecked(false);
-
+      
         $state = $this->_doc->state;
 
         //готов  к  отправке
         if ($state == Document::STATE_READYTOSHIP) {
             $this->statuspan->statusform->bdevivered->setVisible(false);
             $this->statuspan->statusform->bret->setVisible(false);
-            $this->statuspan->statusform->closeorder->setVisible(false);
+
         }
         //отправлен
         if ($state == Document::STATE_INSHIPMENT) {
