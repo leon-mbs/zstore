@@ -125,6 +125,9 @@ class Options extends \App\Pages\Base
         @unlink(_ROOT . "upload/arealist.dat");
         @unlink(_ROOT . "upload/citylist.dat");
         @unlink(_ROOT . "upload/pointlist.dat");
+        
+        @mkdir(_ROOT . "upload") ;
+        
         $api = new Helper();
 
         $areas = array();
