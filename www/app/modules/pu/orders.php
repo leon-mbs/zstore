@@ -69,22 +69,18 @@ class Orders extends \App\Pages\Base
             }
  
        
-           $conn = \ZDB\DB::getConnect();
+            $conn = \ZDB\DB::getConnect();
  
             foreach ($data['orders'] as $puorder) {
 
                $cnt  = $conn->getOne("select count(*) from documents_view where meta_name='Order' and content like '%<puorder>{$puorder['id']}</puorder>%' ")  ;
 
-               // $isorder = Document::findCnt("meta_name='Order' and content like '%<wcorder>{$puorder->id}</wcorder>%'");
+
                 if (  intval($cnt) > 0) { //уже импортирован
                     continue;
                 }
 
                 $neworder = Document::create('Order');
-                $neworder->document_number = $neworder->nextNumber();
-                if (strlen($neworder->document_number) == 0) {
-                    $neworder->document_number = 'PU00001';
-                }
                 $neworder->customer_id = $modules['pucustomer_id'];
 
                 //товары
@@ -156,8 +152,8 @@ class Orders extends \App\Pages\Base
     public function noOnRow($row) {
         $order = $row->getDataItem();
 
-        $row->add(new Label('number', $order->headerdata['wcorder']));
-        $row->add(new Label('customer', $order->headerdata['wcclient']));
+        $row->add(new Label('number', $order->headerdata['puorder']));
+        $row->add(new Label('customer', $order->headerdata['puclient']));
         $row->add(new Label('amount', round($order->amount)));
         $row->add(new Label('comment', $order->notes));
         $row->add(new Label('date', \App\Helper::fdt(strtotime($order->document_date))));
@@ -167,6 +163,10 @@ class Orders extends \App\Pages\Base
         $modules = System::getOptions("modules");
 
         foreach ($this->_neworders as $shoporder) {
+            $shoporder->document_number = $shoporder->nextNumber();
+            if (strlen($shoporder->document_number) == 0) {
+                $shoporder->document_number = 'PU00001';
+            }
 
             $shoporder->save();
             $shoporder->updateStatus(Document::STATE_NEW);

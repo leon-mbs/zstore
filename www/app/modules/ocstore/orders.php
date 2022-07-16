@@ -134,9 +134,9 @@ class Orders extends \App\Pages\Base
 
 
             $neworder = Document::create('Order');
-            $neworder->document_number = $neworder->nextNumber();
             $neworder->document_date = strtotime($shoporder->date_added);
 
+            $neworder->document_number = $neworder->nextNumber();
             if (strlen($neworder->document_number) == 0) {
                 $neworder->document_number = 'OC00001';
             }

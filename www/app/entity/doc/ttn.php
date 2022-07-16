@@ -187,6 +187,13 @@ class TTN extends Document
                         $itemp = \App\Entity\Item::load($part->item_id);
                         if($itemp == null)  continue;
                         $itemp->quantity = $item->quantity * $part->qty;
+                      
+                        if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
+                            throw new \Exception(H::l("nominus", H::fqty($itemp->getQuantity($this->headerdata['store'])), $itemp->itemname));
+                        }
+
+                       
+                      
                         $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
 
                         foreach ($listst as $st) {
@@ -214,6 +221,9 @@ class TTN extends Document
                 $sc->save();
             }
 
+            if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
+                throw new \Exception(H::l("nominus", H::fqty($item->getQuantity($this->headerdata['store'])), $item->itemname));
+            }
 
             //продажа
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
