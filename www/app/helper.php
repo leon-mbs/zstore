@@ -1003,8 +1003,12 @@ class Helper
             }
             $header['iscolor'] = $printer['pcolor'] == 1;
 
-
-            $htmls = $htmls . $report->generate($header);
+            
+            $qty =  intval($item->quantity);
+            if($qty==0) $qty=1;
+            for($i=0;$i<$qty;$i++){
+               $htmls = $htmls . $report->generate($header);
+            }
 
         }
         $htmls = str_replace("\'", "", $htmls);

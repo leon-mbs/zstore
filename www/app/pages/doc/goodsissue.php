@@ -207,8 +207,10 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->total->setText(H::fa($order->amount));
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
-                        
-                        $this->_doc->headerdata['prepaid']  = abs($basedoc->payamount);
+                        if($basedoc->state == Document::STATE_WP || $basedoc->state == Document::STATE_PAYED) {
+                            $this->_doc->headerdata['prepaid']  = abs($basedoc->payamount);                            
+                        }
+
 
                            if($basedoc->headerdata['paydisc']>0) {
                              $this->docform->editpaydisc->setText($basedoc->headerdata['paydisc']);
