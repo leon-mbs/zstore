@@ -173,7 +173,6 @@ class TTN extends Document
         }
 
 
-
         foreach ($this->unpackDetails('detaildata') as $item) {
 
 
@@ -191,15 +190,13 @@ class TTN extends Document
                         if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
                             throw new \Exception(H::l("nominus", H::fqty($itemp->getQuantity($this->headerdata['store'])), $itemp->itemname));
                         }
-
-                       
                       
                         $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
 
                         foreach ($listst as $st) {
                             $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                             $sc->setStock($st->stock_id);
-                            $sc->tag=-3;
+                            $sc->tag=Entry::TAG_TOPROD;
 
                             $sc->save();
                         }
@@ -216,7 +213,7 @@ class TTN extends Document
 
                 $sc = new Entry($this->document_id, $item->quantity * $price, $item->quantity);
                 $sc->setStock($stock->stock_id);
-               $sc->tag=-4;
+               $sc->tag=Entry::TAG_FROMPROD;
 
                 $sc->save();
             }
@@ -233,7 +230,7 @@ class TTN extends Document
                 $sc->setStock($st->stock_id);
                 //  $sc->setExtCode($item->price - $st->partion); //Для АВС
                 $sc->setOutPrice($item->price);
-                $sc->tag=-1;
+                $sc->tag=Entry::TAG_SELL;
                 $sc->save();
             }
         }

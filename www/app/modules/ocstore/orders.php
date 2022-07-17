@@ -70,7 +70,7 @@ class Orders extends \App\Pages\Base
 
         $this->_neworders = array();
         $fields = array(
-            'status_id' => $status,
+            'status_id' => $status,    
         );
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/orders&' . System::getSession()->octoken;
         $json = Helper::do_curl_request($url, $fields);
@@ -271,79 +271,98 @@ class Orders extends \App\Pages\Base
                 }
             }
         }
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
+        try {
 
-        $i = 0;
-        foreach ($this->_neworders as $shoporder) {
+            $i = 0;
+            foreach ($this->_neworders as $shoporder) {
 
 
-            $neworder = Document::create('TTN');
-            $neworder->document_number = $neworder->nextNumber();
-            if (strlen($neworder->document_number) == 0) {
-                $neworder->document_number = 'ТТН-00001';
-            }
-
-            //товары
-            $j=0;
-            $totalpr = 0;
-            $tlist = array();
-            foreach ($shoporder->_products_ as $product) {
-                //ищем по артикулу 
-                if (strlen($product['sku']) == 0) {
-                    continue;
+                $neworder = Document::create('TTN');
+                $neworder->document_date = time();
+                $neworder->headerdata['sent_date'] = time();
+                $neworder->headerdata['delivery_date'] = time()+(3600*24);
+                $neworder->document_number = $neworder->nextNumber();
+                if (strlen($neworder->document_number) == 0) {
+                    $neworder->document_number = 'ТТН-00001';
                 }
-                $code = Item::qstr($product['sku']);
 
-                $tovar = Item::getFirst('item_code=' . $code);
-                if ($tovar == null) {
+                //товары
+                $j=0;
+                $totalpr = 0;
+                $tlist = array();
+                foreach ($shoporder->_products_ as $product) {
+                    //ищем по артикулу 
+                    if (strlen($product['sku']) == 0) {
+                        continue;
+                    }
+                    $code = Item::qstr($product['sku']);
 
-                    $this->setWarn("nofoundarticle_inorder", $product['name'], $shoporder['order_id']);
-                    continue;
+                    $tovar = Item::getFirst('item_code=' . $code);
+                    if ($tovar == null) {
+
+                        $this->setWarn("nofoundarticle_inorder", $product['name'], $shoporder['order_id']);
+                        continue;
+                    }
+                    $tovar->quantity = $product['quantity'];
+                    $tovar->price = \App\Helper::fa($product['price']);
+                    $totalpr += ($tovar->quantity * $tovar->price);
+                    $j++;
+                    $tovar->rowid = $j;
+
+                    $tlist[$j] = $tovar;
                 }
-                $tovar->quantity = $product['quantity'];
-                $tovar->price = \App\Helper::fa($product['price']);
-                $totalpr += ($tovar->quantity * $tovar->price);
-                $j++;
-                $tovar->rowid = $j;
+                $neworder->packDetails('detaildata', $tlist);
 
-                $tlist[$j] = $tovar;
+                $neworder->headerdata['store'] = $store;
+                $neworder->headerdata['store_name'] = $this->filter2->store->getValueName();
+                $neworder->headerdata['ocorder'] = $shoporder->order_id;
+                $neworder->headerdata['outnumber'] = $shoporder->order_id;
+
+                $neworder->customer_id = $modules['occustomer_id'];
+
+                $neworder->amount = \App\Helper::fa($totalpr);
+
+                if ($shoporder->total > $totalpr) {
+                    $neworder->headerdata['ship_amount'] = $shoporder->total - $totalpr;
+                    $neworder->headerdata['delivery'] = Document::DEL_SELF;
+                    $neworder->headerdata['delivery_name'] = \App\Helper::l('delself');
+                }
+
+                $neworder->payamount = 0;
+                $neworder->payed = 0;
+                $neworder->notes = "OC номер:{$shoporder->order_id};";
+                $neworder->notes .= " Клiєнт:" . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
+                if (strlen($shoporder->email) > 0) {
+                    $neworder->notes .= " Email:" . $shoporder->email . ";";
+                }
+                if (strlen($shoporder->telephone) > 0) {
+                    $neworder->notes .= " Тел:" . $shoporder->telephone . ";";
+                }
+                $neworder->notes .= " Адреса:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
+                $neworder->notes .= " Коментар:" . $shoporder->comment . ";";
+                $neworder->save();
+                $neworder->updateStatus(Document::STATE_NEW);
+                $neworder->updateStatus(Document::STATE_EXECUTED);
+                $neworder->updateStatus(Document::STATE_DELIVERED);
+
+                $i++;
             }
-            $neworder->packDetails('detaildata', $tlist);
+            
+          $conn->CommitTrans();
+            
+            
+        } catch(\Throwable $ee) {
+            global $logger;
+            $conn->RollbackTrans();
+        
+           
+            $this->setError($ee->getMessage());
 
-            $neworder->headerdata['store'] = $store;
-            $neworder->headerdata['store_name'] = $this->filter2->store->getValueName();
-            $neworder->headerdata['ocorder'] = $shoporder->order_id;
-            $neworder->headerdata['outnumber'] = $shoporder->order_id;
-
-            $neworder->customer_id = $modules['occustomer_id'];
-
-            $neworder->amount = \App\Helper::fa($totalpr);
-
-            if ($shoporder->total > $totalpr) {
-                $neworder->headerdata['ship_amount'] = $shoporder->total - $totalpr;
-                $neworder->headerdata['delivery'] = Document::DEL_SELF;
-                $neworder->headerdata['delivery_name'] = \App\Helper::l('delself');
-            }
-
-            $neworder->payamount = 0;
-            $neworder->payed = 0;
-            $neworder->notes = "OC номер:{$shoporder->order_id};";
-            $neworder->notes .= " Клiєнт:" . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
-            if (strlen($shoporder->email) > 0) {
-                $neworder->notes .= " Email:" . $shoporder->email . ";";
-            }
-            if (strlen($shoporder->telephone) > 0) {
-                $neworder->notes .= " Тел:" . $shoporder->telephone . ";";
-            }
-            $neworder->notes .= " Адреса:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
-            $neworder->notes .= " Коментар:" . $shoporder->comment . ";";
-            $neworder->save();
-            $neworder->updateStatus(Document::STATE_NEW);
-            $neworder->updateStatus(Document::STATE_EXECUTED);
-            $neworder->updateStatus(Document::STATE_DELIVERED);
-
-            $i++;
+            $logger->error($ee->getMessage() . " OCStore "  );
+            return;
         }
-
 
         $this->setInfo('imported_orders', $i);
 
