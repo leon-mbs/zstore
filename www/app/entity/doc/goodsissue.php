@@ -157,7 +157,6 @@ class GoodsIssue extends Document
 
                         $itemp = \App\Entity\Item::load($part->item_id);
                         if($itemp == null)  continue;
-                        
                         $itemp->quantity = $item->quantity * $part->qty;
 
                         if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
