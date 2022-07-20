@@ -199,7 +199,7 @@ class Orders extends \App\Pages\Base
                     $cust->type = Customer::TYPE_BAYER;
                     $cust->phone = $shoporder->telephone;
                     $cust->email = $shoporder->email;
-                    $cust->comment = "Клiєнт IМ";
+                    $cust->comment = "Клiєнт OpenCart";
                     $cust->save();
                 }
                 $neworder->customer_id = $cust->customer_id;

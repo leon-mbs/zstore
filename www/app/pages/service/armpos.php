@@ -74,7 +74,9 @@ class ARMPos extends \App\Pages\Base
         $this->add(new Panel('checklistpan'))->setVisible(false);
         $this->checklistpan->add(new ClickLink('newcheck', $this, 'newdoc'));
         $this->checklistpan->add(new DataView('checklist', new ArrayDataSource($this, '_doclist'), $this, 'onDocRow'));
-
+        $this->checklistpan->add(new \Zippy\Html\DataList\Paginator('pag',  $this->checklistpan->checklist));
+        $this->checklistpan->checklist->setPageSize(H::getPG());
+ 
         //панель статуса,  просмотр
         $this->checklistpan->add(new Form('searchform'))->onSubmit($this, 'updatechecklist');
         $this->checklistpan->searchform->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');

@@ -331,7 +331,7 @@ class Outcome extends \App\Pages\Base
         }
 
         if ($type == 12  ) {    //по брендам
-        
+             
             $man="''";
             $brand = trim($this->filter->brand->getText());
             if(strlen($brand)>0) {
@@ -390,6 +390,7 @@ class Outcome extends \App\Pages\Base
 
         $header = array('datefrom' => \App\Helper::fd($from),
                         "_detail"  => $detail,
+                        "brand"  => $brand,
                         'dateto'   => \App\Helper::fd($to)
         );
 
