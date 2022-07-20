@@ -95,6 +95,7 @@ class Order extends \App\Pages\Base
         $this->editdetail->add(new ClickLink('opencatpan', $this, 'onOpenCatPan'));
   
         $this->editdetail->add(new Label('qtystock'));
+        $this->editdetail->add(new Label('pricestock'));
         $this->editdetail->add(new SubmitLink('addnewitem'))->onClick($this, 'addnewitemOnClick');
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
@@ -494,8 +495,10 @@ class Order extends \App\Pages\Base
 
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity()));
         $this->editdetail->editprice->setText($price);
+        $price = $item->getLastPartion();
+        $this->editdetail->pricestock->setText( H::fa($price));
 
-        $this->updateAjax(array('qtystock', 'editprice'));
+        $this->updateAjax(array('qtystock', 'editprice','pricestock'));
     }
 
     public function OnAutoCustomer($sender) {

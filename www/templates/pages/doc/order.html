@@ -286,7 +286,9 @@
                         <br> <a   zippy="addnewitem">Додати новий</a>
 
                         <br>Наявність: <span zippy="qtystock"></span>
-
+                         {{^noshowpartion}}
+                        <br>Облікова  ціна: <span zippy="pricestock"></span>
+                         {{/noshowpartion}}
                     </div>
                     <div class="form-group">
                         <label for="editquantity">Кількість</label>

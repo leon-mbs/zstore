@@ -238,13 +238,13 @@ class Helper
         }
 
         if ($modules['promua'] == 1) {
-            if ($role->rolename == 'admins' || strpos($role->modules, 'pu') !== false) {
+            if ($role->rolename == 'admins' || strpos($role->modules, 'promua') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10015, 'meta_name' => "/PU/Orders", 'meta_type' => 6, 'description' => self::l('modpuorders')));
             }
         }
         if ($modules['promua'] == 1) {
-            if ($role->rolename == 'admins' || strpos($role->modules, 'pu') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10016, 'meta_name' => "/PU/Items", 'meta_type' => 6, 'description' => self::l('modpuitems')));
+            if ($role->rolename == 'admins' || strpos($role->modules, 'promua') !== false) {
+               // $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10016, 'meta_name' => "/PU/Items", 'meta_type' => 6, 'description' => self::l('modpuitems')));
             }
         }
 

@@ -88,6 +88,7 @@ class Invoice extends \App\Pages\Base
         $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
 
         $this->editdetail->add(new Label('qtystock'));
+        $this->editdetail->add(new Label('pricestock'));
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
@@ -561,8 +562,10 @@ class Invoice extends \App\Pages\Base
 
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
         $this->editdetail->editprice->setText(H::fa($price));
+        $price = $item->getLastPartion();
+        $this->editdetail->pricestock->setText( H::fa($price));
 
-        $this->updateAjax(array('qtystock', 'editprice'));
+        $this->updateAjax(array('qtystock', 'editprice','pricestock'));
     }
 
     public function OnAutoCustomer($sender) {

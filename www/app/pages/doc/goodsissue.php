@@ -107,6 +107,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
 
         $this->editdetail->add(new Label('qtystock'));
+        $this->editdetail->add(new Label('pricestock'));
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
@@ -379,6 +380,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->editdetail->editquantity->setText("1");
         $this->editdetail->editprice->setText("0");
         $this->editdetail->qtystock->setText("");
+        $this->editdetail->pricestock->setText("");
         $this->docform->setVisible(false);
         $this->_rowid = 0;
     }
@@ -850,8 +852,10 @@ class GoodsIssue extends \App\Pages\Base
             $this->editdetail->editserial->setText($serial);
         }
 
+        $price = $item->getLastPartion();
+        $this->editdetail->pricestock->setText( H::fa($price));
 
-        $this->updateAjax(array('qtystock', 'editprice', 'editserial'));
+        $this->updateAjax(array('qtystock', 'editprice', 'editserial','pricestock'));
     }
 
     public function OnAutoItem($sender) {
