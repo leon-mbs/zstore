@@ -538,13 +538,11 @@ class GoodsReceipt extends \App\Pages\Base
                 if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
-                if($this->_doc->payamount > $this->_doc->payed && $this->_doc->payamount > doubleval($this->_doc->headerdata['prepaid'] ) ) {
-                      $this->_doc->updateStatus(Document::STATE_WP);                    
-                }
+
  
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                if ($this->_doc->payamount > $this->_doc->payed) {
-                   $this->_doc->updateStatus(Document::STATE_WP);
+                if($this->_doc->payamount > $this->_doc->payed && $this->_doc->payamount > doubleval($this->_doc->headerdata['prepaid'] ) ) {
+                      $this->_doc->updateStatus(Document::STATE_WP);                    
                 }
 
                 if ($this->_doc->parent_id > 0) {   //закрываем заказ

@@ -123,7 +123,7 @@ class PaySelList extends \App\Pages\Base
             if(in_array($_c->customer_id,$ids)) {
                  $this->_custlist[$_c->customer_id]->docs = $_c->docs;                                         
             } else {
-              //   $this->_custlist[$_c->customer_id] = $_c;                                                         
+                 $this->_custlist[$_c->customer_id] = $_c;                                                         
             }
             
         };
@@ -181,7 +181,7 @@ class PaySelList extends \App\Pages\Base
         }
         $this->_doclist = array();
 
-        $list = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id}  and  state NOT IN (0, 1, 2, 3, 15, 8)  and  (state = ". Document::STATE_WP  ."  or  payamount >payed)   and meta_name in('InvoiceCust','RetCustIssue','GoodsReceipt') ", "document_date desc, document_id desc");
+        $list = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id}  and   state = ". Document::STATE_WP  ."    and meta_name in('InvoiceCust','RetCustIssue','GoodsReceipt') ", "document_date desc, document_id desc");
   
 
         foreach ($list as $d) {
@@ -367,15 +367,32 @@ class PaySelList extends \App\Pages\Base
 
         $this->_blist = array();
 
-        $list = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id} and    state NOT IN (0, 1, 2, 3, 15, 8) " , "document_date desc, document_id desc",-1,-1,"*,  COALESCE( ((CASE WHEN (meta_name IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService', 'OutcomeMoney')) THEN payed WHEN ((meta_name = 'OutcomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payamount ELSE 0 END)), 0) AS s_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsReceipt') ) THEN payamount WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payed ELSE 0 END)), 0) AS s_active ");
-   
+        $list = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id} and    state NOT IN (0, 1, 2, 3, 15, 8) " , "document_id asc ",-1,-1,"*,  COALESCE( ((CASE WHEN (meta_name IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService', 'OutcomeMoney')) THEN payed WHEN ((meta_name = 'OutcomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payamount ELSE 0 END)), 0) AS s_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsReceipt') ) THEN payamount WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payed ELSE 0 END)), 0) AS s_active ");
+
+        $bal=0;
 
         foreach ($list as $id=>$d) {
             if($d->s_active != $d->s_passive ){
-                 $this->_blist[] = $d;                
-            }
+                
+                 $r = new  \App\DataItem() ;
+                 $r->document_id = $d->document_id;
+                 $r->meta_desc = $d->meta_desc;
+                 $r->document_number = $d->document_number;
+                 $r->document_date = $d->document_date;
+                 $r->s_active = $d->s_active;
+                 $r->s_passive = $d->s_passive;
 
-            
+                 $diff = $d->s_passive - $d->s_active;
+        
+                 $bal +=  $diff;        
+                 $r->bal =  $bal;
+
+                 $this->_blist[] = $r; 
+                 if($bal==0){
+                     $this->_blist = array();  
+                 }                                
+            }
+             
         }
 //        $this->_blist = array_reverse($this->_doclist);
 
@@ -388,14 +405,13 @@ class PaySelList extends \App\Pages\Base
 
         $row->add(new Label('dname', $doc->meta_desc));
         $row->add(new Label('dnumber', $doc->document_number));
-        $diff = $doc->s_passive - $doc->s_active;
+        $row->add(new Label('ddate', H::fd($doc->document_date)));
         
-        $this->_bal +=  $diff;
 
         $row->add(new Label('out', $doc->s_passive > 0 ?  H::fa( $doc->s_passive):"" ));
         $row->add(new Label('in', $doc->s_active>0 ? H::fa( $doc->s_active):"" ));
-        $row->add(new Label('bc', $this->_bal > 0? H::fa( $this->_bal):"" ));
-        $row->add(new Label('bd', $this->_bal < 0? H::fa( 0-$this->_bal):"" ));
+        $row->add(new Label('bc', $doc->bal > 0? H::fa( $doc->bal):"" ));
+        $row->add(new Label('bd', $doc->bal < 0? H::fa( 0-$doc->bal):"" ));
       
         $row->add(new ClickLink('showdet'))->onClick($this, 'showOnClick');
 
