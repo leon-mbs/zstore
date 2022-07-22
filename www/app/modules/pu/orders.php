@@ -3,6 +3,7 @@
 namespace App\Modules\PU;
 
 use App\Entity\Doc\Document;
+use App\Entity\Customer;
 use App\Entity\Item;
 use App\System;
 use App\Helper as H;
@@ -113,6 +114,9 @@ class Orders extends \App\Pages\Base
                 $neworder->packDetails('detaildata', $itlist);
                 $neworder->headerdata['pricetype'] = 'price1';
 
+                $neworder->headerdata['cemail'] = $puorder['email'];
+                $neworder->headerdata['cname'] = $puorder['client_first_name'] . ' ' . $puorder['client_last_name'];
+                $neworder->headerdata['cphone'] = $puorder['phone'] ;
                 $neworder->headerdata['puorder'] = $puorder['id'];
                 $neworder->headerdata['outnumber'] = $puorder['id'];
                 $neworder->headerdata['puorderback'] = 0;
@@ -168,6 +172,23 @@ class Orders extends \App\Pages\Base
                 $shoporder->document_number = 'PU00001';
             }
 
+            if (strlen($shoporder->headerdata['cemail'] )> 0 && $modules['puinsertcust'] == 1) {
+                $cust = Customer::getByEmail($shoporder->headerdata['cemail']);
+                if ($cust == null) {
+                    $cust = new Customer();
+                    $cust->customer_name = $shoporder->headerdata['cname'];
+                    $cust->phone = $shoporder->headerdata['cphone'];
+
+                    $cust->type = Customer::TYPE_BAYER;
+                     
+                    $cust->email = $shoporder->headerdata['cemail'];
+                    $cust->comment = "Клiєнт Prom UA";
+                    $cust->save();
+                }
+                $shoporder->customer_id = $cust->customer_id;
+            }            
+            
+            
             $shoporder->save();
             $shoporder->updateStatus(Document::STATE_NEW);
             $shoporder->updateStatus(Document::STATE_INPROCESS);

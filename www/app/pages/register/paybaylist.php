@@ -127,7 +127,8 @@ class PayBayList extends \App\Pages\Base
             if(in_array($_c->customer_id,$ids)) {
                  $this->_custlist[$_c->customer_id]->docs = $_c->docs;                                         
             } else {
-                // $this->_custlist[$_c->customer_id] = $_c;                                                         
+                 $this->_custlist[$_c->customer_id] = $_c;                                                         
+                
             }
             
         };
@@ -157,9 +158,9 @@ class PayBayList extends \App\Pages\Base
         $row->add(new Label('amountc',$diff >0 ? H::fa($diff):''));
         $row->add(new Label('amountd',$diff <0 ? H::fa(0-$diff):''));
 
-        $row->add(new RedirectLink('createpay'))->setVisible($diff>0);
-        if ($diff>0) {
-            $row->createpay->setLink("\\App\\Pages\\Doc\\IncomeMoney", array(0, $cust->customer_id, $diff ));
+        $row->add(new RedirectLink('createpay'))->setVisible($diff<0);
+        if ($diff<0) {
+            $row->createpay->setLink("\\App\\Pages\\Doc\\IncomeMoney", array(0, $cust->customer_id, 0-$diff ));
             $row->createpay->setVisible(true);
         }
         $row->add(new ClickLink('showdocs',$this, 'showdocsOnClick'))->setVisible($cust->docs>0);
@@ -192,7 +193,7 @@ class PayBayList extends \App\Pages\Base
 
         $this->_doclist = array();
 
-        $list = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id}  and  state NOT IN (0, 1, 2, 3, 15, 8) and  (state = ". Document::STATE_WP  ."  or  payamount >payed)   and meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue') ", "document_date desc, document_id desc");
+        $list = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id}  and   state = ". Document::STATE_WP  ."    and meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue') ", "document_id asc ");
    
 
         foreach ($list as $d) {
@@ -383,12 +384,31 @@ class PayBayList extends \App\Pages\Base
 
         $this->_blist = array();
 
-        $list = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id} and    state NOT IN (0, 1, 2, 3, 15, 8) " , "document_date desc, document_id desc",-1,-1,"*, COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'TTN', 'PosCheck', 'OrderFood')) THEN payamount WHEN ((meta_name = 'OutcomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payed ELSE 0 END)), 0) AS b_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN payed WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payamount ELSE 0 END)), 0) AS b_active");
+        $list = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id} and    state NOT IN (0, 1, 2, 3, 15, 8) " , "  document_id asc",-1,-1,"*, COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'TTN', 'PosCheck', 'OrderFood')) THEN payamount WHEN ((meta_name = 'OutcomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payed ELSE 0 END)), 0) AS b_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN payed WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payamount ELSE 0 END)), 0) AS b_active");
    
-
+        $bal=0;
+      
         foreach ($list as $id=>$d) {
             if($d->b_active != $d->b_passive ){
-                 $this->_blist[] = $d;                
+                 $r = new  \App\DataItem() ;
+                 $r->document_id = $d->document_id;
+                 $r->meta_desc = $d->meta_desc;
+                 $r->document_number = $d->document_number;
+                 $r->document_date = $d->document_date;
+                 $r->b_active = $d->b_active;
+                 $r->b_passive = $d->b_passive;            
+                
+                 $diff = $d->b_passive - $d->b_active;
+        
+                 $bal +=  $diff;
+                
+                 $r->bal =  $bal;
+
+                 $this->_blist[] = $r; 
+                 if($bal==0){
+                     $this->_blist = array();  
+                 }                 
+                
             }
 
             
@@ -404,14 +424,12 @@ class PayBayList extends \App\Pages\Base
 
         $row->add(new Label('dname', $doc->meta_desc));
         $row->add(new Label('dnumber', $doc->document_number));
-        $diff = $doc->b_passive - $doc->b_active;
-        
-        $this->_bal +=  $diff;
-
+        $row->add(new Label('ddate', H::fd($doc->document_date)));
+ 
         $row->add(new Label('out', $doc->b_passive > 0 ?  H::fa( $doc->b_passive):"" ));
         $row->add(new Label('in', $doc->b_active>0 ? H::fa( $doc->b_active):"" ));
-        $row->add(new Label('bc', $this->_bal > 0? H::fa( $this->_bal):"" ));
-        $row->add(new Label('bd', $this->_bal < 0? H::fa( 0-$this->_bal):"" ));
+        $row->add(new Label('bc',  $doc->bal > 0? H::fa(  $doc->bal):"" ));
+        $row->add(new Label('bd',  $doc->bal < 0? H::fa( 0- $doc->bal):"" ));
       
         $row->add(new ClickLink('showdet'))->onClick($this, 'showOnClick');
 

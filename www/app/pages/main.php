@@ -19,12 +19,14 @@ use App\Util;
  */
 class Main extends Base
 {
+  
+
     private $_docstatelist;
 
     public function __construct() {
         parent::__construct();
 
-        $this->_tvars['curversion'] = CURR_VERSION;
+        $this->_tvars['curversion'] = System::CURR_VERSION;
         $this->_tvars['curversionbd'] = System::getOptions('version',false);
 
         $user = System::getUser();

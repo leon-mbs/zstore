@@ -36,7 +36,8 @@ class Options extends \App\Pages\Base
         $form->add(new CheckBox('setpayamount', $modules['pusetpayamount']));
 
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
-
+        $form->add(new CheckBox('insertcust', $modules['puinsertcust']));
+ 
     }
     //584ac4cc9096eb799cf6664ce977b22c6f463cba
 
@@ -46,7 +47,8 @@ class Options extends \App\Pages\Base
         $setpayamount = $this->cform->setpayamount->isChecked() ? 1 : 0;
         $customer_id = $this->cform->defcust->getValue();
         $pricetype = $this->cform->defpricetype->getValue();
-        if ($customer_id == 0) {
+      $insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
+         if ($customer_id == 0) {
             $this->setError('noselcust');
             return;
         }
@@ -64,7 +66,8 @@ class Options extends \App\Pages\Base
         $modules['pucustomer_id'] = $customer_id;
         $modules['pupricetype'] = $pricetype;
         $modules['pusetpayamount'] = $setpayamount;
-
+        $modules['puinsertcust'] = $insertcust;
+ 
         System::setOptions("modules", $modules);
         $this->setSuccess('saved');
 

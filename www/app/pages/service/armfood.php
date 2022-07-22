@@ -87,6 +87,8 @@ class ARMFood extends \App\Pages\Base
 
         $this->orderlistpan->add(new ClickLink('neworder', $this, 'onNewOrder'));
         $this->orderlistpan->add(new DataView('orderlist', new ArrayDataSource($this, '_doclist'), $this, 'onDocRow'));
+        $this->orderlistpan->add(new \Zippy\Html\DataList\Paginator('pag',  $this->orderlistpan->orderlist));
+        $this->orderlistpan->orderlist->setPageSize(H::getPG());
 
         $this->orderlistpan->add(new Form('searchform'))->onSubmit($this, 'updateorderlist');
         $this->orderlistpan->searchform->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');

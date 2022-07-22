@@ -295,6 +295,9 @@
                         <input placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
                         <a zippy="openitemsel">Відкрити довідник</a>
                         <br>Наявність: <span zippy="qtystock"></span>
+                         {{^noshowpartion}}
+                        <br>Облікова  ціна: <span zippy="pricestock"></span>
+                         {{/noshowpartion}}
 
                     </div>
                     {{#usesnumber}}

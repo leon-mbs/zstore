@@ -271,4 +271,36 @@
 
 </table>
 {{/_type8}}     
+{{#_type12}}
+<tr style="font-size:larger; font-weight: bolder;">
+    <td align="center" colspan="5">
+        Товари по бренду  {{brand}}<br> <br>
+    </td>
+</tr>
+<tr style="font-weight: bolder;">
+    <th colspan="2" style="border: solid black 1px">Найменування</th>
 
+          <th align="right" style="border: solid black 1px">Кіл.</th>
+
+    <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
+    <th align="right" style="border: solid black 1px">Прибуток</th>
+
+  
+</tr>
+{{#_detail}}
+<tr>
+
+
+    <td colspan="2">{{name}}</td>
+
+
+    <td align="right">{{qty}}</td>
+    <td align="right">{{summa}}</td>
+    <td align="right">{{navar}}</td>
+    
+</tr>
+{{/_detail}}
+<tr><td colspan="3" ></td> <td align="right" ><b>{{totsumma}}</b></td> <td align="right"   > <b>{{totnavar}}</b></td><td   > </td>  </tr>
+
+</table>
+{{/_type12}}
