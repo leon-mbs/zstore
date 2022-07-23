@@ -55,10 +55,16 @@ $(document).ready(function() {
 
             console.log(JSON.stringify(data));
         });
-    }    
+    }   
+    
+     */ 
   function beep(){
       
-    try {
+
+new Audio('/assets/beep.mp3').play()
+
+
+  /*  try {
         var context =  new (window.AudioContext || window.webkitAudioContext)();
         if (context !== undefined) {
               
@@ -66,19 +72,21 @@ $(document).ready(function() {
             var osc = context.createOscillator()
             osc.type = 'sine'
             osc.frequency.value = 400
+            osc.connect(context.destination)
             osc.start(currentTime)
-            osc.stop(currentTime + 0.5)           
+            osc.stop(currentTime + 0.2)  
+                     
         }     
     
-    
-} catch (error) {
-  
-}
-
+     
+        } catch (error) {
+          
+        }
+*/
       
         
     }
-    */
+   
 
 
    function mobileCheck() {

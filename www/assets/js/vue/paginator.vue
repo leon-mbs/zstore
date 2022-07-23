@@ -113,11 +113,13 @@ module.exports = {
             onbtn:function(i){
               this.currentpage=i;
               this.refresh()    
-              this.onpage(i)
+ this.$emit('onpage',i)
+//              this.onpage(i)
+
             }   
         } ,
        
-         data: function() {
+         data() {
             return {
                 reset:0,
                 currentpage:1,
@@ -126,7 +128,7 @@ module.exports = {
             }
         } ,
    
-    props:['rows' ,'pagesize','buttonscnt','onpage' ]
+    props:['rows' ,'pagesize','buttonscnt'  ]
 }
 </script>
 

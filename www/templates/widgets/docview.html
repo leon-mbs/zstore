@@ -249,9 +249,9 @@
             }
 
                
-        var vdocview = new Vue({
-            el: '#vdocview',
-              data: {
+        var vdocview = Vue.createApp({
+        
+              data() { return  {
                    
                   docid:0,
                    path:'',
@@ -265,7 +265,7 @@
                   fileslist:[]  
                   
                      
-              }             
+              } }            
     ,
      computed:{
          printmob:function(){
@@ -313,13 +313,13 @@
          mounted: function(){
              
               this.docid=  $('#_docid_').attr('docid')         
-             // this.path=  $('#_docid_').attr('path')         
-             
+              this.path=  $('#_path_').attr('path')         
+              
         }  ,      
            methods: {
                 load:function(){
                       
-                   callPageMethod($('#_path_').attr('path') +'::loaddata',[this.docid], null,(data)=> 
+                   callPageMethod(this.path +'::loaddata',[this.docid], null,(data)=> 
                   {
                     
                         
@@ -349,7 +349,7 @@
              
                loaddocs:function( ){
                    
-                   callPageMethod($('#_path_').attr('path') +'::loadchilddocs',[this.docid], null,(data)=> 
+                   callPageMethod(this.path +'::loadchilddocs',[this.docid], null,(data)=> 
                               {    
                                   this.reldocs = JSON.parse(data) ;
                                    
@@ -357,7 +357,7 @@
                }  ,
                delchilddoc:function( id){
                     
-                   callPageMethod($('#_path_').attr('path') +'::delchilddoc',[ id], null,(data)=> 
+                   callPageMethod(this.path +'::delchilddoc',[ id], null,(data)=> 
                               {
                                   this.loaddocs() 
                               });
@@ -368,7 +368,7 @@
                 },
                 ontext: async function (query){
                    
-                    var url  = getMethodUrl(('#_path_').attr('path') +'::getDocs',[query, this.docid])
+                    var url  = getMethodUrl(this.path +'::getDocs',[query, this.docid])
                     let response = await fetch(url);
              
                     return  await response.json()  ;
@@ -377,7 +377,7 @@
                 onadddoc:function (){
                     
                     
-                   callPageMethod($('#_path_').attr('path') +'::addchilddoc',[this.childdocid, this.docid], null,(data)=> 
+                   callPageMethod(this.path +'::addchilddoc',[this.childdocid, this.docid], null,(data)=> 
                    {
                       this.loaddocs() 
                    });                    
@@ -391,7 +391,7 @@
              
                 delmsg:function( id){
                     
-                   callPageMethod($('#_path_').attr('path') +'::delmsg',[ id], null,(data)=> 
+                   callPageMethod(this.path +'::delmsg',[ id], null,(data)=> 
                      {
                         this.loadmessages() 
                      });
@@ -400,7 +400,7 @@
                    var el = document.getElementById('msgform') ;
                    var f = new  FormData(el)  
                     
-                   callPageMethod($('#_path_').attr('path') +'::addmsg',[  this.docid], f,(data)=> 
+                   callPageMethod(this.path+'::addmsg',[  this.docid], f,(data)=> 
                    {
                         this.loadmessages() 
                    });                    
@@ -410,7 +410,7 @@
                 } ,               
                loadmessages:function( ){
                    
-                   callPageMethod($('#_path_').attr('path') +'::loadmessages',[this.docid], null,(data)=> 
+                   callPageMethod(this.path+'::loadmessages',[this.docid], null,(data)=> 
                       {
                           
                           this.msglist = JSON.parse(data) ;
@@ -422,7 +422,7 @@
                    var el = document.getElementById('fileaddform') ;
                    var f = new  FormData(el)  
                     
-                   callPageMethod($('#_path_').attr('path') +'::addfile',[  this.docid], f,(data)=> 
+                   callPageMethod(this.path +'::addfile',[  this.docid], f,(data)=> 
                    {
                         this.loadfiles() 
                    });                    
@@ -432,14 +432,14 @@
                 } ,  
                 delfile:function( id){
                     
-                   callPageMethod($('#_path_').attr('path') +'::delfile',[ id], null,(data)=> 
+                   callPageMethod($this.path+'::delfile',[ id], null,(data)=> 
                      {
                         this.loadfiles() 
                      });
                } ,  
                   loadfiles:function( ){
                    
-                   callPageMethod($('#_path_').attr('path') +'::loadfiles',[this.docid], null,(data)=> 
+                   callPageMethod(this.path +'::loadfiles',[this.docid], null,(data)=> 
                       {
                           
                           this.fileslist = JSON.parse(data) ;
@@ -449,11 +449,15 @@
                
           } ,
         components: {   
-                   'typeahead': httpVueLoader('/assets/js/vue/typeahead.vue')
+    
+        //           'typeahead': httpVueLoader('/assets/js/vue/typeahead.vue')
+  'typeahead': Vue.defineAsyncComponent( () => loadModule('/assets/js/vue/typeahead.vue', vueoptions) )
+                      
                }            
-        }) 
+        }).mount('#vdocview') 
         
-        
+    
+      
         function setdocid(id){   
               vdocview.docid= id
         }

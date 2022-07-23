@@ -42,17 +42,63 @@
             
                 function onBell(){
                     $("#bell").attr('class','fa fa-bell  text-success')
+                    // beep()
                 }
                
             
                 window.setInterval(onNewOrder, 5000);
 
             
-                function onNewOrder() {
+     
+    
+    var vapp = Vue.createApp({
+      
+      data() {return  {
+          itemlist:[]
+      }    }  ,
+     components: {
+           // 'paginator': httpVueLoader('/assets/js/vue/paginator.vue')
+   'paginator': Vue.defineAsyncComponent( () => loadModule('/assets/js/vue/paginator.vue', vueoptions) )
+ 
+        }, 
+        methods: {
+             onReady( document_id,item_id, index) {
+                 // onBell()
+                  $('#newordersalert').hide();
+                  callPageMethod('onReady',[document_id,item_id],null,(data)=> 
+                  {
+                      this.updateItems() ;
+                  });     
+             
+           } ,
+           
+        updateItems(){
+            
+      
+            
+          callPageMethod('getItems',null,null,(data)=> 
+          {
+                   
+              this.itemlist= JSON.parse(data)  
+              
+          
+          });
+            
+      }           
+        }      
+      
+    }).mount('#vapp')      
+
+    function updateItems() {
+      vapp.updateItems() ;
+  }
+  
+  
+             function onNewOrder() {
                         
                         callPageMethod('getMessages',null,null,(data)=> 
                         {
-                           
+                               
                                 var  answer = JSON.parse(data)  
                                 
                                 if (answer.update==true ) {
@@ -66,52 +112,14 @@
                                    $('#newordersalert').show();
                                    $('#neworderscnt').text('Нових заказов ' + answer.cnt);
                                    beep()
-                                  window.setTimeout(function(){
-                                                  
-                                        updateItems() 
-                                        }, 5000); 
-                                           
-                                 }
-                                 
-                                
+                                   updateItems() 
+                                }
                             });
+                
                 }
-
     
-    var vapp = new Vue({
-      el: '#vapp',
-      data: {
-          itemlist:[]
-      }  ,
-     components: {
-            'paginator': httpVueLoader('/assets/js/vue/paginator.vue')
-        }, 
-        methods: {
-             onReady( document_id,item_id, index) {
-                  onBell()
-               
-                  callPageMethod('onReady',[document_id,item_id],null,(data)=> 
-                  {
-                      updateItems() ;
-                  });     
-             
-           }
-        }      
-      
-    })      
+  
 
-
-      function updateItems(){
-          callPageMethod('getItems',null,null,(data)=> 
-          {
-                   
-              vapp.itemlist= JSON.parse(data)  
-              
-          
-          });
-            
-      }
-      
       
   $(document).ready(function () {
       
@@ -122,4 +130,11 @@
 
     </body>
 </html>
- 
+ const app = Vue.createApp({
+  methods: {
+    initialize() { /* ... */ }
+  }
+});
+
+const vm = app.mount("#app");
+vm.initialize();

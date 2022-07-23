@@ -35,7 +35,7 @@
                     </tr>
                 </table>
               
-                <paginator   :onpage="change"  v-bind:rows="rowscnt" v-bind:pagesize="pagesize" buttonscnt="10"></paginator>
+                <paginator  v-on:onpage="changepage"  v-bind:rows="rowscnt" v-bind:pagesize="pagesize" buttonscnt="10"></paginator>
       
             </div>
 
@@ -50,20 +50,22 @@
  {|={{ }}=|}  
  
  <script>
-        
-    var vapp = new Vue({
-      el: '#vapp',
-      data: {
+
+    var vapp =  Vue.createApp({
+       
+      data() { return {
           itemlist:[] ,
           rowscnt:0  ,
           searchtext:'' ,
           pagesize:25
-      }  ,
+      } } ,
      components: {
-            'paginator': httpVueLoader('/assets/js/vue/paginator.vue')
+     //       'paginator': httpVueLoader('/assets/js/vue/paginator.vue')
+     'paginator': Vue.defineAsyncComponent( () => loadModule('/assets/js/vue/paginator.vue', vueoptions) )
+               
         }, 
         methods: {
-            change:function( page){    //кнопка  пагинатора
+            changepage:function( page){    //кнопка  пагинатора
                 
                  this.loaddata( (page-1) * this.pagesize );
             }   ,
@@ -74,33 +76,31 @@
                     count:this.pagesize 
                 };
                 
-                updateItems(body);
+                  callPageMethod('getItems',null, JSON.stringify(body),(data)=> 
+                  {
+                      let tmp =   JSON.parse(data)  
+                      this.itemlist=  tmp.items
+                     
+                      this.rowscnt=tmp.cnt
+                  
+                  });
             }  ,
             onsearch:function (){
                 this.rowscnt=0;
                 this.loaddata();
-            }
+            }  
+           
             
         }  ,
         mounted: function(){
              this.loaddata();
         }
       
-    })   
+    }).mount('#vapp')   
  
+   
   
-  
-    function updateItems(body){
-          callPageMethod('getItems',null, JSON.stringify(body),(data)=> 
-          {
-              let tmp =   JSON.parse(data)  
-              vapp.itemlist=  tmp.items
-             
-              vapp.rowscnt=tmp.cnt
-          
-          });
-            
-      } 
+   
       
       
    //   updateItems();
