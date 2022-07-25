@@ -5,7 +5,7 @@ namespace App\API;
 use \App\Entity\Customer;
 use \App\Helper as H;
 
-class customers extends \App\API\Base\JsonRPC
+class customers extends  JsonRPC
 {
 
     //список  контрагентов

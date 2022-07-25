@@ -58,22 +58,7 @@ class Application extends \Zippy\WebApplication
 
             $class = $api[1];
 
-            if ($class == 'echo') {  //для  теста  /api/echo/параметр
-                echo $api[2];
-                die;
-            }
-                 
-               /*
-               if ($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
-                  header('Access-Control-Allow-Origin: *');
-                    header('Access-Control-Allow-Credentials: true');
-                    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-                    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
-                    http_response_code(200); 
-                    die;
-               }            
-            
-               */
+           
             
             
             try {
@@ -86,46 +71,20 @@ class Application extends \Zippy\WebApplication
                 require_once($file);
 
                 $class = "\\App\\API\\" . $class;
-                $method = $api[2];
+               // $method = $api[2];
 
                 $page = new $class;
 
-                //  RESTFul
-                if ($page instanceof \App\API\Base\RestFul) {
-                    $_params = array_slice($api, 3);
-                    $i=0;
-                    if( is_array($_params) ) {
-                        foreach($_params as $v) {
-                           $params[$i++]=$v;        
-                        }
-                    }
-                    if( is_array($_REQUEST) ) {
-                        foreach($_REQUEST as $k=>$v) {
-                           $params[$k]=$v;        
-                        }
-                    }
-                    
-                    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                         $post =  file_get_contents('php://input');   
-                         $page->{$method}($params,$post);
-                         die;
-                    };
-               
-                    $page->{$method}($params);
-                    die;
-                }
-                // JSON-RPC
-                if ($page instanceof \App\API\Base\JsonRPC) {
+ 
+         
+                if ($page instanceof \App\API\JsonRPC) {
                     $page->Execute();
-                    die;
-                }
-
-                //для произвольной страницы
-                $params = array_slice($api, 3);
-                if (strlen($api[2]) > 0) {
-                    call_user_func_array(array($page, $api[2]), $params);
+                   
+                }   else {
+                   $this->headers(403); 
                 }
                 die;
+                
             } catch(\Throwable $e) {
                 global $logger;
                 $logger->error($e->getMessage());

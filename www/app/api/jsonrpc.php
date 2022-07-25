@@ -1,6 +1,6 @@
 <?php
 
-namespace App\API\Base;
+namespace App\API;
 
 /**
  * Base class for Json RPC
