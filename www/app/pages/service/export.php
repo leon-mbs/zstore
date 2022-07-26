@@ -161,12 +161,12 @@ class Export extends \App\Pages\Base
             $data['E' . $i] = $item->item_code;
             $data['F' . $i] = $item->bar_code;
             $price = H::fa($item->getPrice($pt));
-            $data['G' . $i] = array('value' => H::fa($price), 'format' => 'number', 'align' => 'right');
+            $data['G' . $i] = array('value' => H::fa(doubleval($price)), 'format' => 'number', 'align' => 'right');
             
             if ($t == 1) {
                 $data['H' . $i] = $item->cell;
                 $qty = H::fqty($item->getQuantity($store));
-                $data['I' . $i] = array('value' => H::fqty($qty), 'format' => 'number', 'align' => 'right');
+                $data['I' . $i] = array('value' => H::fqty(doubleval($qty)), 'format' => 'number', 'align' => 'right');
             }
             
             $root.="<item>";
@@ -236,8 +236,8 @@ class Export extends \App\Pages\Base
                 $data['B' . $i] = $n++;
                 $data['C' . $i] = $item->itemname;
                 $data['D' . $i] = $item->item_code;
-                $data['E' . $i] = array('value' => H::fqty($item->quantity), 'format' => 'number', 'align' => 'right');
-                $data['F' . $i] = array('value' => H::fa($item->price), 'format' => 'number', 'align' => 'right');
+                $data['E' . $i] = array('value' => H::fqty(doubleval($item->quantity)), 'format' => 'number', 'align' => 'right');
+                $data['F' . $i] = array('value' => H::fa(doubleval($item->price)), 'format' => 'number', 'align' => 'right');
              
                 $root.="<itemname><![CDATA[" . $doc->itemname . "]]></itemname>";
                 $root.="<item_code>" . $item->item_code . "</item_code>";
@@ -250,7 +250,7 @@ class Export extends \App\Pages\Base
 
             $i++;
             $data['A' . $i] = array('value' => H::l("total") . ": ", 'bold' => true, 'align' => 'right');
-            $data['B' . $i] = array('value' => H::fa($item->amount), 'format' => 'number', 'bold' => true, 'align' => 'right');
+            $data['B' . $i] = array('value' => H::fa(doubleval($item->amount)), 'format' => 'number', 'bold' => true, 'align' => 'right');
             $i++;
             
             $root.="</doc>";  
