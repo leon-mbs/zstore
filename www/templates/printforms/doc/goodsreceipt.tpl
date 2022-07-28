@@ -99,6 +99,12 @@
         <td align="right">{{nds}}</td>
     </tr>
     {{/isnds}}
+   {{#delivery}}
+    <tr style="font-weight: bolder;">
+        <td colspan="8" align="right">Доставка:</td>
+        <td align="right">{{delivery}}</td>
+    </tr>
+    {{/delivery}}
  
    {{#payamount}}
     <tr style="font-weight: bolder;">

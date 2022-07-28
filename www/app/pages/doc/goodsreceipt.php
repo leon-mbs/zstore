@@ -77,18 +77,18 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new SubmitButton('bnds'))->onClick($this, 'onNds');
         $this->docform->add(new TextInput('editdisc', "0"));
         $this->docform->add(new SubmitButton('bdisc'))->onClick($this, 'onDisc');
+        $this->docform->add(new TextInput('editdelivery', "0"));
+        $this->docform->add(new SubmitButton('bdelivery'))->onClick($this, 'onDelivery');
 
       
         $this->docform->add(new Label('nds', 0));
-        
         $this->docform->add(new Label('disc', 0));
+        $this->docform->add(new Label('delivery', 0));
 
         $this->docform->add(new Label('payed', 0));
         $this->docform->add(new Label('payamount', 0));
         $this->docform->add(new Label('total'));
         $this->docform->add(new \Zippy\Html\Form\File('scan'));
-        $this->docform->add(new TextInput('zatr'));
-        $this->docform->add(new CheckBox('zatrself'));
 
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutoItem');
@@ -145,8 +145,8 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->outnumber->setText($this->_doc->headerdata['outnumber']);
             $this->docform->disc->setText(H::fa($this->_doc->headerdata['disc']));
             $this->docform->editdisc->setText(H::fa($this->_doc->headerdata['disc']));
-            $this->docform->zatr->setText($this->_doc->headerdata['zatr']);
-            $this->docform->zatrself->setChecked($this->_doc->headerdata['zatrself']);
+            $this->docform->delivery->setText(H::fa($this->_doc->headerdata['delivery']));
+            $this->docform->editdelivery->setText(H::fa($this->_doc->headerdata['delivery']));
 
             if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
                 $this->_doc->payed = $this->_doc->headerdata['payed'];
@@ -481,8 +481,6 @@ class GoodsReceipt extends \App\Pages\Base
         if ($this->_doc->firm_id > 0) {
             $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();
         }
-        $this->_doc->headerdata['zatr'] = $this->docform->zatr->getText();
-        $this->_doc->headerdata['zatrself'] = $this->docform->zatrself->isChecked()?1:0;
 
         
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
@@ -492,6 +490,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->_doc->headerdata['rate'] = $this->docform->rate->getText();
         $this->_doc->headerdata['nds'] = $this->docform->nds->getText();
         $this->_doc->headerdata['disc'] = $this->docform->disc->getText();
+        $this->_doc->headerdata['delivery'] = $this->docform->delivery->getText();
         $this->_doc->headerdata['outnumber'] = $this->docform->outnumber->getText();
         $this->_doc->headerdata['basedoc'] = $this->docform->basedoc->getText();
         
@@ -628,6 +627,11 @@ class GoodsReceipt extends \App\Pages\Base
         $this->CalcPay();
         $this->goAnkor("tankor");
     }
+    public function onDelivery($sender) {
+        $this->docform->delivery->setText(H::fa($this->docform->editdelivery->getText()));
+        $this->CalcPay();
+        $this->goAnkor("tankor");
+    }
 
     public function onNds($sender) {
         $this->docform->nds->setText($this->docform->editnds->getText());
@@ -659,6 +663,7 @@ class GoodsReceipt extends \App\Pages\Base
     private function CalcPay() {
         $total = $this->docform->total->getText();
         $disc = doubleval($this->docform->disc->getText());
+        $delivery = doubleval($this->docform->delivery->getText());
         $nds = doubleval($this->docform->nds->getText()) ;
         
         $total = $total + $nds - $disc  ;  
@@ -668,6 +673,8 @@ class GoodsReceipt extends \App\Pages\Base
         if(doubleval( $this->_doc->headerdata['prepaid'])>0) {
            $total = $total - $this->_doc->headerdata['prepaid'];  
         }  
+        
+        $total += + $delivery;
         
         $this->docform->editpayed->setText(H::fa($total));
         $this->docform->payed->setText(H::fa($total));

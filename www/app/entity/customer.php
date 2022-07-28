@@ -256,22 +256,32 @@ class Customer extends \ZCL\DB\Entity
     }
     
     public function getDolg() {
-     $br = "";
-        $c = \App\ACL::getBranchConstraint();
-        if (strlen($c) > 0) {
-            $br = " {$c} and ";
-        }    
-        $docs      = " and ( meta_name in('GoodsIssue','Invoice' ,'PosCheck','ServiceAct','Order','ReturnIssue')  or  (meta_name='IncomeMoney'  and content like '%<detail>1</detail>%'  )  or  (meta_name='OutcomeMoney'  and content like '%<detail>2</detail>%'  ))  ";
- 
+    
+        $dolg = 0;
         $conn = \ZDB\DB::getConnect();
-     $sql = "select  coalesce(sum(sam),0) as sam  from (
-        select   (case when  ( meta_name='OutcomeMoney' or meta_name='ReturnIssue' ) then  (payed - payamount )   else  (payamount - payed)  end) as sam 
-            from documents_view  
-            where {$br}   customer_id={$this->customer_id} and (payamount >0  or  payed >0) {$docs}  and state not in (1,2,3,17,8)   and  ( (meta_name <>'POSCheck' and payamount <> payed) or(meta_name = 'POSCheck' and payamount > payed  ))
-            ) t    ";
 
+     //   if($this->type == self::TYPE_SELLER)   {
+            $sql = "SELECT   COALESCE( SUM( a.s_passive),0) as  pas, coalesce(SUM( a.s_active ),0) AS act
+                FROM cust_acc_view a  WHERE  a.s_active <> a.s_passive  and  a.customer_id = ". $this->customer_id ;
+
+            $row=$conn->GetRow($sql)  ;
+        
+            $dolg = $row['pas']  - $row['act'] ;
+            
+     //   }
+     //   if($this->type == self::TYPE_BAYER)   {
+            $sql = "SELECT   COALESCE( SUM( a.b_passive),0) as  pas, coalesce(SUM( a.b_active ),0) AS act
+                FROM cust_acc_view a  WHERE  a.b_active <> a.b_passive  and  a.customer_id = ". $this->customer_id ;
+
+            $row=$conn->GetRow($sql)  ;
+        
+            $dolg += $row['pas']  - $row['act'] ;
+            
+     //   }
  
-        return $conn->GetOne($sql);
+ 
+ 
+        return $dolg;
 
     }
     

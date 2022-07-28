@@ -80,14 +80,7 @@
 
                     </div>
                     {{/useval}}
-                           <div class="form-group  ">
-                        <label for="zatr">Накладнi видатки </label>
-
-                        <input style="width:100px" pattern="[0-9]+" class="form-control" type="text" zippy="zatr">
-                      
-                        <input zippy="zatrself" type="checkbox"> Розподiлити на  собiвартiсть товару
-                   
-                    </div>
+            
                     <div class="form-group  ">
                         <label for="outnumber">Номер у постачальника </label>
 
@@ -179,6 +172,11 @@
                                         class="fa fa-edit"></i></a></td>
                         </tr>
                        {{/prepaid}}
+                          <tr style="font-weight: bolder;">
+                            <td data-label="delivery" colspan={{colspan}} class="text-right">Доставка:</td>
+                            <td zippy="delivery" class="text-right"></td>
+                            <td data-label="delivery"><a href="javascript:void(0);" data-toggle="modal" data-target="#modaldelivery"><i    class="fa fa-edit"></i></a></td>
+                        </tr>
 
  
                         
@@ -290,6 +288,29 @@
                 </div>
             </div>
 
+            <div id="modaldelivery" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered  modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Доставка</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group  ">
+                                <input class="form-control qtyprice" type="text" zippy="editdelivery" pattern="[0-9\.\,]+">
+                                <div class="input-group-append">
+                                    <input type="submit" value="OK" zippy="bdelivery" class="ml-2 btn btn-info  ">
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
 
        
 

@@ -66,6 +66,7 @@ class GoodsReceipt extends Document
 
         $header['prepaid'] = H::fa($this->headerdata["prepaid"]);
         $header['disc'] = H::fa($this->headerdata["disc"]);
+        $header['delivery'] = H::fa($this->headerdata["delivery"]);
         $header['nds'] = H::fa($this->headerdata["nds"]);
         $header['rate'] = $this->headerdata["rate"];
         if ($header['rate'] == 0 || $header['rate'] == 1) {
@@ -104,9 +105,9 @@ class GoodsReceipt extends Document
         $total = $total * $rate;
         
         
-        if($this->headerdata['zatr'] > 0 && $this->headerdata['zatrself'] ==1 ) {
-            $total = $total + $this->headerdata["zatr"];  // распределяем накладные  затраты  на  себестоимость
-        }
+     //   if($this->headerdata['delivery'] > 0   ) {
+     //       $total = $total + $this->headerdata["delivery"];  // распределяем накладные  затраты  на  себестоимость
+    //    }
         
         
         $k = $total / $this->amount;   
@@ -157,13 +158,7 @@ class GoodsReceipt extends Document
             }
 
         }
-        if($this->headerdata['zatr'] > 0 && $this->headerdata['zatrself'] !=1 ) {
-            \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->headerdata['zatr'], $this->headerdata['payment']);     
-        }
-        if($this->headerdata['zatr'] > 0  ) {
-            \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata['zatr'], \App\Entity\IOState::TYPE_NAKL);
-        }
-        
+ 
        
         $payamount = $thus->payamount * $rate; 
           

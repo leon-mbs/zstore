@@ -212,6 +212,11 @@ class PaySelList extends \App\Pages\Base
     public function showOnClick($sender) {
 
         $this->_doc = $sender->owner->getDataItem();
+        
+        if($this->_doc instanceof \App\DataItem){
+           $this->_doc  = Document::load($this->_doc->document_id ); 
+        }        
+        
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
         }
