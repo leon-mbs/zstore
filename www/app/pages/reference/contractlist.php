@@ -95,9 +95,7 @@ class ContractList extends \App\Pages\Base
 
         $row->add(new Label('customer', $item->customer_name));
         $row->add(new Label('firm', $item->firm_name));
-
-        $dolg = $item->getDolg();
-        $row->add(new Label('dolg', $dolg <> 0 ? H::fa($dolg) : ""));
+        $c = Customer::load($item->customer_id);
         $row->add(new Label('emp', $item->emp_name));
         $row->add(new Label('hasnotes'))->setVisible(strlen($item->desc) > 0);
         $row->hasnotes->setAttribute('title', $item->desc);
