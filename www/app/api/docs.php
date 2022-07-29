@@ -6,7 +6,7 @@ use \App\Entity\Doc\Document;
 use \App\Entity\Item;
 use \App\Helper as H;
 
-class docs extends \App\API\Base\JsonRPC
+class docs extends JsonRPC
 {
 
     //список  статусов

@@ -2,7 +2,7 @@
 
 namespace App\API;
 
-class common extends \App\API\Base\JsonRPC
+class common extends  JsonRPC
 {
 
 

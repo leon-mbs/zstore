@@ -51,6 +51,7 @@ class Prod extends \App\Pages\Base
 
         $detail = array();
         $detail2 = array();
+        $detail3 = array();
         $sum1 = 0;
         $sum2 = 0;
         $conn = \ZDB\DB::getConnect();
@@ -113,11 +114,47 @@ class Prod extends \App\Pages\Base
             );
             $sum2 += $row['summa'];
         }
+        
+        //готово  к производству
+        
+        $items = \App\Entity\Item::find("disabled<> 1 and item_id in(select pitem_id from item_set)","itemname") ;
+        
+        
+        
+        foreach($items as $it){
 
+            $max = 1000000;
+            $parts = \App\Entity\ItemSet::find("pitem_id=".$it->item_id) ;
+            
+            foreach($parts as $part){         
+                 $pi = \App\Entity\item::load($part->item_id);
+                 if($pi==null) continue;
+                 $pqty = $pi->getQuantity(); 
+                 if($pqty==0) {
+                     $max=0;
+                     break;
+                 }
+                 $t = $pqty/$part->qty;
+                 if($t<$max) $max = $t;
+                   
+            }
+            if( $max<=0 || $max == 1000000)  continue;
+                        
+            $detail3[] = array(
+                "code"  => $it->item_code,
+                "name"  => $it->itemname,
+                "qty"   => H::fqty($max),
+               
+            );
+            
+        }
+        
         $header = array('datefrom' => \App\Helper::fd($from),
                         "_detail"  => $detail,
                         "_detail2" => $detail2,
+                        "_detail3" => $detail3,
                         'dateto'   => \App\Helper::fd($to),
+                        'currdate'   => \App\Helper::fd(time()),
                         'parea'    => null,
                         'sum1'     => H::fa($sum1),
                         'sum2'     => H::fa($sum2)

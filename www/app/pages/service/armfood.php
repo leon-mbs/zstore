@@ -756,30 +756,34 @@ class ARMFood extends \App\Pages\Base
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
-        //списываем  со  склада
-
+      
         try {
-            if ($this->_doc->state == Document::STATE_INPROCESS) {
                 $conn = \ZDB\DB::getConnect();
                 $conn->Execute("delete from entrylist where document_id =" . $this->_doc->document_id);
                 $conn->Execute("delete from iostate where document_id=" . $this->_doc->document_id);
 
+
+     
+
                 $n = new \App\Entity\Notify();
                 $n->user_id = \App\Entity\Notify::ARMFOODPROD;
                 $n->dateshow = time();
-
                 $n->message = serialize(array('cmd' => 'update'));
 
-
-                $n->save();
+            
+            if( $this->_doc->state== Document::STATE_NEW)  {
+                $this->_doc->updateStatus(Document::STATE_INPROCESS);
+                $n->message = serialize(array('cmd' => 'new','document_id'=>$this->_doc->document_id));
+                
             }
+            $n->save();            
+
+              
             $this->_doc = $this->_doc->cast();
 
             $this->_doc->DoStore();
             $this->_doc->save();
-            $this->_doc->updateStatus(Document::STATE_INPROCESS);
-
-
+   
             $conn->CommitTrans();
         } catch(\Throwable $ee) {
             global $logger;

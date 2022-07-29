@@ -9,23 +9,23 @@
     "require": {
         "php": ">=7.4",
          
-        "phpmailer/phpmailer": "~6.1",
+        "phpmailer/phpmailer": "^6.5",
         "monolog/monolog": "1.26.1",
        
-        "dompdf/dompdf": "v1.2.1",
-        "firebase/php-jwt": "v5.5.1",
+        "dompdf/dompdf": "2.0.0",
+        "firebase/php-jwt": "5.5.1",
         "roave/security-advisories": "dev-master",
-        "picqer/php-barcode-generator": "v2.2.1",
+        "picqer/php-barcode-generator": "2.2.1",
         "endroid/qr-code": "4.4.7",
 
         "masterexploder/phpthumb" :"2.1",
-        "lemmon/fetch" :"v0.3.0",
+        "lemmon/fetch" :"0.3.0",
         "lis-dev/nova-poshta-api-2" :"0.1.6",
         "phpoffice/phpspreadsheet" :"1.21.0",
        
         "automattic/woocommerce": "3.0.0",
-        "symfony/polyfill-mbstring": "v1.24.0",
-        "symfony/polyfill-uuid": "v1.23.0",
+        "symfony/polyfill-mbstring": "1.24.0",
+        "symfony/polyfill-uuid": "1.23.0",
    
         "wayforpay/php-sdk": "*",
         "leon-mbs/zippy": "2.5.14",

@@ -5,7 +5,7 @@ namespace App\API;
 use \App\Entity\Item;
 use \App\Helper as H;
 
-class items extends \App\API\Base\JsonRPC
+class items extends  JsonRPC
 {
 
     // список категорий  ТМЦ

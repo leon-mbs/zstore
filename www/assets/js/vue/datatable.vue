@@ -174,7 +174,7 @@ module.exports = {
                  
         } ,
        
-         data: function() {
+         data()  {
             return {
                 items:[] ,
                 headers:[]  ,
