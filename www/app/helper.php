@@ -231,12 +231,7 @@ class Helper
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10010, 'meta_name' => "/WC/Items", 'meta_type' => 6, 'description' => self::l('modwcitems')));
             }
         }
-        if ($modules['issue'] == 1) {
-            if ($role->rolename == 'admins' || strpos($role->modules, 'issue') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10014, 'meta_name' => "/Issue/Pages/IssueList", 'meta_type' => 6, 'description' => self::l('modissueslist')));
-            }
-        }
-
+  
         if ($modules['promua'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'promua') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10015, 'meta_name' => "/PU/Orders", 'meta_type' => 6, 'description' => self::l('modpuorders')));
@@ -248,7 +243,17 @@ class Helper
             }
         }
 
-     
+        if ($modules['issue'] == 1) {
+            if ($role->rolename == 'admins' || strpos($role->modules, 'issue') !== false) {
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10014, 'meta_name' => "/Issue/Pages/IssueList", 'meta_type' => 6, 'description' => self::l('modissueslist')));
+            }
+        }
+        if ($modules['issue'] == 1) {
+            if ($role->rolename == 'admins' || strpos($role->modules, 'issue') !== false) {
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10017, 'meta_name' => "/Issue/Pages/ProjectList", 'meta_type' => 6, 'description' => self::l('modprojectlist')));
+            }
+        }
+   
          
         return $mdata;
     }
