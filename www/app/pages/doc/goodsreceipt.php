@@ -39,7 +39,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         $common = System::getOptions("common");
 
-        $this->_tvars["colspan"] = $common['usesnumber'] == 1 ? 8 : 6;
+        $this->_tvars["colspan"] = $common['usesnumber'] == 1 ? 9 : 7;
    
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
@@ -136,8 +136,6 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
-            $this->docform->payamount->setText(H::fa($this->_doc->payamount));
-            $this->docform->editpayamount->setText(H::fa($this->_doc->payamount));
             $this->docform->nds->setText(H::fa($this->_doc->headerdata['nds']));
             $this->docform->editnds->setText(H::fa($this->_doc->headerdata['nds']));
             $this->docform->val->setValue($this->_doc->headerdata['val']);
@@ -148,11 +146,16 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->delivery->setText(H::fa($this->_doc->headerdata['delivery']));
             $this->docform->editdelivery->setText(H::fa($this->_doc->headerdata['delivery']));
 
-            if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
+            if (  $this->_doc->headerdata['payed'] > 0) {
                 $this->_doc->payed = $this->_doc->headerdata['payed'];
             }
-           $this->docform->editpayed->setText(H::fa($this->_doc->payed));
+            if ( $this->_doc->headerdata['payamount'] > 0) {
+                $this->_doc->payamount = $this->_doc->headerdata['payamount'];
+            }
+            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
             $this->docform->payed->setText(H::fa($this->_doc->payed));
+            $this->docform->payamount->setText(H::fa($this->_doc->payamount));
+            $this->docform->editpayamount->setText(H::fa($this->_doc->payamount));
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
@@ -496,6 +499,7 @@ class GoodsReceipt extends \App\Pages\Base
         
         
         $this->_doc->payamount = $this->docform->payamount->getText();
+        $this->_doc->headerdata['payamount'] = $this->docform->payamount->getText();
 
         $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
@@ -667,14 +671,14 @@ class GoodsReceipt extends \App\Pages\Base
         $nds = doubleval($this->docform->nds->getText()) ;
         
         $total = $total + $nds - $disc  ;  
- 
+        $total +=  $delivery;
+  
         $this->docform->editpayamount->setText(H::fa($total));
         $this->docform->payamount->setText(H::fa($total));
         if(doubleval( $this->_doc->headerdata['prepaid'])>0) {
            $total = $total - $this->_doc->headerdata['prepaid'];  
         }  
         
-        $total += + $delivery;
         
         $this->docform->editpayed->setText(H::fa($total));
         $this->docform->payed->setText(H::fa($total));
