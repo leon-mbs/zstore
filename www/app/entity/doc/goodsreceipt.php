@@ -102,12 +102,13 @@ class GoodsReceipt extends Document
             $total = $total + $this->headerdata["nds"];
         }
         
-        $total = $total * $rate;
         
         
      //   if($this->headerdata['delivery'] > 0   ) {
      //       $total = $total + $this->headerdata["delivery"];  // распределяем накладные  затраты  на  себестоимость
     //    }
+     
+        $total = $total * $rate;
         
         
         $k = $total / $this->amount;   
