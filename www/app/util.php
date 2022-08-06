@@ -186,6 +186,15 @@ class Util
         return $list;
     }
 
+//массив  в  обекты для  фронта 
+    public function     tokv(array $a){
+        $r = array();
+        foreach($a as $k=>$v){
+           $r[]=array('key'=>$k,'value'=>$v) ;
+        }
+        return  $r;           
+    }    
+    
 }
 
 // Convert digital Russian currency representation
@@ -603,4 +612,4 @@ function sk_plural_form($d) {
     }
 }
 
- 
+

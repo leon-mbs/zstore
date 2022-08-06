@@ -10,32 +10,32 @@
             <div class="col-12 col-md-8 col-xl-6" id="vapp">
                 <h4>Журнал системних повiдомлень</h4>
                 <div class="navbar nav">
-                    <form   class="form-inline ">
+                    <form  zippy="filter" class="form-inline ">
 
 
-                        <input v-model="searchtext" class="form-control mr-2" type="text" zippy="searchtext" placeholder="Пошук  по  контенту">
+                        <input   class="form-control mr-2" type="text" zippy="searchtext" placeholder="Пошук  по  контенту">
 
-                        <input v-on:click.prevent="onsearch" type="button" class="  btn btn-outline-success  " value="Шукати">
+                        <input   type="submit" class="  btn btn-outline-success  " value="Шукати">
 
 
                     </form>
                 </div>
 
                 <table class="table table-sm    ">
-                    <tr v-for="item,index  in itemlist">
+                    <tr  zippy="nlist">
 
-                        <td><i class="fa fa-clock"> </i> <span  >{{item.date}}</span>
+                        <td><i class="fa fa-clock"> </i> <span zippy="ndate" > </span>
 
-                            <p v-html="item.message">
+                            <p zippy="msg" >
                             <p>
                         </td>
-                        <td><span v-show="item.isnew" class="badge badge-info">Нове</span></td>
+                        <td><span  zippy="newn" class="badge badge-info">Нове</span></td>
 
 
                     </tr>
                 </table>
-              
-                <paginator  v-on:onpage="changepage"  v-bind:rows="rowscnt" v-bind:pagesize="pagesize" buttonscnt="10"></paginator>
+                <div zippy="pag"></div>              
+
       
             </div>
 
