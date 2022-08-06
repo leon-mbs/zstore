@@ -64,6 +64,7 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('btask'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bmove'));
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
@@ -246,6 +247,7 @@ class OrderList extends \App\Pages\Base
         $ref = $this->_doc->checkStates(array(Document::STATE_REFUSED)) > 0;
 
         $this->statuspan->statusform->brd->setVisible(false);
+        $this->statuspan->statusform->bmove->setVisible(false);
 
         //новый
         if ($state < Document::STATE_EXECUTED) {
@@ -325,6 +327,10 @@ class OrderList extends \App\Pages\Base
             // $this->statuspan->statusform->bclose->setVisible(false);
         }
 
+        if($this->_doc->hasPayments() == false && ( $state<4 || $state==Document::STATE_INPROCESS  ) )  {
+           $this->statuspan->statusform->bmove->setVisible(true);
+        }
+        
 
         $this->_tvars['askclose'] = false;
         if ($inproc == false || $closed == false) {
@@ -530,14 +536,14 @@ class OrderList extends \App\Pages\Base
         $this->doclist->Reload(false);
         $this->payform->setVisible(false);
     }
-
+  
     
     public function onBranch($sender){
        $id = $sender->getValue();   
        $users = array(0=> H::l("selnothing") ); 
        
        foreach(\App\Entity\User::getByBranch($id) as $id=>$u) {
-          $users[$id]= $u ;  
+          $users[$id] = $u ;  
        }; 
        
        $this->fmove->usmove->setOptionList($users);
