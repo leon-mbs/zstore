@@ -70,6 +70,7 @@ class OrderList extends \App\Pages\Base
         $this->doclist->Reload();
         $this->add(new ClickLink('csv', $this, 'oncsv'));
 
+        
         $this->add(new Form('payform'))->onSubmit($this, 'payOnSubmit');
         $this->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
         $this->payform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', "details like '%<usefisc>1</usefisc>%' "), 0));
@@ -78,7 +79,14 @@ class OrderList extends \App\Pages\Base
         $this->payform->add(new CheckBox('closeorder'));
         $this->payform->add(new Date('pdate', time()));
         $this->payform->setVisible(false);
-     }
+
+        $this->add(new Form('fmove'))->onSubmit($this, 'moveOnSubmit');
+        
+        $this->fmove->add(new DropDownChoice('brmove', \App\Entity\Branch::getList() ,\App\Acl::getCurrentBranch()))->onChange($this,"onBranch",true);
+        $this->fmove->add(new DropDownChoice('usmove',array(),0  ));
+        
+    
+    }
 
     public function filterOnSubmit($sender) {
 
@@ -393,8 +401,11 @@ class OrderList extends \App\Pages\Base
             
         }
         
+       $this->fmove->brmove->setValue($this->_doc->branch_id) ;   
+       $this->onBranch( $this->fmove->brmove);  
+       $this->fmove->usmove->setValue($this->_doc->user_id);   
     }
-
+  
     public function editOnClick($sender) {
         $doc = $sender->getOwner()->getDataItem();
         if (false == \App\ACL::checkEditDoc($doc, true)) {
@@ -520,6 +531,36 @@ class OrderList extends \App\Pages\Base
         $this->payform->setVisible(false);
     }
 
+    
+    public function onBranch($sender){
+       $id = $sender->getValue();   
+       $users = array(0=> H::l("selnothing") ); 
+       
+       foreach(\App\Entity\User::getByBranch($id) as $id=>$u) {
+          $users[$id]= $u ;  
+       }; 
+       
+       $this->fmove->usmove->setOptionList($users);
+    }
+    
+    public function moveOnSubmit($sender){
+       $br = intval($this->fmove->brmove->getValue() );   
+       $us = $this->fmove->usmove->getValue();   
+       if($br>0){
+           $this->_doc->branch_id = $br;
+       }
+       if($us>0){
+           $this->_doc->user_id = $us;
+       }
+       
+       if($br>0 || $us>0){
+          $this->_doc->save();           
+          $this->doclist->Reload();
+         
+       }       
+     
+    }
+    
 }
 
 /**
