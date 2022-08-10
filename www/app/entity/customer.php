@@ -226,10 +226,13 @@ class Customer extends \ZCL\DB\Entity
     */
     public static function getBonusAll() {
         $conn = \ZDB\DB::getConnect();
-        $sql = "select coalesce(sum(bonus),0) as bonus, d.customer_id from paylist p join documents d ON  p.document_id = d.document_id group by  d.customer_id having bonus <> 0";
+        $sql = "select coalesce(sum(bonus),0) as bonusall, d.customer_id from paylist p join documents d ON  p.document_id = d.document_id group by  d.customer_id ";
         $ret = array();
         foreach($conn->Execute($sql) as $row ){
-           $ret[$row['customer_id']] = $row['bonus'] ;               
+           if( doubleval($row['bonusall']) <>0 )  {
+               $ret[$row['customer_id']] = $row['bonusall'] ;                              
+           }
+
         }
         return $ret;
 

@@ -562,7 +562,8 @@ class OrderList extends \App\Pages\Base
        if($br>0 || $us>0){
           $this->_doc->save();           
           $this->doclist->Reload();
-         
+          $this->statuspan->setVisible(false);
+          
        }       
      
     }
