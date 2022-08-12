@@ -56,14 +56,14 @@ class ProjectList extends \App\Pages\Base
         $this->projectpanel->add(new Paginator('pag', $list));
         $this->projectpanel->projectlist->Reload();
 
-        $projectpanel->add(new ClickLink('padd'))->onClick($this, 'addOnClick');
-        $this->add(new Form('projectform'))->setVisible(false);
-        $this->projectform->add(new TextInput('editname'));
-        $this->projectform->add(new AutocompleteTextInput('editcust'))->onText($this, 'OnAutoCustomer');
-        $this->projectform->add(new TextArea('editdesc'));
-        $this->projectform->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
-        $this->projectform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
-        $this->projectform->add(new \Zippy\Html\Form\CheckBoxList('userlist', '<br>'));
+      //  $projectpanel->add(new ClickLink('padd'))->onClick($this, 'addOnClick');
+      //  $this->add(new Form('projectform'))->setVisible(false);
+      //  $this->projectform->add(new TextInput('editname'));
+      //  $this->projectform->add(new AutocompleteTextInput('editcust'))->onText($this, 'OnAutoCustomer');
+     //   $this->projectform->add(new TextArea('editdesc'));
+     //   $this->projectform->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
+       // $this->projectform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
+      //  $this->projectform->add(new \Zippy\Html\Form\CheckBoxList('userlist', '<br>'));
 
         $this->add(new Panel("showpan"))->setVisible(false);
         $this->showpan->add(new ClickLink('back', $this, 'cancelOnClick'));
@@ -335,18 +335,8 @@ class ProjectList extends \App\Pages\Base
     }
 
     
-      //vue
-    public function ontextCustomers($args,$post) {
- 
-        
-         $text = $args[0];
-         $text= Customer::qstr('%'.$text.'%') ;
- 
-       $list = H::kv2o(Customer::findArray("customer_name", "status=0 and customer_name like " . $text));
      
-       return json_encode($list, JSON_UNESCAPED_UNICODE);          
-        
-    }
+
   
       public function delpr($args, $post ){
           if($args[0] > 0) {
@@ -355,6 +345,7 @@ class ProjectList extends \App\Pages\Base
           return json_encode(array('success'=>true ), JSON_UNESCAPED_UNICODE);     
             
       }
+    
       public function savepr($args, $post ){
         
         $data = @json_decode($post) ;        
@@ -384,10 +375,56 @@ class ProjectList extends \App\Pages\Base
          return json_encode(array('stlist'=>$stlist,'custlist'=>$custlist), JSON_UNESCAPED_UNICODE);     
       
     }
-     public function loaddata($args, $post){
-        $number = trim($post['searchnumber']);
-        $cust = $post['searchcust'];    
-        $status = $post['searchstate'];
+    
+    
+     public function getusers() {
+        $user = System::getUsers($args, $post=null);
+        $this->projectform->userlist->clean();
+
+        $pusers = $this->_project->getUsers();
+        $users = \App\Entity\User::find(" user_id <>" . $user->user_id, 'username');
+        foreach ($users as $k => $v) {
+            if ($v->rolename != 'admins' && strpos($v->modules, 'issue') === false) {
+                continue;
+            }
+            $inlist = in_array($k, $pusers);
+            $this->projectform->userlist->AddCheckBox($k, $inlist, $v->username);
+        }
+    }   
+    
+   //vue  
+   public function init($args, $post){
+       
+        $post = json_decode($post) ;
+        $stlist = Project::getStatusList();
+ 
+        return json_encode(array(
+                  'stlist'=> \App\Util::tokv($stlist) ,
+                
+                  'pagesize'=> H::getPG()  
+                    ), JSON_UNESCAPED_UNICODE);     
+      
+   }
+
+   public function del($args, $post=null){
+       
+        
+        $del = Project::delete($args[0]);
+          
+      
+   }
+  
+      
+   public function getList($args, $post){
+       
+        $post = json_decode($post) ;
+        $user = System::getUser();
+      
+          
+       
+        $number = trim($post->searchnumber);
+        $cust = $post->searchcust;    
+        $status = $post->searchstate;
       
         if ($status == 0) {
             $where = " status <>  " . Project::STATUS_CLOSED;
@@ -412,31 +449,71 @@ class ProjectList extends \App\Pages\Base
         $stlist = Project::getStatusList() ;
      
         $prlist = array();
-        foreach(Project::find($where, "project_id desc", $args[1], $args[0]) as $p)  {
+        foreach(Project::find($where, "project_id desc", $post->count, $post->start) as $p)  {
            $pa = $p->getData() ;
            $pa['status_id']  = $p->status;
+           $pa['allowedit']  = true;
+           $pa['allowdel']  = true;
+           
+           if ($user->rolename != 'admins' && $user->user_id != $p->creator_id) {
+               $pa['allowedit']  = false;
+               $pa['allowdel']  = false;
+           }
+
+
+           if ($p->status == Project::STATUS_CLOSED) {
+               $pa['allowedit']  = false;
+               $pa['allowdel']  = false;
+           }
+           
+           
            $pa['status']  = $stlist[$p->status];
            unset($pa['details']);
            $prlist[]=  $pa;  
         }
-            
-         return json_encode(array('prlist'=>$prlist,'allcnt'=> Project::findCnt($where)  ), JSON_UNESCAPED_UNICODE);     
+         $clist = Customer::findArray('customer_name', 'customer_id in (select customer_id from issue_projectlist )', 'customer_name');
+          
+         return json_encode(array('prlist'=>$prlist,'cnt'=> Project::findCnt($where) ,  'custlist'=> \App\Util::tokv($clist) ,  ), JSON_UNESCAPED_UNICODE);     
       
     }
-    
-     public function getusers() {
-        $user = System::getUsers($args, $post=null);
-        $this->projectform->userlist->clean();
+     
+      
+    public function getedit($args, $post=null){
+      $pd = Project::load($args[0])  ;      
+            
+      return json_encode(array('name'=>$pd->project_name,
+                   'desc'=>$pd->desc,
+                   'customer_id'=>$pd->customer_id,
+                   'customer_name'=>$pd->customer_name
 
-        $pusers = $this->_project->getUsers();
-        $users = \App\Entity\User::find(" user_id <>" . $user->user_id, 'username');
-        foreach ($users as $k => $v) {
-            if ($v->rolename != 'admins' && strpos($v->modules, 'issue') === false) {
-                continue;
-            }
-            $inlist = in_array($k, $pusers);
-            $this->projectform->userlist->AddCheckBox($k, $inlist, $v->username);
-        }
+                     ), JSON_UNESCAPED_UNICODE);     
+   
+    
+    }   
+     public function save($args, $post=null){
+      $pd = Project::load($args[0])  ;      
+      if($pd==null)  $pd = new  Project();
+      
+      $pd->project_name=$post["name"] ;
+      $pd->desc=$post["desc"] ;
+      $pd->customer_id=$post["customer_id"] ;
+      $pd->save();
+      
+          
+      return "";     
+   
+    
+    }   
+    public function ontextCustomers($args,$post=null) {
+ 
+        
+         $text = $args[0];
+         $text= Customer::qstr('%'.$text.'%') ;
+ 
+       $list = H::kv2o(Customer::findArray("customer_name", "status=0 and customer_name like " . $text));
+     
+       return json_encode($list, JSON_UNESCAPED_UNICODE);          
+        
     }   
 }
 
