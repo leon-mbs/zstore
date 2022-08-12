@@ -406,6 +406,19 @@ class ACL
         \App\System::setErrorMsg(\App\Helper::l('selectbranch'));
         \App\Application::Redirect("\\App\\Pages\\Main");
     }
+ 
+    public static function getCurrentBranch() {
+        $options = \App\System::getOptions('common');
+        if ($options['usebranch'] != 1) {
+            return 0;
+        }
+        $id = \App\System::getBranch();
+        if ($id > 0) {
+            return $id;
+        }
+        return 0;
+    }
+ 
 
     /**
      * Возвращает  список складов для подстановки  в запрос по текущим  филиалам

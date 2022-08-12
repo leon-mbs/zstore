@@ -168,6 +168,7 @@
     "noselpricetype": "Не вказаний тип  ціни",
     "noselstatus": "Не видраний статус",
     "noselorder": "Не вибраний   ордер",
+    "selnothing": "Не вибрано",
     "notallowedtotovgroup": "Не можна додати дочірню в групу з товарами",
     "invalidformat": "Невірний формат",
     "assignedlogin": "Логін вже призначено %s",

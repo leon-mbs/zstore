@@ -78,7 +78,7 @@ class Stat extends \App\Pages\Base
                 where  date(createdon) >= " . $conn->DBDate($from) . " and  date(createdon) <= " . $conn->DBDate($to) . "   
                 {$where}
                 group by   username,project_name  
-                having amount >0
+                having sum(duration) >0
                 order  by  username,project_name ";
 
         $res = $conn->Execute($sql);

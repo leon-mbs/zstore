@@ -176,11 +176,11 @@ class User extends \ZCL\DB\Entity
     /**
      * Возвращает  пользователя   по  хешу
      *
-     * @param mixed $md5hash
+     * @param mixed $hash
      */
-    public static function getByHash($md5hash) {
+    public static function getByHash($hash) {
         //$conn = \ZDB\DB::getConnect();
-        $arr = User::find('md5hash=' . User::qstr($md5hash));
+        $arr = User::find('hash=' . User::qstr($hash));
         if (count($arr) == 0) {
             return null;
         }
@@ -214,7 +214,7 @@ class User extends \ZCL\DB\Entity
         $this->_options[$key] = $value;
     }
 
-
+    //список  пользователей  доступных в  филиале
     public static function getByBranch($branch_id) {
         $users = array();
 
