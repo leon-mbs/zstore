@@ -61,45 +61,7 @@
             </div>
 
         </div>
-        <div class="row">
-            <div class="col-12">
-                <form zippy="projectform" method="post">
-                    <div class="row">
-                        <div class="col-12 col-md-8  col-xl-6">
-
-                            <div class="form-group">
-                                <label for="editname"> Назва</label>
-                                <input class="form-control" type="text" zippy="editname" required="required">
-                            </div>
-                            <div class="form-group">
-                                <label for="editcust"> Замовник </label>
-                                <input style="width:300px" placeholder="Почніть вводити..." class="form-control mr-2"
-                                       type="text"
-                                       zippy="editcust">
-                            </div>
-                            <div class="form-group">
-                                <label for="editdesc"> Опис </label>
-                                <textarea class="form-control mr-2" zippy="editdesc"></textarea>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-4  col-xl-4">
-                            <div class="form-group">
-                                <label> Список учасникiв </label>
-                                <div zippy="userlist"></div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-4  col-xl-4">
-
-                            <div class="form-group">
-                                <input zippy="save" type="submit" value="Зберегти" class="btn btn-outline-primary  "> &nbsp;
-                                <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-secondary ">
-                            </div>
-
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
+     
         <div class="row" zippy="showpan">
             <div class="col-12 col-md-8 col-xl-6">
                 <a zippy="back"><i class="fa fa-arrow-circle-left"></i> До списку</a>
@@ -107,11 +69,7 @@
                 &nbsp; &nbsp; <a zippy="newissue"> Створити завдання</a>
                 <h4 zippy="mtitle"></h4>
 
-                <a href="#q1" data-toggle="collapse"><b> Опис <i class="fa fa-chevron-down"></i></b> </a>
-
-                <div id="q1" class="collapse ">
-                    <p zippy="mdesc"></p>
-                </div>
+               
 
                 <hr>
                 <a id="afiles">
@@ -172,14 +130,285 @@
                     </div>
 
                 </form>
-
+                <h4>Опис</h4>
+           <p zippy="mdesc"></p>
             </div>
         </div>
+   
+    {{={| |}=}}   
+    
+        <div class="row"  id="vapp" >
+            <div v-show="this.mode=='list'" class="col-12   ">
+                <h2>Проекти</h2>
+                <div class="navbar nav  ">
+                    <form   class="form-inline ">
+                        <input  v-model="searchtext" placeholder="Пошук..." class="form-control mr-2" type="text"  >
 
+                        <label for="searchstate">статус </label>
+                        <select v-model="searchstate" class="form-control  mr-2   "  >
+                            <option value="0">Відкриті</option>
+                           <option v-for="option in stlist" :value="option.key">
+                              {{ option.value }}
+                          </option>                            
+                        </select>
+                        <label for="searchcust">замовник </label>
+                        <select v-model="searchcust" class="form-control     "  >
+                           <option value="0">Не вибраний</option>
+                
+                           <option v-for="option in custlist" :value="option.key">
+                              {{ option.value }}
+                          </option>
+                       </select>
+
+                      
+                        <input v-on:click.prevent="onsearch" type="button" class=" ml-2   btn btn-success  " value="ОК">
+                    </form>
+
+                </div>
+            </div>
+            <div v-show="this.mode=='list'" class="col-12 col-md-10 col-xl-8 ">
+                <a  v-on:click.prevent="add()"  class="btn btn-primary  ">Новий проект</a>
+                <table class="table table-bordered  table-sm">
+                    <tr>
+                        <th>Назва</th>
+                        <th>Замовник</th>
+                        <th>Статус</th>
+                        <th colspan="3" class="text-center">Завдання</th>
+
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    <tr  v-for="project,index  in projectlist">
+                        <td  >{{project.project_name}}</td>
+                        <td  >{{project.customer_name}}</td>
+                        <td  >{{project.status}}</td>
+                        <td style="width:40px" ><span   title="Нові" class="badge badge-success  " v-show="project.inew>0">{{project.inew}}</span></td>
+                        <td style="width:40px"><span   title="В роботі" class="badge badge-primary" v-show="project.iproc>0">{{project.iproc}}</span></td>
+                        <td style="width:40px"><span   title="Закриті" class="badge badge-secondary" v-show="project.iclose>0">{{project.iclose}}</span></td>
+
+                        <td>
+                            <a  ><i class="fa fa-eye"/></a>
+                         </td>
+                         <td>   
+                            <a  v-show="project.allowedit" v-on:click.prevent="edit(project.project_id)"   title="Редагувати" href="javascript:void(0)" ><i class="fa fa-edit"></i></a>
+                         </td>
+                         <td>
+                           
+                            <a  v-show="project.allowdel" v-on:click.prevent="del(project.project_id,project.project_name)"   title="Вилучити" href="javascript:void(0)" ><i class="fa fa-trash"></i></a>
+                         </td>
+                    </tr>
+                </table>
+               <paginator  v-on:onpage="changepage"  v-bind:rows="rowscnt" v-bind:pagesize="pagesize" buttonscnt="10"></paginator>
+ 
+            </div>
+
+            
+            <div v-show="this.mode=='edit'" class="col-12">
+                <form    method="post">
+                    <div class="row">
+                        <div class="col-12 col-md-8  col-xl-6">
+
+                            <div class="form-group">
+                                <label for="editname"> Назва</label>
+                                <input v-model="editname" id="editname" name="editname" class="form-control" type="text"    >
+                            </div>
+                            <div class="form-group">
+                                <label for="editcust"> Замовник </label>
+                                <typeahead  :setquery="cname"   ref="cust"  :onquery="ontext"  :onhit="hitcust" placeholder="Почнiть вводити ..."></typeahead>   
+
+                            </div>
+                            <div class="form-group">
+                                <label for="editdesc"> Опис </label>
+                                <div  id="editdesc" class="form-control mr-2"  ></div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4  col-xl-4">
+                            <div class="form-group">
+                                <label> Список учасникiв </label>
+                                <div ></div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4  col-xl-4">
+
+                            <div class="form-group">
+                                <input v-on:click.prevent="onsave" type="button" value="Зберегти" class="btn btn-outline-primary  "> &nbsp;
+                                <input v-on:click.prevent="onback"  type="button" value="Скасувати" class="btn btn-outline-secondary ">
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>            
+            
+        </div>
+
+    {|={{ }}=|}      
+    
 
         <script>
-            $(function () {
-                // Summernote
+        
+        
+    var vapp =  Vue.createApp({
+       
+      data() { return {
+          projectlist:[] ,
+          stlist:[] ,
+          custlist:[] ,
+          rowscnt:0,
+          searchtext:'' ,
+          searchcust:'0' ,
+          searchstate:'0',
+          editid:0 ,
+          editname:'' ,
+          cname:'' ,
+     
+          editcust:0,
+          pagesize:25  ,
+          mode:'list'
+      } } ,
+     components: {
+     //       'paginator': httpVueLoader('/assets/js/vue/paginator.vue')
+     'paginator': Vue.defineAsyncComponent( () => loadModule('/assets/js/vue/paginator.vue', vueoptions) )
+     ,'typeahead': Vue.defineAsyncComponent( () => loadModule('/assets/js/vue/typeahead.vue', vueoptions) )
+           
+        }, 
+        methods: {
+            del:function( project_id,name){    
+                
+               if(confirm("Видалити  проект '"+name+"'?"))
+               {                
+                  callPageMethod('del',[project_id], null,(data)=> 
+                  {                                
+                       if(data != ""){
+                          toastr.error( data ,'',{'timeOut':'8000'})
+               
+                       } else {
+                           
+                       }           
+                       this.loaddata();
+                      
+                  });      
+               } 
+            }   ,
+            edit:function( project_id){    
+                  this.editid = project_id;
+                
+                  callPageMethod('getedit',[project_id], null,(data)=> 
+                  {                                
+                       let tmp =   JSON.parse(data)  
+                     
+                       this.editname=tmp.name;   
+                       this.editcust=tmp.customer_id;
+                       this.cname=tmp.customer_name;  
+                       $('#editdesc').summernote("code",tmp.desc)
+                       
+                       this.mode='edit'  
+                  });               
+                
+                 
+            }   ,     
+            add:function( project_id){    
+                  this.editid = 0
+                  this.editname =""
+                  $('#editdesc').summernote("code","")                
+                //  this.$refs.cust.setquery = "xxx";       
+                  this.mode='edit'  
+                  this.cname=''  
+                
+                 
+            }   ,
+                 hitcust: function (id){
+            
+                    this.editcust = id 
+                },
+                ontext: async function (query){
+                   
+                    var url  = getMethodUrl('ontextCustomers',[query ])
+                    let response = await fetch(url);
+             
+                    return  await response.json()  ;
+     
+                }  ,
+       
+        onsave:function(  ){    
+                  
+                  var data = new  FormData();
+                  data.append('name',  this.editname);
+                  data.append('customer_id',  this.editcust);
+                  data.append('desc',   $('#editdesc').summernote("code")                );
+                  
+                  callPageMethod('save',[this.editid], data,(data)=> 
+                  {                                
+                       if(data==""){ 
+                         this.mode='list' 
+                         this.loaddata(); 
+                       } else {
+                           alert(data);
+                       }
+                  });               
+                
+                 
+            }   ,
+            
+            
+            
+            onback:function(  ){    
+                
+                 this.mode='list'
+                
+                 
+            }   ,
+            changepage:function( page){    //кнопка  пагинатора
+                
+                 this.loaddata( (page-1) * this.pagesize );
+            }   ,
+            loaddata: function(start=0){
+                let body={
+                    searchnumber:"",
+                    searchcust:this.searchcust,
+                    searchstate:this.searchstate,
+                    start:start,
+
+                    count:this.pagesize 
+                };
+                
+                  callPageMethod('getList',null, JSON.stringify(body),(data)=> 
+                  {
+                      let tmp =   JSON.parse(data)  
+                      this.projectlist=  tmp.prlist
+                     
+                      this.rowscnt=tmp.cnt
+                      this.custlist=tmp.custlist
+                  });
+            }  ,
+            onsearch:function (){
+                this.rowscnt=0;
+                this.loaddata();
+            }  
+           
+            
+        }  ,
+        mounted: function(){
+            
+                  callPageMethod('init',null, null,(data)=> 
+                  {
+                      let tmp =   JSON.parse(data)  
+                      this.stlist=  tmp.stlist
+                     
+                 
+                      this.pagesize=tmp.pagesize
+                      this.loaddata();
+                  });            
+            
+        }
+      
+    }).mount('#vapp')   
+ 
+   
+          
+        
+           
 
                 $('#editdesc').summernote({
                     height: 400,
@@ -201,7 +430,7 @@
                     }
                 });
 
-            })
+         
         </script>
     </body>
 </html>
