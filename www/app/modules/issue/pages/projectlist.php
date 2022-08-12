@@ -397,9 +397,11 @@ class ProjectList extends \App\Pages\Base
        
         $post = json_decode($post) ;
         $stlist = Project::getStatusList();
- 
+        $users = \App\Entity\User::find(" user_id <>" . $user->user_id, 'username');
+  
         return json_encode(array(
                   'stlist'=> \App\Util::tokv($stlist) ,
+                  'userlist'=> \App\Util::tokv($users) ,
                 
                   'pagesize'=> H::getPG()  
                     ), JSON_UNESCAPED_UNICODE);     

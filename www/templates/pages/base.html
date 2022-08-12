@@ -25,38 +25,11 @@
         <script src="/assets/js/summernote/summernote-bs4.js" type="text/javascript"></script>
         <script src="/assets/js/summernote/lang/summernote-uk-UA.js" type="text/javascript"></script>
         <script src="/assets/js/adminlte.js" type="text/javascript"></script>
-        <script src="/assets/js/vue/vue.global.prod.js"></script>     
-        <script src="/assets/js/vue/vue3-sfc-loader.js"></script>     
-          
+        <script src="/assets/js/vue/vue.min.js"></script>     
+        <script src="/assets/js/vue/httpvueloader.js"></script>     
+           
         <script src="/assets/js/app.js" type="text/javascript"></script>
-        <script>
-        
-  const vueoptions = {
-      moduleCache: {
-        vue: Vue
-      },
-      async getFile(url) {
-        
-        const res = await fetch(url);
-        if ( !res.ok )
-          throw Object.assign(new Error(res.statusText + ' ' + url), { res });
-        return {
-          getContentData: asBinary => asBinary ? res.arrayBuffer() : res.text(),
-        }
-      },
-      addStyle(textContent) {
-
-        const style = Object.assign(document.createElement('style'), { textContent });
-        const ref = document.head.getElementsByTagName('style')[0] || null;
-        document.head.insertBefore(style, ref);
-      },
-    }
- 
-    const { loadModule, vueVersion } = window['vue3-sfc-loader'];
-
-                
-        
-</script>        
+       
         <!-- Google Font -->
         <link rel="stylesheet"
               href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">

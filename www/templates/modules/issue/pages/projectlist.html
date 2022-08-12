@@ -215,7 +215,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="editcust"> Замовник </label>
-                                <typeahead  :setquery="cname"   ref="cust"  :onquery="ontext"  :onhit="hitcust" placeholder="Почнiть вводити ..."></typeahead>   
+                                <typeahead     ref="cust"  :onquery="ontext"  :onhit="hitcust" placeholder="Почнiть вводити ..."></typeahead>   
 
                             </div>
                             <div class="form-group">
@@ -249,8 +249,9 @@
         <script>
         
         
-    var vapp =  Vue.createApp({
-       
+     var vapp = new Vue({
+            el: '#vapp',
+      
       data() { return {
           projectlist:[] ,
           stlist:[] ,
@@ -268,9 +269,10 @@
           mode:'list'
       } } ,
      components: {
-     //       'paginator': httpVueLoader('/assets/js/vue/paginator.vue')
-     'paginator': Vue.defineAsyncComponent( () => loadModule('/assets/js/vue/paginator.vue', vueoptions) )
-     ,'typeahead': Vue.defineAsyncComponent( () => loadModule('/assets/js/vue/typeahead.vue', vueoptions) )
+    
+     'typeahead': httpVueLoader('/assets/js/vue/typeahead.vue')
+    , 'paginator': httpVueLoader('/assets/js/vue/paginator.vue')
+   
            
         }, 
         methods: {
@@ -312,7 +314,7 @@
                   this.editid = 0
                   this.editname =""
                   $('#editdesc').summernote("code","")                
-                //  this.$refs.cust.setquery = "xxx";       
+                  this.$refs.cust.query = "";       
                   this.mode='edit'  
                   this.cname=''  
                 
@@ -403,7 +405,7 @@
             
         }
       
-    }).mount('#vapp')   
+    })
  
    
           
