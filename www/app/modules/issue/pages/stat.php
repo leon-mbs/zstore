@@ -87,7 +87,7 @@ class Stat extends \App\Pages\Base
 
             $item->project_name = $v['project_name'];
             $item->username = $v['username'];
-            $item->amount = $v['amount'];
+            $item->amount = doubleval($v['amount']);
             $this->_list[] = $item;
             $total += $item->amount;
         }

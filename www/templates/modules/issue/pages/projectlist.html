@@ -138,7 +138,7 @@
                 </form>
                  <hr>
 
-    <form id="fileaddform" class="form-inline mb-1"  enctype="multipart/form-data">
+                <form id="fileaddform" class="form-inline mb-1"  enctype="multipart/form-data">
                        
                         <label> Вибрати файл: </label>
 
@@ -297,7 +297,7 @@
             add:function( project_id){    
                   
                
-                this.editid = 0
+                  this.editid = 0
                   this.editname =""
                   $('#editdesc').summernote("code","")                
                   this.$refs.cust.query = "";       
@@ -420,7 +420,7 @@
             }   ,
             loaddata: function(start=0){
                 let body={
-                    searchnumber:"",
+                    searchtext:this.searchtext,
                     searchcust:this.searchcust,
                     searchstate:this.searchstate,
                     start:start,
@@ -450,7 +450,7 @@
             
                   callPageMethod('init',null, null,(data)=> 
                   {
-                      
+                      console.log(data)
                       let tmp     =  JSON.parse(data)  
                       this.stlist =  tmp.stlist
                       this.users  =  tmp.userlist

@@ -242,7 +242,7 @@ class ProjectList extends \App\Pages\Base
      
         if(strlen($file['tmp_name'])==0 ) return;
                                      
-        H::addFile($file, $args[0], '', 6);
+        H::addFile($file, $args[0], '', \App\Entity\Message::TYPE_PROJECT);
          
  
    }
