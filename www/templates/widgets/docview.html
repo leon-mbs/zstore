@@ -249,7 +249,8 @@
             }
 
                
-        var vdocview = Vue.createApp({
+        var vdocview = new Vue({
+            el: '#vdocview',
         
               data() { return  {
                    
@@ -449,12 +450,10 @@
                
           } ,
         components: {   
-    
-        //           'typeahead': httpVueLoader('/assets/js/vue/typeahead.vue')
-  'typeahead': Vue.defineAsyncComponent( () => loadModule('/assets/js/vue/typeahead.vue', vueoptions) )
-                      
+               'typeahead': httpVueLoader('/assets/js/vue/typeahead.vue')
+                     
                }            
-        }).mount('#vdocview') 
+        }) 
         
     
       

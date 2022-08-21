@@ -83,6 +83,7 @@ class Project extends \ZCL\DB\Entity
         foreach ($users as $u) {
             $conn->Execute("insert into issue_projectacc  (project_id,user_id) value ({$this->project_id},{$u}) ");
         }
+        $conn->Execute("insert into issue_projectacc  (project_id,user_id) value ({$this->project_id},". \App\System::getUser()->user_id  .")  ");        
     }
 
     public static function getStatusList() {

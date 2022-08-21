@@ -33,8 +33,8 @@ class Calendar extends \App\Pages\Base
             return;
         }
         $this->add(new Panel('listpan'));
-        $this->add(new ClickLink('tabc', $this, 'onTab'));
-        $this->add(new ClickLink('tabs', $this, 'onTab'));
+        $this->listpan->add(new ClickLink('tabc', $this, 'onTab'));
+        $this->listpan->add(new ClickLink('tabs', $this, 'onTab'));
         $this->listpan->add(new Panel('tasktab'))->setVisible(false);
 
         $this->listpan->add(new ClickLink('addtime', $this, 'OnAdd'));
@@ -60,7 +60,7 @@ class Calendar extends \App\Pages\Base
         $this->editform->add(new DropDownChoice('eproject', Project::findArray('project_name', '', 'project_id desc')))->onChange($this, 'OnProject');
         $this->editform->add(new DropDownChoice('eissue'));
 
-        $this->onTab($this->tabc);
+        $this->onTab($this->listpan->tabc);
     }
 
     public function onTab($sender) {

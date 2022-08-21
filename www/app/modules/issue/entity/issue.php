@@ -103,6 +103,17 @@ class Issue extends \ZCL\DB\Entity
         return $list;
     }
 
+   public static function getPriorityList() {
+        $list = array();
+
+  
+        
+        $list[self::PRIORITY_HIGH] = \App\Helper::l('is_sthigh');
+        $list[self::PRIORITY_NORMAL] = \App\Helper::l('is_stnorm');
+        $list[self::PRIORITY_LOW] = \App\Helper::l('is_stlow');
+        return $list;
+    }
+
     public function addStatusLog($desc) {
         $user = \App\System::getUser();
         $conn = \ZCL\DB\DB::getConnect();
