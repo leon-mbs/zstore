@@ -281,7 +281,10 @@ class Import extends \App\Pages\Base
             }
   
 
-            if ($item == null) {
+            if ($item == null ) {
+                if(strlen($itemname) == 0) {
+                    continue;
+                }
                 $item = new Item();
             }
             
