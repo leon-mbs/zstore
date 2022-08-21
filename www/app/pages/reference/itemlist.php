@@ -858,7 +858,8 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         $sort = $this->page->filter->searchsort->getValue();
         
         if($sort==1)  $sortfield = "item_code asc";
-        if($sort==2)  $sortfield = "item_id desc";
+        if($sort==2)  $sortfield = "item_type asc";
+        if($sort==3)  $sortfield = "item_id desc";
         
         $l = Item::find($this->getWhere(true), $sortfield, $count, $start);
         $f = Item::find($this->getWhere(), $sortfield, $count, $start);

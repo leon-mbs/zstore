@@ -36,13 +36,15 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("store", Store::getList(), H::getDefStore()));
 
         $form->add(new \Zippy\Html\Form\File("filename"));
-        $cols = array(0 => '-', 'A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F', 'G' => 'G', 'H' => 'H', 'I' => 'I', 'J' => 'J', 'K' => 'K', 'L' => 'L', 'M' => 'M' );
+        $cols = array(0 => '-', 'A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F', 'G' => 'G', 'H' => 'H', 'I' => 'I', 'J' => 'J', 'K' => 'K', 'L' => 'L', 'M' => 'M', 'N' => 'N', 'O' => 'O' );
         $form->add(new DropDownChoice("colname", $cols));
         $form->add(new DropDownChoice("colcode", $cols));
         $form->add(new DropDownChoice("colbarcode", $cols));
         $form->add(new DropDownChoice("colcat", $cols));
         $form->add(new DropDownChoice("colqty", $cols));
         $form->add(new DropDownChoice("colcell", $cols));
+        $form->add(new DropDownChoice("colshortname", $cols));
+        $form->add(new DropDownChoice("colimage", $cols));
 
         $pt = \App\Entity\Item::getPriceTypeList();
 
@@ -157,6 +159,8 @@ class Import extends \App\Pages\Base
         $colcell = $this->iform->colcell->getValue();
         $colbrand = $this->iform->colbrand->getValue();
         $coldesc = $this->iform->coldesc->getValue();
+        $colimage = $this->iform->colimage->getValue();
+        $colshortname = $this->iform->colshortname->getValue();
      
       
         if ($t == 1 && $colqty === '0') {
@@ -240,10 +244,12 @@ class Import extends \App\Pages\Base
             $msr = trim($row[$colmsr]);
             $desc = trim($row[$coldesc]);
             $catname = trim($row[$colcat]);
+            $image = trim($row[$colimage]);
+            $shortname = trim($row[$colshortname]);
             $inprice = str_replace(',', '.', trim($row[$colinprice]));
             $qty = str_replace(',', '.', trim($row[$colqty]));
 
-            $cat_id=0;
+            $cat_id = 0;
             
             if (strlen($catname) > 0) {
                 
@@ -300,6 +306,9 @@ class Import extends \App\Pages\Base
             if (strlen($desc) > 0) {
                 $item->description = trim($desc);
             }
+            if (strlen($shortname) > 0) {
+                $item->shortname = trim($shortname);
+            }
             if ($price1 > 0) {
                 $item->price1 = $price1;
             }
@@ -329,7 +338,7 @@ class Import extends \App\Pages\Base
             if ($item_type > 0) {
                 $item->item_type = $item_type;
             }
-
+ 
             $item->amount = $item->quantity * $item->price;
 
             $item->noprice = $this->iform->noshowprice->isChecked() ? 1 : 0;
@@ -340,7 +349,57 @@ class Import extends \App\Pages\Base
             if ($item->quantity > 0) {
                 $newitems[] = $item; //для склада   
             }
-                 
+            
+          
+           // $image="http://local.zstore/assets/images/logo.png";
+            
+            if (strlen($image) > 0) {
+                $file = file_get_contents($image) ;
+                if(strlen($file)==0)  continue;
+                $tmp = tempnam(sys_get_temp_dir(),"import") ;
+                file_put_contents($tmp,$file) ;
+                
+                $imagedata = getimagesize($tmp);
+                if ($imagedata== false) {
+                    continue;
+                    
+                }
+                $image = new \App\Entity\Image();
+                $image->content = file_get_contents($tmp);
+                $image->mime = $imagedata['mime'];
+
+                if ($imagedata[0] != $imagedata[1]) {
+                    $thumb = new \App\Thumb($tmp);
+                    if ($imagedata[0] > $imagedata[1]) {
+                        $thumb->cropFromCenter($imagedata[1], $imagedata[1]);
+                    }
+                    if ($imagedata[0] < $imagedata[1]) {
+                        $thumb->cropFromCenter($imagedata[0], $imagedata[0]);
+                    }
+
+
+                    $image->content = $thumb->getImageAsString();
+                    $thumb->resize(256, 256);
+                    $image->thumb = $thumb->getImageAsString();
+                    $thumb->resize(64, 64);
+                    
+                    $item->thumb = "data:{$image->mime};base64," . base64_encode($thumb->getImageAsString());
+                }
+                $conn =   \ZDB\DB::getConnect();
+                if($conn->dataProvider=='postgres') {
+                  $image->thumb = pg_escape_bytea($image->thumb);
+                  $image->content = pg_escape_bytea($image->content);
+                    
+                }
+
+                $image->save();
+                $item->image_id = $image->image_id;
+                $item->save();
+           
+                    
+                
+            }
+              
             
         }
         if (count($newitems) > 0) {
