@@ -126,7 +126,7 @@ class IOState extends \App\Pages\Base
 
         H::exportExcel($data, $header, 'paylist.xlsx');
     }
-
+    /*
     public function printOnClick($sender) {
         $pay = $sender->getOwner()->getDataItem();
         $doc = \App\Entity\Doc\Document::load($pay->document_id);
@@ -149,7 +149,7 @@ class IOState extends \App\Pages\Base
         $html = $report->generate($header);
         $this->updateAjax(array(), "  $('#paysprint').html('{$html}') ; $('#pform').modal()");
     }
-
+    */
 }
 
 /**

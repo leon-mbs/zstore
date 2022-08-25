@@ -498,7 +498,7 @@ class Order extends \App\Pages\Base
         $price = $item->getLastPartion();
         $this->editdetail->pricestock->setText( H::fa($price));
 
-        $this->updateAjax(array('qtystock', 'editprice','pricestock'));
+      //  $this->updateAjax(array('qtystock', 'editprice','pricestock'));
     }
 
     public function OnAutoCustomer($sender) {

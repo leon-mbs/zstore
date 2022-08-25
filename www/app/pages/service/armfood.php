@@ -1090,7 +1090,7 @@ class ARMFood extends \App\Pages\Base
                 $this->docpanel->listsform->contact->setText($customer->customer_name . ', ' . $customer->phone);
             }
 
-            $this->updateAjax(array('address', 'contact'));
+         //   $this->updateAjax(array('address', 'contact'));
 
         } else {
             return;

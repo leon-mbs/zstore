@@ -898,7 +898,7 @@ class POSCheck extends \App\Pages\Base
         }
 
 
-        $this->updateAjax(array('qtystock', 'editprice', 'editserial'));
+       // $this->updateAjax(array('qtystock', 'editprice', 'editserial'));
     }
 
     public function OnAutoItem($sender) {
@@ -919,7 +919,7 @@ class POSCheck extends \App\Pages\Base
         $ser = Service::load($id);
         $this->editserdetail->editserprice->setText($ser->getPrice());
 
-        $this->updateAjax(array('editserprice'));
+      //  $this->updateAjax(array('editserprice'));
     }
 
     public function OnAutoCustomer($sender) {
