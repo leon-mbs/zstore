@@ -162,7 +162,7 @@
                     meridiem: function(e, t, r) {
                         return e < 4 ? "ночі" : e < 12 ? "ранку" : e < 17 ? "дня" : "вечора"
         dayOfMonthOrdinalParse: /\d{1,2}-(й|го|я)/,
-        ordinal: function (number, period) {
+        ordinal: function(number, period) {
             switch (period) {
                 case 'M':
                 case 'd':

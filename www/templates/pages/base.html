@@ -138,11 +138,13 @@
                                 <a class="dropdown-item  " href="/index.php?p=App/Pages/Jobs"><i
                                         class="fa fa-gavel"></i>  Мої завдання</a>
                             </li>
-                            
+                             {{#showtimesheet}} 
                             <li>
                                 <a class="dropdown-item  " href="/index.php?p=App/Pages/TimeSheet"><i
                                         class="fa fa-calendar-alt"></i> Облiк роб. часу</a>
                             </li>
+                            {{/showtimesheet}} 
+
                             {{#isemp}}
                             <li>
                                 <a class="dropdown-item  " href="/index.php?p=App/Pages/EmpAcc"><i
