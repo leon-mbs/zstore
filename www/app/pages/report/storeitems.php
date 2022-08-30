@@ -138,7 +138,7 @@ class StoreItems extends \App\Pages\Base
 
         $header = array( 
                         "_detail"       => $detail,
-                        "stores"         => H::kv2o($storelist)
+                        "stores"         => \App\Util::tokv($storelist)
         );
        
         $report = new \App\Report('report/storeitems.tpl');

@@ -909,21 +909,7 @@ class Helper
 
     
     
-    /**
-    * превращает массив  ключ  значение  в  массив  массивов (id,name) для   json
-    * 
-    * @param array $in
-    */
-    public  static  function kv2o(array $in){
-       $out = array();
-                   
-       foreach($in as $k=>$v)     
-       {
-           $out[] = array('id'=>$k,'name'=>$v ) ;
-       }            
-       return $out  ;          
-                       
-    } 
+ 
     
     public  static  function printItems(array $items){
         $printer = \App\System::getOptions('printer');

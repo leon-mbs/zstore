@@ -125,7 +125,126 @@
                 </form>
             </div>
         </div>
+          {{={| |}=}}   
+         <div class="row">
+            <div class="col-12 col-lg-10" id="vapp" >
+                <h4>Табель облiку робочого часу</h4>
+                     <div class="navbar nav">
+                    <form   class="form-inline ">
 
-    </body>
+                        <label for="from">З</label>
+                        <input v-model="from"  class="form-control mr-2" style="width: 120px" type="date" >
 
+                        <label for="to">по</label>
+                        <input v-model="to" class="form-control mr-2" style="width: 120px" type="date" >
+
+
+                        <label   for="parea">Спiвробiтник</label>
+                        <select2     v-model="empid" :options="emps"   >
+
+                        </select2>
+
+                        <input @click.prevent="onFilter"  type="button" class="ml-2  btn btn-success  " value="ОК">
+
+
+                    </form>
+                </div>
+
+                   <ul class="nav nav-tabs">
+                  
+                       <li class="nav-item">
+                        <a class="nav-link " data-toggle="tab" href="#tcal">Календар</a>
+                      </li>
+                      
+                       <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#ttable"> Таблиця </a>
+                      </li>
+                       <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#tstat">Статистика  </a>
+                      </li>
+                  </ul>
+                <div class="tab-content"  >   
+                    <div class="tab-pane   "  id="tcal"> 
+                        
+
+                    </div>
+                   <div class="tab-pane show active   "  id="ttable"> 
+
+                         
+                    </div>
+                   <div class="tab-pane    "  id="tstat"> 
+
+                       
+                    </div>
+                </div>
+   
+             </div>
+        </div>
+           {|={{ }}=|}  
+           
+<script>
+     var vapp = new Vue({
+            el: '#vapp',
+                data() { return  {
+                   
+                  isadmin:true,
+                  empid:0,
+                  emps:[],
+                  from:"",
+                  to:"",
+               
+                  
+                     
+              } }            
+    ,         
+       
+           methods: {
+                init:function(){
+                      
+                  callPageMethod('init',[], null,(data)=> 
+                  {
+                       let tmp =   JSON.parse(data)  
+                       this.empid = tmp.empid; 
+                       this.isadmin = tmp.isadmin; 
+                       this.emps = tmp.emps; 
+                       this.to = tmp.to; 
+                       this.from = tmp.from; 
+                 
+                  
+                  });
+                            
+                            
+                } ,
+                
+                
+               onFilter:function(){
+                 
+                            
+          
+               } ,    
+           },    
+       
+         watch:   { 
+              empid(newVal, oldVal) { 
+                   
+                   //this.load()
+                  
+                } 
+           }  
+         ,   
+          mounted: function(){
+             
+              this.init();      
+              
+         }  ,       
+            components: {   
+               'select2': httpVueLoader('/assets/js/vue/select2.vue')
+                     
+               }            
+        })    
+</script>
+
+           
+           
+   </body>
 </html>

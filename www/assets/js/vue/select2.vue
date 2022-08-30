@@ -1,5 +1,5 @@
 <template>
-  <select  @change="$emit('input', event.target.value)"  :value="value" :name="name" :id="id" class='form-control' >
+  <select  @change="$emit('input', event.target.value)"  v-model="value" :name="name" :id="id" class='form-control' >
 
        <option v-for="opt in options"  :value="opt.key">{{opt.value}}</option>
        
@@ -18,7 +18,8 @@ module.exports = {
                .on("change", function() {
                vm.$emit("input", this.value);
                 });
-            }, 250);  
+            }, 250 );  
+            
         },
  
         
@@ -38,7 +39,8 @@ module.exports = {
                     });    
                    
                    
-                }, 250);  
+                }, 250 );  
+                 
         },
           
         props: ["options", "value", "id","name" ],

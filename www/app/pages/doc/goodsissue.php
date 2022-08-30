@@ -216,6 +216,7 @@ class GoodsIssue extends \App\Pages\Base
                            if($basedoc->headerdata['paydisc']>0) {
                              $this->docform->editpaydisc->setText($basedoc->headerdata['paydisc']);
                              $this->docform->paydisc->setText($basedoc->headerdata['paydisc']);
+                             $this->_doc->headerdata['manualdisc']  =  $basedoc->headerdata['paydisc'] ;
                            } else {
                              // $this->OnChangeCustomer($this->docform->customer);    
                            }
@@ -303,7 +304,8 @@ class GoodsIssue extends \App\Pages\Base
                         //$this->calcTotal();
                         //$this->calcPay();
                        $this->docform->total->setText($basedoc->amount);
-                         
+                       $this->_doc->headerdata['manualdisc']  =  $basedoc->headerdata['paydisc'] ;
+               
                     }
                     if ($basedoc->meta_name == 'ServiceAct') {
 
@@ -718,6 +720,8 @@ class GoodsIssue extends \App\Pages\Base
 
     public function onPayDisc() {
         $this->docform->paydisc->setText($this->docform->editpaydisc->getText());
+        $this->_doc->headerdata['manualdisc']  =  $this->docform->editpaydisc->getText();
+
         $this->calcPay();
         $this->goAnkor("tankor");
     }
@@ -744,7 +748,7 @@ class GoodsIssue extends \App\Pages\Base
             $customer = Customer::load($customer_id);
 
             if ($customer->discount > 0) {
-                $disc = round($total * ($customer->discount / 100));
+                $disc =  ($total * ($customer->discount / 100.0));
             } else {
                 $bonus = $customer->getBonus();
                 if ($bonus > 0) {
@@ -756,7 +760,9 @@ class GoodsIssue extends \App\Pages\Base
                 }
             }
         }
-
+        if($this->_doc->headerdata['manualdisc'] >0 ) {
+            $disc = $this->_doc->headerdata['manualdisc'] ;
+        }
 
         $this->docform->paydisc->setText(H::fa($disc));
         $this->docform->editpaydisc->setText(H::fa($disc));

@@ -84,7 +84,7 @@ class TimeSheet extends \App\Pages\Base
         $this->editform->add(new Date('editdate', time()));
         $this->editform->add(new Button('cancel'))->onClick($this, 'onCancel');
 
-        $this->onTab($this->tpanel->tabc);
+        $this->onTab($this->tpanel->taba);
         $this->filterOnSubmit($this->filter);
     }
 
@@ -355,4 +355,27 @@ class TimeSheet extends \App\Pages\Base
         $this->updateList();
     }
 
+//vue
+    
+    public function init($arg,$post=null){
+        $user = \App\System::getUser() ;
+  
+        $ret = array();  
+        $ret['empid']  =  $user->employee_id;
+        $ret['isadmin']  =  $user->rolename=="admins";
+        $ret['emps']  =  \App\Util::tokv(\App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name")  ) ;
+        if($ret['isadmin'] == false)  {
+           $ret['emps']  =  \App\Util::tokv(\App\Entity\Employee::findArray("emp_name", "disabled<>1 and employee_id=".$user->employee_id, "emp_name")  ) ;
+        } 
+      $dt = new \App\DateTime();
+
+        $ret['from'] = date("Y-m-d", $dt->startOfMonth()->getTimestamp() );
+        $ret["to"] = date("Y-m-d",$dt->endOfMonth()->getTimestamp() );
+        
+         
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);     
+       
+    }    
+    
+    
 }

@@ -16,7 +16,7 @@
 
     <ul    v-show="hasItems">
       <li v-for="(item, $item) in items" :class="activeClass($item)" @mousedown="hit" @mousemove="setActive($item)">
-        <span class="name" v-text="item.name"></span>
+        <span class="name" v-text="item.value"></span>
         <span class="screen-name" v-text="item.screen_name"></span>
       </li>
     </ul>
@@ -118,10 +118,10 @@ module.exports = {
     hit () {
       if (this.current !== -1) {
           var item = this.items[this.current]
-          this.query = item.name
+          this.query = item.value
           this.reset()
           //this.onhit(item.id);
-          this.id= item.id
+          this.id= item.key
       }
     },
 
