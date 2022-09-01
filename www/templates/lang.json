@@ -298,6 +298,7 @@
     "incomebasedonbr": "Підства %s,склад %s,филія %s  ",
     "createddoc": "Створено документ %s  ",
     "noempselected": " Не  вибрано співробітника",
+    "notypeselected": " Не  вибраний тип",
     "all": "Все",
     "notpayed": "Не  сплачені",
     "notexecuted": "Не проведені",
