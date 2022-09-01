@@ -453,12 +453,12 @@ class OrderCust extends \App\Pages\Base
         
         $custitem = CustItem::getFirst("customer_id={$cust} and item_id=".$item->item_id,"updatedon desc")   ;
         if($custitem==null){
-          $this->updateAjax(array('qtystock'));    
+        //  $this->updateAjax(array('qtystock'));    
         }   else {
           $this->editdetail->editcustcode->setText($custitem->cust_code);
           $this->editdetail->editprice->setText(H::fa($custitem->price));
 
-          $this->updateAjax(array('qtystock','editcustcode','editprice'));  
+        //  $this->updateAjax(array('qtystock','editcustcode','editprice'));  
         }
         
         

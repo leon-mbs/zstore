@@ -691,7 +691,7 @@ class ARMPos extends \App\Pages\Base
         }
 
 
-        $this->updateAjax(array('qtystock', 'editprice', 'editserial'));
+       // $this->updateAjax(array('qtystock', 'editprice', 'editserial'));
     }
 
     public function OnAutoItem($sender) {
@@ -712,7 +712,7 @@ class ARMPos extends \App\Pages\Base
         $ser = Service::load($id);
         $this->docpanel->editserdetail->editserprice->setText($ser->price);
 
-        $this->updateAjax(array('editserprice'));
+       // $this->updateAjax(array('editserprice'));
     }
 
     public function OnAutoCustomer($sender) {

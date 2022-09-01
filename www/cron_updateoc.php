@@ -115,218 +115,226 @@ try {
         unset($items);
         
         //обновление  количеств 
-        $data = json_encode($qlist);
+        if(true){
+            $data = json_encode($qlist);
 
-        $fields = array(
-            'data' => $data
-        );
-        $url = $site. '/index.php?route=api/zstore/updatequantity&' . $token;
-        $json = \App\Modules\OCStore\Helper::do_curl_request($url, $fields);
-        if ($json === false)
-            return;
-        $data = json_decode($json, true);
+            $fields = array(
+                'data' => $data
+            );
+            $url = $site. '/index.php?route=api/zstore/updatequantity&' . $token;
+            $json = \App\Modules\OCStore\Helper::do_curl_request($url, $fields);
+            if ($json === false)
+                return;
+            $data = json_decode($json, true);
 
-        if ($data['error'] != "") {
-            $logger->error($data['error']);
-            return;
-        }
-        
-        echo  "<br>Оновлена кількість";
-        $logger->info("Оновлена кількість ");
-        
-        
-        //обновление  цен
-        $data = json_encode($plist);
-
-        $fields = array(
-            'data' => $data
-        );
-        $url = $site. '/index.php?route=api/zstore/updateprice&' . $token;
-        $json = \App\Modules\OCStore\Helper::do_curl_request($url, $fields);
-        if ($json === false)
-            return;
-        $data = json_decode($json, true);
-
-        if ($data['error'] != "") {
-            $logger->error($data['error']);
-            return;
-        }
-        
-
-        $logger->info("Оновлені ціни");
-         echo  "<br>Оновлені ціни";
- 
-  
-        //импорт товаров
- 
-        $url = $site . '/index.php?route=api/zstore/getproducts&' . $token;
-        $json = \App\Modules\OCStore\Helper::do_curl_request($url, $fields);
-        if ($json === false)
-            return;
-        $data = json_decode($json, true);
-   
-      
-        if ($data['error'] != "") {
-            $logger->error($data['error']);
-            return;
-        }
-     
-         foreach ($data['products'] as $product) {
-
-            if (strlen($product['sku']) == 0) continue;
-  
-            $item = \App\Entity\Item::getFirst("item_code=" . \App\Entity\Item::qstr($product['sku']));
-            if($item instanceof \App\Entity\Item)  {
-               $item->itemname = str_replace('&quot;', '"', $product['name']);    
-               $item->save();
-            } else {
-                $item = new  \App\Entity\Item();
-                $item->itemname = str_replace('&quot;', '"', $product['name']);
-                $item->item_code = $product['sku'];
-                $item->bar_code = $product['sku'];
-                $item->save();
-              
-            }
-
-            
-         }
-      
-        //импорт заказов
-        $fields = array(
-            'status_id' => $status
-        );
-          
-        $url = $site . '/index.php?route=api/zstore/orders&' . $token;
-        $json = \App\Modules\OCStore\Helper::do_curl_request($url, $fields);
-        if ($json === false)
-            return;
-        $data = json_decode($json, true);
-   
-      
-        if ($data['error'] != "") {
-            $logger->error($data['error']);
-            return;
-        }
-
-           $neworders = array();
-        
-           foreach ($data['orders'] as $ocorder) {
-
-
-              $cnt  = $conn->getOne("select count(*) from documents_view where (meta_name='Order' or meta_name='TTN') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'")  ;
-
-                if ( intval($cnt) > 0) { //уже импортирован
-                     continue;
-                }
- 
-
-                $order = new \App\DataItem($ocorder);
-                      
-                $neworders[$ocorder['order_id']] = $order;
-            }  
-      
-        $i = 0;
-        foreach ($neworders as $shoporder) {
-
-
-            $neworder = \App\Entity\Doc\Document::create('Order');
-            $neworder->document_number = $neworder->nextNumber();
-            $neworder->document_date = strtotime($shoporder->date_added);
-
-            if (strlen($neworder->document_number) == 0) {
-                $neworder->document_number = 'OC00001';
-            }
-            $neworder->customer_id = $modules['occustomer_id'];
-            $j=0;           //товары
-            $tlist = array();
-            foreach ($shoporder->_products_ as $product) {
-                //ищем по артикулу 
-                if (strlen($product['sku']) == 0) {
-                    continue;
-                }
-                $code = \App\Entity\Item::qstr($product['sku']);
-
-                $tovar = \App\Entity\Item::getFirst('item_code=' . $code);
-                if ($tovar == null) {
-
-                   
-                    continue;
-                }
-                $tovar->quantity = $product['quantity'];
-                $tovar->price = str_replace(',', '.', $product['price']);
-                $desc = '';
-                if (array($product['_options_'])) {
-                    foreach ($product['_options_'] as $k => $v) {
-                        $desc = $desc . $k . ':' . $v . ';';
-                    }
-                }
-                //$tovar->octoreoptions = serialize($product['_options_']);
-                $tovar->desc = $desc;
-                $j++;
-                $tovar->rowid = $j;
-
-                $tlist[$j] = $tovar;
-            }
-            if(count($tlist)==0)  {
+            if ($data['error'] != "") {
+                $logger->error($data['error']);
                 return;
             }
-            $neworder->packDetails('detaildata', $tlist);
-            $neworder->amount = \App\Helper::fa($shoporder->total);
             
-            if($modules['ocsetpayamount']==1){
-               $neworder->payamount = $neworder->amount;
-             
-            }
-            
-            $neworder->headerdata['salesource'] = \App\Helper::getDefSaleSource();
-            $neworder->headerdata['outnumber'] = $shoporder->order_id;
-            $neworder->headerdata['ocorder'] = $shoporder->order_id;
-            $neworder->headerdata['ocorderback'] = 0;
-            $neworder->headerdata['pricetype'] = 'price1';
-        
-            $neworder->notes = "OC номер:{$shoporder->order_id};";
-
-            $neworder->headerdata['occlient'] = $shoporder->firstname . ' ' . $shoporder->lastname;
-            $neworder->notes .= " Клієнт:" . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
-
-            if ($shoporder->customer_id > 0 && $modules['ocinsertcust'] == 1) {
-                $cust = \App\Entity\Customer::getFirst("detail like '%<shopcust_id>{$shoporder->customer_id}</shopcust_id>%'");
-                if ($cust == null) {
-                    $cust = new \App\Entity\Customer();
-                    $cust->shopcust_id = $shoporder->customer_id;
-                    $cust->customer_name = $shoporder->firstname . ' ' . $shoporder->lastname;
-                    $cust->address = $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1;
-                    $cust->type = \App\Entity\Customer::TYPE_BAYER;
-                    $cust->phone = $shoporder->telephone;
-                    $cust->email = $shoporder->email;
-                    $cust->comment = "Клієнт ІМ";
-                    $cust->save();
-                }
-                $neworder->customer_id = $cust->customer_id;
-            }
-
-
-            if (strlen($shoporder->email) > 0) {
-                $neworder->notes .= " Email:" . $shoporder->email . ";";
-            }
-            if (strlen($shoporder->telephone) > 0) {
-                $neworder->notes .= " Тел:" . $shoporder->telephone . ";";
-            }
-            $neworder->notes .= " Адреса:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
-            $neworder->notes .= " Оплата:" . $shoporder->payment_method . ";";
-            $neworder->notes .= " Комментар:" . $shoporder->comment . ";";
-            $neworder->save();
-            $neworder->updateStatus(\App\Entity\Doc\Document::STATE_NEW);
-            $neworder->updateStatus(\App\Entity\Doc\Document::STATE_INPROCESS);
-
-            $i++;
+            echo  "<br>Оновлена кількість";
+            $logger->info("Оновлена кількість ");
         }
+        
+        //обновление  цен
+        if(true){
+            $data = json_encode($plist);
+
+            $fields = array(
+                'data' => $data
+            );
+            $url = $site. '/index.php?route=api/zstore/updateprice&' . $token;
+            $json = \App\Modules\OCStore\Helper::do_curl_request($url, $fields);
+            if ($json === false)
+                return;
+            $data = json_decode($json, true);
+
+            if ($data['error'] != "") {
+                $logger->error($data['error']);
+                return;
+            }
+            
+
+            $logger->info("Оновлені ціни");
+             echo  "<br>Оновлені ціни";
+         }
+  
+        //импорт товаров
+        if(true){
+
+            $url = $site . '/index.php?route=api/zstore/getproducts&' . $token;
+            $json = \App\Modules\OCStore\Helper::do_curl_request($url, $fields);
+            if ($json === false)
+                return;
+            $data = json_decode($json, true);
        
-        $logger->info("Імпортовано {$i} замовлень ");
-        echo  "<br>Імпортовано {$i} замовлень ";
+          
+            if ($data['error'] != "") {
+                $logger->error($data['error']);
+                return;
+            }
+         
+             foreach ($data['products'] as $product) {
+
+                if (strlen($product['sku']) == 0) continue;
       
+                $item = \App\Entity\Item::getFirst("item_code=" . \App\Entity\Item::qstr($product['sku']));
+                if($item instanceof \App\Entity\Item)  {
+                   $item->itemname = str_replace('&quot;', '"', $product['name']);    
+                   $item->save();
+                } else {
+                    $item = new  \App\Entity\Item();
+                    $item->itemname = str_replace('&quot;', '"', $product['name']);
+                    $item->item_code = $product['sku'];
+                    $item->bar_code = $product['sku'];
+                    $item->save();
+                  
+                }
+
+                
+             }
+        }
+        
+        
+        //импорт заказов
+     
+       if(true){
+     
+            $fields = array(
+                'status_id' => $status
+            );
+              
+            $url = $site . '/index.php?route=api/zstore/orders&' . $token;
+            $json = \App\Modules\OCStore\Helper::do_curl_request($url, $fields);
+            if ($json === false)
+                return;
+            $data = json_decode($json, true);
+       
+          
+            if ($data['error'] != "") {
+                $logger->error($data['error']);
+                return;
+            }
+
+               $neworders = array();
+            
+               foreach ($data['orders'] as $ocorder) {
+
+
+                  $cnt  = $conn->getOne("select count(*) from documents_view where (meta_name='Order' or meta_name='TTN') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'")  ;
+
+                    if ( intval($cnt) > 0) { //уже импортирован
+                         continue;
+                    }
+     
+
+                    $order = new \App\DataItem($ocorder);
+                          
+                    $neworders[$ocorder['order_id']] = $order;
+                }  
+          
+            $i = 0;
+            foreach ($neworders as $shoporder) {
+
+
+                $neworder = \App\Entity\Doc\Document::create('Order');
+                $neworder->document_number = $neworder->nextNumber();
+                $neworder->document_date = strtotime($shoporder->date_added);
+
+                if (strlen($neworder->document_number) == 0) {
+                    $neworder->document_number = 'OC00001';
+                }
+                $neworder->customer_id = $modules['occustomer_id'];
+                $j=0;           //товары
+                $tlist = array();
+                foreach ($shoporder->_products_ as $product) {
+                    //ищем по артикулу 
+                    if (strlen($product['sku']) == 0) {
+                        continue;
+                    }
+                    $code = \App\Entity\Item::qstr($product['sku']);
+
+                    $tovar = \App\Entity\Item::getFirst('item_code=' . $code);
+                    if ($tovar == null) {
+
+                       
+                        continue;
+                    }
+                    $tovar->quantity = $product['quantity'];
+                    $tovar->price = str_replace(',', '.', $product['price']);
+                    $desc = '';
+                    if (array($product['_options_'])) {
+                        foreach ($product['_options_'] as $k => $v) {
+                            $desc = $desc . $k . ':' . $v . ';';
+                        }
+                    }
+                    //$tovar->octoreoptions = serialize($product['_options_']);
+                    $tovar->desc = $desc;
+                    $j++;
+                    $tovar->rowid = $j;
+
+                    $tlist[$j] = $tovar;
+                }
+                if(count($tlist)==0)  {
+                    return;
+                }
+                $neworder->packDetails('detaildata', $tlist);
+                $neworder->amount = \App\Helper::fa($shoporder->total);
+                
+                if($modules['ocsetpayamount']==1){
+                   $neworder->payamount = $neworder->amount;
+                 
+                }
+                
+                $neworder->headerdata['salesource'] = \App\Helper::getDefSaleSource();
+                $neworder->headerdata['outnumber'] = $shoporder->order_id;
+                $neworder->headerdata['ocorder'] = $shoporder->order_id;
+                $neworder->headerdata['ocorderback'] = 0;
+                $neworder->headerdata['pricetype'] = 'price1';
+            
+                $neworder->notes = "OC номер:{$shoporder->order_id};";
+
+                $neworder->headerdata['occlient'] = $shoporder->firstname . ' ' . $shoporder->lastname;
+                $neworder->notes .= " Клієнт:" . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
+
+                if ($shoporder->customer_id > 0 && $modules['ocinsertcust'] == 1) {
+                    $cust = \App\Entity\Customer::getFirst("detail like '%<shopcust_id>{$shoporder->customer_id}</shopcust_id>%'");
+                    if ($cust == null) {
+                        $cust = new \App\Entity\Customer();
+                        $cust->shopcust_id = $shoporder->customer_id;
+                        $cust->customer_name = $shoporder->firstname . ' ' . $shoporder->lastname;
+                        $cust->address = $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1;
+                        $cust->type = \App\Entity\Customer::TYPE_BAYER;
+                        $cust->phone = $shoporder->telephone;
+                        $cust->email = $shoporder->email;
+                        $cust->comment = "Клієнт ІМ";
+                        $cust->save();
+                    }
+                    $neworder->customer_id = $cust->customer_id;
+                }
+
+
+                if (strlen($shoporder->email) > 0) {
+                    $neworder->notes .= " Email:" . $shoporder->email . ";";
+                }
+                if (strlen($shoporder->telephone) > 0) {
+                    $neworder->notes .= " Тел:" . $shoporder->telephone . ";";
+                }
+                $neworder->notes .= " Адреса:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
+                $neworder->notes .= " Оплата:" . $shoporder->payment_method . ";";
+                $neworder->notes .= " Комментар:" . $shoporder->comment . ";";
+                $neworder->save();
+                $neworder->updateStatus(\App\Entity\Doc\Document::STATE_NEW);
+                $neworder->updateStatus(\App\Entity\Doc\Document::STATE_INPROCESS);
+
+                $i++;
+            }
+           
+            $logger->info("Імпортовано {$i} замовлень ");
+            echo  "<br>Імпортовано {$i} замовлень ";
+       }     
       
-        die;
+       die;
 
 } catch (Exception $e) {
     echo $e->getMessage();

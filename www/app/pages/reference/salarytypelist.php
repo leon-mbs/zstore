@@ -161,7 +161,9 @@ class SalaryTypeList extends \App\Pages\Base
         $opt['codeadvance'] = $this->optform->optadvance->getValue();
 
         System::setOptions('salary', $opt);
-        $this->updateAjax(array(), "toastr.success('" . H::l("saved") . "')");
+
+        $this->addAjaxResponse("toastr.success('" . H::l("saved") . "')");
+        
     }
 
     public function onSaveCalc($sender) {
@@ -169,7 +171,9 @@ class SalaryTypeList extends \App\Pages\Base
         $opt['calc'] = $this->calcform->algo->getText();
         System::setOptions('salary', $opt);
 
-        $this->updateAjax(array(), "toastr.success('" . H::l("saved") . "')");
+
+        $this->addAjaxResponse("toastr.success('" . H::l("saved") . "')");
+       
     }
 
 }

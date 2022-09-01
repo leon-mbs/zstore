@@ -5,7 +5,7 @@
     </head>
 
     <body>
-      {{={| |}=}}   
+ 
         <div class="row">
             <div class="col-12 col-md-8 col-xl-6" id="vapp">
                 <h4>Журнал системних повiдомлень</h4>
@@ -47,65 +47,7 @@
       
  
  
- {|={{ }}=|}  
- 
- <script>
-
-    var vapp =  Vue.createApp({
-       
-      data() { return {
-          itemlist:[] ,
-          rowscnt:0  ,
-          searchtext:'' ,
-          pagesize:25
-      } } ,
-     components: {
-     //       'paginator': httpVueLoader('/assets/js/vue/paginator.vue')
-     'paginator': Vue.defineAsyncComponent( () => loadModule('/assets/js/vue/paginator.vue', vueoptions) )
-               
-        }, 
-        methods: {
-            changepage:function( page){    //кнопка  пагинатора
-                
-                 this.loaddata( (page-1) * this.pagesize );
-            }   ,
-            loaddata: function(start=0){
-                let body={
-                    search:this.searchtext,
-                    start:start,
-                    count:this.pagesize 
-                };
-                
-                  callPageMethod('getItems',null, JSON.stringify(body),(data)=> 
-                  {
-                      let tmp =   JSON.parse(data)  
-                      this.itemlist=  tmp.items
-                     
-                      this.rowscnt=tmp.cnt
-                  
-                  });
-            }  ,
-            onsearch:function (){
-                this.rowscnt=0;
-                this.loaddata();
-            }  
-           
-            
-        }  ,
-        mounted: function(){
-             this.loaddata();
-        }
-      
-    }).mount('#vapp')   
- 
-   
   
-   
-      
-      
-   //   updateItems();
-      
- </script>   
  
           
     </body>

@@ -32,60 +32,7 @@ class TimeSheet extends \App\Pages\Base
             App::Redirect("\\App\\Pages\\Userlogin");
         }
 
-        $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
-
-        $def = 0;
-        $list = array();
-        $emps = Employee::findArray('emp_name', 'disabled<>1', 'emp_name');
-
-        $user = System::getUser();
-        if ($user->employee_id > 0) {
-            $def = $user->employee_id;
-            $list = array($user->employee_id => $emps[$user->employee_id]);
-        }
-        if ($user->rolename == 'admins') {
-            $list = $emps;
-        }
-
-        $this->filter->add(new DropDownChoice('emp', $list, $def));
-
-        $dt = new \App\DateTime();
-
-        $from = $dt->startOfMonth()->getTimestamp();
-        $to = $dt->endOfMonth()->getTimestamp();
-
-        $this->filter->add(new Date('from', $from));
-        $this->filter->add(new Date('to', $to));
-
-        $this->add(new Panel('tpanel'))->setVisible(false);
-
-        $tcal = $this->tpanel->add(new Panel('tcal'));
-        $tagen = $this->tpanel->add(new Panel('tagen'));
-        $tstat = $this->tpanel->add(new Panel('tstat'));
-
-        $this->tpanel->add(new ClickLink('tabc', $this, 'onTab'));
-        $this->tpanel->add(new ClickLink('taba', $this, 'onTab'));
-        $this->tpanel->add(new ClickLink('tabs', $this, 'onTab'));
-
-        $this->tpanel->add(new ClickLink('addnew', $this, 'AddNew'));
-
-        $tagen->add(new DataView('llist', new ArrayDataSource($this, '_list'), $this, 'listOnRow'));
-        $tstat->add(new DataView('lstat', new ArrayDataSource($this, '_stat'), $this, 'statOnRow'));
-
-        $tcal->add(new  \ZCL\Calendar\Calendar('calendar', 'ua'))->setEvent($this, 'OnCal');
-
-        $this->add(new Form('editform'))->onSubmit($this, 'timeOnSubmit');
-        $this->editform->setVisible(false);
-        $this->editform->add(new DropDownChoice('edittype', TimeItem::getTypeTime(), TimeItem::TIME_WORK));
-        $this->editform->add(new TextInput('editnote'));
-        $this->editform->add(new \Zippy\Html\Form\Time('editfrom'));
-        $this->editform->add(new \Zippy\Html\Form\Time('editto'));
-        $this->editform->add(new TextInput('editbreak'));
-        $this->editform->add(new Date('editdate', time()));
-        $this->editform->add(new Button('cancel'))->onClick($this, 'onCancel');
-
-        $this->onTab($this->tpanel->tabc);
-        $this->filterOnSubmit($this->filter);
+  
     }
 
     public function onTab($sender) {
@@ -136,7 +83,7 @@ class TimeSheet extends \App\Pages\Base
         $this->edit();
     }
 
-    private function edit() {
+    private function edite() {
 
         $this->filter->setVisible(false);
         $this->tpanel->setVisible(false);
@@ -192,61 +139,7 @@ class TimeSheet extends \App\Pages\Base
         $this->editform->setVisible(false);
     }
 
-    public function OnCal($sender, $action) {
-        if ($action['action'] == 'click') {
-
-            $this->_time_id = $action['id'];
-            if ($this->_time_id > 0) {
-                $this->edit();
-            }
-        }
-        if ($action['action'] == 'add') {
-
-            $start = strtotime($action['id']);
-            $this->AddNew(null);
-            $this->editform->editdate->setDate($start);
-        }
-    }
-
-    private function updateCal() {
-
-        $tasks = array();
-
-        foreach ($this->_list as $item) {
-
-            $col = "#bbb";
-
-            if ($item->t_type == TimeItem::TIME_WORK) {
-                $col = "#007bff";
-            }
-            if ($item->t_type == TimeItem::TINE_BT) {
-                $col = "#17a2b8";
-            }
-            if ($item->t_type == TimeItem::TINE_HL) {
-                $col = "#28a745";
-            }
-            if ($item->t_type == TimeItem::TINE_ILL) {
-                $col = "#ffc107";
-            }
-            if ($item->t_type == TimeItem::TINE_OVER) {
-                $col = "#dc3545";
-            }
-            if ($item->t_type == TimeItem::TINE_WN) {
-                $col = "#dc3545";
-            }
-            if ($item->t_type == TimeItem::TINE_OTHER) {
-                $col = "#bbb";
-            }
-
-
-            $tasks[] = new \ZCL\Calendar\CEvent($item->time_id, '', $item->t_start, $item->t_end, $col);
-        }
-
-
-        $this->tpanel->tcal->calendar->setData($tasks);
-    }
-
-    private function updateList() {
+     private function updateList() {
         $emp_id = $this->filter->emp->getValue();
         $conn = \ZDB\DB::getConnect();
         $t_start = $conn->DBDate($this->filter->from->getDate());
@@ -263,7 +156,7 @@ class TimeSheet extends \App\Pages\Base
 
         $tn = TimeItem::getTypeTime();
         $this->_stat = array();
-        $stat = $conn->Execute("select t_type,sum(tm) as tm  from (select t_type,  (UNIX_TIMESTAMP(t_end)-UNIX_TIMESTAMP(t_start)  - t_break*60)   as  tm from timesheet where  emp_id = {$emp_id} and  t_start>={$t_start} and   t_start<{$t_end} ) t  group by t_type order by t_type ");
+        $stat = $conn->Execute("select t_type,sum(tm) as tm  from (select t_type,  (UNIX_TIMESTAMP(t_end)-UNIX_TIMESTAMP(t_start)  - t_break*60)   as  tm from timesheet where  emp_id = {$emp_id} and  date(t_start)>=date({$t_start}) and  date( t_start)<= date( {$t_end} ) ) t  group by t_type order by t_type ");
         foreach ($stat as $row) {
             $t = new \App\DataItem();
             $t->t_type = $row['t_type'];
@@ -354,5 +247,269 @@ class TimeSheet extends \App\Pages\Base
 
         $this->updateList();
     }
+   public function OnCal($sender, $action) {
+        if ($action['action'] == 'click') {
 
+            $this->_time_id = $action['id'];
+            if ($this->_time_id > 0) {
+                $this->edit();
+            }
+        }
+        if ($action['action'] == 'add') {
+
+            $start = strtotime($action['id']);
+            $this->AddNew(null);
+            $this->editform->editdate->setDate($start);
+        }
+    }
+
+    private function updateCal() {
+
+        $tasks = array();
+
+        foreach ($this->_list as $item) {
+
+            $col = "#bbb";
+
+            if ($item->t_type == TimeItem::TIME_WORK) {
+                $col = "#007bff";
+            }
+            if ($item->t_type == TimeItem::TINE_BT) {
+                $col = "#17a2b8";
+            }
+            if ($item->t_type == TimeItem::TINE_HL) {
+                $col = "#28a745";
+            }
+            if ($item->t_type == TimeItem::TINE_ILL) {
+                $col = "#ffc107";
+            }
+            if ($item->t_type == TimeItem::TINE_OVER) {
+                $col = "#dc3545";
+            }
+            if ($item->t_type == TimeItem::TINE_WN) {
+                $col = "#dc3545";
+            }
+            if ($item->t_type == TimeItem::TINE_OTHER) {
+                $col = "#bbb";
+            }
+
+
+            $tasks[] = new \ZCL\Calendar\CEvent($item->time_id, '', $item->t_start, $item->t_end, $col);
+        }
+
+
+        $this->tpanel->tcal->calendar->setData($tasks);
+    }
+
+ 
+//vue
+    
+    public function init($arg,$post=null){
+        $user = \App\System::getUser() ;
+  
+        $ret = array();  
+        $ret['empid']  =  $user->employee_id;
+        $ret['isadmin']  =  $user->rolename=="admins";
+        $ret['types']  =  \App\Util::tokv(TimeItem::getTypeTime());
+        $ret['emps']  =  \App\Util::tokv(\App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name")  ) ;
+        if($ret['isadmin'] == false)  {
+           $ret['emps']  =  \App\Util::tokv(\App\Entity\Employee::findArray("emp_name", "disabled<>1 and employee_id=".$user->employee_id, "emp_name")  ) ;
+        } 
+        $dt = new \App\DateTime();
+
+        $ret['from'] = date("Y-m-d", $dt->startOfMonth()->getTimestamp() );
+        $ret["to"] = date("Y-m-d",$dt->endOfMonth()->getTimestamp() );
+        $ret["today"] = date("Y-m-d",time() );
+        
+         
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);     
+       
+    }    
+
+    public function loaddata($arg,$post){
+       
+        $post = json_decode($post) ;
+        
+        $conn = \ZDB\DB::getConnect();
+         
+        $emp_id = $post->empid;
+        $t_start = $conn->DBDate(strtotime($post->from));
+        $t_end = $conn->DBDate(strtotime($post->to));
+            
+        $ret = array()  ;
+        $ret['stat'] = array();
+       
+        $tn = TimeItem::getTypeTime();
+       
+        $stat = $conn->Execute("select t_type,sum(tm) as tm  from (select t_type,  (UNIX_TIMESTAMP(t_end)-UNIX_TIMESTAMP(t_start)  - t_break*60)   as  tm from timesheet where  emp_id = {$emp_id} and  date(t_start)>=date({$t_start}) and  date( t_start)<= date( {$t_end} ) ) t  group by t_type order by t_type ");
+        foreach ($stat as $row) {
+     
+            $color="";
+            if ($row['t_type'] == TimeItem::TIME_WORK) {
+               $color=  'badge badge-primary' ;
+            }
+            if ($row['t_type'] == TimeItem::TINE_BT) {
+
+               $color=  'badge badge-info'   ;
+            }
+            if ($row['t_type'] == TimeItem::TINE_HL) {
+               $color=  'badge badge-success'  ;
+            }
+            if ($row['t_type'] == TimeItem::TINE_ILL) {
+               $color=  'badge badge-warning'  ;
+            }
+            if ($row['t_type'] == TimeItem::TINE_OVER) {
+               $color=  'badge badge-danger'  ;
+            }
+            if ($row['t_type'] == TimeItem::TINE_WN) {
+               $color=  'badge badge-danger'  ;
+            }
+            if ($row['t_type'] == TimeItem::TINE_OTHER) {
+               $color=  'badge badge-light'   ;
+            }            
+                
+            $ret['stat'][] = array(
+            "color"=> $color,
+            "cnt"=> number_format($row['tm'] / 3600, 2, '.', '') ,
+            "name"=>$tn[$row['t_type']]
+            );
+        }
+      
+        $ret['times'] = array();
+        $ret['events'] = array();
+        
+        $w = "emp_id = {$emp_id} and  date(t_start)>=date({$t_start}) and  date( t_start)<= date( {$t_end} )  ";
+
+        if ($this->_tvars["usebranch"] && $this->branch_id > 0) {
+            $w .= " and branch_id=" . $this->branch_id;
+        }
+
+
+         
+         foreach (TimeItem::find($w, 't_start') as $tm) {
+     
+            $color="";
+            $colorcal="";
+            if ($tm->t_type == TimeItem::TIME_WORK) {
+               $color=  'badge badge-primary' ;
+               $colorcal=  "#007bff" ;
+            }
+            if ($tm->t_type == TimeItem::TINE_BT) {
+
+               $color=  'badge badge-info'   ;
+               $colorcal=  "#17a2b8" ;
+            }
+            if ($tm->t_type == TimeItem::TINE_HL) {
+               $color=  'badge badge-success'  ;
+               $colorcal=  "#28a745" ;
+            }
+            if ($tm->t_type == TimeItem::TINE_ILL) {
+               $color=  'badge badge-warning'  ;
+               $colorcal=  "#ffc107" ;
+            }
+            if ($tm->t_type == TimeItem::TINE_OVER) {
+               $color=  'badge badge-danger'  ;
+               $colorcal=  "#dc3545" ;
+            }
+            if ($tm->t_type == TimeItem::TINE_WN) {
+               $color=  'badge badge-danger'  ;
+               $colorcal=  "#dc3545" ;
+            }
+            if ($tm->t_type == TimeItem::TINE_OTHER) {
+               $color=  'badge badge-light'   ;
+               $colorcal=  "#bbb" ;
+            }            
+            $diff = $tm->t_end - $tm->t_start - ($tm->t_break * 60);
+            $diff = number_format($diff / 3600, 2, '.', '');
+           
+            $ret['times'][] = array(
+             "date"=> date('Y-m-d', $tm->t_start),
+             "from"=> date('H:i', $tm->t_start),
+             "to"=> date('H:i', $tm->t_end),
+             "desc"=> $tm->description,
+             "type"=> $tm->t_type,
+             "break"=> $tm->t_break,
+             "dur"=> $diff,
+             "color"=> $color,
+             "branch"=> $tm->branch_id > 0 ? $tm->branch_name : '',
+             "name"=>$tn[$tm->t_type]  ,
+             "time_id"=>$tm->time_id
+            );
+            
+          $ret['events'][] = array(
+             "start"=> date('c', $tm->t_start),
+             "end"=> date('c', $tm->t_start),
+
+             "backgroundColor"=>$colorcal ,
+             "title"=>$tm->description ,
+             "id"=>$tm->time_id
+            );
+            
+            
+        }
+   
+      
+      
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);     
+               
+    }
+    public function save($args,$post) {
+        
+        $post = json_decode($post) ;
+       
+        $time = new TimeItem();
+        if($args[0] > 0) {
+           $time = TimeItem::load($args[0] ); 
+        }
+        
+        $time->description = $post->desc;
+        $time->emp_id = $post->empid;
+        if ($time->emp_id == 0) {
+
+            return json_encode(H::l("noempselected"), JSON_UNESCAPED_UNICODE);     
+        }
+        $time->t_type = $post->type;
+     
+        if ($time->t_type == 0) {
+
+            return H::l("notypeselected");     
+        }
+      
+     
+        $time->t_break = $post->break;
+        $from = $post->date . ' ' . $post->from;
+        $to = $post->date . ' ' . $post->to;
+
+        $time->t_start = strtotime($from);
+        $time->t_end = strtotime($to);
+
+        $v = $time->isValid();
+        if (strlen($v) > 0) {
+           return  H::l($v);     
+     
+        }
+
+        if ($this->_tvars["usebranch"]) {
+            if ($this->branch_id == 0) {
+                 
+                return H::l("selbranch");     
+   
+            }
+            $time->branch_id = $this->branch_id;
+        }
+
+
+        $time->save();
+
+        return "";     
+       
+    }
+  
+     public function del($args) {
+
+
+        TimeItem::delete($args[0]);
+
+
+    }   
 }

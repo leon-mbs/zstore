@@ -95,8 +95,17 @@ new Audio('/assets/beep.mp3').play()
       return check;
     };    
 
-
     
+   //для  комбобоксов 
+   function tokv(list){
+       var  ret=[];
+        for (let v of Object.getOwnPropertyNames(list)) {
+                     var o = { "key":v,"value": list[v] }
+                     ret.push( o )
+                 }     
+                         
+     return ret;           
+   } 
    
    
   

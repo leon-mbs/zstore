@@ -189,7 +189,8 @@ class PayList extends \App\Pages\Base
         $report = new \App\Report('pays_bill.tpl');
 
         $html = $report->generate($header);
-        $this->updateAjax(array(), "  $('#paysprint').html('{$html}') ; $('#pform').modal()");
+
+         $this->addAjaxResponse("  $('#paysprint').html('{$html}') ; $('#pform').modal()") ;
     }
 
 }

@@ -7,133 +7,7 @@
     <body>
 
 
-        <div class="row" zippy="projectpanel">
-            <div class="col-12  ">
-                <h2>Проекти</h2>
-                <div class="navbar nav  ">
-                    <form zippy="filter" class="form-inline ">
-                        <input placeholder="Пошук..." class="form-control mr-2" type="text" zippy="searchnumber">
-
-                        <label for="searchstate">статус </label>
-                        <select class="form-control  mr-2   " zippy="searchstate">
-                            <option value="0">Відкриті</option>
-                        </select>
-                        <label for="searchcust">замовник </label>
-                        <select class="form-control     " zippy="searchcust">
-                            <option value="0">Не обрано</option>
-                        </select>
-
-
-                        <input type="submit" class=" ml-2   btn btn-outline-success  " value="ОК">
-                    </form>
-
-                </div>
-            </div>
-            <div class="col-12 col-xl-10 ">
-                <a zippy="padd" class="btn btn-primary  ">Новий проект</a>
-                <table class="table table-bordered  table-sm">
-                    <tr>
-                        <th>Назва</th>
-                        <th>Замовник</th>
-                        <th>Статус</th>
-                        <th colspan="3" class="text-center">Завдання</th>
-
-                        <th></th>
-                    </tr>
-                    <tr zippy="projectlist">
-                        <td zippy="project_name"></td>
-                        <td zippy="customer_name"></td>
-                        <td zippy="status"></td>
-                        <td style="width:40px"><span zippy="inew" title="Нові" class="badge badge-success  "></span></td>
-                        <td style="width:40px"><span zippy="iproc" title="В роботі" class="badge badge-primary"></span></td>
-                        <td style="width:40px"><span zippy="iclose" title="Закриті" class="badge badge-secondary"></span></td>
-
-                        <td>
-                            <a zippy="preview"><i class="fa fa-eye"/></a>
-                            &nbsp;&nbsp;
-                            <a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a>
-
-                            &nbsp;&nbsp;
-                            <a zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a></td>
-                    </tr>
-                </table>
-                <div zippy="pag"></div>
-            </div>
-
-        </div>
-     
-        <div class="row" zippy="showpan">
-            <div class="col-12 col-md-8 col-xl-6">
-                <a zippy="back"><i class="fa fa-arrow-circle-left"></i> До списку</a>
-                &nbsp; &nbsp; <a zippy="toilist"> До списку завдань</a>
-                &nbsp; &nbsp; <a zippy="newissue"> Створити завдання</a>
-                <h4 zippy="mtitle"></h4>
-
-               
-
-                <hr>
-                <a id="afiles">
-                    <form class="form-inline" zippy="addfileform" enctype="multipart/form-data">
-                        <input type="hidden" name="MAX_FILE_SIZE" value="5000000">
-                        <label> Вибрати файл: </label>
-
-                        <input class="form-control mr-2" type="file" required="required" zippy="addfile">
-
-                        <input class="btn btn-outline-info  " type="submit" value="Додати">
-
-                    </form>
-
-                    <div zippy="filelist" style="float:left">
-
-                        <i class="fa fa-paperclip"></i> <a zippy="filename" target="_blank"></a>
-                        &nbsp;<a zippy="delfile" class="text-danger  text-bold" title="Вилучити">x</a>&nbsp;&nbsp;
-
-                    </div>
-
-
-                    <hr>
-                    <h5>Коментарі</h5>
-                    <table style="width:400px" class="table table-sm">
-                        <tr zippy="msglist">
-                            <td>
-                                <span><b zippy="msguser"></b> <span zippy="msgdate"
-                                                                    class="text-muted float-right"></span></span>
-
-                                <br><span zippy="msgdata"></span>
-
-                            </td>
-                            <td valign="top"><a zippy="delmsg" class="text-danger text-bold">x</a></td>
-                        </tr>
-                    </table>
-                    <div zippy="pagmsg"></div>
-                    <a id="amessages"/>
-                    <form style="margin-left:40px;" zippy="addmsgform" id="msgankor">
-                        <label> Коментар: </label>
-                        <div class="form-group">
-                            <textarea class="form-control" required="required" zippy="msgdata"
-                                      style="width:400px;height:120px;"></textarea>
-                        </div>
-                        <input class="btn btn-outline-success  " type="submit" value="Додати">
-                    </form>
-
-            </div>
-            <div class="col-12 col-md-4 col-xl-3">
-                <form zippy="statusform">
-                    <div class="form-group">
-                        <label for="stlist">Статус </label>
-                        <select class="form-control     " zippy="stlist">
-
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" class=" ml-2   btn btn-outline-success  " value="Змінити">
-                    </div>
-
-                </form>
-                <h4>Опис</h4>
-           <p zippy="mdesc"></p>
-            </div>
-        </div>
+    
    
     {{={| |}=}}   
     
@@ -188,7 +62,7 @@
                         <td style="width:40px"><span   title="Закриті" class="badge badge-secondary" v-show="project.iclose>0">{{project.iclose}}</span></td>
 
                         <td>
-                            <a  ><i class="fa fa-eye"/></a>
+                            <a  v-show="project.allowedit" v-on:click.prevent="show(project.project_id)"   title="Перегляд" href="javascript:void(0)" ><i class="fa fa-eye"></i></a>
                          </td>
                          <td>   
                             <a  v-show="project.allowedit" v-on:click.prevent="edit(project.project_id)"   title="Редагувати" href="javascript:void(0)" ><i class="fa fa-edit"></i></a>
@@ -215,7 +89,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="editcust"> Замовник </label>
-                                <typeahead  :setquery="cname"   ref="cust"  :onquery="ontext"  :onhit="hitcust" placeholder="Почнiть вводити ..."></typeahead>   
+                                <typeahead     ref="cust"  :onquery="ontext"  :onhit="hitcust" placeholder="Почнiть вводити ..."></typeahead>   
 
                             </div>
                             <div class="form-group">
@@ -226,7 +100,13 @@
                         <div class="col-12 col-md-4  col-xl-4">
                             <div class="form-group">
                                 <label> Список учасникiв </label>
-                                <div ></div>
+                              
+                                <div v-for="user in users">
+                                  <input type="checkbox" :id="user.key" :value="user" v-model="selectedUsers">
+                                  <label :for="user.key">{{user.value}}</label>
+                                </div>
+                              
+                                  
                             </div>
                         </div>
                         <div class="col-12 col-md-4  col-xl-4">
@@ -240,7 +120,71 @@
                     </div>
                 </form>
             </div>            
-            
+           <div v-show="this.mode=='show'" class="col-12 col-md-8 col-xl-6">
+                <h4>{{title}} </h4>
+                <a href="javascript:void(0)"   v-on:click.prevent="onback" ><i class="fa fa-arrow-circle-left" ></i> До списку</a>
+                &nbsp; &nbsp; <a id="optasks"  ><i class="fa fa-list"></i>  До списку завдань</a>
+                &nbsp; &nbsp; <a id="optasknew"  ><i class="fa fa-plus"></i> Створити завдання</a>
+
+                <form  class="form-inline ">
+                        <label for="stlist">Статус </label>
+                        <select id="stlist" v-on:change="onchstatus" v-model="currstatus" class="form-control   ml-1  " >
+                           <option v-for="option in stlist" :value="option.key">
+                              {{ option.value }}
+                          </option>                            
+
+                        </select>
+
+                </form>
+                 <hr>
+
+                <form id="fileaddform" class="form-inline mb-1"  enctype="multipart/form-data">
+                       
+                        <label> Вибрати файл: </label>
+
+                        <input name="pfile" class="form-control mr-2" type="file" >
+
+                        <input  v-on:click.prevent="onfile" class="btn btn-outline-info  " type="button" value="Додати">
+
+                    </form>
+
+                    <div v-for="f in filelist"  style="float:left">
+
+                        <i class="fa fa-paperclip"></i> <a :href="f.url" target="_blank">{{f.filename}}</a>
+                        &nbsp;<a v-show="f.candel" v-on:click.prevent="delfile(f.file_id)" href="javascript:void(0)"   class="text-danger  text-bold" title="Вилучити">x</a>&nbsp;&nbsp;
+
+                    </div>
+
+
+                    <hr>
+                    <h4>Коментарі</h4>
+                    <table style="width:400px" class="table table-sm">
+                        <tr v-for="msg in msglist" >
+                            <td>
+                                <span><b >{{msg.user}}</b> <span  class="text-muted float-right">{{msg.date}}</span></span>
+
+                                <br><span  >{{msg.data}}</span>
+
+                            </td>
+                            <td valign="top"><a v-show="msg.candel" v-on:click.prevent="delmsg(msg.message_id)"   title="Вилучити" href="javascript:void(0)"  class="text-danger text-bold">x</a></td>
+                        </tr>
+                    </table>
+                    
+
+                    <form >
+                        <label> Коментар: </label>
+                        <div class="form-group">
+                            <textarea v-model="msg" class="form-control"  style="width:400px;height:120px;"></textarea>
+                        </div>
+                        <input   v-on:click.prevent="onmsg"  class="btn btn-outline-success  " type="button" value="Додати">
+                    </form>
+ 
+                         
+          </div>
+           <div v-show="this.mode=='show'" class="col-12 col-md-8 col-xl-6">
+                <h4>Опис</h4>
+                <p v-html="desc"><p>
+          </div>
         </div>
 
     {|={{ }}=|}      
@@ -249,28 +193,39 @@
         <script>
         
         
-    var vapp =  Vue.createApp({
-       
+     var vapp = new Vue({
+            el: '#vapp',
+      
       data() { return {
           projectlist:[] ,
           stlist:[] ,
           custlist:[] ,
+          users:[] ,
+          selectedUsers:[] ,
           rowscnt:0,
           searchtext:'' ,
           searchcust:'0' ,
           searchstate:'0',
           editid:0 ,
           editname:'' ,
-          cname:'' ,
-     
           editcust:0,
+
+          desc:'' ,
+          title:'' ,
+          currstatus:0 ,
+
+          msg:"" ,
+          msglist:[] ,
+          filelist:[] ,
           pagesize:25  ,
+          currpage:1  ,
           mode:'list'
       } } ,
      components: {
-     //       'paginator': httpVueLoader('/assets/js/vue/paginator.vue')
-     'paginator': Vue.defineAsyncComponent( () => loadModule('/assets/js/vue/paginator.vue', vueoptions) )
-     ,'typeahead': Vue.defineAsyncComponent( () => loadModule('/assets/js/vue/typeahead.vue', vueoptions) )
+    
+     'typeahead': httpVueLoader('/assets/js/vue/typeahead.vue')
+   , 'paginator': httpVueLoader('/assets/js/vue/paginator.vue')
+   
            
         }, 
         methods: {
@@ -291,38 +246,71 @@
                   });      
                } 
             }   ,
+            show:function( project_id){    
+                 this.editid = project_id;
+                 
+                 $('#optasks').attr("href","/index.php?p=App/Modules/Issue/Pages/IssueList&arg=0/" + project_id  )                 
+                 $('#optasknew').attr("href","/index.php?p=App/Modules/Issue/Pages/IssueList&arg=0/" + project_id +"/true"  )                
+                 
+                 
+                 
+                  callPageMethod('show',[project_id], null,(data)=> 
+                  {    
+                                              
+                       let tmp =   JSON.parse(data)  
+                  
+                     
+                       this.title=tmp.name;   
+                       this.desc=tmp.desc;   
+                       this.currstatus=tmp.status;   
+
+                       this.mode='show'       
+                       this.getmsglist();
+                       this.getfilelist();
+                
+
+                  });                 
+                 
+                 
+                  
+                
+            } ,
             edit:function( project_id){    
                   this.editid = project_id;
                 
-                  callPageMethod('getedit',[project_id], null,(data)=> 
+                  callPageMethod('edit',[project_id], null,(data)=> 
                   {                                
                        let tmp =   JSON.parse(data)  
                      
                        this.editname=tmp.name;   
                        this.editcust=tmp.customer_id;
-                       this.cname=tmp.customer_name;  
+                       this.selectedUsers=tmp.selusers;
+                       this.$refs.cust.query = tmp.customer_name;  
                        $('#editdesc').summernote("code",tmp.desc)
                        
                        this.mode='edit'  
+
                   });               
                 
                  
             }   ,     
             add:function( project_id){    
+                  
+               
                   this.editid = 0
                   this.editname =""
                   $('#editdesc').summernote("code","")                
-                //  this.$refs.cust.setquery = "xxx";       
+                  this.$refs.cust.query = "";       
                   this.mode='edit'  
-                  this.cname=''  
+                  
                 
                  
             }   ,
-                 hitcust: function (id){
+            hitcust: function (id){
             
                     this.editcust = id 
                 },
-                ontext: async function (query){
+            ontext: async function (query){
                    
                     var url  = getMethodUrl('ontextCustomers',[query ])
                     let response = await fetch(url);
@@ -331,9 +319,17 @@
      
                 }  ,
        
-        onsave:function(  ){    
-                  
+            onsave:function(  ){    
+                  if(this.editname==""){
+
+                     toastr.error("Не введена назва")
+                      return;
+                  }
                   var data = new  FormData();
+                  var u ="";
+                  this.selectedUsers.forEach((us) => u = u + ","+ us.key );
+
+                  data.append('users',  u);
                   data.append('name',  this.editname);
                   data.append('customer_id',  this.editcust);
                   data.append('desc',   $('#editdesc').summernote("code")                );
@@ -342,17 +338,75 @@
                   {                                
                        if(data==""){ 
                          this.mode='list' 
-                         this.loaddata(); 
+                         this.loaddata( (this.currpage-1) * this.pagesize ); 
                        } else {
-                           alert(data);
+                           toastr.error(data)
                        }
                   });               
                 
                  
             }   ,
             
-            
-            
+            onchstatus:function(  ){    
+
+                  callPageMethod('onStatus',[this.editid,this.currstatus], null,(data)=> 
+                  {                                
+                       this.loaddata( (this.currpage-1) * this.pagesize ); 
+                  });               
+                
+
+            }   ,
+            onmsg:function(){
+                  callPageMethod('addMsg',[this.editid], this.msg,(data)=> 
+                  {     
+                        this.msg=''                           
+                        this.getmsglist();
+                  });               
+             
+            } ,
+            delmsg:function(id){
+                  callPageMethod('delMsg',[id], null,(data)=> 
+                  {                                
+                        this.getmsglist();
+                  });               
+             
+            } ,
+            getmsglist:function(){
+                  callPageMethod('getMsgList',[this.editid], null,(data)=> 
+                  {                                
+                      let tmp =   JSON.parse(data)  
+                      this.msglist = tmp.list
+                  });               
+             
+            } ,
+            onfile:function(){
+                   var el = document.getElementById('fileaddform') ;
+                   var f = new  FormData(el)  
+          
+                  callPageMethod('addFile',[this.editid], f,(data)=> 
+                  {     
+          
+                        this.getfilelist();
+                  });               
+                  el.reset();
+
+            } ,
+            delfile:function(id){
+                  callPageMethod('delFile',[id], null,(data)=> 
+                  {                                
+                        this.getfilelist();
+                  });               
+             
+            } ,
+            getfilelist:function(){
+                  callPageMethod('getFileList',[this.editid], null,(data)=> 
+                  {                                
+                      let tmp =   JSON.parse(data)  
+                      this.filelist = tmp
+                  });               
+             
+            } ,
+                        
             onback:function(  ){    
                 
                  this.mode='list'
@@ -360,12 +414,13 @@
                  
             }   ,
             changepage:function( page){    //кнопка  пагинатора
-                
+                 this.currpage = page
+                 
                  this.loaddata( (page-1) * this.pagesize );
             }   ,
             loaddata: function(start=0){
                 let body={
-                    searchnumber:"",
+                    searchtext:this.searchtext,
                     searchcust:this.searchcust,
                     searchstate:this.searchstate,
                     start:start,
@@ -380,6 +435,8 @@
                      
                       this.rowscnt=tmp.cnt
                       this.custlist=tmp.custlist
+ 
+                      
                   });
             }  ,
             onsearch:function (){
@@ -393,17 +450,20 @@
             
                   callPageMethod('init',null, null,(data)=> 
                   {
-                      let tmp =   JSON.parse(data)  
-                      this.stlist=  tmp.stlist
-                     
-                 
+                      console.log(data)
+                      let tmp     =  JSON.parse(data)  
+                      this.stlist =  tmp.stlist
+                      this.users  =  tmp.userlist
+                       
                       this.pagesize=tmp.pagesize
                       this.loaddata();
+                      
+                      if(tmp.id >0) this.show(tmp.id)
                   });            
             
         }
       
-    }).mount('#vapp')   
+    })
  
    
           
