@@ -40,7 +40,7 @@ class IOState extends \App\Pages\Base
         $this->_ptlist = \App\Entity\IOState::getTypeList();
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
-        $this->filter->add(new DropDownChoice('fuser', \App\Entity\User::findArray('username', '', 'username'), 0));
+        $this->filter->add(new DropDownChoice('fuser', \App\Entity\User::findArray('username', 'disabled<>1', 'username'), 0));
         $this->filter->add(new DropDownChoice('ftype', $this->_ptlist, 0));
 
         $doclist = $this->add(new DataView('doclist', new IOStateListDataSource($this), $this, 'doclistOnRow'));
