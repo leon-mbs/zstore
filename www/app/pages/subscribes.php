@@ -47,7 +47,7 @@ class Subscribes extends \App\Pages\Base
         $this->editform->add(new DropDownChoice('editstate', \App\Entity\Doc\Document::getStateList(), 0));
         $this->editform->add(new DropDownChoice('editrecievertype', Subscribe::getRecieverList(), Subscribe::RSV_CUSTOMER))->onChange($this, 'update');
         $this->editform->add(new DropDownChoice('editmsgtype', Subscribe::getMsgTypeList(), 0))->onChange($this, 'update');;
-        $this->editform->add(new DropDownChoice('edituser', \App\Entity\User::findArray('username', '', 'username'), 0));
+        $this->editform->add(new DropDownChoice('edituser', \App\Entity\User::findArray('username', 'disabled<>1', 'username'), 0));
 
         $this->editform->add(new SubmitButton('save'))->onClick($this, 'OnSave');
         $this->editform->add(new ClickLink('cancel'))->onClick($this, 'OnCancel');
