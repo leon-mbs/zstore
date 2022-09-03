@@ -461,7 +461,7 @@ class ProdIssue extends \App\Pages\Base
             $this->editdetail->editserial->setText($serial);
         }
 
-        $this->updateAjax(array('qtystock', 'editserial'));
+       // $this->updateAjax(array('qtystock', 'editserial'));
     }
 
     public function OnAutoItem($sender) {

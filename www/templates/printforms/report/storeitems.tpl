@@ -12,7 +12,7 @@
         <th style="border: solid black 1px">Найменування</th>
         <th style="border: solid black 1px">Артикул</th>
         {{#stores}}
-        <th style="border: solid black 1px">{{name}} </th>
+        <th style="border: solid black 1px">{{value}} </th>
         {{/stores}}
     </tr>
     {{#_detail}}       

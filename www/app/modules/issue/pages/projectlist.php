@@ -191,7 +191,7 @@ class ProjectList extends \App\Pages\Base
          $text = $args[0];
          $text= Customer::qstr('%'.$text.'%') ;
  
-       $list = H::kv2o(Customer::findArray("customer_name", "status=0 and customer_name like " . $text));
+       $list =\App\Util::tokv(Customer::findArray("customer_name", "status=0 and customer_name like " . $text));
      
        return json_encode($list, JSON_UNESCAPED_UNICODE);          
         

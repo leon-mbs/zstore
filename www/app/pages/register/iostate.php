@@ -40,7 +40,7 @@ class IOState extends \App\Pages\Base
         $this->_ptlist = \App\Entity\IOState::getTypeList();
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
-        $this->filter->add(new DropDownChoice('fuser', \App\Entity\User::findArray('username', '', 'username'), 0));
+        $this->filter->add(new DropDownChoice('fuser', \App\Entity\User::findArray('username', 'disabled<>1', 'username'), 0));
         $this->filter->add(new DropDownChoice('ftype', $this->_ptlist, 0));
 
         $doclist = $this->add(new DataView('doclist', new IOStateListDataSource($this), $this, 'doclistOnRow'));
@@ -126,7 +126,7 @@ class IOState extends \App\Pages\Base
 
         H::exportExcel($data, $header, 'paylist.xlsx');
     }
-
+    /*
     public function printOnClick($sender) {
         $pay = $sender->getOwner()->getDataItem();
         $doc = \App\Entity\Doc\Document::load($pay->document_id);
@@ -149,7 +149,7 @@ class IOState extends \App\Pages\Base
         $html = $report->generate($header);
         $this->updateAjax(array(), "  $('#paysprint').html('{$html}') ; $('#pform').modal()");
     }
-
+    */
 }
 
 /**

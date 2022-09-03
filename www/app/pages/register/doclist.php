@@ -67,7 +67,7 @@ class DocList extends \App\Pages\Base
         $this->filter->add(new Date('from', $filter->from));
         $this->filter->add(new Date('to', $filter->to));
         $this->filter->add(new DropDownChoice('doctype', H::getDocTypes(), $filter->doctype));
-        $this->filter->add(new DropDownChoice('author', \App\Entity\User::findArray('username', '', 'username'), $filter->author));
+        $this->filter->add(new DropDownChoice('author', \App\Entity\User::findArray('username', 'disabled<>1', 'username'), $filter->author));
         $this->filter->add(new DropDownChoice('status', Document::getStateList(), $filter->status));
 
         $this->filter->add(new ClickLink('erase', $this, "onErase"));
@@ -546,10 +546,12 @@ class DocList extends \App\Pages\Base
         
         if( \App\System::getUser()->usemobileprinter == 1) {
             \App\Session::getSession()->printform =  $htmls;
-            $this->updateAjax(array(), "     window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
+
+            $this->addAjaxResponse("     window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
         }
         else {
-          $this->updateAjax(array(), "  $('#tag').html('{$htmls}') ; $('#pform').modal()");
+
+            $this->addAjaxResponse("  $('#tag').html('{$htmls}') ; $('#pform').modal()");
              
         }        
     }

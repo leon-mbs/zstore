@@ -443,7 +443,7 @@ class IncomeService extends \App\Pages\Base
 
         $this->editdetail->editprice->setText($price);
 
-        $this->updateAjax(array('editprice'));
+      //  $this->updateAjax(array('editprice'));
     }
 
     public function OnCustomerFirm($sender) {

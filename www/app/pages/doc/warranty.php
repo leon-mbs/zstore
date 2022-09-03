@@ -283,7 +283,7 @@ class Warranty extends \App\Pages\Base
         $item = Item::load($id);
         $this->editdetail->editwarranty->setText($item->warranty);
 
-        $this->updateAjax(array('editwarranty'));
+      //  $this->updateAjax(array('editwarranty'));
     }
 
 }

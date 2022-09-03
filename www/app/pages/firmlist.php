@@ -228,11 +228,12 @@ class FirmList extends \App\Pages\Base
            $certdata =  @file_get_contents($certfile['tmp_name']);
            
            if(strlen($password)==0  || strlen($keydata)==0    )  {
-               $this->updateAjax(array(),"   $('#progress').text('". H::l("pponotloaddata") ."');   $('#send').attr('disabled',null);            ") ;
+               $this->addAjaxResponse("   $('#progress').text('". H::l("pponotloaddata") ."');   $('#send').attr('disabled',null);            ");
+   
                return;
            }
            if(  strlen($certdata)==0 && $isjks == false)  {
-               $this->updateAjax(array(),"   $('#progress').text('". H::l("pponotloaddata") ."');   $('#send').attr('disabled',null);            ") ;
+               $this->addAjaxResponse("   $('#progress').text('". H::l("pponotloaddata") ."');   $('#send').attr('disabled',null);            ");
                return;
            }
            
@@ -252,7 +253,9 @@ class FirmList extends \App\Pages\Base
              }  
                
              if($key==null){
-                $this->updateAjax(array(),"   $('#progress').text('Invalid  key');   $('#send').attr('disabled',null);            ") ;
+
+                $this->addAjaxResponse("   $('#progress').text('Invalid  key');   $('#send').attr('disabled',null);       ");
+                
                 return;
                   
              }
@@ -267,7 +270,7 @@ class FirmList extends \App\Pages\Base
            } catch(\Exception $ee){
              $msg = $ee->getMessage() ; 
              $msg = str_replace("'","`",$msg) ;
-             $this->updateAjax(array(),"   $('#progress').text('{$msg}');   $('#send').attr('disabled',null);            ") ;
+             $this->addAjaxResponse("   $('#progress').text('{$msg}');   $('#send').attr('disabled',null);   ");
              return;
                
            }      
@@ -276,7 +279,8 @@ class FirmList extends \App\Pages\Base
        
        if($signtype==1 || $signtype==2 ) {       
              if(strlen($serhost)==0  || strlen($serport)==0   )  {
-                 $this->updateAjax(array(),"   $('#progress').text('". H::l("pponotloaddata") ."');   $('#send').attr('disabled',null);            ") ;
+                 $this->addAjaxResponse("    $('#progress').text('". H::l("pponotloaddata") ."');   $('#send').attr('disabled',null);     ");
+
                  return;
              }         
              
@@ -324,7 +328,9 @@ class FirmList extends \App\Pages\Base
                 if (curl_errno($request) > 0) {
                      $msg = curl_error($request) ; 
                       $msg = str_replace("'","\"",$msg) ;
-                     $this->updateAjax(array(),"   $('#progress').text('{$msg}');   $('#send').attr('disabled',null);            ") ;
+
+                     $this->addAjaxResponse("   $('#progress').text('{$msg}');   $('#send').attr('disabled',null);         ");
+                     
                      return;            
                 }
 
@@ -336,7 +342,9 @@ class FirmList extends \App\Pages\Base
                         $msg = $ret->message  ; 
                      }; 
                        $msg = str_replace("'","\"",$msg) ;  
-                     $this->updateAjax(array(),"   $('#progress').text('{$msg}');   $('#send').attr('disabled',null);            ") ;
+
+                     $this->addAjaxResponse("    $('#progress').text('{$msg}');   $('#send').attr('disabled',null);          ");
+                     
                      return;            
                 }  
                  
@@ -362,8 +370,9 @@ class FirmList extends \App\Pages\Base
              $this->_firm->save();      
 
              $kl = \App\Helper::l("ppokeyloaded");
-             $this->updateAjax(array(),"   $('#progress').text('{$kl}')") ;
-         
+
+             $this->addAjaxResponse("   $('#progress').text('{$kl}')");
+        
          
     }
 }

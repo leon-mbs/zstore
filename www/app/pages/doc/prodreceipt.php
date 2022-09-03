@@ -372,7 +372,7 @@ class ProdReceipt extends \App\Pages\Base
         $price = $item->getProdprice();
         $this->editdetail->editprice->setText($price > 0 ? H::fa($price) : '');
 
-        $this->updateAjax(array('editprice'));
+      //  $this->updateAjax(array('editprice'));
     }
 
 }

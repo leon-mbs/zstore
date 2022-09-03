@@ -40,7 +40,7 @@ class PayList extends \App\Pages\Base
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new DropDownChoice('fmfund', \App\Entity\MoneyFund::getList(), 0));
-        $this->filter->add(new DropDownChoice('fuser', \App\Entity\User::findArray('username', '', 'username'), 0));
+        $this->filter->add(new DropDownChoice('fuser', \App\Entity\User::findArray('username', 'disabled<>1', 'username'), 0));
 
         $this->filter->add(new AutocompleteTextInput('fcustomer'))->onText($this, 'OnAutoCustomer');
 
@@ -189,7 +189,8 @@ class PayList extends \App\Pages\Base
         $report = new \App\Report('pays_bill.tpl');
 
         $html = $report->generate($header);
-        $this->updateAjax(array(), "  $('#paysprint').html('{$html}') ; $('#pform').modal()");
+
+         $this->addAjaxResponse("  $('#paysprint').html('{$html}') ; $('#pform').modal()") ;
     }
 
 }

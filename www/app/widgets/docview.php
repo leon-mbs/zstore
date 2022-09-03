@@ -194,7 +194,7 @@ class DocView extends \Zippy\Html\PageFragment
          $q= \App\Entity\Doc\Document::qstr('%'.$q.'%') ;
          $data = array(); 
          foreach(\App\Entity\Doc\Document::findArray('document_number',"parent_id <> {$args[1]} and document_number like ".$q) as $id=>$v ) {
-              $data[]=array('name'=>$v,'id'=>$id); 
+              $data[]=array('value'=>$v,'key'=>$id); 
          }
        
        return json_encode($data, JSON_UNESCAPED_UNICODE);     

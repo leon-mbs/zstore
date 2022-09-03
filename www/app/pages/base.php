@@ -90,6 +90,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["isadmin"] = $user->userlogin == 'admin';
         $this->_tvars["isadmins"] = $user->rolename == 'admins';
         $this->_tvars["isemp"] = $user->employee_id>0 ;
+        $this->_tvars["showtimesheet"] = ($user->rolename == 'admins' || $user->employee_id>0 );
 
         if ($this->_tvars["usebranch"] == false) {
             $this->branch_id = 0;

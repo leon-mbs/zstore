@@ -64,7 +64,7 @@
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"></th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Од.</th>
 
-        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="50">Кол.</th>
+        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="50">Кiл.</th>
         <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Ціна</th>
         <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="80">Сума</th>
     </tr>

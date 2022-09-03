@@ -53,46 +53,42 @@ class Task extends \App\Pages\Base
 
         $this->docform->add(new DropDownChoice('parea', Prodarea::findArray("pa_name", ""), 0));
 
-        $this->docform->add(new SubmitLink('addservice'))->onClick($this, 'addserviceOnClick');
-        $this->docform->add(new SubmitLink('addprod'))->onClick($this, 'addprodOnClick');
+     //   $this->docform->add(new SubmitLink('addservice'))->onClick($this, 'addserviceOnClick');
+       // $this->docform->add(new SubmitLink('addprod'))->onClick($this, 'addprodOnClick');
 
-        $this->docform->add(new SubmitLink('addeq'))->onClick($this, 'addeqOnClick');
-        $this->docform->add(new SubmitLink('addemp'))->onClick($this, 'addempOnClick');
+       // $this->docform->add(new SubmitLink('addeq'))->onClick($this, 'addeqOnClick');
+      //  $this->docform->add(new SubmitLink('addemp'))->onClick($this, 'addempOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
 
         //service
-        $this->add(new Form('editdetail'))->setVisible(false);
+        $this->add(new Form('editdetail'));
         $this->editdetail->add(new DropDownChoice('editservice', Service::findArray("service_name", "disabled<>1", "service_name")));
 
         $this->editdetail->add(new TextInput('editqty'));
         $this->editdetail->add(new TextInput('editdesc'));
-        $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
         //prod
-        $this->add(new Form('editdetailprod'))->setVisible(false);
+        $this->add(new Form('editdetailprod'));
         $this->editdetailprod->add(new DropDownChoice('editprod', Item::findArray("itemname", "item_type in(4,5) and disabled<>1", "itemname")));
 
         $this->editdetailprod->add(new TextInput('editqtyprod'));
         $this->editdetailprod->add(new TextInput('editdescprod'));
-        $this->editdetailprod->add(new Button('cancelrowprod'))->onClick($this, 'cancelprodrowOnClick');
         $this->editdetailprod->add(new SubmitButton('saverowprod'))->onClick($this, 'saverowprodOnClick');
 
         //employer
-        $this->add(new Form('editdetail3'))->setVisible(false);
+        $this->add(new Form('editdetail3'));
         $this->editdetail3->add(new DropDownChoice('editemp', Employee::findArray("emp_name", "disabled<>1", "emp_name")));
         $this->editdetail3->add(new TextInput('editktu'));
-        $this->editdetail3->add(new Button('cancelrow3'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail3->add(new SubmitButton('saverow3'))->onClick($this, 'saverow3OnClick');
 
         //equipment
-        $this->add(new Form('editdetail4'))->setVisible(false);
+        $this->add(new Form('editdetail4'));
         $this->editdetail4->add(new DropDownChoice('editeq', Equipment::getQuipment()));
-        $this->editdetail4->add(new Button('cancelrow4'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail4->add(new SubmitButton('saverow4'))->onClick($this, 'saverow4OnClick');
 
-        if ($docid > 0) {    //загружаем   содержимое  документа настраницу
+        if ($docid > 0) {    
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->notes->setText($this->_doc->notes);
@@ -135,26 +131,17 @@ class Task extends \App\Pages\Base
             }
         }
 
-        $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_servicelist')), $this, 'detailOnRow'))->Reload();
-        $this->docform->add(new DataView('detail3', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_emplist')), $this, 'detail3OnRow'))->Reload();
-        $this->docform->add(new DataView('detail4', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_eqlist')), $this, 'detail4OnRow'))->Reload();
-        $this->docform->add(new DataView('detailprod', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_prodlist')), $this, 'detailprodOnRow'))->Reload();
+        $this->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_servicelist')), $this, 'detailOnRow'))->Reload();
+        $this->add(new DataView('detail3', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_emplist')), $this, 'detail3OnRow'))->Reload();
+        $this->add(new DataView('detail4', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_eqlist')), $this, 'detail4OnRow'))->Reload();
+        $this->add(new DataView('detailprod', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_prodlist')), $this, 'detailprodOnRow'))->Reload();
 
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
     }
 
-    public function cancelrowOnClick($sender) {
-        $this->editdetail->setVisible(false);
-        $this->editdetailprod->setVisible(false);
-
-        $this->editdetail3->setVisible(false);
-        $this->editdetail4->setVisible(false);
-
-        $this->docform->setVisible(true);
-    }
-
+   
     public function detailOnRow($row) {
         $service = $row->getDataItem();
 
@@ -163,54 +150,19 @@ class Task extends \App\Pages\Base
         $row->add(new Label('quantity', $service->quantity));
         $row->add(new Label('desc', $service->desc));
 
-        $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
+
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
 
-    public function addserviceOnClick($sender) {
-        $this->editdetail->setVisible(true);
-        $this->docform->setVisible(false);
-
-        $this->editdetail->editservice->setValue(0);
-        $this->_rowidser = 0;
-
-        $this->editdetail->editqty->setText('1');
-        $this->editdetail->editdesc->setText('');
-    }
-
-    public function editOnClick($sender) {
-        $service = $sender->getOwner()->getDataItem();
-        $this->editdetail->setVisible(true);
-        $this->docform->setVisible(false);
-        if ($service->_rowidser > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $service->_rowidser = $service->service_id;
-        }
-
-        $this->_rowidser = $service->_rowidser;
-
-        $this->editdetail->editqty->setText($service->quantity);
-        $this->editdetail->editdesc->setText($service->desc);
-
-        $this->editdetail->editservice->setValue($service->service_id);
-    }
-
+    
     public function deleteOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
         $service = $sender->owner->getDataItem();
-        if ($service->_rowidser > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $service->_rowidser = $service->service_id;
-        }
 
         $this->_servicelist = array_diff_key($this->_servicelist, array($service->_rowidser => $this->_servicelist[$service->_rowidser]));
-        $this->docform->detail->Reload();
+        $this->detail->Reload();
 
     }
 
@@ -229,39 +181,18 @@ class Task extends \App\Pages\Base
             $service->price = 0;
         }
 
-        if ($this->_rowidser > 0) {
-            $service->_rowidser = $this->_rowidser;
-        } else {
-            $next = count($this->_servicelist) > 0 ? max(array_keys($this->_servicelist)) : 0;
-            $service->_rowidser = $next + 1;
-        }
+        $next = count($this->_servicelist) > 0 ? max(array_keys($this->_servicelist)) : 0;
+        $service->_rowidser =  $next + 1 ;
         $this->_servicelist[$service->_rowidser] = $service;
+ 
+        $this->detail->Reload();
 
-        $this->_rowidser = 0;
-
-        $this->editdetail->setVisible(false);
-        $this->docform->setVisible(true);
-
-        $this->docform->detail->Reload();
-
-        //очищаем  форму
-        $this->editdetail->editservice->setValue(0);
-
+        $this->editdetail->clean();
         $this->editdetail->editqty->setText("1");
     }
 
     //prod
-    public function addprodOnClick($sender) {
-        $this->editdetailprod->setVisible(true);
-        $this->docform->setVisible(false);
-
-        $this->editdetailprod->editprod->setValue(0);
-        $this->_rowidprod = 0;
-
-        $this->editdetailprod->editqtyprod->setText('1');
-        $this->editdetailprod->editdescprod->setText('');
-    }
-
+    
     public function detailprodOnRow($row) {
         $item = $row->getDataItem();
 
@@ -270,55 +201,20 @@ class Task extends \App\Pages\Base
         $row->add(new Label('quantityprod', $item->quantity));
         $row->add(new Label('descprod', $item->desc));
 
-        $row->add(new ClickLink('editprod'))->onClick($this, 'editprodOnClick');
+
         $row->add(new ClickLink('deleteprod'))->onClick($this, 'deleteprodOnClick');
     }
 
-    public function cancelprodrowOnClick($sender) {
-        $this->editdetail->setVisible(false);
-        $this->editdetailprod->setVisible(false);
-
-        $this->editdetail3->setVisible(false);
-        $this->editdetail4->setVisible(false);
-
-        $this->docform->setVisible(true);
-    }
-
-    public function editprodOnClick($sender) {
-        $item = $sender->getOwner()->getDataItem();
-        $this->editdetailprod->setVisible(true);
-        $this->docform->setVisible(false);
-
-        if ($item->_rowidprod > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $item->_rowidprod = $item->item_id;
-        }
-
-        $this->_rowidprod = $item->_rowidprod;
-
-        $this->editdetailprod->editqtyprod->setText($item->quantity);
-        $this->editdetailprod->editdescprod->setText($item->desc);
-
-        $this->editdetailprod->editprod->setValue($item->item_id);
-    }
-
+    
     public function deleteprodOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
         $item = $sender->owner->getDataItem();
-        if ($item->_rowidprod > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $item->_rowidprod = $item->item_id;
-        }
-
+ 
         $this->_prodlist = array_diff_key($this->_prodlist, array($item->_rowidprod => $this->_prodlist[$item->_rowidprod]));
 
-        $this->docform->detailprod->Reload();
+        $this->detailprod->Reload();
     }
 
     public function saverowprodOnClick($sender) {
@@ -332,36 +228,25 @@ class Task extends \App\Pages\Base
         $item->quantity = $this->editdetailprod->editqtyprod->getText();
         $item->desc = $this->editdetailprod->editdescprod->getText();
 
-        if ($this->_rowidprod > 0) {
-            $item->_rowidprod = $this->_rowidprod;
-        } else {
-            $next = count($this->_prodlist) > 0 ? max(array_keys($this->_prodlist)) : 0;
-            $item->_rowidprod = $next + 1;
-        }
+ 
+        $next = count($this->_prodlist) > 0 ? max(array_keys($this->_prodlist)) : 0;
+        $item->_rowidprod = $next + 1;
+       
         $this->_prodlist[$item->_rowidprod] = $item;
 
         $this->_rowidprod = 0;
 
-        $this->editdetailprod->setVisible(false);
-        $this->docform->setVisible(true);
 
-        $this->docform->detailprod->Reload();
+        $this->detailprod->Reload();
 
         //очищаем  форму
-        $this->editdetailprod->editprod->setValue(0);
+        $this->editdetailprod->clean();
 
         $this->editdetailprod->editqtyprod->setText("1");
     }
 
     //employee
-    public function addempOnClick($sender) {
-        $this->editdetail3->setVisible(true);
-        $this->docform->setVisible(false);
-
-        $this->editdetail3->editktu->setText('1');
-        $this->editdetail3->editemp->setValue(0);
-    }
-
+ 
     public function saverow3OnClick($sender) {
         $id = $this->editdetail3->editemp->getValue();
         if ($id == 0) {
@@ -372,9 +257,8 @@ class Task extends \App\Pages\Base
         $emp = Employee::load($id);
         $emp->ktu = $this->editdetail3->editktu->getText();
         $this->_emplist[$emp->employee_id] = $emp;
-        $this->editdetail3->setVisible(false);
-        $this->docform->setVisible(true);
-        $this->docform->detail3->Reload();
+        $this->detail3->Reload();
+        $this->editdetail3->clean();
     }
 
     public function detail3OnRow($row) {
@@ -388,17 +272,11 @@ class Task extends \App\Pages\Base
     public function delete3OnClick($sender) {
         $emp = $sender->owner->getDataItem();
         $this->_emplist = array_diff_key($this->_emplist, array($emp->employee_id => $this->_emplist[$emp->employee_id]));
-        $this->docform->detail3->Reload();
+        $this->detail3->Reload();
     }
-
+    
     //equipment
-    public function addeqOnClick($sender) {
-        $this->editdetail4->setVisible(true);
-        $this->docform->setVisible(false);
-
-        $this->editdetail4->editeq->setValue(0);
-    }
-
+   
     public function saverow4OnClick($sender) {
         $id = $this->editdetail4->editeq->getValue();
         if ($id == 0) {
@@ -409,9 +287,8 @@ class Task extends \App\Pages\Base
         $eq = Equipment::load($id);
 
         $this->_eqlist[$eq->eq_id] = $eq;
-        $this->editdetail4->setVisible(false);
-        $this->docform->setVisible(true);
-        $this->docform->detail4->Reload();
+        $this->editdetail4->clean();
+        $this->detail4->Reload();
     }
 
     public function detail4OnRow($row) {
@@ -425,7 +302,7 @@ class Task extends \App\Pages\Base
     public function delete4OnClick($sender) {
         $eq = $sender->owner->getDataItem();
         $this->_eqlist = array_diff_key($this->_eqlist, array($eq->eq_id => $this->_eqlist[$eq->eq_id]));
-        $this->docform->detail4->Reload();
+        $this->detail4->Reload();
     }
 
     public function savedocOnClick($sender) {
