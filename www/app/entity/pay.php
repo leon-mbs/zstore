@@ -193,6 +193,12 @@ class Pay extends \ZCL\DB\Entity
             if ($disc["summa2"] > 0 && $disc["bonus2"] > 0 && $disc["summa2"] < $amount) {
                 $bonus = round($amount * $disc["bonus2"] / 100);
             }
+            if ($disc["summa3"] > 0 && $disc["bonus3"] > 0 && $disc["summa3"] < $amount) {
+                $bonus = round($amount * $disc["bonus3"] / 100);
+            }
+            if ($disc["summa4"] > 0 && $disc["bonus4"] > 0 && $disc["summa4"] < $amount) {
+                $bonus = round($amount * $disc["bonus4"] / 100);
+            }
         }
 
         if ($bonus > 0) {

@@ -225,7 +225,7 @@
 
        
             <div  v-show="editissue != -1" class="col-12 col-md-8 col-xl-4">
-                <form zippy="editform">
+                <form id="fval">
                     <div class="form-group">
                         <label for="edittitle">Назва</label>
                         <input type="text" required="required" class="form-control" v-model="edittitle">
@@ -268,7 +268,7 @@
                     <div class="form-group">
                         <label for="edithours">Планований час, годин</label>
 
-                        <input style="width:60px" v-model="edithours"   type="text" class="form-control qtyprice">
+                        <input pattern="[0-9]+" style="width:60px" v-model="edithours"   type="text" class="form-control qtyprice">
 
                     </div>
 
@@ -412,10 +412,9 @@
                 save:function ( ){
                     
                     
-                   if(this.edittitle.trim()=="") {
-                        toastr.error("Не  введена назва!" )
-                        return;
-                   }
+                     var v = checkForm('fval');
+                    if(!v) return
+ 
                     
                    if(this.editproj==0) {
                         toastr.error("Не  вибраний проект!" )

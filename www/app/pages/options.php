@@ -14,6 +14,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\File;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
@@ -83,7 +84,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new TextInput('ts_break'));
         $this->common->add(new TextInput('ts_start'));
         $this->common->add(new TextInput('ts_end'));
-        $this->common->add(new TextInput('checkslogan'));
+        $this->common->add(new TextArea('checkslogan'));
 
         $common = System::getOptions("common");
         if (!is_array($common)) {
@@ -304,8 +305,9 @@ class Options extends \App\Pages\Base
         $common['ts_break'] = $this->common->ts_break->getText();
         $common['ts_start'] = $this->common->ts_start->getText();
         $common['ts_end'] = $this->common->ts_end->getText();
-        $common['checkslogan'] = $this->common->checkslogan->getText();
+        $common['checkslogan'] = trim($this->common->checkslogan->getText() );
 
+ 
         $common['autoarticle'] = $this->common->autoarticle->isChecked() ? 1 : 0;
 
         $common['usesnumber'] = $this->common->usesnumber->isChecked() ? 1 : 0;

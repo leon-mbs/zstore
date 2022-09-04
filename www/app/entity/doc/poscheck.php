@@ -164,6 +164,16 @@ class POSCheck extends Document
                         "payed"           => $this->headerdata['payed'] > 0 ? H::fa($this->headerdata['payed']) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
         );
+        
+        
+        $frases = explode(PHP_EOL, $header['checkslogan']) ;
+        if(count($frases) >0)  {
+            $i=  rand(0,count($frases) -1)  ;
+            $header['checkslogan']   =   $frases[$i];        
+        }
+        
+        
+        
         if($this->headerdata['payment']  >0){
             $mf = \App\Entity\MoneyFund::load($this->headerdata['payment'] );
             $header['nal']  = $mf->beznal!=1;
