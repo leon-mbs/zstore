@@ -722,7 +722,7 @@ class ItemList extends \App\Pages\Base
         if( \App\System::getUser()->usemobileprinter == 1) {
             \App\Session::getSession()->printform =  $htmls;
 
-           $this->addAjaxResponse("   $('.seldel').prop('checked',null); window.open('/index?p=App/Pages/ShowReport&arg=print')");
+           $this->addAjaxResponse("   $('.seldel').prop('checked',null); window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
         }
         else {
            $this->addAjaxResponse("  $('#tag').html('{$htmls}') ;$('.seldel').prop('checked',null); $('#pform').modal()");

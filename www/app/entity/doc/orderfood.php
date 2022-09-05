@@ -134,7 +134,12 @@ class OrderFood extends Document
 
                         "payamount" => H::fa($this->payamount)
         );
-
+        $frases = explode(PHP_EOL, $header['checkslogan']) ;
+        if(count($frases) >0)  {
+            $i=  rand(0,count($frases) -1)  ;
+            $header['checkslogan']   =   $frases[$i];        
+        }
+  
         $report = new \App\Report('doc/orderfood_bill.tpl');
 
         $html = $report->generate($header);

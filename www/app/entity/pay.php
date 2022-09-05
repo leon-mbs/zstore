@@ -57,7 +57,8 @@ class Pay extends \ZCL\DB\Entity
             return;
         }
 
-
+        self::addBonus($document_id,$amount );
+   
         $pay = new \App\Entity\Pay();
         $pay->mf_id = $mf_id;
         $pay->document_id = $document_id;
@@ -101,7 +102,6 @@ class Pay extends \ZCL\DB\Entity
 
         }
    
-        self::addBonus($document_id,$amount );
       
 
         $conn = \ZDB\DB::getConnect();
@@ -173,7 +173,11 @@ class Pay extends \ZCL\DB\Entity
         }
 
         $bonus = 0;
-    
+        if($doc->payamount >0 && $amount > $doc->payamount){
+           $amount= $doc->payamount; 
+        }
+           
+   
         $disc = \App\System::getOptions("discount");
 
         $cnt = (int)$conn->GetOne("select  count(*)  from paylist_view where  customer_id=" . $customer_id);
@@ -188,6 +192,12 @@ class Pay extends \ZCL\DB\Entity
             }
             if ($disc["summa2"] > 0 && $disc["bonus2"] > 0 && $disc["summa2"] < $amount) {
                 $bonus = round($amount * $disc["bonus2"] / 100);
+            }
+            if ($disc["summa3"] > 0 && $disc["bonus3"] > 0 && $disc["summa3"] < $amount) {
+                $bonus = round($amount * $disc["bonus3"] / 100);
+            }
+            if ($disc["summa4"] > 0 && $disc["bonus4"] > 0 && $disc["summa4"] < $amount) {
+                $bonus = round($amount * $disc["bonus4"] / 100);
             }
         }
 
