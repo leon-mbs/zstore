@@ -108,4 +108,18 @@ new Audio('/assets/beep.mp3').play()
    } 
    
    
-  
+  function checkForm(id){
+    var ret = 0
+ 
+    $('#'+id+' input ').each(
+        function(index){  
+            var input = $(this);
+
+            var v =   input.get(0).reportValidity() 
+            if(!v)ret++
+            
+        }
+    );   
+     
+    return ret == 0
+  }

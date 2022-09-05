@@ -62,6 +62,10 @@ class Discounts extends \App\Pages\Base
         $form->add(new  TextInput("summa1", $disc["summa1"]));
         $form->add(new  TextInput("bonus2", $disc["bonus2"]));
         $form->add(new  TextInput("summa2", $disc["summa2"]));
+        $form->add(new  TextInput("bonus3", $disc["bonus3"]));
+        $form->add(new  TextInput("summa3", $disc["summa3"]));
+        $form->add(new  TextInput("bonus4", $disc["bonus4"]));
+        $form->add(new  TextInput("summa4", $disc["summa4"]));
 
         //покупатели
         $this->ctab->add(new Form('cfilter'))->onSubmit($this, 'OnCAdd');
@@ -129,6 +133,10 @@ class Discounts extends \App\Pages\Base
         $disc["summa1"] = $sender->summa1->getText();
         $disc["bonus2"] = $sender->bonus2->getText();
         $disc["summa2"] = $sender->summa2->getText();
+        $disc["bonus3"] = $sender->bonus3->getText();
+        $disc["summa3"] = $sender->summa3->getText();
+        $disc["bonus4"] = $sender->bonus4->getText();
+        $disc["summa4"] = $sender->summa4->getText();
         System::setOptions("discount", $disc);
         $this->setSuccess('saved');
     }

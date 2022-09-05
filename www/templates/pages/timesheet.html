@@ -29,7 +29,7 @@
                         <input v-model="to" class="form-control mr-2" style="width: 120px" type="date" >
 
 
-                        <label   for="parea">Спiвробiтник</label>
+                        <label v-show="isadmin==true" >Спiвробiтник</label>
                         <select2     v-model="empid" :options="emps"   >
 
                         </select2>
@@ -102,9 +102,19 @@
     <div class="modal-content">
  
       <div class="modal-body">
-    <form  >
+    <form id="fval" >
                     <h4 v-show="edited>0">Редагування</h4>
                     <h4 v-show="edited==0">Новий запис</h4>
+                    
+                    <div    class="form-group">
+                    
+                     <label  >Спiвробiтник</label>
+                        <select2     v-model="editempid" :options="emps"   >
+
+                       </select2>
+                    </div>
+
+                    
                     <div class="form-group">
                         <label for="editdate">Дата</label>
                         <input v-model="editdate" required="required" class="form-control"  type="date" />
@@ -126,11 +136,11 @@
                     </div>
                     <div class="form-group">
                         <label for="editbreak">Перерва, хв</label>
-                        <input v-model="editbreak" required="required" style="width:75px;" pattern="[0-9]+" class="form-control" />
+                        <input   v-model="editbreak" required="required" style="width:75px;" pattern="[0-9]+" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label for="editnote">Примiтка</label>
-                        <input v-model="editdesc" class="form-control" />
+                        <input  v-model="editdesc" class="form-control" />
                     </div>
 
 
@@ -167,6 +177,7 @@ var calendar
                   times:[] ,
                   types:[] ,
                   edited:0 ,
+                  editempid:0 ,
                   editdesc:"" ,
                   editdate:"" ,
                   editfrom:"" ,
@@ -186,6 +197,7 @@ var calendar
                   {
                        let tmp =   JSON.parse(data)  
                        this.empid = tmp.empid; 
+                       this.editempid = tmp.empid; 
                        this.isadmin = tmp.isadmin; 
                        this.emps = tmp.emps; 
                        this.types = tmp.types; 
@@ -202,7 +214,10 @@ var calendar
                 
                 
                onFilter:function(){
-                
+                   if(isNaN( Number.parseInt(this.empid)) ) {
+                      alert('Не вибраний спiвробiтник');
+                      return;
+                  }     
                     this.loaddata() ;       
           
                } ,    
@@ -232,6 +247,7 @@ var calendar
                   this.editdate = tm.date;
                   this.editfrom = tm.from;
                   this.editto = tm.to;
+                  this.editempid = tm.to;
                   
                    
                   $('#editmodal').modal('show')   
@@ -250,8 +266,14 @@ var calendar
                } ,    
                save:function(i){
                 
+
+                    var v = checkForm('fval');
+                    if(!v) return
+ 
+
+                    
                      let body={
-                     empid:this.empid ,
+                     empid:this.editempid ,
                      desc:this.editdesc ,
                      type:this.edittype ,
                      break:this.editbreak ,
@@ -279,7 +301,8 @@ var calendar
           
                } ,    
                loaddata:function(){
-                 
+                   
+          
                   let body={
                      empid:this.empid ,
                      from:this.from  ,
