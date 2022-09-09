@@ -73,7 +73,11 @@ abstract class JsonRPC
 
             $key = strlen($api['key']) > 0 ? $api['key'] : "defkey";
 
+         
             $decoded = \Firebase\JWT\JWT::decode($jwt, $key, array('HS256'));
+          //v6.3.0  $decoded = \Firebase\JWT\JWT::decode($jwt,  new \Firebase\JWT\Key($key, 'HS256'));
+               
+         
             if ($decoded->exp < time()) {
 
                 return self::error(null, -1002, \App\Helper::l('apitokenexpired'));

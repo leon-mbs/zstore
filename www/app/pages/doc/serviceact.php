@@ -7,6 +7,8 @@ use App\Entity\Customer;
 use App\Entity\Doc\Document;
 use App\Entity\MoneyFund;
 use App\Entity\Service;
+use App\Entity\Item;
+use App\Entity\Store;
 use App\Helper as H;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\AutocompleteTextInput;
@@ -28,8 +30,10 @@ class ServiceAct extends \App\Pages\Base
 {
 
     public  $_servicelist = array();
+    public  $_itemlist = array();
     private $_doc;
     private $_rowid       = 0;
+    private $_rowid2       = 0;
     private $_basedocid   = 0;
 
     public function __construct($docid = 0, $basedocid = 0) {
@@ -43,6 +47,7 @@ class ServiceAct extends \App\Pages\Base
 
         $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), H::getDefFirm()))->onChange($this, 'OnCustomerFirm');
         $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);;
+        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
 
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('gar'));
@@ -64,6 +69,7 @@ class ServiceAct extends \App\Pages\Base
         $this->docform->add(new Label('paydisc', 0));
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
+        $this->docform->add(new SubmitLink('additemrow'))->onClick($this, 'addItemrowOnClick');
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
@@ -81,6 +87,19 @@ class ServiceAct extends \App\Pages\Base
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
 
+        
+        $this->add(new Form('edititemdetail'))->setVisible(false);
+        $this->edititemdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutoItem');
+        $this->edititemdetail->edititem->onChange($this, 'OnChangeItem', true);
+
+        $this->edititemdetail->add(new TextInput('edititemqty'));
+        $this->edititemdetail->add(new TextInput('edititemprice'));
+        $this->edititemdetail->add(new Label('qtystock'));
+
+        $this->edititemdetail->add(new Button('cancelrowitem'))->onClick($this, 'cancelrowOnClick');
+        $this->edititemdetail->add(new SubmitButton('saverowitem'))->onClick($this, 'saveitemrowOnClick');
+           
+        
         //добавление нового кантрагента
         $this->add(new Form('editcust'))->setVisible(false);
         $this->editcust->add(new TextInput('editcustname'));
@@ -94,7 +113,8 @@ class ServiceAct extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->gar->setText($this->_doc->headerdata['gar']);
-
+            $this->docform->store->setValue($this->_doc->headerdata['store']);
+  
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
@@ -121,6 +141,7 @@ class ServiceAct extends \App\Pages\Base
             $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
 
             $this->_servicelist = $this->_doc->unpackDetails('detaildata');
+            $this->_itemlist = $this->_doc->unpackDetails('detail2data');
         } else {
             $this->_doc = Document::create('ServiceAct');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -142,7 +163,16 @@ class ServiceAct extends \App\Pages\Base
 
                     $this->_servicelist = array();
                     foreach($basedoc->unpackDetails('detaildata') as $v ) {
-                       $this->_servicelist[$v->service_id]= $v ;    
+                       if($v->service_id>0) {
+                           $this->_servicelist[$v->service_id]= $v ;                               
+                       }
+
+                    }
+                    foreach($basedoc->unpackDetails('detaildata') as $v ) {
+                       if($v->item_id>0) {
+                           $this->_itemlist[$v->item_id]= $v ;                               
+                       }
+
                     }
                 }
                 if ($basedoc->meta_name == 'ServiceAct') {
@@ -153,21 +183,26 @@ class ServiceAct extends \App\Pages\Base
                     foreach($basedoc->unpackDetails('detaildata') as $v ) {
                        $this->_servicelist[$v->service_id]= $v ;    
                     }
+                    $this->_itemlist = array();
+                    foreach($basedoc->unpackDetails('detail2data') as $v ) {
+                       $this->_itemlist[$v->item_id]= $v ;    
+                    }
                 }
             }
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_servicelist')), $this, 'detailOnRow'))->Reload();
+        $this->docform->add(new DataView('detail2', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detail2OnRow'))->Reload();
         $this->calcTotal();
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
     }
-
+  
     public function detailOnRow($row) {
         $service = $row->getDataItem();
 
-        $row->add(new Label('item', $service->service_name));
+        $row->add(new Label('service', $service->service_name));
         $row->add(new Label('desc', $service->desc));
 
         $row->add(new Label('qty', H::fqty($service->quantity)));
@@ -176,6 +211,19 @@ class ServiceAct extends \App\Pages\Base
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+    }
+    public function detail2OnRow($row) {
+        $item = $row->getDataItem();
+
+        $row->add(new Label('itemname', $item->itemname));
+        $row->add(new Label('item_code', $item->item_code));
+
+        $row->add(new Label('qtyitem', H::fqty($item->quantity)));
+        $row->add(new Label('priceitem', H::fa($item->price)));
+        $row->add(new Label('amountitem', H::fa($item->price * $item->quantity)));
+
+        $row->add(new ClickLink('edititem'))->onClick($this, 'edititemOnClick');
+        $row->add(new ClickLink('deleteitem'))->onClick($this, 'deleteitemOnClick');
     }
 
     public function editOnClick($sender) {
@@ -199,8 +247,52 @@ class ServiceAct extends \App\Pages\Base
 
         $this->_rowid = $service->rowid;
     }
+   
+    public function editItemOnClick($sender) {
+        $item = $sender->getOwner()->getDataItem();
+        $this->edititemdetail->setVisible(true);
+        $this->docform->setVisible(false);
+
+        $this->edititemdetail->edititem->setKey(($item->item_id));
+        $this->edititemdetail->edititem->setText(($item->itemname));
+
+        $this->edititemdetail->edititemprice->setText($item->price);
+        $this->edititemdetail->edititemqty->setText($item->quantity);
+       
+        $this->OnChangeItem( $this->edititemdetail->edititem);
+
+        if ($item->rowid > 0) {
+            ;
+        }               //для совместимости
+        else {
+            $item->rowid = $item->item_id;
+        }
+
+        $this->_rowid2 = $item->rowid;
+    }
 
     public function deleteOnClick($sender) {
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
+            return;
+        }
+
+        $service = $sender->owner->getDataItem();
+
+        if ($service->rowid > 0) {
+            ;
+        }               //для совместимости
+        else {
+            $service->rowid = $service->service_id;
+        }
+
+        $this->_servicelist = array_diff_key($this->_servicelist, array($service->rowid => $this->_servicelist[$service->rowid]));
+
+        $this->docform->detail->Reload();
+        $this->calcTotal();
+        $this->calcPay();
+    }
+   
+    public function deleteitemOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
@@ -214,12 +306,13 @@ class ServiceAct extends \App\Pages\Base
             $item->rowid = $item->item_id;
         }
 
-        $this->_servicelist = array_diff_key($this->_servicelist, array($item->rowid => $this->_servicelist[$item->rowid]));
+        $this->_itemlist = array_diff_key($this->_itemlist, array($item->rowid => $this->_itemlist[$item->rowid]));
 
-        $this->docform->detail->Reload();
+        $this->docform->detail2->Reload();
         $this->calcTotal();
         $this->calcPay();
     }
+
 
     public function addrowOnClick($sender) {
         $this->editdetail->setVisible(true);
@@ -230,7 +323,19 @@ class ServiceAct extends \App\Pages\Base
         $this->editdetail->editprice->setText(0);
         $this->editdetail->editqty->setText("1");
     }
+ 
+    public function additemrowOnClick($sender) {
+        $this->edititemdetail->setVisible(true);
+        $this->docform->setVisible(false);
+        $this->_rowid2 = 0;
+        $this->edititemdetail->edititem->setKey(0);
+        $this->edititemdetail->edititem->setText('');
+        $this->edititemdetail->qtystock->setText('');
 
+        $this->edititemdetail->edititemprice->setText(0);
+        $this->edititemdetail->edititemqty->setText("1");
+    }
+ 
     public function saverowOnClick($sender) {
         $id = $this->editdetail->editservice->getValue();
         if ($id == 0) {
@@ -267,8 +372,40 @@ class ServiceAct extends \App\Pages\Base
         $this->editdetail->editprice->setText("0");
     }
 
+    public function saveitemrowOnClick($sender) {
+        $id = $this->edititemdetail->edititem->getKey();
+        if ($id == 0) {
+            $this->setError("noselservice");
+            return;
+        }
+        $item = Item::load($id);
+
+        $item->price = $this->edititemdetail->edititemprice->getText();
+        $item->quantity = $this->edititemdetail->edititemqty->getText();
+      
+        if ($this->_rowid2 > 0) {
+            $item->rowid = $this->_rowid2;
+        } else {
+            $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
+            $item->rowid = $next + 1;
+        }
+        
+        $kk = array_keys($this->_itemlist) ;
+        $this->_itemlist[$item->rowid] = $item;
+
+        $this->_rowid = 0;
+
+        $this->edititemdetail->setVisible(false);
+        $this->docform->setVisible(true);
+        $this->docform->detail2->Reload();
+        $this->calcTotal();
+        $this->calcPay();
+
+    }
+
     public function cancelrowOnClick($sender) {
         $this->editdetail->setVisible(false);
+        $this->edititemdetail->setVisible(false);
         $this->docform->setVisible(true);
     }
 
@@ -282,9 +419,10 @@ class ServiceAct extends \App\Pages\Base
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
         if ($this->_doc->customer_id > 0) {
-            $customer = Customer::load($this->_doc->customer_id);
+          //  $customer = Customer::load($this->_doc->customer_id);
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         }
+        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['device'] = $this->docform->device->getText();
         $this->_doc->headerdata['devsn'] = $this->docform->devsn->getText();
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
@@ -309,6 +447,7 @@ class ServiceAct extends \App\Pages\Base
         }
 
         $this->_doc->packDetails('detaildata', $this->_servicelist);
+        $this->_doc->packDetails('detail2data', $this->_itemlist);
 
         $isEdited = $this->_doc->document_id > 0;
         $this->_doc->amount = $this->docform->total->getText();
@@ -320,17 +459,28 @@ class ServiceAct extends \App\Pages\Base
                 $this->_doc->parent_id = $this->_basedocid;
                 $this->_basedocid = 0;
             }
-               $this->_doc->payed = 0;
-               $this->_doc->headerdata['payed'] = 0;
-               $this->_doc->headerdata['payment'] = 0;
+            $this->_doc->payed = 0;
+            $this->_doc->headerdata['payed'] = 0;
+            $this->_doc->headerdata['payment'] = 0;
             
+            $payamount = $this->docform->payamount->getText();
+
+   
+            if ($sender->id == 'execdoc') {
+                if ( $payamount > 0 && $this->_doc->customer_id == 0) {
+                    $this->setError('noselcustifnopay');
+                    return;
+                }
+            }               
+   
+                
+             
             if ($sender->id == 'paydoc') {
                $this->_doc->payed = $this->docform->payed->getText();
                $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
                $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
                
-               $payamount = $this->docform->payamount->getText();
-
+    
                if ($this->_doc->payed > $payamount) {
                     $this->setError('inserted_extrasum');
                     return;
@@ -385,6 +535,11 @@ class ServiceAct extends \App\Pages\Base
         $total = 0;
 
         foreach ($this->_servicelist as $item) {
+            $item->amount = $item->price * $item->quantity;
+
+            $total = $total + $item->amount;
+        }
+        foreach ($this->_itemlist as $item) {
             $item->amount = $item->price * $item->quantity;
 
             $total = $total + $item->amount;
@@ -557,4 +712,25 @@ class ServiceAct extends \App\Pages\Base
         $this->calcPay();
         $this->goAnkor("tankor");
     }
+  
+  
+    public function OnAutoItem($sender) {
+        $store_id = $this->docform->store->getValue();
+        $text = trim($sender->getText());
+        return Item::findArrayAC($text);
+    }  
+    
+   public function OnChangeItem($sender) {
+        $id = $sender->getKey();
+        $item = Item::load($id);
+        $store_id = $this->docform->store->getValue();
+        $price = $item->getPrice("price1", $store_id);
+ 
+        $qty = $item->getQuantity($store_id);
+
+        $this->edititemdetail->qtystock->setText(H::fqty($qty));
+        $this->edititemdetail->edititemprice->setText($price);
+    
+
+    }    
 }

@@ -117,7 +117,7 @@ class PayBayList extends \App\Pages\Base
                                     
         $sql = "SELECT c.customer_name,c.phone, c.customer_id, coalesce(count(*),0) as docs 
              FROM documents_view d  join customers c  on d.customer_id = c.customer_id and c.status=0    
-             WHERE  d.state = ". Document::STATE_WP  ." and d.meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue')   {$hold}
+             WHERE  d.state = ". Document::STATE_WP  ." and d.meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct')   {$hold}
              group by c.customer_name,c.phone, c.customer_id
              order by c.customer_name
              ";
@@ -193,7 +193,7 @@ class PayBayList extends \App\Pages\Base
 
         $this->_doclist = array();
 
-        $list = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id}  and   state = ". Document::STATE_WP  ."    and meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue') ", "document_id asc ");
+        $list = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id}  and   state = ". Document::STATE_WP  ."    and meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct') ", "document_id asc ");
    
 
         foreach ($list as $d) {
@@ -350,6 +350,11 @@ class PayBayList extends \App\Pages\Base
             $this->_doc = Document::load($this->_doc->document_id);
             if($this->_doc->meta_name=='Order' || $this->_doc->meta_name=='Invoice') {
                 $this->_doc->updateStatus(Document::STATE_PAYED);                            
+                return;
+            }
+            if($this->_doc->meta_name=='ServiceAct'  ) {
+                $this->_doc->updateStatus(Document::STATE_FINISHED,true);                            
+                
                 return;
             }
             //предыдущий статус

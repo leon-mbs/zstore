@@ -355,15 +355,15 @@ class Document extends \ZCL\DB\Entity
      * Обновляет состояние  документа
      *
      * @param mixed $state
-     * @param mixed $nodata   только  смена  статуса  без  проводок    
+     * @param mixed $onlystate   только  смена  статуса  без  проводок    
      */
-    public function updateStatus($state,$nodata = false) {
+    public function updateStatus($state,$onlystate = false) {
 
 
         if ($this->document_id == 0) {
             return false;
         }
-
+     
         //если нет права  выполнять    
         if ($state >= self::STATE_EXECUTED && \App\Acl::checkExeDoc($this, false, false) == false) {
 
@@ -375,12 +375,12 @@ class Document extends \ZCL\DB\Entity
             $state = self::STATE_WA;   //переводим на   ожидание  утверждения
         } else {
             if ($state == self::STATE_CANCELED) {
-              if($nodata == false) {
+              if($onlystate == false) {
                 $this->Cancel();  
               } 
             } else {
                 if ($state == self::STATE_EXECUTED) {
-                    if($nodata == false) {
+                    if($onlystate == false) {
                        $this->Execute();                        
                     }
 
@@ -401,7 +401,9 @@ class Document extends \ZCL\DB\Entity
 
         if ($oldstate != $state) {
             $doc = $this->cast();
-            $doc->onState($state);
+             if($onlystate == false) {
+                 $doc->onState($state);
+             }
 
             \App\Entity\Subscribe::onDocumentState($doc->document_id, $state);
         }        

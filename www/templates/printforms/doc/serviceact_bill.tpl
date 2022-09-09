@@ -52,12 +52,29 @@
     </tr>
 
     {{/slist}}
+     {{/iswork}}  
+  
+    {{#isitems}}
+   <tr>
+        <td colspan="2">Комплектуючi:</td>
+    </tr>
+    {{#ilist}}
+    <tr>
+        <td>{{itemname}}</td>
+        <td align="right">{{amount}}</td>
+    </tr>
+
+    {{/ilist}}
+    {{/isitems}}
+   
+    {{#istotal}}
     <tr>
         <td align="right">Всього:</td>
         <td align="right">{{total}}</td>
     </tr>
+    {{/istotal}}
 
-    {{/iswork}}
+ 
 
 
     {{#ispay}}
