@@ -18,13 +18,15 @@ class common extends  JsonRPC
             $key = strlen($api['key']) > 0 ? $api['key'] : "defkey";
             $exp = strlen($api['exp']) > 0 ? $api['exp'] : 60;
 
-            $token = array(
+            $payload = array(
                 "user_id" => $user->user_id,
                 "iat"     => time(),
                 "exp"     => time() + $exp * 60
             );
 
-            $jwt = \Firebase\JWT\JWT::encode($token, $key);
+            $jwt = \Firebase\JWT\JWT::encode($payload, $key);
+     // v6.3.0       $jwt = \Firebase\JWT\JWT::encode($payload, $key, 'HS256');
+          
         } else {
             throw new \Exception(\App\Helper::l('invalidlogin'), -1000);
         }

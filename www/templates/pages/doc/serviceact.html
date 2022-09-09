@@ -64,7 +64,14 @@
                         <label for="document_date"> Дата</label>
                         <input class="form-control" type="text" zippy="document_date" required="required">
                     </div>
+                                  <div class="form-group  ">
+                        <label for="store">Склад  комплектуючих</label>
 
+                        <select class="form-control" zippy="store">
+                            <option value="0">Не обрано</option>
+                        </select>
+                    </div>
+ 
                     <div class="form-group  ">
                         <label for="gar">Гарантійний термін</label>
 
@@ -83,25 +90,27 @@
             </div>
             <div class="row">
                 <div class="col-10 col-lg-8">
-                    <a zippy="addrow"  class="btn btn-info">Додати роботу</a> <br>
+                    <a zippy="addrow"  class="btn btn-info mr-4">Додати роботу</a> 
+                    <a zippy="additemrow"  class="btn btn-info ">Додати комплектуючі</a> 
+                    <br>
                     <small>Документ може бути збережений без позицій, якщо обсяг робіт ще невідомий а потрібно роздрукувати (з журналу послуг) квитанцію про прийом у замовника виробу</small>
                     <table class="table  table-sm">
                         <tr>
                             <th>Назва</th>
+                            <th> </th>
                             <th>Кiл.</th>
-                            <th>Опис</th>
 
 
                             <th class="text-right">Вартість</th>
                             <th class="text-right">Сума</th>
-
+                
 
                             <th  ></th>
                         </tr>
                         <tr zippy="detail">
-                            <td zippy="item"></td>
-                            <td zippy="qty"></td>
+                            <td zippy="service"></td>
                             <td zippy="desc"></td>
+                            <td zippy="qty" class="text-right"></td>
 
                             <td zippy="price" class="text-right"></td>
                             <td zippy="amount" class="text-right"></td>
@@ -111,6 +120,21 @@
                                         class="fa fa-trash"></i></a>
                             </td>
                         </tr>
+                      <tr zippy="detail2">
+                            <td   zippy="itemname"></td>
+                            <td   zippy="item_code"></td>
+
+                            <td zippy="qtyitem" class="text-right"></td>
+
+                            <td zippy="priceitem" class="text-right"></td>
+                            <td zippy="amountitem" class="text-right"></td>
+
+
+                            <td><a zippy="edititem"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;&nbsp;<a zippy="deleteitem"><i
+                                        class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>
+                        
                         <tr style="font-weight: bolder;">
                             <td colspan="4" class="text-right">На суму:</td>
                             <td zippy="total" class="text-right"></td>
@@ -128,7 +152,7 @@
                             <td><a data-label="payamount" href="javascript:void(0);" data-toggle="modal"
                                    data-target="#modalpayamount"><i class="fa fa-edit"></i></a></td>
                         </tr>
-       
+            
 
                     </table>
 
@@ -226,7 +250,7 @@
                     </div>
                 </div>
             </div>
-
+  
         </form>
 
 
@@ -259,6 +283,36 @@
                     <div class="form-group">
                         <input zippy="saverow" type="submit" value="Зберегти" class="btn btn-outline-primary">
                         <input type="button" zippy="cancelrow" value="Скасувати" class="btn btn-outline-secondary ">
+                    </div>
+                </div>
+            </div>
+        </form>
+   <form zippy="edititemdetail">
+            <h3>Редагування ТМЦ</h3>
+            <div class="row">
+                <div class="col-12 col-md-4 col-xl-3">
+
+                    <div class="form-group">
+                        <label for="edititem">Назва </label>
+                       <input placeholder="Почніть вводити..." class="form-control " zippy="edititem"/>
+                       Наявність: <span zippy="qtystock"></span>
+         
+                    </div>
+                  
+                    <div class="form-group">
+                        <label for="edititemqty">Кiлькiсть </label>
+                        <input class="form-control " zippy="edititemqty">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edititemprice">Ціна </label>
+                        <input class="form-control qtyprice" type="text" zippy="edititemprice" required="required" pattern="[0-9\.\,]+"
+                               value="0" style="width: 100px;">
+                    </div>
+
+                    <div class="form-group">
+                        <input zippy="saverowitem" type="submit" value="Зберегти" class="btn btn-outline-primary">
+                        <input type="button" zippy="cancelrowitem" value="Скасувати" class="btn btn-outline-secondary ">
                     </div>
                 </div>
             </div>

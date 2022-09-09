@@ -53,7 +53,7 @@ class SerList extends \App\Pages\Base
 
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bfin'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bclose'))->onClick($this, 'statusOnSubmit');
+
         $this->statuspan->statusform->add(new SubmitButton('binproc'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('btask'))->onClick($this, 'statusOnSubmit');
@@ -134,13 +134,17 @@ class SerList extends \App\Pages\Base
         }
         if ($sender->id == "bfin") {
             $this->_doc->updateStatus(Document::STATE_FINISHED);
+
+            if($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed)   {
+                $this->_doc->updateStatus(Document::STATE_WP);
+                
+            }         
+           
+            
+            
         }
 
-        if ($sender->id == "bclose") {
-            $this->_doc->updateStatus(Document::STATE_EXECUTED);
-            $this->_doc->updateStatus(Document::STATE_CLOSED);
-        }
-
+        
 
         $this->doclist->Reload(false);
 
@@ -155,7 +159,7 @@ class SerList extends \App\Pages\Base
         //новый     
         if ($state < Document::STATE_EXECUTED) {
             $this->statuspan->statusform->binproc->setVisible(true);
-            $this->statuspan->statusform->bclose->setVisible(false);
+
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
@@ -167,7 +171,7 @@ class SerList extends \App\Pages\Base
         if ($state == Document::STATE_INPROCESS) {
 
             $this->statuspan->statusform->binproc->setVisible(false);
-            $this->statuspan->statusform->bclose->setVisible(true);
+
             $this->statuspan->statusform->bttn->setVisible(true);
             $this->statuspan->statusform->bref->setVisible(true);
             $this->statuspan->statusform->btask->setVisible(true);
@@ -178,7 +182,17 @@ class SerList extends \App\Pages\Base
         if ($state == Document::STATE_FINISHED) {
 
             $this->statuspan->statusform->binproc->setVisible(false);
-            $this->statuspan->statusform->bclose->setVisible(true);
+
+            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->bref->setVisible(false);
+            $this->statuspan->statusform->btask->setVisible(false);
+            $this->statuspan->statusform->bfin->setVisible(false);
+        }
+      // ждет оплату
+        if ($state == Document::STATE_WP) {
+
+            $this->statuspan->statusform->binproc->setVisible(false);
+
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
@@ -188,7 +202,7 @@ class SerList extends \App\Pages\Base
         //закрыт
         if ($state == Document::STATE_CLOSED) {
             $this->statuspan->statusform->binproc->setVisible(false);
-            $this->statuspan->statusform->bclose->setVisible(false);
+
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
@@ -201,6 +215,7 @@ class SerList extends \App\Pages\Base
     public function showOnClick($sender) {
 
         $this->_doc = $sender->owner->getDataItem();
+        $this->_doc = $this->_doc->cast();
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
         }
