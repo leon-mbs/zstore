@@ -32,7 +32,7 @@ class PayBayList extends \App\Pages\Base
     public  $_totamountd = 0;
     public  $_bal = 0;
    
-    public function __construct() {
+    public function __construct($docid=0) {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('PayBayList')) {
             return;
@@ -75,6 +75,11 @@ class PayBayList extends \App\Pages\Base
 
 
         $this->updateCust();
+        
+        if($docid>0) {
+            $this->payDoc($docid) ;
+        }
+        
     }
 
     public function filterOnSubmit($sender) {
@@ -177,7 +182,7 @@ class PayBayList extends \App\Pages\Base
         $this->_cust = $sender->owner->getDataItem();
         $this->plist->cname->setText($this->_cust->customer_name);
         $this->updateDocs();
-
+     
         $this->clist->setVisible(false);
         $this->plist->setVisible(true);
     }
@@ -247,16 +252,34 @@ class PayBayList extends \App\Pages\Base
     }
 
     //оплаты
-    public function payOnClick($sender) {
+    public function payDoc($docid) { 
+
+        $this->_doc = Document::load($docid)  ;
+        $this->_cust = \App\Entity\Customer::load($this->_doc->customer_id);
+        $this->showPay();
+        $this->plist->cname->setText($this->_cust->customer_name);
+        $this->updateDocs();
+     
+        $this->clist->setVisible(false);
+        $this->plist->setVisible(true);
+
+    }
+    
+    
+    public function payOnClick($sender) { 
         $this->docview->setVisible(false);
 
         $this->_doc = $sender->owner->getDataItem();
+     //   $this->plist->doclist->setSelectedRow($sender->getOwner());
+        $this->showPay();
+    }
 
-        $this->paypan->setVisible(true);
-
-        $this->plist->doclist->setSelectedRow($sender->getOwner());
+    public function showPay() { 
         $this->plist->doclist->Reload(false);
 
+        $this->paypan->setVisible(true);
+        
+        
         $this->goAnkor('dankor');
         $amount = $this->_doc->payamount - $this->_doc->payed;
         if ($amount > $this->_cust->sam) {
@@ -269,8 +292,11 @@ class PayBayList extends \App\Pages\Base
 
         $this->_pays = \App\Entity\Pay::getPayments($this->_doc->document_id);
         $this->paypan->paylist->Reload();
+        
     }
-
+    
+    
+    
     public function payOnRow($row) {
         $pay = $row->getDataItem();
         $row->add(new Label('plamount', H::fa($pay->amount)));

@@ -1,6 +1,11 @@
 <table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{printw}}}>
     <tr>
-        <td colspan="2">Квитанція {{document_number}}</td>
+        <td colspan="2">
+          {{#isfinished}}  Акт виконаних робіт {{/isfinished}} 
+          {{^isfinished}}  Квитанція до {{/isfinished}} 
+        
+        
+         {{document_number}}</td>
     </tr>
     <tr>
 

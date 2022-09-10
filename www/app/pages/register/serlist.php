@@ -57,6 +57,7 @@ class SerList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('binproc'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('btask'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new \Zippy\Html\Link\RedirectLink('btopay'));
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
@@ -156,6 +157,8 @@ class SerList extends \App\Pages\Base
 
         $state = $this->_doc->state;
 
+        $this->statuspan->statusform->btopay->setVisible(false);
+
         //новый     
         if ($state < Document::STATE_EXECUTED) {
             $this->statuspan->statusform->binproc->setVisible(true);
@@ -199,6 +202,15 @@ class SerList extends \App\Pages\Base
             $this->statuspan->statusform->bfin->setVisible(false);
         }
 
+        //к  оплате
+        if ($state == Document::STATE_WP) {
+            
+          if( $this->_doc->payamount > 0 &&  $this->_doc->payamount >  $this->_doc->payed) { 
+              $this->statuspan->statusform->btopay->setVisible(true);
+              $this->statuspan->statusform->btopay->setLink("App\\PAges\\Register\\PayBayList",array($this->_doc->document_id));
+          }
+          
+        }
         //закрыт
         if ($state == Document::STATE_CLOSED) {
             $this->statuspan->statusform->binproc->setVisible(false);

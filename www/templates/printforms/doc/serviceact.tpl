@@ -33,7 +33,10 @@
     {{/isdevice}}
     <tr style="font-weight: bolder;">
         <td colspan="5" align="center">
-            Акт виконаних робіт № {{document_number}} від {{date}}
+           
+          {{#isfinished}}  Акт виконаних робіт {{/isfinished}} 
+          {{^isfinished}}  Квитанція до {{/isfinished}} 
+           № {{document_number}} від {{date}}
         </td>
     </tr>
 

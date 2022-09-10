@@ -65,6 +65,7 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('btask'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bmove'));
+        $this->statuspan->statusform->add(new \Zippy\Html\Link\RedirectLink('btopay'));
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
@@ -246,6 +247,7 @@ class OrderList extends \App\Pages\Base
         //аннулирован
         $ref = $this->_doc->checkStates(array(Document::STATE_REFUSED)) > 0;
 
+        $this->statuspan->statusform->btopay->setVisible(false);
         $this->statuspan->statusform->brd->setVisible(false);
         $this->statuspan->statusform->bmove->setVisible(false);
 
@@ -323,6 +325,18 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->brd->setVisible(false);
         }
 
+        if ($state == Document::STATE_WP) {
+            
+          if( $this->_doc->payamount > 0 &&  $this->_doc->payamount >  $this->_doc->payed) { 
+              $this->statuspan->statusform->btopay->setVisible(true);
+              $this->statuspan->statusform->btopay->setLink("App\\PAges\\Register\\PayBayList",array($this->_doc->document_id));
+          }
+          
+        }
+        
+        
+        
+        
         if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
             // $this->statuspan->statusform->bclose->setVisible(false);
         }
