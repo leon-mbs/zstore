@@ -105,7 +105,7 @@ class IncomeItem extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ПТ-000000';
+        return 'ОТ-000000';
     }
 
 }

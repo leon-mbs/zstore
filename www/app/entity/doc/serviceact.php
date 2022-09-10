@@ -61,7 +61,8 @@ class ServiceAct extends Document
             $header['createdon'] = H::fd($contract->createdon);
         }
 
-
+        $header['isfinished'] =  $this->checkStates(array(self::STATE_FINISHED)) > 0;
+   
         $report = new \App\Report('doc/serviceact.tpl');
 
         $html = $report->generate($header);
@@ -167,9 +168,8 @@ class ServiceAct extends Document
             );
         }
         $header['iswork'] = count($detail) > 0;
-
-
         $header['slist'] = $detail;
+        $header['isfinished'] =  $this->checkStates(array(self::STATE_FINISHED)) > 0;
 
         $detail2 = array();
 

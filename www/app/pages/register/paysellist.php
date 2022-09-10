@@ -32,7 +32,7 @@ class PaySelList extends \App\Pages\Base
     public  $_totamountc = 0;
  public  $_bal = 0;
      
-    public function __construct() {
+    public function __construct($docid=0) {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('PaySelList')) {
             return;
@@ -74,6 +74,12 @@ class PaySelList extends \App\Pages\Base
 
 
         $this->updateCust();
+        
+      if($docid>0) {
+            $this->payDoc($docid) ;
+        }
+          
+        
     }
 
     public function filterOnSubmit($sender) {
@@ -238,14 +244,37 @@ class PaySelList extends \App\Pages\Base
     }
 
     //оплаты
-    public function payOnClick($sender) {
+    
+    
+    public function payDoc($docid) { 
+
+        $this->_doc = Document::load($docid)  ;
+        $this->_cust = \App\Entity\Customer::load($this->_doc->customer_id);
+        $this->showPay();
+        $this->plist->cname->setText($this->_cust->customer_name);
+        $this->updateDocs();
+     
+        $this->clist->setVisible(false);
+        $this->plist->setVisible(true);
+
+    }    
+    
+    public function payOnClick($sender) { 
         $this->docview->setVisible(false);
 
         $this->_doc = $sender->owner->getDataItem();
+     //   $this->plist->doclist->setSelectedRow($sender->getOwner());
+        $this->showPay();
+    }
+
+    public function showPay() { 
+//        $this->plist->doclist->Reload(false);
+        $this->docview->setVisible(false);
+
 
         $this->paypan->setVisible(true);
 
-        $this->plist->doclist->setSelectedRow($sender->getOwner());
+
         $this->plist->doclist->Reload(false);
 
         $this->goAnkor('dankor');

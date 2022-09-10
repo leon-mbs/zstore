@@ -549,7 +549,8 @@ class Document extends \ZCL\DB\Entity
         if ($this->branch_id > 0) {
             $branch = " and branch_id=" . $this->branch_id;
         }
-        $doc = Document::getFirst("meta_id={$this->meta_id}  and  document_number = '{$this->document_number}' {$branch}");
+      //  $doc = Document::getFirst("meta_id={$this->meta_id}  and  document_number = '{$this->document_number}' {$branch}");
+        $doc = Document::getFirst( " document_number = '{$this->document_number}' {$branch}");
         if ($doc instanceof Document) {
             if ($this->document_id != $doc->document_id) {
                 return false;
