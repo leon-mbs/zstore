@@ -337,7 +337,7 @@ class Item extends \ZCL\DB\Entity
     public function getPrice($_price_ = 'price1', $store = 0, $partion = 0) {
         if(strlen($_price_)==0) $_price_ = 'price1';
         $price = $this->getPurePrice($_price_, $store, $partion);
-        if ($this->hasAction()) {
+        if ($this->hasAction() && $_price_ == 'price1') {
             $price = $this->getActionPrice($price);
 
         }
