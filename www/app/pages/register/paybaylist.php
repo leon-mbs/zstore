@@ -32,7 +32,7 @@ class PayBayList extends \App\Pages\Base
     public  $_totamountd = 0;
     public  $_bal = 0;
    
-    public function __construct() {
+    public function __construct($docid=0) {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('PayBayList')) {
             return;
@@ -75,6 +75,11 @@ class PayBayList extends \App\Pages\Base
 
 
         $this->updateCust();
+        
+        if($docid>0) {
+            $this->payDoc($docid) ;
+        }
+        
     }
 
     public function filterOnSubmit($sender) {
@@ -117,7 +122,7 @@ class PayBayList extends \App\Pages\Base
                                     
         $sql = "SELECT c.customer_name,c.phone, c.customer_id, coalesce(count(*),0) as docs 
              FROM documents_view d  join customers c  on d.customer_id = c.customer_id and c.status=0    
-             WHERE  d.state = ". Document::STATE_WP  ." and d.meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue')   {$hold}
+             WHERE  d.state = ". Document::STATE_WP  ." and d.meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct')   {$hold}
              group by c.customer_name,c.phone, c.customer_id
              order by c.customer_name
              ";
@@ -177,7 +182,7 @@ class PayBayList extends \App\Pages\Base
         $this->_cust = $sender->owner->getDataItem();
         $this->plist->cname->setText($this->_cust->customer_name);
         $this->updateDocs();
-
+     
         $this->clist->setVisible(false);
         $this->plist->setVisible(true);
     }
@@ -193,7 +198,7 @@ class PayBayList extends \App\Pages\Base
 
         $this->_doclist = array();
 
-        $list = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id}  and   state = ". Document::STATE_WP  ."    and meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue') ", "document_id asc ");
+        $list = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id}  and   state = ". Document::STATE_WP  ."    and meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct') ", "document_id asc ");
    
 
         foreach ($list as $d) {
@@ -247,16 +252,34 @@ class PayBayList extends \App\Pages\Base
     }
 
     //оплаты
-    public function payOnClick($sender) {
+    public function payDoc($docid) { 
+
+        $this->_doc = Document::load($docid)  ;
+        $this->_cust = \App\Entity\Customer::load($this->_doc->customer_id);
+        $this->showPay();
+        $this->plist->cname->setText($this->_cust->customer_name);
+        $this->updateDocs();
+     
+        $this->clist->setVisible(false);
+        $this->plist->setVisible(true);
+
+    }
+    
+    
+    public function payOnClick($sender) { 
         $this->docview->setVisible(false);
 
         $this->_doc = $sender->owner->getDataItem();
+     //   $this->plist->doclist->setSelectedRow($sender->getOwner());
+        $this->showPay();
+    }
 
-        $this->paypan->setVisible(true);
-
-        $this->plist->doclist->setSelectedRow($sender->getOwner());
+    public function showPay() { 
         $this->plist->doclist->Reload(false);
 
+        $this->paypan->setVisible(true);
+        
+        
         $this->goAnkor('dankor');
         $amount = $this->_doc->payamount - $this->_doc->payed;
         if ($amount > $this->_cust->sam) {
@@ -269,8 +292,11 @@ class PayBayList extends \App\Pages\Base
 
         $this->_pays = \App\Entity\Pay::getPayments($this->_doc->document_id);
         $this->paypan->paylist->Reload();
+        
     }
-
+    
+    
+    
     public function payOnRow($row) {
         $pay = $row->getDataItem();
         $row->add(new Label('plamount', H::fa($pay->amount)));
@@ -350,6 +376,11 @@ class PayBayList extends \App\Pages\Base
             $this->_doc = Document::load($this->_doc->document_id);
             if($this->_doc->meta_name=='Order' || $this->_doc->meta_name=='Invoice') {
                 $this->_doc->updateStatus(Document::STATE_PAYED);                            
+                return;
+            }
+            if($this->_doc->meta_name=='ServiceAct'  ) {
+                $this->_doc->updateStatus(Document::STATE_FINISHED,true);                            
+                
                 return;
             }
             //предыдущий статус

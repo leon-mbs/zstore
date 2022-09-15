@@ -129,7 +129,7 @@
                 $('.salsum').each(function (index, value) {
                     var a = $(this).val();
                     a = parseFloat(a);
-                    if (isNaN(a) == false) {
+                    if (Number.isNaN(a) == false) {
                         total = total + a;
                     }
 

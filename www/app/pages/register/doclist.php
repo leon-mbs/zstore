@@ -97,24 +97,28 @@ class DocList extends \App\Pages\Base
         $this->doclist->setSorting('priority desc,document_id desc', '');
         $doclist->Reload();
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
-        if ($docid > 0) {
-            $this->docview->setVisible(true);
-            $this->_doc = Document::load($docid);
-            $this->docview->setDoc($this->_doc);
-            //$this->doclist->setSelectedRow($docid);
-            // $filter->searchnumber = $dc->document_number;
-            // $this->filter->searchnumber->setText($dc->document_number);
-            $doclist->Reload(false);
-        }
         $this->add(new Form('statusform'))->SetVisible(false);
+        $this->statusform->add(new \Zippy\Html\Link\RedirectLink('btopay'));
         $this->statusform->add(new SubmitButton('bap'))->onClick($this, 'statusOnSubmit');
         $this->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
         $this->statusform->add(new SubmitButton('bstatus'))->onClick($this, 'statusOnSubmit');
         $this->statusform->add(new TextInput('refcomment'));
         $this->statusform->add(new DropDownChoice('mstates',Document::getStateListMan()));
-
+    
         $this->statusform->add(new ClickLink('bprint'))->onClick($this, 'printlabels',true);
         $this->add(new ClickLink('csv', $this, 'oncsv'));
+
+
+        if ($docid > 0) {
+            $this->docview->setVisible(true);
+            $this->_doc = Document::load($docid);
+            $this->_doc = $this->_doc->cast() ;    
+            $this->show($this->_doc);            
+            $doclist->Reload(false);
+        
+        
+            
+        }
         
     }
 
@@ -287,6 +291,24 @@ class DocList extends \App\Pages\Base
         $this->statusform->refcomment->setVisible($ch==true && $this->_doc->state == Document::STATE_WA);
         $this->statusform->mstates->setValue(0);
 
+        $this->statusform->btopay->setVisible(false);
+        if($this->_doc->state == Document::STATE_WP){
+              $this->statusform->btopay->setVisible(true);
+              if( $this->_doc->payamount > 0 &&  $this->_doc->payamount >  $this->_doc->payed) { 
+                  
+                  if( in_array($this->_doc->meta_name,array('InvoiceCust','RetCustIssue','GoodsReceipt')))  {
+                      $this->statusform->btopay->setVisible(true);
+                      $this->
+                      statusform->btopay->setLink("App\\PAges\\Register\\PaySelList",array($this->_doc->document_id));
+                  }
+                  if( in_array($this->_doc->meta_name,array('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct')))  {
+                      $this->statusform->btopay->setVisible(true);
+                      $this->statusform->btopay->setLink("App\\PAges\\Register\\PayBayList",array($this->_doc->document_id));
+                  }
+                  
+              }
+                             
+        }
         
         
         $this->statusform->mstates->setVisible($ch==true && $this->_doc->state != Document::STATE_WA  );

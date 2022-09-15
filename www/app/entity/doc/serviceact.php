@@ -28,6 +28,15 @@ class ServiceAct extends Document
                               "amount"       => H::fa($ser->price * $ser->quantity)
             );
         }
+        foreach ($this->unpackDetails('detail2data') as $ser) {
+            $detail[] = array("no"           => $i++,
+                              "service_name" => $ser->itemname,
+                              "desc"         => $ser->item_code,
+                              "qty"          => H::fqty($ser->quantity),
+                              "price"        => H::fa($ser->price),
+                              "amount"       => H::fa($ser->price * $ser->quantity)
+            );
+        }
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
@@ -52,7 +61,8 @@ class ServiceAct extends Document
             $header['createdon'] = H::fd($contract->createdon);
         }
 
-
+        $header['isfinished'] =  $this->checkStates(array(self::STATE_FINISHED)) > 0;
+   
         $report = new \App\Report('doc/serviceact.tpl');
 
         $html = $report->generate($header);
@@ -60,23 +70,11 @@ class ServiceAct extends Document
         return $html;
     }
 
-    public function Execute() {
+ 
+     protected function onState($state) {
         $conn = \ZDB\DB::getConnect();
 
-        foreach ($this->unpackDetails('detaildata') as $ser) {
-
-            $sc = new Entry($this->document_id, 0 - ($ser->price * $ser->quantity), 0 - $ser->quantity);
-            $sc->setService($ser->service_id);
-
-            //  $sc->setExtCode($ser->price); //Для АВС
-            //$sc->setCustomer($this->customer_id);
-            $sc->setOutPrice($ser->price);
-       
-            $sc->save();
-        }
-    }
-     protected function onState($state) {
-
+    
         if ($state == self::STATE_INPROCESS) {
           
 
@@ -88,7 +86,40 @@ class ServiceAct extends Document
                 \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
 
             }
+            
+            foreach ($this->unpackDetails('detail2data') as $item) {
+
+                $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
+
+                foreach ($listst as $st) {
+                    $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
+                    $sc->setStock($st->stock_id);
+
+                    $sc->setOutPrice($item->price  );
+                    $sc->tag=Entry::TAG_SELL;
+                    $sc->save();
+                   
+                }
+            }            
+            
         }
+        
+        
+         if ($state == self::STATE_FINISHED) {
+           foreach ($this->unpackDetails('detaildata') as $ser) {
+
+                $sc = new Entry($this->document_id, 0 - ($ser->price * $ser->quantity), 0 - $ser->quantity);
+                $sc->setService($ser->service_id);
+
+                //  $sc->setExtCode($ser->price); //Для АВС
+                //$sc->setCustomer($this->customer_id);
+                $sc->setOutPrice($ser->price);
+           
+                $sc->save();
+            }
+                  
+         }        
+        
     }
  
 
@@ -138,7 +169,27 @@ class ServiceAct extends Document
         }
         $header['iswork'] = count($detail) > 0;
         $header['slist'] = $detail;
+        $header['isfinished'] =  $this->checkStates(array(self::STATE_FINISHED)) > 0;
 
+        $detail2 = array();
+
+        foreach ($this->unpackDetails('detail2data') as $it) {
+            $detail2[] = array("no"           => $i++,
+                              "itemname" => $it->itemname,
+                              "qty"          => H::fqty($it->quantity),
+                              "price"        => H::fa($it->price),
+                              "amount"       => H::fa($it->price * $it->quantity)
+            );
+        }
+
+        $header['isitems'] = count($detail2) > 0;
+
+        $header['ilist'] = $detail2;
+        
+       
+        $header['istotal'] = $header['total'] > 0   ;
+
+        
         $pays = \App\Entity\Pay::getPayments($this->document_id);
         if (count($pays) > 0) {
             $header['plist'] = array();
@@ -159,7 +210,7 @@ class ServiceAct extends Document
         $list = array();
         $list['Task'] = self::getDesc('Task');
         $list['ProdIssue'] = self::getDesc('ProdIssue');
-        $list['GoodsIssue'] = self::getDesc('GoodsIssue');
+    //    $list['GoodsIssue'] = self::getDesc('GoodsIssue');
         $list['ServiceAct'] = self::getDesc('ServiceAct');
 
         return $list;

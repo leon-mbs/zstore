@@ -132,7 +132,7 @@ class CustomerList extends \App\Pages\Base
         $this->contentview->addeventform->add(new TextInput('addeventtitle'));
         $this->contentview->addeventform->add(new TextArea('addeventdesc'));
 
-        $this->contentview->addeventform->add(new DropDownChoice('addeventnotify', array(1 => "1 час", 2 => "2 часа", 4 => "4 часа", 8 => "8 часов", 16 => "16 часов", 24 => "24 часа"), 0));
+        $this->contentview->addeventform->add(new DropDownChoice('addeventnotify', array(), 0));
         $this->contentview->add(new DataView('dw_eventlist', new ArrayDataSource(new Bind($this, '_eventlist')), $this, 'eventListOnRow'));
 
         $this->contentview->dw_eventlist->setPageSize(10);
