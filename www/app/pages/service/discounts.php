@@ -50,6 +50,9 @@ class Discounts extends \App\Pages\Base
 
         $this->onTab($this->tabo);
 
+        $common = System::getOptions("common");
+        $this->_tvars['price1name'] = $common['price1'];
+        
         $disc = System::getOptions("discount");
         if (!is_array($disc)) {
             $disc = array();

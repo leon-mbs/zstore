@@ -214,7 +214,7 @@ var calendar
                 
                 
                onFilter:function(){
-                   if(isNaN( Number.parseInt(this.empid)) ) {
+                   if(Number.isNaN( Number.parseInt(this.empid)) ) {
                       alert('Не вибраний спiвробiтник');
                       return;
                   }     

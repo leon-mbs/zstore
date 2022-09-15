@@ -52,7 +52,7 @@ class Jobs extends \App\Pages\Base
         $this->addeventform->add(new \Zippy\Html\Form\Time('addeventtime', time()));
         $this->addeventform->add(new TextInput('addeventtitle'));
         $this->addeventform->add(new TextArea('addeventdesc'));
-        $this->addeventform->add(new DropDownChoice('addeventnotify', array(1 => "1 час", 2 => "2 часа", 4 => "4 часа", 8 => "8 часов", 16 => "16 часов", 24 => "24 часа"), 0));
+        $this->addeventform->add(new DropDownChoice('addeventnotify', array(), 0));
         $this->addeventform->add(new DropDownChoice('adduser', \App\Entity\User::findArray("username", "disabled<>1 and  user_id<>" . $user->user_id, "username"), 0));
         $this->addeventform->add(new ClickLink('cancel', $this, 'onCancel'));
 
