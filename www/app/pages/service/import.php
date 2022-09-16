@@ -45,6 +45,7 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("colcell", $cols));
         $form->add(new DropDownChoice("colshortname", $cols));
         $form->add(new DropDownChoice("colimage", $cols));
+        $form->add(new DropDownChoice("colwar", $cols));
 
         $pt = \App\Entity\Item::getPriceTypeList();
 
@@ -91,6 +92,7 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("ncolqty", $cols));
         $form->add(new DropDownChoice("ncolprice", $cols));
         $form->add(new DropDownChoice("ncolmsr", $cols));
+        $form->add(new DropDownChoice("ncoldesc", $cols));
         $form->add(new CheckBox("npassfirst"));
         $form->add(new CheckBox("npreview"));
 
@@ -161,6 +163,7 @@ class Import extends \App\Pages\Base
         $coldesc = $this->iform->coldesc->getValue();
         $colimage = $this->iform->colimage->getValue();
         $colshortname = $this->iform->colshortname->getValue();
+        $colwar = $this->iform->colwar->getValue();
      
       
         if ($t == 1 && $colqty === '0') {
@@ -245,6 +248,7 @@ class Import extends \App\Pages\Base
             $desc = trim($row[$coldesc]);
             $catname = trim($row[$colcat]);
             $image = trim($row[$colimage]);
+            $warranty = trim($row[$colwar]);
             $shortname = trim($row[$colshortname]);
             $inprice = str_replace(',', '.', trim($row[$colinprice]));
             $qty = str_replace(',', '.', trim($row[$colqty]));
@@ -311,6 +315,9 @@ class Import extends \App\Pages\Base
             }
             if (strlen($shortname) > 0) {
                 $item->shortname = trim($shortname);
+            }
+            if (strlen($warranty) > 0) {
+                $item->warranty = trim($warranty);
             }
             if ($price1 > 0) {
                 $item->price1 = $price1;
@@ -558,6 +565,7 @@ class Import extends \App\Pages\Base
         $colqty = $this->nform->ncolqty->getValue();
         $colprice = $this->nform->ncolprice->getValue();
         $colmsr = $this->nform->ncolmsr->getValue();
+        $coldesc = $this->nform->ncoldesc->getValue();
 
         if ($colname === '0') {
             $this->setError('noselcolname');
@@ -645,8 +653,11 @@ class Import extends \App\Pages\Base
                     if (strlen($row[$colcode]) > 0) {
                         $item->item_code = trim($row[$colcode]);
                     }
-                    if (strlen($row[$colmsr - 1]) > 0) {
+                    if (strlen($row[$colmsr]) > 0) {
                         $item->msr = trim($row[$colmsr]);
+                    }
+                    if (strlen($row[$coldesc]) > 0) {
+                        $item->description = trim($row[$coldesc]);
                     }
 
 

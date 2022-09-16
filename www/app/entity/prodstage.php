@@ -17,6 +17,7 @@ class ProdStage extends \ZCL\DB\Entity
     const STATE_NEW       = 0;
     const STATE_INPROCESS = 1;
     const STATE_FINISHED  = 2;
+    const STATE_STOPPED  = 3;
 
     protected function init() {
         $this->st_id = 0;
@@ -73,6 +74,8 @@ class ProdStage extends \ZCL\DB\Entity
                 return Helper::l('stpp_inprocess');
             case ProdStage::STATE_FINISHED:
                 return Helper::l('stpp_finished');
+            case ProdStage::STATE_STOPPED:
+                return Helper::l('stpp_stopped');
 
 
             default:
