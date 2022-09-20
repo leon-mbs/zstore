@@ -10,16 +10,18 @@
                 padding: 02px;;
             }
         </style>
+        
+        
         <div class="row">
             <div class="col-md-4 col-sm-12">
                 <div class=" mb-1">
-                    &nbsp;<a href="javascript:" class="btn btn-primary btn-sm" style="cursor:pointer;" zippy="treeadd"
+                    <a href="javascript:" class="btn btn-primary btn-sm"  zippy="treeadd"
                              onclick="newnode()"><i class="fa fa-plus-circle"></i> Новий вузол</a>
-                &nbsp;    <a title="Редагувати вузол" style="cursor:pointer;" zippy="treeedit" onclick="editnode()"><i
+                    <a title="Редагувати вузол"  zippy="treeedit" onclick="editnode()"><i
                             class="fa                            fa-edit"></i></a>
-                 &nbsp;   <a title="Вирізати" style="cursor:pointer;" zippy="treecut"><i class="fa fa-cut"></i></a>
-                 &nbsp;   <a title="Вставити" style="cursor:pointer;" zippy="treepaste"><i class="fa fa-paste"></i></a>
-                &nbsp;    <a title="Вилучити" style="cursor:pointer;" zippy="treedelete"><i class="fa fa-trash"></i></a>
+                    <a title="Вирізати"  zippy="treecut"><i class="fa fa-cut"></i></a>
+                    <a title="Вставити"  zippy="treepaste"><i class="fa fa-paste"></i></a>
+                    <a title="Вилучити"  zippy="treedelete"><i class="fa fa-trash"></i></a>
                 </div>
                 <div zippy="tree"></div>
 
@@ -31,16 +33,16 @@
                 <div class="row">
                     <div class="col-12">
                         <div class=" mb-1">
-                            &nbsp;<a class="btn btn-primary btn-sm" style="cursor:pointer;" zippy="topicadd"><i
-                                    class="fa fa-plus-circle"></i> Новий топік</a>
-                      &nbsp;      <a title="Редагувати" style="cursor:pointer;" zippy="topicedit"><i class="fa fa-edit"></i></a>
-                      &nbsp;      <a title="Вирізати" style="cursor:pointer;" zippy="topiccut"><i class="fa fa-cut"></i></a>
-                      &nbsp;      <a title="Копіювати" style="cursor:pointer;" zippy="topiccopy"><i class="fa fa-copy"></i></a>
-                      &nbsp;      <a title="Копіювати як ярлик" style="cursor:pointer;" zippy="topictag"><i
-                                    class="fa fa-link"></i></a>
-                      &nbsp;      <a title="Вставити" style="cursor:pointer;" zippy="topicpaste"><i class="fa fa-paste"></i></a>
-                      &nbsp;      <a title="Вилучити" style="cursor:pointer;" zippy="topicdelete"><i class="fa fa-trash"></i></a>
-                            <a title="Зовнішнє посилання" style="cursor:pointer;" target="_blank" zippy="topiclink"><i
+                            <a class="btn btn-primary btn-sm"  zippy="topicadd"><i
+                                     class="fa fa-plus-circle"></i> Новий топік</a>
+                            <a title="Редагувати"  zippy="topicedit"><i class="fa fa-edit"></i></a>
+                            <a title="Вирізати"  zippy="topiccut"><i class="fa fa-cut"></i></a>
+                            <a title="Копіювати"  zippy="topiccopy"><i class="fa fa-copy"></i></a>
+                            <a title="Копіювати як ярлик"  zippy="topictag"><i
+                                     class="fa fa-link"></i></a>
+                            <a title="Вставити"  zippy="topicpaste"><i class="fa fa-paste"></i></a>
+                            <a title="Вилучити"  zippy="topicdelete"><i class="fa fa-trash"></i></a>
+                            <a title="Зовнішнє посилання"  target="_blank" zippy="topiclink"><i
                                     class="fa                                    fa-external-link-alt"></i></a>
                         </div>
 
@@ -87,7 +89,7 @@
                                         <a zippy="filedel"><i style="color:red;font-size: smaller;"
                                                               class="fa  fa-times-circle  "></i> </a>
                                     </div>
-                                    &nbsp;<a title="Додати файл" zippy="addfile" href="#" onclick="newfile()"><i
+                                    <a title="Додати файл" zippy="addfile" href="#" onclick="newfile()"><i
                                             class="fa                                            fa-upload text-primary"></i></a>
                                 </td>
                                 <td style="width:20px;"><a zippy="setfav"><i style="font-weight:bold;"
@@ -130,7 +132,7 @@
                                 <small>Щоб додати тег нажмiть Enter</small>
                             </div>
 
-                            <a zippy="editcancel" class="btn btn-outline-secondary">Скасувати</a>&nbsp;
+                            <a zippy="editcancel" class="btn btn-outline-secondary">Скасувати</a>
                             <a zippy="editsave" class="btn btn-primary">Зберегти</a>
                         </form>
                     </div>
@@ -180,37 +182,7 @@
         </div>
 
 
-        <div id="nodeedit" class="modal fade" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <form zippy="nodeform">
-                        <input type="hidden" zippy="opname">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">&times;</span></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="editnodetitle">Назва вузла</label>
-                                <input required="required" zippy="editnodetitle" class="form-control" type="text">
-                            </div>
-                            <div class="form-group">
-                                <input zippy="editnodepublic" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="editnodepublic">Доступний для всiх</label>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn
-                                    btn-primary">OK
-                            </button>
-                        </div>
-                    </form>
-                </div>
-                <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
-        </div>
-        <!-- /.modal -->
+       
 
         <div id="fileedit" class="modal fade" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
@@ -235,14 +207,234 @@
                         </div>
                     </form>
                 </div>
-                <!-- /.modal-content -->
+                
             </div>
-            <!-- /.modal-dialog -->
+            
         </div>
-        <!-- /.modal -->
+       
+
+        
+        
+      
+   {{={| |}=}}   
+   <div class="row" id="vapp">
+     <div class="  col-12" >
+   <div class="row">
+     <div class="col-md-4 col-12">
+               <div class=" mb-1">
+                   <a v-on:click.prevent="onNewNode"    v-show="selectedNode != null"  class="btn btn-primary btn-sm mr-2"             ><i class="fa fa-plus-circle"></i> Новий вузол</a>
+                   <a v-on:click.prevent="onEditNode"   v-show="selectedNode != null && selectedNode.pid > 0" title="Редагувати вузол" class=" mr-2" ><i  class="fa fa-edit"></i></a>
+                   <a v-on:click.prevent="onCopyNode"   v-show="selectedNode != null && selectedNode.pid > 0" title="Вирізати" class=" mr-2"><i class="fa fa-cut"></i></a>
+                   <a v-on:click.prevent="onPasteNode"  v-show="selectedNode != null && selectedNode.pid > 0 && cpn != null" title="Вставити" class=" mr-2"><i class="fa fa-paste"></i></a>
+                   <a v-on:click.prevent="onDeleteNode" v-show="selectedNode != null && selectedNode.pid > 0" title="Вилучити" class=" mr-2"><i class="fa fa-trash"></i></a>
+                </div>
+                <div id="tree"  ></div>
+               
+
+    </div>        
+     <div class="col-md-8 col-12" v-show="selectedNode != null">
+         <div class="row">
+           <div class="col-md-4 col-12">
+                <div class=" mb-1">
+                            <a class="btn btn-primary btn-sm  mr-2"   ><i                                       class="fa fa-plus-circle"></i> Новий топік</a>
+                            <a title="Редагувати"  class=" mr-2"><i class="fa fa-edit"></i></a>
+                            <a title="Вирізати"  class=" mr-2"><i class="fa fa-cut"></i></a>
+                            <a title="Копіювати для вставки  як   копію"  class=" mr-2"><i class="fa fa-copy"></i></a>
+                            <a title="Копіювати для вставки  як посилання"  class=" mr-2"><i                                     class="fa fa-external-link-alt"></i></a>
+                            <a title="Вставити"  class=" mr-2"><i class="fa fa-paste"></i></a>
+                            <a title="Вилучити"  class=" mr-2"><i class="fa fa-trash"></i></a>
+                            <a title="Зовнішнє посилання для перегляду топіка"  target="_blank" class=" mr-2"><i                                    class="fa      fa-link"></i></a>
+                        </div>           
+               <table class="able table-sm">
+               <tr>
+                   <td> </td>
+                   <td><i class="ml-2 fa fa-star"></i></td>
+               </tr>
+               </table>
+          </div>        
+           <div class="col-md-8 col-12" v-show="selectedTopic != null">
+
+          </div>        
+        </div>        
+     </div>        
+  </div>        
+     <div class="row">
+            <div class="col-12">
+                <hr>
+            </div>
+        </div>
+</div>
 
 
+   <div id="nodeedit" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog"  >
+                <div class="modal-content">
+                    <form  >
+
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="editnodetitle">Назва вузла</label>
+                                <input v-model="nameNode"  id="editnodetitle" required="required"   class="form-control" type="text">
+                            </div>
+                            <div class="form-check">
+                                <input v-model="publicNode"  id="editnodepublic" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="editnodepublic">Доступний для всiх</label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button v-on:click.prevent="onSaveNode"  type="button" class="btn                                     btn-primary">OK                            </button>
+                        </div>
+                    </form>
+                </div>
+            
+            </div>
+            
+        </div>
+     
+
+</div>
+    
+   
+   {|={{ }}=|}     
+   
+   
         <script>
+        
+        
+  var vapp = new Vue({
+        el: '#vapp',
+        data() { return {
+            selectedNode:null ,
+            selectedTopic:null ,
+            nameNode:'' ,
+            newNode:false ,
+            publicNode:false ,
+            cpn:null ,
+            cpt:null ,
+
+            
+            
+        } } ,        
+        methods: {             
+            onNewNode:function(){
+                  this.publicNode = false;
+                  this.newNode = true;
+                  this.nameNode = "";
+                  $('#nodeedit').modal('show');
+            }   ,
+            onSaveNode:function(){
+             
+                 if(editnodetitle.reportValidity() ){
+
+                    if(this.newNode) {
+                       this.opTree(["new",this.nameNode,this.publicNode,this.selectedNode.id])       
+                    } else {
+                       this.opTree(["edit",this.nameNode,this.publicNode,this.selectedNode.id])                           
+                    }
+                    
+                 }
+              
+            }   ,
+            onEditNode:function(){
+                  this.publicNode = this.selectedNode.ispublic==1;
+                  this.newNode = false;
+                  this.nameNode = this.selectedNode.text;
+                  $('#nodeedit').modal('show');
+            
+            }   ,
+            onCopyNode:function(){
+               this.cpn = this.selectedNode 
+            }   ,
+            onPasteNode:function(){
+               this.opTree(["paste",this.cpn.id,this.selectedNode.id])       
+               this.cpn = null
+            }   ,
+            onDeleteNode:function(){
+                 if(confirm("Видалити вузол")){
+                     this.opTree(["delete",this.selectedNode.id])                           
+    
+                 }         
+            }   ,
+            
+            opTree:function(args){
+               
+               callPageMethod('opTree',args, null,(data)=> 
+               {   
+                    if(data != ""){
+                        toastr.error(data)
+                  
+                        return;
+                    }
+                    $('#nodeedit').modal('hide');
+                    this.selectedNode=null
+                    this.selectedTopic=null
+                    var  ex = [];
+                      
+                    for (let n of $('#tree').treeview('getExpanded') ) {
+                        ex.push(n.id) ;
+                    } 
+                       
+                     
+                    updateTree(ex.join() );
+                   
+               });
+               
+                
+            }   ,
+            
+        },    
+        watch:{
+            selectedNode(newVal, oldVal) { 
+                if(newVal== null) selectedTopic=null;
+               //console.log(newVal) 
+            } 
+        } ,
+        mounted: function(){
+            $('#tree').treeview({   
+                       data: []  
+                 })       
+
+            updateTree();
+        } 
+     })        
+        
+        
+ 
+ 
+ function updateTree(expanded=""){
+           callPageMethod('getTree',[expanded], null,(data)=> 
+           {   
+                 var treedata  = JSON.parse(data)
+                                        
+                 $('#tree').treeview('remove');
+                 $('#tree').treeview({
+                                  data: treedata,  
+                                  expandIcon:'fa fa-plus  fa-xs',
+                                  collapseIcon:'fa fa-minus  fa-xs',
+                                 // levels:2    ,
+                                  emptyIcon:'fa '
+                                 
+                                 
+                 })      
+                 $('#tree').on('nodeSelected', function(event, data) {
+                    vapp.selectedNode = data
+
+                 });     
+                 $('#tree').on('nodeUnselected ', function(event, data) {
+                    vapp.selectedNode = null
+                 });     
+                    
+                   
+           });     
+ }
+ 
+ 
+        
+        
             $('#nodeedit').modal({
                 show: false
             });
@@ -304,6 +496,20 @@
                 }
             });
 
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
         </script>
     </body>
 

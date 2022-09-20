@@ -39,7 +39,7 @@ class Main extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
 
-        //дерево
+       /**
         $tree = $this->add(new Tree("tree"));
         $tree->onSelectNode($this, "onTree");
 
@@ -112,6 +112,9 @@ class Main extends \App\Pages\Base
 
         $this->_tvars['editor'] = false;
         $this->reloadfav();
+        
+        
+        */
     }
 
     //добавить топик
@@ -558,7 +561,7 @@ class Main extends \App\Pages\Base
      * @see WebPage
      *
      */
-    public function beforeRender() {
+    public function _beforeRender() {
         parent::beforeRender();
 
         $nodeid = $this->tree->selectedNodeId();
@@ -671,4 +674,138 @@ class Main extends \App\Pages\Base
         }
     }
 
+    
+    
+    //vue
+    public  function opTree($args,$post=null) {
+         if($args[0] =="new") {
+            $id = $args[3] ;
+            $parent = Node::load($id);
+            $node = new Node();
+            $node->pid = $id;
+            $node->user_id = System::getUser()->user_id;
+            $node->title = $args[1];
+            $node->ispublic = $args[2]=="true"  ? 1:0;
+            if ($parent->ispublic == 0 && $node->ispublic == 1) {
+
+                return H::l("noaddprivate") ;
+            }
+
+            $node->save();
+       
+         }
+         if($args[0] =="edit") {
+            $id = $args[3] ;
+            $node = Node::load($id);
+            $node->title = $args[1];
+            $node->ispublic = $args[2]=="true" ? 1 : 0;
+            $parent = Node::load($node->pid);
+            if ($parent->ispublic == 0 && $node->ispublic == 1) {
+                 return H::l("noaddprivate") ;
+            }
+
+            $node->save();
+       
+         }
+         if($args[0] =="delete") {
+             Node::delete($args[0]);
+             Topic::deleteByNode($args[0]);
+             
+         }
+         if($args[0] =="paste") {
+              $id = $args[1] ;
+              $pid = $args[2] ;
+              $dest = Node::load($pid);
+
+            if ($pid == $id) {
+                return;
+            }
+            $node = Node::load($id);
+            if (strpos($dest->mpath, $node->mpath) === 0) {
+
+
+                return H::l("nomovedesc");
+            }
+
+            $node->moveTo($dest->node_id);
+  
+             
+             
+         }
+         return "";
+    }  
+   
+    public  function getTree($args,$post=null) {
+        $expanded = strlen($args[0])>0 ? explode(",",$args[0]) : array();
+        $tree = array();
+        
+        
+        $user = System::getUser();
+        $w = "ispublic = 1 or  user_id={$user->user_id}  ";
+        if ($user->rolename == 'admins') {
+            $w = '';
+        }
+        $itemlist = Node::find($w, "pid,mpath,title");
+        if (count($itemlist) == 0) { //добавляем  корень
+            $root = new Node();
+            $root->title = "//";
+            $root->user_id = 0;
+            $root->ispublic = 1;
+            $root->state = array('expanded'=>true) ;
+      
+            $root->save();
+
+            $itemlist = Node::find($w, "pid,mpath,title");
+        } 
+
+        $nodelist = array();
+        foreach ($itemlist as $item) {
+          
+           
+            $node = new Node2();
+            $node->id = $item->node_id; 
+            $node->pid = $item->pid; 
+            $node->text = $item->title; 
+            $node->ispublic = $item->ispublic; 
+
+            if ($node->ispublic == 1) {
+                $node->icon = 'fa fa-users fa-xs';
+            } else {
+                $node->icon = 'fa fa-lock fa-xs';
+            }
+
+            if(in_array($node->id,$expanded))  {    //восстанавливаем развернутые
+                $node->state = array('expanded'=>true) ;
+      
+            }
+            
+            if( (@$nodelist[$node->pid]) instanceof Node2 ) {
+                if(!is_array($nodelist[$node->pid]->nodes))  $nodelist[$node->pid]->nodes  = array();
+                $nodelist[$node->pid]->nodes[]=$node; 
+            }
+            $nodelist[$node->id] = $node;
+            
+ 
+        }     
+        foreach($nodelist as $n) {
+            if($n->pid==0) $tree[]=$n;
+        }
+     
+             
+           
+        return json_encode($tree , JSON_UNESCAPED_UNICODE);     
+    
+    }
+    
+    
+    
+}
+
+class  Node2 {
+    public $id;
+    public $pid;
+    public $icon;
+    public $title;
+    public $nodes = null;
+    public $state = array();
 }
