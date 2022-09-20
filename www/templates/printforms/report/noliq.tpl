@@ -37,12 +37,7 @@
     {{/_detail}}
 
 
-    <tr>
-
-        <td colspan="3">
-            <b> На суму:</b> {{total}}
-        </td>
-    </tr>
+  
 
 </table>
 <br> <br>
