@@ -203,9 +203,6 @@ class Warranty extends \App\Pages\Base
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
-        if ($this->checkForm() == false) {
-            return;
-        }
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->headerdata["customer_name"] = $this->docform->customer->getText();
 
@@ -216,6 +213,11 @@ class Warranty extends \App\Pages\Base
 
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
+   
+        if ($this->checkForm() == false) {
+            return;
+        }
+   
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
