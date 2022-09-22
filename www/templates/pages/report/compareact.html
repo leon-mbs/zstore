@@ -1,0 +1,47 @@
+<html>
+   <head>
+        <title> Звіт по закупках   </title>
+
+    </head>
+    <body>
+        <div class="row">
+            <div class="col-12   col-xl-10">
+                <h3>Звіт по закупках</h3>
+                <div class="navbar nav">
+                    <form zippy="filter" class="form-inline">
+
+                        <label for="from">З</label>
+                        <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="from">
+
+                        <label for="to">по</label>
+                        <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="to">
+
+                        <label for="to">Тип</label>
+                        <select class="form-control mr-sm-2" zippy="type"> </select>
+                        <label for="cust" data-label="cust">постачальник</label>
+                        <input class="form-control mr-sm-2" zippy="cust" placeholder=" Почнiть вводити...">
+
+
+                        <input class="btn btn-outline-primary  " type="submit" value="ОК">
+
+
+                    </form>
+                </div>
+
+
+                <div zippy="detail">
+                    <div>
+                       <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
+                        <a href="/showreport/xls/income" target="_blank" title="Експорт в Excel"><i class="fa fa-file-excel mr-2"></a>
+                        <a href="/showreport/pdf/income" target="_blank" title="Експорт в PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
+                                                                            
+
+                    </div>
+                    <div zippy="preview" class="table-responsive-sm">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

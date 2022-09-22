@@ -560,7 +560,8 @@ class Document extends \ZCL\DB\Entity
     }
 
     public function nextNumber($branch_id = 0) {
-
+        $doc = $this->cast();
+ 
         $conn = \ZDB\DB::getConnect();
         $branch = "";
         if ($this->branch_id > 0) {
@@ -569,19 +570,27 @@ class Document extends \ZCL\DB\Entity
         if ($branch_id > 0) {
             $branch = " and branch_id=" . $branch_id;
         }
-        $d = Document::getFirst(" meta_id='{$this->meta_id}'   {$branch} ", " document_id desc")  ;
-        if($d == null)  {
-            $prevnumber =  $this->getNumberTemplate();
+         $limit =" limit 0,1";
+            if($conn->dataProvider=="postgres") {
+                $limit =" limit 1";
+            }  
+        $sql = "select document_number from  documents  where   meta_id='{$this->meta_id}'   {$branch}  order  by document_id desc ".$limit;
+        $prevnumber = $conn->GetOne($sql);
+        if (strlen($prevnumber) == 0) {
+            $prevnumber = $doc->getNumberTemplate();
         } else {
-            $prevnumber = $d->document_number;             
+ //           $prevnumber = $d->document_number;             
         }
         $letter = preg_replace('/[0-9]/', '', $prevnumber);
         $letter = $conn->qstr($letter.'%');
-        $d = Document::getFirst(" document_number like {$letter}     {$branch} ", " document_id desc")  ;
-        if($d == null)  {
-            $prevnumber =  $this->getNumberTemplate();
+
+        $sql = "select document_number from  documents  where   document_number like {$letter}     {$branch}  order  by document_id desc ".$limit;
+        $prevnumber = $conn->GetOne($sql);
+           
+        if (strlen($prevnumber) == 0) {
+            $prevnumber =  $doc->getNumberTemplate();
         } else {
-            $prevnumber = $d->document_number;             
+//            $prevnumber = $d->document_number;             
         }
 
         
