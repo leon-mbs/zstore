@@ -433,7 +433,7 @@
                 } ,  
                 delfile:function( id){
                     
-                   callPageMethod($this.path+'::delfile',[ id], null,(data)=> 
+                   callPageMethod(this.path+'::delfile',[ id], null,(data)=> 
                      {
                         this.loadfiles() 
                      });

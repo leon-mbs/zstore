@@ -1,3 +1,7 @@
+
+INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Акт звірки', 'CompareAct', 'Контрагенти', 0);
+
+
 DROP VIEW prodstageagenda_view ;
 
 CREATE VIEW prodstageagenda_view
@@ -15,6 +19,10 @@ SELECT
 FROM (`prodstageagenda` `a`
   JOIN `prodstage` `pv`
     ON ((`a`.`st_id` = `pv`.`st_id`)));
+    
+    
+    
+    
     
 delete  from  options where  optname='version' ;
 insert  into options (optname,optvalue) values('version','6.4.0');
