@@ -279,9 +279,6 @@ class ProdIssue extends \App\Pages\Base
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
-        if ($this->checkForm() == false) {
-            return;
-        }
 
 
         $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
@@ -293,6 +290,9 @@ class ProdIssue extends \App\Pages\Base
 
         $this->_doc->amount = 0;
         $this->_doc->payamount = 0;
+        if ($this->checkForm() == false) {
+            return;
+        }
 
         $isEdited = $this->_doc->document_id > 0;
 

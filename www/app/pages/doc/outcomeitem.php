@@ -220,10 +220,7 @@ class OutcomeItem extends \App\Pages\Base
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
-        if ($this->checkForm() == false) {
-            return;
-        }
-
+ 
 
         $this->_doc->notes = $this->docform->notes->getText();
 
@@ -236,6 +233,12 @@ class OutcomeItem extends \App\Pages\Base
 
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
+      
+       if ($this->checkForm() == false) {
+            return;
+        }
+      
+      
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
