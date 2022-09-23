@@ -37,7 +37,7 @@
     <tr>
         <td></td>
 
-        <td valign="top"><b>Продавец</b></td>
+        <td valign="top"><b>Продавець</b></td>
         <td colspan="5"><b>{{firm_name}}</b></td>
 
     </tr>

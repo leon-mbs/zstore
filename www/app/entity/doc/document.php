@@ -128,7 +128,7 @@ class Document extends \ZCL\DB\Entity
         $prev = Document::getFirst(" document_id <> {$this->document_id} and user_id = {$this->user_id} and  meta_id={$this->meta_id}","document_id  desc");
         $diff = time() - $prev->lastupdate ;
         if($diff <= 10 && $prev != false && $this->amount==$prev->amount) {
-           throw new \Exception(Helper::l("doubledoc"));  
+          // throw new \Exception(Helper::l("doubledoc"));  
         }
         
         

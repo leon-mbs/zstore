@@ -143,6 +143,7 @@ class DocList extends \App\Pages\Base
         $this->filter->from->setDate(time() - (7 * 24 * 3600));
         $this->filter->doctype->setValue(0);
         $this->filter->status->setValue(0);
+        $this->filter->author->setValue(0);
         $this->filterOnSubmit($this->filter);
     }
 
@@ -328,9 +329,15 @@ class DocList extends \App\Pages\Base
             if($_u->rolename == 'admins')   {
                 $u[$_u->user_id]=$_u->username;
             }  else {
-                $aclexe = explode(',', $user->aclexe);
+                $aclexe = explode(',', $_u->aclexe);
 
                 if (in_array($this->_doc->meta_id, $aclexe)) {
+                     $u[$_u->user_id] = $_u->username;
+
+                }
+                $aclstate = explode(',', $_u->aclstate);
+
+                if (in_array($this->_doc->meta_id, $aclstate)) {
                      $u[$_u->user_id] = $_u->username;
 
                 }

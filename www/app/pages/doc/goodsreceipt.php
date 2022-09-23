@@ -610,8 +610,14 @@ class GoodsReceipt extends \App\Pages\Base
 
             return;
         }
-        App::Redirect("\\App\\Pages\\Register\\GRList");
 
+        if (false == \App\ACL::checkShowReg('GRList',false)) {
+            App::RedirectHome() ;
+        }
+        else {
+          App::Redirect("\\App\\Pages\\Register\\GRList");
+        }
+       
     }
 
     public function onPayAmount($sender) {
