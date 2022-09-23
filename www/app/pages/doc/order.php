@@ -392,7 +392,17 @@ class Order extends \App\Pages\Base
             if ($sender->id == 'execdoc') {
                 // App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
             }
-            App::Redirect("\\App\\Pages\\Register\\OrderList");
+            
+            
+            if (false == \App\ACL::checkShowReg('OrderList',false)) {
+                App::RedirectHome() ;
+            }
+            else {
+              App::Redirect("\\App\\Pages\\Register\\OrderList");
+            }
+            
+            
+
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
