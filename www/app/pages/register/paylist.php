@@ -25,6 +25,9 @@ class PayList extends \App\Pages\Base
 {
 
     private $_doc = null;
+    private $_totp = 0;
+    private $_totm = 0;
+
 
 
     /**
@@ -41,7 +44,9 @@ class PayList extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new DropDownChoice('fmfund', \App\Entity\MoneyFund::getList(), 0));
         $this->filter->add(new DropDownChoice('fuser', \App\Entity\User::findArray('username', 'disabled<>1', 'username'), 0));
-
+        $this->filter->add(new Date('from', time()));
+        $this->filter->add(new Date('to', time()));
+  
         $this->filter->add(new AutocompleteTextInput('fcustomer'))->onText($this, 'OnAutoCustomer');
 
         $doclist = $this->add(new DataView('doclist', new PayListDataSource($this), $this, 'doclistOnRow'));
@@ -53,8 +58,11 @@ class PayList extends \App\Pages\Base
         $this->add(new Form('fnotes'))->onSubmit($this, 'delOnClick');
         $this->fnotes->add(new TextInput('pl_id'));
         $this->fnotes->add(new TextInput('notes'));
+        $this->add(new Label('totp'));
+        $this->add(new Label('totm'));
+        $this->add(new Label('tottot'));
 
-        $this->doclist->Reload();
+     //   $this->doclist->Reload();
         $this->add(new ClickLink('csv', $this, 'oncsv'));
 
 
@@ -62,9 +70,17 @@ class PayList extends \App\Pages\Base
 
     public function filterOnSubmit($sender) {
 
-
+        $this->_totp=0;
+        $this->_totm=0;
         $this->docview->setVisible(false);
         $this->doclist->Reload();
+        
+        $this->totp->setText(H::fa($this->_totp)) ;
+        $this->totm->setText(H::fa($this->_totm)) ;
+        $this->tottot->setText(H::fa($this->_totp - $this->_totm)) ;
+        
+        
+        
     }
 
     public function OnAutoCustomer($sender) {
@@ -93,6 +109,10 @@ class PayList extends \App\Pages\Base
         $row->del->setAttribute('onclick', "delpay({$doc->pl_id})");
 
         $row->add(new ClickLink('print'))->onClick($this, 'printOnClick', true);
+        
+        $this->_totp += ($doc->amount > 0 ? $doc->amount : 0);
+        $this->_totm += ($doc->amount < 0 ? $doc->amount : 0);
+        
     }
 
     //просмотр
@@ -213,8 +233,9 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
         $conn = \ZDB\DB::getConnect();
 
         //$where = "   d.customer_id in(select  customer_id from  customers  where  status=0)";
-          
-        $where = " paydate>=  ". $conn->DBDate(strtotime("-400 day") );
+        $where = " date(paydate) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(paydate) <= " . $conn->DBDate($this->page->filter->to->getDate());
+        
+//        $where = " paydate>=  ". $conn->DBDate(strtotime("-400 day") );
     
         $author = $this->page->filter->fuser->getValue();
 
