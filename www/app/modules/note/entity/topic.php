@@ -118,6 +118,8 @@ class Topic extends \ZCL\DB\Entity
         $conn->Execute("delete from note_tags where topic_id=" . $this->topic_id);
 
         foreach ($tags as $tag) {
+            $tag = trim($tag) ;
+            $tag = strtolower($tag) ;
             $conn->Execute("insert into note_tags (topic_id,tagvalue) values (" . $this->topic_id . "," . $conn->qstr($tag) . ")");
         }
     }
