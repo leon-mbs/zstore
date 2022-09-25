@@ -361,19 +361,7 @@ class Main extends \App\Pages\Base
     }
 
     //избранное
-    public function onFav($sender) {
-        $topic = Topic::load($this->topiclist->getSelectedRow()->getDataItem()->topic_id);
 
-        $conn = \ZCL\DB\DB::getConnect();
-        if (in_array($topic->topic_id, $this->_favorites)) {
-            $conn->Execute("delete from note_fav where topic_id={$topic->topic_id} and  user_id= " . System::getUser()->user_id);
-        } else {
-            $conn->Execute("insert into note_fav (topic_id,user_id) values ({$topic->topic_id}," . System::getUser()->user_id . ") ");
-        }
-
-        $this->reloadfav();
-        $this->ReloadTopic();
-    }
 
     private function reloadfav() {
         $conn = \ZCL\DB\DB::getConnect();
@@ -502,7 +490,7 @@ class Main extends \App\Pages\Base
     }
 
     //обработчик поиска
-    public function OnSearch($form) {
+    public function _OnSearch($form) {
         $text = $form->skeyword->getText();
         $t = $form->searchtype->getValue();
         if ($text == "") {
@@ -677,7 +665,159 @@ class Main extends \App\Pages\Base
     
     
     //vue
-    public  function opTree($args,$post=null) {
+    
+     public function onSearch($args,$post=null) {
+        $cr = json_decode($post) ;
+        $ret = array();
+        $l = array();
+        if($cr->fav == true){
+           $l = TopicNode::searchFav();          
+        }  
+        if(strlen( $cr->tag) >0 ){
+           $l = TopicNode::searchByTag($cr->tag)    ;
+        }
+        if(strlen($cr->text) > 0) {
+            $l =  TopicNode::searchByText($cr->text, $cr->type, $cr->title);    
+        }
+        
+        
+        foreach($l as $t){
+           $ret[]=array(
+                "topic_id" =>$t->topic_id,
+                "node_id" =>$t->node_id,
+                "title" =>$t->title,
+                "nodes" =>$t->nodes()
+           );    
+        }
+        
+       return json_encode($ret , JSON_UNESCAPED_UNICODE);     
+          
+    }   
+ 
+ 
+    public function onDelFile($args,$post=null) {
+
+          Helper::deleteFile($args[0]);
+         
+        
+    }  
+    public function onAddFile($args,$post=null) {
+
+         $file =  @$_FILES['editfile']  ;
+     
+         if(strlen($file['tmp_name'])==0 ) return;
+          
+         Helper::addFile($file, $args[0]);
+ 
+        
+    }  
+    
+     
+    public function onFav($args,$post=null) {
+
+
+        $conn = \ZCL\DB\DB::getConnect();
+        if ($args[1]=="true") {
+            $conn->Execute("insert into note_fav (topic_id,user_id) values ({$args[0]}," . System::getUser()->user_id . ") ");
+        } else {
+            $conn->Execute("delete from note_fav where topic_id={$args[0]} and  user_id= " . System::getUser()->user_id);
+        }
+        
+    }   
+    
+   
+    public  function opTopic($args,$post=null) {
+         if($args[0] =="delete") {
+             Topic::delete($args[1]);
+         }
+         if($args[0] =="paste") {
+             $node = Node::Load($args[2] );
+             $topic = Topic::load($args[1] );
+
+             if ($topic->acctype > 0 && $node->ispublic != 1) {
+                $this->setError('tn_nopublictopic');
+
+                return;
+             }
+             $topic->removeFromNode($this->clipboard[3]);
+             $topic->addToNode($this->tree->selectedNodeId());
+          
+         }
+         if($args[0] =="pastel") {
+             $node = Node::Load($args[2] );
+             $topic = Topic::load($args[1] );
+
+             if ($topic->acctype > 0 && $node->ispublic != 1) {
+                $this->setError('tn_nopublictopic');
+
+                return;
+             }
+            $newtopic = new Topic();
+            $newtopic->user_id = System::getUser()->user_id;
+            $newtopic->title = $topic->title;
+            if ($node->node_id == $topic->node_id) {
+                $newtopic->title = $topic->title . " (".H::l("thecopy").")";
+            }
+            $newtopic->detail = $topic->detail;
+            $newtopic->save();
+            $newtopic->addToNode($node->node_id );
+           
+         }
+         if($args[0] =="new") {
+
+         }
+         if($args[0] =="edit") {
+
+         }
+           
+         return "";
+     }
+   
+    public  function saveTopic($args,$post=null) {
+
+         $post = json_decode($post) ;
+         if($args[0] > 0)  {
+             $topic = Topic::load($args[0]);
+         }  else {
+             $topic = new  Topic();  
+             $topic->user_id = System::getUser()->user_id;
+                           
+         }
+
+      
+   
+   
+        $topic->title = $post->title;
+        $topic->detail = $post->data;
+        $topic->acctype = $post->acctype;
+
+        if (strlen($topic->title) == 0) {
+            return H::l('notitle');
+        }
+
+
+        $node = Node::load($args[1]);
+        if ($topic->acctype > 0 && $node->ispublic != 1) {
+             return  H::l('tn_nopublictopic') ;
+        }
+
+        $topic->save();
+        $tags = trim($post->tags) ;
+        if(strlen($tags)>0) {
+           $topic->saveTags( explode(",", $tags) );    
+        }
+        
+
+        if ($args[0] == 0) {
+            $topic->addToNode($args[1]);
+        }
+   
+   
+           
+         return "";
+     }
+     
+     public  function opTree($args,$post=null) {
          if($args[0] =="new") {
             $id = $args[3] ;
             $parent = Node::load($id);
@@ -735,7 +875,7 @@ class Main extends \App\Pages\Base
          return "";
     }  
    
-    public  function getTree($args,$post=null) {
+     public  function getTree($args,$post=null) {
         $expanded = strlen($args[0])>0 ? explode(",",$args[0]) : array();
         $tree = array();
         
@@ -797,7 +937,49 @@ class Main extends \App\Pages\Base
     
     }
     
+     public  function loadTopic($args,$post=null) {
+         $t = Topic::load($args[0]) ;
+         
+         
+         $ret = array();
+         $ret['acctype'] = $t->acctype;
+         $ret['detail'] = $t->detail;
+         $ret['tags'] = $t->getTags();;
+         $ret['files'] = array();
     
+         foreach(Helper::findFileByTopic($t->topic_id) as $f) {
+             $ret['files'][] = array('file_id'=>$f->file_id, 
+              'filename'=>$f->filename , 
+              'link'=>"/loadfile.php?id=" . $f->file_id  
+              ); 
+         }
+
+    
+         
+         return json_encode($ret , JSON_UNESCAPED_UNICODE);     
+    
+   }
+   public  function loadTopics($args,$post=null) {
+        
+        $conn = \ZCL\DB\DB::getConnect();
+        $res = $conn->Execute("select topic_id from note_fav where user_id= " . System::getUser()->user_id);
+        $favorites = array();
+        foreach ($res as $r) {
+            $favorites[] = $r['topic_id'];
+        }        
+        
+        
+          $arr = array()  ;
+          foreach(Topic::findByNode($args[0]) as $t){
+             $t->fav = in_array($t->topic_id, $favorites)  ;
+             $arr[]=array("title"=>$t->title,"fav"=>$t->fav,"topic_id"=>$t->topic_id); 
+          };
+ 
+          return json_encode($arr , JSON_UNESCAPED_UNICODE);     
+      
+    }
+    
+   
     
 }
 
@@ -806,6 +988,7 @@ class  Node2 {
     public $pid;
     public $icon;
     public $title;
+    public $ispublic;
     public $nodes = null;
     public $state = array();
 }

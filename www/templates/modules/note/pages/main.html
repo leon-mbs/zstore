@@ -11,208 +11,7 @@
             }
         </style>
         
-        
-        <div class="row">
-            <div class="col-md-4 col-sm-12">
-                <div class=" mb-1">
-                    <a href="javascript:" class="btn btn-primary btn-sm"  zippy="treeadd"
-                             onclick="newnode()"><i class="fa fa-plus-circle"></i> Новий вузол</a>
-                    <a title="Редагувати вузол"  zippy="treeedit" onclick="editnode()"><i
-                            class="fa                            fa-edit"></i></a>
-                    <a title="Вирізати"  zippy="treecut"><i class="fa fa-cut"></i></a>
-                    <a title="Вставити"  zippy="treepaste"><i class="fa fa-paste"></i></a>
-                    <a title="Вилучити"  zippy="treedelete"><i class="fa fa-trash"></i></a>
-                </div>
-                <div zippy="tree"></div>
-
-
-            </div>
-
-            {{^editor}}
-            <div class="col-md-8 col-sm-12">
-                <div class="row">
-                    <div class="col-12">
-                        <div class=" mb-1">
-                            <a class="btn btn-primary btn-sm"  zippy="topicadd"><i
-                                     class="fa fa-plus-circle"></i> Новий топік</a>
-                            <a title="Редагувати"  zippy="topicedit"><i class="fa fa-edit"></i></a>
-                            <a title="Вирізати"  zippy="topiccut"><i class="fa fa-cut"></i></a>
-                            <a title="Копіювати"  zippy="topiccopy"><i class="fa fa-copy"></i></a>
-                            <a title="Копіювати як ярлик"  zippy="topictag"><i
-                                     class="fa fa-link"></i></a>
-                            <a title="Вставити"  zippy="topicpaste"><i class="fa fa-paste"></i></a>
-                            <a title="Вилучити"  zippy="topicdelete"><i class="fa fa-trash"></i></a>
-                            <a title="Зовнішнє посилання"  target="_blank" zippy="topiclink"><i
-                                    class="fa                                    fa-external-link-alt"></i></a>
-                        </div>
-
-                        <table class="table table-sm table-bordered">
-                            <tr zippy="topiclist">
-                                <td style="width:30px" align="center">
-                                    <span zippy="fav"><i style="color:brown" class="fa fa-star"></i></span></td>
-                                <td style="width:100%">
-                                    <span zippy="title"> </span>
-                                </td>
-
-                            </tr>
-                        </table>
-                        <div zippy="pag"></div>
-                    </div>
-
-                </div>
-                <div class="row">
-                    <div class="col-12">
-
-
-                        <div zippy="detail" style="border-radius:4px; ">         </div>
-                    </div>
-                </div>
-
-                <div zippy="tpanel"   class="row">
-                    <div class="col-12">
-
-                        <table class="table table-sm">
-                            <tr>
-                                <td style="width:20px;"><i title="Теги" class="fa fa-tags"
-                                                           style="font-weight:                                        bolder;font-size:16px;"></i>
-                                </td>
-                                <td><span zippy="taglist"></span></td>
-
-                                <td style="width:20px;">
-                                    <i title="Прикріплені файли" class="fa           fa-paperclip"
-                                       style="font-weight:                                         bolder;font-size:16px;"></i>
-                                </td>
-                                <td>
-                                    <div zippy="filelist"
-                                         style="display:inline;;margin:2px;">
-                                        <a target="_blank" zippy="filelink"></a>
-                                        <a zippy="filedel"><i style="color:red;font-size: smaller;"
-                                                              class="fa  fa-times-circle  "></i> </a>
-                                    </div>
-                                    <a title="Додати файл" zippy="addfile" href="#" onclick="newfile()"><i
-                                            class="fa                                            fa-upload text-primary"></i></a>
-                                </td>
-                                <td style="width:20px;"><a zippy="setfav"><i style="font-weight:bold;"
-                                                                             class="fa                                            fa-star"/></a>
-                                </td>
-                            </tr>
-                        </table>
-
-                    </div>
-
-
-                </div>
-            </div>
-
-            {{/editor}}
-            {{#editor}}
-            <div class="col-md-7 col-sm-12">
-                <div class="row">
-                    <div class="col-12">
-                        <form zippy="editform">
-                            <div class="form-group">
-                                <label for="edittitle">Заголовок</label>
-                                <input type="text" required="required" class="form-control" zippy="edittitle">
-                            </div>
-                            <div class="form-group">
-                                <label for="editdetail">Змiст </label>
-                                <textarea style="height:200px;" class="form-control" zippy="editdetail"></textarea>
-                            </div>
-                            <div class="form-group ">
-                                <label for="editacctype">Тип доступу</label>
-                                <select zippy="editacctype" class="form-control">
-
-                                </select>
-                            </div>
-
-
-                            <div class="form-group">
-                                <label for="edittags">Теги</label>
-                                <div zippy="edittags"></div>
-                                <small>Щоб додати тег нажмiть Enter</small>
-                            </div>
-
-                            <a zippy="editcancel" class="btn btn-outline-secondary">Скасувати</a>
-                            <a zippy="editsave" class="btn btn-primary">Зберегти</a>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            {{/editor}}
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <hr>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div>
-                    <div class="navbar nav">
-                        <form class="form-inline" zippy="sform">
-
-                            <div class="form-group">
-                                <label for="skeyword">Пошук </label>
-                                <input required="required" zippy="skeyword" class="form-control mr-2" zippy="text">
-                                <div class="form-check">
-                                    <input zippy="searchtitle" type="checkbox" class="form-check-input">
-                                    <label class="form-check-label mr-2" for="planned">тільки в заголовках</label>
-                                </div>
-                                <select zippy="searchtype" class="form-control mr-2">
-                                    <option value="1">Фраза</option>
-                                    <option value="2">Комбінація слів</option>
-                                </select>
-
-                                <button type="submit" class="btn btn-primary                                        mr-2"><i
-                                        class="fa fa-search"></i></button>
-                                <a title="Знайти обрані" zippy="searchfav"><i class="fa fa-star" style="color:brown"></i></a>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <table class="table table-sm">
-                    <tr zippy="searchlist">
-                        <td zippy="stitle">
-                        </td>
-                        <td zippy="snodes">
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-
-
-       
-
-        <div id="fileedit" class="modal fade" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <form zippy="fileform" enctype="multipart/form-data">
-
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">&times;</span></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="editfile">Файл (до 10 Мб)</label>
-                                <input required="required" type="file" zippy="editfile" class="form-control
-                                       input-sm">
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn
-                                    btn-primary">OK
-                            </button>
-                        </div>
-                    </form>
-                </div>
-                
-            </div>
-            
-        </div>
-       
-
+ 
         
         
       
@@ -221,12 +20,13 @@
      <div class="  col-12" >
    <div class="row">
      <div class="col-md-4 col-12">
-               <div class=" mb-1">
+               <div class=" mb-1" style="height:30px;">
                    <a v-on:click.prevent="onNewNode"    v-show="selectedNode != null"  class="btn btn-primary btn-sm mr-2"             ><i class="fa fa-plus-circle"></i> Новий вузол</a>
                    <a v-on:click.prevent="onEditNode"   v-show="selectedNode != null && selectedNode.pid > 0" title="Редагувати вузол" class=" mr-2" ><i  class="fa fa-edit"></i></a>
-                   <a v-on:click.prevent="onCopyNode"   v-show="selectedNode != null && selectedNode.pid > 0" title="Вирізати" class=" mr-2"><i class="fa fa-cut"></i></a>
+                   <a v-on:click.prevent="onCutNode"    v-show="selectedNode != null && selectedNode.pid > 0" title="Вирізати" class=" mr-2"><i class="fa fa-cut"></i></a>
                    <a v-on:click.prevent="onPasteNode"  v-show="selectedNode != null && selectedNode.pid > 0 && cpn != null" title="Вставити" class=" mr-2"><i class="fa fa-paste"></i></a>
                    <a v-on:click.prevent="onDeleteNode" v-show="selectedNode != null && selectedNode.pid > 0" title="Вилучити" class=" mr-2"><i class="fa fa-trash"></i></a>
+
                 </div>
                 <div id="tree"  ></div>
                
@@ -235,25 +35,60 @@
      <div class="col-md-8 col-12" v-show="selectedNode != null">
          <div class="row">
            <div class="col-md-4 col-12">
-                <div class=" mb-1">
-                            <a class="btn btn-primary btn-sm  mr-2"   ><i                                       class="fa fa-plus-circle"></i> Новий топік</a>
-                            <a title="Редагувати"  class=" mr-2"><i class="fa fa-edit"></i></a>
-                            <a title="Вирізати"  class=" mr-2"><i class="fa fa-cut"></i></a>
-                            <a title="Копіювати для вставки  як   копію"  class=" mr-2"><i class="fa fa-copy"></i></a>
-                            <a title="Копіювати для вставки  як посилання"  class=" mr-2"><i                                     class="fa fa-external-link-alt"></i></a>
-                            <a title="Вставити"  class=" mr-2"><i class="fa fa-paste"></i></a>
-                            <a title="Вилучити"  class=" mr-2"><i class="fa fa-trash"></i></a>
-                            <a title="Зовнішнє посилання для перегляду топіка"  target="_blank" class=" mr-2"><i                                    class="fa      fa-link"></i></a>
+                <div class=" mb-1" style="height:30px;">
+                            <a v-on:click.prevent="onNewTopic()" class="btn btn-primary btn-sm  mr-2"   ><i  class="fa fa-plus-circle"></i> Новий топік</a>
+                            <a v-on:click.prevent="onEditTopic()" v-show="selectedTopic != null" title="Редагувати"  class=" mr-2"><i class="fa fa-edit"></i></a>
+                            <a v-on:click.prevent="onCutTopic"   v-show="selectedTopic != null" title="Вирізати"  class=" mr-2"><i class="fa fa-cut"></i></a>
+                            <a v-on:click.prevent="onCopyTopic"  v-show="selectedTopic != null" title="Копіювати для вставки  як   копію"  class=" mr-2"><i class="fa fa-copy"></i></a>
+                            <a v-on:click.prevent="onCopyLinkTopic" v-show="selectedTopic != null" title="Копіювати для вставки  як посилання"  class=" mr-2"><i                                     class="fa fa-external-link-alt"></i></a>
+                            <a v-on:click.prevent="onPasteTopic" v-show="cpt != null || cptl != null" title="Вставити"  class=" mr-2"><i class="fa fa-paste"></i></a>
+                            <a v-on:click.prevent="onDelTopic" v-show="selectedTopic != null" title="Вилучити"  class=" mr-2"><i class="fa fa-trash"></i></a>
+                            <a v-bind:href="extlink" v-show="selectedTopic != null && selectedNode.ispublic==true " title="Зовнішнє посилання для перегляду топіка"  target="_blank" class=" mr-2"><i                                    class="fa      fa-link"></i></a>
                         </div>           
-               <table class="able table-sm">
-               <tr>
-                   <td> </td>
-                   <td><i class="ml-2 fa fa-star"></i></td>
+               <table class="table table-sm table-hover">
+               <tr v-for="t in topics"    v-bind:class="{'bg-success':issel(t.topic_id)}" >
+                   <td     > <a v-on:click.prevent="onTopic(t)">  {{t.title}}</a> </td>
+                    
+                   
+                   <td class="text-right"><a v-on:click.prevent="onFav(t)"><small>
+                       <i v-show="t.fav==true"   class="fas fa-star"></i>
+                       <i v-show="t.fav==false"  class="far fa-star"></i>
+                       </small></a></td>
                </tr>
                </table>
           </div>        
            <div class="col-md-8 col-12" v-show="selectedTopic != null">
+                <div   class="row">
+                    <div class="col-12">
+                      <div v-html="topicData"></div>     
+                                                  
+                   </div>
+                   <div class="col-12">
 
+                        <table class="table table-sm">
+                            <tr>
+                                <td style="width:20px;"><i title="Теги" class="fa fa-tags"  style="font-weight:                                        bolder;font-size:16px;"></i>
+                                </td>
+                                <td><a v-on:click.prevent="onTag(tag)" v-for="tag in topicTags" class="mr-2"  >{{tag}}</a></td>
+
+                                <td style="width:20px;">
+                                    <i title="Прикріплені файли" class="fa           fa-paperclip"      style="font-weight:   bolder;font-size:16px;"></i>
+                                </td>
+                                <td>
+                                    <div v-for="f in topicFiles"  style="display:inline;;margin:2px;">
+                                        <a v-bind:href="f.link"  target="_blank" >{{f.filename}}</a>
+                                        <a v-on:click.prevent="onDelFile(f.file_id)" ><i style="color:red;font-size: smaller;"   class="fa  fa-times-circle  "></i> </a>
+                                    </div>
+                                    <a v-on:click.prevent="onAddFile" title="Додати файл"  ><i    class="fa   fa-upload ml-2"></i></a>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+
+
+                </div>                
+                
           </div>        
         </div>        
      </div>        
@@ -262,7 +97,39 @@
             <div class="col-12">
                 <hr>
             </div>
+
+            <div class="col-sm-12">
+              
+                    <div class="navbar nav">
+                        <form class="form-inline"  >
+
+                            <div class="form-group">
+                                <label for="skeyword">Пошук </label>
+                                <input  v-model="searchText"   class="form-control mr-2" >
+                                <div class="form-check">
+                                    <input  v-model="searchTitle"  type="checkbox" class="form-check-input">
+                                    <label class="form-check-label mr-2" for="planned">тільки в заголовках</label>
+                                </div>
+                                <select v-model="searchType"  class="form-control mr-2">
+                                    <option value="1">Фраза</option>
+                                    <option value="2">Комбінація слів</option>
+                                </select>
+
+                                <button v-on:click.prevent="onSearch"  type="button" class="btn btn-primary   mr-2"><i                                        class="fa fa-search"></i></button>                     
+                                <a v-on:click.prevent="onSearchFav" title="Знайти обрані" ><i class="fa fa-star" style="color:brown"></i></a>
+                            </div>
+                        </form>
+                    </div>
+              
+                <table class="table table-sm">
+                    <tr style="cursor:pointer" v-on:click="onSearchTopic(t)" v-for="t in searchResult">
+                        <td > {{t.title}}                         </td>
+                        <td > {{t.nodes}}                       </td>
+                    </tr>
+                </table>
+            </div>
         </div>
+
 </div>
 
 
@@ -294,10 +161,76 @@
             </div>
             
         </div>
-     
+    <div id="fileedit" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form id="fileform"  enctype="multipart/form-data">
 
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="editfile">Файл (до 10 Мб)</label>
+                                <input id="editfile" name="editfile"  required="required" type="file"  class="form-control        ">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button v-on:click.prevent="onSaveFile()" type="button" class="btn                                    btn-primary">OK
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+            </div>
+            
+        </div>
+         
+   <div id="topicedit" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg"  >
+                <div class="modal-content">
+                    <form  >
+
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        </div>
+                        <div class="modal-body">
+                       <div class="form-group">
+                                <label for="edittitle">Заголовок</label>
+                                <input id="edittitle" v-model="editTitle" type="text"  class="form-control"  >
+                            </div>
+                            <div class="form-group">
+                                <label for="editdetail">Змiст </label>
+                                <div id="editdetail" class="form-control"  ></div>
+                            </div>
+                            <div class="form-group ">
+                                <label for="editacctype">Тип доступу</label>
+                                <select v-model="editAccType" style="width:200px"  class="form-control">
+                                     <option value="0">Приватний</option>
+                                     <option value="1">Публiчний</option>
+                                     <option value="2">Спiльне  реагування</option>
+                                </select>
+                            </div>
+                              <div class="form-group">
+                                <label for="edittags">Теги</label>
+                                <input   v-model="editTags" type="text"  class="form-control"  >
+                                <small>Теги роздiляются  комою</small>
+                            </div>
+                       
+                       
+                           
+                        <div class="modal-footer">
+                            <button v-on:click.prevent="onSaveTopic()"  type="button" class="btn                                     btn-primary">OK                            </button>
+                        </div>
+                    </form> 
+                </div>
+            
+            </div>
+            
+                             
 </div>
-    
    
    {|={{ }}=|}     
    
@@ -315,17 +248,231 @@
             publicNode:false ,
             cpn:null ,
             cpt:null ,
+            cptl:null ,
+            searchResult:[] ,
+            topics:[] ,
+            topicData:"" ,
+            topicTags:[] ,
+            topicFiles:[] ,
+            searchType:1 ,
+            searchText:"" ,
+            searchTitle:false ,
+            selectedSearchId:0 ,
 
+            newTopic:false ,
+            editTitle:"" ,
+            editTags:"" ,
+         
+            editAccType:0 ,
+                 
             
-            
-        } } ,        
+        } } ,  
+        computed:{
+            extlink: function(){
+                if(this.selectedTopic == null) return "";
+                return "/topic/"+ this.selectedTopic.topic_id
+            }
+        },              
         methods: {             
+            issel:function(id){
+                  return this.selectedTopic != null && this.selectedTopic.topic_id == id
+            }   ,
+            onFav:function(t){
+               t.fav = !t.fav
+                  
+               callPageMethod('onFav',[t.topic_id,t.fav], null,(data)=> 
+               { 
+                      //   this.updateTopics(this.selectedNode.id)
+    
+               })          
+                  
+                            
+                  
+            }   ,
+            onSearchTopic:function(t){
+               var v = this
+               
+               var allNodes=  $('#tree').treeview('getEnabled'); 
+               $(allNodes).each(function(index, element) { 
+                           if(element.id==t.node_id) {
+                             $('#tree').treeview('selectNode', [ element, { silent: true } ]);
+                             $('#tree').treeview('revealNode', [ element, { silent: true } ]);
+                             v.selectedNode = element
+                             v.selectedSearchId = t.topic_id
+                             v.updateTopics(v.selectedNode.id)
+                             //v.onTopic(t.topic_id)
+
+                             
+                           }; 
+               })          
+            },
+            onSearch:function(t){
+               var criteria={
+                   "type":this.searchType,
+                   "text":this.searchText,
+                   "title":this.searchTitle,
+                   
+               } 
+               callPageMethod('onSearch',[], JSON.stringify(criteria),(data)=> 
+               { 
+                     this.searchResult = JSON.parse(data) 
+    
+               })          
+                
+            }   ,
+            onSearchFav:function(t){
+               var criteria={
+                   "fav":true
+               } 
+               callPageMethod('onSearch',[], JSON.stringify(criteria),(data)=> 
+               { 
+                     this.searchResult = JSON.parse(data) 
+    
+               })          
+                
+            }   ,
+            
+            onTag:function(tag){
+
+                          
+               var criteria={
+                   "tag":tag
+               } 
+               callPageMethod('onSearch',[], JSON.stringify(criteria),(data)=> 
+               { 
+                     this.searchResult = JSON.parse(data) 
+    
+               })           
+                  
+                            
+                  
+            }   ,
+            onDelFile:function(id){
+
+                          
+               callPageMethod('onDelFile',[id], null,(data)=> 
+               { 
+                     
+                  this.onTopic(this.selectedTopic)
+               })           
+                  
+                            
+                  
+            }   ,
+                 
+            
+            onAddFile:function(t){    
+                
+               $("#fileedit").modal('show') 
+                
+            },
+            onSaveFile:function(t){    
+                
+               if(editfile.reportValidity()==false) return
+                
+               var el = document.getElementById('fileform') ;
+               var f = new  FormData(el)  
+               
+                  callPageMethod('onAddFile',[this.selectedTopic.topic_id], f,(data)=> 
+                  {     
+                      this.onTopic(this.selectedTopic)  
+                  });               
+                  el.reset();
+                  $("#fileedit").modal('hide') 
+                     
+                
+            },
+                
+            onTopic:function(t){    //загрузка  топика
+                
+                   this.selectedTopic = t
+               
+                   callPageMethod('loadTopic',[t.topic_id], null,(data)=> 
+                   { 
+                      data = JSON.parse(data)
+                      this.topicData = data.detail
+                      this.editAccType = data.acctype
+                      this.topicTags = data.tags
+                      this.topicFiles = data.files
+                     
+                   })          
+                      
+                  
+            }   ,
+         
+            onNewTopic:function(){
+                  this.editAccType = 0;
+                  this.newTopic = true;
+                  this.editTitle = "";
+                  this.editTags = "";
+            
+ 
+                  $('#topicedit').modal('show');
+                  $('#editdetail').summernote("code","")
+         
+      
+            
+                    
+                                     
+            }   ,
+            onEditTopic:function(){
+                //  this.editAccType = this.selectedTopic.acctype;
+                  this.newTopic = false;
+                  this.editTitle = this.selectedTopic.title;
+                  this.editDetail = this.selectedTopic.detail;
+                  this.editTags = this.topicTags.join();
+                  $('#topicedit').modal('show');
+                  $('#editdetail').summernote("code",this.topicData)
+                
+            
+                
+                  
+            }   ,
+         
+            onSaveTopic:function(){
+             
+               if(edittitle.reportValidity() ==false) return;
+
+               
+               var d = {
+                   "title": this.editTitle,
+                   "acctype": this.editAccType,
+                   "tags": this.editTags,
+                   "data":$('#editdetail').summernote("code") ,
+               }
+               
+               
+               callPageMethod('saveTopic',[this.newTopic ? 0 : this.selectedTopic.topic_id, this.selectedNode.id], JSON.stringify(d) ,(data)=> 
+               {  
+               
+                    if(data != ""){
+                        toastr.error(data)
+                  
+                        return;
+                    }
+               
+//                   this.selectedSearchId = ret.id                   
+                   this.selectedTopic = null
+                   this.updateTopics(this.selectedNode.id)            
+         
+                   $('#topicedit').modal('hide');
+          
+               }  )
+                    
+        
+                 
+              
+            }   ,       
             onNewNode:function(){
                   this.publicNode = false;
                   this.newNode = true;
                   this.nameNode = "";
-                  $('#nodeedit').modal('show');
+                  $('#nodeedit').modal('show');  
             }   ,
+            
+  
+                
+            
             onSaveNode:function(){
              
                  if(editnodetitle.reportValidity() ){
@@ -346,7 +493,37 @@
                   $('#nodeedit').modal('show');
             
             }   ,
-            onCopyNode:function(){
+            onCutTopic:function(){
+               this.cpt = this.selectedTopic 
+            }   ,
+            onCopyTopic:function(){
+               this.cpt = this.selectedTopic 
+               this.cptl=null
+            }   ,
+            onCopyLinkTopic:function(){
+               this.cpt = null 
+               this.cptl = this.selectedTopic 
+            }   ,
+            onPasteTopic:function(){
+               if(this.cpt != null)  {
+                  this.opTopic(["paste",this.selectedTopic.topic_id,this.selectedNode.id])                               
+               }
+               if(this.cptl != null)  {
+                  this.opTopic(["pastel",this.selectedTopic.topic_id,this.selectedNode.id])                               
+               }
+               
+             
+               this.cpt = null 
+               this.cptl = null 
+               this.selectedTopic = null
+            }   ,
+            onDelTopic:function(){
+               this.opTopic(["delete",this.selectedTopic.topic_id])                           
+           
+               this.selectedTopic = null
+
+            }   ,
+            onCutNode:function(){
                this.cpn = this.selectedNode 
             }   ,
             onPasteNode:function(){
@@ -385,12 +562,59 @@
                
                 
             }   ,
+            opTopic:function(args){
+               
+               callPageMethod('opTopic',args, null,(data)=> 
+               {   
+                    if(data != ""){
+                        toastr.error(data)
+                  
+                        return;
+                    }
+
+                   this.selectedTopic=null
+                   this.updateTopics(this.selectedNode.id)
+                   
+               });
+               
+                
+            }   ,
+            updateTopics:function( nodeid){
+                
+                   callPageMethod('loadTopics',[nodeid], null,(data)=> 
+                   {   
+                          
+                         this.topics = JSON.parse(data)
+                         
+
+                         
+                         if(this.selectedSearchId >0) {
+                            for(let tt of this.topics )  {
+                                if(tt.topic_id == this.selectedSearchId) {
+                                    this.onTopic(tt);
+                                    this.selectedSearchId = 0
+                                }
+                            }
+                         }
+                         
+                         
+                         
+                   })
+     
+            }   ,
             
         },    
         watch:{
             selectedNode(newVal, oldVal) { 
-                if(newVal== null) selectedTopic=null;
-               //console.log(newVal) 
+                if(newVal == null) {
+                   selectedTopic=null;   
+                   return;
+                }
+               
+                this.updateTopics(newVal.id)
+               
+               
+               
             } 
         } ,
         mounted: function(){
@@ -399,6 +623,10 @@
                  })       
 
             updateTree();
+            
+            
+            
+            
         } 
      })        
         
@@ -426,52 +654,15 @@
                  });     
                  $('#tree').on('nodeUnselected ', function(event, data) {
                     vapp.selectedNode = null
+                    vapp.selectedTopic = null
                  });     
                     
                    
            });     
  }
  
- 
+     
         
-        
-            $('#nodeedit').modal({
-                show: false
-            });
-            $('#fileedit').modal({
-                show: false
-            });
-
-
-            function newfile() {
-
-                $('#fileedit').modal('show');
-            }
-
-            function newnode() {
-                $('#opname').val('add');
-                $('#editnodetitle').val('');
-                $('#nodeedit').modal('show');
-            }
-
-            function editnode() {
-                $('#opname').val('edit');
-                var arr = $('#tree').treeview('getSelected');
-                arr.forEach(function (entry) {
-                    $('#editnodetitle').val(entry.text);
-                });
-
-                $('#nodeedit').modal('show');
-            }
-
-            function check_treedelete() {
-                return confirm('Удалить узел');
-            }
-
-
-            function fav() {
-
-            }
 
             $('#editdetail').summernote({
                 height: 400,
@@ -498,7 +689,11 @@
 
             
             
-            
+     $(function() {
+         
+          
+         
+    });       
             
             
             
