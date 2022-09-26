@@ -144,8 +144,54 @@ class Order extends \App\Entity\Doc\Document
         return $html;
     }
 
-    protected function onState($state) {
+    //резеорвирование товаров
+    public  function reserve(){
+          
+          $this->unreserve();
+        
+          if(intval($this->headerdata['store'])==0)  return;
+        
+          $items = $this->unpackDetails('detaildata')  ;
+        
+          foreach ($items as $item) {
+                if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
+                    throw new \Exception(H::l("nominus", H::fqty($item->getQuantity($this->headerdata['store'])), $item->itemname));
+                }
+              
+          }
+          foreach ($items as $item) {
 
+                $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
+
+                foreach ($listst as $st) {
+                    $sc = new \App\Entity\Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
+                    $sc->setStock($st->stock_id);
+                  //  $sc->setOutPrice($item->price  );
+                    $sc->tag = \App\Entity\Entry::TAG_RESERV;
+                    $sc->save();
+                    
+                }
+           }
+        
+    }
+    //отмена  резерва
+    public  function unreserve(){
+           $conn = \ZDB\DB::getConnect();
+           $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
+    }
+    
+    protected function onState($state,$oldstate) {
+
+        if ($state == self::STATE_READYTOSHIP) {
+
+           $this->reserve()  ;
+        }
+
+        if ($state < 5 || $state == self::STATE_REFUSED || $state == self::STATE_FAIL || $state == self::STATE_CLOSED) {
+           
+           $this->unreserve()  ;
+            
+        }
         if ($state == self::STATE_INPROCESS) {
           
 

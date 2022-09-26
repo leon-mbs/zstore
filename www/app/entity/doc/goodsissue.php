@@ -289,7 +289,7 @@ class GoodsIssue extends Document
         return array(self::EX_EXCEL, self::EX_POS, self::EX_PDF);
     }
 
-    protected function onState($state) {
+    protected function onState($state,$oldstate) {
         if($state == Document::STATE_EXECUTED) {
            if($this->hasStore() && $this->payed > 0 && $this->payamount == $this->payed ) { //провеен  и оплачен
                $this->updateStatus(Document::STATE_CLOSED) ;

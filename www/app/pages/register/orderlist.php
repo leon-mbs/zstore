@@ -62,6 +62,8 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bgi'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bco'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bres'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bunres'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('btask'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bmove'));
@@ -112,6 +114,9 @@ class OrderList extends \App\Pages\Base
         $row->add(new Label('emp', $doc->username));
         $row->add(new Label('customer', $doc->customer_name));
         $row->add(new Label('amount', H::fa($doc->amount)));
+        
+        $row->add(new Label('isreserved' ))->setVisible($doc->hasStore());
+        
         $stname = Document::getStateName($doc->state);
 
         $row->add(new Label('state', $stname));
@@ -174,6 +179,16 @@ class OrderList extends \App\Pages\Base
             $this->_doc->updateStatus(Document::STATE_FAIL);
 
             $this->setWarn('order_canceled');
+        }
+        if ($sender->id == "bres") {
+
+            $this->_doc->reserve();
+
+        }
+        if ($sender->id == "bunres") {
+
+            $this->_doc->unreserve();
+
         }
         if ($sender->id == "btask") {
             $task = count($this->_doc->getChildren('Task')) > 0;
@@ -251,6 +266,8 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->btopay->setVisible(false);
         $this->statuspan->statusform->brd->setVisible(false);
         $this->statuspan->statusform->bmove->setVisible(false);
+        $this->statuspan->statusform->bres->setVisible(false);
+        $this->statuspan->statusform->bunres->setVisible(false);
 
         //новый
         if ($state < Document::STATE_EXECUTED) {
@@ -335,8 +352,12 @@ class OrderList extends \App\Pages\Base
           
         }
         
-        
-        
+       if ($state == Document::STATE_INPROCESS  && $this->_doc->headerdata['store'] >0 ) {
+           $reerved = $this->_doc->hasStore();
+           $this->statuspan->statusform->bres->setVisible(!$reerved);
+           $this->statuspan->statusform->bunres->setVisible($reerved);
+           
+       } 
         
         if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
             // $this->statuspan->statusform->bclose->setVisible(false);
@@ -352,14 +373,18 @@ class OrderList extends \App\Pages\Base
             $this->_tvars['askclose'] = true;
         }
 
-        $order = $this->_doc->cast();
-        //проверяем  что уже есть отправка
-        $list = $order->getChildren('TTN');
 
+        //проверяем  что уже есть отправка
+        $list = $this->_doc->getChildren('TTN');
+
+        if(count($list)>0)             $this->statuspan->statusform->bres->setVisible(false);
+        
         if (count($list) > 0 && $common['numberttn'] <> 1) {
             $this->statuspan->statusform->bttn->setVisible(false);
         }
-        $list = $order->getChildren('GoodsIssue');
+        $list = $this->_doc->getChildren('GoodsIssue');
+
+        if(count($list)>0)             $this->statuspan->statusform->bres->setVisible(false);
 
         if (count($list) > 0 && $common['numberttn'] <> 1) {
             $this->statuspan->statusform->bgi->setVisible(false);
@@ -380,6 +405,7 @@ class OrderList extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
         }
+        $this->_doc = $this->_doc->cast();
 
         $this->statuspan->setVisible(true);
         $this->statuspan->statusform->setVisible(true);

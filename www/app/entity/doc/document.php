@@ -402,7 +402,7 @@ class Document extends \ZCL\DB\Entity
         if ($oldstate != $state) {
             $doc = $this->cast();
              if($onlystate == false) {
-                 $doc->onState($state);
+                 $doc->onState($state,$oldstate);
              }
 
             \App\Entity\Subscribe::onDocumentState($doc->document_id, $state);
@@ -416,10 +416,12 @@ class Document extends \ZCL\DB\Entity
      * переопределяется в  дочерних документах
      *
      * @param mixed $state новый  статус
+     * @param mixed $oldstate старый статус
      */
-    protected function onState($state) {
+    protected function onState($state,$oldstate) {
 
     }
+  
     public function getPriorytyByState($state) {
         if($state == self::STATE_NEW)          return 100;
         if($state == self::STATE_CLOSED)       return 1;
