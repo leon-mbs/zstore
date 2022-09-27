@@ -160,10 +160,23 @@ class OrderList extends \App\Pages\Base
           if ($sender->id == "bres") {
             $store = $this->statuspan->resform->store->getValue();
             if($store == 0)  return;
-            $this->_doc->headerdata['store']=$store;
-            $this->_doc->save() ;
-            $this->_doc->reserve();
-            
+     
+            $conn = \ZDB\DB::getConnect();
+            $conn->BeginTrans();
+        
+            try{
+                $this->_doc->headerdata['store'] = $store;
+                $this->_doc->save() ;
+                $this->_doc->reserve();
+
+                $conn->CommitTrans();
+                       
+            }  catch(\Exception $e){
+                 $this->setError($e->getMessage()) ;
+                 $conn->RollbackTrans();
+                 return;
+            }
+
             $this->statuspan->resform->bres->setVisible(false);            
             $this->statuspan->resform->store->setVisible(false);            
             $this->statuspan->resform->bunres->setVisible(true);            
@@ -396,14 +409,14 @@ class OrderList extends \App\Pages\Base
         //проверяем  что уже есть отправка
         $list = $this->_doc->getChildren('TTN');
 
-        if(count($list)>0)             $this->statuspan->statusform->bres->setVisible(false);
+        if(count($list)>0)             $this->statuspan->resform->setVisible(false);
         
         if (count($list) > 0 && $common['numberttn'] <> 1) {
             $this->statuspan->statusform->bttn->setVisible(false);
         }
         $list = $this->_doc->getChildren('GoodsIssue');
 
-        if(count($list)>0)             $this->statuspan->statusform->bres->setVisible(false);
+        if(count($list)>0)             $this->statuspan->resform->setVisible(false);
 
         if (count($list) > 0 && $common['numberttn'] <> 1) {
             $this->statuspan->statusform->bgi->setVisible(false);
