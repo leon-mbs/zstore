@@ -6,30 +6,26 @@
             Зарезервованi товари  на {{date}}<br>
         </td>
     </tr>
-   <tr style=" font-weight: bolder;">
-        <td  colspan="4">
-            Контрагент {{cust}}<br><br>
-        </td>
-    </tr>
+   
     <tr style="font-weight: bolder;">
-        <th style="border: solid black 1px">Дата</th>
+        <th style="border: solid black 1px">Товар</th>
+        <th style="border: solid black 1px">Склад</th>
         <th style="border: solid black 1px">Документ</th>
+        <th style="border: solid black 1px">Покупатель</th>
 
-        <th align="right" style="border: solid black 1px">Дебет</th>
-        <th align="right" style="border: solid black 1px">Кредит</th>
-        <th align="right" style="border: solid black 1px">Сальдо</th>
+        <th align="right" style="border: solid black 1px">Кол.</th>
 
     </tr>
     {{#_detail}}
     <tr>
 
-        <td>{{document_date}}</td>
+        <td>{{itemname}}</td>
 
-        <td>{{meta_desc}} {{document_number}}</td>
+        <td>{{store}}</td>
+        <td>{{document_number}}</td>
+        <td>{{customer}}</td>
 
-        <td align="right">{{active}}</td>
-        <td align="right">{{passive}}</td>
-        <td align="right">{{bal}}</td>
+        <td align="right">{{qty}}</td>
 
     </tr>
     {{/_detail}}

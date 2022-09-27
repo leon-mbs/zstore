@@ -63,7 +63,7 @@ class PayList extends \App\Pages\Base
      //   $this->doclist->Reload();
         $this->add(new ClickLink('csv', $this, 'oncsv'));
 
-
+        $this->filterOnSubmit(null);
     }
 
     public function filterOnSubmit($sender) {
