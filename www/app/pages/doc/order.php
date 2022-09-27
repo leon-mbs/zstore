@@ -7,7 +7,7 @@ use App\Entity\Customer;
 use App\Entity\MoneyFund;
 use App\Entity\Doc\Document;
 use App\Entity\Item;
-use App\Entity\Store;
+
 use App\Helper as H;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\AutocompleteTextInput;
@@ -50,7 +50,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new TextArea('notes'));
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), 0));
         $this->docform->add(new DropDownChoice('salesource', H::getSaleSources(), H::getDefSaleSource()));
-        $this->docform->add(new DropDownChoice('store', Store::getList(), 0));
+
 
         $this->docform->add(new TextInput('editpaydisc'));
         $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
@@ -129,7 +129,7 @@ class Order extends \App\Pages\Base
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
 
-            $this->docform->store->setValue($this->_doc->headerdata['store']);
+
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
             $this->OnDelivery($this->docform->delivery);
             $this->docform->production->setChecked($this->_doc->headerdata['production']);
@@ -317,7 +317,7 @@ class Order extends \App\Pages\Base
         }
 
 
-        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+
         $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
         $this->_doc->headerdata['delivery_name'] = $this->docform->delivery->getValueName();
         $this->_doc->headerdata['ship_address'] = $this->docform->address->getText();

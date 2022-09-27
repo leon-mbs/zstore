@@ -35,6 +35,13 @@
 
     </tr>
     {{/outnumber}}
+    <tr>
+        <td></td>
+
+        <td valign="top"><b>Склад</b></td>
+        <td colspan="6">{{storename}}</td>
+
+    </tr>
     
     <tr>
         <td></td>

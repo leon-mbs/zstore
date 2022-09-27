@@ -489,6 +489,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         $this->_doc->headerdata['val'] = $this->docform->val->getValue();
         $this->_doc->headerdata['valname'] = $this->docform->val->getValueName();

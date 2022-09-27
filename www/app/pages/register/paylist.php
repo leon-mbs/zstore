@@ -25,8 +25,6 @@ class PayList extends \App\Pages\Base
 {
 
     private $_doc = null;
-    private $_totp = 0;
-    private $_totm = 0;
 
 
 
@@ -70,14 +68,21 @@ class PayList extends \App\Pages\Base
 
     public function filterOnSubmit($sender) {
 
-        $this->_totp=0;
-        $this->_totm=0;
         $this->docview->setVisible(false);
         $this->doclist->Reload();
+
+        $totp = 0;
+        $totm = 0;
+        foreach($this->doclist->getDataSource()->getItems() as $doc){
+            if( doubleval($doc->amount) >0 )   $totp += $doc->amount;
+            if( doubleval($doc->amount) <0 )   $totm += $doc->amount;
+        }        
         
-        $this->totp->setText(H::fa($this->_totp)) ;
-        $this->totm->setText(H::fa($this->_totm)) ;
-        $this->tottot->setText(H::fa($this->_totp - $this->_totm)) ;
+        
+        
+        $this->totp->setText(H::fa($totp)) ;
+        $this->totm->setText(H::fa($totm)) ;
+        $this->tottot->setText(H::fa($totp - $totm)) ;
         
         
         
@@ -110,8 +115,6 @@ class PayList extends \App\Pages\Base
 
         $row->add(new ClickLink('print'))->onClick($this, 'printOnClick', true);
         
-        $this->_totp += ($doc->amount > 0 ? $doc->amount : 0);
-        $this->_totm += ($doc->amount < 0 ? $doc->amount : 0);
         
     }
 
@@ -276,7 +279,7 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
         return $conn->GetOne($sql);
     }
 
-    public function getItems($start, $count, $sortfield = null, $asc = null) {
+    public function getItems($start=-1, $count=-1, $sortfield = null, $asc = null) {
 
         $conn = \ZDB\DB::getConnect();
         $sql = "select  p.*,d.customer_name,d.meta_id,d.document_date  from documents_view  d join paylist_view p on d.document_id = p.document_id where " . $this->getWhere() . " order  by  pl_id desc   ";

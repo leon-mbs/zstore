@@ -62,8 +62,6 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bgi'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bco'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bres'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bunres'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('btask'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bmove'));
@@ -71,6 +69,12 @@ class OrderList extends \App\Pages\Base
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
+        $this->statuspan->add(new Form('resform'))->setVisible(false);
+        $this->statuspan->resform->add(new SubmitButton('bres'))->onClick($this, 'resOnSubmit');
+        $this->statuspan->resform->add(new SubmitButton('bunres'))->onClick($this, 'resOnSubmit');
+        $this->statuspan->resform->add(new DropDownChoice('store',\App\Entity\Store::getList(),H::getDefStore()));
+        
+        
         $this->doclist->Reload();
         $this->add(new ClickLink('csv', $this, 'oncsv'));
 
@@ -152,6 +156,28 @@ class OrderList extends \App\Pages\Base
         }
     }
 
+    public function resOnSubmit($sender) {
+          if ($sender->id == "bres") {
+            $store = $this->statuspan->resform->store->getValue();
+            if($store == 0)  return;
+            $this->_doc->headerdata['store']=$store;
+            $this->_doc->save() ;
+            $this->_doc->reserve();
+            
+            $this->statuspan->resform->bres->setVisible(false);            
+            $this->statuspan->resform->store->setVisible(false);            
+            $this->statuspan->resform->bunres->setVisible(true);            
+
+        }
+        if ($sender->id == "bunres") {
+
+            $this->_doc->unreserve();
+            $this->statuspan->resform->bunres->setVisible(false);            
+
+        }
+        $this->doclist->Reload(false);
+     
+    }
     public function statusOnSubmit($sender) {
         if (\App\Acl::checkChangeStateDoc($this->_doc, true, true) == false) {
             return;
@@ -179,16 +205,6 @@ class OrderList extends \App\Pages\Base
             $this->_doc->updateStatus(Document::STATE_FAIL);
 
             $this->setWarn('order_canceled');
-        }
-        if ($sender->id == "bres") {
-
-            $this->_doc->reserve();
-
-        }
-        if ($sender->id == "bunres") {
-
-            $this->_doc->unreserve();
-
         }
         if ($sender->id == "btask") {
             $task = count($this->_doc->getChildren('Task')) > 0;
@@ -266,8 +282,9 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->btopay->setVisible(false);
         $this->statuspan->statusform->brd->setVisible(false);
         $this->statuspan->statusform->bmove->setVisible(false);
-        $this->statuspan->statusform->bres->setVisible(false);
-        $this->statuspan->statusform->bunres->setVisible(false);
+
+        $this->statuspan->resform->setVisible(false);
+
 
         //новый
         if ($state < Document::STATE_EXECUTED) {
@@ -352,10 +369,12 @@ class OrderList extends \App\Pages\Base
           
         }
         
-       if ($state == Document::STATE_INPROCESS  && $this->_doc->headerdata['store'] >0 ) {
+       if ($state == Document::STATE_INPROCESS   ) {
+           $this->statuspan->resform->setVisible(true);
            $reerved = $this->_doc->hasStore();
-           $this->statuspan->statusform->bres->setVisible(!$reerved);
-           $this->statuspan->statusform->bunres->setVisible($reerved);
+           $this->statuspan->resform->bres->setVisible(!$reerved);
+           $this->statuspan->resform->store->setVisible(!$reerved);
+           $this->statuspan->resform->bunres->setVisible($reerved);
            
        } 
         

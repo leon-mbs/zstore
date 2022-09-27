@@ -185,13 +185,22 @@
                         <button zippy="bco" class="btn btn-info  mr-2">  Закупка               </button>
                         <button zippy="btask" type="submit" class=" btn btn-info mr-2 ">Створити наряд</button>
                         <button zippy="bref" class="btn btn-danger  mr-4"><i class="fas fa-thumbs-down"></i> Анульований                </button>
-                        <button zippy="bres" class="btn btn-info  mr-4"> Резервувати товари                </button>
-                        <button zippy="bunres" class="btn btn-info  mr-4"> Зняти з резерву                </button>
                             {{#isadmins}}
                           
-                        <a href="javascript:void(0);" data-toggle="modal"  data-target="#modmove"  zippy="bmove" class="btn btn-primary  mr-2">Перевести <i class="fa fa-arrow-right "></i>  </a>
+                        <a href="javascript:void(0);" data-toggle="modal"  data-target="#modmove"  zippy="bmove" class="btn btn-primary  mr-4">Перевести <i class="fa fa-arrow-right "></i>  </a>
                          
                             {{/isadmins}}
+                            
+                            
+                    </form>
+                     <form zippy="resform" class="form-inline mt-1">
+                        <label data-label="bres";>Резервувати товари </label>
+                        <select   zippy="store"></select>
+                         
+                        <button zippy="bres" class="btn btn-info  ">OK                 </button>
+                        <button zippy="bunres" class="btn btn-info "> Зняти з резерву                </button>
+
+
                     </form>
                 </div>
 

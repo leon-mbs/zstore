@@ -184,7 +184,7 @@ class Order extends \App\Entity\Doc\Document
 
         if ($state == self::STATE_READYTOSHIP) {
 
-           $this->reserve()  ;
+         //  $this->reserve()  ;
         }
 
         if ($state < 5 || $state == self::STATE_REFUSED || $state == self::STATE_FAIL || $state == self::STATE_CLOSED) {
