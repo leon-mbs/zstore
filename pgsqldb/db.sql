@@ -1295,7 +1295,7 @@ SELECT
   pv.pa_id AS pa_id,
   pv.pp_id AS pp_id
 FROM (prodstageagenda a
-  JOIN prodstage pv
+  JOIN prodstage_view pv
     ON ((a.st_id = pv.st_id)));
 
 

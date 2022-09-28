@@ -81,7 +81,7 @@
                 </div>
 
                
-                <input v-on:click="onadddoc" class="btn btn-success  " type="button" value="Додаит">
+                <input v-on:click="onadddoc" class="btn btn-success  " type="button" value="Додати">
             </form>
       </div>
       </div>
@@ -142,7 +142,7 @@
                             <input name="adddescfile" class="form-control" type="text"    >
                         </div>
                         <input v-on:click="onaddfile" class="btn btn-success  " type="button" value="Додати">
-                        <input type="hidden" name="MAX_FILE_SIZE" value="5000000">
+
 
                     </form>   
               </div>
@@ -433,7 +433,7 @@
                 } ,  
                 delfile:function( id){
                     
-                   callPageMethod($this.path+'::delfile',[ id], null,(data)=> 
+                   callPageMethod(this.path+'::delfile',[ id], null,(data)=> 
                      {
                         this.loadfiles() 
                      });

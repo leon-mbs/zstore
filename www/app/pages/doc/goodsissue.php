@@ -172,6 +172,7 @@ class GoodsIssue extends \App\Pages\Base
             if ($basedocid > 0) {  //создание на  основании
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
+                     
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'Order') {
 
@@ -208,11 +209,16 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->total->setText(H::fa($order->amount));
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
-                        if($basedoc->state == Document::STATE_WP || $basedoc->state == Document::STATE_PAYED) {
+                        if($basedoc->state == Document::STATE_WP || $basedoc->hasPayments()) {
                             $this->_doc->headerdata['prepaid']  = abs($basedoc->payamount);                            
                         }
 
 
+                           if($order->headerdata['store']>0) {
+                                 $this->docform->store->setValue($order->headerdata['store']);
+                                 $order->unreserve();
+                           }
+                           
                            if($basedoc->headerdata['paydisc']>0) {
                              $this->docform->editpaydisc->setText($basedoc->headerdata['paydisc']);
                              $this->docform->paydisc->setText($basedoc->headerdata['paydisc']);
@@ -230,8 +236,8 @@ class GoodsIssue extends \App\Pages\Base
                         
 
  
-                        $this->docform->editpayed->setText($this->docform->editpayamount->getText());
-                        $this->docform->payed->setText($this->docform->payamount->getText());
+                      //  $this->docform->editpayed->setText($this->docform->editpayamount->getText());
+                     //   $this->docform->payed->setText($this->docform->payamount->getText());
 
                  
 
@@ -683,8 +689,16 @@ class GoodsIssue extends \App\Pages\Base
 
 
             $conn->CommitTrans();
-
-            App::Redirect("\\App\\Pages\\Register\\GIList", $this->_doc->document_id);
+            
+            
+            
+            if (false == \App\ACL::checkShowReg('GIList',false)) {
+                 App::RedirectHome() ;
+            }
+            else {
+                 App::Redirect("\\App\\Pages\\Register\\GIList", $this->_doc->document_id);     
+            }
+           
 
         } catch(\Throwable $ee) {
             global $logger;
@@ -785,7 +799,7 @@ class GoodsIssue extends \App\Pages\Base
             
             $total -= $prepaid;
         }
-
+        //внесена  оплата
         $this->docform->editpayed->setText(H::fa($total));
         $this->docform->payed->setText(H::fa($total));
 

@@ -49,8 +49,10 @@
                         <th>Замовник</th>
                         <th class="text-right">Сума</th>
                         <th>Статус</th>
+                        <th>Вiдповiдальний</th>
 
 
+                        <th></th>
                         <th></th>
                         <th></th>
                         <th></th>
@@ -66,9 +68,13 @@
 
 
                         <td class="text-nowrap" zippy="state"></td>
+                        <td   zippy="emp"></td>
                         <td zippy="onotes"></td>
                         <td>
                             <a zippy="pay" title="Оплата"><i class="fa fa-credit-card"></i></a>
+                        </td>
+                        <td>
+                            <i  zippy="isreserved" title="Зарезервованi товари" class="fa fa-archive"></i>
                         </td>
 
                         <td class="text-nowrap">
@@ -179,12 +185,46 @@
                         <button zippy="bco" class="btn btn-info  mr-2">  Закупка               </button>
                         <button zippy="btask" type="submit" class=" btn btn-info mr-2 ">Створити наряд</button>
                         <button zippy="bref" class="btn btn-danger  mr-4"><i class="fas fa-thumbs-down"></i> Анульований                </button>
-                            {{#isadmins}}
                           
-                        <a href="javascript:void(0);" data-toggle="modal"  data-target="#modmove"  zippy="bmove" class="btn btn-primary  mr-2">Перевести <i class="fa fa-arrow-right "></i>  </a>
                          
-                            {{/isadmins}}
+                         
+                            
+                            
+                    </form> 
+                       {{#isadmins}}
+                      <table>  <tr><td>  
+                     <form zippy="moveform" class="form-inline mt-1">
+                        <label class="mr-2">Перевести на: </label>
+                          {{#usebranch}}
+
+                                <label for="brmove">фiлiя </label>
+                                <select zippy="brmove" class="form-control mr-2 ">
+                                    <option value="0">Не вказана</option>
+                                </select>
+                          
+                               {{/usebranch}}
+                          
+                                <label for="usmove">користувач </label>
+                                <select class="form-control mr-2" zippy="usmove" class="form-control mr-2 ">
+
+                                </select>
+                                <button zippy="bmove" type="submit" class="btn btn-info  mr-4 ">OK                 </button>
+                   
+                     </form>
+                       {{/isadmins}} 
+                       
+                     </td><td>  
+                       
+                     <form zippy="resform" class="form-inline mt-1">
+                        <label data-label="bres";>Резервувати товари </label>
+                        <select   zippy="store"></select>
+                         
+                        <button zippy="bres" class="btn btn-info  ">OK                 </button>
+                        <button zippy="bunres" class="btn btn-info "> Зняти з резерву                </button>
+
+
                     </form>
+                   </td></tr></table>
                 </div>
 
 
@@ -192,41 +232,7 @@
 
             </div>
         </div>
-         <div id="modmove" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered   ">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Перевести замовлення на</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form zippy="fmove">
-                               {{#usebranch}}
-                            <div class="form-group ">
-                                <label for="brmove">Фiлiя </label>
-                                <select zippy="brmove" class="form-control  ">
-                                    <option value="0">Не вказана</option>
-                                </select>
-                            </div>
-                               {{/usebranch}}
-                            <div class="form-group ">
-                                <label for="usmove">Користувач </label>
-                                <select zippy="usmove" class="form-control  ">
-
-                                </select>
-                            </div>
-                            <div class="input-group  ">
-                                <input type="submit" value="OK"   class="  btn btn-info  ">
-                            </div>
-                           </form>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
+       
 
      
         {{#askclose}}

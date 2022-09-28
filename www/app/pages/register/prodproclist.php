@@ -482,17 +482,40 @@ class ProdProcList extends \App\Pages\Base
 
 
     public function onProcStatus($sender) {
+      
+        $stages = ProdStage::find('pp_id=' . $this->_proc->pp_id);
+    
+      
         if ($sender->id == "btnstinprocess") {
             $this->_proc->state = ProdProc::STATE_INPROCESS;
         }
         if ($sender->id == "btnstsuspend") {
             $this->_proc->state = ProdProc::STATE_STOPPED;
+            
+            foreach($stages as $st) {
+                $st->state= ProdStage::STATE_STOPPED;
+                $st->save();
+            }
+            
         }
         if ($sender->id == "btnstclose") {
             $this->_proc->state = ProdProc::STATE_FINISHED;
+            foreach($stages as $st) {
+                $st->state= ProdStage::STATE_FINISHED;
+                $st->save();
+            }
+            
+            
+            
         }
         if ($sender->id == "btnstcancel") {
             $this->_proc->state = ProdProc::STATE_CANCELED;
+            foreach($stages as $st) {
+                $st->state= ProdStage::STATE_STOPPED;
+                $st->save();
+            }
+            
+            
         }
         $this->_proc->save();
         $this->listpan->showpan->setVisible(false);

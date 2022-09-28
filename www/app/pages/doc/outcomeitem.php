@@ -36,13 +36,14 @@ class OutcomeItem extends \App\Pages\Base
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
-
+        $bid = \App\System::getBranch();
+     
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
 
         $tostore = array();
         $conn = \ZDB\DB::getConnect();
         if ($this->_tvars["usebranch"]) {
-            $rs = $conn->Execute("select  s.store_id,s.storename,b.branch_id ,b.branch_name from stores s join branches b on s.branch_id = b.branch_id where b.disabled <>  1   order  by branch_name, storename");
+            $rs = $conn->Execute("select  s.store_id,s.storename,b.branch_id ,b.branch_name from stores s join branches b on s.branch_id = b.branch_id where b.disabled <>  1 and b.branch_id <> {$bid}  order  by branch_name, storename");
             foreach ($rs as $it) {
                 $tostore[$it['store_id']] = $it['branch_name'] . ", " . $it['storename'];
             }
@@ -219,10 +220,7 @@ class OutcomeItem extends \App\Pages\Base
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
-        if ($this->checkForm() == false) {
-            return;
-        }
-
+ 
 
         $this->_doc->notes = $this->docform->notes->getText();
 
@@ -235,6 +233,12 @@ class OutcomeItem extends \App\Pages\Base
 
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
+      
+       if ($this->checkForm() == false) {
+            return;
+        }
+      
+      
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -280,7 +284,7 @@ class OutcomeItem extends \App\Pages\Base
 
                             $indoc->branch_id = $st->branch_id;
                         }
-                        $indoc->document_number = $indoc->nextNumber($indoc->branch_id);
+                        $indoc->document_number =  $indoc->nextNumber($indoc->branch_id);
                         
                         $admin  =\App\Entity\User::getByLogin('admin') ;
                         $indoc->user_id = $admin->user_id;

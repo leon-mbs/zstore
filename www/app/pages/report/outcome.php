@@ -400,6 +400,8 @@ class Outcome extends \App\Pages\Base
         $header['isdisc'] = $disc > 0;
         $header['totall'] = H::fa($totsum - $disc);
 
+        $header['noshowpartion'] = $this->_tvars['noshowpartion'] ;
+
         $header['_type1'] = false;
         $header['_type2'] = false;
         $header['_type3'] = false;

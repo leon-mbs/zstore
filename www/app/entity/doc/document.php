@@ -128,7 +128,7 @@ class Document extends \ZCL\DB\Entity
         $prev = Document::getFirst(" document_id <> {$this->document_id} and user_id = {$this->user_id} and  meta_id={$this->meta_id}","document_id  desc");
         $diff = time() - $prev->lastupdate ;
         if($diff <= 10 && $prev != false && $this->amount==$prev->amount) {
-           throw new \Exception(Helper::l("doubledoc"));  
+          // throw new \Exception(Helper::l("doubledoc"));  
         }
         
         
@@ -402,7 +402,7 @@ class Document extends \ZCL\DB\Entity
         if ($oldstate != $state) {
             $doc = $this->cast();
              if($onlystate == false) {
-                 $doc->onState($state);
+                 $doc->onState($state,$oldstate);
              }
 
             \App\Entity\Subscribe::onDocumentState($doc->document_id, $state);
@@ -416,10 +416,12 @@ class Document extends \ZCL\DB\Entity
      * переопределяется в  дочерних документах
      *
      * @param mixed $state новый  статус
+     * @param mixed $oldstate старый статус
      */
-    protected function onState($state) {
+    protected function onState($state,$oldstate) {
 
     }
+  
     public function getPriorytyByState($state) {
         if($state == self::STATE_NEW)          return 100;
         if($state == self::STATE_CLOSED)       return 1;
@@ -560,7 +562,8 @@ class Document extends \ZCL\DB\Entity
     }
 
     public function nextNumber($branch_id = 0) {
-
+        $doc = $this->cast();
+ 
         $conn = \ZDB\DB::getConnect();
         $branch = "";
         if ($this->branch_id > 0) {
@@ -569,16 +572,32 @@ class Document extends \ZCL\DB\Entity
         if ($branch_id > 0) {
             $branch = " and branch_id=" . $branch_id;
         }
-            $limit =" limit 0,1";
+         $limit =" limit 0,1";
             if($conn->dataProvider=="postgres") {
                 $limit =" limit 1";
             }  
         $sql = "select document_number from  documents  where   meta_id='{$this->meta_id}'   {$branch}  order  by document_id desc ".$limit;
         $prevnumber = $conn->GetOne($sql);
         if (strlen($prevnumber) == 0) {
-            $prevnumber = $this->getNumberTemplate();
+            $prevnumber = $doc->getNumberTemplate();
+        } else {
+ //           $prevnumber = $d->document_number;             
+        }
+        $letter = preg_replace('/[0-9]/', '', $prevnumber);
+        $letter = $conn->qstr($letter.'%');
+
+        $sql = "select document_number from  documents  where   document_number like {$letter}     {$branch}  order  by document_id desc ".$limit;
+        $prevnumber = $conn->GetOne($sql);
+           
+        if (strlen($prevnumber) == 0) {
+            $prevnumber =  $doc->getNumberTemplate();
+        } else {
+//            $prevnumber = $d->document_number;             
         }
 
+        
+        
+        
         if (strlen($prevnumber) == 0) {
             return '';
         }
@@ -588,17 +607,11 @@ class Document extends \ZCL\DB\Entity
         }
 
         $letter = preg_replace('/[0-9]/', '', $prevnumber);
-        for ($i = 0; $i < 10; $$i++) {
-            $next = $letter . sprintf("%05d", ++$number);
-
-            $ch = $conn->GetOne("select count(*) from documents     where   meta_id='{$this->meta_id}'   {$branch} and document_number=" . $conn->qstr($next));
-            if ($ch == 0) {
-                return $next;
-            }
-        }
+        $next = $letter . sprintf("%05d", ++$number);
+ 
 
 
-        return '';
+        return $next;
     }
 
     /**

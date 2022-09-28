@@ -1,0 +1,48 @@
+<html>
+   <head>
+        <title> Акт звiрки   </title>
+
+    </head>
+    <body>
+        <div class="row">
+            <div class="col-12   col-xl-10">
+                <h3>Акт звiрки</h3>
+                <div class="navbar nav">
+                    <form zippy="filter" class="form-inline">
+
+
+                        <label for="to">Тип</label>
+                        <select class="form-control mr-2" zippy="type"> 
+                             <option value="0">Не вибрано</option>
+                             <option value="1">Покупцi</option>
+                             <option value="2">Постачальники</option>
+                        </select>
+                        <label for="cust" data-label="cust">контрагент</label>
+                        <select class="form-control select2" zippy="cust"> 
+                             <option value="0">Не вибрано</option>
+                        </select>
+
+
+                        <input class="btn btn-primary  ml-2" type="submit" value="ОК">
+
+
+                    </form>
+                </div>
+
+
+                <div zippy="detail">
+                    <div>
+                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
+                        <a href="/showreport/xls/compareact" target="_blank" title="Експорт в Excel"><i class="fa fa-file-excel mr-2"></a>
+                        <a href="/showreport/pdf/compareact" target="_blank" title="Експорт в PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
+                                                                            
+
+                    </div>
+                    <div zippy="preview" class="table-responsive-sm">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

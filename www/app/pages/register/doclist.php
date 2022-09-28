@@ -102,8 +102,10 @@ class DocList extends \App\Pages\Base
         $this->statusform->add(new SubmitButton('bap'))->onClick($this, 'statusOnSubmit');
         $this->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
         $this->statusform->add(new SubmitButton('bstatus'))->onClick($this, 'statusOnSubmit');
+        $this->statusform->add(new SubmitButton('buser'))->onClick($this, 'statusOnSubmit');
         $this->statusform->add(new TextInput('refcomment'));
         $this->statusform->add(new DropDownChoice('mstates',Document::getStateListMan()));
+        $this->statusform->add(new DropDownChoice('musers',array()));
     
         $this->statusform->add(new ClickLink('bprint'))->onClick($this, 'printlabels',true);
         $this->add(new ClickLink('csv', $this, 'oncsv'));
@@ -141,6 +143,9 @@ class DocList extends \App\Pages\Base
         $this->filter->from->setDate(time() - (7 * 24 * 3600));
         $this->filter->doctype->setValue(0);
         $this->filter->status->setValue(0);
+        $this->filter->author->setValue(0);
+        $this->filter->searchnumber->setText("") ;
+        $this->filter->searchtext->setText("") ;
         $this->filterOnSubmit($this->filter);
     }
 
@@ -318,6 +323,35 @@ class DocList extends \App\Pages\Base
                                               $this->_doc->meta_name=='ProdReceipt'         );
         
 
+        $this->statusform->musers->setValue(0);
+        $u = array() ;
+        
+        foreach(\App\Entity\User::find("disabled <> 1","username asc") as $_u)  
+        {
+            if($_u->rolename == 'admins')   {
+                $u[$_u->user_id]=$_u->username;
+            }  else {
+                $aclexe = explode(',', $_u->aclexe);
+
+                if (in_array($this->_doc->meta_id, $aclexe)) {
+                     $u[$_u->user_id] = $_u->username;
+
+                }
+                $aclstate = explode(',', $_u->aclstate);
+
+                if (in_array($this->_doc->meta_id, $aclstate)) {
+                     $u[$_u->user_id] = $_u->username;
+
+                }
+                
+            }
+        }         
+        $this->statusform->musers->setOptionList($u);
+        $user = System::getUser();
+        if(in_array($user->user_id,array_keys($u))) {
+            $this->statusform->musers->setValue($user->user_id);
+        }
+        
     }
 
     //редактирование
@@ -485,6 +519,7 @@ class DocList extends \App\Pages\Base
         return Customer::getList($sender->getText());
     }
 
+  
     public function statusOnSubmit($sender) {
         if (\App\ACL::checkExeDoc($this->_doc, true, false) == false) {
             $this->setError('notallowedexedoc');
@@ -529,6 +564,15 @@ class DocList extends \App\Pages\Base
            if($newst >0  && $newst != $this->_doc->state ) {
               $this->_doc->updateStatus($newst,true); 
            }
+           
+           
+       }        
+       if ($sender->id == "buser") {
+           $user_id = intval( $this->statusform->musers->getValue() );
+           if($user_id==0)  return;
+           
+           $this->_doc->user_id = $user_id;
+           $this->_doc->save();
            
            
        }        

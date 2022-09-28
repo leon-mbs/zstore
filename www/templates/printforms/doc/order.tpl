@@ -21,21 +21,6 @@
         <td>{{delivery}}</td>
         <td colspan="7">Адреса: {{ship_address}}</td>
     </tr>
-     {{#outnumber}}
-    <tr>
-        <td></td>
-
-        <td valign="top"><b>Зовн. номер</b></td>
-        <td colspan="6">{{outnumber}}</td>
-
-    </tr>
-    {{/outnumber}}
-
-    <tr>
-        <td style="font-weight: bolder;font-size: larger;" align="center" colspan="10" valign="middle">
-            Замовлення № {{document_number}} від {{date}}
-        </td>
-    </tr>
     {{#isoutnumber}}
     <tr>
         <td></td>
@@ -44,6 +29,13 @@
     </tr>
 
     {{/isoutnumber}}
+
+    <tr>
+        <td style="font-weight: bolder;font-size: larger;" align="center" colspan="10" valign="middle">
+            Замовлення № {{document_number}} від {{date}}
+        </td>
+    </tr>
+
 
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>

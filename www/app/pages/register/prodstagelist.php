@@ -80,6 +80,8 @@ class ProdStageList extends \App\Pages\Base
         $this->statuspan->add(new ClickLink("btntoprod", $this, "toprodOnClick"));
         $this->statuspan->add(new ClickLink("btnfromprod", $this, "fromprodOnClick"));
         $this->statuspan->add(new ClickLink("btnclose", $this, "closeOnClick"));
+        $this->statuspan->add(new ClickLink("btnstop", $this, "stopOnClick"));
+        $this->statuspan->add(new ClickLink("btnstart", $this, "startOnClick"));
 
         $this->statuspan->add(new DataView('doclist', new  ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_docs')), $this, 'onDocRow'));
         $this->statuspan->add(new \App\Widgets\DocView('docview'))->setVisible(false);
@@ -362,7 +364,13 @@ class ProdStageList extends \App\Pages\Base
         foreach ($items as $item) {
 
             $col = "#00ff00";
-
+            if($item->state==ProdStage::STATE_FINISHED) {
+              $col = "#ACACAC";  
+            }
+            if($item->state==ProdStage::STATE_STOPPED) {
+              $col = "#FFC0C0";   
+            }
+            
             $tasks[] = new \ZCL\Calendar\CEvent($item->sta_id, $item->stagename, $item->startdate, $item->enddate, $col);
         }
 
@@ -420,7 +428,23 @@ class ProdStageList extends \App\Pages\Base
     }
 
     public function closeOnClick($sender) {
+        $this->_stage->state = ProdStage::STATE_FINISHED;
+        $this->_stage->save();
+        $this->statuspan->setVisible(false);
+        $this->listpan->setVisible(true);
+
+        $this->listpan->stlist->Reload();
+    }
+    public function startOnClick($sender) {
         $this->_stage->state = ProdStage::STATE_INPROCESS;
+        $this->_stage->save();
+        $this->statuspan->setVisible(false);
+        $this->listpan->setVisible(true);
+
+        $this->listpan->stlist->Reload();
+    }
+    public function stopOnClick($sender) {
+        $this->_stage->state = ProdStage::STATE_STOPPED;
         $this->_stage->save();
         $this->statuspan->setVisible(false);
         $this->listpan->setVisible(true);
@@ -437,11 +461,24 @@ class ProdStageList extends \App\Pages\Base
 
 
         $this->statuspan->btnclose->setVisible(true);
+        $this->statuspan->btnstart->setVisible(true);
+        $this->statuspan->btnstop->setVisible(true);
         $this->statuspan->btntoprod->setVisible(true);
         $this->statuspan->btnfromprod->setVisible(true);
 
         if ($this->_stage->state == ProdStage::STATE_NEW) {
             $this->statuspan->btnclose->setVisible(false);
+            $this->statuspan->btnstop->setVisible(false);
+
+        }
+        if ($this->_stage->state == ProdStage::STATE_INPROCESS) {
+            $this->statuspan->btnstart->setVisible(false);
+
+        }
+        if ($this->_stage->state == ProdStage::STATE_STOPPED) {
+            $this->statuspan->btnstop->setVisible(false);
+            $this->statuspan->btntoprod->setVisible(false);
+            $this->statuspan->btnfromprod->setVisible(false);
 
         }
 
@@ -449,6 +486,8 @@ class ProdStageList extends \App\Pages\Base
             $this->statuspan->btntoprod->setVisible(false);
             $this->statuspan->btnfromprod->setVisible(false);
             $this->statuspan->btnclose->setVisible(false);
+            $this->statuspan->btnstart->setVisible(false);
+            $this->statuspan->btnstop->setVisible(false);
 
         }
 

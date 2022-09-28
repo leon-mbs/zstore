@@ -823,7 +823,14 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
             if ($cat == -1) {
                 $where = $where . " and cat_id=0";
             } else {
-                $where = $where . " and cat_id=" . $cat;
+                
+                
+                $c = Category::load($cat) ;
+                $ch = $c->getChildren();
+                $ch[]=$cat;
+                                
+                $cats = implode(",",$ch)  ;              
+                $where = $where . " and cat_id in ({$cats}) " ;
             }
         }
 

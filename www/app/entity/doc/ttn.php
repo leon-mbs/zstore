@@ -238,7 +238,7 @@ class TTN extends Document
         return true;
     }
 
-    public function onState($state) {
+    public function onState($state,$oldstate) {
 
         if ($state == Document::STATE_INSHIPMENT) {
             //расходы на  доставку
