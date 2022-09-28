@@ -48,7 +48,7 @@ class Pay extends \ZCL\DB\Entity
      * @param mixed $mf денежный счет
      * @param mixed $comment коментарий
      */
-    public static function addPayment($document_id, $paydate, $amount, $mf_id,   $comment = '') {
+    public static function addPayment($document_id, $paydate, $amount, $mf_id,   $comment = '',$nobank=false) {
         if (0 == (float)$amount || 0 == (int)$document_id || 0 == $mf_id) {
             return;
         }
@@ -75,7 +75,7 @@ class Pay extends \ZCL\DB\Entity
             //банковский процент
 
 
-            if ($mf->beznal == 1) {
+            if ($mf->beznal == 1 && $nobank==false) {
                 if (($mf->btran > 0 && $amount < 0) || ($mf->btranin > 0 && $amount > 0)) {
                     $amount = abs($amount);
                     $payb = new \App\Entity\Pay();

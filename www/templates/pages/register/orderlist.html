@@ -190,9 +190,9 @@
                          
                             
                             
-                    </form>
+                    </form> 
                        {{#isadmins}}
-                         
+                      <table>  <tr><td>  
                      <form zippy="moveform" class="form-inline mt-1">
                         <label class="mr-2">Перевести на: </label>
                           {{#usebranch}}
@@ -205,13 +205,16 @@
                                {{/usebranch}}
                           
                                 <label for="usmove">користувач </label>
-                                <select zippy="usmove" class="form-control mr-2 ">
+                                <select class="form-control mr-2" zippy="usmove" class="form-control mr-2 ">
 
                                 </select>
-                                <button zippy="bmove" type="submit" class="btn btn-info  ">OK                 </button>
+                                <button zippy="bmove" type="submit" class="btn btn-info  mr-4 ">OK                 </button>
                    
                      </form>
                        {{/isadmins}} 
+                       
+                     </td><td>  
+                       
                      <form zippy="resform" class="form-inline mt-1">
                         <label data-label="bres";>Резервувати товари </label>
                         <select   zippy="store"></select>
@@ -221,6 +224,7 @@
 
 
                     </form>
+                   </td></tr></table>
                 </div>
 
 

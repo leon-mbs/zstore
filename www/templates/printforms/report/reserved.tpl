@@ -11,7 +11,7 @@
         <th style="border: solid black 1px">Товар</th>
         <th style="border: solid black 1px">Склад</th>
         <th style="border: solid black 1px">Документ</th>
-        <th style="border: solid black 1px">Покупатель</th>
+        <th style="border: solid black 1px">Покупець</th>
 
         <th align="right" style="border: solid black 1px">Кол.</th>
 
