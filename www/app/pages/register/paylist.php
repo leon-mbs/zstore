@@ -75,7 +75,7 @@ class PayList extends \App\Pages\Base
         $totm = 0;
         foreach($this->doclist->getDataSource()->getItems() as $doc){
             if( doubleval($doc->amount) >0 )   $totp += $doc->amount;
-            if( doubleval($doc->amount) <0 )   $totm += $doc->amount;
+            if( doubleval($doc->amount) <0 )   $totm += (0 - $doc->amount);
         }        
         
         
