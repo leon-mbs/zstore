@@ -18,6 +18,7 @@ class Entry extends \ZCL\DB\Entity
    const TAG_RBAY = -8;   //возврат  поставщику
    const TAG_TOPROD = -16;   //списание в  производство
    const TAG_FROMPROD = -32;   //оприходование  с  производства
+   const TAG_RESERV = -64;   //резервирование
     
     
     

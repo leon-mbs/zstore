@@ -364,13 +364,13 @@ class ProdStageList extends \App\Pages\Base
         foreach ($items as $item) {
 
             $col = "#00ff00";
-          /*  if($item['state']==ProdStage::STATE_FINISHED) {
+            if($item->state==ProdStage::STATE_FINISHED) {
               $col = "#ACACAC";  
             }
-            if($item['state']==ProdStage::STATE_STOPPED) {
+            if($item->state==ProdStage::STATE_STOPPED) {
               $col = "#FFC0C0";   
             }
-            */
+            
             $tasks[] = new \ZCL\Calendar\CEvent($item->sta_id, $item->stagename, $item->startdate, $item->enddate, $col);
         }
 

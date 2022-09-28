@@ -172,6 +172,7 @@ class GoodsIssue extends \App\Pages\Base
             if ($basedocid > 0) {  //создание на  основании
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
+                     
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'Order') {
 
@@ -213,6 +214,11 @@ class GoodsIssue extends \App\Pages\Base
                         }
 
 
+                           if($order->headerdata['store']>0) {
+                                 $this->docform->store->setValue($order->headerdata['store']);
+                                 $order->unreserve();
+                           }
+                           
                            if($basedoc->headerdata['paydisc']>0) {
                              $this->docform->editpaydisc->setText($basedoc->headerdata['paydisc']);
                              $this->docform->paydisc->setText($basedoc->headerdata['paydisc']);

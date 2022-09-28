@@ -489,6 +489,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         $this->_doc->headerdata['val'] = $this->docform->val->getValue();
         $this->_doc->headerdata['valname'] = $this->docform->val->getValueName();
@@ -789,12 +790,22 @@ class GoodsReceipt extends \App\Pages\Base
         $item->itemname = $itemname;
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
         $item->msr = $this->editnewitem->editnewmsr->getText();
+        $item->bar_code = $this->editnewitem->editnewitembarcode->getText();
 
         if (strlen($item->item_code) > 0 && System::getOption("common", "nocheckarticle") != 1) {
             $code = Item::qstr($item->item_code);
             $cnt = Item::findCnt("  item_code={$code} ");
             if ($cnt > 0) {
                 $this->setError('itemcode_exists');
+                return;
+            }
+
+        } 
+        if (strlen($item->bar_code) > 0 ) {
+            $code = Item::qstr($item->bar_code);
+            $cnt = Item::findCnt("  bar_code={$code} ");
+            if ($cnt > 0) {
+                $this->setError('barcode_exists');
                 return;
             }
 
@@ -807,7 +818,6 @@ class GoodsReceipt extends \App\Pages\Base
 
 
         $item->manufacturer = $this->editnewitem->editnewmanufacturer->getText();
-        $item->bar_code = $this->editnewitem->editnewitembarcode->getText();
         $item->snumber = $this->editnewitem->editnewitemsnumber->getText();
         if (strlen($item->snumber) > 0) {
             $item->useserial = 1;

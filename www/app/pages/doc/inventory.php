@@ -39,7 +39,7 @@ class Inventory extends \App\Pages\Base
         $this->docform->add(new Date('document_date', time()));
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
-        $this->docform->add(new DropDownChoice('category', Category::getList(false,false), 0))->onChange($this, 'OnChangeCat');
+        $this->docform->add(new DropDownChoice('category', Category::getList(  ), 0))->onChange($this, 'OnChangeCat');
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new CheckBox('autoincome'));
         $this->docform->add(new CheckBox('autooutcome'));
@@ -283,9 +283,16 @@ class Inventory extends \App\Pages\Base
         $cat_id = $sender->getValue();
 
         if ($cat_id > 0) {
+            
+            $c = Category::load($cat_id) ;
+            $ch = $c->getChildren();
+            $ch[]=$cat_id;
+                 
+            
+            
             $itemlist = array();
             foreach ($this->_itemlist as $item) {
-                if ($item->cat_id == $cat_id) {
+                if ( in_array($item->cat_id,$ch) ) {
                     $itemlist[$item->item_id] = $item;
                 }
             }
@@ -299,8 +306,24 @@ class Inventory extends \App\Pages\Base
         $store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
         $cat_id = $this->docform->category->getValue();
-
-        return Item::findArrayAC($text, $store_id, $cat_id);
+        $common = \App\System::getOptions('common')  ;
+        if($common['usecattree'] != 1){
+            return Item::findArrayAC($text, $store_id, $cat_id);
+        }
+  
+        $c = Category::load($cat_id) ;
+        $ch = $c->getChildren();
+        $ch[]=$cat_id;
+        $ret = array();
+        foreach($ch as $id){
+            foreach(Item::findArrayAC($text, $store_id, $id) as $k=>$v) {
+                 $ret[$k]=$v;    
+            }
+        }
+        
+        
+        
+        return $ret;
     }
 
     public function loadallOnClick($sender) {
@@ -309,7 +332,14 @@ class Inventory extends \App\Pages\Base
         $cat_id = $this->docform->category->getValue();
         $w = " disabled<> 1 and  item_id in (select item_id from  store_stock_view where  qty>0 and store_id={$store_id})    ";
         if ($cat_id > 0) {
-            $w = $w . " and cat_id =" . $cat_id;
+            
+            $c = Category::load($cat_id) ;
+            $ch = $c->getChildren();
+            $ch[]=$cat_id;
+            $cats = implode(",",$ch)  ;              
+               
+            
+            $w = $w . " and cat_id in ({$cats}) ";
         }
         $items = Item::find($w, 'itemname');
         foreach ($items as $item) {
@@ -344,7 +374,15 @@ class Inventory extends \App\Pages\Base
         $cat_id = $this->docform->category->getValue();
         $w = "item_code={$code_} or bar_code={$code_} or  item_code={$code0} or bar_code={$code0} ";
         if ($cat_id > 0) {
-            $w = $w . "  and cat_id=" . $cat_id;
+         
+         
+            $c = Category::load($cat_id) ;
+            $ch = $c->getChildren();
+            $ch[]=$cat_id;
+            $cats = implode(",",$ch)  ;              
+              
+         
+            $w = $w . " and cat_id in ({$cats}) ";
         }
         $item = Item::getFirst($w);
         if ($item == null) {

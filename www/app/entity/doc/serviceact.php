@@ -71,7 +71,7 @@ class ServiceAct extends Document
     }
 
  
-     protected function onState($state) {
+     protected function onState($state,$oldstate) {
         $conn = \ZDB\DB::getConnect();
 
     

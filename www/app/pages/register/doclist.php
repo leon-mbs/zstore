@@ -144,6 +144,8 @@ class DocList extends \App\Pages\Base
         $this->filter->doctype->setValue(0);
         $this->filter->status->setValue(0);
         $this->filter->author->setValue(0);
+        $this->filter->searchnumber->setText("") ;
+        $this->filter->searchtext->setText("") ;
         $this->filterOnSubmit($this->filter);
     }
 

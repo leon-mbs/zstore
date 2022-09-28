@@ -40,25 +40,7 @@ class ShowTopic extends \App\Pages\Base
 
         $this->add(new Label("title", $this->_topic->title, true));
         $this->add(new Label("detail", $this->_topic->detail, true));
-        $this->add(new ClickLink("copy", $this, "onInsert"));
-        $this->add(new ClickLink("link", $this, "onInsert"));
     }
 
-    public function onInsert($sender) {
-        $user = System::getUser();
-        $node = Node::getFirst("user_id=" . $user->user_id, "node_id  ");
-        if ($node == null) {
-            $this->setError("noroot");
-
-            return;
-        }
-
-        if ($sender->id == "copy") {
-            $this->_topic->topic_id = 0;
-            $this->_topic->save();
-        }
-        $this->_topic->addToNode($node->node_id);
-        App::Redirect("App\\Modules\\Note\\Pages\\Main");
-    }
-
+     
 }

@@ -64,11 +64,24 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('btask'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bmove'));
+
+
         $this->statuspan->statusform->add(new \Zippy\Html\Link\RedirectLink('btopay'));
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
+        $this->statuspan->add(new Form('moveform'));
+        $this->statuspan->moveform->add(new DropDownChoice('brmove', \App\Entity\Branch::getList() ,\App\Acl::getCurrentBranch()))->onChange($this,"onBranch",true);
+        $this->statuspan->moveform->add(new DropDownChoice('usmove',array(),0  ));
+        $this->statuspan->moveform->add(new SubmitButton('bmove'))->onClick($this, 'MoveOnSubmit');
+        
+        $this->statuspan->add(new Form('resform'))->setVisible(false);
+        
+        $this->statuspan->resform->add(new SubmitButton('bres'))->onClick($this, 'resOnSubmit');
+        $this->statuspan->resform->add(new SubmitButton('bunres'))->onClick($this, 'resOnSubmit');
+        $this->statuspan->resform->add(new DropDownChoice('store',\App\Entity\Store::getList(),H::getDefStore()));
+        
+        
         $this->doclist->Reload();
         $this->add(new ClickLink('csv', $this, 'oncsv'));
 
@@ -82,10 +95,7 @@ class OrderList extends \App\Pages\Base
         $this->payform->add(new Date('pdate', time()));
         $this->payform->setVisible(false);
 
-        $this->add(new Form('fmove'))->onSubmit($this, 'moveOnSubmit');
         
-        $this->fmove->add(new DropDownChoice('brmove', \App\Entity\Branch::getList() ,\App\Acl::getCurrentBranch()))->onChange($this,"onBranch",true);
-        $this->fmove->add(new DropDownChoice('usmove',array(),0  ));
         
     
     }
@@ -112,6 +122,9 @@ class OrderList extends \App\Pages\Base
         $row->add(new Label('emp', $doc->username));
         $row->add(new Label('customer', $doc->customer_name));
         $row->add(new Label('amount', H::fa($doc->amount)));
+        
+        $row->add(new Label('isreserved' ))->setVisible($doc->hasStore());
+        
         $stname = Document::getStateName($doc->state);
 
         $row->add(new Label('state', $stname));
@@ -147,6 +160,42 @@ class OrderList extends \App\Pages\Base
         }
     }
 
+    public function resOnSubmit($sender) {
+          if ($sender->id == "bres") {
+            $store = $this->statuspan->resform->store->getValue();
+            if($store == 0)  return;
+     
+            $conn = \ZDB\DB::getConnect();
+            $conn->BeginTrans();
+        
+            try{
+                $this->_doc->headerdata['store'] = $store;
+                $this->_doc->headerdata['storename'] = $this->statuspan->resform->store->getValueName();
+                $this->_doc->save() ;
+                $this->_doc->reserve();
+
+                $conn->CommitTrans();
+                       
+            }  catch(\Exception $e){
+                 $this->setError($e->getMessage()) ;
+                 $conn->RollbackTrans();
+                 return;
+            }
+
+            $this->statuspan->resform->bres->setVisible(false);            
+            $this->statuspan->resform->store->setVisible(false);            
+            $this->statuspan->resform->bunres->setVisible(true);            
+
+        }
+        if ($sender->id == "bunres") {
+
+            $this->_doc->unreserve();
+            $this->statuspan->resform->bunres->setVisible(false);            
+
+        }
+        $this->doclist->Reload(false);
+     
+    }
     public function statusOnSubmit($sender) {
         if (\App\Acl::checkChangeStateDoc($this->_doc, true, true) == false) {
             return;
@@ -250,7 +299,10 @@ class OrderList extends \App\Pages\Base
 
         $this->statuspan->statusform->btopay->setVisible(false);
         $this->statuspan->statusform->brd->setVisible(false);
-        $this->statuspan->statusform->bmove->setVisible(false);
+        $this->statuspan->moveform->setVisible(false);
+
+        $this->statuspan->resform->setVisible(false);
+
 
         //новый
         if ($state < Document::STATE_EXECUTED) {
@@ -335,15 +387,21 @@ class OrderList extends \App\Pages\Base
           
         }
         
-        
-        
+       if ($state == Document::STATE_INPROCESS   ) {
+           $this->statuspan->resform->setVisible(true);
+           $reerved = $this->_doc->hasStore();
+           $this->statuspan->resform->bres->setVisible(!$reerved);
+           $this->statuspan->resform->store->setVisible(!$reerved);
+           $this->statuspan->resform->bunres->setVisible($reerved);
+           
+       } 
         
         if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
             // $this->statuspan->statusform->bclose->setVisible(false);
         }
 
         if($this->_doc->hasPayments() == false && ( $state<4 || $state==Document::STATE_INPROCESS  ) )  {
-           $this->statuspan->statusform->bmove->setVisible(true);
+           $this->statuspan->moveform->setVisible(true);
         }
         
 
@@ -352,14 +410,18 @@ class OrderList extends \App\Pages\Base
             $this->_tvars['askclose'] = true;
         }
 
-        $order = $this->_doc->cast();
-        //проверяем  что уже есть отправка
-        $list = $order->getChildren('TTN');
 
+        //проверяем  что уже есть отправка
+        $list = $this->_doc->getChildren('TTN');
+
+        if(count($list)>0)             $this->statuspan->resform->setVisible(false);
+        
         if (count($list) > 0 && $common['numberttn'] <> 1) {
             $this->statuspan->statusform->bttn->setVisible(false);
         }
-        $list = $order->getChildren('GoodsIssue');
+        $list = $this->_doc->getChildren('GoodsIssue');
+
+        if(count($list)>0)             $this->statuspan->resform->setVisible(false);
 
         if (count($list) > 0 && $common['numberttn'] <> 1) {
             $this->statuspan->statusform->bgi->setVisible(false);
@@ -380,6 +442,7 @@ class OrderList extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
         }
+        $this->_doc = $this->_doc->cast();
 
         $this->statuspan->setVisible(true);
         $this->statuspan->statusform->setVisible(true);
@@ -422,9 +485,9 @@ class OrderList extends \App\Pages\Base
             
         }
         
-       $this->fmove->brmove->setValue($this->_doc->branch_id) ;   
-       $this->onBranch( $this->fmove->brmove);  
-       $this->fmove->usmove->setValue($this->_doc->user_id);   
+       $this->statuspan->moveform->brmove->setValue($this->_doc->branch_id) ;   
+       $this->onBranch( $this->statuspan->moveform->brmove);  
+       $this->statuspan->moveform->usmove->setValue($this->_doc->user_id);   
     }
   
     public function editOnClick($sender) {
@@ -561,12 +624,12 @@ class OrderList extends \App\Pages\Base
           $users[$id] = $u ;  
        }; 
        
-       $this->fmove->usmove->setOptionList($users);
+       $this->statuspan->moveform->usmove->setOptionList($users);
     }
     
     public function moveOnSubmit($sender){
-       $br = intval($this->fmove->brmove->getValue() );   
-       $us = $this->fmove->usmove->getValue();   
+       $br = intval($this->statuspan->moveform->brmove->getValue() );   
+       $us = $this->statuspan->moveform->usmove->getValue();   
        if($br>0){
            $this->_doc->branch_id = $br;
        }
