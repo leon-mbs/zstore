@@ -137,11 +137,19 @@
                  
            
               <table class="table table-sm">
+                     <tr>
+                     <th>Товар</th>
+                     <th>Артикул</th>
+                     <th class="text-right">Замовлено</th>
+                     <th>На  складi</th>
+                     <th>У  постачальникiв</th>
+                     </tr>
                      {{#citems}}
                      <tr>
                         <td>{{itemname}}</td>
                         <td>{{itemcode}}</td>
-                        <td>
+                        <td class="text-right">{{itemqty}}</td>
+                        <td>     
                           <table class="ctable">
                               {{#citemsstore}}
                               <tr>
@@ -152,7 +160,7 @@
                           </table>
                         </td>
                         <td>
-                          <table class="ctable">
+                          <table class="ctable"> 
                               {{#citemscust}}
                               <tr>
                                  <td>{{itcust}}</td>

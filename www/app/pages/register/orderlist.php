@@ -456,7 +456,7 @@ class OrderList extends \App\Pages\Base
         
         $this->_tvars['citems'] = array();
         foreach($this->_doc->unpackDetails('detaildata') as $it) {
-            $ait=array('itemname'=>$it->itemname,'itemcode'=>$it->item_code);
+            $ait=array('itemname'=>$it->itemname,'itemcode'=>$it->item_code,'itemqty'=>$it->quantity);
             
             $ait['citemsstore']  =  array();
             
