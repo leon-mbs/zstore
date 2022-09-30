@@ -817,6 +817,7 @@ class PPOHelper
 
         $conn->Execute("delete from ppo_zformstat where  pos_id=" . $pos_id);
     }
+  
     public static function delStat($id) {
         $conn = \ZDB\DB::getConnect();
 
@@ -836,7 +837,8 @@ class PPOHelper
 
         return $conn->GetRow($sql);
     }
-   public static function getStatList($pos_id ) {
+  
+    public static function getStatList($pos_id ) {
         $conn = \ZDB\DB::getConnect();
 
         $sql = "select  * from  ppo_zformstat where  pos_id=" . $pos_id;
@@ -928,11 +930,7 @@ class PPOHelper
           }
           //добавляем недостающие
           
-          $amount0=0;
-          $amount1=0;
-          $amount2=0;
-          $amount3=0;
-          
+           
           
           foreach($fdocs as $d){
               if(in_array($d,$floc)==false)  {
@@ -951,13 +949,31 @@ class PPOHelper
                 if($xml==false)  continue;
                 $st =  (string)$xml->CHECKHEAD->DOCSUBTYPE;
                 
+                
+                $amount0=0;
+                $amount1=0;
+                $amount2=0;
+                $amount3=0;
+                 
+                
                 foreach ($xml->CHECKPAY->children() as $row) {
                    $fc =  (string)$row->PAYFORMCD;
                    $sum =  (string)$row->SUM;
-                   if($fc=="0")  $amount0 += $sum;
-                   if($fc=="1")  $amount1 += $sum;
-                   if($fc=="2")  $amount2 += $sum;
-                   if($fc=="3")  $amount3 += $sum; 
+                   if($fc=="0") { 
+                       $amount0 += $sum;
+                   }
+                   else if($fc=="1") {
+                     $amount1 += $sum;  
+                   } 
+                   else if($fc=="2") {
+                     $amount2 += $sum;  
+                   } 
+                   else if($fc=="3") {
+                     $amount3 += $sum;   
+                   } else {
+                      \App\Helper::log("payform ".$fc); 
+                      \App\Helper::log($xml); 
+                   }
                }
                   
                  
