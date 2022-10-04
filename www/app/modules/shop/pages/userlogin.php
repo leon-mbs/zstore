@@ -135,8 +135,9 @@ class UserLogin extends \Zippy\Html\WebPage
         System::setCustomer($c->customer_id)  ;
         System::getSession()->custname = $c->customer_name;
         if ($sender->remember->isChecked()) {
-
-               setcookie("remembercust", $c->customer_id . '_' . md5($c->customer_id . $_config['common']['salt']), time() + 60 * 60 * 24 * 30);
+            setcookie("remembercust", $c->customer_id . '_' . md5($c->customer_id . $_config['common']['salt']), time() + 60 * 60 * 24 * 30);
+        } else {
+            setcookie("remembercust", '', 0);
         }
         App::Redirect("\\App\\Modules\\Shop\\Pages\\Main",0);
 

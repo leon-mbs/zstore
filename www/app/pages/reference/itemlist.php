@@ -849,10 +849,10 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         if (strlen($text) > 0) {
             if ($p == false) {
                 $text = Item::qstr('%' . $text . '%');
-                $where = $where . " and (itemname like {$text} or item_code like {$text}  or bar_code like {$text} )  ";
+                $where = $where . " and (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  or description like {$text} )  ";
             } else {
                 $text = Item::qstr($text);
-                $where = $where . " and (itemname = {$text} or item_code = {$text}  or bar_code like {$text} )  ";
+                $where = $where . " and (itemname = {$text} or item_code = {$text}  or bar_code = {$text} )  ";
             }
         }
         return $where;

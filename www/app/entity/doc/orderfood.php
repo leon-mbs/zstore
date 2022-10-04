@@ -205,7 +205,7 @@ class OrderFood extends Document
                         //учитываем  отходы
                         if ($itemp->lost > 0) {
                             $k = 1 / (1 - $itemp->lost / 100);
-                            $itemp->quantity = \App\Helper::fqty($itemp->quantity * $k);
+                            $itemp->quantity = $itemp->quantity * $k;
                             $lost = $k - 1;
 
 
