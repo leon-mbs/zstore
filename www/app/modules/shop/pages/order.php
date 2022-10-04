@@ -266,7 +266,7 @@ class Order extends Base
                 $order->updateStatus(Document::STATE_EXECUTED);
             }  else {
                 $order->updateStatus(Document::STATE_INPROCESS);
-                $order->updateStatus(Document::STATE_WP});
+                $order->updateStatus(Document::STATE_WP);
               
             }
 

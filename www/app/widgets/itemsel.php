@@ -129,7 +129,7 @@ class ItemSel extends \Zippy\Html\PageFragment
         if (strlen($text) > 0) {
 
             $text = Item::qstr('%' . $text . '%');
-            $where = $where . " and (itemname like {$text} or item_code like {$text} or bar_code like {$text} )  ";
+            $where = $where . " and (itemname like {$text} or item_code like {$text} or bar_code like {$text}   or description like {$text} )  ";
         }
         if (strlen($man) > 0) {
 

@@ -49,10 +49,11 @@ class DocList extends \App\Pages\Base
         
         $filter = Filter::getFilter("doclist");
         if ($filter->isEmpty()) {
-            $filter->to = time() + (3 * 24 * 3600);
-            $d = new \App\DateTime() ;
-            $d = $d->startOfMonth()->subMonth(1) ;
-            $filter->from = $d->getTimestamp();
+            $filter->to = time();
+       //     $d = new \App\DateTime() ;
+//            $d = $d->startOfMonth()->subMonth(1) ;
+//            $filter->from = $d->getTimestamp();
+            $filter->from = time() - (7 * 24 * 3600);
             $filter->page = 1;
             $filter->doctype = 0;
             $filter->customer = 0;
@@ -297,14 +298,13 @@ class DocList extends \App\Pages\Base
         $this->statusform->mstates->setValue(0);
 
         $this->statusform->btopay->setVisible(false);
-        if($this->_doc->state == Document::STATE_WP){
+        if($this->_doc->customer_id >0 &&   $this->_doc->state == Document::STATE_WP){
               $this->statusform->btopay->setVisible(true);
               if( $this->_doc->payamount > 0 &&  $this->_doc->payamount >  $this->_doc->payed) { 
                   
                   if( in_array($this->_doc->meta_name,array('InvoiceCust','RetCustIssue','GoodsReceipt')))  {
                       $this->statusform->btopay->setVisible(true);
-                      $this->
-                      statusform->btopay->setLink("App\\PAges\\Register\\PaySelList",array($this->_doc->document_id));
+                      $this->statusform->btopay->setLink("App\\PAges\\Register\\PaySelList",array($this->_doc->document_id));
                   }
                   if( in_array($this->_doc->meta_name,array('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct')))  {
                       $this->statusform->btopay->setVisible(true);

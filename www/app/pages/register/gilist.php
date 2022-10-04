@@ -48,7 +48,7 @@ class GIList extends \App\Pages\Base
         $this->listpan->filter->add(new DropDownChoice('status', array(0 => H::l('opened'), 1 => H::l('newed'), 2 => H::l('sended'), 5 => H::l('st_rdshipment'), 3 => H::l('all')), 0));
         $this->listpan->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
         $this->listpan->filter->add(new DropDownChoice('salesource', H::getSaleSources(), 0));
-        $this->listpan->filter->add(new DropDownChoice('fstore', \App\Entity\Store::getList(), H::getDefStore()));
+        $this->listpan->filter->add(new DropDownChoice('fstore', \App\Entity\Store::getList(), 0));
 
         $doclist = $this->listpan->add(new DataView('doclist', new GoodsIssueDataSource($this), $this, 'doclistOnRow'));
 
