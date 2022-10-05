@@ -72,7 +72,7 @@ class docs extends JsonRPC
             $neworder->document_number = 'API00001';
         }
         $doc->document_date = time();
-        $doc->state = Document::STATE_NEW;
+
         $doc->headerdata["outnumber"] = $args['number'];
         $doc->headerdata["apinumber"] = $args['number'];
         // $doc->document_number = $args['number'];
@@ -119,7 +119,8 @@ class docs extends JsonRPC
         $doc->payamount = $doc->amount;
 
         $doc->save();
-
+        $doc->updateStatus(Document::STATE_NEW);
+   
         return $doc->document_number;
     }
 
@@ -157,7 +158,7 @@ class docs extends JsonRPC
 
         $doc->document_number = $doc->nextNumber();
         $doc->document_date = time();
-        $doc->state = Document::STATE_NEW;
+
         $doc->headerdata["apinumber"] = $args['number'];
         $doc->headerdata["phone"] = $args['phone'];
         $doc->headerdata["email"] = $args['email'];
@@ -201,6 +202,7 @@ class docs extends JsonRPC
         $doc->payamount = $doc->amount;
 
         $doc->save();
+        $doc->updateStatus(Document::STATE_NEW);
 
         return $doc->document_number;
     }
@@ -238,7 +240,7 @@ class docs extends JsonRPC
 
         $doc->document_number = $doc->nextNumber();
         $doc->document_date = time();
-        $doc->state = Document::STATE_NEW;
+
         $doc->headerdata["apinumber"] = $args['number'];
         $doc->headerdata["payment"] = $args['mf'];
 
@@ -283,6 +285,8 @@ class docs extends JsonRPC
         $doc->payed = $args["payed"];
 
         $doc->save();
+        $doc->updateStatus(Document::STATE_NEW);
+        
         if ($args["autoexec"] == true) {
             $doc->updateStatus(Document::STATE_EXECUTED);
         }
@@ -324,7 +328,7 @@ class docs extends JsonRPC
 
         $doc->document_number = $doc->nextNumber();
         $doc->document_date = time();
-        $doc->state = Document::STATE_NEW;
+
         $doc->headerdata["apinumber"] = $args['number'];
         $doc->headerdata["payment"] = $args['mf'];
         $doc->headerdata["nds"] = 0;
@@ -371,6 +375,8 @@ class docs extends JsonRPC
         $doc->payed = $args["payed"];
 
         $doc->save();
+        $doc->updateStatus(Document::STATE_NEW);
+        
         if ($args["autoexec"] == true) {
             $doc->updateStatus(Document::STATE_EXECUTED);
         }
@@ -405,7 +411,6 @@ class docs extends JsonRPC
 
         $doc->document_number = $doc->nextNumber();
         $doc->document_date = time();
-        $doc->state = Document::STATE_NEW;
         $doc->headerdata["apinumber"] = $args['number'];
 
 
@@ -447,6 +452,8 @@ class docs extends JsonRPC
 
 
         $doc->save();
+        $doc->updateStatus(Document::STATE_NEW);
+        
         if ($args["autoexec"] == true) {
             $doc->updateStatus(Document::STATE_EXECUTED);
         }
@@ -519,7 +526,7 @@ class docs extends JsonRPC
         $doc->document_date = time();
         $doc->headerdata['store'] = $args['store_id'];
         $doc->headerdata['parea'] = $args['parea'];
-        $doc->state = Document::STATE_NEW;
+
 
         $doc->notes = @base64_decode($args['description']);
         $details = array();
@@ -552,6 +559,7 @@ class docs extends JsonRPC
         $doc->amount = 0;
 
         $doc->save();
+        $doc->updateStatus(Document::STATE_NEW);
 
         $doc->updateStatus(Document::STATE_EXECUTED);
 
@@ -584,7 +592,7 @@ class docs extends JsonRPC
 
         $doc->document_number = $doc->nextNumber();
         $doc->document_date = time();
-        $doc->state = Document::STATE_NEW;
+
         $doc->headerdata["apinumber"] = $args['number'];
         $doc->headerdata["payment"] = $args['mf'];
         $doc->headerdata["device"] = $args['device'];
@@ -628,6 +636,8 @@ class docs extends JsonRPC
         $doc->payed = $args["payed"];
 
         $doc->save();
+        $doc->updateStatus(Document::STATE_NEW);
+        
         if ($args["autoexec"] == true) {
             $doc->updateStatus(Document::STATE_INPROCESS);
         }

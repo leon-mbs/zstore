@@ -144,7 +144,7 @@ class PayList extends \App\Pages\Base
 
         $conn = \ZDB\DB::getConnect();
 
-        $sql = "select coalesce(abs(sum(amount)),0) from paylist where document_id=" . $pl->document_id;
+        $sql = "select coalesce(abs(sum(amount)),0) from paylist_view where document_id=" . $pl->document_id;
         $payed = $conn->GetOne($sql);
 
         $conn->Execute("update documents set payed={$payed} where   document_id =" . $pl->document_id);
