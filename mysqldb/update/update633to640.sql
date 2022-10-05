@@ -1,6 +1,6 @@
 
-INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Акт звірки', 'CompareAct', 'Контрагенти', 0);
-INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Зарезервовані товари', 'Reserved', 'Склад', 0);
+INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'РђРєС‚ Р·РІС–СЂРєРё', 'CompareAct', 'РљРѕРЅС‚СЂР°РіРµРЅС‚Рё', 0);
+INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Р—Р°СЂРµР·РµСЂРІРѕРІР°РЅС– С‚РѕРІР°СЂРё', 'Reserved', 'РЎРєР»Р°Рґ', 0);
 
 
 DROP VIEW prodstageagenda_view ;

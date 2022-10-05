@@ -137,11 +137,19 @@
                  
            
               <table class="table table-sm">
+                     <tr>
+                     <th>Товар</th>
+                     <th>Артикул</th>
+                     <th class="text-right">Замовлено</th>
+                     <th>На  складi</th>
+                     <th>У  постачальникiв</th>
+                     </tr>
                      {{#citems}}
                      <tr>
                         <td>{{itemname}}</td>
                         <td>{{itemcode}}</td>
-                        <td>
+                        <td class="text-right">{{itemqty}}</td>
+                        <td>     
                           <table class="ctable">
                               {{#citemsstore}}
                               <tr>
@@ -152,7 +160,7 @@
                           </table>
                         </td>
                         <td>
-                          <table class="ctable">
+                          <table class="ctable"> 
                               {{#citemscust}}
                               <tr>
                                  <td>{{itcust}}</td>
@@ -217,7 +225,7 @@
                        
                      <form zippy="resform" class="form-inline mt-1">
                         <label data-label="bres";>Резервувати товари </label>
-                        <select   zippy="store"></select>
+                        <select class="form-control mr-2"  zippy="store"></select>
                          
                         <button zippy="bres" class="btn btn-info  ">OK                 </button>
                         <button zippy="bunres" class="btn btn-info "> Зняти з резерву                </button>

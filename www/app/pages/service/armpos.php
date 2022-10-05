@@ -837,7 +837,8 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->payed = $this->docpanel->form3->payed->getText();
         $this->_doc->headerdata['payed'] = $this->docpanel->form3->payed->getText();
         $this->_doc->headerdata['exchange'] = $this->docpanel->form3->exchange->getText();
-        $this->_doc->headerdata['trans'] = $this->docpanel->form3->trans->getText();
+        $this->_doc->headerdata['trans'] = trim($this->docpanel->form3->trans->getText());
+        $this->_doc->notes = $this->_doc->notes . ' ' . $this->_doc->headerdata['trans']  ;
         $this->_doc->headerdata['paydisc'] = $this->docpanel->form3->paydisc->getText();
         $this->_doc->headerdata['payment'] = $this->docpanel->form3->payment->getValue();
         $this->_doc->headerdata['bonus'] = $this->docpanel->form3->bonus->getText();
@@ -1076,7 +1077,7 @@ class ARMPos extends \App\Pages\Base
 
 
         }
-        $this->_doclist = Document::find($where, 'priority desc,document_id desc');
+        $this->_doclist = Document::find($where, ' document_id desc');
         $this->checklistpan->checklist->Reload();
     }
 

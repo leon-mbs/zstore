@@ -75,7 +75,7 @@ class Document extends \ZCL\DB\Entity
      */
     protected function init() {
         $this->document_id = 0;
-        $this->state = self::STATE_NEW;
+        $this->state = 0;
         $this->customer_id = 0;
         $this->branch_id = 0;
         $this->parent_id = 0;
@@ -92,6 +92,11 @@ class Document extends \ZCL\DB\Entity
         $this->headerdata = array();
         $this->detaildata = array();
         $this->headerdata['contract_id'] = 0;
+        
+        $hash = md5(rand(1,1000000), false);
+        $hash = base64_encode(substr($hash,0,24));
+        $this->headerdata['hash'] = strtolower($hash)  ;
+               
     }
 
     /**
@@ -289,7 +294,7 @@ class Document extends \ZCL\DB\Entity
             $conn->Execute("delete from store_stock where stock_id not in (select  stock_id  from entrylist) ");
 
             //отменяем оплаты   
-            $conn->Execute("delete from paylist where document_id = " . $this->document_id);
+            $conn->Execute("delete from paylist_view where document_id = " . $this->document_id);
             //лицевые счета  контрагентов
 
 
@@ -395,12 +400,11 @@ class Document extends \ZCL\DB\Entity
     
   
         $this->priority = $this->getPriorytyByState($this->state) ;
-      
     
         $this->save();
 
-        if ($oldstate != $state) {
-            $doc = $this->cast();
+        if ($oldstate != $state   ) {
+             $doc = $this->cast();
              if($onlystate == false) {
                  $doc->onState($state,$oldstate);
              }
@@ -666,7 +670,7 @@ class Document extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
 
         $hasExecuted = $conn->GetOne("select count(*)  from docstatelog where docstate = " . Document::STATE_EXECUTED . " and  document_id=" . $this->document_id);
-        //   $hasPayment = $conn->GetOne("select count(*)  from paylist where   document_id=" . $this->document_id);
+        //   $hasPayment = $conn->GetOne("select count(*)  from paylist_view where   document_id=" . $this->document_id);
 
         $conn->Execute("delete from docstatelog where document_id=" . $this->document_id);
 
@@ -769,14 +773,14 @@ class Document extends \ZCL\DB\Entity
     public function getPayAmount() {
         $conn = \ZDB\DB::getConnect();
 
-        return $conn->GetOne("select coalesce(sum(amount),0) from paylist where   document_id = {$this->document_id}  ");
+        return $conn->GetOne("select coalesce(sum(amount),0) from paylist_view where   document_id = {$this->document_id}  ");
     }
 
    
    /* public function hasEntry() {
         $conn = \ZDB\DB::getConnect();
 
-        return $conn->GetOne("select coalesce(sum(amount),0) from paylist where   document_id = {$this->document_id}  ");
+        return $conn->GetOne("select coalesce(sum(amount),0) from paylist_view where   document_id = {$this->document_id}  ");
     } */
 
     /**
@@ -960,7 +964,7 @@ class Document extends \ZCL\DB\Entity
      */
     public function hasPayments() {
         $conn = \ZDB\DB::getConnect();
-        $sql = "select coalesce(sum(amount),0) from paylist where   document_id=" . $this->document_id;
+        $sql = "select coalesce(sum(amount),0) from paylist_view where   document_id=" . $this->document_id;
         $am = doubleval($conn->GetOne($sql));
 
         return $am != 0;
@@ -1066,9 +1070,9 @@ class Document extends \ZCL\DB\Entity
     public function getBonus($add=true) {
         $conn = \ZDB\DB::getConnect();
         if($add){
-           $sql = "select coalesce(sum(bonus),0) as bonus from paylist where bonus > 0 and document_id =" . $this->document_id;   
+           $sql = "select coalesce(sum(bonus),0) as bonus from paylist_view where bonus > 0 and document_id =" . $this->document_id;   
         } else {
-           $sql = "select coalesce(sum(0-bonus),0) as bonus from paylist where bonus < 0 and document_id =" . $this->document_id;     
+           $sql = "select coalesce(sum(0-bonus),0) as bonus from paylist_view where bonus < 0 and document_id =" . $this->document_id;     
         }
 
         return $conn->GetOne($sql);
