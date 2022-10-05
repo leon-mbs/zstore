@@ -52,7 +52,7 @@ class MoneyFund extends \ZCL\DB\Entity
 
         $conn = \ZDB\DB::getConnect();
 
-        $cnt = $conn->GetOne("select count(*) from paylist where mf_id = {$this->mf_id} ");
+        $cnt = $conn->GetOne("select count(*) from paylist_view where mf_id = {$this->mf_id} ");
         if ($cnt > 0) {
             return \App\Helper::l("nodelmf");
         }
@@ -67,7 +67,7 @@ class MoneyFund extends \ZCL\DB\Entity
 
         $conn = \ZDB\DB::getConnect();
         $list = array();
-        $rc = $conn->Execute("select coalesce(sum(amount),0)  as amount,mf_id from paylist where  paytype <=1000  group by  mf_id ");
+        $rc = $conn->Execute("select coalesce(sum(amount),0)  as amount,mf_id from paylist_view where  paytype <=1000  group by  mf_id ");
         foreach ($rc as $row) {
             $list[$row["mf_id"]] = $row["amount"];
         }

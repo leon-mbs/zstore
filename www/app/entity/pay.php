@@ -106,7 +106,7 @@ class Pay extends \ZCL\DB\Entity
 
         $conn = \ZDB\DB::getConnect();
 
-        $sql = "select coalesce(abs(sum(amount)),0) from paylist where paytype < 1000  and  document_id=" . $document_id;
+        $sql = "select coalesce(abs(sum(amount)),0) from paylist_view where paytype < 1000  and  document_id=" . $document_id;
         $payed = $conn->GetOne($sql);
         $conn->Execute("update documents set payed={$payed} where   document_id =" . $document_id);
         return $payed;

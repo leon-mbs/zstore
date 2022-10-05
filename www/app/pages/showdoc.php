@@ -20,7 +20,7 @@ class ShowDoc extends \Zippy\Html\WebPage
         $doc = Document::load($docid);
         if ($doc == null) {
             echo "Не задан  документ";
-            return;
+            die;
         }
 
         $doc = $doc->cast();
