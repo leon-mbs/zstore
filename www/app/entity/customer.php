@@ -215,7 +215,7 @@ class Customer extends \ZCL\DB\Entity
     */
     public function getBonus() {
         $conn = \ZDB\DB::getConnect();
-        $sql = "select coalesce(sum(bonus),0) as bonus from paylist_view where  document_id in (select  document_id  from  documents where  customer_id={$this->customer_id})";
+        $sql = "select coalesce(sum(bonus),0) as bonus from paylist where  document_id in (select  document_id  from  documents where  customer_id={$this->customer_id})";
 
         return $conn->GetOne($sql);
 
@@ -226,7 +226,7 @@ class Customer extends \ZCL\DB\Entity
     */
     public static function getBonusAll() {
         $conn = \ZDB\DB::getConnect();
-        $sql = "select coalesce(sum(bonus),0) as bonusall, d.customer_id from paylist_view p join documents d ON  p.document_id = d.document_id group by  d.customer_id ";
+        $sql = "select coalesce(sum(bonus),0) as bonusall, d.customer_id from paylist p join documents d ON  p.document_id = d.document_id group by  d.customer_id ";
         $ret = array();
         foreach($conn->Execute($sql) as $row ){
            if( doubleval($row['bonusall']) <>0 )  {
@@ -243,7 +243,7 @@ class Customer extends \ZCL\DB\Entity
     */
     public   function getBonuses() {
         $conn = \ZDB\DB::getConnect();
-        $sql = "select bonus, paydate,d.document_number  from paylist_view p join documents d ON  p.document_id = d.document_id where d.customer_id={$this->customer_id} and coalesce(p.bonus,0) <> 0 order  by  pl_id ";
+        $sql = "select bonus, paydate,d.document_number  from paylist p join documents d ON  p.document_id = d.document_id where d.customer_id={$this->customer_id} and coalesce(p.bonus,0) <> 0 order  by  pl_id ";
         $ret = array();
         foreach($conn->Execute($sql) as $row ){
            

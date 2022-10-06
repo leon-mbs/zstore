@@ -41,10 +41,10 @@
         <td align="right">Разом:</td>
 
 
-        <td align="right">{{tb}}</td>
+        <td align="right"></td>
         <td align="right">{{tin}}</td>
         <td align="right">{{tout}}</td>
-        <td align="right">{{tend}}</td>
+        <td align="right"></td>
         <td></td>
     </tr>
 
