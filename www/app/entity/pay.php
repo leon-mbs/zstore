@@ -213,6 +213,7 @@ class Pay extends \ZCL\DB\Entity
             $pay->bonus = (int)$bonus;
             $pay->paytype = self::PAY_BONUS;
             $pay->paydate = time();
+            $pay->user_id = \App\System::getUser()->user_id;
 
             $pay->save();
             

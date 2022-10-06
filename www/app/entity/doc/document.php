@@ -294,7 +294,7 @@ class Document extends \ZCL\DB\Entity
             $conn->Execute("delete from store_stock where stock_id not in (select  stock_id  from entrylist) ");
 
             //отменяем оплаты   
-            $conn->Execute("delete from paylist_view where document_id = " . $this->document_id);
+            $conn->Execute("delete from paylist where document_id = " . $this->document_id);
             //лицевые счета  контрагентов
 
 
@@ -1070,9 +1070,9 @@ class Document extends \ZCL\DB\Entity
     public function getBonus($add=true) {
         $conn = \ZDB\DB::getConnect();
         if($add){
-           $sql = "select coalesce(sum(bonus),0) as bonus from paylist_view where bonus > 0 and document_id =" . $this->document_id;   
+           $sql = "select coalesce(sum(bonus),0) as bonus from paylist where bonus > 0 and document_id =" . $this->document_id;   
         } else {
-           $sql = "select coalesce(sum(0-bonus),0) as bonus from paylist_view where bonus < 0 and document_id =" . $this->document_id;     
+           $sql = "select coalesce(sum(0-bonus),0) as bonus from paylist where bonus < 0 and document_id =" . $this->document_id;     
         }
 
         return $conn->GetOne($sql);
