@@ -77,11 +77,18 @@ class Subscribe extends \ZCL\DB\Entity
     }
 
     public static function getMsgTypeList() {
+        
+        $sms = \App\System::getOptions('sms')  ;
+        
         $list = array();
         $list[self::MSG_NOTIFY] = H::l("sb_msgnotify");
         $list[self::MSG_EMAIL] = H::l("sb_msgemail");
         $list[self::MSG_SMS] = H::l("sb_msgsms");
-        //  $list[self::MSG_VIBER]=  H::l("sb_msgviber");
+       
+        if($sms['smstype']==2) {
+            $list[self::MSG_VIBER] =  H::l("sb_msgviber");            
+        }
+
 
         return $list;
     }
@@ -121,7 +128,7 @@ class Subscribe extends \ZCL\DB\Entity
                 $c = \App\Entity\Customer::load($doc->customer_id);
                 if ($c != null && $c->nosubs != 1) {
                     $phone = $c->phone;
-                    // $viber = $c->viber;
+                    $viber = $c->viber;
                     $email = $c->email;
                 }
             }
@@ -129,7 +136,7 @@ class Subscribe extends \ZCL\DB\Entity
                 $u = \App\Entity\User::load($doc->user_id);
                 if ($u != null) {
                     $phone = $u->phone;
-                    //   $viber = $u->viber;
+                    $viber = $u->viber;
                     $email = $u->email;
                     $notify = $doc->user_id;
                 }
@@ -138,7 +145,7 @@ class Subscribe extends \ZCL\DB\Entity
                 $u = \App\Entity\User::load($sub->user_id);
                 if ($u != null) {
                     $phone = $u->phone;
-                    //  $viber = $u->viber;   
+                    $viber = $u->viber;   
                     $email = $u->email;
                     $notify = $sub->user_id;
                 }
@@ -150,9 +157,11 @@ class Subscribe extends \ZCL\DB\Entity
             if (strlen($email) > 0 && $sub->msg_type == self::MSG_EMAIL) {
                 self::sendEmail($email, $text, $sub->msgsubject);
             }
-            //   if(strlen($viber)>0 && $sub->msg_type == self::MSG_VIBER) {
-            //      self::sendViber($viber,$text) ;
-            //   }
+            
+            if(strlen($viber)==0) $viber = $phone;
+            if(strlen($viber)>0 && $sub->msg_type == self::MSG_VIBER) {
+                self::sendViber($viber,$text) ;
+            }
             if ($notify > 0 && $sub->msg_type == self::MSG_NOTIFY) {
                 self::sendNotify($notify, $text);
             }
@@ -276,8 +285,27 @@ class Subscribe extends \ZCL\DB\Entity
         H::sendLetter($email,$text,    $subject);
     }
 
-    public static function sendViber($viber, $text) {
+    public static function sendViber($phone, $text) {
+    
+        $sms = System::getOptions("sms");
 
+    
+        if ($sms['smstype'] == 2) {  // sms club
+       
+              $api = new \SmsclubApi\Services\ApiService([
+                    'token' => $sms['smsclubtoken'],      // Токен пользователя
+                    'login' => $sms['smsclublogin'],      // Логин пользователя
+                    'password' => $sms['smsclubpass'] // Пароль пользвоателя
+              ]);  
+        
+       
+              $viberMessage = new \SmsclubApi\Classes\ViberMessage();
+              $viberMessage->setOriginator(new \SmsclubApi\Classes\Originator($sms['smsclubvan']))
+              ->setPhones([$phone])
+              ->setMessage($text);
+
+              $result = $api->sendViber($viberMessage);      
+        }
     }
 
     public static function sendNotify($user_id, $text) {
@@ -289,7 +317,7 @@ class Subscribe extends \ZCL\DB\Entity
         $n->save();
     }
 
-    public static function sendSMS($phone, $text, $viber = false) {
+    public static function sendSMS($phone, $text ) {
         try {
             $sms = System::getOptions("sms");
 
@@ -321,39 +349,20 @@ class Subscribe extends \ZCL\DB\Entity
                     return '';
                 }
             }
-            if ($sms['smstype'] == 2) {  //turbo sms
-                $json = '{
-               "recipients":[
-                  "' . $phone . '" 
-               ],
-               "sms":{
-                  
-                  "text": "' . $text . '"
-               }
-            } ';
+            if ($sms['smstype'] == 2) {  // sms club
+                $api = new \SmsclubApi\Services\ApiService([
+                    'token' => $sms['smsclubtoken'],      // Токен пользователя
+                    'login' => $sms['smsclublogin'],      // Логин пользователя
+                    'password' => $sms['smsclubpass'] // Пароль пользвоателя
+                ]);  
+                
+                $sms = new \SmsclubApi\Classes\Sms();
+                $sms->setOriginator(new \SmsclubApi\Classes\Originator($sms['smscluban']))
+                    ->setPhones([$phone])
+                    ->setMessage($text)   ;
 
-                $url = "https://api.turbosms.ua/message/send.json";
-                $curl = curl_init($url);
-                curl_setopt($curl, CURLOPT_USERPWD, $sms['turbosmstoken']);
-                curl_setopt($curl, CURLOPT_POST, true);
-                curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-                curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
-                $output = curl_exec($curl);
-                if (curl_errno($curl) > 0) {
-
-                    return 'Curl error: ' . curl_error($curl);
-                }
-                curl_close($curl);
-                $output = json_decode($output, true);
-                if ($output['response_code'] <> 0) {
-                    \App\Helper::logerror($output['response_status']);
-                    return $output['response_status'];
-                } else {
-                    return '';
-                }
+                $result = $api->sendSms($sms);                
+                 
             }
             if ($sms['smstype'] == 3) {  //sms  fly
                 // $text = iconv('windows-1251', 'utf-8', htmlspecialchars('Заметьте, что когда герой фильма подписывает договор с Сатаной, он не подписывает копию договора и не получает ее.'));
