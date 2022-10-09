@@ -198,7 +198,7 @@ class ProductView extends Base
         $comment->comment = $this->formcomment->comment->getText();
         $comment->rating = $this->formcomment->rating->getText();
         $comment->created = time();
-        $comment->Save();
+        $comment->save();
         $this->formcomment->nick->setText('');
         $this->formcomment->comment->setText('');
         $this->formcomment->rating->setText('0');
@@ -223,7 +223,7 @@ class ProductView extends Base
     public function OnAddCommentRow(\Zippy\Html\DataList\DataRow $datarow) {
         $item = $datarow->getDataItem();
         if ($item->moderated == 1) {
-            $item->comment = "Отменено  модератором";
+            $item->comment = "Скасовано модератором";
         }
         $datarow->add(new Label("nick", $item->author));
         $datarow->add(new Label("comment", $item->comment));
@@ -255,7 +255,7 @@ class ProductView extends Base
         $product->comments = $conn->GetOne("select count(*) from shop_prod_comments where  item_id ={$this->item_id} and moderated <> 1");
         $product->save();
         $this->rated->setText($product->rating);
-        $this->comments->setText("Отзывов({$product->comments})");
+        $this->comments->setText("Вiгукiв({$product->comments})");
     }
 
     public function imglistOnRow($row) {
@@ -264,7 +264,7 @@ class ProductView extends Base
         $row->add(new \Zippy\Html\Link\BookmarkableLink('product_thumb'))->setValue("/loadshopimage.php?id={$image->image_id}&t=t");
         $row->product_thumb->setAttribute('href', "/loadshopimage.php?id={$image->image_id}");
    }
-   public function varlistOnRow($row) {
+    public function varlistOnRow($row) {
         $vi = $row->getDataItem();
         $options = \App\System::getOptions('shop');
         $row->add(new \Zippy\Html\Link\BookmarkableLink('vattrvalue',"/sp/".$vi->item_id))->setValue($vi->attributevalue);

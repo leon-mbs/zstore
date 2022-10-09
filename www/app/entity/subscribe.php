@@ -1,6 +1,7 @@
 <?php
-
 namespace App\Entity;
+
+
 
 use App\Helper as H;
 use App\System;
@@ -152,7 +153,11 @@ class Subscribe extends \ZCL\DB\Entity
             }
             $text = $sub->getText($doc);
             if (strlen($phone) > 0 && $sub->msg_type == self::MSG_SMS) {
-                self::sendSMS($phone, $text);
+                $ret =   self::sendSMS($phone, $text);
+                if(strlen($ret)>0) {
+                    \App\Helper::logerror($ret);               
+                }
+                   
             }
             if (strlen($email) > 0 && $sub->msg_type == self::MSG_EMAIL) {
                 self::sendEmail($email, $text, $sub->msgsubject);
@@ -160,7 +165,11 @@ class Subscribe extends \ZCL\DB\Entity
             
             if(strlen($viber)==0) $viber = $phone;
             if(strlen($viber)>0 && $sub->msg_type == self::MSG_VIBER) {
-                self::sendViber($viber,$text) ;
+                $ret =   self::sendViber($viber,$text) ;
+                if(strlen($ret)>0) {
+                    \App\Helper::logerror($ret);               
+                }
+                
             }
             if ($notify > 0 && $sub->msg_type == self::MSG_NOTIFY) {
                 self::sendNotify($notify, $text);
@@ -292,19 +301,38 @@ class Subscribe extends \ZCL\DB\Entity
     
         if ($sms['smstype'] == 2) {  // sms club
        
-              $api = new \SmsclubApi\Services\ApiService([
-                    'token' => $sms['smsclubtoken'],      // Токен пользователя
-                    'login' => $sms['smsclublogin'],      // Логин пользователя
-                    'password' => $sms['smsclubpass'] // Пароль пользвоателя
-              ]);  
-        
-       
-              $viberMessage = new \SmsclubApi\Classes\ViberMessage();
-              $viberMessage->setOriginator(new \SmsclubApi\Classes\Originator($sms['smsclubvan']))
-              ->setPhones([$phone])
-              ->setMessage($text);
+                   
+                $url = 'https://im.smsclub.mobi/vibers/send';
 
-              $result = $api->sendViber($viberMessage);      
+                $data = json_encode([
+                    'phone' => array($phone),
+                    'message' => $text,
+                    'src_addr' => $sms['smsclubvan']
+                ]);
+
+                $ch = curl_init();
+
+                curl_setopt_array($ch, [
+                    CURLOPT_URL => $url,
+                    CURLOPT_POSTFIELDS => $data,
+                    CURLOPT_POST => true,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_SSL_VERIFYPEER => FALSE,
+                    CURLOPT_USERPWD => $sms['smsclublogin'] . ':' . $sms['smsclubpass'],
+                    CURLOPT_HTTPHEADER => [
+                        'Content-Type: application/json'
+                    ]
+                ]);
+               
+              
+                $result = curl_exec($ch);
+                $encoded = json_decode($result);
+                curl_close($ch);              
+                if(strlen($encoded->message)>0) {
+                   return $encoded->message; 
+                }                
+
+                return '';      
         }
     }
 
@@ -343,25 +371,46 @@ class Subscribe extends \ZCL\DB\Entity
                 curl_close($curl);
                 $output = json_decode($output, true);
                 if ($output['code'] <> 0) {
-                    \App\Helper::logerror($output['error']);
+
                     return $output['error'];
                 } else {
                     return '';
                 }
             }
             if ($sms['smstype'] == 2) {  // sms club
-                $api = new \SmsclubApi\Services\ApiService([
-                    'token' => $sms['smsclubtoken'],      // Токен пользователя
-                    'login' => $sms['smsclublogin'],      // Логин пользователя
-                    'password' => $sms['smsclubpass'] // Пароль пользвоателя
-                ]);  
-                
-                $sms = new \SmsclubApi\Classes\Sms();
-                $sms->setOriginator(new \SmsclubApi\Classes\Originator($sms['smscluban']))
-                    ->setPhones([$phone])
-                    ->setMessage($text)   ;
+            
+   
+                $url = 'https://im.smsclub.mobi/sms/send';
 
-                $result = $api->sendSms($sms);                
+                $data = json_encode([
+                    'phone' => array($phone),
+                    'message' => $text,
+                    'src_addr' => $sms['smscluban']
+                ]);
+
+                $ch = curl_init();
+
+                curl_setopt_array($ch, [
+                    CURLOPT_URL => $url,
+                    CURLOPT_POSTFIELDS => $data,
+                    CURLOPT_POST => true,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_SSL_VERIFYPEER => FALSE,
+                    CURLOPT_HTTPHEADER => [
+                        'Authorization: Bearer ' . $sms['smsclubtoken'],
+                        'Content-Type: application/json'
+                    ]
+                ]);
+               
+              
+                $result = curl_exec($ch);
+                $encoded = json_decode($result);
+                curl_close($ch);              
+                if(strlen($encoded->message)>0) {
+                   return $encoded->message; 
+                }                
+
+                return '';                
                  
             }
             if ($sms['smstype'] == 3) {  //sms  fly
@@ -401,11 +450,11 @@ class Subscribe extends \ZCL\DB\Entity
                 if (strpos($response, 'ACCEPT') > 0) {
                     return '';
                 }
-                \App\Helper::logerror($response);
+
                 return $response;
             }
         } catch(\Exception $e) {
-            \App\Helper::logerror($e->getMessage());
+
             return $e->getMessage();
         }
     }

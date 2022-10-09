@@ -58,6 +58,7 @@ class Orders extends Base
    
     public function OnRow($row) {
         $order = $row->getDataItem();
+        $order = $order->cast();
         $row->add(new Label('id', $order->document_id)) ;
         $row->add(new Label('date', H::fd($order->document_date)) );
         $row->add(new Label('amount', H::fa($order->amount)) );

@@ -304,35 +304,35 @@ class Order extends Base
         $this->_tvars['orderid']  =  $order->document_id;
         
         if($payment==2) {
-           $this->preview->ppayment->setVisible(true) ; 
+            $this->preview->ppayment->setVisible(true) ; 
            
-           
-$credential = new AccountSecretTestCredential();
-//$credential = new AccountSecretCredential('account', 'secret');
+                       
+            $credential = new AccountSecretTestCredential();
+            //$credential = new AccountSecretCredential('account', 'secret');
 
-$widget = PurchaseWizard::get($credential)
-    ->setOrderReference($order->document_id)
-    ->setAmount($order->amount)
-    ->setCurrency('UAH')
-    ->setLanguage('UA')
-    ->setOrderDate(new \DateTime())
-    ->setMerchantDomainName('https://google.com')
-    ->setClient(new Client(
-        'John',
-        'Dou',
-        null,
-        '+12025550152' 
-         
-    ))
-    ->setProducts(new ProductCollection(array(
-        new Product('test', 0.01, 1)
-    )))
- //   ->setReturnUrl('http://local.zstore/index.php?p=/App/Modules/Shop/Pages/Order')
- //   ->setServiceUrl('http://local.zstore/index.php?p=/App/Modules/Shop/Pages/Order')
-    ->getForm()
-    ->getWidget('onPay','Оплатити');        
-        
-     $this->_tvars["pay"]  = $widget;      
+            $widget = PurchaseWizard::get($credential)
+                ->setOrderReference($order->document_id)
+                ->setAmount($order->amount)
+                ->setCurrency('UAH')
+                ->setLanguage('UA')
+                ->setOrderDate(new \DateTime())
+                ->setMerchantDomainName('https://google.com')
+                ->setClient(new Client(
+                    'John',
+                    'Dou',
+                    null,
+                    '+12025550152' 
+                     
+                ))
+                ->setProducts(new ProductCollection(array(
+                    new Product('test', 0.01, 1)
+                )))
+                ->setReturnUrl(_BASEURL . 'index.php?p=/App/Modules/Shop/Pages/Order')
+                ->setServiceUrl(_BASEURL . 'index.php?p=/App/Modules/Shop/Pages/Order')
+                ->getForm()
+                ->getWidget('onPay','Оплатити');        
+                    
+                 $this->_tvars["pay"] = $widget;      
               
            
               
