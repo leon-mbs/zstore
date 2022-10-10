@@ -71,9 +71,7 @@ class Order extends Base
             $form->lastname->setText($c->lastname)  ;
         }        
         
-        $this->add(new Panel('preview'))->setVisible(false);     
-        $this->preview->add(new Panel('ppayment'))->setVisible(false);
-        
+    
         $this->OnDelivery($form->delivery);
 
         
@@ -128,7 +126,7 @@ class Order extends Base
             return;
         }
         $shop = System::getOptions("shop");
-
+        
         $time = trim($this->orderform->deldate->getDate());
         $time = trim($this->orderform->deltime->getDateTime($time));
         $email = trim($this->orderform->email->getText());
@@ -169,10 +167,10 @@ class Order extends Base
             return;
         }
 
-
+        $order = null;
         try {
 
-
+  
             $store_id = (int)$shop["defstore"];
             $f = 0;
 
@@ -298,43 +296,13 @@ class Order extends Base
         $this->basketlist = array();
         Basket::getBasket()->list = array();
 
-        $this->orderform->setVisible(false);
-        $this->listform->setVisible(false);
-        $this->preview->setVisible(true);
-        $this->_tvars['orderid']  =  $order->document_id;
-        
-        if($payment==2) {
-            $this->preview->ppayment->setVisible(true) ; 
-           
-                       
-            $credential = new AccountSecretTestCredential();
-            //$credential = new AccountSecretCredential('account', 'secret');
-
-            $widget = PurchaseWizard::get($credential)
-                ->setOrderReference($order->document_id)
-                ->setAmount($order->amount)
-                ->setCurrency('UAH')
-                ->setLanguage('UA')
-                ->setOrderDate(new \DateTime())
-                ->setMerchantDomainName('https://google.com')
-                ->setClient(new Client(
-                    'John',
-                    'Dou',
-                    null,
-                    '+12025550152' 
-                     
-                ))
-                ->setProducts(new ProductCollection(array(
-                    new Product('test', 0.01, 1)
-                )))
-                ->setReturnUrl(_BASEURL . 'index.php?p=/App/Modules/Shop/Pages/Order')
-                ->setServiceUrl(_BASEURL . 'index.php?p=/App/Modules/Shop/Pages/Order')
-                ->getForm()
-                ->getWidget('onPay','Оплатити');        
-                    
-                 $this->_tvars["pay"] = $widget;      
-              
-           
+        $number = preg_replace('/[^0-9]/', '', $order->document_number);
+    
+        System::setSuccessMsg("createdorder", $number) ;
+          
+        if($payment == 1) {
+            
+            App::Redirect("App\\Modules\\Shop\\Pages\\OrderPay",array($order->document_id)) ;
               
         }
         
@@ -351,18 +319,6 @@ class Order extends Base
         $datarow->add(new Image('photo', "/loadshopimage.php?id={$item->image_id}&t=t"));
     }
 
-    public  function onPayed($args, $post) {
-         $order= Document::load($this->orderid) ;
-           
-                $payed = \App\Entity\Pay::addPayment($order->document_id, $order->document_date, $order->payed, $order->headerdata['payment'],   'WayForPay');
-                if ($payed > 0) {
-                    $order->payed = $payed;
-            
-                }
-                \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
-               $order->save();
-                   
-         return json_encode(array(), JSON_UNESCAPED_UNICODE);
-    }
+
     
 }
