@@ -7,6 +7,7 @@ use App\Entity\Doc\Document;
 use App\Entity\Customer;
 use App\Modules\Shop\Basket;
 use App\System;
+use App\Helper as H;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextArea;
@@ -49,6 +50,20 @@ class OrderPay extends Base
             return;
         }        
     
+        $number = preg_replace('/[^0-9]/', '', $this->order->document_number);
+    
+        $this->_tvars['onumber'] = $number;
+        $this->_tvars['detail'] = array();
+        
+        foreach($this->order->unpackDetails('detaildata') as $item){
+            $this->_tvars['detail'][] = array(
+              'itemname'=>$item->itemname,
+              'qty'=> H::fqty( $item->qty),
+              'price'=> H::fa($item->price),
+              'sum'=>H::fa($item->price * $item->qty)
+            );             
+        }
+        
         
     }
  

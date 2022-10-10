@@ -3,17 +3,27 @@
     <body>
      
         <div class="row" style="min-height:400px;">
-            <div class="col-12 col-md-8  ">
-                <h3 class="mt-2 mb-3">Оплата замовленя </h3>
-                 
+            <div class="col-12 col-md-6 col-xl-4  ">
+                <h3 class="mt-2 mb-3">Оплата замовлення {{onumber}}</h3>
+                 <table class="table table-sm">
+                    {{#detail}}
+                    <tr>
+                       <td>{{itemname}}</td>
+                       <td class="tezt-right">{{qty}}</td>
+                       <td class="tezt-right">{{price}}</td>
+                       <td class="tezt-right">{{sum}}</td>
+                    </tr>
+                    
+                   {{/detail}}  
+                 </table>
+
+                 <button class="btn btn-success" type="button" onclick="pay();">Оплатити</button>         
             </div>
          
-         
+
         </div>
-      
-<button type="button" onclick="pay();">Оплатити</button>
+   
          
-        
  
 <script id="widget-wfp-script" language="javascript" type="text/javascript" src="https://secure.wayforpay.com/server/pay-widget.js"></script>
 
