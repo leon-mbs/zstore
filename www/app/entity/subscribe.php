@@ -305,9 +305,9 @@ class Subscribe extends \ZCL\DB\Entity
                 $url = 'https://im.smsclub.mobi/vibers/send';
 
                 $data = json_encode([
-                    'phone' => array($phone),
+                    'phones' => array($phone),
                     'message' => $text,
-                    'src_addr' => $sms['smsclubvan']
+                    'sender' => $sms['smsclubvan']
                 ]);
 
                 $ch = curl_init();
@@ -325,14 +325,25 @@ class Subscribe extends \ZCL\DB\Entity
                 ]);
                
               
-                $result = curl_exec($ch);
-                $encoded = json_decode($result);
+                $response = curl_exec($ch);
+                
+                $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                
+                
+                $encoded = json_decode($result,true);
                 curl_close($ch);              
-                if(strlen($encoded->message)>0) {
-                   return $encoded->message; 
+              
+              
+                if ($httpcode >200)   {
+                   H::log("code ".$httpcode );
+                   H::log($response) ;
+                   return "Error. See logs";
                 }                
-
-                return '';      
+                              
+                return  ""  ;             
+              
+              
+                    
         }
     }
 
@@ -381,7 +392,7 @@ class Subscribe extends \ZCL\DB\Entity
             
    
                 $url = 'https://im.smsclub.mobi/sms/send';
-
+//                $phone="380973707047"  ;
                 $data = json_encode([
                     'phone' => array($phone),
                     'message' => $text,
@@ -402,17 +413,27 @@ class Subscribe extends \ZCL\DB\Entity
                     ]
                 ]);
                
-              
-                $result = curl_exec($ch);
-                $encoded = json_decode($result);
-                curl_close($ch);              
-                if(strlen($encoded->message)>0) {
-                   return $encoded->message; 
-                }                
+   
+                $response = curl_exec($ch);
 
-                return '';                
+                $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+                
+                $encoded = json_decode($response,true);
+                curl_close($ch);              
+                
+                if ($httpcode >200)    {
+                   H::log("code ".$httpcode) ;
+                   H::log($response) ;
+                   return "Error. See logs";
+                }                
+                              
+                return  ""  ;             
+            }            
+
+                             
                  
-            }
+            
             if ($sms['smstype'] == 3) {  //sms  fly
                 // $text = iconv('windows-1251', 'utf-8', htmlspecialchars('Заметьте, что когда герой фильма подписывает договор с Сатаной, он не подписывает копию договора и не получает ее.'));
                 $an = '';
