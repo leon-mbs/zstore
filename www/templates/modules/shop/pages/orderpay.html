@@ -25,14 +25,14 @@
    
          
  
-<script id="widget-wfp-script" language="javascript" type="text/javascript" src="https://secure.wayforpay.com/server/pay-widget.js"></script>
+<script id="widget-wfp-script"   src="https://secure.wayforpay.com/server/pay-widget.js"></script>
 
 <script type="text/javascript">     
 var wayforpay = new Wayforpay();     
 var pay = function () {         
 wayforpay.run({                 
 merchantAccount : "test_merch_n1",                 
-merchantDomainName : "local.zstorevue",                 
+merchantDomainName : "local.zstore",                 
 authorizationType : "SimpleSignature",                 
 merchantSignature : "flk3409refn54t54t*FNJRET",                 
 orderReference : "DH783023",                 
@@ -49,13 +49,15 @@ clientPhone: "380631234567",
 language: "UA"             
 },             
 function (response) {
-// on approved                             
+    console.log(JSON.stringify(response)) ;                         
 },             
 function (response) {
-// on declined             
+    console.log(JSON.stringify(response)) ;                         
+
 },             
 function (response) {
-// on pending or in processing             
+    console.log(JSON.stringify(response)) ;                         
+
 }         
 );     
 }
