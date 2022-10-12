@@ -60,7 +60,12 @@ class UserLogin extends \Zippy\Html\WebPage
         $p= substr(base64_encode(md5(time())),0,8);
         $c->passw = $p;
         $c->save();
-        \App\Entity\Subscribe::sendSMS($phone, \App\Helper::l("recoverypass", $p));
+        $ret = \App\Entity\Subscribe::sendSMS($phone, \App\Helper::l("recoverypass", $p));
+        if(strlen($ret)  >0 ){
+           \App\Helper::logerror($ret) ;          
+           $this->setError('SMS error') ;
+           return ; 
+        }
         $this->setSuccess("passsent")  ;
         $this->loginform->setVisible(true) ;
         $this->recallform->setVisible(false) ;

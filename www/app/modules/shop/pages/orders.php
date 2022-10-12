@@ -58,11 +58,12 @@ class Orders extends Base
    
     public function OnRow($row) {
         $order = $row->getDataItem();
+        $order = $order->cast();
         $row->add(new Label('id', $order->document_id)) ;
         $row->add(new Label('date', H::fd($order->document_date)) );
         $row->add(new Label('amount', H::fa($order->amount)) );
         $row->add(new Label('status', Document::getStateName($order->state)) );
-        $row->add(new ClickLink('topay', $this, 'onPayment'))->setVisible($order->payamount > $order->payed) ;
+        $row->add(new ClickLink('topay', $this, 'onPayment'))->setVisible($order->state==Document::STATE_WP) ;
         $row->add(new ClickLink('detail', $this, 'onOrder')) ;
          
     }
@@ -107,6 +108,10 @@ class Orders extends Base
     } 
     
     public function onPayment($sender) {
-        $this->_order = $sender->getOwner()->getDataItem();
+        $order = $sender->getOwner()->getDataItem();
+        
+        App::Redirect("App\\Modules\\Shop\\Pages\\OrderPay",array($order->document_id)) ;
+            
+        
     }  
 }
