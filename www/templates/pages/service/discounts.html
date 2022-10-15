@@ -13,10 +13,10 @@
 
                 <div class="mt-1" style="font-size: 1.5rem"  >
                     <a zippy="tabo"><span class="{{{tabobadge}}}"> Бонуси</span> </a> &nbsp;&nbsp;
-                    <a zippy="tabc"><span class="{{{tabcbadge}}}">  Покупці   </span> </a>
+                    <a zippy="tabc"><span class="{{{tabcbadge}}}">  Знижки   </span> </a>
                     
-                    <a zippy="tabi"><span class="{{{tabibadge}}}">  Товари   </span> </a>
-                    <a zippy="tabs"><span class="{{{tabsbadge}}}">  Послуги, роботи   </span> </a>
+                    <a zippy="tabi"><span class="{{{tabibadge}}}">  Акції, товари   </span> </a>
+                    <a zippy="tabs"><span class="{{{tabsbadge}}}">  Акції, послуги    </span> </a>
 
 
                 </div>   <br>
@@ -24,14 +24,14 @@
 
                     <div class="row">
                         <div class="col-12 col-md-4 col-xl-3   ">
-                            <h3> Бонуси</h3>
+                           
                             <form zippy="commonform">
                                 <div class="form-group">
                                     <label for="firstbay">Бонуси від суми першої покупки, % від суми</label>
                                     <input zippy="firstbay"  pattern="[0-9\.\,]+" style="width:100px"  class="form-control qtyprice" type="text">
                                 </div>
                                 <div class="form-group">
-                                    <label ><b>Бонуси від від суми</b></label>
+                                    <label ><b>Бонуси від  суми покупки</b></label>
                                 </div>
                                 <div class="form-group">
 
@@ -53,7 +53,7 @@
 
                                     <small>Другий рівень</small>
                                 </div>
-                              <div class="form-group">
+                                <div class="form-group">
                                     <div class="input-group">
                                         <span class="input-group-text"> Більше</span>
                                         <input   class="form-control"   zippy="summa3"   pattern="[0-9]+">
@@ -63,7 +63,7 @@
 
                                     <small>Третiй рівень</small>
                                 </div>
-                              <div class="form-group">
+                                <div class="form-group">
                                     <div class="input-group">
                                         <span class="input-group-text"> Більше</span>
                                         <input   class="form-control"   zippy="summa4"   pattern="[0-9]+">
@@ -75,7 +75,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <button class="btn btn-primary" type="submit">Зберегти</button>
+                                    <button class="btn btn-success" type="submit">Зберегти</button>
                                 </div>
                             </form>
                         </div>
@@ -84,17 +84,69 @@
                 <div zippy="ctab">
                     <div class="row">
                         <div class="col-12 col-md-8 col-xl-6   ">
-                            <h3> Покупці</h3>
-                            <small> <i class="fa fa-exclamation-triangle"/> Якщо задана постійна знижка бонуси  не  використовуются </small> 
+                            <small> <i class="fa fa-exclamation-triangle"/> Якщо  заданi знижки, бонуси  не  використовуются </small> 
+                            <h5> Накопичувальнi знижки (вiд суми покупок за перiод)</h5>
+                               <div class="row">
+                               <div class="col-12 col-md-8 col-xl-6">
+                              <form zippy="discform" >
+                         
+                                <div class="form-group">
+
+                                    <div class="input-group">
+                                        <span class="input-group-text"> Більше</span>
+                                        <input   class="form-control"   zippy="discsumma1"   pattern="[0-9]+">
+                                        <span class="input-group-text"> знижка,%</span>
+                                        <input   class="form-control qtyprice"   zippy="disc1"   pattern="[0-9\.\,]+">
+                                    </div>      
+                                    <small>Перший рівень</small>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-text"> Більше</span>
+                                        <input   class="form-control"   zippy="discsumma2"   pattern="[0-9]+">
+                                        <span class="input-group-text"> знижка,%</span>
+                                        <input   class="form-control qtyprice"   zippy="disc2"   pattern="[0-9\.\,]+">
+                                    </div>      
+
+                                    <small>Другий рівень</small>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-text"> Більше</span>
+                                        <input   class="form-control"   zippy="discsumma3"   pattern="[0-9]+">
+                                        <span class="input-group-text"> знижка,%</span>
+                                        <input   class="form-control qtyprice"   zippy="disc3" pattern="[0-9\.\,]+" >
+                                    </div>      
+
+                                    <small>Третiй рівень</small>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-text"> Більше</span>
+                                        <input   class="form-control"   zippy="discsumma4"   pattern="[0-9]+">
+                                        <span class="input-group-text"> знижка,%</span>
+                                        <input   class="form-control qtyprice"   zippy="disc4" pattern="[0-9\.\,]+" >
+                                    </div>      
+
+                                    <small>Четвертий рівень</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <button class="btn btn-success" type="submit">Зберегти</button>
+                                </div>
+                            </form>
+                             </div>
+                             </div>
+                            <h5> Постiйнi знижки</h5>
                             <div class="navbar nav  ">
                                 <form zippy="cfilter" class="form-inline ">
 
-                                    <label for="csearchkey">Iм'я</label>
+                                    <label for="csearchkey">Контрагент</label>
                                     <input placeholder="Почнiть вводити..." class="form-control mr-sm-2" type="text" zippy="csearchkey">
-                                    <label for="csearchdisc">знижка,%</label>
+                                    <label for="csearchdisc">знижка, %</label>
                                     <input   class="form-control qtyprice mr-sm-2" type="text" zippy="csearchdisc" pattern="[0-9\.\,]+" style="width:50px;">
 
-                                    <input class="btn btn-outline-success   " type="submit" value="Додати"  >
+                                    <input class="btn btn-success   " type="submit" value="Додати"  >
 
                                 </form> 
                             </div>
@@ -102,9 +154,9 @@
 
                                 <table class="table    table-sm mt-2">
                                     <tr>
-                                        <th >Iм'я </th>
+                                        <th >Контрагент </th>
                                         <th >Тел. </th>
-                                        <th    >Знижка,%</th>
+                                        <th    >Знижка, %</th>
                                         <th    > </th>
 
 
@@ -113,7 +165,7 @@
                                         <td zippy="cname"></td>
                                         <td zippy="cphone"></td>
                                         <td >
-                                            <input class=" qtyprice" style="width:50px;" zippy="cdisc"    pattern="[0-9\.\,]+">
+                                            <input class="form-control qtyprice" style="width:50px;" zippy="cdisc"    pattern="[0-9\.\,]+">
                                         </td>
 
                                         <td  ><a zippy="сdel"><i class="fa fa-trash"/></a></td>
@@ -131,7 +183,7 @@
                 <div zippy="itab">
                     <div class="row">
                         <div class="col-12  col-xl-10   ">
-                            <h3> Товари</h3>
+                             
                             <span>Тiльки для <i> {{price1name}}</i> </span> 
             <div class="navbar nav  ">
                                 <form zippy="ifilter" class="form-inline ">
@@ -146,7 +198,7 @@
                                     <label  for="isearchto">по</label>
                                     <input  class="form-control mr-sm-2"   zippy="isearchto" style="width:100px;" >
 
-                                    <input class="btn btn-outline-success  ml-2 " type="submit" value="Додати"  >
+                                    <input class="btn btn-success  ml-2 " type="submit" value="Додати"  >
 
                                 </form>   
                                 
@@ -165,7 +217,7 @@
                                     <label  for="gsearchto">по</label>
                                     <input  class="form-control mr-sm-2"   zippy="gsearchto" style="width:100px;" >
 
-                                    <input class="btn btn-outline-success  ml-2 " type="submit" value="Додати"  >
+                                    <input class="btn btn-success  ml-2 " type="submit" value="Додати"  >
 
                                 </form>
                                 
@@ -213,7 +265,7 @@
                 <div zippy="stab">
                     <div class="row">
                         <div class="col-12 col-md-10 col-xl-8   ">
-                            <h3> Послуги</h3>
+                            
                             <div class="navbar nav  ">
                                 <form zippy="sfilter" class="form-inline ">
 
@@ -227,7 +279,7 @@
                                     <label  for="sgsearchto">по</label>
                                     <input  class="form-control mr-sm-2"   zippy="ssearchto" style="width:100px;" >
 
-                                    <input class="btn btn-outline-success  ml-2 " type="submit" value="Додати"  >
+                                    <input class="btn btn-success  ml-2 " type="submit" value="Додати"  >
 
                                 </form> 
                             </div>                     

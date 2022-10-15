@@ -69,6 +69,18 @@ class Discounts extends \App\Pages\Base
         $form->add(new  TextInput("summa3", $disc["summa3"]));
         $form->add(new  TextInput("bonus4", $disc["bonus4"]));
         $form->add(new  TextInput("summa4", $disc["summa4"]));
+     
+        $form = $this->ctab->add(new  Form("discform"));
+        $form->onSubmit($this, "onDisc");
+
+        $form->add(new  TextInput("disc1", $disc["disc1"]));
+        $form->add(new  TextInput("discsumma1", $disc["discsumma1"]));
+        $form->add(new  TextInput("disc2", $disc["disc2"]));
+        $form->add(new  TextInput("discsumma2", $disc["discsumma2"]));
+        $form->add(new  TextInput("disc3", $disc["disc3"]));
+        $form->add(new  TextInput("discsumma3", $disc["discsumma3"]));
+        $form->add(new  TextInput("disc4", $disc["disc4"]));
+        $form->add(new  TextInput("discsumma4", $disc["discsumma4"]));
 
         //покупатели
         $this->ctab->add(new Form('cfilter'))->onSubmit($this, 'OnCAdd');
@@ -140,6 +152,25 @@ class Discounts extends \App\Pages\Base
         $disc["summa3"] = $sender->summa3->getText();
         $disc["bonus4"] = $sender->bonus4->getText();
         $disc["summa4"] = $sender->summa4->getText();
+        System::setOptions("discount", $disc);
+        $this->setSuccess('saved');
+    }
+
+    
+    public function onDisc($sender) {
+        $disc = System::getOptions("discount");
+        if (!is_array($disc)) {
+            $disc = array();
+        }
+
+        $disc["disc1"] = $sender->disc1->getText();
+        $disc["discsumma1"] = $sender->discsumma1->getText();
+        $disc["disc2"] = $sender->disc2->getText();
+        $disc["discsumma2"] = $sender->discsumma2->getText();
+        $disc["disc3"] = $sender->disc3->getText();
+        $disc["discsumma3"] = $sender->discsumma3->getText();
+        $disc["disc4"] = $sender->disc4->getText();
+        $disc["discsumma4"] = $sender->discsumma4->getText();
         System::setOptions("discount", $disc);
         $this->setSuccess('saved');
     }

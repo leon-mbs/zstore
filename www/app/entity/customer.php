@@ -288,6 +288,15 @@ class Customer extends \ZCL\DB\Entity
 
     }
     
+    public  function getDiscount(){
+        $d = $this->discount;
+        if($d > 0) {
+            return  $d;
+        }
+        return 0 ;
+    }
+    
+    
     public   function getID() {
         return $this->customer_id;
     }    
