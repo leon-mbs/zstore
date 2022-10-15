@@ -1,7 +1,7 @@
 <html>
  
     <body>
-        <div class="row" style="min-height:400px;">
+        <div class="row"  >
             <div class="col-12 col-md-8  ">
                 <h3 class="mt-2 mb-3">Формування замовленя</h3>
                 <form zippy="listform" method="post">
@@ -68,23 +68,23 @@
                        <input zippy="email" class="form-control">
                      </div>
                     </div>
-                    {{#hideblock}}     
+                     {{#usepayment}}
                     <div class="form-group  row">
                     
-                            <label class="col-5 col-form-label" for="payment"for="payment">Оплата</label>
+                            <label class="col-5 col-form-label" for="payment" for="payment">Оплата</label>
                       
                        <div class="col-7">
                        <select class="form-control" zippy="payment">
-                            <option value="0">Вибрати</option>
-                            <option value="1">Готiвкою при  отриманнi</option>
-                            <option value="2">Онлайн оплата</option>
+                            <option value="0">Готiвкою при  отриманнi</option>
+                            <option value="1">Онлайн оплата</option>
                         </select>
                       </div>
                     </div> 
-                    {{/hideblock}}     
+                     {{/usepayment}}
+               
                     <div class="form-group  row">
                     
-                            <label class="col-5 col-form-label" for="delivery">Доставка</label>
+                       <label class="col-5 col-form-label" for="delivery">Доставка</label>
                       
                        <div class="col-7">
                        <select class="form-control" zippy="delivery">
@@ -117,7 +117,7 @@
 
                     <div class="form-group  row">
                     
-                          <label class="col-5 col-form-label" for="notes" >Комментар </label>
+                          <label class="col-5 col-form-label" for="notes" >Коментар </label>
                        
                           <div class="col-7">
                           <textarea zippy="notes" class="form-control"></textarea>
@@ -130,56 +130,11 @@
                 </form>
             </div>
            
-            <div zippy="preview" class="col-12 col-md-8   col-xl-6">
-              <h5>Замовлення  номер {{orderid}} прийнято  в  обробку</h5>
-              
-              <div zippy="ppayment">
-              Оплата онлайн<br>
-              
-                {{{pay}}}
- 
-              </div>
-               
-            </div>
+        
          
         </div>
       
-        <script>
-       function onPay(event)
-                    {
-          
-                        
-                        if(event.data == "WfpWidgetEventClose"       // при закритии виджета пользователем
-                           || event.data == "WfpWidgetEventApproved" // при успешном завершении операции
-                           || event.data == "WfpWidgetEventDeclined" // при неуспешном завершении
-                           || event.data == "WfpWidgetEventPending"  // транзакция на обработке
-                        ) {
-                            console.log(event.data);
-                            if(event.data == "WfpWidgetEventApproved") {
-                                toastr.success('Замовлення оплачено');
-                                  callPageMethod('onPayed',null,null,(data)=> 
-                                  {
-                                           
-                                      
-                                  });     
-                            }  
-                            if(event.data == "WfpWidgetEventDeclined") {
-                                toastr.error('Помилка оплати');
-                                
-                            }
-                            if(event.data == "WfpWidgetEventPending") {
-                                toastr.info('Оплата  в  обробцi');
-                                
-                            }
-                        }
-                    }     
+      
         
-        
-            $("._number").bind('  change  ', function () {
-                $("#listform").submit();
-            });
-
-        </script>
-
     </body>
 </html>

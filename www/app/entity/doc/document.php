@@ -33,7 +33,7 @@ class Document extends \ZCL\DB\Entity
     const STATE_PAYED = 22; // Оплачен
     
     // типы  экспорта
-    const EX_WORD  = 1; //  Word
+    const EX_WORD  = 1;    //  Word
     const EX_EXCEL = 2;    //  Excel
     const EX_PDF   = 3;    //  PDF
     const EX_POS   = 4;    //  POS терминал
@@ -43,7 +43,7 @@ class Document extends \ZCL\DB\Entity
     const DEL_SELF    = 1;    //  самовывоз
     const DEL_BOY     = 2;    //  курьер
     const DEL_SERVICE = 3;    //  служба доставки
-    const DEL_NP      = 4;         //  новая почта
+    const DEL_NP      = 4;    //  новая почта
 
     /**
      * Ассоциативный массив   с атрибутами заголовка  документа

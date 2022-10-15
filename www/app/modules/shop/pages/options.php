@@ -39,6 +39,7 @@ class Options extends \App\Pages\Base
 
         $this->shop->add(new DropDownChoice('shopdefpricetype', \App\Entity\Item::getPriceTypeList()));
         $this->shop->add(new DropDownChoice('shopdefbranch', \App\Entity\Branch::getList()));
+        $this->shop->add(new DropDownChoice('paysystem',array() ))->onChange($this, 'onPaySystem');
         $this->shop->add(new TextInput('email'));
         $this->shop->add(new TextInput('shopname'));
         $this->shop->add(new TextInput('currencyname'));
@@ -48,10 +49,7 @@ class Options extends \App\Pages\Base
         $this->shop->add(new CheckBox('usefilter'));
         $this->shop->add(new CheckBox('usefeedback'));
         $this->shop->add(new CheckBox('usemainpage'));
-           
-        
-        
-        
+          
         $this->add(new Panel('adminpan'));
         $this->adminpan->add(new ClickLink('updatesitemap'))->onClick($this, 'updateSiteMapOnClick');
         
@@ -80,6 +78,7 @@ class Options extends \App\Pages\Base
 
         $this->shop->shopdefbranch->setValue($shop['defbranch']);
         $this->shop->shopordertype->setValue($shop['ordertype']);
+        $this->shop->paysystem->setValue($shop['paysystem']);
         $this->shop->shopdefpricetype->setValue($shop['defpricetype']);
         $this->shop->currencyname->setText($shop['currencyname']);
         $this->shop->uselogin->setChecked($shop['uselogin']);
@@ -91,7 +90,9 @@ class Options extends \App\Pages\Base
         $this->shop->email->setText($shop['email']);
         $this->shop->currencyname->setText($shop['currencyname']);
         $this->shop->phone->setText($shop['phone']);
-
+        
+        $this->onPaySystem($this->shop->paysystem);
+        
         $this->adminpan->plist->Reload() ;
     
     }
@@ -105,7 +106,8 @@ class Options extends \App\Pages\Base
 
         $shop['defbranch'] = $this->shop->shopdefbranch->getValue();
         $shop['ordertype'] = $this->shop->shopordertype->getValue();
-        $shop['defpricetype'] = $this->shop->shopdefpricetype->getValue();
+        $shop['paysystem'] = $this->shop->paysystem->getValue();
+        $shop['defpricetype'] = $this->shop->paysystem->getValue();
         $shop['email'] = $this->shop->email->getText();
         $shop['shopname'] = $this->shop->shopname->getText();
         $shop['currencyname'] = $this->shop->currencyname->getText();
@@ -211,6 +213,9 @@ class Options extends \App\Pages\Base
     }
  
 
+    public function onPaySystem($sender) {
+         $this->goAnkor('paysystem') ;
+    }
     public function savePageOnClick($sender) {
 
         $oldlink = $sender->oldlink->getText();
