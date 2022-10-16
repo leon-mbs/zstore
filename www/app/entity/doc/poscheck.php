@@ -254,7 +254,7 @@ class POSCheck extends Document
         //списываем бонусы
         if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
             $customer = \App\Entity\Customer::load($this->customer_id);
-            if ($customer->discount > 0) {
+            if ($customer->getDiscount() > 0) {
                 //процент
             } else {
                 $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0);

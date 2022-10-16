@@ -217,7 +217,7 @@ class CustomerList extends \App\Pages\Base
             if(doubleval($d) > 0) {
                   $title= Helper::l("actionbulkdiscounttitile",Helper::fa($d));                
             }
-            $d = $item->discount;
+            $d = $item->discount;   //постоянная  скидка
             if(doubleval($d) > 0) {
                   $title= Helper::l("actiondiscounttitile",Helper::fa($d));                
             }

@@ -168,7 +168,7 @@ class Pay extends \ZCL\DB\Entity
 
            // return;
         }
-        if (doubleval($c->discount) > 0) { //если  постоянная скидка бонусы  не  начисляем
+        if (doubleval($c->getDiscount()) > 0) { //если    скидка бонусы  не  начисляем
             return;
         }
 
