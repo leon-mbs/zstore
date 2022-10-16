@@ -51,6 +51,9 @@ body {
 .dark-mode a {
    color: #ccf;
 }
+.dark-mode .form-control-plaintext {
+   color: #ccf;
+}
 
 .icon20 {
     height: 24px; margin-left:4px;
