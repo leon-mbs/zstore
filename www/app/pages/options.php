@@ -432,12 +432,14 @@ class Options extends \App\Pages\Base
     public function testSMSOnClick($sender) {
 
         $res = \App\Entity\Subscribe::sendSMS($this->sms->smstestphone->getText(), $this->sms->smstesttext->getText());
-       // $res = \App\Entity\Subscribe::sendViber($this->sms->smstestphone->getText(), $this->sms->smstesttext->getText());
         if (strlen($res) == 0) {
             $this->setSuccess('success');
+            $res = \App\Entity\Subscribe::sendViber($this->sms->smstestphone->getText(), $this->sms->smstesttext->getText());
+            
         } else {
             $this->setError($res);
         }
+        
     }
 
 
