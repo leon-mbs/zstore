@@ -1,0 +1,98 @@
+<html>
+
+<body>
+
+    <div class="row" style="min-height:400px;">
+        <div class="col-12 col-md-6 col-xl-4  ">
+            <h3 class="mt-2 mb-3">Оплата замовлення {{onumber}}</h3>
+            <table class="table table-sm">
+                {{#detail}}
+                <tr>
+                    <td>{{itemname}}</td>
+                    <td class="tezt-right">{{qty}}</td>
+                    <td class="tezt-right">{{price}}</td>
+                    <td class="tezt-right">{{sum}}</td>
+                </tr>
+
+                {{/detail}}
+            </table>
+
+            <button class="btn btn-success" type="button" onclick="pay();">Оплатити</button>
+        </div>
+    </div>
+
+    <script src="/assets/js/hmac-md5.js"></script>
+    <script id="widget-wfp-script" src="https://secure.wayforpay.com/server/pay-widget.js"></script>
+
+    <script type="text/javascript">
+        let wayforpay = new Wayforpay();
+
+        let sign = function(data){
+            let secretKey = 'flk3409refn54t54t*FNJRET'; // сюди треба додати секретний ключ торговця (merchantSecretKey)
+            let concat = [
+                data['merchantAccount'],
+                data['merchantDomainName'],
+                data['orderReference'],
+                data['orderDate'],
+                data['amount'],
+                data['currency'],
+                data['productName'].join(';'),
+                data['productCount'].join(';'),
+                data['productPrice'].join(';'),
+            ].join(';');
+
+            return CryptoJS.HmacMD5(concat, secretKey).toString();
+        }
+
+        let pay = function () {
+            let data = {
+                merchantAccount: "test_merch_n1",
+                merchantAuthType: "SimpleSignature",
+                merchantDomainName: "www.market.ua",
+                language: "UA",
+                orderReference: "DH1665607762",
+                orderDate: 1415379863,
+                orderTimeout: 49000,
+                amount: 1547.36,
+                currency: "UAH",
+                productName: [
+                    "Процессор Intel Core i5-4670 3.4GHz",
+                    "Память Kingston DDR3-1600 4096MB PC3-12800"
+                ],
+                productPrice: [
+                    "1000",
+                    "547.36"
+                ],
+                productCount: [
+                    "1",
+                    "1"
+                ],
+                clientFirstName: "Вася",
+                clientLastName: "Пупкин",
+                clientAddress: "пр. Гагарина, 12",
+                clientCity: "Днепропетровск",
+                clientEmail: "some@mail.com",
+                defaultPaymentSystem: "card",
+                clientPhone: "380631234567",
+            };
+
+            data['merchantSignature'] = sign(data);
+
+            wayforpay.run(data,
+                function (response) {
+                    console.log(JSON.stringify(response));
+                },
+                function (response) {
+                    console.log(JSON.stringify(response));
+
+                },
+                function (response) {
+                    console.log(JSON.stringify(response));
+                }
+            );
+        }
+    </script>
+
+</body>
+
+</html>

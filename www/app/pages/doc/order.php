@@ -440,9 +440,9 @@ class Order extends \App\Pages\Base
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
             $customer = Customer::load($customer_id);
-
-            if ($customer->discount > 0) {
-                $disc = round($total * ($customer->discount / 100));
+            $d = $customer->getDiscount();
+            if ($d > 0) {
+                $disc = round($total * ($d / 100));
                 $this->docform->bonus->setText(0);
                 $this->docform->editbonus->setText(0);
 
@@ -530,9 +530,9 @@ class Order extends \App\Pages\Base
             $this->docform->phone->setText($customer->phone);
             $this->docform->email->setText($customer->email);
             $this->docform->address->setText($customer->address);
-
-            if ($customer->discount > 0) {
-                $this->docform->discount->setText(H::l("custdisc") ." ". $customer->discount . '%');
+            $d= $customer->getDiscount();
+            if ($d > 0) {
+                $this->docform->discount->setText(H::l("custdisc") ." ". $d . '%');
                 $this->docform->discount->setVisible(true);
                   
             } else {

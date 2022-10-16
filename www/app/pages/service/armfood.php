@@ -636,8 +636,9 @@ class ARMFood extends \App\Pages\Base
             $bonus = 0;
             if ($this->_doc->customer_id > 0) {
                 $customer = \App\Entity\Customer::load($this->_doc->customer_id);
-                if ($customer->discount > 0) {
-                    $disc = round($amount * ($customer->discount / 100));
+                $d = $customer->getDiscount() ;
+                if ($d > 0) {
+                    $disc = round($amount * ($d / 100));
                 } else {
                     $bonus = $customer->getBonus();
                     if ($bonus > 0) {
@@ -818,8 +819,9 @@ class ARMFood extends \App\Pages\Base
         $disc = 0;
         if ($this->_doc->customer_id > 0) {
             $customer = \App\Entity\Customer::load($this->_doc->customer_id);
-            if ($customer->discount > 0) {
-                $disc = round($amount * ($customer->discount / 100));
+            $d= $customer->getDiscount();
+            if ($d > 0) {
+                $disc = round($amount * ($d / 100));
             } else {
                 $bonus = $customer->getBonus();
                 if ($bonus > 0) {

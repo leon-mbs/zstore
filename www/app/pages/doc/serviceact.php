@@ -551,9 +551,9 @@ class ServiceAct extends \App\Pages\Base
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
             $customer = Customer::load($customer_id);
-
-            if ($customer->discount > 0) {
-                $disc = round($total * ($customer->discount / 100));
+            $d = $customer->getDiscount();
+            if ($d > 0) {
+                $disc = round($total * ($d / 100));
             } else {
                 $bonus = $customer->getBonus();
                 if ($bonus > 0) {
@@ -649,8 +649,9 @@ class ServiceAct extends \App\Pages\Base
             $cust = Customer::load($c);
 
             $disctext = "";
-            if (doubleval($cust->discount) > 0) {
-                $disctext = H::l("custdisc") . " {$cust->discount}%";
+            $d= $cust->getDiscount()
+            if (doubleval($d) > 0) {
+                $disctext = H::l("custdisc") . " {$d}%";
             } else {
                 $bonus = $cust->getBonus();
                 if ($bonus > 0) {

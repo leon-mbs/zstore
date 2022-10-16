@@ -760,9 +760,9 @@ class GoodsIssue extends \App\Pages\Base
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
             $customer = Customer::load($customer_id);
-
-            if ($customer->discount > 0) {
-                $disc =  ($total * ($customer->discount / 100.0));
+            $d = $customer->getDiscount() ;
+            if ($d > 0) {
+                $disc =  ($total * ($d / 100.0));
             } else {
                 $bonus = $customer->getBonus();
                 if ($bonus > 0) {
@@ -901,8 +901,9 @@ class GoodsIssue extends \App\Pages\Base
 
 
             $disctext = "";
-            if (doubleval($cust->discount) > 0) {
-                $disctext = H::l("custdisc") . " {$cust->discount}%";
+            $d = $cust->getDiscount() ;
+            if (doubleval($d) > 0) {
+                $disctext = H::l("custdisc") . " {$d}%";
             } else {
                 $bonus = $cust->getBonus();
                 if ($bonus > 0) {
