@@ -15,7 +15,12 @@ class Base extends \Zippy\Html\WebPage
 
         \Zippy\Html\WebPage::__construct();
         global $_config;
-
+        $modules = \App\System::getOptions("modules");
+        if($modules['shop'] != 1) {
+            App::RedirectHome()  ;
+       
+            return;
+        }
         $shop = System::getOptions("shop");
         if (!is_array($shop)) {
             $shop = array();
@@ -42,8 +47,7 @@ class Base extends \Zippy\Html\WebPage
                 return;
             }
         }
-          $modules = \App\System::getOptions("modules");
-
+   
 
         $this->_tvars["islogined"] = $customer_id > 0;
  
