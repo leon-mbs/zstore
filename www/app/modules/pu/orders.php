@@ -177,7 +177,7 @@ class Orders extends \App\Pages\Base
                 if ($cust == null) {
                     $cust = new Customer();
                     $cust->customer_name = $shoporder->headerdata['cname'];
-                    $cust->phone = $shoporder->headerdata['cphone'];
+                    $cust->phone = \App\Util::handlePhone($shoporder->headerdata['cphone']);
 
                     $cust->type = Customer::TYPE_BAYER;
                      

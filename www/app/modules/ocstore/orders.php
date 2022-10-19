@@ -197,7 +197,7 @@ class Orders extends \App\Pages\Base
                     $cust->customer_name = $shoporder->firstname . ' ' . $shoporder->lastname;
                     $cust->address = $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1;
                     $cust->type = Customer::TYPE_BAYER;
-                    $cust->phone = $shoporder->telephone;
+                    $cust->phone = \App\Util::handlePhone($shoporder->telephone);
                     $cust->email = $shoporder->email;
                     $cust->comment = "Клiєнт OpenCart";
                     $cust->save();

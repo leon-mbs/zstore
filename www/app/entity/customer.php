@@ -118,7 +118,7 @@ class Customer extends \ZCL\DB\Entity
             return null;
         }
         $conn = \ZDB\DB::getConnect();
-        return Customer::getFirst(' phone = ' . $conn->qstr($phone));
+        return Customer::getFirst(' phone = ' . $conn->qstr($phone) .' or   phone = ' . $conn->qstr('38'.$phone) );
     }
 
     public static function getByEmail($email) {
