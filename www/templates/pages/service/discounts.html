@@ -231,8 +231,8 @@
                                     
                                     <th > Категорiя </th>
                                     <th > Назва </th>
-                                    <th style="width:100px"> акц. цiна</th>
-                                    <th style="width:100px"> знижка,%</th>
+                                    <th class="text-right" style="width:100px"> акц. цiна</th>
+                                    <th class="text-right" style="width:100px"> знижка,%</th>
                                     <th > З </th>
                                     <th > По</th>
                                    
@@ -257,6 +257,7 @@
                             </table>  
                             <div zippy="ipag"></div>   
                             </form>
+                            
                             <h5>Знижки для опту (2 товари і більше)</h5> 
                                        <div class="navbar nav  ">
                                             <form zippy="iofilter" class="form-inline ">
@@ -264,10 +265,14 @@
                                                 <label for="isearchokey">Назва</label>
                                                 <input  placeholder="Начните вводить..."  class="form-control  mr-2"   zippy="isearchokey"> 
 
-                                                <label for="isearchoqty">кiл.</label>
-                                                <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchoqty" pattern="[0-9\.\,]+" style="width:50px;">
-                                                <label for="isearchodisc">акц. цiна</label>
-                                                <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchodisc" pattern="[0-9\.\,]+" style="width:50px;">
+                                                <label for="isearchoqty1">кiл. (рiвень1)</label>
+                                                <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchoqty1" pattern="[0-9\.\,]+" style="width:50px;">
+                                                <label for="isearchoprice1">акц. цiна (рiвень1)</label>
+                                                <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchoprice1" pattern="[0-9\.\,]+" style="width:50px;">
+                                                <label for="isearchoqty2">кiл. (рiвень2)</label>
+                                                <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchoqty2" pattern="[0-9\.\,]+" style="width:50px;">
+                                                <label for="isearchoprice2">акц. цiна (рiвень2)</label>
+                                                <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchoprice2" pattern="[0-9\.\,]+" style="width:50px;">
                                            
                                                 <input class="btn btn-success  ml-2 " type="submit" value="Додати"  >
 
@@ -277,18 +282,24 @@
                                      <table class="table    table-sm mt-2">
                                      <tr>
                                        <th > Назва </th>
-                                       <th style="width:100px"> кiл.</th>
-                                       <th style="width:100px"> акц. цiна</th>
+                                       <th class="text-right" style="width:100px"> кiл. (р1)</th>
+                                       <th class="text-right" > акц. цiна (р1)</th>
+                                       <th class="text-right" style="width:100px"> кiл. (р2)</th>
+                                       <th class="text-right" > акц. цiна (р2)</th>
                                        <th> </th>
                                      </tr>
                                       <tr zippy="iolist">
-                                       <td zippy="ioname" style="width:500px">  </td>
-                                       <td zippy="ioqty" style="width:100px"> </td>
-                                       <td zippy="ioprice" style="width:100px"></td>
+                                       <td zippy="ioname" >  </td>
+                                       <td zippy="ioqty1"  class="text-right" style="width:100px"> </td>
+                                       <td zippy="ioprice1"  class="text-right" ></td>
+                                       <td zippy="ioqty2"  class="text-right" style="width:100px"> </td>
+                                       <td zippy="ioprice2" class="text-right" ></td>
                                        <td  ><a zippy="odel"><i class="fa fa-trash"/></a></td>
                                       </tr>
                                      </table>  
                                      <div zippy="iopag"></div>  
+                        
+          
                         </div>
                     </div>
                 </div>

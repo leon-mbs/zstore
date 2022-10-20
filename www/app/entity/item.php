@@ -86,7 +86,10 @@ class Item extends \ZCL\DB\Entity
             $this->price5 = $this->brprice[$id]['price5'];
         }
 
-        $this->actionqty = doubleval($xml->actionqty[0]);
+        $this->actionqty1 = doubleval($xml->actionqty1[0]);
+        $this->actionprice1 = doubleval($xml->actionprice1[0]);
+        $this->actionqty2 = doubleval($xml->actionqty2[0]);
+        $this->actionprice2 = doubleval($xml->actionprice2[0]);
         $this->actionprice = doubleval($xml->actionprice[0]);
         $this->actiondisc = doubleval($xml->actiondisc[0]);
         $this->todate = intval($xml->todate[0]);
@@ -154,8 +157,13 @@ class Item extends \ZCL\DB\Entity
         if ($this->actiondisc > 0) {
             $this->detail .= "<actiondisc>{$this->actiondisc}</actiondisc>";
         }
-        if ($this->actionqty > 1) {
-            $this->detail .= "<actionqty>{$this->actionqty}</actionqty>";
+        if ($this->actionqty1 > 1) {
+            $this->detail .= "<actionqty1>{$this->actionqty1}</actionqty1>";
+            $this->detail .= "<actionprice1>{$this->actionprice1}</actionprice1>";
+            if ($this->actionqty2 > $this->actionqty1) {
+                $this->detail .= "<actionqty2>{$this->actionqty2}</actionqty2>";
+                $this->detail .= "<actionprice2>{$this->actionprice2}</actionprice2>";
+            }
         }
         $this->detail .= "<todate>{$this->todate}</todate>";
         $this->detail .= "<fromdate>{$this->fromdate}</fromdate>";
@@ -320,7 +328,7 @@ class Item extends \ZCL\DB\Entity
             }
 
         }
-        if( doubleval($this->actionqty) > 0) {
+        if( doubleval($this->actionqty1) > 0) {
             return true;
         }
         return false;
@@ -333,8 +341,11 @@ class Item extends \ZCL\DB\Entity
             if ( intval($this->fromdate) < time() && intval($this->todate) > time()) {
                 return $this->actionprice;
             }
-            if ( doubleval($this->actionqty) > $qty ) {
-                return $this->actionprice;
+            if ( doubleval($this->actionqty2) > $qty ) {
+               // return $this->actionprice2;
+            }
+            if ( doubleval($this->actionqty1) > $qty ) {
+               // return $this->actionprice1;
             }
             
             
