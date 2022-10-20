@@ -144,8 +144,7 @@
                                     <label for="csearchkey">Контрагент</label>
                                     <input placeholder="Почнiть вводити..." class="form-control mr-sm-2" type="text" zippy="csearchkey">
                                     <label for="csearchdisc">знижка, %</label>
-                                    <input   class="form-control qtyprice mr-sm-2" type="text" zippy="csearchdisc" pattern="[0-9\.\,]+" style="width:50px;">
-
+                                    <input class="form-control qtyprice mr-sm-2" type="text" zippy="csearchdisc" pattern="[0-9\.\,]+" style="width:50px;">
                                     <input class="btn btn-success   " type="submit" value="Додати"  >
 
                                 </form> 
@@ -156,10 +155,8 @@
                                     <tr>
                                         <th >Контрагент </th>
                                         <th >Тел. </th>
-                                        <th    >Знижка, %</th>
-                                        <th    > </th>
-
-
+                                        <th >Знижка, %</th>
+                                        <th > </th>
                                     </tr>
                                     <tr  zippy="clist">
                                         <td zippy="cname"></td>
@@ -190,7 +187,7 @@
                                             <form zippy="ifilter" class="form-inline ">
 
                                                 <label for="isearchkey">Назва</label>
-                                                <input  placeholder="Начните вводить..."  class="form-control  "   zippy="isearchkey"> 
+                                                <input  placeholder="Начните вводить..."  class="form-control   mr-2"   zippy="isearchkey"> 
 
                                                 <label for="isearchdisc">акц. цiна</label>
                                                 <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchdisc" pattern="[0-9\.\,]+" style="width:50px;">
@@ -224,19 +221,19 @@
                                 </form>
                                 
                             </div>
-                            <span>Встановлює знижку на всі товари даної категорії</span>                      
+                            <span>Встановлює акційну знижку на всі товари даної категорії</span>                      
                            <form  zippy="itform" >          
                             <table class="table    table-sm mt-2">
                                 <tr>
-             <th onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
+                                   <th onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
                            style="width:30px;cursor:pointer" title="Зняти/виставити галки"><i
                                     class="fa fa-check-double "></i></th>                                     
                                     
                                     <th > Категорiя </th>
                                     <th > Назва </th>
-                                     <th style="width:100px"> акц. цiна</th>
+                                    <th style="width:100px"> акц. цiна</th>
                                     <th style="width:100px"> знижка,%</th>
-                                 <th > З</th>
+                                    <th > З </th>
                                     <th > По</th>
                                    
                                 </tr>
@@ -260,7 +257,38 @@
                             </table>  
                             <div zippy="ipag"></div>   
                             </form>
-                            <h5>Знижки для опту (2 товари і більше)</h5>   
+                            <h5>Знижки для опту (2 товари і більше)</h5> 
+                                       <div class="navbar nav  ">
+                                            <form zippy="iofilter" class="form-inline ">
+
+                                                <label for="isearchokey">Назва</label>
+                                                <input  placeholder="Начните вводить..."  class="form-control  mr-2"   zippy="isearchokey"> 
+
+                                                <label for="isearchoqty">кiл.</label>
+                                                <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchoqty" pattern="[0-9\.\,]+" style="width:50px;">
+                                                <label for="isearchodisc">акц. цiна</label>
+                                                <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchodisc" pattern="[0-9\.\,]+" style="width:50px;">
+                                           
+                                                <input class="btn btn-success  ml-2 " type="submit" value="Додати"  >
+
+                                            </form>   
+                                            
+                                        </div>
+                                     <table class="table    table-sm mt-2">
+                                     <tr>
+                                       <th > Назва </th>
+                                       <th style="width:100px"> кiл.</th>
+                                       <th style="width:100px"> акц. цiна</th>
+                                       <th> </th>
+                                     </tr>
+                                      <tr zippy="iolist">
+                                       <td zippy="ioname" style="width:500px">  </td>
+                                       <td zippy="ioqty" style="width:100px"> </td>
+                                       <td zippy="ioprice" style="width:100px"></td>
+                                       <td  ><a zippy="odel"><i class="fa fa-trash"/></a></td>
+                                      </tr>
+                                     </table>  
+                                     <div zippy="iopag"></div>  
                         </div>
                     </div>
                 </div>

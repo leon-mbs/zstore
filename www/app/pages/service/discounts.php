@@ -134,6 +134,14 @@ class Discounts extends \App\Pages\Base
  
         $this->itab->itform->ilist->Reload();
 
+        $this->itab->add(new Form('iofilter'))->onSubmit($this, 'OnIOAdd');
+        $this->itab->iofilter->add(new AutocompleteTextInput('isearchokey'))->onText($this, 'OnAutoItem');
+        $this->itab->iofilter->add(new TextInput('isearchoqty'));
+        $this->itab->iofilter->add(new TextInput('isearchodisc'));
+        $this->itab->add(new DataView('iolist', new DiscItemODataSource($this), $this, 'oitemlistOnRow'));
+        $this->itab->iolist->setPageSize(H::getPG());
+        $this->itab->add(new \Zippy\Html\DataList\Paginator('iopag', $this->itab->iolist));
+        $this->itab->iolist->Reload();
 
     }
 
@@ -313,6 +321,7 @@ class Discounts extends \App\Pages\Base
         if ($d > 0) {
             $i->actionprice = $d;
             $i->actiondisc = 0;
+            $i->actionqty = 0;
             $i->fromdate = $sender->isearchfrom->getDate();
             $i->todate = $sender->isearchto->getDate(true);;
             if ($i->fromdate > $i->todate) {
@@ -327,7 +336,55 @@ class Discounts extends \App\Pages\Base
         $sender->isearchkey->setText("");
         $sender->isearchkey->setKey(0);
     }
+   
+    public function OnIOAdd($sender) {
+        $k = $sender->isearchokey->getKey();
+        $i = Item::load($k);
+        if ($i == null) {
+            return;
+        }
+        $d = doubleval($sender->isearchodisc->getText());
+        $q = doubleval($sender->isearchoqty->getText());
+        if ($d > 0 && $q > 1) {
+            $i->actionprice = $d;
+            $i->actionqty   = $q;
+            $i->actiondisc  = 0;
+            $i->fromdate  = 0;
+            $i->todate  = 0;
+         
+            $i->save();
+            $this->itab->itform->ilist->Reload();
+        }
 
+        $sender->isearchodisc->setText("");
+        $sender->isearchoqty->setText("");
+        $sender->isearchokey->setText("");
+        $sender->isearchokey->setKey(0);
+        
+        $this->itab->iolist->Reload();
+        $this->goAnkor('iofilter')  ;
+      
+        
+    }
+
+    public function oitemlistOnRow($row) {
+        $i = $row->getDataItem();
+        $row->add(new  ClickLink('odel'))->onClick($this, 'odeleteOnClick');
+        $row->add(new  Label("ioname", $i->itemname) );
+        $row->add(new  Label("ioqty", H::fqty($i->actionqty)) );
+        $row->add(new  Label("ioprice", H::fa($i->actionprice)));
+    
+    }
+ 
+    public function odeleteOnClick($sender) {
+        $s = $sender->owner->getDataItem();
+        $s->actionqty = 0;
+        $s->save();
+        $this->itab->iolist->Reload();
+        $this->goAnkor('iofilter')  ;
+
+    }  
+     
     public function itemlistOnRow($row) {
         $i = $row->getDataItem();
         $row->add(new  Label("icat_name", $i->cat_name));
@@ -361,7 +418,7 @@ class Discounts extends \App\Pages\Base
        
     }
 
-   public function OnDelAll($sender) {
+    public function OnDelAll($sender) {
         if (false == \App\ACL::checkDelRef('ItemList')) {
             return;
         }
@@ -520,6 +577,38 @@ class DiscItemDataSource implements \Zippy\Interfaces\DataSource
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
+        return Item::find($this->getWhere(), "itemname ", $count, $start);
+    }
+
+    public function getItem($id) {
+
+    }
+
+}
+
+class DiscItemODataSource implements \Zippy\Interfaces\DataSource
+{
+
+    private $page;
+
+    public function __construct($page) {
+        $this->page = $page;
+    }
+
+    private function getWhere() {
+
+        $conn = \ZDB\DB::getConnect();
+
+        $where = "  disabled <> 1  and  (  detail   like  '%<actionqty>%'   ) ";
+
+        return $where;
+    }
+
+    public function getItemCount() {
+        return Item::findCnt($this->getWhere());
+    }
+
+    public function getItems($start, $count, $sortfield = null, $asc = null) {
         return Item::find($this->getWhere(), "itemname ", $count, $start);
     }
 
