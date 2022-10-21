@@ -382,6 +382,7 @@ class Discounts extends \App\Pages\Base
         $i = $row->getDataItem();
         $row->add(new  ClickLink('odel'))->onClick($this, 'odeleteOnClick');
         $row->add(new  Label("ioname", $i->itemname) );
+        $row->add(new  Label("iocode", $i->item_code) );
         $row->add(new  Label("ioqty1", H::fqty($i->actionqty1)) );
         $row->add(new  Label("ioprice1", H::fa($i->actionprice1)));
         $row->add(new  Label("ioqty2", H::fqty($i->actionqty2)) );
@@ -402,6 +403,7 @@ class Discounts extends \App\Pages\Base
         $i = $row->getDataItem();
         $row->add(new  Label("icat_name", $i->cat_name));
         $row->add(new  Label("iname", $i->itemname));
+        $row->add(new  Label("icode", $i->item_code) );
         $row->add(new  Label("iprice"))->setText($i->actionprice);
         $row->iprice->setVisible($i->actionprice > 0);
         if ($i->fromdate < time() && $i->todate > time()) {

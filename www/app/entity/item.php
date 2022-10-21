@@ -341,17 +341,19 @@ class Item extends \ZCL\DB\Entity
             if ( intval($this->fromdate) < time() && intval($this->todate) > time()) {
                 return $this->actionprice;
             }
-            if ( doubleval($this->actionqty2) > $qty ) {
-               // return $this->actionprice2;
-            }
-            if ( doubleval($this->actionqty1) > $qty ) {
-               // return $this->actionprice1;
-            }
             
             
             
         }
-        if (doubleval($this->actiondisc) > 0) {
+        
+            if ( $this->actionprice2 >0 && doubleval($this->actionqty2) <= $qty && $qty>1) {
+                return $this->actionprice2;
+            }
+            if ($this->actionprice1 >0 &&  doubleval($this->actionqty1) <= $qty && $qty>1 ) {
+                return $this->actionprice1;
+            }
+        
+        if (doubleval($this->actiondisc) > 0 && intval($this->fromdate) < time() && intval($this->todate) > time()) {   //по  категории
             return ($price - $price * $this->actiondisc / 100);
         }
 
