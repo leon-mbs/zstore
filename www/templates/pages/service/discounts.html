@@ -28,7 +28,7 @@
                             <form zippy="commonform">
                                 <div class="form-group">
                                     <label for="firstbay">Бонуси від суми першої покупки, % від суми</label>
-                                    <input zippy="firstbay"  pattern="[0-9\.\,]+" style="width:100px"  class="form-control qtyprice" type="text">
+                                    <input zippy="firstbay"  pattern="[0-9,\.]+" style="width:100px"  class="form-control qtyprice" type="text">
                                 </div>
                                 <div class="form-group">
                                     <label ><b>Бонуси від  суми покупки</b></label>
@@ -39,7 +39,7 @@
                                         <span class="input-group-text"> Більше</span>
                                         <input   class="form-control"   zippy="summa1"   pattern="[0-9]+">
                                         <span class="input-group-text"> бонус,%</span>
-                                        <input   class="form-control qtyprice"   zippy="bonus1"   pattern="[0-9\.\,]+">
+                                        <input   class="form-control qtyprice"   zippy="bonus1"   pattern="[0-9,\.]+">
                                     </div>      
                                     <small>Перший рівень</small>
                                 </div>
@@ -48,7 +48,7 @@
                                         <span class="input-group-text"> Більше</span>
                                         <input   class="form-control"   zippy="summa2"   pattern="[0-9]+">
                                         <span class="input-group-text"> бонус,%</span>
-                                        <input   class="form-control qtyprice"   zippy="bonus2"   pattern="[0-9\.\,]+">
+                                        <input   class="form-control qtyprice"   zippy="bonus2"   pattern="[0-9,\.]+">
                                     </div>      
 
                                     <small>Другий рівень</small>
@@ -58,7 +58,7 @@
                                         <span class="input-group-text"> Більше</span>
                                         <input   class="form-control"   zippy="summa3"   pattern="[0-9]+">
                                         <span class="input-group-text"> бонус,%</span>
-                                        <input   class="form-control qtyprice"   zippy="bonus3" pattern="[0-9\.\,]+" >
+                                        <input   class="form-control qtyprice"   zippy="bonus3" pattern="[0-9,\.]+" >
                                     </div>      
 
                                     <small>Третiй рівень</small>
@@ -68,7 +68,7 @@
                                         <span class="input-group-text"> Більше</span>
                                         <input   class="form-control"   zippy="summa4"   pattern="[0-9]+">
                                         <span class="input-group-text"> бонус,%</span>
-                                        <input   class="form-control qtyprice"   zippy="bonus4" pattern="[0-9\.\,]+" >
+                                        <input   class="form-control qtyprice"   zippy="bonus4" pattern="[0-9,\.]+" >
                                     </div>      
 
                                     <small>Четвертий рівень</small>
@@ -96,7 +96,7 @@
                                         <span class="input-group-text"> Більше</span>
                                         <input   class="form-control"   zippy="discsumma1"   pattern="[0-9]+">
                                         <span class="input-group-text"> знижка,%</span>
-                                        <input   class="form-control qtyprice"   zippy="disc1"   pattern="[0-9\.\,]+">
+                                        <input   class="form-control qtyprice"   zippy="disc1"   pattern="[0-9,\.]+">
                                     </div>      
                                     <small>Перший рівень</small>
                                 </div>
@@ -105,7 +105,7 @@
                                         <span class="input-group-text"> Більше</span>
                                         <input   class="form-control"   zippy="discsumma2"   pattern="[0-9]+">
                                         <span class="input-group-text"> знижка,%</span>
-                                        <input   class="form-control qtyprice"   zippy="disc2"   pattern="[0-9\.\,]+">
+                                        <input   class="form-control qtyprice"   zippy="disc2"   pattern="[0-9,\.]+">
                                     </div>      
 
                                     <small>Другий рівень</small>
@@ -115,7 +115,7 @@
                                         <span class="input-group-text"> Більше</span>
                                         <input   class="form-control"   zippy="discsumma3"   pattern="[0-9]+">
                                         <span class="input-group-text"> знижка,%</span>
-                                        <input   class="form-control qtyprice"   zippy="disc3" pattern="[0-9\.\,]+" >
+                                        <input   class="form-control qtyprice"   zippy="disc3" pattern="[0-9,\.]+" >
                                     </div>      
 
                                     <small>Третiй рівень</small>
@@ -125,7 +125,7 @@
                                         <span class="input-group-text"> Більше</span>
                                         <input   class="form-control"   zippy="discsumma4"   pattern="[0-9]+">
                                         <span class="input-group-text"> знижка,%</span>
-                                        <input   class="form-control qtyprice"   zippy="disc4" pattern="[0-9\.\,]+" >
+                                        <input   class="form-control qtyprice"   zippy="disc4" pattern="[0-9,\.]+" >
                                     </div>      
 
                                     <small>Четвертий рівень</small>
@@ -144,7 +144,7 @@
                                     <label for="csearchkey">Контрагент</label>
                                     <input placeholder="Почнiть вводити..." class="form-control mr-sm-2" type="text" zippy="csearchkey">
                                     <label for="csearchdisc">знижка, %</label>
-                                    <input class="form-control qtyprice mr-sm-2" type="text" zippy="csearchdisc" pattern="[0-9\.\,]+" style="width:50px;">
+                                    <input class="form-control qtyprice mr-sm-2" type="text" zippy="csearchdisc" pattern="[0-9,\.]+" style="width:50px;">
                                     <input class="btn btn-success   " type="submit" value="Додати"  >
 
                                 </form> 
@@ -162,7 +162,7 @@
                                         <td zippy="cname"></td>
                                         <td zippy="cphone"></td>
                                         <td >
-                                            <input class="form-control qtyprice" style="width:50px;" zippy="cdisc"    pattern="[0-9\.\,]+">
+                                            <input class="form-control qtyprice" style="width:50px;" zippy="cdisc"    pattern="[0-9,\.]+">
                                         </td>
 
                                         <td  ><a zippy="сdel"><i class="fa fa-trash"/></a></td>
@@ -190,7 +190,7 @@
                                                 <input  placeholder="Начните вводить..."  class="form-control   mr-2"   zippy="isearchkey"> 
 
                                                 <label for="isearchdisc">акц. цiна</label>
-                                                <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchdisc" pattern="[0-9\.\,]+" style="width:50px;">
+                                                <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchdisc" pattern="[0-9,\.]+" style="width:50px;">
                                                 <label for="isearchfrom">з</label>
                                                 <input  class="form-control mr-sm-2"   zippy="isearchfrom"  style="width:100px;">
                                                 <label  for="isearchto">по</label>
@@ -210,7 +210,7 @@
                                     <select   class="form-control  "   zippy="gsearchkey"></select>
                                     &nbsp;   &nbsp;
                                     <label for="gsearchdisc">знижка,%</label>
-                                    <input   class="form-control qtyprice mr-sm-2" type="text" zippy="gsearchdisc" pattern="[0-9\.\,]+" style="width:50px;">
+                                    <input   class="form-control qtyprice mr-sm-2" type="text" zippy="gsearchdisc" pattern="[0-9,\.]+" style="width:50px;">
                                     <label for="gsearchfrom">з</label>
                                     <input  class="form-control mr-sm-2"   zippy="gsearchfrom"  style="width:100px;">
                                     <label  for="gsearchto">по</label>
@@ -266,13 +266,13 @@
                                                 <input  placeholder="Начните вводить..."  class="form-control  mr-2"   zippy="isearchokey"> 
 
                                                 <label for="isearchoqty1">кiл. (рiвень1)</label>
-                                                <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchoqty1" pattern="[0-9\.\,]+" style="width:50px;">
+                                                <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchoqty1" pattern="[0-9,\.]+" style="width:50px;">
                                                 <label for="isearchoprice1">акц. цiна (рiвень1)</label>
-                                                <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchoprice1" pattern="[0-9\.\,]+" style="width:50px;">
+                                                <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchoprice1" pattern="[0-9,\.]+" style="width:50px;">
                                                 <label for="isearchoqty2">кiл. (рiвень2)</label>
-                                                <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchoqty2" pattern="[0-9\.\,]+" style="width:50px;">
+                                                <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchoqty2" pattern="[0-9,\.]+" style="width:50px;">
                                                 <label for="isearchoprice2">акц. цiна (рiвень2)</label>
-                                                <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchoprice2" pattern="[0-9\.\,]+" style="width:50px;">
+                                                <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchoprice2" pattern="[0-9,\.]+" style="width:50px;">
                                            
                                                 <input class="btn btn-success  ml-2 " type="submit" value="Додати"  >
 
@@ -314,7 +314,7 @@
                                     <select   class="form-control select2"   zippy="ssearchkey"></select>
                                     &nbsp;   &nbsp;
                                     <label for="ssearchdisc">акц. ціна</label>
-                                    <input   class="form-control qtyprice mr-sm-2" type="text" zippy="ssearchdisc" pattern="[0-9\.\,]+" style="width:50px;">
+                                    <input   class="form-control qtyprice mr-sm-2" type="text" zippy="ssearchdisc" pattern="[0-9,\.]+" style="width:50px;">
                                     <label for="ssearchfrom">з</label>
                                     <input  class="form-control mr-sm-2"   zippy="ssearchfrom"  style="width:100px;">
                                     <label  for="sgsearchto">по</label>

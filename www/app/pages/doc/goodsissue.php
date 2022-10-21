@@ -1026,6 +1026,15 @@ class GoodsIssue extends \App\Pages\Base
         $this->calcPay();
     }
 
+    
+    public function getPriceByQty($args,$post=null)  {
+        $item = Item::load($args[0]) ;
+
+        $price = $item->getPrice($this->docform->pricetype->getValue(), $this->docform->store->getValue(),0,$args[1]);
+        
+        return  $price;
+        
+    }
 }
 
 

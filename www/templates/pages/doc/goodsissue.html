@@ -223,7 +223,7 @@
                         </div>
                         <div class="modal-body">
                             <div class="input-group  ">
-                                <input class="form-control qtyprice" type="text" zippy="editpaydisc" pattern="[0-9\.\,]+">
+                                <input class="form-control qtyprice" type="text" zippy="editpaydisc" pattern="[0-9,\.]+">
                                 <div class="input-group-append">
                                     <input type="submit" value="OK" zippy="bpaydisc" class="ml-2 btn btn-info  ">
 
@@ -247,7 +247,7 @@
                         </div>
                         <div class="modal-body">
                             <div class="input-group  ">
-                                <input class="form-control qtyprice" type="text" zippy="editpayamount" pattern="[0-9\.\,]+">
+                                <input class="form-control qtyprice" type="text" zippy="editpayamount" pattern="[0-9,\.]+">
                                 <div class="input-group-append">
                                     <input type="submit" value="OK" zippy="bpayamount" class="ml-2 btn btn-info  ">
 
@@ -270,7 +270,7 @@
                         </div>
                         <div class="modal-body">
                             <div class="input-group  ">
-                                <input class="form-control qtyprice" type="text" zippy="editpayed" pattern="[0-9\.\,]+">
+                                <input class="form-control qtyprice" type="text" zippy="editpayed" pattern="[0-9,\.]+">
                                 <div class="input-group-append">
                                     <input type="submit" value="OK" zippy="bpayed" class="ml-2 btn btn-info  ">
 
@@ -310,22 +310,22 @@
                     {{/usesnumber}}
                     <div class="form-group">
                         <label for="editquantity">Кількість</label>
-                        <input class="form-control qtyprice" type="text" zippy="editquantity" required="required" pattern="[0-9\.\,\s]+"
+                        <input  class="form-control qtyprice" type="text" zippy="editquantity" required="required" pattern="[0-9,\.\s]+"
                                style="width: 70px;">
 
                     </div>
 
                     <div class="form-group">
                         <label for="editprice">Ціна </label>
-                        <input class="form-control qtyprice" type="text" zippy="editprice" required="required" pattern="[0-9\.\,\s]+"
+                        <input class="form-control qtyprice" type="text" zippy="editprice" required="required" pattern="[0-9,\.\s]+"
                                style="width: 70px;">
 
                     </div>
 
 
                     <div class="form-group">
-                        <input type="submit" zippy="submitrow" value="Зберегти" class="btn btn-outline-primary ">
-                        &nbsp; <input type="button" zippy="cancelrow" value="До списку" class="btn btn-outline-secondary ">
+                        <input type="submit" zippy="submitrow" value="Зберегти" class="btn btn-primary ">
+                        &nbsp; <input type="button" zippy="cancelrow" value="До списку" class="btn btn-secondary ">
                     </div>
 
 
@@ -516,6 +516,13 @@
                     $('#stream_constraints').val(val);
                 }
 
+                
+                
+                
+              
+                
+                
+                
 
             });
 
@@ -538,11 +545,34 @@
                 $('#barcode').val(code);
                 $('#addcode').click()
             }
-
-
+            
        
         </script>
-  
-        {{/usescanner}}
+        {{/usescanner}}   
+          <script>
+            $(document).ready(function () {
+     
+        
+            $('#editquantity').on('input',function( ) {
+                   if(editquantity.reportValidity()==false) return
+           
+                   var id = $('#edittovar_id').val()
+                   if(id==0)   return;
+                   var q = $('#editquantity').val()
+                   
+                   $('#submitrow').attr('disabled','disabled')                     
+                      callPageMethod('getPriceByQty',[id,q], null,(data)=> 
+                      {
+                              // $('#editprice').val(data)
+                               $('#submitrow').attr('disabled',null)                     
+     
+                          
+                      });
+                    
+            })
+                 
+          });       
+         </script> 
+
     </body>
 </html>
