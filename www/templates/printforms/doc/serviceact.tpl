@@ -90,6 +90,9 @@
             Гарантія: {{gar}}
         </td>
     </tr>
+    <tr>
+        <td colspan="5">{{{notes}}}</td>
+    </tr>
 
 </table>
 

@@ -31,6 +31,10 @@
 
     </tr>
     {{/isdevice}}
+   <tr>
+        <td colspan="5">{{{notes}}}</td>
+    </tr>
+    
     <tr style="font-weight: bolder;">
         <td colspan="5" align="center">
             Отриманi послуги № {{document_number}} від {{date}}

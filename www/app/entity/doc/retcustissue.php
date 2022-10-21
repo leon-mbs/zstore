@@ -46,6 +46,7 @@ class RetCustIssue extends Document
                         "_detail"         => $detail,
                         "firm_name"       => $this->headerdata["firm_name"],
                         "customer_name"   => $this->customer_name,
+                        "notes"           => nl2br($this->notes),
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount),
                         "payed"           => H::fa($this->payed)

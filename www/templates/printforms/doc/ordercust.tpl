@@ -6,6 +6,9 @@
         <td>Постачальник</td>
         <td colspan="5">{{customer_name}}</td>
     </tr>
+      <tr>
+        <td colspan="7">{{{notes}}}</td>
+    </tr>
 
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">

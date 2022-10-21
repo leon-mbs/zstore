@@ -70,6 +70,7 @@ class TTN extends Document
                         "delivery_name"   => $this->headerdata["delivery_name"],
                         "order"           => strlen($this->headerdata["order"]) > 0 ? $this->headerdata["order"] : false,
                         "ship_amount"     => strlen($this->headerdata["ship_amount"]) > 0 ? H::fa($this->headerdata["ship_amount"]) : false,
+                        "notes"           => nl2br($this->notes),
                         "emp_name"        => $this->headerdata["emp_name"],
                         "document_number" => $this->document_number,
                         "phone"           => $this->headerdata["phone"],

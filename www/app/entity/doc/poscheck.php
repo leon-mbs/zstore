@@ -147,6 +147,7 @@ class POSCheck extends Document
                         "customer_name" => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
                         "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
                         "fiscalnumberpos"  => strlen($this->headerdata["fiscalnumberpos"]) > 0 ? $this->headerdata["fiscalnumberpos"] : false,
+                        "notes"           => nl2br($this->notes),
 
                         "pos_name"        => $this->headerdata["pos_name"],
                         "time"            => H::fdt($this->headerdata["time"]),

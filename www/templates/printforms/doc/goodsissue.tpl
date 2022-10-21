@@ -90,6 +90,9 @@
         <td colspan="5">{{order}}</td>
     </tr>
     {{/order}}
+    <tr>
+        <td colspan="7">{{{notes}}}</td>
+    </tr>
 
 
     <tr>

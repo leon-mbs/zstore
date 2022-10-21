@@ -46,6 +46,9 @@
             {{amount}}
         </td>
     </tr>
+    <tr>
+        <td colspan="2">{{{notes}}}</td>
+    </tr>
 
 
 </table>

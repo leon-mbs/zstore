@@ -34,7 +34,11 @@
         
         
     </tr>
-    {{/isval}}        
+    {{/isval}}
+   <tr>
+        <td colspan="7">{{{notes}}}</td>
+    </tr>
+            
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
             <br> Рахунок вхідний № {{document_number}} від {{date}} <br><br>

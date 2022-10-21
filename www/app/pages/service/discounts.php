@@ -358,8 +358,8 @@ class Discounts extends \App\Pages\Base
             $d2 = doubleval($sender->isearchoprice2->getText());
             $q2 = doubleval($sender->isearchoqty2->getText());
             if ($d2 > 0 && $q2 > 1) {
-                $i->actionprice2 = $d;
-                $i->actionqty2 = $q;
+                $i->actionprice2 = $d2;
+                $i->actionqty2 = $q2;
             }
             $i->save();
             $this->itab->itform->ilist->Reload();

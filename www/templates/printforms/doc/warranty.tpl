@@ -10,6 +10,10 @@
             від {{date}}
         </td>
     </tr>
+   <tr>
+        <td colspan="8">{{{notes}}}</td>
+    </tr>
+    
     <tr>
         <td colspan="8">&nbsp;</td>
     </tr>
