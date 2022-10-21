@@ -629,7 +629,7 @@ class ServiceAct extends \App\Pages\Base
 
         $this->editdetail->editprice->setText($price);
 
-      //  $this->updateAjax(array('editprice'));
+      
     }
 
     public function OnCustomerFirm($sender) {

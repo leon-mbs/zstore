@@ -398,7 +398,7 @@ class RetCustIssue extends \App\Pages\Base
         $this->editdetail->editprice->setText(H::fa($e->partion));
 
 
-       // $this->updateAjax(array('qtystock', 'editprice'));
+       
     }
 
     public function OnAutoCustomer($sender) {

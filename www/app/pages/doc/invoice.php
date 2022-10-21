@@ -565,7 +565,7 @@ class Invoice extends \App\Pages\Base
         $price = $item->getLastPartion();
         $this->editdetail->pricestock->setText( H::fa($price));
 
-       // $this->updateAjax(array('qtystock', 'editprice','pricestock'));
+       
     }
 
     public function OnAutoCustomer($sender) {
@@ -580,7 +580,7 @@ class Invoice extends \App\Pages\Base
 
         $this->editserdetail->editserprice->setText($price);
 
-       // $this->updateAjax(array('editserprice'));
+       
     }
 
     public function OnChangeCustomer($sender) {

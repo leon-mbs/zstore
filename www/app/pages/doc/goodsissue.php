@@ -875,7 +875,7 @@ class GoodsIssue extends \App\Pages\Base
         $price = $item->getLastPartion();
         $this->editdetail->pricestock->setText( H::fa($price));
 
-      //  $this->updateAjax(array('qtystock', 'editprice', 'editserial','pricestock'));
+
     }
 
     public function OnAutoItem($sender) {
