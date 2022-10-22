@@ -210,11 +210,16 @@ class CustomerList extends \App\Pages\Base
         
       
             $title="";
-            if(doubleval($item->discount) > 0) {
-                  $title= Helper::l("actiondiscounttitile",Helper::fa($item->actionprice));                
-            }
             if(intval( $this->_bonuses[$item->customer_id]  ) > 0) {
                 $title= Helper::l("actionbonustitile",$this->_bonuses[$item->customer_id]);                
+            }
+            $d = $item->getDiscount();
+            if(doubleval($d) > 0) {
+                  $title= Helper::l("actionbulkdiscounttitile",Helper::fa($d));                
+            }
+            $d = $item->discount;   //постоянная  скидка
+            if(doubleval($d) > 0) {
+                  $title= Helper::l("actiondiscounttitile",Helper::fa($d));                
             }
             $row->add(new Label('hasaction'))->setVisible(strlen($title)>0);
             

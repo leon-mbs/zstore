@@ -10,6 +10,9 @@
         </td>
 
     </tr>
+    <tr>
+        <td colspan="4">{{{notes}}}</td>
+    </tr>
 
 
     <tr style="font-weight: bolder;">
@@ -35,12 +38,7 @@
 
     </tr>
     {{/_detail}}
-    <tr>
-        <td colspan="4">
-            {{{notes}}}
-        </td>
-
-    </tr>
+   
 </table>
 
 

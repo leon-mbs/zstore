@@ -488,9 +488,9 @@ class Invoice extends \App\Pages\Base
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
             $customer = Customer::load($customer_id);
-
-            if ($customer->discount > 0) {
-                $disc = round($total * ($customer->discount / 100));
+            $d = $customer->getDiscount() ;
+            if ($d > 0) {
+                $disc = round($total * ($d / 100));
             } else {
                 $bonus = $customer->getBonus();
                 if ($bonus > 0) {
@@ -565,7 +565,7 @@ class Invoice extends \App\Pages\Base
         $price = $item->getLastPartion();
         $this->editdetail->pricestock->setText( H::fa($price));
 
-       // $this->updateAjax(array('qtystock', 'editprice','pricestock'));
+       
     }
 
     public function OnAutoCustomer($sender) {
@@ -580,7 +580,7 @@ class Invoice extends \App\Pages\Base
 
         $this->editserdetail->editserprice->setText($price);
 
-       // $this->updateAjax(array('editserprice'));
+       
     }
 
     public function OnChangeCustomer($sender) {
@@ -594,8 +594,9 @@ class Invoice extends \App\Pages\Base
             }
 
             $disctext = "";
-            if (doubleval($cust->discount) > 0) {
-                $disctext = H::l("custdisc") . " {$cust->discount}%";
+            $d =  $cust->getDiscount() ;
+            if (doubleval($d) > 0) {
+                $disctext = H::l("custdisc") . " {$d}%";
             } else {
                 $bonus = $cust->getBonus();
                 if ($bonus > 0) {
@@ -695,4 +696,13 @@ class Invoice extends \App\Pages\Base
         }
     }
 
+    public function getPriceByQty($args,$post=null)  {
+        $item = Item::load($args[0]) ;
+        $args[1] = str_replace(',','.',$args[1]) ;
+        $price = $item->getPrice($this->docform->pricetype->getValue(),0,0,$args[1]);
+        
+        return $price;
+        
+    }    
+    
 }

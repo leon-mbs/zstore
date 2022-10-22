@@ -86,7 +86,10 @@
         <td colspan="5"> {{ship_amount}}</td>
     </tr>
     {{/ship_amount}}
-</tr>
+    <tr>
+        <td colspan="7">{{{notes}}}</td>
+    </tr>
+
 
 
 <tr>

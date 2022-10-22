@@ -440,9 +440,9 @@ class Order extends \App\Pages\Base
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
             $customer = Customer::load($customer_id);
-
-            if ($customer->discount > 0) {
-                $disc = round($total * ($customer->discount / 100));
+            $d = $customer->getDiscount();
+            if ($d > 0) {
+                $disc = round($total * ($d / 100));
                 $this->docform->bonus->setText(0);
                 $this->docform->editbonus->setText(0);
 
@@ -512,7 +512,7 @@ class Order extends \App\Pages\Base
         $price = $item->getLastPartion();
         $this->editdetail->pricestock->setText( H::fa($price));
 
-      //  $this->updateAjax(array('qtystock', 'editprice','pricestock'));
+      
     }
 
     public function OnAutoCustomer($sender) {
@@ -530,9 +530,9 @@ class Order extends \App\Pages\Base
             $this->docform->phone->setText($customer->phone);
             $this->docform->email->setText($customer->email);
             $this->docform->address->setText($customer->address);
-
-            if ($customer->discount > 0) {
-                $this->docform->discount->setText(H::l("custdisc") ." ". $customer->discount . '%');
+            $d= $customer->getDiscount();
+            if ($d > 0) {
+                $this->docform->discount->setText(H::l("custdisc") ." ". $d . '%');
                 $this->docform->discount->setVisible(true);
                   
             } else {
@@ -735,4 +735,16 @@ class Order extends \App\Pages\Base
         $this->editnewitem->setVisible(false);
         $this->editdetail->setVisible(true);
     }
+    
+    public function getPriceByQty($args,$post=null)  {
+        $item = Item::load($args[0]) ;
+        $args[1] = str_replace(',','.',$args[1]) ;
+        $price = $item->getPrice($this->docform->pricetype->getValue(), 0,0,$args[1]);
+        
+        return  $price;
+        
+    }    
+
+     
+    
 }

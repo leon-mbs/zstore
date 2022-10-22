@@ -57,7 +57,8 @@ class GoodsReceipt extends Document
             $header['contract'] = $contract->contract_number;
             $header['createdon'] = H::fd($contract->createdon);
         }
-
+     
+        $header['notes'] = nl2br($this->notes)  ;
         $header['storename'] = $this->headerdata["storename"]  ;
         $header['isprep'] = $this->headerdata["prepaid"] > 0;
         $header['isdisc'] = $this->headerdata["disc"] > 0;

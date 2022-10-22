@@ -700,7 +700,7 @@ class ItemList extends \App\Pages\Base
         $html = $report->generate($header);
 
 
-        $this->updateAjax(array(), "  $('#tag').html('{$html}') ; $('#pform').modal()");
+        
     }
 
     */

@@ -48,6 +48,10 @@
         <td><b>Підстава</b></td>
         <td colspan="6">{{basedoc}}</td>
     </tr>
+    <tr>
+        <td colspan="9">{{{notes}}}</td>
+    </tr>
+    
      {{#isval}}
     <tr style="font-weight: bolder;">
        <td></td>

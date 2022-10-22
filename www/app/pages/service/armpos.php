@@ -429,6 +429,10 @@ class ARMPos extends \App\Pages\Base
     public function plusOnClick($sender) {
         $tovar = $sender->owner->getDataItem();
         $tovar->quantity++;
+        
+        $tovar->price = $tovar->getPrice($this->getPriceType(), $this->form1->store->getValue(),0,$tovar->quantity);
+        
+        
         $this->docpanel->form2->detail->Reload();
         $this->calcTotal();
     }
@@ -438,6 +442,10 @@ class ARMPos extends \App\Pages\Base
         if ($tovar->quantity > 1) {
             $tovar->quantity--;
         }
+        
+        $tovar->price = $tovar->getPrice($this->getPriceType(), $this->form1->store->getValue(),0,$tovar->quantity);
+       
+        
         $this->docpanel->form2->detail->Reload();
         $this->calcTotal();
     }
@@ -691,7 +699,7 @@ class ARMPos extends \App\Pages\Base
         }
 
 
-       // $this->updateAjax(array('qtystock', 'editprice', 'editserial'));
+
     }
 
     public function OnAutoItem($sender) {
@@ -712,7 +720,7 @@ class ARMPos extends \App\Pages\Base
         $ser = Service::load($id);
         $this->docpanel->editserdetail->editserprice->setText($ser->price);
 
-       // $this->updateAjax(array('editserprice'));
+
     }
 
     public function OnAutoCustomer($sender) {
@@ -731,9 +739,10 @@ class ARMPos extends \App\Pages\Base
             $cust = Customer::load($customer_id);
 
             $disctext = "";
-            if (doubleval($cust->discount) > 0) {
-                $disctext = H::l("custdisc") . " {$cust->discount}%";
-                $disc = round($total * ($cust->discount / 100));
+            $d = $cust->getDiscount() ;
+            if (doubleval($d) > 0) {
+                $disctext = H::l("custdisc") . " {$d}%";
+                $disc = round($total * ($d / 100));
                 
                 $this->docpanel->form3->discount->setText($disctext);
                 $this->docpanel->form3->discount->setVisible(true);
@@ -1111,4 +1120,13 @@ class ARMPos extends \App\Pages\Base
         return $this->_pt;
     }
 
+   
+    public function getPriceByQty($args,$post=null)  {
+        $item = Item::load($args[0]) ;
+        $args[1] = str_replace(',','.',$args[1]) ;
+        $price = $item->getPrice($this->getPriceType(), $this->form1->store ,0,$args[1]);
+        
+        return  $price;
+        
+    }   
 }

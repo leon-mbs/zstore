@@ -4,6 +4,10 @@
             <b> Інвентаризація № {{document_number}} від {{date}}</b> <br>
         </td>
     </tr>
+   <tr>
+        <td colspan="4">{{{notes}}}</td>
+    </tr>
+    
     <tr>
         <td colspan="4">
             <b> Склад:</b> {{store}}

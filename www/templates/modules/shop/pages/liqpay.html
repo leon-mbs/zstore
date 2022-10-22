@@ -1,0 +1,78 @@
+<html>
+
+<body>
+
+    <div class="row" style="min-height:400px;">
+        <div class="col-12 col-md-6 col-xl-4  ">
+            <h3 class="mt-2 mb-3">Оплата замовлення {{onumber}}</h3>
+            <table class="table table-sm">
+                {{#detail}}
+                <tr>
+                    <td>{{itemname}}</td>
+                    <td class="tezt-right">{{qty}}</td>
+                    <td class="tezt-right">{{price}}</td>
+                    <td class="tezt-right">{{sum}}</td>
+                </tr>
+
+                {{/detail}}
+            </table>
+
+            <button class="btn btn-success" type="button" onclick="pay();">Оплатити</button>
+            <!-- <div id="liqpay_checkout"></div> -->
+        </div>
+    </div>
+    
+    <script src="/assets/js/sha1.js"></script>
+    <script src="/assets/js/enc-base64.js"></script>
+    <script>
+        let pay = function(){};
+        let base64_encode = function(str){
+            return window.btoa(unescape(encodeURIComponent( str )));
+        }
+
+        let sign = function(encoded_data){
+            let private_key = 'sandbox_JOBg3ngEMQcBSjknmoSQgfYT2KC3N0Dmau17XKV2';
+
+            return CryptoJS.enc.Base64.stringify(
+                CryptoJS.SHA1(
+                    private_key + encoded_data + private_key
+                )
+            );
+        };
+
+        window.LiqPayCheckoutCallback = function() {
+            pay = function(){
+                let data = {
+                    version: 3,
+                    public_key: 'sandbox_i2218966209',
+                    action: 'pay',
+                    amount: 200.53,
+                    currency: 'UAH',
+                    description: 'Оплата товару',
+                    order_id: 'ABC12345678',
+                    language: 'uk'
+                };
+
+                let encoded_data = base64_encode(JSON.stringify(data));
+
+                LiqPayCheckout.init({
+                    data: encoded_data,
+                    signature: sign(encoded_data),
+                    language: "uk",
+                    mode: "popup"
+                }).on("liqpay.callback", function(data){
+                    console.log(data.status);
+                    console.log(data);
+                }).on("liqpay.ready", function(data){
+                    // ready
+                }).on("liqpay.close", function(data){
+                    // close
+                });
+            };
+        };
+    </script>
+    <script src="https://static.liqpay.ua/libjs/checkout.js" async></script>
+
+</body>
+
+</html>

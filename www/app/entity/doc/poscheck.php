@@ -147,6 +147,7 @@ class POSCheck extends Document
                         "customer_name" => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
                         "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
                         "fiscalnumberpos"  => strlen($this->headerdata["fiscalnumberpos"]) > 0 ? $this->headerdata["fiscalnumberpos"] : false,
+                        "notes"           => nl2br($this->notes),
 
                         "pos_name"        => $this->headerdata["pos_name"],
                         "time"            => H::fdt($this->headerdata["time"]),
@@ -254,7 +255,7 @@ class POSCheck extends Document
         //списываем бонусы
         if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
             $customer = \App\Entity\Customer::load($this->customer_id);
-            if ($customer->discount > 0) {
+            if ($customer->getDiscount() > 0) {
                 //процент
             } else {
                 $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0);

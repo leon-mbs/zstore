@@ -380,7 +380,7 @@ class OutcomeItem extends \App\Pages\Base
         $item = Item::load($item_id);
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
 
-      //  $this->updateAjax(array('qtystock'));
+      
     }
 
     public function OnChangeStore($sender) {

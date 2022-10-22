@@ -148,6 +148,7 @@ class ServiceAct extends Document
                         "shopname"        => strlen($common['shopname']) > 0 ? $common['shopname'] : false,
                         "address"         => $firm['address'],
                         "phone"           => $firm['phone'],
+                        "notes"           => nl2br($this->notes),
                         "customer_name"   => $this->headerdata['customer_name'],
                         "isdevice"        => strlen($this->headerdata["device"]) > 0,
                         "device"          => $this->headerdata["device"],

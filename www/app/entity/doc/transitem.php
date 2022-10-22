@@ -61,6 +61,7 @@ class TransItem extends Document
             "from"            => Store::load($this->headerdata["store"])->storename,
             "to"            => Store::load($this->headerdata["tostore"])->storename,
             "fromitemname"    => $fi->itemname . ', ' . $this->headerdata["fromquantity"] . $fi->msr,
+            "notes"           => nl2br($this->notes),
             "toitemname"      => $ti->itemname . ', ' . $this->headerdata["toquantity"] . $ti->msr,
             "document_number" => $this->document_number,
             "amount"          => H::fa($this->amount)
