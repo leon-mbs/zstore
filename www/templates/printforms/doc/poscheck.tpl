@@ -43,6 +43,10 @@
         <td colspan="5">{{customer_name}}</td>
     </tr>
     {{/customer_name}}
+   <tr>
+        <td colspan="7">{{{notes}}}</td>
+    </tr>
+    
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Найменування</th>

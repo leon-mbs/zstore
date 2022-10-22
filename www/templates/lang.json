@@ -514,6 +514,7 @@
     "nodelusedstore": "Не можна  видаляти використовуваний склад"  ,
     "seritemdiff": "Сума по  ТМЦ  не  співпадає з вартістю послуги" ,
     "actiondiscounttitile": "Постійна знижка %s%%"   ,
+    "actionbulkdiscounttitile": "Накопичувальна знижка %s%%"   ,
     "actionbonustitile": "Бонуси %s"   ,
     "actionpricetitile": "Акційна ціна %s"   ,
     "actiondisctitile": "Акційна знижка %s%%" ,

@@ -145,7 +145,7 @@ class PayActivity extends \App\Pages\Base
             $html = $this->generateReport();
             \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
             $this->detail->preview->setText($html, true);
-           // $this->updateAjax(array('preview'));
+           
         }
     }
 

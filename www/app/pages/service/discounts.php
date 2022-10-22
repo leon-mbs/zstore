@@ -69,6 +69,18 @@ class Discounts extends \App\Pages\Base
         $form->add(new  TextInput("summa3", $disc["summa3"]));
         $form->add(new  TextInput("bonus4", $disc["bonus4"]));
         $form->add(new  TextInput("summa4", $disc["summa4"]));
+     
+        $form = $this->ctab->add(new  Form("discform"));
+        $form->onSubmit($this, "onDisc");
+
+        $form->add(new  TextInput("disc1", $disc["disc1"]));
+        $form->add(new  TextInput("discsumma1", $disc["discsumma1"]));
+        $form->add(new  TextInput("disc2", $disc["disc2"]));
+        $form->add(new  TextInput("discsumma2", $disc["discsumma2"]));
+        $form->add(new  TextInput("disc3", $disc["disc3"]));
+        $form->add(new  TextInput("discsumma3", $disc["discsumma3"]));
+        $form->add(new  TextInput("disc4", $disc["disc4"]));
+        $form->add(new  TextInput("discsumma4", $disc["discsumma4"]));
 
         //покупатели
         $this->ctab->add(new Form('cfilter'))->onSubmit($this, 'OnCAdd');
@@ -122,6 +134,16 @@ class Discounts extends \App\Pages\Base
  
         $this->itab->itform->ilist->Reload();
 
+        $this->itab->add(new Form('iofilter'))->onSubmit($this, 'OnIOAdd');
+        $this->itab->iofilter->add(new AutocompleteTextInput('isearchokey'))->onText($this, 'OnAutoItem');
+        $this->itab->iofilter->add(new TextInput('isearchoqty1'));
+        $this->itab->iofilter->add(new TextInput('isearchoprice1'));
+        $this->itab->iofilter->add(new TextInput('isearchoqty2'));
+        $this->itab->iofilter->add(new TextInput('isearchoprice2'));
+        $this->itab->add(new DataView('iolist', new DiscItemODataSource($this), $this, 'oitemlistOnRow'));
+        $this->itab->iolist->setPageSize(H::getPG());
+        $this->itab->add(new \Zippy\Html\DataList\Paginator('iopag', $this->itab->iolist));
+        $this->itab->iolist->Reload();
 
     }
 
@@ -140,6 +162,25 @@ class Discounts extends \App\Pages\Base
         $disc["summa3"] = $sender->summa3->getText();
         $disc["bonus4"] = $sender->bonus4->getText();
         $disc["summa4"] = $sender->summa4->getText();
+        System::setOptions("discount", $disc);
+        $this->setSuccess('saved');
+    }
+
+    
+    public function onDisc($sender) {
+        $disc = System::getOptions("discount");
+        if (!is_array($disc)) {
+            $disc = array();
+        }
+
+        $disc["disc1"] = $sender->disc1->getText();
+        $disc["discsumma1"] = $sender->discsumma1->getText();
+        $disc["disc2"] = $sender->disc2->getText();
+        $disc["discsumma2"] = $sender->discsumma2->getText();
+        $disc["disc3"] = $sender->disc3->getText();
+        $disc["discsumma3"] = $sender->discsumma3->getText();
+        $disc["disc4"] = $sender->disc4->getText();
+        $disc["discsumma4"] = $sender->discsumma4->getText();
         System::setOptions("discount", $disc);
         $this->setSuccess('saved');
     }
@@ -282,6 +323,8 @@ class Discounts extends \App\Pages\Base
         if ($d > 0) {
             $i->actionprice = $d;
             $i->actiondisc = 0;
+            $i->actionqty1 = 0;
+            $i->actionprice1 = 0;
             $i->fromdate = $sender->isearchfrom->getDate();
             $i->todate = $sender->isearchto->getDate(true);;
             if ($i->fromdate > $i->todate) {
@@ -296,11 +339,71 @@ class Discounts extends \App\Pages\Base
         $sender->isearchkey->setText("");
         $sender->isearchkey->setKey(0);
     }
+   
+    public function OnIOAdd($sender) {
+        $k = $sender->isearchokey->getKey();
+        $i = Item::load($k);
+        if ($i == null) {
+            return;
+        }
+        $d1 = doubleval($sender->isearchoprice1->getText());
+        $q1 = doubleval($sender->isearchoqty1->getText());
+        if ($d1 > 0 && $q1 > 1) {
+            $i->actionprice1 = $d1;
+            $i->actionqty1  = $q1;
+            $i->actiondisc  = 0;
+            $i->actionprice  = 0;
+            $i->fromdate  = 0;
+            $i->todate  = 0;
+            $d2 = doubleval($sender->isearchoprice2->getText());
+            $q2 = doubleval($sender->isearchoqty2->getText());
+            if ($d2 > 0 && $q2 > 1) {
+                $i->actionprice2 = $d2;
+                $i->actionqty2 = $q2;
+            }
+            $i->save();
+            $this->itab->itform->ilist->Reload();
+        }
 
+        $sender->isearchoprice1->setText("");
+        $sender->isearchoprice2->setText("");
+        $sender->isearchoqty1->setText("");
+        $sender->isearchoqty2->setText("");
+        $sender->isearchokey->setText("");
+        $sender->isearchokey->setKey(0);
+        
+        $this->itab->iolist->Reload();
+        $this->goAnkor('iofilter')  ;
+      
+        
+    }
+
+    public function oitemlistOnRow($row) {
+        $i = $row->getDataItem();
+        $row->add(new  ClickLink('odel'))->onClick($this, 'odeleteOnClick');
+        $row->add(new  Label("ioname", $i->itemname) );
+        $row->add(new  Label("iocode", $i->item_code) );
+        $row->add(new  Label("ioqty1", H::fqty($i->actionqty1)) );
+        $row->add(new  Label("ioprice1", H::fa($i->actionprice1)));
+        $row->add(new  Label("ioqty2", H::fqty($i->actionqty2)) );
+        $row->add(new  Label("ioprice2", H::fa($i->actionprice2)));
+    
+    }
+ 
+    public function odeleteOnClick($sender) {
+        $s = $sender->owner->getDataItem();
+        $s->actionqty1 = 0;
+        $s->save();
+        $this->itab->iolist->Reload();
+        $this->goAnkor('iofilter')  ;
+
+    }  
+     
     public function itemlistOnRow($row) {
         $i = $row->getDataItem();
         $row->add(new  Label("icat_name", $i->cat_name));
         $row->add(new  Label("iname", $i->itemname));
+        $row->add(new  Label("icode", $i->item_code) );
         $row->add(new  Label("iprice"))->setText($i->actionprice);
         $row->iprice->setVisible($i->actionprice > 0);
         if ($i->fromdate < time() && $i->todate > time()) {
@@ -330,7 +433,7 @@ class Discounts extends \App\Pages\Base
        
     }
 
-   public function OnDelAll($sender) {
+    public function OnDelAll($sender) {
         if (false == \App\ACL::checkDelRef('ItemList')) {
             return;
         }
@@ -489,6 +592,38 @@ class DiscItemDataSource implements \Zippy\Interfaces\DataSource
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
+        return Item::find($this->getWhere(), "itemname ", $count, $start);
+    }
+
+    public function getItem($id) {
+
+    }
+
+}
+
+class DiscItemODataSource implements \Zippy\Interfaces\DataSource
+{
+
+    private $page;
+
+    public function __construct($page) {
+        $this->page = $page;
+    }
+
+    private function getWhere() {
+
+        $conn = \ZDB\DB::getConnect();
+
+        $where = "  disabled <> 1  and  (  detail   like  '%<actionqty1>%'   ) ";
+
+        return $where;
+    }
+
+    public function getItemCount() {
+        return Item::findCnt($this->getWhere());
+    }
+
+    public function getItems($start, $count, $sortfield = null, $asc = null) {
         return Item::find($this->getWhere(), "itemname ", $count, $start);
     }
 

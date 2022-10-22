@@ -810,7 +810,7 @@ class TTN extends \App\Pages\Base
         }
 
 
-      //  $this->updateAjax(array('qtystock', 'editprice', 'editserial'));
+      
     }
 
     public function OnAutoItem($sender) {

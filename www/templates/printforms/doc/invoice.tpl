@@ -88,6 +88,10 @@
 
     </tr>
     {{/isbank}}
+   <tr>
+        <td colspan="9">{{{notes}}}</td>
+    </tr>
+    
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="9" valign="middle">
             Рахунок-фактура № {{document_number}} від {{date}}

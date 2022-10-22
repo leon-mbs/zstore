@@ -157,6 +157,12 @@ class Util
     public static function handlePhone($tel) {
         $tel = str_replace(' ', '', $tel);
         $tel = preg_replace("/[^0-9.]/", "", $tel);
+        
+        $phonel = System::getOption("common", 'phonel');
+        if($phonel==12 && strlen($tel)==10) {
+            $tel = '38'.$tel ;
+        }
+        
         return $tel;
     }
 

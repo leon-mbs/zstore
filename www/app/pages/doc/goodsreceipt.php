@@ -931,7 +931,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editdetail->editsellprice->setText($item->price1);
 
 
-       // $this->updateAjax(array('editsellprice'));
+
     }
 
 }

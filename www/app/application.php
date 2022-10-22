@@ -18,10 +18,7 @@ class Application extends \Zippy\WebApplication
         $path = '';
         $name = ltrim($name, '\\');
 
-       
         $templatepath = 'templates/';
-
-     
 
         $className = str_replace("\\", "/", ltrim($name, '\\'));
 
@@ -57,10 +54,7 @@ class Application extends \Zippy\WebApplication
         if ($api[0] == 'api' && count($api) > 1) {
 
             $class = $api[1];
-
-           
-            
-            
+             
             try {
 
                 $file = _ROOT . "app/api/" . strtolower($class) . ".php";
@@ -74,14 +68,11 @@ class Application extends \Zippy\WebApplication
                // $method = $api[2];
 
                 $page = new $class;
-
- 
-         
+           
                 if ($page instanceof \App\API\JsonRPC) {
                     $page->Execute();
-                   
-                }   else {
-                   $this->headers(403); 
+                } else {
+                   http_response_code (403); 
                 }
                 die;
                 
@@ -96,22 +87,18 @@ class Application extends \Zippy\WebApplication
         $arr = explode('/', $uri);
 
         $pages = array(
-            "store"    => "\\App\\Pages\\Main",
-            "admin"    => "\\App\\Pages\\Main",
-            "shop"     => "\\App\\Modules\\Shop\\Pages\\Main",
-            "sp"       => "\\App\\Modules\\Shop\\Pages\\ProductView",
-         //   "aboutus"  => "\\App\\Modules\\Shop\\Pages\\AboutUs",
-         //   "delivery" => "\\App\\Modules\\Shop\\Pages\\Delivery",
-        //    "contact"  => "\\App\\Modules\\Shop\\Pages\\Contact",
-        //    "news"     => "\\App\\Modules\\Shop\\Pages\\News",
+            "store"          => "\\App\\Pages\\Main",
+            "admin"          => "\\App\\Pages\\Main",
+            "shop"           => "\\App\\Modules\\Shop\\Pages\\Main",
+            "sp"             => "\\App\\Modules\\Shop\\Pages\\ProductView",
             "showreport"     => "\\App\\Pages\\ShowReport",
-            "showdoc"     => "\\App\\Pages\\ShowDoc",
-            "doclink"     => "\\App\\Pages\\Doclink",
-            "scat"     => "\\App\\Modules\\Shop\\Pages\\Main",
-            "pcat"     => "\\App\\Modules\\Shop\\Pages\\Catalog",
-            "project"  => "\\App\\Modules\\Issue\\Pages\\ProjectList",
-            "issue"    => "\\App\\Modules\\Issue\\Pages\\IssueList",
-            "topic"    => "\\App\\Modules\\Note\\Pages\\ShowTopic"
+            "showdoc"        => "\\App\\Pages\\ShowDoc",
+            "doclink"        => "\\App\\Pages\\Doclink",
+            "scat"           => "\\App\\Modules\\Shop\\Pages\\Main",
+            "pcat"           => "\\App\\Modules\\Shop\\Pages\\Catalog",
+            "project"        => "\\App\\Modules\\Issue\\Pages\\ProjectList",
+            "issue"          => "\\App\\Modules\\Issue\\Pages\\IssueList",
+            "topic"          => "\\App\\Modules\\Note\\Pages\\ShowTopic"
         );
 
         if (strlen($pages[$arr[0]]) > 0) {

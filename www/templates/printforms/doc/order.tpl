@@ -29,6 +29,9 @@
     </tr>
 
     {{/isoutnumber}}
+     <tr>
+        <td colspan="10">{{{notes}}}</td>
+    </tr>
 
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="10" valign="middle">
@@ -97,13 +100,6 @@
  
 
 
-    <tr>
-        <td></td>
-        <td valign="top"> Примiтка</td>
-        <td colspan="5">
-            {{{notes}}}
-        </td>
-         <td colspan="3"></td>
-    </tr>
+    
 </table>
 

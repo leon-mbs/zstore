@@ -37,7 +37,8 @@ class InvoiceCust extends Document
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                          "isval"           => strlen($this->headerdata['val']) > 1,
                        "iscontract"      => $this->headerdata["contract_id"] > 0,
-                        "total"           => H::fa($this->amount),
+                        "notes"           => nl2br($this->notes),
+                       "total"           => H::fa($this->amount),
                         "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
         );

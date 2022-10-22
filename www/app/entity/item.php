@@ -86,6 +86,10 @@ class Item extends \ZCL\DB\Entity
             $this->price5 = $this->brprice[$id]['price5'];
         }
 
+        $this->actionqty1 = doubleval($xml->actionqty1[0]);
+        $this->actionprice1 = doubleval($xml->actionprice1[0]);
+        $this->actionqty2 = doubleval($xml->actionqty2[0]);
+        $this->actionprice2 = doubleval($xml->actionprice2[0]);
         $this->actionprice = doubleval($xml->actionprice[0]);
         $this->actiondisc = doubleval($xml->actiondisc[0]);
         $this->todate = intval($xml->todate[0]);
@@ -152,6 +156,14 @@ class Item extends \ZCL\DB\Entity
         }
         if ($this->actiondisc > 0) {
             $this->detail .= "<actiondisc>{$this->actiondisc}</actiondisc>";
+        }
+        if ($this->actionqty1 > 1) {
+            $this->detail .= "<actionqty1>{$this->actionqty1}</actionqty1>";
+            $this->detail .= "<actionprice1>{$this->actionprice1}</actionprice1>";
+            if ($this->actionqty2 > $this->actionqty1) {
+                $this->detail .= "<actionqty2>{$this->actionqty2}</actionqty2>";
+                $this->detail .= "<actionprice2>{$this->actionprice2}</actionprice2>";
+            }
         }
         $this->detail .= "<todate>{$this->todate}</todate>";
         $this->detail .= "<fromdate>{$this->fromdate}</fromdate>";
@@ -287,7 +299,7 @@ class Item extends \ZCL\DB\Entity
         }
 
          
-        //если  не  зажана  наценка и цена  то  берем  закупочную
+        //если  не  задана  наценка и цена  то  берем  закупочную
         if ( intval($common['defprice']) == 0 && $price == 0) {
 
             if ($partion == 0) {
@@ -316,16 +328,32 @@ class Item extends \ZCL\DB\Entity
             }
 
         }
-
+        if( doubleval($this->actionqty1) > 0) {
+            return true;
+        }
         return false;
     }
 
     //цена  со  скидкой
-    public function getActionPrice($price) {
+    public function getActionPrice($price,$qty=0) {
         if (doubleval($this->actionprice) > 0) {
-            return $this->actionprice;
+            
+            if ( intval($this->fromdate) < time() && intval($this->todate) > time()) {
+                return $this->actionprice;
+            }
+            
+            
+            
         }
-        if (doubleval($this->actiondisc) > 0) {
+        
+            if ( $this->actionprice2 >0 && doubleval($this->actionqty2) <= $qty && $qty>1) {
+                return $this->actionprice2;
+            }
+            if ($this->actionprice1 >0 &&  doubleval($this->actionqty1) <= $qty && $qty>1 ) {
+                return $this->actionprice1;
+            }
+        
+        if (doubleval($this->actiondisc) > 0 && intval($this->fromdate) < time() && intval($this->todate) > time()) {   //по  категории
             return ($price - $price * $this->actiondisc / 100);
         }
 
@@ -334,11 +362,11 @@ class Item extends \ZCL\DB\Entity
     }
 
     //цена  со  скидками (если  есть)
-    public function getPrice($_price_ = 'price1', $store = 0, $partion = 0) {
+    public function getPrice($_price_ = 'price1', $store = 0, $partion = 0,$qty=0) {
         if(strlen($_price_)==0) $_price_ = 'price1';
         $price = $this->getPurePrice($_price_, $store, $partion);
         if ($this->hasAction() && $_price_ == 'price1') {
-            $price = $this->getActionPrice($price);
+            $price = $this->getActionPrice($price,$qty);
 
         }
 

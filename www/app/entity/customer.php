@@ -118,7 +118,7 @@ class Customer extends \ZCL\DB\Entity
             return null;
         }
         $conn = \ZDB\DB::getConnect();
-        return Customer::getFirst(' phone = ' . $conn->qstr($phone));
+        return Customer::getFirst(' phone = ' . $conn->qstr($phone) .' or   phone = ' . $conn->qstr('38'.$phone) );
     }
 
     public static function getByEmail($email) {
@@ -287,6 +287,43 @@ class Customer extends \ZCL\DB\Entity
         return $dolg;
 
     }
+    
+    public  function getDiscount(){
+        $d = $this->discount;
+        if($d > 0) {
+            return  $d;
+        }
+        $d = 0;
+        $disc = \App\System::getOptions("discount");
+    
+        $amount = 0;
+
+  //COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN `d`.`payed` WHEN ((`d`.`meta_name` = 'IncomeMoney') AND
+  //    (`d`.`content` LIKE '%<detail>1</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'ReturnIssue') THEN 0 - `d`.`payed` ELSE 0 END)), 0) AS `b_active`,  
+      
+        $conn = \ZDB\DB::getConnect() ;
+        $sql= "select sum(amount) from paylist where document_id in (select document_id from documents_view where customer_id = {$this->customer_id} 
+               and meta_name in ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct','ReturnIssue')   ) " ;
+        $amount = doubleval( $conn->GetOne($sql));
+        
+        if ($disc["discsumma1"] > 0 && $disc["disc1"] > 0 && $disc["discsumma1"] < $amount) {
+            $d = $disc["disc1"];
+        }
+        if ($disc["discsumma2"] > 0 && $disc["disc2"] > 0 && $disc["discsumma2"] < $amount) {
+            $d = $disc["disc3"];
+        }
+        if ($disc["discsumma3"] > 0 && $disc["disc3"] > 0 && $disc["discsumma3"] < $amount) {
+            $d = $disc["disc3"];
+        }
+        if ($disc["discsumma4"] > 0 && $disc["disc4"] > 0 && $disc["discsumma4"] < $amount) {
+            $d = $disc["disc4"];
+        }
+         
+        
+        
+        return $d ;
+    }
+    
     
     public   function getID() {
         return $this->customer_id;

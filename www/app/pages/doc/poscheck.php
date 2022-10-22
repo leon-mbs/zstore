@@ -709,9 +709,9 @@ class POSCheck extends \App\Pages\Base
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
             $customer = Customer::load($customer_id);
-
-            if ($customer->discount > 0) {
-                $disc = round($total * ($customer->discount / 100));
+            $d= $customer->getDiscount();
+            if ($d > 0) {
+                $disc = round($total * ($d / 100));
             } else {
                 if ($customer->bonus > 0) {
                     if ($total >= $customer->bonus) {
@@ -898,7 +898,7 @@ class POSCheck extends \App\Pages\Base
         }
 
 
-       // $this->updateAjax(array('qtystock', 'editprice', 'editserial'));
+       
     }
 
     public function OnAutoItem($sender) {
@@ -919,7 +919,7 @@ class POSCheck extends \App\Pages\Base
         $ser = Service::load($id);
         $this->editserdetail->editserprice->setText($ser->getPrice());
 
-      //  $this->updateAjax(array('editserprice'));
+      
     }
 
     public function OnAutoCustomer($sender) {
@@ -932,8 +932,9 @@ class POSCheck extends \App\Pages\Base
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
             $customer = Customer::load($customer_id);
-            if ($customer->discount > 0) {
-                $this->docform->discount->setText("Постоянная скидка " . $customer->discount . '%');
+            $d = $customer->getDiscount();
+            if ($d > 0) {
+                $this->docform->discount->setText("Постоянная скидка " . $d . '%');
                 $this->docform->discount->setVisible(true);
             } else {
                 if ($customer->bonus > 0) {

@@ -165,6 +165,21 @@ class Helper
         return $attr;
     }
   
+    /**
+    * подпись для wayforpay
+    * 
+    */
+    public static function signWP( ) {
+        
+    }
+
+    /**
+    * подпись для liqpay
+    * 
+    */
+    public static function signLQ( ) {
+        
+    }
   
     
     /*
