@@ -173,7 +173,7 @@ class Helper
                     break;
                 case 5 :
                     $dir = "Pages/Service";
-                    $icon = "<i class=\"nav-icon fas fa-project-diagrame\"></i>";
+                    $icon = "<i class=\"nav-icon fas fa-project-diagram\"></i>";
                     break;
             }
 
