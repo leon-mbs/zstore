@@ -344,6 +344,7 @@ class Discounts extends \App\Pages\Base
         $k = $sender->isearchokey->getKey();
         $i = Item::load($k);
         if ($i == null) {
+            $this->setError("noselitem") ;
             return;
         }
         $d1 = doubleval($sender->isearchoprice1->getText());
