@@ -165,6 +165,8 @@ class Items extends \App\Pages\Base
     }
 
     public function onUpdateQty($sender) {
+        
+        $cat = $this->upd->updcat->getValue();
         $modules = System::getOptions("modules");
           
         $elist = array();
@@ -213,7 +215,7 @@ class Items extends \App\Pages\Base
          foreach ($elist as $code=>$qty) {
         
             if($sku[$code]>0)  {
-                $list[] = array('id'     => $sku[$code],
+                $list[] = array('sku'     => $sku[$code],
                                  
                                  'quantity_in_stock' =>$elist[$code]
                                  
@@ -221,7 +223,7 @@ class Items extends \App\Pages\Base
             }
         }
   
-        $data = json_encode($elist);
+        $data = json_encode($list);
 
     
 
@@ -237,7 +239,8 @@ class Items extends \App\Pages\Base
 
     public function onUpdatePrice($sender) {
         $modules = System::getOptions("modules");
-          
+        $cat = $this->upd->updcat->getValue();
+        
         $elist = array();
         $items = Item::find("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : ""));
         foreach ($items as $item) {
@@ -282,7 +285,7 @@ class Items extends \App\Pages\Base
          foreach ($elist as $code=>$price) {
         
             if($sku[$code]>0)  {
-                $list[] = array('id'     => $sku[$code],
+                $list[] = array('sku'     => $sku[$code],
                                  
                                  
                                  'price'    =>$price
@@ -291,7 +294,7 @@ class Items extends \App\Pages\Base
             }
         }
   
-        $data = json_encode($elist);
+        $data = json_encode($list);
 
     
 
