@@ -48,6 +48,10 @@ body {
 .dark-mode .fa {
    color: white;
 }
+.dark-mode .fas {
+   color: white;
+}
+
 .dark-mode a {
    color: #ccf;
 }

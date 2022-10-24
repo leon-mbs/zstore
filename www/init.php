@@ -20,6 +20,9 @@ include_once _ROOT . "vendor/adodb/adodb-php/adodb-exceptions.inc.php";
 //чтение  конфигурации
 $_config = parse_ini_file(_ROOT . 'config/config.ini', true);
 
+if(!is_array($_config)){
+    die("Invalid config file") ;
+}
 
 // логгер
 $logger = new \Monolog\Logger("main");
