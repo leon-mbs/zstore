@@ -243,7 +243,7 @@ class DocList extends \App\Pages\Base
         if ($doc->document_id == @$this->_doc->document_id) {
             $row->setAttribute('class', 'table-success');
         }
-          H::log("---");
+         
     }
 
     public function onSort($sender) {
