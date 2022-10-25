@@ -31,10 +31,10 @@ class OrderPay extends Base
     private $c;
     
 
-    public function __construct($orderid) {
+    public function __construct($orderid=0) {
         parent::__construct();
        
-
+        /*
         $this->order = Document::load($orderid);
         if($this->order == null){
             App::RedirectHome() ;
@@ -64,7 +64,7 @@ class OrderPay extends Base
             );             
         }
         
-        
+        */
     }
  
  
@@ -82,4 +82,51 @@ class OrderPay extends Base
          return json_encode(array(), JSON_UNESCAPED_UNICODE);
     }
  
+ 
+    public  function dataLP($args,$post=null) {
+          $private_key = 'sandbox_JOBg3ngEMQcBSjknmoSQgfYT2KC3N0Dmau17XKV2';
+
+          $data = array(
+                    'version'=> 3,
+                    'public_key'=> 'sandbox_i2218966209',
+                    'action'=> 'pay',
+                    'amount'=> 200.53,
+                    'currency'=> 'UAH',
+                    'description'=> 'Оплата товару',
+                    'order_id'=> 'ABC12345678',
+                    'language'=> 'uk'
+                );
+          $data = json_encode($data,JSON_UNESCAPED_UNICODE)  ;
+          $data = base64_encode($data)  ;
+        
+        $ret = array();
+        $ret['data']  = $data;
+        $ret['sign']  =  base64_encode(sha1($private_key.$data.$private_key, 1));;
+        
+        
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);     
+         
+        
+    }
+ 
+ 
+   public  function dataWP($args,$post=null) {
+          $private_key = 'flk3409refn54t54t*FNJRET';
+
+          $data = array(
+                   
+                );
+      
+        
+         $data = implode(';', $data);
+        
+         $ret['sign'] =   hash_hmac('md5', $data, $private_key) ;       
+       
+    return json_encode($ret, JSON_UNESCAPED_UNICODE);     
+                   
+                
+   }
+    const FIELDS_DELIMITER  = ';';
+    const DEFAULT_CHARSET   = 'utf8';
+
 }
