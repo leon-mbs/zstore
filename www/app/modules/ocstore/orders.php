@@ -178,12 +178,12 @@ class Orders extends \App\Pages\Base
             $neworder->amount = \App\Helper::fa($shoporder->total);
             $neworder->payamount = $neworder->amount;
               
-            $neworder->headerdata['salesource'] = \App\Helper::getDefSaleSource();
             $neworder->headerdata['outnumber'] = $shoporder->order_id;
             $neworder->headerdata['ocorder'] = $shoporder->order_id;
             $neworder->headerdata['ocorderback'] = 0;
             $neworder->headerdata['pricetype'] = 'price1';
-        
+            $neworder->headerdata['salessource'] = $modules['ocsalessource'];
+
             $neworder->notes = "OC номер:{$shoporder->order_id};";
 
             $neworder->headerdata['occlient'] = $shoporder->firstname . ' ' . $shoporder->lastname;

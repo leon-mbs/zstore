@@ -36,7 +36,7 @@ class Options extends \App\Pages\Base
         $form->add(new TextArea('key', $modules['ockey']));
         $form->add(new DropDownChoice('defcust', \App\Entity\Customer::getList(), $modules['occustomer_id'] > 0 ? $modules['occustomer_id'] : 0));
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['ocpricetype']));
-        $form->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), "0"));
+        $form->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), $modules['ocsalesource']));
 
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
     }
@@ -48,6 +48,7 @@ class Options extends \App\Pages\Base
         $key = $this->cform->key->getText();
         $customer_id = $this->cform->defcust->getValue();
         $pricetype = $this->cform->defpricetype->getValue();
+        $salesource = $this->cform->salesource->getValue();
         $outcome = $this->cform->outcome->isChecked() ? 1 : 0;
         $ssl = $this->cform->ssl->isChecked() ? 1 : 0;
         $insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
@@ -72,6 +73,7 @@ class Options extends \App\Pages\Base
         $modules['ockey'] = $key;
         $modules['occustomer_id'] = $customer_id;
         $modules['ocpricetype'] = $pricetype;
+        $modules['ocsalesource'] = $salesource;
         $modules['ocssl'] = $ssl;
         $modules['ocinsertcust'] = $insertcust;
         $modules['ocoutcome'] = $outcome;

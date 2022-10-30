@@ -81,6 +81,7 @@ class Options extends \App\Pages\Base
         $this->shop->shopordertype->setValue($shop['ordertype']);
         $this->shop->paysystem->setValue($shop['paysystem']);
         $this->shop->shopdefpricetype->setValue($shop['defpricetype']);
+        $this->shop->salesource->setValue($shop['salesource']);
         $this->shop->currencyname->setText($shop['currencyname']);
         $this->shop->uselogin->setChecked($shop['uselogin']);
         $this->shop->usefilter->setChecked($shop['usefilter']);
@@ -109,6 +110,7 @@ class Options extends \App\Pages\Base
         $shop['ordertype'] = $this->shop->shopordertype->getValue();
         $shop['paysystem'] = $this->shop->paysystem->getValue();
         $shop['defpricetype'] = $this->shop->paysystem->getValue();
+        $shop['salesource'] = $this->shop->salesource->getValue();
         $shop['email'] = $this->shop->email->getText();
         $shop['shopname'] = $this->shop->shopname->getText();
         $shop['currencyname'] = $this->shop->currencyname->getText();

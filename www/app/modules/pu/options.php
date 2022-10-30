@@ -34,7 +34,7 @@ class Options extends \App\Pages\Base
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['pupricetype']));
 
         $form->add(new CheckBox('setpayamount', $modules['pusetpayamount']));
-        $form->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), "0"));
+        $form->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), $modules['pusalesource']));
 
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $form->add(new CheckBox('insertcust', $modules['puinsertcust']));
@@ -48,7 +48,8 @@ class Options extends \App\Pages\Base
         $setpayamount = $this->cform->setpayamount->isChecked() ? 1 : 0;
         $customer_id = $this->cform->defcust->getValue();
         $pricetype = $this->cform->defpricetype->getValue();
-      $insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
+        $salesource = $this->cform->salesource->getValue();
+        $insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
          if ($customer_id == 0) {
             $this->setError('noselcust');
             return;
@@ -66,6 +67,7 @@ class Options extends \App\Pages\Base
         $modules['puapitoken'] = $apitoken;
         $modules['pucustomer_id'] = $customer_id;
         $modules['pupricetype'] = $pricetype;
+        $modules['pusalesource'] = $salesource;
         $modules['pusetpayamount'] = $setpayamount;
         $modules['puinsertcust'] = $insertcust;
  

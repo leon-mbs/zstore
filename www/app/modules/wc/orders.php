@@ -143,6 +143,7 @@ class Orders extends \App\Pages\Base
                 $neworder->headerdata['wcorder'] = $wcorder->id;
                 $neworder->headerdata['outnumber'] = $wcorder->id;
                 $neworder->headerdata['wcorderback'] = 0;
+                $neworder->headerdata['salessource'] = $modules['wcsalessource'];
                 $neworder->headerdata['wcclient'] = $wcorder->shipping->first_name . ' ' . $wcorder->shipping->last_name;
                 $neworder->amount = H::fa($wcorder->total);
                 $neworder->payamount = $neworder->amount;
