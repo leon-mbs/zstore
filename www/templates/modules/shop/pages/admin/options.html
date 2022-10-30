@@ -94,18 +94,6 @@
                       
                     </div>
                    
-                      <div class="form-group   ">
-                        <label   for="paysystem">Онлайн оплата </label>
-                 
-                       
-                            <select class="form-control" zippy="paysystem">
-                                <option value="0">Не використовувати</option>
-                                <option value="1">WayForPay</option>
-                                <option value="2">Liqpay</option>
-                            </select>
-                            
-                      
-                    </div>
                    
 
                     <div class="form-check">
@@ -144,6 +132,27 @@
                     </div>
 
                 </form>
+                <h4>Онлайн оплата</h4>
+     <form zippy="pay" >
+                           <div class="form-group   ">
+                        <label   for="paysystem">Тип системи </label>
+                 
+                       
+                            <select class="form-control" zippy="paysystem">
+                                <option value="0">Не використовувати</option>
+                                <option value="1">WayForPay</option>
+                                <option value="2">Liqpay</option>
+                            </select>
+                            
+                      
+                    </div>
+                    <div class="form-group mt-2  ">
+                        <div class="col-sm-4">
+                            <button class="btn btn-primary" type="submit">Зберегти</button>
+                       
+                        </div>
+                    </div>
+      </form>                          
             </div>
            
             <div class="col-12 col-md-6 col-xl-7  ml-4  ">

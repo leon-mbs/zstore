@@ -140,7 +140,7 @@ class Orders extends \App\Pages\Base
             if (strlen($neworder->document_number) == 0) {
                 $neworder->document_number = 'OC00001';
             }
-            $neworder->customer_id = $modules['occustomer_id'];
+            
             $j=0;           //товары
             $tlist = array();
             foreach ($shoporder->_products_ as $product) {
@@ -320,7 +320,7 @@ class Orders extends \App\Pages\Base
                 $neworder->headerdata['ocorder'] = $shoporder->order_id;
                 $neworder->headerdata['outnumber'] = $shoporder->order_id;
 
-                $neworder->customer_id = $modules['occustomer_id'];
+
 
                 $neworder->amount = \App\Helper::fa($totalpr);
 

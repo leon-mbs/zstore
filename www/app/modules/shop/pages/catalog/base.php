@@ -59,6 +59,8 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["comparecnt"] = false;
         $this->_tvars["phone"] = strlen($shop["phone"]) > 0 ? $shop["phone"] : false;
         $this->_tvars["usepayment"] = $shop["paysystem"] > 0 ;
+        $this->_tvars["wp"] = $shop["paysystem"] == 1;
+        $this->_tvars["lp"] = $shop["paysystem"] == 2;
 
         $this->add(new \Zippy\Html\Form\Form('searchform'));
         $this->searchform->add(new \Zippy\Html\Form\AutocompleteTextInput('searchitem'))->onText($this, 'onSearch');

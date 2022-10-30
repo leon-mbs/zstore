@@ -34,7 +34,7 @@ class Options extends \App\Pages\Base
         $form->add(new CheckBox('insertcust', $modules['ocinsertcust']));
         $form->add(new CheckBox('setpayamount', $modules['ocsetpayamount']));
         $form->add(new TextArea('key', $modules['ockey']));
-        $form->add(new DropDownChoice('defcust', \App\Entity\Customer::getList(), $modules['occustomer_id'] > 0 ? $modules['occustomer_id'] : 0));
+        
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['ocpricetype']));
         $form->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), $modules['ocsalesource']));
 
@@ -46,18 +46,14 @@ class Options extends \App\Pages\Base
         $site = $this->cform->site->getText();
         $apiname = $this->cform->apiname->getText();
         $key = $this->cform->key->getText();
-        $customer_id = $this->cform->defcust->getValue();
+        
         $pricetype = $this->cform->defpricetype->getValue();
         $salesource = $this->cform->salesource->getValue();
         $outcome = $this->cform->outcome->isChecked() ? 1 : 0;
         $ssl = $this->cform->ssl->isChecked() ? 1 : 0;
         $insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
         $setpayamount = $this->cform->setpayamount->isChecked() ? 1 : 0;
-        if ($customer_id == 0) {
-
-            $this->setError('noselcust');
-            return;
-        }
+        
         if (strlen($pricetype) < 2) {
 
             $this->setError('noselpricetype');
@@ -71,7 +67,7 @@ class Options extends \App\Pages\Base
         $modules['ocsite'] = $site;
         $modules['ocapiname'] = $apiname;
         $modules['ockey'] = $key;
-        $modules['occustomer_id'] = $customer_id;
+
         $modules['ocpricetype'] = $pricetype;
         $modules['ocsalesource'] = $salesource;
         $modules['ocssl'] = $ssl;

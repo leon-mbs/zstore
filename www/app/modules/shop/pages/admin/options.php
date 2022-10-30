@@ -39,7 +39,6 @@ class Options extends \App\Pages\Base
 
         $this->shop->add(new DropDownChoice('shopdefpricetype', \App\Entity\Item::getPriceTypeList()));
         $this->shop->add(new DropDownChoice('shopdefbranch', \App\Entity\Branch::getList()));
-        $this->shop->add(new DropDownChoice('paysystem',array() ))->onChange($this, 'onPaySystem');
         $this->shop->add(new TextInput('email'));
         $this->shop->add(new TextInput('shopname'));
         $this->shop->add(new TextInput('currencyname'));
@@ -50,6 +49,11 @@ class Options extends \App\Pages\Base
         $this->shop->add(new CheckBox('usefeedback'));
         $this->shop->add(new CheckBox('usemainpage'));
         $this->shop->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), "0"));
+        
+        
+        $this->add(new Form('pay'))->onSubmit($this, 'savePayOnClick');
+        $this->pay->add(new DropDownChoice('paysystem',array() ))->onChange($this, 'onPaySystem');
+        
         
         $this->add(new Panel('adminpan'));
         $this->adminpan->add(new ClickLink('updatesitemap'))->onClick($this, 'updateSiteMapOnClick');
@@ -79,7 +83,6 @@ class Options extends \App\Pages\Base
 
         $this->shop->shopdefbranch->setValue($shop['defbranch']);
         $this->shop->shopordertype->setValue($shop['ordertype']);
-        $this->shop->paysystem->setValue($shop['paysystem']);
         $this->shop->shopdefpricetype->setValue($shop['defpricetype']);
         $this->shop->salesource->setValue($shop['salesource']);
         $this->shop->currencyname->setText($shop['currencyname']);
@@ -93,12 +96,24 @@ class Options extends \App\Pages\Base
         $this->shop->currencyname->setText($shop['currencyname']);
         $this->shop->phone->setText($shop['phone']);
         
-        $this->onPaySystem($this->shop->paysystem);
+        $this->pay->paysystem->setValue($shop['paysystem']);
+        $this->onPaySystem($this->pay->paysystem);
         
         $this->adminpan->plist->Reload() ;
     
     }
 
+    public function savePayOnClick($sender) {
+        $shop = System::getOptions("shop");
+        if (!is_array($shop)) {
+            $shop = array();
+        }
+        $shop['paysystem'] = $this->pay->paysystem->getValue();
+
+        System::setOptions("shop", $shop);
+        $this->setSuccess('saved');
+        
+    }
     public function saveShopOnClick($sender) {
         $shop = System::getOptions("shop");
         if (!is_array($shop)) {
@@ -108,8 +123,7 @@ class Options extends \App\Pages\Base
 
         $shop['defbranch'] = $this->shop->shopdefbranch->getValue();
         $shop['ordertype'] = $this->shop->shopordertype->getValue();
-        $shop['paysystem'] = $this->shop->paysystem->getValue();
-        $shop['defpricetype'] = $this->shop->paysystem->getValue();
+        $shop['defpricetype'] = $this->shop->shopdefpricetype->getValue();
         $shop['salesource'] = $this->shop->salesource->getValue();
         $shop['email'] = $this->shop->email->getText();
         $shop['shopname'] = $this->shop->shopname->getText();

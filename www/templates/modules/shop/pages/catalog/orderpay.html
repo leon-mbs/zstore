@@ -23,26 +23,20 @@
 
         </div>
    
-         
- 
+      
+      {{#wp}} 
     <script src="/assets/js/hmac-md5.js"></script>
     <script id="widget-wfp-script" src="https://secure.wayforpay.com/server/pay-widget.js"></script>
 
     <script type="text/javascript">
  
-        let secret = "flk3409refn54t54t*FNJRET"; 
-         
-         console.log('js');
-       console.log(CryptoJS.HmacMD5("concat", secret).toString());
                
    callPageMethod('dataWP',null, null,(data)=> 
                       {
-                          console.log("PHP");
+                         
 
                           data =  JSON.parse(data)  
-                         
-                        //  console.log(data.data);
-                          console.log(data.sign);
+                   
           
                           
      
@@ -51,7 +45,10 @@
         
         
     </script>
-
+    
+        {{/wp}} 
+        {{#lp}} 
+        {{/lp}} 
     </body>
 </html>
         

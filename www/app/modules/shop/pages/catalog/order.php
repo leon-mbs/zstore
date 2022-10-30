@@ -230,7 +230,7 @@ class Order extends Base
             }
 
             if ($order->customer_id == 0) {
-           
+                
                 $c = new  Customer();
                 $c->firstname = $firstname;
                 $c->lastname= $lastname;

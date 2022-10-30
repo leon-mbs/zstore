@@ -82,7 +82,7 @@ class Orders extends \App\Pages\Base
                 }
 
                 $neworder = Document::create('Order');
-                $neworder->customer_id = $modules['pucustomer_id'];
+                
 
                 //товары
                 $j=0;

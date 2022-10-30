@@ -30,7 +30,7 @@ class Options extends \App\Pages\Base
       
         $form->add(new TextInput('apitoken', $modules['puapitoken']));
         
-        $form->add(new DropDownChoice('defcust', \App\Entity\Customer::getList(), $modules['pucustomer_id'] > 0 ? $modules['pucustomer_id'] : 0));
+        
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['pupricetype']));
 
         $form->add(new CheckBox('setpayamount', $modules['pusetpayamount']));
@@ -46,14 +46,11 @@ class Options extends \App\Pages\Base
        
         $apitoken = $this->cform->apitoken->getText();
         $setpayamount = $this->cform->setpayamount->isChecked() ? 1 : 0;
-        $customer_id = $this->cform->defcust->getValue();
+        
         $pricetype = $this->cform->defpricetype->getValue();
         $salesource = $this->cform->salesource->getValue();
         $insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
-         if ($customer_id == 0) {
-            $this->setError('noselcust');
-            return;
-        }
+         
         if (strlen($pricetype) < 2) {
             $this->setError('noselpricetype');
             return;
@@ -65,7 +62,7 @@ class Options extends \App\Pages\Base
 
        // $modules['pusite'] = "http://my.prom.ua/";
         $modules['puapitoken'] = $apitoken;
-        $modules['pucustomer_id'] = $customer_id;
+
         $modules['pupricetype'] = $pricetype;
         $modules['pusalesource'] = $salesource;
         $modules['pusetpayamount'] = $setpayamount;

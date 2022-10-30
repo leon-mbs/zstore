@@ -109,7 +109,7 @@ class Orders extends \App\Pages\Base
                 if (strlen($neworder->document_number) == 0) {
                     $neworder->document_number = 'WC00001';
                 }
-                $neworder->customer_id = $modules['wccustomer_id'];
+                
 
                 //товары
                 $j=0;
