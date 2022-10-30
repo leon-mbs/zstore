@@ -89,13 +89,13 @@ class Application extends \Zippy\WebApplication
         $pages = array(
             "store"          => "\\App\\Pages\\Main",
             "admin"          => "\\App\\Pages\\Main",
-            "shop"           => "\\App\\Modules\\Shop\\Pages\\Main",
-            "sp"             => "\\App\\Modules\\Shop\\Pages\\ProductView",
+            "shop"           => "\\App\\Modules\\Shop\\Pages\\Catalog\\Main",
+            "sp"             => "\\App\\Modules\\Shop\\Pages\\Catalog\\ProductView",
             "showreport"     => "\\App\\Pages\\ShowReport",
             "showdoc"        => "\\App\\Pages\\ShowDoc",
             "doclink"        => "\\App\\Pages\\Doclink",
-            "scat"           => "\\App\\Modules\\Shop\\Pages\\Main",
-            "pcat"           => "\\App\\Modules\\Shop\\Pages\\Catalog",
+            "scat"           => "\\App\\Modules\\Shop\\Pages\\Catalog\\Main",
+            "pcat"           => "\\App\\Modules\\Shop\\Pages\\Catalog\\Catalog",
             "project"        => "\\App\\Modules\\Issue\\Pages\\ProjectList",
             "issue"          => "\\App\\Modules\\Issue\\Pages\\IssueList",
             "topic"          => "\\App\\Modules\\Note\\Pages\\ShowTopic"

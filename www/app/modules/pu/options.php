@@ -34,6 +34,7 @@ class Options extends \App\Pages\Base
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['pupricetype']));
 
         $form->add(new CheckBox('setpayamount', $modules['pusetpayamount']));
+        $form->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), "0"));
 
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $form->add(new CheckBox('insertcust', $modules['puinsertcust']));

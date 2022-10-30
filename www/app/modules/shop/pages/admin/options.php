@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shop\Pages;
+namespace App\Modules\Shop\Pages\Admin;
 
 use App\Application as App;
 use App\Entity\Item;
@@ -49,7 +49,8 @@ class Options extends \App\Pages\Base
         $this->shop->add(new CheckBox('usefilter'));
         $this->shop->add(new CheckBox('usefeedback'));
         $this->shop->add(new CheckBox('usemainpage'));
-          
+        $this->shop->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), "0"));
+        
         $this->add(new Panel('adminpan'));
         $this->adminpan->add(new ClickLink('updatesitemap'))->onClick($this, 'updateSiteMapOnClick');
         

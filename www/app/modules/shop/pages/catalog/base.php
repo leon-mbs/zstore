@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shop\Pages;
+namespace App\Modules\Shop\Pages\Catalog;
 
 use \App\Application as App;
 use \App\Helper;
@@ -43,7 +43,7 @@ class Base extends \Zippy\Html\WebPage
         
         if ($shop["uselogin"] == 1) {
             if ($customer_id == 0) {
-                App::Redirect("\\App\\Modules\\Shop\\Pages\\Userlogin");
+                App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog\\Userlogin");
                 return;
             }
         }
@@ -63,8 +63,8 @@ class Base extends \Zippy\Html\WebPage
         $this->add(new \Zippy\Html\Form\Form('searchform'));
         $this->searchform->add(new \Zippy\Html\Form\AutocompleteTextInput('searchitem'))->onText($this, 'onSearch');
         $this->searchform->searchitem->onChange($this, 'onSelect');
-        $this->add(new \Zippy\Html\Link\BookmarkableLink('shopcart', "/index.php?p=/App/Modules/Shop/Pages/Order"))->setVisible(false);
-        $this->add(new \Zippy\Html\Link\BookmarkableLink('showcompare', "/index.php?p=/App/Modules/Shop/Pages/Compare"))->setVisible(false);
+        $this->add(new \Zippy\Html\Link\BookmarkableLink('shopcart', "/index.php?p=/App/Modules/Shop/Pages/Catalog/Order"))->setVisible(false);
+        $this->add(new \Zippy\Html\Link\BookmarkableLink('showcompare', "/index.php?p=/App/Modules/Shop/Pages/Catalog/Compare"))->setVisible(false);
 
         $this->op = System::getOptions("shop");
 
@@ -114,7 +114,7 @@ class Base extends \Zippy\Html\WebPage
     public function onSelect(\Zippy\Html\Form\AutocompleteTextInput $sender) {
         $key = $sender->getKey();
         if ($key > 0) {
-            App::Redirect("\\App\\Modules\\Shop\\Pages\\ProductView", $key);
+            App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog\\ProductView", $key);
         }
     }
 
@@ -187,7 +187,7 @@ class Base extends \Zippy\Html\WebPage
         System::setCustomer(0);
         setcookie("remembercust", '', 0);
     \App\Modules\Shop\Basket::getBasket()->Empty();      
-        App::Redirect("\\App\\Modules\\Shop\\Pages\\Main",0);
+        App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog\\Main",0);
        
     }
     

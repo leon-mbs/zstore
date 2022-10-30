@@ -34,6 +34,7 @@ class Options extends \App\Pages\Base
         $form->add(new DropDownChoice('api', array('v3' => 'v3', 'v2' => 'v2', 'v1' => 'v1'), $modules['wcapi']));
         $form->add(new CheckBox('ssl', $modules['wcssl']));
         $form->add(new CheckBox('setpayamount', $modules['wcsetpayamount']));
+        $form->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), "0"));
 
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
 

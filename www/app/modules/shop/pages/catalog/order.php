@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shop\Pages;
+namespace App\Modules\Shop\Pages\Catalog;
 
 use App\Application as App;
 use App\Entity\Doc\Document;
@@ -114,7 +114,7 @@ class Order extends Base
         $this->basketlist = Basket::getBasket()->list;
 
         if (Basket::getBasket()->isEmpty()) {
-            App::Redirect("\\App\\Modules\\Shop\\Pages\\Main", 0);
+            App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog\\Main", 0);
         } else {
             $this->OnUpdate($this);
         }
@@ -302,7 +302,7 @@ class Order extends Base
           
         if($payment == 1) {
             
-            App::Redirect("App\\Modules\\Shop\\Pages\\OrderPay",array($order->document_id)) ;
+            App::Redirect("App\\Modules\\Shop\\Pages\\Catalog\\OrderPay",array($order->document_id)) ;
               
         }
         

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shop\Pages;
+namespace App\Modules\Shop\Pages\Admin;
 
 use App\Application as App;
 use App\Entity\Item;

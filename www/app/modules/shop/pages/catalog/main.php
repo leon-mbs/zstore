@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shop\Pages;
+namespace App\Modules\Shop\Pages\Catalog;
 
 use App\Modules\Shop\Entity\ProductGroup;
 use App\Modules\Shop\Helper;
