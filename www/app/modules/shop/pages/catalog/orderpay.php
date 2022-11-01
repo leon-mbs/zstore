@@ -109,7 +109,7 @@ class OrderPay extends Base
                     'version'=> 3,
                     'public_key'=> $shop['lqpublic'], //'sandbox_i2218966209',
                     'action'=> 'pay',
-                    'amount'=> H::fa($this->order->payed),
+                    'amount'=> H::fa($this->order->payamount),
                     'currency'=> 'UAH',
                     'description'=> 'Оплата товару',
                     'order_id'=> $this->order->document_number,
@@ -129,17 +129,59 @@ class OrderPay extends Base
     }
  
  
+   public  function payWP($args,$post=null) {
+           $shop = System::getOptions("shop");
+     
+   }
    public  function dataWP($args,$post=null) {
-          $private_key = 'flk3409refn54t54t*FNJRET';
+          $shop = System::getOptions("shop");
+   
+          $private_key = $shop['wpsevret']; // 'flk3409refn54t54t*FNJRET';
 
           $data = array( );
-                
+          $data['merchantAccount']  = $shop['wpsevret']  ;   
+          $data['merchantAuthType']  = '"SimpleSignature"' ;   
+          $data['merchantDomainName']  = $shop['wpsite']  ;   
+          $data['orderReference']  = $this->order->document_number ;   
+          $data['orderDate']  = $this->order->document_date ;   
+          $data['amount']  = $this->order->payamount ;   
+          $data['currency']  = $shop['wpsite']  ;   
+          $data['productName']  = array() ;   
+          $data['productCount']  = array() ;   
+          $data['productPrice']  = array() ;   
+          $data['language']  = "UA" ;   
+          $data['defaultPaymentSystem']  = "card" ;   
+          $data['clientFirstName']  = "tester" ;   
+          $data['clientLastName']  = "tester" ;   
+      //    $data['clientAddress']  = "UA" ;   
+    //      $data['clientCity']  = "UA" ;   
+          $data['clientPhone']  = "380631234567" ;   
         
-         $data = implode(';', $data);
         
-         $ret['sign'] =   hash_hmac('md5', $data, $private_key) ;       
+          foreach($this->order->unpackDetails('detaildata') as $item){
+               $data['productName'][] = $item->itemname;
+               $data['productCount'][] = $item->quantity;
+               $data['productPrice'][] = $item->price;
+          
+          }        
+        
+          $forsign = array();
+          $forsign[]= $data['merchantAccount'] ;
+          $forsign[]= $data['merchantDomainName'] ;
+          $forsign[]= $data['orderReference'] ;
+          $forsign[]= $data['orderDate'] ;
+          $forsign[]= $data['amount'] ;
+          $forsign[]= $data['currency'] ;
+          $forsign[]= implode(';', $data['productName']) ;
+          $forsign[]= implode(';', $data['productCount']) ;
+          $forsign[]= implode(';', $data['productPrice']) ;
+
+          
+        
+          $data['merchantSignature'] =   hash_hmac('md5', implode(';', $forsign), $private_key) ;       
+
        
-    return json_encode($ret, JSON_UNESCAPED_UNICODE);     
+    return json_encode($data, JSON_UNESCAPED_UNICODE);     
                    
                 
    }

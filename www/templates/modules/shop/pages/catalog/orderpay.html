@@ -25,7 +25,8 @@
    
       
       {{#wp}} 
-  
+   <script id="widget-wfp-script" src="https://secure.wayforpay.com/server/pay-widget.js"></script>
+ 
     <script type="text/javascript">
         let wayforpay = new Wayforpay();
 
@@ -34,12 +35,26 @@
          callPageMethod('dataWP',null, null,(data)=> 
                       {
                          
-
+                              
                             data =  JSON.parse(data)  
             
                             wayforpay.run(data,
                                 function (response) {
                                     console.log(JSON.stringify(response));
+                                    
+                                callPageMethod('payWP',[], null,(data)=> 
+                                {
+                                    if(data.status=="success") {
+                                     //  window.location = "/index.php?p=App/Modules/Shop/Pages/Catalog/Orders"
+                                       
+                                       setTimeout(function() { 
+                                           window.location = "/shop"     
+                                       }, 2000);   
+                                        
+                                    }  
+                                    
+                                });                                      
+                                    
                                 },
                                 function (response) {
                                     console.log(JSON.stringify(response));

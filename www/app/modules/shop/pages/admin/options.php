@@ -56,6 +56,9 @@ class Options extends \App\Pages\Base
         $this->pay->add(new DropDownChoice('mf', \App\Entity\MoneyFund::getList(2) ));
         $this->pay->add(new TextInput('lqpublic'  ));
         $this->pay->add(new TextInput('lqpriv'  ));
+        $this->pay->add(new TextInput('wpsevret'  ));
+        $this->pay->add(new TextInput('wpmacc'  ));
+        $this->pay->add(new TextInput('wpsite'  ));
         
         
         $this->add(new Panel('adminpan'));
@@ -103,6 +106,9 @@ class Options extends \App\Pages\Base
         $this->pay->mf->setValue($shop['mf_id']);
         $this->pay->lqpublic->setText($shop['lqpublic']);
         $this->pay->lqpriv->setText($shop['lqpriv']);
+        $this->pay->wpsevret->setText($shop['wpsevret']);
+        $this->pay->wpmacc->setText($shop['wpmacc']);
+        $this->pay->wpsite->setText($shop['wpsite']);
         $this->onPaySystem(null);
         
         $this->adminpan->plist->Reload() ;
@@ -122,6 +128,9 @@ class Options extends \App\Pages\Base
         }
         $shop['lqpriv'] =  $sender->lqpriv->getText() ; 
         $shop['lqpublic'] = $sender->lqpublic->getText() ; 
+        $shop['wpsevret'] = $sender->wpsevret->getText() ; 
+        $shop['wpmacc'] = $sender->wpmacc->getText() ; 
+        $shop['wpsite'] = $sender->wpsite->getText() ; 
 
         System::setOptions("shop", $shop);
         $this->setSuccess('saved');
@@ -136,6 +145,9 @@ class Options extends \App\Pages\Base
          $this->pay->mf->setVisible($ps>0);
          $this->pay->lqpriv->setVisible($ps==2);
          $this->pay->lqpublic->setVisible($ps==2);
+         $this->pay->wpsevret->setVisible($ps==1);
+         $this->pay->wpmacc->setVisible($ps==1);
+         $this->pay->wpsite->setVisible($ps==1);
 
     }    
     
