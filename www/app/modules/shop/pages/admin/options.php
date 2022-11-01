@@ -54,6 +54,8 @@ class Options extends \App\Pages\Base
         $this->add(new Form('pay'))->onSubmit($this, 'savePayOnClick');
         $this->pay->add(new DropDownChoice('paysystem',array() ))->onChange($this, 'onPaySystem');
         $this->pay->add(new DropDownChoice('mf', \App\Entity\MoneyFund::getList(2) ));
+        $this->pay->add(new TextInput('lqpublic'  ));
+        $this->pay->add(new TextInput('lqpriv'  ));
         
         
         $this->add(new Panel('adminpan'));
@@ -99,6 +101,8 @@ class Options extends \App\Pages\Base
         
         $this->pay->paysystem->setValue($shop['paysystem']);
         $this->pay->mf->setValue($shop['mf_id']);
+        $this->pay->lqpublic->setText($shop['lqpublic']);
+        $this->pay->lqpriv->setText($shop['lqpriv']);
         $this->onPaySystem(null);
         
         $this->adminpan->plist->Reload() ;
@@ -110,12 +114,15 @@ class Options extends \App\Pages\Base
         if (!is_array($shop)) {
             $shop = array();
         }
-        $shop['paysystem'] = $this->pay->paysystem->getValue();
+        $shop['paysystem'] = $sender->paysystem->getValue();
         $shop['mf_id'] =  intval($sender->mf->getValue() ); 
         if($shop['mf_id']==0) {
             $this->setError('noselmf');
             return;
         }
+        $shop['lqpriv'] =  $sender->lqpriv->getText() ; 
+        $shop['lqpublic'] = $sender->lqpublic->getText() ; 
+
         System::setOptions("shop", $shop);
         $this->setSuccess('saved');
         
@@ -127,6 +134,8 @@ class Options extends \App\Pages\Base
          }
          $ps = intval($this->pay->paysystem->getValue()) ;
          $this->pay->mf->setVisible($ps>0);
+         $this->pay->lqpriv->setVisible($ps==2);
+         $this->pay->lqpublic->setVisible($ps==2);
 
     }    
     

@@ -103,11 +103,11 @@ class OrderPay extends Base
           $shop = System::getOptions("shop");
    
          
-          $private_key = $shop['lp_priv']; //'sandbox_JOBg3ngEMQcBSjknmoSQgfYT2KC3N0Dmau17XKV2';
+          $private_key = $shop['lqpriv']; //'sandbox_JOBg3ngEMQcBSjknmoSQgfYT2KC3N0Dmau17XKV2';
 
           $data = array(
                     'version'=> 3,
-                    'public_key'=> $shop['lp_public'], //'sandbox_i2218966209',
+                    'public_key'=> $shop['lqpublic'], //'sandbox_i2218966209',
                     'action'=> 'pay',
                     'amount'=> H::fa($this->order->payed),
                     'currency'=> 'UAH',
