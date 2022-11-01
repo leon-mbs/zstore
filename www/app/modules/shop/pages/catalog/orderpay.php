@@ -8,6 +8,7 @@ use App\Entity\Customer;
 use App\Modules\Shop\Basket;
 use App\System;
 use App\Helper as H;
+use App\Entity\Pay;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextArea;
@@ -34,7 +35,7 @@ class OrderPay extends Base
     public function __construct($orderid=0) {
         parent::__construct();
        
-        /*
+        
         $this->order = Document::load($orderid);
         if($this->order == null){
             App::RedirectHome() ;
@@ -64,7 +65,7 @@ class OrderPay extends Base
             );             
         }
         
-        */
+         
     }
  
  
@@ -83,17 +84,35 @@ class OrderPay extends Base
     }
  
  
+    public  function payLP($args,$post=null) {
+        if($args[0]=='success') {
+             $shop = System::getOptions("shop");
+   
+             $payed =  Pay::addPayment($this->order->document_id,time(),$this->order->payed,$shop['mf_id'],'LiqPay ID:'.$args[1]);
+             if ($payed > 0) {
+                 $this->order->payed = $payed;
+             }
+             \App\Entity\IOState::addIOState($this->order->document_id, $this->order->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+             $this->order->save();              
+             $this->order->updateStatus(Document::STATE_PAYED)   ;
+             
+        }
+    }
+    
     public  function dataLP($args,$post=null) {
-          $private_key = 'sandbox_JOBg3ngEMQcBSjknmoSQgfYT2KC3N0Dmau17XKV2';
+          $shop = System::getOptions("shop");
+   
+         
+          $private_key = $shop['lp_priv']; //'sandbox_JOBg3ngEMQcBSjknmoSQgfYT2KC3N0Dmau17XKV2';
 
           $data = array(
                     'version'=> 3,
-                    'public_key'=> 'sandbox_i2218966209',
+                    'public_key'=> $shop['lp_public'], //'sandbox_i2218966209',
                     'action'=> 'pay',
-                    'amount'=> 200.53,
+                    'amount'=> H::fa($this->order->payed),
                     'currency'=> 'UAH',
                     'description'=> 'Оплата товару',
-                    'order_id'=> 'ABC12345678',
+                    'order_id'=> $this->order->document_number,
                     'language'=> 'uk'
                 );
           $data = json_encode($data,JSON_UNESCAPED_UNICODE)  ;
@@ -113,10 +132,8 @@ class OrderPay extends Base
    public  function dataWP($args,$post=null) {
           $private_key = 'flk3409refn54t54t*FNJRET';
 
-          $data = array(
-                   
-                );
-      
+          $data = array( );
+                
         
          $data = implode(';', $data);
         

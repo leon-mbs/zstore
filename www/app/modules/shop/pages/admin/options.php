@@ -53,6 +53,7 @@ class Options extends \App\Pages\Base
         
         $this->add(new Form('pay'))->onSubmit($this, 'savePayOnClick');
         $this->pay->add(new DropDownChoice('paysystem',array() ))->onChange($this, 'onPaySystem');
+        $this->pay->add(new DropDownChoice('mf', \App\Entity\MoneyFund::getList(2) ));
         
         
         $this->add(new Panel('adminpan'));
@@ -97,7 +98,8 @@ class Options extends \App\Pages\Base
         $this->shop->phone->setText($shop['phone']);
         
         $this->pay->paysystem->setValue($shop['paysystem']);
-        $this->onPaySystem($this->pay->paysystem);
+        $this->pay->mf->setValue($shop['mf_id']);
+        $this->onPaySystem(null);
         
         $this->adminpan->plist->Reload() ;
     
@@ -109,11 +111,25 @@ class Options extends \App\Pages\Base
             $shop = array();
         }
         $shop['paysystem'] = $this->pay->paysystem->getValue();
-
+        $shop['mf_id'] =  intval($sender->mf->getValue() ); 
+        if($shop['mf_id']==0) {
+            $this->setError('noselmf');
+            return;
+        }
         System::setOptions("shop", $shop);
         $this->setSuccess('saved');
         
     }
+    
+    public function onPaySystem($sender) {
+         if($sender!= null) {
+             $this->goAnkor('paysystem') ;   
+         }
+         $ps = intval($this->pay->paysystem->getValue()) ;
+         $this->pay->mf->setVisible($ps>0);
+
+    }    
+    
     public function saveShopOnClick($sender) {
         $shop = System::getOptions("shop");
         if (!is_array($shop)) {
@@ -230,9 +246,7 @@ class Options extends \App\Pages\Base
     }
  
 
-    public function onPaySystem($sender) {
-         $this->goAnkor('paysystem') ;
-    }
+
     public function savePageOnClick($sender) {
 
         $oldlink = $sender->oldlink->getText();
