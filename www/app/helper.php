@@ -210,17 +210,14 @@ class Helper
             }
         }
 
+        if ($modules['shop'] == 1) {
+            if ($role->rolename == 'admins' || strpos($role->modules, 'shop') !== false) {
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10002, 'meta_name' => "/Shop/Pages/ProductList", 'meta_type' => 6, 'description' => self::l('modshopman')));
+            }
+        }
 
-        if ($modules['ocstore'] == 1) {
-            if ($role->rolename == 'admins' || strpos($role->modules, 'ocstore') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10005, 'meta_name' => "/OCStore/Orders", 'meta_type' => 6, 'description' => self::l('modocstoreorders')));
-            }
-        }
-        if ($modules['ocstore'] == 1) {
-            if ($role->rolename == 'admins' || strpos($role->modules, 'ocstore') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10006, 'meta_name' => "/OCStore/Items", 'meta_type' => 6, 'description' => self::l('modocstoreitems')));
-            }
-        }
+
+
         if ($modules['wc'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'wc') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10009, 'meta_name' => "/WC/Orders", 'meta_type' => 6, 'description' => self::l('modwcorders')));
@@ -254,7 +251,16 @@ class Helper
             }
         }
    
-         
+          if ($modules['ocstore'] == 1) {
+            if ($role->rolename == 'admins' || strpos($role->modules, 'ocstore') !== false) {
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10005, 'meta_name' => "/OCStore/Orders", 'meta_type' => 6, 'description' => self::l('modocstoreorders')));
+            }
+        }
+        if ($modules['ocstore'] == 1) {
+            if ($role->rolename == 'admins' || strpos($role->modules, 'ocstore') !== false) {
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10018, 'meta_name' => "/OCStore/Items", 'meta_type' => 6, 'description' => self::l('modocstoreitems')));
+            }
+        }       
         return $mdata;
     }
 
