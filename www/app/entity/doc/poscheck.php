@@ -287,7 +287,21 @@ class POSCheck extends Document
             \App\Entity\IOState::addIOState($this->document_id, $payed, \App\Entity\IOState::TYPE_BASE_INCOME);
 
         }
+        
+        //сдачу в  бонусы
+        if($this->headerdata['exch2b']==1 && $this->headerdata['exchange']>0 ) {
+            $pay = new \App\Entity\Pay();
 
+            $pay->document_id = $this->document_id;
+        
+            $pay->amount = 0;
+            $pay->bonus = (int)$this->headerdata['exchange'];
+            $pay->paytype = \App\Entity\Pay::PAY_BONUS;
+            $pay->paydate = time();
+            $pay->user_id = \App\System::getUser()->user_id;
+
+            $pay->save();          
+        }
         return true;
     }
 
