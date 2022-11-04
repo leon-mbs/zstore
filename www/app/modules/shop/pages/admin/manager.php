@@ -6,6 +6,7 @@ use App\Application as App;
 use App\Entity\Item;
 use App\Modules\Shop\Entity\Product;
 use App\System;
+use App\Helper as H;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\AutocompleteTextInput;
 use Zippy\Html\Form\File;
@@ -39,7 +40,9 @@ class Manager extends \App\Pages\Base
         if (!is_array($shop)) {
             $shop = array();
         }
-    
+        
+        
+     
     }
 
    

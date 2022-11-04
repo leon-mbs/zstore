@@ -11,6 +11,9 @@ use ZCL\DB\DB as DB;
 class Helper
 {
 
+    const STAT_HIT_SHOP         = 1;     //посещение  онлайн  каталога
+     
+    
     private static $meta = array(); //кеширует метаданные
 
     /**
@@ -912,10 +915,6 @@ class Helper
         $writer->save('php://output');
         die;
     }
-
-    
-    
- 
     
     public  static  function printItems(array $items){
         $printer = \App\System::getOptions('printer');
@@ -1012,6 +1011,36 @@ class Helper
                
         return $htmls;               
     }
-    
+
+
+    public  static function getVal($key){
+          if(strlen($key)==0)   return;
+          $conn = \ZDB\DB::getConnect();
+          
+          $ret = $conn->GetOne("select vald from  keyval  where  keyd=" . $cann->qstr($key));
+
+          if(strlen($ret)==0)   return "";
+    }    
+    public  static function setVal($key,$data){
+          if(strlen($key)==0)   return;
+          $conn = \ZDB\DB::getConnect();
+          $conn->Execute("delete  from  keyval  where  keyd=" . $cann->qstr($key));
+          if($data===null){
+             return; 
+          }
+          $conn->Execute("insert into keyval  (  keyd,vald)  values (" . $cann->qstr($key).",".$cann->qstr($data).")" );
+          
+          
+    }    
+
+    public  static function insertstat(int $cat,int $key,int $data ){
+          if(  $cat==0  )   return;
+          
+          $conn = \ZDB\DB::getConnect();
+          $dt= $conn->DBTimeStamp(time());
+          $conn->Execute("insert into stats  ( category, keyd,vald,dt)  values ({$cat},{$key},{$data},{$dt})" );
+          
+          
+    }    
     
 }
