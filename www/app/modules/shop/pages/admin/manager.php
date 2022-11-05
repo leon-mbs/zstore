@@ -40,9 +40,30 @@ class Manager extends \App\Pages\Base
         if (!is_array($shop)) {
             $shop = array();
         }
-        
-        
      
+        $conn =   \ZDB\DB::getConnect();
+  
+        $grvisdays = array();
+        $grvisdays_ = array();
+        $grviscnt = array();
+  
+        $d = new \App\DateTime() ;
+        for($i=0;$i<31;$i++) {
+           $grvisdays_[]  = $d->getTimestamp() ;
+           $d->subDay(1) ;
+                         
+        }
+  
+     $grvisdays_ = array_reverse($grvisdays_) ;
+        foreach($grvisdays_ as $dd)  {
+           $grvisdays[]=  date('m-d',$dd);
+
+           $cnt = $conn->GetOne("select count(*) from stats where category = " . H::STAT_HIT_SHOP . " and date(dt)=". $conn->DBDate($dd) );
+           $grviscnt[]= intval($cnt);     
+        }
+        $this->_tvars['grvisdays'] = json_encode($grvisdays);
+        $this->_tvars['grviscnt'] = json_encode($grviscnt);
+    
     }
 
    

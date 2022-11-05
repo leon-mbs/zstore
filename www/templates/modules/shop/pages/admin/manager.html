@@ -12,8 +12,17 @@
                 <a zippy="updatesitemap" class="btn btn-outline-info"> Оновити sitemap.xml</a>
                 
             </div>
-            <div class="col-12 ">
-                <h4>Посещения за 30 дней</h4>
+            <div class="col-12 col-md-6">
+               
+                 <div   class="card ">
+                    <div   class="card-body">
+
+                        <canvas style="width:100%" id="grvisit"></canvas>
+                    </div>
+                </div>                  
+            </div>
+            <div class="col-12 col-md-6">
+                
                  
             </div>
  
@@ -24,8 +33,72 @@
         
         
   
+        <script language="javascript" src="/assets/js/chart.js"></script>
+
         <script>
+        
+    var fontcolor='#000' ;
+        {{#darkmode}}
+            fontcolor='#fff' ;
+        {{/darkmode}}   
      
+   
+var sellData = {
+labels  : {{{grvisdays}}},
+        datasets: [
+        {
+     
+                backgroundColor         : 'rgba(60,141,188,0.8)',
+                borderColor         : 'rgba(60,141,188,0.8)',
+                fill          : true,
+                data                :  {{{grviscnt}}}
+        } 
+    
+        ]
+}
+
+   
+
+var sellOptions = {
+title: {
+display: true,   
+fontColor: fontcolor,
+text: 'Вiдвiдувачi сайту за 30 днiв'
+},
+legend: {
+display: false     
+},
+
+ 
+
+        scales: {
+        xAxes: [{     ticks: { 
+                   fontColor: fontcolor 
+             },
+        gridLines : {
+        display : false,
+        }
+        }],
+                yAxes: [{    ticks: { 
+                   fontColor: fontcolor 
+             },
+                gridLines : {
+                display : false,
+                }
+                }]
+        }
+}   
+     
+     
+window.onload = function() {     
+         new Chart(document.querySelector('#grvisit'), {
+        type: 'line',
+                data: sellData,
+                options: sellOptions
+        })
+
+
+};    
 
         </script>
 
