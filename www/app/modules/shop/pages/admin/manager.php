@@ -63,7 +63,20 @@ class Manager extends \App\Pages\Base
         }
         $this->_tvars['grvisdays'] = json_encode($grvisdays);
         $this->_tvars['grviscnt'] = json_encode($grviscnt);
-    
+   
+   
+        $grordersdays = array();
+        $grorderscnt = array();
+        foreach($grvisdays_ as $dd)  {
+           $grordersdays[]=  date('m-d',$dd);
+
+           $cnt = $conn->GetOne("select count(*) from stats where category = " . H::STAT_ORDER_SHOP . " and date(dt)=". $conn->DBDate($dd) );
+           $grorderscnt[]= intval($cnt);     
+        }
+  
+        $this->_tvars['grordersdays'] = json_encode($grordersdays);
+        $this->_tvars['grorderscnt'] = json_encode($grorderscnt);
+   
     }
 
    

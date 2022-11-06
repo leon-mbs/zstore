@@ -246,6 +246,7 @@ class Order extends Base
             $order->headerdata['pricetype'] = $shop["defpricetype"];
             $order->headerdata['contact'] = $name . ', ' . $phone;
             $order->headerdata['salessource'] = $shop['salessource'];
+            $order->headerdata['shoporder'] = 1;
 
             $order->notes = trim($this->orderform->notes->getText());
             $order->amount = $amount;
@@ -258,6 +259,10 @@ class Order extends Base
             }
             
             $order->save();
+            
+            \App\Helper::insertstat(\App\Helper::STAT_ORDER_SHOP,0,0) ;
+             
+            
             $this->orderid = intval( preg_replace('/[^0-9]/', '', $order->document_number));
             $order->updateStatus(Document::STATE_NEW);
                 

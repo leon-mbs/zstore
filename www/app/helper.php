@@ -11,7 +11,8 @@ use ZCL\DB\DB as DB;
 class Helper
 {
 
-    const STAT_HIT_SHOP         = 1;     //посещение  онлайн  каталога
+    const STAT_HIT_SHOP           = 1;     //посещение  онлайн  каталога
+    const STAT_ORDER_SHOP         = 2;     //заказы  в  онлайн каталоге
      
     
     private static $meta = array(); //кеширует метаданные
