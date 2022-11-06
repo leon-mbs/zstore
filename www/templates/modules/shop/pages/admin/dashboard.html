@@ -1,15 +1,18 @@
 <html>
 
+        <head>
+        <title> Дашборд  </title>
 
+    </head>
     <body>
-      
+     {{={| |}=}}       
 
-        <div class="row ">
+        <div class="row " id="vapp">
         
            
             <div class="col-12 ">
-                <h3>Менеджмент</h3>
-                <a zippy="updatesitemap" class="btn btn-outline-info"> Оновити sitemap.xml</a>
+                <h3>Дашборд</h3>
+                <a onclick="updateSiteMap()"  href="javascript:void(0)"  class="btn btn-outline-info"> Оновити sitemap.xml</a>
                 
             </div>
            <div class="col-12 text-center ">
@@ -41,7 +44,7 @@
         </div>
         
         
-        
+      {|={{ }}=|}     
         
   
         <script language="javascript" src="/assets/js/chart.js"></script>
@@ -163,6 +166,16 @@ window.onload = function() {
 
 
 };    
+
+
+   function updateSiteMap(){
+            
+          callPageMethod('updateSiteMap',null,null,(data)=> 
+          {
+             toastr.success('Оновлено','',{'timeOut':'2000'})  
+          });           
+      
+   }
 
         </script>
 

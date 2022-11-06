@@ -20,7 +20,7 @@ use Zippy\Html\Label;
 use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\DataList\DataView;
 
-class Manager extends \App\Pages\Base
+class Dashboard extends \App\Pages\Base
 {
     public $_pages = array();
    
@@ -33,8 +33,6 @@ class Manager extends \App\Pages\Base
         }
 
  
-        $this->add(new ClickLink('updatesitemap'))->onClick($this, 'updateSiteMapOnClick');
-        
         
         $shop = System::getOptions("shop");
         if (!is_array($shop)) {
@@ -80,7 +78,7 @@ class Manager extends \App\Pages\Base
     }
 
    
-    public function updateSiteMapOnClick($sender) {
+    public function updateSiteMap($sarg,$post=null) {
 
 
         $sm = _ROOT . 'sitemap.xml';
@@ -97,7 +95,7 @@ class Manager extends \App\Pages\Base
         }
         $xml .= "</urlset>";
         file_put_contents($sm, $xml);
-        $this->setSuccess('refreshed');
+         
     }
 
  
