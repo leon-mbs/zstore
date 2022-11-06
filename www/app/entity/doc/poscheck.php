@@ -289,13 +289,16 @@ class POSCheck extends Document
         }
         
         //сдачу в  бонусы
-        if($this->headerdata['exch2b']==1 && $this->headerdata['exchange']>0 ) {
+        if($this->headerdata['exch2b'] > 0 && $this->headerdata['exchange']>0 ) {
             $pay = new \App\Entity\Pay();
 
             $pay->document_id = $this->document_id;
         
             $pay->amount = 0;
-            $pay->bonus = (int)$this->headerdata['exchange'];
+            $pay->bonus = (int)$this->headerdata['exch2b'];
+            if($this->headerdata['exch2b'] > $this->headerdata['exchange'])  {
+               $pay->bonus = (int)$this->headerdata['exchange'];
+            }           
             $pay->paytype = \App\Entity\Pay::PAY_BONUS;
             $pay->paydate = time();
             $pay->user_id = \App\System::getUser()->user_id;

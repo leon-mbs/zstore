@@ -129,7 +129,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form3->add(new TextInput('exchange'));
         $this->docpanel->form3->add(new TextInput('bonus'));
         $this->docpanel->form3->add(new TextInput('trans'));
-        $this->docpanel->form3->add(new CheckBox('exch2b'));
+        $this->docpanel->form3->add(new TextInput('exch2b'));
 
         $this->docpanel->form3->add(new Label('discount'));
         $this->docpanel->form3->add(new CheckBox('passfisc'));
@@ -253,7 +253,7 @@ class ARMPos extends \App\Pages\Base
         $this->form1->setVisible(false);
         $this->docpanel->form2->setVisible(true);
 
-        $this->docpanel->form3->exch2b->setVisible( $this->pos->usefisc != 1);
+    //    $this->docpanel->form3->exch2b->setVisible( $this->pos->usefisc != 1);
                   
         $this->newdoc(null);
     }
@@ -300,7 +300,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->setVisible(false);
         $this->docpanel->form3->setVisible(true);
         $this->docpanel->form3->passfisc->setChecked(false);
-        $this->docpanel->form3->exch2b->setChecked(false);
+        $this->docpanel->form3->exch2b->setText('');
         $this->OnChangeCustomer($this->docpanel->form3->customer);
     }
 
@@ -850,7 +850,7 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->payed = $this->docpanel->form3->payed->getText();
         $this->_doc->headerdata['payed'] = $this->docpanel->form3->payed->getText();
         $this->_doc->headerdata['exchange'] = $this->docpanel->form3->exchange->getText();
-        $this->_doc->headerdata['exch2b'] = $this->docpanel->form3->exch2b->isChecked() ? 1:0 ;
+        $this->_doc->headerdata['exch2b'] = $this->docpanel->form3->exch2b->getText() ;
         $this->_doc->headerdata['trans'] = trim($this->docpanel->form3->trans->getText());
         $this->_doc->notes = $this->_doc->notes . ' ' . $this->_doc->headerdata['trans']  ;
         $this->_doc->headerdata['paydisc'] = $this->docpanel->form3->paydisc->getText();
@@ -866,7 +866,7 @@ class ARMPos extends \App\Pages\Base
             return;
         }
    
-        if ($this->docpanel->form3->exch2b->isChecked() && $this->_doc->customer_id == 0) {
+        if ( doubleval($this->docpanel->form3->exch2b->getText() ) >0 && $this->_doc->customer_id == 0) {
             $this->setError("mustsel_cust");
             return;
         }
