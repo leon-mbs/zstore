@@ -195,26 +195,7 @@ class Options extends \App\Pages\Base
         $this->setSuccess('saved');
     }
 
-    public function updateSiteMapOnClick($sender) {
-
-
-        $sm = _ROOT . 'sitemap.xml';
-        @unlink($sm);
-        $xml = "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">";
-
-        $prods = Product::find(" disabled <>1 and detail  not  like '%<noshop>1</noshop>%' ");
-        foreach ($prods as $p) {
-            if (strlen($p->sef) > 0) {
-                $xml = $xml . " <url><loc>" . _BASEURL . "{$p->sef}</loc></url>";
-            } else {
-                $xml = $xml . " <url><loc>" . _BASEURL . "sp/{$p->item_id}</loc></url>";
-            }
-        }
-        $xml .= "</urlset>";
-        file_put_contents($sm, $xml);
-        $this->setSuccess('refreshed');
-    }
-
+ 
  
    
     public function plistOnRow($row) {

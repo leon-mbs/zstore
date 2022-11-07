@@ -38,7 +38,13 @@ class Dashboard extends \App\Pages\Base
         if (!is_array($shop)) {
             $shop = array();
         }
-     
+
+        $this->updateGraph();
+    }
+
+   
+    public function updateGraph() {
+       
         $conn =   \ZDB\DB::getConnect();
   
         $grvisdays = array();
@@ -52,7 +58,7 @@ class Dashboard extends \App\Pages\Base
                          
         }
   
-     $grvisdays_ = array_reverse($grvisdays_) ;
+        $grvisdays_ = array_reverse($grvisdays_) ;
         foreach($grvisdays_ as $dd)  {
            $grvisdays[]=  date('m-d',$dd);
 
@@ -74,10 +80,9 @@ class Dashboard extends \App\Pages\Base
   
         $this->_tvars['grordersdays'] = json_encode($grordersdays);
         $this->_tvars['grorderscnt'] = json_encode($grorderscnt);
-   
+         
     }
-
-   
+        
     public function updateSiteMap($sarg,$post=null) {
 
 
