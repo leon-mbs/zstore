@@ -31,20 +31,4 @@ FROM (((paylist pl
     
  
 
-CREATE TABLE stats (
-  id bigint(20) NOT NULL AUTO_INCREMENT,
-  category smallint(6) NOT NULL,
-  keyd int(11) NOT NULL,
-  vald int(11) NOT NULL,
-  dt datetime DEFAULT NULL,
-  KEY (datetime) ,
-  KEY (category) ,
-  PRIMARY KEY (id)
-)  DEFAULT CHARSET=utf8;   
-
-CREATE TABLE keyval (
-  keyd varchar(255) NOT NULL,
-  vald text NOT NULL,
-  PRIMARY KEY (keyd)
-)
-DEFAULT CHARSET=utf8;
+ 
