@@ -11,6 +11,10 @@ use ZCL\DB\DB as DB;
 class Helper
 {
 
+    const STAT_HIT_SHOP           = 1;     //посещение  онлайн  каталога
+    const STAT_ORDER_SHOP         = 2;     //заказы  в  онлайн каталоге
+     
+    
     private static $meta = array(); //кеширует метаданные
 
     /**
@@ -210,17 +214,14 @@ class Helper
             }
         }
 
+        if ($modules['shop'] == 1) {
+            if ($role->rolename == 'admins' || strpos($role->modules, 'shop') !== false) {
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10019, 'meta_name' => "/Shop/Pages/Dashboard", 'meta_type' => 6, 'description' => self::l('modshopman')));
+            }
+        }
 
-        if ($modules['ocstore'] == 1) {
-            if ($role->rolename == 'admins' || strpos($role->modules, 'ocstore') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10005, 'meta_name' => "/OCStore/Orders", 'meta_type' => 6, 'description' => self::l('modocstoreorders')));
-            }
-        }
-        if ($modules['ocstore'] == 1) {
-            if ($role->rolename == 'admins' || strpos($role->modules, 'ocstore') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10006, 'meta_name' => "/OCStore/Items", 'meta_type' => 6, 'description' => self::l('modocstoreitems')));
-            }
-        }
+
+
         if ($modules['wc'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'wc') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10009, 'meta_name' => "/WC/Orders", 'meta_type' => 6, 'description' => self::l('modwcorders')));
@@ -254,7 +255,16 @@ class Helper
             }
         }
    
-         
+          if ($modules['ocstore'] == 1) {
+            if ($role->rolename == 'admins' || strpos($role->modules, 'ocstore') !== false) {
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10005, 'meta_name' => "/OCStore/Orders", 'meta_type' => 6, 'description' => self::l('modocstoreorders')));
+            }
+        }
+        if ($modules['ocstore'] == 1) {
+            if ($role->rolename == 'admins' || strpos($role->modules, 'ocstore') !== false) {
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10018, 'meta_name' => "/OCStore/Items", 'meta_type' => 6, 'description' => self::l('modocstoreitems')));
+            }
+        }       
         return $mdata;
     }
 
@@ -588,7 +598,7 @@ class Helper
         $qty = trim($qty);
         $common = System::getOptions("common");
         if ($common['qtydigits'] > 0) {
-            return number_format($qty, $common['qtydigits'], '.', '');
+            return @number_format($qty, $common['qtydigits'], '.', '');
         } else {
             return round($qty);
         }
@@ -608,17 +618,18 @@ class Helper
 
         $am = preg_replace("/[^0-9\.\-]/", "",$am);        
         $am = trim($am);
+         
         $common = System::getOptions("common");
         if ($common['amdigits'] == 1) {
-            return number_format($am, 2, '.', '');
+            return @number_format($am, 2, '.', '');
         }
         if ($common['amdigits'] == 5) {
             $am = round($am * 20) / 20;
-            return number_format($am, 2, '.', '');
+            return @number_format($am, 2, '.', '');
         }
         if ($common['amdigits'] == 10) {
             $am = round($am * 10) / 10;
-            return number_format($am, 2, '.', '');
+            return @number_format($am, 2, '.', '');
         }
 
         return round($am);
@@ -906,10 +917,6 @@ class Helper
         $writer->save('php://output');
         die;
     }
-
-    
-    
- 
     
     public  static  function printItems(array $items){
         $printer = \App\System::getOptions('printer');
@@ -1006,6 +1013,36 @@ class Helper
                
         return $htmls;               
     }
-    
+
+
+    public  static function getVal($key){
+          if(strlen($key)==0)   return;
+          $conn = \ZDB\DB::getConnect();
+          
+          $ret = $conn->GetOne("select vald from  keyval  where  keyd=" . $cann->qstr($key));
+
+          if(strlen($ret)==0)   return "";
+    }    
+    public  static function setVal($key,$data){
+          if(strlen($key)==0)   return;
+          $conn = \ZDB\DB::getConnect();
+          $conn->Execute("delete  from  keyval  where  keyd=" . $cann->qstr($key));
+          if($data===null){
+             return; 
+          }
+          $conn->Execute("insert into keyval  (  keyd,vald)  values (" . $cann->qstr($key).",".$cann->qstr($data).")" );
+          
+          
+    }    
+
+    public  static function insertstat(int $cat,int $key,int $data ){
+          if(  $cat==0  )   return;
+          
+          $conn = \ZDB\DB::getConnect();
+          $dt= $conn->DBTimeStamp(time());
+          $conn->Execute("insert into stats  ( category, keyd,vald,dt)  values ({$cat},{$key},{$data},{$dt})" );
+          
+          
+    }    
     
 }

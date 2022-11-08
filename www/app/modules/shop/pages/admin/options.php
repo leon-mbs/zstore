@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shop\Pages;
+namespace App\Modules\Shop\Pages\Admin;
 
 use App\Application as App;
 use App\Entity\Item;
@@ -39,7 +39,6 @@ class Options extends \App\Pages\Base
 
         $this->shop->add(new DropDownChoice('shopdefpricetype', \App\Entity\Item::getPriceTypeList()));
         $this->shop->add(new DropDownChoice('shopdefbranch', \App\Entity\Branch::getList()));
-        $this->shop->add(new DropDownChoice('paysystem',array() ))->onChange($this, 'onPaySystem');
         $this->shop->add(new TextInput('email'));
         $this->shop->add(new TextInput('shopname'));
         $this->shop->add(new TextInput('currencyname'));
@@ -49,7 +48,19 @@ class Options extends \App\Pages\Base
         $this->shop->add(new CheckBox('usefilter'));
         $this->shop->add(new CheckBox('usefeedback'));
         $this->shop->add(new CheckBox('usemainpage'));
-          
+        $this->shop->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), "0"));
+        
+        
+        $this->add(new Form('pay'))->onSubmit($this, 'savePayOnClick');
+        $this->pay->add(new DropDownChoice('paysystem',array() ))->onChange($this, 'onPaySystem');
+        $this->pay->add(new DropDownChoice('mf', \App\Entity\MoneyFund::getList(2) ));
+        $this->pay->add(new TextInput('lqpublic'  ));
+        $this->pay->add(new TextInput('lqpriv'  ));
+        $this->pay->add(new TextInput('wpsevret'  ));
+        $this->pay->add(new TextInput('wpmacc'  ));
+        $this->pay->add(new TextInput('wpsite'  ));
+        
+        
         $this->add(new Panel('adminpan'));
         $this->adminpan->add(new ClickLink('updatesitemap'))->onClick($this, 'updateSiteMapOnClick');
         
@@ -78,8 +89,8 @@ class Options extends \App\Pages\Base
 
         $this->shop->shopdefbranch->setValue($shop['defbranch']);
         $this->shop->shopordertype->setValue($shop['ordertype']);
-        $this->shop->paysystem->setValue($shop['paysystem']);
         $this->shop->shopdefpricetype->setValue($shop['defpricetype']);
+        $this->shop->salesource->setValue($shop['salesource']);
         $this->shop->currencyname->setText($shop['currencyname']);
         $this->shop->uselogin->setChecked($shop['uselogin']);
         $this->shop->usefilter->setChecked($shop['usefilter']);
@@ -91,12 +102,55 @@ class Options extends \App\Pages\Base
         $this->shop->currencyname->setText($shop['currencyname']);
         $this->shop->phone->setText($shop['phone']);
         
-        $this->onPaySystem($this->shop->paysystem);
+        $this->pay->paysystem->setValue($shop['paysystem']);
+        $this->pay->mf->setValue($shop['mf_id']);
+        $this->pay->lqpublic->setText($shop['lqpublic']);
+        $this->pay->lqpriv->setText($shop['lqpriv']);
+        $this->pay->wpsevret->setText($shop['wpsevret']);
+        $this->pay->wpmacc->setText($shop['wpmacc']);
+        $this->pay->wpsite->setText($shop['wpsite']);
+        $this->onPaySystem(null);
         
         $this->adminpan->plist->Reload() ;
     
     }
 
+    public function savePayOnClick($sender) {
+        $shop = System::getOptions("shop");
+        if (!is_array($shop)) {
+            $shop = array();
+        }
+        $shop['paysystem'] = $sender->paysystem->getValue();
+        $shop['mf_id'] =  intval($sender->mf->getValue() ); 
+        if($shop['mf_id']==0) {
+            $this->setError('noselmf');
+            return;
+        }
+        $shop['lqpriv'] =  $sender->lqpriv->getText() ; 
+        $shop['lqpublic'] = $sender->lqpublic->getText() ; 
+        $shop['wpsevret'] = $sender->wpsevret->getText() ; 
+        $shop['wpmacc'] = $sender->wpmacc->getText() ; 
+        $shop['wpsite'] = $sender->wpsite->getText() ; 
+
+        System::setOptions("shop", $shop);
+        $this->setSuccess('saved');
+        
+    }
+    
+    public function onPaySystem($sender) {
+         if($sender!= null) {
+             $this->goAnkor('paysystem') ;   
+         }
+         $ps = intval($this->pay->paysystem->getValue()) ;
+         $this->pay->mf->setVisible($ps>0);
+         $this->pay->lqpriv->setVisible($ps==2);
+         $this->pay->lqpublic->setVisible($ps==2);
+         $this->pay->wpsevret->setVisible($ps==1);
+         $this->pay->wpmacc->setVisible($ps==1);
+         $this->pay->wpsite->setVisible($ps==1);
+
+    }    
+    
     public function saveShopOnClick($sender) {
         $shop = System::getOptions("shop");
         if (!is_array($shop)) {
@@ -106,8 +160,8 @@ class Options extends \App\Pages\Base
 
         $shop['defbranch'] = $this->shop->shopdefbranch->getValue();
         $shop['ordertype'] = $this->shop->shopordertype->getValue();
-        $shop['paysystem'] = $this->shop->paysystem->getValue();
-        $shop['defpricetype'] = $this->shop->paysystem->getValue();
+        $shop['defpricetype'] = $this->shop->shopdefpricetype->getValue();
+        $shop['salesource'] = $this->shop->salesource->getValue();
         $shop['email'] = $this->shop->email->getText();
         $shop['shopname'] = $this->shop->shopname->getText();
         $shop['currencyname'] = $this->shop->currencyname->getText();
@@ -141,26 +195,7 @@ class Options extends \App\Pages\Base
         $this->setSuccess('saved');
     }
 
-    public function updateSiteMapOnClick($sender) {
-
-
-        $sm = _ROOT . 'sitemap.xml';
-        @unlink($sm);
-        $xml = "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">";
-
-        $prods = Product::find(" disabled <>1 and detail  not  like '%<noshop>1</noshop>%' ");
-        foreach ($prods as $p) {
-            if (strlen($p->sef) > 0) {
-                $xml = $xml . " <url><loc>" . _BASEURL . "{$p->sef}</loc></url>";
-            } else {
-                $xml = $xml . " <url><loc>" . _BASEURL . "sp/{$p->item_id}</loc></url>";
-            }
-        }
-        $xml .= "</urlset>";
-        file_put_contents($sm, $xml);
-        $this->setSuccess('refreshed');
-    }
-
+ 
  
    
     public function plistOnRow($row) {
@@ -213,9 +248,7 @@ class Options extends \App\Pages\Base
     }
  
 
-    public function onPaySystem($sender) {
-         $this->goAnkor('paysystem') ;
-    }
+
     public function savePageOnClick($sender) {
 
         $oldlink = $sender->oldlink->getText();

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shop\Pages;
+namespace App\Modules\Shop\Pages\Catalog;
 
 use App\Application as App;
 use App\Helper as H;
@@ -33,7 +33,7 @@ class Orders extends Base
         $id = System::getCustomer();
 
         if ($id == 0) {
-            App::Redirect("\\App\\Modules\\Shop\\Pages\\Userlogin");
+            App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog\\Userlogin");
             return;
         }
         $this->_c  = Customer::load($id);
@@ -110,7 +110,7 @@ class Orders extends Base
     public function onPayment($sender) {
         $order = $sender->getOwner()->getDataItem();
         
-        App::Redirect("App\\Modules\\Shop\\Pages\\OrderPay",array($order->document_id)) ;
+        App::Redirect("App\\Modules\\Shop\\Pages\\Catalog\\OrderPay",array($order->document_id)) ;
             
         
     }  

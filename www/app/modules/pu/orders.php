@@ -82,7 +82,7 @@ class Orders extends \App\Pages\Base
                 }
 
                 $neworder = Document::create('Order');
-                $neworder->customer_id = $modules['pucustomer_id'];
+                
 
                 //товары
                 $j=0;
@@ -120,6 +120,8 @@ class Orders extends \App\Pages\Base
                 $neworder->headerdata['puorder'] = $puorder['id'];
                 $neworder->headerdata['outnumber'] = $puorder['id'];
                 $neworder->headerdata['puorderback'] = 0;
+                $neworder->headerdata['salessource'] = $modules['pusalessource'];
+                
                 $neworder->headerdata['puclient'] = $puorder['client_first_name'] . ' ' . $puorder['client_last_name'];
                 
                 $neworder->amount = H::fa($puorder['full_price']);
