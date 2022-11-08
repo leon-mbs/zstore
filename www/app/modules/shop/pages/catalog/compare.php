@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shop\Pages;
+namespace App\Modules\Shop\Pages\Admin;
 
 use App\Modules\Shop\Comparelist;
 use App\Modules\Shop\Helper;
@@ -26,7 +26,7 @@ class Compare extends Base
 
         $filter = \App\Filter::getFilter("ProductCatalog");
 
-        App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog", $filter->cat_id);
+        App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog\\Catalog", $filter->cat_id);
     }
 
 }
@@ -108,7 +108,7 @@ class CompareGrid extends \Zippy\Html\CustomComponent implements \Zippy\Interfac
         if ($comparelist->isEmpty()) {
             $filter = \App\Filter::getFilter("ProductCatalog");
 
-            App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog", $filter->cat_id);
+            App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog\\Catalog", $filter->cat_id);
         }
     }
 

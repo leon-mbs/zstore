@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shop\Pages;
+namespace App\Modules\Shop\Pages\Catalog;
 
 use App\Application as App;
 use App\Entity\Doc\Document;
@@ -114,7 +114,7 @@ class Order extends Base
         $this->basketlist = Basket::getBasket()->list;
 
         if (Basket::getBasket()->isEmpty()) {
-            App::Redirect("\\App\\Modules\\Shop\\Pages\\Main", 0);
+            App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog\\Main", 0);
         } else {
             $this->OnUpdate($this);
         }
@@ -230,7 +230,7 @@ class Order extends Base
             }
 
             if ($order->customer_id == 0) {
-           
+                
                 $c = new  Customer();
                 $c->firstname = $firstname;
                 $c->lastname= $lastname;
@@ -245,6 +245,8 @@ class Order extends Base
             }
             $order->headerdata['pricetype'] = $shop["defpricetype"];
             $order->headerdata['contact'] = $name . ', ' . $phone;
+            $order->headerdata['salessource'] = $shop['salessource'];
+            $order->headerdata['shoporder'] = 1;
 
             $order->notes = trim($this->orderform->notes->getText());
             $order->amount = $amount;
@@ -257,6 +259,10 @@ class Order extends Base
             }
             
             $order->save();
+            
+            \App\Helper::insertstat(\App\Helper::STAT_ORDER_SHOP,0,0) ;
+             
+            
             $this->orderid = intval( preg_replace('/[^0-9]/', '', $order->document_number));
             $order->updateStatus(Document::STATE_NEW);
                 
@@ -302,7 +308,7 @@ class Order extends Base
           
         if($payment == 1) {
             
-            App::Redirect("App\\Modules\\Shop\\Pages\\OrderPay",array($order->document_id)) ;
+            App::Redirect("App\\Modules\\Shop\\Pages\\Catalog\\OrderPay",array($order->document_id)) ;
               
         }
         

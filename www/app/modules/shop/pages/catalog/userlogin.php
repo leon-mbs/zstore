@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shop\Pages;
+namespace App\Modules\Shop\Pages\Catalog;
 
 use App\Application as App;
 use App\Entity\User;
@@ -144,7 +144,7 @@ class UserLogin extends \Zippy\Html\WebPage
         } else {
             setcookie("remembercust", '', 0);
         }
-        App::Redirect("\\App\\Modules\\Shop\\Pages\\Main",0);
+        App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog\\Main",0);
 
         
     }
@@ -153,7 +153,7 @@ class UserLogin extends \Zippy\Html\WebPage
         parent::beforeRequest();
 
         if (System::getCustomer()  > 0) {
-          App::Redirect("\\App\\Modules\\Shop\\Pages\\Main",0);
+          App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog\\Main",0);
 
         }
     }

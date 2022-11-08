@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shop\Pages;
+namespace App\Modules\Shop\Pages\Catalog;
 
 use App\Application as App;
 use App\Modules\Shop\Entity\Product;
@@ -69,7 +69,7 @@ class ProductView extends Base
         $this->add(new \Zippy\Html\DataList\DataView('attributelist', new \Zippy\Html\DataList\ArrayDataSource($list), $this, 'OnAddAttributeRow'))->Reload();
         $this->add(new ClickLink('buy', $this, 'OnBuy'));
         $this->add(new ClickLink('addtocompare', $this, 'OnAddCompare'));
-        $this->add(new RedirectLink('compare', "\\App\\Modules\\Shop\\Pages\\Compare"))->setVisible(false);
+        $this->add(new RedirectLink('compare', "\\App\\Modules\\Shop\\Pages\\Catalog\\Compare"))->setVisible(false);
 
         $form = $this->add(new \Zippy\Html\Form\Form('formcomment'));
         $form->onSubmit($this, 'OnComment');
@@ -129,7 +129,7 @@ class ProductView extends Base
     public function OnBack($sender) {
         $product = Product::load($this->item_id);
 
-        App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog", $product->cat_id);
+        App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog\\Catalog", $product->cat_id);
     }
 
     public function OnAddAttributeRow(\Zippy\Html\DataList\DataRow $datarow) {

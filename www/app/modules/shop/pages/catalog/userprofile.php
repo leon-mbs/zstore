@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shop\Pages;
+namespace App\Modules\Shop\Pages\Catalog;
 
 use App\Application as App;
 use App\Helper as H;
@@ -26,7 +26,7 @@ class UserProfile extends Base
         $id = System::getCustomer();
 
         if ($id == 0) {
-            App::Redirect("\\App\\Modules\\Shop\\Pages\\Userlogin");
+            App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog\\Userlogin");
             return;
         }
         $this->c  = Customer::load($id);

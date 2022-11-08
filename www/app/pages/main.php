@@ -257,10 +257,10 @@ class Main extends Base
               from entrylist_view  e
 
               join items_view i on e.item_id = i.item_id
-             join documents_view d on d.document_id = e.document_id
-               where e.item_id >0  and e.quantity <> 0   
-               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood')
-               {$br}  
+              join documents_view d on d.document_id = e.document_id
+              where e.item_id > 0  and e.quantity <> 0   
+              and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood')
+              {$br}  
               AND DATE(e.document_date) >= " . $conn->DBDate($m['start']) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($m['end']) . "
             
