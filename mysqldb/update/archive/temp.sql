@@ -37,6 +37,7 @@ CREATE TABLE stats (
   keyd int(11) NOT NULL,
   vald int(11) NOT NULL,
   dt datetime DEFAULT NULL,
+  KEY (datetime) ,
   KEY (category) ,
   PRIMARY KEY (id)
 )  DEFAULT CHARSET=utf8;   

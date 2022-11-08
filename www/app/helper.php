@@ -598,7 +598,7 @@ class Helper
         $qty = trim($qty);
         $common = System::getOptions("common");
         if ($common['qtydigits'] > 0) {
-            return number_format($qty, $common['qtydigits'], '.', '');
+            return @number_format($qty, $common['qtydigits'], '.', '');
         } else {
             return round($qty);
         }
@@ -618,17 +618,18 @@ class Helper
 
         $am = preg_replace("/[^0-9\.\-]/", "",$am);        
         $am = trim($am);
+         
         $common = System::getOptions("common");
         if ($common['amdigits'] == 1) {
-            return number_format($am, 2, '.', '');
+            return @number_format($am, 2, '.', '');
         }
         if ($common['amdigits'] == 5) {
             $am = round($am * 20) / 20;
-            return number_format($am, 2, '.', '');
+            return @number_format($am, 2, '.', '');
         }
         if ($common['amdigits'] == 10) {
             $am = round($am * 10) / 10;
-            return number_format($am, 2, '.', '');
+            return @number_format($am, 2, '.', '');
         }
 
         return round($am);
