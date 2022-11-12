@@ -13,6 +13,7 @@ class Helper
 
     const STAT_HIT_SHOP           = 1;     //посещение  онлайн  каталога
     const STAT_ORDER_SHOP         = 2;     //заказы  в  онлайн каталоге
+    const STAT_VIEW_ITEM          = 3;     //перегляд  товару
      
     
     private static $meta = array(); //кеширует метаданные
@@ -611,13 +612,15 @@ class Helper
      * @return mixed
      */
     public static function fa($am) {
-        if (strlen($am) == 0) {
-            return '';
-        }
         $am = str_replace(',', '.', $am);
 
         $am = preg_replace("/[^0-9\.\-]/", "",$am);        
-        $am = trim($am);
+        $am = trim($am);   
+        if (strlen($am) == 0) {
+            return '';
+        }
+
+        $am  = doubleval($am)  ;   
          
         $common = System::getOptions("common");
         if ($common['amdigits'] == 1) {
@@ -631,7 +634,7 @@ class Helper
             $am = round($am * 10) / 10;
             return @number_format($am, 2, '.', '');
         }
-
+ 
         return round($am);
     }
 

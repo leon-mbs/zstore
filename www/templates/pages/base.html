@@ -7,6 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="/assets/css/fontawesome-all.css">
+
         <link rel="stylesheet" href="/assets/css/adminlte.css">
         <!--<link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/bootstrap.css">   -->
         <link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/zippy-bundle.css">
@@ -485,15 +486,21 @@
                                                     <p>&nbsp;&nbsp;Варiацiї товарiв</p>
                                                 </a>
                                             </li>
-                                                  {{#hideblock}}
+                                                
                                            <li>
                                                 <a href="/index.php?p=App/Modules/Shop/Pages/Admin/Dashboard" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
                                                     <p>&nbsp;&nbsp;Дашборд</p>
                                                 </a>
                                             </li>
-                                                 {{/hideblock}}
+                                                
                                              {{#isadmins}}
+                                            <li>
+                                                <a href="/index.php?p=App/Modules/Shop/Pages/Admin/Custom" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>
+                                                    <p>&nbsp;&nbsp;Кастомiзацiя</p>
+                                                </a>
+                                            </li>     
                                             <li>
                                                 <a href="/index.php?p=App/Modules/Shop/Pages/Admin/Options" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
@@ -841,7 +848,6 @@
                     </div>
                     <div class="row">
                         <div class="col-12    ">
-
                             {{#smart}}
 
                             <div class=" card navbar nav justify-content-start d-none d-sm-block">

@@ -80,28 +80,51 @@ class Dashboard extends \App\Pages\Base
   
         $this->_tvars['grordersdays'] = json_encode($grordersdays);
         $this->_tvars['grorderscnt'] = json_encode($grorderscnt);
-         
-    }
-        
-    public function updateSiteMap($sarg,$post=null) {
-
-
-        $sm = _ROOT . 'sitemap.xml';
-        @unlink($sm);
-        $xml = "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">";
-
-        $prods = Product::find(" disabled <> 1 and detail  not  like '%<noshop>1</noshop>%' ");
-        foreach ($prods as $p) {
-            if (strlen($p->sef) > 0) {
-                $xml = $xml . " <url><loc>" . _BASEURL . "{$p->sef}</loc></url>";
-            } else {
-                $xml = $xml . " <url><loc>" . _BASEURL . "sp/{$p->item_id}</loc></url>";
+ 
+        $sql = " content  LIKE '%<shoporder>1</shoporder>%' "  ;
+        $sql .= " and date(document_date) <= " . $conn->DBDAte(time());
+        $sql .= " and date(document_date) > " . $conn->DBDAte( strtotime("- 30 day",time()) );
+        $docs = \App\Entity\Doc\Document::find($sql) ;
+        $items = array();
+        $cats = array();
+        foreach($docs as $doc){
+            foreach($doc->unpackDetails('detaildata') as $it){
+                if(!isset($items[$it->itemname])) $items[$it->itemname] = 0;
+                if(!isset($cats[$it->cat_name])) $cats[$it->cat_name] = 0;
+                $items[$it->itemname] += ($it->quantity * $it->price) ;
+                $cats[$it->cat_name] += ($it->quantity * $it->price) ;
             }
         }
-        $xml .= "</urlset>";
-        file_put_contents($sm, $xml);
-         
+        asort($items,SORT_NUMERIC) ;
+        asort($cats,SORT_NUMERIC) ;
+        $items = array_reverse($items,true) ;
+        $cats = array_reverse($cats,true) ;
+
+        $this->_tvars['topitems']  = array();;
+        $this->_tvars['topcats'] = array();;
+        $this->_tvars['topview'] = array();;
+        foreach($items as $k=>$v) {
+            $this->_tvars['topitems'][]= array('v'=>$v,'n'=>$k);             
+            if(count($this->_tvars['topitems'])==10) break;
+        }
+        foreach($cats as $k=>$v) {
+            $this->_tvars['topcats'][]= array('v'=>$v,'n'=>$k);             
+            if(count($this->_tvars['topcats'])==10) break;
+        }
+        
+        
+        $sql = "select cnt,itemname from (select keyd,count(*) as cnt from stats where category = " . H::STAT_VIEW_ITEM . " and date(dt)>" . $conn->DBDAte( strtotime("- 30 day",time()) ) ;
+        $sql .= "group by keyd ) t join items i on i.item_id = t.keyd order  by  t.cnt desc  "    ;
+        $res = $conn->Execute($sql);
+        foreach($res as $row) {
+            $this->_tvars['topview'][]= array('v'=>$row['cnt'],'n'=>$row['itemname']);             
+            if(count($this->_tvars['topview'])==10) break;
+        }
+            
+    
     }
+        
+  
 
  
     

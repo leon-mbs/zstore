@@ -12,9 +12,7 @@
            
             <div class="col-12 ">
                 <h3>Дашборд</h3>
-                <div clas="navbar nav">
-                <a onclick="updateSiteMap()"  href="javascript:void(0)"  class="btn btn-outline-info"> Оновити sitemap.xml</a>
-                </div>
+                 
             </div>
            <div class="col-12 text-center ">
                 <h4>Статистика за останнi 30 днiв</h4>
@@ -42,20 +40,39 @@
             </div>
          
           <div class="col-12    ">   </div> 
-                 <div class="col-12 col-md-4 text-center ">
+             <div class="col-12 col-md-4   ">
                 
                   <h5>Топ проданих товарiв </h5>             
                   <table class="table table-sm">
                     <tr> <th>Товар</th><th class="text-right">На суму</th>  </tr>
+                    {{#topitems}}
+                    <tr> <td>{{n}}</td><td class="text-right">{{v}}</td>  </tr>                       
+                    {{/topitems}}
                   </table>  
             </div>      
       
-                 <div class="col-12 col-md-4 text-center ">
+                 <div class="col-12 col-md-4   ">
                 
                   <h5>Топ  проданих категорiй</h5>             
                   <table class="table table-sm">
                      <tr> <th>Категорiя</th><th class="text-right">На суму</th>  </tr>
+                    {{#topcats}}
+                    <tr> <td>{{n}}</td><td class="text-right">{{v}}</td>  </tr>                       
+                    {{/topcats}}
                   </table>  
+                  
+            
+            </div>      
+             <div class="col-12 col-md-4   ">
+                
+                  <h5>Топ переглядiв</h5>             
+                  <table class="table table-sm">
+                     <tr> <th>Товар</th><th class="text-right">Кiл.</th>  </tr>
+                    {{#topview}}
+                    <tr> <td>{{n}}</td><td class="text-right">{{v}}</td>  </tr>                       
+                    {{/topview}}
+                  </table>  
+                  
             
             </div>      
         </div>

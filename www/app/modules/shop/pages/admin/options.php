@@ -61,23 +61,8 @@ class Options extends \App\Pages\Base
         $this->pay->add(new TextInput('wpsite'  ));
         
         
-        $this->add(new Panel('adminpan'));
-        $this->adminpan->add(new ClickLink('updatesitemap'))->onClick($this, 'updateSiteMapOnClick');
-        
-        $this->adminpan->add(new ClickLink('padd'))->onClick($this, 'paddOnClick');
-        $this->adminpan->add(new DataView('plist', new ArrayDataSource($this, "_pages"), $this, 'plistOnRow'));
-    
-        
-        $this->add(new Form('pageform'))->onSubmit($this, 'savePageOnClick');
-        $this->pageform->add(new TextArea('pagetext'));
-        $this->pageform->add(new TextInput('pagelink'));
-        $this->pageform->add(new TextInput('pagetitle'));
-        $this->pageform->add(new TextInput('oldlink'));
-        $this->pageform->add(new TextInput('pageorder'));
-        $this->pageform->setVisible(false) ;
-        $this->pageform->add(new ClickLink('pcancel'))->onClick($this, 'pcancelOnClick');
-         
-        
+   
+ 
         $shop = System::getOptions("shop");
         if (!is_array($shop)) {
             $shop = array();
@@ -111,7 +96,7 @@ class Options extends \App\Pages\Base
         $this->pay->wpsite->setText($shop['wpsite']);
         $this->onPaySystem(null);
         
-        $this->adminpan->plist->Reload() ;
+
     
     }
 
@@ -138,9 +123,7 @@ class Options extends \App\Pages\Base
     }
     
     public function onPaySystem($sender) {
-         if($sender!= null) {
-             $this->goAnkor('paysystem') ;   
-         }
+   
          $ps = intval($this->pay->paysystem->getValue()) ;
          $this->pay->mf->setVisible($ps>0);
          $this->pay->lqpriv->setVisible($ps==2);
@@ -196,93 +179,25 @@ class Options extends \App\Pages\Base
     }
 
  
- 
+    public function updateSiteMap($sarg,$post=null) {
+
+
+        $sm = _ROOT . 'sitemap.xml';
+        @unlink($sm);
+        $xml = "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">";
+
+        $prods = Product::find(" disabled <> 1 and detail  not  like '%<noshop>1</noshop>%' ");
+        foreach ($prods as $p) {
+            if (strlen($p->sef) > 0) {
+                $xml = $xml . " <url><loc>" . _BASEURL . "{$p->sef}</loc></url>";
+            } else {
+                $xml = $xml . " <url><loc>" . _BASEURL . "sp/{$p->item_id}</loc></url>";
+            }
+        }
+        $xml .= "</urlset>";
+        file_put_contents($sm, $xml);
+         
+    } 
    
-    public function plistOnRow($row) {
-        $p = $row->getDataItem();
-        $row->add(new Label("ptitle",$p->title));
-        $row->add(new Label("plink",$p->link));
-        $row->add(new Label("porder",$p->order));
-        $row->add(new ClickLink("pedit",$this,"peditOnClick"));
-        $row->add(new ClickLink("pdel",$this,"pdelOnClick"));
-    }
-    public function paddOnClick($sender) {
-        $this->pageform->clean();  
-        $this->pageform->setvisible(true);  
-        $this->adminpan->setvisible(false);  
-       
-    }
-    public function peditOnClick($sender) {
-        $page = $sender->getOwner()->getDataItem();
-       
-       
-        $this->pageform->oldlink->setText($page->link)  ;
-        $this->pageform->pagelink->setText($page->link)  ;
-        $this->pageform->pagetitle->setText($page->title) ;
-        $this->pageform->pageorder->setText($page->order) ;
-       
-        $this->pageform->pagetext->setText(@base64_decode($page->text));
-         
-        $this->pageform->setvisible(true);  
-        $this->adminpan->setvisible(false);  
-        
-    }
-    public function pcancelOnClick($sender) {
-         
-        $this->pageform->setvisible(false);  
-        $this->adminpan->setvisible(true);  
-       
-    }
-    public function pdelOnClick($sender) {
-        
-        $p = $sender->getOwner()->getDataItem();
-        
-        $this->_pages = array_diff_key($this->_pages, array($p->link => $this->_pages[$p->link]));
-       
-        $shop = System::getOptions("shop");
-        $shop['pages'] = $this->_pages ;    
-        System::setOptions("shop", $shop);
-        
-        $this->adminpan->plist->Reload() ;
-       
-    }
  
-
-
-    public function savePageOnClick($sender) {
-
-        $oldlink = $sender->oldlink->getText();
-        if(strlen($oldlink)>0)  {
-             $this->_pages = array_diff_key($this->_pages, array($oldlink => $this->_pages[$oldlink]));
-    
-        }
-        
-        $page = new \App\DataItem();
-        $page->link = $sender->pagelink->getText()  ;
-        $page->title = $sender->pagetitle->getText() ;
-        $page->order = $sender->pageorder->getText() ;
-        
-        $page->text = base64_encode($sender->pagetext->getText());
- 
-        $this->_pages[$page->link] = $page;
-        
-    usort($this->_pages, function($a, $b) {
-            return $a->order > $b->order;
-        });       
-        $pages=array();
-        foreach($this->_pages as $p){
-            $pages[$p->link]=$p;
-        }
-        $this->_pages =$pages;
-        $shop = System::getOptions("shop");
-        $shop['pages'] = $this->_pages; 
-        System::setOptions("shop", $shop);
-        
-        $this->adminpan->plist->Reload() ;
- 
-       $this->pageform->setvisible(false);  
-        $this->adminpan->setvisible(true);  
-    
-    }
-    
 }
