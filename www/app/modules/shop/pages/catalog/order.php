@@ -245,7 +245,7 @@ class Order extends Base
             }
             $order->headerdata['pricetype'] = $shop["defpricetype"];
             $order->headerdata['contact'] = $name . ', ' . $phone;
-            $order->headerdata['salessource'] = $shop['salessource'];
+            $order->headerdata['salesource'] = $shop['salesource'];
             $order->headerdata['shoporder'] = 1;
 
             $order->notes = trim($this->orderform->notes->getText());
