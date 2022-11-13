@@ -168,6 +168,8 @@ class ProductView extends Base
         $product = Product::load($this->item_id);
         $product->quantity = 1;
         \App\Modules\Shop\Basket::getBasket()->addProduct($product);
+        \App\Modules\Shop\Basket::getBasket()->sendCookie()  ;
+          
         $this->setSuccess("addedtocart");
         $this->resetURL();
         //  App::RedirectURI('/pcat/' . $product->cat_id);

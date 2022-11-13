@@ -11,7 +11,7 @@ class Basket implements \Zippy\Interfaces\DataSource
     public $list = array();
 
     public static function getBasket() {
-
+      
         $basket = System::getSession()->productbasket;
         if (!isset($basket)) {
             $basket = new Basket();
@@ -59,7 +59,7 @@ class Basket implements \Zippy\Interfaces\DataSource
            $cl[$it->item_id] =$it->quantity;                 
         }
         
-        setcookie('shop_cart',serialize($cl)) ;
+        setcookie('shop_cart',serialize($cl),0 ) ;
     }
     public function isEmpty() {
         return count($this->list) == 0;
