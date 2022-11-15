@@ -5,9 +5,29 @@
       
 
         <div class="row ">
-            <div class="col-12    col-md-6   col-xl-4   ">
-                <h4>Новинки</h4>
+            <div class="col-12     ">
     
+              <a onclick="updateSiteMap()"  href="javascript:void(0)"  class="btn btn-outline-info"> Оновити sitemap.xml</a>
+                                          
+            </div>
+           <div class="col-12    col-md-6   col-xl-4   ">
+                <h4>Новинки</h4>
+                <form zippy="newform" class="form-inline mt-2 mb-2">
+                    <label for="newitem">Товар:</label>
+                    <input placeholder="Почніть вводити.." class="form-control  mr-sm-2" zippy="newitem"/>
+    
+                    <input class="btn btn-outline-success  " type="submit" value="Додати">
+                </form>   <table class="table  table-sm">
+                  <tr zippy="newlist">
+                      <td>
+                                <a zippy="imagelistitem" data-type="image"    > <img
+                                        style="float:left; width:64px"></a>
+
+                            </td>
+                    <td zippy="newname"></td>
+                    <td><a zippy="newdel"><i class="fa fa-trash"></i></a></td>
+                  </tr>
+                </table>
                
                 
                                           
@@ -31,7 +51,7 @@
                    </tr>
                 </table>
                 
-                
+                   
              </div>
            
            
@@ -115,7 +135,14 @@
                 });
             })
 
-
+        function updateSiteMap(){
+            
+          callPageMethod('updateSiteMap',null,null,(data)=> 
+          {
+             toastr.success('Оновлено','',{'timeOut':'2000'})  
+          });           
+      
+   }
         </script>
 
     </body>

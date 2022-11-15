@@ -3,18 +3,21 @@
 namespace App\Modules\Shop\Pages\Catalog;
 
 use App\Modules\Shop\Entity\ProductGroup;
+use App\Modules\Shop\Entity\Product;
 use App\Modules\Shop\Helper;
 use ZCL\DB\EntityDataSource;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Label;
 use Zippy\Html\Link\BookmarkableLink;
 use Zippy\Html\Panel;
+use Zippy\Html\DataList\ArrayDataSource;
 
 class Main extends Base
 {
 
     private $cat_id = 0;
-
+    public $_newlist = array();
+ 
     public function __construct($id = 0) {
         parent::__construct();
 
@@ -36,7 +39,33 @@ class Main extends Base
             $cat = " cat_id in (" . implode(',', $ch) . ") and ";
         }
 
-        $this->newlistp->add(new DataView("newlist", new EntityDataSource("\\App\\Modules\\Shop\\Entity\\Product", "  {$cat} disabled <> 1 and detail  not  like '%<noshop>1</noshop>%' ", "item_id desc", 6), $this, 'OnNewRow'))->Reload();
+ 
+
+        $ar = @unserialize(\App\Helper::getVal('shop_newlist') ) ;
+        if(is_array($ar) && COUNT($ar) >0) {
+    
+    
+  
+            $ids = array() ;
+            foreach($ar as $a){
+               $ids[] = $a->item_id; 
+            }   
+    
+            $sql=   " item_id in (" . implode(',', $ids) . ") and  {$cat} disabled <> 1 and detail  not  like '%<noshop>1</noshop>%' " ;
+        
+            $newlist = Product::find($sql,'',6);
+      
+            foreach($ar as $a){  //выстраиваем  в порядке  добавления
+               if($newlist[$a->item_id] instanceof Product) {
+                  $this->_newlist[]=$newlist[$a->item_id] ;       
+               } 
+               
+            }
+            unset($newlist);
+        }      
+        $this->newlistp->add(new DataView('newlist', new ArrayDataSource($this, "_newlist"), $this, 'OnNewRow'))->Reload();
+        $this->newlistp->setVisible(count($this->_newlist)>0) ;
+//        $this->newlistp->add(new DataView("newlist", new EntityDataSource("\\App\\Modules\\Shop\\Entity\\Product", "  {$cat} disabled <> 1 and detail  not  like '%<noshop>1</noshop>%' ", "item_id desc", 6), $this, 'OnNewRow'))->Reload();
     }
 
     public function OnCatRow($datarow) {
@@ -53,3 +82,4 @@ class Main extends Base
     }
 
 }
+ 

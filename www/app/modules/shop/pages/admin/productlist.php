@@ -299,7 +299,7 @@ class ProductDataSource implements \Zippy\Interfaces\DataSource
 
         $conn = \ZDB\DB::getConnect();
 
-        $where = "disabled<>1  ";
+        $where = "disabled<>1 and detail  not  like '%<noshop>1</noshop>%' ";
 
         if ($this->page->group instanceof Category) {
 

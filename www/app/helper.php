@@ -1022,18 +1022,19 @@ class Helper
           if(strlen($key)==0)   return;
           $conn = \ZDB\DB::getConnect();
           
-          $ret = $conn->GetOne("select vald from  keyval  where  keyd=" . $cann->qstr($key));
+          $ret = $conn->GetOne("select vald from  keyval  where  keyd=" . $conn->qstr($key));
 
           if(strlen($ret)==0)   return "";
+          return $ret;
     }    
-    public  static function setVal($key,$data){
+    public  static function setVal($key,$data=null){
           if(strlen($key)==0)   return;
           $conn = \ZDB\DB::getConnect();
-          $conn->Execute("delete  from  keyval  where  keyd=" . $cann->qstr($key));
+          $conn->Execute("delete  from  keyval  where  keyd=" . $conn->qstr($key));
           if($data===null){
              return; 
           }
-          $conn->Execute("insert into keyval  (  keyd,vald)  values (" . $cann->qstr($key).",".$cann->qstr($data).")" );
+          $conn->Execute("insert into keyval  (  keyd,vald)  values (" . $conn->qstr($key).",".$conn->qstr($data).")" );
           
           
     }    
