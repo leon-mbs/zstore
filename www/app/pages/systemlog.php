@@ -40,7 +40,8 @@ class SystemLog extends \App\Pages\Base
         
         
         $this->filterOnSubmit($this->filter)  ;
-        
+      \App\Entity\Notify::markRead(\App\Entity\Notify::SYSTEM);
+       
     }
 
   

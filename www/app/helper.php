@@ -327,6 +327,8 @@ class Helper
             }
         } catch(\Exception $e) {
             System::setErrorMsg($e->getMessage());
+            Helper::logerror($e->getMessage()) ;
+            return "See log";
         }
 
         /*
