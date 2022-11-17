@@ -45,6 +45,7 @@ class Subscribe extends \ZCL\DB\Entity
         $this->user_id = (int)($xml->user_id[0]);
         $this->state = (int)($xml->state[0]);
         $this->doctype = (int)($xml->doctype[0]);
+        $this->attach = (int)($xml->attach[0]);
 
         parent::afterLoad();
     }
@@ -59,6 +60,7 @@ class Subscribe extends \ZCL\DB\Entity
         $this->detail .= "<msg_typename>{$this->msg_typename}</msg_typename>";
         $this->detail .= "<user_id>{$this->user_id}</user_id>";
         $this->detail .= "<state>{$this->state}</state>";
+        $this->detail .= "<attach>{$this->attach}</attach>";
         $this->detail .= "<doctype>{$this->doctype}</doctype>";
         $this->detail .= "<doctypename>{$this->doctypename}</doctypename>";
         $this->detail .= "<statename>{$this->statename}</statename>";
@@ -121,6 +123,7 @@ class Subscribe extends \ZCL\DB\Entity
                // continue;
             }
 
+            $ret = '';
             $phone = '';
             //  $viber='';
             $email = '';
@@ -154,26 +157,33 @@ class Subscribe extends \ZCL\DB\Entity
             $text = $sub->getText($doc);
             if (strlen($phone) > 0 && $sub->msg_type == self::MSG_SMS) {
                 $ret =   self::sendSMS($phone, $text);
-                if(strlen($ret)>0) {
-                    \App\Helper::logerror($ret);               
-                }
+ 
                    
             }
             if (strlen($email) > 0 && $sub->msg_type == self::MSG_EMAIL) {
-                self::sendEmail($email, $text, $sub->msgsubject);
+              $ret =   self::sendEmail($email, $text, $sub->msgsubject,$sub->attach==1 ? $doc :null);
             }
             
             if(strlen($viber)==0) $viber = $phone;
             if(strlen($viber)>0 && $sub->msg_type == self::MSG_VIBER) {
                 $ret =   self::sendViber($viber,$text) ;
-                if(strlen($ret)>0) {
-                    \App\Helper::logerror($ret);               
-                }
+
                 
             }
             if ($notify > 0 && $sub->msg_type == self::MSG_NOTIFY) {
                 self::sendNotify($notify, $text);
             }
+            
+            if(strlen($ret)>0) {
+                \App\Helper::logerror($ret); 
+            $n = new \App\Entity\Notify();
+            $n->user_id = \App\Entity\Notify::SYSTEM;
+            $n->sender_id = \App\Entity\Notify::SUBSCRIBE;
+            $n->message = $ret;
+
+            $n->save();                          
+            }            
+            
         }
     }
 
@@ -288,10 +298,72 @@ class Subscribe extends \ZCL\DB\Entity
         }
     }
 
-    public static function sendEmail($email, $text, $subject) {
-       // $common = System::getOptions("common");
+    public static function sendEmail($email, $text, $subject,$doc=null) {
+        global $_config;
 
-        H::sendLetter($email,$text,    $subject);
+        $emailfrom = $_config['smtp']['emailfrom'];
+        if(strlen($emailfrom)==0) {
+            $emailfrom = $_config['smtp']['user'];
+            
+        }
+
+        try {
+
+            if($doc != null){
+                $filename = strtolower($doc->meta_name ) . ".pdf";
+                $html = $doc->cast()->generateReport();
+                $dompdf = new \Dompdf\Dompdf(array('isRemoteEnabled' => true, 'defaultFont' => 'DejaVu Sans'));
+                $dompdf->loadHtml($html);
+
+                $dompdf->render();
+
+                $data = $dompdf->output();
+
+                $f = tempnam(sys_get_temp_dir(), "eml");
+                file_put_contents($f, $data);
+                   
+            }
+            
+            
+            
+            $mail = new \PHPMailer\PHPMailer\PHPMailer();
+
+            if ($_config['smtp']['usesmtp'] == true) {
+                $mail->isSMTP();
+                $mail->Host = $_config['smtp']['host'];
+                $mail->Port = $_config['smtp']['port'];
+                $mail->Username = $_config['smtp']['user'];
+                $mail->Password = $_config['smtp']['pass'];
+                $mail->SMTPAuth = true;
+                if ($_config['smtp']['tls'] == true) {
+                    $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+                }
+            }
+
+             
+            $mail->setFrom($emailfrom);
+            $mail->addAddress($email);
+            $mail->Subject = $subject;
+            $mail->msgHTML($text);
+            $mail->CharSet = "UTF-8";
+            $mail->IsHTML(true);
+            if(strlen($filename)>0) {
+               $mail->AddAttachment($f, $filename, 'base64', 'application/pdf');
+            }
+           
+          
+            if ($mail->send() === false) {
+                H::logerror($mail->ErrorInfo) ;
+                  return "See log";
+            } else {
+                //  System::setSuccessMsg(Helper::l('email_sent'));
+            }
+        } catch(\Exception $e) {
+
+            H::logerror($e->getMessage()) ;
+            return "See log";
+            
+        }
     }
 
     public static function sendViber($phone, $text) {
@@ -335,9 +407,7 @@ class Subscribe extends \ZCL\DB\Entity
               
               
                 if ($httpcode >200)   {
-                   H::log("code ".$httpcode );
-                   H::log($response) ;
-                   return "Error. See logs";
+                   return "code ".$httpcode . ' ' .$response;
                 }                
                               
                 return  ""  ;             
