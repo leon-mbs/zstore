@@ -88,6 +88,8 @@ class TransItem extends \App\Pages\Base
         $this->_doc->headerdata['tostore'] = $this->docform->tostore->getValue();
         $this->_doc->headerdata['fromitem'] = $this->docform->fromitem->getKey();
         $this->_doc->headerdata['toitem'] = $this->docform->toitem->getKey();
+        $this->_doc->headerdata['fromitemname'] = $this->docform->fromitem->getText();
+        $this->_doc->headerdata['toitemname'] = $this->docform->toitem->getText();
         $this->_doc->headerdata['fromquantity'] = $this->docform->fromquantity->getText();
         $this->_doc->headerdata['toquantity'] = $this->docform->toquantity->getText();
 
