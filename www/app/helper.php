@@ -1016,7 +1016,7 @@ class Helper
 
 
     public  static function getVal($key){
-          if(strlen($key)==0)   return;
+                return;     if(strlen($key)==0)   return;
           $conn = \ZDB\DB::getConnect();
           
           $ret = $conn->GetOne("select vald from  keyval  where  keyd=" . $cann->qstr($key));
@@ -1024,7 +1024,7 @@ class Helper
           if(strlen($ret)==0)   return "";
     }    
     public  static function setVal($key,$data){
-          if(strlen($key)==0)   return;
+               return;      if(strlen($key)==0)   return;
           $conn = \ZDB\DB::getConnect();
           $conn->Execute("delete  from  keyval  where  keyd=" . $cann->qstr($key));
           if($data===null){
@@ -1036,7 +1036,7 @@ class Helper
     }    
 
     public  static function insertstat(int $cat,int $key,int $data ){
-          if(  $cat==0  )   return;
+              return;       if(  $cat==0  )   return;
           
           $conn = \ZDB\DB::getConnect();
           $dt= $conn->DBTimeStamp(time());
