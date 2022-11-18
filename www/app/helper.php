@@ -13,6 +13,7 @@ class Helper
 
     const STAT_HIT_SHOP           = 1;     //посещение  онлайн  каталога
     const STAT_ORDER_SHOP         = 2;     //заказы  в  онлайн каталоге
+    const STAT_VIEW_ITEM          = 3;     //перегляд  товару
      
     
     private static $meta = array(); //кеширует метаданные
@@ -326,6 +327,7 @@ class Helper
             }
         } catch(\Exception $e) {
             System::setErrorMsg($e->getMessage());
+        
         }
 
         /*
@@ -611,13 +613,15 @@ class Helper
      * @return mixed
      */
     public static function fa($am) {
-        if (strlen($am) == 0) {
-            return '';
-        }
         $am = str_replace(',', '.', $am);
 
         $am = preg_replace("/[^0-9\.\-]/", "",$am);        
-        $am = trim($am);
+        $am = trim($am);   
+        if (strlen($am) == 0) {
+            return '';
+        }
+
+        $am  = doubleval($am)  ;   
          
         $common = System::getOptions("common");
         if ($common['amdigits'] == 1) {
@@ -631,7 +635,7 @@ class Helper
             $am = round($am * 10) / 10;
             return @number_format($am, 2, '.', '');
         }
-
+ 
         return round($am);
     }
 
@@ -1016,27 +1020,28 @@ class Helper
 
 
     public  static function getVal($key){
-                return;     if(strlen($key)==0)   return;
+          if(strlen($key)==0)   return;
           $conn = \ZDB\DB::getConnect();
           
-          $ret = $conn->GetOne("select vald from  keyval  where  keyd=" . $cann->qstr($key));
+          $ret = $conn->GetOne("select vald from  keyval  where  keyd=" . $conn->qstr($key));
 
           if(strlen($ret)==0)   return "";
+          return $ret;
     }    
-    public  static function setVal($key,$data){
-               return;      if(strlen($key)==0)   return;
+    public  static function setVal($key,$data=null){
+          if(strlen($key)==0)   return;
           $conn = \ZDB\DB::getConnect();
-          $conn->Execute("delete  from  keyval  where  keyd=" . $cann->qstr($key));
+          $conn->Execute("delete  from  keyval  where  keyd=" . $conn->qstr($key));
           if($data===null){
              return; 
           }
-          $conn->Execute("insert into keyval  (  keyd,vald)  values (" . $cann->qstr($key).",".$cann->qstr($data).")" );
+          $conn->Execute("insert into keyval  (  keyd,vald)  values (" . $conn->qstr($key).",".$conn->qstr($data).")" );
           
           
     }    
 
     public  static function insertstat(int $cat,int $key,int $data ){
-              return;       if(  $cat==0  )   return;
+          if(  $cat==0  )   return;
           
           $conn = \ZDB\DB::getConnect();
           $dt= $conn->DBTimeStamp(time());
