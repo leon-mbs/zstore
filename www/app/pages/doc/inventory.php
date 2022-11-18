@@ -43,6 +43,7 @@ class Inventory extends \App\Pages\Base
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new CheckBox('autoincome'));
         $this->docform->add(new CheckBox('autooutcome'));
+        $this->docform->add(new CheckBox('reserved'));
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
         $this->docform->add(new SubmitLink('loadall'))->onClick($this, 'loadallOnClick');
@@ -73,6 +74,7 @@ class Inventory extends \App\Pages\Base
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->autoincome->setChecked($this->_doc->headerdata['autoincome']);
             $this->docform->autooutcome->setChecked($this->_doc->headerdata['autooutcome']);
+            $this->docform->reserved->setChecked($this->_doc->headerdata['reserved']);
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
         } else {
@@ -191,12 +193,27 @@ class Inventory extends \App\Pages\Base
 
         $this->_doc->headerdata['autoincome'] = $this->docform->autoincome->isChecked() ? 1 : 0;
         $this->_doc->headerdata['autooutcome'] = $this->docform->autooutcome->isChecked() ? 1 : 0;
+        $this->_doc->headerdata['reserved'] = $this->docform->reserved->isChecked() ? 1 : 0;
         $this->_doc->headerdata['cat'] = $this->docform->category->getValue();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
 
+           $reserved = array();
+           if($this->_doc->headerdata['reserved'] ==1) {
+               $conn = \ZDB\DB::getConnect();
+               $sql = "select item_id,sum(0-quantity) as cnt from entrylist_view where tag=-64 and stock_id in(select stock_id from store_stock where  store_id= {$this->_doc->headerdata['store']}) group by item_id"  ;
+               foreach($conn->Execute($sql) as $row){
+                  $reserved[$row['item_id']]  = $row['cnt'] ;  
+               };
+           }
+           
+        
+        
         foreach ($this->_itemlist as $item) {
             $item->quantity = $item->getQuantity($this->_doc->headerdata['store'], $item->snumber,$this->docform->document_date->getDate(0));
+            if($reserved[$item->item_id] > 0  && $this->_doc->headerdata['reserved']  ==1) {
+               $item->quantity += $reserved[$item->item_id] ;
+            }
         }
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
