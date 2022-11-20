@@ -435,9 +435,7 @@ class Discounts extends \App\Pages\Base
     }
 
     public function OnDelAll($sender) {
-        if (false == \App\ACL::checkDelRef('ItemList')) {
-            return;
-        }
+     
 
         $ids = array();
         foreach ($this->itab->itform->ilist->getDataRows() as $row) {
