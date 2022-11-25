@@ -68,6 +68,7 @@ class Roles extends \App\Pages\Base
         $this->editpan->editform->add(new CheckBox('editppo'));
         $this->editpan->editform->add(new CheckBox('editnp'));
         $this->editpan->editform->add(new CheckBox('editpu'));
+        $this->editpan->editform->add(new CheckBox('editpl'));
 
         $this->editpan->editform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
@@ -185,6 +186,9 @@ class Roles extends \App\Pages\Base
         }
         if (strpos($this->role->modules, 'promua') !== false) {
             $this->editpan->editform->editpu->setChecked(true);
+        }
+        if (strpos($this->role->modules, 'paperless') !== false) {
+            $this->editpan->editform->editpl->setChecked(true);
         }
     }
 
@@ -310,6 +314,9 @@ class Roles extends \App\Pages\Base
         }
         if ($this->editpan->editform->editpu->isChecked()) {
             $modules = $modules . ',promua';
+        }
+        if ($this->editpan->editform->editpl->isChecked()) {
+            $modules = $modules . ',paperless';
         }
 
         $this->role->modules = trim($modules, ',');

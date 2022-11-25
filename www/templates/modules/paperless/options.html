@@ -1,0 +1,82 @@
+<html>
+    <head>
+      <title> Налаштування   </title>
+
+    </head>
+
+    <body>
+
+        <div class="row  ">
+            <div class="col-12  col-sm-10 col-md-6    col-xl-4  ">
+                <h4>Налаштування </h4>
+                <h5>Налаштування API</h5>
+                <form zippy="cform">
+
+                    <div class="form-group">
+                        <label for="apikey">Ключ</label>
+                        <input type="text" zippy="apikey" class="form-control" required="required"/>
+                    </div>
+
+
+                    <div class="form-group">
+                        <input type="submit" value="Зберегти" class="btn   btn-primary  "/>
+
+                    </div>
+                </form>  <br>
+                <h5>Оновлення довiдникiв  НП</h5>
+                <small>Мiста та  вiддiлення кешуются для бiльш швидкого оновленн спискiв вибору</small>
+
+                <form zippy="formcache"> 
+                    <input type="submit" onclick=" $('#loader').show()" value="Обновить" class="btn   btn-primary  "/>
+                    <img id="loader" style="display:none"   src="/assets/images/ajax-loader.gif"  />
+
+                </form>
+                <br>
+                <h5>Данi вiдправника за замовчанням .</h5>
+
+                <form zippy="oform">
+
+                    <div class="form-group">
+                        <label for="tel">Телефон</label>
+
+                        <input zippy="tel" class="form-control   "/>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="area">Область</label>
+
+                        <select zippy="area" class="form-control   ">
+                            <option value="0">Не вибрано</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="city">Мiсто</label>
+                        <select zippy="city" class="form-control  ">
+                            <option value="0">Не вибрано</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="point">Вiддiлення</label>
+                        <select zippy="point" class="form-control  ">
+                            <option value="0">Не вибрано</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Зберегти" class="btn   btn-primary  "/>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script>
+
+            function check_check() {
+
+                $('#loader').removeAttr('style');
+            }
+
+        </script>
+
+    </body>
+</html>

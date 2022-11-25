@@ -285,6 +285,7 @@ class Options extends \App\Pages\Base
         $this->modules->add(new CheckBox('modppo', $modules['ppo']));
         $this->modules->add(new CheckBox('modnp', $modules['np']));
         $this->modules->add(new CheckBox('modpromua', $modules['promua']));
+        $this->modules->add(new CheckBox('modpaperless', $modules['paperless']));
        
         
         
@@ -542,6 +543,7 @@ class Options extends \App\Pages\Base
          $modules['ppo'] = $sender->modppo->isChecked() ? 1:0;
          $modules['np'] = $sender->modnp->isChecked() ? 1:0;
          $modules['promua'] = $sender->modpromua->isChecked() ? 1:0;
+         $modules['paperless'] = $sender->modpaperless->isChecked() ? 1:0;
          $modules['issue'] = $sender->modissue->isChecked() ? 1:0;
          $modules['note'] = $sender->modnote->isChecked() ? 1:0;
          
