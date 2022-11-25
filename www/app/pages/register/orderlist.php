@@ -453,6 +453,12 @@ class OrderList extends \App\Pages\Base
         $this->updateStatusButtons();
         $this->goAnkor('dankor');
         $this->_tvars['askclose'] = false;
+        $conn= \zdb\db::getConnect() ;
+        
+        $stl = array() ;
+        foreach($conn->Execute("select store_id,storename from stores") as $row) {
+           $stl[$row['store_id']]=$row['storename'];    
+        }
         
         $this->_tvars['citems'] = array();
         foreach($this->_doc->unpackDetails('detaildata') as $it) {
@@ -460,10 +466,10 @@ class OrderList extends \App\Pages\Base
             
             $ait['citemsstore']  =  array();
             
-            foreach(\App\Entity\Store::find("") as $st){
-                $qty=$it->getQuantity($st->store_id);
-                if(0 <> doubleval($qty)) {
-                   $ait['citemsstore'][]=array('itstore'=>$st->storename,'itqty'=>H::fqty($qty));     
+            foreach($stl as $k=>$v){
+                $qty = $it->getQuantity($k);
+                if(0 < doubleval($qty)) {
+                   $ait['citemsstore'][] = array('itstore'=>$v,'itqty'=>H::fqty($qty));     
                 }
             }
             $ait['citemscust']  =  array();

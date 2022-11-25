@@ -57,10 +57,10 @@
                                 <img class="card-img-top"/>
                             </a>
                             <div class="card-body p-2 d-flex card-custom-body">
-                                <b class="card-custom-title"><a class="card-title card-link text-dark" zippy="scatname"></a></b>
+                                <b class="card-custom-title"><a class="card-title card-link text-dark  clip" zippy="scatname"></a></b>
                                 <div>
                                     {{#usefeedback}}
-                                    <div class="d-flex align-items-center mt-1">
+                                    <div class="d-flex align-items-center ">
                                         <div class="mr-2">
                                             <input style="display:inline" readonly="readonly" type="hidden" class="rating" zippy="srated" value="0" data-filled="fas fa-star" data-empty="far fa-star "/>
                                         </div>
@@ -68,10 +68,11 @@
                                     </div> 
                                     {{/usefeedback}}   
 
-                                    <div colspan="2" class="mt-1" style="font-size:larger;">
+                                    <div   class="mt-1" style="font-size:larger;">
                                         <b zippy="sprice"></b>&nbsp; <b class="text-danger" zippy="sactionprice"></b> 
+                                      &nbsp; &nbsp; <a zippy="sbuy" ><i class="fa fa-shopping-cart"></i></a>
                                     </div> 
-                                    <a zippy="sbuy" class="btn btn-success btn-sm mt-2">До кошика</a>
+                                    
                                 </div>
                             </div >
                         </div>
@@ -87,7 +88,7 @@
                             <div class="card h-100">
                                 <a zippy="rimage"><img class="card-img-top"></a>
                                 <div class="card-body p-2">
-                                    <a class="card-title card-link text-dark" zippy="rname"></a>
+                                    <a class="card-title card-link text-dark  clip" zippy="rname"></a>
                                 </div>
                             </div>
                         </div>

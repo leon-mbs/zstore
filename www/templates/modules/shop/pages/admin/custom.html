@@ -1,0 +1,149 @@
+<html>
+
+
+    <body>
+      
+
+        <div class="row ">
+            <div class="col-12     ">
+    
+              <a onclick="updateSiteMap()"  href="javascript:void(0)"  class="btn btn-outline-info"> Оновити sitemap.xml</a>
+                                          
+            </div>
+           <div class="col-12    col-md-6   col-xl-4   ">
+                <h4>Новинки</h4>
+                <form zippy="newform" class="form-inline mt-2 mb-2">
+                    <label for="newitem">Товар:</label>
+                    <input placeholder="Почніть вводити.." class="form-control  mr-sm-2" zippy="newitem"/>
+    
+                    <input class="btn btn-outline-success  " type="submit" value="Додати">
+                </form>   <table class="table  table-sm">
+                  <tr zippy="newlist">
+                      <td>
+                                <a zippy="imagelistitem" data-type="image"    > <img
+                                        style="float:left; width:64px"></a>
+
+                            </td>
+                    <td zippy="newname"></td>
+                    <td><a zippy="newdel"><i class="fa fa-trash"></i></a></td>
+                  </tr>
+                </table>
+               
+                
+                                          
+            </div>
+           
+            <div class="col-12 col-md-6 col-xl-7  ml-4  ">
+              <div class="row">
+               <div class="col-12 col-md-10   col-xl-8 " zippy="pagespan">
+          
+                <h4>Користувацькi сторiнки   </h4>
+                <a class="btn btn-info" zippy="padd">Додати</a>
+                <table class="table table-sm">
+                   <tr zippy="plist">
+                     <td zippy="ptitle"></td>
+                     <td zippy="plink"></td>
+                     <td zippy="porder"></td>
+                     <td >
+                     <a zippy="pedit"><i class="fa fa-edit"></i></a>
+                     &nbsp;&nbsp;<a zippy="pdel"><i class="fa fa-trash"></i></a>
+                     </td>
+                   </tr>
+                </table>
+                
+                   
+             </div>
+           
+           
+               <div class="col-12   ">
+                 
+                 <form zippy="pageform">
+                  <input type="hidden" zippy="oldlink">
+                <h4>Редагування сторiнки</h4>  
+                    <div class="form-group   ">
+                        <label for="pagetitle">Назва    </label>
+                        <input required="required" style="width:300px;" zippy="pagetitle" class="form-control ">
+                        </input>
+                    <small>Для вiдображення в  меню</small>
+                </div> 
+                  <div class="form-group   ">
+                        <label for="pagelink">Вiдносне  посилання    </label>
+                        <input pattern=[0-9a-z_]+ required="required" style="width:200px;" zippy="pagelink" class="form-control ">
+                        </input>
+                        <small>Не включаючи адресу сайту. Допускаются тiльки  латиничнi символи. Наприклад  news  about_us  dostavka</small>
+                        
+                    </div> 
+               <div class="form-group   ">
+                        <label for="pageorder">Порядковий  номер    </label>
+                        <input pattern=[0-9]+ required="required" style="width:40px;" zippy="pageorder" class="form-control ">
+                        </input>
+                        <small>Номер  порядку виводу  в  меню</small>
+                        
+                    </div> 
+                    <div class="form-group   ">
+                        <label for="pagetext">Змiст  </label>
+                        <textarea zippy="pagetext" class="form-control ">
+                        </textarea>
+                <small>Зображення повинні бути якомога меншого розміру.</small>
+                        
+                    </div>      
+     
+                  <div class="form-group   ">
+
+                        <a class="btn btn-outline-primary" zippy="pcancel">Скасувати</a>
+                        <button class="btn btn-primary" type="submit">Зберегти</button>
+
+                    </div>
+                </form>      
+              </div>
+ 
+             </div>
+            </div>
+              
+            
+            
+        </div>
+        
+        
+        
+        
+  
+        <script>
+            $(function () {
+                // Summernote
+
+ 
+ 
+                $('#pagetext').summernote({
+                    height: 600,
+                    lang: 'uk-UA',
+
+                    callbacks: {
+                        onEnter: function (e) {
+                            if (e.keyCode === key.code.ENTER) {
+                                e.shiftKey = true;
+                                context.triggerEvent('enter', e);
+                            }
+                        },
+                        onPaste: function (e) {
+
+                            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                            e.preventDefault();
+                            document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
+                        }
+                    }
+                });
+            })
+
+        function updateSiteMap(){
+            
+          callPageMethod('updateSiteMap',null,null,(data)=> 
+          {
+             toastr.success('Оновлено','',{'timeOut':'2000'})  
+          });           
+      
+   }
+        </script>
+
+    </body>
+</html>

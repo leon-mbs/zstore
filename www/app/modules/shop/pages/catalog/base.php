@@ -195,7 +195,7 @@ class Base extends \Zippy\Html\WebPage
     public function LogoutClick($sender) {
         System::setCustomer(0);
         setcookie("remembercust", '', 0);
-    \App\Modules\Shop\Basket::getBasket()->Empty();      
+        \App\Modules\Shop\Basket::getBasket()->Empty();      
         App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog\\Main",0);
        
     }

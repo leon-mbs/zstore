@@ -120,7 +120,7 @@ class Orders extends \App\Pages\Base
                 $neworder->headerdata['puorder'] = $puorder['id'];
                 $neworder->headerdata['outnumber'] = $puorder['id'];
                 $neworder->headerdata['puorderback'] = 0;
-                $neworder->headerdata['salessource'] = $modules['pusalessource'];
+                $neworder->headerdata['salesource'] = $modules['pusalesource'];
                 
                 $neworder->headerdata['puclient'] = $puorder['client_first_name'] . ' ' . $puorder['client_last_name'];
                 

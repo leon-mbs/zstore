@@ -183,10 +183,7 @@ class CustItems extends \App\Pages\Base
  
  
     public function OnDelAll($sender) {
-        if (false == \App\ACL::checkDelRef('CustItems')) {
-            return;
-        }
-
+    
         $ids = array();
         foreach ($this->itemtable->listform->itemlist->getDataRows() as $row) {
             $item = $row->getDataItem();

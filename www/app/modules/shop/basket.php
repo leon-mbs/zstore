@@ -11,10 +11,21 @@ class Basket implements \Zippy\Interfaces\DataSource
     public $list = array();
 
     public static function getBasket() {
-
+      
         $basket = System::getSession()->productbasket;
         if (!isset($basket)) {
             $basket = new Basket();
+            $cl = @unserialize($_COOKIE['shop_cart'] );
+            if(is_array($cl)){
+               foreach($cl as $k=>$v){
+                  $item=\App\Entity\Item::load($k) ;
+                  if($item !=null && $item->disabled !=1){
+                      $item->quantity = $v;
+                      $this->addProduct($item) ;
+                  }
+               }
+                  
+            }
             System::getSession()->productbasket = $basket;
         }
         return $basket;
@@ -26,6 +37,8 @@ class Basket implements \Zippy\Interfaces\DataSource
         } else {
             $this->list[$product->item_id] = $product;
         }
+        $this->sendCookie();
+        
     }
 
     public function deleteProduct($product_id) {
@@ -38,14 +51,24 @@ class Basket implements \Zippy\Interfaces\DataSource
             }
             $this->list[$p->item_id] = $p;
         }
+        $this->sendCookie();
     }
-
+    public function sendCookie(){
+        $cl= array();
+        foreach($this->list as $it){
+           $cl[$it->item_id] =$it->quantity;                 
+        }
+        
+        setcookie('shop_cart',serialize($cl),0 ) ;
+    }
     public function isEmpty() {
         return count($this->list) == 0;
     }
 
     public function Empty() {
-        return $this->list = array();
+        $this->list = array();
+        $this->sendCookie();
+        
     }
 
     // реализация  DataSource

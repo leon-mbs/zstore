@@ -362,6 +362,13 @@ class Base extends \Zippy\Html\WebPage
 
             }
         }
+        if ($user->rolename == "admins") {
+            if (\App\Entity\Notify::isNotify(\App\Entity\Notify::SYSTEM)) {
+                $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("hassystemnotify") . "\"");
+
+            }
+        }
+        
         if (count($this->_tvars["toasts"]) == 0) {
            // $this->_tvars["toasts"][] = array('title' => '');
            \App\Session::getSession()->toasts = false;

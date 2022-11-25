@@ -15,7 +15,7 @@ try {
 
     if ($_COOKIE['remember'] && \App\System::getUser()->user_id == 0) {
         $arr = explode('_', $_COOKIE['remember']);
-        $_config = parse_ini_file(_ROOT . 'config/config.ini', true);
+     //   $_config = parse_ini_file(_ROOT . 'config/config.ini', true);
         if ($arr[0] > 0 && $arr[1] === md5($arr[0] . $_config['common']['salt'])) {
             $user = \App\Entity\User::load($arr[0]);
         }
@@ -25,9 +25,7 @@ try {
 
             \App\System::setUser($user);
 
-            //  $_SESSION['user_id'] = $user->user_id; //для  использования  вне  Application
-            //   $_SESSION['userlogin'] = $user->userlogin; //для  использования  вне  Application
-        }
+         }
     }
 
     $mainpage='\App\Pages\Main';
@@ -45,16 +43,7 @@ try {
         $app->Run($mainpage);
     }
 
-    /* } catch (\ZippyERP\System\Exception $e) {
-      Logger::getLogger("main")->error($e->getMessage(), e);
-      \ZippyERP\System\Application::Redirect('\\ZippyERP\\System\\Pages\\Error', $e->getMessage());
-      } catch (\Zippy\Exception $e) {
-      Logger::getLogger("main")->error($e->getMessage(), e);
-      \ZippyERP\System\Application::Redirect('\\ZippyERP\\System\\Pages\\Error', $e->getMessage());
-      } catch (ADODB_Exception $e) {
-
-      \ZippyERP\System\Application::Redirect('\\ZippyERP\\System\\Pages\\Error', $e->getMessage());
-     */
+   
 } catch (Throwable $e) {
     if ($e instanceof ADODB_Exception) {
 

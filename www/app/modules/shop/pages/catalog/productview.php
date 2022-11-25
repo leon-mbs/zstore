@@ -63,7 +63,7 @@ class ProductView extends Base
 
         $this->add(new Label('description', $product->getDescription(), true));
         $this->add(new TextInput('rated'))->setText($product->getRating());
-        $this->add(new Label('comments', \App\Helper::l("shopfeedbaks", $product->comments)));
+        $this->add(new Label('comments', \App\Helper::l("shopfeedbaks", intval($product->comments))));
 
         $list = Helper::getAttributeValuesByProduct($product, false);
         $this->add(new \Zippy\Html\DataList\DataView('attributelist', new \Zippy\Html\DataList\ArrayDataSource($list), $this, 'OnAddAttributeRow'))->Reload();
@@ -122,8 +122,12 @@ class ProductView extends Base
         \App\Session::getSession()->recently = $recently;
         
         
-        
-        
+        if(strlen($_COOKIE['viewitem_'.$product->item_id])==0) {
+           \App\Helper::insertstat(\App\Helper::STAT_VIEW_ITEM,$product->item_id,0) ;
+           setcookie('viewitem_'.$product->item_id,"viewed" , time() + 60 * 60 * 24);
+       
+        }
+          
     }
 
     public function OnBack($sender) {
@@ -164,6 +168,8 @@ class ProductView extends Base
         $product = Product::load($this->item_id);
         $product->quantity = 1;
         \App\Modules\Shop\Basket::getBasket()->addProduct($product);
+        \App\Modules\Shop\Basket::getBasket()->sendCookie()  ;
+          
         $this->setSuccess("addedtocart");
         $this->resetURL();
         //  App::RedirectURI('/pcat/' . $product->cat_id);
