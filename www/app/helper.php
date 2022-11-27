@@ -922,6 +922,11 @@ class Helper
         die;
     }
     
+    /**
+    * Печать  этикиток
+    * 
+    * @param array $items
+    */
     public  static  function printItems(array $items){
         $printer = \App\System::getOptions('printer');
         $pwidth = "width:70mm;";
@@ -1018,7 +1023,12 @@ class Helper
         return $htmls;               
     }
 
-
+    /**
+    * Получение  дангный с  таблицы ключ-значение
+    * 
+    * @param mixed $key
+    * @return mixed
+    */
     public  static function getVal($key){
           if(strlen($key)==0)   return;
           $conn = \ZDB\DB::getConnect();
@@ -1028,6 +1038,14 @@ class Helper
           if(strlen($ret)==0)   return "";
           return $ret;
     }    
+   
+    /**
+    * Вставка  данных в  таблицу ключ-значение
+    * 
+    * @param mixed $key
+    * @param mixed $data
+    * @return mixed
+    */
     public  static function setVal($key,$data=null){
           if(strlen($key)==0)   return;
           $conn = \ZDB\DB::getConnect();
@@ -1039,7 +1057,16 @@ class Helper
           
           
     }    
-
+    
+    
+    /**
+    * Вставка  данных  в  таблицу  статистики
+    * 
+    * @param mixed $cat
+    * @param mixed $key
+    * @param mixed $data
+    * @return mixed
+    */
     public  static function insertstat(int $cat,int $key,int $data ){
           if(  $cat==0  )   return;
           
