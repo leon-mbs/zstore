@@ -1,5 +1,5 @@
 <?php
-//синхронизация  с  опенкартом    http://local.zstore/cron_updateoc.php
+//синхронизация  с  опенкартом    
 
 require_once 'init.php';
 
