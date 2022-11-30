@@ -1135,7 +1135,7 @@ class ARMPos extends \App\Pages\Base
     public function getPriceByQty($args,$post=null)  {
         $item = Item::load($args[0]) ;
         $args[1] = str_replace(',','.',$args[1]) ;
-        $price = $item->getPrice($this->getPriceType(), $this->form1->store ,0,$args[1]);
+        $price = $item->getPrice($this->getPriceType(), $this->form1->store->getValue() ,0,$args[1]);
         
         return  $price;
         
