@@ -8,6 +8,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Link\ClickLink;
 use Zippy\WebApplication as App;
 
 class Options extends \App\Pages\Base
@@ -33,6 +34,7 @@ class Options extends \App\Pages\Base
 
         $form->onSubmit($this, 'saveapiOnClick');
 
+        $this->add(new ClickLink("check",$this,"onCheck")) ;
          
     }
 
@@ -40,37 +42,26 @@ class Options extends \App\Pages\Base
 
         $modules = System::getOptions("modules");
 
-        $modules['plemail'] = $this->cform->email->getText();
-        $modules['plpassword'] = $this->cform->password->getText();
-        $modules['plclientid'] = $this->cform->clientid->getText();
-        $modules['plsecret'] = $this->cform->secret->getText();
+        $modules['plemail'] = trim($this->cform->email->getText());
+        $modules['plpassword'] = trim($this->cform->password->getText());
+        $modules['plclientid'] = trim($this->cform->clientid->getText());
+        $modules['plsecret'] =trim($this->cform->secret->getText());
 
         System::setOptions("modules", $modules);
         $this->setSuccess('saved');
          
     }
 
-    public function savedataOnClick($sender) {
-        $arearef = $this->oform->area->getValue();
-        $area = $this->oform->area->getValueName();
-        $cityref = $this->oform->city->getValue();
-        $city = $this->oform->city->getValueName();
-        $pointref = $this->oform->point->getValue();
-        $point = $this->oform->point->getValueName();
-
-        $modules = System::getOptions("modules");
-
-        $modules['nparea'] = $area;
-        $modules['nparearef'] = $arearef;
-        $modules['npcity'] = $city;
-        $modules['npcityref'] = $cityref;
-        $modules['nppoint'] = $point;
-        $modules['nppointref'] = $pointref;
-        $modules['nptel'] = $this->oform->tel->getText();
-
-        System::setOptions("modules", $modules);
-        $this->setSuccess('saved');
+    public function onCheck($sender) {
+        list($code,$result) =        Helper::connect();
+        if($code=='ok') {
+            
+        }
+        if($code=='error') {
+            
+        }
+        
     }
-
+  
   
 }
