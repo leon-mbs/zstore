@@ -1,55 +1,155 @@
 <html >
   <head>
-      <title> Стан  доставок   </title>
+      <title> Документи на вiдправку   </title>
 
     </head>
     <body>
-        <div class="row">
+     {{={| |}=}}   
+        <div class="row"  id="vapp">
             <div class="col-12   col-xl-10"  >
 
-                <h3>Стан  доставок</h3>
-                    <div class="col-12 col-md-10 col-xl-8" >
-              
-                            <div class="navbar nav">
-                                <form zippy="searchform" class="form-inline ">
-                                    <label for="searchnumber"> ЕН </label>
+                <h3>Документи на вiдправку </h3>
+                     
+                     <div class="navbar nav">
+                                <form  class="form-inline ">
 
-                                    <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:200px">
-                                    <label for="searchcust"> Покупець </label>
-                                    <select class="form-control select2" zippy="searchcust" >
-                                       <option value="0">Не обрано </option>
+                                    <label for="searchcust"> Компанiя </label>
+                                    <select class="form-control" id="firm" name="firm" >
+                                       <option value="0">Не накладати  КЕП </option>
                                     </select>
 
-                                    <input type="submit" class=" ml-2 btn btn-outline-success  " value="Шукати">
+                                    <label for="customer"> Контрагент </label>
+                                    <select class="form-control " id="customer" name="customer" >
+                                       <option value="0">Не обрано </option>
+                                    </select>
+                                 
+                                    <label for="doctype"> Тип  документу </label>
+                                    <select class="form-control " id="doctype"  name="doctype" >
+                                       <option value="0" selected="" >Видаткова  накладна </option>
+                                       <option value="0">Рахунок фактура </option>
+                                    </select>
+
+                                    <button class="  btn btn-outline-success " >Вибрати</button>
 
 
                                 </form>
-                            </div>
+                            
                   
-                </div>
+                          </div>
+            </div>
+            <div class="col-12   col-md-10 col-xl-8"  >
 
                 
-                &nbsp; &nbsp;  <a zippy="refresh">Оновити</a>
+               
                 <table class="table  table">
                     <tr>
-                        <th>ТТН</th>
-                        <th>Сума</th>
-                        <th>Покупець</th>
-                        <th>Експрес-накладна</th>
-                        <th>Стан</th>
-                        <th> </th>
+                        <th style="width:30px"> <input  name="chlist"  class="seldel" type="checkbox"></th>
+                        <th>Документ</th>
+                        <th class="text-right">Сума</th>
+                        <th>Контрагент</th>
+
                     </tr>
-                    <tr zippy="doclist">
-                        <td zippy="document_number"></th>
-                        <td zippy="amount"></th>
-                        <td zippy="customer_name"></td>
-                        <td zippy="ship_number"></td>
-                        <td zippy="state"></td>
-                        <td><a target="_blank" zippy="print" title="Друк маркировки"><i class="fa fa-print"></i></a> </td>
+                    <tr >
+                        <td  ></td>
+                        <td  ></td>
+                        <td  class="text-right"></td>
+                        <td  ></td>
                     </tr>
                 </table>
             </div>
         </div>
+       {|={{ }}=|}  
+       
+      <script>
+       var vapp = new Vue({
+            el: '#vapp',
+                data() { return  {
+                   
+                  
+                  empid:0,
+                  firmid:0,
+                  doctype:'',
+                  
+                  
+                  
+                     
+              } }            
+             ,         
+       
+           methods: {
+                init:function(){
+                      
+                  callPageMethod('init',[], null,(data)=> 
+                  {
+                       let tmp =   JSON.parse(data)  
+                       this.empid = tmp.empid; 
+                       this.editempid = tmp.empid; 
+                       this.isadmin = tmp.isadmin; 
+                       this.emps = tmp.emps; 
+                       this.types = tmp.types; 
+                       this.to = tmp.to; 
+                       this.from = tmp.from; 
+                       this.today = tmp.today; 
+                 
+                       this.loaddata() ;       
+                      
+                  });
+                            
+                              
+                } ,
+                
+                
+               onFilter:function(){
+                   if(Number.isNaN( Number.parseInt(this.empid)) ) {
+                      alert('Не вибраний спiвробiтник');
+                      return;
+                  }     
+                    this.loaddata() ;       
+          
+               } ,    
+            
+              
+           
+               loaddata:function(){
+                   
+          
+                  let body={
+                     empid:this.empid ,
+                     from:this.from  ,
+                     to:this.to 
+                  } 
+                     
+                  callPageMethod('loaddata',[], JSON.stringify(body),(data)=> 
+                  {
+                       let tmp =   JSON.parse(data)  
+                       this.stat = tmp.stat 
+                       this.times = tmp.times 
+ 
 
+                       calendar.removeAllEventSources(   );
+                       calendar.addEventSource( tmp.events );
+                        
+                       calendar.render()
+                      
+                       
+                       
+                  });
+                      
+          
+               } ,    
+           },    
+       
+    
+          mounted: function(){
+             
+              this.init();      
+              
+         }  ,       
+            components: {   
+             //  'select2': httpVueLoader('/assets/js/vue/select2.vue')
+                     
+               }            
+        })   
+     </script>       
     </body>
 </html>
