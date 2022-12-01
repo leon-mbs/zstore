@@ -55,7 +55,8 @@ class Options extends \App\Pages\Base
     public function onCheck($sender) {
         list($code,$result) =        Helper::connect();
         if($code=='ok') {
-             $token = $result;
+             System::getSession()->pltoken = $result;
+             $this->setSuccess("connected") ;
         }
         if($code=='error') {
            $this->setError($result) ;
@@ -63,11 +64,13 @@ class Options extends \App\Pages\Base
            return;
         }
 
-        $doc = file_get_contents("c:/Users/leonm/Downloads/Підписаний_api.pdf") ;
+      //  $docdata = file_get_contents("c:/Users/leonm/Downloads/Підписаний_api.pdf") ;
         
         
-         Helper::send($token,$doc) ;
-
+      //  list($code,$result) =    Helper::send(System::getSession()->pltoken,$docdata,"Підписаний_api.pdf","softman@ukr.net") ;
+     //   if($code =='ok'){
+            
+     //   }
         
     }
   

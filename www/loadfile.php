@@ -3,12 +3,6 @@ require_once 'init.php';
 
  
  
- \App\Helper::log(json_encode($_REQUEST)) ;
- \App\Helper::log(json_encode($_FILES['file'])) ;
-  $cc = file_get_contents($_FILES['file']['tmp_name'])   ;
-  
- \App\Helper::log(strlen($cc)) ;
- 
  
 if (!is_numeric($_REQUEST['id'])) {
     die;

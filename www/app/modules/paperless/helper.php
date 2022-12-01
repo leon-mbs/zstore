@@ -89,23 +89,23 @@ class Helper
         
     }
     
-    public  static  function send($token,$doc) {
+    public  static  function send($token,$docdata,$docname,$email) {
                 $modules = System::getOptions("modules");
                 $url= "https://paperless.com.ua/api2/checked/upload";        
                 $boundary = str_replace('-','', \App\Util::guid() );
                
-      //          $doc = file_get_contents("c:/Users/leonm/Downloads/Підписаний_api.pdf") ;
-                $doc = base64_encode($doc) ;
+              //  $doc = file_get_contents("c:/Users/leonm/Downloads/test.pdf") ;
+                $docdata = base64_encode($docdata) ;
                 $eol = "\r\n";
       
                 
                 $post="--{$boundary}".$eol;
-                $post.="Content-Disposition: form-data; name=\"file\"; filename=\"Підписаний_api.pdf\"".$eol;
+                $post.="Content-Disposition: form-data; name=\"file\"; filename=\"{$docname}\"".$eol;
                 $post.="Content-Type: application/octet-stream;".$eol;
                 $post.="Content-Transfer-Encoding: binary".$eol.$eol;
 
                         
-                $post .=  $doc.$eol;        
+                $post .=  $docdata.$eol;        
                 $post .=  "--{$boundary}--".$eol;        
                         
                 $size = strlen($post);
@@ -129,13 +129,49 @@ class Helper
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
                 $result = curl_exec($ch);
-                $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE)  ;  
-                $res = json_decode($result,true)  ;                          
+                $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE)  ; 
+
                 if (curl_errno($ch) > 0) {
                     $msg = curl_error($ch);
                     return  array('error',$msg) ;
                 }                
-      
+                curl_close($ch) ;
+                $res = @json_decode($result,true)  ;                          
+                if (!is_array($res)  || $res['state'] != 'ok' ) {
+                    $msg = "Invalid answer ".$res;
+                    return  array('error',$msg) ;
+                }      
+                $id = $res['resourceDTO'][0]['id'] ;
+
+                $url= "https://paperless.com.ua/api2/checked/share/".$id;        
+                $post  = "{\"requestList\":[{\"email\":\"{$email}\",\"comment\":\"\",\"mode\":0}]}"  ;
+                $a = json_decode($post) ;
+                $ch = curl_init();
+                       
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                                 "Accept: application/json",
+                                 "Cookie: sessionId=\"Bearer {$token}, Id {$modules['plclientid']}\""
+                                ,"Content-Type: application/json"
+                ));
+                curl_setopt($ch, CURLOPT_HEADER, 0);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+                $result = curl_exec($ch);
+                $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE)  ;                  
+                if (curl_errno($ch) > 0) {
+                    $msg = curl_error($ch);
+                    return  array('error',$msg) ;
+                }              curl_close($ch) ;
+                if($httpcode ==200) {
+                    return  array('ok') ;                    
+                }  else {
+                   return  array('error',"http code ".$httpcode) ;                                        
+                }
+                
+                
     }
 }
 
