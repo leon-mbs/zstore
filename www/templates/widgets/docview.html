@@ -33,8 +33,8 @@
   
   <div class="tab-pane   show active" id="tprint"> 
        
-       <a   v-if="docdata.usemobileprinter" :href="printmob" target="_blank"   title="Печать"><i class="fa fa-print mr-2"></i> </a>
-       <a v-else  href="javascript:void(0)"   onclick="printform()" title="Печать"><i class="fa fa-print mr-2"></i></a>   
+       <a   v-if="docdata.usemobileprinter" :href="printmob" target="_blank"   title="Друк"><i class="fa fa-print mr-2"></i> </a>
+       <a v-else  href="javascript:void(0)"   onclick="printform()" title="Друк"><i class="fa fa-print mr-2"></i></a>   
     
         
         <a v-show="docdata.exports.word" :href="word"  target="_blank" title="Експорт в Word"><i class="fa fa-file-word mr-2"></i>   </a>
@@ -44,8 +44,8 @@
     
         <span v-show="docdata.exports.pos">
        
-       <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="Печать на  чековом принтере"> <i class="fas fa-cash-register mr-1"></i></a>
-       <a v-else   onclick=" printpos()" title="Печать на  чековом принтере"><i class="fas fa-cash-register mr-1"></i> </a>
+       <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="Друк на  чековом принтере"> <i class="fas fa-cash-register mr-1"></i></a>
+       <a v-else   onclick=" printpos()" title="Друк на  чековом принтере"><i class="fas fa-cash-register mr-1"></i> </a>
          </span>            
        
        <br>
