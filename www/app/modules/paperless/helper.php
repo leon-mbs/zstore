@@ -90,9 +90,55 @@ class Helper
     }
     
     public  static  function send($token,$doc) {
-        
+                $modules = System::getOptions("modules");
+                $url= "https://paperless.com.ua/api2/checked/upload";        
+                $boundary = str_replace('-','', \App\Util::guid() );
+               
+      //          $doc = file_get_contents("c:/Users/leonm/Downloads/Підписаний_api.pdf") ;
+                $doc = base64_encode($doc) ;
+                $eol = "\r\n";
+      
+                
+                $post="--{$boundary}".$eol;
+                $post.="Content-Disposition: form-data; name=\"file\"; filename=\"Підписаний_api.pdf\"".$eol;
+                $post.="Content-Type: application/octet-stream;".$eol;
+                $post.="Content-Transfer-Encoding: binary".$eol.$eol;
+
+                        
+                $post .=  $doc.$eol;        
+                $post .=  "--{$boundary}--".$eol;        
+                        
+                $size = strlen($post);
+             
+
+
+            
+               
+                $ch = curl_init();
+                       
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                                 "Accept: application/json",
+                                 "Cookie: sessionId=\"Bearer {$token}, Id {$modules['plclientid']}\""
+                                 ,"Content-Type: multipart/form-data; boundary={$boundary}; charset=UTF-8",
+                                 "Content-Length: {$size}"
+                                 ));
+                curl_setopt($ch, CURLOPT_HEADER, 0);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+                $result = curl_exec($ch);
+                $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE)  ;  
+                $res = json_decode($result,true)  ;                          
+                if (curl_errno($ch) > 0) {
+                    $msg = curl_error($ch);
+                    return  array('error',$msg) ;
+                }                
+      
     }
 }
+
 
  /*
  

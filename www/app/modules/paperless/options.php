@@ -55,11 +55,19 @@ class Options extends \App\Pages\Base
     public function onCheck($sender) {
         list($code,$result) =        Helper::connect();
         if($code=='ok') {
-            
+             $token = $result;
         }
         if($code=='error') {
-            
+           $this->setError($result) ;
+           
+           return;
         }
+
+        $doc = file_get_contents("c:/Users/leonm/Downloads/Підписаний_api.pdf") ;
+        
+        
+         Helper::send($token,$doc) ;
+
         
     }
   

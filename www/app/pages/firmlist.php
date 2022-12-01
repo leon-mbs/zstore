@@ -65,6 +65,12 @@ class FirmList extends \App\Pages\Base
         $this->keyform->add(new CheckBox('usessl'));
         $this->keyform->add(new File('keyfile'));
         $this->keyform->add(new File('certfile'));
+   
+        $modules = System::getOptions('modules');
+        
+        $this->_tvars["loadkey"] = ($modules['ppo'] == 1) || ($modules['paperless'] == 1);
+   
+        
      
     }
 
