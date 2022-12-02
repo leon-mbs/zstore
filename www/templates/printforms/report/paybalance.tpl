@@ -103,7 +103,7 @@
         <td align="right"> {{tu}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="Виручка (відпускна ціна на кількість) мінус змінні застрати (собівартість)"></i>
+               title="Виручка (відпускна ціна на кількість) мінус змінні витрати (собівартість)"></i>
         </td>
     </tr>
     <tr>

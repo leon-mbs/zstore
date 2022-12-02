@@ -55,14 +55,18 @@ class OrderPay extends Base
     
         $this->_tvars['onumber'] = $number;
         $this->_tvars['detail'] = array();
+        $this->_tvars['total'] = 0;
         
         foreach($this->order->unpackDetails('detaildata') as $item){
             $this->_tvars['detail'][] = array(
               'itemname'=>$item->itemname,
-              'qty'=> H::fqty( $item->qty),
+              'qty'=> H::fqty( $item->quantity),
               'price'=> H::fa($item->price),
-              'sum'=>H::fa($item->price * $item->qty)
+              'sum'=>H::fa($item->price * $item->quantity)
             );             
+            
+            $this->_tvars['total']  = H::fa( $this->order->payamount );
+            
         }
         
          
@@ -88,7 +92,7 @@ class OrderPay extends Base
         if($args[0]=='success') {
              $shop = System::getOptions("shop");
    
-             $payed =  Pay::addPayment($this->order->document_id,time(),$this->order->payed,$shop['mf_id'],'LiqPay ID:'.$args[1]);
+             $payed =  Pay::addPayment($this->order->document_id,time(),$this->order->payamount,$shop['mf_id'],'LiqPay ID:'.$args[1]);
              if ($payed > 0) {
                  $this->order->payed = $payed;
              }
@@ -130,22 +134,35 @@ class OrderPay extends Base
  
  
    public  function payWP($args,$post=null) {
-           $shop = System::getOptions("shop");
+        
+     
+             $shop = System::getOptions("shop");
+   
+             $payed =  Pay::addPayment($this->order->document_id,time(),$this->order->payamount,$shop['mf_id'],'WayForPay' );
+             if ($payed > 0) {
+                 $this->order->payed = $payed;
+             }
+             \App\Entity\IOState::addIOState($this->order->document_id, $this->order->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+             $this->order->save();              
+             $this->order->updateStatus(Document::STATE_PAYED)   ;
+             
+                  
+           
      
    }
    public  function dataWP($args,$post=null) {
           $shop = System::getOptions("shop");
    
-          $private_key = $shop['wpsevret']; // 'flk3409refn54t54t*FNJRET';
+          $private_key = $shop['wpsecret']; // 'flk3409refn54t54t*FNJRET';
 
           $data = array( );
-          $data['merchantAccount']  = $shop['wpsevret']  ;   
-          $data['merchantAuthType']  = '"SimpleSignature"' ;   
+          $data['merchantAccount']  = $shop['wpmacc']  ;   
+          $data['merchantAuthType']  = 'SimpleSignature' ;   
           $data['merchantDomainName']  = $shop['wpsite']  ;   
           $data['orderReference']  = $this->order->document_number ;   
           $data['orderDate']  = $this->order->document_date ;   
           $data['amount']  = $this->order->payamount ;   
-          $data['currency']  = $shop['wpsite']  ;   
+          $data['currency']  = 'UAH'  ;   
           $data['productName']  = array() ;   
           $data['productCount']  = array() ;   
           $data['productPrice']  = array() ;   

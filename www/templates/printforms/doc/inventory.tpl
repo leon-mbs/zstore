@@ -14,6 +14,14 @@
         </td>
 
     </tr>
+    {{#reserved}}
+  <tr>
+        <td colspan="4">
+            <small>Враховуючи  зарезервовані</small>
+        </td>
+
+    </tr>
+    {{/reserved}}
 
 
     <tr style="font-weight: bolder;">

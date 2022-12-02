@@ -13,7 +13,7 @@ class Helper
 
     public static function getBreadScrumbs($id) {
 
-        $bs = "<li class=\"breadcrumb-item\"><a href='/'>Каталог</a></li>";
+        $bs = "<li class=\"breadcrumb-item\"><a href='/shop'>Каталог</a></li>";
         if ($id > 0) {
             $g = Category::load($id);
             $gl = $g->getParents();

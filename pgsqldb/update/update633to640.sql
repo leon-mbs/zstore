@@ -5,7 +5,6 @@ INSERT INTO metadata ( meta_type, description, meta_name, menugroup, disabled) V
 
     
     
-DELETE  FROM `options` WHERE  `optname`='version' ;
-INSERT INTO `options` (`optname`, `optvalue`) values('version','6.4.0');  
-
+DELETE  FROM "options" WHERE  optname='version' ;
+INSERT INTO "options" (optname, optvalue) values('version','6.4.0');   
      

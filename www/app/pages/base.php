@@ -109,6 +109,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["ppo"] = $modules['ppo'] == 1;
         $this->_tvars["np"] = $modules['np'] == 1;
         $this->_tvars["promua"] = $modules['promua'] == 1;
+        $this->_tvars["paperless"] = $modules['paperless'] == 1;
 
 
         //доступы к  модулям
@@ -137,6 +138,9 @@ class Base extends \Zippy\Html\WebPage
         if (strpos(System::getUser()->modules, 'promua') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["promua"] = false;
         }
+        if (strpos(System::getUser()->modules, 'paperless') === false && System::getUser()->rolename != 'admins') {
+            $this->_tvars["paperless"] = false;
+        }
 
         if ($this->_tvars["shop"] ||
             $this->_tvars["ocstore"] ||
@@ -144,6 +148,7 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["note"] ||
             $this->_tvars["issue"] ||
             $this->_tvars["promua"] ||
+            $this->_tvars["paperless"] ||
             $this->_tvars["ppo"] ||
             $this->_tvars["np"]
         ) {
@@ -362,6 +367,13 @@ class Base extends \Zippy\Html\WebPage
 
             }
         }
+        if ($user->rolename == "admins") {
+            if (\App\Entity\Notify::isNotify(\App\Entity\Notify::SYSTEM)) {
+                $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("hassystemnotify") . "\"");
+
+            }
+        }
+        
         if (count($this->_tvars["toasts"]) == 0) {
            // $this->_tvars["toasts"][] = array('title' => '');
            \App\Session::getSession()->toasts = false;

@@ -104,7 +104,7 @@ class Order extends Base
         }
        
         Basket::getBasket()->list = $this->basketlist;
-        
+        Basket::getBasket()->sendCookie()  ;
     }
 
     
@@ -320,7 +320,7 @@ class Order extends Base
         $datarow->setDataItem($item);
         $datarow->add(new \Zippy\Html\Link\RedirectLink('pname', '\App\Modules\Shop\Pages\ProductView', $item->item_id))->setValue($item->itemname);
         $datarow->add(new Label('price', $item->getPriceFinal()));
-        $datarow->add(new TextInput('quantity', new \Zippy\Binding\PropertyBinding($item, 'quantity')));
+        $datarow->add(new TextInput('quantity', new \Zippy\Binding\PropertyBinding($item, 'quantity'))) ;
         $datarow->add(new \Zippy\Html\Link\ClickLink('delete', $this, 'OnDelete'));
         $datarow->add(new Image('photo', "/loadshopimage.php?id={$item->image_id}&t=t"));
     }

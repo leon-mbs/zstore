@@ -2,20 +2,30 @@
  
     <body>
      
-        <div class="row" style="min-height:400px;">
-            <div class="col-12 col-md-6 col-xl-4  ">
+            
+         <div class="row justify-content-md-center" style="min-height:400px;">
+             
+      
+          
+ 
+          
+            <div class="col-12 col-md-auto">
                 <h3 class="mt-2 mb-3">Оплата замовлення {{onumber}}</h3>
                  <table class="table table-sm">
                     {{#detail}}
                     <tr>
                        <td>{{itemname}}</td>
-                       <td class="tezt-right">{{qty}}</td>
-                       <td class="tezt-right">{{price}}</td>
-                       <td class="tezt-right">{{sum}}</td>
+                       <td class="text-right">{{qty}}</td>
+                       <td class="text-right">{{price}}</td>
+                       <td class="text-right">{{sum}}</td>
                     </tr>
                     
                    {{/detail}}  
-                 </table>
+                       <tr>
+                       <td colspan="3" class="text-right"><b>До сплати</b></td>
+                       <td class="text-right"><b>{{total}}</b></td>
+                    </tr>
+             </table>
 
                  <button class="btn btn-success" type="button" onclick="pay();">Оплатити</button>         
             </div>
@@ -35,16 +45,18 @@
          callPageMethod('dataWP',null, null,(data)=> 
                       {
                          
-                              
+                       
                             data =  JSON.parse(data)  
             
+      
                             wayforpay.run(data,
                                 function (response) {
-                                    console.log(JSON.stringify(response));
+//console.log(JSON.stringify(response));
+                                   
                                     
-                                callPageMethod('payWP',[], null,(data)=> 
+                                callPageMethod('payWP',[], null,()=> 
                                 {
-                                    if(data.status=="success") {
+                                    if(response.transactionStatus=="Approved") {
                                      //  window.location = "/index.php?p=App/Modules/Shop/Pages/Catalog/Orders"
                                        
                                        setTimeout(function() { 
@@ -70,7 +82,9 @@
                           
                       });         
         }
-        
+  
+   
+   
     </script>
     
         {{/wp}} 
@@ -84,7 +98,7 @@
                  
                callPageMethod('dataLP',null, null,(data)=> 
                       {
-                         
+                                 
 
                             data =  JSON.parse(data)  
             
@@ -94,11 +108,8 @@
                                 language: "uk",
                                 mode: "popup"
                             }).on("liqpay.callback", function(data){
-                                //console.log(data.status);
-                                
-                                //console.log(JSON.stringify(data));
-                                
-                                callPageMethod('payLP',[data.status,data.payment_id], null,(data)=> 
+                               
+                                callPageMethod('payLP',[data.status,data.payment_id], null,()=> 
                                 {
                                     if(data.status=="success") {
                                      //  window.location = "/index.php?p=App/Modules/Shop/Pages/Catalog/Orders"

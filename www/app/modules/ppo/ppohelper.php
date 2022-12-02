@@ -20,8 +20,9 @@ class PPOHelper
      * @param mixed $data
      * @param mixed $type cmd (команда) или  doc (документ)
      * @param mixed $firm компания
+     * @param mixed $onlysign только  наложть  подпись
      */
-    public static function send($data, $type, \App\Entity\Firm $firm) {
+    public static function send($data, $type, \App\Entity\Firm $firm,$onlysign = false) {
 
         try {
 
@@ -43,13 +44,13 @@ class PPOHelper
                 if ($pposigntype == 1) {
 
                     if (strlen($password) == 0 || strlen($keydata) == 0  ) {
-                        return array('success' => false, 'data' => 'Не задано  ключ');
+                        return array('success' => false, 'data' => 'Не заданий  ключ');
 
 
                     }
 
                     if ( $isjks != 1 &&  strlen($certdata) == 0) {
-                        return array('success' => false, 'data' => 'Не задано  ключ');
+                        return array('success' => false, 'data' => 'Не заданий  ключ');
 
 
                     }
@@ -115,7 +116,9 @@ class PPOHelper
                 $signed = PPO::sign($data, $key, $cert);
 
             }
-
+            if($onlysign == true ) {
+               return array('success' => true, 'signed' => $signed);                
+            }
             $return = PPO::send($signed, $type);
 
 
