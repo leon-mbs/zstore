@@ -13,23 +13,30 @@
                      <div class="navbar nav">
                                 <form  class="form-inline ">
 
-                                    <label for="searchcust"> Компанiя </label>
-                                    <select class="form-control" id="firm" name="firm" >
+                                    <label for="firm"> Компанiя </label>
+                                    <select class="form-control  mr-2" v-model="firmid" id="firm" name="firm" >
                                        <option value="0">Не накладати  КЕП </option>
+                                       <option v-for="f in firms" :value="f.key">
+                                          {{ f.value }}
+                                      </option>
                                     </select>
 
                                     <label for="customer"> Контрагент </label>
-                                    <select class="form-control " id="customer" name="customer" >
-                                       <option value="0">Не обрано </option>
+                                    <select v-model="custid" class="form-control  mr-2" id="customer" name="customer" >
+                                       <option value="0">Всi </option>
+                                       
+                                      <option v-for="c in clist" :value="c.key">
+                                          {{ c.value }}
+                                      </option>
                                     </select>
                                  
                                     <label for="doctype"> Тип  документу </label>
-                                    <select class="form-control " id="doctype"  name="doctype" >
-                                       <option value="0" selected="" >Видаткова  накладна </option>
-                                       <option value="0">Рахунок фактура </option>
+                                    <select v-model="doctype" class="form-control mr-2" id="doctype"  name="doctype" >
+                                       <option value="GoodsIssue"    >Видаткова  накладна </option>
+                                       <option value="Invoice">Рахунок фактура </option>
                                     </select>
 
-                                    <button class="  btn btn-outline-success " >Вибрати</button>
+                                    <button v-on:click.prevent="onFilter" class="  btn btn-success " >Вибрати</button>
 
 
                                 </form>
@@ -40,22 +47,31 @@
             <div class="col-12   col-md-10 col-xl-8"  >
 
                 
-               
-                <table class="table  table">
+                <table class="table  table-sm">
                     <tr>
-                        <th style="width:30px"> <input  name="chlist"  class="seldel" type="checkbox"></th>
-                        <th>Документ</th>
+                        <th style="width:30px"> <input v-model="selall" v-on:change="onSelAll"  name="chlist"  class="seldel" type="checkbox"></th>
+                        <th>Номер</th>
+                        <th>Дата</th>
                         <th class="text-right">Сума</th>
                         <th>Контрагент</th>
 
                     </tr>
-                    <tr >
-                        <td  ></td>
-                        <td  ></td>
-                        <td  class="text-right"></td>
-                        <td  ></td>
+                    <tr  v-for="d in docs">
+                        <td  ><input :id="d.id" :value="d" v-model="selectedDocs"     class="seldel" type="checkbox"></td>
+                        <td  >{{d.number}}</td>
+                        <td  >{{d.date}}</td>
+                        <td  class="text-right">{{d.amount}}</td>
+                        <td  >{{d.cname}}</td>
                     </tr>
                 </table>
+                
+                <a class="btn btn-sm btn-outline-success" v-on:click.prevent="onMark">Позначити  як вiдправленi</a>
+                <div v-show="showsp1" class="spinner-border spinner-border-sm"></div>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a class="btn btn-sm btn-success" v-on:click.prevent="onSend">Вiдправити  в  papeless</a>
+                <div v-show="showsp2" class="spinner-border spinner-border-sm"></div>
+                <div v-html="log" class="mb-4"> </div>
+                
             </div>
         </div>
        {|={{ }}=|}  
@@ -66,9 +82,18 @@
                 data() { return  {
                    
                   
-                  empid:0,
+                  log:"",
+                  showsp1:false,
+                  showsp2:false,
+                  counter:0,
+                  selall:0,
+                  custid:0,
                   firmid:0,
-                  doctype:'',
+                  doctype:'GoodsIssue',
+                  docs:[] ,
+                  selectedDocs:[] ,
+                  clist:[] ,
+                  firms:[]
                   
                   
                   
@@ -82,16 +107,10 @@
                   callPageMethod('init',[], null,(data)=> 
                   {
                        let tmp =   JSON.parse(data)  
-                       this.empid = tmp.empid; 
-                       this.editempid = tmp.empid; 
-                       this.isadmin = tmp.isadmin; 
-                       this.emps = tmp.emps; 
-                       this.types = tmp.types; 
-                       this.to = tmp.to; 
-                       this.from = tmp.from; 
-                       this.today = tmp.today; 
-                 
-                       this.loaddata() ;       
+                       this.firmid = tmp.firmid; 
+                       this.firms = tmp.firms; 
+                       this.clist = tmp.clist; 
+                              
                       
                   });
                             
@@ -100,11 +119,79 @@
                 
                 
                onFilter:function(){
-                   if(Number.isNaN( Number.parseInt(this.empid)) ) {
-                      alert('Не вибраний спiвробiтник');
-                      return;
-                  }     
-                    this.loaddata() ;       
+                   this.log =""   
+                   this.loaddata() ;       
+          
+               } ,    
+            
+              
+               onMark:function(){
+                   if(this.selectedDocs.length ==0) return;
+                   if(confirm("Позначити як вiдправленi?")==false)  return
+                   
+                   this.showsp1 = true
+                   
+                   var ids = [] 
+                   for(var d of this.selectedDocs) {
+                        ids.push(d.id)
+                   }   
+                        
+                   callPageMethod('mark',[], ids.join(","),(data)=> 
+                   {
+                        
+                       this.loaddata() ;       
+           
+                       this.showsp1 = false
+                    
+                       
+                       
+                   });         
+                        
+          
+               } ,    
+               onSend:function(){
+                   if(this.selectedDocs.length ==0) return;
+                   if(confirm("Вiдправити  в  papeless?")==false)  return
+                   this.showsp2 = true
+                   this.log = ""
+                    
+                    
+                    
+                   callPageMethod('connect',[], null,(data)=> 
+                   {
+                       if(data=="") {
+                          this.log = "Успішне  з`єднання...<br>" 
+                       }
+                       else {
+                          this.log = data 
+                          this.showsp2 = false
+                          return
+                       }
+                       this.counter = this.selectedDocs.length
+                       
+                       for(var d of this.selectedDocs) {
+                            callPageMethod('send',[d.id,this.firmid ], null,(data)=> 
+                            {
+                                    this.log= this.log + data +"<br>"
+                           
+                                    this.counter--
+                           
+                           
+                           });   
+                       }   
+                   
+                   });   
+                   
+                
+               } ,    
+            
+           onSelAll:function(){
+                   if(this.selall==false) {
+                       this.selectedDocs = []
+                   }  else {
+                       this.selectedDocs = this.docs
+                   }
+                   
           
                } ,    
             
@@ -113,24 +200,16 @@
                loaddata:function(){
                    
           
-                  let body={
-                     empid:this.empid ,
-                     from:this.from  ,
-                     to:this.to 
-                  } 
+                  
+                  this.counter=0
                      
-                  callPageMethod('loaddata',[], JSON.stringify(body),(data)=> 
+                  callPageMethod('loaddocs',[this.custid,this.doctype], null,(data)=> 
                   {
-                       let tmp =   JSON.parse(data)  
-                       this.stat = tmp.stat 
-                       this.times = tmp.times 
+                       let tmp =  JSON.parse(data)  
+                       this.docs = tmp.docs 
+                       this.selectedDocs = []  
  
-
-                       calendar.removeAllEventSources(   );
-                       calendar.addEventSource( tmp.events );
-                        
-                       calendar.render()
-                      
+                    
                        
                        
                   });
@@ -138,7 +217,18 @@
           
                } ,    
            },    
-       
+        watch:   { 
+                   counter(newVal, oldVal) { 
+
+                       if(oldVal>0 && newVal==0) {
+                           this.loaddata() ;       
+               
+                           this.showsp2 = false
+                              
+                       }
+                  
+                } 
+           } ,
     
           mounted: function(){
              

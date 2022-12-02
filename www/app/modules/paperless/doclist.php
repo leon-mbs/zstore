@@ -34,6 +34,126 @@ class DocList extends \App\Pages\Base
  
     }
 
+    public function init($arg,$post=null){
+        $user = \App\System::getUser() ;
+  
+  
+        $cust= \App\Entity\Customer::find("customer_id IN  ( select customer_id FROM documents_view WHERE  meta_name  IN ('Invoice','GoodsIssue')  and content   not like '%<paperless>%')");
+  
+        $ret = [];  
+        $ret['clist']  =  [];
+        foreach($cust as $c){
+           $ret['clist'][] = array('key'=>$c->customer_id,'value'=>$c->customer_name);     
+        }
+        $ret['firmid']  =  0;
+        $ret['firms']  =  [];
+        foreach(\App\Entity\Firm::find('') as $f){
+           if(strlen($f->ppokeyid)==0) continue;
+           $ret['firms'][] = array('key'=>$f->firm_id,'value'=>$f->firm_name);     
+           if($ret['firmid']==0) $ret['firmid']  = $f->firm_id;//первую
+        }
+      
+         
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);     
+       
+    }    
  
+    public function loaddocs($arg,$post=null){
+      //  $user = \App\System::getUser() ;
+  
+        $sql = "meta_name='{$arg[1]}' and content  not  like '%paperless%' and customer_id  >0 ";
+        if($arg[0] > 0){
+            $sql .= " and customer_id={$arg[0]} ";
+        }
+        $docs=Document::find($sql,"document_id desc");
+  
+        $ret = [];  
+        $ret['docs']  =  [];
+        foreach($docs as $d){
+           $ret['docs'][] = array('id'=>$d->document_id,
+                                  'number'=>$d->document_number,
+                                  'cname'=>$d->customer_name,
+                                  'date'=> H::fd($d->document_date),
+                                  'amount'=> H::fa($d->payamount)  
+                                  
+                                  );     
+        }
+     
+        unset($docs) ;
+         
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);     
+       
+    }    
+ 
+    
+    public function mark($arg,$post=null){
+        $ids = $post;
+        foreach(Document::find("document_id  in ({$ids})") as $doc){
+            $doc->headerdata['paperless'] = 0;
+            $doc->save();
+        };
+        
+    }
 
+    public function send($arg,$post=null){
+        try{
+
+            $doc = Document::load($arg[0]);    
+            $doc = $doc->cast();
+            $name = $doc->document_number;
+            //pdf
+            $html = $doc->generateReport();
+            $dompdf = new \Dompdf\Dompdf(array('isRemoteEnabled' => true, 'defaultFont' => 'DejaVu Sans'));
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'landscape');
+            $dompdf->render();
+            $pdf = $dompdf->output();
+
+            //sign
+            if($arg[1] > 0) {
+                $firm = \App\Entity\Firm::load($arg[1])  ;
+                
+                $ret = \App\Modules\PPO\PPOHelper::send($pdf,"doc",$firm,true) ;
+                if($ret['success'] != true) {
+                    return $name." ".$ret['data'];     
+                }
+                $signedpdf = $ret['signed'] ;
+                
+                
+            }
+            
+            //send
+            $token =  System::getSession()->pltoken;
+            
+            //share
+            $c = \App\Entity\Contract::load($doc->contragent_id) ; 
+            if(strlen($c->email)==0){
+                return $name." ".H::l("noemail");                                 
+            }
+                
+            return $name." ok";                 
+        }catch(\Exception $e){
+           H::log($name .' '. $e->getMessage()) ; 
+           return $name ." ".$e->getMessage();     
+            
+        }
+       
+        
+  
+    }    
+    
+    
+     public function connect($arg,$post=null){
+        list($ok,$data) = Helper::connect()  ;
+        if($ok == "ok"){
+           System::getSession()->pltoken = $data;
+       
+           return "";     
+               
+        }
+        return $data;     
+   
+   
+   
+     }
 }
