@@ -99,6 +99,8 @@ class DocList extends \App\Pages\Base
         try{
 
             $doc = Document::load($arg[0]);    
+      
+           
             $doc = $doc->cast();
             $name = $doc->document_number;
             //pdf
@@ -117,18 +119,20 @@ class DocList extends \App\Pages\Base
                 if($ret['success'] != true) {
                     return $name." ".$ret['data'];     
                 }
-                $signedpdf = $ret['signed'] ;
+                $pdf = $ret['signed'] ;
                 
                 
             }
             
             //send
             $token =  System::getSession()->pltoken;
-            
-            //share
-            $c = \App\Entity\Contract::load($doc->contragent_id) ; 
+            $c = \App\Entity\Customer::load($doc->customer_id) ; 
+           
+            list($ok,$data) = Helper::send($token,$pdf,$name,$c->email)  ;
+            $doc->headerdata['paperless'] = 0;
+            $doc->save();
             if(strlen($c->email)==0){
-                return $name." ".H::l("noemail");                                 
+                return $name." ok ".H::l("noemail");                                 
             }
                 
             return $name." ok";                 

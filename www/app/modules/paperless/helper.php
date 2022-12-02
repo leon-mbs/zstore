@@ -89,7 +89,7 @@ class Helper
         
     }
     
-    public  static  function send($token,$docdata,$docname,$email) {
+    public  static  function send($token,$docdata,$docname,$email="") {
                 $modules = System::getOptions("modules");
                 $url= "https://paperless.com.ua/api2/checked/upload";        
                 $boundary = str_replace('-','', \App\Util::guid() );
@@ -142,7 +142,9 @@ class Helper
                     return  array('error',$msg) ;
                 }      
                 $id = $res['resourceDTO'][0]['id'] ;
-
+                if(strlen($email)==0) {
+                    return  array('ok') ;  
+                }
                 $url= "https://paperless.com.ua/api2/checked/share/".$id;        
                 $post  = "{\"requestList\":[{\"email\":\"{$email}\",\"comment\":\"\",\"mode\":0}]}"  ;
                 $a = json_decode($post) ;
