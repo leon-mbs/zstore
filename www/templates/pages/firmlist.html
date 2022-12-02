@@ -6,12 +6,12 @@
 
     <body>
         <div class="row">
-             {{^ppo}}
+             {{^loadkey}}
                <div class="col-12 col-md-8 col-xl-6">
-             {{/ppo}}
-             {{#ppo}}
+             {{/loadkey}}
+             {{#loadkey}}
                <div class="col-12   col-xl-10">
-             {{/ppo}}
+             {{/loadkey}}
                 <div zippy="firmtable">
                     <h3>Список компанiй </h3>
 
@@ -21,13 +21,13 @@
                             <th>Назва</th>
                          
                             <th></th>
-   {{#ppo}}
+   {{#loadkey}}
                             <th  > </th>
                             <th  >Власник сертифiкату</th>
                             <th  >Iдентифiкатор  ключа</th>
                             
                             
-                            {{/ppo}}                               
+                            {{/loadkey}}                               
                         </tr>
                         <tr zippy="firmlist">
                             <td zippy="firm_name"></td>
@@ -35,16 +35,16 @@
 
                             <td style="width:100px"><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a>
                              &nbsp;&nbsp; <a                                    zippy="delete" title="Видалити"><i class="fa fa-trash"></i></a></td>
-    {{#ppo}}
+    {{#loadkey}}
                             <td  >
                                <a  zippy="ppo" title="Загрузить ключ  и сертификат" ><i class="fa fa-key"></a>
                             </td>
                             <td zippy="ppoowner"> </td>
                             <td zippy="ppokeyid"> </td>
-                            {{/ppo}}                                      
+                            {{/loadkey}}                                      
                         </tr>
                     </table>
-                {{#ppo}}    <small>Iдентифiкатор  ключа мае  бути  прописаний в  податковiй</small>       {{/ppo}}     
+                {{#loadkey}}    <small>Iдентифiкатор  ключа мае  бути  прописаний в  податковiй</small>       {{/loadkey}}     
                 </div>
             </div>
         </div>
