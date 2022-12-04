@@ -38,7 +38,7 @@ class DocList extends \App\Pages\Base
         $user = \App\System::getUser() ;
   
   
-        $cust= \App\Entity\Customer::find("status = 0 and customer_id IN  ( select customer_id FROM documents_view WHERE  meta_name  IN ('Invoice','GoodsIssue')  and content   not like '%<paperless>%')");
+        $cust= \App\Entity\Customer::find("status = 0 and customer_id IN  ( select customer_id FROM documents_view WHERE  meta_name  IN ('Invoice','GoodsIssue','ServiceAct')  and content   not like '%<paperless>%')");
   
         $ret = [];  
         $ret['clist']  =  [];
