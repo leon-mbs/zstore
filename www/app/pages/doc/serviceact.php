@@ -649,7 +649,7 @@ class ServiceAct extends \App\Pages\Base
             $cust = Customer::load($c);
 
             $disctext = "";
-            $d= $cust->getDiscount()
+            $d= $cust->getDiscount()   ;
             if (doubleval($d) > 0) {
                 $disctext = H::l("custdisc") . " {$d}%";
             } else {
