@@ -62,6 +62,7 @@ class FirmList extends \App\Pages\Base
         $this->keyform->add(new DropDownChoice('signtype'))->onChange($this,'onSignType');
         $this->keyform->add(new TextInput('serhost'));
         $this->keyform->add(new TextInput('serport'));
+        $this->keyform->add(new CheckBox('outher'));
         $this->keyform->add(new CheckBox('usessl'));
         $this->keyform->add(new File('keyfile'));
         $this->keyform->add(new File('certfile'));
@@ -224,6 +225,7 @@ class FirmList extends \App\Pages\Base
        $serhost = $this->keyform->serhost->getText() ;
        $serport = $this->keyform->serport->getText() ;
        $usessl  = $this->keyform->usessl->isChecked() ;
+       $outher  = $this->keyform->outher->isChecked() ;
        $password = $this->keyform->password->getText() ;
        $keyfile = $this->keyform->keyfile->getFile() ;
        $certfile = $this->keyform->certfile->getFile() ;
@@ -244,29 +246,78 @@ class FirmList extends \App\Pages\Base
            }
            
        }
-       if($signtype==0  ) {   //ppolib
+      // if($signtype==0  ) {   //ppolib
+       if(true ) {   //ppolib
       
            try{
+           
+             if($outher) {
+                $req  = [];
+                $req['key']  = base64_encode($keydata);
+                $req['cert']  =  base64_encode($certdata);
+                $req['pass']  = $password;
+                $req['isjks']  = $isjks;
+                $post = json_encode($req, JSON_UNESCAPED_UNICODE) ;
                
-             if($isjks) {
-                list($key,$cert)= \PPOLib\KeyStore::loadjks($keydata,$password) ;
+                $url = "http://local.zstorevue/loadkey.php?DBGSESSID=448997432305600007;d=1,p=0,c=1";
+                $url = "https://key.zippy.com.ua/loadkey.php";
+                $ch = curl_init();
+                       
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                                 "Accept: application/json",
+                                "Content-Type: application/json"
+                ));
+                curl_setopt($ch, CURLOPT_HEADER, 0);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+                $result = curl_exec($ch);           
+                $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE)  ;                  
+                if (curl_errno($ch) > 0) {
+                    //$msg = curl_error($ch);
+                     
+                }              
+                curl_close($ch) ;
+            
+                
+                      
+                  $res = json_decode($result) ;
+             
+                   if(strlen($res->error) > 0){
+
+                    $this->addAjaxResponse("   $('#progress').text({$res->error});   $('#send').attr('disabled',null);       ");
+                    
+                    return;
+                      
+                 } 
+                 $cert=  unserialize(base64_decode( $res->cert))  ;
+                 $key  = unserialize(base64_decode($res->key) ) ;
+                            
              }
              else {
-                  $cert =  \PPOLib\Cert::load($certdata) ;
-       
-                  $key =   \PPOLib\KeyStore::load($keydata,$password,$cert ) ;
-            
-             }  
                
-             if($key==null){
-
-                $this->addAjaxResponse("   $('#progress').text('Invalid  key');   $('#send').attr('disabled',null);       ");
+                 if($isjks) {
+                    list($key,$cert)= \PPOLib\KeyStore::loadjks($keydata,$password) ;
+                 }
+                 else {
+                      $cert =  \PPOLib\Cert::load($certdata) ;
+           
+                      $key =   \PPOLib\KeyStore::load($keydata,$password,$cert ) ;
                 
-                return;
-                  
+                 }  
+                   
+                 if($key==null){
+
+                    $this->addAjaxResponse("   $('#progress').text('Invalid  key');   $('#send').attr('disabled',null);       ");
+                    
+                    return;
+                      
+                 }
+             
              }
              
-
              $this->_firm->ppoowner =  $cert->getOwner()   ;
              $this->_firm->ppokeyid =  $cert->getKeyId()   ;
              $this->_firm->ppocert = base64_encode(serialize($cert) )  ;
