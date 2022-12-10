@@ -1017,11 +1017,29 @@ class PPOHelper
             return  false;
         }
         $res = json_decode($res['data']);
-        
+        return  $res;
    
     }
     
+    /**
+    * получение итоговых  данных по смене  для  z отчета
+    * 
+    * @param mixed $fiscnumber
+    * @param mixed $firm
+    */
+    public static function shiftTotal($fiscnumber,$firm){
+        $res = PPOHelper::send(json_encode(array('Command' => 'LastShiftTotals','NumFiscal'=>$fiscnumber)), 'cmd', $firm);
+        if($res['success'] != true){
+            return  false;
+        }
+
+        $res = json_decode($res['data'],true);
+        return  $res;
+
+   
+    }
     
+     
    
 }
 
