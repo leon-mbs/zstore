@@ -59,7 +59,8 @@ class FirmList extends \App\Pages\Base
         $this->keyform->add(new Button('cancelppo'))->onClick($this, 'cancelOnClick');
         $this->keyform->add(new Button('delppo'))->onClick($this, 'delOnClick');
         $this->keyform->add(new TextInput('password'));
-        $this->keyform->add(new DropDownChoice('signtype'))->onChange($this,'onSignType');
+        $this->keyform->add(new DropDownChoice('signtype',0))->onChange($this,'onSignType');
+        $this->keyform->signtype->setVisible(false);
         $this->keyform->add(new TextInput('serhost'));
         $this->keyform->add(new TextInput('serport'));
         $this->keyform->add(new CheckBox('outher'));
