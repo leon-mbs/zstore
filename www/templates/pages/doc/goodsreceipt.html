@@ -64,7 +64,7 @@
                         </select>
 
                     </div>
-        <div class="form-group  ">
+                    <div class="form-group  ">
                         <label for="rate">Курс </label>
                         <input pattern="[0-9,\.]+" class="form-control qtyprice" type="text" zippy="rate">
                         <small for="rate">Проводки  по  касi та  складу будут  виконанi  в  нацiональнiй валютi  по  курсу</small>
@@ -351,8 +351,9 @@
                         <label for="edititem">Назва </label>
                         <input placeholder="Почніть вводити..." class="form-control " zippy="edititem"/>
                         <a zippy="openitemsel">Вiдкрити довiдник</a>
+                        <br><a zippy="openlast">Останнi закупки</a>
 
-                        <br> <a style="font-size:smaller" zippy="addnewitem">Додати новий</a>
+                        <br><a style="font-size:smaller" zippy="addnewitem">Додати новий</a>
                     </div>
                     {{#usesnumber}}
                     <div class="form-group">
@@ -394,6 +395,26 @@
 
             <div class="col-12 col-md-8 col-xl-8">
                 <div zippy="wselitem"></div>
+                <div zippy="sellastitem">
+                   <h5>Останнi закупки</h5>
+                   <small>ТМЦ за мiсяць (остання  партiя) по  контрагенту  та  типу  оплати (якщо була  вибрана  каса)</small>
+                   <table class="table  table-sm" > 
+                     <tr>
+                       <th >Дата</th>
+                       <th >ТМЦ</th>
+                       <th >Артикул</th>
+                       <th >Штрих-код</th>
+                       <th class="text-right">Цiна</th>
+                     </tr> 
+                     <tr zippy="sllist">
+                       <td zippy="sldate"></td>                     
+                       <td ><a zippy="slitem"></a></td>                     
+                       <td zippy="slitem_code"></td>                     
+                       <td zippy="slbar_code"></td>                     
+                       <td class="text-right" zippy="slprice"></td>                     
+                     </tr>                 
+                   </table>
+                </div>
 
 
             </div>

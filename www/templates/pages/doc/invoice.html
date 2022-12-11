@@ -94,7 +94,14 @@
             </div>
             <div class="row">
                 <div class="col-10 col-lg-8">
-
+                      {{#usescanner}}
+                    <div class="navbar nav justify-content-start">
+                        Штрих-код &nbsp;<input style="width:150px;" autocomplete="off" autofocus type="text" zippy="barcode"
+                                               onkeydown="onBarCode()">
+                        &nbsp; &nbsp; &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
+          
+                    </div>
+                    {{/usescanner}}
                     <a zippy="addrow" class="btn btn-info  ">Додати товар</a>   &nbsp;&nbsp;   <a zippy="addserrow" class="btn btn-info  ">Додати послугу</a>
                     <table class="table table-sm">
                         <tr>
@@ -320,7 +327,17 @@
                     
             })
                  
-          });       
+          });   
+          
+          
+          function onBarCode(ele) {
+
+                if (event.key === 'Enter' || event.keyCode == 13) {
+                    // alert($('#barcode').val());
+                    $('#addcode').click()
+                }
+            }          
+              
          </script> 
 
     </body>
