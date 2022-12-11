@@ -27,8 +27,6 @@ class Options extends \App\Pages\Base
         $modules = System::getOptions("modules");
 
         $form = $this->add(new Form("cform"));
-        $form->add(new TextInput('email', $modules['plemail']));
-        $form->add(new TextInput('password', $modules['plpassword']));
         $form->add(new TextInput('clientid', $modules['plclientid']));
         $form->add(new TextInput('secret', $modules['plsecret']));
 
@@ -42,8 +40,6 @@ class Options extends \App\Pages\Base
 
         $modules = System::getOptions("modules");
 
-        $modules['plemail'] = trim($this->cform->email->getText());
-        $modules['plpassword'] = trim($this->cform->password->getText());
         $modules['plclientid'] = trim($this->cform->clientid->getText());
         $modules['plsecret'] =trim($this->cform->secret->getText());
 

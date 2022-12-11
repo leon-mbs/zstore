@@ -54,11 +54,7 @@ class GoodsIssue extends Document
 
         $printer = System::getOptions('printer');
 
-        $style = "";
-        if (strlen($printer['pa4width']) > 0) {
-            $style = 'style=" width:' . $printer['pa4width'] . ';"';
-
-        }
+      
 
         $header = array('date'      => H::fd($this->document_date),
                         "_detail"   => $detail,
@@ -73,7 +69,7 @@ class GoodsIssue extends Document
                         "total"           => H::fa($this->amount),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
-                        "style"           => $style,
+
                         "bank"            => @$mf->bank,
                         "bankacc"         => @$mf->bankacc,
                         "isbank"          => (strlen($mf->bankacc) > 0 && strlen($mf->bank) > 0),

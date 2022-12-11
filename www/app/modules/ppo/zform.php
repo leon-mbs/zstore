@@ -38,6 +38,8 @@ class ZForm extends \App\Pages\Base
         $this->stat->add(new CheckBox('onlyshift'));
         $this->stat->setVisible(false);
         $this->add(new  ClickLink("sync",$this,"onSync")) ;
+        $this->add(new  ClickLink("zt",$this,"onZT")) ;
+        $this->add(new  Label("ztres" ) );
     
         $this->add(new DataView('list', new ArrayDataSource(new Prop($this, '_list')), $this, 'OnRow'));
        
@@ -116,6 +118,8 @@ class ZForm extends \App\Pages\Base
         
     }
     
+    
+
     
     public function onFisc($sender) {
            $item = $sender->getOwner()->getDataItem();
@@ -258,34 +262,49 @@ class ZForm extends \App\Pages\Base
             
     }    
     
-    /*
-    public function closeshift() {
-
-
-        $ret = \App\Modules\PPO\PPOHelper::shift($this->_pos->pos_id, false);
-        if ($ret['success'] == false && $ret['docnumber'] > 0) {
-            //повторяем для  нового номера
-            $pos->fiscdocnumber = $ret['docnumber'];
-            $pos->save();
-            $ret = \App\Modules\PPO\PPOHelper::shift($this->_pos->pos_id, false);
-        }
-        if ($ret['success'] == false) {
-            $this->setErrorTopPage($ret['data']);
-            return false;
-        } else {
-            $this->setSuccess("ppo_shiftclosed");
-            if ($ret['docnumber'] > 0) {
-                $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                $this->_pos->save();
-            } else {
-                $this->setError("ppo_noretnumber");
-                return;
-            }
-            \App\Modules\PPO\PPOHelper::clearStat($this->_pos->pos_id);
-        }
-
-
-        return true;
-    }
-    */
+    
+    public function onZT($sender) {
+         $this->ztres->setText("");
+         $pos_id = $this->filter->pos->getValue();
+         if ($pos_id == 0) {
+            return;
+         }     
+         
+         $pos = \App\Entity\Pos::load($this->_pos->pos_id);
+         $firm = \App\Entity\Firm::load($this->_pos->firm_id);
+         
+         $ret = PPOHelper::shiftTotal($pos->fiscalnumber,$firm) ;
+         if($ret == false) {
+             $this->setError(\App\Helper::l("noserverorshift") );
+             return ;
+         } 
+         if(!is_array($ret['Totals'])) {
+             $this->setError(\App\Helper::l("noserverorshift")) ;
+             return ;
+         } 
+         $zt="";
+         if(is_array($ret['Totals']['Real']['PayForm'])) {
+             $zt .="<b>Реалiзацiя</b><br>";
+             foreach($ret['Totals']['Real']['PayForm'] as $form){
+                 $zt .= $form['PayFormName']." ".$form['Sum']."<br>" ;
+                            
+             }
+             $zt .= " Чекiв ".$ret['Totals']['Real']['OrdersCount'] ;
+         }
+         if(is_array($ret['Totals']['Ret']['PayForm'])) {
+             $zt .="<b>Повернення</b><br>";
+             foreach($ret['Totals']['Ret']['PayForm'] as $form){
+                 $zt .= $form['PayFormName']." ".$form['Sum']."<br>" ;
+                            
+             }
+             $zt .= " Чекiв ".$ret['Totals']['Ret']['OrdersCount'] ;
+         }
+           
+         $this->ztres->setText($zt,true);
+       
+    }    
+    
+    
+    
+   
 }

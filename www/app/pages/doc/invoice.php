@@ -78,6 +78,9 @@ class Invoice extends \App\Pages\Base
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total', 0));
+       
+        $this->docform->add(new TextInput('barcode'));
+        $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
 
         $this->add(new Form('editdetail'))->setVisible(false);
@@ -704,5 +707,91 @@ class Invoice extends \App\Pages\Base
         return $price;
         
     }    
-    
+    public function addcodeOnClick($sender) {
+        $code = trim($this->docform->barcode->getText());
+        $this->docform->barcode->setText('');
+        $code0 = $code;
+        $code = ltrim($code,'0');
+        
+        if ($code == '') {
+            return;
+        }
+
+        foreach ($this->_itemlist as $ri => $_item) {
+            if ($_item->bar_code == $code || $_item->item_code == $code  || $_item->bar_code == $code0 || $_item->item_code == $code0 ) {
+                $this->_itemlist[$ri]->quantity += 1;
+                $this->docform->detail->Reload();
+                $this->calcTotal();
+                $this->CalcPay();
+                return;
+            }
+        }
+
+
+        $store_id = $this->docform->store->getValue();
+        if ($store_id == 0) {
+            $this->setError('noselstore');
+            return;
+        }
+
+        $code_ = Item::qstr($code);
+        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and   (item_code = {$code_} or bar_code = {$code_})");
+
+        if ($item == null) {
+
+            $this->setWarn("noitemcode", $code);
+            return;
+        }
+
+
+        $qty = $item->getQuantity($store_id);
+        if ($qty <= 0) {
+
+            $this->setWarn("noitemonstore", $item->itemname);
+        }
+
+
+        $price = $item->getPrice($this->docform->pricetype->getValue(), $store_id);
+        $item->price = $price;
+        $item->quantity = 1;
+
+        if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
+
+            $serial = '';
+            $slist = $item->getSerials($store_id);
+            if (count($slist) == 1) {
+                $serial = array_pop($slist);
+            }
+
+
+            if (strlen($serial) == 0) {
+                $this->setWarn('needs_serial');
+                $this->editdetail->setVisible(true);
+                $this->docform->setVisible(false);
+
+                $this->editdetail->edittovar->setKey($item->item_id);
+                $this->editdetail->edittovar->setText($item->itemname);
+                $this->editdetail->editserial->setText('');
+                $this->editdetail->editquantity->setText('1');
+                $this->editdetail->editprice->setText($item->price);
+
+                return;
+            } else {
+                $item->snumber = $serial;
+            }
+        }
+
+
+        $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
+        $item->rowid = $next + 1;
+
+        $this->_itemlist[$item->rowid] = $item;
+
+        $this->docform->detail->Reload();
+        $this->calcTotal();
+        $this->calcPay();
+
+        $this->_rowid = 0;
+    }
+   
 }

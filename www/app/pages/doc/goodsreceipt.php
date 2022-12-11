@@ -11,6 +11,7 @@ use App\Entity\Store;
 use App\Helper as H;
 use App\System;
 use Zippy\Html\DataList\DataView;
+use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\Form\AutocompleteTextInput;
 use Zippy\Html\Form\Button;
 use Zippy\Html\Form\Date;
@@ -20,6 +21,7 @@ use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
+use Zippy\Html\Panel;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
 
@@ -29,10 +31,11 @@ use Zippy\Html\Link\SubmitLink;
 class GoodsReceipt extends \App\Pages\Base
 {
 
-    public  $_itemlist  = array();
+    public  $_itemlist  = [];
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = 0;
+    public $_sllist    = [];
   
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -100,11 +103,14 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editdetail->add(new TextInput('editsnumber'));
         $this->editdetail->add(new Date('editsdate'));
         $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
+        $this->editdetail->add(new ClickLink('openlast', $this, 'onOpenLast'));
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
 
         $this->add(new \App\Widgets\ItemSel('wselitem', $this, 'onSelectItem'))->setVisible(false);
+        $this->add(new Panel('sellastitem'))->setVisible(false);
+        $this->sellastitem->add( new  DataView('sllist',new ArrayDataSource($this,'_sllist') , $this, 'slOnRow'))   ;
 
         //добавление нового товара
         $this->add(new Form('editnewitem'))->setVisible(false);
@@ -255,7 +261,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->_tvars['price1name'] = $common['price1'];
  
         
-        $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
+        $this->docform->add(new DataView('detail', new ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         
         $this->OnVal($this->docform->val);
         
@@ -433,6 +439,7 @@ class GoodsReceipt extends \App\Pages\Base
             $this->editdetail->setVisible(false);
             $this->docform->setVisible(true);            
             $this->wselitem->setVisible(false);           
+            $this->sellastitem->setVisible(false);           
         } else {
             $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
             $item->rowid = $next + 1;
@@ -464,6 +471,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->wselitem->setVisible(false);
+        $this->sellastitem->setVisible(false);
         $this->goAnkor("lankor");        
     }
 
@@ -769,6 +777,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editnewitem->setVisible(true);
         $this->editdetail->setVisible(false);
         $this->wselitem->setVisible(false);
+        $this->sellastitem->setVisible(false);
 
         $this->editnewitem->clean();
 
@@ -896,17 +905,23 @@ class GoodsReceipt extends \App\Pages\Base
     }
 
     public function onOpenItemSel($sender) {
+        $this->sellastitem->setVisible(false);
         $this->wselitem->setVisible(true);
         $this->wselitem->Reload();
     }
 
-    public function onSelectItem($item_id, $itemname) {
+    public function onSelectItem($item_id, $itemname,$price=null) {
         $this->editdetail->edititem->setKey($item_id);
         $this->editdetail->edititem->setText($itemname);
-
         $item = Item::load($item_id);
 
-        $this->editdetail->editsellprice->setText($item->price1);
+        if($price==null){
+          $price = $item->getLastPartion($this->docform->store->getValue()   , null, false);
+            
+        }
+     
+        $this->editdetail->editprice->setText(H::fa($price));
+        $this->editdetail->editsellprice->setText(H::fa($item->price1));
     }
 
     public function OnCustomerFirm($sender) {
@@ -929,9 +944,68 @@ class GoodsReceipt extends \App\Pages\Base
         $item = Item::load($id);
 
         $this->editdetail->editsellprice->setText($item->price1);
+  
+    }
+        
+    public function slOnRow($row) {
+        $item = $row->getDataItem();
+        $row->add(new Label("sldate", H::fd($item->date)))  ;
+        $row->add(new Label("slitem_code", $item->item_code))  ;
+        $row->add(new Label("slbar_code", $item->bar_code))  ;
+        $row->add(new Label("slprice", $item->price))  ;
+        $row->add(new ClickLink("slitem",$this,"onSLItem" ))->setValue($item->itemname)  ;
+    }
+    
+    public function onSLItem($sender) {
+        $item = $sender->getOwner()->getDataItem();
+        
+ 
+        $this->onSelectItem($item->item_id,$item->itemname,$item->price);
+    }
+    
+    public function onOpenLast($sender) {
+       $cid = $this->docform->customer->getKey();
+       if($cid == 0){
+           $this->setError("noselsender");
+           return;
+       } 
+       $ptype=0;
+       $p = $this->docform->payment->getValue();
+       if($p > 0){
+        //  $mf = \App\Entity\MoneyFund::load($p) ;   
+       //   $p = $mf->beznal == 1 ? 2:1;
+       }
+       $this->sellastitem->setVisible(true);
+       $this->wselitem->setVisible(false);
+       $this->_sllist = [];
+       $conn = \ZDB\DB::getConnect()  ;
+       $dt = $conn->DBDate( strtotime("-1 month",time() ) );
 
-
-
+       $docs=  Document::find("customer_id={$cid} and  meta_name='GoodsReceipt' and  document_date >= {$dt} ","document_id desc") ;
+       foreach($docs as $doc){
+           
+          if($p > 0 && $p != $doc->headerdata['payment']){ 
+              continue;
+          }
+           
+          foreach($doc->unpackDetails('detaildata') as $item){
+           
+               $r = new \App\DataItem() ;
+               $r->date= $doc->document_date ;
+               $r->item_id= $item->item_id ;
+               $r->item_code= $item->item_code ;
+               $r->bar_code= $item->bar_code ;
+               $r->itemname= $item->itemname ;
+               $r->price = $item->price ;
+               if($this->_sllist[$r->item_id] != null) {
+                  continue;  
+               }
+               
+               $this->_sllist[$r->item_id]=$r;
+          }
+       }
+       
+       $this->sellastitem->sllist->Reload();
     }
 
 }

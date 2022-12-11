@@ -111,11 +111,14 @@
                     <label for="signtype">Метод  пiдпису </label>
                     <select   class="form-control" type="text" zippy="signtype">
                       <option value="0">Внутрiшня  бiблiотека</option>
-                      <option value="1">Сервер  з передачею ключа</option>
+                  <!--    <option value="1">Сервер  з передачею ключа</option>
                       <option value="2">Сервер з встроєним  ключем</option>
+                      -->
                     </select>
                     
-                </div>    
+                </div>  
+            
+                             
                 <div class="form-group">
                     <label for="password">Пароль </label>
                     <input required="required" class="form-control" type="text" zippy="password">
@@ -146,7 +149,11 @@
                 </small>       
                 </div>   
 
-                                
+                <div class="form-check">
+                   <input zippy="outher" type="checkbox" class="form-check-input">
+                   <label class="form-check-label" for="outher">Використати  зовнiшнiй сервер</label>
+                  <br> <small>Якщо помилка з таймаутом</small>
+               </div>                              
                  
                 <span style="display:block" id="progress"></span>
                 <input zippy="send" type="button" value="Завантажити" class="btn btn-primary  ">&nbsp;&nbsp;

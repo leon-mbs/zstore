@@ -51,11 +51,7 @@ class TTN extends Document
 
         $printer = System::getOptions('printer');
 
-        $style = "";
-        if (strlen($printer['pa4width']) > 0) {
-            $style = 'style=" width:' . $printer['pa4width'] . ';"';
-
-        }
+      
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
@@ -63,7 +59,7 @@ class TTN extends Document
                         "customer_name"   => $this->customer_id ? $this->customer_name : $this->headerdata["customer_name"],
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                         "store_name"      => $this->headerdata["store_name"],
-                        "style"           => $style,
+
                         "weight"          => $weight > 0 ? H::l("allweight", $weight) : '',
                         "ship_address"    => strlen($this->headerdata["ship_address"]) > 0 ? $this->headerdata["ship_address"] : false,
                         "ship_number"     => strlen($this->headerdata["ship_number"]) > 0 ? $this->headerdata["ship_number"] : false,
