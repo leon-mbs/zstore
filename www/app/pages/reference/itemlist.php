@@ -619,16 +619,36 @@ class ItemList extends \App\Pages\Base
     
     public function printQrOnClick($sender) {
       
+        $printer = \App\System::getOptions('printer') ;
         
         $item = $sender->getOwner()->getDataItem();
 
+        if(intval($printer['prtype'] ) == 0){
+            $dataUri = \App\Util::generateQR($item->url,100,5)  ;
+            $html = "<img src=\"{$dataUri}\"  />";
+            $this->addAjaxResponse("  $('#tag').html('{$html}') ; $('#pform').modal()");
+            return;            
+        }
+
+        $connector = new \Mike42\Escpos\PrintConnectors\DummyPrintConnector();
+        $printer = new \Mike42\Escpos\Printer($connector);       
+        $printer->setJustification( \Mike42\Escpos\Printer::JUSTIFY_CENTER)  ;
+        $printer->qrCode($item->url)  ;
+     
+        $printer->feed(1) ;
+        
+        $cc = $connector->getData()  ;
+        $connector->finalize() ;      
+      
+        $buf = [];
+        foreach(str_split($cc) as $c) {
+          $buf[]= ord($c) ;   
+        }    
+        
+        $b = json_encode($buf) ;
+        
+        $this->addAjaxResponse(" sendPS('{$b}') ");  
   
-        $dataUri = \App\Util::generateQR($item->url,100,5)  ;
-
-        $html = "<img src=\"{$dataUri}\"  />";
-
-           $this->addAjaxResponse("  $('#tag').html('{$html}') ; $('#pform').modal()");
-
     }
 
     /*

@@ -363,7 +363,7 @@
                              <div class="form-group  ">
                                 <label data-label="pwsym" for="pwsym">Ширина, символiв</label>
                                 <input type="number"  style="width:100px"   class="form-control" zippy="pwsym">
-                                <a  data-label="pwsym" onclick="testps()" href="javascript:void(0)">Тест  принтера</a>
+                                <a  data-label="pwsym" zippy="pstest" >Тест  принтера</a>
                             </div>
      
                     
@@ -628,37 +628,7 @@
             }
             
             
-        function testps( ){
-
-           var url=  $("#pserver").val() 
-            
-            
                 
-    
-   var opt={
-           method: 'POST'   
-  
-  
-       };    
-             
-       fetch(url+"/test",opt)                                            
-  
-              .then((response) => {
-                  return response.text();
-              })
-              .then((data) => {
-                 if(data == ""){
-                     toastr.success("Вiдправлено на принтер" )   
-                 }   else {
-                    toastr.error(data )        
-                 }
-              })
-               .catch(function (error) {
-                    toastr.error(error )       
-                      });  
-            
-       
-        }             
         </script>
 
     </body>

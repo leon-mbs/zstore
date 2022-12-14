@@ -12,7 +12,17 @@ use Symfony\Polyfill\Uuid\Uuid;
 class Util
 {
 
-     
+  /**
+  * генерация  комманд для  чекового  принтера
+  *    
+  * @param mixed $template
+  * @return mixed
+  */
+  public  static function generateESCPOS($template){
+      
+      
+      return  [];
+  }  
     
   /**
   * генерация QR кода  *   

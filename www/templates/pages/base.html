@@ -928,7 +928,6 @@
             </div>
 
    
-
         {{#toasts}}
         <script>
 $(document).Toasts('create', {
@@ -1060,17 +1059,17 @@ icon: 'fa fa-exclamation-triangle text-warning',
         } 
    
      
-        function sendPS(commands){
-
+        function sendPS( buf){
+          
            var url="{{psurl}}"  
             
-            
-                
+     console.log(buf)     
+               
     
    var opt={
            method: 'POST' ,
   
-           body:   commands
+           body:   buf
        };    
              
        fetch(url+"/print",opt)                                            
