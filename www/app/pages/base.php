@@ -110,6 +110,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["np"] = $modules['np'] == 1;
         $this->_tvars["promua"] = $modules['promua'] == 1;
         $this->_tvars["paperless"] = $modules['paperless'] == 1;
+        $this->_tvars["psurl"] =  $options['pserver'] ;  
 
 
         //доступы к  модулям

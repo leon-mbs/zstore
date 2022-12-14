@@ -253,6 +253,14 @@ class Document extends \ZCL\DB\Entity
     public function generatePosReport() {
         return "";
     }
+   
+   /**
+   * Генерация  команд для сервера  печати
+   * 
+   */
+    public function generatePS() {
+        return "";
+    }
 
     /**
      * Выполнение документа - обычно проводки по  складу и платежи

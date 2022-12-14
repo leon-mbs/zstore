@@ -929,32 +929,14 @@ class Helper
     */
     public  static  function printItems(array $items){
         $printer = \App\System::getOptions('printer');
-        $pwidth = "width:70mm;";
-        $pheight = "height:40mm;";
-        $pfs = 'style="font-size:16px;"';
-        $pfs = 'style="font-size:24px;"';
+ 
 
-        if (strlen($printer['pwidth']) > 0) {
-            $pwidth = "width:" . $printer['pwidth'] . ";";
-        }
-        if (strlen($printer['pheight']) > 0) {
-            $pheight = "height:" . $printer['pheight'] . ";";
-        }
-        $style = "style=\"";
-        $style .= $pwidth;
-        $style .= $pheight;
-        $style .= "\"";
-
-        if (strlen($printer['pfontsize']) > 0) {
-            $pfs = 'style="font-size:' . $printer['pfontsize'] . 'px";';
-            $pfsp = 'style="font-size:' . intval(($printer['pfontsize'] * 1.5)) . 'px";';
-        }
-
+    
         $htmls = "";
 
         foreach ($items as $item) {
             $report = new \App\Report('item_tag.tpl');
-            $header = array('style' => $style, 'fsize' => $pfs, 'fsizep' => $pfsp);
+            $header = [];
             if ($printer['pname'] == 1) {
 
                 if (strlen($item->shortname) > 0) {
@@ -1012,7 +994,7 @@ class Helper
 
             
             $qty =  intval($item->quantity);
-            if($qty==0) $qty=1;
+            if($qty==0) $qty = 1;
             for($i=0;$i<$qty;$i++){
                $htmls = $htmls . $report->generate($header);
             }

@@ -154,37 +154,47 @@ class Options extends \App\Pages\Base
         $this->valform->valprice->setChecked($val['valprice']);
 
         //печать
-        $this->add(new Form('printer'))->onSubmit($this, 'savePrinterOnClick');
+        $this->add(new Form('printer'));
 
-        $this->printer->add(new TextInput('pwidth'));
-        $this->printer->add(new TextInput('pdocwidth'));
-        $this->printer->add(new TextInput('pheight'));
+
+        $this->printer->add(new DropDownChoice('prtype',0 ))->onChange($this,"onPSType");
+
+
+        $this->printer->add(new TextInput('pserver'));
+        $this->printer->add(new TextInput('pwsym'));
         $this->printer->add(new TextInput('pmaxname'));
         $this->printer->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList()));
-        $this->printer->add(new DropDownChoice('barcodetype', array('EAN13' => 'EAN-13', 'EAN8' => 'EAN-8', 'C128' => 'Code128', 'C39' => 'Code39'), 'Code128'));
-        $this->printer->add(new DropDownChoice('pdocfontsize', array('12' => '12', '14' => '14', '16' => '16', '20' => '20', '24' => '24', '28' => '28', '36' => '36',), '16'));
-        $this->printer->add(new DropDownChoice('pfontsize', array('12' => '12', '14' => '14', '16' => '16', '20' => '20', '24' => '24', '28' => '28', '36' => '36',), '16'));
+        $this->printer->add(new DropDownChoice('barcodetype', array('EAN13' => 'EAN-13', 'C128' => 'Code128', 'C39' => 'Code39'), 'Code128'));
+
+
         $this->printer->add(new CheckBox('pname'));
         $this->printer->add(new CheckBox('pcode'));
         $this->printer->add(new CheckBox('pbarcode'));
         $this->printer->add(new CheckBox('pprice'));
         $this->printer->add(new CheckBox('pqrcode'));
         $this->printer->add(new CheckBox('pcolor'));
+        $this->printer->add(new SubmitButton('savep'))->onClick($this, 'savePrinterOnClick');
 
         $printer = System::getOptions("printer");
         if (!is_array($printer)) {
             $printer = array();
         }
+        if(strlen($printer['prtype']) == 0){
+            $printer['prtype'] = 0 ;
+            $printer['pserver'] = "http://127.0.0.1:8080";
+            $printer['pwsym'] = 32;
+            System::setOptions("printer", $printer);
+        }
+        $this->printer->prtype->setValue("".intval($printer['prtype']) );
 
-
-        $this->printer->pwidth->setText($printer['pwidth']);
-        $this->printer->pdocwidth->setText($printer['pdocwidth']);
-        $this->printer->pheight->setText($printer['pheight']);
+        $this->printer->pserver->setText($printer['pserver']);
+        $this->printer->pwsym->setText($printer['pwsym']);
+        
         $this->printer->pmaxname->setText($printer['pmaxname']);
         $this->printer->pricetype->setValue($printer['pricetype']);
         $this->printer->barcodetype->setValue($printer['barcodetype']);
-        $this->printer->pfontsize->setValue($printer['pfontsize']);
-        $this->printer->pdocfontsize->setValue($printer['pdocfontsize']);
+
+
         $this->printer->pname->setChecked($printer['pname']);
         $this->printer->pcode->setChecked($printer['pcode']);
         $this->printer->pbarcode->setChecked($printer['pbarcode']);
@@ -192,6 +202,8 @@ class Options extends \App\Pages\Base
         $this->printer->pprice->setChecked($printer['pprice']);
         $this->printer->pcolor->setChecked($printer['pcolor']);
 
+        $this->onPSType(null);
+        
         //API
         $this->add(new Form('api'))->onSubmit($this, 'saveApiOnClick');
 
@@ -327,8 +339,6 @@ class Options extends \App\Pages\Base
         $common['printoutqrcode'] = $this->common->printoutqrcode->isChecked() ? 1 : 0;
         
         $common['nocheckarticle'] = $this->common->nocheckarticle->isChecked() ? 1 : 0;
-        
-
 
         $common['showactiveusers'] = $this->common->showactiveusers->isChecked() ? 1 : 0;
         $common['showchat'] = $this->common->showchat->isChecked() ? 1 : 0;
@@ -351,24 +361,32 @@ class Options extends \App\Pages\Base
     }
 
  
+    public function onPSType($sender) {
+       $prtype =  $this->printer->prtype->getValue();
+       $this->printer->pserver->setVisible($prtype==1) ;      
+       $this->printer->pwsym->setVisible($prtype==1) ;      
+        
+    }
+    
     public function savePrinterOnClick($sender) {
         $printer = array();
-        $printer['pheight'] = $this->printer->pheight->getText();
+ 
 
-        $printer['pwidth'] = $this->printer->pwidth->getText();
-        $printer['pdocwidth'] = $this->printer->pdocwidth->getText();
         $printer['pmaxname'] = $this->printer->pmaxname->getText();
         $printer['pricetype'] = $this->printer->pricetype->getValue();
         $printer['barcodetype'] = $this->printer->barcodetype->getValue();
-        $printer['pfontsize'] = $this->printer->pfontsize->getValue();
-        $printer['pdocfontsize'] = $this->printer->pdocfontsize->getValue();
+
+
         $printer['pname'] = $this->printer->pname->isChecked() ? 1 : 0;
         $printer['pcode'] = $this->printer->pcode->isChecked() ? 1 : 0;
         $printer['pbarcode'] = $this->printer->pbarcode->isChecked() ? 1 : 0;
         $printer['pqrcode'] = $this->printer->pqrcode->isChecked() ? 1 : 0;
         $printer['pprice'] = $this->printer->pprice->isChecked() ? 1 : 0;
         $printer['pcolor'] = $this->printer->pcolor->isChecked() ? 1 : 0;
-
+        $printer['prtype'] = $this->printer->prtype->getValue() ;
+        $printer['pserver'] = trim($this->printer->pserver->getText() );
+        $printer['pwsym'] = trim($this->printer->pwsym->getText() );
+        $printer['pserver']  = rtrim($printer['pserver'] ,"/") ;
         System::setOptions("printer", $printer);
         $this->setSuccess('saved');
     }

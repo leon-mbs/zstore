@@ -12,6 +12,8 @@ use Symfony\Polyfill\Uuid\Uuid;
 class Util
 {
 
+     
+    
   /**
   * генерация QR кода  *   
   * @param mixed $data
@@ -203,10 +205,7 @@ class Util
     
 }
 
-// Convert digital Russian currency representation
-// (Russian rubles and copecks) to the verbal one
-// Copyright 2008 Sergey Kurakin
-// Licensed under LGPL version 3 or later
+
 
 define('M2S_KOPS_DIGITS', 0x01);    // digital copecks
 define('M2S_KOPS_MANDATORY', 0x02);    // mandatory copecks
