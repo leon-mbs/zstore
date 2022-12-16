@@ -166,7 +166,7 @@ class Options extends \App\Pages\Base
         
         $this->printer->add(new TextInput('pmaxname'));
         $this->printer->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList()));
-        $this->printer->add(new DropDownChoice('barcodetype', array('EAN13' => 'EAN-13', 'C128' => 'Code128', 'C39' => 'Code39'), 'Code128'));
+        $this->printer->add(new DropDownChoice('barcodetype', array('EAN13' => 'EAN13', 'C128' => 'Code128', 'C39' => 'Code39'), 'Code128'));
 
 
         $this->printer->add(new CheckBox('pname'));

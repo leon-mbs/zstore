@@ -638,15 +638,15 @@ class ItemList extends \App\Pages\Base
        // $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_LEFT)  ;
      
 
-        $printer->text("1111     ");
+        $printer->text("тест\n");
         
 
 
-        $connector->write("\x1b\x45\x01");
+     //   $connector->write("\x1b\x45\x01");
         
       
-        $printer->text("2222");
-        $printer->feed(3) ;
+      //  $printer->text("2222");
+      //  $printer->feed(3) ;
         
         $cc = $connector->getData()  ;
         $connector->finalize() ;      
@@ -656,6 +656,13 @@ class ItemList extends \App\Pages\Base
           $buf[]= ord($c) ;   
         }    
         
+       $d=    0x70; 
+        $pr = new \App\Printer() ;
+        //$pr->feed();
+        
+         $pr->text("Тест  новый");
+            
+        $buf = $pr->getBuffer() ;
         $b = json_encode($buf) ;
         
         $this->addAjaxResponse(" sendPS('{$b}') ");  
