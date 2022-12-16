@@ -59,11 +59,13 @@
                                     </select>
                                 </div>
 
+                                {{^printserver}}
                                 <div class="form-check">
                                     <input zippy="usemobileprinter" type="checkbox" class="form-check-input">
                                     <label class="form-check-label" for="usemobileprinter">Відкривати друк документа в новій вкладці  </label>
-                                    <br><small>Для мобільних пристроїв, щоб друкувати відповідним додатком через меню Поділиться</small>
+                                    <br><small>Для мобільних пристроїв, щоб друкувати відповідним додатком через меню Поділиться.</small>
                                 </div> 
+                                {{/printserver}}
                             </div>
                            <div class="form-check">
                                 <input zippy="emailnotify" type="checkbox" class="form-check-input">

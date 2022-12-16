@@ -114,6 +114,7 @@ class Base extends \Zippy\Html\WebPage
         $printer = System::getOptions('printer');
 
         $this->_tvars["psurl"] =  $printer['pserver'] ;  
+        $this->_tvars["printserver"] =  $printer['prtype'] == 1;  
 
 
         //доступы к  модулям

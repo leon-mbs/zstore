@@ -922,8 +922,68 @@ class Helper
         die;
     }
     
+ 
     /**
-    * Печать  этикиток
+    * Получение  дангный с  таблицы ключ-значение
+    * 
+    * @param mixed $key
+    * @return mixed
+    */
+    public  static function getVal($key){
+          if(strlen($key)==0)   return;
+          $conn = \ZDB\DB::getConnect();
+          
+          $ret = $conn->GetOne("select vald from  keyval  where  keyd=" . $conn->qstr($key));
+
+          if(strlen($ret)==0)   return "";
+          return $ret;
+    }    
+   
+    /**
+    * Вставка  данных в  таблицу ключ-значение
+    * 
+    * @param mixed $key
+    * @param mixed $data
+    * @return mixed
+    */
+    public  static function setVal($key,$data=null){
+          if(strlen($key)==0)   return;
+          $conn = \ZDB\DB::getConnect();
+          $conn->Execute("delete  from  keyval  where  keyd=" . $conn->qstr($key));
+          if($data===null){
+             return; 
+          }
+          $conn->Execute("insert into keyval  (  keyd,vald)  values (" . $conn->qstr($key).",".$conn->qstr($data).")" );
+          
+          
+    }    
+    
+    
+    /**
+    * Вставка  данных  в  таблицу  статистики
+    * 
+    * @param mixed $cat
+    * @param mixed $key
+    * @param mixed $data
+    * @return mixed
+    */
+    public  static function insertstat(int $cat,int $key,int $data ){
+          if(  $cat==0  )   return;
+          
+          $conn = \ZDB\DB::getConnect();
+          $dt= $conn->DBTimeStamp(time());
+          $conn->Execute("insert into stats  ( category, keyd,vald,dt)  values ({$cat},{$key},{$data},{$dt})" );
+          
+          
+    }    
+   
+   
+   
+   
+   
+   
+   /**
+    * Печать  этикеток
     * 
     * @param array $items
     */
@@ -1004,59 +1064,112 @@ class Helper
                
         return $htmls;               
     }
-
-    /**
-    * Получение  дангный с  таблицы ключ-значение
-    * 
-    * @param mixed $key
-    * @return mixed
-    */
-    public  static function getVal($key){
-          if(strlen($key)==0)   return;
-          $conn = \ZDB\DB::getConnect();
-          
-          $ret = $conn->GetOne("select vald from  keyval  where  keyd=" . $conn->qstr($key));
-
-          if(strlen($ret)==0)   return "";
-          return $ret;
-    }    
    
-    /**
-    * Вставка  данных в  таблицу ключ-значение
+   
+   
+   /**
+    * Печать  этикеток на  ESC/POS
     * 
-    * @param mixed $key
-    * @param mixed $data
-    * @return mixed
+    * @param array $items
     */
-    public  static function setVal($key,$data=null){
-          if(strlen($key)==0)   return;
-          $conn = \ZDB\DB::getConnect();
-          $conn->Execute("delete  from  keyval  where  keyd=" . $conn->qstr($key));
-          if($data===null){
-             return; 
-          }
-          $conn->Execute("insert into keyval  (  keyd,vald)  values (" . $conn->qstr($key).",".$conn->qstr($data).")" );
-          
-          
-    }    
+    public  static  function printItemsEP(array $items){
+        $printer = \App\System::getOptions('printer');
+ 
     
     
+        $htmls = "";
+
+        foreach ($items as $item) {
+            $report = new \App\Report('item_tag_ps.tpl');
+            $header = [];
+            if ($printer['pname'] == 1) {
+
+                if (strlen($item->shortname) > 0) {
+                    $header['name'] = $item->shortname;
+                } else {
+                    $header['name'] = $item->itemname;
+                }
+            }
+            $header['name'] = str_replace("'","`", $header['name'])  ;
+            if ($printer['pcode'] == 1) {
+                $header['article'] = $item->item_code;
+                $header['isap'] = true;
+            }
+            if ($printer['pqrcode'] == 1 && strlen($item->url) > 0) {
+                $writer = new \Endroid\QrCode\Writer\PngWriter();
+ 
+      
+                $qrCode = new \Endroid\QrCode\QrCode($item->url);
+                 
+                $qrCode->setSize(500);
+                $qrCode->setMargin(5);
+              
+                 $result = $writer->write($qrCode );
+     
+                 $dataUri = $result->getDataUri();
+                 $header['qrcode'] = "<img style=\"width:100px\" src=\"{$dataUri}\"  />";
+
+            }
+            if ($printer['pbarcode'] == 1) {
+                $barcode = $item->bar_code;
+                if (strlen($barcode) == 0) {
+                    $barcode = $item->item_code;
+                }
+                if (strlen($barcode) == 0) {
+                    continue;
+                }
+
+                $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+                $img = '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($barcode, $printer['barcodetype'])) . '">';
+                $header['img'] = $img;
+                $header['barcode'] = \App\Util::addSpaces($barcode);
+            }
+
+            $header['isap'] = false;
+            if ($printer['pprice'] == 1) {
+                $header['price'] = self::fa($item->getPurePrice($printer['pricetype']));
+                $header['isap'] = true;
+            }
+
+            $header['action'] = $item->hasAction();;
+            if ($header['action']) {
+                $header['actionprice'] = $item->getActionPrice($header['price']);
+            }
+            $header['iscolor'] = $printer['pcolor'] == 1;
+
+            
+            $qty =  intval($item->quantity);
+            if($qty==0) $qty = 1;
+            for($i=0;$i<$qty;$i++){
+               $htmls = $htmls . $report->generate($header);
+            }
+
+        }
+        $htmls = str_replace("\'", "", $htmls);
+               
+        return $htmls;               
+    }
+   
+   
+   
+    
     /**
-    * Вставка  данных  в  таблицу  статистики
+    * генерация  ESC/POS последовтельности
     * 
-    * @param mixed $cat
-    * @param mixed $key
-    * @param mixed $data
-    * @return mixed
+    * @param mixed $tpl  шаблон
+    * @param mixed $syb  ширина, в  символах
     */
-    public  static function insertstat(int $cat,int $key,int $data ){
-          if(  $cat==0  )   return;
-          
-          $conn = \ZDB\DB::getConnect();
-          $dt= $conn->DBTimeStamp(time());
-          $conn->Execute("insert into stats  ( category, keyd,vald,dt)  values ({$cat},{$key},{$data},{$dt})" );
-          
-          
-    }    
+    public  static function genEP($tpl,$syb=32 ){
+        
+    } 
+    
+    private static function f32($s,$r='') {
+         if(mb_strlen($r)>0) {
+            return $s . str_repeat(' ', 30 - (mb_strlen($s) +mb_strlen($r) ) ).$r;               
+         }
+        
+         $s = mb_substr($s,0,30);
+         return $s . str_repeat(' ', 30 - mb_strlen($s));
+    }      
     
 }

@@ -632,10 +632,21 @@ class ItemList extends \App\Pages\Base
 
         $connector = new \Mike42\Escpos\PrintConnectors\DummyPrintConnector();
         $printer = new \Mike42\Escpos\Printer($connector);       
-        $printer->setJustification( \Mike42\Escpos\Printer::JUSTIFY_CENTER)  ;
-        $printer->qrCode($item->url)  ;
+      
+      //  $printer->setJustification( \Mike42\Escpos\Printer::JUSTIFY_CENTER)  ;
+      //  $printer->qrCode($item->url)  ;
+       // $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_LEFT)  ;
      
-        $printer->feed(1) ;
+
+        $printer->text("1111     ");
+        
+
+
+        $connector->write("\x1b\x45\x01");
+        
+      
+        $printer->text("2222");
+        $printer->feed(3) ;
         
         $cc = $connector->getData()  ;
         $connector->finalize() ;      

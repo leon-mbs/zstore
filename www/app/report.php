@@ -30,7 +30,15 @@ class Report
       
         $dir = 'templates';
     
-        $template = @file_get_contents(_ROOT . $dir . '/printforms/' . $this->_template);
+        $fp = _ROOT . $dir . '/printforms/' . $this->_template ;
+        $fp_c = str_replace(".tpl","_custom.tpl",$fp) ;    //кастомный  шаблон
+        if(file_exists($fp_c)) {
+            $template = @file_get_contents($fp_c);
+        }   else {
+            $template = @file_get_contents($fp);
+        }
+        
+        
         if (strlen($template) == 0) {
             return "Файл  печатной формы " . $this->_template . " не найден";
         }

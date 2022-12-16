@@ -384,7 +384,7 @@ class Options extends \App\Pages\Base
       
         $buf = [];
         foreach(str_split($cc) as $c) {
-          $buf[]= ord($c) ;   
+          $buf[] = ord($c) ;   
         }    
         
         $b = json_encode($buf) ;

@@ -1066,13 +1066,13 @@ icon: 'fa fa-exclamation-triangle text-warning',
      console.log(buf)     
                
     
-   var opt={
+       var opt={
            method: 'POST' ,
   
            body:   buf
        };    
              
-       fetch(url+"/print",opt)                                            
+          fetch(url+"/print",opt)                                            
   
               .then((response) => {
                   return response.text();
