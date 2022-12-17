@@ -1090,86 +1090,33 @@ class Helper
                     $header['name'] = $item->itemname;
                 }
             }
-            $header['name'] = str_replace("'","`", $header['name'])  ;
+
             if ($printer['pcode'] == 1) {
                 $header['article'] = $item->item_code;
-                $header['isap'] = true;
-            }
-            if ($printer['pqrcode'] == 1 && strlen($item->url) > 0) {
-                $writer = new \Endroid\QrCode\Writer\PngWriter();
- 
-      
-                $qrCode = new \Endroid\QrCode\QrCode($item->url);
-                 
-                $qrCode->setSize(500);
-                $qrCode->setMargin(5);
-              
-                 $result = $writer->write($qrCode );
-     
-                 $dataUri = $result->getDataUri();
-                 $header['qrcode'] = "<img style=\"width:100px\" src=\"{$dataUri}\"  />";
-
-            }
-            if ($printer['pbarcode'] == 1) {
-                $barcode = $item->bar_code;
-                if (strlen($barcode) == 0) {
-                    $barcode = $item->item_code;
-                }
-                if (strlen($barcode) == 0) {
-                    continue;
-                }
-
-                $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-                $img = '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($barcode, $printer['barcodetype'])) . '">';
-                $header['img'] = $img;
-                $header['barcode'] = \App\Util::addSpaces($barcode);
-            }
-
-            $header['isap'] = false;
-            if ($printer['pprice'] == 1) {
                 $header['price'] = self::fa($item->getPurePrice($printer['pricetype']));
-                $header['isap'] = true;
+                 
+            }
+          
+            $header['barcode'] == false;
+            if ($printer['pbarcode'] == 1) {
+                $header['barcode'] = $item->bar_code;
+            
             }
 
-            $header['action'] = $item->hasAction();;
-            if ($header['action']) {
-                $header['actionprice'] = $item->getActionPrice($header['price']);
-            }
-            $header['iscolor'] = $printer['pcolor'] == 1;
-
+        
             
             $qty =  intval($item->quantity);
             if($qty==0) $qty = 1;
             for($i=0;$i<$qty;$i++){
-               $htmls = $htmls . $report->generate($header);
+              // $htmls = $htmls . $report->generate($header);
             }
 
         }
-        $htmls = str_replace("\'", "", $htmls);
-               
+        $htmls = $htmls . $report->generate($header);                 
         return $htmls;               
     }
    
    
-   
-    
-    /**
-    * генерация  ESC/POS последовтельности
-    * 
-    * @param mixed $tpl  шаблон
-    * @param mixed $syb  ширина, в  символах
-    */
-    public  static function genEP($tpl,$syb=32 ){
-        
-    } 
-    
-    private static function f32($s,$r='') {
-         if(mb_strlen($r)>0) {
-            return $s . str_repeat(' ', 30 - (mb_strlen($s) +mb_strlen($r) ) ).$r;               
-         }
-        
-         $s = mb_substr($s,0,30);
-         return $s . str_repeat(' ', 30 - mb_strlen($s));
-    }      
+         
     
 }

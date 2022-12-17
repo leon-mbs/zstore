@@ -334,6 +334,14 @@ class Printer{
         $this->buffer[]= self::LF; 
  
     } 
+    public function beep( )
+    {
+        $this->buffer[]= self::ESC; 
+        $this->buffer[]= ord('B'); 
+        $this->buffer[]= 2; 
+        $this->buffer[]= 1; 
+ 
+    } 
     public function cut($partial = false )
     {
         if($partial)
@@ -350,7 +358,6 @@ class Printer{
     */
     public function cash($pin)
     {
-        self::ESC . "p" . chr($pin_value) ;
         
         $this->buffer[]=self::ESC; 
         $this->buffer[]= 0x70; 
@@ -396,7 +403,7 @@ class Printer{
     * @param mixed $text
     * @param mixed $type     EAN13 Code128 Code39
     */
-    public function QR($text,$size=12 )
+    public function QR($text,$size=19 )
     {
      //    $text = $this->encode($text)  ;
          $store_len = strlen($text) + 3;
@@ -554,6 +561,32 @@ class Printer{
         $c = (2 << 3) * ($widthMultiplier - 1) + ($heightMultiplier - 1);
         $this->addBytes([self::GS , ord('!') , $c])  ;
  
-     }             
+     }   
+     
+     /**
+     * генерит  последовательность  команд по  xml
+     * 
+     */
+     public static function xml2comm($xml){
+         $xml = "<root>{$xml}</root>" ;
+         $xml = @simplexml_load_string($xml) ;
+         if($xml==false) {
+            throw  new \Exception("Invalid xml  template") ; 
+         }
+         
+          foreach ($xml->children() as $tag=>$v) {
+            $name = (string)$tag;
+            $val = (string)$v;
+            $attr = [];
+            foreach( $v->attributes() as $a => $b ){
+               $attr[(string)$a] = (string)$b;    
+            }
+        
+
+          }       
+          
+                     
+     }
+               
 }  
  
