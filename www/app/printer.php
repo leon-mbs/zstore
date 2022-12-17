@@ -46,45 +46,21 @@ class Printer{
      */
     const EOT = 0x04;
 
-    /**
-     * Indicates UPC-A barcode when used with Printer::barcode
-     */
-    const BARCODE_UPCA = 65;
-
-    /**
-     * Indicates UPC-E barcode when used with Printer::barcode
-     */
-    const BARCODE_UPCE = 66;
+ 
 
     /**
      * Indicates JAN13 barcode when used with Printer::barcode
      */
-    const BARCODE_JAN13 = 67;
+    const BARCODE_EAN13 = 67;
 
-    /**
-     * Indicates JAN8 barcode when used with Printer::barcode
-     */
-    const BARCODE_JAN8 = 68;
+ 
 
     /**
      * Indicates CODE39 barcode when used with Printer::barcode
      */
     const BARCODE_CODE39 = 69;
 
-    /**
-     * Indicates ITF barcode when used with Printer::barcode
-     */
-    const BARCODE_ITF = 70;
-
-    /**
-     * Indicates CODABAR barcode when used with Printer::barcode
-     */
-    const BARCODE_CODABAR = 71;
-
-    /**
-     * Indicates CODE93 barcode when used with Printer::barcode
-     */
-    const BARCODE_CODE93 = 72;
+ 
 
     /**
      * Indicates CODE128 barcode when used with Printer::barcode
@@ -338,9 +314,12 @@ class Printer{
 
     }
     
-    public function feed( )
+ 
+    public function align($align )
     {
-        $this->buffer[]= self::LF; 
+        $this->buffer[]= 0x1b; 
+        $this->buffer[]= 0x61; 
+        $this->buffer[]= $align; 
  
     } 
     public function newline( )
@@ -357,7 +336,11 @@ class Printer{
  
     } 
 
-    
+    /**
+    * открыть ящик .  Пин  2 или  5 
+    * 
+    * @param mixed $pin
+    */
     public function cash($pin)
     {
         self::ESC . "p" . chr($pin_value) ;
@@ -365,10 +348,16 @@ class Printer{
         $this->buffer[]=self::ESC; 
         $this->buffer[]= 0x70; 
 
-        $this->buffer[]= $pin == 2 : 0:1; 
+        $this->buffer[]= $pin == 2 ? 0:1; 
  
     } 
     
+    /**
+    * вывод текста
+    * 
+    * @param mixed $text
+    * @param mixed $newline   перевод на  новую  строку
+    */
     public function text($text,$newline=true )
     {
         $text = $this->encode($text)  ;
@@ -379,7 +368,7 @@ class Printer{
         }
         
         
-        if($newline) $this->buffer[]= self::LF; 
+        if($newline) $this->newline( )  ;
     }      
 
     /**
@@ -388,67 +377,101 @@ class Printer{
     * @param mixed $text
     * @param mixed $type     EAN13 Code128 Code39
     */
-    public function QR($text,$type )
+    public function QR($text,$size=12 )
     {
-         $text = \Normalizer::normalize($text);        
-        if ($text === false) {
-            throw new \Exception("Input must be UTF-8");
-        }   
-        
-        $text = iconv('UTF-8','cp866',$text)  ;
+     //    $text = $this->encode($text)  ;
+         $store_len = strlen($text) + 3;
+         $store_pL = intval($store_len % 256);
+         $store_pH = intval($store_len / 256);
+  
+         $model=[0x1d, 0x28, 0x6b, 0x04, 0x00, 0x31, 0x41,0x32,0 ] ;
+         $size =[0x1d, 0x28, 0x6b, 0x03, 0x00, 0x31, 0x43,intval($size) ] ;
+         $error=[0x1d, 0x28, 0x6b, 0x03, 0x00, 0x31, 0x45,0x31] ;
+         $store=[0x1d, 0x28, 0x6b, $store_pL, $store_pH, 0x31, 0x50,0x30] ;
+         $print=[0x1d, 0x28, 0x6b, 0x03, 0x00, 0x31, 0x51,0x30] ;
+         
+         $this->addBytes($model) ;
+         $this->addBytes($size) ;
+         $this->addBytes($error) ;
+         $this->addBytes($store) ;
+         
+        $t = str_split($text) ;    
+        foreach($t as $b) {
+           $this->buffer[]= ord($b);     
+        }
+    
 
+        $this->addBytes($print) ;
+
+    
+        
     } 
-       
+
+
+    /**
+    * вывод QR кода   
+    * 
+    * @param mixed $text
+    * @param mixed $type     EAN13 Code128 Code39
+    */
+    public function BarCode($text,int $type )
+    {
+        if($type == self::BARCODE_CODE128) {
+            
+            $text = "{B".$text;
+            
+            if (preg_match("/^\{[A-C][\\x00-\\x7F]+$/", $text) === 0) {
+                throw new \Exception("invalid barcode {$text}");
+            }  
+            
+            $this->addBytes( [self::GS , ord('k') , $type , (int)strlen($text) ] );
+            
+            $t = str_split($text) ;    
+            foreach($t as $b) {
+               $this->buffer[]= ord($b);     
+            }         
+            
+            
+        }
+  
+        if($type == self::BARCODE_CODE39) {
+            
+            $text =strtoupper($text);
+            
+            if (preg_match("/^([0-9A-Z \$\%\+\-\.\/]+|\*[0-9A-Z \$\%\+\-\.\/]+\*)$/", $text) === 0) {
+                throw new \Exception("invalid barcode {$text}");
+            }  
+            
+            $this->addBytes( [self::GS , ord('k') , $type , (int)strlen($text) ] );
+            
+            $t = str_split($text) ;    
+            foreach($t as $b) {
+               $this->buffer[]= ord($b);     
+            }         
+            
+            
+        }
+  
+        if($type == self::BARCODE_EAN13) {
+            
+             
+            if (preg_match("/^[0-9]{12,13}$/", $text) === 0) {
+                throw new \Exception("invalid barcode {$text}");
+            }  
+            
+            $this->addBytes( [self::GS , ord('k') , $type , (int)strlen($text) ] );
+            
+            $t = str_split($text) ;    
+            foreach($t as $b) {
+               $this->buffer[]= ord($b);     
+            }         
+            
+            
+        }
+  
+  
+  
+  
+    }       
 }  
  
-public void print_qr_code(String qrdata)
-{
-    int store_len = qrdata.length() + 3;
-    byte store_pL = (byte) (store_len % 256);
-    byte store_pH = (byte) (store_len / 256);
-
-
-    // QR Code: Select the model
-    //              Hex     1D      28      6B      04      00      31      41      n1(x32)     n2(x00) - size of model
-    // set n1 [49 x31, model 1] [50 x32, model 2] [51 x33, micro qr code]
-    // https://reference.epson-biz.com/modules/ref_escpos/index.php?content_id=140
-    byte[] modelQR = {(byte)0x1d, (byte)0x28, (byte)0x6b, (byte)0x04, (byte)0x00, (byte)0x31, (byte)0x41, (byte)0x32, (byte)0x00};
-
-    // QR Code: Set the size of module
-    // Hex      1D      28      6B      03      00      31      43      n
-    // n depends on the printer
-    // https://reference.epson-biz.com/modules/ref_escpos/index.php?content_id=141
-    byte[] sizeQR = {(byte)0x1d, (byte)0x28, (byte)0x6b, (byte)0x03, (byte)0x00, (byte)0x31, (byte)0x43, (byte)0x03};
-
-
-    //          Hex     1D      28      6B      03      00      31      45      n
-    // Set n for error correction [48 x30 -> 7%] [49 x31-> 15%] [50 x32 -> 25%] [51 x33 -> 30%]
-    // https://reference.epson-biz.com/modules/ref_escpos/index.php?content_id=142
-    byte[] errorQR = {(byte)0x1d, (byte)0x28, (byte)0x6b, (byte)0x03, (byte)0x00, (byte)0x31, (byte)0x45, (byte)0x31};
-
-
-    // QR Code: Store the data in the symbol storage area
-    // Hex      1D      28      6B      pL      pH      31      50      30      d1...dk
-    // https://reference.epson-biz.com/modules/ref_escpos/index.php?content_id=143
-    //                        1D          28          6B         pL          pH  cn(49->x31) fn(80->x50) m(48->x30) d1…dk
-    byte[] storeQR = {(byte)0x1d, (byte)0x28, (byte)0x6b, store_pL, store_pH, (byte)0x31, (byte)0x50, (byte)0x30};
-
-
-    // QR Code: Print the symbol data in the symbol storage area
-    // Hex      1D      28      6B      03      00      31      51      m
-    // https://reference.epson-biz.com/modules/ref_escpos/index.php?content_id=144
-    byte[] printQR = {(byte)0x1d, (byte)0x28, (byte)0x6b, (byte)0x03, (byte)0x00, (byte)0x31, (byte)0x51, (byte)0x30};
-
-    // flush() runs the print job and clears out the print buffer
-    flush();
-
-    // write() simply appends the data to the buffer
-    write(modelQR);
-
-    write(sizeQR);
-    write(errorQR);
-    write(storeQR);
-    write(qrdata.getBytes());
-    write(printQR);
-    flush();
-}
