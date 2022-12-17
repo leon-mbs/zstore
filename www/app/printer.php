@@ -284,10 +284,17 @@ class Printer{
      * Indicates double underline when used with Printer::setUnderline
      */
     const UNDERLINE_DOUBLE = 2;
-  private $buffer=[];
+  
+    private $buffer=[];
+    private $wc=32;
   
     function __construct( ) {
-       
+   
+        $options = \App\System::getOptions('printer')  ;
+        
+        $this->wc = intval($options['pwsym']) ;
+        if($this->wc==0) $this->wc=32;
+        
         $this->buffer[]= self::ESC;        
         $this->buffer[]= ord('@'); 
         
@@ -361,10 +368,22 @@ class Printer{
     public function text($text,$newline=true )
     {
         $text = $this->encode($text)  ;
-        
-        $t = str_split($text) ;    
-        foreach($t as $b) {
-           $this->buffer[]= ord($b);     
+
+        $a = str_split($text,$this->wc) ;    
+        $i=0;
+        foreach($a as $ap) {
+            
+            $t = str_split( $ap) ;    
+            
+            foreach($t as $b) {
+               $this->buffer[]= ord($b);     
+            }
+            $i++;
+            
+            if($i<count($a) ) {
+                $this->newline( )  ;
+            }
+            
         }
         
         
@@ -383,9 +402,10 @@ class Printer{
          $store_len = strlen($text) + 3;
          $store_pL = intval($store_len % 256);
          $store_pH = intval($store_len / 256);
-  
+     //\x1b\x23\x23\x51\x50\x49\x58
          $model=[0x1d, 0x28, 0x6b, 0x04, 0x00, 0x31, 0x41,0x32,0 ] ;
          $size =[0x1d, 0x28, 0x6b, 0x03, 0x00, 0x31, 0x43,intval($size) ] ;
+     //    $size =[0x1b, 0x23, 0x23, 0x51, 0x50, 0x49, 0x58, intval($size) ] ;
          $error=[0x1d, 0x28, 0x6b, 0x03, 0x00, 0x31, 0x45,0x31] ;
          $store=[0x1d, 0x28, 0x6b, $store_pL, $store_pH, 0x31, 0x50,0x30] ;
          $print=[0x1d, 0x28, 0x6b, 0x03, 0x00, 0x31, 0x51,0x30] ;
@@ -469,9 +489,71 @@ class Printer{
             
         }
   
+
   
+    } 
   
-  
-    }       
+    /**
+    * высота  штрихкода 1 - 255
+    *  
+    * @param mixed $height
+    */
+    public function barcodeHeight(int $height = 100)
+    {
+        $this->addBytes( [self::GS , ord('h') ,   $height ] );
+               
+    }
+
+    /**
+    * ширина  штрихкода   2 - 6
+    * 
+    * @param mixed $width
+    */
+    public function barcodeWidth(int $width = 2)
+    {
+        $this->addBytes( [self::GS , ord('w') ,   $width ] );
+    }   
+   
+      /**
+      * цвет
+      * 
+      * @param mixed $color   0,1
+      */
+      public function color($color )
+      {
+        $this->addBytes([self::ESC , ord('r') , $color])  ;
+ 
+      }  
+      /**
+      * режим печати
+      * 
+      * @param mixed $mode  MODE_FONT_A MODE_FONT_B  self::MODE_EMPHASIZED   self::MODE_DOUBLE_HEIGHT self::MODE_DOUBLE_WIDTH  self::MODE_UNDERLINE
+      */
+      public function mode($mode=self::MODE_FONT_A )
+      {
+          
+        $allModes = Printer::MODE_FONT_B | self::MODE_EMPHASIZED | self::MODE_DOUBLE_HEIGHT | self::MODE_DOUBLE_WIDTH | self::MODE_UNDERLINE;
+        if (!is_integer($mode) || $mode < 0 || ($mode & $allModes) != $mode) {
+            throw new InvalidArgumentException("Invalid mode");
+        }
+
+       
+        $this->addBytes([self::ESC , ord('!') , $mode])  ;
+ 
+      }  
+     
+     /**
+     * размер  текста
+     *  
+     * @param mixed $widthMultiplier   1 - 8
+     * @param mixed $heightMultiplier  1 - 8
+     */
+     public function textSize(int $widthMultiplier, int $heightMultiplier)
+     {
+       
+        $c = (2 << 3) * ($widthMultiplier - 1) + ($heightMultiplier - 1);
+        $this->addBytes([self::GS , ord('!') , $c])  ;
+ 
+     }             
 }  
  
