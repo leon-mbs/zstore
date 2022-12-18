@@ -7,7 +7,7 @@
     <body>
 
         <div class="row ">
-            <div class="col-10  col-md-9 col-lg-7">
+            <div class="col-10  col-md-8 col-lg-6">
 
                 <h4>Мій профіль</h4>
                 <form role="form" zippy="profileform">
@@ -59,13 +59,9 @@
                                     </select>
                                 </div>
 
-                                {{^printserver}}
-                                <div class="form-check">
-                                    <input zippy="usemobileprinter" type="checkbox" class="form-check-input">
-                                    <label class="form-check-label" for="usemobileprinter">Відкривати друк документа в новій вкладці  </label>
-                                    <br><small>Для мобільних пристроїв, щоб друкувати відповідним додатком через меню Поділиться.</small>
-                                </div> 
-                                {{/printserver}}
+                              
+                              
+                                
                             </div>
                            <div class="form-check">
                                 <input zippy="emailnotify" type="checkbox" class="form-check-input">
@@ -84,6 +80,14 @@
                                 <label class="form-check-label" for="darkmode">Нiчна тема </label>
 
                             </div>
+                                  <div class="form-check">
+                                    <input zippy="usemobileprinter" type="checkbox" class="form-check-input">
+                                    <label class="form-check-label" for="usemobileprinter">Відкривати друк   в новій вкладці  </label> 
+                                   <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Для мобільних пристроїв, щоб друкувати відповідним додатком через меню Поділиться. 
+                                    Стосується тільки системних принтерів"></i>
+
+                                </div>                              
                         </div>
 
 
@@ -122,13 +126,43 @@
                     </div>            
                 </form>
             </div>
-            <div class="col-10 col-lg-3 col-md-3">
+        
+            <div class="col-10 col-lg-3 col-md-3 col-xl-2">
+                         <h4>Принтер  чеків</h4>
+                         <form zippy="printer">
+                            <div class="form-group  ">
+                                <label for="prtype">Тип підключення</label>
+                                <select class="form-control" zippy="prtype">
+                                     <option value="0">Системний принтер</option>
+                                     <option value="1">Print сервер</option>
+                                </select>
+                                <small>Опис <a href="https://zippy.com.ua/ext#10" target="_blank">тут</a>  </small>
+                            </div>    
+                                 
+                                
+                             <div class="form-group  ">
+                                <label data-label="pserver" for="pserver">Адреса серверу</label>
+                                <input class="form-control" zippy="pserver">
+                                 
+                            </div>
+                             <div class="form-group  ">
+                                <label data-label="pwsym" for="pwsym">Ширина  (кiл. символiв)</label>
+                                <input type="number"  style="width:100px"   class="form-control" zippy="pwsym">
+                                <a  data-label="pwsym" zippy="pstest" >Тест  принтера</a>
+                            </div>
+                                          
+                             <div class="form-group">
+                                <input zippy="savep" class="btn btn-primary" type="submit" value="Зберегти">
+                            </div>                            
+                         </form>   
+            </div>
+            <div class="col-10 col-lg-3 col-md-3 col-xl-2">
 
                 <h4>Зміна пароля</h4>
                 <form role="form" zippy="passwordform">
 
                     <div class="form-group">
-                        <label for="userpassword">Пароль</label>
+                        <label for="userpassword">Новий пароль</label>
                         <input type="password" class="form-control" zippy="userpassword" required="required">
                     </div>
 
@@ -143,7 +177,6 @@
 
 
             </div>
-
         </div>
 
 

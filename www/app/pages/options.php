@@ -157,13 +157,7 @@ class Options extends \App\Pages\Base
         $this->add(new Form('printer'));
 
 
-        $this->printer->add(new DropDownChoice('prtype',0 ))->onChange($this,"onPSType");
-
-
-        $this->printer->add(new TextInput('pserver'));
-        $this->printer->add(new TextInput('pwsym'));
-        $this->printer->add(new ClickLink('pstest'))->onClick($this,'onPSTest',true);
-        
+ 
         $this->printer->add(new TextInput('pmaxname'));
         $this->printer->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList()));
         $this->printer->add(new DropDownChoice('barcodetype', array('EAN13' => 'EAN13', 'C128' => 'Code128', 'C39' => 'Code39'), 'Code128'));
@@ -181,17 +175,8 @@ class Options extends \App\Pages\Base
         if (!is_array($printer)) {
             $printer = array();
         }
-        if(strlen($printer['prtype']) == 0){
-            $printer['prtype'] = 0 ;
-            $printer['pserver'] = "http://127.0.0.1:8080";
-            $printer['pwsym'] = 32;
-            System::setOptions("printer", $printer);
-        }
-        $this->printer->prtype->setValue("".intval($printer['prtype']) );
 
-        $this->printer->pserver->setText($printer['pserver']);
-        $this->printer->pwsym->setText($printer['pwsym']);
-        
+   
         $this->printer->pmaxname->setText($printer['pmaxname']);
         $this->printer->pricetype->setValue($printer['pricetype']);
         $this->printer->barcodetype->setValue($printer['barcodetype']);
@@ -204,7 +189,7 @@ class Options extends \App\Pages\Base
         $this->printer->pprice->setChecked($printer['pprice']);
         $this->printer->pcolor->setChecked($printer['pcolor']);
 
-        $this->onPSType(null);
+
         
         //API
         $this->add(new Form('api'))->onSubmit($this, 'saveApiOnClick');
@@ -363,35 +348,7 @@ class Options extends \App\Pages\Base
     }
 
  
-    public function onPSType($sender) {
-       $prtype =  $this->printer->prtype->getValue();
-       $this->printer->pserver->setVisible($prtype==1) ;      
-       $this->printer->pwsym->setVisible($prtype==1) ;      
-        
-    }
-   public function onPSTest($sender) {
-      
-        $connector = new \Mike42\Escpos\PrintConnectors\DummyPrintConnector();
-        $printer = new \Mike42\Escpos\Printer($connector);       
  
-        $printer->selectCharacterTable(17) ;
-        $printer->text("Printer test\n") ;
-        $printer->text("Тест принтера\n") ;
-        $printer->feed(1) ;
-        
-        $cc = $connector->getData()  ;
-        $connector->finalize() ;      
-      
-        $buf = [];
-        foreach(str_split($cc) as $c) {
-          $buf[] = ord($c) ;   
-        }    
-        
-        $b = json_encode($buf) ;
-        
-        $this->addAjaxResponse(" sendPS('{$b}') ");    
-        
-    }
     
     public function savePrinterOnClick($sender) {
         $printer = array();
@@ -408,10 +365,6 @@ class Options extends \App\Pages\Base
         $printer['pqrcode'] = $this->printer->pqrcode->isChecked() ? 1 : 0;
         $printer['pprice'] = $this->printer->pprice->isChecked() ? 1 : 0;
         $printer['pcolor'] = $this->printer->pcolor->isChecked() ? 1 : 0;
-        $printer['prtype'] = $this->printer->prtype->getValue() ;
-        $printer['pwsym'] = trim($this->printer->pwsym->getText() );
-        $printer['pserver'] = trim($this->printer->pserver->getText() );
-        $printer['pserver']  = rtrim($printer['pserver'] ,"/") ;
         System::setOptions("printer", $printer);
         $this->setSuccess('saved');
     }
