@@ -61,6 +61,9 @@ class Helper
 
     public static function logout() {
 
+        System::clean() ;
+        System::getSession()->clean();
+        
         setcookie("remember", '', 0);
         System::setUser(new \App\Entity\User());
         $_SESSION['user_id'] = 0;
@@ -1093,9 +1096,9 @@ class Helper
 
             if ($printer['pcode'] == 1) {
                 $header['article'] = $item->item_code;
-                $header['price'] = self::fa($item->getPurePrice($printer['pricetype']));
                  
             }
+            $header['price'] = self::fa($item->getPurePrice($printer['pricetype']));
           
             $header['barcode'] == false;
             if ($printer['pbarcode'] == 1) {
@@ -1106,13 +1109,13 @@ class Helper
         
             
             $qty =  intval($item->quantity);
-            if($qty==0) $qty = 1;
+             $qty = 1;
             for($i=0;$i<$qty;$i++){
-              // $htmls = $htmls . $report->generate($header);
+               $htmls = $htmls .   $report->generate($header) ;
             }
 
         }
-        $htmls = $htmls . $report->generate($header);                 
+      
         return $htmls;               
     }
    

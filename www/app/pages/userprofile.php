@@ -131,7 +131,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->defsalesource = $sender->defsalesource->getValue();
         $this->user->pagesize = $sender->pagesize->getValue();
         $this->user->mainpage = $sender->mainpage->getValue();
-       $this->user->usemobileprinter = $this->printer->usemobileprinter->isChecked() ? 1 : 0;
+       $this->user->usemobileprinter = $this->profileform->usemobileprinter->isChecked() ? 1 : 0;
 
         if (!$this->isError()) {
 
@@ -216,10 +216,10 @@ class UserProfile extends \App\Pages\Base
     
  
 
-        $printer['prtype'] = $this->printer->prtype->getValue() ;
-        $printer['pwsym'] = trim($this->printer->pwsym->getText() );
-        $printer['pserver'] = trim($this->printer->pserver->getText() );
-        $printer['pserver']  = rtrim($printer['pserver'] ,"/") ;
+        $this->user->prtype = $this->printer->prtype->getValue() ;
+        $this->user->pwsym = trim($this->printer->pwsym->getText() );
+        $this->user->pserver = trim($this->printer->pserver->getText() );
+        $this->user->pserver  = rtrim($this->user->pserver,"/") ;
 
         $this->user->save();
         $this->setSuccess('saved');

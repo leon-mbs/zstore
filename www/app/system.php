@@ -169,5 +169,8 @@ class System
     public static function getInfoMsg() {
         return Session::getSession()->imsg;
     }
-
+    public static function clean() {
+        self::$_cache = [] ;
+        self::$_cache = [] ;
+    }
 }

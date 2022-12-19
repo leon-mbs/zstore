@@ -290,13 +290,14 @@ class Printer{
   
     function __construct( ) {
    
-        $options = \App\System::getOptions('printer')  ;
+       // $options = \App\System::getOptions('printer')  ;
+        $user = \App\System::getUser() ;
         
-        $this->wc = intval($options['pwsym']) ;
+        $this->wc = intval($user->pwsym) ;
         if($this->wc==0) $this->wc=32;
         
-        $this->buffer[]= self::ESC;        
-        $this->buffer[]= ord('@'); 
+        $this->buffer[] = self::ESC;        
+        $this->buffer[] = ord('@'); 
         
         $this->addBytes([27,116,17]); //866
     }
@@ -358,11 +359,12 @@ class Printer{
     */
     public function cash($pin)
     {
-        
-        $this->buffer[]=self::ESC; 
-        $this->buffer[]= 0x70; 
+        if($pin==2 || $pin==5) {
+            $this->buffer[]=self::ESC; 
+            $this->buffer[]= 0x70; 
 
-        $this->buffer[]= $pin == 2 ? 0:1; 
+            $this->buffer[]= $pin == 2 ? 0:1; 
+        }
  
     } 
     
@@ -398,21 +400,40 @@ class Printer{
     }      
 
     /**
+    * разделительЮ строка  симолов по  всей  ширине
+    * 
+    * @param mixed $symbol
+    * @return mixed
+    */
+    public function separator($symbol) {
+       if(strlen($symbol) !=1)  return;
+       
+       $text=str_repeat($symbol,$this->wc) ;
+       
+       $this->text($text) ;
+    }
+
+    /**
     * вывод QR кода   
     * 
     * @param mixed $text
     * @param mixed $type     EAN13 Code128 Code39
     */
-    public function QR($text,$size=19 )
+    public function QR($text,int $size=12 )
     {
+        
+        if($size <1 || $size >24 )  {
+            $size=12;
+        }
+        
      //    $text = $this->encode($text)  ;
          $store_len = strlen($text) + 3;
          $store_pL = intval($store_len % 256);
          $store_pH = intval($store_len / 256);
-     //\x1b\x23\x23\x51\x50\x49\x58
+
          $model=[0x1d, 0x28, 0x6b, 0x04, 0x00, 0x31, 0x41,0x32,0 ] ;
          $size =[0x1d, 0x28, 0x6b, 0x03, 0x00, 0x31, 0x43,intval($size) ] ;
-     //    $size =[0x1b, 0x23, 0x23, 0x51, 0x50, 0x49, 0x58, intval($size) ] ;
+//         $size =[0x1b, 0x23, 0x23, 0x51, 0x50, 0x49, 0x58, 2 ] ;
          $error=[0x1d, 0x28, 0x6b, 0x03, 0x00, 0x31, 0x45,0x31] ;
          $store=[0x1d, 0x28, 0x6b, $store_pL, $store_pH, 0x31, 0x50,0x30] ;
          $print=[0x1d, 0x28, 0x6b, 0x03, 0x00, 0x31, 0x51,0x30] ;
@@ -507,6 +528,7 @@ class Printer{
     */
     public function barcodeHeight(int $height = 100)
     {
+        if($width < 1 || $width > 255) return;
         $this->addBytes( [self::GS , ord('h') ,   $height ] );
                
     }
@@ -518,6 +540,7 @@ class Printer{
     */
     public function barcodeWidth(int $width = 2)
     {
+        if($width < 2 || $width > 6) return;
         $this->addBytes( [self::GS , ord('w') ,   $width ] );
     }   
    
@@ -526,9 +549,12 @@ class Printer{
       * 
       * @param mixed $color   0,1
       */
-      public function color($color )
+      public function color(int $color )
       {
-        $this->addBytes([self::ESC , ord('r') , $color])  ;
+        if($color == 0  || $color ==1) {
+           $this->addBytes([self::ESC , ord('r') , $color])  ;    
+        } 
+        
  
       }  
       /**
@@ -557,7 +583,8 @@ class Printer{
      */
      public function textSize(int $widthMultiplier, int $heightMultiplier)
      {
-       
+        if($widthMultiplier < 1 ||  $widthMultiplier >8) $widthMultiplier=1;
+        if($heightMultiplier < 1 ||  $heightMultiplier >8) $heightMultiplier=1;
         $c = (2 << 3) * ($widthMultiplier - 1) + ($heightMultiplier - 1);
         $this->addBytes([self::GS , ord('!') , $c])  ;
  
@@ -568,25 +595,137 @@ class Printer{
      * 
      */
      public static function xml2comm($xml){
+     
+         $pr = new \App\Printer() ;
+  
+         $allowed = ['size','separator','align','barcode','qr','text','font','newline','cash','cut','partialcut','beep','color','commands','row'];
+         
          $xml = "<root>{$xml}</root>" ;
          $xml = @simplexml_load_string($xml) ;
          if($xml==false) {
             throw  new \Exception("Invalid xml  template") ; 
          }
          
-          foreach ($xml->children() as $tag=>$v) {
-            $name = (string)$tag;
-            $val = (string)$v;
-            $attr = [];
-            foreach( $v->attributes() as $a => $b ){
-               $attr[(string)$a] = (string)$b;    
-            }
-        
+                          
+              foreach ($xml->children() as $tag) {
+                $name =strtolower( (string)$tag->getName() );
+                if(in_array($name,$allowed)==false)  {
+                    throw  new \Exception("Invalid tag ".$name) ;                 
+                }
+                
+                
+                $val =  (string)$tag;
+                $pr->handletag($name,$val,$tag) ;
 
-          }       
+              }       
+                 
           
-                     
+            $buf = $pr->getBuffer() ;
+             
+            return $buf;
      }
+     private   function handletag($name,$val,$tag ){
+
+
+            if($name==='text') {
+                $this->text($val)  ;  return  ;
+            }
+            if($name==='beep') {
+                $this->beep()  ;  return  ;
+            }
+            if($name==='newline') {
+                $this->newline()  ;  return   ;
+            }
+            if($name==='color') {
+                $this->color($val)  ;  return   ;
+            }
+            if($name==='cash') {
+                $this->cash($val)  ;  return   ;
+            }
+            if($name==='cut') {
+                $this->cut()  ;  return   ;
+            }
+            if($name==='partialcut') {
+                $this->cut(true)  ;  return   ;
+            }
+            if($name==='separator') {
+                $this->separator($val)  ;  return   ;
+            }
+            if($name==='align') {
+                if($val==="left")   $this->align(self::JUSTIFY_LEFT) ; 
+                if($val==="center") $this->align(self::JUSTIFY_CENTER) ; 
+                if($val==="right")  $this->align(self::JUSTIFY_RIGHT) ; 
+                return;
+            }
+         
+            if($name==='commands') {
+                $bl=[];
+                foreach( explode(',',$val) as $b){
+                    $b=trim($b);
+                    if(strlen($b)==0)  return;
+                    $b=intval($b);
+                    if($b <0 || $b>255)  return;
+                    $bl[]=$b;
+                } ;
+                
+                $this->addBytes($bl)  ;
+                
+                return;
+            }
+         
+        
+       
+         
+            $attr = [];
+            foreach( $tag->attributes() as $a => $b ){
+               $attr[ strtolower( (string)$a)] = strtolower( (string)$b);    
+            }
+            
+            if($name==='size') {
+               if(!isset($attr['height'])) return;
+               if(!isset($attr['width'])) return;
+    
+               $this->textSize($attr['width'],$attr['height']) ;
+            }
+            if($name==='qr') {
+                if(isset($attr['size'])) {
+                   $this->QR($val,intval($attr['size'])) ;                 
+                }   else {
+                   $this->QR($val) ;                    
+                }
+
+                return;
+            }
+            if($name==='barcode') {
+                if(!isset($attr['type'])) return;
+                if(isset($attr['height'])) {
+                    $this->barcodeHeight($attr['height']) ;
+                }  else {
+                    $this->barcodeHeight() ;                    
+                }
+                if(isset($attr['width'])) {
+                    $this->barcodeWidth($attr['width']) ;
+                } else {
+                    $this->barcodeWidth() ;
+                }
+                
+                if($attr['type'] ==='code128') $this->BarCode($val,self::BARCODE_CODE128) ;
+                if($attr['type'] ==='code29') $this->BarCode($val,self::BARCODE_CODE39) ;
+                if($attr['type'] ==='ean13') $this->BarCode($val,self::BARCODE_EAN13) ;
+                
+                return;
+            }
+   
+            if($name==='font') {
+               $m=0;
+               if($val=="b") $m = $m | self::MODE_FONT_B;
+               if($attr['bold']=="true") $m = $m | self::MODE_EMPHASIZED ;
+               
+               $this->mode($m) ;
+            }
+    
+     }
+ 
                
 }  
  

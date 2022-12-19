@@ -620,10 +620,11 @@ class ItemList extends \App\Pages\Base
     public function printQrOnClick($sender) {
       
         $printer = \App\System::getOptions('printer') ;
+        $user = \App\System::getUser() ;
         
         $item = $sender->getOwner()->getDataItem();
 
-        if(intval($printer['prtype'] ) == 0){
+        if(intval($user->prtype ) == 0){
             $dataUri = \App\Util::generateQR($item->url,100,5)  ;
             $html = "<img src=\"{$dataUri}\"  />";
             $this->addAjaxResponse("  $('#tag').html('{$html}') ; $('#pform').modal()");
@@ -752,8 +753,7 @@ class ItemList extends \App\Pages\Base
 
     */
     public function OnPrintAll($sender) {
-        $printer = \App\System::getOptions('printer') ;
-  
+     
         $items = array();
         foreach ($this->itemtable->listform->itemlist->getDataRows() as $row) {
             $item = $row->getDataItem();
@@ -764,7 +764,7 @@ class ItemList extends \App\Pages\Base
         if (count($items) == 0) {
             return;
         }
-        if(intval($printer['prtype'] ) == 0){
+        if(intval(\App\System::getUser()->prtype ) == 0){
   
             $htmls = H::printItems($items);
             
@@ -783,9 +783,10 @@ class ItemList extends \App\Pages\Base
      try{
           
         $xml = H::printItemsEP($items);
-        $b = \App\Printer::xml2comm($xml);
-        
-        $this->addAjaxResponse(" sendPS('{$b}') ");      
+        $buf = \App\Printer::xml2comm($xml);
+        $b = json_encode($buf) ;                   
+          
+        $this->addAjaxResponse("$('.seldel').prop('checked',null); sendPS('{$b}') ");      
       }catch(\Exception $e){
            $message = $e->getMessage()  ;
            $message = str_replace(";","`",$message)  ;

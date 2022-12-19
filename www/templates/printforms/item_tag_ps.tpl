@@ -1,7 +1,14 @@
+<align>left</align>
+<font>a</font>
 <text>{{name}}</text>
 <text>Код {{article}}</text>
-<text align="right" height="2" width="2" bold="true">  {{price}}</text>
+<align>right</align>
+<font bold="true">b</font>
+<size height="3" width="3" ></size>
+<text  >  {{price}}</text>
+<align>center</align>
 {{#barcode}}
-  <barcode type="code128" align="center">{{barcode}}</barcode>
+  <barcode type="code128" >{{barcode}}</barcode>
 {{/barcode}}
 <newline></newline>
+
