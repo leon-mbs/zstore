@@ -406,7 +406,7 @@ class ItemList extends \App\Pages\Base
         }
         $printer = System::getOptions('printer');
 
-        if (intval($printer['pmaxname']) > 0 && strlen($this->_item->shortname) > intval($printer['pmaxname'])) {
+        if (intval($printer['pmaxname']) > 0 && mb_strlen($this->_item->shortname) > intval($printer['pmaxname'])) {
 
             $this->setWarn('tolongshortname', $printer['pmaxname']);
 

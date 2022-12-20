@@ -208,12 +208,32 @@ class PayList extends \App\Pages\Base
             $all += abs($p->amount);
         }
         $header['pall'] = H::fa($all);
+        if(intval(\App\System::getUser()->prtype ) == 0){
+      
+            $report = new \App\Report('pays_bill.tpl');
 
-        $report = new \App\Report('pays_bill.tpl');
+            $html = $report->generate($header);
 
-        $html = $report->generate($header);
+            $this->addAjaxResponse("  $('#paysprint').html('{$html}') ; $('#pform').modal()") ;
+            return;
+        }
 
-         $this->addAjaxResponse("  $('#paysprint').html('{$html}') ; $('#pform').modal()") ;
+      try{
+        $report = new \App\Report('pays_bill_ps.tpl');
+
+        $xml = $report->generate($header);         
+        $buf = \App\Printer::xml2comm($xml);
+        $b = json_encode($buf) ;                   
+          
+        $this->addAjaxResponse("$('.seldel').prop('checked',null); sendPS('{$b}') ");      
+      }catch(\Exception $e){
+           $message = $e->getMessage()  ;
+           $message = str_replace(";","`",$message)  ;
+           $this->addAjaxResponse(" toastr.error( '{$message}' )         ");  
+                   
+        }       
+        
+        
     }
 
 }

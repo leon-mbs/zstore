@@ -376,6 +376,7 @@ class Printer{
     */
     public function text($text,$newline=true )
     {
+        if(strlen($text)==0) return;
         $text = $this->encode($text)  ;
 
         $a = str_split($text,$this->wc) ;    
@@ -598,7 +599,7 @@ class Printer{
      
          $pr = new \App\Printer() ;
   
-         $allowed = ['size','separator','align','barcode','qr','text','font','newline','cash','cut','partialcut','beep','color','commands','row'];
+         $allowed = ['size','separator','align','barcode','qrcode','text','font','newline','cash','cut','partialcut','beep','color','commands','row'];
          
          $xml = "<root>{$xml}</root>" ;
          $xml = @simplexml_load_string($xml) ;
@@ -672,8 +673,6 @@ class Printer{
                 
                 return;
             }
-         
-        
        
          
             $attr = [];
@@ -687,7 +686,7 @@ class Printer{
     
                $this->textSize($attr['width'],$attr['height']) ;
             }
-            if($name==='qr') {
+            if($name==='qrcode') {
                 if(isset($attr['size'])) {
                    $this->QR($val,intval($attr['size'])) ;                 
                 }   else {
@@ -723,6 +722,61 @@ class Printer{
                
                $this->mode($m) ;
             }
+            if($name==='row') {
+                $rowtext = ""; 
+                $cols=[];
+                $l=0;
+
+                foreach ($tag->children() as $col) {
+                    $name =strtolower( (string)$col->getName() );
+                    if($name != "col")  {
+                        throw  new \Exception("Invalid tag {$name} in row ") ;                 
+                    }
+                    
+                    
+                    $coltext =  (string)$col;
+                    $attr = [];
+                    foreach( $col->attributes() as $a => $b ){
+                       $attr[ strtolower( (string)$a)] = strtolower( (string)$b);    
+                    }
+                    
+                    $cl =  intval($attr['length']);
+                    if($cl < 1  ) {
+                         throw  new \Exception("Invalid length  of row ") ;                                     
+                    }                    
+                    $l += $cl;
+                    
+                    $cols[]=array("text"=>$coltext,"length"=>$cl,"align"=>$attr['align'] );
+                    
+ 
+                }   
+                if(  $l > $this->wc )  {
+                     throw  new \Exception("Invalid length  of row ") ;                                     
+                }
+                $out = "";
+                foreach($cols  as  $c){
+                    if(mb_strlen($c["text"])>$c['length']) {
+                       $c["text"] = mb_substr( $c["text"],0,$c['length']) ;
+                    }  
+                    if(mb_strlen($c["text"])<$c['length']) {
+                       $diff = $c['length'] -  mb_strlen($c["text"]);
+                       if($c["align"]=='right' ) {
+                           $c["text"] =  str_repeat(' ',$diff) .$c["text"]  ;                             
+                       }  else {
+                           $c["text"] =  $c["text"]  .  str_repeat(' ',$diff) ;   
+                       }   
+                       
+                    }  
+                    
+                    $out .=  $c["text"];
+                    
+                }
+                
+                $this->text($out) ;                    
+                 
+                         
+            }
+
     
      }
  

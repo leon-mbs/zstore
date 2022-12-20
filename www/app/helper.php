@@ -1077,8 +1077,6 @@ class Helper
     */
     public  static  function printItemsEP(array $items){
         $printer = \App\System::getOptions('printer');
- 
-    
     
         $htmls = "";
 
@@ -1105,21 +1103,15 @@ class Helper
                 $header['barcode'] = $item->bar_code;
             
             }
-
-        
             
             $qty =  intval($item->quantity);
-             $qty = 1;
+            if($qty==0) $qty = 1;
             for($i=0;$i<$qty;$i++){
                $htmls = $htmls .   $report->generate($header) ;
             }
-
         }
       
         return $htmls;               
     }
-   
-   
-         
     
 }
