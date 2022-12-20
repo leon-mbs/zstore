@@ -321,9 +321,8 @@ class DocView extends \Zippy\Html\PageFragment
         $doc = Document::Load($arg[0])->cast();
         $xml = $doc->generatePosReport(true);
         $pr = new \App\Printer() ;
-        $xml = "<text>test</text>"   ;
+
         $buf = $pr->xml2comm($xml) ;
-        
         
         $retb = json_encode($buf) ; 
         $ret = json_encode(array("error"=>"","buf"=>$buf))  ;
