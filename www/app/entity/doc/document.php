@@ -248,9 +248,9 @@ class Document extends \ZCL\DB\Entity
 
     /**
      * Генерация  печати для POS  терминала  или  принтеров чеков
-     *
+     *  $ps - генерировать  из шаблона  для  принт сервера
      */
-    public function generatePosReport() {
+    public function generatePosReport($ps=false) {
         return "";
     }
    

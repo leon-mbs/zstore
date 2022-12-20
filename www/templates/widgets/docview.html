@@ -44,8 +44,8 @@
     
         <span v-show="docdata.exports.pos">
        
-       <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="Друк на  чековом принтере"> <i class="fas fa-cash-register mr-1"></i></a>
-       <a v-else   onclick=" printpos()" title="Друк на  чековом принтере"><i class="fas fa-cash-register mr-1"></i> </a>
+       <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="Друк на  чековому принтерi"> <i class="fas fa-cash-register mr-1"></i></a>
+       <a v-else   onclick=" printpos()" title="Друк на  чековому принтерi"><i class="fas fa-cash-register mr-1"></i> </a>
          </span>            
        
        <br>
@@ -234,7 +234,7 @@
       {|={{ }}=|}  
         <script>
 
-        
+            var _docid =0
         
             function printform() {
                 $('#previewpos').attr('style', 'display:none');
@@ -245,7 +245,34 @@
             function printpos() {
                 $('#preview').attr('style', 'display:none');
                 $('#previewpos').attr('style', 'display:block');
-                $('#previewpos').printThis();
+                {{^printserver}}
+                  $('#previewpos').printThis();
+                {{/printserver}}
+               
+                {{#printserver}}
+                  
+                     var path=  $('#_path_').attr('path')         
+               
+                  callPageMethod(path +'::printEP',[_docid], null,(data)=> 
+                  {
+                     
+                      var data = JSON.parse(data)
+                      
+                     
+                  
+                      if(data.error  != "") {
+                          toastr.error(data.error)
+                      } else {
+                         //отправояем на  принтер 
+                         sendPS("["+data.buf+"]" )                             
+                          
+                      }
+                  
+                  });                
+                  
+                  
+                  
+                {{/printserver}}
             }
 
                
@@ -315,7 +342,8 @@
              
               this.docid=  $('#_docid_').attr('docid')         
               this.path=  $('#_path_').attr('path')         
-              
+              _docid=  $('#_docid_').attr('docid')         
+                         
         }  ,      
            methods: {
                 load:function(){
@@ -345,6 +373,7 @@
                opendoc:function(id){
                    
                   this.docid = id 
+                  _docid = id 
                }   ,
              
              

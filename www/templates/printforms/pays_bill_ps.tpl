@@ -17,7 +17,6 @@
 <align>right</align>
 <text>Всього: {{pall}}</text>
 <newline ></newline>
-<cut></cut>
 
  
 

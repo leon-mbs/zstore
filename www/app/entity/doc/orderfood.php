@@ -80,7 +80,7 @@ class OrderFood extends Document
         return $html;
     }
 
-    public function generatePosReport() {
+    public function generatePosReport($ps=false) {
 
         $detail = array();
 

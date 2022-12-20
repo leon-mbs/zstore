@@ -131,7 +131,7 @@ class ServiceAct extends Document
         return 'Акт-000000';
     }
 
-    public function generatePosReport() {
+    public function generatePosReport($ps=false) {
 
         $common = \App\System::getOptions('common');
         $printer = \App\System::getOptions('printer');
