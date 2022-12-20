@@ -275,8 +275,13 @@ class GoodsIssue extends Document
             $header["customer_name"] = false;
         }
 
-        $report = new \App\Report('doc/goodsissue_bill.tpl');
-
+   
+        if($ps)   {
+          $report = new \App\Report('doc/goodsissue_bill_ps.tpl');
+        }
+        else 
+          $report = new \App\Report('doc/goodsissue_bill.tpl');
+ 
         $html = $report->generate($header);
 
         return $html;

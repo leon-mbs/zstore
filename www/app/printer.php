@@ -307,6 +307,7 @@ class Printer{
         if ($text === false) {
             throw new \Exception("Input must be UTF-8");
         }   
+
         $text = mb_convert_encoding($text,  "cp866","utf-8");   
 //        $text = iconv('UTF-8','cp866',$text)  ;        
         
@@ -696,7 +697,12 @@ class Printer{
                 return;
             }
             if($name==='barcode') {
-                if(!isset($attr['type'])) return;
+                if(!isset($attr['type'])) {
+                    $po= \App\System::getOptions('printer')  ;
+                    $attr['type']  = $po['barcodetype']  ;
+                    if($attr['type'] =='C128') $attr['type']  ='code128';
+                    if($attr['type'] =='C39') $attr['type']  ='code39';
+                }
                 if(isset($attr['height'])) {
                     $this->barcodeHeight($attr['height']) ;
                 }  else {

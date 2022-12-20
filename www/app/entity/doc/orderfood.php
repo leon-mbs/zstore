@@ -140,7 +140,12 @@ class OrderFood extends Document
             $header['checkslogan']   =   $frases[$i];        
         }
   
-        $report = new \App\Report('doc/orderfood_bill.tpl');
+
+        if($ps)   {
+          $report = new \App\Report('doc/orderfood_bill_ps.tpl');
+        }
+        else 
+          $report = new \App\Report('doc/orderfood_bill.tpl');
 
         $html = $report->generate($header);
 

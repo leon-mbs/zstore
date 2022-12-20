@@ -1,57 +1,23 @@
-<table class="ctable" border="0" cellpadding="1" cellspacing="0"  {{{style}}}}>
-    <tr>
-        <td colspan="3">Накладна №{{document_number}}</td>
-    </tr>
-    <tr>
-
-        <td colspan="3">вiд {{date}}</td>
-    </tr>
-    <tr>
-        <td colspan="3"> Продавець:</td>
-    </tr>
-    <tr>
-
-        <td colspan="2"> {{firm_name}}</td>
-    </tr>
-
-
-    <tr>
-        <td colspan="3"> Тел. {{phone}}</td>
-    </tr>
-    {{#customer_name}}
-    <tr>
-        <td colspan="3"> Покупець:</td>
-    </tr>
-    <tr>
-        <td colspan="3"> {{customer_name}}</td>
-    </tr>
-
-    {{/customer_name}}
-
-
-    {{#_detail}}
-    <tr>
-        <td colspan="3">{{tovar_name}}</td>
-
-    </tr>
-
-
-    <tr>
-
-        <td align="right">{{quantity}}</td>
-        <td align="right">{{price}}</td>
-        <td align="right">{{amount}}</td>
-    </tr>
-    {{/_detail}}
-    <tr>
-        <td colspan="2" align="right">Всього:</td>
-        <td align="right">{{total}}</td>
-    </tr>
-    <tr>
-                        <td colspan="3" > 
-                            {{{docbarcode}}}
-                        </td>
-       </tr>                 
-   
-
-</table>
+<align>center</align>
+<font bold="true">a</font>
+<text>Накладна №{{document_number}}</text>
+<font >a</font>
+<text>вiд {{date}}</text>
+<align>left</align>
+<text>Продавець: {{firm_name}}</text>
+<text>Тел. {{phone}}</text>
+<text>Покупець: {{customer_name}}</text>
+<separator>-</separator>
+ {{#_detail}}
+ <text>{{tovar_name}}</text>
+<row>
+  <col align="right" length="12" >{{quantity}}</col>
+  <col align="right" length="10" >{{price}}</col>
+  <col align="right" length="10" >{{amount}}</col>
+</row>
+{{/_detail}}
+<font bold="true">a</font>
+<separator>-</separator>
+<align>right</align>
+<text>Всього: {{total}}</text>
+<newline ></newline>

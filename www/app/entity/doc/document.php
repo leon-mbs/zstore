@@ -1002,7 +1002,7 @@ class Document extends \ZCL\DB\Entity
             return '';
         }
         $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-        $img = '<img style="max-width:200px" src="data:image/png;base64,' . base64_encode($generator->getBarcode($this->document_number, 'C128')) . '">';
+        $img = '<img style="max-width:200px" src="data:image/png;base64,' . base64_encode($generator->getBarcode($this->document_number, 'code128')) . '">';
 
         return $img;
     }

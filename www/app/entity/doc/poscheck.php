@@ -175,7 +175,13 @@ class POSCheck extends Document
             $mf = \App\Entity\MoneyFund::load($this->headerdata['payment'] );
             $header['nal']  = $mf->beznal!=1;
         }
-        $report = new \App\Report('doc/poscheck_bill.tpl');
+
+
+       if($ps)   {
+          $report = new \App\Report('doc/poscheck_bill_ps.tpl');
+        }
+        else 
+          $report = new \App\Report('doc/poscheck_bill.tpl');
 
         $html = $report->generate($header);
 

@@ -200,7 +200,12 @@ class ServiceAct extends Document
         }
         $header['ispay'] = count($pays) > 0;
 
-        $report = new \App\Report('doc/serviceact_bill.tpl');
+
+        if($ps)   {
+          $report = new \App\Report('doc/serviceact_bill_ps.tpl');
+        }
+        else 
+          $report = new \App\Report('doc/serviceact_bill.tpl');
 
         $html = $report->generate($header);
 

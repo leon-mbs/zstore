@@ -8,7 +8,7 @@
 <text>Продавець: {{firm_name}}</text>
 <text>Тел. {{phone}}</text>
 <text>Покупець: {{customer_name}}</text>
-<text>ship {{delivery}}</text>
+<text>Доставка {{delivery}}</text>
 <text>{{ship_address}}</text>
  <newline> </newline>
  {{#_detail}}
