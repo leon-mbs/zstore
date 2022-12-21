@@ -16,11 +16,7 @@ use Zippy\Html\Image;
 use Zippy\Html\Label;
 use Zippy\Html\Panel;
 use Zippy\Html\Link\ClickLink;
-use WayForPay\SDK\Collection\ProductCollection;
-use WayForPay\SDK\Credential\AccountSecretTestCredential;
-use WayForPay\SDK\Domain\Client;
-use WayForPay\SDK\Domain\Product;
-use WayForPay\SDK\Wizard\PurchaseWizard;
+
 //страница формирования заказа  пользователя
 class Order extends Base
 {
@@ -304,7 +300,7 @@ class Order extends Base
 
         $number = preg_replace('/[^0-9]/', '', $order->document_number);
     
-        System::setSuccessMsg("createdorder", $number) ;
+        System::setSuccessMsg( \App\Helper::l("createdorder"), $number) ;
           
         if($payment == 1) {
             

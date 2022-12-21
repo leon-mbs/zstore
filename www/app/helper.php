@@ -645,8 +645,7 @@ class Helper
     /**
      * форматирование дат
      *
-     * @param timestamp $date
-     * @return mixed
+          * @return mixed
      */
     public static function fd($date) {
         if ($date > 0) {

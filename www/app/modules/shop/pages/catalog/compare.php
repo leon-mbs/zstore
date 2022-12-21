@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shop\Pages\Admin;
+namespace App\Modules\Shop\Pages\Catalog;
 
 use App\Modules\Shop\Comparelist;
 use App\Modules\Shop\Helper;

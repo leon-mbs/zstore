@@ -142,7 +142,7 @@ class SalaryList extends \App\Pages\Base
 /**
  *  Источник  данных  для   списка  документов
  */
-class SerListDataSource implements \Zippy\Interfaces\DataSource
+class SalListDataSource implements \Zippy\Interfaces\DataSource
 {
 
     private $page;

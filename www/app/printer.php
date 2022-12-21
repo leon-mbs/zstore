@@ -303,7 +303,7 @@ class Printer{
     }
   
     private function encode($text){
-        $text = \Normalizer::normalize($text);        
+       // $text = \Normalizer::normalize($text);
         if ($text === false) {
             throw new \Exception("Input must be UTF-8");
         }   
@@ -571,7 +571,7 @@ class Printer{
           
         $allModes = Printer::MODE_FONT_B | self::MODE_EMPHASIZED | self::MODE_DOUBLE_HEIGHT | self::MODE_DOUBLE_WIDTH | self::MODE_UNDERLINE;
         if (!is_integer($mode) || $mode < 0 || ($mode & $allModes) != $mode) {
-            throw new InvalidArgumentException("Invalid mode");
+            throw new \Exception("Invalid mode");
         }
 
        
