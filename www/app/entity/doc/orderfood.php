@@ -131,6 +131,7 @@ class OrderFood extends Document
                         "delbonus"           => $delbonus > 0 ? H::fa($delbonus) : false,
                         "allbonus"           => $allbonus > 0 ? H::fa($allbonus) : false,
                        "docqrcode"       => $this->getQRCodeImage(),
+                       "docqrcodeurl"     =>  $this->getQRCodeImage(true),
 
                         "payamount" => H::fa($this->payamount)
         );

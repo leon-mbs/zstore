@@ -1011,15 +1011,19 @@ class Document extends \ZCL\DB\Entity
      * возвращает  тэг <img> со QR кодом ссылки на  сайт налоговой
      *
      */
-    protected function getQRCodeImage() {
+    protected function getQRCodeImage($text=false) {
         
         $print = System::getOption('common', 'printoutqrcode');
         if ($print == 0) {
             return '';
         }
         $url =$this->getFiscUrl( );
-        if(strlen($url)==0)  return '';
        // $firm = \App\Entity\Firm::load($this->firm_id);
+        if($text){
+           if(strlen($url)==0)  return false;
+           return $url;
+        }
+        if(strlen($url)==0)  return '';
    
         $dataUri = \App\Util::generateQR($url,200,5)  ;
         $img = "<img style=\"width:80%\"  src=\"{$dataUri}\"  />";

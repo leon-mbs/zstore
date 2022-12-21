@@ -1,6 +1,6 @@
 <align>center</align>
 <font bold="true">a</font>
-<text>Накладна №{{document_number}}</text>
+<text>Накладна {{document_number}}</text>
 <font >a</font>
 <text>вiд {{date}}</text>
 <align>left</align>

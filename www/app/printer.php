@@ -307,7 +307,9 @@ class Printer{
         if ($text === false) {
             throw new \Exception("Input must be UTF-8");
         }   
-
+        //украинское i на  ангглийсккое  хз  почему
+        $text = str_replace("і","i",$text);  
+        $text = str_replace("І","I",$text);  
         $text = mb_convert_encoding($text,  "cp866","utf-8");   
 //        $text = iconv('UTF-8','cp866',$text)  ;        
         

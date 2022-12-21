@@ -1,117 +1,77 @@
-<table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{printw}}}>
-    <tr>
-        <td colspan="2">
-          {{#isfinished}}  Акт виконаних робіт {{/isfinished}} 
+<align>center</align>
+<font bold="true">a</font>
+<text>
+   {{#isfinished}}  Акт виконаних робіт {{/isfinished}} 
           {{^isfinished}}  Квитанція до {{/isfinished}} 
-        
-        
-         {{document_number}}</td>
-    </tr>
-    <tr>
-
-        <td colspan="2">від {{date}}</td>
-    </tr>
-    <tr>
-
-        <td colspan="2"> {{firmname}}</td>
-    </tr>
+         {{document_number}}
+</text>
+<font >a</font>
+<text>вiд {{date}}</text>
+<align>left</align>
+<text> {{firmname}}</text>
     {{#shopname}}
-    <tr>
-        <td colspan="2"> {{shopname}}</td>
-    </tr>
+<text> {{shopname}}</text>
     {{/shopname}}
-    <tr>
-
-        <td colspan="2"> {{address}}</td>
-    </tr>
-    <tr>
-        <td colspan="2"> {{phone}}</td>
-    </tr>
-
-    <tr>
-        <td colspan="2"> {{customer_name}}</td>
-    </tr>
-
+<text> {{address}}</text>    
+<text>Тел. {{phone}}</text>    
+<text> {{customer_name}}</text>    
 
     {{#isdevice}}
-    <tr>
-        <td colspan="2"> Прийнято від клієнта</td>
-    </tr>
-    <tr>
-        <td colspan="2"> {{device}}</td>
-    </tr>
-    <tr>
-        <td colspan="2"> С/Н {{serial}}</td>
-    </tr>
+<text>Прийнято від клієнта:</text>       
+<text>{{device}}</text>       
+<text>С/Н {{serial}}</text>       
     {{/isdevice}}
-
     {{#iswork}}
-
-    <tr>
-        <td colspan="2">Роботи:</td>
-    </tr>
+<text>Роботи:</text>       
     {{#slist}}
-    <tr>
-        <td>{{service_name}}</td>
-        <td align="right">{{amount}}</td>
-    </tr>
 
+<row>
+  <col length="22" >{{service_name}}</col>
+  <col align="right" length="10" >{{amount}}</col>
+</row>
     {{/slist}}
-     {{/iswork}}  
+
+   {{/iswork}}  
   
     {{#isitems}}
-   <tr>
-        <td colspan="2">Комплектуючi:</td>
-    </tr>
+<text>комплектуючі:</text>       
+ 
     {{#ilist}}
-    <tr>
-        <td>{{itemname}}</td>
-        <td align="right">{{amount}}</td>
-    </tr>
-
+ 
+<row>
+  <col length="22" >{{itemname}}</col>
+  <col align="right" length="10" >{{amount}}</col>
+</row>
+    
     {{/ilist}}
     {{/isitems}}
    
     {{#istotal}}
-    <tr>
-        <td align="right">Всього:</td>
-        <td align="right">{{total}}</td>
-    </tr>
+<align>right</align>
+<text>Всього: {{total}}</text>
     {{/istotal}}
-
- 
 
 
     {{#ispay}}
-    <tr>
-        <td colspan="2">Оплати:</td>
-    </tr>
+<align>left</align> 
+<text>Оплати:</text>  
+ 
     {{#plist}}
-    <tr>
-        <td>{{pdate}}</td>
-        <td align="right">{{ppay}}</td>
-    </tr>
+    
+<row>
+  <col length="22" >{{pdate}}</col>
+  <col align="right" length="10" >{{ppay}}</col>
+</row>    
+    
+ 
 
     {{/plist}}
     {{/ispay}}
-    <tr>
-        <td colspan="2"> {{gar}}</td>
-
-    </tr>
-    <tr>
-        <td colspan="2"> <br></td>
-
-    </tr>
-    <tr>
-        <td>Виконавець</td>
-        <td>________</td>
-    </tr>
-    <tr>
-        <td colspan="2"> <br></td>
-
-    </tr>
-    <tr>
-        <td>Клієнт</td>
-        <td>________</td>
-    </tr>
-</table>
+   
+<text>{{gar}}</text>      
+ <newline ></newline>   
+ <text>Виконавець ________</text>  
+ <newline ></newline>  
+ <text>Клієнт ________</text>  
+ <newline ></newline>  
+ 
