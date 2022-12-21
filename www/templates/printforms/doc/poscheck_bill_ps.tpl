@@ -29,7 +29,7 @@
 
  
 
-
+<separator>-</separator>
     {{#_detail}}
 <text>{{tovar_name}}</text>     
  
@@ -39,8 +39,9 @@
 </row>
  
     {{/_detail}}
- <font bold="true">a</font>
 <separator>-</separator>
+<font bold="true">a</font>
+
 <align>right</align>
 <text>Всього: {{total}}</text>
 <font >a</font>

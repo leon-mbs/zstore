@@ -137,7 +137,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->add(new Form('formcheck'))->setVisible(false);
         $this->docpanel->formcheck->add(new Label('showcheck'));
         $this->docpanel->formcheck->add(new Button('newdoc'))->onClick($this, 'newdoc');
-        $this->docpanel->formcheck->add(new Button('print'));
+        $this->docpanel->formcheck->add(new Button('print'))->onClick($this,"OnPrint",true);
 
         $this->docpanel->add(new Form('editdetail'))->setVisible(false);
         $this->docpanel->editdetail->add(new TextInput('editquantity'))->setText("1");
@@ -1140,4 +1140,32 @@ class ARMPos extends \App\Pages\Base
         return  $price;
         
     }   
+    
+    public function OnPrint($sender) {
+     
+ 
+        if(intval(\App\System::getUser()->prtype ) == 0){
+  
+              
+            $this->addAjaxResponse(" $('#showcheck').printThis() ");
+         
+            return;
+        }
+        
+     try{
+        $doc = $this->_doc->cast();
+        $xml = $doc->generatePosReport(true);
+
+        $buf = \App\Printer::xml2comm($xml);
+        $b = json_encode($buf) ;                   
+          
+        $this->addAjaxResponse("  sendPS('{$b}') ");      
+      }catch(\Exception $e){
+           $message = $e->getMessage()  ;
+           $message = str_replace(";","`",$message)  ;
+           $this->addAjaxResponse(" toastr.error( '{$message}' )         ");  
+                   
+        }
+ 
+    }    
 }

@@ -168,10 +168,10 @@ class ARMFood extends \App\Pages\Base
 
         $this->docpanel->payform->add(new ClickLink('bbackitems'))->onClick($this, 'backItemsOnClick');
         $this->docpanel->payform->add(new SubmitButton('btocheck'))->onClick($this, 'payandcloseOnClick');
-
         $this->docpanel->add(new Panel('checkpan'))->setVisible(false);
         $this->docpanel->checkpan->add(new ClickLink('bnewcheck'))->onClick($this, 'onNewOrder');
         $this->docpanel->checkpan->add(new Label('checktext'));
+        $this->docpanel->checkpan->add(new Button('btoprint'))->onClick($this,"OnPrint",true);
 
         //добавление нового контрагента
         $this->add(new Form('editcust'))->setVisible(false);
@@ -293,7 +293,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->navform->setVisible(false);
 
 
-        $this->_catlist = Category::find(" coalesce(parent_id,0)=0 and detail  not  like '%<nofastfood>1</nofastfood>%' ");
+        $this->_catlist = Category::find(" cat_id in(select cat_id from  items where  disabled <>1  ) and  coalesce(parent_id,0)=0 and detail  not  like '%<nofastfood>1</nofastfood>%' ");
         $this->docpanel->catpan->catlist->Reload();
     }
 
@@ -1215,6 +1215,32 @@ class ARMFood extends \App\Pages\Base
         return true;
     }
 
-    
+  public function OnPrint($sender) {
+     
+ 
+        if(intval(\App\System::getUser()->prtype ) == 0){
+  
+              
+            $this->addAjaxResponse("  $('#checktext').printThis() ");
+         
+            return;
+        }
+        
+     try{
+        $doc = $this->_doc->cast();
+        $xml = $doc->generatePosReport(true);
+
+        $buf = \App\Printer::xml2comm($xml);
+        $b = json_encode($buf) ;                   
+          
+        $this->addAjaxResponse("  sendPS('{$b}') ");      
+      }catch(\Exception $e){
+           $message = $e->getMessage()  ;
+           $message = str_replace(";","`",$message)  ;
+           $this->addAjaxResponse(" toastr.error( '{$message}' )         ");  
+                   
+        }
+ 
+    }        
     
 }
