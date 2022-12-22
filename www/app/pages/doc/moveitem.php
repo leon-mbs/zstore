@@ -124,10 +124,15 @@ class MoveItem extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
-        $id = $item->item_id;
+        if ($item->rowid > 0) {
+            ;
+        }               //для совместимости
+        else {
+            $item->rowid = $item->item_id;
+        }
 
-        $this->_itemlist = array_diff_key($this->_itemlist, array($id => $this->_itemlist[$id]));
-        $this->docform->detail->Reload();
+        $this->_itemlist = array_diff_key($this->_itemlist, array($item->rowid => $this->_itemlist[$item->rowid]));
+      $this->docform->detail->Reload();
     }
 
     public function addrowOnClick($sender) {
@@ -141,6 +146,8 @@ class MoveItem extends \App\Pages\Base
         $this->editdetail->edititem->setValue('');
         $this->editdetail->qtystock->setText('');
         $this->editdetail->editsnumber->setText('');
+        $this->_rowid = 0;
+         
     }
 
     public function editOnClick($sender) {
@@ -156,7 +163,14 @@ class MoveItem extends \App\Pages\Base
 
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
 
-        $this->_rowid = $item->item_id . $item->snumber;
+        if ($item->rowid > 0) {
+            ;
+        }               //для совместимости
+        else {
+            $item->rowid = $item->item_id;
+        }
+
+        $this->_rowid = $item->rowid;
     }
 
     public function saverowOnClick($sender) {
@@ -186,21 +200,16 @@ class MoveItem extends \App\Pages\Base
         }
 
 
-        $tarr = array();
-
-        foreach ($this->_itemlist as $k => $value) {
-
-            if ($this->_rowid > 0 && $this->_rowid == $k) {
-                $tarr[$item->item_id] = $item;    // заменяем
-            } else {
-                $tarr[$k] = $value;    // старый
-            }
+        if ($this->_rowid > 0) {
+            $item->rowid = $this->_rowid;
+             
+            
+        } else {
+            $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
+            $item->rowid = $next + 1;
         }
+        $this->_itemlist[$item->rowid] = $item;
 
-        if ($this->_rowid == 0) {        // в конец
-            $tarr[$item->item_id] = $item;
-        }
-        $this->_itemlist = $tarr;
         $this->_rowid = 0;
 
         $this->editdetail->setVisible(false);
