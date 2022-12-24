@@ -52,7 +52,7 @@ class CustomerList extends \App\Pages\Base
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSearch');
         $this->filter->add(new TextInput('searchkey'));
-        $this->filter->add(new DropDownChoice('searchtype', array()), 0));
+        $this->filter->add(new DropDownChoice('searchtype', array(), 0));
         $this->filter->add(new DropDownChoice('searchholding', Customer::getHoldList(), 0));
 
         $this->filter->add(new DropDownChoice('searchleadsource', Customer::getLeadSources(), "0"));
@@ -911,17 +911,20 @@ class CustomerDataSource implements \Zippy\Interfaces\DataSource
                 $search = Customer::qstr('%' . $search . '%');
                 $where .= " and (customer_name like  {$search} or phone like {$search} or email like {$search}  or detail like {$edrpou}    )";
             }
-            if ($type == 1) {
-                $where .= " and status = 0 and  detail like '%<type>1</type>%'    ";
-            }
-            if ($type == 2) {
-                $where .= " and status = 0 and detail like '%<type>2</type>%'    ";
-            }
-            if ($type == 5) {
-                $where .= " and status = 0 and detail like '%<isholding>1</isholding>%'    ";
-            }
-            if ($holding > 0) {
-                $where .= " and status = 0  and detail like '%<holding>{$holding}</holding>%'    ";
+            if($type < 10) {
+                $where .= " and status = 0 ";
+                if ($type == 1) {
+                    $where .= " and  detail like '%<type>1</type>%'    ";
+                }
+                if ($type == 2) {
+                    $where .= " and detail like '%<type>2</type>%'    ";
+                }
+                if ($type == 5) {
+                    $where .= " and detail like '%<isholding>1</isholding>%'    ";
+                }
+                if ($holding > 0) {
+                    $where .= " and detail like '%<holding>{$holding}</holding>%'    ";
+                }
             }
             if ($type == 10) {
                 $where .= " and status = 1    ";
