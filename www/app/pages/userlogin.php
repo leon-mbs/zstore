@@ -15,7 +15,11 @@ class UserLogin extends \Zippy\Html\WebPage
 
     public function __construct() {
         parent::__construct();
-     
+        
+        System::clean() ;
+        System::getSession()->clean();
+
+        
         $common = System::getOptions('common');
         \App\Session::getSession()->clipboard = null;
 

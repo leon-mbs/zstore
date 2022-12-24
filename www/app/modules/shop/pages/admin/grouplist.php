@@ -5,7 +5,7 @@ namespace App\Modules\Shop\Pages\Admin;
 use App\Application as App;
 use App\Modules\Shop\Entity\Product;
 use App\Modules\Shop\Entity\ProductAttribute;
-use App\Modules\Shop\Entity\ProductGroup;
+
 use App\Modules\Shop\Helper;
 use App\System;
 use App\Entity\Category;

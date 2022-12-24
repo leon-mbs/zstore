@@ -505,7 +505,7 @@ class Subscribe extends \ZCL\DB\Entity
                  
             
             if ($sms['smstype'] == 3) {  //sms  fly
-                // $text = iconv('windows-1251', 'utf-8', htmlspecialchars('Заметьте, что когда герой фильма подписывает договор с Сатаной, он не подписывает копию договора и не получает ее.'));
+
                 $an = '';
                 if (strlen($sms['flysmsan']) > 0) {
                     $an = "source=\"{$sms['flysmsan']}\"";

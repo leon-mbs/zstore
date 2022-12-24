@@ -111,6 +111,11 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["promua"] = $modules['promua'] == 1;
         $this->_tvars["paperless"] = $modules['paperless'] == 1;
 
+      //  $printer = System::getOptions('printer');
+
+        $this->_tvars["psurl"] =  $user->pserver ;  
+        $this->_tvars["printserver"] = $user->prtype == 1;  
+
 
         //доступы к  модулям
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {

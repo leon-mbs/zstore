@@ -90,7 +90,7 @@ class POSCheck extends Document
         return $html;
     }
 
-    public function generatePosReport() {
+    public function generatePosReport($ps=false) {
 
         $detail = array();
 
@@ -156,7 +156,7 @@ class POSCheck extends Document
                         "delbonus"           => $delbonus > 0 ? H::fa($delbonus) : false,
                         "allbonus"           => $allbonus > 0 ? H::fa($allbonus) : false,
                         "trans"           => $this->headerdata["trans"] > 0 ? $this->headerdata["trans"] : false,
-                        
+                        "docqrcodeurl"     =>  $this->getQRCodeImage(true),             
                         "docqrcode"       => $this->getQRCodeImage(),
                         "payed"           => $this->headerdata['payed'] > 0 ? H::fa($this->headerdata['payed']) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
@@ -175,7 +175,13 @@ class POSCheck extends Document
             $mf = \App\Entity\MoneyFund::load($this->headerdata['payment'] );
             $header['nal']  = $mf->beznal!=1;
         }
-        $report = new \App\Report('doc/poscheck_bill.tpl');
+
+
+       if($ps)   {
+          $report = new \App\Report('doc/poscheck_bill_ps.tpl');
+        }
+        else 
+          $report = new \App\Report('doc/poscheck_bill.tpl');
 
         $html = $report->generate($header);
 

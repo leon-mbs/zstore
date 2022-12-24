@@ -38,7 +38,7 @@ class ItemList extends \App\Pages\Base
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
-        $this->filter->add(new CheckBox('showdis'));
+
         $this->filter->add(new TextInput('searchbrand'));
         $this->filter->searchbrand->setDataList(Item::getManufacturers());
 
@@ -51,6 +51,7 @@ class ItemList extends \App\Pages\Base
         }
         $this->filter->add(new DropDownChoice('searchcat', $catlist, 0));
         $this->filter->add(new DropDownChoice('searchsort', array(), 0));
+        $this->filter->add(new DropDownChoice('searchtype', array( ), 0));
 
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
@@ -207,7 +208,7 @@ class ItemList extends \App\Pages\Base
         $row->add(new ClickLink('set'))->onClick($this, 'setOnClick');
         $row->set->setVisible($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD);
 
-        $row->add(new ClickLink('printqr'))->onClick($this, 'printQrOnClick', true);
+        $row->add(new ClickLink('printqr'))->onClick($this, 'printQrOnClick',true);
         $row->printqr->setVisible(strlen($item->url) > 0);
 
         
@@ -406,7 +407,7 @@ class ItemList extends \App\Pages\Base
         }
         $printer = System::getOptions('printer');
 
-        if (intval($printer['pmaxname']) > 0 && strlen($this->_item->shortname) > intval($printer['pmaxname'])) {
+        if (intval($printer['pmaxname']) > 0 && mb_strlen($this->_item->shortname) > intval($printer['pmaxname'])) {
 
             $this->setWarn('tolongshortname', $printer['pmaxname']);
 
@@ -619,16 +620,64 @@ class ItemList extends \App\Pages\Base
     
     public function printQrOnClick($sender) {
       
+        $printer = \App\System::getOptions('printer') ;
+        $user = \App\System::getUser() ;
         
         $item = $sender->getOwner()->getDataItem();
 
+        if(intval($user->prtype ) == 0){
+            $dataUri = \App\Util::generateQR($item->url,100,5)  ;
+            $html = "<img src=\"{$dataUri}\"  />";
+            $this->addAjaxResponse("  $('#tag').html('{$html}') ; $('#pform').modal()");
+            return;            
+        }
+        /*
+        $connector = new \Mike42\Escpos\PrintConnectors\DummyPrintConnector();
+        $printer = new \Mike42\Escpos\Printer($connector);       
+      
+        $printer->setJustification( \Mike42\Escpos\Printer::JUSTIFY_CENTER)  ;
+        $printer->qrCode($item->url)  ;
+      
+     
+
+      //  $printer->text("тест\n");
+        
+
+
+      //   $connector->write("\x1b\x45\x01");
+        
+      
+       // $printer->barcode("{sB0123456",\Mike42\Escpos\Printer::BARCODE_CODE128) ;
+       
+        
+        $cc = $connector->getData()  ;
+        $connector->finalize() ;      
+      
+        $buf = [];
+        foreach(str_split($cc) as $c) {
+            $buf[] = ord($c) ;   
+        }    
+        */
+        try{
+     
+            $pr = new \App\Printer() ;
+            $pr->align(\App\Printer::JUSTIFY_CENTER) ;
+
+            $pr->QR($item->url);
+          
+              
+            $buf = $pr->getBuffer() ;
+            $b = json_encode($buf) ;
+            $this->addAjaxResponse(" sendPS('{$b}') ");  
+            
+        }catch(\Exception $e){
+           $message = $e->getMessage()  ;
+           $message = str_replace(";","`",$message)  ;
+           $this->addAjaxResponse(" toastr.error( '{$message}' )         ");  
+                    
+        }
+        
   
-        $dataUri = \App\Util::generateQR($item->url,100,5)  ;
-
-        $html = "<img src=\"{$dataUri}\"  />";
-
-           $this->addAjaxResponse("  $('#tag').html('{$html}') ; $('#pform').modal()");
-
     }
 
     /*
@@ -705,7 +754,7 @@ class ItemList extends \App\Pages\Base
 
     */
     public function OnPrintAll($sender) {
-
+     
         $items = array();
         foreach ($this->itemtable->listform->itemlist->getDataRows() as $row) {
             $item = $row->getDataItem();
@@ -716,19 +765,36 @@ class ItemList extends \App\Pages\Base
         if (count($items) == 0) {
             return;
         }
+        if(intval(\App\System::getUser()->prtype ) == 0){
+  
+            $htmls = H::printItems($items);
+            
+            if( \App\System::getUser()->usemobileprinter == 1) {
+                \App\Session::getSession()->printform =  $htmls;
 
-        $htmls = H::printItems($items);
+               $this->addAjaxResponse("   $('.seldel').prop('checked',null); window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
+            }
+            else {
+               $this->addAjaxResponse("  $('#tag').html('{$htmls}') ;$('.seldel').prop('checked',null); $('#pform').modal()");
+             
+            }
+            return;
+        }
         
-        if( \App\System::getUser()->usemobileprinter == 1) {
-            \App\Session::getSession()->printform =  $htmls;
-
-           $this->addAjaxResponse("   $('.seldel').prop('checked',null); window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
+     try{
+          
+        $xml = H::printItemsEP($items);
+        $buf = \App\Printer::xml2comm($xml);
+        $b = json_encode($buf) ;                   
+          
+        $this->addAjaxResponse("$('.seldel').prop('checked',null); sendPS('{$b}') ");      
+      }catch(\Exception $e){
+           $message = $e->getMessage()  ;
+           $message = str_replace(";","`",$message)  ;
+           $this->addAjaxResponse(" toastr.error( '{$message}' )         ");  
+                   
         }
-        else {
-           $this->addAjaxResponse("  $('#tag').html('{$htmls}') ;$('.seldel').prop('checked',null); $('#pform').modal()");
-         
-        }
-
+ 
     }
 
     public function onAllCat($sender) {                                                               
@@ -816,8 +882,9 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         $where = "1=1";
         $text = trim($form->searchkey->getText());
         $brand = trim($form->searchbrand->getText());
+        $type = trim($form->searchtype->getValue());
         $cat = $form->searchcat->getValue();
-        $showdis = $form->showdis->isChecked();
+
 
         if ($cat != 0) {
             if ($cat == -1) {
@@ -840,12 +907,17 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
             $where = $where . " and  manufacturer like {$brand}      ";
         }
 
-
-        if ($showdis == true) {
-
-        } else {
-            $where = $where . " and disabled <> 1";
+        if($type == 10) {
+            $where = $where . " and disabled = 1";
         }
+        if($type < 10) {
+            $where = $where . " and disabled <> 1";
+            if($type >0) {
+                $where = $where . " and item_type = {$type}";                
+            }
+        }
+            
+
         if (strlen($text) > 0) {
             if ($p == false) {
                 $text = Item::qstr('%' . $text . '%');

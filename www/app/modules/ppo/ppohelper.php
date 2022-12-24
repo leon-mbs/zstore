@@ -962,7 +962,8 @@ class PPOHelper
                 foreach ($xml->CHECKPAY->children() as $row) {
                    $fc =  (string)$row->PAYFORMCD;
                    $sum =  (string)$row->SUM;
-                   if($fc=="0") { 
+                   $sum  = doubleval($sum);
+                   if($fc=="0") {
                        $amount0 += $sum;
                    }
                    else if($fc=="1") {

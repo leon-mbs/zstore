@@ -2,7 +2,7 @@
 
 namespace App\Modules\Shop\Pages\Catalog;
 
-use App\Modules\Shop\Entity\ProductGroup;
+
 use App\Modules\Shop\Entity\Product;
 use App\Modules\Shop\Helper;
 use ZCL\DB\EntityDataSource;

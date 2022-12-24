@@ -90,7 +90,7 @@ class ProductView extends Base
             $this->buy->setVisible(false);
         } else {
 
-            if ($product->getQuantity($options['defstore']) > 0) {
+            if ($product->getQuantity() > 0 || $this->_tvars["isfood"]==true ) {
                 $this->onstore->setText(\App\Helper::l('isonstore'));
                 $this->buy->setValue(\App\Helper::l('tobay'));
             } else {

@@ -927,8 +927,7 @@
                 </div>
             </div>
 
-
-
+   
         {{#toasts}}
         <script>
 $(document).Toasts('create', {
@@ -1059,7 +1058,39 @@ icon: 'fa fa-exclamation-triangle text-warning',
        
         } 
    
+     
+        function sendPS( buf){
+          
+           var url="{{psurl}}"  
             
+   //  console.log(buf)     
+               
+    
+       var opt={
+           method: 'POST' ,
+  
+           body:   buf
+       };    
+             
+          fetch(url+"/print",opt)                                            
+  
+              .then((response) => {
+                  return response.text();
+              })
+              .then((data) => {
+                 if(data == ""){
+                     toastr.success("Вiдправлено на принтер" )   
+                 }   else {
+                    toastr.error(data )        
+                 }
+              })
+               .catch(function (error) {
+                    toastr.error(error )       
+                      });  
+            
+       
+        } 
+           
         </script>
         {{#usemobilescanner}}
         <script src="/assets/js/quagga.min.js" type="text/javascript"></script>

@@ -103,6 +103,9 @@ class User extends \ZCL\DB\Entity
         $this->emailnotify = (int)$options['emailnotify'];
         $this->hidesidebar = (int)$options['hidesidebar'];
         $this->usemobileprinter = (int)$options['usemobileprinter'];
+        $this->prtype = (int)$options['prtype'];
+        $this->pwsym = (int)$options['pwsym'];
+        $this->pserver = $options['pserver'];
         $this->mainpage = $options['mainpage'];
         $this->favs = $options['favs'];
 
@@ -136,6 +139,9 @@ class User extends \ZCL\DB\Entity
         $options['darkmode'] = $this->darkmode;
         $options['emailnotify'] = $this->emailnotify;
         $options['usemobileprinter'] = $this->usemobileprinter;
+        $options['pserver'] = $this->pserver;
+        $options['prtype'] = $this->prtype;
+        $options['pwsym'] = $this->pwsym;
         $options['mainpage'] = $this->mainpage;
         $options['phone'] = $this->phone;
         $options['viber'] = $this->viber;

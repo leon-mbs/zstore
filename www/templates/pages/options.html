@@ -179,6 +179,13 @@
                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                                    title=" Можливість вибудовувати деревоподібну ієрархію категорій. має сенс якщо передбачається використання в онлайн-каталозі   "></i>
                             </div>
+                           <div class="form-check">
+                                <input zippy="nocheckarticle" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="nocheckarticle">Не перевіряти унікальність артикулів</label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Використовується наприклад в обліку автозапчастин, де ідентифікація товару йде по артикулу виробника і імені виробника.
+                                    Не слід вмикати без необхідності - невірно буде працювати підбір зі сканером штрих коду. "></i>
+                            </div>                   
                             <div class="form-check">
                                 <input zippy="showactiveusers" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="showactiveusers">Показувати  активних користувачiв </label>
@@ -212,13 +219,7 @@
 
 
                             </div>
-                           <div class="form-check">
-                                <input zippy="nocheckarticle" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="nocheckarticle">Не перевіряти унікальність артикулів</label>
-                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Використовується наприклад в обліку автозапчастин, де ідентифікація товару йде по артикулу виробника і імені виробника.
-                                    Не слід вмикати без необхідності - невірно буде працювати підбір зі сканером штрих коду. "></i>
-                            </div>
+
                             
                             <div class="form-group  ">
                                 <label for="ts_end">Кiнець рабочого дня</label>
@@ -344,50 +345,16 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <h4>Налаштування принтера</h4>
-                        <small><i class="fa fa-exclamation-triangle"></i> 
-                            Для зручності друку з мобільних пристроїв в профілі користувача можна задати друк в новій вкладці браузера                        </small>
+                        <h4>Параметри для етикеток і цінників</h4>
                          <form zippy="printer">
-                            <div class="form-group">
-                                <label  style="font-size:larger" >Параметри для принтеру чеків</label>
-                            </div>
-                            <div class="form-group  ">
-                                <label for="pdocfontsize">Розмiр шрифту</label>
-                                <select style="width:100px" class="form-control" zippy="pdocfontsize">
-                                </select>
-                            </div>           
-                            <div class="form-group">
-                                <label for="pdocwidth">Ширина друку </label>
-                                <input style="width:100px" class="form-control" type="text" zippy="pdocwidth">
-                                <small class="form-text text-muted">Наприклад <b>100%</b> або <b>70mm</b> або <b>250px</b></small>
-
-                            </div>
-                            <div class="form-group">
-                                <label style="font-size:larger">Параметри для етикеток і цінників</label>
-                            </div>
-                            <div class="form-group">
-                                <label for="pwidth">Ширина друку </label>
-                                <input style="width:100px" class="form-control" type="text" zippy="pwidth">
-                                <small class="form-text text-muted">Наприклад <b>100%</b> або <b>70mm</b> або <b>250px</b></small>
-
-                            </div>
-                            <div class="form-group">
-                                <label for="pheight">Висота друку </label>
-                                <input style="width:100px" class="form-control" type="text" zippy="pheight">
-                                <small class="form-text text-muted">Наприклад <b>100%</b> або <b>50mm</b> або <b>150px</b> </small>
-
-                            </div>
+                        
+    
+                         
                             <div class="form-group">
                                 <label for="pmaxname">Максимальна давжина  назви</label>
                                 <input style="width:100px" class="form-control" type="text" zippy="pmaxname">
-
-                            </div>
-
-                            <div class="form-group  ">
-                                <label for="pfontsize">Розмiр шрифту</label>
-                                <select style="width:100px" class="form-control" zippy="pfontsize">
-                                </select>
-                            </div>
+                                <small>Довжина  короткої назва  в  довіднику  ТМЦ</small>
+                            </div>                            
                             <div class="form-group  ">
                                 <label for="pricetype">Тип ціни</label>
                                 <select class="form-control" zippy="pricetype">
@@ -426,7 +393,7 @@
                          
 
                             <div class="form-group">
-                                <button class="btn btn-primary" type="submit">Зберегти</button>
+                                <input zippy="savep" class="btn btn-primary" type="submit" value="Зберегти">
                             </div>
                         </form>
                     </div>
@@ -444,7 +411,7 @@
             
 <div class="card">
                     <div class="card-body">
-                        <h4>Налаштування  сервiсу SMS повiдомлень</h4>
+                        <h4>Налаштування SMS сервiсу    </h4>
                         <form zippy="sms">    
 
                             <div class="form-group  ">
@@ -637,6 +604,9 @@
             function check_rowdelete() {
                 return confirm("Видалити запис?")
             }
+            
+            
+                
         </script>
 
     </body>

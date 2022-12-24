@@ -7,7 +7,7 @@ use App\Modules\Shop\Entity\Product;
 use App\Modules\Shop\Entity\ProductAttribute;
 use App\Modules\Shop\Entity\Variation;
 use App\Modules\Shop\Entity\VarItem;
-use App\Modules\Shop\Entity\ProductGroup;
+
 use App\Modules\Shop\Helper;
 use App\System;
 use App\Entity\Category;

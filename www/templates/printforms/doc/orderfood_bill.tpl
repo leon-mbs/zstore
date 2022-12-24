@@ -125,7 +125,7 @@
 
     </tr>
        <tr>                    
-                        <td colspan="3"> 
+                        <td colspan="3" > 
                             {{{docqrcode}}}
                         </td>
 
