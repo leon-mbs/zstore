@@ -52,7 +52,7 @@ class CustomerList extends \App\Pages\Base
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSearch');
         $this->filter->add(new TextInput('searchkey'));
-        $this->filter->add(new DropDownChoice('searchtype', array(Customer::TYPE_BAYER => Helper::l("bayers"), Customer::TYPE_SELLER => Helper::l("sellers"), 5 => Helper::l("holdings")), 0));
+        $this->filter->add(new DropDownChoice('searchtype', array()), 0));
         $this->filter->add(new DropDownChoice('searchholding', Customer::getHoldList(), 0));
 
         $this->filter->add(new DropDownChoice('searchleadsource', Customer::getLeadSources(), "0"));
@@ -904,7 +904,7 @@ class CustomerDataSource implements \Zippy\Interfaces\DataSource
 
         $isleads = $this->page->leadf->chleads->isChecked();
         if ($isleads == false) {
-            $where = "status < 2 ";
+            $where = "1=1 ";
 
             if (strlen($search) > 0) {
                 $edrpou = Customer::qstr('%<edrpou>' . $search . '</edrpou>%');
@@ -912,17 +912,21 @@ class CustomerDataSource implements \Zippy\Interfaces\DataSource
                 $where .= " and (customer_name like  {$search} or phone like {$search} or email like {$search}  or detail like {$edrpou}    )";
             }
             if ($type == 1) {
-                $where .= " and detail like '%<type>1</type>%'    ";
+                $where .= " and status = 0 and  detail like '%<type>1</type>%'    ";
             }
             if ($type == 2) {
-                $where .= " and detail like '%<type>2</type>%'    ";
+                $where .= " and status = 0 and detail like '%<type>2</type>%'    ";
             }
             if ($type == 5) {
-                $where .= " and detail like '%<isholding>1</isholding>%'    ";
+                $where .= " and status = 0 and detail like '%<isholding>1</isholding>%'    ";
             }
             if ($holding > 0) {
-                $where .= " and detail like '%<holding>{$holding}</holding>%'    ";
+                $where .= " and status = 0  and detail like '%<holding>{$holding}</holding>%'    ";
             }
+            if ($type == 10) {
+                $where .= " and status = 1    ";
+            }
+            
         } else {
             $searchleadsource = $this->page->filter->searchleadsource->getValue();
             $searchleadstatus = $this->page->filter->searchleadstatus->getValue();

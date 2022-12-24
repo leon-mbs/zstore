@@ -38,7 +38,7 @@ class ItemList extends \App\Pages\Base
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
-        $this->filter->add(new CheckBox('showdis'));
+
         $this->filter->add(new TextInput('searchbrand'));
         $this->filter->searchbrand->setDataList(Item::getManufacturers());
 
@@ -51,6 +51,7 @@ class ItemList extends \App\Pages\Base
         }
         $this->filter->add(new DropDownChoice('searchcat', $catlist, 0));
         $this->filter->add(new DropDownChoice('searchsort', array(), 0));
+        $this->filter->add(new DropDownChoice('searchtype', array( ), 0));
 
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
@@ -881,8 +882,9 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         $where = "1=1";
         $text = trim($form->searchkey->getText());
         $brand = trim($form->searchbrand->getText());
+        $type = trim($form->searchtype->getValue());
         $cat = $form->searchcat->getValue();
-        $showdis = $form->showdis->isChecked();
+
 
         if ($cat != 0) {
             if ($cat == -1) {
@@ -905,12 +907,17 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
             $where = $where . " and  manufacturer like {$brand}      ";
         }
 
-
-        if ($showdis == true) {
-
-        } else {
-            $where = $where . " and disabled <> 1";
+        if($type == 10) {
+            $where = $where . " and disabled = 1";
         }
+        if($type < 10) {
+            $where = $where . " and disabled <> 1";
+            if($type >0) {
+                $where = $where . " and item_type = {$type}";                
+            }
+        }
+            
+
         if (strlen($text) > 0) {
             if ($p == false) {
                 $text = Item::qstr('%' . $text . '%');

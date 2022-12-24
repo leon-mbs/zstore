@@ -30,13 +30,18 @@
                         </select>
                         <label for="searchbrand">Бренд </label>
                         <input autocomplete="off"   class="form-control mr-2" zippy="searchbrand"/>
+                        <label for="searchtype">Тип</label>
+                            <select zippy="searchtype" class="form-control mr-sm-2">
+                                <option value="0">Всі активні</option>
+                                <option value="1">Тоаари</option>
+                                <option value="2">Матеріали та комплектуючі</option>
+                                <option value="3">МШП</option>
+                                <option value="4">Готова  продукція</option>
+                                <option value="5">Напівфабрикати</option>
+                                <option value="10">Деактивовані</option>
+                </select>
 
-
-                        <div class="form-check">
-
-                            <input title="Показати неактуальні" class="form-check-input" type="checkbox" zippy="showdis">
-                            <label title="Показати неактуальні" class="form-check-label mr-3" for="showdis">Всі</label>
-                        </div>
+              
                         <label for="searchsort">Сортування</label>
 
                         <select class="form-control mr-2" zippy="searchsort">
