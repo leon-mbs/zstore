@@ -228,62 +228,14 @@ class Printer{
      */
     const QR_MICRO = 3;
 
-    /**
-     * Indicates a request for printer status when used with
-     * Printer::getPrinterStatus (experimental)
-     */
-    const STATUS_PRINTER = 1;
-
-    /**
-     * Indicates a request for printer offline cause when used with
-     * Printer::getPrinterStatus (experimental)
-     */
-    const STATUS_OFFLINE_CAUSE = 2;
-
-    /**
-     * Indicates a request for error cause when used with Printer::getPrinterStatus
-     * (experimental)
-     */
-    const STATUS_ERROR_CAUSE = 3;
-
-    /**
-     * Indicates a request for error cause when used with Printer::getPrinterStatus
-     * (experimental)
-     */
-    const STATUS_PAPER_ROLL = 4;
-
-    /**
-     * Indicates a request for ink A status when used with Printer::getPrinterStatus
-     * (experimental)
-     */
-    const STATUS_INK_A = 7;
-
-    /**
-     * Indicates a request for ink B status when used with Printer::getPrinterStatus
-     * (experimental)
-     */
-    const STATUS_INK_B = 6;
-
-    /**
-     * Indicates a request for peeler status when used with Printer::getPrinterStatus
-     * (experimental)
-     */
-    const STATUS_PEELER = 8;
+ 
 
     /**
      * Indicates no underline when used with Printer::setUnderline
      */
     const UNDERLINE_NONE = 0;
 
-    /**
-     * Indicates single underline when used with Printer::setUnderline
-     */
-    const UNDERLINE_SINGLE = 1;
 
-    /**
-     * Indicates double underline when used with Printer::setUnderline
-     */
-    const UNDERLINE_DOUBLE = 2;
   
     private $buffer=[];
     private $wc=32;
