@@ -18,7 +18,14 @@ require_once _ROOT . 'vendor/autoload.php';
 include_once _ROOT . "vendor/adodb/adodb-php/adodb-exceptions.inc.php";
 
 //чтение  конфигурации
-$_config = parse_ini_file(_ROOT . 'config/config.ini', true);
+if(file_exists(_ROOT . 'config/config.php')){
+   require_once _ROOT . 'config/config.php';
+    
+}   else {   // для  совместимости
+   $_config = parse_ini_file(_ROOT . 'config/config.ini', true);    
+}
+
+
 
 if(!is_array($_config)){
     die("Invalid config file") ;
