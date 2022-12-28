@@ -1,8 +1,6 @@
 <?php
- 
- 
 
- require_once 'init.php';
+require_once 'init.php';
 
 global $_config;
 
