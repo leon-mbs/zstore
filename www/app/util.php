@@ -178,7 +178,7 @@ class Util
         return $tel;
     }
 
-    //генерация слуяайного цвета
+    //генерация случайного цвета
     public static function genColor() {
         $color = dechex(rand(0x000000, 0xFFFFFF));
         return $color;
