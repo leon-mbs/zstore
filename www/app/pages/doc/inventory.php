@@ -326,9 +326,9 @@ class Inventory extends \App\Pages\Base
     public function OnAutocompleteItem($sender) {
         $store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
-        $cat_id = $this->docform->category->getValue();
+        $cat_id = intval( $this->docform->category->getValue() );
         $common = \App\System::getOptions('common')  ;
-        if($common['usecattree'] != 1){
+        if($common['usecattree'] != 1 || $cat_id==0){
             return Item::findArrayAC($text, $store_id, $cat_id);
         }
   

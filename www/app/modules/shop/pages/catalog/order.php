@@ -130,18 +130,12 @@ class Order extends Base
         $firstname = trim($this->orderform->firstname->getText());
         $lastname = trim($this->orderform->lastname->getText());
         $delivery = $this->orderform->delivery->getValue();
-      //  $payment = $this->orderform->payment->getValue();
-        $payment=1;
+        $payment = intval($this->orderform->payment->getValue());
         $address = $this->orderform->address->getValue();
 
         if ($delivery == 0) {
 
             $this->setError("enterdelivery");
-            return;
-        }
-        if ($payment == 0) {
-
-            $this->setError("enterpayment");
             return;
         }
         if (($delivery == 2 || $delivery == 3) && strlen($address) == 0) {
@@ -150,6 +144,11 @@ class Order extends Base
             return;
         }
   
+        if ($payment == 0) {
+
+            $this->setError("enterpayment");
+            return;
+        }
 
 
  
