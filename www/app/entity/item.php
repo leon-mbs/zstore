@@ -185,6 +185,9 @@ class Item extends \ZCL\DB\Entity
 
     protected function afterDelete() {
 
+        foreach(\App\Entity\ItemSet::find("item_id = {$this->item_id} or  pitem_id={$this->item_id} ") as $is){
+             \App\Entity\ItemSet::delete($is->set_id) ;
+        }
 
         if ($this->image_id > 0) {
             \App\Entity\Image::delete($this->image_id);
