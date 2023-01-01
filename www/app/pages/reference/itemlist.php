@@ -173,7 +173,9 @@ class ItemList extends \App\Pages\Base
         $item = $row->getDataItem();
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
 
-        $row->add(new Label('itemname', $item->itemname));
+         
+        $row->add(new ClickLink('itemname',$this, 'editOnClick'))->setValue($item->itemname);
+        
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('cat_name', $item->cat_name));
@@ -527,11 +529,13 @@ class ItemList extends \App\Pages\Base
         $total = 0;
         foreach($this->_itemset as $i) {
              $item = Item::load($i->item_id);
-             $total += ($i->qty  * $item->getLastPartion() );
+             if($item != null){
+                $total += doubleval($i->qty  * $item->getLastPartion() );   
+             }
 
         }
         foreach($this->_serviceset as $s) {
-             $total  += $s->cost;
+             $total  += doubleval($s->cost);
         }
     
         $this->setpanel->stotal->setText(H::fa($total));
@@ -830,29 +834,32 @@ class ItemList extends \App\Pages\Base
             return;
         }
 
-        $ids = array();
+        $items = array();
         foreach ($this->itemtable->listform->itemlist->getDataRows() as $row) {
             $item = $row->getDataItem();
             if ($item->seldel == true) {
-                $ids[] = $item->item_id;
+                $items[] = $item;
             }
         }
-        if (count($ids) == 0) {
+        if (count($items) == 0) {
             return;
         }
 
         $conn = \ZDB\DB::getConnect();
         $d = 0;
         $u = 0;
-        foreach ($ids as $id) {
-            $sql = "  select count(*)  from  store_stock where   item_id = {$id}  ";
+        foreach ($items as $it) {
+            $sql = "  select count(*)  from  store_stock where   item_id = {$it->item_id}  ";
             $cnt = $conn->GetOne($sql);
             if ($cnt > 0) {
                 $u++;
-                $conn->Execute("update items  set  disabled=1 where   item_id={$id}");
+                //$conn->Execute("update items  set  disabled=1 where   item_id={$id}");
+                $it->disabled=1;
+                $it->save();
             } else {
                 $d++;
-                $conn->Execute("delete from items  where   item_id={$id}");
+                Item::delete($it->item_id) ;
+                //$conn->Execute("delete from items  where   item_id={$id}");
 
             }
         }
