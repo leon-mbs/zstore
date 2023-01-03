@@ -2,7 +2,7 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="6">
-            Рух по грошовим рахунках
+            Рух по грошовим рахункам
         </td>
     </tr>
     <tr>

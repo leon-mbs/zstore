@@ -79,7 +79,7 @@
     
     <tr>
         <td></td>
-        <td valign="top"><br>Зписано з</td>
+        <td valign="top"><br>Списано з</td>
         <td colspan="5"><br>{{store_name}}</td>
     </tr>
  
