@@ -62,6 +62,8 @@ class ProdProc extends \ZCL\DB\Entity
         if (strlen($this->detail) == 0) {
             return;
         }
+        $this->startdate = strtotime($this->startdate);
+        $this->enddate = strtotime($this->enddate);
 
         $xml = simplexml_load_string($this->detail);
 
@@ -70,6 +72,9 @@ class ProdProc extends \ZCL\DB\Entity
         if (!is_array($this->prodlist)) {
             $this->prodlist = array();
         }
+        
+        
+        
         parent::afterLoad();
     }
 

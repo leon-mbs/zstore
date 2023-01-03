@@ -1,7 +1,8 @@
 <html>
      <head>
         <title>  Виробничі процеси </title>
-
+      <script src="/assets/js/frappe-gantt.js"></script>
+      <link rel="stylesheet" href="/assets/css/frappe-gantt.css">
     </head>
   <body>
         <div class="row">
@@ -92,10 +93,10 @@
 
                         </div>               
                     </div>
-                    <div   class="col-12 col-md-6 col-xl-4">
+                    <div   class="col-12 col-md-8 col-xl-6">
                         <h5>Виробничі  етапи</h5>
                         <table class="table table-sm">
-                            <tr><th>Найменування</th><th  >Статус</th><th  >Дільниця</th></tr>
+                            <tr><th>Найменування</th><th  >Статус</th><th  >Виробнича дільниця</th></tr>
                             {{#stagelist}}
                             <tr   >
                                 <td   >{{stagename}} </td>
@@ -105,7 +106,9 @@
                             </tr>
                             {{/stagelist}}
                         </table>
-                    </div>            
+                    </div>   
+             
+                    <div class="w-100"></div>         
                     <div   class="col-12 col-md-6 col-xl-4">
                         <h5>Готова продукція</h5>
                         <table class="table table-sm">
@@ -116,7 +119,7 @@
                         </table>
                     </div>            
                     <div   class="col-12 col-md-6 col-xl-4">
-                        <h5>Списано материалов и комплектующих</h5>
+                        <h5>Списано матеріалів та комплектуючих</h5>
                         <table class="table table-sm">
                             <tr><th>Найменування</th><th class="text-right">Кіл.</th><th class="text-right">На суму</th></tr>
                             {{#prodstuff}}
@@ -132,7 +135,7 @@
         </div>
 
         <form zippy="editproc"  >
-
+            <h4>Редагування процесу</h4>
             <div class="row"  >
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
@@ -213,7 +216,8 @@
         </div>
 
         <form zippy="editstage"  >
-
+                <h4>Редагування етапу</h4>
+ 
             <div class="row"  >
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
@@ -307,7 +311,8 @@
                 });
             })
 
-
+         
+            
         </script>            
 
     </body>
