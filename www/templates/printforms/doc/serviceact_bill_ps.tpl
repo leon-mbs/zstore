@@ -34,7 +34,7 @@
    {{/iswork}}  
   
     {{#isitems}}
-<text>комплектуючі:</text>       
+<text>Комплектуючі:</text>       
  
     {{#ilist}}
  

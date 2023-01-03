@@ -83,7 +83,7 @@
     {{/isdisc}}
    {{#payamount}}
     <tr style="font-weight: bolder;">
-        <td colspan="6" align="right">До оплати:</td>
+        <td colspan="6" align="right">До сплати:</td>
         <td align="right">{{payamount}}</td>
     </tr>
     {{/payamount}} 
