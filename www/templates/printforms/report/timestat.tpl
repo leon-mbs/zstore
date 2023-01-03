@@ -2,7 +2,7 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="2">
-            Звiт по робочому часi
+            Звiт про робочий час
         </td>
     </tr>
     <tr>

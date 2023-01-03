@@ -60,7 +60,7 @@
     {{#ship_number}}
     <tr>
         <td></td>
-        <td><b>№ декларацii</b></td>
+        <td><b>№ декларацiї</b></td>
         <td colspan="4">{{ship_number}}</td>
     </tr>
     {{/ship_number}}

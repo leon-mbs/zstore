@@ -1,6 +1,6 @@
 <table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{printw}}}>
     <tr>
-        <td colspan="2"> <b>Квитанцiя про  оплату </b></td>
+        <td colspan="2"> <b>Квитанцiя про оплату </b></td>
     </tr>
     <tr>
 

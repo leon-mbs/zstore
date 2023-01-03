@@ -13,7 +13,7 @@
         <th style="border: solid black 1px">Документ</th>
         <th style="border: solid black 1px">Покупець</th>
 
-        <th align="right" style="border: solid black 1px">Кол.</th>
+        <th align="right" style="border: solid black 1px">Кіл.</th>
 
     </tr>
     {{#_detail}}

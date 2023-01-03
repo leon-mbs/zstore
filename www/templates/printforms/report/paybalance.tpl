@@ -127,7 +127,7 @@
         <td align="right"> {{PR}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="проход мiнус  видатки"></i>
+               title="проход мiнус видатки"></i>
         </td>
     </tr>
     {{#isinv}}

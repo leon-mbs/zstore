@@ -86,7 +86,7 @@
     </tr>
     {{/delbonus}}
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">До оплати:</td>
+        <td colspan="2" align="right">До сплати:</td>
         <td align="right">{{payamount}}</td>
     </tr>
     <tr style="font-weight: bolder;">

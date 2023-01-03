@@ -224,7 +224,7 @@ class ProdStageList extends \App\Pages\Base
         $this->calpan->planhours->setText($this->_stage->hours);
 
         $this->onCalUpdate();
-
+        $this->calpan->calform->clean() ;
     }
 
     public function onAddCal($sender) {

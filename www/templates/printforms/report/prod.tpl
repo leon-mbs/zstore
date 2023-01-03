@@ -75,7 +75,7 @@
         <th align="right" style="border: solid black 1px">Кіл.</th>
 
 
-        <th align="right" style="border: solid black 1px">Сумма</th>
+        <th align="right" style="border: solid black 1px">Сума</th>
 
         {{#_detail2}}
     <tr>
