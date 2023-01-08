@@ -10,7 +10,7 @@ use \App\Helper  as H;
 */
 class ChatBot{
    
-  private  $token;    //5852939150:AAEgi9ZMLPZ7756la_PAjQM2GJQtdjNicIQ     zippytest_bot     chat_id 217130115
+  private  $token;   
 
   function __construct($token  ) {
    
@@ -163,36 +163,5 @@ class ChatBot{
           
    }
   
-  
- //   https://api.telegram.org/bot5852939150:AAEgi9ZMLPZ7756la_PAjQM2GJQtdjNicIQ/setWebhook?url=https://store.zippy.com.ua/chatbot.php 
- //   https://api.telegram.org/bot5852939150:AAEgi9ZMLPZ7756la_PAjQM2GJQtdjNicIQ/deleteWebhook?url=https://store.zippy.com.ua/chatbot.php 
-/* 
- {
-     "update_id":357071162, 
-     "message":
-     {
-         "message_id":7,
-         "from":
-         {
-             "id":217130115,
-             "is_bot":false,
-             "first_name":"\u041b\u0435\u043e\u043d\u0438\u0434",
-             "last_name":"M",
-             "username":"leonmbs",
-             "language_code":"ru"
-         },
-        "chat":
-              {
-                  "id":217130115,
-                  "first_name":"\u041b\u0435\u043e\u043d\u0438\u0434",
-                  "last_name":"M",
-                  "username":"leonmbs",
-                  "type":"private"
-              },
-         "date":1672884492,
-         "text":"dd"
-     }
- }
  
- */  
 }
