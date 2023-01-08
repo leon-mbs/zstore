@@ -108,6 +108,7 @@ class User extends \ZCL\DB\Entity
         $this->pserver = $options['pserver'];
         $this->mainpage = $options['mainpage'];
         $this->favs = $options['favs'];
+        $this->chat_id = $options['chat_id'];
 
         parent::afterLoad();
     }
@@ -146,6 +147,7 @@ class User extends \ZCL\DB\Entity
         $options['phone'] = $this->phone;
         $options['viber'] = $this->viber;
         $options['favs'] = $this->favs   ;
+        $options['chat_id'] = $this->chat_id   ;
 
         $this->options = serialize($options);
 
