@@ -159,8 +159,8 @@ class Subscribe extends \ZCL\DB\Entity
                     $phone = $u->phone;
                     $viber = $u->viber;   
                     $email = $u->email;
-                     $chat_id = $u->chat_id;
-                   $notify = $sub->user_id;
+                    $chat_id = $u->chat_id;
+                    $notify = $sub->user_id;
                 }
             }
             $text = $sub->getText($doc);
@@ -176,20 +176,20 @@ class Subscribe extends \ZCL\DB\Entity
                 $ret =   self::sendViber($viber,$text) ;
             }
             if(strlen($chat_id)>0 && $sub->msg_type == self::MSG_BOT) {
-                $ret =   self::sendBot($viber,$text) ;
+                $ret =   self::sendBot($chat_id,$text) ;
             }
             if ($notify > 0 && $sub->msg_type == self::MSG_NOTIFY) {
                 self::sendNotify($notify, $text);
             }
             
             if(strlen($ret)>0) {
-            \App\Helper::logerror($ret); 
-            $n = new \App\Entity\Notify();
-            $n->user_id = \App\Entity\Notify::SYSTEM;
-            $n->sender_id = \App\Entity\Notify::SUBSCRIBE;
-            $n->message = $ret;
+                \App\Helper::logerror($ret); 
+                $n = new \App\Entity\Notify();
+                $n->user_id = \App\Entity\Notify::SYSTEM;
+                $n->sender_id = \App\Entity\Notify::SUBSCRIBE;
+                $n->message = $ret;
 
-            $n->save();                          
+                $n->save();                          
             }            
             
         }
