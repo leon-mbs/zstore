@@ -19,12 +19,13 @@ class ChatBot{
   }    
   
   public function doGet($command,$p=null){
-          
+
      $url ="https://api.telegram.org/bot".$this->token."/".$command; 
      
      if(is_array($p)){
            $url .= "?". http_build_query($p)  ;
      }
+     
      
      $ch = curl_init($url);
      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
