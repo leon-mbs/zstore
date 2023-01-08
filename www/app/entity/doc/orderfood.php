@@ -170,6 +170,11 @@ class OrderFood extends Document
 
     public function DoPayment() {
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
+           
+     
+           
+           
+           
             $payed = $this->payed;
             if ($this->headerdata['exchange'] > 0 && $this->payed > $this->headerdata['exchange']) {
 
@@ -181,7 +186,7 @@ class OrderFood extends Document
             if ($payed > 0) {
                 $this->payed = $payed;
             }
-
+          
             \App\Entity\IOState::addIOState($this->document_id, 0 - $this->payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
 
 
@@ -190,6 +195,13 @@ class OrderFood extends Document
 
     public function DoStore() {
         if($this->hasStore()) return;
+      
+      
+        $dd =   doubleval($this->headerdata['bonus'] ) + doubleval($this->headerdata['paydisc'] ) ;
+        $k = 1;   //учитываем  скидку
+        if ($dd > 0 && $this->amount > 0) {
+            $k = ($this->amount - $dd) / $this->amount;
+        }
         
         foreach ($this->unpackDetails('detaildata') as $item) {
 
@@ -261,10 +273,7 @@ class OrderFood extends Document
             }
 
 
-            $k = 1;   //учитываем  скидку
-            if ($this->headerdata["paydisc"] > 0 && $this->amount > 0) {
-                $k = ($this->amount - $this->headerdata["paydisc"]) / $this->amount;
-            }
+
 
 
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);

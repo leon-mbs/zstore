@@ -212,7 +212,19 @@ class Util
         }
         return  $r;           
     }    
-    
+    //парсит  строку на  слова
+    public static function  strtoarray($text){
+        $r = array();
+        
+        foreach(explode(' ',trim($text)) as $l ){
+           $l = trim($l) ;
+           if(strlen($l) > 0) {
+               $r[] = $l ;    
+           }
+           
+        }
+        return  $r;           
+    }      
 }
 
 

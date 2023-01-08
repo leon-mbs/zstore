@@ -191,7 +191,13 @@ class POSCheck extends Document
     public function Execute() {
         //$conn = \ZDB\DB::getConnect();
 
-
+        $dd =   doubleval($this->headerdata['bonus'] ) + doubleval($this->headerdata['paydisc'] ) ;
+        $k = 1;   //учитываем  скидку
+        if ($dd > 0 && $this->amount > 0) {
+            $k = ($this->amount - $dd) / $this->amount;
+        }
+            
+            
         foreach ($this->unpackDetails('detaildata') as $item) {
 
 
@@ -237,10 +243,6 @@ class POSCheck extends Document
             }
 
 
-            $k = 1;   //учитываем  скидку
-            if ($this->headerdata["paydisc"] > 0 && $this->amount > 0) {
-                $k = ($this->amount - $this->headerdata["paydisc"]) / $this->amount;
-            }
 
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
@@ -254,19 +256,7 @@ class POSCheck extends Document
             }
         }
 
-        //списываем бонусы
-        if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
-            $customer = \App\Entity\Customer::load($this->customer_id);
-            if ($customer->getDiscount() > 0) {
-                //процент
-            } else {
-                $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0);
-                if ($customer->bonus < 0) {
-                    $customer->bonus = 0;
-                }
-                $customer->save();
-            }
-        }
+ 
         $payed = $this->payed;
         if ($this->headerdata['exchange'] > 0 && $this->payed > $this->headerdata['exchange']) {
 
@@ -290,23 +280,7 @@ class POSCheck extends Document
 
         }
         
-        //сдачу в  бонусы
-        if($this->headerdata['exch2b'] > 0 && $this->headerdata['exchange']>0 ) {
-            $pay = new \App\Entity\Pay();
 
-            $pay->document_id = $this->document_id;
-        
-            $pay->amount = 0;
-            $pay->bonus = (int)$this->headerdata['exch2b'];
-            if($this->headerdata['exch2b'] > $this->headerdata['exchange'])  {
-               $pay->bonus = (int)$this->headerdata['exchange'];
-            }           
-            $pay->paytype = \App\Entity\Pay::PAY_BONUS;
-            $pay->paydate = time();
-            $pay->user_id = \App\System::getUser()->user_id;
-
-            $pay->save();          
-        }
         return true;
     }
 

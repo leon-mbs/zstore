@@ -3,11 +3,22 @@
 error_reporting(E_ALL & ~E_WARNING & ~E_STRICT & ~ E_NOTICE & ~E_DEPRECATED );
  
 
-define('_ROOT', __DIR__ . '/');
-$http = @$_SERVER["HTTPS"] == 'on' ? 'https' : 'http';
+
+$http = 'http';
+if (isset($_SERVER['HTTPS']) &&  strtolower($_SERVER['HTTPS']) !== 'off') {
+   $http = 'https';
+}
+elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' || !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on') {
+   $http = 'https';
+} elseif(443 == intval($_SERVER['SERVER_PORT'] )) {
+   $http = 'https';    
+}
+
 define('_BASEURL', $http . "://" . $_SERVER["HTTP_HOST"] . '/');
 
-define('UPLOAD_USERS', 'uploads/users/');
+define('_ROOT', __DIR__ . '/');
+
+//define('UPLOAD_USERS', 'uploads/users/');
 
 
 date_default_timezone_set('Europe/Kiev');

@@ -22,6 +22,7 @@ class Subscribe extends \ZCL\DB\Entity
     const MSG_EMAIL  = 2;
     const MSG_SMS    = 3;
     const MSG_VIBER  = 4;
+    const MSG_BOT  = 5;
     //типы  получателей
     const RSV_CUSTOMER  = 1;
     const RSV_DOCAUTHOR = 2;
@@ -87,9 +88,14 @@ class Subscribe extends \ZCL\DB\Entity
         $list[self::MSG_NOTIFY] = H::l("sb_msgnotify");
         $list[self::MSG_EMAIL] = H::l("sb_msgemail");
         $list[self::MSG_SMS] = H::l("sb_msgsms");
+        $list[self::MSG_SMS] = H::l("sb_msgsms");
        
         if($sms['smstype']==2) {
             $list[self::MSG_VIBER] =  H::l("sb_msgviber");            
+        }
+        if(strlen(\App\System::getOption("common",'tbtoken'))>0) {
+            $list[self::MSG_BOT] = H::l("sb_msgbot");
+
         }
 
 
@@ -134,6 +140,7 @@ class Subscribe extends \ZCL\DB\Entity
                     $phone = $c->phone;
                     $viber = $c->viber;
                     $email = $c->email;
+                    $chat_id = $c->chat_id;
                 }
             }
             if ($sub->reciever_type == self::RSV_DOCAUTHOR) {
@@ -142,6 +149,7 @@ class Subscribe extends \ZCL\DB\Entity
                     $phone = $u->phone;
                     $viber = $u->viber;
                     $email = $u->email;
+                    $chat_id = $u->chat_id;
                     $notify = $doc->user_id;
                 }
             }
@@ -151,14 +159,13 @@ class Subscribe extends \ZCL\DB\Entity
                     $phone = $u->phone;
                     $viber = $u->viber;   
                     $email = $u->email;
+                    $chat_id = $u->chat_id;
                     $notify = $sub->user_id;
                 }
             }
             $text = $sub->getText($doc);
             if (strlen($phone) > 0 && $sub->msg_type == self::MSG_SMS) {
                 $ret =   self::sendSMS($phone, $text);
- 
-                   
             }
             if (strlen($email) > 0 && $sub->msg_type == self::MSG_EMAIL) {
               $ret =   self::sendEmail($email, $text, $sub->msgsubject,$sub->attach==1 ? $doc :null);
@@ -167,8 +174,9 @@ class Subscribe extends \ZCL\DB\Entity
             if(strlen($viber)==0) $viber = $phone;
             if(strlen($viber)>0 && $sub->msg_type == self::MSG_VIBER) {
                 $ret =   self::sendViber($viber,$text) ;
-
-                
+            }
+            if(strlen($chat_id)>0 && $sub->msg_type == self::MSG_BOT) {
+                $ret =   self::sendBot($chat_id,$text) ;
             }
             if ($notify > 0 && $sub->msg_type == self::MSG_NOTIFY) {
                 self::sendNotify($notify, $text);
@@ -176,12 +184,12 @@ class Subscribe extends \ZCL\DB\Entity
             
             if(strlen($ret)>0) {
                 \App\Helper::logerror($ret); 
-            $n = new \App\Entity\Notify();
-            $n->user_id = \App\Entity\Notify::SYSTEM;
-            $n->sender_id = \App\Entity\Notify::SUBSCRIBE;
-            $n->message = $ret;
+                $n = new \App\Entity\Notify();
+                $n->user_id = \App\Entity\Notify::SYSTEM;
+                $n->sender_id = \App\Entity\Notify::SUBSCRIBE;
+                $n->message = $ret;
 
-            $n->save();                          
+                $n->save();                          
             }            
             
         }
@@ -426,6 +434,11 @@ class Subscribe extends \ZCL\DB\Entity
         $n->save();
     }
 
+    public static function sendBot($chat_id, $text) {
+        $bot = new \App\ChatBot( \App\System::getOption("common",'tbtoken')) ;
+        $bot->sendMessage($chat_id, $text)  ;
+    }
+
     public static function sendSMS($phone, $text ) {
         try {
             $sms = System::getOptions("sms");
@@ -458,92 +471,9 @@ class Subscribe extends \ZCL\DB\Entity
                     return '';
                 }
             }
-            if ($sms['smstype'] == 2) {  // sms club
+
             
-   
-                $url = 'https://im.smsclub.mobi/sms/send';
-//                $phone="380973707047"  ;
-                $data = json_encode([
-                    'phone' => array($phone),
-                    'message' => $text,
-                    'src_addr' => $sms['smscluban']
-                ]);
-
-                $ch = curl_init();
-
-                curl_setopt_array($ch, [
-                    CURLOPT_URL => $url,
-                    CURLOPT_POSTFIELDS => $data,
-                    CURLOPT_POST => true,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_SSL_VERIFYPEER => FALSE,
-                    CURLOPT_HTTPHEADER => [
-                        'Authorization: Bearer ' . $sms['smsclubtoken'],
-                        'Content-Type: application/json'
-                    ]
-                ]);
-               
-   
-                $response = curl_exec($ch);
-
-                $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-                
-                $encoded = json_decode($response,true);
-                curl_close($ch);              
-                
-                if ($httpcode >200)    {
-                   H::log("code ".$httpcode) ;
-                   H::log($response) ;
-                   return "Error. See logs";
-                }                
-                              
-                return  ""  ;             
-            }            
-
-                             
-                 
-            
-            if ($sms['smstype'] == 3) {  //sms  fly
-
-                $an = '';
-                if (strlen($sms['flysmsan']) > 0) {
-                    $an = "source=\"{$sms['flysmsan']}\"";
-                }
-
-
-                $lifetime = 4; // срок жизни сообщения 4 часа
-
-                $myXML = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
-                $myXML .= "<request>" . "\n";
-                $myXML .= "<operation>SENDSMS</operation>" . "\n";
-                $myXML .= '        <message   lifetime="' . $lifetime . '" ' . $an . ' >' . "\n";
-                $myXML .= "        <body>" . $text . "</body>" . "\n";
-                $myXML .= "        <recipient>" . $phone . "</recipient>" . "\n";
-                $myXML .= "</message>" . "\n";
-                $myXML .= "</request>";
-
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_USERPWD, $sms['flysmslogin'] . ':' . $sms['flysmspass']);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-                curl_setopt($ch, CURLOPT_POST, 1);
-                curl_setopt($ch, CURLOPT_URL, 'http://sms-fly.com/api/api.php');
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml", "Accept: text/xml"));
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $myXML);
-                $response = curl_exec($ch);
-
-                if (curl_errno($ch) > 0) {
-
-                    return 'Curl error: ' . curl_error($ch);
-                }
-                curl_close($ch);
-                if (strpos($response, 'ACCEPT') > 0) {
-                    return '';
-                }
-
-                return $response;
-            }
+          
         } catch(\Exception $e) {
 
             return $e->getMessage();

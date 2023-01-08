@@ -80,7 +80,7 @@
                 <div class="col-12  col-xl-10"> 
 
                     <div   zippy="catpan" class="row">
-                        <div    class="col-12">
+                        <div    class="col-12 mb-2">
                             <i class="fa fa-arrow-alt-circle-left"></i><a  zippy="stopcat">До  замовлення</a>  
                         </div>
                         <div   zippy="catlist" class="col-12 col-sm-6 col-md-4  col-xl-3">
@@ -104,9 +104,10 @@
                         </div >        
                     </div >        
                     <div   zippy="prodpan" class="row">
-                        <div    class="col-12">
+                        <div    class="col-12 mb-2">
                             <i class="fa fa-arrow-alt-circle-left"></i><a  zippy="stopprod">До  замовлення</a>  
-                        </div>                      <div   zippy="prodlist" class="col-12 col-sm-6 col-md-4  col-xl-3">
+                        </div>       
+                        <div   zippy="prodlist" class="col-12 col-sm-6 col-md-4  col-xl-3">
                             <div class="card mb-2" zippy="prodbtn" style="cursor:pointer;;">
                                 <table style="height:100%;width:100%;"  >
                                     <tr><td rowspan="2">
@@ -350,11 +351,14 @@
                                 <input readonly="readonly" zippy="pfrest" style="width:100px;" class="form-control-plaintext    "  pattern="[0-9,\.]+">
 
                             </div>
-                            <div class="form-check">
-                                <input zippy="exch2b" type="checkbox" class="form-check-input">
-                                <label class="form-check-label"  data-label="exch2b" for="exch2b">Занести решту в бонуси </label>
-                           </div>
-
+                            <div class="form-group">
+                      
+                                <label class="col-4" for="pfexch2b" data-label="pfexch2b">Бонуси</label>
+                                <input autocomplete="off" class="form-control" type="text" zippy="pfexch2b">
+                                <small>     Занести частину або  всю решту в бонуси </small>
+                                 
+                           </div>                            
+                       
                                    
                         </div>
                         <div class="col-12   ">  

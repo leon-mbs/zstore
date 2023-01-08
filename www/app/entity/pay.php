@@ -168,6 +168,34 @@ class Pay extends \ZCL\DB\Entity
 
            // return;
         }
+        
+        
+        
+        //сдачу в  бонусы
+        if($doc->headerdata['exch2b'] > 0 && $doc->headerdata['exchange']>0  ) {
+            if( $doc->headerdata['exch2b'] > $doc->headerdata['exchange'] ){
+                $doc->headerdata['exch2b'] = $doc->headerdata['exchange']  ;           
+            }
+      
+      
+            $pay = new \App\Entity\Pay();
+
+            $pay->document_id = $document_id;
+        
+            $pay->amount = 0;
+            $pay->bonus = (int)$doc->headerdata['exch2b'];
+            if($doc->headerdata['exch2b'] > $doc->headerdata['exchange'])  {
+               $pay->bonus = (int)$doc->headerdata['exchange'];
+            }           
+            $pay->paytype = \App\Entity\Pay::PAY_BONUS;
+            $pay->paydate = time();
+            $pay->user_id = \App\System::getUser()->user_id;
+
+            $pay->save();          
+        }        
+        
+        
+        
         if (doubleval($c->getDiscount()) > 0) { //если    скидка бонусы  не  начисляем
             return;
         }

@@ -257,6 +257,13 @@ class Options extends \App\Pages\Base
         $this->food->add(new CheckBox('foodtables', $food['tables']));
         $this->food->add(new CheckBox('foodpack', $food['pack']));
 
+
+       //телеграм бот
+        
+        $this->add(new Form('tbform'))->onSubmit($this,"onBot");
+        $this->tbform->add(new TextInput('tbtoken', $common['tbtoken']));
+       
+
         //источники  продаж
         
         $this->add(new Form('salesourcesform'));
@@ -348,6 +355,35 @@ class Options extends \App\Pages\Base
     }
 
  
+    public function onBot($sender) {
+        
+        
+        $common = System::getOptions("common");
+        if (!is_array($common)) {
+            $common = array();
+        }
+
+        $common['tbtoken'] = $sender->tbtoken->getText()  ;
+        
+        $url= _BASEURL. 'chatbot.php' ;
+       
+        $bot = new \App\ChatBot($common['tbtoken']) ;
+        $res = $bot->doGet('setWebhook',array('url'=>$url)) ;
+        if($res['error_code'] == 404)  {
+            $this->setError(H::l("btinvalidtoken")) ;
+            return;
+        }
+        if($res['ok'] != true)  {
+            $this->setError($res['error_code']. ' ' .$res['description']) ;
+            return;
+        }
+        
+        H::log("set hook ".$url);
+        
+        System::setOptions("common", $common);
+        $this->setSuccess('saved');
+   
+    }
  
     
     public function savePrinterOnClick($sender) {

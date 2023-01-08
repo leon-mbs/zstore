@@ -9,10 +9,10 @@ UPDATE users set  role_id=(select role_id  from roles  where  rolename='admins' 
 
  
 INSERT INTO `stores` (  `storename`, `description`) VALUES(  'Основний склад', '');
-INSERT INTO `mfund` (`mf_id`, `mf_name`, `description`, `branch_id`, `detail`) VALUES(2, 'Касса', '', NULL, '<detail><beznal>0</beznal><btran></btran><bank><![CDATA[]]></bank><bankacc><![CDATA[]]></bankacc></detail>');
+INSERT INTO `mfund` (`mf_id`, `mf_name`, `description`, `branch_id`, `detail`) VALUES(2, 'Каса', '', NULL, '<detail><beznal>0</beznal><btran></btran><bank><![CDATA[]]></bank><bankacc><![CDATA[]]></bankacc></detail>');
 
-INSERT INTO `firms` (  `firm_name`, `details`, `disabled`) VALUES(  'Наша  фiрма', '', 0);
-INSERT INTO `customers` ( `customer_name`, `detail`, `email`, `phone`, `status`, `city`, `leadstatus`, `leadsource`, `createdon`) VALUES( 'Фiз. особа', '<detail><code></code><discount></discount><bonus></bonus><type>0</type><fromlead>0</fromlead><jurid></jurid><shopcust_id></shopcust_id><isholding>0</isholding><holding>0</holding><viber></viber><nosubs>1</nosubs><user_id>4</user_id><holding_name><![CDATA[]]></holding_name><address><![CDATA[]]></address><comment><![CDATA[Умовний контрагент якщо треба  когось  вказати.]]></comment></detail>', '', '', 0, '', NULL, NULL, '2021-04-28');
+INSERT INTO `firms` (  `firm_name`, `details`, `disabled`) VALUES(  'Наша фiрма', '', 0);
+INSERT INTO `customers` ( `customer_name`, `detail`, `email`, `phone`, `status`, `city`, `leadstatus`, `leadsource`, `createdon`) VALUES( 'Фiз. особа', '<detail><code></code><discount></discount><bonus></bonus><type>0</type><fromlead>0</fromlead><jurid></jurid><shopcust_id></shopcust_id><isholding>0</isholding><holding>0</holding><viber></viber><nosubs>1</nosubs><user_id>4</user_id><holding_name><![CDATA[]]></holding_name><address><![CDATA[]]></address><comment><![CDATA[Умовний контрагент (якщо треба когось зазначити)]]></comment></detail>', '', '', 0, '', NULL, NULL, '2021-04-28');
 
 
   
@@ -22,7 +22,7 @@ INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `men
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(3, 4, 'Співробітники', 'EmployeeList', '', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(4, 4, 'Категорії товарів', 'CategoryList', 'Товари', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(5, 4, 'Контрагенти', 'CustomerList', '', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(6, 1, 'Прибуткова накладна', 'GoodsReceipt', 'Закупки', 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(6, 1, 'Прибуткова накладна', 'GoodsReceipt', 'Закупівлі', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(7, 1, 'Видаткова накладна', 'GoodsIssue', 'Продажі', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(8, 3, 'Журнал документiв', 'DocList', '', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(10, 1, 'Гарантійний талон', 'Warranty', 'Продажі', 0);
@@ -34,7 +34,7 @@ INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `men
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(18, 3, 'Наряди', 'TaskList', 'Виробництво', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(19, 1, 'Наряд', 'Task', 'Виробництво', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(20, 2, 'Оплата по виробництву', 'EmpTask', 'Виробництво', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(21, 2, 'Закупівлі', 'Income', 'Закупки', 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(21, 2, 'Закупівлі', 'Income', 'Закупівлі', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(22, 2, 'Продажі', 'Outcome', 'Продажі', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(27, 3, 'Замовлення клієнтів', 'OrderList', 'Продажі', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(28, 1, 'Замовлення', 'Order', 'Продажі', 0);
@@ -44,25 +44,25 @@ INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `men
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(33, 4, 'Виробничі дільниці', 'ProdAreaList', '', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(35, 3, 'Продажі', 'GIList', 'Продажі', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(36, 4, 'Обладнання та ОЗ', 'EqList', '', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(37, 3, 'Закупівлі', 'GRList', 'Закупки', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(38, 1, 'Заявка постачальнику', 'OrderCust', 'Закупки', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(39, 3, 'Заявки постачальникам', 'OrderCustList', 'Закупки', 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(37, 3, 'Закупівлі', 'GRList', 'Закупівлі', 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(38, 1, 'Заявка постачальнику', 'OrderCust', 'Закупівлі', 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(39, 3, 'Заявки постачальникам', 'OrderCustList', 'Закупівлі', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(40, 2, 'Прайс', 'Price', 'Склад', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(41, 1, 'Повернення постачальнику', 'RetCustIssue', 'Закупки', 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(41, 1, 'Повернення постачальнику', 'RetCustIssue', 'Закупівлі', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(44, 1, 'Перекомплектація (расфасовка)', 'TransItem', 'Склад', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(46, 4, 'Каси, рахунки', 'MFList', '', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(47, 3, 'Журнал платежів', 'PayList', 'Каса та платежі', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(48, 2, 'Рух по грошовим рахунках', 'PayActivity', 'Каса та платежі', 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(48, 2, 'Рух по грошовим рахункам', 'PayActivity', 'Каса та платежі', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(50, 1, 'Прибутковий ордер', 'IncomeMoney', 'Каса та платежі', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(51, 1, 'Видатковий ордер', 'OutcomeMoney', 'Каса та платежі', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(53, 2, 'Фінансові  результати', 'PayBalance', '', 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(53, 2, 'Фінансові результати', 'PayBalance', '', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(57, 1, 'Інвентаризація', 'Inventory', 'Склад', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(58, 1, 'Рахунок, вхідний', 'InvoiceCust', 'Закупки', 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(58, 1, 'Рахунок, вхідний', 'InvoiceCust', 'Закупівлі', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(59, 1, 'Рахунок-фактура', 'Invoice', 'Продажі', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(60, 5, 'Імпорт', 'Import', '', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(61, 3, 'Рух ТМЦ', 'StockList', 'Склад', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(62, 1, 'Касовий чек', 'POSCheck', 'Продажі', 1);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(63, 2, 'Товари в дорозі', 'CustOrder', 'Закупки', 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(63, 2, 'Товари в дорозі', 'CustOrder', 'Закупівлі', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(64, 1, 'Списання ТМЦ', 'OutcomeItem', 'Склад', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(65, 1, 'Оприбуткування ТМЦ', 'IncomeItem', 'Склад', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(67, 5, 'АРМ касира', 'ARMPos', '', 0);
@@ -70,41 +70,41 @@ INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `men
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(71, 3, 'Товари на складі', 'ItemList', 'Склад', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(75, 5, 'Експорт', 'Export', '', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(76, 1, 'Виплата зарплати', 'OutSalary', 'Зарплата', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(77, 2, 'Звіт по  зарплаті', 'SalaryRep', 'Каса та платежі', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(79, 4, 'Контракти', 'ContractList', '', 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(77, 2, 'Звіт по зарплаті', 'SalaryRep', 'Каса та платежі', 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(79, 4, 'Договори', 'ContractList', '', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(80, 1, 'Перемiщення ТМЦ', 'MoveItem', 'Склад', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(81, 2, 'Робочий час', 'Timestat', '', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(84, 1, 'Товарно-транспортна накладна', 'TTN', 'Продажі', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(85, 2, 'Нелiквiднi товари', 'NoLiq', 'Склад', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(86, 3, 'Розрахунки з  постачальниками', 'PaySelList', 'Каса та платежі', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(87, 3, 'Розрахунки з  покупцями', 'PayBayList', 'Каса та платежі', 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(86, 3, 'Розрахунки з постачальниками', 'PaySelList', 'Каса та платежі', 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(87, 3, 'Розрахунки з покупцями', 'PayBayList', 'Каса та платежі', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(88, 1, 'Перемiщення грошей', 'MoveMoney', 'Каса та платежі', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(89, 1, 'Замовленя кафе', 'OrderFood', 'Кафе', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(91, 5, 'АРМ касира (кафе)', 'ARMFood', 'Кафе', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(95, 3, 'Журнал доставок', 'DeliveryList', 'Кафе', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(96, 5, 'АРМ кухнi (бару)', 'ArmProdFood', 'Кафе', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(97, 3, 'Прибутки та  видатки', 'IOState', '', 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(97, 3, 'Прибутки та видатки', 'IOState', '', 0);
 INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  2, 'Замовленi товари', 'ItemOrder', 'Продажі', 0);
-INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 5, 'Знижки та  акції', 'Discounts', '', 0);
+INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 5, 'Знижки та акції', 'Discounts', '', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  1, 'Нарахування зарплати', 'CalcSalary', 'Каса та платежі', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  4, 'Нарахування та утримання', 'SalaryTypeList', '', 0);
 
  INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Вир. процеси', 'ProdProcList', 'Виробництво', 0);
  INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Вир. етапи', 'ProdStageList', 'Виробництво', 0);
- INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 1, 'Перемiщення  партiй ТМЦ', 'MovePart', 'Склад', 0);
-INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Повернення  покупцiв', 'Returnselled', 'Продажі', 0);
-INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Повернення  постачальникам', 'Returnbayed', 'Закупки', 0);
+ INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 1, 'Перемiщення партiй ТМЦ', 'MovePart', 'Склад', 0);
+INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Повернення покупцiв', 'Returnselled', 'Продажі', 0);
+INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Повернення постачальникам', 'Returnbayed', 'Закупівлі', 0);
 INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  1, 'Надані послуги', 'IncomeService', 'Послуги', 0);
-INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Стан  складiв', 'StoreItems', 'Склад', 0);
-INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  3, 'Товари у  постачальників', 'CustItems', '', 0);
+INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Стан складiв', 'StoreItems', 'Склад', 0);
+INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  3, 'Товари у постачальників', 'CustItems', '', 0);
 INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Акт звірки', 'CompareAct', 'Контрагенти', 0);
 INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Зарезервовані товари', 'Reserved', 'Склад', 0);
   
 
 
-INSERT INTO `saltypes` (`st_id`, `salcode`, `salname`, `salshortname`, `disabled`) VALUES(2, 105, 'Основна  зарплата', 'осн', 0);
+INSERT INTO `saltypes` (`st_id`, `salcode`, `salname`, `salshortname`, `disabled`) VALUES(2, 105, 'Основна зарплата', 'осн', 0);
 INSERT INTO `saltypes` (`st_id`, `salcode`, `salname`, `salshortname`, `disabled`) VALUES(3, 200, 'Всього нараховано', 'вс. нар', 0);
-INSERT INTO `saltypes` (`st_id`, `salcode`, `salname`, `salshortname`, `disabled`) VALUES(4, 600, 'Всього  утримано', 'вс. ут', 0);
+INSERT INTO `saltypes` (`st_id`, `salcode`, `salname`, `salshortname`, `disabled`) VALUES(4, 600, 'Всього утримано', 'вс. утр', 0);
 INSERT INTO `saltypes` (`st_id`, `salcode`, `salname`, `salshortname`, `disabled`) VALUES(5, 900, 'До видачi', 'До видачi', 0);
 INSERT INTO `saltypes` (`st_id`, `salcode`, `salname`, `salshortname`, `disabled`) VALUES(6, 850, 'Аванс', 'Аванс', 0);
 INSERT INTO `saltypes` (`st_id`, `salcode`, `salname`, `salshortname`, `disabled`) VALUES(7, 220, 'НДФО', 'НДФО', 0);
@@ -112,12 +112,12 @@ INSERT INTO `saltypes` (`st_id`, `salcode`, `salname`, `salshortname`, `disabled
 
 
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('api', 'a:3:{s:3:\"exp\";s:0:\"\";s:3:\"key\";s:4:\"test\";s:5:\"atype\";s:1:\"1\";}');
-INSERT INTO `options` (`optname`, `optvalue`) VALUES('common', 'a:39:{s:9:\"qtydigits\";s:1:\"0\";s:8:\"amdigits\";s:1:\"0\";s:10:\"dateformat\";s:5:\"d.m.Y\";s:11:\"partiontype\";s:1:\"1\";s:4:\"curr\";s:2:\"gr\";s:6:\"phonel\";s:2:\"10\";s:6:\"price1\";s:17:\"Роздрiбна\";s:6:\"price2\";s:12:\"Оптова\";s:6:\"price3\";s:0:\"\";s:6:\"price4\";s:0:\"\";s:6:\"price5\";s:0:\"\";s:8:\"defprice\";s:2:\"10\";s:8:\"shopname\";s:19:\"Наша  фiрма\";s:8:\"ts_break\";s:2:\"60\";s:8:\"ts_start\";s:5:\"09:00\";s:6:\"ts_end\";s:5:\"18:00\";s:11:\"checkslogan\";s:8:\"Тест\";s:11:\"autoarticle\";i:1;s:10:\"usesnumber\";i:1;s:10:\"usescanner\";i:1;s:9:\"useimages\";i:1;s:15:\"showactiveusers\";i:1;s:10:\"usecattree\";i:0;s:9:\"usebranch\";i:0;s:10:\"noallowfiz\";i:0;s:10:\"allowminus\";i:1;s:6:\"useval\";i:1;s:6:\"capcha\";i:0;s:9:\"numberttn\";i:0;s:16:\"usemobileprinter\";i:0;s:11:\"leadsources\";a:3:{i:1621367652;O:12:\"App\\DataItem\":2:{s:2:\"id\";i:1621367652;s:9:\"\0*\0fields\";a:1:{s:4:\"name\";s:6:\"ккк\";}}i:1621367735;O:12:\"App\\DataItem\":2:{s:2:\"id\";i:1621367735;s:9:\"\0*\0fields\";a:1:{s:4:\"name\";s:18:\"ннннннннн\";}}i:1621368209;O:12:\"App\\DataItem\":2:{s:2:\"id\";i:1621368209;s:9:\"\0*\0fields\";a:1:{s:4:\"name\";s:3:\"111\";}}}s:12:\"leadstatuses\";a:1:{i:1621367663;O:12:\"App\\DataItem\":2:{s:2:\"id\";i:1621367663;s:9:\"\0*\0fields\";a:1:{s:4:\"name\";s:3:\"yyy\";}}}s:14:\"printoutqrcode\";i:0;s:15:\"printoutbarcode\";i:1;s:11:\"salesources\";a:2:{i:1622515925;O:12:\"App\\DataItem\":2:{s:2:\"id\";i:1622515925;s:9:\"\0*\0fields\";a:1:{s:4:\"name\";s:12:\"офлайн\";}}i:1622515939;O:12:\"App\\DataItem\":2:{s:2:\"id\";i:1622515939;s:9:\"\0*\0fields\";a:1:{s:4:\"name\";s:4:\"ИМ\";}}}s:14:\"nocheckarticle\";i:1;s:8:\"showchat\";i:1;s:16:\"usemobilescanner\";i:0;s:10:\"exportxlsx\";i:0;}');
+INSERT INTO `options` (`optname`, `optvalue`) VALUES('common', 'a:39:{s:9:\"qtydigits\";s:1:\"0\";s:8:\"amdigits\";s:1:\"0\";s:10:\"dateformat\";s:5:\"d.m.Y\";s:11:\"partiontype\";s:1:\"1\";s:4:\"curr\";s:2:\"gr\";s:6:\"phonel\";s:2:\"10\";s:6:\"price1\";s:17:\"Роздрiбна\";s:6:\"price2\";s:12:\"Оптова\";s:6:\"price3\";s:0:\"\";s:6:\"price4\";s:0:\"\";s:6:\"price5\";s:0:\"\";s:8:\"defprice\";s:2:\"10\";s:8:\"shopname\";s:19:\"Наша фiрма\";s:8:\"ts_break\";s:2:\"60\";s:8:\"ts_start\";s:5:\"09:00\";s:6:\"ts_end\";s:5:\"18:00\";s:11:\"checkslogan\";s:8:\"Тест\";s:11:\"autoarticle\";i:1;s:10:\"usesnumber\";i:1;s:10:\"usescanner\";i:1;s:9:\"useimages\";i:1;s:15:\"showactiveusers\";i:1;s:10:\"usecattree\";i:0;s:9:\"usebranch\";i:0;s:10:\"noallowfiz\";i:0;s:10:\"allowminus\";i:1;s:6:\"useval\";i:1;s:6:\"capcha\";i:0;s:9:\"numberttn\";i:0;s:16:\"usemobileprinter\";i:0;s:11:\"leadsources\";a:3:{i:1621367652;O:12:\"App\\DataItem\":2:{s:2:\"id\";i:1621367652;s:9:\"\0*\0fields\";a:1:{s:4:\"name\";s:6:\"ккк\";}}i:1621367735;O:12:\"App\\DataItem\":2:{s:2:\"id\";i:1621367735;s:9:\"\0*\0fields\";a:1:{s:4:\"name\";s:18:\"ннннннннн\";}}i:1621368209;O:12:\"App\\DataItem\":2:{s:2:\"id\";i:1621368209;s:9:\"\0*\0fields\";a:1:{s:4:\"name\";s:3:\"111\";}}}s:12:\"leadstatuses\";a:1:{i:1621367663;O:12:\"App\\DataItem\":2:{s:2:\"id\";i:1621367663;s:9:\"\0*\0fields\";a:1:{s:4:\"name\";s:3:\"yyy\";}}}s:14:\"printoutqrcode\";i:0;s:15:\"printoutbarcode\";i:1;s:11:\"salesources\";a:2:{i:1622515925;O:12:\"App\\DataItem\":2:{s:2:\"id\";i:1622515925;s:9:\"\0*\0fields\";a:1:{s:4:\"name\";s:12:\"офлайн\";}}i:1622515939;O:12:\"App\\DataItem\":2:{s:2:\"id\";i:1622515939;s:9:\"\0*\0fields\";a:1:{s:4:\"name\";s:4:\"ИМ\";}}}s:14:\"nocheckarticle\";i:1;s:8:\"showchat\";i:1;s:16:\"usemobilescanner\";i:0;s:10:\"exportxlsx\";i:0;}');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('disc', 'a:4:{s:8:\"firstbay\";s:2:\"11\";s:6:\"bonus1\";s:0:\"\";s:6:\"level2\";s:0:\"\";s:6:\"bonus2\";s:0:\"\";}');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('discount', 'a:6:{s:8:\"firstbay\";s:2:\"11\";s:6:\"bonus1\";s:3:\"1.1\";s:6:\"level2\";s:0:\"\";s:6:\"bonus2\";s:0:\"\";s:6:\"summa1\";s:3:\"100\";s:6:\"summa2\";s:0:\"\";}');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('food', 'a:5:{s:8:\"worktype\";s:1:\"2\";s:9:\"pricetype\";s:6:\"price1\";s:8:\"delivery\";i:1;s:6:\"tables\";i:1;s:4:\"pack\";i:1;}');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('printer', 'a:15:{s:7:\"pheight\";s:0:\"\";s:8:\"pa4width\";s:0:\"\";s:6:\"pwidth\";s:4:\"100%\";s:9:\"pdocwidth\";s:4:\"70mm\";s:8:\"pmaxname\";s:1:\"7\";s:9:\"pricetype\";s:6:\"price1\";s:11:\"barcodetype\";s:4:\"C128\";s:9:\"pfontsize\";s:2:\"28\";s:12:\"pdocfontsize\";s:2:\"16\";s:5:\"pname\";i:1;s:5:\"pcode\";i:1;s:8:\"pbarcode\";i:1;s:7:\"pqrcode\";i:1;s:6:\"pprice\";i:1;s:6:\"pcolor\";i:0;}');
-INSERT INTO `options` (`optname`, `optvalue`) VALUES('salary', 'a:4:{s:13:\"codebaseincom\";s:3:\"105\";s:10:\"coderesult\";s:3:\"900\";s:4:\"calc\";s:219:\"v200 = v105\r\n//податки\r\nv220 =  v200 * 0.18\r\nv300 =  v200 * 0.22\r\n//всього  утримано\r\nv600 =v200  - v220- v300\r\n//на руки\r\nv900 =v200  - v600-v850\r\n\r\n\r\n//приклад\r\nif(invalid){\r\n   \r\n}  \";s:11:\"codeadvance\";s:3:\"850\";}');
+INSERT INTO `options` (`optname`, `optvalue`) VALUES('salary', 'a:4:{s:13:\"codebaseincom\";s:3:\"105\";s:10:\"coderesult\";s:3:\"900\";s:4:\"calc\";s:219:\"v200 = v105\r\n//податки\r\nv220 =  v200 * 0.18\r\nv300 =  v200 * 0.22\r\n//всього утримано\r\nv600 =v200  - v220- v300\r\n//на руки\r\nv900 =v200  - v600-v850\r\n\r\n\r\n//приклад\r\nif(invalid){\r\n   \r\n}  \";s:11:\"codeadvance\";s:3:\"850\";}');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('shop', 'YToyMDp7czo3OiJkZWZjdXN0IjtzOjE6IjEiO3M6MTE6ImRlZmN1c3RuYW1lIjtzOjI5OiLQm9C10L7QvdC40LQg0JzQsNGA0YLRi9C90Y7QuiI7czo5OiJkZWZicmFuY2giO047czo5OiJvcmRlcnR5cGUiO3M6MToiMCI7czoxMjoiZGVmcHJpY2V0eXBlIjtzOjY6InByaWNlMSI7czo1OiJlbWFpbCI7czowOiIiO3M6ODoic2hvcG5hbWUiO3M6MTc6ItCd0LDRiCDQvNCw0LPQsNC3IjtzOjEyOiJjdXJyZW5jeW5hbWUiO3M6Njoi0YDRg9CxIjtzOjg6InVzZWxvZ2luIjtpOjA7czo5OiJ1c2VmaWx0ZXIiO2k6MDtzOjEzOiJjcmVhdGVuZXdjdXN0IjtpOjA7czoxMToidXNlZmVlZGJhY2siO2k6MDtzOjExOiJ1c2VtYWlucGFnZSI7aTowO3M6NzoiYWJvdXR1cyI7czoxNjoiUEhBK1BHSnlQand2Y0Q0PSI7czo3OiJjb250YWN0IjtzOjA6IiI7czo4OiJkZWxpdmVyeSI7czowOiIiO3M6NDoibmV3cyI7czowOiIiO3M6NToicGFnZXMiO2E6Mjp7czo0OiJuZXdzIjtPOjEyOiJBcHBcRGF0YUl0ZW0iOjI6e3M6MjoiaWQiO047czo5OiIAKgBmaWVsZHMiO2E6NDp7czo0OiJsaW5rIjtzOjQ6Im5ld3MiO3M6NToidGl0bGUiO3M6MTE6Imtra3JycnJycnJyIjtzOjU6Im9yZGVyIjtzOjE6IjIiO3M6NDoidGV4dCI7czoyNDoiUEhBK1pXVmxaV1ZsWldWbFBDOXdQZz09Ijt9fXM6ODoiYWJvdXRfdXMiO086MTI6IkFwcFxEYXRhSXRlbSI6Mjp7czoyOiJpZCI7TjtzOjk6IgAqAGZpZWxkcyI7YTo0OntzOjQ6ImxpbmsiO3M6ODoiYWJvdXRfdXMiO3M6NToidGl0bGUiO3M6OToi0J4g0L3QsNGBIjtzOjU6Im9yZGVyIjtzOjE6IjMiO3M6NDoidGV4dCI7czozMjoiUEhBK1BHSSswSjRnMEwzUXNOR0JQQzlpUGp3dmNEND0iO319fXM6NToicGhvbmUiO3M6MDoiIjtzOjEwOiJzYWxlc291cmNlIjtzOjE6IjAiO30=');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('val', 'a:2:{s:7:\"vallist\";a:2:{i:1642675955;O:12:\"App\\DataItem\":2:{s:2:\"id\";i:1642675955;s:9:\"\0*\0fields\";a:3:{s:4:\"code\";s:3:\"USD\";s:4:\"name\";s:10:\"Долар\";s:4:\"rate\";s:2:\"28\";}}i:1642676126;O:12:\"App\\DataItem\":2:{s:2:\"id\";i:1642676126;s:9:\"\0*\0fields\";a:3:{s:4:\"code\";s:4:\"EURO\";s:4:\"name\";s:8:\"Євро\";s:4:\"rate\";s:2:\"33\";}}}s:8:\"valprice\";i:0;}');
 INSERT INTO `options` (`optname`, `optvalue`) values('version','6.5.0');  
