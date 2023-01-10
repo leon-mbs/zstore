@@ -24,7 +24,7 @@
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Ціна</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="70">Сума</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="140">Сер. номер</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="70">Гар., Міс</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="70">Гар., міс.</th>
     </tr>
     {{#_detail}}
     <tr>
@@ -68,7 +68,7 @@
 
         </td>
         <td colspan="3">
-            М.Ш.
+            М.П.
         </td>
 
 

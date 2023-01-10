@@ -32,7 +32,7 @@
                     <span class="info-box-icon bg-success elevation-1"><i class="fa  fa-pallet"></i></span>
 
                     <div class="info-box-content">
-                        <span class="info-box-text">Товарiв на  складi</span>
+                        <span class="info-box-text">Товарiв на складi</span>
                         <span class="info-box-number">
                             На суму  {{biitemscnt}}
 
@@ -155,9 +155,9 @@
 
                 <div   class="card ">
                     <div   class="card-body">
-                        <h4>Просроченi товари</h4>
-                        <br><a zippy="sdcsv">Експорт в  Excel</a>
-                        <small>Товари для котрих закiнчився срок придатностi</small>
+                        <h4>Простроченi товари</h4>
+                        <br><a zippy="sdcsv">Експорт у Excel</a>
+                        <small>Товари для котрих закiнчився термін придатностi</small>
                         <table class="table   table-sm">
                             <tr>
 
@@ -187,8 +187,8 @@
                 <div   class="card ">
                     <div   class="card-body">
                         <h4>Мiнiмальна кiлькiсть </h4>
-                        <small>Товари для якмх задана мiнiмальна  кiлькiсть на складi  та актуальна кiлькiсть менше заданоi</small>
-                        <br><a zippy="mqcsv">Експорт в  Excel</a>
+                        <small>Товари для яких задана мiнiмальна кiлькiсть на складi та актуальна кiлькiсть менше заданої</small>
+                        <br><a zippy="mqcsv">Експорт у Excel</a>
                         <table class="table   table-sm">
                             <tr>
                                   <th>Склад</th>
@@ -220,9 +220,9 @@
 
                 <div   class="card ">
                     <div   class="card-body">
-                        <h4>Недавнi документи</h4>
-                        <small>Документи з недавно змiненим статусом</small>
-                        <br><a zippy="rdcsv">Експорт в  Excel</a>
+                        <h4>Останні документи</h4>
+                        <small>Документи з нещодавно змiненим статусом</small>
+                        <br><a zippy="rdcsv">Експорт у Excel</a>
                         <table class="table   table-sm">
                             <tr>
                                 <th>Номер</th>
@@ -256,7 +256,7 @@
                     <div   class="card-body">
                         <h4>Мої документи</h4>
                         <small>Документи, створені поточним користувачем</small>
-                        <br><a zippy="mdcsv">Експорт в  Excel</a>
+                        <br><a zippy="mdcsv">Експорт у Excel</a>
                         <table class="table   table-sm">
                             <tr>
                                 <th>Номер</th>
@@ -303,7 +303,7 @@
             fontcolor='#fff' ;
         {{/darkmode}}              
         
-//структура   расходов
+//структура видатків
 var pieData = {
 labels: {{{pbtitle}}},
         datasets: [
@@ -320,7 +320,7 @@ maintainAspectRatio : false,
         responsive : true,
         title: {
         display: true,   fontColor: fontcolor,
-                text: 'Структура видаткiв за  три мiсяцi',
+                text: 'Структура видаткiв за три мiсяцi',
                 position: 'top'
 
         },
@@ -338,7 +338,7 @@ maintainAspectRatio : false,
         },
 }
 
-//сравнение  доходоа  и расходов
+//порівняння прибутків і видатків
 
 
 
@@ -371,7 +371,7 @@ display: true,
          },
         title: {
         display: true,   fontColor: fontcolor,
-                text: 'Прибутки та  видатки'
+                text: 'Прибутки та видатки'
         }
         
 , 

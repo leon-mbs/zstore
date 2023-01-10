@@ -11,8 +11,8 @@
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-toggle="popover"
                        data-placement="bottom" data-html="true" data-content="Імпорт ТМЦ з Excel файлу.
-                       Для вказівки розташування даних необхідно вказати номери відповідних колонок. перевіряється на                                 унікальність артикул і найменування
-                       Може бути виконаний імпорт номенклатури в довідник, або якщо вказано кількість оприбуткування на склад.                       У цьому випадку створюється документ Оприбуткування товару
+                       Для розташування даних необхідно вказати номери відповідних колонок (перевіряється на унікальність артикул і найменування).
+                       Може бути виконаний імпорт номенклатури в довідник, або якщо вказано кількість оприбуткування на склад, створюється документ Оприбуткування товару.
                        <br>Також є можливість попереднього перегляду даних. "></i>
                 </h3>
 
@@ -31,10 +31,10 @@
                         <div class="form-group  ">
                             <label for="icompare">Спiвставлення при оновленнi</label>
                             <select zippy="icompare" class="form-control  ">
-                                <option value="0">По артикулу</option>
-                                <option value="1">По найменуванню</option>
-                                <option value="2">По найменуванню та бренду</option>
-                                <option value="3">По артикулу та бренду</option>
+                                <option value="0">За артикулем</option>
+                                <option value="1">За найменуванням</option>
+                                <option value="2">За найменуванням та брендом</option>
+                                <option value="3">За артикулем та брендом</option>
                                
                                 
                             </select>
@@ -64,11 +64,11 @@
                        
                         <div class="  form-check">
                             <input zippy="noshowprice" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="noshowprice">Не показувати в  прайсi</label>
+                            <label class="form-check-label" for="noshowprice">Не показувати в прайсi</label>
                         </div>
                         <div class="  form-check">
                             <input zippy="noshowshop" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="noshowshop">Не показувати в  онлайн каталозi </label>
+                            <label class="form-check-label" for="noshowshop">Не показувати в онлайн каталозi </label>
                         </div>
                         
 
@@ -78,7 +78,7 @@
                         </div>
 
                         <div class="form-group  ">
-                            <input class="btn btn-info" type="submit" value="Загрузити"/>
+                            <input class="btn btn-info" type="submit" value="Завантажити"/>
                         </div>
                     </div>
                     <div class="col-4">
@@ -93,7 +93,7 @@
                             </select>   </div> 
                         </div>
                        <div class="form-group row">
-                            <label  class="col-8 col-form-label" for="colshortname">Коротке найменування</label>
+                            <label  class="col-8 col-form-label" for="colshortname">Скорочене найменування</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colshortname" class="form-control  ">
                             </select>   </div> 
@@ -256,10 +256,9 @@
                 <h3>Імпорт накладної
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-toggle="popover"
-                       data-placement="bottom" data-html="true" data-content="Імпорт накладної з  Excel файлу.
-                       Для вказівки розташування даних необхідно вказати номери відповідних колонок. перевіряється на    унікальність артикул і найменування
-
-                       В результатi створюется докусмент Прибуткова накладна який слiд  провести  пiсля вводу                         оплат и других атрибцутов
+                       data-placement="bottom" data-html="true" data-content="Імпорт накладної з Excel файлу.
+                       Для розташування даних необхідно вказати номери відповідних колонок (перевіряється на унікальність артикул і найменування).
+                       У результатi створюється документ Прибуткова накладна, який слiд провести пiсля введення оплат та інших атрибутів.
                        <br>Також є можливість попереднього перегляду даних. "></i>
                 </h3>
 
@@ -293,7 +292,7 @@
                         </div>
 
                         <div class="form-group  ">
-                            <input class="btn btn-info" type="submit" value="Загрузити"/>
+                            <input class="btn btn-info" type="submit" value="Завантажити"/>
                         </div>
                     </div>
                     <div class="col-6">
@@ -314,7 +313,7 @@
                             </select>   </div>
                         </div>
                         <div class="form-group row ">
-                            <label  class="col-8 col-form-label" for="ncolbarcode">Штрих-код</label>
+                            <label  class="col-8 col-form-label" for="ncolbarcode">Штрих код</label>
                               <div class="col-4">
                              <select style="width:100px;" zippy="ncolbarcode" class="form-control  ">
                             </select>  </div>
@@ -358,7 +357,7 @@
                             <tr>
                                 <th>Найменування</th>
                                 <th>Код</th>
-                                <th>Штрих-код</th>
+                                <th>Штрих код</th>
 
                                 <th>Од.</th>
                                 <th class="text-right">Кіл.</th>
@@ -389,8 +388,8 @@
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-toggle="popover"
                        data-placement="bottom" data-html="true" data-content="Імпорт контрагентів з Excel файлу.
-                       Для вказівки розташування даних необхідно вказати номери відповідних колонок.
-                       Перевіряється на унікальність телефон 
+                       Для розташування даних необхідно вказати номери відповідних колонок.
+                       Перевіряється на унікальність телефон. 
                        <br>Також є можливість попереднього перегляду даних. "></i>
                 </h3>
 
@@ -404,7 +403,7 @@
                         <div class="form-group  ">
                             <label for="ctype">Імпортувати як</label>
                             <select zippy="ctype" class="form-control   ">
-                                <option value="0">Не вибрано</option>
+                                <option value="0">Не обрано</option>
                                 <option value="1">Покупцi</option>
                                 <option value="2">Постачальники</option>
                                 
@@ -429,7 +428,7 @@
                         </div>
 
                         <div class="form-group  ">
-                            <input class="btn btn-info" type="submit" value="Загрузити"/>
+                            <input class="btn btn-info" type="submit" value="Завантажити"/>
                         </div>
 
                     </div>
@@ -481,7 +480,7 @@
                             <tr>
                                 <th>Найменування</th>
                                 <th>Тел.</th>
-                                <th>Email</th>
+                                <th>E-mail</th>
                                 <th>Місто</th>
                                 <th>Адреса</th>
 

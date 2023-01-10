@@ -25,7 +25,7 @@
 
                         <label for="salesource">Джерело продаж</label>
                         <select class="form-control mr-2" zippy="salesource">
-                            <option value="0">Не  вибране</option>
+                            <option value="0">Не обрано</option>
                         </select>
 
                         <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Пошук по контенту">
@@ -39,7 +39,7 @@
                 <a href="/index.php?p=App/Pages/Doc/Order" class="btn btn-info mt-2 mb-3">Нове замовлення</a>
 
 
-                <br><a zippy="csv">Експорт в Excel</a>
+                <br><a zippy="csv">Експорт у Excel</a>
 
                 <table class="table   table-sm   ">
                     <tr>
@@ -99,7 +99,7 @@
             <div class="col-12 col-xl-10">
                 <div class="navbar nav">
                     <form zippy="payform" class="form-inline ">
-                        <label>До оплати</label>
+                        <label>До сплати</label>
                         <input zippy="pamount" pattern="[0-9\.\-]+" style="width:100px;" placeholder="Сума..."
                                class="form-control mr-2">
                         <label for="payment">рахунок</label>
@@ -109,7 +109,7 @@
                         {{#ppo}}
                         <label for="pos">POS</label>
                         <select class="form-control mr-2" zippy="pos">
-                            <option value="0">Не вибраний</option>
+                            <option value="0">Не обрано</option>
 
                         </select>
                         {{/ppo}}
@@ -118,7 +118,7 @@
 
                         <input zippy="pcomment" placeholder="Коментар..." class="form-control mr-2">
 
-                        <button type="submit" class="  btn btn-info  mr-2 ">Оплатити</button>
+                        <button type="submit" class="  btn btn-info  mr-2 ">Сплатити</button>
                         <input zippy="closeorder" type="checkbox" class="form-control "> <span data-label="closeorder">Закрити ордер</span>
 
 
@@ -132,7 +132,7 @@
         <div class="row" zippy="statuspan">
             <div class="col-12   col-xl-10">
                 <details>
-                  <summary>Наявнiсть товарiв на  складi та/або у постачальника</summary>
+                  <summary>Наявнiсть товарiв на складi та/або у постачальника</summary>
                   
                  
            
@@ -141,8 +141,8 @@
                      <th>Товар</th>
                      <th>Артикул</th>
                      <th class="text-right">Замовлено</th>
-                     <th>На  складi</th>
-                     <th>У  постачальникiв</th>
+                     <th>На складi</th>
+                     <th>У постачальникiв</th>
                      </tr>
                      {{#citems}}
                      <tr>
@@ -183,16 +183,16 @@
                     <form zippy="statusform" class="form-inline ">
 
                         <button zippy="binp" class="btn btn-success  mr-2"> На обробку</button>
-                        <button zippy="brd" class="btn btn-success  mr-2"> Готовий до  вiдправки</button>
+                        <button zippy="brd" class="btn btn-success  mr-2"> Готовий до вiдправки</button>
                         <button zippy="bclose" type="submit" class="  btn btn-success  mr-2 ">                     Виконано                </button>
-                        <a zippy="btopay" class="  btn btn-success  mr-2 ">Оплатити</a>
+                        <a zippy="btopay" class="  btn btn-success  mr-2 ">Сплатити</a>
 
                         <button zippy="bttn" class="btn btn-info  mr-4"></i> Створити ТТН</button>
                         <button zippy="bpos" class="btn btn-info  mr-2"> Чек                </button>
-                        <button zippy="bgi" class="btn btn-info  mr-2">  Видаткова  накладна                </button>
-                        <button zippy="bco" class="btn btn-info  mr-2">  Закупка               </button>
+                        <button zippy="bgi" class="btn btn-info  mr-2">  Видаткова накладна                </button>
+                        <button zippy="bco" class="btn btn-info  mr-2">  Закупівля               </button>
                         <button zippy="btask" type="submit" class=" btn btn-info mr-2 ">Створити наряд</button>
-                        <button zippy="bref" class="btn btn-danger  mr-4"><i class="fas fa-thumbs-down"></i> Анульований                </button>
+                        <button zippy="bref" class="btn btn-danger  mr-4"><i class="fas fa-thumbs-down"></i> Анульовано                </button>
                           
                          
                          
@@ -207,7 +207,7 @@
 
                                 <label for="brmove">фiлiя </label>
                                 <select zippy="brmove" class="form-control mr-2 ">
-                                    <option value="0">Не вказана</option>
+                                    <option value="0">Не вказано</option>
                                 </select>
                           
                                {{/usebranch}}

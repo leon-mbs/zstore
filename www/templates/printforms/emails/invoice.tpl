@@ -1,7 +1,7 @@
 Добрий день, {{customer_name}}
 <br>
 <br>
-Рахунок на оплату {{number}}  вiд {{date}} на суму {{amount}}.
+Рахунок на оплату {{number}} вiд {{date}} на суму {{amount}}.
 <br>
 <br>
 

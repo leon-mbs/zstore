@@ -61,7 +61,7 @@
 
     <tr style="font-weight: bolder;">
 
-        <th colspan="6" style="text-align: left;">Готова  продукцiя</th>
+        <th colspan="6" style="text-align: left;">Готова продукцiя</th>
 
     </tr>
     <tr style="font-weight: bolder;">

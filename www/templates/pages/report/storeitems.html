@@ -1,16 +1,16 @@
 <html>
    <head>
-        <title> Стан  складiв   </title>
+        <title> Стан складiв   </title>
 
     </head>
     <body>
         <div class="row">
             <div class="col-12   ">
-                <h3>Стан  складiв</h3>
-                <small>Кiлькiсть  по складах</small>
+                <h3>Стан складiв</h3>
+                <small>Кiлькiсть по складам</small>
                 <div class="navbar nav">
                     <form zippy="filter" class="form-inline">
-                         <input autocomplete="off" placeholder="Iм'я  або  код..." class="form-control mr-sm-2" type="text"
+                         <input autocomplete="off" placeholder="Iм'я або код..." class="form-control mr-sm-2" type="text"
                                onkeydown="onSearch()" zippy="searchkey">
                        <div class="form-check   mr-2">
                             <input class="form-check-input" type="checkbox" zippy="fminus">
@@ -21,7 +21,7 @@
                        <div class="form-check   mr-2">
                             <input class="form-check-input" type="checkbox" zippy="fmin">
                             <label class="form-check-label" for="fmin">
-                                Менше  мiнiмального
+                                Менше мiнiмального
                             </label>
                         </div>
                         <label for="searchcat">категорiя</label>
@@ -39,15 +39,15 @@
                 <div zippy="detail">
                     <div>
                         <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
-                        <a href="/showreport/xls/storeitems" target="_blank" title="Експорт в Excel"><i class="fa fa-file-excel mr-2"></a>
-                        <a href="/showreport/pdf/storeitems" target="_blank" title="Експорт в PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
+                        <a href="/showreport/xls/storeitems" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></a>
+                        <a href="/showreport/pdf/storeitems" target="_blank" title="Експорт у PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
 
                     </div>
 
 
                     <div zippy="preview" class="table-responsive-sm">
                      <div class="spinner-border m-3" role="status">
-  <span class="sr-only">Loading...</span>
+  <span class="sr-only">Завантаження...</span>
 </div>                 
                     </div>
 

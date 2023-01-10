@@ -11,11 +11,11 @@
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
-                        <label for="document_number">Номер документу</label>
+                        <label for="document_number">Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number" required="required">
                     </div>
                     <div class="form-group  ">
-                        <label for="store">З складу</label>
+                        <label for="store">Зі складу</label>
                         <select class="form-control" zippy="store">
                             <option value="0">Не встановлено</option>
                         </select>
@@ -105,10 +105,10 @@
                         </tr>
                         <tr style="font-weight: bolder;">
                             {{^usesnumber}}
-                            <td colspan="5" class="text-right"><span data-label="payed">Внесена оплата:</span></td>
+                            <td colspan="5" class="text-right"><span data-label="payed">Внесено оплату:</span></td>
                             {{/usesnumber}}
                             {{#usesnumber}}
-                            <td colspan="7" class="text-right"><span data-label="payed">Внесена оплата:</span></td>
+                            <td colspan="7" class="text-right"><span data-label="payed">Внесено оплату:</span></td>
                             {{/usesnumber}}
 
                             <td zippy="payed" class="text-right"></td>

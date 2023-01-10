@@ -12,7 +12,7 @@
     </tr>
     <tr>
         <td></td>
-        <td>Email</td>
+        <td>E-mail</td>
         <td colspan="8">{{email}}</td>
     </tr>
     <tr>

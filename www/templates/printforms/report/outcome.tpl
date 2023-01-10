@@ -109,7 +109,7 @@
 {{#_type3}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="5">
-        Продажі по датах <br> <br>
+        Продажі по датам <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
@@ -175,7 +175,7 @@
 {{#_type5}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="5">
-        Продажi по категорiях <br> <br>
+        Продажi по категорiям <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
@@ -221,7 +221,7 @@
 {{#_type6}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="5">
-        Продажi по компанiях <br> <br>
+        Продажi по компанiям <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
@@ -266,7 +266,7 @@
 {{#_type7}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="5">
-        Продажi по складах <br> <br>
+        Продажi по складам <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
@@ -310,7 +310,7 @@
 {{#_type8}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="5">
-        Продажi по джерелах <br> <br>
+        Продажi по джерелам <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
@@ -355,7 +355,7 @@
 {{#_type12}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="5">
-        Товари по бренду  {{brand}}<br> <br>
+        Товари по брендам  {{brand}}<br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">

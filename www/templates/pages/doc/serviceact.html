@@ -10,8 +10,8 @@
             <h3> Замовлення (послуги)
                 <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover"
                    data-html="true" data-placement="bottom" data-content="Документ введення робіт або послуг, які потрібні замовнику.
-                   На підставі замовленя може бути створений 'Наряд' на виконання робіт. Робота з документами типа 'Акт' проводиться в журналі 'Послуги'. 
-                   <br><br>Є можливість друку квитанцій на вузькому (чековом) принтері."></i>
+                   На підставі замовленя може бути створений 'Наряд' на виконання робіт. Робота з документами типу 'Акт' проводиться в журналі 'Послуги'. 
+                   <br><br>Є можливість друку квитанцій на вузькому (чековому) принтері."></i>
 
             </h3>
 
@@ -30,23 +30,23 @@
                     <div class="form-group  ">
                         <label for="firm">Виконавець</label>
                         <select class="form-control" zippy="firm">
-                            <option value="0">Не вибраний</option>
+                            <option value="0">Не обрано</option>
                         </select>
                     </div>
 
                     <div class="form-group  ">
-                        <label for="contract" data-label="contract">Контракт</label>
+                        <label for="contract" data-label="contract">Договір</label>
                         <select class="form-control" zippy="contract">
-                            <option value="0">Не вибраний</option>
+                            <option value="0">Не обрано</option>
                         </select>
 
 
                     </div>
 
                     <div class="form-group">
-                        <label for="device"> Виріб, матеріали прийняті від замовника</label>
+                        <label for="device"> Виріб, матеріали, прийняті від замовника</label>
                         <input class="form-control" type="text" zippy="device"/>
-                        <small>Заповнюється в сервісних центрах, майстеренях, СТО ...</small>
+                        <small>Заповнюється в сервісних центрах, майстеренях, СТО...</small>
                     </div>
                     <div class="form-group">
                         <label for="devsn">Серійний номер виробу</label>
@@ -57,7 +57,7 @@
                 </div>
                 <div class="col-6 col-md-4 col-lg-3">
                    <div class="form-group">
-                        <label for="document_number">Номер документу</label>
+                        <label for="document_number">Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number" required="required">
                     </div>                   
                     <div class="form-group">
@@ -93,7 +93,7 @@
                     <a zippy="addrow"  class="btn btn-info mr-4">Додати роботу</a> 
                     <a zippy="additemrow"  class="btn btn-info ">Додати комплектуючі</a> 
                     <br>
-                    <small>Документ може бути збережений без позицій, якщо обсяг робіт ще невідомий а потрібно роздрукувати (з журналу послуг) квитанцію про прийом у замовника виробу</small>
+                    <small>Документ може бути збережений без позицій, якщо обсяг робіт ще невідомий, а потрібно роздрукувати (з журналу послуг) квитанцію про прийом у замовника виробу</small>
                     <table class="table  table-sm">
                         <tr>
                             <th>Назва</th>
@@ -174,7 +174,7 @@
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">До оплати</h5>
+                            <h5 class="modal-title">До сплати</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -192,7 +192,7 @@
                     </div>
                 </div>
             </div>
-      <div id="modalpayed" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"                  aria-hidden="true">
+      <div id="modalpayed" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -205,13 +205,13 @@
                             <div class="form-group  ">
                                 <label for="payment">Каса, рахунок</label>
                                 <select class="form-control" zippy="payment">
-                                    <option value="0">Не вибрано</option>
+                                    <option value="0">Не обрано</option>
                                 </select>
                                
                             </div>
                         
                             <div class="form-group  ">
-                                <label for="payment">Внесена  оплата</label>
+                                <label for="payment">Внесено  оплату</label>
                                                          
                                 <input class="form-control qtyprice" type="text" zippy="payed" pattern="[0-9,\.]+">
                                 
@@ -332,7 +332,7 @@
                         <input pattern="[0-9]+" class="form-control" type="text" zippy="editphone"/>
                     </div>
                      <div class="form-group">
-                        <label for="editemail">E-email</label>
+                        <label for="editemail">E-mail</label>
                         <input class="form-control" type="email" zippy="editemail"/>
                     </div>
 

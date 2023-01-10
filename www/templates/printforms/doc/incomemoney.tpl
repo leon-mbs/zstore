@@ -32,7 +32,7 @@
     {{#contract}}
     <tr>
         <td colspan="4">
-            <b>Угода:</b> {{contract}}
+            <b>Договір:</b> {{contract}}
         </td>
     </tr>
     {{/contract}}

@@ -20,7 +20,7 @@
 
         <td></td>
 
-        <td valign="top"><b>Угода</b></td>
+        <td valign="top"><b>Договір</b></td>
         <td colspan="5">{{contract}} вiд {{createdon}}</td>
 
 

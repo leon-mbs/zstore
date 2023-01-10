@@ -11,12 +11,12 @@
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
-                        <label for="document_number">Номер документу</label>
+                        <label for="document_number">Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number" required="required">
                     </div>
 
                     <div class="form-group  ">
-                        <label for="store">З складу</label>
+                        <label for="store">Зі складу</label>
                         <select class="form-control" zippy="store">
                             <option value="0">Не обрано</option>
                         </select>
@@ -36,7 +36,7 @@
                     <div class="form-group  ">
                         <label for="pos">POS термiнал</label>
                         <select class="form-control" zippy="pos">
-                            <option value="0">Не вибраний</option>
+                            <option value="0">Не обрано</option>
                         </select>
                     </div>
 
@@ -54,7 +54,7 @@
                     <div class="form-group  ">
                         <label for="salesource">Джерело продаж</label>
                         <select class="form-control" zippy="salesource">
-                            <option value="0">Не вибрано</option>
+                            <option value="0">Не обрано</option>
                         </select>
                     </div>
 
@@ -80,7 +80,7 @@
                 <div class="col-12 col-md-10 col-xl-8">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих-код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
+                        Штрих код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
                         &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
 
                     </div>
@@ -182,10 +182,10 @@
                         </tr>
                         <tr style="font-weight: bolder;">
                             {{^usesnumber}}
-                            <td colspan="5" class="text-right"><span data-label="payed">Внесена оплата:</span></td>
+                            <td colspan="5" class="text-right"><span data-label="payed">Внесено оплату:</span></td>
                             {{/usesnumber}}
                             {{#usesnumber}}
-                            <td colspan="7" class="text-right"><span data-label="payed">Внесена оплата:</span></td>
+                            <td colspan="7" class="text-right"><span data-label="payed">Внесено оплату:</span></td>
                             {{/usesnumber}}
 
                             <td zippy="payed" class="text-right"></td>
@@ -269,7 +269,7 @@
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Внесена оплата</h5>
+                            <h5 class="modal-title">Внесено оплату</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>

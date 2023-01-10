@@ -74,7 +74,7 @@
     <tr>
 
         <td></td>
-        <td> Угода</td>
+        <td> Договір</td>
         <td colspan="7">{{contract}} вiд {{createdon}}</td>
 
     </tr>

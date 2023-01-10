@@ -91,7 +91,7 @@
                                   <td>
                                   {{#auserid}}
                                   
-                                  <i onclick="openSendMsg({{auserid}},'{{ausername}}')" style="cursor:pointer" class="fa fa-comment-alt" title="Отправить сообщение" />
+                                  <i onclick="openSendMsg({{auserid}},'{{ausername}}')" style="cursor:pointer" class="fa fa-comment-alt" title="Відправити повідомлення" />
                                   
                                   {{/auserid}} 
                                   </td>
@@ -174,7 +174,7 @@
                 <!-- Brand Logo -->
                 <a href="/index.php" class="brand-link">
 
-                    <span class="brand-text font-weight-light">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Zippy  Склад</span>
+                    <span class="brand-text font-weight-light">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Zippy Склад</span>
                 </a>
 
                 <!-- Sidebar -->
@@ -465,7 +465,7 @@
                                             <li class="nav-item">
                                                 <a href="/shop" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Перейти  до  каталогу</p>
+                                                    <p>&nbsp;&nbsp;Перейти до каталогу</p>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
@@ -610,7 +610,7 @@
                                                
                                                 <a href="/index.php?p=App/Modules/Issue/Pages/TimeSheet" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Облік  часу</p>
+                                                    <p>&nbsp;&nbsp;Облік часу</p>
                                                 </a>
                                               
                                              
@@ -625,7 +625,7 @@
                                     <li class="nav-item">
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
-                                            <p>Фiскализацiя
+                                            <p>Фiскалізацiя
                                                 <i class="right fas fa-angle-left"></i>
                                             </p>
 
@@ -641,7 +641,7 @@
                                             <li class="nav-item">
                                                 <a href="/index.php?p=App/Modules/PPO/ZList" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Журнал  z-звiтiв</p>
+                                                    <p>&nbsp;&nbsp;Журнал z-звiтiв</p>
                                                 </a>
                                             </li>
                                                    {{#isadmins}}                                            
@@ -714,7 +714,7 @@
                                     <li class="nav-item">
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
-                                            <p>Обмен с PromUa
+                                            <p>Обмін з PromUa
                                                 <i class="right fas fa-angle-left"></i>
                                             </p>
 
@@ -1014,7 +1014,7 @@ icon: 'fa fa-exclamation-triangle text-warning',
             }
             
             {{#twodigit}}
-            //форматирует
+            //форматує
             function  _setText(id,v){
                $('#'+id).val( v.toFixed(2)  );         
             }
@@ -1024,7 +1024,7 @@ icon: 'fa fa-exclamation-triangle text-warning',
             {{/twodigit}}
         
             {{^twodigit}}
-            //форматирует
+            //форматує
             function  _setText(id,v){
                $('#'+id).val( v.toFixed(0)  );         
             }
@@ -1033,12 +1033,12 @@ icon: 'fa fa-exclamation-triangle text-warning',
             }
             {{/twodigit}}        
         
-       //автофокус на  модальном  окне
+       //автофокус на модальному вікні
        $(document).on('shown.bs.modal', '.modal', function() {
           $(this).find('input:visible:first').focus();
        });            
    
-       //замена  запятой
+       //заміна коми
         $(document).on('change', 'input.qtyprice', function() {
           var val =   $(this).val().replace(/,/g, '.');
           val =   val.replace(/\s/g, '');

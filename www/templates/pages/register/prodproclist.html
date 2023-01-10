@@ -24,7 +24,7 @@
 
 
                         <th>Найменування</th>
-                        <th>Замовлення, контракт</th>
+                        <th>Замовлення, договір</th>
                         <th>Серія, партія</th>
                         <th>Статус</th>
                         <th>Початок</th>
@@ -61,7 +61,7 @@
                         <td  >
                           &nbsp;   <a zippy="edit" title="Редагування"><i class="fa fa-edit"></i></a>
                         </td> <td  >
-                          &nbsp;   <a zippy="stages" title="Виробничі єтапи"><i class="fa fa-gavel"></i></a>
+                          &nbsp;   <a zippy="stages" title="Виробничі етапи"><i class="fa fa-gavel"></i></a>
                         </td> 
                         <td  >
                           &nbsp;   <a zippy="copy" title="Копіювати"><i class="fa fa-copy"></i></a>
@@ -88,13 +88,13 @@
                             &nbsp;&nbsp;
                             <a class="btn btn-danger" zippy="btnstcancel">Скасувати</a>
                             &nbsp;&nbsp;
-                            <a class="btn btn-success" zippy="btnstclose">Виконаний</a>
+                            <a class="btn btn-success" zippy="btnstclose">Виконано</a>
 
 
                         </div>               
                     </div>
                     <div   class="col-12 col-md-8 col-xl-6">
-                        <h5>Виробничі  етапи</h5>
+                        <h5>Виробничі етапи</h5>
                         <table class="table table-sm">
                             <tr><th>Найменування</th><th  >Статус</th><th  >Виробнича дільниця</th></tr>
                             {{#stagelist}}
@@ -143,7 +143,7 @@
                         <input required="required" class="form-control" zippy="editname"/>
                     </div>
                     <div class="form-group">
-                        <label for="editbasedoc">Замовлення, контракт</label>
+                        <label for="editbasedoc">Замовлення, договір</label>
                         <input   class="form-control" zippy="editbasedoc"/>
                     </div>
                     <div class="form-group">
@@ -166,13 +166,13 @@
 
         <div class="row" zippy="prodspan" >
             <div class="col-12 col-md-8 col-xl-6">
-                <h5>Запланована  готова  продукція</h5>
+                <h5>Запланована готова продукція</h5>
                 <div class="navbar nav">
                     <form zippy="addprodform" class="form-inline ">
                         <label  for="additem">Найменування</label>
 
                         <select   class="form-control mr-2" zippy="additem">
-                            <option value="0">Не  вибрано</option>
+                            <option value="0">Не обрано</option>
 
                         </select>
                         <label for="addqty">Кіл.</label>
@@ -199,7 +199,7 @@
         <div class="row" zippy="stagespan" >
             <div class="col-12 col-md-8 col-xl-6">
                 <h5>Виробничі етапи </h5>
-                <a zippy="backtoproc"   ><i class="fa fa-arrow-alt-circle-left"></i> До списку  процесів</a>  <br>
+                <a zippy="backtoproc"   ><i class="fa fa-arrow-alt-circle-left"></i> До списку процесів</a>  <br>
                 <a zippy="addstage"  class="btn  btn-success">Додати</a>
                 <table class="table table-sm">
                     <tr zippy="stagelist">
@@ -227,7 +227,7 @@
                     <div class="form-group">
                         <label for="editstagearea">Виробнича дільниця  </label>
                         <select  class="form-control" zippy="editstagearea">
-                            <option value="0">Не вибрана</option>
+                            <option value="0">Не обрано</option>
                         </select>
                     </div>
 

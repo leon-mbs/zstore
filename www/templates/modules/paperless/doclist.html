@@ -30,10 +30,10 @@
                                       </option>
                                     </select>
                                  
-                                    <label for="doctype"> Тип  документу </label>
+                                    <label for="doctype"> Тип  документа </label>
                                     <select v-model="doctype" class="form-control mr-2" id="doctype"  name="doctype" >
                                        <option value="GoodsIssue"    >Видаткова  накладна </option>
-                                       <option value="Invoice">Рахунок фактура </option>
+                                       <option value="Invoice">Рахунок-фактура </option>
                                        <option value="ServiceAct">Акт виконаних робiт </option>
                                     </select>
 
@@ -161,7 +161,7 @@
                    callPageMethod('connect',[], null,(data)=> 
                    {
                        if(data=="") {
-                          this.log = "Успішне  з`єднання...<br>" 
+                          this.log = "Успішне  з'єднання...<br>" 
                        }
                        else {
                           this.log = data 
