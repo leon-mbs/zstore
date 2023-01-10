@@ -12,8 +12,13 @@
 <text>ФН РРО {{fiscalnumberpos}}</text>   
     {{/fiscalnumberpos}}
 
-<text>{{firm_name}}</text>   
+<text>{{firm_name}}</text> 
+{{#inn}}  
 <text>ІПН {{inn}}</text>   
+{{/inn}}  
+{{#tin}}  
+<text>ЄДРПОУ {{tin}}</text>   
+{{/tin}}  
 <text>{{shopname}}</text>   
   {{#shopname}}
 <text>{{shopname}}</text>   
