@@ -295,44 +295,7 @@
 
 
 
-        
-        <script>
-        
-    var fontcolor='#000' ;
-    var bgcolor='#fff' ;
-        {{#darkmode}}
-            fontcolor='#fff' ;
-            bgcolor='#333' ;
-        {{/darkmode}}              
-        
-
  
- 
-
- 
- 
-    /*
-   
-   function cl(){
-      var input = document.querySelector('#tf')
-
-    var data = new FormData()
-    data.append('file', input.files[0])
-  
-
-             
-     fetch('http://local.next/api/app/uploadfile?DBGSESSID=447335844422600002;d=1,p=0,c=1', { 
-        method: 'post', 
-        headers: new Headers({
-            'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMiIsImlhdCI6MTY1NTgwOTM4NSwiZXhwIjoxNjU1ODk1Nzg1fQ.GMrtcnK60IZ2q-P9Oh0SxUkd01EXGlH9oEM37-1Swes' 
-            
-        }), 
-        body: data
-    });
-         
-   }
-*/
-        </script>
  
  
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -340,6 +303,16 @@
       google.charts.load('current', {'packages':['corechart'], 'language': 'uk'});
       google.charts.setOnLoadCallback(drawChart);
 
+      
+    var fontcolor='#000' ;
+    var bgcolor='#fff' ;
+        {{#darkmode}}
+            fontcolor='#fff' ;
+            bgcolor='#333' ;
+        {{/darkmode}}            
+      
+      
+      
       function drawChart() {
 
         //структура видатків

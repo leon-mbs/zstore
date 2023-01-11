@@ -782,15 +782,20 @@ class CustomerList extends \App\Pages\Base
         $data = array();
         $color = array();
 
+        $gr1=[];
+        $gr1[]=["name","amount"] ;
+        
         foreach ($rs as $row) {
-            $data[] = $row['cnt'];
-            $title[] = $row['leadstatus'];
-            $color[] = '#' . \App\Util::genColor();
+            
+            $gr1[]=[$row['leadstatus'], intval( $row['cnt'])];
+            
         }
-        $this->_tvars['gr1title'] = json_encode($title, JSON_UNESCAPED_UNICODE);
-        $this->_tvars['gr1data'] = json_encode($data);
-        $this->_tvars['gr1color'] = json_encode($color);
-
+       
+    
+        $this->_tvars['gr1'] = json_encode($gr1);
+            
+        
+        
         $sql = " 
          SELECT   leadsource,coalesce(count(*),0) as cnt   FROM customers 
              WHERE   
@@ -799,21 +804,21 @@ class CustomerList extends \App\Pages\Base
              GROUP BY  leadsource   
                          
         ";
-
+        $gr2=[];
+        $gr2[]=["name","amount"] ;
+    
         $rs = $conn->Execute($sql);
-        $title = array();
-        $data = array();
-        $color = array();
+ 
 
         foreach ($rs as $row) {
-            $data[] = $row['cnt'];
-            $title[] = $row['leadsource'];
-            $color[] = '#' . \App\Util::genColor();
+      
+         $gr2[]=[$row['leadsource'], intval( $row['cnt'])];
+               
+            
         }
-        $this->_tvars['gr2title'] = json_encode($title, JSON_UNESCAPED_UNICODE);
-        $this->_tvars['gr2data'] = json_encode($data);
-        $this->_tvars['gr2color'] = json_encode($color);
-
+      
+        $this->_tvars['gr2'] = json_encode($gr2);
+     
         $sql = " 
          SELECT   leadsource,coalesce(count(*),0) as cnt   FROM customers 
              WHERE   
@@ -824,18 +829,16 @@ class CustomerList extends \App\Pages\Base
         ";
 
         $rs = $conn->Execute($sql);
-        $title = array();
-        $data = array();
-        $color = array();
-
+ 
+        $gr3=[];
+        $gr3[]=["name","amount"] ;
+     
         foreach ($rs as $row) {
-            $data[] = $row['cnt'];
-            $title[] = $row['leadsource'];
-            $color[] = '#' . \App\Util::genColor();
+            $gr3[]=[$row['leadsource'], intval( $row['cnt'])];
+            
         }
-        $this->_tvars['gr3title'] = json_encode($title, JSON_UNESCAPED_UNICODE);
-        $this->_tvars['gr3data'] = json_encode($data);
-        $this->_tvars['gr3color'] = json_encode($color);
+        $this->_tvars['gr3'] = json_encode($gr3);
+        
     }
 
     public function closeStat($sender) {
