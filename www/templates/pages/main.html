@@ -1,8 +1,6 @@
 <html>
     <head>
-        <link rel="stylesheet" href="/assets/css/chart.css">
-
- 
+       
        
 
     </head>
@@ -121,26 +119,29 @@
 
             <div   class="col-12  col-lg-4   ">
                 <div   class="card ">
-                    <div   class="card-body">
 
-                        <canvas style="width:100%" id="paystructure"></canvas>
+
+                        <div style="width:100%" id="paystructure"></div>
                     </div>
-                </div>  
+
             </div>
+ 
 
-            <div   class="col-12  col-lg-4 ">
+  
+ 
+           <div   class="col-12  col-lg-4 ">
                 <div   class="card ">
-                    <div   class="card-body">
-
-                        <canvas style="width:100%" id="paycompare"></canvas>
-                    </div>
+                    
+                        <div style="width:100%" id="paycompare"></div>
+                  
                 </div>    
             </div>
-            <div   class="col-12  col-lg-4 ">
+         
+          <div   class="col-12  col-lg-4 ">
                 <div   class="card ">
                     <div   class="card-body">
 
-                        <canvas style="width:100%" id="sellstat"></canvas>
+                        <div style="width:100%" id="sellstat"></div>
                     </div>
                 </div>    
             </div>
@@ -294,182 +295,21 @@
 
 
 
-        <script language="javascript" src="/assets/js/chart.js"></script>
-
+        
         <script>
         
     var fontcolor='#000' ;
+    var bgcolor='#fff' ;
         {{#darkmode}}
             fontcolor='#fff' ;
+            bgcolor='#333' ;
         {{/darkmode}}              
         
-//структура видатків
-var pieData = {
-labels: {{{pbtitle}}},
-        datasets: [
-        {
-        data: {{{pbdata}}},
-                backgroundColor : {{{pbcolor}}},
-        }
-        ]
-}
 
+ 
+ 
 
-var pieOptions = {
-maintainAspectRatio : false,
-        responsive : true,
-        title: {
-        display: true,   fontColor: fontcolor,
-                text: 'Структура видаткiв за три мiсяцi',
-                position: 'top'
-
-        },
-        legend: {
-        display: true,
-                position: 'right',
-                labels: {
-                boxWidth: 10,
-                        fontColor: fontcolor,
-                        padding:  5
-                }
-        },
-        tooltips: {
-        enabled: true
-        },
-}
-
-//порівняння прибутків і видатків
-
-
-
-
-var barData = {
-labels: {{{pcmon}}},
-        datasets: [
-        {
-        label: "Видаток",
-                backgroundColor: "red",
-                data: {{{pcout}}}
-        }, {
-        label: "Прибуток",
-                backgroundColor: "green",
-                data: {{{pcin}}}
-        }
-        ]
-}
-
-
-var barOptions = {
-legend: {
-display: true,
-        position: 'right',  
-        labels: {
-                
-                        fontColor: fontcolor 
-                        
-                }
-         },
-        title: {
-        display: true,   fontColor: fontcolor,
-                text: 'Прибутки та видатки'
-        }
-        
-, 
-       scales: {
-        xAxes: [{
-             ticks: { 
-                   fontColor: fontcolor 
-             } 
-        }],
-                yAxes: [{    ticks: { 
-                   fontColor: fontcolor 
-             } 
-                }]
-        }                  
-}
-
-
-var sellData = {
-labels  : {{{tsmon}}},
-        datasets: [
-        {
-        label               : 'Товари',
-                backgroundColor         : 'rgba(60,141,188,0.8)',
-                borderColor         : 'rgba(60,141,188,0.8)',
-                fill          : false,
-                data                :  {{{tstov}}}
-        },
-        {
-        label               : 'Послуги',
-                backgroundColor         : 'rgba(210, 100, 100, 1)',
-                borderColor         : 'rgba(210, 100, 100, 1)',
-                fill          : false,
-                data                :  {{{tsser}}}
-        },
-        ]
-}
-
-
-
-
-
-
-var sellOptions = {
-title: {
-display: true,   fontColor: fontcolor,
-        text: 'Реалiзацiя'
-},
-
-legend: {
-   labels: {
-                
-                        fontColor: fontcolor 
-                        
-                }
-      
-        }, 
-
-        scales: {
-        xAxes: [{     ticks: { 
-                   fontColor: fontcolor 
-             },
-        gridLines : {
-        display : false,
-        }
-        }],
-                yAxes: [{    ticks: { 
-                   fontColor: fontcolor 
-             },
-                gridLines : {
-                display : false,
-                }
-                }]
-        }
-}
-
-window.onload = function() {
-
-
-new Chart(document.querySelector('#paystructure'), {
-type: 'pie',
-        data: pieData,
-        options: pieOptions
-})
-
-        new Chart(document.querySelector('#paycompare'), {
-        type: 'bar',
-                data: barData,
-                options: barOptions
-        })
-
-        new Chart(document.querySelector('#sellstat'), {
-        type: 'line',
-                data: sellData,
-                options: sellOptions
-        })
-
-
-};
+ 
  
     /*
    
@@ -493,6 +333,159 @@ type: 'pie',
    }
 */
         </script>
+ 
+ 
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart'], 'language': 'uk'});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+
+        //структура видатків
+          
+        var psdata = google.visualization.arrayToDataTable( 
+        
+          {{{ps}}}
+        
+        );
+
+        
+        
+        
+        var psoptions = {
+          title: 'Структура видаткiы за три мiсяцi' ,
+          sliceVisibilityThreshold: 0.01,         
+          backgroundColor: {
+            "fill":bgcolor 
+          } , 
+          titleTextStyle:{
+             "color":fontcolor ,"bold":true
+          } ,
+                   
+          chartArea:{
+             "top":25,"bottom":5,"left":10 , "right":60
+          } ,
+                  
+          legendTextStyle:{
+             "color":fontcolor 
+          } ,
+                  
+        };
+
+  
+       //старвнение
+        var pschart = new google.visualization.PieChart(document.getElementById('paystructure'));
+
+        pschart.draw(psdata, psoptions);
+        
+        
+  
+     
+      var pcdata = new google.visualization.DataTable();
+      pcdata.addColumn('string', 'Мiсяць');
+      pcdata.addColumn('number', 'Прибутки');
+      pcdata.addColumn('number', 'Видатки');
+
+      pcdata.addRows(
+          {{{pc}}}
+      );
+
+      var pcoptions = {
+        title: 'Прибутки та видатки',
+        legend:{
+            position:"bottom"
+        }  ,
+          backgroundColor: {
+            "fill":bgcolor 
+          } , 
+          titleTextStyle:{
+             "color":fontcolor ,"bold":true
+          } ,
+                   
+      
+                  
+          legendTextStyle:{
+             "color":fontcolor 
+          } , 
+          
+          hAxis:{
+           
+              textStyle: {
+                color: fontcolor
+              }
+            } ,
+          vAxis:{
+              gridlines:null,
+              textStyle: {
+                color: fontcolor
+              }
+            } ,                 
+      };
+      
+      var pcchart = new google.visualization.ColumnChart(document.getElementById('paycompare'));
+      pcchart.draw(pcdata, pcoptions);
+      
+     
+       //продажи
+          
+         
+        var tsdata = new google.visualization.DataTable();
+      tsdata.addColumn('string', 'Мiсяць');
+      tsdata.addColumn('number', 'Послуги');
+      tsdata.addColumn('number', 'Товари');
+
+      tsdata.addRows( 
+       {{{ts}}}
+     )
+        
+        
+        
+        var tsoptions = {
+          title: 'Реалiзацiя',
+          curveType: 'function',
+          legend: { position: 'bottom' } ,
+          backgroundColor: {
+            "fill":bgcolor 
+          } , 
+          titleTextStyle:{
+             "color":fontcolor ,"bold":true
+          } ,
+                   
+      
+          legendTextStyle:{
+             "color":fontcolor 
+          } , 
+          
+          hAxis:{
+           
+              textStyle: {
+                color: fontcolor
+              }
+            } ,
+          vAxis:{
+              gridlines:null,
+              textStyle: {
+                color: fontcolor
+              }
+            } ,
+            
+                   
+        };
+
+        var tschart = new google.visualization.LineChart(document.getElementById('sellstat'));
+
+        tschart.draw(tsdata, tsoptions);       
+        
+        
+        
+        
+        
+        
+        
+        
+      }
+    </script
   
     </body>
 </html>
