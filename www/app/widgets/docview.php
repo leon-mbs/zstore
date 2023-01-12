@@ -339,5 +339,27 @@ class DocView extends \Zippy\Html\PageFragment
                    
         }
         
-    }           
+    }    
+    
+    
+    public function onMail($arg,$post) {
+       try{
+         $doc = Document::Load($arg[0])->cast();
+        
+         $doc->sendEmail();
+              
+         return json_encode(array("ok"=>true)) ;          
+
+        
+      }catch(\Exception $e){
+           $message = $e->getMessage()  ;
+           $message = str_replace(";","`",$message)  ;
+           $ret = json_encode(array("error"=>$message))  ;
+
+                   
+        }       
+       
+    }
+    
+           
 }

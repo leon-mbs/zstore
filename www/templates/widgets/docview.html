@@ -367,7 +367,21 @@
                 }
                ,
                sendmail:function(){
-                   //toastr.success('Отправлено','',{'timeOut':'2000'})   
+
+                  callPageMethod(this.path +'::onMail',[this.docid], null,(data)=> 
+                  {    
+                      var ret = JSON.parse(data) ;
+                      if(ret.ok==true) {
+                           toastr.success('Вiдправлено','',{'timeOut':'2000'})   
+                      }  else {
+                           toastr.error(ret.error,'',{'timeOut':'5000'})                             
+                      }
+                                         
+                       
+                  });           
+                   
+                   
+                  
                } 
                ,
                opendoc:function(id){
