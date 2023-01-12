@@ -27,7 +27,7 @@
                         </select>
                         <label for="searchcust">замовник </label>
                         <select v-model="searchcust" class="form-control     "  >
-                           <option value="0">Не вибраний</option>
+                           <option value="0">Не обрано</option>
                 
                            <option v-for="option in custlist" :value="option.key">
                               {{ option.value }}
@@ -99,7 +99,7 @@
                         </div>
                         <div class="col-12 col-md-4  col-xl-4">
                             <div class="form-group">
-                                <label> Список учасникiв </label>
+                                <label> Перелік учасникiв </label>
                               
                                 <div v-for="user in users">
                                   <input type="checkbox" :id="user.key" :value="user" v-model="selectedUsers">
@@ -122,8 +122,8 @@
             </div>            
            <div v-show="this.mode=='show'" class="col-12 col-md-8 col-xl-6">
                 <h4>{{title}} </h4>
-                <a href="javascript:void(0)"   v-on:click.prevent="onback" ><i class="fa fa-arrow-circle-left" ></i> До списку</a>
-                &nbsp; &nbsp; <a id="optasks"  ><i class="fa fa-list"></i>  До списку завдань</a>
+                <a href="javascript:void(0)"   v-on:click.prevent="onback" ><i class="fa fa-arrow-circle-left" ></i> До переліку</a>
+                &nbsp; &nbsp; <a id="optasks"  ><i class="fa fa-list"></i>  До переліку завдань</a>
                 &nbsp; &nbsp; <a id="optasknew"  ><i class="fa fa-plus"></i> Створити завдання</a>
 
                 <form  class="form-inline ">
@@ -322,7 +322,7 @@
             onsave:function(  ){    
                   if(this.editname==""){
 
-                     toastr.error("Не введена назва")
+                     toastr.error("Не введено назву")
                       return;
                   }
                   var data = new  FormData();

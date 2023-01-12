@@ -8,15 +8,15 @@
         <form zippy="docform">
             <h3> Інвентаризація
                 <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover"
-                   data-placement="bottom" data-content="Документ дозволяє ввести поточну кількость на складі і внести корективи
-                   в залежності від різниці в ту чи іншу сторону. Фактична кількість може  
+                   data-placement="bottom" data-content="Документ дозволяє ввести поточну кількість на складі і внести корективи
+                   в залежності від різниці в ту чи іншу сторону. Фактичну кількість може  
                    бачити адміністратор при перегляді документа"></i>
             </h3>
 
             <div class="row">
                 <div class="col-12 col-md-3">
                     <div class="form-group">
-                        <label for="document_number">Номер документу</label>
+                        <label for="document_number">Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number">
                     </div>
                     <div class="form-group  ">
@@ -28,7 +28,7 @@
                     <div class="form-group  ">
                         <label for="store">Категорiя</label>
                         <select class="form-control" zippy="category">
-                            <option value="0">Не вибрана</option>
+                            <option value="0">Не обрано</option>
                         </select>
                         <a zippy="loadall">Загрузити всi ТМЦ зi складу</a>
                     </div>
@@ -49,7 +49,7 @@
                     </div>
                     <div class="form-check">
                         <input zippy="autoincome" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="autoincome">Автоматично оприходувати злишки </label>
+                        <label class="form-check-label" for="autoincome">Автоматично оприходувати залишки </label>
 
                     </div>
                     <div class="form-check">
@@ -68,7 +68,7 @@
                 <div class="col-12 col-md-8 col-xl-6">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих-код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
+                        Штрих код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
                         &nbsp; &nbsp; &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
                         
                          {{#usemobilescanner}}  
@@ -141,7 +141,7 @@
 
                 <div class="form-group">
                     <label for="edititem">Найменування</label>
-                    <input class="form-control" zippy="edititem" placeholder="Почнiть вводити  ">
+                    <input class="form-control" zippy="edititem" placeholder="Почнiть вводити...  ">
 
                 </div>
                 {{#usesnumber}}

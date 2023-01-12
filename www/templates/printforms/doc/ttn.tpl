@@ -46,7 +46,7 @@
     </tr>
     <tr>
         <td></td>
-        <td><b>Email</b></td>
+        <td><b>E-mail</b></td>
         <td colspan="5">{{email}}</td>
     </tr>
 

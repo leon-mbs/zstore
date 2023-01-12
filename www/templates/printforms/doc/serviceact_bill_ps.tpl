@@ -19,7 +19,7 @@
     {{#isdevice}}
 <text>Прийнято від клієнта:</text>       
 <text>{{device}}</text>       
-<text>С/Н {{serial}}</text>       
+<text>с/н {{serial}}</text>       
     {{/isdevice}}
     {{#iswork}}
 <text>Роботи:</text>       

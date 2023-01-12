@@ -52,7 +52,7 @@
               <tr>
 
         <td   colspan="5">
-            <b>По виробничих етапах</b>
+            <b>По виробничим етапам</b>
         </td>
     </tr>
       <tr style="font-weight: bolder;">

@@ -114,7 +114,8 @@ class OrderFood extends Document
                         "shopname"        => strlen($common["shopname"]) > 0 ? $common["shopname"] : false,
                         "address"         => $firm["address"],
                         "phone"           => $firm["phone"],
-                        "inn"             => $firm["inn"],
+                        "inn"             => strlen($firm["inn"]) >0 ? $firm["inn"] :false,
+                        "tin"             => strlen($firm["tin"]) >0 ? $firm["tin"] :false,
                         "checkslogan"     => $common["checkslogan"],
                         "customer_name"   => strlen($this->customer_name) > 0 ? $this->customer_name : false,
                         "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
@@ -135,6 +136,11 @@ class OrderFood extends Document
 
                         "payamount" => H::fa($this->payamount)
         );
+        
+        if($header['inn'] != false) {
+           $header['tin'] = false; 
+        }
+        
         $frases = explode(PHP_EOL, $header['checkslogan']) ;
         if(count($frases) >0)  {
             $i=  rand(0,count($frases) -1)  ;

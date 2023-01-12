@@ -17,7 +17,7 @@
     {{#reserved}}
   <tr>
         <td colspan="4">
-            <small>Враховуючи  зарезервовані</small>
+            <small>Враховуючи зарезервовані</small>
         </td>
 
     </tr>
@@ -69,7 +69,7 @@
        {{#summinus}}  
    <tr>
         <td  >
-            <b> Недостача на  суму:   </b>
+            <b> Недостача на суму:   </b>
         </td>
       <td colspan="3" align="right" style="color:red">
             <b>  {{summinus}}   </b>
@@ -80,7 +80,7 @@
    {{#sumplus}} 
    <tr>
         <td  >
-           <b>  Злишки на  суму:  </b>
+           <b>  Залишки на суму:  </b>
         </td>    <td colspan="3" align="right">
              <b>  {{sumplus}}   </b>
         </td>

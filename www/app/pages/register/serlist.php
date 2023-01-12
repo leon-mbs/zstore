@@ -42,7 +42,7 @@ class SerList extends \App\Pages\Base
         $this->filter->add(new TextInput('searchtext'));
         $this->filter->add(new DropDownChoice('status', array(0 => H::l("opened"), 1 => H::l("newed"), 2 => H::l("st_inprocess"), 3 => H::l("all")), 0));
 
-        $doclist = $this->add(new DataView('doclist', new SalListDataSource($this), $this, 'doclistOnRow'));
+        $doclist = $this->add(new DataView('doclist', new SerListDataSource($this), $this, 'doclistOnRow'));
 
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());

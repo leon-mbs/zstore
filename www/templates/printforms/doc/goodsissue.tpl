@@ -70,7 +70,7 @@
 
         <td></td>
 
-        <td valign="top"><b>Угода</b></td>
+        <td valign="top"><b>Договір</b></td>
         <td colspan="5">{{contract}} вiд {{createdon}}</td>
 
 
@@ -179,7 +179,7 @@
                         <td> </td>
                         <td colspan="6">
                             <br><br>
-                            &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;    &nbsp; МП
+                            &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;    &nbsp; М.П.
                             <br><br>
                         </td>
 

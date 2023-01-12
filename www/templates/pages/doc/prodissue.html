@@ -11,11 +11,11 @@
             <div class="row">
                 <div class="col-12 col-md-3">
                     <div class="form-group">
-                        <label for="document_number">Номер документу</label>
+                        <label for="document_number">Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number" required="required">
                     </div>
                     <div class="form-group  ">
-                        <label for="store">З складу</label>
+                        <label for="store">Зі складу</label>
                         <select class="form-control" zippy="store">
                             <option value="0">Не встановлено</option>
                         </select>
@@ -47,7 +47,7 @@
                 <div class="col-12 col-md-10 col-xl-8">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих-код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
+                        Штрих код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
                         &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
 
                     </div>
@@ -111,7 +111,7 @@
                         <label for="edittovar">Назва</label>
                         <input placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
 
-                        Наличие : <span zippy="qtystock"></span>
+                        Наявність : <span zippy="qtystock"></span>
 
                     </div>
                     {{#usesnumber}}
@@ -132,7 +132,7 @@
 
                     <div class="form-group">
                         <input type="submit" zippy="submitrow" value="Зберегти" class="btn btn-outline-primary ">
-                        &nbsp; <input type="button" zippy="cancelrow" value="До списку" class="btn btn-outline-secondary ">
+                        &nbsp; <input type="button" zippy="cancelrow" value="До переліку" class="btn btn-outline-secondary ">
                     </div>
 
 

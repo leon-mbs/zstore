@@ -12,7 +12,7 @@
     </tr>
    <tr>
         <td colspan="4">
-            <b> В :</b> {{to}}  
+            <b> До :</b> {{to}}  
         </td>
 
     </tr>

@@ -47,6 +47,8 @@ class Dashboard extends \App\Pages\Base
        
         $conn =   \ZDB\DB::getConnect();
   
+        $vis=[];
+  
         $grvisdays = array();
         $grvisdays_ = array();
         $grviscnt = array();
@@ -60,26 +62,27 @@ class Dashboard extends \App\Pages\Base
   
         $grvisdays_ = array_reverse($grvisdays_) ;
         foreach($grvisdays_ as $dd)  {
-           $grvisdays[]=  date('m-d',$dd);
 
            $cnt = $conn->GetOne("select count(*) from stats where category = " . H::STAT_HIT_SHOP . " and date(dt)=". $conn->DBDate($dd) );
-           $grviscnt[]= intval($cnt);     
+      
+           $vis[]=[ date('m-d',$dd),intval($cnt)];
+             
         }
-        $this->_tvars['grvisdays'] = json_encode($grvisdays);
-        $this->_tvars['grviscnt'] = json_encode($grviscnt);
+     
+        $this->_tvars['vis'] = json_encode($vis);
    
-   
-        $grordersdays = array();
-        $grorderscnt = array();
+        $ord=[];
+  
         foreach($grvisdays_ as $dd)  {
-           $grordersdays[]=  date('m-d',$dd);
 
            $cnt = $conn->GetOne("select count(*) from stats where category = " . H::STAT_ORDER_SHOP . " and date(dt)=". $conn->DBDate($dd) );
-           $grorderscnt[]= intval($cnt);     
+         
+           $ord[]=[date('m-d',$dd),intval($cnt)];
+               
         }
   
-        $this->_tvars['grordersdays'] = json_encode($grordersdays);
-        $this->_tvars['grorderscnt'] = json_encode($grorderscnt);
+
+        $this->_tvars['ord'] = json_encode($ord);
  
         $sql = " content  LIKE '%<shoporder>1</shoporder>%' "  ;
         $sql .= " and date(document_date) <= " . $conn->DBDAte(time());

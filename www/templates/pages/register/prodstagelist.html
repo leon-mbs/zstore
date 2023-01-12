@@ -28,11 +28,11 @@
 
                             <label for="fproc"> Процес </label>
                             <select class="form-control mr-2" zippy="fproc">
-                                <option value="0">Не вибраний</option>
+                                <option value="0">Не обрано</option>
                             </select>
                             <label for="fparea"> Дільниця </label>
                             <select class="form-control mr-2" zippy="fparea">
-                                <option value="0">Не вибрана</option>
+                                <option value="0">Не обрано</option>
                             </select>
 
 
@@ -53,7 +53,7 @@
                             <th>Найменування</th>
                             <th>Статус</th>
                             <th>Початок</th>
-                            <th>Квнець</th>
+                            <th>Кінець</th>
 
                             <th>Процес</th>
                             <th>Серія, партія</th>                        
@@ -112,12 +112,12 @@
             <div   class="col-12 col-md-6 col-xl-4">
                 <h5 zippy="stageh5"></h5>
                 <small>Виконавці, які беруть участь  в  данному  етапі з коефіцієнтом трудової участі 
-                для  нарахування  зарплат                      </small>
+                для  нарахування  зарплат.          </small>
                 <form zippy="useraddform" class="form-inline ">
 
                     <label for="adduser"> Виконавець </label>
                     <select class="form-control mr-2" zippy="adduser">
-                        <option value="0">Не вибраний</option>
+                        <option value="0">Не обрано</option>
                     </select>
                     <label for="addktu"> КТУ </label>
                     <input pattern="[0-9,\.]+" style="width:75px" class="form-control qtyprice mr-2" zippy="addktu">
@@ -155,7 +155,7 @@
             <div   class="col-12 col-md-7 col-xl-5">
                 <a zippy="backd"><i class="fa fa-arrow-alt-circle-left"></i> До списку</a> 
                 <h5 zippy="stagenamed"></h5>
-                <b>Графік  робіт  по етапу. План, годин: <span zippy="planhours"></span> </b>
+                <b>Графік робіт по етапу. План, годин: <span zippy="planhours"></span> </b>
                 <form zippy="calform" class="form-inline ">
 
                     <label for="addcaldate"> Дата </label>
@@ -186,9 +186,9 @@
                 <a zippy="backs"><i class="fa fa-arrow-alt-circle-left"></i> До списку</a> 
                 <h5 zippy="stagenames"></h5>
                 <div class="navbar nav justify-content-start">
-                    <a title="Списати в  виробництво  сировину  та  матеріали" class="btn btn-info mr-2" zippy="btntoprod">Зписати</a>
+                    <a title="Списати у виробництво сировину та матеріали" class="btn btn-info mr-2" zippy="btntoprod">Записати</a>
 
-                    <a title="Оприбуткувати  готову продукцію або напівфабрикати" class="btn btn-info mr-2" zippy="btnfromprod">Оприбуткувати</a>
+                    <a title="Оприбуткувати готову продукцію або напівфабрикати" class="btn btn-info mr-2" zippy="btnfromprod">Оприбуткувати</a>
 
                     <a title="Запустити етап" class="btn btn-info mr-2" zippy="btnstart">Старт</a>
                     <a title="Призупинити етап" class="btn btn-info mr-2" zippy="btnstop">Призупинити</a>
@@ -213,24 +213,24 @@
 
         <div zippy="calendarpan"  class="row">
             <div   class="col-12 col-xl-10 ">
-                <a zippy="backcal"><i class="fa fa-arrow-alt-circle-left"></i> К списку</a> 
+                <a zippy="backcal"><i class="fa fa-arrow-alt-circle-left"></i> До списку</a> 
                 <form zippy="calfilter" class="form-inline ">
 
                     <label for="calfilterpp"> Процес </label>
                     <select  class="form-control mr-2" zippy="calfilterpp">
-                        <option value="0">Не вибраний</option>
+                        <option value="0">Не обрано</option>
                     </select>
                     <label data-label="calfilterps" for="calfilterps"> етап </label>
                     <select  class="form-control mr-2" zippy="calfilterps">
-                        <option value="0">Не вибраний</option>
+                        <option value="0">Не обрано</option>
                     </select>
                     <label for="calfilterpa"> вир. дільниця </label>
                     <select  class="form-control mr-2" zippy="calfilterpa">
-                        <option value="0">Не вибрана</option>
+                        <option value="0">Не обрано</option>
                     </select>
                     <label for="calfilteremp"> виконавець </label>
                     <select  class="form-control mr-2" zippy="calfilteremp">
-                        <option value="0">Не вибраний</option>
+                        <option value="0">Не обрано</option>
                     </select>
 
                     <input zippy="filterok" type="submit" class="  btn btn-success  " value="ОК">

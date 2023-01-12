@@ -194,24 +194,25 @@ class Main extends Base
         ";
 
         $rs = $conn->Execute($sql);
-        $title = array();
-        $data = array();
-        $color = array();
+ 
 
+        $ps = [];
+        $ps[]=["name","amount"] ;
+        
         foreach ($rs as $row) {
-            $data[] = abs(round($row['am']));
-            $title[] = $names[$row['iotype']];
-            $color[] = '#' . Util::genColor();
+               
+           $ps[]=[$names[$row['iotype']],abs(round($row['am']))] ;
+            
         }
-        $this->_tvars['pbtitle'] = json_encode($title, JSON_UNESCAPED_UNICODE);
-        $this->_tvars['pbdata'] = json_encode($data);
-        $this->_tvars['pbcolor'] = json_encode($color);
-
+        $this->_tvars['ps'] = json_encode($ps);
+    
         //сравнение  доходов  и расходов  
         $mon = array();
         $in = array();
         $out = array();
 
+        $pc=[];
+        
         $mlist = Util::genPastMonths(3);
 
         foreach ($mlist as $m) {
@@ -224,7 +225,7 @@ class Main extends Base
                   
                              
             ";
-            $out[] = abs(round($conn->GetOne($sql)));
+            $out = abs(round($conn->GetOne($sql)));
             $sql = " 
              SELECT   coalesce(sum(amount),0) as am   FROM iostate_view 
                  WHERE   
@@ -234,24 +235,23 @@ class Main extends Base
                   
                              
             ";
-            $in[] = abs(round($conn->GetOne($sql)));
-            $mon[] = $m['name'];
+            $in = abs(round($conn->GetOne($sql)));
+
+               
+            $pc[]=[$m['name'],$in,$out]  ;
+            
         }
-        $this->_tvars['pcmon'] = json_encode($mon, JSON_UNESCAPED_UNICODE);
-        $this->_tvars['pcin'] = json_encode($in);
-        $this->_tvars['pcout'] = json_encode($out);
+        $this->_tvars['pc'] = json_encode($pc);
 
         //реализация
-        $mon = array();
-        $tstov = array();
-        $tsser = array();
+        $ts = [];
+      //  $ts[] = ['Month','Goods','Service'];
 
         $mlist = Util::genPastMonths(6);
 
         foreach ($mlist as $m) {
 
-            $mon[] = $m['name'];
-
+            
             $sql = "
            select  coalesce(sum(0-(e.outprice*e.quantity))) as summa 
               from entrylist_view  e
@@ -267,7 +267,8 @@ class Main extends Base
                
         ";
 
-            $tstov[] = abs(round($conn->GetOne($sql)));
+
+            $tov = abs(round($conn->GetOne($sql)));
 
             $sql = "
            select  coalesce( sum(0-(e.outprice*e.quantity)) ) as summa     
@@ -281,11 +282,15 @@ class Main extends Base
               AND DATE(e.document_date) <= " . $conn->DBDate($m['end']) . "
                     
                   ";
-            $tsser[] = abs(round($conn->GetOne($sql)));
+
+            $ser = abs(round($conn->GetOne($sql)));
+            
+            $ts[] = [$m['name'],$ser,$tov];
+            
+            
+            
         }
-        $this->_tvars['tsmon'] = json_encode($mon, JSON_UNESCAPED_UNICODE);
-        $this->_tvars['tstov'] = json_encode($tstov);
-        $this->_tvars['tsser'] = json_encode($tsser);
+        $this->_tvars['ts'] = json_encode($ts);
 
         //инфоблоки
         $sql = " select coalesce(count(*),0) as cnt  from  documents_view d where  meta_name in ('Order')  

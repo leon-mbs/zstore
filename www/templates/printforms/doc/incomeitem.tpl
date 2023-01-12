@@ -24,7 +24,7 @@
     {{/emp}}
 
     <tr style="font-weight: bolder;">
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Назва</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Найменування</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Код</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"></th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Од.</th>

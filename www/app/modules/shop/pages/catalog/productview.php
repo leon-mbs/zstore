@@ -24,9 +24,11 @@ class ProductView extends Base
     public $msg, $attrlist, $clist;
     protected               $item_id;
 
-    public function __construct($item_id = 0) {
+    public function __construct(  $item_id = 0) {
         parent::__construct();
-
+        
+        $item_id = intval($item_id);
+        
         $this->item_id = $item_id;
         $product = Product::load($item_id);
         if ($product == null) {

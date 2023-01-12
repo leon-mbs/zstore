@@ -280,6 +280,7 @@ class Subscribe extends \ZCL\DB\Entity
            $header['docurl'] = _BASEURL . 'doclink/' . $doc->headerdata['hash'];
             
         }
+        $header['docview'] = _BASEURL . 'doclist/' . $doc->document_id;
 
         $table = array();
         foreach ($doc->unpackDetails('detaildata') as $item) {

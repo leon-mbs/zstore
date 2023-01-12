@@ -22,19 +22,18 @@
             <div class="col-12 col-md-6">
                
                  <div   class="card ">
-                    <div   class="card-body">
+                   
 
-                        <canvas style="width:100%" id="grvisit"></canvas>
-                    </div>
+                        <div style="width:100%" id="grvisit"></div>
+                    
                 </div>                  
             </div>
             <div class="col-12 col-md-6">
                 
                <div   class="card ">
-                    <div   class="card-body">
-
-                        <canvas style="width:100%" id="grorders"></canvas>
-                    </div>
+                   
+                        <div style="width:100%" id="grorders"></div>
+                 
                 </div>                  
             
             </div>
@@ -80,126 +79,125 @@
         
         
         
+      
   
-        <script language="javascript" src="/assets/js/chart.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart'], 'language': 'uk'});
+      google.charts.setOnLoadCallback(drawChart);
 
-        <script>
+
         
     var fontcolor='#000' ;
+    var bgcolor='#fff' ;
         {{#darkmode}}
             fontcolor='#fff' ;
-        {{/darkmode}}   
+            bgcolor='#333' ;
+        {{/darkmode}}        
      
- //посетители  
-var visData = {
-labels  : {{{grvisdays}}},
-        datasets: [
-        {
      
-                backgroundColor         : 'rgba(60,141,188,0.8)',
-                borderColor         : 'rgba(60,141,188,0.8)',
-                fill          : true,
-                data                :  {{{grviscnt}}}
-        } 
-    
-        ]
-}
+     function drawChart() {
+         
+          var visdata = new google.visualization.DataTable();
+          visdata.addColumn('string', 'Дата');
+          visdata.addColumn('number', 'Кiл.');
+         
+          visdata.addRows( 
+           {{{vis}}}
+         )
+        
+        
+        
+        var visoptions = {
+          title: 'Вiдвiдувачi сайту',
+          curveType: 'function',
+          legend: { position: 'none' } ,
+          backgroundColor: {
+            "fill":bgcolor 
+          } , 
+          titleTextStyle:{
+             "color":fontcolor ,"bold":true
+          } ,
+                   
+      
+          legendTextStyle:{
+             "color":fontcolor 
+          } , 
+          
+          hAxis:{
+           
+              textStyle: {
+                color: fontcolor
+              }
+            } ,
+          vAxis:{
+              gridlines:null,
+              textStyle: {
+                color: fontcolor
+              }
+            } ,
+            
+                   
+        };
 
-   
+        var vischart = new google.visualization.LineChart(document.getElementById('grvisit'));
 
-var visOptions = {
-title: {
-display: true,   
-fontColor: fontcolor,
-text: 'Вiдвiдувачi сайту  '
-},
-legend: {
-display: false     
-},
+        vischart.draw(visdata, visoptions);  
+        
+        
+         var orddata = new google.visualization.DataTable();
+          orddata.addColumn('string', 'Дата');
+          orddata.addColumn('number', 'Кiл.');
+         
+          orddata.addRows( 
+           {{{ord}}}
+         )
+        
+        
+        
+        var ordoptions = {
+          title: 'Замовлення',
+          curveType: 'function',
+          legend: { position: 'none' } ,
+          backgroundColor: {
+            "fill":bgcolor 
+          } , 
+          titleTextStyle:{
+             "color":fontcolor ,"bold":true
+          } ,
+                   
+      
+          legendTextStyle:{
+             "color":fontcolor 
+          } , 
+          
+          hAxis:{
+           
+              textStyle: {
+                color: fontcolor
+              }
+            } ,
+          vAxis:{
+              gridlines:null,
+              textStyle: {
+                color: fontcolor
+              }
+            } ,
+            
+                   
+        };
 
+        var ordchart = new google.visualization.LineChart(document.getElementById('grorders'));
+
+        ordchart.draw(orddata, ordoptions);  
+        
+        
+          
  
-
-        scales: {
-        xAxes: [{     ticks: { 
-                   fontColor: fontcolor 
-             },
-        gridLines : {
-        display : false,
-        }
-        }],
-                yAxes: [{    ticks: { 
-                   fontColor: fontcolor 
-             },
-                gridLines : {
-                display : false,
-                }
-                }]
-        }
 }   
      
- //заказы  
-var orderData = {
-labels  : {{{grordersdays}}},
-        datasets: [
-        {
      
-                backgroundColor         : 'rgba(60,141,188,0.8)',
-                borderColor         : 'rgba(60,141,188,0.8)',
-                fill          : true,
-                data                :  {{{grorderscnt}}}
-        } 
-    
-        ]
-}
-
-   
-
-var orderOptions = {
-title: {
-display: true,   
-fontColor: fontcolor,
-text: 'Замовлення  '
-},
-legend: {
-display: false     
-},
-
  
-
-        scales: {
-        xAxes: [{     ticks: { 
-                   fontColor: fontcolor 
-             },
-        gridLines : {
-        display : false,
-        }
-        }],
-                yAxes: [{    ticks: { 
-                   fontColor: fontcolor 
-             },
-                gridLines : {
-                display : false,
-                }
-                }]
-        }
-}   
-     
-     
-window.onload = function() {     
-         new Chart(document.querySelector('#grvisit'), {
-        type: 'line',
-                data: visData,
-                options: visOptions
-        })
-    
-        new Chart(document.querySelector('#grorders'), {
-        type: 'line',
-                data: orderData,
-                options: orderOptions
-        })
-
-
-};    
 
 
    function updateSiteMap(){

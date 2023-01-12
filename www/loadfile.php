@@ -1,12 +1,7 @@
 <?php
 require_once 'init.php';
 
- 
- 
- 
-if (!is_numeric($_REQUEST['id'])) {
-    die;
-}
+$_REQUEST['id'] = intval($_REQUEST['id']);
 
 
 $user = \App\System::getUser();

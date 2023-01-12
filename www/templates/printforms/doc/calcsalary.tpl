@@ -20,7 +20,7 @@
     </tr>
     <tr>
         <td>
-            <b>ПIБ</b>
+            <b>П I Б</b>
         </td>
         {{#stnames}}
         <td class="text-right">

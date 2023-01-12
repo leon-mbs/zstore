@@ -11,7 +11,7 @@
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
-                        <label for="document_number">Номер документу</label>
+                        <label for="document_number">Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number" required="required">
                     </div>
                     <div class="form-group">
@@ -36,7 +36,7 @@
 
                     </div>
                     <div class="form-group  ">
-                        <label for="email">Email</label>
+                        <label for="email">E-mail</label>
 
                         <input zippy="email" class="form-control">
 
@@ -45,7 +45,7 @@
                     <div class="form-check">
                         <input zippy="nostore" type="checkbox" class="form-check-input">
                         <label class="form-check-label" for="nostore">Не проводити по складу</label>
-                        <br><small>Вказуеться якщо наприклад товар виробляется пiд заказ и по складу не проводится</small>
+                        <br><small>Вказується, якщо, наприклад, товар виробляється пiд заказ і по складу не проводиться</small>
                     </div>
 
                     <div class="form-group  ">
@@ -65,18 +65,18 @@
                     <div class="form-group  ">
                         <label for="salesource">Джерело продаж</label>
                         <select class="form-control" zippy="salesource">
-                            <option value="0">Не вибрано</option>
+                            <option value="0">Не обрано</option>
                         </select>
                     </div>
 
                     <div class="form-group  ">
                         <label for="firm">Продавець</label>
                         <select class="form-control" zippy="firm">
-                            <option value="0">Не вибраний</option>
+                            <option value="0">Не обрано</option>
                         </select>
                     </div>
                     <div class="form-group  ">
-                        <label for="store">З складу</label>
+                        <label for="store">Зі складу</label>
 
                         <select class="form-control" zippy="store">
                             <option value="0">Не обрано</option>
@@ -134,12 +134,12 @@
                 <div class="col-12  col-xl-10">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих-код &nbsp;<input style="width:150px;" autocomplete="off" autofocus type="text" zippy="barcode"
+                        Штрих код &nbsp;<input style="width:150px;" autocomplete="off" autofocus type="text" zippy="barcode"
                                                onkeydown="onBarCode()">
                         &nbsp; &nbsp; &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
                        {{#usemobilescanner}}  
                         &nbsp; &nbsp; &nbsp; &nbsp; <i id="mobilescanner" data-toggle="modal" data-target="#modalscanner"
-                                                       title="Сканувати  мобiльним пристроєм"
+                                                       title="Сканувати мобiльним пристроєм"
                                                        style="cursor:pointer;font-size:28px" class="fa fa-mobile-alt"></i>
                                     {{/usemobilescanner}}  
                     </div>

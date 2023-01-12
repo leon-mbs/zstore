@@ -2,7 +2,7 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="3">
-            Повернення вiд покупцiв.
+            Повернення вiд покупцiв
         </td>
     </tr>
 

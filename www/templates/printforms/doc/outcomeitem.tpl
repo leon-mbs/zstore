@@ -6,7 +6,7 @@
     </tr>
     <tr>
         <td colspan="4">
-            <b> З складу:</b> {{from}}
+            <b> Зі складу:</b> {{from}}
         </td>
 
     </tr>

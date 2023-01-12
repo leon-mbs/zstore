@@ -12,7 +12,7 @@
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
-                        <label for="document_number">Номер документу</label>
+                        <label for="document_number">Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number">
                     </div>
                     <div class="form-group">
@@ -52,7 +52,7 @@
 
             <div class="row">
                 <div class="col-12 col-md-6">
-                    <input type="button" value="Скасуватии" zippy="backtolist" class="btn   btn-outline-secondary">
+                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-outline-secondary">
                     &nbsp; <input zippy="tocalc" type="submit" value="Далi " class="btn   btn-outline-primary">
            
                 </div>
@@ -71,7 +71,7 @@
                 </div>
                <div class="col-auto">
                   <select  v-model="selectednewemp" class="form-control"  id="newemp" name="newemp" >
-                     <option value="0">Не вибраний</option>
+                     <option value="0">Не обрано</option>
                         <option v-for=" e in deleted "  v-bind:value="e.id">
                             {{e.emp_name}}
                          </option>     
@@ -88,7 +88,7 @@
            <table class="table table-sm">
                 <tr>
                  <th>
-                 ПIБ
+                 П I Б
                  </th>
                  <th v-for=" v in stlist ">
                     {{v.salname}}

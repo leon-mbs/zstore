@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5e18170f8c6bc3a654e52e5c8c51e616",
+    "content-hash": "64c831ca67d7b7c77855fa7a0a5d9c20",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -601,16 +601,16 @@
         },
         {
             "name": "leon-mbs/zippy",
-            "version": "2.5.16",
+            "version": "2.5.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/zippy.git",
-                "reference": "b1c432fe6400b6fe069a48f5d0ee080bfe545d66"
+                "reference": "b0cbb7366ca57fae12bb2a4c9526c79c74ea7ef4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/b1c432fe6400b6fe069a48f5d0ee080bfe545d66",
-                "reference": "b1c432fe6400b6fe069a48f5d0ee080bfe545d66",
+                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/b0cbb7366ca57fae12bb2a4c9526c79c74ea7ef4",
+                "reference": "b0cbb7366ca57fae12bb2a4c9526c79c74ea7ef4",
                 "shasum": ""
             },
             "require": {
@@ -637,9 +637,9 @@
             ],
             "support": {
                 "issues": "https://github.com/leon-mbs/zippy/issues",
-                "source": "https://github.com/leon-mbs/zippy/tree/2.5.16"
+                "source": "https://github.com/leon-mbs/zippy/tree/2.5.17"
             },
-            "time": "2022-09-06T10:18:00+00:00"
+            "time": "2023-01-08T13:51:47+00:00"
         },
         {
             "name": "lis-dev/nova-poshta-api-2",
@@ -1001,112 +1001,6 @@
                 "source": "https://github.com/Masterminds/html5-php/tree/2.7.6"
             },
             "time": "2022-08-18T16:18:26+00:00"
-        },
-        {
-            "name": "mike42/escpos-php",
-            "version": "v4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mike42/escpos-php.git",
-                "reference": "74fd89a3384135c90a8c6dc4b724e03df7c0e4f9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mike42/escpos-php/zipball/74fd89a3384135c90a8c6dc4b724e03df7c0e4f9",
-                "reference": "74fd89a3384135c90a8c6dc4b724e03df7c0e4f9",
-                "shasum": ""
-            },
-            "require": {
-                "ext-intl": "*",
-                "ext-json": "*",
-                "ext-zlib": "*",
-                "mike42/gfx-php": "^0.6",
-                "php": ">=7.3.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^9",
-                "squizlabs/php_codesniffer": "^3.3"
-            },
-            "suggest": {
-                "ext-gd": "Used for image printing if present.",
-                "ext-imagick": "Will be used for image printing if present. Required for PDF printing or use of custom fonts."
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Mike42\\": "src/Mike42"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michael Billington",
-                    "email": "michael.billington@gmail.com"
-                }
-            ],
-            "description": "PHP receipt printer library for use with ESC/POS-compatible thermal and impact printers",
-            "homepage": "https://github.com/mike42/escpos-php",
-            "keywords": [
-                "Epson",
-                "barcode",
-                "escpos",
-                "printer",
-                "receipt-printer"
-            ],
-            "support": {
-                "issues": "https://github.com/mike42/escpos-php/issues",
-                "source": "https://github.com/mike42/escpos-php/tree/v4.0"
-            },
-            "time": "2022-05-23T11:05:09+00:00"
-        },
-        {
-            "name": "mike42/gfx-php",
-            "version": "v0.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mike42/gfx-php.git",
-                "reference": "ed9ded2a9298e4084a9c557ab74a89b71e43dbdb"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mike42/gfx-php/zipball/ed9ded2a9298e4084a9c557ab74a89b71e43dbdb",
-                "reference": "ed9ded2a9298e4084a9c557ab74a89b71e43dbdb",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.0.0"
-            },
-            "require-dev": {
-                "phpbench/phpbench": "@dev",
-                "phpunit/phpunit": "^6.5",
-                "squizlabs/php_codesniffer": "^3.3.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Mike42\\": "src/Mike42"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL-2.1-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Michael Billington",
-                    "email": "michael.billington@gmail.com"
-                }
-            ],
-            "description": "The pure PHP graphics library",
-            "homepage": "https://github.com/mike42/gfx-php",
-            "support": {
-                "issues": "https://github.com/mike42/gfx-php/issues",
-                "source": "https://github.com/mike42/gfx-php/tree/v0.6"
-            },
-            "time": "2019-10-05T02:44:33+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -1935,12 +1829,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "a9271310987d5cd362141476d9fff15c189dc204"
+                "reference": "ef9dca6c49faa06e7203bbed30411e26e474a8fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/a9271310987d5cd362141476d9fff15c189dc204",
-                "reference": "a9271310987d5cd362141476d9fff15c189dc204",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/ef9dca6c49faa06e7203bbed30411e26e474a8fb",
+                "reference": "ef9dca6c49faa06e7203bbed30411e26e474a8fb",
                 "shasum": ""
             },
             "conflict": {
@@ -1995,7 +1889,7 @@
                 "cesnet/simplesamlphp-module-proxystatistics": "<3.1",
                 "codeception/codeception": "<3.1.3|>=4,<4.1.22",
                 "codeigniter/framework": "<=3.0.6",
-                "codeigniter4/framework": "<4.2.7",
+                "codeigniter4/framework": "<4.2.11",
                 "codeigniter4/shield": "= 1.0.0-beta",
                 "codiad/codiad": "<=2.8.4",
                 "composer/composer": "<1.10.26|>=2-alpha.1,<2.2.12|>=2.3,<2.3.5",
@@ -2060,7 +1954,7 @@
                 "facade/ignition": "<1.16.15|>=2,<2.4.2|>=2.5,<2.5.2",
                 "facturascripts/facturascripts": "<=2022.8",
                 "feehi/cms": "<=2.1.1",
-                "feehi/feehicms": "<=2.0.1.1",
+                "feehi/feehicms": "<=2.1.1",
                 "fenom/fenom": "<=2.12.1",
                 "filegator/filegator": "<7.8",
                 "firebase/php-jwt": "<2",
@@ -2079,7 +1973,7 @@
                 "friendsofsymfony/user-bundle": ">=1.2,<1.3.5",
                 "friendsoftypo3/mediace": ">=7.6.2,<7.6.5",
                 "froala/wysiwyg-editor": "<3.2.7",
-                "froxlor/froxlor": "<0.10.39",
+                "froxlor/froxlor": "<0.10.39|>=2-beta.0,<2-beta.1",
                 "fuel/core": "<1.8.1",
                 "gaoming13/wechat-php-sdk": "<=1.10.2",
                 "genix/cms": "<=1.1.11",
@@ -2167,6 +2061,7 @@
                 "melisplatform/melis-cms": "<5.0.1",
                 "melisplatform/melis-front": "<5.0.1",
                 "mezzio/mezzio-swoole": "<3.7|>=4,<4.3",
+                "mgallegos/laravel-jqgrid": "<=1.3",
                 "microweber/microweber": "<=1.3.1",
                 "miniorange/miniorange-saml": "<1.4.3",
                 "mittwald/typo3_forum": "<1.2.1",
@@ -2260,6 +2155,7 @@
                 "remdex/livehelperchat": "<3.99",
                 "rmccue/requests": ">=1.6,<1.8",
                 "robrichards/xmlseclibs": "<3.0.4",
+                "roots/soil": "<4.1",
                 "rudloff/alltube": "<3.0.3",
                 "s-cart/core": "<6.9",
                 "s-cart/s-cart": "<6.9",
@@ -2286,7 +2182,7 @@
                 "silverstripe/registry": ">=2.1,<2.1.2|>=2.2,<2.2.1",
                 "silverstripe/restfulserver": ">=1,<1.0.9|>=2,<2.0.4",
                 "silverstripe/silverstripe-omnipay": "<2.5.2|>=3,<3.0.2|>=3.1,<3.1.4|>=3.2,<3.2.1",
-                "silverstripe/subsites": ">=2,<2.1.1",
+                "silverstripe/subsites": ">=2,<2.6.1",
                 "silverstripe/taxonomy": ">=1.3,<1.3.1|>=2,<2.0.1",
                 "silverstripe/userforms": "<3",
                 "silverstripe/versioned-admin": ">=1,<1.11.1",
@@ -2297,7 +2193,7 @@
                 "simplito/elliptic-php": "<1.0.6",
                 "slim/slim": "<2.6",
                 "smarty/smarty": "<3.1.47|>=4,<4.2.1",
-                "snipe/snipe-it": "<6.0.11|>= 6.0.0-RC-1, <= 6.0.0-RC-5",
+                "snipe/snipe-it": "<=6.0.14|>= 6.0.0-RC-1, <= 6.0.0-RC-5",
                 "socalnick/scn-social-auth": "<1.15.2",
                 "socialiteproviders/steam": "<1.1",
                 "spatie/browsershot": "<3.57.4",
@@ -2362,13 +2258,13 @@
                 "tinymce/tinymce": "<5.10.7|>=6,<6.3.1",
                 "titon/framework": ">=0,<9.9.99",
                 "tobiasbg/tablepress": "<= 2.0-RC1",
-                "topthink/framework": "<=6.0.13",
+                "topthink/framework": "<6.0.14",
                 "topthink/think": "<=6.0.9",
                 "topthink/thinkphp": "<=3.2.3",
                 "tribalsystems/zenario": "<=9.3.57595",
                 "truckersmp/phpwhois": "<=4.3.1",
                 "twig/twig": "<1.44.7|>=2,<2.15.3|>=3,<3.4.3",
-                "typo3/cms": ">=6.2,<6.2.30|>=7,<7.6.32|>=8,<8.7.38|>=9,<9.5.29|>=10,<10.4.33|>=11,<11.5.20|>=12,<12.1.1",
+                "typo3/cms": "<2.0.5|>=3,<3.0.3|>=6.2,<6.2.30|>=7,<7.6.32|>=8,<8.7.38|>=9,<9.5.29|>=10,<10.4.33|>=11,<11.5.20|>=12,<12.1.1",
                 "typo3/cms-backend": ">=7,<=7.6.50|>=8,<=8.7.39|>=9,<=9.5.24|>=10,<=10.4.13|>=11,<=11.1",
                 "typo3/cms-core": "<8.7.49|>=9,<9.5.38|>=10,<10.4.33|>=11,<11.5.20|>=12,<12.1.1",
                 "typo3/cms-form": ">=8,<=8.7.39|>=9,<=9.5.24|>=10,<=10.4.13|>=11,<=11.1",
@@ -2406,9 +2302,10 @@
                 "yiisoft/yii2-bootstrap": "<2.0.4",
                 "yiisoft/yii2-dev": "<2.0.43",
                 "yiisoft/yii2-elasticsearch": "<2.0.5",
-                "yiisoft/yii2-gii": "<2.0.4",
+                "yiisoft/yii2-gii": "<=2.2.4",
                 "yiisoft/yii2-jui": "<2.0.4",
                 "yiisoft/yii2-redis": "<2.0.8",
+                "yikesinc/yikes-inc-easy-mailchimp-extender": "<6.8.6",
                 "yoast-seo-for-typo3/yoast_seo": "<7.2.3",
                 "yourls/yourls": "<=1.8.2",
                 "zendesk/zendesk_api_client_php": "<2.2.11",
@@ -2471,7 +2368,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-12-13T18:04:19+00:00"
+            "time": "2023-01-04T14:04:25+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",

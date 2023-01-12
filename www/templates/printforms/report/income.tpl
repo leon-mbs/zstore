@@ -10,7 +10,7 @@
     {{#_type1}}
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="4">
-            Закупівлі по товарах <br><br>
+            Закупівлі по товарам <br><br>
         </td>
     </tr>
     <tr style="font-weight: bolder;">
@@ -43,7 +43,7 @@
 {{#_type2}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="4">
-        Закупівлі по постачальниках <br> <br>
+        Закупівлі по постачальникам <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
@@ -72,7 +72,7 @@
 {{#_type3}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="4">
-        Закупівлі по датах <br> <br>
+        Закупівлі по датам <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">

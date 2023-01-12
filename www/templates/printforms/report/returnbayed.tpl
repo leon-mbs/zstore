@@ -2,7 +2,7 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="3">
-            Повернення постачальникам.
+            Повернення постачальникам
         </td>
     </tr>
 

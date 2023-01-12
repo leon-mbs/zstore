@@ -140,11 +140,11 @@
         </td>
     </tr>
     <tr>
-        <td>Вiддача  вiд iнвестицiй (ROI),%:</td>
+        <td>Вiддача вiд iнвестицiй (ROI),%:</td>
         <td align="right"> {{ROI}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="Проход на  iнвестицiї"></i>
+               title="Проход на iнвестицiї"></i>
         </td>
     </tr>
     {{/isinv}}

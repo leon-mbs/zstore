@@ -3,7 +3,7 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="4">
-            Зарезервованi товари  на {{date}}<br>
+            Зарезервованi товари на {{date}}<br>
         </td>
     </tr>
    

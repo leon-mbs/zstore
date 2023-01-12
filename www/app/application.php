@@ -94,6 +94,7 @@ class Application extends \Zippy\WebApplication
             "showreport"     => "\\App\\Pages\\ShowReport",
             "showdoc"        => "\\App\\Pages\\ShowDoc",
             "doclink"        => "\\App\\Pages\\Doclink",
+            "doclist"        => "\\App\\Pages\\Register\\DocList",
             "scat"           => "\\App\\Modules\\Shop\\Pages\\Catalog\\Main",
             "pcat"           => "\\App\\Modules\\Shop\\Pages\\Catalog\\Catalog",
             "project"        => "\\App\\Modules\\Issue\\Pages\\ProjectList",
