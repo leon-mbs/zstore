@@ -185,7 +185,10 @@ class CustomerList extends \App\Pages\Base
     public function customerlistOnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new Label('customername', $item->customer_name));
+          
+        $row->add(new ClickLink('customername',$this, 'editOnClick'))->setValue($item->customer_name);
+       
+       
         $row->add(new Label('customerphone', $item->phone));
         $row->add(new Label('customeremail', $item->email));
         $row->add(new Label('leadstatus', $item->leadstatus));

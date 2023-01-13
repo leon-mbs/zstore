@@ -49,6 +49,9 @@ class Pay extends \ZCL\DB\Entity
      * @param mixed $comment коментарий
      */
     public static function addPayment($document_id, $paydate, $amount, $mf_id,   $comment = '',$nobank=false) {
+       
+        self::addBonus($document_id,$amount );
+       
         if (0 == (float)$amount || 0 == (int)$document_id || 0 == $mf_id) {
             return;
         }
@@ -57,8 +60,7 @@ class Pay extends \ZCL\DB\Entity
             return;
         }
 
-        self::addBonus($document_id,$amount );
-   
+    
         $pay = new \App\Entity\Pay();
         $pay->mf_id = $mf_id;
         $pay->document_id = $document_id;
@@ -136,7 +138,7 @@ class Pay extends \ZCL\DB\Entity
     }
 
     //начисление  (списание)  бонусов
-    public static function addBonus($document_id ,$amount  ) {
+    public static function addBonus($document_id ,$amount =0 ) {
     
         $conn = \Zdb\DB::getConnect();
 
@@ -204,7 +206,9 @@ class Pay extends \ZCL\DB\Entity
         if($doc->payamount >0 && $amount > $doc->payamount){
            $amount= $doc->payamount; 
         }
-           
+        if($amount==0) {
+            return;
+        }  
    
         $disc = \App\System::getOptions("discount");
 

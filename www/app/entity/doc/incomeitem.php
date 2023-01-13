@@ -37,15 +37,14 @@ class IncomeItem extends Document
 
         }
 
-        if ($this->headerdata['emp'] > 0 && $this->headerdata['exmf'] > 0 && $this->headerdata['examount'] > 0) {
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['examount'], $this->headerdata['exmf'],  $this->notes);
+             $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['examount'], $this->headerdata['exmf'],  $this->notes);
             if ($payed > 0) {
                 $this->payed = $payed;
             }
             \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
 
 
-        }
+        
         
         if ($this->headerdata['emp'] > 0) {
             //авансовый    отчет

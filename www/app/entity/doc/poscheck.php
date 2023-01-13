@@ -276,14 +276,12 @@ class POSCheck extends Document
     
             $sc->save();
         }
-        if ($this->headerdata['payment'] > 0 && $payed > 0) {
             $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $payed, $this->headerdata['payment'] );
             if ($payed > 0) {
                 $this->payed = $payed;
             }
             \App\Entity\IOState::addIOState($this->document_id, $payed, \App\Entity\IOState::TYPE_BASE_INCOME);
 
-        }
         
 
         return true;

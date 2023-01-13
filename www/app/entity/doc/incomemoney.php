@@ -29,9 +29,7 @@ class IncomeMoney extends Document
         }
 
         
-        
-        if( intval($this->headerdata['begval'])==0) {
-    
+      
             $payed = Pay::addPayment($this->document_id, $this->document_date, $this->amount, $this->headerdata['payment'],   $this->notes);
             if ($payed > 0) {
                 $this->payed = $payed;
@@ -39,7 +37,7 @@ class IncomeMoney extends Document
             
            
             \App\Entity\IOState::addIOState($this->document_id, $this->amount, $this->headerdata['type']);
-        }
+        
 
         if ($this->headerdata['detail'] == 3) {  //Приход от сотрудника
             $ua = new \App\Entity\EmpAcc();
