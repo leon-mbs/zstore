@@ -103,8 +103,12 @@ class User extends \ZCL\DB\Entity
         $this->emailnotify = (int)$options['emailnotify'];
         $this->hidesidebar = (int)$options['hidesidebar'];
         $this->usemobileprinter = (int)$options['usemobileprinter'];
+        $this->prtype = (int)$options['prtype'];
+        $this->pwsym = (int)$options['pwsym'];
+        $this->pserver = $options['pserver'];
         $this->mainpage = $options['mainpage'];
         $this->favs = $options['favs'];
+        $this->chat_id = $options['chat_id'];
 
         parent::afterLoad();
     }
@@ -136,10 +140,14 @@ class User extends \ZCL\DB\Entity
         $options['darkmode'] = $this->darkmode;
         $options['emailnotify'] = $this->emailnotify;
         $options['usemobileprinter'] = $this->usemobileprinter;
+        $options['pserver'] = $this->pserver;
+        $options['prtype'] = $this->prtype;
+        $options['pwsym'] = $this->pwsym;
         $options['mainpage'] = $this->mainpage;
         $options['phone'] = $this->phone;
         $options['viber'] = $this->viber;
         $options['favs'] = $this->favs   ;
+        $options['chat_id'] = $this->chat_id   ;
 
         $this->options = serialize($options);
 

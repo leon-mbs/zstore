@@ -1,7 +1,7 @@
 <html>
 
     <head>
-      <title> Список завдань   </title>
+      <title> Перелік завдань   </title>
 
     </head>
 
@@ -12,7 +12,7 @@
         <div class="row"  id="vapp" >
   
             <div class="col-12  ">
-                <h3>Список завдань </h3>
+                <h3>Перелік завдань </h3>
                 <div class="navbar nav">
 
 
@@ -43,9 +43,9 @@
 
                        <label for="searchproject"> сортувати </label>
                         <select v-model="searchsort"   class="form-control mr-sm-2  "  >
-                            <option value="0">По приоритету</option>
-                            <option value="1">По номеру</option>
-                            <option value="2">По оновленню</option>
+                            <option value="0">За пріоритетом</option>
+                            <option value="1">За номером</option>
+                            <option value="2">За оновленням</option>
                         </select>
 
                         <input v-on:click.prevent="onfilter" type="button" class="mr-2  btn btn-outline-success  " value="ОК">
@@ -257,7 +257,7 @@
                     <div  v-show="editissue==0"  class="form-group">
                         <label for="editemp">Виконавець </label>
                         <select class="form-control     " v-model="editemp" style="width:200px">
-                            <option value="0">Не обраний</option>
+                            <option value="0">Не обрано</option>
                            <option v-for="option in editemps" :value="option.key">
                               {{ option.value }}
                           </option> 
@@ -417,12 +417,12 @@
  
                     
                    if(this.editproj==0) {
-                        toastr.error("Не  вибраний проект!" )
+                        toastr.error("Проект не обрано!" )
                         return;
                    }
                     
                    if(this.editemp==0) {
-                        toastr.error("Не  вибраний виконавець!" )
+                        toastr.error("Виконавця не обрано!" )
                         return;
                    }
               
@@ -468,7 +468,7 @@
                
                 } ,  
                 del:function ( ){
-                  if( confirm("Видалити задачу?")==false )  return
+                  if( confirm("Видалити завдання?")==false )  return
                    
                   callPageMethod('del',[this.issue], null,(data)=> 
                   {

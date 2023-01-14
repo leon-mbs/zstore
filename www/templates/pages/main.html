@@ -1,8 +1,6 @@
 <html>
     <head>
-        <link rel="stylesheet" href="/assets/css/chart.css">
-
- 
+       
        
 
     </head>
@@ -32,7 +30,7 @@
                     <span class="info-box-icon bg-success elevation-1"><i class="fa  fa-pallet"></i></span>
 
                     <div class="info-box-content">
-                        <span class="info-box-text">Товарiв на  складi</span>
+                        <span class="info-box-text">Товарiв на складi</span>
                         <span class="info-box-number">
                             На суму  {{biitemscnt}}
 
@@ -121,26 +119,29 @@
 
             <div   class="col-12  col-lg-4   ">
                 <div   class="card ">
-                    <div   class="card-body">
 
-                        <canvas style="width:100%" id="paystructure"></canvas>
+
+                        <div style="width:100%" id="paystructure"></div>
                     </div>
-                </div>  
+
             </div>
+ 
 
-            <div   class="col-12  col-lg-4 ">
+  
+ 
+           <div   class="col-12  col-lg-4 ">
                 <div   class="card ">
-                    <div   class="card-body">
-
-                        <canvas style="width:100%" id="paycompare"></canvas>
-                    </div>
+                    
+                        <div style="width:100%" id="paycompare"></div>
+                  
                 </div>    
             </div>
-            <div   class="col-12  col-lg-4 ">
+         
+          <div   class="col-12  col-lg-4 ">
                 <div   class="card ">
                     <div   class="card-body">
 
-                        <canvas style="width:100%" id="sellstat"></canvas>
+                        <div style="width:100%" id="sellstat"></div>
                     </div>
                 </div>    
             </div>
@@ -155,9 +156,9 @@
 
                 <div   class="card ">
                     <div   class="card-body">
-                        <h4>Просроченi товари</h4>
-                        <br><a zippy="sdcsv">Експорт в  Excel</a>
-                        <small>Товари для котрих закiнчився срок придатностi</small>
+                        <h4>Простроченi товари</h4>
+                        <br><a zippy="sdcsv">Експорт у Excel</a>
+                        <small>Товари для котрих закiнчився термін придатностi</small>
                         <table class="table   table-sm">
                             <tr>
 
@@ -187,8 +188,8 @@
                 <div   class="card ">
                     <div   class="card-body">
                         <h4>Мiнiмальна кiлькiсть </h4>
-                        <small>Товари для якмх задана мiнiмальна  кiлькiсть на складi  та актуальна кiлькiсть менше заданоi</small>
-                        <br><a zippy="mqcsv">Експорт в  Excel</a>
+                        <small>Товари для яких задана мiнiмальна кiлькiсть на складi та актуальна кiлькiсть менше заданої</small>
+                        <br><a zippy="mqcsv">Експорт у Excel</a>
                         <table class="table   table-sm">
                             <tr>
                                   <th>Склад</th>
@@ -197,7 +198,7 @@
                                 <th>Код</th>
 
                                 <th class="text-right">Факт</th>
-                                <th class="text-right">Мин.</th>
+                                <th class="text-right">Мiн.</th>
                             </tr>
                             <tr zippy="mqlist">
                                 <td zippy="wmq_storename"></td>
@@ -220,9 +221,9 @@
 
                 <div   class="card ">
                     <div   class="card-body">
-                        <h4>Недавнi документи</h4>
-                        <small>Документи з недавно змiненим статусом</small>
-                        <br><a zippy="rdcsv">Експорт в  Excel</a>
+                        <h4>Останні документи</h4>
+                        <small>Документи з нещодавно змiненим статусом</small>
+                        <br><a zippy="rdcsv">Експорт у Excel</a>
                         <table class="table   table-sm">
                             <tr>
                                 <th>Номер</th>
@@ -256,7 +257,7 @@
                     <div   class="card-body">
                         <h4>Мої документи</h4>
                         <small>Документи, створені поточним користувачем</small>
-                        <br><a zippy="mdcsv">Експорт в  Excel</a>
+                        <br><a zippy="mdcsv">Експорт у Excel</a>
                         <table class="table   table-sm">
                             <tr>
                                 <th>Номер</th>
@@ -294,205 +295,170 @@
 
 
 
-        <script language="javascript" src="/assets/js/chart.js"></script>
+ 
+ 
+ 
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart'], 'language': 'uk'});
+      google.charts.setOnLoadCallback(drawChart);
 
-        <script>
-        
+      
     var fontcolor='#000' ;
+    var bgcolor='#fff' ;
         {{#darkmode}}
             fontcolor='#fff' ;
-        {{/darkmode}}              
-        
-//структура   расходов
-var pieData = {
-labels: {{{pbtitle}}},
-        datasets: [
-        {
-        data: {{{pbdata}}},
-                backgroundColor : {{{pbcolor}}},
-        }
-        ]
-}
-
-
-var pieOptions = {
-maintainAspectRatio : false,
-        responsive : true,
-        title: {
-        display: true,   fontColor: fontcolor,
-                text: 'Структура видаткiв за  три мiсяцi',
-                position: 'top'
-
-        },
-        legend: {
-        display: true,
-                position: 'right',
-                labels: {
-                boxWidth: 10,
-                        fontColor: fontcolor,
-                        padding:  5
-                }
-        },
-        tooltips: {
-        enabled: true
-        },
-}
-
-//сравнение  доходоа  и расходов
-
-
-
-
-var barData = {
-labels: {{{pcmon}}},
-        datasets: [
-        {
-        label: "Видаток",
-                backgroundColor: "red",
-                data: {{{pcout}}}
-        }, {
-        label: "Прибуток",
-                backgroundColor: "green",
-                data: {{{pcin}}}
-        }
-        ]
-}
-
-
-var barOptions = {
-legend: {
-display: true,
-        position: 'right',  
-        labels: {
-                
-                        fontColor: fontcolor 
-                        
-                }
-         },
-        title: {
-        display: true,   fontColor: fontcolor,
-                text: 'Прибутки та  видатки'
-        }
-        
-, 
-       scales: {
-        xAxes: [{
-             ticks: { 
-                   fontColor: fontcolor 
-             } 
-        }],
-                yAxes: [{    ticks: { 
-                   fontColor: fontcolor 
-             } 
-                }]
-        }                  
-}
-
-
-var sellData = {
-labels  : {{{tsmon}}},
-        datasets: [
-        {
-        label               : 'Товари',
-                backgroundColor         : 'rgba(60,141,188,0.8)',
-                borderColor         : 'rgba(60,141,188,0.8)',
-                fill          : false,
-                data                :  {{{tstov}}}
-        },
-        {
-        label               : 'Послуги',
-                backgroundColor         : 'rgba(210, 100, 100, 1)',
-                borderColor         : 'rgba(210, 100, 100, 1)',
-                fill          : false,
-                data                :  {{{tsser}}}
-        },
-        ]
-}
-
-
-
-
-
-
-var sellOptions = {
-title: {
-display: true,   fontColor: fontcolor,
-        text: 'Реалiзацiя'
-},
-
-legend: {
-   labels: {
-                
-                        fontColor: fontcolor 
-                        
-                }
+            bgcolor='#333' ;
+        {{/darkmode}}            
       
-        }, 
+      
+      
+      function drawChart() {
 
-        scales: {
-        xAxes: [{     ticks: { 
-                   fontColor: fontcolor 
-             },
-        gridLines : {
-        display : false,
-        }
-        }],
-                yAxes: [{    ticks: { 
-                   fontColor: fontcolor 
-             },
-                gridLines : {
-                display : false,
-                }
-                }]
-        }
-}
+        //структура видатків
+          
+        var psdata = google.visualization.arrayToDataTable( 
+        
+          {{{ps}}}
+        
+        );
 
-window.onload = function() {
+        
+        
+        
+        var psoptions = {
+          title: 'Структура видаткiы за три мiсяцi' ,
+          sliceVisibilityThreshold: 0.01,         
+          backgroundColor: {
+            "fill":bgcolor 
+          } , 
+          titleTextStyle:{
+             "color":fontcolor ,"bold":true
+          } ,
+                   
+          chartArea:{
+             "top":25,"bottom":5,"left":10 , "right":60
+          } ,
+                  
+          legendTextStyle:{
+             "color":fontcolor 
+          } ,
+                  
+        };
 
-
-new Chart(document.querySelector('#paystructure'), {
-type: 'pie',
-        data: pieData,
-        options: pieOptions
-})
-
-        new Chart(document.querySelector('#paycompare'), {
-        type: 'bar',
-                data: barData,
-                options: barOptions
-        })
-
-        new Chart(document.querySelector('#sellstat'), {
-        type: 'line',
-                data: sellData,
-                options: sellOptions
-        })
-
-
-};
- 
-    /*
-   
-   function cl(){
-      var input = document.querySelector('#tf')
-
-    var data = new FormData()
-    data.append('file', input.files[0])
   
+       //старвнение
+        var pschart = new google.visualization.PieChart(document.getElementById('paystructure'));
 
-             
-     fetch('http://local.next/api/app/uploadfile?DBGSESSID=447335844422600002;d=1,p=0,c=1', { 
-        method: 'post', 
-        headers: new Headers({
-            'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMiIsImlhdCI6MTY1NTgwOTM4NSwiZXhwIjoxNjU1ODk1Nzg1fQ.GMrtcnK60IZ2q-P9Oh0SxUkd01EXGlH9oEM37-1Swes' 
-            
-        }), 
-        body: data
-    });
+        pschart.draw(psdata, psoptions);
+        
+        
+  
+     
+      var pcdata = new google.visualization.DataTable();
+      pcdata.addColumn('string', 'Мiсяць');
+      pcdata.addColumn('number', 'Прибутки');
+      pcdata.addColumn('number', 'Видатки');
+
+      pcdata.addRows(
+          {{{pc}}}
+      );
+
+      var pcoptions = {
+        title: 'Прибутки та видатки',
+        legend:{
+            position:"bottom"
+        }  ,
+          backgroundColor: {
+            "fill":bgcolor 
+          } , 
+          titleTextStyle:{
+             "color":fontcolor ,"bold":true
+          } ,
+                   
+      
+                  
+          legendTextStyle:{
+             "color":fontcolor 
+          } , 
+          
+          hAxis:{
+           
+              textStyle: {
+                color: fontcolor
+              }
+            } ,
+          vAxis:{
+              gridlines:null,
+              textStyle: {
+                color: fontcolor
+              }
+            } ,                 
+      };
+      
+      var pcchart = new google.visualization.ColumnChart(document.getElementById('paycompare'));
+      pcchart.draw(pcdata, pcoptions);
+      
+     
+       //продажи
+          
          
-   }
-*/
-        </script>
+        var tsdata = new google.visualization.DataTable();
+      tsdata.addColumn('string', 'Мiсяць');
+      tsdata.addColumn('number', 'Послуги');
+      tsdata.addColumn('number', 'Товари');
+
+      tsdata.addRows( 
+       {{{ts}}}
+     )
+        
+        
+        
+        var tsoptions = {
+          title: 'Реалiзацiя',
+          curveType: 'function',
+          legend: { position: 'bottom' } ,
+          backgroundColor: {
+            "fill":bgcolor 
+          } , 
+          titleTextStyle:{
+             "color":fontcolor ,"bold":true
+          } ,
+                   
+      
+          legendTextStyle:{
+             "color":fontcolor 
+          } , 
+          
+          hAxis:{
+           
+              textStyle: {
+                color: fontcolor
+              }
+            } ,
+          vAxis:{
+              gridlines:null,
+              textStyle: {
+                color: fontcolor
+              }
+            } ,
+            
+                   
+        };
+
+        var tschart = new google.visualization.LineChart(document.getElementById('sellstat'));
+
+        tschart.draw(tsdata, tsoptions);       
+        
+        
+        
+        
+        
+        
+        
+        
+      }
+    </script
   
     </body>
 </html>

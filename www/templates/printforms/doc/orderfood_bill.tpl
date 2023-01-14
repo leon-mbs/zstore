@@ -21,12 +21,20 @@
     </tr>
     <tr>
 
-        <td colspan="2"> {{firm_name}}</td>
+        <td colspan="3"> {{firm_name}}</td>
     </tr>
+  {{#inn}}
     <tr>
 
         <td colspan="3">ІПН {{inn}}</td>
     </tr>
+ {{/inn}} 
+ {{#tin}}
+    <tr>
+
+        <td colspan="3">ЄДРПОУ {{tin}}</td>
+    </tr>
+ {{/tin}} 
     {{#shopname}}
     <tr>
         <td colspan="3"> {{shopname}}</td>
@@ -125,7 +133,7 @@
 
     </tr>
        <tr>                    
-                        <td colspan="3"> 
+                        <td colspan="3" > 
                             {{{docqrcode}}}
                         </td>
 

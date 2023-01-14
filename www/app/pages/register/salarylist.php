@@ -40,7 +40,7 @@ class SalaryList extends \App\Pages\Base
 
         $this->filter->add(new TextInput('searchnumber'));
 
-        $doclist = $this->add(new DataView('doclist', new SerListDataSource($this), $this, 'doclistOnRow'));
+        $doclist = $this->add(new DataView('doclist', new SalListDataSource($this), $this, 'doclistOnRow'));
 
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
@@ -142,7 +142,7 @@ class SalaryList extends \App\Pages\Base
 /**
  *  Источник  данных  для   списка  документов
  */
-class SerListDataSource implements \Zippy\Interfaces\DataSource
+class SalListDataSource implements \Zippy\Interfaces\DataSource
 {
 
     private $page;

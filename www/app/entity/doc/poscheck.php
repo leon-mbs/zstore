@@ -54,20 +54,17 @@ class POSCheck extends Document
         $firm = H::getFirmData($this->firm_id);
         $printer = System::getOptions('printer');
 
-        $style = "";
-        if (strlen($printer['pa4width']) > 0) {
-            $style = 'style=" width:' . $printer['pa4width'] . ';"';
-
-        }
+     
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
                         "firm_name"       => $firm["firm_name"],
-                        "style"           => $style,
+
                         "shopname"        => $common["shopname"],
                         "address"         => $firm["address"],
                         "phone"           => $firm["phone"],
-                        "inn"             => $firm["inn"],
+                        "inn"           => strlen($firm["inn"]) >0 ? $firm["inn"] :false,
+                        "tin"           => strlen($firm["tin"]) >0 ? $firm["tin"] :false,
                         "customer_name"   => strlen($this->customer_name) > 0 ? $this->customer_name : false,
                         "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
                         "exchange"        => H::fa($this->headerdata["exchange"]),
@@ -94,7 +91,7 @@ class POSCheck extends Document
         return $html;
     }
 
-    public function generatePosReport() {
+    public function generatePosReport($ps=false) {
 
         $detail = array();
 
@@ -142,7 +139,8 @@ class POSCheck extends Document
                         "shopname"      => strlen($common["shopname"]) > 0 ? $common["shopname"] : false,
                         "address"       => $firm["address"],
                         "phone"         => $firm["phone"],
-                        "inn"           => strlen($firm["inn"]) >0 ? $firm["inn"] :$firm["tin"],
+                        "inn"           => strlen($firm["inn"]) >0 ? $firm["inn"] :false,
+                        "tin"           => strlen($firm["tin"]) >0 ? $firm["tin"] :false,
                         "checkslogan"   => $common["checkslogan"],
                         "customer_name" => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
                         "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
@@ -160,12 +158,15 @@ class POSCheck extends Document
                         "delbonus"           => $delbonus > 0 ? H::fa($delbonus) : false,
                         "allbonus"           => $allbonus > 0 ? H::fa($allbonus) : false,
                         "trans"           => $this->headerdata["trans"] > 0 ? $this->headerdata["trans"] : false,
-                        
+                        "docqrcodeurl"     =>  $this->getQRCodeImage(true),             
                         "docqrcode"       => $this->getQRCodeImage(),
                         "payed"           => $this->headerdata['payed'] > 0 ? H::fa($this->headerdata['payed']) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
         );
         
+        if($header['inn'] != false) {
+           $header['tin'] = false; 
+        }
         
         $frases = explode(PHP_EOL, $header['checkslogan']) ;
         if(count($frases) >0)  {
@@ -179,7 +180,13 @@ class POSCheck extends Document
             $mf = \App\Entity\MoneyFund::load($this->headerdata['payment'] );
             $header['nal']  = $mf->beznal!=1;
         }
-        $report = new \App\Report('doc/poscheck_bill.tpl');
+
+
+       if($ps)   {
+          $report = new \App\Report('doc/poscheck_bill_ps.tpl');
+        }
+        else 
+          $report = new \App\Report('doc/poscheck_bill.tpl');
 
         $html = $report->generate($header);
 
@@ -189,7 +196,13 @@ class POSCheck extends Document
     public function Execute() {
         //$conn = \ZDB\DB::getConnect();
 
-
+        $dd =   doubleval($this->headerdata['bonus'] ) + doubleval($this->headerdata['paydisc'] ) ;
+        $k = 1;   //учитываем  скидку
+        if ($dd > 0 && $this->amount > 0) {
+            $k = ($this->amount - $dd) / $this->amount;
+        }
+            
+            
         foreach ($this->unpackDetails('detaildata') as $item) {
 
 
@@ -235,10 +248,6 @@ class POSCheck extends Document
             }
 
 
-            $k = 1;   //учитываем  скидку
-            if ($this->headerdata["paydisc"] > 0 && $this->amount > 0) {
-                $k = ($this->amount - $this->headerdata["paydisc"]) / $this->amount;
-            }
 
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
@@ -252,19 +261,7 @@ class POSCheck extends Document
             }
         }
 
-        //списываем бонусы
-        if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
-            $customer = \App\Entity\Customer::load($this->customer_id);
-            if ($customer->getDiscount() > 0) {
-                //процент
-            } else {
-                $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0);
-                if ($customer->bonus < 0) {
-                    $customer->bonus = 0;
-                }
-                $customer->save();
-            }
-        }
+ 
         $payed = $this->payed;
         if ($this->headerdata['exchange'] > 0 && $this->payed > $this->headerdata['exchange']) {
 
@@ -279,32 +276,14 @@ class POSCheck extends Document
     
             $sc->save();
         }
-        if ($this->headerdata['payment'] > 0 && $payed > 0) {
             $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $payed, $this->headerdata['payment'] );
             if ($payed > 0) {
                 $this->payed = $payed;
             }
             \App\Entity\IOState::addIOState($this->document_id, $payed, \App\Entity\IOState::TYPE_BASE_INCOME);
 
-        }
         
-        //сдачу в  бонусы
-        if($this->headerdata['exch2b'] > 0 && $this->headerdata['exchange']>0 ) {
-            $pay = new \App\Entity\Pay();
 
-            $pay->document_id = $this->document_id;
-        
-            $pay->amount = 0;
-            $pay->bonus = (int)$this->headerdata['exch2b'];
-            if($this->headerdata['exch2b'] > $this->headerdata['exchange'])  {
-               $pay->bonus = (int)$this->headerdata['exchange'];
-            }           
-            $pay->paytype = \App\Entity\Pay::PAY_BONUS;
-            $pay->paydate = time();
-            $pay->user_id = \App\System::getUser()->user_id;
-
-            $pay->save();          
-        }
         return true;
     }
 

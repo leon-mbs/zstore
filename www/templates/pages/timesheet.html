@@ -25,7 +25,7 @@
                         <label for="from">З</label>
                         <input v-model="from"  class="form-control mr-2" style="width: 120px" type="date" >
 
-                        <label for="to">по</label>
+                        <label for="to">По</label>
                         <input v-model="to" class="form-control mr-2" style="width: 120px" type="date" >
 
 
@@ -121,21 +121,21 @@
                     </div>
                     <div class="form-group">
                         <label for="editfrom">З</label>
-                        <input v-model="editfrom" required="required"                                  class="form-control"  type="time" />
+                        <input v-model="editfrom" required="required"  class="form-control"  type="time" />
                     </div>
                     <div class="form-group">
                         <label for="editto">По</label>
-                        <input  v-model="editto" required="required" type="time"                                class="form-control" />
+                        <input  v-model="editto" required="required" type="time" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label for="edittype">Тип</label>
                         <select v-model="edittype"  class="form-control">
-                            <option value="0">Не вибрано</option>
+                            <option value="0">Не обрано</option>
                             <option v-for="t in types" :value="t.key">{{t.value}}</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="editbreak">Перерва, хв</label>
+                        <label for="editbreak">Перерва, хв.</label>
                         <input   v-model="editbreak" required="required" style="width:75px;" pattern="[0-9]+" class="form-control" />
                     </div>
                     <div class="form-group">
@@ -215,7 +215,7 @@ var calendar
                 
                onFilter:function(){
                    if(Number.isNaN( Number.parseInt(this.empid)) ) {
-                      alert('Не вибраний спiвробiтник');
+                      alert('Спiвробiтника не обрано');
                       return;
                   }     
                     this.loaddata() ;       

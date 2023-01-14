@@ -2,7 +2,7 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="9">
-            Стан  складiв
+            Стан складiв
         </td>
     </tr>
  

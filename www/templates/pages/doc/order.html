@@ -11,7 +11,7 @@
             <div class="row">
                 <div class="col-12 col-md-3">
                     <div class="form-group">
-                        <label for="document_number">Номер документу</label>
+                        <label for="document_number">Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number" required="required">
                     </div>
                     <div class="form-group  ">
@@ -28,7 +28,7 @@
 
                     </div>
                     <div class="form-group  ">
-                        <label for="email">Email</label>
+                        <label for="email">E-mail</label>
 
                         <input zippy="email" class="form-control">
 
@@ -54,7 +54,7 @@
                     <div class="form-group  ">
                         <label for="salesource">Джерело продаж</label>
                         <select class="form-control" zippy="salesource">
-                            <option value="0">Не вибрано</option>
+                            <option value="0">Не обрано</option>
                         </select>
                     </div>
 
@@ -165,7 +165,7 @@
                     &nbsp; <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-outline-primary  ">
                     &nbsp;<input zippy="execdoc" type="submit" value="На обробку" class="btn btn-outline-primary  ">
                     &nbsp;<input zippy="topaydoc" type="submit" value="До сплати" class="btn btn-outline-info  ">
-                    &nbsp;<a data-toggle="modal"                                   data-target="#modalpayed"  href="javascript:void(0);"  class="btn btn-outline-info  ">Оплатити</a>
+                    &nbsp;<a data-toggle="modal" data-target="#modalpayed"  href="javascript:void(0);"  class="btn btn-outline-info  ">Оплатити</a>
                
 
                 </div>
@@ -220,7 +220,7 @@
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">До оплати</h5>
+                            <h5 class="modal-title">До сплати</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -251,13 +251,13 @@
                             <div class="form-group  ">
                                 <label for="payment">Каса, рахунок</label>
                                 <select class="form-control" zippy="payment">
-                                    <option value="0">Не вибрано</option>
+                                    <option value="0">Не обрано</option>
                                 </select>
                                
                             </div>
                         
                             <div class="form-group  ">
-                                <label for="payment">Внесена  оплата</label>
+                                <label for="payment">Внесено оплату</label>
                                                          
                                 <input class="form-control qtyprice" type="text" zippy="payed" pattern="[0-9,\.]+">
                                 
@@ -303,14 +303,14 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="editdesc">Комментар </label>
+                        <label for="editdesc">Коментар </label>
                         <input   class="form-control" type="text" zippy="editdesc"     >
 
                     </div>
 
                     <div class="form-group">
                         <input type="submit" zippy="submitrow" value="Зберегти" class="btn btn-outline-primary ">
-                        &nbsp; <input type="button" zippy="cancelrow" value="До списку" class="btn btn-outline-secondary ">
+                        &nbsp; <input type="button" zippy="cancelrow" value="До переліку" class="btn btn-outline-secondary ">
                     </div>
                 </form>
 

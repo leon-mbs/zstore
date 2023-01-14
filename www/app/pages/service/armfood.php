@@ -128,13 +128,12 @@ class ARMFood extends \App\Pages\Base
 
         $this->docpanel->navform->add(new SubmitButton('baddnewpos'))->onClick($this, 'addnewposOnClick');
 
-        $this->docpanel->navform->add(new ClickLink('openshift', $this, 'OnOpenShift'));
-        $this->docpanel->navform->add(new ClickLink('closeshift', $this, 'OnCloseShift'));
         
         
         $this->docpanel->add(new Form('listsform'))->setVisible(false);
         $this->docpanel->listsform->add(new DataView('itemlist', new ArrayDataSource($this, '_itemlist'), $this, 'onItemRow'));
 
+        $this->docpanel->listsform->add(new SubmitButton('btosave'))->onClick($this, 'tosaveOnClick');
         $this->docpanel->listsform->add(new SubmitButton('btopay'))->onClick($this, 'topayOnClick');
         $this->docpanel->listsform->add(new SubmitButton('btoprod'))->onClick($this, 'toprodOnClick');
         $this->docpanel->listsform->add(new SubmitButton('btodel'))->onClick($this, 'todelOnClick');
@@ -159,8 +158,9 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->payform->add(new TextInput('pfrest'));
         $this->docpanel->payform->add(new TextInput('pftrans'));
         $this->docpanel->payform->add(new TextInput('pfbonus'));
+        $this->docpanel->payform->add(new TextInput('pfexch2b'));
 
-        $this->docpanel->payform->add(new CheckBox('passfisc'));
+
  
         $bind = new  \Zippy\Binding\PropertyBinding($this, '_pt');
         $this->docpanel->payform->add(new \Zippy\Html\Form\RadioButton('pfnal', $bind, 1));
@@ -168,10 +168,10 @@ class ARMFood extends \App\Pages\Base
 
         $this->docpanel->payform->add(new ClickLink('bbackitems'))->onClick($this, 'backItemsOnClick');
         $this->docpanel->payform->add(new SubmitButton('btocheck'))->onClick($this, 'payandcloseOnClick');
-
         $this->docpanel->add(new Panel('checkpan'))->setVisible(false);
         $this->docpanel->checkpan->add(new ClickLink('bnewcheck'))->onClick($this, 'onNewOrder');
         $this->docpanel->checkpan->add(new Label('checktext'));
+        $this->docpanel->checkpan->add(new Button('btoprint'))->onClick($this,"OnPrint",true);
 
         //добавление нового контрагента
         $this->add(new Form('editcust'))->setVisible(false);
@@ -293,7 +293,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->navform->setVisible(false);
 
 
-        $this->_catlist = Category::find(" coalesce(parent_id,0)=0 and detail  not  like '%<nofastfood>1</nofastfood>%' ");
+        $this->_catlist = Category::find(" cat_id in(select cat_id from  items where  disabled <>1  ) and  coalesce(parent_id,0)=0 and detail  not  like '%<nofastfood>1</nofastfood>%' ");
         $this->docpanel->catpan->catlist->Reload();
     }
 
@@ -759,7 +759,7 @@ class ARMFood extends \App\Pages\Base
         $conn->BeginTrans();
       
         try {
-                $conn = \ZDB\DB::getConnect();
+            
                 $conn->Execute("delete from entrylist where document_id =" . $this->_doc->document_id);
                 $conn->Execute("delete from iostate where document_id=" . $this->_doc->document_id);
 
@@ -800,6 +800,47 @@ class ARMFood extends \App\Pages\Base
         $this->onNewOrder();
     }
 
+  // сохранить  
+    public function tosaveOnClick($sender) {
+
+
+        if ($this->createdoc() == false) {
+            return;
+        }
+
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
+      
+        try {
+        
+
+     
+            
+            if( $this->_doc->state != Document::STATE_NEW)  {
+                $this->_doc->updateStatus(Document::STATE_EDITED);
+                
+            }
+
+              
+            $this->_doc = $this->_doc->cast();
+
+            $this->_doc->save();
+   
+            $conn->CommitTrans();
+        } catch(\Throwable $ee) {
+            global $logger;
+            $conn->RollbackTrans();
+            $this->setErrorTopPage($ee->getMessage());
+
+            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            return;
+        }
+
+
+        $this->setInfo('sentprod');
+        $this->onNewOrder();
+    }
+
 
     //к  оплате
     public function topayOnClick($sender) {
@@ -807,7 +848,7 @@ class ARMFood extends \App\Pages\Base
         if ($this->createdoc() == false) {
             return;
         }
-        $this->docpanel->payform->passfisc->setChecked(false);
+
  
         $this->docpanel->payform->setVisible(true);
         $this->docpanel->listsform->setVisible(false);
@@ -866,6 +907,7 @@ class ARMFood extends \App\Pages\Base
             $this->_doc->payed = $this->docpanel->payform->pfpayed->getText();
             $this->_doc->headerdata['exchange'] = $this->docpanel->payform->pfrest->getText();
             $this->_doc->headerdata['payed'] = $this->docpanel->payform->pfpayed->getText();
+            $this->_doc->headerdata['exch2b'] = $this->docpanel->payform->pfexch2b->getText();
 
             $this->_doc->headerdata['bonus'] = $this->docpanel->payform->pfbonus->getText();
             $this->_doc->headerdata['paydisc'] = $this->docpanel->payform->pfdisc->getText();
@@ -880,6 +922,21 @@ class ARMFood extends \App\Pages\Base
                 $this->setError("toolowamount");
                 return;
             }
+            
+            if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $this->_doc->customer_id == 0) {
+                $this->setError("mustsel_cust");
+                return;
+            }  
+            
+            if ( doubleval($this->_doc->headerdata['bonus'] ) >0 && $this->_doc->customer_id == 0) {
+                $this->setError("mustsel_cust");
+                return;
+            }            
+            if ( doubleval($this->_doc->headerdata['exch2b'] ) >0 && $this->_doc->customer_id == 0) {
+                $this->setError("mustsel_cust");
+                return;
+            }            
+                      
             $this->_doc->save();
             $this->_doc = $this->_doc->cast();
             $this->_doc->DoPayment();
@@ -901,41 +958,7 @@ class ARMFood extends \App\Pages\Base
             }
             //если  оплачен и  закончен   закрываем
             if ($this->_doc->payamount <= $this->_doc->payed && ($this->_doc->state == Document::STATE_EXECUTED || $this->_doc->state == Document::STATE_DELIVERED || $this->_doc->state == Document::STATE_FINISHED)) {
-                    if($this->docpanel->payform->passfisc->isChecked()) {
-                      $ret = \App\Modules\PPO\PPOHelper::check($this->_doc,true);
-  
-                    }   else {
-                
-                      if ($this->_pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
-                        $this->_doc->headerdata["fiscalnumberpos"]  =  $this->_pos->fiscalnumber;
-         
-
-                        $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
-                        if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
-                            //повторяем для  нового номера
-                            $this->_pos->fiscdocnumber = $ret['doclocnumber'];
-                            $this->_pos->save();
-                            $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
-                        }
-                        if ($ret['success'] == false) {
-                            $this->setErrorTopPage($ret['data']);
-                            $conn->RollbackTrans();
-                            return;
-                        } else {
-                            
-                            if ($ret['docnumber'] > 0) {
-                                $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                                $this->_pos->save();
-                                $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
-                            } else {
-                                $this->setError("ppo_noretnumber");
-                                 $conn->RollbackTrans();
-                                return;
-                            }
-                        }
-                    }
-     
-                }
+          
          
                 $this->_doc->updateStatus(Document::STATE_CLOSED);
             }
@@ -1124,97 +1147,35 @@ class ARMFood extends \App\Pages\Base
         return json_encode(array("cntprod" => $cntprod, 'cntorder' => $cntorder), JSON_UNESCAPED_UNICODE);
     }
 
-    //фискализация
-    public function OnOpenShift() {
-        $ret = \App\Modules\PPO\PPOHelper::shift($this->_pos->pos_id, true);
-        if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
-            //повторяем для  нового номера
-            $this->_pos->fiscdocnumber = $ret['doclocnumber'];
-            $this->_pos->save();
-            $ret = \App\Modules\PPO\PPOHelper::shift($this->_pos->pos_id, true);
+ 
+
+   
+  public function OnPrint($sender) {
+     
+ 
+        if(intval(\App\System::getUser()->prtype ) == 0){
+  
+              
+            $this->addAjaxResponse("  $('#checktext').printThis() ");
+         
+            return;
         }
-        if ($ret['success'] == false) {
-            $this->setErrorTopPage($ret['data']);
-            return false;
-        } else {
-            $this->setSuccess("ppo_shiftopened");
-            if ($ret['doclocnumber'] > 0) {
-                $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                $this->_pos->save();
-             //   $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
-            }  
-            \App\Modules\PPO\PPOHelper::clearStat($this->_pos->pos_id);
+        
+     try{
+        $doc = $this->_doc->cast();
+        $xml = $doc->generatePosReport(true);
+
+        $buf = \App\Printer::xml2comm($xml);
+        $b = json_encode($buf) ;                   
+          
+        $this->addAjaxResponse("  sendPS('{$b}') ");      
+      }catch(\Exception $e){
+           $message = $e->getMessage()  ;
+           $message = str_replace(";","`",$message)  ;
+           $this->addAjaxResponse(" toastr.error( '{$message}' )         ");  
+                   
         }
-
-
-        $this->_pos->save();
-        return true;
-    }
-
-    public function OnCloseShift($sender) {
-        $ret = $this->zform();
-        if ($ret == true) {
-            $this->closeshift();
-        }
-    }
-
-    public function zform() {
-
-        $stat = \App\Modules\PPO\PPOHelper::getStat($this->_pos->pos_id);
-        $rstat = \App\Modules\PPO\PPOHelper::getStat($this->_pos->pos_id, true);
-
-        $ret = \App\Modules\PPO\PPOHelper::zform($this->_pos->pos_id, $stat, $rstat);
-        if (strpos($ret['data'], 'ZRepAlreadyRegistered')) {
-            return true;
-        }
-        if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
-            //повторяем для  нового номера
-            $this->_pos->fiscdocnumber = $ret['doclocnumber'];
-            $this->_pos->save();
-            $ret = \App\Modules\PPO\PPOHelper::zform($this->_pos->pos_id, $stat, $rstat);
-        }
-        if ($ret['success'] == false) {
-            $this->setErrorTopPage($ret['data']);
-            return false;
-        } else {
-
-            if ($ret['doclocnumber'] > 0) {
-                $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                $this->_pos->save();
-            } else {
-                $this->setError("ppo_noretnumber");
-                return;
-            }
-        }
-
-
-        return true;
-    }
-
-    public function closeshift() {
-        $ret = \App\Modules\PPO\PPOHelper::shift($this->_pos->pos_id, false);
-        if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
-            //повторяем для  нового номера
-            $this->_pos->fiscdocnumber = $ret['doclocnumber'];
-            $this->_pos->save();
-            $ret = \App\Modules\PPO\PPOHelper::shift($this->_pos->pos_id, false);
-        }
-        if ($ret['success'] == false) {
-            $this->setErrorTopPage($ret['data']);
-            return false;
-        } else {
-            $this->setSuccess("ppo_shiftclosed");
-            if ($ret['doclocnumber'] > 0) {
-                $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                $this->_pos->save();
-            }  
-            \App\Modules\PPO\PPOHelper::clearStat($this->_pos->pos_id);
-        }
-
-
-        return true;
-    }
-
-    
+ 
+    }        
     
 }

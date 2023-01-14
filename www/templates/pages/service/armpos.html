@@ -13,27 +13,27 @@
                     <div class="form-group  ">
                         <label for="pos">POS термінал</label>
                         <select class="form-control" zippy="pos">
-                            <option value="0">Не вибрано</option>
+                            <option value="0">Не обрано</option>
                         </select>
                     </div>
 
                     <div class="form-group  ">
                         <label for="store">Склад</label>
                         <select class="form-control" zippy="store">
-                            <option value="0">Не вибраний</option>
+                            <option value="0">Не обрано</option>
                         </select>
                     </div>
 
                     <div class="form-group  ">
                         <label for="pricetype">Тип цiни</label>
                         <select class="form-control" zippy="pricetype">
-                            <option value="0">Не вибрано</option>
+                            <option value="0">Не обрано</option>
                         </select>
                     </div>
                     <div class="form-group  ">
                         <label for="salesource">Джерело продаж</label>
                         <select class="form-control" zippy="salesource">
-                            <option value="0">Не вибрано</option>
+                            <option value="0">Не обрано</option>
                         </select>
                     </div>
 
@@ -48,8 +48,8 @@
 
         <div   zippy="docpanel">
 
-            <h4 class="mb-2  ">Оформлення  чеку</h4>
-            <a zippy="tochecklist"  ><i class="fa fa-list"></i> Список  чекiв</a>    &nbsp;  &nbsp; &nbsp;  &nbsp; 
+            <h4 class="mb-2  ">Оформлення чеку</h4>
+            <a zippy="tochecklist"  ><i class="fa fa-list"></i> Список чекiв</a>    &nbsp;  &nbsp; &nbsp;  &nbsp; 
              {{#ppo}}
                 
                         <a zippy="openshift"><i class="fa fa-bullhorn"/> Вiдкрити змiну</a>
@@ -63,7 +63,7 @@
                     <div class="col-12 col-md-10 col-lg-8 col-xl-7">
                         {{#usescanner}}
                         <div class="navbar nav justify-content-start">
-                            Штрих-код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
+                            Штрих код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
                             &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
 
                         </div>
@@ -72,7 +72,7 @@
 
                         <a class="btn btn-info  " zippy="addrow">Додати товар</a>
                         &nbsp;&nbsp;<a class="btn btn-info  " zippy="addser">Додати послугу</a>
-                        &nbsp;&nbsp;<input type="submit" value="Перейти до  оплати >" zippy="topay" class="btn  btn-info">
+                        &nbsp;&nbsp;<input type="submit" value="Перейти до оплати >" zippy="topay" class="btn  btn-info">
 
 
                         <table class="table table-sm">
@@ -152,7 +152,7 @@
                 <div class="row">
                     <div class="col-12 col-md-4">
                         <div class="form-group row">
-                            <label class="col-4" for="document_number">Номер документу</label>
+                            <label class="col-4" for="document_number">Номер документа</label>
                             <div class="col-6">
                             <input class="form-control" type="text" zippy="document_number" required="required">
                             </div>
@@ -206,7 +206,7 @@
                     </div>
 
 
-                    <div class="col-12 col-md-4  ">
+                    <div class="col-12 col-md-5  ">
                         <div class="form-group row">
                           <label class="col-4" for="total2">На суму</label>
                            <div class="col-2">
@@ -232,7 +232,7 @@
                          </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-4" for="payed" data-label="payed">Внесена оплата</label>
+                            <label class="col-4" for="payed" data-label="payed">Внесено оплату</label>
                            <div class="col-2">
                             <input autocomplete="off" class="form-control qtyprice" type="text" zippy="payed">
                           </div>
@@ -252,7 +252,7 @@
                             <input autocomplete="off" class="form-control" type="text" zippy="exch2b">
                          </div>     
                              <div class="col-12">
-                  <small>    Занести частину або  всю решту в бонуси </small>
+                  <small>    Занести частину або всю решту в бонуси </small>
                       </div>     
                         </div>
 
@@ -266,9 +266,9 @@
                             <input type="button" value="< назад" zippy="cancel2" class="btn  btn-outline-info">
                             &nbsp;&nbsp;<input type="submit" value="Зберегти  " zippy="save" class="btn  btn-info">
                             {{#ppo}}
-                            &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Вiдкласти  фiскалiзацiю  
+                            &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Вiдкласти фiскалiзацiю  
                            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="На випадок збою інтернету фіскалізацію можна пропустити. Чек може бути фіскалізований ДО закриття зміни на сторінці ручного закриття зміни в модулі РРО "></i>
+                                   title="На випадок збою інтернету фіскалізацію можна пропустити. Чек може бути фіскалізований до закриття зміни на сторінці ручного закриття зміни в модулі РРО "></i>
                                               
                             {{/ppo}}
                             
@@ -286,9 +286,11 @@
                         </div>
                         <br>
                         <div class="form-group  ">
-                            <input onclick="$('#showcheck').printThis()" zippy="print" type="button" value="Друк "
-                                   class="btn  btn-primary">
-                            &nbsp;&nbsp;<input type="button" value="Новий чек  " zippy="newdoc" class="btn  btn-info">
+                          
+                           <input   zippy="print" type="button" value="Друк " class="btn  btn-primary">
+                                     
+                         
+                            &nbsp;&nbsp;<input type="button" value="Новий чек " zippy="newdoc" class="btn  btn-info">
                         </div>
 
                     </div>
@@ -388,7 +390,7 @@
         <div class="row" zippy="checklistpan"  >
 
             <div class="col-12 col-md-10 xl-8" >
-                <h4>Список  чекiв</h4>
+                <h4>Список чекiв</h4>
                 <a  class="btn btn-success" zippy="newcheck">Новий чек</a>   
 
 
@@ -401,7 +403,7 @@
 
                                     <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
 
-                                    <label for="searchcust"> Клiент </label>
+                                    <label for="searchcust"> Клiєнт </label>
 
                                     <input placeholder="Почнiть вводити..." class="form-control mr-2" type="text" zippy="searchcust"  >
 
@@ -451,7 +453,7 @@
                                 <div class="navbar nav">
                                     <form zippy="statusform" class="form-inline ">
                                         <label for="stpamount">До сплати</label>
-                                        <input zippy="stpamount" pattern="[0-9\.\-]+" style="width:100px;" placeholder="Сумма..."
+                                        <input zippy="stpamount" pattern="[0-9\.\-]+" style="width:100px;" placeholder="Сума..."
                                                class="form-control mr-2">
                                         <label for="stpayment">рахунок</label>
                                         <select class="form-control mr-2" zippy="stpayment">

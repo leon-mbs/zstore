@@ -17,7 +17,7 @@
     {{#iscontract}}
     <tr>
         <td colspan="5">
-            Угода: {{contract}} вiд {{createdon}}
+            Договір: {{contract}} вiд {{createdon}}
         </td>
 
     </tr>
@@ -69,7 +69,7 @@
            <table style="font-size:smaller"  >
                <tr> <td >Найменування</td>
                 <td align="right">&nbsp;Кіл.&nbsp;</td>
-                <td align="right">Ціна.</td></tr>
+                <td align="right">Ціна</td></tr>
              {{#items}}
                <tr> <td  >{{itemname}}</td>
                 <td align="right">{{qty}}</td>
@@ -88,7 +88,7 @@
     </tr>
    {{#payamount}}
     <tr style="font-weight: bolder;">
-        <td colspan="4" align="right">До оплати:</td>
+        <td colspan="4" align="right">До сплати:</td>
         <td align="right">{{payamount}}</td>
     </tr>
     {{/payamount}} 

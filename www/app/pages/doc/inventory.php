@@ -99,7 +99,7 @@ class Inventory extends \App\Pages\Base
         $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd($item->sdate) : ''));
 
         //  $row->add(new Label('quantity', H::fqty($item->quantity)));
-        $row->add(new TextInput('qfact', new \Zippy\Binding\PropertyBinding($item, 'qfact')));
+        $row->add(new TextInput('qfact', new \Zippy\Binding\PropertyBinding($item, 'qfact')))->onChange($this,"onText",true);
 
         $row->item->setAttribute('class', "text-success");
 
@@ -108,6 +108,10 @@ class Inventory extends \App\Pages\Base
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
     }
 
+    //для  сохранения формы
+    public function onText($sender) {
+        
+    }
     public function deleteOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
@@ -322,9 +326,9 @@ class Inventory extends \App\Pages\Base
     public function OnAutocompleteItem($sender) {
         $store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
-        $cat_id = $this->docform->category->getValue();
+        $cat_id = intval( $this->docform->category->getValue() );
         $common = \App\System::getOptions('common')  ;
-        if($common['usecattree'] != 1){
+        if($common['usecattree'] != 1 || $cat_id==0){
             return Item::findArrayAC($text, $store_id, $cat_id);
         }
   

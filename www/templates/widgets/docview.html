@@ -13,7 +13,7 @@
   </li>
   
   <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#tdocs"><i class="fa fa-project-diagram"></i> Зв'язанi документи <span   class="badge badge-pill badge-info" v-show="doccnt>0" v-text="doccnt"> </span></a>
+    <a class="nav-link" data-toggle="tab" href="#tdocs"><i class="fa fa-project-diagram"></i> Пов'язанi документи <span   class="badge badge-pill badge-info" v-show="doccnt>0" v-text="doccnt"> </span></a>
   </li>
  <li class="nav-item">
     <a class="nav-link" data-toggle="tab" href="#tcomm"><i class="fa fa-comments"></i> Коментарi  <span   class="badge badge-pill badge-info" v-show="msgcnt>0" v-text="msgcnt"> </span></a>
@@ -37,15 +37,15 @@
        <a v-else  href="javascript:void(0)"   onclick="printform()" title="Друк"><i class="fa fa-print mr-2"></i></a>   
     
         
-        <a v-show="docdata.exports.word" :href="word"  target="_blank" title="Експорт в Word"><i class="fa fa-file-word mr-2"></i>   </a>
-        <a v-show="docdata.exports.excel"  :href="excel"   target="_blank" title="Експорт в Excel"><i class="fa fa-file-excel mr-2"></i>  </a>
-        <a v-show="docdata.exports.pdf"   :href="pdf"  target="_blank" title="Експорт в PDF"> <i class="fa fa-file-pdf mr-2"></i>  </a>
-        <a v-show="docdata.exports.email" v-on:click="sendmail"   href="javascript:void(0)"  title="Вiдправка  по  поштi"> <i class="fa fa-envelope mr-2"></i>  </a>
+        <a v-show="docdata.exports.word" :href="word"  target="_blank" title="Експорт у Word"><i class="fa fa-file-word mr-2"></i>   </a>
+        <a v-show="docdata.exports.excel"  :href="excel"   target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i>  </a>
+        <a v-show="docdata.exports.pdf"   :href="pdf"  target="_blank" title="Експорт у PDF"> <i class="fa fa-file-pdf mr-2"></i>  </a>
+        <a v-show="docdata.exports.email" v-on:click="sendmail"   href="javascript:void(0)"  title="Вiдправка електронною поштою "> <i class="fa fa-envelope mr-2"></i>  </a>
     
         <span v-show="docdata.exports.pos">
        
-       <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="Друк на  чековом принтере"> <i class="fas fa-cash-register mr-1"></i></a>
-       <a v-else   onclick=" printpos()" title="Друк на  чековом принтере"><i class="fas fa-cash-register mr-1"></i> </a>
+       <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="Друк на чековому принтерi"> <i class="fas fa-cash-register mr-1"></i></a>
+       <a v-else   onclick=" printpos()" title="Друк на чековому принтерi"><i class="fas fa-cash-register mr-1"></i> </a>
          </span>            
        
        <br>
@@ -234,7 +234,7 @@
       {|={{ }}=|}  
         <script>
 
-        
+            var _docid =0
         
             function printform() {
                 $('#previewpos').attr('style', 'display:none');
@@ -245,7 +245,34 @@
             function printpos() {
                 $('#preview').attr('style', 'display:none');
                 $('#previewpos').attr('style', 'display:block');
-                $('#previewpos').printThis();
+                {{^printserver}}
+                  $('#previewpos').printThis();
+                {{/printserver}}
+               
+                {{#printserver}}
+                  
+                     var path=  $('#_path_').attr('path')         
+               
+                  callPageMethod(path +'::printEP',[_docid], null,(data)=> 
+                  {
+                     
+                      var data = JSON.parse(data)
+                      
+                     
+                  
+                      if(data.error  != "") {
+                          toastr.error(data.error)
+                      } else {
+                         //відправляємо на принтер 
+                         sendPS("["+data.buf+"]" )                             
+                          
+                      }
+                  
+                  });                
+                  
+                  
+                  
+                {{/printserver}}
             }
 
                
@@ -315,7 +342,8 @@
              
               this.docid=  $('#_docid_').attr('docid')         
               this.path=  $('#_path_').attr('path')         
-              
+              _docid=  $('#_docid_').attr('docid')         
+                         
         }  ,      
            methods: {
                 load:function(){
@@ -339,12 +367,27 @@
                 }
                ,
                sendmail:function(){
-                   //toastr.success('Отправлено','',{'timeOut':'2000'})   
+
+                  callPageMethod(this.path +'::onMail',[this.docid], null,(data)=> 
+                  {    
+                      var ret = JSON.parse(data) ;
+                      if(ret.ok==true) {
+                           toastr.success('Вiдправлено','',{'timeOut':'2000'})   
+                      }  else {
+                           toastr.error(ret.error,'',{'timeOut':'5000'})                             
+                      }
+                                         
+                       
+                  });           
+                   
+                   
+                  
                } 
                ,
                opendoc:function(id){
                    
                   this.docid = id 
+                  _docid = id 
                }   ,
              
              

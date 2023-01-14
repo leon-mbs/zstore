@@ -43,7 +43,7 @@
 
                          <td zippy="amountd" class="text-right"></td>
                         <td zippy="amountc" class="text-right"></td>
-                   <td><a zippy="createpay">Створити  КО</a></td>
+                   <td><a zippy="createpay">Створити КО</a></td>
 
 
                         <td><a zippy="showdet">Деталiзацiя</a></td>
@@ -70,9 +70,9 @@
             </div>
 
             <div class="col-12 col-lg-8 col-xl-6 " zippy="plist">
-                <a zippy="back"><i class="fa fa-arrow-alt-circle-left"></i> до списку</a>
+                <a zippy="back"><i class="fa fa-arrow-alt-circle-left"></i> до переліку</a>
                 <h3 zippy="cname"></h3>
-                <small><i class="fa fa-exclamation-circle"></i> Для  оплати  по  угодах  а  не окремих документах  використовуются  кассовi  ордери</small>
+                <small><i class="fa fa-exclamation-circle"></i> Для оплати по договорам, а не окремим документам використовуються касовi ордери</small>
 
                 <table class="table table-sm    ">
                     <tr>
@@ -117,7 +117,7 @@
 
                 <div class="navbar nav">
                     <form zippy="payform" class="form-inline ">
-                        <label>До оплати</label>
+                        <label>До сплати</label>
                         <input zippy="pamount" pattern="[0-9\.\-]+" style="width:100px;" placeholder="Сума..."
                                class="form-control mr-2">
                         <label for="payment">рахунок</label>
@@ -127,7 +127,7 @@
                         {{#ppo}}
                         <label for="pos">POS</label>
                         <select class="form-control mr-2" zippy="pos">
-                            <option value="0">Не вибраний</option>
+                            <option value="0">Не обрано</option>
 
                         </select>
                         {{/ppo}}
@@ -136,7 +136,7 @@
 
                         <input zippy="pcomment" placeholder="Коментар..." class="form-control mr-2">
 
-                        <button type="submit" class="  btn btn-info  mr-2 ">Оплатити</button>
+                        <button type="submit" class="  btn btn-info  mr-2 ">Сплатити</button>
 
 
                     </form>

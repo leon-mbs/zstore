@@ -12,6 +12,8 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Label;
 
 class UserProfile extends \App\Pages\Base
@@ -93,6 +95,25 @@ class UserProfile extends \App\Pages\Base
         $form->onSubmit($this, 'onsubmitpass');
         $this->add($form);
 
+        
+        if(strlen($this->user->prtype) == 0){
+            $this->user->prtype = 0 ;
+            $this->user->pserver   = "http://127.0.0.1:8080";
+            $this->user->pwsym     = 32;
+        }        
+        
+        $form = new Form('printer');
+        $form->add(new DropDownChoice('prtype',0 ))->onChange($this,"onPSType");
+        $form->prtype->setValue($this->user->prtype);
+
+        $form->add(new TextInput('pserver',$this->user->pserver));
+        $form->add(new ClickLink('pstest'))->onClick($this,'onPSTest',true);
+        $form->add(new TextInput('pwsym',$this->user->pwsym));
+        $form->add(new SubmitButton('savep'))->onClick($this, 'savePrinterOnClick');
+        $this->add($form);
+  
+        $this->onPSType(null);
+       
     }
 
     public function onsubmit($sender) {
@@ -102,7 +123,6 @@ class UserProfile extends \App\Pages\Base
         $this->user->viber = $sender->viber->getText();
         $this->user->hidesidebar = $sender->hidesidebar->isChecked() ? 1 : 0;
         $this->user->darkmode = $sender->darkmode->isChecked() ? 1 : 0;
-        $this->user->usemobileprinter = $sender->usemobileprinter->isChecked() ? 1 : 0;
         $this->user->emailnotify = $sender->emailnotify->isChecked() ? 1 : 0;
 
         $this->user->deffirm = $sender->deffirm->getValue();
@@ -111,6 +131,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->defsalesource = $sender->defsalesource->getValue();
         $this->user->pagesize = $sender->pagesize->getValue();
         $this->user->mainpage = $sender->mainpage->getValue();
+       $this->user->usemobileprinter = $this->profileform->usemobileprinter->isChecked() ? 1 : 0;
 
         if (!$this->isError()) {
 
@@ -162,5 +183,48 @@ class UserProfile extends \App\Pages\Base
         $sender->confirmpassword->setText('');
     }
 
+    public function onPSType($sender) {
+       $prtype = (int)$this->printer->prtype->getValue();
+       $this->printer->pserver->setVisible($prtype==1) ;      
+       $this->printer->pwsym->setVisible($prtype==1) ;      
+
+        
+    }
+    public function onPSTest($sender) {
+      
+        try{
+     
+            $pr = new \App\Printer() ;
+          
+            $pr->text("Printer text");
+            $pr->text("Тест принтера");
+              
+            $buf = $pr->getBuffer() ;
+            $b = json_encode($buf) ;
+            $this->addAjaxResponse(" sendPS('{$b}') ");  
+            
+        }catch(\Exception $e){
+           $message = $e->getMessage()  ;
+           $message = str_replace(";","`",$message)  ;
+           $this->addAjaxResponse(" toastr.error( '{$message}' )         ");  
+                    
+        }   
+        
+    }
+    
+    public function savePrinterOnClick($sender) {
+    
+ 
+
+        $this->user->prtype = $this->printer->prtype->getValue() ;
+        $this->user->pwsym = trim($this->printer->pwsym->getText() );
+        $this->user->pserver = trim($this->printer->pserver->getText() );
+        $this->user->pserver  = rtrim($this->user->pserver,"/") ;
+
+        $this->user->save();
+        $this->setSuccess('saved');
+        System::setUser($this->user);
+      
+    }
 
 }

@@ -89,7 +89,7 @@ class DocView extends \Zippy\Html\PageFragment
         $ret['exports']['word']  =  in_array(Document::EX_WORD, $exportlist) ;
         $ret['exports']['excel'] =  in_array(Document::EX_EXCEL, $exportlist) ;
         $ret['exports']['pdf']   =  in_array(Document::EX_PDF, $exportlist) ;
-        $ret['exports']['pos']   =   in_array(Document::EX_POS, $exportlist) ;
+        $ret['exports']['pos']   =  in_array(Document::EX_POS, $exportlist) ;
         $ret['exports']['email'] =  in_array(Document::EX_MAIL, $exportlist) ;
           
         $ret['html'] = $html   ;
@@ -311,6 +311,55 @@ class DocView extends \Zippy\Html\PageFragment
          H::addFile($file, $arg[0], $post['adddescfile'], \App\Entity\Message::TYPE_DOC);
      
     } 
+    
+     public function printEP($arg,$post){
+          
+    
+           
+     try{
+          
+        $doc = Document::Load($arg[0])->cast();
+        $xml = $doc->generatePosReport(true);
+        $pr = new \App\Printer() ;
+
+        $buf = $pr->xml2comm($xml) ;
+        
+        $retb = json_encode($buf) ; 
+        $ret = json_encode(array("error"=>"","buf"=>$buf))  ;
+                    
+                      
+        return $ret;          
+
+        
+      }catch(\Exception $e){
+           $message = $e->getMessage()  ;
+           $message = str_replace(";","`",$message)  ;
+           $ret = json_encode(array("error"=>$message))  ;
+
+                   
+        }
+        
+    }    
+    
+    
+    public function onMail($arg,$post) {
+       try{
+         $doc = Document::Load($arg[0])->cast();
+        
+         $doc->sendEmail();
+              
+         return json_encode(array("ok"=>true)) ;          
+
+        
+      }catch(\Exception $e){
+           $message = $e->getMessage()  ;
+           $message = str_replace(";","`",$message)  ;
+           $ret = json_encode(array("error"=>$message))  ;
+
+                   
+        }       
+       
+    }
     
            
 }

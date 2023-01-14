@@ -15,7 +15,11 @@ class UserLogin extends \Zippy\Html\WebPage
 
     public function __construct() {
         parent::__construct();
-     
+        
+        System::clean() ;
+        System::getSession()->clean();
+
+        
         $common = System::getOptions('common');
         \App\Session::getSession()->clipboard = null;
 
@@ -137,17 +141,14 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->cntlogin++;
         if ($this->cntlogin == 5) {
             $msg = Helper::l("extralogin");
-            $msg .= '<br>' . $this->loginform->userlogin->getText() . ', ';
+            $t = $this->loginform->userlogin->getText()  ;
+            $t = htmlspecialchars($t) ;
+            $msg .= '<br>' . $t. ', ';
             $msg .= $_SERVER['HTTP_HOST'] . ' ' . $_SERVER['SERVER_ADDR'];
-        //    $admin = \App\Entity\User::getByLogin('admin');
-
-
+    
             \App\Entity\Notify::toSystemLog($msg) ;
             \App\Entity\Notify::toAdmin($msg) ;
-            
-            
-       
-
+   
             
             $this->setError('invalidloginalert');
             $this->loginform->setVisible(false);

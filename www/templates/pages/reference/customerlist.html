@@ -1,8 +1,7 @@
 <html>
     <head>
-        <link rel="stylesheet" href="/assets/css/chart.css">
-
-             <title> Довідник  контрагентів</title>
+        
+             <title> Довідник контрагентів</title>
  
     </head>
 
@@ -10,10 +9,10 @@
         <div class="row">
             <div class="col-12   col-xl-10  ">
                 <div zippy="customertable">
-                    <h2>Довідник  контрагентів </h2>
+                    <h2>Довідник контрагентів </h2>
                     <div class="navbar nav  ">
                         <form zippy="leadf" class="form-inline ">
-                            <input   zippy="chleads" type="checkbox"> <b>Режим  роботи з  лідами </b>
+                            <input   zippy="chleads" type="checkbox"> <b>Режим роботи з лідами </b>
                         </form>
                     </div>
                     <div class="navbar nav  ">
@@ -24,7 +23,11 @@
                             {{^leadmode}}
                             <label for="searchtype">Тип</label>
                             <select zippy="searchtype" class="form-control mr-sm-2">
-                                <option value="0">Всі</option>
+                                <option value="0">Всі активні</option>
+                                <option value="1">Покупці</option>
+                                <option value="2">Постачальники</option>
+                                <option value="5">Холдинги</option>
+                                <option value="10">Деактивовані</option>
                             </select>
 
                             <label for="searchholding">дочірній для</label>
@@ -35,11 +38,11 @@
                             {{#leadmode}} 
                             <label for="searchleadsource">джерело</label>
                             <select zippy="searchleadsource" class="form-control mr-2">
-                                <option value="0">Не вказане</option>
+                                <option value="0">Не вказано</option>
                             </select>    
                             <label for="searchleadstatus">стан</label>
                             <select zippy="searchleadstatus" class="form-control mr-2">
-                                <option value="0">Не вказаний</option>
+                                <option value="0">Не вказано</option>
                             </select>    
                             {{/leadmode}} 
                             <input class="btn btn-outline-success   " type="submit" value="ОК"  >
@@ -69,10 +72,10 @@
                         <table class="table table-hover   table-sm mt-2">
                             <tr>
                                 <th onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
-                                    style="width:30px;cursor:pointer" title="Зняти/виставити флажки"><i
+                                    style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"><i
                                         class="fa fa-check-double"></i></th>
 
-                                <th ><a zippy="sortname">Имя</a> </th>
+                                <th ><a zippy="sortname">Ім'я</a> </th>
                                 <th >Тел.</th>
                                 <th >E-Mail</th>
                                 {{^leadmode}}        <th  ><a zippy="sortdoc">Док.</a> </th>    {{/leadmode}}
@@ -90,7 +93,7 @@
                             <tr zippy="customerlist">
                                 <td><input class="seldel" zippy="seldel"  type="checkbox"></td>
 
-                                <td zippy="customername" class="text-nowrap"></td>
+                                <td  class="text-nowrap"><a zippy="customername"></a></td>
                                 <td zippy="customerphone" class="text-nowrap"></td>
                                 <td zippy="customeremail" class="text-nowrap"></td>
                                 {{^leadmode}}    <td class="text-right" > <span zippy="docs" class="badge badge-secondary badge-pill"></span> </td>  {{/leadmode}}
@@ -102,19 +105,19 @@
                                                      
                                 <td><i zippy="customercomment" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i></td>
 
-                                <td><i zippy="hasmsg" class="fa fa-comments" title="Комментарі"></i></td>
+                                <td><i zippy="hasmsg" class="fa fa-comments" title="Коментарі"></i></td>
                                 <td><i zippy="hasfiles" class="fa fa-paperclip" title="Прикріплені файли  "></i></td>
                                 <td><i zippy="isplanned" class="fa fa-calendar-alt" title="Заплановані події"></i></td>
 
                                 <td style="white-space:  nowrap"> &nbsp;&nbsp;
-                                    <a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a>
-                                    &nbsp;&nbsp;&nbsp;<a zippy="contentlist" title="Редагувати  додаткові  дані"><i
+                                    <a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a>
+                                    &nbsp;&nbsp;&nbsp;<a zippy="contentlist" title="Редагувати додаткові дані"><i
                                             class="fa fa-eye"></i></a>
 
                                 </td>
 
                             </tr>
-                            <tr><td><a class="text-danger" zippy="deleteall" title="Видалити(деактивувати)"><i class="fa fa-trash"></i></a></td><td colspan="9"></td></tr>
+                            <tr><td><a class="text-danger" zippy="deleteall" title="Видалити (деактивувати)"><i class="fa fa-trash"></i></a></td><td colspan="9"></td></tr>
 
                         </table>
                         <div zippy="pag"></div>
@@ -135,7 +138,7 @@
                     <label for="editcustomername">Назва</label>
                     <input required="required" class="form-control" zippy="editcustomername"/>
                     {{#leadmode}}  
-                    <small>Можна  використати контакт  як тимчасове  ім'я</small>
+                    <small>Можна використати контакт як тимчасове ім'я</small>
                     {{/leadmode}}  
                 </div>
 
@@ -158,13 +161,13 @@
                 <div class="form-group">
                     <label for="editleadsource">Джерело ліда</label>
                     <select class="form-control" zippy="editleadsource">
-                        <option value="0">Не вказане</option>
+                        <option value="0">Не вказано</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="editleadstatus">Стан ліда</label>
                     <select class="form-control" zippy="editleadstatus">
-                        <option value="0">Не вказаний</option>
+                        <option value="0">Не вказано</option>
                     </select>
                 </div>
                 {{/leadmode}} 
@@ -173,7 +176,7 @@
                 <div class="form-group">
                     <label for="edittype">Тип</label>
                     <select zippy="edittype" class="form-control">
-                        <option value="0">Не вказаний</option>
+                        <option value="0">Не вказано</option>
                     </select>
                 </div>
                 <div class="form-check">
@@ -189,9 +192,9 @@
                 </div>
                 {{#shop}}        
                 <div class="form-group">
-                    <label for="editpassword">Пароль логiна для  каталогу</label>
+                    <label for="editpassword">Пароль логiна для каталогу</label>
                     <input class="form-control" zippy="editpassword"  type="password"/>
-                    <small>Залиште  порожнiм  якщо пароль не  змiнюється</small>
+                    <small>Залиште порожнiм, якщо пароль не змiнюється</small>
                 </div>
                  <div class="form-group">
                     <label for="editconfirm">Пiдтвердити пароль</label>
@@ -200,16 +203,16 @@
            
                <div class="form-check">
                     <input zippy="editallowedshop" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="editallowedshop" for="editallowedshop" data-label="editallowedshop">Дозвiл на  перегляд онлайн-каталогу</label>
+                    <label class="form-check-label" for="editallowedshop" for="editallowedshop" data-label="editallowedshop">Дозвiл на перегляд онлайн каталогу</label>
                 </div>        
                 {{/shop}}        
                 <div class="form-check">
                     <input zippy="editnosubs" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="editnosubs">Не враховувати  в  пiдписках</label>
+                    <label class="form-check-label" for="editnosubs">Не враховувати в пiдписках</label>
                 </div>
                 <div class="form-check">
                     <input zippy="editdisabled" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="editdisabled">Більше не використовуєтся</label>
+                    <label class="form-check-label" for="editdisabled">Більше не використовується</label>
                 </div>        
                 {{/leadmode}} 
 
@@ -226,7 +229,7 @@
                     <input class="form-control" zippy="editcountry"/>
                 </div>
                 <div class="form-group">
-                    <label for="editaddress">Повна  адреса</label>
+                    <label for="editaddress">Повна адреса</label>
                     <input class="form-control" zippy="editaddress"/>
                 </div>
 
@@ -243,7 +246,7 @@
            <div class="form-group  ">
                         <label for="editpricetype">Тип ціни</label>
                         <select class="form-control" zippy="editpricetype">
-                         <option value="none">Не вибраний</option>
+                         <option value="none">Не обрано</option>
                         </select>
                     </div>         
                 
@@ -278,7 +281,7 @@
                     <tr><td colspan="2">
                             <span  zippy="conlastdoc"></span> 
                         </td></tr>
-                    <tr><td ><span data-label="conphone">Phone</span></td><td><span zippy="conphone"></span></td></tr>
+                    <tr><td ><span data-label="conphone">Телефон</span></td><td><span zippy="conphone"></span></td></tr>
                     <tr><td ><span data-label="conemail">E-Mail</span></td><td><span zippy="conemail"></span></td></tr>
                 </table>
 
@@ -300,7 +303,7 @@
                 <div class="card">
                     <div class="card-body">
 
-                        <h5> Розклад  подій </h5>
+                        <h5> Розклад подій </h5>
                         <table class="table table-sm">
                             <tr zippy="dw_eventlist">
                                 <td><span zippy="eventdate"></span><br>
@@ -331,7 +334,7 @@
                                 <input required="required" class="form-control" zippy="addeventtitle">
                             </div>
                             <div class="form-group">
-                                <label for="addeventdesc">Комментар</label>
+                                <label for="addeventdesc">Коментар</label>
                                 <textarea class="form-control" zippy="addeventdesc" style=" height:120px;"></textarea>
                             </div>
                             <div class="form-group">
@@ -368,7 +371,7 @@
                         <hr>
                         <form zippy="addmsgform">
                             <div class="form-group">
-                                <label for="addmsg">Комментар</label>
+                                <label for="addmsg">Коментар</label>
                                 <textarea required="required" class="form-control" zippy="addmsg"
                                           style=" height:120px;"></textarea>
                             </div>
@@ -410,7 +413,7 @@
             <div class="col-4 col-xl-3 ">
                 <div class="card">
                     <div class="card-body">
-                        <h5> Угоди </h5>
+                        <h5> Договори </h5>
                         <table class="table table-sm">
                             <tr zippy="dw_contr">
                                 <td><a title="Перейти" zippy="contract"></a></td>
@@ -444,7 +447,7 @@
             <div class="row">
                 <div class="col-12  col-md-6 col-xl-4">
                     <h5>Редагування джерел лідів</h5>
-                    <small>Джерела лідів наприклад 'інстаграм', 'звінок'...</small>  <br>
+                    <small>Джерела лідів, наприклад, 'інстаграм', 'дзвінок'...</small>  <br>
                     <a  zippy="addnewsource">Додати</a>
 
                     <table class="table table-sm">
@@ -461,8 +464,8 @@
         <form zippy="leadstatusesform">
             <div class="row">
                 <div class="col-12  col-md-6 col-xl-4">
-                    <h5>Редагуванняя  станів  лідів</h5>
-                    <small>Стан ліда наприклад 'очікує', 'перемовини'...</small>  <br>
+                    <h5>Редагуванняя станів лідів</h5>
+                    <small>Стан ліда, наприклад, 'очікує', 'перемовини'...</small>  <br>
                     <a  zippy="addnewstatus">Додати</a>
 
                     <table class="table table-sm">
@@ -484,32 +487,27 @@
             <div class="row"   >
                 <div   class="col-12  col-md-6  col-xl-4  ">
                     <div class="card">
-                        <div class="card-body">
+                        
 
+                            <div style="width:100%" id="statusesg"></div>
 
-                            <canvas style="width:100%" id="statusesg"></canvas>
-
-                        </div>
+                       
                     </div>
                 </div>
                 <div   class="col-12  col-md-6  col-xl-4  ">
                     <div class="card">
-                        <div class="card-body">
+                        
 
-
-                            <canvas style="width:100%" id="sourcesg"></canvas>
-
-                        </div>
+                            <div style="width:100%" id="sourcesg"></div>
+                      
                     </div>
                 </div>
                 <div   class="col-12  col-md-6  col-xl-4  ">
                     <div class="card">
-                        <div class="card-body">
+                       
 
-
-                            <canvas style="width:100%" id="sourcescustg"></canvas>
-
-                        </div>
+                            <div style="width:100%" id="sourcescustg"></div>
+                       
                     </div>
                 </div>
 
@@ -524,148 +522,136 @@
 
 
 
-        <script language="javascript" src="/assets/js/chart.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart'], 'language': 'uk'});
+      google.charts.setOnLoadCallback(drawChart);
 
-        <script>
-        
-        var fontcolor='#000' ;
+      
+    var fontcolor='#000' ;
+    var bgcolor='#fff' ;
         {{#darkmode}}
             fontcolor='#fff' ;
-        {{/darkmode}}        
+            bgcolor='#333' ;
+        {{/darkmode}}             
         
-//состояниея лидов
-                                    var pieData1 = {
-                                    labels: {{{gr1title}}},
-                                            datasets: [
-                                            {
-                                            data: {{{gr1data}}},
-                                                    backgroundColor : {{{gr1color}}},
-                                            }
-                                            ]
-                                    }
+ 
+ 
+      function drawChart() {
+ 
+             
+        var rg1data = google.visualization.arrayToDataTable( 
+        
+          {{{gr1}}}
+        
+        );
 
+        
+        var rg1options = {
+          title: 'Стан лідів' ,
+          sliceVisibilityThreshold: 0.01,         
+          backgroundColor: {
+            "fill":bgcolor 
+          } , 
+          titleTextStyle:{
+             "color":fontcolor ,"bold":true
+          } ,
+                   
+          chartArea:{
+             "top":25,"bottom":5,"left":10 , "right":60
+          } ,
+                  
+          legendTextStyle:{
+             "color":fontcolor 
+          } ,
+                  
+        };
 
-                                    var pieOptions1 = {
-                                    maintainAspectRatio : false,
-                                            responsive : true,
-                                            title: {
-                                            display: true,   fontColor: fontcolor,
-                                                    text: 'Стани лідів',
-                                                    position: 'top'
+  
+       //старвнение
+        var rg1chart = new google.visualization.PieChart(document.getElementById('statusesg'));
 
-                                            },
-                                            legend: {
-                                            display: true,
-                                                    position: 'right',
-                                                    labels: {
-                                                    boxWidth: 10,
-                                                            fontColor: fontcolor,
-                                                            padding:  2
-                                                    }
-                                            },
-                                            tooltips: {
-                                            enabled: true
-                                            },
-                                    }
+        rg1chart.draw(rg1data, rg1options);
+        
+       
+        var rg2data = google.visualization.arrayToDataTable( 
+        
+          {{{gr2}}}
+        
+        );
 
-                                    var pieData2 = {
-                                    labels: {{{gr2title}}},
-                                            datasets: [
-                                            {
-                                            data: {{{gr2data}}},
-                                                    backgroundColor : {{{gr2color}}},
-                                            }
-                                            ]
-                                    }
+        
+        var rg2options = {
+          title: 'Джерела лідів' ,
+          sliceVisibilityThreshold: 0.01,         
+          backgroundColor: {
+            "fill":bgcolor 
+          } , 
+          titleTextStyle:{
+             "color":fontcolor ,"bold":true
+          } ,
+                   
+          chartArea:{
+             "top":25,"bottom":5,"left":10 , "right":60
+          } ,
+                  
+          legendTextStyle:{
+             "color":fontcolor 
+          } ,
+                  
+        };
 
+  
+       //старвнение
+        var rg2chart = new google.visualization.PieChart(document.getElementById('sourcesg'));
 
-                                    var pieOptions2 = {
-                                    maintainAspectRatio : false,
-                                            responsive : true,
-                                            title: {
-                                            display: true,    fontColor: fontcolor,
-                                                    text: 'Джерела лідів',
-                                                    position: 'top'
+        rg2chart.draw(rg2data, rg2options);
+        
+  
+        var rg3data = google.visualization.arrayToDataTable( 
+        
+          {{{gr3}}}
+        
+        );
 
-                                            },
-                                            legend: {
-                                            display: true,
-                                                    position: 'right',
-                                                    labels: {
-                                                    boxWidth: 10,
-                                                            fontColor: fontcolor,
-                                                            padding:  2
-                                                    }
-                                            },
-                                            tooltips: {
-                                            enabled: true
-                                            },
-                                    }
+        
+        var rg3options = {
+          title: 'Джерела  конвертованих лідів' ,
+          sliceVisibilityThreshold: 0.01,         
+          backgroundColor: {
+            "fill":bgcolor 
+          } , 
+          titleTextStyle:{
+             "color":fontcolor ,"bold":true
+          } ,
+                   
+          chartArea:{
+             "top":25,"bottom":5,"left":10 , "right":60
+          } ,
+                  
+          legendTextStyle:{
+             "color":fontcolor 
+          } ,
+                  
+        };
 
-                                    var pieData3 = {
-                                    labels: {{{gr3title}}},
-                                            datasets: [
-                                            {
-                                            data: {{{gr3data}}},
-                                                    backgroundColor : {{{gr3color}}},
-                                            }
-                                            ]
-                                    }
+  
+       //старвнение
+        var rg3chart = new google.visualization.PieChart(document.getElementById('sourcescustg'));
 
-
-                                    var pieOptions3 = {
-                                    maintainAspectRatio : false,
-                                            responsive : true,
-                                            title: {
-                                            display: true,    fontColor: fontcolor,
-                                                    text: 'Джерела  конвертованих лідів',
-                                                    position: 'top'
-
-                                            },
-                                            legend: {
-                                            display: true,
-                                                    position: 'right',
-                                                    labels: {
-                                                    boxWidth: 10,
-                                                            fontColor: fontcolor,
-                                                            padding:  2
-                                                    }
-                                            },
-                                            tooltips: {
-                                            enabled: true
-                                            },
-                                    }
-
-
-                                    window.onload = function() {
-
-
-                                    new Chart(document.querySelector('#statusesg'), {
-                                    type: 'pie',
-                                            data: pieData1,
-                                            options: pieOptions1
-                                    })
-
-
-
-
-                                            new Chart(document.querySelector('#sourcesg'), {
-                                            type: 'pie',
-                                                    data: pieData2,
-                                                    options: pieOptions2
-                                            })
-
-
-
-                                            new Chart(document.querySelector('#sourcescustg'), {
-                                            type: 'pie',
-                                                    data: pieData3,
-                                                    options: pieOptions3
-                                            })
-
-
-
-                                    };
+        rg3chart.draw(rg3data, rg3options);
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      }                  
         </script> 
 
         {{/leadmode}}  

@@ -1,4 +1,4 @@
-<table class="ctable" border="0" cellspacing="0" cellpadding="2"  {{{style}}}} >
+<table class="ctable" border="0" cellspacing="0" cellpadding="2"  >
 
      {{#customer_name}}
     <tr>
@@ -70,7 +70,7 @@
 
         <td></td>
 
-        <td valign="top"><b>Угода</b></td>
+        <td valign="top"><b>Договір</b></td>
         <td colspan="5">{{contract}} вiд {{createdon}}</td>
 
 
@@ -79,7 +79,7 @@
     
     <tr>
         <td></td>
-        <td valign="top"><br>Зписано з</td>
+        <td valign="top"><br>Списано з</td>
         <td colspan="5"><br>{{store_name}}</td>
     </tr>
  
@@ -161,7 +161,7 @@
    
    {{#totalstr}}
     <tr>
-        <td colspan="7">На суму <b>{{totalstr}}<b></td>
+        <td colspan="7">На суму <b>{{totalstr}}</b></td>
    </tr>
    {{/totalstr}}                    
 
@@ -179,7 +179,7 @@
                         <td> </td>
                         <td colspan="6">
                             <br><br>
-                            &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;    &nbsp; МП
+                            &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;    &nbsp; М.П.
                             <br><br>
                         </td>
 

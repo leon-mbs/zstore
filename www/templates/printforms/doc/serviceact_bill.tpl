@@ -41,7 +41,7 @@
         <td colspan="2"> {{device}}</td>
     </tr>
     <tr>
-        <td colspan="2"> С/Н {{serial}}</td>
+        <td colspan="2"> с/н {{serial}}</td>
     </tr>
     {{/isdevice}}
 

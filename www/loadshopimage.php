@@ -1,5 +1,6 @@
 <?php
 require_once 'init.php';
+    $_REQUEST['id'] = intval($_REQUEST['id']);
 
 if (isset($_REQUEST['id']) > 0) {
     

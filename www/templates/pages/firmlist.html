@@ -1,6 +1,6 @@
 <html>
    <head>
-        <title> Список компанiй   </title>
+        <title> Перелік компанiй   </title>
 
     </head>
 
@@ -13,7 +13,7 @@
                <div class="col-12   col-xl-10">
              {{/loadkey}}
                 <div zippy="firmtable">
-                    <h3>Список компанiй </h3>
+                    <h3>Перелік компанiй </h3>
 
                     <a zippy="addnew" class="btn btn-primary  ">Додати</a>
                     <table class="table table-bordered   table-sm">
@@ -24,7 +24,7 @@
    {{#loadkey}}
                             <th  > </th>
                             <th  >Власник сертифiкату</th>
-                            <th  >Iдентифiкатор  ключа</th>
+                            <th  >Iдентифiкатор ключа</th>
                             
                             
                             {{/loadkey}}                               
@@ -37,14 +37,14 @@
                              &nbsp;&nbsp; <a                                    zippy="delete" title="Видалити"><i class="fa fa-trash"></i></a></td>
     {{#loadkey}}
                             <td  >
-                               <a  zippy="ppo" title="Загрузить ключ  и сертификат" ><i class="fa fa-key"></a>
+                               <a  zippy="ppo" title="Завантажити ключ і сертифікат" ><i class="fa fa-key"></a>
                             </td>
                             <td zippy="ppoowner"> </td>
                             <td zippy="ppokeyid"> </td>
                             {{/loadkey}}                                      
                         </tr>
                     </table>
-                {{#loadkey}}    <small>Iдентифiкатор  ключа мае  бути  прописаний в  податковiй</small>       {{/loadkey}}     
+                {{#loadkey}}    <small>Iдентифiкатор ключа має бути прописаний в податковiй</small>       {{/loadkey}}     
                 </div>
             </div>
         </div>
@@ -66,7 +66,7 @@
                 </div>
                
                 <div class="form-group">
-                    <label for="editphone">Телефон,viber </label>
+                    <label for="editphone">Телефон, viber </label>
                     <input class="form-control" type="text" zippy="editphone">
                 </div>
                 <div class="form-group">
@@ -77,25 +77,25 @@
                 <div class="form-group">
                     <label for="editlogo">Логотип </label>
                     <input class="form-control" type="text" zippy="editlogo">
-                    <small class="form-text text-muted">Шлях до файлу логотипа вiдносно кореня сайту. Наприклад
+                    <small class="form-text text-muted">Шлях до файлу логотипа вiдносно кореня сайту. Наприклад,
                         '/upload/logo.png'</small>
                 </div>
                 <div class="form-group">
-                    <label for="editstamp">Печать </label>
+                    <label for="editstamp">Друк </label>
                     <input class="form-control" type="text" zippy="editstamp">
-                    <small class="form-text text-muted">Шлях до файла зображення вiдносно кореня сайту . </small>
+                    <small class="form-text text-muted">Шлях до файла зображення вiдносно кореня сайту. </small>
                 </div>
                 <div class="form-group">
                     <label for="editsign">Пiдпис (факсимiле) </label>
                     <input class="form-control" type="text" zippy="editsign">
-                    <small class="form-text text-muted">Шлях до зображення вiдносно кореня сайту . </small>
+                    <small class="form-text text-muted">Шлях до зображення вiдносно кореня сайту. </small>
                 </div>
       
 
 
                 <div class="form-check">
                     <input zippy="editdisabled" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="editdisabled">Не використовуеться</label>
+                    <label class="form-check-label" for="editdisabled">Не використовується</label>
                 </div>
                 <input zippy="save" type="submit" value="Зберегти" class="btn btn-outline-primary  ">&nbsp;&nbsp;
                 <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary  ">
@@ -105,24 +105,20 @@
           <div class="row">
             
             <form class="col-6 col-md-4  col-xl-3" zippy="keyform" enctype="multipart/form-data">
-                <h5>Завантаження  ключа  та сертифiкату</h5>
-            <small>Опис  роботи з ключами <a  target="_blank" href="https://zippy.com.ua/ua/ext#6">тут</a> </small>
+                <h5>Завантаження ключа та сертифiкату</h5>
+            <small>Опис роботи з ключами <a  target="_blank" href="https://zippy.com.ua/ua/ext#6">тут</a> </small>
                   <div class="form-group">
-                    <label for="signtype">Метод  пiдпису </label>
+                    <label for="signtype">Метод пiдпису </label>
                     <select   class="form-control" type="text" zippy="signtype">
-                      <option value="0">Внутрiшня  бiблiотека</option>
-                  <!--    <option value="1">Сервер  з передачею ключа</option>
-                      <option value="2">Сервер з встроєним  ключем</option>
+                      <option value="0">Внутрiшня бiблiотека</option>
+                  <!--    <option value="1">Сервер з передачею ключа</option>
+                      <option value="2">Сервер з встроєним ключем</option>
                       -->
                     </select>
                     
                 </div>  
             
-               <div class="form-check">
-                   <input zippy="outher" type="checkbox" class="form-check-input">
-                   <label class="form-check-label" for="outher">Використати  зовнiшнiй сервер</label>
-                  <br> <small>Якщо помилка з таймаутом</small>
-               </div>                  
+                             
                 <div class="form-group">
                     <label for="password">Пароль </label>
                     <input required="required" class="form-control" type="text" zippy="password">
@@ -133,27 +129,31 @@
                   
                 </div>
                 <div class="form-group">
-                    <label for="certfile">Файл сертифiкату </label>
+                    <label for="certfile">Файл сертифiката </label>
                     <input class="form-control" type="file" zippy="certfile">
                 </div>
    <small>Для jks ключiв (ПриватБанк) необов'язково</small>                      
                 <div class="form-group">
-                    <label for="serhost">Адреса  серверу пiдпису </label>
+                    <label for="serhost">Адреса сервера пiдпису </label>
                     <input class="form-control"   zippy="serhost">
                 </div>
                 <div class="form-group">
-                    <label for="serport">Порт  серверу </label>
+                    <label for="serport">Порт сервера </label>
                     <input class="form-control"   zippy="serport">
                 </div>
                 <div class="form-check">
                     <input zippy="usessl" type="checkbox" class="form-check-input">
                     <label class="form-check-label text-bold" for="usessl">Перевiряти SSL сертифiкат</label>
-             <small for="usessl">У разі проблем із самопідписаним сертифікатом потрібно додати його до системи до списку довірених.
-                 Або покласти файл сертифіката в папку config, перейменувавши в 'ssl.srt'
+             <small for="usessl">У разі проблем із самопідписаним сертифікатом потрібно додати його до системи до списку довірених,
+                 або покласти файл сертифіката в папку config, перейменувавши в 'ssl.srt'
                 </small>       
                 </div>   
 
-                                
+                <div class="form-check">
+                   <input zippy="outher" type="checkbox" class="form-check-input">
+                   <label class="form-check-label" for="outher">Використати зовнiшнiй сервер</label>
+                  <br> <small>Якщо помилка з таймаутом</small>
+               </div>                              
                  
                 <span style="display:block" id="progress"></span>
                 <input zippy="send" type="button" value="Завантажити" class="btn btn-primary  ">&nbsp;&nbsp;

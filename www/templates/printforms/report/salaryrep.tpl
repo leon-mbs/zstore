@@ -39,7 +39,7 @@
      <tr >
 
         <td style="font-weight: bolder;" colspan="3">
-         <br>   Нарахування  та  утримання
+         <br>   Нарахування та утримання
         </td>
     </tr>
     {{#_detail2}}

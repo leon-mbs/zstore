@@ -6,16 +6,17 @@
 
     <body>
         <div class="row">
-            <div class="col-12 col-md-6 col-xl-4"  >
+            <div class="col-12  col-xl-8"  >
 
                 <h3>Закриття змiни</h3>
-                <small>Сторiнка для ручного закриття змiни</small>
+                <small>Сторiнка для ручного закриття змiни. На  випадок росходжень з фiскальним сервером (наприклад, внаслiдок  збою) 
+                можна  отримати  данi з ФС  або  синхронiзувати  документи  з тими,  що вiдправленi на ФС </small>
                 <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
 
                         <label for="pos">POS термiнал</label>
                         <select zippy="pos" class="form-control mr-sm-2">
-                            <option value="0">Не вибраний</option>
+                            <option value="0">Не обрано</option>
                         </select>
 
                         <input type="submit" class="  btn btn-outline-success  " value="Оновити">
@@ -28,14 +29,15 @@
    
     <div class="row">
             <div class="col-12 col-md-6 col-xl-4"  >
-  
+                <a title="Пiдсумковi данi з  фiскального сервера" zippy="zt"><b>Отримати пiдсумки  з  ДПА</b></a>
+                <p zippy="ztres"></p>
                 <form zippy="stat">
                     <div class="form-group  ">
                         <label for="nal">Готiвка</label>
                         <input style="width:100px" zippy="nal" pattern="[0-9,\.]+" class="form-control   qtyprice">
                     </div>
                     <div class="form-group  ">
-                        <label for="bnal">Банкiвська картка</label>
+                        <label for="bnal">Банкiвська карта</label>
                         <input style="width:100px" zippy="bnal" pattern="[0-9,\.]+" class="form-control  qtyprice ">
                     </div>
                     <div class="form-group  ">
@@ -56,7 +58,7 @@
                         <input style="width:100px" zippy="retnal" pattern="[0-9,\.]+" class="form-control   qtyprice">
                     </div>
                     <div class="form-group  ">
-                        <label for="retbnal">Повернення, банкiвська картка</label>
+                        <label for="retbnal">Повернення, банкiвська карта</label>
                         <input style="width:100px" zippy="retbnal" pattern="[0-9,\.]+" class="form-control   qtyprice">
                     </div>
                     <div class="form-group  ">
@@ -72,7 +74,7 @@
             
             <div class="col-12 col-md-6 col-lg-8  "  >
                 Документи  в  z-звiтi
-               <br><a zippy="sync"><b>Синхронизацiя  с  фiскальним  сервером</b></a>  <img id="aloader" style="display:none" src="/assets/images/ajax-loader.gif">
+               <br><a zippy="sync"><b>Синхронизацiя  з  фiскальним  сервером</b></a>  <img id="aloader" style="display:none" src="/assets/images/ajax-loader.gif">
                           
                 <table class="table table-sm">
                     <tr>

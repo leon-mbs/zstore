@@ -527,6 +527,11 @@ class Order extends \App\Pages\Base
         if ($customer_id > 0) {
             $customer = Customer::load($customer_id);
 
+            if (strlen($customer->pricetype) > 4) {
+                $this->docform->pricetype->setValue($customer->pricetype);
+            }
+            
+            
             $this->docform->phone->setText($customer->phone);
             $this->docform->email->setText($customer->email);
             $this->docform->address->setText($customer->address);

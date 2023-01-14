@@ -48,6 +48,7 @@ class Customer extends \ZCL\DB\Entity
         $this->detail .= "<edrpou>{$this->edrpou}</edrpou>";
 
         $this->detail .= "<user_id>{$this->user_id}</user_id>";
+        $this->detail .= "<chat_id>{$this->chat_id}</chat_id>";
         $this->detail .= "<pricetype>{$this->pricetype}</pricetype>";
 
         $this->detail .= "<holding_name><![CDATA[{$this->holding_name}]]></holding_name>";
@@ -84,6 +85,7 @@ class Customer extends \ZCL\DB\Entity
         $this->edrpou = (string)($xml->edrpou[0]);
         $this->firstname = (string)($xml->firstname[0]);
         $this->lastname = (string)($xml->lastname[0]);
+        $this->chat_id = (string)($xml->chat_id[0]);
 
         $this->createdon = strtotime($this->createdon);
 

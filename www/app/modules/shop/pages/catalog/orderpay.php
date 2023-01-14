@@ -18,11 +18,7 @@ use Zippy\Html\Image;
 use Zippy\Html\Label;
 use Zippy\Html\Panel;
 use Zippy\Html\Link\ClickLink;
-use WayForPay\SDK\Collection\ProductCollection;
-use WayForPay\SDK\Credential\AccountSecretTestCredential;
-use WayForPay\SDK\Domain\Client;
-use WayForPay\SDK\Domain\Product;
-use WayForPay\SDK\Wizard\PurchaseWizard;
+
 //страница оплаты заказа
 class OrderPay extends Base
 {

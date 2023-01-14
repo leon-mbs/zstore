@@ -10,7 +10,11 @@ class ShowDoc extends \Zippy\Html\WebPage
 
     public function __construct($type, $docid) {
         parent::__construct();
-         $common = \App\System::getOptions('common');
+     
+        $docid = intval($docid);
+     
+     
+        $common = \App\System::getOptions('common');
  
         $user = \App\System::getUser();
         if ($user->user_id == 0) {

@@ -2,7 +2,7 @@
 
 namespace App\Modules\Shop\Pages\Catalog;
 
-use App\Modules\Shop\Entity\ProductGroup;
+
 use App\Modules\Shop\Entity\Product;
 use App\Modules\Shop\Helper;
 use ZCL\DB\EntityDataSource;
@@ -20,6 +20,7 @@ class Main extends Base
  
     public function __construct($id = 0) {
         parent::__construct();
+        $id = intval($id);
 
         $this->cat_id = $id;
 

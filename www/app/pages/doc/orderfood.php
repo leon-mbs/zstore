@@ -123,7 +123,7 @@ class OrderFood extends \App\Pages\Base
             if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
                 $this->_doc->payed = $this->_doc->headerdata['payed'];
             }
-           $this->docform->editpayed->setText(H::fa($this->_doc->payed));
+            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
             $this->docform->payed->setText(H::fa($this->_doc->payed));
 
 
@@ -187,7 +187,7 @@ class OrderFood extends \App\Pages\Base
 
         $tovar = $sender->owner->getDataItem();
 
-        $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->rowid => $this->_itemlist[$tovar->rowid]));
+        $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->item_id => $this->_itemlist[$tovar->item_id]));
         $this->docform->detail->Reload();
         $this->calcTotal();
         $this->calcPay();
@@ -218,7 +218,7 @@ class OrderFood extends \App\Pages\Base
         $this->editdetail->editquantity->setText($item->quantity);
 
 
-        $this->_rowid = $item->rowid;
+        $this->_rowid = $item->item_id;
     }
 
 
@@ -240,14 +240,9 @@ class OrderFood extends \App\Pages\Base
             $this->setWarn('inserted_extra_count');
         }
 
-
-        if ($this->_rowid > 0) {
-            $item->rowid = $this->_rowid;
-        } else {
-            $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
-            $item->rowid = $next + 1;
-        }
-        $this->_itemlist[$item->rowid] = $item;
+        $this->_itemlist = array_diff_key($this->_itemlist, array($this->_rowid => $this->_itemlist[$this->_rowid]));
+   
+        $this->_itemlist[$item->item_id] = $item;
 
         $this->_rowid = 0;
 

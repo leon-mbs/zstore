@@ -19,6 +19,7 @@ class ShowTopic extends \App\Pages\Base
     public function __construct($topic_id) {
 
         parent::__construct();
+         $topic_id = intval($topic_id);
 
         $this->_topic = \App\Modules\Note\Entity\Topic::load($topic_id);
         if ($this->_topic == null) {

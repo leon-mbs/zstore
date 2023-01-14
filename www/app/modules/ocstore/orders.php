@@ -203,6 +203,9 @@ class Orders extends \App\Pages\Base
                     $cust->save();
                 }
                 $neworder->customer_id = $cust->customer_id;
+            }   else {
+                $neworder->notes .= "Контрагент: ".$shoporder->firstname . ' ' . $shoporder->lastname;
+           
             }
 
 

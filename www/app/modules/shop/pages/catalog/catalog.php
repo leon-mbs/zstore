@@ -25,6 +25,7 @@ class Catalog extends Base
 
     public function __construct($id = 0) {
         parent::__construct();
+        $id = intval($id);
 
         $this->cat_id = $id;
 
@@ -222,7 +223,7 @@ class Catalog extends Base
         $row->add(new TextInput('srated'))->setText($item->getRating());
         $row->add(new Label('scomments'))->setText(\App\Helper::l("shopfeedbaks", $item->comments));
         $row->add(new ClickLink('sbuy', $this, 'OnBuy'));
-        if ($item->getQuantity() > 0) {
+        if ($item->getQuantity() > 0 || $this->_tvars["isfood"]==true) {
 
            // $row->sbuy->setValue(\App\Helper::l('tobay'));
         } else {

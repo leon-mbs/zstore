@@ -52,7 +52,7 @@ class CustomerList extends \App\Pages\Base
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSearch');
         $this->filter->add(new TextInput('searchkey'));
-        $this->filter->add(new DropDownChoice('searchtype', array(Customer::TYPE_BAYER => Helper::l("bayers"), Customer::TYPE_SELLER => Helper::l("sellers"), 5 => Helper::l("holdings")), 0));
+        $this->filter->add(new DropDownChoice('searchtype', array(), 0));
         $this->filter->add(new DropDownChoice('searchholding', Customer::getHoldList(), 0));
 
         $this->filter->add(new DropDownChoice('searchleadsource', Customer::getLeadSources(), "0"));
@@ -185,7 +185,10 @@ class CustomerList extends \App\Pages\Base
     public function customerlistOnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new Label('customername', $item->customer_name));
+          
+        $row->add(new ClickLink('customername',$this, 'editOnClick'))->setValue($item->customer_name);
+       
+       
         $row->add(new Label('customerphone', $item->phone));
         $row->add(new Label('customeremail', $item->email));
         $row->add(new Label('leadstatus', $item->leadstatus));
@@ -782,15 +785,20 @@ class CustomerList extends \App\Pages\Base
         $data = array();
         $color = array();
 
+        $gr1=[];
+        $gr1[]=["name","amount"] ;
+        
         foreach ($rs as $row) {
-            $data[] = $row['cnt'];
-            $title[] = $row['leadstatus'];
-            $color[] = '#' . \App\Util::genColor();
+            
+            $gr1[]=[$row['leadstatus'], intval( $row['cnt'])];
+            
         }
-        $this->_tvars['gr1title'] = json_encode($title, JSON_UNESCAPED_UNICODE);
-        $this->_tvars['gr1data'] = json_encode($data);
-        $this->_tvars['gr1color'] = json_encode($color);
-
+       
+    
+        $this->_tvars['gr1'] = json_encode($gr1);
+            
+        
+        
         $sql = " 
          SELECT   leadsource,coalesce(count(*),0) as cnt   FROM customers 
              WHERE   
@@ -799,21 +807,21 @@ class CustomerList extends \App\Pages\Base
              GROUP BY  leadsource   
                          
         ";
-
+        $gr2=[];
+        $gr2[]=["name","amount"] ;
+    
         $rs = $conn->Execute($sql);
-        $title = array();
-        $data = array();
-        $color = array();
+ 
 
         foreach ($rs as $row) {
-            $data[] = $row['cnt'];
-            $title[] = $row['leadsource'];
-            $color[] = '#' . \App\Util::genColor();
+      
+         $gr2[]=[$row['leadsource'], intval( $row['cnt'])];
+               
+            
         }
-        $this->_tvars['gr2title'] = json_encode($title, JSON_UNESCAPED_UNICODE);
-        $this->_tvars['gr2data'] = json_encode($data);
-        $this->_tvars['gr2color'] = json_encode($color);
-
+      
+        $this->_tvars['gr2'] = json_encode($gr2);
+     
         $sql = " 
          SELECT   leadsource,coalesce(count(*),0) as cnt   FROM customers 
              WHERE   
@@ -824,18 +832,16 @@ class CustomerList extends \App\Pages\Base
         ";
 
         $rs = $conn->Execute($sql);
-        $title = array();
-        $data = array();
-        $color = array();
-
+ 
+        $gr3=[];
+        $gr3[]=["name","amount"] ;
+     
         foreach ($rs as $row) {
-            $data[] = $row['cnt'];
-            $title[] = $row['leadsource'];
-            $color[] = '#' . \App\Util::genColor();
+            $gr3[]=[$row['leadsource'], intval( $row['cnt'])];
+            
         }
-        $this->_tvars['gr3title'] = json_encode($title, JSON_UNESCAPED_UNICODE);
-        $this->_tvars['gr3data'] = json_encode($data);
-        $this->_tvars['gr3color'] = json_encode($color);
+        $this->_tvars['gr3'] = json_encode($gr3);
+        
     }
 
     public function closeStat($sender) {
@@ -904,25 +910,32 @@ class CustomerDataSource implements \Zippy\Interfaces\DataSource
 
         $isleads = $this->page->leadf->chleads->isChecked();
         if ($isleads == false) {
-            $where = "status < 2 ";
+            $where = "1=1 ";
 
             if (strlen($search) > 0) {
                 $edrpou = Customer::qstr('%<edrpou>' . $search . '</edrpou>%');
                 $search = Customer::qstr('%' . $search . '%');
                 $where .= " and (customer_name like  {$search} or phone like {$search} or email like {$search}  or detail like {$edrpou}    )";
             }
-            if ($type == 1) {
-                $where .= " and detail like '%<type>1</type>%'    ";
+            if($type < 10) {
+                $where .= " and status = 0 ";
+                if ($type == 1) {
+                    $where .= " and  detail like '%<type>1</type>%'    ";
+                }
+                if ($type == 2) {
+                    $where .= " and detail like '%<type>2</type>%'    ";
+                }
+                if ($type == 5) {
+                    $where .= " and detail like '%<isholding>1</isholding>%'    ";
+                }
+                if ($holding > 0) {
+                    $where .= " and detail like '%<holding>{$holding}</holding>%'    ";
+                }
             }
-            if ($type == 2) {
-                $where .= " and detail like '%<type>2</type>%'    ";
+            if ($type == 10) {
+                $where .= " and status = 1    ";
             }
-            if ($type == 5) {
-                $where .= " and detail like '%<isholding>1</isholding>%'    ";
-            }
-            if ($holding > 0) {
-                $where .= " and detail like '%<holding>{$holding}</holding>%'    ";
-            }
+            
         } else {
             $searchleadsource = $this->page->filter->searchleadsource->getValue();
             $searchleadstatus = $this->page->filter->searchleadstatus->getValue();

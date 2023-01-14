@@ -268,6 +268,7 @@ class ProdProcList extends \App\Pages\Base
         $this->stagespan->setVisible(true);
         $this->listpan->setVisible(false);
         $this->_proc = $sender->getOwner()->getDataItem();
+        $this->stagespan->stagelist->getDataSource()->setWhere("pp_id=".$this->_proc->pp_id );  
         $this->stagespan->stagelist->Reload();
     }
 

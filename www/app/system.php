@@ -10,7 +10,7 @@ use App\Entity\User;
  */
 class System
 {
-    const CURR_VERSION= "6.5.0";
+    const CURR_VERSION= "6.5.4";
 
     private static $_options = array();   //  для кеширования  
     private static $_cache   = array();   //  для кеширования
@@ -169,5 +169,8 @@ class System
     public static function getInfoMsg() {
         return Session::getSession()->imsg;
     }
-
+    public static function clean() {
+        self::$_cache = [] ;
+        self::$_cache = [] ;
+    }
 }

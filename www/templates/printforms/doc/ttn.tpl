@@ -1,4 +1,4 @@
-<table class="ctable" border="0" cellspacing="0" cellpadding="2"  {{{style}}}} >
+<table class="ctable" border="0" cellspacing="0" cellpadding="2"  >
 
 
     <tr>
@@ -46,7 +46,7 @@
     </tr>
     <tr>
         <td></td>
-        <td><b>Email</b></td>
+        <td><b>E-mail</b></td>
         <td colspan="5">{{email}}</td>
     </tr>
 
@@ -60,7 +60,7 @@
     {{#ship_number}}
     <tr>
         <td></td>
-        <td><b>№ декларацii</b></td>
+        <td><b>№ декларацiї</b></td>
         <td colspan="4">{{ship_number}}</td>
     </tr>
     {{/ship_number}}

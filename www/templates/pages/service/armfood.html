@@ -16,7 +16,7 @@
 
             </div>
   <div class="col-12 col-md-4 col-xl-3   " >
-             <i style="cursor:pointer"  onclick="onBell(this)" title="Звукове  повiдомлення" class="fa fa-bell-slash text-secondary"></i>  
+             <i style="cursor:pointer"  onclick="onBell(this)" title="Звукове повiдомлення" class="fa fa-bell-slash text-secondary"></i>  
             </div>              
         </div>
 
@@ -29,7 +29,7 @@
                         <label class="col-6 col-form-label" for="nal">Готiвкова каса</label>
                         <div class="col-6">
                             <select class="form-control" zippy="nal">
-                                <option value="0">Не вибрана</option>
+                                <option value="0">Не обрано</option>
                             </select>
                         </div>
                     </div>
@@ -37,7 +37,7 @@
                         <label class="col-6 col-form-label" for="beznal">Безготiвковий рахунок</label>
                         <div class="col-6">
                             <select class="form-control" zippy="beznal">
-                                <option value="0">Не вибраний</option>
+                                <option value="0">Не обрано</option>
                             </select>
                         </div>
                     </div>
@@ -45,7 +45,7 @@
                         <label class="col-6 col-form-label" for="pos">POS термiнал</label>
                         <div class="col-6">
                             <select class="form-control" zippy="pos">
-                                <option value="0">Не вибраний</option>
+                                <option value="0">Не обрано</option>
                             </select>
                         </div>
                     </div>
@@ -55,14 +55,14 @@
                         <label class="col-6 col-form-label"   for="store">Склад (кухня)</label>
                         <div class="col-6">
                             <select class="form-control" zippy="store">
-                                <option value="0">Не вибраний</option>
+                                <option value="0">Не обрано</option>
                             </select>
                         </div>
                     </div>
 
 
                     <div class="form-group   ">
-                        <input type="submit" value="К заказам >"   class="btn btn-success">
+                        <input type="submit" value="До замовлень >"   class="btn btn-success">
                     </div>
                 </div>
 
@@ -72,16 +72,16 @@
 
 
         <div   zippy="docpanel">
-            <h5><strong><a zippy="toorderlist"><i class="fa fa-list"></i> До списку  замовлень</a></strong> </h5>
-            <h3>Оформлення  замовлення</h3>
+            <h5><strong><a zippy="toorderlist"><i class="fa fa-list"></i> До переліку замовлень</a></strong> </h5>
+            <h3>Оформлення замовлення</h3>
 
 
             <div class="row"  >
                 <div class="col-12  col-xl-10"> 
 
                     <div   zippy="catpan" class="row">
-                        <div    class="col-12">
-                            <i class="fa fa-arrow-alt-circle-left"></i><a  zippy="stopcat">До  замовлення</a>  
+                        <div    class="col-12 mb-2">
+                            <i class="fa fa-arrow-alt-circle-left"></i><a  zippy="stopcat">До замовлення</a>  
                         </div>
                         <div   zippy="catlist" class="col-12 col-sm-6 col-md-4  col-xl-3">
                             <div class="card mb-2" zippy="catbtn"  style="cursor:pointer" >
@@ -104,9 +104,10 @@
                         </div >        
                     </div >        
                     <div   zippy="prodpan" class="row">
-                        <div    class="col-12">
-                            <i class="fa fa-arrow-alt-circle-left"></i><a  zippy="stopprod">До  замовлення</a>  
-                        </div>                      <div   zippy="prodlist" class="col-12 col-sm-6 col-md-4  col-xl-3">
+                        <div    class="col-12 mb-2">
+                            <i class="fa fa-arrow-alt-circle-left"></i><a  zippy="stopprod">До замовлення</a>  
+                        </div>       
+                        <div   zippy="prodlist" class="col-12 col-sm-6 col-md-4  col-xl-3">
                             <div class="card mb-2" zippy="prodbtn" style="cursor:pointer;;">
                                 <table style="height:100%;width:100%;"  >
                                     <tr><td rowspan="2">
@@ -133,9 +134,9 @@
 
                     <div class="navbar mt-4">        
                         <form zippy="navform" class="form-inline   ">                   
-                            <input  zippy="baddnewpos"  type="submit" value="Додати позицiю    "   class="btn btn-info mr-4"> 
+                            <input  zippy="baddnewpos"  type="submit" value="Додати позицiю  "   class="btn btn-info mr-4"> 
                             {{#usescanner}}
-                            Штрих-код &nbsp;<input class="form-control"   style="width:150px;" autocomplete="off" autofocus type="text" zippy="barcode"
+                            Штрих код &nbsp;<input class="form-control"   style="width:150px;" autocomplete="off" autofocus type="text" zippy="barcode"
                                                    onkeydown="onBarCode()"> &nbsp;<a zippy="addcode" class="btn btn-info btn-sm mr-4">+</a>
 
                             {{/usescanner}}
@@ -160,7 +161,7 @@
                                     <th class="text-right">Цiна</th>
                                     <th class="text-right">Сума</th>
                                     {{#pack}}
-                                    <th class="text-center text-nowrap">С собою</th>
+                                    <th class="text-center text-nowrap">Із собою</th>
                                     {{/pack}}
 
                                     <th > </th>
@@ -193,7 +194,7 @@
                         <div class="  row ">
                             <div class="  col-6 ">
                                 <div class="form-group   ">
-                                    <label   for="customer">Клiент</label>
+                                    <label   for="customer">Клiєнт</label>
 
                                     <input  zippy="customer" class="form-control" placeholder="Почнiть вводити..."  > 
                                     <a zippy="addcust" >Додати нового</a>
@@ -203,7 +204,7 @@
 
                                 {{#tables}}
                                 <div class="form-group   ">
-                                    <label  for="table">Номер  столу</label>
+                                    <label  for="table">Номер столу</label>
 
                                     <input  style="width:100px;" zippy="table" class="form-control"  > 
 
@@ -228,7 +229,7 @@
                                     <label   for="delivery">Доставка</label>
 
                                     <select class="form-control" zippy="delivery">
-                                        <option value="0">Доставки нема</option>
+                                        <option value="0">Доставки немає</option>
                                     </select>
 
 
@@ -271,11 +272,13 @@
 
 
                         <div class="  w-100 ">
-                            <input zippy="btopay" type="submit" value="До спрлати"   class="btn btn-success mr-4">
+                            <input zippy="btosave" type="submit" value="Зберегти"   class="btn btn-success mr-4">
+                            
+                            <input zippy="btopay" type="submit" value="До сплати"   class="btn btn-success mr-4">
 
                             <input zippy="btodel" type="submit" value="В доставку"   class="btn btn-success mr-4">
 
-                            <input zippy="btoprod" type="submit" value="До  виробництва"   class="btn btn-success mr-4">
+                            <input zippy="btoprod" type="submit" value="У виробництво"   class="btn btn-success mr-4">
    
                         </div>
                     </form>  
@@ -336,7 +339,7 @@
                         </div>
                             
                             <div class="form-group   ">
-                                <label for="pfpayed"  >Внесена  оплата</label>
+                                <label for="pfpayed"  >Внесено оплату</label>
 
                                 <input autocomplete="off" zippy="pfpayed" style="width:100px;" class="form-control  qtyprice "  pattern="[0-9,\.]+">
 
@@ -348,22 +351,25 @@
                                 <input readonly="readonly" zippy="pfrest" style="width:100px;" class="form-control-plaintext    "  pattern="[0-9,\.]+">
 
                             </div>
-                            <div class="form-check">
-                                <input zippy="exch2b" type="checkbox" class="form-check-input">
-                                <label class="form-check-label"  data-label="exch2b" for="exch2b">Занести решту в бонуси </label>
-                           </div>
-
+                            <div class="form-group">
+                      
+                                <label class="col-4" for="pfexch2b" data-label="pfexch2b">Бонуси</label>
+                                <input autocomplete="off" class="form-control" type="text" zippy="pfexch2b">
+                                <small>     Занести частину або всю решту в бонуси </small>
+                                 
+                           </div>                            
+                       
                                    
                         </div>
                         <div class="col-12   ">  
                             <div class="form-group   ">
                                 <a zippy="bbackitems" class="btn btn-outline-info"> &lt; Назад</a>
 
-                                &nbsp;&nbsp; <input zippy="btocheck" type="submit" value="Друкувати  чек > "   class="btn btn-success">
+                                &nbsp;&nbsp; <input zippy="btocheck" type="submit" value="Друкувати чек > "   class="btn btn-success">
                                      {{#ppo}}
-                            &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Вiдкласти  фiскализацiю  
+                            &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Вiдкласти фiскалізацiю  
                            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="На випадок збою інтернету фіскалізацію можна пропустити. Чек може бути фіскалізований ДО закриття зміни на сторінці ручного закриття зміни в модулі РРО "></i>
+                                   title="На випадок збою інтернету фіскалізацію можна пропустити. Чек може бути фіскалізований до закриття зміни на сторінці ручного закриття зміни в модулі РРО "></i>
                                               
                             {{/ppo}}                             
                             </div>
@@ -377,7 +383,7 @@
 
                         <div zippy="checktext"></div> 
                         <br>
-                        <a onclick=" printcheck()"  zippy="btoprint"  class="btn  btn-info">Друк</a>&nbsp;&nbsp;&nbsp;
+                        <a    zippy="btoprint"  class="btn  btn-info">Друк</a>&nbsp;&nbsp;&nbsp;
                         <a zippy="bnewcheck"  class="btn  btn-success">Нове замовлення</a> &nbsp;&nbsp;&nbsp;
 
                     </div>
@@ -391,7 +397,7 @@
         <div class="row" zippy="orderlistpan">
 
             <div class="col-12  " >
-                <h3>Список  замовлень</h3>
+                <h3>Перелік замовлень</h3>
                 <a  class="btn btn-success" zippy="neworder">Нове замовлення</a>  &nbsp;&nbsp;&nbsp;
             </div>
 
@@ -404,7 +410,7 @@
 
                                 <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
 
-                                <label for="searchcust"> Клiент </label>
+                                <label for="searchcust"> Клiєнт </label>
 
                                 <input placeholder="Почнiть вводити..." class="form-control mr-2" type="text" zippy="searchcust"  >
 
@@ -509,7 +515,7 @@
                 <div class="col-12 col-md-4 col-xl-3">
 
                     <div class="form-group">
-                        <label for="editcustname">Им'я </label>
+                        <label for="editcustname">Ім'я </label>
                         <input class="form-control " zippy="editcustname" required="required"/>
                     </div>
                     <div class="form-group">
@@ -566,9 +572,7 @@
 
             });
 
-            function printcheck() {
-                $('#checktext').printThis();
-            }
+
 
             function check_brefuse() {
                 return confirm("Анулювати замовлення?")

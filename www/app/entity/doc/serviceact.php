@@ -78,14 +78,14 @@ class ServiceAct extends Document
         if ($state == self::STATE_INPROCESS) {
           
 
-            if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
+
                 $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment']);
                 if ($payed > 0) {
                     $this->payed = $payed;
                 }
                 \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
 
-            }
+            
             
             foreach ($this->unpackDetails('detail2data') as $item) {
 
@@ -131,7 +131,7 @@ class ServiceAct extends Document
         return 'Акт-000000';
     }
 
-    public function generatePosReport() {
+    public function generatePosReport($ps=false) {
 
         $common = \App\System::getOptions('common');
         $printer = \App\System::getOptions('printer');
@@ -200,7 +200,12 @@ class ServiceAct extends Document
         }
         $header['ispay'] = count($pays) > 0;
 
-        $report = new \App\Report('doc/serviceact_bill.tpl');
+
+        if($ps)   {
+          $report = new \App\Report('doc/serviceact_bill_ps.tpl');
+        }
+        else 
+          $report = new \App\Report('doc/serviceact_bill.tpl');
 
         $html = $report->generate($header);
 

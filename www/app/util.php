@@ -13,6 +13,18 @@ class Util
 {
 
   /**
+  * генерация  комманд для  чекового  принтера
+  *    
+  * @param mixed $template
+  * @return mixed
+  */
+  public  static function generateESCPOS($template){
+      
+      
+      return  [];
+  }  
+    
+  /**
   * генерация QR кода  *   
   * @param mixed $data
   * @param mixed $size
@@ -166,7 +178,7 @@ class Util
         return $tel;
     }
 
-    //генерация слуяайного цвета
+    //генерация случайного цвета
     public static function genColor() {
         $color = dechex(rand(0x000000, 0xFFFFFF));
         return $color;
@@ -200,13 +212,22 @@ class Util
         }
         return  $r;           
     }    
-    
+    //парсит  строку на  слова
+    public static function  strtoarray($text){
+        $r = array();
+        
+        foreach(explode(' ',trim($text)) as $l ){
+           $l = trim($l) ;
+           if(strlen($l) > 0) {
+               $r[] = $l ;    
+           }
+           
+        }
+        return  $r;           
+    }      
 }
 
-// Convert digital Russian currency representation
-// (Russian rubles and copecks) to the verbal one
-// Copyright 2008 Sergey Kurakin
-// Licensed under LGPL version 3 or later
+
 
 define('M2S_KOPS_DIGITS', 0x01);    // digital copecks
 define('M2S_KOPS_MANDATORY', 0x02);    // mandatory copecks

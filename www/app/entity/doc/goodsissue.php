@@ -54,11 +54,7 @@ class GoodsIssue extends Document
 
         $printer = System::getOptions('printer');
 
-        $style = "";
-        if (strlen($printer['pa4width']) > 0) {
-            $style = 'style=" width:' . $printer['pa4width'] . ';"';
-
-        }
+      
 
         $header = array('date'      => H::fd($this->document_date),
                         "_detail"   => $detail,
@@ -73,7 +69,7 @@ class GoodsIssue extends Document
                         "total"           => H::fa($this->amount),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
-                        "style"           => $style,
+
                         "bank"            => @$mf->bank,
                         "bankacc"         => @$mf->bankacc,
                         "isbank"          => (strlen($mf->bankacc) > 0 && strlen($mf->bank) > 0),
@@ -211,7 +207,6 @@ class GoodsIssue extends Document
 
 
  
-        if ($this->headerdata['payment'] > 0 && $this->headerdata['payed'] > 0) {
             $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['payed'], $this->headerdata['payment']);
             if ($payed > 0) {
                 $this->payed = $payed;
@@ -219,7 +214,7 @@ class GoodsIssue extends Document
             \App\Entity\IOState::addIOState($this->document_id, $this->headerdata['payed'], \App\Entity\IOState::TYPE_BASE_INCOME);
  
 
-        }
+   
 
         return true;
     }
@@ -239,7 +234,7 @@ class GoodsIssue extends Document
         return 'ВН-000000';
     }
 
-    public function generatePosReport() {
+    public function generatePosReport($ps=false) {
 
         $detail = array();
 
@@ -279,8 +274,13 @@ class GoodsIssue extends Document
             $header["customer_name"] = false;
         }
 
-        $report = new \App\Report('doc/goodsissue_bill.tpl');
-
+   
+        if($ps)   {
+          $report = new \App\Report('doc/goodsissue_bill_ps.tpl');
+        }
+        else 
+          $report = new \App\Report('doc/goodsissue_bill.tpl');
+ 
         $html = $report->generate($header);
 
         return $html;

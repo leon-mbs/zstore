@@ -962,7 +962,8 @@ class PPOHelper
                 foreach ($xml->CHECKPAY->children() as $row) {
                    $fc =  (string)$row->PAYFORMCD;
                    $sum =  (string)$row->SUM;
-                   if($fc=="0") { 
+                   $sum  = doubleval($sum);
+                   if($fc=="0") {
                        $amount0 += $sum;
                    }
                    else if($fc=="1") {
@@ -988,143 +989,58 @@ class PPOHelper
           }  
     }    
     
-    /*
-       public static function sign($data, $server, $port) {
+    /**
+    * состояние фискального сервер
+    * 
+    * @param mixed $firm
+    */
+    public static function checkServer($firm){
+        $res = PPOHelper::send(json_encode(array('Command' => 'ServerState')), 'cmd', $firm);
+        if($res['success'] != true){
+            return  false;
+        }
+        $res = json_decode($res['data']);
+        if(strlen($res['Timestamp'] )==0){
+            return  false;
+        }
+   
+    }
+ 
+    /**
+    * состояние  регистратора
+    * 
+    * @param mixed $fiscnumber
+    * @param mixed $firm
+    */
+    public static function rroState($fiscnumber,$firm){
+        $res = PPOHelper::send(json_encode(array('Command' => 'TransactionsRegistrarState','NumFiscal'=>$fiscnumber)), 'cmd', $firm);
+        if($res['success'] != true){
+            return  false;
+        }
+        $res = json_decode($res['data']);
+        return  $res;
+   
+    }
+    
+    /**
+    * получение итоговых  данных по смене  для  z отчета
+    * 
+    * @param mixed $fiscnumber
+    * @param mixed $firm
+    */
+    public static function shiftTotal($fiscnumber,$firm){
+        $res = PPOHelper::send(json_encode(array('Command' => 'LastShiftTotals','NumFiscal'=>$fiscnumber)), 'cmd', $firm);
+        if($res['success'] != true){
+            return  false;
+        }
 
-           $server = rtrim($server, '/');
+        $res = json_decode($res['data'],true);
+        return  $res;
 
-           $request = curl_init();
-
-           curl_setopt_array($request, [
-               CURLOPT_PORT           => 3000,
-               CURLOPT_URL            => "127.0.0.1:3000/sign",
-               CURLOPT_POST           => true,
-               CURLOPT_ENCODING       => "",
-               CURLOPT_MAXREDIRS      => 10,
-               CURLOPT_RETURNTRANSFER => true,
-               CURLOPT_CONNECTTIMEOUT => 20,
-               CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-               CURLOPT_POSTFIELDS     => $data
-           ]);
-
-           $ret = curl_exec($request);
-           if (curl_errno($request) > 0) {
-
-               return array('success' => false, 'data' => 'Curl error: ' . curl_error($request));
-           }
-
-           curl_close($request);
-           $ret = json_decode($ret, true);
-
-           return array('success' => true, 'data' => base64_decode($ret['data']));
-       }
-
-
-       public static function decrypt($data, $server, $port) {
-
-
-           $request = curl_init();
-
-           curl_setopt_array($request, [
-               CURLOPT_PORT           => $port,
-               CURLOPT_URL            => "{$server}:{$port}/decrypt",
-               CURLOPT_POST           => true,
-               CURLOPT_ENCODING       => "",
-               CURLOPT_MAXREDIRS      => 10,
-               CURLOPT_RETURNTRANSFER => true,
-               CURLOPT_CONNECTTIMEOUT => 20,
-               CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-               CURLOPT_POSTFIELDS     => base64_encode($data)
-           ]);
-
-           if (curl_errno($request) > 0) {
-               return array('success' => false, 'data' => 'Curl error: ' . curl_error($request));
-           }
-           $ret = (curl_exec($request));
-
-           curl_close($request);
-           $data = json_decode($ret, true);
-           return array('success' => true, 'data' => base64_decode($data['data']));
-       }
-
-
-       public static function send_old($data, $type, $server, $port, $encrypted) {
-
-           $signed = self::sign($data, $server, $port);
-           if (strlen($signed['data']) == 0) {
-               return array('success' => false, 'data' => 'Неверный ответ сервера  подписи');
-           }
-
-           if ($signed['success'] == true) {
-
-
-               $request = curl_init();
-
-               curl_setopt_array($request, [
-                   CURLOPT_URL            => self::DPI . $type,
-                   CURLOPT_POST           => true,
-                   CURLOPT_HEADER         => false,
-                   CURLOPT_HTTPHEADER     => array('Content-Type: application/octet-stream', "Content-Length: " . strlen($signed['data'])),
-                   CURLOPT_ENCODING       => "",
-                   CURLOPT_RETURNTRANSFER => true,
-                   CURLOPT_CONNECTTIMEOUT => 20,
-                   CURLOPT_VERBOSE        => 1,
-                   CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-                   CURLOPT_POSTFIELDS     => $signed['data']
-               ]);
-
-               $return = curl_exec($request);
-
-               if (curl_errno($request) > 0) {
-                   return array('success' => false, 'data' => 'Curl error: ' . curl_error($request));
-               }
-               curl_close($request);
-
-               if (strpos($return, 'Номер документа повинен дорівнювати') > 0) {
-                   $arr = explode(' ', $return);
-                   if ($arr[count($arr) - 1] > 0) {
-                       return array('success' => false, 'docnumber' => $arr[count($arr) - 1], 'data' => $return);
-                   }
-               }
-               if (strpos($return, 'помилки') > 0) {
-
-                   return array('success' => false, 'data' => $return);
-               }
-
-               //декодируем  подписаный ответ
-               if ($encrypted) {
-
-                   $decrypted = self::decrypt($return, $server, $port);
-
-                   if ($decrypted['success'] == true) {
-                       //если  вернул  xml
-                       if (substr($decrypted['data'], 0, 5) == "<?xml" && $type == "doc") {
-                           $xml = $decrypted['data'];
-                           // $xml = mb_convert_encoding($xml , "utf-8", "windows-1251" )  ;
-
-                           $xml = simplexml_load_string($xml);
-                           $errorcode = (string)($xml->ERRORCODE[0]);
-                           $taxnum = (string)($xml->ORDERTAXNUM[0]);
-                           $taxnumloc = (string)($xml->ORDERNUM[0]);
-
-                           if ($errorcode == '0' && $taxnum > 0) {   //следующий номер  документа
-                               return array('success' => true, 'docnumber' => $taxnum, 'doclocnumber' => $taxnumloc, 'data' => $return);
-                           }
-                           return array('success' => false, 'data' => $errorcode);
-                       }
-
-                       return array('success' => true, 'data' => $decrypted['data']);
-                   } else {
-                       return array('success' => false, 'data' => $decrypted['data']);
-                   }
-               } else {
-                   return array('success' => true, 'data' => $return);;
-               }
-           } else {
-               return array('success' => false, 'data' => $signed['data']);
-           }
-       }
-
-       */
+   
+    }
+    
+     
+   
 }
 

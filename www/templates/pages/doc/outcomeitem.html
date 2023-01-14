@@ -10,7 +10,7 @@
             <div class="row">
                 <div class="col-12 col-md-3">
                     <div class="form-group">
-                        <label for="document_number">Номер документу</label>
+                        <label for="document_number">Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number">
                     </div>
                     <div class="form-group">
@@ -26,7 +26,7 @@
                     <div class="form-group">
                         <label for="mtype">Тип витрат</label>
                         <select class="form-control" zippy="mtype">
-                            <option value="0">Не вибрано</option>
+                            <option value="0">Не обрано</option>
                         </select>
                     </div>
 
@@ -38,8 +38,8 @@
                             <option value="0">Не обрано</option>
                         </select>
                         <small class="form-text text-muted">При проведеннi буде створено документ 'Оприходування на склад'.
-                            Цей документ не буде проведено и йому не буде присвоено автора поки
-                            користувач, який мае право роботи з цiльоввою фiлiею, не збереже новостворений документ. </small>
+                            Цей документ не буде проведено та йому не буде присвоєно автора, поки
+                            користувач, який має право роботи з цiльовою фiлiєю, не збереже новостворений документ. </small>
                     </div>
                     {{/usebranch}}
 
@@ -56,7 +56,7 @@
                 <div class="col-12 col-md-8 col-xl-6">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих-код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
+                        Штрих код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
                         &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
 
 
@@ -121,7 +121,7 @@
                     <input class="form-control" zippy="edititem" placeholder="Почніть вводити... ">
 
 
-                    Наявність <span zippy="qtystock"></span>
+                    Наявність: <span zippy="qtystock"></span>
 
 
                 </div>

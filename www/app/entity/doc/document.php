@@ -248,9 +248,17 @@ class Document extends \ZCL\DB\Entity
 
     /**
      * Генерация  печати для POS  терминала  или  принтеров чеков
-     *
+     *  $ps - генерировать  из шаблона  для  принт сервера
      */
-    public function generatePosReport() {
+    public function generatePosReport($ps=false) {
+        return "";
+    }
+   
+   /**
+   * Генерация  команд для сервера  печати
+   * 
+   */
+    public function generatePS() {
         return "";
     }
 
@@ -994,7 +1002,7 @@ class Document extends \ZCL\DB\Entity
             return '';
         }
         $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-        $img = '<img style="max-width:200px" src="data:image/png;base64,' . base64_encode($generator->getBarcode($this->document_number, 'C128')) . '">';
+        $img = '<img style="max-width:200px" src="data:image/png;base64,' . base64_encode($generator->getBarcode($this->document_number, 'code128')) . '">';
 
         return $img;
     }
@@ -1003,15 +1011,19 @@ class Document extends \ZCL\DB\Entity
      * возвращает  тэг <img> со QR кодом ссылки на  сайт налоговой
      *
      */
-    protected function getQRCodeImage() {
+    protected function getQRCodeImage($text=false) {
         
         $print = System::getOption('common', 'printoutqrcode');
         if ($print == 0) {
             return '';
         }
         $url =$this->getFiscUrl( );
-        if(strlen($url)==0)  return '';
        // $firm = \App\Entity\Firm::load($this->firm_id);
+        if($text){
+           if(strlen($url)==0)  return false;
+           return $url;
+        }
+        if(strlen($url)==0)  return '';
    
         $dataUri = \App\Util::generateQR($url,200,5)  ;
         $img = "<img style=\"width:80%\"  src=\"{$dataUri}\"  />";

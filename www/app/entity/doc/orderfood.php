@@ -80,7 +80,7 @@ class OrderFood extends Document
         return $html;
     }
 
-    public function generatePosReport() {
+    public function generatePosReport($ps=false) {
 
         $detail = array();
 
@@ -114,7 +114,8 @@ class OrderFood extends Document
                         "shopname"        => strlen($common["shopname"]) > 0 ? $common["shopname"] : false,
                         "address"         => $firm["address"],
                         "phone"           => $firm["phone"],
-                        "inn"             => $firm["inn"],
+                        "inn"             => strlen($firm["inn"]) >0 ? $firm["inn"] :false,
+                        "tin"             => strlen($firm["tin"]) >0 ? $firm["tin"] :false,
                         "checkslogan"     => $common["checkslogan"],
                         "customer_name"   => strlen($this->customer_name) > 0 ? $this->customer_name : false,
                         "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
@@ -131,16 +132,27 @@ class OrderFood extends Document
                         "delbonus"           => $delbonus > 0 ? H::fa($delbonus) : false,
                         "allbonus"           => $allbonus > 0 ? H::fa($allbonus) : false,
                        "docqrcode"       => $this->getQRCodeImage(),
+                       "docqrcodeurl"     =>  $this->getQRCodeImage(true),
 
                         "payamount" => H::fa($this->payamount)
         );
+        
+        if($header['inn'] != false) {
+           $header['tin'] = false; 
+        }
+        
         $frases = explode(PHP_EOL, $header['checkslogan']) ;
         if(count($frases) >0)  {
             $i=  rand(0,count($frases) -1)  ;
             $header['checkslogan']   =   $frases[$i];        
         }
   
-        $report = new \App\Report('doc/orderfood_bill.tpl');
+
+        if($ps)   {
+          $report = new \App\Report('doc/orderfood_bill_ps.tpl');
+        }
+        else 
+          $report = new \App\Report('doc/orderfood_bill.tpl');
 
         $html = $report->generate($header);
 
@@ -164,6 +176,11 @@ class OrderFood extends Document
 
     public function DoPayment() {
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
+           
+     
+           
+           
+           
             $payed = $this->payed;
             if ($this->headerdata['exchange'] > 0 && $this->payed > $this->headerdata['exchange']) {
 
@@ -175,7 +192,7 @@ class OrderFood extends Document
             if ($payed > 0) {
                 $this->payed = $payed;
             }
-
+          
             \App\Entity\IOState::addIOState($this->document_id, 0 - $this->payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
 
 
@@ -184,6 +201,13 @@ class OrderFood extends Document
 
     public function DoStore() {
         if($this->hasStore()) return;
+      
+      
+        $dd =   doubleval($this->headerdata['bonus'] ) + doubleval($this->headerdata['paydisc'] ) ;
+        $k = 1;   //учитываем  скидку
+        if ($dd > 0 && $this->amount > 0) {
+            $k = ($this->amount - $dd) / $this->amount;
+        }
         
         foreach ($this->unpackDetails('detaildata') as $item) {
 
@@ -255,10 +279,7 @@ class OrderFood extends Document
             }
 
 
-            $k = 1;   //учитываем  скидку
-            if ($this->headerdata["paydisc"] > 0 && $this->amount > 0) {
-                $k = ($this->amount - $this->headerdata["paydisc"]) / $this->amount;
-            }
+
 
 
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);

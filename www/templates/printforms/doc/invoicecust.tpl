@@ -20,7 +20,7 @@
 
         <td></td>
 
-        <td valign="top"><b>Угода</b></td>
+        <td valign="top"><b>Договір</b></td>
         <td colspan="5">{{contract}} вiд {{createdon}}</td>
 
 
@@ -88,7 +88,7 @@
 
    {{#payamount}}
     <tr style="font-weight: bolder;">
-        <td colspan="7" align="right">До оплати:</td>
+        <td colspan="7" align="right">До сплати:</td>
         <td align="right">{{payamount}}</td>
     </tr>
     {{/payamount}} 

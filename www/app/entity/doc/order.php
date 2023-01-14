@@ -104,7 +104,7 @@ class Order extends \App\Entity\Doc\Document
         return array(self::EX_EXCEL, self::EX_PDF, self::EX_POS);
     }
 
-    public function generatePosReport() {
+    public function generatePosReport($ps=false) {
 
         $detail = array();
 
@@ -131,14 +131,18 @@ class Order extends \App\Entity\Doc\Document
                         "_detail"         => $detail,
                         "firm_name"       => $firm["firm_name"],
                         "phone"           => $firm["phone"],
-                        "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
+                        "delivery"        => $this->headerdata["delivery_name"],
+                         "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
                         "document_number" => $this->document_number,
                         "style"           => $style,
                         "total"           => H::fa($this->amount)
         );
-
-        $report = new \App\Report('doc/order_bill.tpl');
-
+        if($ps)   {
+          $report = new \App\Report('doc/order_bill_ps.tpl');
+        }
+        else 
+          $report = new \App\Report('doc/order_bill.tpl');
+        
         $html = $report->generate($header);
 
         return $html;
@@ -195,14 +199,14 @@ class Order extends \App\Entity\Doc\Document
         if ($state == self::STATE_INPROCESS) {
           
 
-            if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
+           
                 $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment']);
                 if ($payed > 0) {
                     $this->payed = $payed;
                 }
                 \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
 
-            }
+            
         }
     }
 

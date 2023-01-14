@@ -61,6 +61,9 @@ class Helper
 
     public static function logout() {
 
+        System::clean() ;
+        System::getSession()->clean();
+        
         setcookie("remember", '', 0);
         System::setUser(new \App\Entity\User());
         $_SESSION['user_id'] = 0;
@@ -642,8 +645,7 @@ class Helper
     /**
      * форматирование дат
      *
-     * @param timestamp $date
-     * @return mixed
+          * @return mixed
      */
     public static function fd($date) {
         if ($date > 0) {
@@ -922,39 +924,81 @@ class Helper
         die;
     }
     
+ 
     /**
-    * Печать  этикиток
+    * Получение  дангный с  таблицы ключ-значение
+    * 
+    * @param mixed $key
+    * @return mixed
+    */
+    public  static function getVal($key){
+          if(strlen($key)==0)   return;
+          $conn = \ZDB\DB::getConnect();
+          
+          $ret = $conn->GetOne("select vald from  keyval  where  keyd=" . $conn->qstr($key));
+
+          if(strlen($ret)==0)   return "";
+          return $ret;
+    }    
+   
+    /**
+    * Вставка  данных в  таблицу ключ-значение
+    * 
+    * @param mixed $key
+    * @param mixed $data
+    * @return mixed
+    */
+    public  static function setVal($key,$data=null){
+          if(strlen($key)==0)   return;
+          $conn = \ZDB\DB::getConnect();
+          $conn->Execute("delete  from  keyval  where  keyd=" . $conn->qstr($key));
+          if($data===null){
+             return; 
+          }
+          $conn->Execute("insert into keyval  (  keyd,vald)  values (" . $conn->qstr($key).",".$conn->qstr($data).")" );
+          
+          
+    }    
+    
+    
+    /**
+    * Вставка  данных  в  таблицу  статистики
+    * 
+    * @param mixed $cat
+    * @param mixed $key
+    * @param mixed $data
+    * @return mixed
+    */
+    public  static function insertstat(int $cat,int $key,int $data ){
+          if(  $cat==0  )   return;
+          
+          $conn = \ZDB\DB::getConnect();
+          $dt= $conn->DBTimeStamp(time());
+          $conn->Execute("insert into stats  ( category, keyd,vald,dt)  values ({$cat},{$key},{$data},{$dt})" );
+          
+          
+    }    
+   
+   
+   
+   
+   
+   
+   /**
+    * Печать  этикеток
     * 
     * @param array $items
     */
     public  static  function printItems(array $items){
         $printer = \App\System::getOptions('printer');
-        $pwidth = "width:70mm;";
-        $pheight = "height:40mm;";
-        $pfs = 'style="font-size:16px;"';
-        $pfs = 'style="font-size:24px;"';
+ 
 
-        if (strlen($printer['pwidth']) > 0) {
-            $pwidth = "width:" . $printer['pwidth'] . ";";
-        }
-        if (strlen($printer['pheight']) > 0) {
-            $pheight = "height:" . $printer['pheight'] . ";";
-        }
-        $style = "style=\"";
-        $style .= $pwidth;
-        $style .= $pheight;
-        $style .= "\"";
-
-        if (strlen($printer['pfontsize']) > 0) {
-            $pfs = 'style="font-size:' . $printer['pfontsize'] . 'px";';
-            $pfsp = 'style="font-size:' . intval(($printer['pfontsize'] * 1.5)) . 'px";';
-        }
-
+    
         $htmls = "";
 
         foreach ($items as $item) {
             $report = new \App\Report('item_tag.tpl');
-            $header = array('style' => $style, 'fsize' => $pfs, 'fsizep' => $pfsp);
+            $header = [];
             if ($printer['pname'] == 1) {
 
                 if (strlen($item->shortname) > 0) {
@@ -1012,7 +1056,7 @@ class Helper
 
             
             $qty =  intval($item->quantity);
-            if($qty==0) $qty=1;
+            if($qty==0) $qty = 1;
             for($i=0;$i<$qty;$i++){
                $htmls = $htmls . $report->generate($header);
             }
@@ -1022,59 +1066,51 @@ class Helper
                
         return $htmls;               
     }
-
-    /**
-    * Получение  дангный с  таблицы ключ-значение
-    * 
-    * @param mixed $key
-    * @return mixed
-    */
-    public  static function getVal($key){
-          if(strlen($key)==0)   return;
-          $conn = \ZDB\DB::getConnect();
-          
-          $ret = $conn->GetOne("select vald from  keyval  where  keyd=" . $conn->qstr($key));
-
-          if(strlen($ret)==0)   return "";
-          return $ret;
-    }    
    
-    /**
-    * Вставка  данных в  таблицу ключ-значение
+   
+   
+   /**
+    * Печать  этикеток на  ESC/POS
     * 
-    * @param mixed $key
-    * @param mixed $data
-    * @return mixed
+    * @param array $items
     */
-    public  static function setVal($key,$data=null){
-          if(strlen($key)==0)   return;
-          $conn = \ZDB\DB::getConnect();
-          $conn->Execute("delete  from  keyval  where  keyd=" . $conn->qstr($key));
-          if($data===null){
-             return; 
-          }
-          $conn->Execute("insert into keyval  (  keyd,vald)  values (" . $conn->qstr($key).",".$conn->qstr($data).")" );
-          
-          
-    }    
+    public  static  function printItemsEP(array $items){
+        $printer = \App\System::getOptions('printer');
     
-    
-    /**
-    * Вставка  данных  в  таблицу  статистики
-    * 
-    * @param mixed $cat
-    * @param mixed $key
-    * @param mixed $data
-    * @return mixed
-    */
-    public  static function insertstat(int $cat,int $key,int $data ){
-          if(  $cat==0  )   return;
+        $htmls = "";
+
+        foreach ($items as $item) {
+            $report = new \App\Report('item_tag_ps.tpl');
+            $header = [];
+            if ($printer['pname'] == 1) {
+
+                if (strlen($item->shortname) > 0) {
+                    $header['name'] = $item->shortname;
+                } else {
+                    $header['name'] = $item->itemname;
+                }
+            }
+
+            if ($printer['pcode'] == 1) {
+                $header['article'] = $item->item_code;
+                 
+            }
+            $header['price'] = self::fa($item->getPurePrice($printer['pricetype']));
           
-          $conn = \ZDB\DB::getConnect();
-          $dt= $conn->DBTimeStamp(time());
-          $conn->Execute("insert into stats  ( category, keyd,vald,dt)  values ({$cat},{$key},{$data},{$dt})" );
-          
-          
-    }    
+            $header['barcode'] == false;
+            if ($printer['pbarcode'] == 1) {
+                $header['barcode'] = $item->bar_code;
+            
+            }
+            
+            $qty =  intval($item->quantity);
+            if($qty==0) $qty = 1;
+            for($i=0;$i<$qty;$i++){
+               $htmls = $htmls .   $report->generate($header) ;
+            }
+        }
+      
+        return $htmls;               
+    }
     
 }

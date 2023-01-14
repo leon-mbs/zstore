@@ -16,11 +16,7 @@ use Zippy\Html\Image;
 use Zippy\Html\Label;
 use Zippy\Html\Panel;
 use Zippy\Html\Link\ClickLink;
-use WayForPay\SDK\Collection\ProductCollection;
-use WayForPay\SDK\Credential\AccountSecretTestCredential;
-use WayForPay\SDK\Domain\Client;
-use WayForPay\SDK\Domain\Product;
-use WayForPay\SDK\Wizard\PurchaseWizard;
+
 //страница формирования заказа  пользователя
 class Order extends Base
 {
@@ -134,18 +130,12 @@ class Order extends Base
         $firstname = trim($this->orderform->firstname->getText());
         $lastname = trim($this->orderform->lastname->getText());
         $delivery = $this->orderform->delivery->getValue();
-      //  $payment = $this->orderform->payment->getValue();
-        $payment=1;
+        $payment = intval($this->orderform->payment->getValue());
         $address = $this->orderform->address->getValue();
 
         if ($delivery == 0) {
 
             $this->setError("enterdelivery");
-            return;
-        }
-        if ($payment == 0) {
-
-            $this->setError("enterpayment");
             return;
         }
         if (($delivery == 2 || $delivery == 3) && strlen($address) == 0) {
@@ -154,6 +144,11 @@ class Order extends Base
             return;
         }
   
+        if ($payment == 0) {
+
+            $this->setError("enterpayment");
+            return;
+        }
 
 
  
@@ -304,7 +299,7 @@ class Order extends Base
 
         $number = preg_replace('/[^0-9]/', '', $order->document_number);
     
-        System::setSuccessMsg("createdorder", $number) ;
+        System::setSuccessMsg( \App\Helper::l("createdorder"), $number) ;
           
         if($payment == 1) {
             
