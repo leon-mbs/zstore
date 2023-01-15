@@ -348,6 +348,28 @@ class Base extends \Zippy\Html\WebPage
 
     }
 
+    public function getCustomerInfo($args, $post) {
+        
+        $c = \App\Entity\Customer::load($args[0]);
+        if($c==null) return  "N/A";
+        
+        $report = new \App\Report('cinfo.tpl');
+        $header = [];
+     
+        $header['name'] = $c->customer_name;
+        $header['email'] = $c->email;
+        $header['phone'] = $c->phone;
+        $header['address'] = $c->address;
+        $header['comment'] = $c->comment;
+         
+     
+        $data = $report->generate($header); 
+        $data = str_replace("'","`",$data)  ;
+        $data = str_replace("\"","`",$data)  ;
+        return $data;
+
+    }
+
     private function generateToasts() {
 
 

@@ -930,7 +930,27 @@
                 </div>
             </div>
 
-   
+            <div id="modalcinfo" class="modal fade  " tabindex="-1"  
+                 aria-hidden="true">
+                <div class="modal-dialog  ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Інформація про контрагента</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div id="mcinfo" class="modal-body">
+                             
+                        </div>
+                 <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрити</button>
+
+                  </div>
+                    </div>
+                </div>
+            </div>
+ 
         {{#toasts}}
         <script>
 $(document).Toasts('create', {
@@ -1061,7 +1081,7 @@ icon: 'fa fa-exclamation-triangle text-warning',
        
         } 
    
-     
+        //принт  сервер
         function sendPS( buf){
           
            var url="{{psurl}}"  
@@ -1093,6 +1113,20 @@ icon: 'fa fa-exclamation-triangle text-warning',
             
        
         } 
+        
+        
+        function customerInfo(id){
+                callPageMethod('getCustomerInfo',[id],null,(data)=> 
+                {
+                     $('#modalcinfo').modal('show')  
+                     $('#mcinfo').html(data)  
+                 
+                  
+         
+                } )          
+        }
+             
+        
            
         </script>
         {{#usemobilescanner}}
