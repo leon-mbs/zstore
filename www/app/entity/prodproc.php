@@ -29,9 +29,16 @@ class ProdProc extends \ZCL\DB\Entity
 
     }
 
+    //копирование процесса
     public function clone() {
         $proc = new ProdProc();
         $proc->detail = $this->detail;
+        $proc->card = $this->card;
+        $diff = time()- $this->startdateplan;
+        if($diff<0) $diff=0;
+        $proc->startdateplan = $this->startdateplan + $diff;
+        $proc->enddateplan = $this->enddateplan + $diff;
+ 
         $proc->procname = $this->procname . "_copy";
         $proc->pp_id = 0;
         $proc->save();
@@ -39,6 +46,9 @@ class ProdProc extends \ZCL\DB\Entity
         foreach ($stlist as $st) {
             $st->st_id = 0;
             $st->pp_id = $proc->pp_id;
+            $st->startdateplan = $st->startdateplan + $diff;
+            $st->enddateplan = $st->enddateplan + $diff;
+            
             $st->save();
         }
 
@@ -50,6 +60,8 @@ class ProdProc extends \ZCL\DB\Entity
         //упаковываем  данные в detail
         $this->detail = "<detail>";
         $this->detail .= "<notes><![CDATA[{$this->notes}]]></notes>";
+        $this->detail .= "<startdateplan>{$this->startdateplan}</startdateplan>";
+        $this->detail .= "<enddateplan>{$this->enddateplan}</enddateplan>";
         $prodlist = base64_encode(serialize($this->prodlist));
         $this->detail .= "<prodlist>{$prodlist}</prodlist>";
         $this->detail .= "</detail>";
@@ -68,6 +80,8 @@ class ProdProc extends \ZCL\DB\Entity
         $xml = simplexml_load_string($this->detail);
 
         $this->notes = (string)($xml->notes[0]);
+        $this->startdateplan = (string)($xml->startdateplan[0]);
+        $this->enddateplan = (string)($xml->enddateplan[0]);
         $this->prodlist = @unserialize(@base64_decode((string)($xml->prodlist[0])));
         if (!is_array($this->prodlist)) {
             $this->prodlist = array();

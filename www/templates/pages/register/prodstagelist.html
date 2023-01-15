@@ -17,7 +17,7 @@
 
             <div class="row">
                 <div class="col-12  ">
-                    <a zippy="opencal" class="btn btn-sm btn-primary ml-2"><i class="fa fa-calendar-alt "></i> Календар</a>
+                    <a zippy="opencal" class="btn btn-sm btn-primary ml-2"><i class="fa fa-chart-gantt "></i> Діаграма Гантта</a>
 
 
 
@@ -214,6 +214,8 @@
         <div zippy="calendarpan"  class="row">
             <div   class="col-12 col-xl-10 ">
                 <a zippy="backcal"><i class="fa fa-arrow-alt-circle-left"></i> До списку</a> 
+                <div class="navbar nav">
+                    
                 <form zippy="calfilter" class="form-inline ">
 
                     <label for="calfilterpp"> Процес </label>
@@ -236,8 +238,31 @@
                     <input zippy="filterok" type="submit" class="  btn btn-success  " value="ОК">
 
                 </form>          
-
-                <div zippy='calendar'></div>
+                </div>
+                    
+                <ul class="nav nav-tabs">
+      
+                  <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#tplan">  План</a>
+                  </li>
+                  
+                  <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#tfact"> Факт</a>
+                  </li>
+              
+              </ul>    
+              <div class="tab-content"  >
+      
+                <div class="tab-pane   show active" id="tplan"> 
+                      
+                </div>
+                <div class="tab-pane   show " id="tfact"> 
+                      
+                </div>
+        
+          </div>
+            
+            
             </div>
         </div> 
 

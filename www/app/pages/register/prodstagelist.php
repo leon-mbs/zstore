@@ -101,7 +101,7 @@ class ProdStageList extends \App\Pages\Base
 
         $this->add(new Panel("calendarpan"))->setVisible(false);
         $this->calendarpan->add(new ClickLink("backcal", $this, "backOnClick"));
-        $this->calendarpan->add(new \ZCL\Calendar\Calendar('calendar', 'ua'))->setEvent($this, 'OnCal');
+
         $this->calendarpan->add(new Form('calfilter'));
         $this->calendarpan->calfilter->add(new SubmitButton('filterok'))->onClick($this, "onCalFilter");
         $this->calendarpan->calfilter->add(new DropDownChoice('calfilterpa', \App\Entity\ProdArea::findArray('pa_name', '', 'pa_name'), 0));
@@ -361,53 +361,11 @@ class ProdStageList extends \App\Pages\Base
 
         $items = ProdStageAgenda::find($where);
 
-        foreach ($items as $item) {
-
-            $col = "#00ff00";
-            if($item->state==ProdStage::STATE_FINISHED) {
-              $col = "#ACACAC";  
-            }
-            if($item->state==ProdStage::STATE_STOPPED) {
-              $col = "#FFC0C0";   
-            }
-            
-            $tasks[] = new \ZCL\Calendar\CEvent($item->sta_id, $item->stagename, $item->startdate, $item->enddate, $col);
-        }
-
-        $this->calendarpan->calendar->setData($tasks);
+       
 
     }
 
-    public function OnCal($sender, $action) {
-
-        if ($action['action'] == 'move') {
-            $task = ProdStageAgenda::load($action['id']);
-
-            if ($action['years'] <> 0) {
-                $task->startdate = strtotime($action['years'] . ' years', $task->startdate);
-                $task->enddate = strtotime($action['years'] . ' years', $task->enddate);
-            }
-            if ($action['months'] <> 0) {
-                $task->startdate = strtotime($action['months'] . ' months', $task->startdate);
-                $task->enddate = strtotime($action['months'] . ' months', $task->enddate);
-            }
-            if ($action['days'] <> 0) {
-                $task->startdate = strtotime($action['days'] . ' days', $task->startdate);
-                $task->enddate = strtotime($action['days'] . ' days', $task->enddate);
-            }
-            if ($action['ms'] <> 0) {
-                $task->startdate = $task->startdate + $action['ms'];
-                $task->enddate = $task->enddate + $action['ms'];
-            }
-
-            $task->save();
-
-            $this->updateCal();
-
-        }
-
-    }
-
+   
 
     public function toprodOnClick($sender) {
         if ($this->_stage->state == ProdStage::STATE_NEW) {

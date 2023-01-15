@@ -28,7 +28,7 @@
                         <th>Серія, партія</th>
                         <th>Статус</th>
                         <th>Початок</th>
-                        <th>Закінчення</th>
+                        <th>Кінець</th>
 
 
                         <th  > </th>
@@ -151,6 +151,14 @@
                         <input   class="form-control" zippy="editsnumber"/>
                     </div>
                     <div class="form-group">
+                        <label for="editstartdateplan">Початок (план)</label>
+                        <input   class="form-control" zippy="editstartdateplan"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="editenddateplan">Кінець (план)</label>
+                        <input   class="form-control" zippy="editenddateplan"/>
+                    </div>
+                    <div class="form-group">
                         <label for="editnotes">Примітка</label>
                         <textarea  style="height:100px"  class="form-control" zippy="editnotes"></textarea>
                     </div>
@@ -197,15 +205,27 @@
         </div>
 
         <div class="row" zippy="stagespan" >
-            <div class="col-12 col-md-8 col-xl-6">
+            <div class="col-12 col-md-10 col-xl-8">
                 <h5>Виробничі етапи </h5>
                 <a zippy="backtoproc"   ><i class="fa fa-arrow-alt-circle-left"></i> До списку процесів</a>  <br>
                 <a zippy="addstage"  class="btn  btn-success">Додати</a>
                 <table class="table table-sm">
+                    <tr>
+                       <th>Назва</th>
+                       <th>Статус</th>
+                       <th>Вир. дільниця</th>
+                       <th>Початок</th>
+                       <th>Кінець</th>
+                       <th> </th>
+                       <th> </th>
+                       <th> </th>
+                    </tr>
                     <tr zippy="stagelist">
                         <td zippy="stagename"></td>
                         <td zippy="stagestate"></td>
                         <td zippy="stageareaname"></td>
+                        <td zippy="stagestartdate"></td>
+                        <td zippy="stageenddate"></td>
 
                         <td><a title="Редагувати" zippy="stageedit"><i class="fa fa-edit"></i></a></td>
                         <td><a title="Тех. карта" zippy="stagecard"><i class="fa fa fa-wrench"></i></a></td>
@@ -232,8 +252,12 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="editstagenotes">Коментар</label>
-                        <textarea  style="height:100px"  class="form-control" zippy="editstagenotes"></textarea>
+                        <label for="editstagestartdateplan">Початок (план)</label>
+                        <input required="required"  class="form-control" zippy="editstagestartdateplan"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="editstageenddateplan">Кінець (план)</label>
+                        <input required="required"   class="form-control" zippy="editstageenddateplan"/>
                     </div>
 
                     <div class="form-group">
@@ -243,6 +267,10 @@
                     <div class="form-group">
                         <label for="editstagesalary">Сума по зарплаті</label>
                         <input pattern="[0-9]+" style="width:75px"   class="form-control" zippy="editstagesalary"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="editstagenotes">Коментар</label>
+                        <textarea  style="height:100px"  class="form-control" zippy="editstagenotes"></textarea>
                     </div>
                 </div>
 
