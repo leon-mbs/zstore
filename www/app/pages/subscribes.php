@@ -66,7 +66,7 @@ class Subscribes extends \App\Pages\Base
         $this->editform->edituser->setVisible($rt == Subscribe::RSV_USER);
         $mt = $this->editform->editmsgtype->getValue();
         $this->editform->editmsgsubject->setVisible($mt == Subscribe::MSG_EMAIL);
-        $this->editform->editattach->setVisible($mt == Subscribe::MSG_EMAIL);
+        $this->editform->editattach->setVisible($mt == Subscribe::MSG_EMAIL || $mt == Subscribe::MSG_BOT);
     }
 
     public function sublistOnRow($row) {
