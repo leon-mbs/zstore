@@ -112,6 +112,7 @@ class ProdStageList extends \App\Pages\Base
         $stlist->Reload();
 
 
+     
     }
 
     public function filterOnSubmit($sender) {
@@ -127,8 +128,12 @@ class ProdStageList extends \App\Pages\Base
         $row->add(new Label('snumber', $st->snumber));
         $row->add(new Label('sstate', ProdStage::getStateName($st->state)));
 
-        $row->add(new Label('startdate', H::fd($st->startdate)));
-        $row->add(new Label('enddate', H::fd($st->enddate)));
+        $row->add(new Label('startdateplan', H::fd($st->startdateplan)));
+        $row->add(new Label('enddateplan', H::fd($st->enddateplan)));
+        $row->add(new Label('hoursplan', H::fa($st->hoursplan)));
+        $row->add(new Label('startdatefact', H::fd($st->startdate)));
+        $row->add(new Label('enddatefact', H::fd($st->enddate)));
+        $row->add(new Label('hoursfact', H::fa($st->hours)));
         $row->add(new Label('hasnotes'))->setVisible(strlen($st->notes) > 0);
         $row->hasnotes->setAttribute('title', $st->notes);
 
@@ -359,8 +364,38 @@ class ProdStageList extends \App\Pages\Base
         }
 
 
-        $items = ProdStageAgenda::find($where);
+        $items = ProdStage::find($where);
+        $p =  "[";
+        $f =  "[";
+        
+        
+ 
+        
+        foreach($items as $st){
+          $sp= $st->startdateplan; 
+          $ep= $st->enddateplan; 
+          $sf= $st->startdate; 
+          $ef= $st->enddate; 
+          if($sp >0  && $ep >0)  {
+               $p .= " ['{$st->st_id}', '{$st->stagename}',    new Date(". date("Y",$sp) .", ". (date("m",$sp) -1 ).", ". date("d",$sp) ."), new Date(". date("Y",$ep) .", ". (date("m",$ep) -1 ).", ". date("d",$ep) ."), null,  100,  null],";      
+          }
+          if($sf >0  && $ef >0)  {
 
+               $f .= " ['{$st->st_id}', '{$st->stagename}',    new Date(". date("Y",$sf) .", ". (date("m",$sf) -1 ).", ". date("d",$sf) ."), new Date(". date("Y",$ef) .", ". ( date("m",$ef) -1 ).", ". date("d",$ef) ."), null,  100,  null],";  
+          }      
+        }
+        
+        
+ 
+        $p .=  "]";
+        $f .=  "]";
+        
+        
+        if($p=="[]") $p = false;
+        if($f=="[]") $f = false;
+        $this->_tvars['gtp'] = $p;
+        $this->_tvars['gtf'] = $f;
+      
        
 
     }
@@ -483,6 +518,7 @@ class ProdStageList extends \App\Pages\Base
 
         $this->listpan->stlist->Reload();
 
+ 
     }
 
 

@@ -289,6 +289,7 @@ class ProdProcList extends \App\Pages\Base
         $row->add(new Label('stageareaname', $s->pa_name));
         $row->add(new Label('stagestartdate', H::fd($s->startdateplan)  ));
         $row->add(new Label('stageenddate', H::fd($s->enddateplan)  ));
+        $row->add(new Label('stagehours', $s->hoursplan  ));
         $row->add(new Label('stagestate', ProdStage::getStateName($s->state)));
 
         $row->add(new ClickLink('stageedit', $this, 'OnStageEdit'))->setVisible($s->state == 0);
@@ -303,7 +304,7 @@ class ProdProcList extends \App\Pages\Base
         $this->_stage->stagename = $this->editstage->editstagename->getText();
         $this->_stage->notes = $this->editstage->editstagenotes->getText();
         $this->_stage->pa_id = $this->editstage->editstagearea->getValue();
-        $this->_stage->hours = $this->editstage->editstagehours->getText();
+        $this->_stage->hoursplan = $this->editstage->editstagehours->getText();
         $this->_stage->startdateplan = $this->editstage->editstagestartdateplan->getDate();
         $this->_stage->enddateplan = $this->editstage->editstageenddateplan->getDate();
         $this->_stage->salary = $this->editstage->editstagesalary->getText();
@@ -338,7 +339,7 @@ class ProdProcList extends \App\Pages\Base
 
         $this->editstage->editstagename->setText($this->_stage->stagename);
         $this->editstage->editstagenotes->setText($this->_stage->notes);
-        $this->editstage->editstagehours->setText($this->_stage->hours);
+        $this->editstage->editstagehours->setText($this->_stage->hoursplan);
         $this->editstage->editstagestartdateplan->setDate($this->_stage->startdateplan);
         $this->editstage->editstageenddateplan->setDate($this->_stage->enddateplan);
         $this->editstage->editstagesalary->setText($this->_stage->salary);

@@ -49,11 +49,21 @@
 
                     <table class="table   table-sm   ">
                         <tr>
+                           <th colspan="2" ]></th>
+                           <th colspan="3" class="text-center">План</th>
+                           <th colspan="3" class="text-center"]>Факт</th>
+                           <th colspan="6"]></th>
+                        </tr>
+                        <tr>
 
-                            <th>Найменування</th>
-                            <th>Статус</th>
+                            <th >Найменування</th>
+                            <th  >Статус</th>
                             <th>Початок</th>
                             <th>Кінець</th>
+                            <th>Годин</th>
+                            <th>Початок</th>
+                            <th>Кінець</th>
+                            <th>Годин</th>
 
                             <th>Процес</th>
                             <th>Серія, партія</th>                        
@@ -71,8 +81,13 @@
                             <td zippy="sstate"></td>
 
 
-                            <td class="text-nowrap" zippy="startdate"></td>
-                            <td class="text-nowrap" zippy="enddate"></td>
+                            <td class="text-nowrap" zippy="startdateplan"></td>
+                            <td class="text-nowrap" zippy="enddateplan"></td>
+                            <td zippy="hoursplan" ></td>
+                            <td class="text-nowrap" zippy="startdatefact"></td>
+                            <td class="text-nowrap" zippy="enddatefact"></td>
+                            <td zippy="hoursfact" ></td>
+                            
                             <td zippy="pname"></td>
                             <td zippy="snumber"></td>
                             <td><i zippy="hasnotes" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i></td>
@@ -186,7 +201,7 @@
                 <a zippy="backs"><i class="fa fa-arrow-alt-circle-left"></i> До списку</a> 
                 <h5 zippy="stagenames"></h5>
                 <div class="navbar nav justify-content-start">
-                    <a title="Списати у виробництво сировину та матеріали" class="btn btn-info mr-2" zippy="btntoprod">Записати</a>
+                    <a title="Списати у виробництво сировину та матеріали" class="btn btn-info mr-2" zippy="btntoprod">Списати</a>
 
                     <a title="Оприбуткувати готову продукцію або напівфабрикати" class="btn btn-info mr-2" zippy="btnfromprod">Оприбуткувати</a>
 
@@ -239,34 +254,108 @@
 
                 </form>          
                 </div>
-                    
-                <ul class="nav nav-tabs">
-      
-                  <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#tplan">  План</a>
-                  </li>
-                  
-                  <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#tfact"> Факт</a>
-                  </li>
-              
-              </ul>    
-              <div class="tab-content"  >
-      
-                <div class="tab-pane   show active" id="tplan"> 
-                      
-                </div>
-                <div class="tab-pane   show " id="tfact"> 
-                      
-                </div>
+                      {{#gtp}}   
+                    <h4>План</h4>
+                    <div id="ganttplan"></div>  
+                      {{/gtp}}   
+
+                      {{#gtf}}   
+                     <h4>Факт</h4>
+                    <div id="ganttfact"></div>  
+                       {{/gtf}}    
+               
         
           </div>
             
             
             </div>
         </div> 
+ 
+     <script type="text/javascript">
+    {{#gantt}}
+    
+      google.charts.load('current', {'packages':['gantt'], 'language': 'uk'});
+      google.charts.setOnLoadCallback(drawChart);
 
-        <script>
+      
+    var fontcolor='#000' ;
+    var bgcolor='#fff' ;
+        {{#darkmode}}
+            fontcolor='#fff' ;
+            bgcolor='#333' ;
+        {{/darkmode}}            
+     
+     
+   function daysToMilliseconds(days) {
+      return days * 24 * 60 * 60 * 1000;
+    }
+
+    
+    
+    
+    function drawChart() {
+
+      var options = {
+     
+          
+             
+      };        
+      {{#gtp}}     
+      
+      var datap = new google.visualization.DataTable();
+      datap.addColumn('string', 'Task ID');
+      datap.addColumn('string', '"Task Name"');
+      datap.addColumn('date', 'Start Date');
+      datap.addColumn('date', 'End Date');
+      datap.addColumn('number', 'Duration');
+      datap.addColumn('number', 'Percent Complete');
+      datap.addColumn('string', 'Dependencies');
+  
+      datap.addRows( 
+          
+          {{{gtp}}}
+      
+       );
+   
+
+      var chartp = new google.visualization.Gantt(document.getElementById('ganttplan'));
+
+      chartp.draw(datap, options);
+      
+      {{/gtp}}
+      
+       {{#gtf}}     
+     
+      var dataf = new google.visualization.DataTable();
+      dataf.addColumn('string', 'Task ID');
+      dataf.addColumn('string', '"Task Name"');
+      dataf.addColumn('date', 'Start Date');
+      dataf.addColumn('date', 'End Date');
+      dataf.addColumn('number', 'Duration');
+      dataf.addColumn('number', 'Percent Complete');
+      dataf.addColumn('string', 'Dependencies');
+  
+      dataf.addRows( 
+          
+          {{{gtf}}}
+      
+       );
+   
+
+      var chartf = new google.visualization.Gantt(document.getElementById('ganttfact'));
+
+      chartf.draw(dataf, options);
+      
+      {{/gtf}} 
+      
+    }     
+     
+     
+     
+     
+   {{/gantt}}   
+     
+      
 
             function check_btnclose() {
                 return confirm("Закрити етап?")

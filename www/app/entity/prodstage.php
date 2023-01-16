@@ -29,7 +29,7 @@ class ProdStage extends \ZCL\DB\Entity
         parent::beforeSave();
         //упаковываем  данные в detail
         $this->detail = "<detail>";
-        $this->detail .= "<hours>{$this->hours}</hours>";
+        $this->detail .= "<hoursplan>{$this->hoursplan}</hoursplan>";
         $this->detail .= "<salary>{$this->salary}</salary>";
         $this->detail .= "<notes><![CDATA[{$this->notes}]]></notes>";
         $this->detail .= "<card><![CDATA[{$this->card}]]></card>";
@@ -54,7 +54,7 @@ class ProdStage extends \ZCL\DB\Entity
         }
 
         $xml = simplexml_load_string($this->detail);
-        $this->hours = doubleval($xml->hours[0]);
+        $this->hoursplan = doubleval($xml->hoursplan[0]);
         $this->salary = intval($xml->salary[0]);
         $this->notes = (string)($xml->notes[0]);
         $this->card = (string)($xml->card[0]);
