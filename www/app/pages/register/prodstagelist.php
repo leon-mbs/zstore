@@ -111,7 +111,9 @@ class ProdStageList extends \App\Pages\Base
 
         $stlist->Reload();
 
-
+        $this->_tvars['gtp'] = false;
+        $this->_tvars['gtf'] = false;
+ 
      
     }
 
@@ -518,7 +520,9 @@ class ProdStageList extends \App\Pages\Base
 
         $this->listpan->stlist->Reload();
 
- 
+         $this->_tvars['gtp'] = false;
+        $this->_tvars['gtf'] = false;
+
     }
 
 

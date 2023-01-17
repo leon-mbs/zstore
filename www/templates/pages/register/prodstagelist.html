@@ -272,7 +272,7 @@
         </div> 
  
      <script type="text/javascript">
-    {{#gantt}}
+  
     
       google.charts.load('current', {'packages':['gantt'], 'language': 'uk'});
       google.charts.setOnLoadCallback(drawChart);
@@ -319,7 +319,8 @@
    
 
       var chartp = new google.visualization.Gantt(document.getElementById('ganttplan'));
-
+   
+ 
       chartp.draw(datap, options);
       
       {{/gtp}}
@@ -351,9 +352,7 @@
     }     
      
      
-     
-     
-   {{/gantt}}   
+
      
       
 
