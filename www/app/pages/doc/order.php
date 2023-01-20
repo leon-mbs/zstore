@@ -564,7 +564,7 @@ class Order extends \App\Pages\Base
         $customer_id=intval($customer_id)  ;
         if($customer_id==0) return;
         $this->docform->cinfo->setVisible(true) ;
-        $this->docform->setAttribute('onclick',"customerInfo({$customer_id});" ) ;
+        $this->docform->cinfo->setAttribute('onclick',"customerInfo({$customer_id});" ) ;
        
     }
     

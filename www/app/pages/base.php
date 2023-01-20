@@ -375,7 +375,7 @@ class Base extends \Zippy\Html\WebPage
         if($doc != null){
            $header['last']= $doc->meta_desc .' '. $doc->document_number;
            $header['lastdate']=Helper::fd($doc->document_date);
-           $header['lastsum']=Helper::fa($doc->payamount);
+           $header['lastsum']=Helper::fa($doc->amount);
            $header['laststatus']   =  \App\Entity\doc\Document::getStateName($doc->state)  ;
         }
      
