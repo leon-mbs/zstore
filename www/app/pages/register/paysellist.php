@@ -348,7 +348,7 @@ class PaySelList extends \App\Pages\Base
 
 
         $payed = Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(),  $form->pcomment->getText());
-        \App\Entity\IOState::addIOState($this->_doc->document_id, $amount, $type);
+        \App\Entity\IOState::addIOState($this->_doc->document_id, 0-$amount, $type);
         
         if($payed>=$this->_doc->payamount){
            $this->markPayed()  ;            

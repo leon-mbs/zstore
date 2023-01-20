@@ -75,14 +75,7 @@ class ChatBot{
             return  false;
         }
         
-      /*  $logger->info($msg['chat']['id'] );
-        $logger->info($msg['from']['id'] );
-        $logger->info($msg['from']['last_name'] );
-        $logger->info($msg['from']['first_name'] );
-        $logger->info($msg['from']['username']);
-        $logger->info($msg['text']);
-        $logger->info( \App\Helper::fdt( $msg['date'] ) );             
-        */   
+ 
          
         $text = $msg['text'] ;
         $chat_id = $msg['chat']['id'] ;
@@ -137,7 +130,33 @@ class ChatBot{
            
         }
         
-  
+        
+        if(strlen($msg['caption'] >0)) {
+           $text = $msg['caption'] ;  //коментарий к  файлу
+        }
+        
+        if(is_array($msg['document'])){
+            $filename=$msg['document']['file_name'] ;
+            $mimetype=$msg['document']['mime_type'] ;
+            $size=$msg['document']['file_size'] ;
+            $file_id=$msg['document']['file_id'] ;
+            
+            $ret = $this->doGet('getFile?file_id='.$file_id);
+            if($ret['ok'] === true ) {
+                $path= $ret['result']['file_path'] ;
+                
+                $url="https://api.telegram.org/file/bot".$this->token."/". $path;
+                
+                
+               // $f = file_get_contents($url) ;
+ 
+                
+            } else {
+                H::log($ret['description']) ;
+            }      
+            
+        }
+             
         return  true;
   
    }
@@ -145,6 +164,28 @@ class ChatBot{
    public function sendMessage( $chat_id, $msg){
 
          $this->doGet('sendMessage',array('chat_id'=>$chat_id,'text'=>$msg)) ; 
+   }
+   public function sendDocument( $chat_id, $filepath,$filename,$mime='application/pdf', $caption=''){
+
+        $arrayQuery = array(
+            'chat_id' => $chat_id,
+            'document' => curl_file_create($filepath, $mime , $filename)
+        );      
+        if(strlen($caption)>0) {
+            $arrayQuery['caption'] = $caption;
+        }
+        
+          
+        $ch = curl_init('https://api.telegram.org/bot'. $this->token .'/sendDocument');
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $arrayQuery);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   
+        $resultQuery = curl_exec($ch);
+         curl_close($ch);   
+        
+        return json_decode($resultQuery,true);        
    }
    
    private function getUser($chat_id){

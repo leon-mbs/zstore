@@ -47,6 +47,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
 
+        $this->docform->add(new \Zippy\Html\Link\BookmarkableLink('cinfo'))->setVisible(false);
         $this->docform->add(new TextArea('notes'));
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), 0));
         $this->docform->add(new DropDownChoice('salesource', H::getSaleSources(), H::getDefSaleSource()));
@@ -157,6 +158,9 @@ class Order extends \App\Pages\Base
             $this->docform->address->setText($this->_doc->headerdata['ship_address']);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
+            
+            $this->OnCinfo($this->_doc->customer_id);
+            
 
             $this->_tovarlist = $this->_doc->unpackDetails('detaildata');
         } else {
@@ -527,6 +531,11 @@ class Order extends \App\Pages\Base
         if ($customer_id > 0) {
             $customer = Customer::load($customer_id);
 
+            if (strlen($customer->pricetype) > 4) {
+                $this->docform->pricetype->setValue($customer->pricetype);
+            }
+            
+            
             $this->docform->phone->setText($customer->phone);
             $this->docform->email->setText($customer->email);
             $this->docform->address->setText($customer->address);
@@ -538,6 +547,10 @@ class Order extends \App\Pages\Base
             } else {
                 
             }
+            
+            
+            $this->OnCinfo($customer_id);
+            
         }
 
 
@@ -546,6 +559,15 @@ class Order extends \App\Pages\Base
         $this->calcPay();
     }
 
+    
+    private  function OnCinfo($customer_id){
+        $customer_id=intval($customer_id)  ;
+        if($customer_id==0) return;
+        $this->docform->cinfo->setVisible(true) ;
+        $this->docform->cinfo->setAttribute('onclick',"customerInfo({$customer_id});" ) ;
+       
+    }
+    
     public function OnAutoItem($sender) {
         return Item::findArrayAC($sender->getText());
     }

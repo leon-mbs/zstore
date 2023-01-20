@@ -348,6 +348,44 @@ class Base extends \Zippy\Html\WebPage
 
     }
 
+    public function getCustomerInfo($args, $post) {
+        
+        $c = \App\Entity\Customer::load($args[0]);
+        if($c==null) return  "N/A";
+        
+        $report = new \App\Report('cinfo.tpl');
+        $header = [];
+     
+        $header['name'] = $c->customer_name;
+        $header['email'] = $c->email;
+        $header['phone'] = $c->phone;
+        $header['address'] = $c->address;
+        $header['comment'] = $c->comment;
+        
+        $header['bonus'] = intval($c->getBonus() );
+        if($header['bonus']==0)  $header['bonus'] = false;
+        $header['dolg'] = doubleval($c->getDolg() );
+        
+        if($header['dolg']>0)  $header['dolg'] ='+'.$header['dolg'] ;
+        if($header['dolg']==0)  $header['dolg'] = false;
+        $header['disc'] = doubleval($c->getDiscount() );
+        if($header['disc']==0)  $header['disc'] = false;
+        $header['last'] = false;
+        $doc = \App\Entity\doc\Document::getFirst(" customer_id={$c->customer_id}","document_id desc") ;
+        if($doc != null){
+           $header['last']= $doc->meta_desc .' '. $doc->document_number;
+           $header['lastdate']=Helper::fd($doc->document_date);
+           $header['lastsum']=Helper::fa($doc->amount);
+           $header['laststatus']   =  \App\Entity\doc\Document::getStateName($doc->state)  ;
+        }
+     
+        $data = $report->generate($header); 
+        $data = str_replace("'","`",$data)  ;
+      //  $data = str_replace("\"","`",$data)  ;
+        return $data;
+
+    }
+
     private function generateToasts() {
 
 

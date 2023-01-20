@@ -207,7 +207,6 @@ class GoodsIssue extends Document
 
 
  
-        if ($this->headerdata['payment'] > 0 && $this->headerdata['payed'] > 0) {
             $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['payed'], $this->headerdata['payment']);
             if ($payed > 0) {
                 $this->payed = $payed;
@@ -215,7 +214,7 @@ class GoodsIssue extends Document
             \App\Entity\IOState::addIOState($this->document_id, $this->headerdata['payed'], \App\Entity\IOState::TYPE_BASE_INCOME);
  
 
-        }
+   
 
         return true;
     }

@@ -93,7 +93,7 @@
                             <tr zippy="customerlist">
                                 <td><input class="seldel" zippy="seldel"  type="checkbox"></td>
 
-                                <td zippy="customername" class="text-nowrap"></td>
+                                <td  class="text-nowrap"><a zippy="customername"></a></td>
                                 <td zippy="customerphone" class="text-nowrap"></td>
                                 <td zippy="customeremail" class="text-nowrap"></td>
                                 {{^leadmode}}    <td class="text-right" > <span zippy="docs" class="badge badge-secondary badge-pill"></span> </td>  {{/leadmode}}
@@ -522,8 +522,7 @@
 
 
 
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
+     <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart'], 'language': 'uk'});
       google.charts.setOnLoadCallback(drawChart);
 

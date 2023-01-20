@@ -48,9 +48,16 @@ class IOState extends \ZCL\DB\Entity
     }
 
     public static function addIOState($document_id, $amount, $type) {
-        if (0 == (float)$amount || 0 == (int)$document_id || 0 == (int)$type) {
+        if (0 == doubleval($amount) || 0 == intval($document_id) || 0 == intval($type) ) {
             return;
         }
+        
+        $amount = abs($amount) ;
+        if( intval($type) >=50) { //расходы
+          $amount = 0- $amount;    
+        }
+        
+        
         $io = new  IOState();
         $io->document_id = $document_id;
         $io->amount = $amount;

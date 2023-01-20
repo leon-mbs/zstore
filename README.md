@@ -5,8 +5,7 @@ Zippy Store
 повноцінний бухгалтерський облік.
    
 Домашня сторінка:  [https://zippy.com.ua/zstore](https://zippy.com.ua/zstore)    
-Русифицированная версия для постсовецкого  пространства:  [https://github.com/leon-mbs/zstore_ru](https://github.com/leon-mbs/zstore_ru)    
-
+ 
 ####
 Основна функціональність
  

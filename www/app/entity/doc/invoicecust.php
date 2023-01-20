@@ -74,14 +74,14 @@ class InvoiceCust extends Document
         if ($rate != 0 && $rate != 1) {
             $payed = $payed * $rate; 
         }
-        if ($this->headerdata['payment'] > 0 && $payed >0) {
+
             $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment'] );
             if ($payed > 0) {
                 $this->payed = $payed;
             }
             \App\Entity\IOState::addIOState($this->document_id, 0 - $this->payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
 
-        }
+
 
         return true;
     }
