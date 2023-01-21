@@ -144,14 +144,14 @@ class Orders extends \App\Pages\Base
                 $neworder->headerdata['outnumber'] = $wcorder->id;
                 $neworder->headerdata['wcorderback'] = 0;
                 $neworder->headerdata['salesource'] = $modules['wcsalesource'];
-                $neworder->headerdata['wcclient'] = $wcorder->shipping->first_name . ' ' . $wcorder->shipping->last_name;
+                $neworder->headerdata['wcclient'] = trim($wcorder->shipping->last_name . ' ' . $wcorder->shipping->first_name);
                 $neworder->amount = H::fa($wcorder->total);
                 $neworder->payamount = $neworder->amount;
                 
                
                 $neworder->document_date = time();
                 $neworder->notes = "WC номер:{$wcorder->id};";
-                $neworder->notes .= " Клієнт:" . $wcorder->shipping->first_name . ' ' . $wcorder->shipping->last_name . ";";
+                $neworder->notes .= " Клієнт: " . trim($wcorder->shipping->last_name . ' ' . $wcorder->shipping->first_name).";";
                 if (strlen($wcorder->billing->email) > 0) {
                     $neworder->notes .= " Email:" . $wcorder->billing->email . ";";
                 }
