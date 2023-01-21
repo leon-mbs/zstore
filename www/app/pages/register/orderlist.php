@@ -116,11 +116,18 @@ class OrderList extends \App\Pages\Base
         if(strlen($doc->headerdata['wcorder'])>0)  $n = $n . " (WC '{$doc->headerdata['wcorder']}')"  ;
         if(strlen($doc->headerdata['puorder'])>0)  $n = $n . " (PU '{$doc->headerdata['puorder']}')"  ;
         
-        $row->add(new Label('number', $n));
+      
+        $row->add(new ClickLink('number', $this, 'showOnClick'))->setValue($n);
+        
+        
         $row->add(new Label('date', H::fd($doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));
         $row->add(new Label('emp', $doc->username));
-        $row->add(new Label('customer', $doc->customer_name));
+ 
+
+        $row->add(new  \Zippy\Html\Link\BookmarkableLink('customer' ))->setValue($doc->customer_name);
+        $row->customer->setAttribute('onclick',"customerInfo({$doc->customer_id});" ) ;
+        
         $row->add(new Label('amount', H::fa($doc->amount)));
         
         $row->add(new Label('isreserved' ))->setVisible($doc->hasStore());
@@ -196,6 +203,7 @@ class OrderList extends \App\Pages\Base
         $this->doclist->Reload(false);
      
     }
+  
     public function statusOnSubmit($sender) {
         if (\App\Acl::checkChangeStateDoc($this->_doc, true, true) == false) {
             return;
@@ -620,7 +628,6 @@ class OrderList extends \App\Pages\Base
         $this->doclist->Reload(false);
         $this->payform->setVisible(false);
     }
-  
     
     public function onBranch($sender){
        $id = $sender->getValue();   

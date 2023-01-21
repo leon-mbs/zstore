@@ -17,7 +17,7 @@
         <link rel="stylesheet" href="/assets/js/summernote/summernote-bs4.css">
         <link rel="stylesheet" href="/assets/css/app.css">
 
-        <script src="/assets/assets/fontawesome/js/all.js" ></script>
+        <script src="/assets/fontawesome/js/all.js" ></script>
         <script src="/vendor/leon-mbs/zippy/assets/js/jquery.js" type="text/javascript"></script>
         <script src="/assets/js/bootstrap.bundle.js" type="text/javascript"></script>
         <script src="/vendor/leon-mbs/zippy/assets/js/zippy-bundle-ua.js" type="text/javascript"></script>
@@ -29,7 +29,8 @@
         <script src="/assets/js/adminlte.js" type="text/javascript"></script>
         <script src="/assets/js/vue/vue.min.js"></script>     
         <script src="/assets/js/vue/httpvueloader.js"></script>     
-           
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+         
         <script src="/assets/js/app.js" type="text/javascript"></script>
        
         <!-- Google Font -->
@@ -930,19 +931,38 @@
                 </div>
             </div>
 
-   
+            <div id="modalcinfo" class="modal fade  " tabindex="-1"  
+                 aria-hidden="true">
+                <div class="modal-dialog  ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Інформація про контрагента</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div id="mcinfo" class="modal-body">
+                             
+                        </div>
+                 <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрити</button>
+
+                  </div>
+                    </div>
+                </div>
+            </div>
+         <script>
         {{#toasts}}
-        <script>
+      
 $(document).Toasts('create', {
 icon: 'fa fa-exclamation-triangle text-warning',
         position:'bottomRight',
 {{{title}}}
 
 })
-        </script>
+      
         {{/toasts}}
-
-        <script>
+       
                     toastr.options = {
                     "closeButton": true,
                             "debug": false,
@@ -1061,7 +1081,7 @@ icon: 'fa fa-exclamation-triangle text-warning',
        
         } 
    
-     
+        //принт  сервер
         function sendPS( buf){
           
            var url="{{psurl}}"  
@@ -1093,6 +1113,21 @@ icon: 'fa fa-exclamation-triangle text-warning',
             
        
         } 
+        
+        
+        function customerInfo(id){
+                callPageMethod('getCustomerInfo',[id],null,(data)=> 
+                {
+                    
+                    $('#modalcinfo').modal('show')  
+                    $('#mcinfo').html(data)  
+                 
+                  
+         
+                } )          
+        }
+             
+        
            
         </script>
         {{#usemobilescanner}}

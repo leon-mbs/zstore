@@ -184,17 +184,17 @@ class Orders extends \App\Pages\Base
             $neworder->headerdata['pricetype'] = 'price1';
             $neworder->headerdata['salesource'] = $modules['ocsalesource'];
 
-            $neworder->notes = "OC номер:{$shoporder->order_id};";
+            $neworder->notes = "OC номер: {$shoporder->order_id};";
 
             $neworder->headerdata['occlient'] = $shoporder->firstname . ' ' . $shoporder->lastname;
-            $neworder->notes .= " Клиент:" . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
+            $neworder->notes .= " Клiєнт: " . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
 
             if ($shoporder->customer_id > 0 && $modules['ocinsertcust'] == 1) {
                 $cust = Customer::getFirst("detail like '%<shopcust_id>{$shoporder->customer_id}</shopcust_id>%'");
                 if ($cust == null) {
                     $cust = new Customer();
                     $cust->shopcust_id = $shoporder->customer_id;
-                    $cust->customer_name = $shoporder->firstname . ' ' . $shoporder->lastname;
+                    $cust->customer_name = trim($shoporder->lastname . ' ' . $shoporder->firstname);
                     $cust->address = $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1;
                     $cust->type = Customer::TYPE_BAYER;
                     $cust->phone = \App\Util::handlePhone($shoporder->telephone);
@@ -213,7 +213,7 @@ class Orders extends \App\Pages\Base
                 $neworder->notes .= " Email:" . $shoporder->email . ";";
             }
             if (strlen($shoporder->telephone) > 0) {
-                $neworder->notes .= " Тел:" . $shoporder->telephone . ";";
+                $neworder->notes .= " Тел: " . $shoporder->telephone . ";";
             }
             $neworder->notes .= " Адреса:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
             $neworder->notes .= " Оплата:" . $shoporder->payment_method . ";";

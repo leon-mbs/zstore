@@ -28,8 +28,7 @@ class Base extends \Zippy\Html\WebPage
         }
 
         $this->_tvars['curversion'] = System::CURR_VERSION ;
-     
- 
+    
         $options = System::getOptions('common');
 
         //опции
@@ -116,7 +115,8 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["psurl"] =  $user->pserver ;  
         $this->_tvars["printserver"] = $user->prtype == 1;  
 
-
+        
+        
         //доступы к  модулям
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["shop"] = false;
@@ -348,6 +348,44 @@ class Base extends \Zippy\Html\WebPage
 
     }
 
+    public function getCustomerInfo($args, $post) {
+        
+        $c = \App\Entity\Customer::load($args[0]);
+        if($c==null) return  "N/A";
+        
+        $report = new \App\Report('cinfo.tpl');
+        $header = [];
+     
+        $header['name'] = $c->customer_name;
+        $header['email'] = $c->email;
+        $header['phone'] = $c->phone;
+        $header['address'] = $c->address;
+        $header['comment'] = $c->comment;
+        
+        $header['bonus'] = intval($c->getBonus() );
+        if($header['bonus']==0)  $header['bonus'] = false;
+        $header['dolg'] = doubleval($c->getDolg() );
+        
+        if($header['dolg']>0)  $header['dolg'] ='+'.$header['dolg'] ;
+        if($header['dolg']==0)  $header['dolg'] = false;
+        $header['disc'] = doubleval($c->getDiscount() );
+        if($header['disc']==0)  $header['disc'] = false;
+        $header['last'] = false;
+        $doc = \App\Entity\doc\Document::getFirst(" customer_id={$c->customer_id}","document_id desc") ;
+        if($doc != null){
+           $header['last']= $doc->meta_desc .' '. $doc->document_number;
+           $header['lastdate']=Helper::fd($doc->document_date);
+           $header['lastsum']=Helper::fa($doc->amount);
+           $header['laststatus']   =  \App\Entity\doc\Document::getStateName($doc->state)  ;
+        }
+     
+        $data = $report->generate($header); 
+        $data = str_replace("'","`",$data)  ;
+      //  $data = str_replace("\"","`",$data)  ;
+        return $data;
+
+    }
+
     private function generateToasts() {
 
 
@@ -377,6 +415,27 @@ class Base extends \Zippy\Html\WebPage
                 $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("hassystemnotify") . "\"");
 
             }
+            //проверка  новой версии        
+        
+
+            $v = @file_get_contents("https://zippy.com.ua/version.json?t=" . time());
+            $v = @json_decode($v, true);
+            if (strlen($v['version']) > 0) {
+                $c = (int)str_replace(".", "", str_replace("v", "",  \App\System::CURR_VERSION));
+                $n = (int)str_replace(".", "", str_replace("v", "", $v['version']));
+
+                if ($n > $c) {
+                   $this->_tvars["toasts"][] = array('title' => "title:  \"" . Helper::l("newversion") . " {$v['version']}  <a target=\\\"_blank\\\" href=\\\"https://zippy.com.ua/zstore#newver\\\">Перейти...</a>\" ");
+       
+                }
+
+                
+            }         
+          
+            
+            
+            
+            
         }
         
         if (count($this->_tvars["toasts"]) == 0) {

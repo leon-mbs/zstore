@@ -646,7 +646,8 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->wselitem->setPriceType($this->getPriceType());
         $this->docpanel->wselitem->Reload();
     }
-     public function onOpenCatPan($sender) {
+ 
+    public function onOpenCatPan($sender) {
         $this->docpanel->wselitem->setVisible(true);
         
         $this->docpanel->wselitem->setPriceType($this->getPriceType());

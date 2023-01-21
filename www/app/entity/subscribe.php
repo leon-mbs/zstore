@@ -176,7 +176,7 @@ class Subscribe extends \ZCL\DB\Entity
                 $ret =   self::sendViber($viber,$text) ;
             }
             if(strlen($chat_id)>0 && $sub->msg_type == self::MSG_BOT) {
-                $ret =   self::sendBot($chat_id,$text) ;
+                $ret =   self::sendBot($chat_id,$text,$sub->attach==1 ? $doc :null) ;
             }
             if ($notify > 0 && $sub->msg_type == self::MSG_NOTIFY) {
                 self::sendNotify($notify, $text);
@@ -209,6 +209,7 @@ class Subscribe extends \ZCL\DB\Entity
 
         $header['document_number'] = $doc->document_number;
         $header['document_date'] = \App\Helper::fd($doc->document_date);
+        $header['document_type'] = $doc->meta_desc;
         $header['amount'] = \App\Helper::fa($doc->amount);
         $header['forpay'] = \App\Helper::fa($doc->payamount);
         $header['customer_name'] = $doc->customer_name;
@@ -435,9 +436,23 @@ class Subscribe extends \ZCL\DB\Entity
         $n->save();
     }
 
-    public static function sendBot($chat_id, $text) {
+    public static function sendBot($chat_id, $text,$doc=null) {
         $bot = new \App\ChatBot( \App\System::getOption("common",'tbtoken')) ;
         $bot->sendMessage($chat_id, $text)  ;
+        if($doc!= null) {
+                $filename = strtolower($doc->meta_name ) . ".pdf";
+                $html = $doc->cast()->generateReport();
+                $dompdf = new \Dompdf\Dompdf(array('isRemoteEnabled' => true, 'defaultFont' => 'DejaVu Sans'));
+                $dompdf->loadHtml($html);
+
+                $dompdf->render();
+
+                $data = $dompdf->output();
+
+                $f = tempnam(sys_get_temp_dir(), "bot");
+                file_put_contents($f, $data);
+                $bot->sendDocument($chat_id,$f,$filename) ;
+        }
     }
 
     public static function sendSMS($phone, $text ) {
