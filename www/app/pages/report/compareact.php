@@ -27,6 +27,8 @@ class CompareAct extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new DropDownChoice('type', array( ), 0))->onChange($this, "OnType");
         $this->filter->add(new DropDownChoice('cust', array() , 0));
+        $this->filter->add(new Date('from', strtotime("-1 month", time()) ));
+        $this->filter->add(new Date('to', time()));
 
         
         $this->add(new Panel('detail'))->setVisible(false);
@@ -69,18 +71,23 @@ class CompareAct extends \App\Pages\Base
     }
 
     private function generateReport() {
+        $conn = \ZDB\DB::getConnect();
 
+        $from = $conn->DBDate($this->filter->from->getDate() );
+        $to = $conn->DBDate($this->filter->to->getDate() );
+ 
         $type = $this->filter->type->getValue();
 
         $cust_id = $this->filter->cust->getValue();
-
-
-         $detail = array();
+      
+        $where =  " document_date >={$from} and document_date <={$to} and    customer_id= {$cust_id} and    state NOT IN (0, 1, 2, 3, 15, 8, 17) ";
+        
+        $detail = array();
         
         
 if($type==1){
 
-        $list = \App\Entity\Doc\Document::find(" customer_id= {$cust_id} and    state NOT IN (0, 1, 2, 3, 15, 8, 17) " , "  document_id asc",-1,-1,"*, COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'TTN', 'PosCheck', 'OrderFood', 'ServiceAct')) THEN payamount WHEN ((meta_name = 'OutcomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payed ELSE 0 END)), 0) AS b_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN payed WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payamount ELSE 0 END)), 0) AS b_active");
+        $list = \App\Entity\Doc\Document::find($where   , "  document_id asc",-1,-1,"*, COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'TTN', 'PosCheck', 'OrderFood', 'ServiceAct')) THEN payamount WHEN ((meta_name = 'OutcomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payed ELSE 0 END)), 0) AS b_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN payed WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payamount ELSE 0 END)), 0) AS b_active");
   
         $bal=0;
 
@@ -112,7 +119,7 @@ if($type==1){
         
 if($type==2){
 
-        $list = \App\Entity\Doc\Document::find("   customer_id= {$cust_id} and    state NOT IN (0, 1, 2, 3, 15, 8, 17) " , "document_id asc ",-1,-1,"*,  COALESCE( ((CASE WHEN (meta_name IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService', 'OutcomeMoney')) THEN payed WHEN ((meta_name = 'OutcomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payamount ELSE 0 END)), 0) AS s_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsReceipt','IncomeService') ) THEN payamount WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payed ELSE 0 END)), 0) AS s_active ");
+        $list = \App\Entity\Doc\Document::find($where , "document_id asc ",-1,-1,"*,  COALESCE( ((CASE WHEN (meta_name IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService', 'OutcomeMoney')) THEN payed WHEN ((meta_name = 'OutcomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payamount ELSE 0 END)), 0) AS s_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsReceipt','IncomeService') ) THEN payamount WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payed ELSE 0 END)), 0) AS s_active ");
 
         $bal=0;
 

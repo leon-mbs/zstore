@@ -28,8 +28,7 @@ class Base extends \Zippy\Html\WebPage
         }
 
         $this->_tvars['curversion'] = System::CURR_VERSION ;
-     
- 
+    
         $options = System::getOptions('common');
 
         //опции
@@ -116,7 +115,8 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["psurl"] =  $user->pserver ;  
         $this->_tvars["printserver"] = $user->prtype == 1;  
 
-
+        
+        
         //доступы к  модулям
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["shop"] = false;
@@ -415,6 +415,27 @@ class Base extends \Zippy\Html\WebPage
                 $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("hassystemnotify") . "\"");
 
             }
+            //проверка  новой версии        
+        
+
+            $v = @file_get_contents("https://zippy.com.ua/version.json?t=" . time());
+            $v = @json_decode($v, true);
+            if (strlen($v['version']) > 0) {
+                $c = (int)str_replace(".", "", str_replace("v", "",  \App\System::CURR_VERSION));
+                $n = (int)str_replace(".", "", str_replace("v", "", $v['version']));
+
+                if ($n > $c) {
+                   $this->_tvars["toasts"][] = array('title' => "title:  \"" . Helper::l("newversion") . " {$v['version']}  <a target=\\\"_blank\\\" href=\\\"https://zippy.com.ua/zstore#newver\\\">Перейти...</a>\" ");
+       
+                }
+
+                
+            }         
+          
+            
+            
+            
+            
         }
         
         if (count($this->_tvars["toasts"]) == 0) {

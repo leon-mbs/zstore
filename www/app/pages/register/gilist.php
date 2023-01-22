@@ -131,8 +131,9 @@ class GIList extends \App\Pages\Base
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
 
-        $row->add(new Label('number', $doc->document_number));
 
+        $row->add(new ClickLink('number', $this, 'showOnClick'))->setValue($doc->document_number);
+   
         $row->add(new Label('date', H::fd($doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));
         $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
@@ -469,7 +470,7 @@ class GIList extends \App\Pages\Base
         }
 
         $this->nppan->npform->baytel->setText($tel);
-        $name = explode(' ', $c->customer_name);
+        $name =   \App\Util::strtoarray($c->customer_name);
         $this->nppan->npform->baylastname->setText($name[0]);
         $this->nppan->npform->bayfirstname->setText($name[1]);
         $this->nppan->npform->baymiddlename->setText($name[2]);

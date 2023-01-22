@@ -185,7 +185,7 @@ class Helper
                     break;
             }
 
-            $textmenu .= " <a class=\"btn btn-sm btn-outline-success mb-1 mr-2\" href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$icon} {$item['description']}</a> ";
+            $textmenu .= " <a class=\"btn btn-sm btn-outline-primary mb-1 mr-2\" href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$icon} {$item['description']}</a> ";
         }
         $role = \App\Entity\UserRole::load($user->role_id);
 
@@ -193,7 +193,7 @@ class Helper
         $smartmenu = explode(',', $smartmenu);
         foreach ($mod as $p) {
             if (in_array($p->meta_id, $smartmenu)) {
-                $textmenu .= " <a class=\"btn btn-sm btn-outline-success mb-1 mr-2\" href=\"/index.php?p=App/Modules{$p->meta_name}\">  <i class=\"nav-icon fa fa-puzzle-piece\"></i> {$p->description}</a> ";
+                $textmenu .= " <a class=\"btn btn-sm btn-outline-primary mb-1 mr-2\" href=\"/index.php?p=App/Modules{$p->meta_name}\">  <i class=\"nav-icon fa fa-puzzle-piece\"></i> {$p->description}</a> ";
             }
         }
         return $textmenu;

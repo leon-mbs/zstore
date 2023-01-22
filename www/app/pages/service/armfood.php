@@ -858,6 +858,7 @@ class ARMFood extends \App\Pages\Base
         $amount = $this->docpanel->listsform->totalamount->getText();
         $this->docpanel->payform->pfamount->setText(H::fa($amount));
         $disc = 0;
+        $bonus = 0;
         if ($this->_doc->customer_id > 0) {
             $customer = \App\Entity\Customer::load($this->_doc->customer_id);
             $d= $customer->getDiscount();
