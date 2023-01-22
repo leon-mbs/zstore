@@ -107,19 +107,27 @@ new Audio('/assets/beep.mp3').play()
      return ret;           
    } 
    
-   
+  //HTNL%  валидация полей
   function checkForm(id){
-    var ret = 0
+
  
     $('#'+id+' input ').each(
         function(index){  
             var input = $(this);
 
             var v =   input.get(0).reportValidity() 
-            if(!v)ret++
+            if(!v) {
+                return  false
+            }
             
         }
     );   
      
-    return ret == 0
+    return true
+  }
+  
+  
+  function  callPM(method,params,postdata,callback =null   , callerror=null     )
+  {
+      callPageMethod(method,params,postdata,callback , callerror);
   }
