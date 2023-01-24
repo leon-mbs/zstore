@@ -15,7 +15,8 @@ class MoneyFund extends \ZCL\DB\Entity
     protected function init() {
         $this->mf_id = 0;
         $this->branch_id = 0;
-    }
+        $this->disabled = 0;
+   }
 
     protected function beforeSave() {
         parent::beforeSave();
@@ -83,7 +84,7 @@ class MoneyFund extends \ZCL\DB\Entity
     public static function getList($nal = 0) {
         $ml = array();
 
-        foreach (MoneyFund::find("") as $k => $v) {
+        foreach (MoneyFund::find("disabled <> 1") as $k => $v) {
             if ($nal == 1 && $v->beznal == 1) {
                 continue;
             }
