@@ -1,9 +1,4 @@
-
-INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Продажі', 'OlapBay', 'Аналітика', 0);
-INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Закупівлі', 'OlapSell', 'Аналітика', 0); 
-
-update  metadata set  menugroup ='Аналітика' where  meta_name='ABC';
-
+ 
 ALTER TABLE `stores` ADD `disabled` tinyint(1)   DEFAULT 0  ;
 ALTER TABLE `mfund`  ADD `disabled` tinyint(1)   DEFAULT 0  ;
 
@@ -13,3 +8,20 @@ ALTER TABLE `mfund`  ADD `disabled` tinyint(1)   DEFAULT 0  ;
 delete  from  options where  optname='version' ;
 insert  into options (optname,optvalue) values('version','6.6.0');
      
+     
+
+
+SELECT iv.itemname,
+ssv.storename,
+iv.cat_name,
+COALESCE(c.customer_name,'Фіз. особа') AS customer_name, 
+dv.document_date ,
+COALESCE(b.branch_name,'') AS branch_name,
+COALESCE(ev.partion,0) AS partion, 
+COALESCE(ev.outprice,0) AS outprice   
+FROM entrylist_view ev   
+JOIN documents dv ON ev.document_id = dv.document_id
+JOIN items_view iv ON ev.item_id = iv.item_id
+JOIN store_stock_view ssv ON ev.stock_id = ssv.stock_id
+LEFT JOIN customers c ON dv.customer_id = c.customer_id
+LEFT JOIN branches b ON dv.branch_id = b.branch_id     
