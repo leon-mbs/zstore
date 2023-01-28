@@ -178,7 +178,7 @@ class OLAP extends \App\Pages\Base
                   if($d=="document_date"){
                         
                        $a = explode('-',$row[$d]);
-                       $colsdata[$d][$row[$d]] = $m[$a[1]].', '.$a[0] ;    
+                       $colsdata[$d][$row[$d]] = $m[intval( $a[1]) ].', '.$a[0] ;    
                        
                   } 
 
@@ -286,7 +286,7 @@ class OLAP extends \App\Pages\Base
              
            if($hor=="document_date"){
                $a = explode('-',$n);
-               $n =   $m[$a[1]].', '.$a[0]  ;
+               $n =   $m[ intval($a[1]) ] .', '.$a[0]  ;
            }             
             
            $h[]=array('name'=>$n)  ;  
@@ -295,7 +295,7 @@ class OLAP extends \App\Pages\Base
            $vname = $n; 
            if($ver=="document_date"){
                $a = explode('-',$n);
-               $vname =   $m[$a[1]].', '.$a[0]  ;
+               $vname =   $m[intval($a[1])].', '.$a[0]  ;
            } 
            
            $da=[]  ;
@@ -332,7 +332,7 @@ class OLAP extends \App\Pages\Base
 
         $conn = \ZDB\DB::getConnect();
         
-        $concat=" concat(year(dv.document_date),'-',month(dv.document_date)) ";
+        $concat=" concat(year(dv.document_date),'-',( case when month(dv.document_date)< 10 then concat('0',month(dv.document_date) )  else concat('',month(dv.document_date) ) end  ) )  ";
         
         if($conn->dataProvider=='postgres') {
             $concat=" concat(DATE_PART( 'year',dv.document_date),'-',DATE_PART('month',dv.document_date)) as";      $data = pg_escape_bytea($data);
@@ -416,8 +416,8 @@ class OLAP extends \App\Pages\Base
         }
         if($type == 5 ) {   //платежи
             
-            $concat=" concat(year(pv.paydate),'-',month(pv.paydate)) ";
-            
+            $concat=" concat(year(pv.paydate),'-',( case when month(pv.paydate)< 10 then concat('0',month(pv.paydate) )  else concat('',month(pv.paydate) ) end  ) )  ";
+           
             if($conn->dataProvider=='postgres') {
                 $concat=" concat(DATE_PART( 'year',pv.paydate),'-',DATE_PART('month',pv.paydate)) as";      $data = pg_escape_bytea($data);
             }       
