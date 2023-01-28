@@ -27,7 +27,7 @@ class Outcome extends \App\Pages\Base
         if (strlen($brids) > 0) {
             $br = " and  branch_id in ({$brids}) ";
         }
-
+        
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));

@@ -164,6 +164,7 @@ CREATE TABLE stores (
   storename CHARACTER VARYING(64) DEFAULT NULL,
   description CHARACTER VARYING(255) DEFAULT NULL,
   branch_id INTEGER DEFAULT 0,
+  disabled SMALLINT DEFAULT 0,  
   CONSTRAINT PK_stores PRIMARY KEY (store_id)
 );
 
@@ -483,6 +484,7 @@ CREATE TABLE mfund (
   description CHARACTER VARYING(255) DEFAULT NULL,
   branch_id INT DEFAULT 0,
   detail TEXT,
+  disabled SMALLINT DEFAULT 0,  
   CONSTRAINT PK_mfund PRIMARY KEY (mf_id)
 );
 

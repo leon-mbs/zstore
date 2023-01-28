@@ -46,6 +46,7 @@ class MFList extends \App\Pages\Base
         $this->mfdetail->add(new TextArea('editmf_description'));
         $this->mfdetail->add(new TextInput('editbank'));
         $this->mfdetail->add(new TextInput('editbankacc'));
+        $this->mfdetail->add(new CheckBox('editdisabled'));
 
         $this->mfdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->mfdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
@@ -61,6 +62,8 @@ class MFList extends \App\Pages\Base
         $row->add(new Label('amount', \App\Helper::fa($this->_balance[$item->mf_id])));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+        $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
+        
     }
 
     public function deleteOnClick($sender) {
@@ -92,6 +95,7 @@ class MFList extends \App\Pages\Base
         $this->mfdetail->editmf_description->setText($this->_mf->description);
         $this->mfdetail->editbank->setText($this->_mf->bank);
         $this->mfdetail->editbankacc->setText($this->_mf->bankacc);
+        $this->mfdetail->editdisabled->setChecked($this->_mf->disabled);
     }
 
     public function addOnClick($sender) {
@@ -119,6 +123,7 @@ class MFList extends \App\Pages\Base
         $this->_mf->btranin = $this->mfdetail->editbtranin->getText();
         $this->_mf->bank = $this->mfdetail->editbank->getText();
         $this->_mf->bankacc = $this->mfdetail->editbankacc->getText();
+        $this->_mf->disabled = $this->mfdetail->editdisabled->isChecked() ? 1: 0;
 
         $this->_mf->description = $this->mfdetail->editmf_description->getText();
         if ($this->_mf->mf_name == '') {

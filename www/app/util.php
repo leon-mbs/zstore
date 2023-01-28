@@ -118,18 +118,18 @@ class Util
      */
     public static function getMonth() {
         $list = array();
-        $list[1] = H::l('january');
-        $list[2] = H::l('february');
-        $list[3] = H::l('march');
-        $list[4] = H::l('april');
-        $list[5] = H::l('may');
-        $list[6] = H::l('june');
-        $list[7] = H::l('july');
-        $list[8] = H::l('august');
-        $list[9] = H::l('september');
-        $list[10] = H::l('october');
-        $list[11] = H::l('november');
-        $list[12] = H::l('december');
+        $list[1] = "Січень";
+        $list[2] = "Лютий";
+        $list[3] = "Березень";
+        $list[4] = "Квітень";
+        $list[5] = "Травень";
+        $list[6] = "Червень";
+        $list[7] = "Липень";
+        $list[8] = "Серпень";
+        $list[9] = "Вересень";
+        $list[10] = "Жовтень";
+        $list[11] = "Листопад";
+        $list[12] = "Грудень";
         return $list;
     }
 
