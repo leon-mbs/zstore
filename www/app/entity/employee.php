@@ -20,6 +20,7 @@ class Employee extends \ZCL\DB\Entity
         $this->zhour = 0;
         $this->branch_id = 0;
         $this->children = 0;
+        $this->disabled = 0;
     }
 
     protected function beforeSave() {

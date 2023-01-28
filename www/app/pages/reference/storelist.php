@@ -9,6 +9,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
@@ -35,6 +36,7 @@ class StoreList extends \App\Pages\Base
         $this->storeform->add(new TextInput('storeeditname'));
         $this->storeform->add(new TextArea('storeeditdesc'));
         $this->storeform->add(new DropDownChoice('editbranch', $this->_blist, 0));
+        $this->storeform->add(new CheckBox('editdisabled'));
 
         $this->storeform->add(new SubmitButton('storesave'))->onClick($this, 'storesaveOnClick');
         $this->storeform->add(new Button('storecancel'))->onClick($this, 'storecancelOnClick');
@@ -61,6 +63,9 @@ class StoreList extends \App\Pages\Base
         $row->add(new Label('qty', H::fqty($conn->GetOne($sql))));
         $row->add(new ClickLink('storeedit'))->onClick($this, 'storeeditOnClick');
         $row->add(new ClickLink('storedelete'))->onClick($this, 'storedeleteOnClick');
+        $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
+        
+        
     }
 
     public function storeeditOnClick($sender) {
@@ -70,7 +75,8 @@ class StoreList extends \App\Pages\Base
         $this->storeform->storeeditname->setText($this->_store->storename);
         $this->storeform->storeeditdesc->setText($this->_store->description);
         $this->storeform->editbranch->setValue($this->_store->branch_id);
-    }
+        $this->storeform->editdisabled->setChecked($this->_store->disabled);
+     }
 
     public function storedeleteOnClick($sender) {
         if (false == \App\ACL::checkDelRef('StoreList')) {
@@ -89,8 +95,8 @@ class StoreList extends \App\Pages\Base
     public function storeaddOnClick($sender) {
         $this->storetable->setVisible(false);
         $this->storeform->setVisible(true);
-        $this->storeform->storeeditname->setText('');
-        $this->storeform->storeeditdesc->setText('');
+        $this->storeform->clean();
+
         $b = \App\System::getBranch();
         $this->storeform->editbranch->setValue($b > 0 ? $b : 0);
 
@@ -114,8 +120,9 @@ class StoreList extends \App\Pages\Base
 
             return;
         }
+        $this->_store->disabled = $this->storeform->editdisabled->isChecked() ? 1: 0;
 
-        $this->_store->Save();
+        $this->_store->save();
         $this->storeform->setVisible(false);
         $this->storetable->setVisible(true);
         $this->storetable->storelist->Reload();

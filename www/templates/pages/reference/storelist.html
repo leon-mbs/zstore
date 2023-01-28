@@ -10,6 +10,7 @@
         <div class="row" zippy="storetable">
             <div class="col-12 col-md-6">
                 <h2>Довідник складів</h2>
+                  <a zippy="storeadd" class="btn btn-primary  ">Додати</a>
                 <table class="table table-bordered  table-sm">
                     <tr>
                         <th>Назва</th>
@@ -34,7 +35,7 @@
                     </tr>
                 </table>
 
-                <a zippy="storeadd" class="btn btn-outline-primary  ">Додати</a>
+
             </div>
         </div>
         <div class="row">
@@ -57,6 +58,10 @@
                     <label for="storeeditdesc"> Опис </label>
                     <textarea class="form-control" type="text" zippy="storeeditdesc"></textarea>
                 </div>
+                <div class="form-check">
+                    <input zippy="editdisabled" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="editdisabled">Не використовується</label>
+                </div>                
                 <div class="form-group">
                     <input zippy="storesave" type="submit" value="Зберегти" class="btn btn-outline-primary  "> &nbsp;
                     <input zippy="storecancel" type="button" value="Скасувати" class="btn btn-outline-secondary ">
