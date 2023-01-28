@@ -82,7 +82,7 @@ class OLAP extends \App\Pages\Base
         $dim['firm_name'] = "Фірма";    
         $dim['username'] = "Співробітник";    
          
-        if($type==1 < 4) {
+        if($type  < 4) {
             $dim['itemname'] = "ТМЦ";    
             $dim['cat_name'] = "Категорія";    
             $dim['storename'] = "Склад";    
@@ -140,45 +140,8 @@ class OLAP extends \App\Pages\Base
         $this->reppan->detail->setVisible(false);
         
         $this->reppan->filter->clean();
-        
-        
-        $cols=[]; 
-        $_cols=[]; 
-        
-
-        $_cols[] = 'document_date';
-        $_cols[] = 'customer_name';
-        $_cols[] = 'firm_name';
-        $_cols[] = 'username';
-   
-       if($type==1 < 4) {
-          $_cols[] = 'itemname';
-          $_cols[] = 'cat_name';
-          $_cols[] = 'storename';
-         
-       }        
      
-       if($type== 4) {
-          $_cols[] = 'service_name';
-       }  
-
-       if($type==5) {
-          $_cols[] = 'mf_name';
-       }  
-   
-       if ($options['usebranch'] == 1) {
-            $id = \App\System::getBranch();
-            if ($id == 0) {
-               $_cols[] = "branch_name"; 
-            }                 
-        }
-       
-        foreach($_cols as $_d) {
-            if($_d != $hor &&  $_d != $ver ) {
-                $cols[]=$_d;
-            }
-        }
-   
+        $cols = $this->getSlices();
             
         $this->_tvars['itemname']  = in_array('itemname',$cols); 
         $this->_tvars['document_date']  = in_array('document_date',$cols); 
@@ -206,18 +169,19 @@ class OLAP extends \App\Pages\Base
         foreach($cols as $d) {
               
             $res = $conn->Execute("select distinct {$d} from ({$sql} ) t order  by {$d} " );
-            
+          
             foreach($res as $row){
             
                if(!in_array($row[$d],$colsdata[$d])) {
                    
+                  $colsdata[$d][$row[$d]] = $row[$d] ;     
                   if($d=="document_date"){
                         
                        $a = explode('-',$row[$d]);
-                      
-                       $row[$d] =   $m[$a[1]].', '.$a[0]  ;
+                       $colsdata[$d][$row[$d]] = $m[$a[1]].', '.$a[0] ;    
+                       
                   } 
-                  $colsdata[$d][$row[$d]] = $row[$d];     
+
                }
                
             }
@@ -266,19 +230,41 @@ class OLAP extends \App\Pages\Base
         $sql = $this->getBaseSql($type)  ;
         
         $data="";
-        if($type==1) {
+        if($type==1 ||  $type==4) {
            $data = "sum(outprice) "   ; 
         }
         if($type==2) {
            $data = "sum(outprice-partion) "  ;  
         }
+        if($type==3) {
+           $data = "sum(partion) "  ;  
+        }
+        if($type==5) {
+           $data = "sum(amount) "  ;  
+        }
         
-        $dver = $conn->GetCol("select distinct coalesce( {$ver},'Н/Д') from ({$sql} ) t order  by {$ver} " );
-        $dhor =  $conn->GetCol("select distinct coalesce( {$hor},'Н/Д') from ({$sql} ) t order  by {$hor} " );
+        $where  = "where  1=1" ;
+        $slices = $this->getSlices()  ;
+        foreach($slices as $sl) {
+               $c = $this->getComponent('sl'.$sl) ;
+               if($c != null) {
+                  
+                  $v = $c->getValue();    
+                  
+                  if($v != '0') {
+                     $where = $where . " and {$sl}=". $conn->qstr($v); 
+                  }
+                  
+               }         
+        }
+        
+        
+        $dver = $conn->GetCol("select distinct coalesce( {$ver},'Н/Д') from ({$sql} ) t {$where} order  by {$ver} " );
+        $dhor = $conn->GetCol("select distinct coalesce( {$hor},'Н/Д') from ({$sql} ) t {$where} order  by {$hor} " );
                     
         
         
-        $sql = "select {$ver},{$hor}, {$data} as amount from ({$sql} ) t group by  {$ver},{$hor}  order by  {$ver},{$hor}  ";
+        $sql = "select {$ver},{$hor}, {$data} as amount from ({$sql} ) t {$where} group by  {$ver},{$hor}  order by  {$ver},{$hor}  ";
        
         
         $detail = [];
@@ -327,8 +313,9 @@ class OLAP extends \App\Pages\Base
         }
  
 
-        $header = array('from'    => \App\Helper::fd($this->startform->stfrom->getDate()),
-                        'to'      => \App\Helper::fd($this->startform->stto->getDate()),
+        $header = array('from'    => H::fd($this->startform->stfrom->getDate()),
+                        'to'      => H::fd($this->startform->stto->getDate()),
+                        "cols"    => count($h)+1,
                         "hor"    => $h,
                         "ver"    => $v
                          
@@ -376,7 +363,7 @@ class OLAP extends \App\Pages\Base
         if($type < 4 ) {   //товар
             
             if($type==3) {
-                 $where .=  " and   ev.tag in(-2, -8 ) ";
+                 $where .=  " and   ev.tag in(-2, -8 ) ";  
             }  else {
                  $where .=  " and   ev.tag in(-1, -4 ) ";
             }
@@ -404,10 +391,108 @@ class OLAP extends \App\Pages\Base
                 ";
         }
         
- 
+        if($type == 4 ) {   //услуга
+            
+     
+            
+             $sql = "SELECT  ss.service_name,
+                COALESCE(c.customer_name,'Фіз. особа') AS customer_name, 
+                {$concat} as document_date ,
+                COALESCE(b.branch_name,'Н/Д') AS branch_name,
+                COALESCE(f.firm_name,'Н/Д') AS firm_name,
+                COALESCE(uv.username ,'Н/Д') AS username,
+                COALESCE(ev.outprice,0) AS outprice   
+                FROM entrylist_view ev   
+                JOIN documents dv ON ev.document_id = dv.document_id
+                JOIN services ss ON ev.service_id = ss.service_id
 
+                LEFT JOIN customers c ON dv.customer_id = c.customer_id
+                LEFT JOIN users_view uv  ON dv.user_id = uv.user_id 
+                LEFT JOIN firms f ON dv.firm_id = f.firm_id 
+                LEFT JOIN branches b ON dv.branch_id = b.branch_id
+                where  {$where}
+                
+                ";
+        }
+        if($type == 5 ) {   //платежи
+            
+            $concat=" concat(year(pv.paydate),'-',month(pv.paydate)) ";
+            
+            if($conn->dataProvider=='postgres') {
+                $concat=" concat(DATE_PART( 'year',pv.paydate),'-',DATE_PART('month',pv.paydate)) as";      $data = pg_escape_bytea($data);
+            }       
+            
+            $where = " pv.amount <> 0  and  pv.paydate >= " . $conn->DBDate($this->startform->stfrom->getDate()) . " 
+                        AND pv.paydate <= " . $conn->DBDate($this->startform->stto->getDate()) ;
+         
+     
+   
+            
+             $sql = "SELECT  pv.mf_name, 
+                COALESCE(c.customer_name,'Фіз. особа') AS customer_name, 
+                {$concat} as document_date ,
+                COALESCE(b.branch_name,'Н/Д') AS branch_name,
+                COALESCE(f.firm_name,'Н/Д') AS firm_name,
+                COALESCE(uv.username ,'Н/Д') AS username,
+                COALESCE(pv.amount,0) AS amount 
+                FROM paylist_view pv   
+                JOIN documents dv ON pv.document_id = dv.document_id
+                LEFT JOIN customers c ON dv.customer_id = c.customer_id
+                LEFT JOIN users_view uv  ON dv.user_id = uv.user_id 
+                LEFT JOIN firms f ON dv.firm_id = f.firm_id 
+                LEFT JOIN branches b ON dv.branch_id = b.branch_id
+                where  {$where}
+                
+                ";
+        }
+
+       
         return $sql;
     }
 
+    //срезы
+    private  function getSlices( ){
+        $type = $this->startform->sttype->getValue();
+        $hor = $this->startform->sthor->getValue();
+        $ver = $this->startform->stver->getValue();
+        $options=\App\System::getOptions('common')  ;
+        $cols=[]; 
+        $_cols=[]; 
+        
+
+        $_cols[] = 'document_date';
+        $_cols[] = 'customer_name';
+        $_cols[] = 'firm_name';
+        $_cols[] = 'username';
    
+       if($type < 4) {
+          $_cols[] = 'itemname';
+          $_cols[] = 'cat_name';
+          $_cols[] = 'storename';
+         
+       }        
+     
+       if($type== 4) {
+          $_cols[] = 'service_name';
+       }  
+
+       if($type==5) {
+          $_cols[] = 'mf_name';
+       }  
+   
+       if ($options['usebranch'] == 1) {
+            $id = \App\System::getBranch();
+            if ($id == 0) {
+               $_cols[] = "branch_name"; 
+            }                 
+        }
+       
+        foreach($_cols as $_d) {
+            if($_d != $hor &&  $_d != $ver ) {
+                $cols[]=$_d;
+            }
+        }   
+   
+        return  $cols;
+    }
 }

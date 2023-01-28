@@ -4,7 +4,7 @@
     <tr>
 
         <td align="center" colspan="4">
-            Період з{{datefrom}} по {{dateto}} <br> <br>
+            Період з {{datefrom}} по {{dateto}} <br> <br>
         </td>
     </tr>
     {{#_type1}}
