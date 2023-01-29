@@ -361,7 +361,7 @@ class OrderFood extends \App\Pages\Base
                     $pos->save();
                     $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
                 } else {
-                    $this->setError("ppo_noretnumber");
+                    $this->setError("Не повернено фіскальний номер");
                     return;
                 }
             }

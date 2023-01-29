@@ -212,7 +212,7 @@ class IssueList extends \App\Pages\Base
 
         $issue->save();
         if ($post->id==0) {
-            $issue->addStatusLog(H::l("iscreated"));
+            $issue->addStatusLog("Створення завдання");
         }
         return "";
      }
@@ -226,19 +226,19 @@ class IssueList extends \App\Pages\Base
         if($issue->status != $post->status) {
            $issue->status = $post->status;   
            $stlist = Issue::getStatusList()  ;
-           $desc=H::l("isstchanged") . " <b>" . $stlist[$issue->status] . "</b>"  ;
+           $desc="Статус змінено на  <b>" . $stlist[$issue->status] . "</b>"  ;
         }
 
         if($issue->priority != $post->priority){
            $issue->priority = $post->priority;    
            $prlist = Issue::getPriorityList() ;
-           $desc=H::l("isprchanged") . " <b>" . $prlist[$issue->priority] . "</b>" ;
+           $desc="Пріоритет змінено на  <b>" . $prlist[$issue->priority] . "</b>" ;
         }        
         
         if($issue->user_id != $post->user_id){
           $issue->user_id = $post->user_id;    
           $user = \App\Entity\User::load($issue->user_id) ;
-          $desc=H::l("isuserchanged") . " <b>" . $user->username . "</b>";
+          $desc="Завдання переведено на  <b>" . $user->username . "</b>";
         }
         
     
