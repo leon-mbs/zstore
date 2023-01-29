@@ -196,7 +196,7 @@ class Options extends \App\Pages\Base
 
         $this->api->add(new TextInput('akey'));
         $this->api->add(new TextInput('aexp'));
-        $this->api->add(new DropDownChoice('atype', array('1' => H::l('apijwt'), '2' => H::l('apibasic'), '3' => H::l('apinologin')), 1))->onChange($this, 'onApiType');
+        $this->api->add(new DropDownChoice('atype', array('1' => "Авторизація з JWT (Bearer)", '2' => "Basic авторизація", '3' => "Автоматична авторизація"), 1))->onChange($this, 'onApiType');
         $api = System::getOptions("api");
         if (!is_array($api)) {
             $api = array('exp' => 60, 'key' => 'qwerty', 'atype' => 1);

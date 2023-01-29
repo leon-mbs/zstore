@@ -88,14 +88,14 @@ class Project extends \ZCL\DB\Entity
 
     public static function getStatusList() {
         $list = array();
-        $list[self::STATUS_NEW] = \App\Helper::l('pr_new');
+        $list[self::STATUS_NEW] = "Новий";
 
-        $list[self::STATUS_INPROCESS] = \App\Helper::l('pr_inp');
-        $list[self::STATUS_WA] = \App\Helper::l('pr_wa');
-        $list[self::STATUS_SHIFTED] = \App\Helper::l('pr_shifted');
-        $list[self::STATUS_WAITPAIMENT] = \App\Helper::l('pr_wp');
-        $list[self::STATUS_REOPENED] = \App\Helper::l('pr_reopened');
-        $list[self::STATUS_CLOSED] = \App\Helper::l('pr_closed');
+        $list[self::STATUS_INPROCESS] = "В роботі";
+        $list[self::STATUS_WA] = "На затвердженні";
+        $list[self::STATUS_SHIFTED] = "Відкладений";
+        $list[self::STATUS_WAITPAIMENT] = "Очікує оплату";
+        $list[self::STATUS_REOPENED] = "Перевідкритий";
+        $list[self::STATUS_CLOSED] = "Закритий";
         return $list;
     }
 

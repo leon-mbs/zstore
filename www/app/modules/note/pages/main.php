@@ -127,7 +127,7 @@ class Main extends \App\Pages\Base
             $newtopic->user_id = System::getUser()->user_id;
             $newtopic->title = $topic->title;
             if ($node->node_id == $topic->node_id) {
-                $newtopic->title = $topic->title . " (".H::l("thecopy").")";
+                $newtopic->title = $topic->title . " (Копія)";
             }
             $newtopic->detail = $topic->detail;
             $newtopic->save();

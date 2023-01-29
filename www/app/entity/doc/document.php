@@ -692,7 +692,7 @@ class Document extends \ZCL\DB\Entity
             $n = new \App\Entity\Notify();
             $n->user_id = \App\Entity\Notify::SYSTEM;
 
-            $n->message = Helper::l('deleteddoc', System::getUser()->username, $this->document_number);
+            $n->message = "Користувач ".System::getUser()->username." видалив раніше проведений документ " .$this->document_number  ;
             $n->save();
         }
     }

@@ -80,7 +80,7 @@ abstract class JsonRPC
          
             if ($decoded->exp < time()) {
 
-                return self::error(null, -1002, \App\Helper::l('apitokenexpired'));
+                return self::error(null, -1002, "Прострочений токен");
             }
             $user = \App\Entity\User::load($decoded->user_id);
         }
@@ -95,7 +95,7 @@ abstract class JsonRPC
             $user = \App\Entity\User::getByLogin('admin');
         }
         if ($user == null || $user == false) {
-            return self::error(null, -1001, \App\Helper::l('apiusernotfound'));
+            return self::error(null, -1001, "Користувач не знайдений");
         }
         \App\System::setUser($user);
 
@@ -244,7 +244,7 @@ abstract class JsonRPC
 
 
         if (method_exists($this, $method) == false) {
-            return self::error($id, -1005, \App\Helper::l('apimethodnotfound', $method));
+            return self::error($id, -1005, "Метод `{$method}` не знайдено" );
         }
 
         try {
@@ -282,7 +282,7 @@ abstract class JsonRPC
      * Returns an error object.
      */
     private static function parseError() {
-        return self::error(null, -1003, \App\Helper::l('apiinvalidformat'));
+        return self::error(null, -1003, "Невірний формат запиту");
     }
 
     /**
@@ -297,7 +297,7 @@ abstract class JsonRPC
      * Returns an error object.
      */
     private static function requestError($id = null) {
-        return self::error($id, -1004, \App\Helper::l('apiinvalidrequest'));
+        return self::error($id, -1004, "Некоректний запит");
     }
 
     /**

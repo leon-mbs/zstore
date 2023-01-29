@@ -175,7 +175,7 @@ class items extends  JsonRPC
         }
 
         if (strlen($item->itemname) == 0) {
-            throw new \Exception(H::l("apientername"));
+            throw new \Exception("Не вказано назву");
         }
 
         $item->save();
