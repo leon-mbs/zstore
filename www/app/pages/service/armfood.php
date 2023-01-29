@@ -989,7 +989,7 @@ class ARMFood extends \App\Pages\Base
                                 $this->_pos->save();
                                 $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
                             } else {
-                                $this->setError("ppo_noretnumber");
+                                $this->setError("Не повернено фіскальний номер");
                                  $conn->RollbackTrans();
                                 return;
                             }
@@ -1198,7 +1198,7 @@ class ARMFood extends \App\Pages\Base
             $this->setErrorTopPage($ret['data']);
             return false;
         } else {
-            $this->setSuccess("ppo_shiftopened");
+            $this->setSuccess("Зміна відкрита");
             if ($ret['doclocnumber'] > 0) {
                 $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                 $this->_pos->save();
@@ -1243,7 +1243,7 @@ class ARMFood extends \App\Pages\Base
                 $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                 $this->_pos->save();
             } else {
-                $this->setError("ppo_noretnumber");
+                $this->setError("Не повернено фіскальний номер");
                 return;
             }
         }
@@ -1264,7 +1264,7 @@ class ARMFood extends \App\Pages\Base
             $this->setErrorTopPage($ret['data']);
             return false;
         } else {
-            $this->setSuccess("ppo_shiftclosed");
+            $this->setSuccess("Зміна закрита");
             if ($ret['doclocnumber'] > 0) {
                 $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                 $this->_pos->save();

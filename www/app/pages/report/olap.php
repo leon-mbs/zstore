@@ -259,12 +259,12 @@ class OLAP extends \App\Pages\Base
         }
         
         
-        $dver = $conn->GetCol("select distinct coalesce( {$ver},'Н/Д') from ({$sql} ) t {$where} order  by {$ver} " );
-        $dhor = $conn->GetCol("select distinct coalesce( {$hor},'Н/Д') from ({$sql} ) t {$where} order  by {$hor} " );
+        $dver = $conn->GetCol("select distinct coalesce( {$ver},'Н/Д') as {$ver} from ({$sql} ) t {$where} order  by {$ver} " );
+        $dhor = $conn->GetCol("select distinct coalesce( {$hor},'Н/Д') as {$hor} from ({$sql} ) t {$where} order  by {$hor} " );
                     
         
         
-        $sql = "select {$ver},{$hor}, {$data} as amount from ({$sql} ) t {$where} group by  {$ver},{$hor}  order by  {$ver},{$hor}  ";
+        $sql = "select {$ver},{$hor}, {$data} as amount from ({$sql} ) t {$where} group by  {$ver},{$hor}  ";
        
         
         $detail = [];
@@ -335,7 +335,7 @@ class OLAP extends \App\Pages\Base
         $concat=" concat(year(dv.document_date),'-',( case when month(dv.document_date)< 10 then concat('0',month(dv.document_date) )  else concat('',month(dv.document_date) ) end  ) )  ";
         
         if($conn->dataProvider=='postgres') {
-            $concat=" concat(DATE_PART( 'year',dv.document_date),'-',DATE_PART('month',dv.document_date)) as";      $data = pg_escape_bytea($data);
+            $concat=" concat(DATE_PART( 'year',dv.document_date),'-',DATE_PART('month',dv.document_date))  ";   
         }       
         
         $where = "  dv.document_date >= " . $conn->DBDate($this->startform->stfrom->getDate()) . " 
@@ -419,7 +419,7 @@ class OLAP extends \App\Pages\Base
             $concat=" concat(year(pv.paydate),'-',( case when month(pv.paydate)< 10 then concat('0',month(pv.paydate) )  else concat('',month(pv.paydate) ) end  ) )  ";
            
             if($conn->dataProvider=='postgres') {
-                $concat=" concat(DATE_PART( 'year',pv.paydate),'-',DATE_PART('month',pv.paydate)) as";      $data = pg_escape_bytea($data);
+                $concat=" concat(DATE_PART( 'year',pv.paydate),'-',DATE_PART('month',pv.paydate)) ";     
             }       
             
             $where = " pv.amount <> 0  and  pv.paydate >= " . $conn->DBDate($this->startform->stfrom->getDate()) . " 
