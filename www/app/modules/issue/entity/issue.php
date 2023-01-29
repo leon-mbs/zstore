@@ -91,14 +91,14 @@ class Issue extends \ZCL\DB\Entity
 
     public static function getStatusList() {
         $list = array();
-        $list[self::STATUS_NEW] = \App\Helper::l('is_new');
-        $list[self::STATUS_INPROCESS] = \App\Helper::l('is_inp');
-        $list[self::STATUS_QA] = \App\Helper::l('is_qa');
-        $list[self::STATUS_REOPENED] = \App\Helper::l('is_reopened');
-        $list[self::STATUS_RETURNED] = \App\Helper::l('is_ret');
-        $list[self::STATUS_WA] = \App\Helper::l('is_wa');
-        $list[self::STATUS_SHIFTED] = \App\Helper::l('is_shifted');
-        $list[self::STATUS_CLOSED] = \App\Helper::l('is_closed');
+        $list[self::STATUS_NEW] = "Нове";
+        $list[self::STATUS_INPROCESS] = "В роботі";
+        $list[self::STATUS_QA] = "На перевірці";
+        $list[self::STATUS_REOPENED] = "Перевідкрите";
+        $list[self::STATUS_RETURNED] =  "Повернене на доопрацювання";
+        $list[self::STATUS_WA] = "На затвердженні";
+        $list[self::STATUS_SHIFTED] = "Відкладене";
+        $list[self::STATUS_CLOSED] = "Закрите";
 
         return $list;
     }
@@ -108,9 +108,9 @@ class Issue extends \ZCL\DB\Entity
 
   
         
-        $list[self::PRIORITY_HIGH] = \App\Helper::l('is_sthigh');
-        $list[self::PRIORITY_NORMAL] = \App\Helper::l('is_stnorm');
-        $list[self::PRIORITY_LOW] = \App\Helper::l('is_stlow');
+        $list[self::PRIORITY_HIGH] = "Високий";
+        $list[self::PRIORITY_NORMAL] = "Нормальний";
+        $list[self::PRIORITY_LOW] = "Низький";
         return $list;
     }
 

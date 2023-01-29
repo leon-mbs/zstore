@@ -299,7 +299,7 @@ class ReturnIssue extends \App\Pages\Base
                 }
 
                 if (strlen($this->_doc->headerdata["docnumberback"]) == 0) {
-                    $this->setError("ppo_returndoc");
+                    $this->setError("Для фіскалізації створіть повернення на основі фіскального чека");
                     return;
                 }
 

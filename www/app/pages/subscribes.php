@@ -143,16 +143,16 @@ class Subscribes extends \App\Pages\Base
         $this->_sub->attach = $this->editform->editattach->isCheCked() ? 1 : 0;
 
         if ($this->_sub->msg_type == 0) {
-            $this->setError('sb_errmtype');
+            $this->setError("Не вказано тип повідомлення");
             return;
         }
         if ($this->_sub->reciever_type == Subscribe::RSV_USER && $this->_sub->user_id == 0) {
-            $this->setError('sb_erruser');
+            $this->setError("Не вказано користувача");
             return;
         }
 
         if (strlen($this->_sub->msgtext) == 0) {
-            $this->setError('sb_errtext');
+            $this->setError("Не вказано текст повідомлення");
             return;
         }
         $this->_sub->save();

@@ -425,7 +425,7 @@ class Base extends \Zippy\Html\WebPage
                 $n = (int)str_replace(".", "", str_replace("v", "", $v['version']));
 
                 if ($n > $c) {
-                   $this->_tvars["toasts"][] = array('title' => "title:  \"" . Helper::l("newversion") . " {$v['version']}  <a target=\\\"_blank\\\" href=\\\"https://zippy.com.ua/zstore#newver\\\">Перейти...</a>\" ");
+                   $this->_tvars["toasts"][] = array('title' => "title:  \"Доступна нова версiя {$v['version']}  <a target=\\\"_blank\\\" href=\\\"https://zippy.com.ua/zstore#newver\\\">Перейти...</a>\" ");
        
                 }
 

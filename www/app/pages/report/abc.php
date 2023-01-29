@@ -26,11 +26,11 @@ class ABC extends \App\Pages\Base
             return;
         }
 
-        $this->typelist[1] = H::l('abc1');
-        $this->typelist[2] = H::l('abc2');
-        $this->typelist[3] = H::l('abc3');
-        $this->typelist[4] = H::l('abc4');
-        $this->typelist[5] = H::l('abc5');
+        $this->typelist[1] = "Товари, дохід";
+        $this->typelist[2] = "Постачальники, об`єм поставок";
+        $this->typelist[3] = "Покупці, об`єм продаж";
+        $this->typelist[4] = "Послуги, виторг";
+        $this->typelist[5] = "Покупці, прибуток";
 
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');

@@ -132,7 +132,7 @@ class DocList extends \App\Pages\Base
             $doc->headerdata['paperless'] = 0;
             $doc->save();
             if(strlen($c->email)==0){
-                return $name." ok ".H::l("noemail");                                 
+                return $name." ok. Не вказано e-mail";                                 
             }
                 
             return $name." ok";                 

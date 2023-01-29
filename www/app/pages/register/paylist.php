@@ -154,7 +154,7 @@ class PayList extends \App\Pages\Base
         $user = \App\System::getUser();
 
 
-        \App\Entity\Notify::toSystemLog(H::l('deletedpay', $user->username, $doc->document_number, $sender->notes->getText())) ;
+        \App\Entity\Notify::toSystemLog( "Користувач {$user->username} видалив платіж з документа {$doc->document_number}. Підстава: " . $sender->notes->getText()  ) ;
         
         $sender->notes->setText('');
         $this->setSuccess('payment_canceled');

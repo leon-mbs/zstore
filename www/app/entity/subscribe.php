@@ -75,7 +75,7 @@ class Subscribe extends \ZCL\DB\Entity
 
     public static function getEventList() {
         $list = array();
-        $list[self::EVENT_DOCSTATE] = H::l("sb_docstate");
+        $list[self::EVENT_DOCSTATE] = "Зміна статусу документа";
 
         return $list;
     }
@@ -85,16 +85,16 @@ class Subscribe extends \ZCL\DB\Entity
         $sms = \App\System::getOptions('sms')  ;
         
         $list = array();
-        $list[self::MSG_NOTIFY] = H::l("sb_msgnotify");
-        $list[self::MSG_EMAIL] = H::l("sb_msgemail");
-        $list[self::MSG_SMS] = H::l("sb_msgsms");
-        $list[self::MSG_SMS] = H::l("sb_msgsms");
+        $list[self::MSG_NOTIFY] = "Системне повідомлення";
+        $list[self::MSG_EMAIL] = "E-mail";
+        $list[self::MSG_SMS] = "SMS";
+
        
         if($sms['smstype']==2) {
-            $list[self::MSG_VIBER] =  H::l("sb_msgviber");            
+            $list[self::MSG_VIBER] =  "Viber";            
         }
         if(strlen(\App\System::getOption("common",'tbtoken'))>0) {
-            $list[self::MSG_BOT] = H::l("sb_msgbot");
+            $list[self::MSG_BOT] = "Телеграм бот";
 
         }
 
@@ -104,9 +104,9 @@ class Subscribe extends \ZCL\DB\Entity
 
     public static function getRecieverList() {
         $list = array();
-        $list[self::RSV_CUSTOMER] = H::l("sb_rsvcust");
-        $list[self::RSV_DOCAUTHOR] = H::l("sb_rsvda");
-        $list[self::RSV_USER] = H::l("sb_rsvuser");
+        $list[self::RSV_CUSTOMER] = "Контрагент документа";
+        $list[self::RSV_DOCAUTHOR] = "Автор документа";
+        $list[self::RSV_USER] = "Користувач системи";
 
         return $list;
     }
@@ -243,17 +243,17 @@ class Subscribe extends \ZCL\DB\Entity
             }
         } else {
             if ($doc->payamount > 0 && $doc->headerdata['payed'] == 0) {
-                $header['mf'] = H::l("credit");
+                $header['mf'] = "Постоплата (кредит)";
             }
             if ($doc->payamount == 0) {
-                $header['mf'] = H::l("prepaid");
+                $header['mf'] = "Передоплата";
             }
         }
         if ($doc->headerdata['payed'] == 0 && $doc->payamount > 0) {
-            $header['mf'] = \App\Helper::l("credit");
+            $header['mf'] = "Постоплата (кредит)";
         }
         if ($doc->headerdata['payed'] == 0 && $doc->payamount == 0) {
-            $header['mf'] = \App\Helper::l("prepaid");
+            $header['mf'] = "Передоплата";
         }
         if ($doc->headerdata['payed'] > 0) {
             $header['payed'] = \App\Helper::fa($doc->headerdata['payed']);
