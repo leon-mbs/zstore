@@ -28,7 +28,7 @@ class common extends  JsonRPC
      // v6.3.0       $jwt = \Firebase\JWT\JWT::encode($payload, $key, 'HS256');
           
         } else {
-            throw new \Exception(\App\Helper::l('invalidlogin'), -1000);
+            throw new \Exception("Невірний логін", -1000);
         }
 
         return $jwt;

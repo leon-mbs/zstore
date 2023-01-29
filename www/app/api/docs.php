@@ -104,10 +104,10 @@ class docs extends JsonRPC
                 }
             }
         } else {
-            throw new \Exception(H::l("apinoitems"));
+            throw new \Exception("Не задані ТМЦ");
         }
         if (count($details) == 0) {
-            throw new \Exception(H::l("apinoitems"));
+            throw new \Exception("Не задані ТМЦ");
         }
         $doc->packDetails('detaildata', $details);
         if ($args['total'] > 0) {
@@ -170,7 +170,7 @@ class docs extends JsonRPC
         if (is_array($args['items']) && count($args['items']) > 0) {
             foreach ($args['items'] as $it) {
                 if (strlen($it['item_code']) == 0) {
-                    throw new \Exception(H::l("apientercode"));
+                    throw new \Exception("Не заданий артикул");
                 }
                 $item = Item::getFirst("disabled<> 1 and item_code=" . Item::qstr($it['item_code']));
 
@@ -188,10 +188,10 @@ class docs extends JsonRPC
                 }
             }
         } else {
-            throw new \Exception(H::l("apinoitems"));
+            throw new \Exception("Не задані позиції");
         }
         if (count($details) == 0) {
-            throw new \Exception(H::l("apinoitems"));
+            throw new \Exception("Не задані позиції"));
         }
         $doc->packDetails('detaildata', $details);
         if ($args['total'] > 0) {
@@ -253,7 +253,7 @@ class docs extends JsonRPC
         if (is_array($args['items']) && count($args['items']) > 0) {
             foreach ($args['items'] as $it) {
                 if (strlen($it['item_code']) == 0) {
-                    throw new \Exception(H::l("apientercode"));
+                    throw new \Exception("Не задано артикул");
                 }
                 $item = Item::getFirst("disabled<> 1 and item_code=" . Item::qstr($it['item_code']));
 
@@ -270,10 +270,10 @@ class docs extends JsonRPC
                 }
             }
         } else {
-            throw new \Exception(H::l("apinoitems"));
+            throw new \Exception("Не задані позиції"));
         }
         if (count($details) == 0) {
-            throw new \Exception(H::l("apinoitems"));
+            throw new \Exception("Не задані позиції"));
         }
         $doc->packDetails('detaildata', $details);
         if ($args['total'] > 0) {
@@ -343,7 +343,7 @@ class docs extends JsonRPC
         if (is_array($args['items']) && count($args['items']) > 0) {
             foreach ($args['items'] as $it) {
                 if (strlen($it['item_code']) == 0) {
-                    throw new \Exception(H::l("apientercode"));
+                    throw new \Exception("Не задано артикул");
                 }
                 $item = Item::getFirst("disabled<> 1 and item_code=" . Item::qstr($it['item_code']));
 
@@ -361,10 +361,10 @@ class docs extends JsonRPC
                 }
             }
         } else {
-            throw new \Exception(H::l("apinoitems"));
+            throw new \Exception("Не задані позиції");
         }
         if (count($details) == 0) {
-            throw new \Exception(H::l("apinoitems"));
+            throw new \Exception("Не задані позиції");
         }
         $doc->packDetails('detaildata', $details);
         if ($args['total'] > 0) {
@@ -423,7 +423,7 @@ class docs extends JsonRPC
         if (is_array($args['items']) && count($args['items']) > 0) {
             foreach ($args['items'] as $it) {
                 if (strlen($it['item_code']) == 0) {
-                    throw new \Exception(H::l("apientercode"));
+                    throw new \Exception("Не задано артикул");
                 }
                 $item = Item::getFirst("disabled<> 1 and item_code=" . Item::qstr($it['item_code']));
 
@@ -440,10 +440,10 @@ class docs extends JsonRPC
                 }
             }
         } else {
-            throw new \Exception(H::l("apinoitems"));
+            throw new \Exception("Не задані позиції");
         }
         if (count($details) == 0) {
-            throw new \Exception(H::l("apinoitems"));
+            throw new \Exception("Не задані позиції");
         }
         $doc->packDetails('detaildata', $details);
         if ($args['total'] > 0) {
@@ -497,7 +497,7 @@ class docs extends JsonRPC
             $doc = Document::getFirst(" content like {$num1}  or content like {$num2} ");
         }
         if ($doc == null) {
-            throw new \Exception(H::l("apinodoc"));
+            throw new \Exception("Документ не  знайдено");
         }
 
         $user = \App\System::getUser();
@@ -507,7 +507,7 @@ class docs extends JsonRPC
         $n->sender_id = $user->user_id;
 
         $n->dateshow = time();
-        $n->message = H::l("apiasccancel", $doc->document_number, $args['reason']);
+        $n->message = "Запит на  видалення  документу {$doc->document_number}. Причина " . $args['reason'];
         $n->save();
     }
 
@@ -536,7 +536,7 @@ class docs extends JsonRPC
         if (is_array($args['items']) && count($args['items']) > 0) {
             foreach ($args['items'] as $it) {
                 if (strlen($it['item_code']) == 0) {
-                    throw new \Exception(H::l("apientercode"));
+                    throw new \Exception("Не зажано артикул");
                 }
                 $item = Item::getFirst("disabled<> 1 and item_code=" . Item::qstr($it['item_code']));
 
@@ -552,10 +552,10 @@ class docs extends JsonRPC
                 }
             }
         } else {
-            throw new \Exception(H::l("apinoitems"));
+            throw new \Exception("Не задані позиції"));
         }
         if (count($details) == 0) {
-            throw new \Exception(H::l("apinoitems"));
+            throw new \Exception("Не задані позиції"));
         }
         $doc->packDetails('detaildata', $details);
 
@@ -624,10 +624,10 @@ class docs extends JsonRPC
                 }
             }
         } else {
-            throw new \Exception(H::l("apinoitems"));
+            throw new \Exception("Не задані позиції");
         }
         if (count($details) == 0) {
-            throw new \Exception(H::l("apinoitems"));
+            throw new \Exception("Не задані позиції");
         }
         $doc->packDetails('detaildata', $details);
         if ($args['total'] > 0) {

@@ -106,7 +106,7 @@ class Main extends \App\Pages\Base
              $topic = Topic::load($args[1] );
 
              if ($topic->acctype > 0 && $node->ispublic != 1) {
-                $this->setError('tn_nopublictopic');
+                $this->setError("Не можна додавати приватний топік у публічний вузол");
 
                 return;
              }
@@ -119,7 +119,7 @@ class Main extends \App\Pages\Base
              $topic = Topic::load($args[1] );
 
              if ($topic->acctype > 0 && $node->ispublic != 1) {
-                $this->setError('tn_nopublictopic');
+                $this->setError("Не можна додавати приватний топік у публічний вузол");
 
                 return;
              }
@@ -169,7 +169,7 @@ class Main extends \App\Pages\Base
 
         $node = Node::load($args[1]);
         if ($topic->acctype > 0 && $node->ispublic != 1) {
-             return  H::l('tn_nopublictopic') ;
+             return  H::l("Не можна додавати приватний топік у публічний вузол") ;
         }
 
         $topic->save();

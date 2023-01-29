@@ -139,7 +139,7 @@ class items extends  JsonRPC
     // запись  ТМЦ.
     public function save($args) {
         if (strlen($args['item_code']) == 0) {
-            throw new \Exception(H::l("apientercode"));
+            throw new \Exception("Не задано артикул");
         }
 
         $code = Item::qstr($args['item_code']);

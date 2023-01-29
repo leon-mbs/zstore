@@ -56,10 +56,10 @@ class ItemSel extends \Zippy\Html\PageFragment
 
         $table = $this->witempan->add(new DataTable('witemselt', $ds, true, true));
         $table->setPageSize(H::getPG());
-        $table->AddColumn(new Column('itemname', H::l('name'), true, true, true));
-        $table->AddColumn(new Column('item_code', H::l('code'), true, true, false));
-        $table->AddColumn(new Column('bar_code', H::l('barcode'), true, true, false));
-        $table->AddColumn(new Column('manufacturer', H::l('brand'), true, true, false));
+        $table->AddColumn(new Column('itemname', "Назва", true, true, true));
+        $table->AddColumn(new Column('item_code', "Артикул", true, true, false));
+        $table->AddColumn(new Column('bar_code', "Штрих-код", true, true, false));
+        $table->AddColumn(new Column('manufacturer', "Бренд", true, true, false));
 
         $table->setCellClickEvent($this, 'OnSelect');
         
