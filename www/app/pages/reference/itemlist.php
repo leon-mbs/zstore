@@ -197,10 +197,10 @@ class ItemList extends \App\Pages\Base
         if($item->hasAction() ) {
             $title="";
             if(doubleval($item->actionprice) > 0) {
-                 $title= H::l("actionpricetitile",H::fa($item->actionprice));                
+                 $title= "Акційна ціна " . H::fa($item->actionprice);                
             }
             if(doubleval($item->actiondisc) > 0) {
-                 $title= H::l("actiondisctitile",H::fa($item->actiondisc));                
+                 $title= "Акційна знижка ". H::fa($item->actiondisc) ."%";                
             }
             $row->hasaction->setAttribute('title',$title)  ;          
         }

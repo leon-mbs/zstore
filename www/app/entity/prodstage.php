@@ -73,17 +73,17 @@ class ProdStage extends \ZCL\DB\Entity
 
         switch($state) {
             case ProdStage::STATE_NEW:
-                return Helper::l('stpp_new');
+                return "Новий";
             case ProdStage::STATE_INPROCESS:
-                return Helper::l('stpp_inprocess');
+                return "Виконується";
             case ProdStage::STATE_FINISHED:
-                return Helper::l('stpp_finished');
+                return "Виконаний";
             case ProdStage::STATE_STOPPED:
-                return Helper::l('stpp_stopped');
-
+                return "Припинено";
+         
 
             default:
-                return Helper::l('st_unknow');
+                return "Невідомий статус";
         }
     }
 }

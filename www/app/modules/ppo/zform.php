@@ -275,11 +275,11 @@ class ZForm extends \App\Pages\Base
          
          $ret = PPOHelper::shiftTotal($pos->fiscalnumber,$firm) ;
          if($ret == false) {
-             $this->setError(\App\Helper::l("noserverorshift") );
+             $this->setError("Сервер недоступний або зміна закрита");
              return ;
          } 
          if(!is_array($ret['Totals'])) {
-             $this->setError(\App\Helper::l("noserverorshift")) ;
+             $this->setError("Сервер недоступний або зміна закрита") ;
              return ;
          } 
          $zt="";

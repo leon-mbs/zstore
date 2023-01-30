@@ -299,7 +299,7 @@ class Order extends Base
 
         $number = preg_replace('/[^0-9]/', '', $order->document_number);
     
-        System::setSuccessMsg( \App\Helper::l("createdorder"), $number) ;
+        System::setSuccessMsg( "Створено замовлення номер " . $number) ;
           
         if($payment == 1) {
             

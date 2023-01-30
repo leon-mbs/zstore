@@ -112,7 +112,7 @@ class PPOHelper
                 $cert = @unserialize(@base64_decode($firm->ppocert));
 
                 if ($key == null || $cert == null) {
-                    $msg = H::l("ppokeynotloaded");
+                    $msg = "Не завантажений ключ або сертифікат";
                     $msg = str_replace("'","\"",$msg) ;
                     return array('success' => false, 'data' => $msg);
                 }

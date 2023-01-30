@@ -467,67 +467,67 @@ class Document extends \ZCL\DB\Entity
 
         switch($state) {
             case Document::STATE_NEW:
-                return Helper::l('st_new');
+                return "Новий";
             case Document::STATE_EDITED:
-                return Helper::l('st_edit');
+                return "Відредагований";
             case Document::STATE_CANCELED:
-                return Helper::l('st_canceled');
+                return "Скасований";
             case Document::STATE_EXECUTED:
-                return Helper::l('st_executed');
+                return "Проведений";
             case Document::STATE_CLOSED:
-                return Helper::l('st_closed');
+                return "Закритий";
             case Document::STATE_APPROVED:
-                return Helper::l('st_approved');
+                return "Готовий до виконання";
             case Document::STATE_DELETED:
-                return Helper::l('st_deleted');
+                return "Видалений";
 
             case Document::STATE_WA:
-                return Helper::l('st_wa');
+                return "Очікує затвердження";
             case Document::STATE_INSHIPMENT:
-                return Helper::l('st_inshipment');
+                return "На доставці";
             case Document::STATE_FINISHED:
-                return Helper::l('st_finished');
+                return "Виконаний";
             case Document::STATE_DELIVERED:
-                return Helper::l('st_delivered');
+                return "Доставлений";
             case Document::STATE_REFUSED:
-                return Helper::l('st_refused');
+                return "Відхилений";
             case Document::STATE_SHIFTED:
-                return Helper::l('st_shifted');
+                return "Відкладений";
             case Document::STATE_FAIL:
-                return Helper::l('st_fail');
+                return "Анульований";
             case Document::STATE_INPROCESS:
-                return Helper::l('st_inprocess');
+                return "Виконується";
             case Document::STATE_READYTOSHIP:
-                return Helper::l('st_rdshipment');
+                return "Готовий до відправлення";
             case Document::STATE_WP:
-                return Helper::l('st_wp');
+                return "Очікує оплату";
             case Document::STATE_PAYED:
-                return Helper::l('st_payed');
+                return "Оплачений";
 
             default:
-                return Helper::l('st_unknow');
+                return "Невідомий статус";
         }
     }
 
     public static function getStateList() {
         $list = array();
-        $list[Document::STATE_NEW] = Helper::l('st_new');
-        $list[Document::STATE_EDITED] = Helper::l('st_edit');
-        $list[Document::STATE_CANCELED] = Helper::l('st_canceled');
-        $list[Document::STATE_EXECUTED] = Helper::l('st_executed');
-        $list[Document::STATE_CLOSED] = Helper::l('st_closed');
-        $list[Document::STATE_APPROVED] = Helper::l('st_approved');
-        $list[Document::STATE_WA] = Helper::l('st_wa');
-        $list[Document::STATE_INSHIPMENT] = Helper::l('st_inshipment');
-        $list[Document::STATE_FINISHED] = Helper::l('st_finished');
-        $list[Document::STATE_DELIVERED] = Helper::l('st_delivered');
-        $list[Document::STATE_REFUSED] = Helper::l('st_refused');
-        $list[Document::STATE_SHIFTED] = Helper::l('st_shifted');
-        $list[Document::STATE_FAIL] = Helper::l('st_fail');
-        $list[Document::STATE_INPROCESS] = Helper::l('st_inprocess');
-        $list[Document::STATE_READYTOSHIP] = Helper::l('st_rdshipment');
-        $list[Document::STATE_WP] = Helper::l('st_wp');
-        $list[Document::STATE_PAYED] = Helper::l('st_payed');
+        $list[Document::STATE_NEW] = "Новий";
+        $list[Document::STATE_EDITED] = "Відредагований";
+        $list[Document::STATE_CANCELED] = "Скасований";
+        $list[Document::STATE_EXECUTED] = "Проведений";
+        $list[Document::STATE_CLOSED] = "Закритий";
+        $list[Document::STATE_APPROVED] = "Готовий до виконання";
+        $list[Document::STATE_WA] = "Очікує затвердження";
+        $list[Document::STATE_INSHIPMENT] = "На доставці";
+        $list[Document::STATE_FINISHED] = "Виконаний";
+        $list[Document::STATE_DELIVERED] = "Доставлений";
+        $list[Document::STATE_REFUSED] = "Відхилений";
+        $list[Document::STATE_SHIFTED] = "Відкладений";
+        $list[Document::STATE_FAIL] = "Анульований";
+        $list[Document::STATE_INPROCESS] = "Виконується";
+        $list[Document::STATE_READYTOSHIP] = "Готовий до відправлення";
+        $list[Document::STATE_WP] = "Очікує оплату";
+        $list[Document::STATE_PAYED] = "Оплачений";
 
         return $list;
     }
@@ -538,17 +538,17 @@ class Document extends \ZCL\DB\Entity
     */
     public static function getStateListMan() {
         $list = array();
-        $list[Document::STATE_CLOSED] = Helper::l('st_closed');
-        $list[Document::STATE_INSHIPMENT] = Helper::l('st_inshipment');
-        $list[Document::STATE_FINISHED] = Helper::l('st_finished');
-        $list[Document::STATE_DELIVERED] = Helper::l('st_delivered');
-        $list[Document::STATE_EXECUTED] = Helper::l('st_executed');
+        $list[Document::STATE_CLOSED] = "Закритий";
+        $list[Document::STATE_INSHIPMENT] = "На доставці";
+        $list[Document::STATE_FINISHED] = "Виконаний";
+        $list[Document::STATE_DELIVERED] = "Доставлений";
+        $list[Document::STATE_EXECUTED] = "Проведений";
 
-        $list[Document::STATE_SHIFTED] = Helper::l('st_shifted');
-        $list[Document::STATE_FAIL] = Helper::l('st_fail');
-        $list[Document::STATE_INPROCESS] = Helper::l('st_inprocess');
-        $list[Document::STATE_READYTOSHIP] = Helper::l('st_rdshipment');
-        $list[Document::STATE_WP] = Helper::l('st_wp');
+        $list[Document::STATE_SHIFTED] = "Відкладений";
+        $list[Document::STATE_FAIL] = "Анульований";
+        $list[Document::STATE_INPROCESS] = "Виконується";
+        $list[Document::STATE_READYTOSHIP] = "Готовий до відправлення";
+        $list[Document::STATE_WP] = "Очікує оплату";
 
         return $list;
     }

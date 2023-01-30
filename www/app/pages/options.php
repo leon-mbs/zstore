@@ -46,8 +46,8 @@ class Options extends \App\Pages\Base
   
         $this->common->add(new DropDownChoice('phonel', array('10' => '10', '12' => '12'), '10'));
         $pt = array(
-            "1" => H::l('opt_lastprice'),
-            "2" => H::l('opt_partion')
+            "1" => "По останній закупівельній ціні",
+            "2" => "Окремо по кожній закупівельній ціні"
         );
         $this->common->add(new DropDownChoice('partiontype', $pt, "1"));
 
@@ -370,7 +370,7 @@ class Options extends \App\Pages\Base
         $bot = new \App\ChatBot($common['tbtoken']) ;
         $res = $bot->doGet('setWebhook',array('url'=>$url)) ;
         if($res['error_code'] == 404)  {
-            $this->setError(H::l("btinvalidtoken")) ;
+            $this->setError("Невірний токен") ;
             return;
         }
         if($res['ok'] != true)  {

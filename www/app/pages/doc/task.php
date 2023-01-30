@@ -405,7 +405,7 @@ class Task extends \App\Pages\Base
                 $ktu += doubleval($emp->ktu);
             }
             if ($ktu != 1) {
-                $this->setError("ktu1");
+                $this->setError("Сумарний КТУ повинен бути 1");
             }
 
         }

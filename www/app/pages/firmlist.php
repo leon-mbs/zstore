@@ -237,12 +237,12 @@ class FirmList extends \App\Pages\Base
            $certdata =  @file_get_contents($certfile['tmp_name']);
            
            if(strlen($password)==0  || strlen($keydata)==0    )  {
-               $this->addAjaxResponse("   $('#progress').text('". H::l("pponotloaddata") ."');   $('#send').attr('disabled',null);            ");
+               $this->addAjaxResponse("   $('#progress').text('Не вказано необхідні дані');   $('#send').attr('disabled',null);            ");
    
                return;
            }
            if(  strlen($certdata)==0 && $isjks == false)  {
-               $this->addAjaxResponse("   $('#progress').text('". H::l("pponotloaddata") ."');   $('#send').attr('disabled',null);            ");
+               $this->addAjaxResponse("   $('#progress').text('Не вказано необхідні дані');   $('#send').attr('disabled',null);            ");
                return;
            }
            
@@ -337,7 +337,7 @@ class FirmList extends \App\Pages\Base
        
        if($signtype==1 || $signtype==2 ) {       
              if(strlen($serhost)==0  || strlen($serport)==0   )  {
-                 $this->addAjaxResponse("    $('#progress').text('". H::l("pponotloaddata") ."');   $('#send').attr('disabled',null);     ");
+                 $this->addAjaxResponse("    $('#progress').text('Не вказано необхідні дані');   $('#send').attr('disabled',null);     ");
 
                  return;
              }         
@@ -427,7 +427,7 @@ class FirmList extends \App\Pages\Base
              $this->_firm->ppoisjks =  $isjks ? 1 :0   ;
              $this->_firm->save();      
 
-             $kl = \App\Helper::l("ppokeyloaded");
+             $kl = "Ключ завантажений";
 
              $this->addAjaxResponse("   $('#progress').text('{$kl}')");
         
