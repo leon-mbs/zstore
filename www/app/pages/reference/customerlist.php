@@ -882,7 +882,7 @@ class CustomerList extends \App\Pages\Base
         }
 
 
-        $this->setSuccess("delcusts", $d, $u);
+        $this->setSuccess("Видалено {$d}, деактивовано {$u} ");
 
         $this->customertable->listform->customerlist->Reload();
 

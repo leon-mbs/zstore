@@ -34,7 +34,7 @@ class TimeSheet extends \App\Pages\Base
 
         $allow = (strpos($user->modules, 'issue') !== false || $user->rolename == 'admins');
         if (!$allow) {
-            $this->setError('noaccesstopage');
+            $this->setError("Немає права доступу до сторінки");
             App::RedirectError();
             return;
         }

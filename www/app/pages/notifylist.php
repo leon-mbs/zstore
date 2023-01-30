@@ -57,15 +57,15 @@ class NotifyList extends \App\Pages\Base
 
         }
         if ($notify->sender_id == Notify::SYSTEM) {
-            $row->sender->setText(H::l("systemmsg"));
+            $row->sender->setText("Системне повідомлення");
             $row->sendericon->setAttribute('class', 'fa fa-cog');
         }
         if ($notify->sender_id == Notify::EVENT) {
-            $row->sender->setText(H::l("alertmsg"));
+            $row->sender->setText("Нагадування про подію");
             $row->sendericon->setAttribute('class', 'fa fa-calendar');
         }
         if ($notify->sender_id == Notify::SUBSCRIBE) {
-            $row->sender->setText(H::l("subsmsg"));
+            $row->sender->setText("Розсилка");
             $row->sendericon->setAttribute('class', 'fa fa-envelope');
         }
 

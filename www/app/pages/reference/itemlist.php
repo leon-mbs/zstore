@@ -404,14 +404,14 @@ class ItemList extends \App\Pages\Base
             $code = Item::qstr($this->_item->bar_code);
             $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and bar_code={$code} ");
             if ($cnt > 0) {
-                $this->setWarn('barcode_exists');
+                $this->setWarn('Такий штрих код вже існує"');
             }
         }
         $printer = System::getOptions('printer');
 
         if (intval($printer['pmaxname']) > 0 && mb_strlen($this->_item->shortname) > intval($printer['pmaxname'])) {
 
-            $this->setWarn('tolongshortname', $printer['pmaxname']);
+            $this->setWarn("Коротка назва має бути не більше {$printer['pmaxname']} символів" );
 
         }
 
@@ -865,7 +865,7 @@ class ItemList extends \App\Pages\Base
         }
 
 
-        $this->setSuccess("delitems", $d, $u);
+        $this->setSuccess("Видалено {$d}, деактивовано {$u}");
 
         $this->itemtable->listform->itemlist->Reload();
 

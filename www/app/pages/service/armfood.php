@@ -195,7 +195,7 @@ class ARMFood extends \App\Pages\Base
         $this->_pos = \App\Entity\Pos::load($this->setupform->pos->getValue());
 
         if ($store == 0 || $nal == 0 || $beznal == 0 || $this->_pos == null) {
-            $this->setError(H::l("notalldata"));
+            $this->setError("Не зазначено всі дані");
             return;
         }
         $filter = \App\Filter::getFilter("armfood");

@@ -60,7 +60,7 @@ class TTN extends Document
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                         "store_name"      => $this->headerdata["store_name"],
 
-                        "weight"          => $weight > 0 ? H::l("allweight", $weight) : '',
+                        "weight"          => $weight > 0 ? "Загальна вага {$weight} кг"  : '',
                         "ship_address"    => strlen($this->headerdata["ship_address"]) > 0 ? $this->headerdata["ship_address"] : false,
                         "ship_number"     => strlen($this->headerdata["ship_number"]) > 0 ? $this->headerdata["ship_number"] : false,
                         "delivery_name"   => $this->headerdata["delivery_name"],

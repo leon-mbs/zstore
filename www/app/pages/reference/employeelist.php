@@ -51,7 +51,7 @@ class EmployeeList extends \App\Pages\Base
         $this->employeedetail->add(new TextArea('editcomment'));
         $this->employeedetail->add(new CheckBox('editdisabled'));
 
-        $this->employeedetail->add(new DropDownChoice('editztype', array("1" => H::l("zoklad"), "2" => H::l("zhour"), "3" => H::l("ztask")), 1))->onChange($this, "onType");
+        $this->employeedetail->add(new DropDownChoice('editztype', array("1" => "Оклад", "2" => "Погодинна оплата", "3" => "Понарядна"), 1))->onChange($this, "onType");
         $this->employeedetail->add(new TextInput('editzhour'));
         $this->employeedetail->add(new TextInput('editzmon'));
         $this->employeedetail->add(new TextInput('editadvance'));

@@ -57,7 +57,7 @@ class Service extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $sql = "  select count(*)  from  entrylist where   service_id = {$this->service_id}";
         $cnt = $conn->GetOne($sql);
-        return ($cnt > 0) ? \App\Helper::l('nodelservice') : "";
+        return ($cnt > 0) ? 'Не можна видаляти послугу, яка використовується' : "";
     }
 
     public static function getCategoryList() {

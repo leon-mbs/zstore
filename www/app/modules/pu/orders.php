@@ -27,7 +27,7 @@ class Orders extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'promua') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg(H::l('noaccesstopage'));
+            System::setErrorMsg("Немає права доступу до сторінки" ) ;
 
             App::RedirectError();
             return;

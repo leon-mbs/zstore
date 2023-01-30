@@ -26,7 +26,7 @@ class Options extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg('noaccesstopage');
+            System::setErrorMsg("Немає права доступу до сторінки");
             App::RedirectError();
             return;
         }

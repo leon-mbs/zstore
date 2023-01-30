@@ -118,12 +118,12 @@ class SalaryTypeList extends \App\Pages\Base
 
         $code = intval($this->_st->salcode);
         if ($code < 100 || $code > 999) {
-            $this->setError('invalidcode');
+            $this->setError('Невірний код');
             return;
         }
         $c = SalType::getFirst("salcode=" . $this->_st->salcode);
         if ($c != null && $isnew) {
-            $this->setError('codeexists');
+            $this->setError('Код вже існує');
             return;
 
         }

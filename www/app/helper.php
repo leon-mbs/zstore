@@ -245,7 +245,7 @@ class Helper
         }
         if ($modules['issue'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'issue') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10017, 'meta_name' => "/Issue/Pages/ProjectList", 'meta_type' => 6, 'description' =>     "modprojectlist": "Проекти"  , ));
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10017, 'meta_name' => "/Issue/Pages/ProjectList", 'meta_type' => 6, 'description' =>   "Проекти"  , ));
             }
         }
    

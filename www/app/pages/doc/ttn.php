@@ -748,7 +748,7 @@ class TTN extends \App\Pages\Base
             }
         }
         $this->docform->total->setText(H::fa($total));
-        $this->docform->weight->setText(H::l("allweight", $weight));
+        $this->docform->weight->setText("Загальна вага {$weight} кг");
         $this->docform->weight->setVisible($weight > 0);
     }
 

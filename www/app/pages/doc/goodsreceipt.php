@@ -814,7 +814,7 @@ class GoodsReceipt extends \App\Pages\Base
             $code = Item::qstr($item->bar_code);
             $cnt = Item::findCnt("  bar_code={$code} ");
             if ($cnt > 0) {
-                $this->setError('barcode_exists');
+                $this->setError('Такий штрих код вже існує"');
                 return;
             }
 
