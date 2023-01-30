@@ -254,7 +254,7 @@ class ProdStageList extends \App\Pages\Base
         $cnt = $conn->GetOne($sql);
 
         if ($cnt > 0) {
-            $this->setError('stpp_intersect_this');
+            $this->setError("Інтервал перетинається з існуючим для цього етапу");
             return;
         }
 
@@ -262,7 +262,7 @@ class ProdStageList extends \App\Pages\Base
         $cnt = $conn->GetOne($sql);
 
         if ($cnt > 0) {
-            $this->setWarn('stpp_intersect_other');
+            $this->setWarn("Інтервал перетинається з наявним на цій ділянці для іншого етапу");
         }
 
         $ag = new ProdStageAgenda();

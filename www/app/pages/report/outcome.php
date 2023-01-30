@@ -40,21 +40,21 @@ class Outcome extends \App\Pages\Base
 
 
         $types = array();
-        $types[1] = H::l('repbyitems');
-        $types[6] = H::l('repbybyersitem');
-        $types[2] = H::l('repbybyers');
-        $types[3] = H::l('repbydates');
-        $types[4] = H::l('repbyservices');
-        $types[7] = H::l('repbybyersservices');
-        $types[5] = H::l('repbycat');
+        $types[1] = "За товарами";
+        $types[6] = "Товари за покупцями";
+        $types[2] = "За покупцями";
+        $types[3] = "За датами";
+        $types[4] = "Послуги, роботи";
+        $types[7] = "Послуги за покупцями";
+        $types[5] = "За категоріями";
 
         if (count($hlist) > 0) {
-            $types[8] = H::l('repbyhold');
+            $types[8] = "За холдінгами";
         }
-        $types[9] = H::l('repbybyfirm');
-        $types[10] = H::l('repbybystore');
-        $types[11] = H::l('repbysalesource');
-        $types[12] = H::l('repbybrand');
+        $types[9] = "За компаніями";
+        $types[10] = "За складами";
+        $types[11] = "За джерелами";
+        $types[12] = "За брендами" ;
 
         $this->filter->add(new DropDownChoice('type', $types, 1))->onChange($this, "OnType");
 

@@ -60,13 +60,13 @@ class UserLogin extends \Zippy\Html\WebPage
         $p= substr(base64_encode(md5(time())),0,8);
         $c->passw = $p;
         $c->save();
-        $ret = \App\Entity\Subscribe::sendSMS($phone, \App\Helper::l("recoverypass", $p));
+        $ret = \App\Entity\Subscribe::sendSMS($phone, "ZStore: новий пароль " . $p);
         if(strlen($ret)  >0 ){
            \App\Helper::logerror($ret) ;          
            $this->setError('SMS error') ;
            return ; 
         }
-        $this->setSuccess("passsent")  ;
+        $this->setSuccess("Пароль відправлено")  ;
         $this->loginform->setVisible(true) ;
         $this->recallform->setVisible(false) ;
        
@@ -133,7 +133,7 @@ class UserLogin extends \Zippy\Html\WebPage
         if ($shop["uselogin"] == 1) {
             if ($c->allowedshop != 1) {
                 
-                $this->setError("notallowedshop" );
+                $this->setError("У вас немає права доступу до каталогу. Зверніться до адміністратора" );
                 return;
             }
         }

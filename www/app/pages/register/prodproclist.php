@@ -310,7 +310,7 @@ class ProdProcList extends \App\Pages\Base
         $this->_stage->salary = $this->editstage->editstagesalary->getText();
 
         if ($this->_stage->pa_id == 0) {
-            $this->setError('noselparea');
+            $this->setError("Не обрано виробничу ділянку");
             return;
         }
 

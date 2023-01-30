@@ -275,11 +275,11 @@ class OrderList extends \App\Pages\Base
              
             
             if($this->_doc->payamount >0 && $this->_doc->payamount>$this->_doc->payed ) {
-                $this->setWarn('ord_closed_nopay');
+                $this->setWarn('"Замовлення закрито без оплати"');
             }       
             
             if($ttn== false && $gi == false) {
-                $this->setWarn('ord_closed_nodel');
+                $this->setWarn('Замовлення закрито без доставки');
             }
 
             

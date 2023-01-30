@@ -28,7 +28,7 @@ class Roles extends \App\Pages\Base
         parent::__construct();
 
         if (System::getUser()->userlogin != 'admin') {
-            $this->setError('onlyadminaccess');
+            $this->setError("До сторінки має доступ тільки користувач admin");
             App::RedirectError();
             return false;
         }

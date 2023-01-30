@@ -483,7 +483,7 @@ class InvoiceCust extends \App\Pages\Base
         $val = $this->docform->val->getValue();
         if (strlen($val) > 1) {
             if($this->_doc->payamount  > $this->_doc->payed )  {
-                $this->setError("nocreditval");
+                $this->setError("Кредит із валютою не дозволено");
              
                 
                 return;

@@ -332,8 +332,8 @@ class IssueList extends \App\Pages\Base
             }
             $n = new \App\Entity\Notify();
             $n->user_id = $u;
-            $n->message = H::l('msgtask') . "  #{$issue->issue_id} {$issue->issue_name} ";
-            $n->message .= "<br>  <a href=\"/issue/{$issue->issue_id}/{$issue->project_id}/#msgankor\">" . H::l('msgreply') . "</a> ";
+            $n->message =  "Коментар до завдання  #{$issue->issue_id} {$issue->issue_name} ";
+            $n->message .= "<br>  <a href=\"/issue/{$issue->issue_id}/{$issue->project_id}/#msgankor\">Відповісти</a> ";
             $n->sender_id = System::getUser()->user_id;
             $n->save();
         }

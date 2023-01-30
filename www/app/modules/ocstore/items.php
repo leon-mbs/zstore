@@ -83,7 +83,7 @@ class Items extends \App\Pages\Base
         $data = json_decode($json, true);
         if (!isset($data)) {
 
-            $this->setError("invalidresponse");
+            $this->setError("Невірна відповідь");
             \App\Helper::log($json);
             return;
         }

@@ -28,7 +28,7 @@ class Subscribes extends \App\Pages\Base
         parent::__construct();
 
         if (System::getUser()->rolename != 'admins') {
-            System::setErrorMsg(H::l('onlyadminsaccess'));
+            System::setErrorMsg("До сторінки має доступ тільки користувачі з роллю admins  ");
             \App\Application::RedirectError();
             return false;
         }

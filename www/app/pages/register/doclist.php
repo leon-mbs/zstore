@@ -384,14 +384,14 @@ class DocList extends \App\Pages\Base
         $user = System::getUser();
         if ($doc->user_id != $user->user_id && $user->rolename != 'admins') {
 
-            $this->setError("candeleteadmin");
+            $this->setError("Видаляти документ може тільки автор або адміністратор");
             return;
         }
         // $f = $doc->checkStates(array(Document::STATE_EXECUTED ));
 
         $list = $doc->getChildren();
         if (count($list) > 0) {
-            $this->setError("dochaschilld");
+            $this->setError("У документа є дочірні документи");
 
             return;
         }
@@ -463,7 +463,7 @@ class DocList extends \App\Pages\Base
                 //свой может  отменить
             } else {
 
-                $this->setError('notallowedcanceldoc', $doc->meta_desc);
+                $this->setError("Немає права відміняти документ " . $doc->meta_desc);
                 return;
             }
         }
@@ -476,7 +476,7 @@ class DocList extends \App\Pages\Base
         $list = $doc->getChildren('', true);
         if (count($list) > 0) {
 
-            $this->setError("dochasnocanceledchilld");
+            $this->setError("У документа є проведені дочірні документи");
             return;
         }
         $cc = $doc->canCanceled();
@@ -505,7 +505,7 @@ class DocList extends \App\Pages\Base
             return;
         }
         if(strlen($doc->headerdata["fiscalnumber"])>0) {
-            $this->setWarn('closedfiscal') ;
+            $this->setWarn('Відмінено фіскалізований документ') ;
             
         }
      
@@ -523,7 +523,7 @@ class DocList extends \App\Pages\Base
   
     public function statusOnSubmit($sender) {
         if (\App\ACL::checkExeDoc($this->_doc, true, false) == false) {
-            $this->setError('notallowedexedoc');
+            $this->setError('Немає права виконувати документ');
             return;
         }
         $this->_doc = $this->_doc->cast();
