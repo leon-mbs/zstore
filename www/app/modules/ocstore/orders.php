@@ -227,7 +227,7 @@ class Orders extends \App\Pages\Base
 
             $i++;
         }
-        $this->setInfo('imported_orders', $i);
+        $this->setInfo("Імпортовано {$i} замовлень" );
 
         $this->_neworders = array();
         $this->neworderslist->Reload();
@@ -367,7 +367,7 @@ class Orders extends \App\Pages\Base
             return;
         }
 
-        $this->setInfo('imported_orders', $i);
+        $this->setInfo("Імпортовано {$i} замовлень");
 
         $this->_neworders = array();
         $this->neworderslist->Reload();
@@ -436,7 +436,7 @@ class Orders extends \App\Pages\Base
             return;
         }
 
-        $this->setSuccess("refrehed_orders", count($elist));
+        $this->setSuccess("Оновлено ".count($elist)." замовлень" );
 
         foreach ($this->_eorders as $order) {
             if ($order->ch == false) {

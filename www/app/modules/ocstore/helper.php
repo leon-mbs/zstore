@@ -119,7 +119,7 @@ class Helper
             }
 
 
-            System::setSuccessMsg(H::l('connected'));
+            System::setSuccessMsg("Успішне з`єднання");
 
             //загружаем список статусов
             $url = $site . '/index.php?route=api/zstore/statuses&' . System::getSession()->octoken;

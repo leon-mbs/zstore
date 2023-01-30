@@ -45,7 +45,7 @@ class ItemList extends \App\Pages\Base
 
         $this->filter->add(new TextInput('searchkey'));
         $catlist = array();
-        $catlist[-1] = H::l("withoutcat");
+        $catlist[-1] = "Без категорії";
         foreach (Category::getList() as $k => $v) {
             $catlist[$k] = $v;
         }

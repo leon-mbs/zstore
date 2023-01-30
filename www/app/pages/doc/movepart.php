@@ -158,13 +158,13 @@ class MovePart extends \App\Pages\Base
         $to = Stock::load($this->docform->tostock->getKey());
 
         if ($from == null || $to == null) {
-            $this->setError("noselpart");
+            $this->setError("Не обрано партію");
         }
         if ($from->stock_id == $to->stock_id) {
-            $this->setError("thesamestock");
+            $this->setError("Однакові партії");
         }
         if ($from->item_id != $to->item_id) {
-            $this->setError("diffitem");
+            $this->setError("Різні ТМЦ");
         }
 
 

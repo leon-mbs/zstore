@@ -171,7 +171,7 @@ class Items extends \App\Pages\Base
             $this->setErrorTopPage($data['error']);
             return;
         }
-        $this->setSuccess('exported_items', count($elist));
+        $this->setSuccess("Експортовано ".count($elist)." товарів" );
 
         //обновляем таблицу
         $this->filterOnSubmit(null);
@@ -365,7 +365,7 @@ class Items extends \App\Pages\Base
             $i++;
         }
 
-        $this->setSuccess("loaded_items", $i);
+        $this->setSuccess("Завантажено {$i} товарів" );
     }
 
 }

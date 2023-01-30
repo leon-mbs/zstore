@@ -39,7 +39,7 @@ class Contract extends \ZCL\DB\Entity
 
         $docs = $this->getDocs();
         if (count($docs) > 0) {
-            return \App\Helper::l("iscontractdocs");
+            return "Є документи з цим договором";
         }
         return "";
     }

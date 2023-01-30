@@ -132,7 +132,7 @@ class PosList extends \App\Pages\Base
             return;
         }
         if ($this->_pos->firm_id == 0) {
-            $this->setError("noselfirm");
+            $this->setError("Не обрано компанію");
             return;
         }
         if ($this->_tvars['usebranch'] == true && $this->_pos->branch_id == 0) {

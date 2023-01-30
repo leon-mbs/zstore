@@ -541,7 +541,7 @@ class Order extends \App\Pages\Base
             $this->docform->address->setText($customer->address);
             $d= $customer->getDiscount();
             if ($d > 0) {
-                $this->docform->discount->setText(H::l("custdisc") ." ". $d . '%');
+                $this->docform->discount->setText("Постійна знижка {$d}%");
                 $this->docform->discount->setVisible(true);
                   
             } else {

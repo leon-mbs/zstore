@@ -370,19 +370,19 @@ class Roles extends \App\Pages\Base
         $item = $row->getDataItem();
         switch($item->meta_type) {
             case 1:
-                $title = H::l('md_doc');
+                $title = 'Документ';
                 break;
             case 2:
-                $title = H::l('md_rep');
+                $title = 'Звіт';
                 break;
             case 3:
-                $title = H::l('md_reg');
+                $title = 'Журнал';
                 break;
             case 4:
-                $title = H::l('md_ref');
+                $title = 'Довідник';
                 break;
             case 5:
-                $title = H::l('md_ser');
+                $title = 'Сервісна сторінка';
                 break;
         }
         $item->editacc = false;
@@ -431,22 +431,22 @@ class Roles extends \App\Pages\Base
         $item = $row->getDataItem();
         switch($item->meta_type) {
             case 1:
-                $title = H::l('md_doc');
+                $title = 'Документ';
                 break;
             case 2:
-                $title = H::l('md_rep');
+                $title = 'Звіт';
                 break;
             case 3:
-                $title = H::l('md_reg');
+                $title = 'Журнал';
                 break;
             case 4:
-                $title = H::l('md_ref');
+                $title = 'Довідник';
                 break;
             case 5:
-                $title = H::l('md_ser');
+                $title = 'Сервісна сторінка';
                 break;
             case 6:
-                $title = H::l('md_mod');
+                $title = "Сторінка модуля";
                 break;
         }
         $smartmenu = @explode(',', $this->role->smartmenu);

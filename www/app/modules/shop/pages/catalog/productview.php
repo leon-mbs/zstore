@@ -172,7 +172,7 @@ class ProductView extends Base
         \App\Modules\Shop\Basket::getBasket()->addProduct($product);
         \App\Modules\Shop\Basket::getBasket()->sendCookie()  ;
           
-        $this->setSuccess("addedtocart");
+        $this->setSuccess("Товар доданий до кошика");
         $this->resetURL();
         //  App::RedirectURI('/pcat/' . $product->cat_id);
     }

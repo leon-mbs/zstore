@@ -352,7 +352,7 @@ class CustomerList extends \App\Pages\Base
         $this->_customer->isholding = $this->customerdetail->editisholding->isChecked() ? 1 : 0;
 
         if ($this->_customer->isholding == 1 && $this->_customer->holding > 0) {
-            $this->setError('nothold');
+            $this->setError('Холдинг не може бути дочірньою компанією');
             return;
         }
 

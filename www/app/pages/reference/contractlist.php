@@ -170,7 +170,7 @@ class ContractList extends \App\Pages\Base
         }
         $this->_contract->firm_id = $this->contractdetail->editcomp->getValue();
         if ($this->_contract->firm_id == 0) {
-            $this->setError("noselfirm");
+            $this->setError("Не обрано компанію");
             return;
         }
         $this->_contract->ctype = $this->contractdetail->editctype->getValue();

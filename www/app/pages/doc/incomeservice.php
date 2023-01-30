@@ -549,7 +549,7 @@ class IncomeService extends \App\Pages\Base
             $a  += doubleval($it->qty*$it->price) ;
         }
         if($ser->quantity*$ser->price  != $a  ) {
-            $this->setWarn("seritemdiff") ;
+            $this->setWarn("Сума по ТМЦ не співпадає із вартістю послуги ") ;
         }
     }
   

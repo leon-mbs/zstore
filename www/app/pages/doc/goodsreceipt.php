@@ -567,7 +567,7 @@ class GoodsReceipt extends \App\Pages\Base
                         if ($order->meta_name =="OrderCust" && $order->state == Document::STATE_INPROCESS) {
                             $order->updateStatus(Document::STATE_CLOSED);
 
-                            $this->setSuccess("order_closed", $order->document_number);
+                            $this->setSuccess("Замовлення {$order->document_number} закрито" );
                         }
                     }
                 }

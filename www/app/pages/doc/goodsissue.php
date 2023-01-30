@@ -669,7 +669,7 @@ class GoodsIssue extends \App\Pages\Base
                     $order = Document::load($this->_doc->parent_id);
 
                     if($this->_changedpos) {
-                        $msg= H::l("changedposlist",$this->_doc->document_number,$order->document_number,\App\System::getUser()->username); ;
+                        $msg= "В документі {$this->_doc->document_number}, створеному на підставі {$order->document_number}, користувачем ".\App\System::getUser()->username." змінено перелік ТМЦ " ;
                         \App\Entity\Notify::toSystemLog($msg) ;
                     }
                     
@@ -903,11 +903,11 @@ class GoodsIssue extends \App\Pages\Base
             $disctext = "";
             $d = $cust->getDiscount() ;
             if (doubleval($d) > 0) {
-                $disctext = H::l("custdisc") . " {$d}%";
+                $disctext = "Постійна знижка {$d}%";
             } else {
                 $bonus = $cust->getBonus();
                 if ($bonus > 0) {
-                    $disctext = H::l("custbonus") . " {$bonus} ";
+                    $disctext = "Нараховано бонусів {$bonus} ";
                 }
             }
             $this->docform->discount->setText($disctext);

@@ -201,7 +201,7 @@ class Orders extends \App\Pages\Base
             
         }
 
-        $this->setInfo('imported_orders', count($this->_neworders));
+        $this->setInfo("Імпортовано ".count($this->_neworders)." замовлень" );
 
         $this->_neworders = array();
         $this->neworderslist->Reload();
@@ -263,8 +263,9 @@ class Orders extends \App\Pages\Base
             $order->save();
         }
 
+        $this->setSuccess("Оновлено ".count($elist)." замовлень" );
 
-        $this->setSuccess("refrehed_orders", count($elist));
+
 
         $this->_eorders = Document::find("meta_name='Order' and content like '%<puorderback>0</puorderback>%' and state <> " . Document::STATE_NEW);
         $this->updateform->orderslist->Reload();

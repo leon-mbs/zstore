@@ -174,7 +174,7 @@ class Outcome extends \App\Pages\Base
         ";
         }
         if ($type == 2) {  //по покупателям
-            $empty = H::l("emptycust");
+            $empty = "Фіз. особа";
             $sql = "
           select coalesce(c.customer_name,'{$empty}') as itemname,c.customer_id,  sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
           from entrylist_view  e

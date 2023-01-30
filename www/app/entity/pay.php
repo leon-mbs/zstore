@@ -91,7 +91,7 @@ class Pay extends \ZCL\DB\Entity
                     }
                     $payb->paytype = Pay::PAY_BANK;
                     $payb->paydate = $paydate;
-                    $payb->notes = \App\Helper::l('bankproc');
+                    $payb->notes = 'Банковський процент за транзакцію';
                     $payb->user_id = \App\System::getUser()->user_id;
                     $payb->save();
 

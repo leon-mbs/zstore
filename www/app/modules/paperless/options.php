@@ -52,7 +52,7 @@ class Options extends \App\Pages\Base
         list($code,$result) =        Helper::connect();
         if($code=='ok') {
              System::getSession()->pltoken = $result;
-             $this->setSuccess("connected") ;
+             $this->setSuccess("Успішне з`єднання") ;
         }
         if($code=='error') {
            $this->setError($result) ;

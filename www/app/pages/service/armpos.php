@@ -746,7 +746,7 @@ class ARMPos extends \App\Pages\Base
             $disctext = "";
             $d = $cust->getDiscount() ;
             if (doubleval($d) > 0) {
-                $disctext = H::l("custdisc") . " {$d}%";
+                $disctext = "Постійна знижка {$d}%";
                 $disc = round($total * ($d / 100));
                 
                 $this->docpanel->form3->discount->setText($disctext);

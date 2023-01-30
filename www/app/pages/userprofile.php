@@ -59,23 +59,23 @@ class UserProfile extends \App\Pages\Base
 
                 case 1 :
                     $p = "\\App\\Pages\\Doc\\";
-                    $n = H::l("md_doc");
+                    $n = "Документ";
                     break;
                 case 2 :
                     $p = "\\App\\Pages\\Report\\";
-                    $n = H::l("md_rep");
+                    $n = 'Звіт';
                     break;
                 case 3 :
                     $p = "\\App\\Pages\\Register\\";
-                    $n = H::l("md_reg");
+                    $n = 'Журнал';
                     break;
                 case 4 :
                     $p = "\\App\\Pages\\Reference\\";
-                    $n = H::l("md_ref");
+                    $n = "Довідник";
                     break;
                 case 5 :
                     $p = "\\App\\Pages\\Service\\";
-                    $n = H::l("md_ser");
+                    $n = 'Сервісна сторінка';
                     break;
             }
 

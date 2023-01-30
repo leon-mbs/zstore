@@ -160,7 +160,7 @@ class Invoice extends \App\Pages\Base
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
 
-                        $this->docform->notes->setText(H::l("invoicefor", $basedoc->document_number));
+                        $this->docform->notes->setText("Рахунок для ". $basedoc->document_number);
                         $order = $basedoc->cast();
 
                         $this->docform->total->setText($order->amount);
@@ -177,7 +177,7 @@ class Invoice extends \App\Pages\Base
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
 
-                        $this->docform->notes->setText(H::l("invoicefor", $basedoc->document_number));
+                        $this->docform->notes->setText("Рахунок для ". $basedoc->document_number);
                         $order = $basedoc->cast();
 
                         $this->docform->total->setText($order->amount);
@@ -603,7 +603,7 @@ class Invoice extends \App\Pages\Base
             } else {
                 $bonus = $cust->getBonus();
                 if ($bonus > 0) {
-                    $disctext = H::l("custbonus") . " {$bonus} ";
+                    $disctext = "Нараховано бонусів {$bonus} ";
                 }
             }
             $this->docform->discount->setText($disctext);

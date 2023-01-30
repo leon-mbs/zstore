@@ -103,19 +103,19 @@ class MenuList extends \App\Pages\Base
         $title = '';
         switch($item->meta_type) {
             case 1:
-                $title = H::l('md_doc');
+                $title = 'Документ';
                 break;
             case 2:
-                $title = H::l('md_rep');
+                $title = 'Звіт';
                 break;
             case 3:
-                $title = H::l('md_reg');
+                $title = 'Журнал';
                 break;
             case 4:
-                $title = H::l('md_ref');
+                $title = 'Довідник';
                 break;
             case 5:
-                $title = H::l('md_ser');
+                $title = 'Сервісна сторінка';
                 break;
         }
 

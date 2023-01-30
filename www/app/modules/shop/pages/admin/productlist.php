@@ -55,8 +55,8 @@ class ProductList extends \App\Pages\Base
 
         $fc = new Category();
         $fc->cat_id = 0;
-        $fc->cat_name = \App\Helper::l("allcategory");
-        $fc->full_name = \App\Helper::l("allcategory");
+        $fc->cat_name = "Всі категорії";
+        $fc->full_name = "Всі категорії";
 
         $first = array($fc);
 
