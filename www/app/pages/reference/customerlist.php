@@ -465,7 +465,7 @@ class CustomerList extends \App\Pages\Base
 
         $file = $this->contentview->addfileform->addfile->getFile();
         if ($file['size'] > 10000000) {
-            $this->setError("filemore10M");
+            $this->setError("Файл більше 10 МБ!");
             return;
         }
 

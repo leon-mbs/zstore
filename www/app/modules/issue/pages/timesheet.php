@@ -291,7 +291,7 @@ class TimeSheet extends \App\Pages\Base
        
         if ($time->duration == 0) {
 
-            return H::l("nosettime");     
+            return H::l("Не вказано час");     
         }
   
 

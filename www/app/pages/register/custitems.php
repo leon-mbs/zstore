@@ -314,7 +314,7 @@ class CustItems extends \App\Pages\Base
             $cnt++;
             
         }
-        $this->setSuccess("imported_items", $cnt);
+        $this->setSuccess("Імпортовано {$cnt} ТМЦ" );
         $this->itemtable->listform->itemlist->Reload();
   
         $this->itemtable->setVisible(true);

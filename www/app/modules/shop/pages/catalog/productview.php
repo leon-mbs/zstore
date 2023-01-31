@@ -183,7 +183,7 @@ class ProductView extends Base
         $comparelist = \App\Modules\Shop\CompareList::getCompareList();
         if (false == $comparelist->addProduct($product)) {
 
-            $this->setWarn('onlythesamecategory');
+            $this->setWarn('Додавати можна тільки товари з однакової категорії');
             return;
         }
         // App::RedirectURI('/pcat/'.$product->group_id)  ;

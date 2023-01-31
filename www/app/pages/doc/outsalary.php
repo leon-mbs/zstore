@@ -123,7 +123,7 @@ class OutSalary extends \App\Pages\Base
             }
         }
         if ($this->_doc->amount == 0) {
-            $this->setError("noentersum");
+            $this->setError("Не введено суму");
             return;
         }
         if ($this->checkForm() == false) {

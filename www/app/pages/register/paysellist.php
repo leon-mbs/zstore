@@ -355,7 +355,7 @@ class PaySelList extends \App\Pages\Base
         }
 
  
-        $this->setSuccess('payment_added');
+        $this->setSuccess('Оплата додана');
 
         //$this->updateDocs();
         $this->paypan->setVisible(false);

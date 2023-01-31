@@ -240,7 +240,7 @@ class ARMPos extends \App\Pages\Base
         }
 
         if (strlen($this->_pt) == 0) {
-            $this->setError("noselpricetype");
+            $this->setError("Не вказано тип ціни");
             return;
         }
         $filter = \App\Filter::getFilter("armpos");
@@ -292,7 +292,7 @@ class ARMPos extends \App\Pages\Base
 
     public function topayOnClick($sender) {
         if (count($this->_itemlist) == 0 && count($this->_serlist) == 0) {
-            $this->setError('noenterpos');
+            $this->setError('Не введено позиції');
             return;
         }
 
@@ -387,7 +387,7 @@ class ARMPos extends \App\Pages\Base
             }
 
             if (strlen($serial) == 0) {
-                $this->setWarn('needs_serial');
+                $this->setWarn('Потрібна партія виробника');
                 $this->docpanel->editdetail->setVisible(true);
                 $this->docpanel->form2->setVisible(false);
 
@@ -524,11 +524,11 @@ class ARMPos extends \App\Pages\Base
         $item->price = H::fa($this->docpanel->editdetail->editprice->getText());
 
         if ($item->quantity > $qstock) {
-            $this->setWarn('inserted_extra_count');
+            $this->setWarn('Введено більше товару, чим є в наявності');
         }
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("needs_serial");
+            $this->setError("Потрібна партія виробника");
             return;
         }
 
@@ -536,7 +536,7 @@ class ARMPos extends \App\Pages\Base
             $slist = $item->getSerials($store);
 
             if (in_array($item->snumber, $slist) == false) {
-                $this->setError('invalid_serialno');
+                $this->setError('Невірний номер серії');
                 return;
             }
         }
@@ -589,7 +589,7 @@ class ARMPos extends \App\Pages\Base
 
         $id = $this->docpanel->editserdetail->editser->getKey();
         if ($id == 0) {
-            $this->setError("noselservice");
+            $this->setError("Не обрано послугу або роботу");
             return;
         }
         $ser = Service::load($id);

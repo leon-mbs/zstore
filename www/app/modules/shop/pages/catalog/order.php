@@ -92,7 +92,7 @@ class Order extends Base
             $product = $row->GetDataItem();
             if (!is_numeric($product->quantity)) {
 
-                $this->setError('invalidquantity');
+                $this->setError('Невірна кількість');
                 break;
             }
 
@@ -135,7 +135,7 @@ class Order extends Base
 
         if ($delivery == 0) {
 
-            $this->setError("enterdelivery");
+            $this->setError("Виберіть тип доставки");
             return;
         }
         if (($delivery == 2 || $delivery == 3) && strlen($address) == 0) {

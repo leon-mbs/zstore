@@ -154,7 +154,7 @@ class TransItem extends \App\Pages\Base
         if ($this->_doc->headerdata['fromquantity'] > 0 && $this->_doc->headerdata['toquantity'] > 0) {
 
         } else {
-            $this->setError("invalidquantity");
+            $this->setError("Невірна кількість");
         }
         if ($this->_doc->headerdata['fromitem'] > 0 && $this->_doc->headerdata['toitem'] > 0) {
 

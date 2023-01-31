@@ -97,7 +97,7 @@ class Orders extends \App\Pages\Base
                     $tovar = Item::getFirst('item_code=' . $code);
                     if ($tovar == null) {
 
-                        $this->setWarn("nofoundarticle_inorder", $product['name'], $puorder['order_id']);
+                        $this->setWarn("Не знайдено артикул товара {$product['name']} в замовленні номер " . $puorder['order_id']);
                         continue;
                     }
                     $tovar->quantity = H::fqty($product['quantity']);
@@ -237,7 +237,7 @@ class Orders extends \App\Pages\Base
             $elist[] = $order;
         }
         if (count($elist) == 0) {
-            $this->setError('noselorder');
+            $this->setError('Не обрано ордер');
             return;
         }
 

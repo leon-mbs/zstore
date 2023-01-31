@@ -36,7 +36,7 @@ class Orders extends \App\Pages\Base
         $statuses = System::getSession()->statuses;
         if (is_array($statuses) == false) {
             $statuses = array();
-            $this->setWarn('do_connect');
+            $this->setWarn('Виконайте з`єднання на сторінці налаштувань');
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
@@ -99,7 +99,7 @@ class Orders extends \App\Pages\Base
                 foreach ($ocorder['_products_'] as $product) {
                     $code = trim($product['sku']);
                     if ($code == "") {
-                        $this->setWarn("noarticle_inorder", $product['name'], $ocorder['order_id']);
+                        $this->setWarn("Не задано артикул товара {$product['name']} в замовленні номер " . $ocorder['order_id']);
                     }
                 }
 
@@ -153,7 +153,7 @@ class Orders extends \App\Pages\Base
                 $tovar = Item::getFirst('item_code=' . $code);
                 if ($tovar == null) {
 
-                    $this->setWarn("nofoundarticle_inorder", $product['name'], $shoporder->order_id);
+                    $this->setWarn("Не знайдено артикул товара {$product['name']} в замовленні номер ". $shoporder->order_id);
                     continue;
                 }
                 $tovar->quantity = $product['quantity'];
@@ -261,7 +261,7 @@ class Orders extends \App\Pages\Base
                     $tovar = Item::getFirst('item_code=' . $code);
                     if ($tovar == null) {
 
-                        $this->setWarn("nofoundarticle_inorder", $product['name'], $shoporder['order_id']);
+                        $this->setWarn("Не знайдено артикул товара {$product['name']} в замовленні номер " . $shoporder['order_id']);
                         continue;
                     }
                     $tovar->quantity = $product['quantity'];
@@ -305,7 +305,7 @@ class Orders extends \App\Pages\Base
                     $tovar = Item::getFirst('item_code=' . $code);
                     if ($tovar == null) {
 
-                        $this->setWarn("nofoundarticle_inorder", $product['name'], $shoporder['order_id']);
+                        $this->setWarn("Не знайдено артикул товара {$product['name']} в замовленні номер " . $shoporder['order_id']);
                         continue;
                     }
                     $tovar->quantity = $product['quantity'];
@@ -402,7 +402,7 @@ class Orders extends \App\Pages\Base
         $st = $this->updateform->estatus->getValue();
         if ($st == 0) {
 
-            $this->setError('noselstatus');
+            $this->setError('Не обрано статус');
             return;
         }
         $elist = array();
@@ -414,7 +414,7 @@ class Orders extends \App\Pages\Base
         }
         if (count($elist) == 0) {
 
-            $this->setError('noselorder');
+            $this->setError('Не обрано ордер');
             return;
         }
         $data = json_encode($elist);

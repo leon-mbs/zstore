@@ -214,12 +214,12 @@ class ProdIssue extends \App\Pages\Base
         $item->snumber = $this->editdetail->editserial->getText();
         $qstock = $this->editdetail->qtystock->getText();
         if ($item->quantity > $qstock) {
-            $this->setWarn('inserted_extra_count');
+            $this->setWarn('Введено більше товару, чим є в наявності');
         }
 
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("needs_serial");
+            $this->setError("Потрібна партія виробника");
             return;
         }
 
@@ -227,7 +227,7 @@ class ProdIssue extends \App\Pages\Base
             $slist = $item->getSerials($store_id);
 
             if (in_array($item->snumber, $slist) == false) {
-                $this->setError('invalid_serialno');
+                $this->setError('Невірний номер серії');
                 return;
             }
         }
@@ -390,7 +390,7 @@ class ProdIssue extends \App\Pages\Base
 
 
                 if (strlen($serial) == 0) {
-                    $this->setWarn('needs_serial');
+                    $this->setWarn('Потрібна партія виробника');
                     $this->editdetail->setVisible(true);
                     $this->docform->setVisible(false);
 

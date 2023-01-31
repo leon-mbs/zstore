@@ -193,7 +193,7 @@ class GoodsIssue extends \App\Pages\Base
 
                         if (count($list) > 0 && $common['numberttn'] <> 1) {
 
-                            $this->setError('order_has_sent');
+                            $this->setError('У замовлення вже є відправки');
                             App::Redirect("\\App\\Pages\\Register\\GIList");
                             return;
                         }
@@ -201,7 +201,7 @@ class GoodsIssue extends \App\Pages\Base
 
                         if (count($list) > 0 && $common['numberttn'] <> 1) {
 
-                            $this->setError('order_has_sent');
+                            $this->setError('У замовлення вже є відправки');
                             App::Redirect("\\App\\Pages\\Register\\GIList");
                             return;
                         }
@@ -451,7 +451,7 @@ class GoodsIssue extends \App\Pages\Base
 
 
             if (strlen($serial) == 0) {
-                $this->setWarn('needs_serial');
+                $this->setWarn('Потрібна партія виробника');
                 $this->editdetail->setVisible(true);
                 $this->docform->setVisible(false);
 
@@ -522,12 +522,12 @@ class GoodsIssue extends \App\Pages\Base
 
         if ($item->quantity > $qstock) {
 
-            $this->setWarn('inserted_extra_count');
+            $this->setWarn('Введено більше товару, чим мається в наявності');
         }
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
 
-            $this->setError("needs_serial");
+            $this->setError("Потрібна партія виробника");
             return;
         }
 
@@ -536,7 +536,7 @@ class GoodsIssue extends \App\Pages\Base
 
             if (in_array($item->snumber, $slist) == false) {
 
-                $this->setError('invalid_serialno');
+                $this->setError('Невірний номер серії');
                 return;
             } else {
                 $st = Stock::getFirst("store_id={$store_id} and item_id={$item->item_id} and snumber=" . Stock::qstr($item->snumber));
@@ -726,7 +726,7 @@ class GoodsIssue extends \App\Pages\Base
         $payamount = $this->docform->payamount->getText();
         if ($payed > $payamount) {
 
-            $this->setWarn('inserted_extrasum');
+            $this->setWarn('Внесена сума більше необхідної');
         } else {
             $this->goAnkor("tankor");
         }
@@ -836,7 +836,7 @@ class GoodsIssue extends \App\Pages\Base
 
         $noallowfiz = System::getOption("common", "noallowfiz");
         if ($noallowfiz == 1 && $c == 0) {
-            $this->setError("noselcust");
+            $this->setError("Не задано контрагента");
         }
 
 

@@ -239,7 +239,7 @@ class InvoiceCust extends \App\Pages\Base
         $item->price = $this->editdetail->editprice->getText();
         $item->custcode = $this->editdetail->editcustcode->getText();
         if ($item->price == 0) {
-            $this->setWarn("no_price");
+            $this->setWarn("Не вказана ціна");
         }
 
         if ($this->_rowid > 0) {
@@ -316,7 +316,7 @@ class InvoiceCust extends \App\Pages\Base
 
         $file = $this->docform->scan->getFile();
         if ($file['size'] > 10000000) {
-            $this->setError("filemore10M");
+            $this->setError("Файл більше 10 МБ!");
             return;
         }
 

@@ -343,7 +343,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         if ($item == null) {
 
-            $this->setWarn('item_notfound');
+            $this->setWarn('Товар не знайдено');
             $this->addnewitemOnClick(null);
         } else {
             $this->editdetail->edititem->setKey($item->item_id);
@@ -417,12 +417,12 @@ class GoodsReceipt extends \App\Pages\Base
 
         if ($item->price == 0) {
 
-            $this->setWarn("no_price");
+            $this->setWarn("Не вказана ціна");
         }
         $item->snumber = $this->editdetail->editsnumber->getText();
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("needs_serial");
+            $this->setError("Потрібна партія виробника");
             return;
         }
 
@@ -524,7 +524,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         $file = $this->docform->scan->getFile();
         if ($file['size'] > 10000000) {
-            $this->setError("filemore10M");
+            $this->setError("Файл більше 10 МБ!");
             return;
         }
 

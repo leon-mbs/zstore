@@ -365,7 +365,7 @@ class PayBayList extends \App\Pages\Base
            $this->markPayed()  ;            
         }
           
-        $this->setSuccess('payment_added');
+        $this->setSuccess('Оплата додана');
 
         //$this->updateDocs();
         $this->paypan->setVisible(false);

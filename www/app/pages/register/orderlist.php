@@ -230,27 +230,27 @@ class OrderList extends \App\Pages\Base
         if ($sender->id == "bref") {
             $this->_doc->updateStatus(Document::STATE_FAIL);
 
-            $this->setWarn('order_canceled');
+            $this->setWarn('Замовлення анульовано');
         }
         if ($sender->id == "btask") {
             $task = count($this->_doc->getChildren('Task')) > 0;
 
             if ($task) {
 
-                $this->setWarn('task_exists');
+                $this->setWarn('Вже існує документ Наряд');
             }
             App::Redirect("\\App\\Pages\\Doc\\Task", 0, $this->_doc->document_id);
         }
         if ($sender->id == "bttn") {
             if ($ttn) {
-                $this->setWarn('order_has_sent');
+                $this->setWarn('У замовлення вже є відправки');
             }
             App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
             return;
         }
         if ($sender->id == "bpos") {
             if ($pos) {
-                $this->setWarn('pos_exists');
+                $this->setWarn('Вже існує документ Чек');
             }
             App::Redirect("\\App\\Pages\\Doc\\POSCheck", 0, $this->_doc->document_id);
             return;
@@ -258,7 +258,7 @@ class OrderList extends \App\Pages\Base
 
         if ($sender->id == "bgi") {
             if ($invoice) {
-                $this->setWarn('goodsissue_exists');
+                $this->setWarn('Вже існує документ Видаткова накладна');
             }
             App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
             return;
@@ -617,7 +617,7 @@ class OrderList extends \App\Pages\Base
         Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(),  $form->pcomment->getText());
         \App\Entity\IOState::addIOState($this->_doc->document_id, $amount, \App\Entity\IOState::TYPE_BASE_INCOME);
 
-        $this->setSuccess('payment_added');
+        $this->setSuccess('Оплата додана');
 
         if ($this->payform->closeorder->isChecked() == true) {
             $doc = Document::load($this->_doc->document_id);     //загружаем  тобы  обновить  оплату
@@ -631,7 +631,7 @@ class OrderList extends \App\Pages\Base
     
     public function onBranch($sender){
        $id = $sender->getValue();   
-       $users = array(0=> H::l("selnothing") ); 
+       $users = array(0=> "Не обрано" ); 
        
        foreach(\App\Entity\User::getByBranch($id) as $id=>$u) {
           $users[$id] = $u ;  

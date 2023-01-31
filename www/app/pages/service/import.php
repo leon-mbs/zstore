@@ -440,7 +440,7 @@ class Import extends \App\Pages\Base
             $doc->updateStatus(\App\Entity\Doc\Document::STATE_EXECUTED);
         }
 
-        $this->setSuccess("imported_items", $cnt);
+        $this->setSuccess("Імпортовано {$cnt} ТМЦ");
     }
 
     public function onCImport($sender) {
@@ -547,7 +547,7 @@ class Import extends \App\Pages\Base
             }
         }
 
-        $this->setSuccess("imported_customers ", $cnt);
+        $this->setSuccess("Імпортовано {$cnt} контрагентів "  );
     }
 
     public function onNImport($sender) {

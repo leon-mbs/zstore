@@ -189,7 +189,7 @@ class TTN extends \App\Pages\Base
 
                         if (count($list) > 0 && $common['numberttn'] <> 1) {
 
-                            $this->setError('order_has_sent');
+                            $this->setError('У замовлення вже є відправки');
                             App::Redirect("\\App\\Pages\\Register\\GIList");
                             return;
                         }
@@ -197,7 +197,7 @@ class TTN extends \App\Pages\Base
 
                         if (count($list) > 0 && $common['numberttn'] <> 1) {
 
-                            $this->setError('order_has_sent');
+                            $this->setError('У замовлення вже є відправки');
                             App::Redirect("\\App\\Pages\\Register\\GIList");
                             return;
                         }
@@ -432,7 +432,7 @@ class TTN extends \App\Pages\Base
 
 
             if (strlen($serial) == 0) {
-                $this->setWarn('needs_serial');
+                $this->setWarn('Потрібна партія виробника');
                 $this->editdetail->setVisible(true);
                 $this->docform->setVisible(false);
 
@@ -509,12 +509,12 @@ class TTN extends \App\Pages\Base
 
         if ($item->quantity > $qstock) {
 
-            $this->setWarn('inserted_extra_count');
+            $this->setWarn('Введено більше товару, чим є в наявності');
         }
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
 
-            $this->setError("needs_serial");
+            $this->setError("Потрібна партія виробника");
             return;
         }
 
@@ -523,7 +523,7 @@ class TTN extends \App\Pages\Base
 
             if (in_array($item->snumber, $slist) == false) {
 
-                $this->setWarn('invalid_serialno');
+                $this->setWarn('Невірний номер серії');
             } else {
                 $st = Stock::getFirst("store_id={$store_id} and item_id={$item->item_id} and snumber=" . Stock::qstr($item->snumber));
                 if ($st instanceof Stock) {
@@ -781,7 +781,7 @@ class TTN extends \App\Pages\Base
         $c = $this->docform->customer->getKey();
 
         if ($c == 0) {
-            $this->setError("noselcust");
+            $this->setError("Не задано контрагента");
         }
 
 

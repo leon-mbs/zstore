@@ -366,7 +366,7 @@ class Order extends \App\Pages\Base
                $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
                
                if ($this->_doc->payed > $this->_doc->payamount) {
-                    $this->setError('inserted_extrasum');
+                    $this->setError('Внесена сума більше необхідної');
                     return;
                }               
                if ($this->_doc->payed == 0) {
@@ -494,7 +494,7 @@ class Order extends \App\Pages\Base
 
         $c = $this->docform->customer->getKey();
         if ($c == 0) {
-            $this->setError("noselcust");
+            $this->setError("Не задано контрагента");
         }
    
 

@@ -239,7 +239,7 @@ class IncomeService extends \App\Pages\Base
     public function saverowOnClick($sender) {
         $id = $this->editdetail->editservice->getValue();
         if ($id == 0) {
-            $this->setError("noselservice");
+            $this->setError("Не обрано послугу або роботу");
             return;
         }
         $service = Service::load($id);
@@ -417,7 +417,7 @@ class IncomeService extends \App\Pages\Base
             }
         }
         if (count($this->_servicelist) == 0) {
-            //  $this->setError("noenterpos");
+            //  $this->setError("Не введено позиції");
         }
 
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {

@@ -339,7 +339,7 @@ class ServiceAct extends \App\Pages\Base
     public function saverowOnClick($sender) {
         $id = $this->editdetail->editservice->getValue();
         if ($id == 0) {
-            $this->setError("noselservice");
+            $this->setError("Не обрано послугу або роботу");
             return;
         }
         $service = Service::load($id);
@@ -375,7 +375,7 @@ class ServiceAct extends \App\Pages\Base
     public function saveitemrowOnClick($sender) {
         $id = $this->edititemdetail->edititem->getKey();
         if ($id == 0) {
-            $this->setError("noselservice");
+            $this->setError("Не обрано послугу або роботу");
             return;
         }
         $item = Item::load($id);
@@ -468,7 +468,7 @@ class ServiceAct extends \App\Pages\Base
    
             if ($sender->id == 'execdoc') {
                 if ( $payamount > 0 && $this->_doc->customer_id == 0) {
-                    $this->setError('noselcustifnopay');
+                    $this->setError('Якщо кредит, необхідно вибрати контрагента');
                     return;
                 }
             }               
@@ -482,7 +482,7 @@ class ServiceAct extends \App\Pages\Base
                
     
                if ($this->_doc->payed > $payamount) {
-                    $this->setError('inserted_extrasum');
+                    $this->setError('Внесена сума більше необхідної');
                     return;
                }               
                if ($this->_doc->payed == 0) {
@@ -605,7 +605,7 @@ class ServiceAct extends \App\Pages\Base
             }
         }
         if (count($this->_servicelist) == 0) {
-            //  $this->setError("noenterpos");
+            //  $this->setError("Не введено позиції");
         }
 
         

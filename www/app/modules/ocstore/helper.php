@@ -53,7 +53,7 @@ class Helper
             if (strlen($result) > 0) {
                 \App\System::setErrorMsg($result,true);
             } else {
-                \App\System::setErrorMsg(H::l("nodataresponse",true));
+                \App\System::setErrorMsg("Немає даних відповіді",true);
             }
 
 
@@ -97,7 +97,7 @@ class Helper
         }
         if (is_array($data) && count($data) == 0) {
 
-            System::setErrorMsg(H::l('nodataresponse'));
+            System::setErrorMsg('Немає даних відповіді');
             return;
         }
 

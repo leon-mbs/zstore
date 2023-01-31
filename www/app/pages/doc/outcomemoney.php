@@ -165,17 +165,17 @@ class OutcomeMoney extends \App\Pages\Base
         }
 
         if (($this->_doc->amount > 0) == false) {
-            $this->setError("noentersum");
+            $this->setError("Не введено суму");
         }
         if ($this->docform->mtype->getValue() == 0 &&  $this->_doc->headerdata['begval']==0) {
-            $this->setError("noseloutcome");
+            $this->setError("Не обрано тип витрат");
         }
 
 
         if ($this->docform->detail->getValue() == 1 || $this->docform->detail->getValue() == 2) {
 
             if ($this->_doc->customer_id == 0 &&  $this->_doc->headerdata['begval']!=2) {
-                $this->setError("noselcust");
+                $this->setError("Не задано контрагента");
             }
         }
         if ($this->docform->detail->getValue() == 3) {

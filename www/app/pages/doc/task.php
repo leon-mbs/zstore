@@ -169,7 +169,7 @@ class Task extends \App\Pages\Base
     public function saverowOnClick($sender) {
         $id = $this->editdetail->editservice->getValue();
         if ($id == 0) {
-            $this->setError("noseljob");
+            $this->setError("Не обрано роботу");
             return;
         }
         $service = Service::load($id);
@@ -220,7 +220,7 @@ class Task extends \App\Pages\Base
     public function saverowprodOnClick($sender) {
         $id = $this->editdetailprod->editprod->getValue();
         if ($id == 0) {
-            $this->setError("noselprod");
+            $this->setError("Не обрано продукцію");
             return;
         }
         $item = Item::load($id);
@@ -397,7 +397,7 @@ class Task extends \App\Pages\Base
             $this->setError('enterdatedoc');
         }
         if (count($this->_servicelist) == 0 && count($this->_prodlist) == 0) {
-            $this->setError("noenterpos");
+            $this->setError("Не введено позиції");
         }
         if (count($this->_emplist) > 0) {
             $ktu = 0;

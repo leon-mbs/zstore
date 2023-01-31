@@ -56,7 +56,7 @@ class Options extends \App\Pages\Base
         
         if (strlen($pricetype) < 2) {
 
-            $this->setError('noselpricetype');
+            $this->setError('Не вказано тип ціни');
             return;
         }
 

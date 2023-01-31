@@ -237,7 +237,7 @@ class OrderFood extends \App\Pages\Base
         $item->price = $this->editdetail->editprice->getText();
 
         if ($item->quantity > $qstock) {
-            $this->setWarn('inserted_extra_count');
+            $this->setWarn('Введено більше товару, чим є в наявності');
         }
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($this->_rowid => $this->_itemlist[$this->_rowid]));
@@ -523,7 +523,7 @@ class OrderFood extends \App\Pages\Base
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("noenterpos");
+            $this->setError("Не введено позиції");
         }
         if (($this->docform->store->getValue() > 0) == false) {
             $this->setError("noselstore");

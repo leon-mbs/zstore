@@ -36,7 +36,7 @@ class ReturnIssue extends \App\Pages\Base
         parent::__construct();
         if ($docid == 0 && $basedocid == 0) {
 
-            $this->setWarn('return_basedon_goodsissue');
+            $this->setWarn('Повернення слід створювати на основі видаткової накладної або чека');
         }
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
@@ -106,7 +106,7 @@ class ReturnIssue extends \App\Pages\Base
 
                     if (count($d) > 0) {
 
-                        $this->setError('return_exists');
+                        $this->setError('Вже існує документ Повернення');
                         App::Redirect("\\App\\Pages\\Register\\DocList");
                         return;
                     }
@@ -391,7 +391,7 @@ class ReturnIssue extends \App\Pages\Base
         $payed = $this->docform->payed->getText();
         $total = $this->docform->total->getText();
         if ($payed > $total) {
-            $this->setWarn('inserted_extrasum');
+            $this->setWarn('Внесена сума більше необхідної');
         } else {
             $this->goAnkor("tankor");
         }
@@ -448,7 +448,7 @@ class ReturnIssue extends \App\Pages\Base
                         }
                     }
                     if ($ok == false) {
-                        $this->setError("thesameitempriceret");
+                        $this->setError("Повернення має відповідати проданим товарам за тією самою ціною");
                         break;
                     }
 

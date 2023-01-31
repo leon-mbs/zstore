@@ -121,7 +121,7 @@ class GRList extends \App\Pages\Base
             $d = $this->_doc->getChildren('GoodsReceipt');
 
             if (count($d) > 0) {
-                $this->setWarn('goodsreceipt_exists');
+                $this->setWarn('Вже існує документ Прибуткова накладна');
             }
             App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", 0, $this->_doc->document_id);
             return;
@@ -131,7 +131,7 @@ class GRList extends \App\Pages\Base
 
             if (count($d) > 0) {
 
-                $this->setWarn('return_exists');
+                $this->setWarn('Вже існує документ Повернення');
             }
             App::Redirect("\\App\\Pages\\Doc\\RetCustIssue", 0, $this->_doc->document_id);
             return;

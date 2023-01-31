@@ -193,7 +193,7 @@ class POSCheck extends \App\Pages\Base
 
                         if (count($list) > 0) {
 
-                            $this->setWarn('order_has_sell');
+                            $this->setWarn('У замовлення вже є продажі');
                         }
                         $this->docform->total->setText($order->amount);
 
@@ -393,11 +393,11 @@ class POSCheck extends \App\Pages\Base
         $item->price = $this->editdetail->editprice->getText();
 
         if ($item->quantity > $qstock) {
-            $this->setWarn('inserted_extra_count');
+            $this->setWarn('Введено більше товару, чим є в наявності');
         }
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("needs_serial");
+            $this->setError("Потрібна партія виробника");
             return;
         }
 
@@ -406,7 +406,7 @@ class POSCheck extends \App\Pages\Base
 
             if (in_array($item->snumber, $slist) == false) {
 
-                $this->setWarn('invalid_serialno');
+                $this->setWarn('Невірний номер серії');
             }
         }
 
@@ -441,7 +441,7 @@ class POSCheck extends \App\Pages\Base
         $id = $this->editserdetail->editser->getKey();
         if ($id == 0) {
 
-            $this->setError("noselservice");
+            $this->setError("Не обрано послугу або роботу");
             return;
         }
         $ser = Service::load($id);
@@ -796,7 +796,7 @@ class POSCheck extends \App\Pages\Base
 
 
             if (strlen($serial) == 0) {
-                $this->setWarn('needs_serial');
+                $this->setWarn('Потрібна партія виробника');
                 $this->editdetail->setVisible(true);
                 $this->docform->setVisible(false);
 
@@ -841,7 +841,7 @@ class POSCheck extends \App\Pages\Base
             }
         }
         if (count($this->_itemlist) == 0 && count($this->_serlist) == 0) {
-            $this->setError("noenterpos");
+            $this->setError("Не введено позиції");
         }
         if (($this->docform->store->getValue() > 0) == false) {
             $this->setError("noselstore");

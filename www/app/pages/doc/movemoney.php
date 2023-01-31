@@ -136,7 +136,7 @@ class MoveMoney extends \App\Pages\Base
         }
 
         if (($this->_doc->amount > 0) == false) {
-            $this->setError("noentersum");
+            $this->setError("Не введено суму");
         }
 
         if ($this->_doc->headerdata['paymentto'] == 0 || $this->_doc->headerdata['paymentfrom'] == 0) {

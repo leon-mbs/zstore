@@ -732,7 +732,7 @@ class ARMFood extends \App\Pages\Base
             $n->message = serialize(array('document_id' => $this->_doc->document_id));
 
             $n->save();
-            $this->setInfo('sentdelivary');
+            $this->setInfo('Відправлено в доставку');
 
         } else {  //в  производство
             $this->_doc->updateStatus(Document::STATE_INPROCESS);
@@ -743,7 +743,7 @@ class ARMFood extends \App\Pages\Base
 
             $n->save();
 
-            $this->setInfo('sentprod');
+            $this->setInfo('Відправлено у виробництво');
 
         }
 
@@ -799,7 +799,7 @@ class ARMFood extends \App\Pages\Base
         }
 
 
-        $this->setInfo('sentprod');
+        $this->setInfo('Відправлено у виробництво');
         $this->onNewOrder();
     }
 
@@ -840,7 +840,7 @@ class ARMFood extends \App\Pages\Base
         }
 
 
-        $this->setInfo('sentprod');
+        $this->setInfo('Відправлено у виробництво');
         $this->onNewOrder();
     }
 
@@ -956,7 +956,7 @@ class ARMFood extends \App\Pages\Base
             {
 
                 $this->_doc->updateStatus(Document::STATE_INPROCESS);
-                $this->setInfo('sentprod');
+                $this->setInfo('Відправлено у виробництво');
 
 
             }
@@ -1030,7 +1030,7 @@ class ARMFood extends \App\Pages\Base
         $idnew = $this->_doc->document_id == 0;
 
         if (count($this->_itemlist) == 0) {
-            $this->setError('noenterpos');
+            $this->setError('Не введено позиції');
             return false;  
         }
         if ($idnew) {

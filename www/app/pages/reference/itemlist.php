@@ -448,13 +448,13 @@ class ItemList extends \App\Pages\Base
             $imagedata = getimagesize($file["tmp_name"]);
 
             if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {
-                $this->setError('invalidformatimage');
+                $this->setError('Невірний формат зображення');
                 return;
             }
 
             if ($imagedata[0] * $imagedata[1] > 10000000) {
 
-             //   $this->setError('toobigimage');
+             //   $this->setError('Занадто великий розмір зображення');
             //    return;
             }
 
@@ -601,7 +601,7 @@ class ItemList extends \App\Pages\Base
     public function OnAddSSet($sender) {
         $id = $sender->editssname->getValue();
         if ($id == 0) {
-            $this->setError("noselservice");
+            $this->setError("Не обрано послугу або роботу");
             return;
         }
 

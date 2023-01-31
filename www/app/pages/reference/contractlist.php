@@ -165,7 +165,7 @@ class ContractList extends \App\Pages\Base
         }
         $this->_contract->customer_id = $this->contractdetail->editcust->getKey();
         if ($this->_contract->customer_id == 0) {
-            $this->setError("noselcust");
+            $this->setError("Не задано контрагента");
             return;
         }
         $this->_contract->firm_id = $this->contractdetail->editcomp->getValue();

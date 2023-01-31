@@ -34,7 +34,7 @@ class Items extends \App\Pages\Base
         $cats = System::getSession()->cats;
         if (is_array($cats) == false) {
             $cats = array();
-            $this->setWarn('do_connect');
+            $this->setWarn('Виконайте з`єднання на сторінці налаштувань');
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
@@ -254,7 +254,7 @@ class Items extends \App\Pages\Base
         $cats = System::getSession()->cats;
         if (is_array($cats) == false) {
             $cats = array();
-            $this->setWarn('do_connect');
+            $this->setWarn('Виконайте з`єднання на сторінці налаштувань');
             return;
         }        
         
