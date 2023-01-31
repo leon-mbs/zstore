@@ -65,7 +65,7 @@ class ProductView extends Base
 
         $this->add(new Label('description', $product->getDescription(), true));
         $this->add(new TextInput('rated'))->setText($product->getRating());
-        $this->add(new Label('comments', \App\Helper::l("shopfeedbaks", intval($product->comments))));
+        $this->add(new Label('comments',"Відгуків (".intval($product->comments).") " ));
 
         $list = Helper::getAttributeValuesByProduct($product, false);
         $this->add(new \Zippy\Html\DataList\DataView('attributelist', new \Zippy\Html\DataList\ArrayDataSource($list), $this, 'OnAddAttributeRow'))->Reload();
@@ -142,9 +142,9 @@ class ProductView extends Base
         $item = $datarow->getDataItem();
         $datarow->add(new Label("attrname", $item->attributename));
         $meashure = "";
-        $nodata = \App\Helper::l("shopattrnodata");
-        $yes = \App\Helper::l("shopattryes");
-        $no = \App\Helper::l("shopattrno");
+        $nodata = "Немає даних";
+        $yes = "Є";
+        $no = "Немає";
         $value = $item->attributevalue;
         if ($item->attributetype == 2) {
             $meashure = $item->valueslist;
@@ -195,7 +195,7 @@ class ProductView extends Base
         $entercode = $this->formcomment->capchacode->getText();
         $capchacode = $this->formcomment->capcha->getCode();
         if (strlen($entercode) == 0 || $entercode != $capchacode) {
-            $this->setError("invalidcapcha");
+            $this->setError("Невірний код капчі");
 
             return;
         }

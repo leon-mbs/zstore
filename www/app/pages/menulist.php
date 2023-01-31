@@ -24,7 +24,7 @@ class MenuList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (System::getUser()->userlogin != 'admin') {
-            System::setErrorMsg(H::l('onlyadminpage'));
+            System::setErrorMsg('До сторінки має доступ тільки адміністратор');
             App::RedirectError();
             return false;
         }

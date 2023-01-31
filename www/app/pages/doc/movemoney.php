@@ -140,10 +140,10 @@ class MoveMoney extends \App\Pages\Base
         }
 
         if ($this->_doc->headerdata['paymentto'] == 0 || $this->_doc->headerdata['paymentfrom'] == 0) {
-            $this->setError("noselpayment");
+            $this->setError("Не обрано рахунок");
         }
         if ($this->_doc->headerdata['paymentto'] == $this->_doc->headerdata['paymentfrom']) {
-            $this->setError("paymentseq");
+            $this->setError("Рахунки однакові");
         }
 
         return !$this->isError();

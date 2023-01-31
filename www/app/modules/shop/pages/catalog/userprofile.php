@@ -67,7 +67,7 @@ class UserProfile extends Base
         if (!$this->isError()) {
 
             $this->c->save();
-            $this->setSuccess('saved');
+            $this->setSuccess('Збережено');
              
         }
     }

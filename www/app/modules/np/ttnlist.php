@@ -107,7 +107,7 @@ class TTNList extends \App\Pages\Base
             if (count($errors) > 0) {
                 $this->setError(Implode('<br>', $errors));
             } 
-            $this->setSuccess("npupdated", $cnt);
+            $this->setSuccess("Оновлено {$cnt} ТТН" );
 
         $this->doclist->Reload();
         

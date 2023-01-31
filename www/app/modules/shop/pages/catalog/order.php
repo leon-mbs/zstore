@@ -158,7 +158,7 @@ class Order extends Base
         }
 
         if ($this->_tvars["isfood"] && $time < (time() + 1800)) {
-            $this->setError("timedelivery");
+            $this->setError("Невірний час доставки");
             return;
         }
 
@@ -282,10 +282,10 @@ class Order extends Base
          
 
 
-         //   $this->setSuccess("shopneworder", $order->document_number);
+         //   $this->setSuccess("Створено замовлення " . $order->document_number);
 
             
-            \App\Entity\Subscribe::sendSMS($phone, \App\Helper::l("shopyoursorder", $order->document_id));
+            \App\Entity\Subscribe::sendSMS($phone, "Ваше замовлення номер " . $order->document_id);
              
         } catch(\Exception $ee) {
             $this->setError($ee->getMessage());

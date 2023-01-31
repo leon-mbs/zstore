@@ -249,7 +249,7 @@ class Export extends \App\Pages\Base
             }
 
             $i++;
-            $data['A' . $i] = array('value' => H::l("total") . ": ", 'bold' => true, 'align' => 'right');
+            $data['A' . $i] = array('value' => "Всього: ", 'bold' => true, 'align' => 'right');
             $data['B' . $i] = array('value' => H::fa(doubleval($item->amount)), 'format' => 'number', 'bold' => true, 'align' => 'right');
             $i++;
             

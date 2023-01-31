@@ -599,7 +599,7 @@ class Invoice extends \App\Pages\Base
             $disctext = "";
             $d =  $cust->getDiscount() ;
             if (doubleval($d) > 0) {
-                $disctext = H::l("custdisc") . " {$d}%";
+                $disctext = "Постійна знижка " . " {$d}%";
             } else {
                 $bonus = $cust->getBonus();
                 if ($bonus > 0) {

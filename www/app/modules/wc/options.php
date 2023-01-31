@@ -72,7 +72,7 @@ class Options extends \App\Pages\Base
         $modules['wcsetpayamount'] = $setpayamount;
 
         System::setOptions("modules", $modules);
-        $this->setSuccess('saved');
+        $this->setSuccess('Збережено');
 
         \App\Modules\WC\Helper::connect();
 

@@ -544,7 +544,7 @@ class POSCheck extends \App\Pages\Base
                     foreach ($this->_itemlist as $item) {
                         $qty = $item->getQuantity($this->_doc->headerdata['store']);
                         if ($qty < $item->quantity) {
-                            $this->setError("nominus", H::fqty($qty), $item->item_name);
+                            $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
                             return;
                         }
                     }
@@ -847,7 +847,7 @@ class POSCheck extends \App\Pages\Base
             $this->setError("Не обрано склад");
         }
         if (($this->docform->pos->getValue() > 0) == false) {
-            $this->setError("noselposterm");
+            $this->setError("Не обрано POS термінал");
         }
         $p = $this->docform->payment->getValue();
         $c = $this->docform->customer->getKey();

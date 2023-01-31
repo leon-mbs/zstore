@@ -53,7 +53,7 @@ class UserLogin extends \Zippy\Html\WebPage
             $entercode = $sender->capchacode->getText();
             $capchacode = $sender->capcha->getCode();
             if (strlen($entercode) == 0 || $entercode != $capchacode) {
-                $this->setError("invalidcapcha");
+                $this->setError("Невірний код капчі");
                 $this->counter();
 
                 return;
@@ -118,14 +118,14 @@ class UserLogin extends \Zippy\Html\WebPage
 
     public function setError($msg) {
 
-        $msg = Helper::l($msg);
+  
         $this->_tvars['alerterror'] = $msg;
     }
 
     private function counter() {
         $this->cntlogin++;
         if ($this->cntlogin == 5) {
-            $msg = Helper::l("extralogin");
+            $msg = "Багато невдалих авторизацій";
             $t = $this->loginform->userlogin->getText()  ;
             $t = htmlspecialchars($t) ;
             $msg .= '<br>' . $t. ', ';

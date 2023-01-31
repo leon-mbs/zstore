@@ -159,7 +159,8 @@ class Order extends \App\Entity\Doc\Document
         
           foreach ($items as $item) {
                 if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
-                    throw new \Exception(H::l("nominus", H::fqty($item->getQuantity($this->headerdata['store'])), $item->itemname));
+                    throw new \Exception("На складі всього ".H::fqty($item->getQuantity($this->headerdata['store']) )." ТМЦ {$item->itemname}. Списання у мінус заборонено" );
+
                 }
               
           }

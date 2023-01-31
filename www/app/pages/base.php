@@ -396,23 +396,23 @@ class Base extends \Zippy\Html\WebPage
 
         $user = System::getUser();
         if ($user->defstore == 0) {
-         //   $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("nodefstore") . "\"");
+         //   $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі склад за замовчуванням\"");
         }
         if ($user->deffirm == 0) {
-         //   $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("nodeffirm") . "\"");
+         //   $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі компанію за замовчуванням\"");
         }
         if ($user->defmf == 0) {
-        //    $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("nodefmf") . "\"");
+        //    $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі касу за замовчуванням\"");
         }
         if ($user->userlogin == "admin") {
             if ($user->userpass == "admin" || $user->userpass == '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.') {
-                $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("nodefadminpass") . "\"");
+                $this->_tvars["toasts"][] = array('title' => "title:\"Зміність у профілі пароль за замовчуванням\"");
 
             }
         }
         if ($user->rolename == "admins") {
             if (\App\Entity\Notify::isNotify(\App\Entity\Notify::SYSTEM)) {
-                $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("hassystemnotify") . "\"");
+                $this->_tvars["toasts"][] = array('title' => "title:\"Наявні непрочитані системні повідомлення\"");
 
             }
             //проверка  новой версии        

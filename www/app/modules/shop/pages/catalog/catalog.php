@@ -221,22 +221,22 @@ class Catalog extends Base
         }
 
         $row->add(new TextInput('srated'))->setText($item->getRating());
-        $row->add(new Label('scomments'))->setText(\App\Helper::l("shopfeedbaks", $item->comments));
+        $row->add(new Label('scomments'))->setText( "Відгуків (".$item->comments.")"  );
         $row->add(new ClickLink('sbuy', $this, 'OnBuy'));
         if ($item->getQuantity() > 0 || $this->_tvars["isfood"]==true) {
 
-           // $row->sbuy->setValue(\App\Helper::l('Купити'));
+           // $row->sbuy->setValue('Купити');
         } else {
-          //  $row->sbuy->setValue(\App\Helper::l('Замовити'));
+          //  $row->sbuy->setValue('Замовити');
         }
 
 
         $op = \App\System::getOptions("shop");
 
         if ($item->getQuantity($op['defstore']) > 0) {
-          //  $row->sbuy->setValue(\App\Helper::l('Купити'));
+          //  $row->sbuy->setValue('Купити');
         } else {
-          //  $row->sbuy->setValue(\App\Helper::l('Замовити'));
+          //  $row->sbuy->setValue('Замовити');
         }
     }
 

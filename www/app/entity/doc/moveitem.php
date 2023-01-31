@@ -24,7 +24,7 @@ class MoveItem extends Document
 
             $listst = Stock::pickup($this->headerdata['store'], $item);
             if (count($listst) == 0) {
-                \App\System::setErrorMsg(H::l('noenaughtovar', $item->itemname));
+                \App\System::setErrorMsg("Недостатньо товару " . $item->itemname);
 
                 return false;
             }

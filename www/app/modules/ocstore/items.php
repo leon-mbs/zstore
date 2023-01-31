@@ -210,7 +210,7 @@ class Items extends \App\Pages\Base
             $this->setErrorTopPage($data['error']);
             return;
         }
-        $this->setSuccess('refreshed');
+        $this->setSuccess('Оновлено');
     }
 
     public function onUpdatePrice($sender) {
@@ -244,7 +244,7 @@ class Items extends \App\Pages\Base
             $this->setErrorTopPage($data['error']);
             return;
         }
-        $this->setSuccess('refreshed');
+        $this->setSuccess('Оновлено');
     }
 
     public function importOnSubmit($sender) {

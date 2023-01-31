@@ -27,7 +27,7 @@ class FirmList extends \App\Pages\Base
         parent::__construct();
 
         if (System::getUser()->userlogin != 'admin') {
-            System::setErrorMsg(H::l('onlyadminpage'));
+            System::setErrorMsg('До сторінки має доступ тільки адміністратор');
             \App\Application::RedirectError();
             return false;
         }

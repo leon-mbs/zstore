@@ -154,7 +154,7 @@ class Invoice extends \App\Entity\Doc\Document
     }
 
     protected function getEmailSubject() {
-        return H::l('emailinvsub', $this->document_number);
+        return  "Рахунок до оплати номер ".$this->document_number ;
     }
 
     public function supportedExport() {

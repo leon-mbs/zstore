@@ -159,15 +159,13 @@ class UserLogin extends \Zippy\Html\WebPage
     }
 
     public function setError($msg,$p=null) {
-        $msg = Helper::l($msg,$p) ;
+      
 
         $this->_tvars['alerterror'] = $msg;
     }
   
     public function setSuccess($msg) {
-
-        $msg = Helper::l($msg ) ;
-
+    
         $this->_tvars['alertsuccess'] = $msg;
     }
     

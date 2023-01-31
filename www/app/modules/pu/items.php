@@ -235,7 +235,7 @@ class Items extends \App\Pages\Base
             return;
         }       
     
-      $this->setSuccess('refreshed');
+      $this->setSuccess('Оновлено');
     }
 
     public function onUpdatePrice($sender) {
@@ -306,7 +306,7 @@ class Items extends \App\Pages\Base
             return;
         }       
     
-      $this->setSuccess('refreshed');
+      $this->setSuccess('Оновлено');
     }
 
     public function importOnSubmit($sender) {

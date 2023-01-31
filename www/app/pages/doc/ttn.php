@@ -628,7 +628,7 @@ class TTN extends \App\Pages\Base
         $isEdited = $this->_doc->document_id > 0;
 
         if ($sender->id == 'senddoc' && $this->_doc->headerdata['delivery'] > 2 && strlen($this->_doc->headerdata['delivery']) == 0) {
-            $this->setError('nottnnumber');
+            $this->setError('Не вказана декларація служби доставки');
             return;
         }
 
@@ -653,7 +653,7 @@ class TTN extends \App\Pages\Base
                     foreach ($this->_itemlist as $item) {
                         $qty = $item->getQuantity($this->_doc->headerdata['store']);
                         if ($qty < $item->quantity) {
-                            $this->setError("nominus", H::fqty($qty), $item->itemname);
+                            $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
                             return;
                         }
                     }
@@ -664,7 +664,7 @@ class TTN extends \App\Pages\Base
 
                     if($this->_changedpos) {
                         if($this->_changedpos) {
-                            $msg= H::l("changedposlist",$this->_doc->document_number,$basedoc->document_number,\App\System::getUser()->username); ;
+                            $msg=  "У документа {$this->_doc->document_number}, створеного на підставі {$basedoc->document_number}, користувачем ".\App\System::getUser()->username." был изменен список ТМЦ "  ;
                             \App\Entity\Notify::toSystemLog($msg) ;
                         }
                
@@ -686,10 +686,9 @@ class TTN extends \App\Pages\Base
                     $basedoc = Document::load($this->_doc->parent_id);
 
                     if($this->_changedpos) {
-                        if($this->_changedpos) {
-                            $msg= H::l("changedposlist",$this->_doc->document_number,$basedoc->document_number,\App\System::getUser()->username); ;
+                            $msg=  "У документа {$this->_doc->document_number}, створеного на підставі {$basedoc->document_number}, користувачем ".\App\System::getUser()->username." был изменен список ТМЦ "  ;
+
                             \App\Entity\Notify::toSystemLog($msg) ;
-                        }
                
                     }
                  }

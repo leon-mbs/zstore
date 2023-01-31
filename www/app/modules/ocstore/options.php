@@ -78,7 +78,7 @@ class Options extends \App\Pages\Base
         System::setOptions("modules", $modules);
 
 
-        $this->setSuccess('saved');
+        $this->setSuccess('Збережено');
 
         \App\Modules\OCStore\Helper::connect();
 

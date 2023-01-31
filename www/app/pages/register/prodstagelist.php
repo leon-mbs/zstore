@@ -242,7 +242,7 @@ class ProdStageList extends \App\Pages\Base
         $from = $sender->addcalfrom->getDateTime($d);
         $to = $sender->addcalto->getDateTime($d);
         if ($from >= $to) {
-            $this->setError('ts_invalidinterval');
+            $this->setError('Невірний інтервал');
             return;
         }
 

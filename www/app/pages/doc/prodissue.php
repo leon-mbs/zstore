@@ -86,12 +86,12 @@ class ProdIssue extends \App\Pages\Base
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'Task') {
 
-                        $this->docform->notes->setText(H::l('basedon') . $basedoc->document_number);
+                        $this->docform->notes->setText('Підстава ' . $basedoc->document_number);
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
                     }
                     if ($basedoc->meta_name == 'ServiceAct') {
 
-                        $this->docform->notes->setText(H::l('basedon') . $basedoc->document_number);
+                        $this->docform->notes->setText('Підстава ' . $basedoc->document_number);
                     }
                     if ($basedoc->meta_name == 'ProdIssue') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
@@ -316,7 +316,7 @@ class ProdIssue extends \App\Pages\Base
                     foreach ($this->_itemlist as $item) {
                         $qty = $item->getQuantity($this->_doc->headerdata['store']);
                         if ($qty < $item->quantity) {
-                            $this->setError("nominus", H::fqty($qty), $item->itemname);
+                            $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
                             return;
                         }
                     }

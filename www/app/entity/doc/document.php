@@ -878,13 +878,13 @@ class Document extends \ZCL\DB\Entity
      */
     public static function getDeliveryTypes($np = false) {
         $list = array();
-        $list[self::DEL_SELF] = Helper::l('delself');
-        $list[self::DEL_BOY] = Helper::l('delboy');
+        $list[self::DEL_SELF] = 'Самовивіз';
+        $list[self::DEL_BOY] = 'Кур`єр';
         if ($np == true) {
-            $list[self::DEL_NP] = Helper::l('delnp');
+            $list[self::DEL_NP] = 'Нова пошта';
         }
 
-        $list[self::DEL_SERVICE] = Helper::l('delservice');
+        $list[self::DEL_SERVICE] = 'Служба доставки';
 
         return $list;
     }
@@ -939,7 +939,7 @@ class Document extends \ZCL\DB\Entity
             if ($mail->send() === false) {
                 System::setErrorMsg($mail->ErrorInfo);
             } else {
-                System::setSuccessMsg(Helper::l('email_sent'));
+                System::setSuccessMsg('E-mail відправлено');
             }
         } catch(\Exception $e) {
             System::setErrorMsg($e->getMessage());

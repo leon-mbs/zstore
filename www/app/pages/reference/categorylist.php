@@ -139,11 +139,11 @@ class CategoryList extends \App\Pages\Base
 
         $cat_id = $sender->owner->getDataItem()->cat_id;
         if ($this->_catlist[$cat_id]->qty > 0) {
-            $this->setError('nodelcat');
+            $this->setError('Не можна видалити категорію з ТМЦ');
             return;
         }
         if ($this->_catlist[$cat_id]->hasChild()) {
-            $this->setError('nodelcatchild');
+            $this->setError('Категорія має дочірні категорії');
             return;
         }
 

@@ -44,7 +44,7 @@ class Options extends \App\Pages\Base
         $modules['plsecret'] =trim($this->cform->secret->getText());
 
         System::setOptions("modules", $modules);
-        $this->setSuccess('saved');
+        $this->setSuccess('Збережено');
          
     }
 

@@ -258,7 +258,7 @@ class OutcomeItem extends \App\Pages\Base
                     foreach ($this->_itemlist as $item) {
                         $qty = $item->getQuantity($this->_doc->headerdata['store']);
                         if ($qty < $item->quantity) {
-                            $this->setError("nominus", H::fqty($qty), $item->itemname);
+                            $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
                             return;
                         }
                     }
@@ -269,10 +269,10 @@ class OutcomeItem extends \App\Pages\Base
                 if ($sender->id == 'execdoc' && $tostore > 0) {
                     $ch = $this->_doc->getChildren('IncomeItem');
                     if (count($ch) > 0) {
-                        $this->setWarn('indocalreadyexists');
+                        $this->setWarn('Вже є прибутковий документ ');
                     } else {
                         if ($this->_doc->headerdata['store'] == $tostore) {
-                            $this->setWarn('thesamestore');
+                            $this->setWarn('Вибрано той самий склад');
                         }
                         $indoc = Document::create('IncomeItem');
 
@@ -289,10 +289,10 @@ class OutcomeItem extends \App\Pages\Base
                         $admin  =\App\Entity\User::getByLogin('admin') ;
                         $indoc->user_id = $admin->user_id;
                         
-                        $indoc->notes = H::l('incomebasedon', $this->_doc->document_number, $this->_doc->headerdata['storename']);
+                        $indoc->notes = "Підстава {$this->_doc->document_number}, склад " . $this->_doc->headerdata['storename'];
                         if ($this->_doc->branch_id > 0) {
                             $br = \App\Entity\Branch::load($this->_doc->branch_id);
-                            $indoc->notes = H::l('incomebasedonbr', $this->_doc->document_number, $this->_doc->headerdata['storename'], $br->branch_name);
+                            $indoc->notes = "Підстава {$this->_doc->document_number}, склад {$this->_doc->headerdata['storename']}, філія " . $br->branch_name;
                         }
 
                         $items = array();
@@ -315,7 +315,7 @@ class OutcomeItem extends \App\Pages\Base
                             $indoc->updateStatus(Document::STATE_EXECUTED);
                         }
                         if ($indoc->document_id > 0) {
-                            $this->setSuccess("createddoc", $indoc->document_number);
+                            $this->setSuccess("Створено документ " . $indoc->document_number);
                         }
                     }
                 }

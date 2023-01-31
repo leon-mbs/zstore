@@ -232,7 +232,7 @@ class POSCheck extends Document
                 $price = $item->getProdprice();
 
                 if ($price == 0) {
-                    throw new \Exception(H::l('noselfprice', $item->itemname));
+                    throw new \Exception('Не розраховано собівартість готової продукції '. $item->itemname);
                 }
                 $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
 
@@ -244,7 +244,9 @@ class POSCheck extends Document
             }
 
             if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
-                throw new \Exception(\App\Helper::l("nominus", $item->getQuantity($this->headerdata['store']), $item->itemname));
+
+               throw new \Exception("На складі всього ".$item->getQuantity($this->headerdata['store']) ." ТМЦ {$item->itemname}. Списання у мінус заборонено" );
+                
             }
 
 

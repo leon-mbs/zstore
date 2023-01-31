@@ -267,8 +267,8 @@ class Orders extends \App\Pages\Base
                     $tovar->quantity = $product['quantity'];
 
                     $qty = $tovar->getQuantity($store);
-                    if ($qty < $tovar->quantity) {
-                        $this->setError("nominus", \App\Helper::fqty($qty), $tovar->itemname);
+                    if ($qty < $tovar->quantity) {               
+                        $this->setError("На складі всього ".\App\Helper::fqty($qty)." ТМЦ {$tovar->itemname}. Списання у мінус заборонено");
                         return;
                     }
                 }
@@ -330,7 +330,7 @@ class Orders extends \App\Pages\Base
                 if ($shoporder->total > $totalpr) {
                     $neworder->headerdata['ship_amount'] = $shoporder->total - $totalpr;
                     $neworder->headerdata['delivery'] = Document::DEL_SELF;
-                    $neworder->headerdata['delivery_name'] = \App\Helper::l('delself');
+                    $neworder->headerdata['delivery_name'] = 'Самовивіз';
                 }
 
                 $neworder->payamount = 0;

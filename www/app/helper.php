@@ -316,7 +316,7 @@ class Helper
             if ($mail->send() === false) {
                 System::setErrorMsg($mail->ErrorInfo);
             } else {
-                //  System::setSuccessMsg(Helper::l('email_sent'));
+                //  System::setSuccessMsg('E-mail відправлено');
             }
         } catch(\Exception $e) {
             System::setErrorMsg($e->getMessage());
@@ -750,43 +750,11 @@ class Helper
      * @param mixed $label
      * @param mixed $p1
      * @param mixed $p2
+     * @deprecated
      */
     public static function l($label, $p1 = "", $p2 = "", $p3 = "") {
-        global $_config;
-
-        $label = trim($label);
-        if (strlen($label) == 0) {
-            return '';
-        }
-
-        $labels = System::getCache('labels');
-        if ($labels == null) {
-            $lang = $_config['common']['lang'];
-            $filename = _ROOT . 'templates/lang.json';
-            if ($lang == 'ua') {
-                $filename = _ROOT . 'templates_ua/lang.json';
-            }
-            $file = @file_get_contents($filename);
-
-            if (strlen($file) == 0) {
-                echo "Не найден файл локализации  " . $filename;
-                die;
-            }
-            $labels = @json_decode($file, true);
-            if ($labels == null) {
-                echo "Неверный файл локализации  " . $filename;
-                die;
-            }
-            System::setCache('labels', $labels);
-        }
-        if (isset($labels[$label])) {
-            $text = $labels[$label];
-            $text = sprintf($text, $p1, $p2, $p3);
-            $text = str_replace("\'", "`", $text);
-            return $text;
-        } else {
-            return $label;
-        }
+       return $label;
+    
     }
 
  
@@ -803,19 +771,19 @@ class Helper
     }
 
     public static function getValName($vn) {
-        if ($vn == 'valuan') {
+        if ($vn == 'Гривня') {
             return 'UAH';
         }
-        if ($vn == 'valusd') {
+        if ($vn == 'Долар') {
             return 'USD';
         }
-        if ($vn == 'valeuro') {
+        if ($vn == 'Євро') {
             return 'EUR';
         }
-        if ($vn == 'valrub') {
+        if ($vn == 'Рубль') {
             return 'RUB';
         }
-        if ($vn == 'valmdl') {
+        if ($vn == 'Лей') {
             return 'MDL';
         }
     }

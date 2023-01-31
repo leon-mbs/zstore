@@ -181,7 +181,7 @@ class OutcomeMoney extends \App\Pages\Base
         if ($this->docform->detail->getValue() == 3) {
 
             if ($this->_doc->headerdata['emp'] == 0 &&  $this->_doc->headerdata['begval']!=2) {
-                $this->setError("noempselected");
+                $this->setError("Не обрано співробітника");
             }
         }
 

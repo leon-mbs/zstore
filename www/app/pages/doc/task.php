@@ -120,11 +120,11 @@ class Task extends \App\Pages\Base
                     $this->_doc->customer_id = $basedoc->customer_id;
 
                     if ($basedoc->meta_name == 'ServiceAct') {
-                        $this->docform->notes->setText(H::l('basedon') . $basedoc->document_number);
+                        $this->docform->notes->setText('Підстава '. $basedoc->document_number);
                         $this->_servicelist = $basedoc->unpackDetails('detaildata');
                     }
                     if ($basedoc->meta_name == 'Order') {
-                        $this->docform->notes->setText(H::l('basedon') . $basedoc->document_number);
+                        $this->docform->notes->setText('Підстава '. $basedoc->document_number);
                         $this->_prodlist = $basedoc->unpackDetails('detaildata');
                     }
                 }

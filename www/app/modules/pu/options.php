@@ -69,7 +69,7 @@ class Options extends \App\Pages\Base
         $modules['puinsertcust'] = $insertcust;
  
         System::setOptions("modules", $modules);
-        $this->setSuccess('saved');
+        $this->setSuccess('Збережено');
 
          \App\Modules\PU\Helper::connect();
 

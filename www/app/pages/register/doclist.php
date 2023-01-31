@@ -537,7 +537,7 @@ class DocList extends \App\Pages\Base
             $n->user_id = $this->_doc->user_id;
             $n->sender_id = $user->user_id;
             $n->dateshow = time();
-            $n->message = H::l("userapprooveddoc", $this->_doc->document_number);
+            $n->message = "Документ {$this->_doc->document_number} затверджено" ;
 
             $n->save();
         }
@@ -552,7 +552,7 @@ class DocList extends \App\Pages\Base
             $n->user_id = $this->_doc->user_id;
             $n->sender_id = $user->user_id;
             $n->dateshow = time();
-            $n->message = H::l("userrefuseddoc", $this->_doc->document_number);
+            $n->message = "Документ {$this->_doc->document_number} відхилено" ;
             $n->message .= "<br> " . $text;
             $n->save();
 

@@ -118,7 +118,7 @@ class Options extends \App\Pages\Base
         $shop['wpsite'] = $sender->wpsite->getText() ; 
 
         System::setOptions("shop", $shop);
-        $this->setSuccess('saved');
+        $this->setSuccess('Збережено');
         
     }
     
@@ -175,7 +175,7 @@ class Options extends \App\Pages\Base
             $shop['logo'] = "/upload/" . $name;
         }
         System::setOptions("shop", $shop);
-        $this->setSuccess('saved');
+        $this->setSuccess('Збережено');
     }
 
  

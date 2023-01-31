@@ -90,7 +90,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->add(new CheckBox('editjurid'));
         $this->customerdetail->add(new CheckBox('editisholding'));
         $this->customerdetail->add(new DropDownChoice('editholding', Customer::getHoldList(), 0));
-        $this->customerdetail->add(new DropDownChoice('edittype', array(1 => Helper::l("bayer"), 2 => Helper::l("seller")), 0));
+        $this->customerdetail->add(new DropDownChoice('edittype', array(1 => "Покупець", 2 => "Постачальник"), 0));
         $this->customerdetail->add(new DropDownChoice('editpricetype', \App\Entity\Item::getPriceTypeList(), Helper::getDefPriceType()));
 
         $this->customerdetail->add(new CheckBox('editallowedshop'))->setVisible($shop["uselogin"] == 1);
@@ -334,11 +334,11 @@ class CustomerList extends \App\Pages\Base
             $this->_customer->leadstatus = $this->customerdetail->editleadstatus->getValue();
             $this->_customer->status = 2;
             if ($this->_customer->leadsource == "0") {
-                $this->setError("enterleadsource");
+                $this->setError("Не вказано джерело ліда");
                 return;
             }
             if ($this->_customer->leadstatus == "0") {
-                $this->setError("enterleadstatus");
+                $this->setError("Не вказано стан ліда");
                 return;
             }
         } else {
@@ -436,11 +436,11 @@ class CustomerList extends \App\Pages\Base
         $lastdoc = '';
         if ($this->_customer->created > 0) {
             $user = \App\Entity\User::load($this->_customer->user_id);
-            $created = Helper::l('custcreated', Helper::fd($this->_customer->createdon), $user->username);
+            $created = "Доданий ".Helper::fd($this->_customer->createdon." користувачем " .$user->username   ;
         }
         $doc = \App\Entity\Doc\Document::getFirst("customer_id=" . $this->_customer->customer_id, 'document_id desc');
         if ($doc instanceof \App\Entity\Doc\Document) {
-            $lastdoc = Helper::l('custlastdoc', $doc->document_number, Helper::fd($doc->document_date), $this->_customer->docs);
+            $lastdoc = "Останній документ {$doc->document_number} від ".Helper::fd($doc->document_date).". Всього " .$this->_customer->docs    );
         }
 
         $this->contentview->b_total->setText($this->_customer->getBonus());

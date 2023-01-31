@@ -54,7 +54,7 @@ class ARMFood extends \App\Pages\Base
         $food = System::getOptions("food");
         if (!is_array($food)) {
             $food = array();
-            $this->setWarn('nocommonoptions');
+            $this->setWarn('Не вказано параметри в загальних налаштуваннях');
         }
         $this->_worktype = $food['worktype'];
 
@@ -698,7 +698,7 @@ class ARMFood extends \App\Pages\Base
             return;
         }
         if ($this->_doc->headerdata['delivery'] > 0 && $this->_doc->headerdata['contact'] == "") {
-            $this->setError('entercontact');
+            $this->setError('Введіть контактні дані');
             return;
         }
 
@@ -923,7 +923,7 @@ class ARMFood extends \App\Pages\Base
             }
 
             if ($this->_doc->payamount > $this->_doc->payed) {
-                $this->setError("toolowamount");
+                $this->setError("Недостатня сума");
                 return;
             }
             

@@ -186,7 +186,7 @@ class Chat extends \App\Pages\Base
         $up = $sender->msgpersonal->getValue();
         if ($up > 0) {
             $n->user_id = $up;  //личное
-            $this->setSuccess("sent");
+            $this->setSuccess("Відправлено");
         }
         $n->save();
         $sender->clean();

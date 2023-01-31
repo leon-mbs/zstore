@@ -136,7 +136,7 @@ class UserProfile extends \App\Pages\Base
         if (!$this->isError()) {
 
             $this->user->save();
-            $this->setSuccess('saved');
+            $this->setSuccess('Збережено');
             System::setUser($this->user);
         }
     }
@@ -222,7 +222,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->pserver  = rtrim($this->user->pserver,"/") ;
 
         $this->user->save();
-        $this->setSuccess('saved');
+        $this->setSuccess('Збережено');
         System::setUser($this->user);
       
     }

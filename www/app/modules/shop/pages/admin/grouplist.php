@@ -140,16 +140,16 @@ class GroupList extends \App\Pages\Base
             $this->attrpanel->attreditform->attrvaluespanel->setVisible(true);
         }
         if ($type == 1) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattryn"));
+            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут `Є/Немає` вказує на наявність або відсутність характеристики (наприклад, FM-тюнер).");
         }
         if ($type == 2) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattrnum"));
+            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут `Число` - числовий параметр (наприклад, ємність акумулятора). Перелік для фільтра відбору формується на основі діапазона значень атрибута, заданих для товарів.");
         }
         if ($type == 3) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattrlist"));
+            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут `Перелік` передбачений для переліку, з якого можна вибрати тільки одне значення (наприклад, колір). Задається переліком через кому");
         }
         if ($type == 4) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattrset"));
+            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут `Набір` передбачений для переліку, з якого можна вибрати кілька значень (наприклад, діапазони прийому сигнала). Задається переліком через кому. ");
         }
         if ($type == 5) {
             $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут 'Строка'- просто текстовый параметр (например тип процессора). Значени не  используется в фильтре. ");

@@ -202,13 +202,13 @@ class TimeSheet extends \App\Pages\Base
         $time->emp_id = $post->empid;
         if ($time->emp_id == 0) {
 
-            return json_encode(H::l("noempselected"), JSON_UNESCAPED_UNICODE);     
+            return json_encode("Не обрано співробітника", JSON_UNESCAPED_UNICODE);     
         }
         $time->t_type = $post->type;
      
         if ($time->t_type == 0) {
 
-            return H::l("notypeselected");     
+            return "Не обрано тип";     
         }
       
      
@@ -221,14 +221,14 @@ class TimeSheet extends \App\Pages\Base
 
         $v = $time->isValid();
         if (strlen($v) > 0) {
-           return  H::l($v);     
+           return  $v;     
      
         }
 
         if ($this->_tvars["usebranch"]) {
             if ($this->branch_id == 0) {
                  
-                return H::l("Виберіть філію");     
+                return "Виберіть філію";     
    
             }
             $time->branch_id = $this->branch_id;

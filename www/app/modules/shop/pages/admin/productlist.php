@@ -352,11 +352,11 @@ class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\I
 
     public function getContent($attributes) {
         $ret = "<td>{$this->productattribute->attributename}</td><td>";
-        $nodata = \App\Helper::l("shopattrnodata");
+        $nodata = "Немає даних";
         //'Есть/Нет'
         if ($this->productattribute->attributetype == 1) {
-            $yes = \App\Helper::l("shopattryes");
-            $no = \App\Helper::l("shopattrno");
+            $yes = "Є";
+            $no = "Немає";
 
             $s1 = ($this->productattribute->value == -1 || strlen($this->productattribute->value) == 0) ? 'selected="on"' : '';
             $s2 = $this->productattribute->value == '0' ? 'selected="on"' : '';

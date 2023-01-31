@@ -162,7 +162,7 @@ class SalaryTypeList extends \App\Pages\Base
 
         System::setOptions('salary', $opt);
 
-        $this->addAjaxResponse("toastr.success('" . H::l("saved") . "')");
+        $this->addAjaxResponse("toastr.success('Збережено')");
         
     }
 
@@ -172,7 +172,7 @@ class SalaryTypeList extends \App\Pages\Base
         System::setOptions('salary', $opt);
 
 
-        $this->addAjaxResponse("toastr.success('" . H::l("saved") . "')");
+        $this->addAjaxResponse("toastr.success('Збережено')");
        
     }
 

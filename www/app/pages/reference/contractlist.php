@@ -160,7 +160,7 @@ class ContractList extends \App\Pages\Base
 
         $this->_contract->contract_number = $this->contractdetail->editcontract_number->getText();
         if ($this->_contract->contract_number == '') {
-            $this->setError("notnumber");
+            $this->setError("Не введено номер");
             return;
         }
         $this->_contract->customer_id = $this->contractdetail->editcust->getKey();
@@ -175,7 +175,7 @@ class ContractList extends \App\Pages\Base
         }
         $this->_contract->ctype = $this->contractdetail->editctype->getValue();
         if ($this->_contract->ctype == 0) {
-            $this->setError("noselctype");
+            $this->setError("Не обрано тип контракту");
             return;
         }
 
