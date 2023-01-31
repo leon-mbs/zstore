@@ -98,7 +98,7 @@ class BranchList extends \App\Pages\Base
 
         $this->_branch->branch_name = $this->branchdetail->editbranchname->getText();
         if ($this->_branch->branch_name == '') {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
 

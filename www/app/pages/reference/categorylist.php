@@ -203,7 +203,7 @@ class CategoryList extends \App\Pages\Base
         $this->_category->noshop = $this->categorydetail->editnoshop->isChecked() ? 1 : 0;
         $this->_category->nofastfood = $this->categorydetail->editnofastfood->isChecked() ? 1 : 0;
         if ($this->_category->cat_name == '') {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
 

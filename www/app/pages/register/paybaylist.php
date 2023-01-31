@@ -318,7 +318,7 @@ class PayBayList extends \App\Pages\Base
 
         if ($amount > H::fa($this->_doc->payamount - $this->_doc->payed)) {
 
-            $this->setWarn('sumoverpay');
+            $this->setWarn('Сума більше необхідної');
         }
         $type = \App\Entity\IOState::TYPE_BASE_INCOME;
 

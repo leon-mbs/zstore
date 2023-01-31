@@ -88,16 +88,16 @@ class ProductView extends Base
         $this->commentlist->Reload();
 
         if ($product->disabled == 1 || $product->noshop == 1) {
-            $this->onstore = \App\Helper::l('cancelsell');
+            $this->onstore = 'Знято з продажу';
             $this->buy->setVisible(false);
         } else {
 
             if ($product->getQuantity() > 0 || $this->_tvars["isfood"]==true ) {
-                $this->onstore->setText(\App\Helper::l('isonstore'));
-                $this->buy->setValue(\App\Helper::l('tobay'));
+                $this->onstore->setText('В наявності');
+                $this->buy->setValue('Купити');
             } else {
-                $this->onstore->setText(\App\Helper::l('fororder'));
-                $this->buy->setValue(\App\Helper::l('toorder'));
+                $this->onstore->setText('Під замовлення');
+                $this->buy->setValue('Замовити');
             }
         }
 

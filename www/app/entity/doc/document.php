@@ -119,7 +119,7 @@ class Document extends \ZCL\DB\Entity
 
 
         if (false == $this->checkUniqueNumber()) {
-            System::setWarnMsg(\App\Helper::l('nouniquedocnumber'));
+            System::setWarnMsg('Не унікальний номер документа');
         }
 
         if ($this->parent_id > 0) {

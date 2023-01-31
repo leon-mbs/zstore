@@ -52,7 +52,7 @@ class StockList extends \App\Pages\Base
     public function filterOnSubmit($sender) {
 
         if ($this->filter->fitem->getKey() == 0) {
-            $this->setError('noselitem');
+            $this->setError('Не обрано товар');
             return;
         }
         $this->docview->setVisible(false);

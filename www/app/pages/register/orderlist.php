@@ -584,7 +584,7 @@ class OrderList extends \App\Pages\Base
 
         if ($amount > $this->_doc->payamount - $this->_doc->payed) {
 
-            $this->setWarn('sumoverpay');
+            $this->setWarn('Сума більше необхідної');
         }
 
 

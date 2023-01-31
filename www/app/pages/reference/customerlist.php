@@ -313,7 +313,7 @@ class CustomerList extends \App\Pages\Base
         $this->_customer->customer_name = trim($this->_customer->customer_name);
          
         if ($this->_customer->customer_name == '') {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
         $this->_customer->phone = $this->customerdetail->editphone->getText();
@@ -360,20 +360,20 @@ class CustomerList extends \App\Pages\Base
         $c = Customer::getByEmail($this->_customer->email);
         if ($c != null) {
             if ($c->customer_id != $this->_customer->customer_id) {
-                $this->setError("existcustemail");
+                $this->setError("Вже існує контрагент з таким e-mail");
                 return;
             }
         }
         $this->_customer->phone = \App\Util::handlePhone($this->_customer->phone);
 
         if (strlen($this->_customer->phone) > 0 && strlen($this->_customer->phone) != Helper::PhoneL()) {
-            $this->setError("tel10", Helper::PhoneL());
+            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
             return;
         }
         $c = Customer::getByPhone($this->_customer->phone);
         if ($c != null) {
             if ($c->customer_id != $this->_customer->customer_id) {
-                $this->setError("existcustphone");
+                $this->setError("Вже існує контрагент з таким телефоном");
                 return;
             }
         }
@@ -389,12 +389,12 @@ class CustomerList extends \App\Pages\Base
 
         if ( strlen($pass)>0 ) {
             if ($confirm == '') {
-                $this->setError('confirmpass');
+                $this->setError('Підтвердіть пароль');
                 return;
             } else {
                 if ($confirm != $pass) {
 
-                    $this->setError('invalidconfirm');
+                    $this->setError('Невірне підтвердження');
                     return;
                 }
             }

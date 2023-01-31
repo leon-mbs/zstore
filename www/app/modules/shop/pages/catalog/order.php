@@ -140,20 +140,20 @@ class Order extends Base
         }
         if (($delivery == 2 || $delivery == 3) && strlen($address) == 0) {
 
-            $this->setError("enteraddress");
+            $this->setError("Введіть адресу");
             return;
         }
   
         if ($payment == 0) {
 
-            $this->setError("enterpayment");
+            $this->setError("Виберіть оплату");
             return;
         }
 
 
  
         if (  strlen($phone) != \App\Helper::PhoneL()) {
-            $this->setError("tel10", \App\Helper::PhoneL());
+            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр" );
             return;
         }
 

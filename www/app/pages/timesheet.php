@@ -228,7 +228,7 @@ class TimeSheet extends \App\Pages\Base
         if ($this->_tvars["usebranch"]) {
             if ($this->branch_id == 0) {
                  
-                return H::l("selbranch");     
+                return H::l("Виберіть філію");     
    
             }
             $time->branch_id = $this->branch_id;

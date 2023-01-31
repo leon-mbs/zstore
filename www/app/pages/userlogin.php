@@ -61,11 +61,11 @@ class UserLogin extends \Zippy\Html\WebPage
         }
         if ($login == '') {
 
-            $this->setError('enterlogin');
+            $this->setError('Введіть логін');
         } else {
             if ($password == '') {
 
-                $this->setError('enterpassword');
+                $this->setError('Введіть пароль');
             }
         }
 
@@ -99,7 +99,7 @@ class UserLogin extends \Zippy\Html\WebPage
                 return;
             } else {
 
-                $this->setError('invalidlogin');
+                $this->setError('Невірний логін');
 
                 $this->counter();
             }
@@ -135,7 +135,7 @@ class UserLogin extends \Zippy\Html\WebPage
             \App\Entity\Notify::toAdmin($msg) ;
    
             
-            $this->setError('invalidloginalert');
+            $this->setError('Багато невдалих авторизацій. Адміністратору системи відправлено повідомлення');
             $this->loginform->setVisible(false);
             if (strlen($admin->email) > 0) {
                 Helper::sendLetter(   $admin->email, $msg, "Zippy Store alert");

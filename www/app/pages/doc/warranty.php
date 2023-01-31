@@ -151,7 +151,7 @@ class Warranty extends \App\Pages\Base
     public function saverowOnClick($sender) {
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("noselitem");
+            $this->setError("Не обрано товар");
             return;
         }
         $item = Item::load($id);
@@ -257,14 +257,14 @@ class Warranty extends \App\Pages\Base
     private function checkForm() {
 
         if (count($this->_tovarlist) == 0) {
-            $this->setError("noenteritem");
+            $this->setError("Не введено товар");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не створено унікальный номер документа');
             }
         }
         return !$this->isError();

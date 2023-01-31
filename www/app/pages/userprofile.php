@@ -148,14 +148,14 @@ class UserProfile extends \App\Pages\Base
         $confirm = $sender->confirmpassword->getText();
 
         if ($pass == '') {
-            $this->setError('enterpassword');
+            $this->setError('Введіть пароль');
         } else {
             if ($confirm == '') {
-                $this->setError('confirmpass');
+                $this->setError('Підтвердіть пароль');
             } else {
                 if ($confirm != $pass) {
 
-                    $this->setError('invalidconfirm');
+                    $this->setError('Невірне підтвердження');
                 }
             }
         }
@@ -169,7 +169,7 @@ class UserProfile extends \App\Pages\Base
             if ($this->user->userlogin != 'admin') {
 
                 
-                \App\Entity\Notify::toSystemLog(H::l('passchanged', $this->user->username, $pass)) ;
+                \App\Entity\Notify::toSystemLog("Користувач <b>{$this->user->username}</b> змінив пароль на <b>{$pass}</b>" )) ;
                 
             }
 

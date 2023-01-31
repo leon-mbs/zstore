@@ -341,7 +341,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->itemname = trim($this->_item->itemname);
         
         if (strlen($this->_item->itemname) == 0) {
-            $this->setError('entername');
+            $this->setError('Не введено назву');
             return;
         }
         
@@ -385,7 +385,7 @@ class ItemList extends \App\Pages\Base
             $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and item_code={$code} ");
             if ($cnt > 0) {
  
-                    $this->setError('itemcode_exists');
+                    $this->setError('Такий артикул вже існує');
                     return;
                 
             }
@@ -420,7 +420,7 @@ class ItemList extends \App\Pages\Base
         $code = Item::qstr($this->_item->item_code);
         $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and itemname={$itemname} and item_code={$code} ");
         if ($cnt > 0) {
-            $this->setError('itemnamecode_exists');
+            $this->setError('ТМЦ з такою назвою і артикулом вже існує');
             return;
         }
 
@@ -566,7 +566,7 @@ class ItemList extends \App\Pages\Base
     public function OnAddSet($sender) {
         $id = $sender->editsname->getKey();
         if ($id == 0) {
-            $this->setError("noselitem");
+            $this->setError("Не обрано товар");
             return;
         }
 

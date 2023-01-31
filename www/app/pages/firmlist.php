@@ -140,7 +140,7 @@ class FirmList extends \App\Pages\Base
         $this->_firm->sign = $this->firmdetail->editsign->getText();
 
         if ($this->_firm->firm_name == '') {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
 

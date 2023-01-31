@@ -416,7 +416,7 @@ class GoodsIssue extends \App\Pages\Base
 
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
-            $this->setError('noselstore');
+            $this->setError('Не обрано склад');
             return;
         }
 
@@ -425,7 +425,7 @@ class GoodsIssue extends \App\Pages\Base
 
         if ($item == null) {
 
-            $this->setWarn("noitemcode", $code);
+            $this->setWarn("Товар з кодом `{$code}` не знайдено" );
             return;
         }
 
@@ -433,7 +433,7 @@ class GoodsIssue extends \App\Pages\Base
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
 
-            $this->setWarn("noitemonstore", $item->itemname);
+            $this->setWarn("Товару {$item->itemname} немає на складі" );
         }
 
 
@@ -508,7 +508,7 @@ class GoodsIssue extends \App\Pages\Base
 
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("noselitem");
+            $this->setError("Не обрано товар");
             return;
         }
         $item = Item::load($id);
@@ -813,7 +813,7 @@ class GoodsIssue extends \App\Pages\Base
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
 
-            $this->setError('enterdocnumber');
+            $this->setError('Введіть номер документа');
         }
 
         if (false == $this->_doc->checkUniqueNumber()) {
@@ -821,16 +821,16 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не створено унікальный номер документа');
             }
         }
 
         if (count($this->_itemlist) == 0) {
-            $this->setError("noenteritem");
+            $this->setError("Не введено товар");
         }
 
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("noselstore");
+            $this->setError("Не обрано склад");
         }
         $c = $this->docform->customer->getKey();
 
@@ -841,10 +841,10 @@ class GoodsIssue extends \App\Pages\Base
 
 
         if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $c == 0) {
-            $this->setError("mustsel_cust");
+            $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
         }
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
-            $this->setError("noselmfp");
+            $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
         }
 
 
@@ -938,7 +938,7 @@ class GoodsIssue extends \App\Pages\Base
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
         $cust = new Customer();
@@ -949,7 +949,7 @@ class GoodsIssue extends \App\Pages\Base
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
             $this->setError("");
-            $this->setError("tel10", H::PhoneL());
+            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
             return;
         }
 
@@ -957,7 +957,7 @@ class GoodsIssue extends \App\Pages\Base
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
 
-                $this->setError("existcustphone");
+                $this->setError("Вже існує контрагент з таким телефоном");
                 return;
             }
         }

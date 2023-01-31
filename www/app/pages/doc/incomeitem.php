@@ -184,7 +184,7 @@ class IncomeItem extends \App\Pages\Base
         }
         $id = $this->editdetail->edititem->getKey();
         if ($id == 0) {
-            $this->setError("noselitem");
+            $this->setError("Не обрано товар");
             return;
         }
 
@@ -344,22 +344,22 @@ class IncomeItem extends \App\Pages\Base
     private function checkForm() {
 
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
-            $this->setError("enterdocnumber");
+            $this->setError("Введіть номер документа");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не створено унікальный номер документа');
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("noenteritem");
+            $this->setError("Не введено товар");
         }
 
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("noselstore");
+            $this->setError("Не обрано склад");
         }
 
 
@@ -433,7 +433,7 @@ class IncomeItem extends \App\Pages\Base
     public function savenewitemOnClick($sender) {
         $itemname = trim($this->editnewitem->editnewitemname->getText());
         if (strlen($itemname) == 0) {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
         $item = new Item();
@@ -445,7 +445,7 @@ class IncomeItem extends \App\Pages\Base
             $code = Item::qstr($item->item_code);
             $cnt = Item::findCnt("  item_code={$code} ");
             if ($cnt > 0) {
-                $this->setError('itemcode_exists');
+                $this->setError('Такий артикул вже існує');
                 return;
             }
 

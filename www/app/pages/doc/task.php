@@ -251,7 +251,7 @@ class Task extends \App\Pages\Base
         $id = $this->editdetail3->editemp->getValue();
         if ($id == 0) {
 
-            $this->setError("noselexecutor");
+            $this->setError("Не обрано виконавця");
             return;
         }
         $emp = Employee::load($id);
@@ -281,7 +281,7 @@ class Task extends \App\Pages\Base
         $id = $this->editdetail4->editeq->getValue();
         if ($id == 0) {
 
-            $this->setError("noseleq");
+            $this->setError("Не обрано обладнання");
             return;
         }
         $eq = Equipment::load($id);
@@ -382,19 +382,19 @@ class Task extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('enterdocnumber');
+            $this->setError('Введіть номер документа');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не створено унікальный номер документа');
             }
         }
         if (strlen($this->_doc->document_date) == 0) {
 
-            $this->setError('enterdatedoc');
+            $this->setError('Введіть дату документа');
         }
         if (count($this->_servicelist) == 0 && count($this->_prodlist) == 0) {
             $this->setError("Не введено позиції");

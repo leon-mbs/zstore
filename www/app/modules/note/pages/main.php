@@ -163,7 +163,7 @@ class Main extends \App\Pages\Base
         $topic->acctype = $post->acctype;
 
         if (strlen($topic->title) == 0) {
-            return H::l('notitle');
+            return H::l('Не введено заголовок');
         }
 
 

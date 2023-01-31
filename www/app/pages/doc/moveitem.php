@@ -137,7 +137,7 @@ class MoveItem extends \App\Pages\Base
 
     public function addrowOnClick($sender) {
         if ($this->docform->store->getValue() == 0) {
-            $this->setError("noselstore");
+            $this->setError("Не обрано склад");
             return;
         }
         $this->editdetail->setVisible(true);
@@ -179,7 +179,7 @@ class MoveItem extends \App\Pages\Base
         }
         $id = $this->editdetail->edititem->getKey();
         if ($id == 0) {
-            $this->setError("noselitem");
+            $this->setError("Не обрано товар");
             return;
         }
 
@@ -307,26 +307,26 @@ class MoveItem extends \App\Pages\Base
     private function checkForm() {
 
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
-            $this->setError("enterdocnumber");
+            $this->setError("Введіть номер документа");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не створено унікальный номер документа');
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("noenteritem");
+            $this->setError("Не введено товар");
         }
 
 
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("noselstore");
+            $this->setError("Не обрано склад");
         }
         if (($this->docform->tostore->getValue() > 0) == false) {
-            $this->setError("noselstore");
+            $this->setError("Не обрано склад");
         }
 
 
@@ -375,7 +375,7 @@ class MoveItem extends \App\Pages\Base
         $this->docform->barcode->setText('');
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
-            $this->setError('noselstore');
+            $this->setError('Не обрано склад');
             return;
         }
 
@@ -384,7 +384,7 @@ class MoveItem extends \App\Pages\Base
 
         $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and     (item_code = {$code} or bar_code = {$code} or item_code = {$code0} or bar_code = {$code0}  )");
         if ($item == null) {
-            $this->setError('noitem');
+            $this->setError('Товар не знайдено');
             return;
         }
 

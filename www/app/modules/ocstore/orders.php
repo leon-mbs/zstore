@@ -239,11 +239,11 @@ class Orders extends \App\Pages\Base
         $store = $this->filter2->store->getValue();
         $kassa = $this->filter2->kassa->getValue();
         if ($store == 0) {
-            $this->setError("noselstore");
+            $this->setError("Не обрано склад");
             return;
         }
         if ($kassa == 0) {
-            $this->setError("noselmf");
+            $this->setError("Не обрано касу");
             return;
         }
         $allowminus = \App\System::getOption("common", "allowminus");

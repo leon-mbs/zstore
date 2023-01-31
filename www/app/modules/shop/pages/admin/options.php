@@ -108,7 +108,7 @@ class Options extends \App\Pages\Base
         $shop['paysystem'] = $sender->paysystem->getValue();
         $shop['mf_id'] =  intval($sender->mf->getValue() ); 
         if($shop['mf_id']==0) {
-            $this->setError('noselmf');
+            $this->setError('Не обрано касу');
             return;
         }
         $shop['lqpriv'] =  $sender->lqpriv->getText() ; 

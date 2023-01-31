@@ -230,12 +230,12 @@ class ARMPos extends \App\Pages\Base
         $this->_pt = $this->form1->pricetype->getValue();
 
         if ($this->pos == null) {
-            $this->setError("noselterm");
+            $this->setError("Не обрано термінал");
             return;
         }
 
         if ($this->_store_id == 0) {
-            $this->setError("noselstore");
+            $this->setError("Не обрано склад");
             return;
         }
 
@@ -354,13 +354,13 @@ class ARMPos extends \App\Pages\Base
         $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store}) and  (item_code = {$code_} or bar_code = {$code_} or item_code = {$code0} or bar_code = {$code0}  )");
 
         if ($item == null) {
-            $this->setError("noitemcode", $code);
+            $this->setError("Товар з кодом `{$code}` не знайдено");
             return;
         }
 
         $qty = $item->getQuantity($store);
         if ($qty <= 0) {
-            $this->setError("noitemonstore", $item->itemname);
+            $this->setError("Товару {$item->itemname} немає на складі");
         }
 
         foreach ($this->_itemlist as $ri => $_item) {
@@ -786,7 +786,7 @@ class ARMPos extends \App\Pages\Base
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
         $cust = new Customer();
@@ -796,14 +796,14 @@ class ARMPos extends \App\Pages\Base
         $cust->phone = \App\Util::handlePhone($cust->phone);
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
-            $this->setError("tel10", H::PhoneL());
+            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
             return;
         }
 
         $c = Customer::getByPhone($cust->phone);
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
-                $this->setError("existcustphone");
+                $this->setError("Вже існує контрагент з таким телефоном");
                 return;
             }
         }
@@ -838,7 +838,7 @@ class ARMPos extends \App\Pages\Base
             $this->docpanel->form3->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не створено унікальный номер документа');
             }
         }
         $this->_doc->document_date = $this->docpanel->form3->document_date->getDate();
@@ -859,20 +859,20 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['bonus'] = $this->docpanel->form3->bonus->getText();
 
         if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $this->_doc->customer_id == 0) {
-            $this->setError("mustsel_cust");
+            $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
             return;
         }
         if ($this->docpanel->form3->payment->getValue() == 0 && $this->_doc->payed > 0) {
-            $this->setError("noselmfp");
+            $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
             return;
         }
    
         if ( doubleval($this->_doc->headerdata['bonus'] ) >0 && $this->_doc->customer_id == 0) {
-            $this->setError("mustsel_cust");
+            $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
             return;
         }
         if ( doubleval($this->_doc->headerdata['exch2b'] ) >0 && $this->_doc->customer_id == 0) {
-            $this->setError("mustsel_cust");
+            $this->setError("Для нарахування бонуса повинен бути обраний контрагент");
             return;
         }
  

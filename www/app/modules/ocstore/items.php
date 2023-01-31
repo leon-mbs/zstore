@@ -148,7 +148,7 @@ class Items extends \App\Pages\Base
         }
         if (count($elist) == 0) {
 
-            $this->setError('noselitem');
+            $this->setError('Не обрано товар');
             return;
         }
         $data = json_encode($elist);

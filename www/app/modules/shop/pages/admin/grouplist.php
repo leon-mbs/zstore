@@ -197,7 +197,7 @@ class GroupList extends \App\Pages\Base
         $attr->attributename = $form->attrname->getText();
 
         if (strlen($attr->attributename) == 0) {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
 
             return;
         }

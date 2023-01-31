@@ -142,14 +142,14 @@ class MovePart extends \App\Pages\Base
     private function checkForm() {
 
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
-            $this->setError("enterdocnumber");
+            $this->setError("Введіть номер документа");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не створено унікальный номер документа');
             }
         }
 

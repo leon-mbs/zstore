@@ -389,7 +389,7 @@ class ARMFood extends \App\Pages\Base
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0 && $item->autoincome != 1) {
 
-            $this->setWarn("noitemonstore", $item->itemname);
+            $this->setWarn("Товару {$item->itemname} немає на складі");
         }
 
 
@@ -454,7 +454,7 @@ class ARMFood extends \App\Pages\Base
 
         if ($item == null) {
 
-            $this->setWarn("noitemcode", $code);
+            $this->setWarn("Товар з кодом `{$code}` не знайдено");
             return;
         }
 
@@ -462,7 +462,7 @@ class ARMFood extends \App\Pages\Base
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
 
-            $this->setWarn("noitemonstore", $item->itemname);
+            $this->setWarn("Товару {$item->itemname} немає на складі");
         }
 
 
@@ -694,7 +694,7 @@ class ARMFood extends \App\Pages\Base
         $dt = $this->docpanel->listsform->dt->getDate();
         $this->_doc->headerdata['deltime'] = $this->docpanel->listsform->time->getDateTime($dt);
         if ($this->_doc->headerdata['delivery'] > 1 && $this->_doc->headerdata['ship_address'] == "") {
-            $this->setError('enteraddress');
+            $this->setError('Введіть адресу');
             return;
         }
         if ($this->_doc->headerdata['delivery'] > 0 && $this->_doc->headerdata['contact'] == "") {
@@ -896,7 +896,7 @@ class ARMFood extends \App\Pages\Base
     public function payandcloseOnClick() {
 
         if ($this->_pt != 1 && $this->_pt != 2) {
-            $this->setError("noselpaytype");
+            $this->setError("Не вказано спосіб оплати");
             return;
         }
 
@@ -928,16 +928,16 @@ class ARMFood extends \App\Pages\Base
             }
             
             if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $this->_doc->customer_id == 0) {
-                $this->setError("mustsel_cust");
+                $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
                 return;
             }  
             
             if ( doubleval($this->_doc->headerdata['bonus'] ) >0 && $this->_doc->customer_id == 0) {
-                $this->setError("mustsel_cust");
+                $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
                 return;
             }            
             if ( doubleval($this->_doc->headerdata['exch2b'] ) >0 && $this->_doc->customer_id == 0) {
-                $this->setError("mustsel_cust");
+                $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
                 return;
             }            
                       
@@ -1040,7 +1040,7 @@ class ARMFood extends \App\Pages\Base
                 $next = $this->_doc->nextNumber();
                 $this->_doc->document_number = $next;
                 if (strlen($next) == 0) {
-                    $this->setError('docnumbercancreated');
+                    $this->setError('Не створено унікальный номер документа');
                     return false;   
                 }
             }
@@ -1100,7 +1100,7 @@ class ARMFood extends \App\Pages\Base
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
         $cust = new Customer();
@@ -1111,7 +1111,7 @@ class ARMFood extends \App\Pages\Base
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
             $this->setError("");
-            $this->setError("tel10", H::PhoneL());
+            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
             return;
         }
 
@@ -1119,7 +1119,7 @@ class ARMFood extends \App\Pages\Base
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
 
-                $this->setError("existcustphone");
+                $this->setError("Вже існує контрагент з таким телефоном");
                 return;
             }
         }

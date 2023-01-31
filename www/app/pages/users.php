@@ -143,7 +143,7 @@ class Users extends \App\Pages\Base
         }
         if ($this->user->user_id == 0 && strlen($pass) == 0) {
 
-            $this->setError("enterpassword");
+            $this->setError("Введіть пароль");
             return;
         }
 
