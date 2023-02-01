@@ -58,7 +58,7 @@ class ChatBot{
    
        $ret = json_decode($request,true)   ;
             
-        $logger->info($request);
+       // $logger->info($request);
         if(false === $this->onMessage($ret['message']) ){
             $logger->error("bot answer " . $request );              
         };

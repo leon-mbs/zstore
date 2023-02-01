@@ -247,7 +247,7 @@ class Base extends \Zippy\Html\WebPage
     public function setError($msg, $p1 = "", $p2 = "") {
         $msg = str_replace("'","`",$msg) ;
      
-        $msg = Helper::l($msg, $p1, $p2);
+
         System::setErrorMsg($msg);
     }
     //вывод  как  bootstrap alert  (для сообщений что  могут  вызвать  ошибку  javascript)
@@ -259,19 +259,19 @@ class Base extends \Zippy\Html\WebPage
 
     public function setSuccess($msg, $p1 = "", $p2 = "") {
         $msg = str_replace("'","`",$msg) ;
-        $msg = Helper::l($msg, $p1, $p2);
+
         System::setSuccessMsg($msg);
     }
 
     public function setWarn($msg, $p1 = "", $p2 = "") {
          $msg = str_replace("'","`",$msg) ;
-       $msg = Helper::l($msg, $p1, $p2);
+
         System::setWarnMsg($msg);
     }
 
     public function setInfo($msg, $p1 = "", $p2 = "") {
         $msg = str_replace("'","`",$msg) ;
-        $msg = Helper::l($msg, $p1, $p2);
+
         System::setInfoMsg($msg);
     }
 

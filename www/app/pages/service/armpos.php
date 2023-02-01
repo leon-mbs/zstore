@@ -511,7 +511,7 @@ class ARMPos extends \App\Pages\Base
 
         $id = $this->docpanel->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("noselitem");
+            $this->setError("Не выбрано товар");
             return;
         }
         $item = Item::load($id);
