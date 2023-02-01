@@ -26,7 +26,7 @@ class DocList extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'paperless') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg(H::l('noaccesstopage'));
+            System::setErrorMsg("Немає права доступу до сторінки");
 
             App::RedirectError();
             return;
@@ -132,7 +132,7 @@ class DocList extends \App\Pages\Base
             $doc->headerdata['paperless'] = 0;
             $doc->save();
             if(strlen($c->email)==0){
-                return $name." ok ".H::l("noemail");                                 
+                return $name." ok. Не вказано e-mail";                                 
             }
                 
             return $name." ok";                 

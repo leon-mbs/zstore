@@ -247,7 +247,7 @@ class Base extends \Zippy\Html\WebPage
     public function setError($msg, $p1 = "", $p2 = "") {
         $msg = str_replace("'","`",$msg) ;
      
-        $msg = Helper::l($msg, $p1, $p2);
+
         System::setErrorMsg($msg);
     }
     //вывод  как  bootstrap alert  (для сообщений что  могут  вызвать  ошибку  javascript)
@@ -259,19 +259,19 @@ class Base extends \Zippy\Html\WebPage
 
     public function setSuccess($msg, $p1 = "", $p2 = "") {
         $msg = str_replace("'","`",$msg) ;
-        $msg = Helper::l($msg, $p1, $p2);
+
         System::setSuccessMsg($msg);
     }
 
     public function setWarn($msg, $p1 = "", $p2 = "") {
          $msg = str_replace("'","`",$msg) ;
-       $msg = Helper::l($msg, $p1, $p2);
+
         System::setWarnMsg($msg);
     }
 
     public function setInfo($msg, $p1 = "", $p2 = "") {
         $msg = str_replace("'","`",$msg) ;
-        $msg = Helper::l($msg, $p1, $p2);
+
         System::setInfoMsg($msg);
     }
 
@@ -396,23 +396,23 @@ class Base extends \Zippy\Html\WebPage
 
         $user = System::getUser();
         if ($user->defstore == 0) {
-         //   $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("nodefstore") . "\"");
+         //   $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі склад за замовчуванням\"");
         }
         if ($user->deffirm == 0) {
-         //   $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("nodeffirm") . "\"");
+         //   $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі компанію за замовчуванням\"");
         }
         if ($user->defmf == 0) {
-        //    $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("nodefmf") . "\"");
+        //    $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі касу за замовчуванням\"");
         }
         if ($user->userlogin == "admin") {
             if ($user->userpass == "admin" || $user->userpass == '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.') {
-                $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("nodefadminpass") . "\"");
+                $this->_tvars["toasts"][] = array('title' => "title:\"Зміність у профілі пароль за замовчуванням\"");
 
             }
         }
         if ($user->rolename == "admins") {
             if (\App\Entity\Notify::isNotify(\App\Entity\Notify::SYSTEM)) {
-                $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("hassystemnotify") . "\"");
+                $this->_tvars["toasts"][] = array('title' => "title:\"Наявні непрочитані системні повідомлення\"");
 
             }
             //проверка  новой версии        
@@ -425,7 +425,7 @@ class Base extends \Zippy\Html\WebPage
                 $n = (int)str_replace(".", "", str_replace("v", "", $v['version']));
 
                 if ($n > $c) {
-                   $this->_tvars["toasts"][] = array('title' => "title:  \"" . Helper::l("newversion") . " {$v['version']}  <a target=\\\"_blank\\\" href=\\\"https://zippy.com.ua/zstore#newver\\\">Перейти...</a>\" ");
+                   $this->_tvars["toasts"][] = array('title' => "title:  \"Доступна нова версiя {$v['version']}  <a target=\\\"_blank\\\" href=\\\"https://zippy.com.ua/zstore#newver\\\">Перейти...</a>\" ");
        
                 }
 

@@ -36,7 +36,7 @@ class ReturnIssue extends \App\Pages\Base
         parent::__construct();
         if ($docid == 0 && $basedocid == 0) {
 
-            $this->setWarn('return_basedon_goodsissue');
+            $this->setWarn('Повернення слід створювати на основі видаткової накладної або чека');
         }
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
@@ -106,7 +106,7 @@ class ReturnIssue extends \App\Pages\Base
 
                     if (count($d) > 0) {
 
-                        $this->setError('return_exists');
+                        $this->setError('Вже існує документ Повернення');
                         App::Redirect("\\App\\Pages\\Register\\DocList");
                         return;
                     }
@@ -216,7 +216,7 @@ class ReturnIssue extends \App\Pages\Base
         }
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("noselitem");
+            $this->setError("Не обрано товар");
             return;
         }
 
@@ -299,7 +299,7 @@ class ReturnIssue extends \App\Pages\Base
                 }
 
                 if (strlen($this->_doc->headerdata["docnumberback"]) == 0) {
-                    $this->setError("ppo_returndoc");
+                    $this->setError("Для фіскалізації створіть повернення на основі фіскального чека");
                     return;
                 }
 
@@ -322,7 +322,7 @@ class ReturnIssue extends \App\Pages\Base
                         $pos->save();
                         $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
                     } else {
-                        $this->setError("ppo_noretnumber");
+                        $this->setError("Не повернено фіскальний номер");
                         return;
                     }
                 }
@@ -391,7 +391,7 @@ class ReturnIssue extends \App\Pages\Base
         $payed = $this->docform->payed->getText();
         $total = $this->docform->total->getText();
         if ($payed > $total) {
-            $this->setWarn('inserted_extrasum');
+            $this->setWarn('Внесена сума більше необхідної');
         } else {
             $this->goAnkor("tankor");
         }
@@ -403,31 +403,31 @@ class ReturnIssue extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('enterdocnumber');
+            $this->setError('Введіть номер документа');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не створено унікальный номер документа');
             }
         }
         if (count($this->_tovarlist) == 0) {
-            $this->setError("noenteritem");
+            $this->setError("Не введено товар");
         }
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("noselstore");
+            $this->setError("Не обрано склад");
         }
 
         $c = $this->docform->customer->getKey();
         if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $c == 0) {
-            $this->setError("mustsel_cust");
+            $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
         }
 
 
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
-            $this->setError("noselmfp");
+            $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
         }
 
 
@@ -448,7 +448,7 @@ class ReturnIssue extends \App\Pages\Base
                         }
                     }
                     if ($ok == false) {
-                        $this->setError("thesameitempriceret");
+                        $this->setError("Повернення має відповідати проданим товарам за тією самою ціною");
                         break;
                     }
 

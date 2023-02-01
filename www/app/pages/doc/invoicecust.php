@@ -229,7 +229,7 @@ class InvoiceCust extends \App\Pages\Base
         $id = $this->editdetail->edititem->getKey();
         $name = trim($this->editdetail->edititem->getText());
         if ($id == 0) {
-            $this->setError("noselitem");
+            $this->setError("Не обрано товар");
             return;
         }
 
@@ -239,7 +239,7 @@ class InvoiceCust extends \App\Pages\Base
         $item->price = $this->editdetail->editprice->getText();
         $item->custcode = $this->editdetail->editcustcode->getText();
         if ($item->price == 0) {
-            $this->setWarn("no_price");
+            $this->setWarn("Не вказана ціна");
         }
 
         if ($this->_rowid > 0) {
@@ -316,7 +316,7 @@ class InvoiceCust extends \App\Pages\Base
 
         $file = $this->docform->scan->getFile();
         if ($file['size'] > 10000000) {
-            $this->setError("filemore10M");
+            $this->setError("Файл більше 10 МБ!");
             return;
         }
 
@@ -460,30 +460,30 @@ class InvoiceCust extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('enterdocnumber');
+            $this->setError('Введіть номер документа');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не створено унікальный номер документа');
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("noenteritem");
+            $this->setError("Не введено товар");
         }
 
         if ($this->docform->customer->getKey() == 0) {
-            $this->setError("noselsender");
+            $this->setError("Не обрано постачальника");
         }
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
-            $this->setError("noselmfp");
+            $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
         }
         $val = $this->docform->val->getValue();
         if (strlen($val) > 1) {
             if($this->_doc->payamount  > $this->_doc->payed )  {
-                $this->setError("nocreditval");
+                $this->setError("Кредит із валютою не дозволено");
              
                 
                 return;
@@ -525,7 +525,7 @@ class InvoiceCust extends \App\Pages\Base
     public function savenewitemOnClick($sender) {
         $itemname = trim($this->editnewitem->editnewitemname->getText());
         if (strlen($itemname) == 0) {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
         $item = new Item();
@@ -538,7 +538,7 @@ class InvoiceCust extends \App\Pages\Base
             $code = Item::qstr($item->item_code);
             $cnt = Item::findCnt("  item_code={$code} ");
             if ($cnt > 0) {
-                $this->setError('itemcode_exists');
+                $this->setError('Такий артикул вже існує');
                 return;
             }
 

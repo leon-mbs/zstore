@@ -53,7 +53,7 @@ class Helper
             if (strlen($result) > 0) {
                 \App\System::setErrorMsg($result,true);
             } else {
-                \App\System::setErrorMsg(H::l("nodataresponse",true));
+                \App\System::setErrorMsg("Немає даних відповіді",true);
             }
 
 
@@ -97,7 +97,7 @@ class Helper
         }
         if (is_array($data) && count($data) == 0) {
 
-            System::setErrorMsg(H::l('nodataresponse'));
+            System::setErrorMsg('Немає даних відповіді');
             return;
         }
 
@@ -119,7 +119,7 @@ class Helper
             }
 
 
-            System::setSuccessMsg(H::l('connected'));
+            System::setSuccessMsg("Успішне з`єднання");
 
             //загружаем список статусов
             $url = $site . '/index.php?route=api/zstore/statuses&' . System::getSession()->octoken;

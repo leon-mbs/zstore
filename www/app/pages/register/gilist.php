@@ -45,7 +45,7 @@ class GIList extends \App\Pages\Base
 
         $this->listpan->filter->add(new TextInput('searchnumber'));
         $this->listpan->filter->add(new TextInput('searchtext'));
-        $this->listpan->filter->add(new DropDownChoice('status', array(0 => H::l('opened'), 1 => H::l('newed'), 2 => H::l('sended'), 5 => H::l('st_rdshipment'), 3 => H::l('all')), 0));
+        $this->listpan->filter->add(new DropDownChoice('status', array(0 => 'Відкриті', 1 => 'Нові', 2 => 'Відправлені', 5 => 'Готові до відправки', 3 => 'Всі'), 0));
         $this->listpan->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
         $this->listpan->filter->add(new DropDownChoice('salesource', H::getSaleSources(), 0));
         $this->listpan->filter->add(new DropDownChoice('fstore', \App\Entity\Store::getList(), 0));
@@ -187,7 +187,7 @@ class GIList extends \App\Pages\Base
 
             $this->_doc->save();
 
-            $this->setSuccess('sent');
+            $this->setSuccess('Відправлено');
         }
 
         if ($sender->id == "bdevivered") {
@@ -203,7 +203,7 @@ class GIList extends \App\Pages\Base
                 $this->_doc->headerdata['ship_number'] = $dec;
             }
             $this->_doc->save();
-            $this->setSuccess("saved");
+            $this->setSuccess("Збережено");
             $this->statuspan->setVisible(false);
         }
         if ($sender->id == "bttn") {
@@ -569,11 +569,11 @@ class GIList extends \App\Pages\Base
 
         //проверка  введеных параметров
         if (($params['Weight'] > 0) == false) {
-            $this->setError(H::l('npnoweight'));
+            $this->setError('Не вказано вагу');
             return;
         }
         if (strlen($params['Description']) == 0) {
-            $this->setError(H::l('npnodesc'));
+            $this->setError('Не вказано опис');
             return;
         }
         $api = new \App\Modules\NP\Helper();
@@ -648,7 +648,7 @@ class GIList extends \App\Pages\Base
             $this->_doc->headerdata['ship_number'] = $result['data'][0]['IntDocNumber'];
             $this->_doc->headerdata['ship_numberref'] = $result['data'][0]['Ref'];
             $this->_doc->save();
-            $this->setSuccess(H::l("npnewdec", $this->_doc->headerdata['ship_number']));
+            $this->setSuccess( "Створено декларацію номер " . $this->_doc->headerdata['ship_number']  );
 
 
             $order = Document::load($this->_doc->parent_id);

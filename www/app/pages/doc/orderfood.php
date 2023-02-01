@@ -226,7 +226,7 @@ class OrderFood extends \App\Pages\Base
 
         $id = $this->editdetail->edittovar->getValue();
         if ($id == 0) {
-            $this->setError("noselitem");
+            $this->setError("Не обрано товар");
             return;
         }
         $item = Item::load($id);
@@ -237,7 +237,7 @@ class OrderFood extends \App\Pages\Base
         $item->price = $this->editdetail->editprice->getText();
 
         if ($item->quantity > $qstock) {
-            $this->setWarn('inserted_extra_count');
+            $this->setWarn('Введено більше товару, чим є в наявності');
         }
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($this->_rowid => $this->_itemlist[$this->_rowid]));
@@ -330,7 +330,7 @@ class OrderFood extends \App\Pages\Base
                     foreach ($this->_itemlist as $item) {
                         $qty = $item->getQuantity($this->_doc->headerdata['store']);
                         if ($qty < $item->quantity) {
-                            $this->setError("nominus", H::fqty($qty), $item->item_name);
+                            $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
                             return;
                         }
                     }
@@ -361,7 +361,7 @@ class OrderFood extends \App\Pages\Base
                     $pos->save();
                     $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
                 } else {
-                    $this->setError("ppo_noretnumber");
+                    $this->setError("Не повернено фіскальний номер");
                     return;
                 }
             }
@@ -512,33 +512,33 @@ class OrderFood extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('enterdocnumber');
+            $this->setError('Введіть номер документа');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не створено унікальный номер документа');
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("noenterpos");
+            $this->setError("Не введено позиції");
         }
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("noselstore");
+            $this->setError("Не обрано склад");
         }
         if (($this->docform->pos->getValue() > 0) == false) {
-            $this->setError("noselposterm");
+            $this->setError("Не обрано POS термінал");
         }
         $p = $this->docform->payment->getValue();
         $c = $this->docform->customer->getKey();
 
         if ($this->_doc->payamount > $this->_doc->payed && $c == 0) {
-            $this->setError("mustsel_cust");
+            $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
         }
         if ($p == 0 && $this->_doc->payed > 0) {
-            $this->setError("noselmfp");
+            $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
         }
 
 
@@ -618,7 +618,7 @@ class OrderFood extends \App\Pages\Base
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
         $cust = new Customer();
@@ -627,14 +627,14 @@ class OrderFood extends \App\Pages\Base
         $cust->phone = \App\Util::handlePhone($cust->phone);
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
-            $this->setError("tel10", H::PhoneL());
+            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
             return;
         }
 
         $c = Customer::getByPhone($cust->phone);
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
-                $this->setError("existcustphone");
+                $this->setError("Вже існує контрагент з таким телефоном");
                 return;
             }
         }

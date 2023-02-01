@@ -40,7 +40,7 @@ class SerList extends \App\Pages\Base
 
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => H::l("opened"), 1 => H::l("newed"), 2 => H::l("st_inprocess"), 3 => H::l("all")), 0));
+        $this->filter->add(new DropDownChoice('status', array(0 => "Відкриті", 1 => "Нові", 2 => "Виконуються", 3 => "Всі"), 0));
 
         $doclist = $this->add(new DataView('doclist', new SerListDataSource($this), $this, 'doclistOnRow'));
 
@@ -112,20 +112,20 @@ class SerList extends \App\Pages\Base
         if ($sender->id == "btask") {
             if ($task) {
 
-                $this->setWarn('task_exists');
+                $this->setWarn('Вже існує документ Наряд');
             }
             App::Redirect("\\App\\Pages\\Doc\\Task", 0, $this->_doc->document_id);
         }
         if ($sender->id == "bttn") {
             if ($ttn) {
-                $this->setWarn('goodsissue_exists');
+                $this->setWarn('Вже існує документ Видаткова накладна');
             }
             App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
         }
         if ($sender->id == "bref") {
             if ($ttn || $task) {
 
-                $this->setWarn('created_task_gi');
+                $this->setWarn('Були створені документи Наряд та/або Видаткова накладна');
             }
             $this->_doc->updateStatus(Document::STATE_REFUSED);
         }

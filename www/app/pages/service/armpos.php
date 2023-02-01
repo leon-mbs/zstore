@@ -105,6 +105,8 @@ class ARMPos extends \App\Pages\Base
 
         $this->docpanel->form2->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'));
         $this->docpanel->form2->add(new DataView('detailser', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_serlist')), $this, 'serOnRow'));
+        $this->docpanel->add(new ClickLink('openshift', $this, 'OnOpenShift'));
+        $this->docpanel->add(new ClickLink('closeshift', $this, 'OnCloseShift'));
 
         //оплата
         $this->docpanel->add(new Form('form3'))->setVisible(false);
@@ -130,7 +132,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form3->add(new TextInput('exch2b'));
 
         $this->docpanel->form3->add(new Label('discount'));
-
+        $this->docpanel->form3->add(new CheckBox('passfisc'));
         //печать
         $this->docpanel->add(new Form('formcheck'))->setVisible(false);
         $this->docpanel->formcheck->add(new Label('showcheck'));
@@ -228,17 +230,17 @@ class ARMPos extends \App\Pages\Base
         $this->_pt = $this->form1->pricetype->getValue();
 
         if ($this->pos == null) {
-            $this->setError("noselterm");
+            $this->setError("Не обрано термінал");
             return;
         }
 
         if ($this->_store_id == 0) {
-            $this->setError("noselstore");
+            $this->setError("Не обрано склад");
             return;
         }
 
         if (strlen($this->_pt) == 0) {
-            $this->setError("noselpricetype");
+            $this->setError("Не вказано тип ціни");
             return;
         }
         $filter = \App\Filter::getFilter("armpos");
@@ -290,7 +292,7 @@ class ARMPos extends \App\Pages\Base
 
     public function topayOnClick($sender) {
         if (count($this->_itemlist) == 0 && count($this->_serlist) == 0) {
-            $this->setError('noenterpos');
+            $this->setError('Не введено позиції');
             return;
         }
 
@@ -352,13 +354,13 @@ class ARMPos extends \App\Pages\Base
         $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store}) and  (item_code = {$code_} or bar_code = {$code_} or item_code = {$code0} or bar_code = {$code0}  )");
 
         if ($item == null) {
-            $this->setError("noitemcode", $code);
+            $this->setError("Товар з кодом `{$code}` не знайдено");
             return;
         }
 
         $qty = $item->getQuantity($store);
         if ($qty <= 0) {
-            $this->setError("noitemonstore", $item->itemname);
+            $this->setError("Товару {$item->itemname} немає на складі");
         }
 
         foreach ($this->_itemlist as $ri => $_item) {
@@ -385,7 +387,7 @@ class ARMPos extends \App\Pages\Base
             }
 
             if (strlen($serial) == 0) {
-                $this->setWarn('needs_serial');
+                $this->setWarn('Потрібна партія виробника');
                 $this->docpanel->editdetail->setVisible(true);
                 $this->docpanel->form2->setVisible(false);
 
@@ -509,7 +511,7 @@ class ARMPos extends \App\Pages\Base
 
         $id = $this->docpanel->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("noselitem");
+            $this->setError("Не выбрано товар");
             return;
         }
         $item = Item::load($id);
@@ -522,11 +524,11 @@ class ARMPos extends \App\Pages\Base
         $item->price = H::fa($this->docpanel->editdetail->editprice->getText());
 
         if ($item->quantity > $qstock) {
-            $this->setWarn('inserted_extra_count');
+            $this->setWarn('Введено більше товару, чим є в наявності');
         }
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("needs_serial");
+            $this->setError("Потрібна партія виробника");
             return;
         }
 
@@ -534,7 +536,7 @@ class ARMPos extends \App\Pages\Base
             $slist = $item->getSerials($store);
 
             if (in_array($item->snumber, $slist) == false) {
-                $this->setError('invalid_serialno');
+                $this->setError('Невірний номер серії');
                 return;
             }
         }
@@ -587,7 +589,7 @@ class ARMPos extends \App\Pages\Base
 
         $id = $this->docpanel->editserdetail->editser->getKey();
         if ($id == 0) {
-            $this->setError("noselservice");
+            $this->setError("Не обрано послугу або роботу");
             return;
         }
         $ser = Service::load($id);
@@ -744,7 +746,7 @@ class ARMPos extends \App\Pages\Base
             $disctext = "";
             $d = $cust->getDiscount() ;
             if (doubleval($d) > 0) {
-                $disctext = H::l("custdisc") . " {$d}%";
+                $disctext = "Постійна знижка {$d}%";
                 $disc = round($total * ($d / 100));
                 
                 $this->docpanel->form3->discount->setText($disctext);
@@ -784,7 +786,7 @@ class ARMPos extends \App\Pages\Base
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
         $cust = new Customer();
@@ -794,14 +796,14 @@ class ARMPos extends \App\Pages\Base
         $cust->phone = \App\Util::handlePhone($cust->phone);
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
-            $this->setError("tel10", H::PhoneL());
+            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
             return;
         }
 
         $c = Customer::getByPhone($cust->phone);
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
-                $this->setError("existcustphone");
+                $this->setError("Вже існує контрагент з таким телефоном");
                 return;
             }
         }
@@ -836,7 +838,7 @@ class ARMPos extends \App\Pages\Base
             $this->docpanel->form3->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не створено унікальный номер документа');
             }
         }
         $this->_doc->document_date = $this->docpanel->form3->document_date->getDate();
@@ -857,20 +859,20 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['bonus'] = $this->docpanel->form3->bonus->getText();
 
         if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $this->_doc->customer_id == 0) {
-            $this->setError("mustsel_cust");
+            $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
             return;
         }
         if ($this->docpanel->form3->payment->getValue() == 0 && $this->_doc->payed > 0) {
-            $this->setError("noselmfp");
+            $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
             return;
         }
    
         if ( doubleval($this->_doc->headerdata['bonus'] ) >0 && $this->_doc->customer_id == 0) {
-            $this->setError("mustsel_cust");
+            $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
             return;
         }
         if ( doubleval($this->_doc->headerdata['exch2b'] ) >0 && $this->_doc->customer_id == 0) {
-            $this->setError("mustsel_cust");
+            $this->setError("Для нарахування бонуса повинен бути обраний контрагент");
             return;
         }
  
@@ -905,13 +907,49 @@ class ARMPos extends \App\Pages\Base
                 foreach ($this->_itemlist as $item) {
                     $qty = $item->getQuantity($this->_doc->headerdata['store']);
                     if ($qty < $item->quantity) {
-                        $this->setError("nominus", H::fqty($qty), $item->itemname);
+                        $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено" );
                         return;
                     }
                 }
             }
 
+            if ($this->pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
+              
+                if($this->docpanel->form3->passfisc->isChecked()) {
+                      $ret = \App\Modules\PPO\PPOHelper::check($this->_doc,true);
+  
+                }   else {
+              
+              
+                    $this->_doc->headerdata["fiscalnumberpos"]  = $this->pos->fiscalnumber;
              
+
+                    $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
+                    if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
+                        //повторяем для  нового номера
+                        $this->pos->fiscdocnumber = $ret['doclocnumber'];
+                        $this->pos->save();
+                        $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
+                    }
+                    if ($ret['success'] == false) {
+                        $this->setErrorTopPage($ret['data']);
+                         $conn->RollbackTrans();
+                        return;
+                    } else {
+                        //  $this->setSuccess("Выполнено") ;
+                        if ($ret['docnumber'] > 0) {
+                            $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                            $this->pos->save();
+                            $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+                        } else {
+                            $this->setError("Не повернено фіскальний номер");
+                             $conn->RollbackTrans();
+                            return;
+                        }
+                    }
+                }
+            }
+
 
             $this->_doc->save();
             $this->_doc->updateStatus(Document::STATE_NEW);
@@ -944,8 +982,96 @@ class ARMPos extends \App\Pages\Base
     }
 
 
- 
- 
+    public function OnOpenShift() {
+        $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, true);
+        if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
+            //повторяем для  нового номера
+            $this->pos->fiscdocnumber = $ret['doclocnumber'];
+            $this->pos->save();
+            $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, true);
+        }
+        if ($ret['success'] == false) {
+            $this->setErrorTopPage($ret['data']);
+            return false;
+        } else {
+            $this->setSuccess("Зміна відкрита");
+            if ($ret['doclocnumber'] > 0) {
+                $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                $this->pos->save();
+             //   $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+            }  
+            \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id);
+        }
+
+
+        $this->pos->save();
+        return true;
+    }
+
+    public function OnCloseShift($sender) {
+        $ret = $this->zform();
+        if ($ret == true) {
+            $this->closeshift();
+        }
+    }
+
+    public function zform() {
+
+        $stat = \App\Modules\PPO\PPOHelper::getStat($this->pos->pos_id);
+        $rstat = \App\Modules\PPO\PPOHelper::getStat($this->pos->pos_id, true);
+
+        $ret = \App\Modules\PPO\PPOHelper::zform($this->pos->pos_id, $stat, $rstat);
+        if (strpos($ret['data'], 'ZRepAlreadyRegistered')) {
+            return true;
+        }
+        if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
+            //повторяем для  нового номера
+            $this->pos->fiscdocnumber = $ret['doclocnumber'];
+            $this->pos->save();
+            $ret = \App\Modules\PPO\PPOHelper::zform($this->pos->pos_id, $stat, $rstat);
+        }
+        if ($ret['success'] == false) {
+            $this->setErrorTopPage($ret['data']);
+            return false;
+        } else {
+
+            if ($ret['doclocnumber'] > 0) {
+                $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                $this->pos->save();
+            } else {
+                $this->setError("Не повернено фіскальний номер");
+                return;
+            }
+        }
+
+
+        return true;
+    }
+
+    public function closeshift() {
+        $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, false);
+        if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
+            //повторяем для  нового номера
+            $this->pos->fiscdocnumber = $ret['doclocnumber'];
+            $this->pos->save();
+            $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, false);
+        }
+        if ($ret['success'] == false) {
+            $this->setErrorTopPage($ret['data']);
+            return false;
+        } else {
+            $this->setSuccess("Зміна закрита");
+            if ($ret['doclocnumber'] > 0) {
+                $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                $this->pos->save();
+            }  
+            \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id);
+        }
+
+
+        return true;
+    }
+
 
     public function onDocRow($row) {
         $doc = $row->getDataItem();

@@ -92,7 +92,7 @@ class Order extends Base
             $product = $row->GetDataItem();
             if (!is_numeric($product->quantity)) {
 
-                $this->setError('invalidquantity');
+                $this->setError('Невірна кількість');
                 break;
             }
 
@@ -135,30 +135,30 @@ class Order extends Base
 
         if ($delivery == 0) {
 
-            $this->setError("enterdelivery");
+            $this->setError("Виберіть тип доставки");
             return;
         }
         if (($delivery == 2 || $delivery == 3) && strlen($address) == 0) {
 
-            $this->setError("enteraddress");
+            $this->setError("Введіть адресу");
             return;
         }
   
         if ($payment == 0) {
 
-            $this->setError("enterpayment");
+            $this->setError("Виберіть оплату");
             return;
         }
 
 
  
         if (  strlen($phone) != \App\Helper::PhoneL()) {
-            $this->setError("tel10", \App\Helper::PhoneL());
+            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр" );
             return;
         }
 
         if ($this->_tvars["isfood"] && $time < (time() + 1800)) {
-            $this->setError("timedelivery");
+            $this->setError("Невірний час доставки");
             return;
         }
 
@@ -282,10 +282,10 @@ class Order extends Base
          
 
 
-         //   $this->setSuccess("shopneworder", $order->document_number);
+         //   $this->setSuccess("Створено замовлення " . $order->document_number);
 
             
-            \App\Entity\Subscribe::sendSMS($phone, \App\Helper::l("shopyoursorder", $order->document_id));
+            \App\Entity\Subscribe::sendSMS($phone, "Ваше замовлення номер " . $order->document_id);
              
         } catch(\Exception $ee) {
             $this->setError($ee->getMessage());
@@ -299,7 +299,7 @@ class Order extends Base
 
         $number = preg_replace('/[^0-9]/', '', $order->document_number);
     
-        System::setSuccessMsg( \App\Helper::l("createdorder"), $number) ;
+        System::setSuccessMsg( "Створено замовлення номер " . $number) ;
           
         if($payment == 1) {
             

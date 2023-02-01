@@ -70,7 +70,7 @@ class Helper
         }
 
 
-        System::setSuccessMsg(H::l('connected'));
+        System::setSuccessMsg("Успішне з`єднання");
 
 
     }

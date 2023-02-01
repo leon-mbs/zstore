@@ -53,7 +53,7 @@ class UserLogin extends \Zippy\Html\WebPage
             $entercode = $sender->capchacode->getText();
             $capchacode = $sender->capcha->getCode();
             if (strlen($entercode) == 0 || $entercode != $capchacode) {
-                $this->setError("invalidcapcha");
+                $this->setError("Невірний код капчі");
                 $this->counter();
 
                 return;
@@ -61,11 +61,11 @@ class UserLogin extends \Zippy\Html\WebPage
         }
         if ($login == '') {
 
-            $this->setError('enterlogin');
+            $this->setError('Введіть логін');
         } else {
             if ($password == '') {
 
-                $this->setError('enterpassword');
+                $this->setError('Введіть пароль');
             }
         }
 
@@ -99,7 +99,7 @@ class UserLogin extends \Zippy\Html\WebPage
                 return;
             } else {
 
-                $this->setError('invalidlogin');
+                $this->setError('Невірний логін');
 
                 $this->counter();
             }
@@ -118,14 +118,14 @@ class UserLogin extends \Zippy\Html\WebPage
 
     public function setError($msg) {
 
-        $msg = Helper::l($msg);
+  
         $this->_tvars['alerterror'] = $msg;
     }
 
     private function counter() {
         $this->cntlogin++;
         if ($this->cntlogin == 5) {
-            $msg = Helper::l("extralogin");
+            $msg = "Багато невдалих авторизацій";
             $t = $this->loginform->userlogin->getText()  ;
             $t = htmlspecialchars($t) ;
             $msg .= '<br>' . $t. ', ';
@@ -135,7 +135,7 @@ class UserLogin extends \Zippy\Html\WebPage
             \App\Entity\Notify::toAdmin($msg) ;
    
             
-            $this->setError('invalidloginalert');
+            $this->setError('Багато невдалих авторизацій. Адміністратору системи відправлено повідомлення');
             $this->loginform->setVisible(false);
             if (strlen($admin->email) > 0) {
                 Helper::sendLetter(   $admin->email, $msg, "Zippy Store alert");

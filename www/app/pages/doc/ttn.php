@@ -189,7 +189,7 @@ class TTN extends \App\Pages\Base
 
                         if (count($list) > 0 && $common['numberttn'] <> 1) {
 
-                            $this->setError('order_has_sent');
+                            $this->setError('У замовлення вже є відправки');
                             App::Redirect("\\App\\Pages\\Register\\GIList");
                             return;
                         }
@@ -197,7 +197,7 @@ class TTN extends \App\Pages\Base
 
                         if (count($list) > 0 && $common['numberttn'] <> 1) {
 
-                            $this->setError('order_has_sent');
+                            $this->setError('У замовлення вже є відправки');
                             App::Redirect("\\App\\Pages\\Register\\GIList");
                             return;
                         }
@@ -398,7 +398,7 @@ class TTN extends \App\Pages\Base
 
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
-            $this->setError('noselstore');
+            $this->setError('Не обрано склад');
             return;
         }
 
@@ -407,7 +407,7 @@ class TTN extends \App\Pages\Base
 
         if ($item == null) {
 
-            $this->setWarn("noitemcode", $code);
+            $this->setWarn("Товар з кодом `{$code}` не знайдено");
             return;
         }
 
@@ -417,7 +417,7 @@ class TTN extends \App\Pages\Base
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
 
-            $this->setWarn("noitemonstore", $item->itemname);
+            $this->setWarn("Товару {$item->itemname} немає на складі");
         }
 
 
@@ -432,7 +432,7 @@ class TTN extends \App\Pages\Base
 
 
             if (strlen($serial) == 0) {
-                $this->setWarn('needs_serial');
+                $this->setWarn('Потрібна партія виробника');
                 $this->editdetail->setVisible(true);
                 $this->docform->setVisible(false);
 
@@ -495,7 +495,7 @@ class TTN extends \App\Pages\Base
 
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("noselitem");
+            $this->setError("Не обрано товар");
             return;
         }
         $item = Item::load($id);
@@ -509,12 +509,12 @@ class TTN extends \App\Pages\Base
 
         if ($item->quantity > $qstock) {
 
-            $this->setWarn('inserted_extra_count');
+            $this->setWarn('Введено більше товару, чим є в наявності');
         }
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
 
-            $this->setError("needs_serial");
+            $this->setError("Потрібна партія виробника");
             return;
         }
 
@@ -523,7 +523,7 @@ class TTN extends \App\Pages\Base
 
             if (in_array($item->snumber, $slist) == false) {
 
-                $this->setWarn('invalid_serialno');
+                $this->setWarn('Невірний номер серії');
             } else {
                 $st = Stock::getFirst("store_id={$store_id} and item_id={$item->item_id} and snumber=" . Stock::qstr($item->snumber));
                 if ($st instanceof Stock) {
@@ -628,7 +628,7 @@ class TTN extends \App\Pages\Base
         $isEdited = $this->_doc->document_id > 0;
 
         if ($sender->id == 'senddoc' && $this->_doc->headerdata['delivery'] > 2 && strlen($this->_doc->headerdata['delivery']) == 0) {
-            $this->setError('nottnnumber');
+            $this->setError('Не вказана декларація служби доставки');
             return;
         }
 
@@ -653,7 +653,7 @@ class TTN extends \App\Pages\Base
                     foreach ($this->_itemlist as $item) {
                         $qty = $item->getQuantity($this->_doc->headerdata['store']);
                         if ($qty < $item->quantity) {
-                            $this->setError("nominus", H::fqty($qty), $item->itemname);
+                            $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
                             return;
                         }
                     }
@@ -664,7 +664,7 @@ class TTN extends \App\Pages\Base
 
                     if($this->_changedpos) {
                         if($this->_changedpos) {
-                            $msg= H::l("changedposlist",$this->_doc->document_number,$basedoc->document_number,\App\System::getUser()->username); ;
+                            $msg=  "У документа {$this->_doc->document_number}, створеного на підставі {$basedoc->document_number}, користувачем ".\App\System::getUser()->username." был изменен список ТМЦ "  ;
                             \App\Entity\Notify::toSystemLog($msg) ;
                         }
                
@@ -686,10 +686,9 @@ class TTN extends \App\Pages\Base
                     $basedoc = Document::load($this->_doc->parent_id);
 
                     if($this->_changedpos) {
-                        if($this->_changedpos) {
-                            $msg= H::l("changedposlist",$this->_doc->document_number,$basedoc->document_number,\App\System::getUser()->username); ;
+                            $msg=  "У документа {$this->_doc->document_number}, створеного на підставі {$basedoc->document_number}, користувачем ".\App\System::getUser()->username." был изменен список ТМЦ "  ;
+
                             \App\Entity\Notify::toSystemLog($msg) ;
-                        }
                
                     }
                  }
@@ -748,7 +747,7 @@ class TTN extends \App\Pages\Base
             }
         }
         $this->docform->total->setText(H::fa($total));
-        $this->docform->weight->setText(H::l("allweight", $weight));
+        $this->docform->weight->setText("Загальна вага {$weight} кг");
         $this->docform->weight->setVisible($weight > 0);
     }
 
@@ -759,7 +758,7 @@ class TTN extends \App\Pages\Base
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
 
-            $this->setError('enterdocnumber');
+            $this->setError('Введіть номер документа');
         }
 
         if (false == $this->_doc->checkUniqueNumber()) {
@@ -767,21 +766,21 @@ class TTN extends \App\Pages\Base
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не створено унікальный номер документа');
             }
         }
 
         if (count($this->_itemlist) == 0) {
-            $this->setError("noenteritem");
+            $this->setError("Не введено товар");
         }
 
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("noselstore");
+            $this->setError("Не обрано склад");
         }
         $c = $this->docform->customer->getKey();
 
         if ($c == 0) {
-            $this->setError("noselcust");
+            $this->setError("Не задано контрагента");
         }
 
 
@@ -851,7 +850,7 @@ class TTN extends \App\Pages\Base
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
         $cust = new Customer();
@@ -863,7 +862,7 @@ class TTN extends \App\Pages\Base
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
             $this->setError("");
-            $this->setError("tel10", H::PhoneL());
+            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
             return;
         }
 
@@ -871,7 +870,7 @@ class TTN extends \App\Pages\Base
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
 
-                $this->setError("existcustphone");
+                $this->setError("Вже існує контрагент з таким телефоном");
                 return;
             }
         }

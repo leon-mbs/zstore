@@ -109,7 +109,7 @@ class ServiceList extends \App\Pages\Base
         $this->_service->cost = $this->servicedetail->editcost->getText();
         $this->_service->hours = $this->servicedetail->edithours->getText();
         if ($this->_service->service_name == '') {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
         $this->_service->disabled = $this->servicedetail->editdisabled->isChecked() ? 1 : 0;

@@ -48,7 +48,7 @@ class customers extends  JsonRPC
         $cust->comment = base64_encode($args['description']);
 
         if (strlen($cust->customer_name) == 0) {
-            throw new \Exception(H::l("entername"));
+            throw new \Exception("Не задано назву контрагента");
         }
 
         $cust->save();

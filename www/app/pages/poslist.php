@@ -27,7 +27,7 @@ class PosList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (System::getUser()->rolename != 'admins') {
-            System::setErrorMsg(H::l('onlyadminsaccess'));
+            System::setErrorMsg("До сторінки має доступ тільки користувачі з роллю admins  ");
             \App\Application::RedirectError();
             return false;
         }
@@ -128,16 +128,16 @@ class PosList extends \App\Pages\Base
         $this->_pos->usefisc = $this->posdetail->editusefisc->isChecked() ? 1 : 0;
 
         if ($this->_pos->pos_name == '') {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
         if ($this->_pos->firm_id == 0) {
-            $this->setError("noselfirm");
+            $this->setError("Не обрано компанію");
             return;
         }
         if ($this->_tvars['usebranch'] == true && $this->_pos->branch_id == 0) {
 
-            $this->setError("selbranch");
+            $this->setError("Виберіть філію");
             return;
         }
         $fn = intval($this->_pos->fiscdocnumber);

@@ -60,7 +60,7 @@ class TTN extends Document
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                         "store_name"      => $this->headerdata["store_name"],
 
-                        "weight"          => $weight > 0 ? H::l("allweight", $weight) : '',
+                        "weight"          => $weight > 0 ? "Загальна вага {$weight} кг"  : '',
                         "ship_address"    => strlen($this->headerdata["ship_address"]) > 0 ? $this->headerdata["ship_address"] : false,
                         "ship_number"     => strlen($this->headerdata["ship_number"]) > 0 ? $this->headerdata["ship_number"] : false,
                         "delivery_name"   => $this->headerdata["delivery_name"],
@@ -185,7 +185,8 @@ class TTN extends Document
                         $itemp->quantity = $item->quantity * $part->qty;
                       
                         if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
-                            throw new \Exception(H::l("nominus", H::fqty($itemp->getQuantity($this->headerdata['store'])), $itemp->itemname));
+                            throw new \Exception("На складі всього ".$itemp->getQuantity($this->headerdata['store']) ." ТМЦ {$itemp->itemname}. Списання у мінус заборонено" );
+                            
                         }
                       
                         $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
@@ -204,7 +205,7 @@ class TTN extends Document
                 $price = $item->getProdprice();
 
                 if ($price == 0) {
-                    throw new \Exception(H::l('noselfprice', $item->itemname));
+                    throw new \Exception('Не розраховано собівартість готової продукції '. $item->itemname);
                 }
                 $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
 
@@ -216,8 +217,8 @@ class TTN extends Document
             }
 
             if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
-                throw new \Exception(H::l("nominus", H::fqty($item->getQuantity($this->headerdata['store'])), $item->itemname));
-            }
+                throw new \Exception("На складі всього ".$item->getQuantity($this->headerdata['store']) ." ТМЦ {$item->itemname}. Списання у мінус заборонено" );
+          }
 
             //продажа
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);

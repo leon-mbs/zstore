@@ -33,7 +33,7 @@ class ProductList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg('noaccesstopage');
+            System::setErrorMsg("Немає права доступу до сторінки");
             App::RedirectError();
             return;
         }
@@ -41,7 +41,7 @@ class ProductList extends \App\Pages\Base
         $this->op = System::getOptions("shop");
         if (strlen($this->op['defcust']) == 0 || strlen($this->op['defpricetype']) == 0) {
 
-            $this->setWarn('notsetoptionsmag');
+            $this->setWarn('Не виконано всі необхідні налаштування магазина. Перейдіть на сторінку налаштувань');
         }
 
 
@@ -55,8 +55,8 @@ class ProductList extends \App\Pages\Base
 
         $fc = new Category();
         $fc->cat_id = 0;
-        $fc->cat_name = \App\Helper::l("allcategory");
-        $fc->full_name = \App\Helper::l("allcategory");
+        $fc->cat_name = "Всі категорії";
+        $fc->full_name = "Всі категорії";
 
         $first = array($fc);
 
@@ -217,12 +217,12 @@ class ProductList extends \App\Pages\Base
             $imagedata = getimagesize($file["tmp_name"]);
 
             if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {
-                $this->setError('invalidformat');
+                $this->setError('Невірний формат');
                 return;
             }
 
             if ($imagedata[0] * $imagedata[1] > 10000000) {
-                $this->setError('toobigimage');
+                $this->setError('Занадто великий розмір зображення');
                 return;
             }
 
@@ -352,11 +352,11 @@ class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\I
 
     public function getContent($attributes) {
         $ret = "<td>{$this->productattribute->attributename}</td><td>";
-        $nodata = \App\Helper::l("shopattrnodata");
+        $nodata = "Немає даних";
         //'Есть/Нет'
         if ($this->productattribute->attributetype == 1) {
-            $yes = \App\Helper::l("shopattryes");
-            $no = \App\Helper::l("shopattrno");
+            $yes = "Є";
+            $no = "Немає";
 
             $s1 = ($this->productattribute->value == -1 || strlen($this->productattribute->value) == 0) ? 'selected="on"' : '';
             $s2 = $this->productattribute->value == '0' ? 'selected="on"' : '';

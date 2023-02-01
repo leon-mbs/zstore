@@ -151,7 +151,7 @@ class ZForm extends \App\Pages\Base
                     $this->_pos->save();
                     $doc->headerdata["fiscalnumber"] = $ret['docnumber'];
                 } else {
-                    $this->setError("ppo_noretnumber");
+                    $this->setError("Не повернено фіскальний номер");
                  
                     return;
                 }
@@ -240,7 +240,7 @@ class ZForm extends \App\Pages\Base
                 $this->_pos->save();
                 return true;
             } else {
-                $this->setError("ppo_noretnumber");
+                $this->setError("Не повернено фіскальний номер");
                 return false;
             }
         }
@@ -275,11 +275,11 @@ class ZForm extends \App\Pages\Base
          
          $ret = PPOHelper::shiftTotal($pos->fiscalnumber,$firm) ;
          if($ret == false) {
-             $this->setError(\App\Helper::l("noserverorshift") );
+             $this->setError("Сервер недоступний або зміна закрита");
              return ;
          } 
          if(!is_array($ret['Totals'])) {
-             $this->setError(\App\Helper::l("noserverorshift")) ;
+             $this->setError("Сервер недоступний або зміна закрита") ;
              return ;
          } 
          $zt="";

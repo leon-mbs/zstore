@@ -25,7 +25,7 @@ class Items extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'promua') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg(H::l('noaccesstopage'));
+            System::setErrorMsg("Немає права доступу до сторінки");
 
             App::RedirectError();
             return;
@@ -145,7 +145,7 @@ class Items extends \App\Pages\Base
         }
         if (count($elist) == 0) {
 
-            $this->setError('noselitem');
+            $this->setError('Не обрано товар');
             return;
         }
         $data = json_encode($elist);
@@ -158,7 +158,8 @@ class Items extends \App\Pages\Base
             System::setErrorMsg($ee->getMessage());
             return;
         }   
-        $this->setSuccess('exported_items', count($elist));
+
+        $this->setSuccess("Експортовано ".count($elist)." товарів" );
 
         //обновляем таблицу
         $this->filterOnSubmit(null);
@@ -234,7 +235,7 @@ class Items extends \App\Pages\Base
             return;
         }       
     
-      $this->setSuccess('refreshed');
+      $this->setSuccess('Оновлено');
     }
 
     public function onUpdatePrice($sender) {
@@ -305,7 +306,7 @@ class Items extends \App\Pages\Base
             return;
         }       
     
-      $this->setSuccess('refreshed');
+      $this->setSuccess('Оновлено');
     }
 
     public function importOnSubmit($sender) {
@@ -420,7 +421,7 @@ class Items extends \App\Pages\Base
             $i++;
         }
 
-        $this->setSuccess("loaded_items", $i);
+        $this->setSuccess("Завантажено {$i} товарів");
     }
 
 }

@@ -257,7 +257,7 @@ class Order extends \App\Pages\Base
         }
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("noselitem");
+            $this->setError("Не обрано товар");
             return;
         }
 
@@ -366,14 +366,14 @@ class Order extends \App\Pages\Base
                $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
                
                if ($this->_doc->payed > $this->_doc->payamount) {
-                    $this->setError('inserted_extrasum');
+                    $this->setError('Внесена сума більше необхідної');
                     return;
                }               
                if ($this->_doc->payed == 0) {
                     return;
                }               
                if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
-                    $this->setError("noselmfp");
+                    $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
                     return;
                }             
                
@@ -478,23 +478,23 @@ class Order extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('enterdocnumber');
+            $this->setError('Введіть номер документа');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не створено унікальный номер документа');
             }
         }
         if (count($this->_tovarlist) == 0) {
-            $this->setError("noenteritem");
+            $this->setError("Не введено товар");
         }
 
         $c = $this->docform->customer->getKey();
         if ($c == 0) {
-            $this->setError("noselcust");
+            $this->setError("Не задано контрагента");
         }
    
 
@@ -541,7 +541,7 @@ class Order extends \App\Pages\Base
             $this->docform->address->setText($customer->address);
             $d= $customer->getDiscount();
             if ($d > 0) {
-                $this->docform->discount->setText(H::l("custdisc") ." ". $d . '%');
+                $this->docform->discount->setText("Постійна знижка {$d}%");
                 $this->docform->discount->setVisible(true);
                   
             } else {
@@ -584,7 +584,7 @@ class Order extends \App\Pages\Base
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
         $cust = new Customer();
@@ -593,14 +593,14 @@ class Order extends \App\Pages\Base
         $cust->phone = \App\Util::handlePhone($cust->phone);
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
-            $this->setError("tel10", H::PhoneL());
+            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
             return;
         }
 
         $c = Customer::getByPhone($cust->phone);
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
-                $this->setError("existcustphone");
+                $this->setError("Вже існує контрагент з таким телефоном");
                 return;
             }
         }
@@ -719,7 +719,7 @@ class Order extends \App\Pages\Base
     public function savenewitemOnClick($sender) {
         $itemname = trim($this->editnewitem->editnewitemname->getText());
         if (strlen($itemname) == 0) {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
         $item = new Item();
@@ -731,7 +731,7 @@ class Order extends \App\Pages\Base
             $code = Item::qstr($item->item_code);
             $cnt = Item::findCnt("  item_code={$code} ");
             if ($cnt > 0) {
-                $this->setError('itemcode_exists');
+                $this->setError('Такий артикул вже існує');
                 return;
             }
 

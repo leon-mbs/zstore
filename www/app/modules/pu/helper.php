@@ -25,7 +25,7 @@ class Helper
         }
 
         if(!is_array($ret)) {
-           //System::setSuccessMsg(H::l('connected'));    
+           //System::setSuccessMsg("Успішне з`єднання");    
            return;
         }
         

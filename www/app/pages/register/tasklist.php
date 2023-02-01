@@ -209,7 +209,7 @@ class TaskList extends \App\Pages\Base
             $d = $this->_task->getChildren('ProdIssue');
             if (count($d) > 0) {
 
-                $this->setWarn('exists_prodissue');
+                $this->setWarn('Вже існує документ Списання на виробництво');
             }
             Application::Redirect("\\App\\Pages\\Doc\\ProdIssue", 0, $this->_task->document_id);
             return;
@@ -218,7 +218,7 @@ class TaskList extends \App\Pages\Base
             $d = $this->_task->getChildren('ProdReceipt');
             if (count($d) > 0) {
 
-                $this->setWarn('exists_prodreceipt');
+                $this->setWarn('Вже існує документ Оприбуткування і виробництво');
             }
             Application::Redirect("\\App\\Pages\\Doc\\ProdReceipt", 0, $this->_task->document_id);
             return;
@@ -227,7 +227,7 @@ class TaskList extends \App\Pages\Base
             $d = $this->_task->getChildren('ServiceAct');
             if (count($d) > 0) {
 
-                $this->setWarn('exists_serviceact');
+                $this->setWarn('Вже існує документ Акт виконаних робіт');
             }
             Application::Redirect("\\App\\Pages\\Doc\\ServiceAct", 0, $this->_task->document_id);
             return;

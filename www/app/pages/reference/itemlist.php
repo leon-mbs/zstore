@@ -45,7 +45,7 @@ class ItemList extends \App\Pages\Base
 
         $this->filter->add(new TextInput('searchkey'));
         $catlist = array();
-        $catlist[-1] = H::l("withoutcat");
+        $catlist[-1] = "Без категорії";
         foreach (Category::getList() as $k => $v) {
             $catlist[$k] = $v;
         }
@@ -197,10 +197,10 @@ class ItemList extends \App\Pages\Base
         if($item->hasAction() ) {
             $title="";
             if(doubleval($item->actionprice) > 0) {
-                 $title= H::l("actionpricetitile",H::fa($item->actionprice));                
+                 $title= "Акційна ціна " . H::fa($item->actionprice);                
             }
             if(doubleval($item->actiondisc) > 0) {
-                 $title= H::l("actiondisctitile",H::fa($item->actiondisc));                
+                 $title= "Акційна знижка ". H::fa($item->actiondisc) ."%";                
             }
             $row->hasaction->setAttribute('title',$title)  ;          
         }
@@ -341,7 +341,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->itemname = trim($this->_item->itemname);
         
         if (strlen($this->_item->itemname) == 0) {
-            $this->setError('entername');
+            $this->setError('Не введено назву');
             return;
         }
         
@@ -385,7 +385,7 @@ class ItemList extends \App\Pages\Base
             $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and item_code={$code} ");
             if ($cnt > 0) {
  
-                    $this->setError('itemcode_exists');
+                    $this->setError('Такий артикул вже існує');
                     return;
                 
             }
@@ -404,14 +404,14 @@ class ItemList extends \App\Pages\Base
             $code = Item::qstr($this->_item->bar_code);
             $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and bar_code={$code} ");
             if ($cnt > 0) {
-                $this->setWarn('barcode_exists');
+                $this->setWarn('Такий штрих код вже існує"');
             }
         }
         $printer = System::getOptions('printer');
 
         if (intval($printer['pmaxname']) > 0 && mb_strlen($this->_item->shortname) > intval($printer['pmaxname'])) {
 
-            $this->setWarn('tolongshortname', $printer['pmaxname']);
+            $this->setWarn("Коротка назва має бути не більше {$printer['pmaxname']} символів" );
 
         }
 
@@ -420,7 +420,7 @@ class ItemList extends \App\Pages\Base
         $code = Item::qstr($this->_item->item_code);
         $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and itemname={$itemname} and item_code={$code} ");
         if ($cnt > 0) {
-            $this->setError('itemnamecode_exists');
+            $this->setError('ТМЦ з такою назвою і артикулом вже існує');
             return;
         }
 
@@ -448,13 +448,13 @@ class ItemList extends \App\Pages\Base
             $imagedata = getimagesize($file["tmp_name"]);
 
             if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {
-                $this->setError('invalidformatimage');
+                $this->setError('Невірний формат зображення');
                 return;
             }
 
             if ($imagedata[0] * $imagedata[1] > 10000000) {
 
-             //   $this->setError('toobigimage');
+             //   $this->setError('Занадто великий розмір зображення');
             //    return;
             }
 
@@ -566,7 +566,7 @@ class ItemList extends \App\Pages\Base
     public function OnAddSet($sender) {
         $id = $sender->editsname->getKey();
         if ($id == 0) {
-            $this->setError("noselitem");
+            $this->setError("Не обрано товар");
             return;
         }
 
@@ -601,7 +601,7 @@ class ItemList extends \App\Pages\Base
     public function OnAddSSet($sender) {
         $id = $sender->editssname->getValue();
         if ($id == 0) {
-            $this->setError("noselservice");
+            $this->setError("Не обрано послугу або роботу");
             return;
         }
 
@@ -865,7 +865,7 @@ class ItemList extends \App\Pages\Base
         }
 
 
-        $this->setSuccess("delitems", $d, $u);
+        $this->setSuccess("Видалено {$d}, деактивовано {$u}");
 
         $this->itemtable->listform->itemlist->Reload();
 

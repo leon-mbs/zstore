@@ -116,10 +116,10 @@ class ArmProdFood extends \App\Pages\Base
 
         $notes = "";
         if ($item->myself == 1) {
-            $notes = H::l("myself");
+            $notes = "Із собою";
         }
         if ($item->del == true) {
-            $notes = H::l("delivery");
+            $notes = "Доставка";
         }                
                 
                 $itemlist[]=array(

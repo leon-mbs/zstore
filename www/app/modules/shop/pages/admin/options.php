@@ -26,7 +26,7 @@ class Options extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg('noaccesstopage');
+            System::setErrorMsg("Немає права доступу до сторінки");
             App::RedirectError();
             return;
         }
@@ -108,7 +108,7 @@ class Options extends \App\Pages\Base
         $shop['paysystem'] = $sender->paysystem->getValue();
         $shop['mf_id'] =  intval($sender->mf->getValue() ); 
         if($shop['mf_id']==0) {
-            $this->setError('noselmf');
+            $this->setError('Не обрано касу');
             return;
         }
         $shop['lqpriv'] =  $sender->lqpriv->getText() ; 
@@ -118,7 +118,7 @@ class Options extends \App\Pages\Base
         $shop['wpsite'] = $sender->wpsite->getText() ; 
 
         System::setOptions("shop", $shop);
-        $this->setSuccess('saved');
+        $this->setSuccess('Збережено');
         
     }
     
@@ -160,12 +160,12 @@ class Options extends \App\Pages\Base
             $imagedata = getimagesize($file["tmp_name"]);
 
             if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {
-                $this->setError('invalidformat');
+                $this->setError('Невірний формат');
                 return;
             }
 
             if ($imagedata[0] * $imagedata[1] > 10000000) {
-                $this->setError('toobigimage');
+                $this->setError('Занадто великий розмір зображення');
                 return;
             }
 
@@ -175,7 +175,7 @@ class Options extends \App\Pages\Base
             $shop['logo'] = "/upload/" . $name;
         }
         System::setOptions("shop", $shop);
-        $this->setSuccess('saved');
+        $this->setSuccess('Збережено');
     }
 
  

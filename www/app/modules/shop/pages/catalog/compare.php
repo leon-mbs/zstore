@@ -43,9 +43,9 @@ class CompareGrid extends \Zippy\Html\CustomComponent implements \Zippy\Interfac
         $attrvalues = array();
         $options = \App\System::getOptions('shop');
 
-        $nodata = \App\Helper::l("shopattrnodata");
-        $yes = \App\Helper::l("shopattryes");
-        $no = \App\Helper::l("shopattrno");
+        $nodata = "Немає даних";
+        $yes = "Є";
+        $no = "Немає";
 
         $result .= "<tr><th></th>";
         $url = $this->owner->getURLNode() . "::" . $this->id;

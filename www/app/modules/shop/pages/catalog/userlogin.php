@@ -49,24 +49,24 @@ class UserLogin extends \Zippy\Html\WebPage
     public function onrcsubmit($sender) {
         $phone = $sender->rcuserphone->getText();
         if (  strlen($phone) != Helper::PhoneL()) {
-            $this->setError("tel10", Helper::PhoneL());
+            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
             return;
         }       
         $c = Customer::getByPhone($phone);
         if (  $c == null) {
-            $this->setError("phonenotfound" );
+            $this->setError("Користувач з таким телефоном не знайдений" );
             return;
         } 
         $p= substr(base64_encode(md5(time())),0,8);
         $c->passw = $p;
         $c->save();
-        $ret = \App\Entity\Subscribe::sendSMS($phone, \App\Helper::l("recoverypass", $p));
+        $ret = \App\Entity\Subscribe::sendSMS($phone, "ZStore: новий пароль " . $p);
         if(strlen($ret)  >0 ){
            \App\Helper::logerror($ret) ;          
            $this->setError('SMS error') ;
            return ; 
         }
-        $this->setSuccess("passsent")  ;
+        $this->setSuccess("Пароль відправлено")  ;
         $this->loginform->setVisible(true) ;
         $this->recallform->setVisible(false) ;
        
@@ -78,20 +78,20 @@ class UserLogin extends \Zippy\Html\WebPage
         $pass = $sender->suserpassword->getText();
         $conf = $sender->sconfirm->getText();
         if (  strlen($phone) != Helper::PhoneL()) {
-            $this->setError("tel10", Helper::PhoneL());
+            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
             return;
         }       
         if (  strlen($pass) ==0  ) {
-            $this->setError("enterpassword") ;
+            $this->setError("Введіть пароль") ;
             return;
         }       
         if (  $pass != $conf) {
-            $this->setError("invalidconfirm") ;
+            $this->setError("Невірне підтвердження") ;
             return;
         }       
         $c = Customer::getByPhone($phone);
         if (  $c != null) {
-            $this->setError("phonefound" );
+            $this->setError("Вже існує користувач з таким телефоном" );
             return;
         }   
         $c = new  Customer();
@@ -118,22 +118,22 @@ class UserLogin extends \Zippy\Html\WebPage
         $sender->userpassword->setText('');
         
         if (  strlen($phone) != Helper::PhoneL()) {
-            $this->setError("tel10", Helper::PhoneL());
+            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
             return;
         }
         $c = Customer::getByPhone($phone);
         if (  $c == null) {
-            $this->setError("phonenotfound" );
+            $this->setError("Користувач з таким телефоном не знайдений" );
             return;
         }
         if ( strlen($password)==0 ||  $c->passw != $password) {
-            $this->setError("enterpassword" );
+            $this->setError("Введіть пароль" );
             return;
         }
         if ($shop["uselogin"] == 1) {
             if ($c->allowedshop != 1) {
                 
-                $this->setError("notallowedshop" );
+                $this->setError("У вас немає права доступу до каталогу. Зверніться до адміністратора" );
                 return;
             }
         }
@@ -159,15 +159,13 @@ class UserLogin extends \Zippy\Html\WebPage
     }
 
     public function setError($msg,$p=null) {
-        $msg = Helper::l($msg,$p) ;
+      
 
         $this->_tvars['alerterror'] = $msg;
     }
   
     public function setSuccess($msg) {
-
-        $msg = Helper::l($msg ) ;
-
+    
         $this->_tvars['alertsuccess'] = $msg;
     }
     

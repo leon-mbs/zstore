@@ -40,7 +40,7 @@ class VarList extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg('noaccesstopage');
+            System::setErrorMsg("Немає права доступу до сторінки");
             App::RedirectError();
             return;
         }

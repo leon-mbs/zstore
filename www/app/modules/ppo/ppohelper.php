@@ -12,6 +12,10 @@ class PPOHelper
 {
 
     //  const DPI = "http://fs.tax.gov.ua:8609/fs/";
+      const FORM_NAL     =  "Готівка";
+      const FORM_CARD    =  "Банківська карта";
+      const FORM_CREDIT  =  "В кредит";
+      const FORM_PREPAID =  "Передоплата";
 
 
     /**
@@ -108,7 +112,7 @@ class PPOHelper
                 $cert = @unserialize(@base64_decode($firm->ppocert));
 
                 if ($key == null || $cert == null) {
-                    $msg = H::l("ppokeynotloaded");
+                    $msg = "Не завантажений ключ або сертифікат";
                     $msg = str_replace("'","\"",$msg) ;
                     return array('success' => false, 'data' => $msg);
                 }
@@ -299,7 +303,7 @@ class PPOHelper
 
         if ($stat['amount0'] > 0) {
             $header['pays'][] = array(
-                'formname' => H::l('ppo_nal'),
+                'formname' => self::FORM_NAL,
                 'formcode' => 0,
                 'sum'      => number_format($stat['amount0'], 2, '.', ''),
                 'num'      => "ROWNUM=\"{$n}\""
@@ -309,7 +313,7 @@ class PPOHelper
         }
         if ($stat['amount1'] > 0) {
             $header['pays'][] = array(
-                'formname' => H::l('ppo_bnal'),
+                'formname' => self::FORM_CARD,
                 'formcode' => 1,
                 'sum'      => number_format($stat['amount1'], 2, '.', ''),
                 'num'      => "ROWNUM=\"{$n}\""
@@ -319,7 +323,7 @@ class PPOHelper
         }
         if ($stat['amount2'] > 0) {
             $header['pays'][] = array(
-                'formname' => H::l('ppo_credit'),
+                'formname' => self::FORM_CREDIT,
                 'formcode' => 2,
                 'sum'      => number_format($stat['amount2'], 2, '.', ''),
                 'num'      => "ROWNUM=\"{$n}\""
@@ -329,7 +333,7 @@ class PPOHelper
         }
         if ($stat['amount3'] > 0) {
             $header['pays'][] = array(
-                'formname' => H::l('ppo_prepaid'),
+                'formname' => self::FORM_PREPAID,
                 'formcode' => 3,
                 'sum'      => number_format($stat['amount3'], 2, '.', ''),
                 'num'      => "ROWNUM=\"{$n}\""
@@ -345,7 +349,7 @@ class PPOHelper
 
         if ($rstat['amount0'] > 0) {
             $header['paysr'][] = array(
-                'formname' => H::l('ppo_nal'),
+                'formname' => self::FORM_NAL,
                 'formcode' => 0,
                 'sum'      => number_format($rstat['amount0'], 2, '.', ''),
                 'num'      => "ROWNUM=\"{$n}\""
@@ -355,7 +359,7 @@ class PPOHelper
         }
         if ($rstat['amount1'] > 0) {
             $header['paysr'][] = array(
-                'formname' => H::l('ppo_bnal'),
+                'formname' => self::FORM_CARD,
                 'formcode' => 1,
                 'sum'      => number_format($rstat['amount1'], 2, '.', ''),
                 'num'      => "ROWNUM=\"{$n}\""
@@ -471,7 +475,7 @@ class PPOHelper
         //
         if ($doc->headerdata['payment'] == 0) {
             $pay = array(
-                'formname' => H::l('ppo_prepaid'),
+                'formname' => self::FORM_PREPAID,
                 'formcode' => 3,
                 'paysum'   => number_format($header['amount'], 2, '.', ''),
                 'payed'    => number_format($header['amount'], 2, '.', ''),
@@ -487,7 +491,7 @@ class PPOHelper
             
             if (  $mf->beznal == 1) {
                 $pay = array(
-                    'formname' => H::l('ppo_bnal'),
+                    'formname' => self::FORM_CARD,
                     'formcode' => 1,
                     'paysum'   => number_format($doc->payamount, 2, '.', ''),
                     'payed'    => number_format($doc->payamount, 2, '.', ''),
@@ -504,7 +508,7 @@ class PPOHelper
             } else {
 
                 $pay = array(
-                    'formname' => H::l('ppo_nal'),
+                    'formname' => self::FORM_NAL,
                     'formcode' => 0,
                     'paysum'   => number_format($doc->payamount, 2, '.', ''),
                     'payed'    => number_format($doc->payed, 2, '.', ''),
@@ -529,7 +533,7 @@ class PPOHelper
         // в долг
         if ($doc->payed < $doc->payamount) {
             $pay = array(
-                'formname' => H::l('ppo_credit'),
+                'formname' => self::FORM_CREDIT,
                 'formcode' => 2,
                 'paysum'   => number_format($doc->payamount - $doc->payed, 2, '.', ''),
                 'payed'    => number_format($doc->payamount - $doc->payed, 2, '.', ''),
@@ -548,7 +552,7 @@ class PPOHelper
         
         if ($doc->payamount == 0) {
             $pay = array(
-                'formname' => H::l('ppo_prepaid'),
+                'formname' => self::FORM_PREPAID,
                 'formcode' => 3,
                 'paysum'   => number_format($header['amount'], 2, '.', ''),
                 'payed'    => number_format($header['amount'], 2, '.', ''),
@@ -564,7 +568,7 @@ class PPOHelper
             
                 if (  $mf->beznal == 1) {
                     $pay = array(
-                        'formname' => H::l('ppo_bnal'),
+                        'formname' => self::FORM_CARD,
                         'formcode' => 1,
                         'paysum'   => number_format($doc->payed, 2, '.', ''),
                         'payed'    => number_format($doc->payed, 2, '.', ''),
@@ -577,7 +581,7 @@ class PPOHelper
                 } else {
 
                     $pay = array(
-                        'formname' => H::l('ppo_nal'),
+                        'formname' => self::FORM_NAL,
                         'formcode' => 0,
                         'paysum'   => number_format($doc->payed, 2, '.', ''),
                         'payed'    => number_format($doc->payed, 2, '.', ''),
@@ -601,7 +605,7 @@ class PPOHelper
        // в долг
             if ($doc->payed < $doc->payamount) {
                 $pay = array(
-                    'formname' => H::l('ppo_credit'),
+                    'formname' => self::FORM_CREDIT,
                     'formcode' => 2,
                     'paysum'   => number_format($doc->payamount - $doc->payed, 2, '.', ''),
                     'payed'    => number_format($doc->payamount - $doc->payed, 2, '.', ''),
@@ -680,11 +684,11 @@ class PPOHelper
          
  
         if (  $mf->beznal == 1) {
-            $header['formname'] = H::l('ppo_bnal');
+            $header['formname'] = self::FORM_CARD;
             $header['formcode'] = 1;
             $amount1 = number_format($payed, 2, '.', '');
         } else {
-            $header['formname'] = H::l('ppo_nal');
+            $header['formname'] = self::FORM_NAL;
             $header['formcode'] = 0;
             $amount0 = number_format($payed, 2, '.', '');
         }
@@ -750,11 +754,11 @@ class PPOHelper
            
  
         if (  $mf->beznal == 1) {
-            $header['formname'] = H::l('ppo_bnal');
+            $header['formname'] = self::FORM_CARD;
             $header['formcode'] = 1;
             $amount1 = number_format($doc->payed, 2, '.', '');
         } else {
-            $header['formname'] = H::l('ppo_nal');
+            $header['formname'] = self::FORM_NAL;
             $header['formcode'] = 0;
             $amount0 = number_format($doc->payed, 2, '.', '');
         }

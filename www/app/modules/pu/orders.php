@@ -27,7 +27,7 @@ class Orders extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'promua') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg(H::l('noaccesstopage'));
+            System::setErrorMsg("Немає права доступу до сторінки" ) ;
 
             App::RedirectError();
             return;
@@ -97,7 +97,7 @@ class Orders extends \App\Pages\Base
                     $tovar = Item::getFirst('item_code=' . $code);
                     if ($tovar == null) {
 
-                        $this->setWarn("nofoundarticle_inorder", $product['name'], $puorder['order_id']);
+                        $this->setWarn("Не знайдено артикул товара {$product['name']} в замовленні номер " . $puorder['order_id']);
                         continue;
                     }
                     $tovar->quantity = H::fqty($product['quantity']);
@@ -201,7 +201,7 @@ class Orders extends \App\Pages\Base
             
         }
 
-        $this->setInfo('imported_orders', count($this->_neworders));
+        $this->setInfo("Імпортовано ".count($this->_neworders)." замовлень" );
 
         $this->_neworders = array();
         $this->neworderslist->Reload();
@@ -237,7 +237,7 @@ class Orders extends \App\Pages\Base
             $elist[] = $order;
         }
         if (count($elist) == 0) {
-            $this->setError('noselorder');
+            $this->setError('Не обрано ордер');
             return;
         }
 
@@ -263,8 +263,9 @@ class Orders extends \App\Pages\Base
             $order->save();
         }
 
+        $this->setSuccess("Оновлено ".count($elist)." замовлень" );
 
-        $this->setSuccess("refrehed_orders", count($elist));
+
 
         $this->_eorders = Document::find("meta_name='Order' and content like '%<puorderback>0</puorderback>%' and state <> " . Document::STATE_NEW);
         $this->updateform->orderslist->Reload();

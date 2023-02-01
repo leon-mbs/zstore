@@ -223,7 +223,8 @@ class OrderFood extends Document
                         if($itemp == null)  continue;
                         $itemp->quantity = $item->quantity * $part->qty;
                         if ($itemp->checkMinus($itemp->quantity, $this->headerdata['store']) == false) {
-                            throw new \Exception(\App\Helper::l("nominus", H::fqty($itemp->getQuantity($this->headerdata['store'])), $itemp->itemname));
+                            throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']) )." ТМЦ {$itemp->itemname}. Списання у мінус заборонено" );
+                            
                         }
 
                         //учитываем  отходы
@@ -262,7 +263,7 @@ class OrderFood extends Document
                 $price = $item->getProdprice();
 
                 if ($price == 0) {
-                    throw new \Exception(H::l('noselfprice', $item->itemname));
+                    throw new \Exception('Не розраховано собівартість готової продукції '. $item->itemname);
                 }
                 $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
 
@@ -275,10 +276,8 @@ class OrderFood extends Document
 
 
             if ($item->checkMinus($item->quantity, $this->headerdata['store']) == false) {
-                throw new \Exception(\App\Helper::l("nominus", H::fqty($item->getQuantity($this->headerdata['store'])), $item->itemname));
+                throw new \Exception("На складі всього ".H::fqty($item->getQuantity($this->headerdata['store']) )." ТМЦ {$item->itemname}. Списання у мінус заборонено" );
             }
-
-
 
 
 

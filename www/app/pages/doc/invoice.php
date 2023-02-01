@@ -160,7 +160,7 @@ class Invoice extends \App\Pages\Base
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
 
-                        $this->docform->notes->setText(H::l("invoicefor", $basedoc->document_number));
+                        $this->docform->notes->setText("Рахунок для ". $basedoc->document_number);
                         $order = $basedoc->cast();
 
                         $this->docform->total->setText($order->amount);
@@ -177,7 +177,7 @@ class Invoice extends \App\Pages\Base
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
 
-                        $this->docform->notes->setText(H::l("invoicefor", $basedoc->document_number));
+                        $this->docform->notes->setText("Рахунок для ". $basedoc->document_number);
                         $order = $basedoc->cast();
 
                         $this->docform->total->setText($order->amount);
@@ -291,7 +291,7 @@ class Invoice extends \App\Pages\Base
         }
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("noselitem");
+            $this->setError("Не обрано товар");
             return;
         }
 
@@ -330,7 +330,7 @@ class Invoice extends \App\Pages\Base
         }
         $id = $this->editserdetail->editservice->getValue();
         if ($id == 0) {
-            $this->setError("noselitem");
+            $this->setError("Не обрано товар");
             return;
         }
 
@@ -528,27 +528,27 @@ class Invoice extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('enterdocnumber');
+            $this->setError('Введіть номер документа');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не створено унікальный номер документа');
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("noenteritem");
+            $this->setError("Не введено товар");
         }
 
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("noselstore");
+            $this->setError("Не обрано склад");
         }
        
         $c = $this->docform->customer->getKey();
         if ($c == 0) {
-            $this->setError("noselcust");
+            $this->setError("Не задано контрагента");
         }
 
         return !$this->isError();
@@ -599,11 +599,11 @@ class Invoice extends \App\Pages\Base
             $disctext = "";
             $d =  $cust->getDiscount() ;
             if (doubleval($d) > 0) {
-                $disctext = H::l("custdisc") . " {$d}%";
+                $disctext = "Постійна знижка " . " {$d}%";
             } else {
                 $bonus = $cust->getBonus();
                 if ($bonus > 0) {
-                    $disctext = H::l("custbonus") . " {$bonus} ";
+                    $disctext = "Нараховано бонусів {$bonus} ";
                 }
             }
             $this->docform->discount->setText($disctext);
@@ -637,7 +637,7 @@ class Invoice extends \App\Pages\Base
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
         $cust = new Customer();
@@ -646,14 +646,14 @@ class Invoice extends \App\Pages\Base
         $cust->phone = \App\Util::handlePhone($cust->phone);
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
-            $this->setError("tel10", H::PhoneL());
+            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
             return;
         }
 
         $c = Customer::getByPhone($cust->phone);
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
-                $this->setError("existcustphone");
+                $this->setError("Вже існує контрагент з таким телефоном");
                 return;
             }
         }
@@ -730,7 +730,7 @@ class Invoice extends \App\Pages\Base
 
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
-            $this->setError('noselstore');
+            $this->setError('Не обрано склад');
             return;
         }
 
@@ -739,7 +739,7 @@ class Invoice extends \App\Pages\Base
 
         if ($item == null) {
 
-            $this->setWarn("noitemcode", $code);
+            $this->setWarn("Товар з кодом `{$code}` не знайдено");
             return;
         }
 
@@ -747,7 +747,7 @@ class Invoice extends \App\Pages\Base
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
 
-            $this->setWarn("noitemonstore", $item->itemname);
+            $this->setWarn("Товару {$item->itemname} немає на складі");
         }
 
 
@@ -765,7 +765,7 @@ class Invoice extends \App\Pages\Base
 
 
             if (strlen($serial) == 0) {
-                $this->setWarn('needs_serial');
+                $this->setWarn('Потрібна партія виробника');
                 $this->editdetail->setVisible(true);
                 $this->docform->setVisible(false);
 

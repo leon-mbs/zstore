@@ -80,51 +80,51 @@ class IOState extends \ZCL\DB\Entity
     public static function getTypeList($type = 0) {
         $list = array();
         if ($type == 1 || $type == 0 || $type == 13) {
-            $list[self::TYPE_BASE_INCOME] = \App\Helper::l('pt_inprod');
+            $list[self::TYPE_BASE_INCOME] = "Доходи основної діяльності";
 
-            $list[self::TYPE_FIN] = \App\Helper::l('pt_fin');
-            $list[self::TYPE_CANCEL_CUST] = \App\Helper::l('pt_cancelcust');
-            $list[self::TYPE_OTHER_INCOME] = \App\Helper::l('pt_inother');
+            $list[self::TYPE_FIN] = "Доходи від фінансових операцій";
+            $list[self::TYPE_CANCEL_CUST] = "Скасування платежу закупівлі";
+            $list[self::TYPE_OTHER_INCOME] = "Інші доходи";
         }
 
         if ($type == 2 || $type == 0 || $type == 24) {
-            $list[self::TYPE_BASE_OUTCOME] = \App\Helper::l('pt_outprod');
-            $list[self::TYPE_COMMON_OUTCOME] = \App\Helper::l('pt_outcommon');
-            $list[self::TYPE_ADMIN_OUTCOME] = \App\Helper::l('pt_outadm');
-            $list[self::TYPE_SALE_OUTCOME] = \App\Helper::l('pt_outsell');
-            $list[self::TYPE_SALARY_OUTCOME] = \App\Helper::l('pt_outsalary');
-            $list[self::TYPE_TAX_OUTCOME] = \App\Helper::l('pt_outtax');
-            $list[self::TYPE_BILL_OUTCOME] = \App\Helper::l('pt_outrent');
-            $list[self::TYPE_DIVIDEND_OUTCOME] = \App\Helper::l('pt_outcap');
-            $list[self::TYPE_INV] = \App\Helper::l('pt_inv');
-            $list[self::TYPE_BANK] = \App\Helper::l('pt_bank');
-            $list[self::TYPE_CANCEL] = \App\Helper::l('pt_cancel');
-            $list[self::TYPE_NAKL] = \App\Helper::l('pt_nakl');
-            $list[self::TYPE_OTHER_OUTCOME] = \App\Helper::l('pt_outother');
+            $list[self::TYPE_BASE_OUTCOME] = "Операційні витрати";
+            $list[self::TYPE_COMMON_OUTCOME] = "Загальновиробничі витрати";
+            $list[self::TYPE_ADMIN_OUTCOME] = "Адміністративні витрати";
+            $list[self::TYPE_SALE_OUTCOME] = "Витрати на збут";
+            $list[self::TYPE_SALARY_OUTCOME] = "Виплата заробітної плати";
+            $list[self::TYPE_TAX_OUTCOME] =  "Оплата податків та зборів";
+            $list[self::TYPE_BILL_OUTCOME] = "Витрати на оренду та комуналку";
+            $list[self::TYPE_DIVIDEND_OUTCOME] = "Розподіл прибутку";
+            $list[self::TYPE_INV] = "Інвестиції";
+            $list[self::TYPE_BANK] = "Послуги банку";
+            $list[self::TYPE_CANCEL] =  "Скасування платежу продажу";
+            $list[self::TYPE_NAKL] =  "Накладні витрати";
+            $list[self::TYPE_OTHER_OUTCOME] = "Інші витрати";
         }
 
         if ($type == 3 || $type == 0 || $type == 13) {
-            $list[self::TYPE_OVER] = \App\Helper::l('pt_itover');
-            $list[self::TYPE_OTHER_INCOME] = \App\Helper::l('pt_inother');
+            $list[self::TYPE_OVER] = "Надлишки при інвентаризації";
+            $list[self::TYPE_OTHER_INCOME] = "Інші доходи";
 
 
         }
 
         if ($type == 4 || $type == 0 || $type == 24) {
-            $list[self::TYPE_LOST] = \App\Helper::l('pt_itlost');
-            $list[self::TYPE_TRASH] = \App\Helper::l('pt_ittrash');
-            $list[self::TYPE_BASE_OUTCOME] = \App\Helper::l('pt_outprod');
-            $list[self::TYPE_COMMON_OUTCOME] = \App\Helper::l('pt_outcommon');
-            $list[self::TYPE_ADMIN_OUTCOME] = \App\Helper::l('pt_outadm');
-            $list[self::TYPE_OTHER_OUTCOME] = \App\Helper::l('pt_outother');
+            $list[self::TYPE_LOST] = "Втрати при інвентаризації";
+            $list[self::TYPE_TRASH] = "Відходи";
+            $list[self::TYPE_BASE_OUTCOME] = "Операційні витрати";
+            $list[self::TYPE_COMMON_OUTCOME] = "Загальновиробничі витрати";
+            $list[self::TYPE_ADMIN_OUTCOME] = "Адміністративні витрати";
+            $list[self::TYPE_OTHER_OUTCOME] = "Інші витрати";
 
         }
         if ($type == 5 ) {
-            $list[self::TYPE_BASE_OUTCOME] = \App\Helper::l('pt_outprod');
-            $list[self::TYPE_COMMON_OUTCOME] = \App\Helper::l('pt_outcommon');
-            $list[self::TYPE_ADMIN_OUTCOME] = \App\Helper::l('pt_outadm');
-            $list[self::TYPE_OTHER_OUTCOME] = \App\Helper::l('pt_outother');
-            $list[self::TYPE_SALE_OUTCOME] = \App\Helper::l('pt_outsell');
+            $list[self::TYPE_BASE_OUTCOME] = "Операційні витрати";
+            $list[self::TYPE_COMMON_OUTCOME] = "Загальновиробничі витрати";
+            $list[self::TYPE_ADMIN_OUTCOME] = "Адміністративні витрати";
+            $list[self::TYPE_OTHER_OUTCOME] = "Інші витрати";
+            $list[self::TYPE_SALE_OUTCOME] = "Витрати на збут";
  
         }
 
