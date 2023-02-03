@@ -42,6 +42,7 @@ class TimeSheet extends \App\Pages\Base
     
     public function init($arg,$post=null){
         $user = \App\System::getUser() ;
+        $common = System::getOptions("common");
   
         $ret = array();  
         $ret['empid']  =  $user->employee_id;
@@ -56,6 +57,9 @@ class TimeSheet extends \App\Pages\Base
         $ret['from'] = date("Y-m-d", $dt->startOfMonth()->getTimestamp() );
         $ret["to"] = date("Y-m-d",$dt->endOfMonth()->getTimestamp() );
         $ret["today"] = date("Y-m-d",time() );
+        $ret["start"] = $common['ts_start'] ;
+        $ret["end"] = $common['ts_end'] ;
+        $ret["break"] = $common['ts_break'] ;
         
          
         return json_encode($ret, JSON_UNESCAPED_UNICODE);     

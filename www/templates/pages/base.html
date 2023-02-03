@@ -1062,8 +1062,8 @@ icon: 'fa fa-exclamation-triangle text-warning',
    
        //заміна коми
         $(document).on('change', 'input.qtyprice', function() {
-          var val =   $(this).val().replace(/,/g, '.');
-          val =   val.replace(/\s/g, '');
+          var val =   $(this).val()
+          val= fixInput(val)
           $(this).val(val)
         });    
                    
@@ -1126,7 +1126,24 @@ icon: 'fa fa-exclamation-triangle text-warning',
                 } )          
         }
              
-        
+        function fixInput(val){
+            val = val.replace(/,/g, '.');
+            val = val.replace(/\s/g, '');     
+            return  val;
+        }
+      
+        function checkPMAnswer(ret){
+            console.log(ret)
+            if(ret.error)  {
+                toastr.error(ret.error )   
+                return  false;
+            }
+            if(ret.success)  {
+                toastr.success(ret.success )   
+  
+            }
+            return  true;
+        }       
            
         </script>
         {{#usemobilescanner}}

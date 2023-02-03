@@ -172,6 +172,9 @@ var calendar
                   from:"",
                   to:"",
                   today:"",
+                  start:"",
+                  end:"",
+                  break:0,
                
                   stat:[] ,
                   times:[] ,
@@ -204,6 +207,9 @@ var calendar
                        this.to = tmp.to; 
                        this.from = tmp.from; 
                        this.today = tmp.today; 
+                       this.start = tmp.start; 
+                       this.end = tmp.end; 
+                       this.break = tmp.break; 
                  
                        this.loaddata() ;       
                       
@@ -257,10 +263,10 @@ var calendar
                 
                   this.edited = 0;
                   this.edittype = 1;
-                  this.editbreak = 60;
                   this.editdate = this.today;
-                  this.editfrom = "09:00";
-                  this.editto = "18:00";
+                  this.editfrom = this.start;
+                  this.editto = this.end;
+                  this.editbreak = this.break;
                   $('#editmodal').modal('show')   
 
                } ,    
