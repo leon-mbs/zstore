@@ -108,13 +108,14 @@ new Audio('/assets/beep.mp3').play()
    } 
    
   //HTNL%  валидация полей
-  function checkForm(id){
+  function checkFormInput(id){
 
- 
+    
     $('#'+id+' input ').each(
         function(index){  
+                   
             var input = $(this);
-
+            
             var v =   input.get(0).reportValidity() 
             if(!v) {
                 return  false

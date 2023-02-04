@@ -84,10 +84,12 @@
                  
                     </div>
                    <div class="tab-pane    "  id="tstat" > 
-                      <table class="table table-sm" style="width:30%">
+                      <table class="table table-sm" style="width:40%">
+                            <tr><th></th><th  class="text-right">Години</th><th class="text-right">Днi</th></tr>
                             <tr v-for="st in stat" >
                                 <td  >  {{st.name}}</td>   
-                                <td align="right"><span :class="st.color">  {{st.cnt}} </span></td>
+                                <td class="text-right"><span :class="st.color">  {{st.cnt}} </span></td>
+                                <td class="text-right"><span :class="st.color">  {{st.days}} </span></td>
 
                             </tr>
                         </table>
@@ -273,7 +275,7 @@ var calendar
                save:function(i){
                 
 
-                    var v = checkForm('fval');
+                    var v = checkFormInput('fval');
                     if(!v) return
  
 

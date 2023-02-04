@@ -30,13 +30,13 @@ class OrderCust extends \App\Pages\Base
     public  $_itemlist  = array();
     private $_doc;
     private $_basedocid = 0;
-     
+    private $_rowid     = 0;
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
         $common = System::getOptions("common");
-        /*
+
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date'))->setDate(time());
@@ -111,37 +111,11 @@ class OrderCust extends \App\Pages\Base
         }
         $this->calcTotal();
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
-        
-        
-        */
-         if ($docid > 0) {    //загружаем   содержимое  документа настраницу
-            $this->_doc = Document::load($docid)->cast();
-            $this->_itemlist = $this->_doc->unpackDetails('detaildata');
-    
-         }
-        else {
-              $this->_doc = Document::create('OrderCust');
-              if ($basedocid > 0) {  //создание на  основании
-                $basedoc = Document::load($basedocid);
-                if ($basedoc instanceof Document) {
-                    $this->_basedocid = $basedocid;
-                    if ($basedoc->meta_name == 'Order') {
-
-                        $order = $basedoc->cast();
-
-                      
-                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
-                         
-                    }
-                }
-            }          
-        }
-        
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
     }
-    /*
+
     public function detailOnRow($row) {
         $item = $row->getDataItem();
 
@@ -332,7 +306,10 @@ class OrderCust extends \App\Pages\Base
 
     }
 
- 
+    /**
+     * Расчет  итого
+     *
+     */
     private function calcTotal() {
 
         $total = 0;
@@ -344,7 +321,10 @@ class OrderCust extends \App\Pages\Base
         $this->docform->total->setText(H::fa($total));
     }
 
- 
+    /**
+     * Валидация   формы
+     *
+     */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
             $this->setError('Введіть номер документа');
@@ -492,20 +472,8 @@ class OrderCust extends \App\Pages\Base
         $this->editdetail->edititem->setText($itemname);
         $this->OnChangeItem($this->editdetail->edititem);
     }    
-  
     public function onOpenItemSel($sender) {
         $this->wselitem->setVisible(true);
         $this->wselitem->Reload();
     }    
-    
-    
-        */
-     public  function loaddata($args,$post){
-            $ret['success'] ="test";
-       
-            return json_encode($ret, JSON_UNESCAPED_UNICODE);   
-    }   
-    
-    
-    
 }
