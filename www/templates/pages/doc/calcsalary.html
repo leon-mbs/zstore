@@ -140,13 +140,14 @@
         
       var vapp = new Vue({
       el: '#vapp',
-      data: {
+       data() { return {
+
           stlist:[] ,
           emps : [] ,
           deleted : [] ,
           selectednewemp:0
           
-      }  ,
+      } } ,
        computed:{
             total:function(){
                   var tot=0

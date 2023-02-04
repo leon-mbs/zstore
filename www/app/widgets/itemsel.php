@@ -22,7 +22,7 @@ use Zippy\Html\Image;
 class ItemSel extends \Zippy\Html\PageFragment
 {
 
-    private $_page;
+     private $_page;
     private $_event;
     private $_pricetype;
     private $_store = 0;
