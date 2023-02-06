@@ -942,7 +942,9 @@ class GoodsReceipt extends \App\Pages\Base
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $item = Item::load($id);
-
+        $price = $item->getLastPartion($this->docform->store->getValue()   , null, false);
+        $this->editdetail->editprice->setText(H::fa($price));
+ 
         $this->editdetail->editsellprice->setText($item->price1);
   
     }
