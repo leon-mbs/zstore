@@ -169,7 +169,7 @@ class UserProfile extends \App\Pages\Base
             if ($this->user->userlogin != 'admin') {
 
                 
-                \App\Entity\Notify::toSystemLog("Користувач <b>{$this->user->username}</b> змінив пароль на <b>{$pass}</b>" )) ;
+                \App\Entity\Notify::toSystemLog("Користувач <b>{$this->user->username}</b> змінив пароль на <b>{$pass}</b>" ) ;
                 
             }
 

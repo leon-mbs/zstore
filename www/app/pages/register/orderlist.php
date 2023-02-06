@@ -395,14 +395,13 @@ class OrderList extends \App\Pages\Base
           
         }
         
-       if ($state == Document::STATE_INPROCESS   ) {
-           $this->statuspan->resform->setVisible(true);
-           $reerved = $this->_doc->hasStore();
-           $this->statuspan->resform->bres->setVisible(!$reerved);
-           $this->statuspan->resform->store->setVisible(!$reerved);
-           $this->statuspan->resform->bunres->setVisible($reerved);
-           
-       } 
+        if ($state == Document::STATE_INPROCESS   ) {
+            $this->statuspan->resform->setVisible(true);
+            $reserved = $this->_doc->hasStore();
+            $this->statuspan->resform->bres->setVisible(!$reserved);
+            $this->statuspan->resform->store->setVisible(!$reserved);
+            $this->statuspan->resform->bunres->setVisible($reserved);
+        } 
         
         if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
             // $this->statuspan->statusform->bclose->setVisible(false);

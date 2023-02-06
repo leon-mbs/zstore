@@ -436,11 +436,11 @@ class CustomerList extends \App\Pages\Base
         $lastdoc = '';
         if ($this->_customer->created > 0) {
             $user = \App\Entity\User::load($this->_customer->user_id);
-            $created = "Доданий ".Helper::fd($this->_customer->createdon." користувачем " .$user->username   ;
+            $created = "Доданий ".Helper::fd($this->_customer->createdon)." користувачем " .$user->username   ;
         }
         $doc = \App\Entity\Doc\Document::getFirst("customer_id=" . $this->_customer->customer_id, 'document_id desc');
         if ($doc instanceof \App\Entity\Doc\Document) {
-            $lastdoc = "Останній документ {$doc->document_number} від ".Helper::fd($doc->document_date).". Всього " .$this->_customer->docs    );
+            $lastdoc = "Останній документ {$doc->document_number} від ".Helper::fd($doc->document_date).". Всього " .$this->_customer->docs    ;
         }
 
         $this->contentview->b_total->setText($this->_customer->getBonus());
