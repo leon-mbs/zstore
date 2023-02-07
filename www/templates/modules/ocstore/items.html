@@ -21,7 +21,10 @@
 
                         <input onclick="$('#loader1').removeAttr('style')" type="submit" class=" mr-2 btn btn-outline-success  "
                                value="Завантажити">
-                        <img id="loader1" style="display:none" src="/assets/images/ajax-loader.gif">
+                         <div style="display:none" id="loader1" class="spinner-border spinner-border-sm " role="status">
+                                  <span class="sr-only">Завантаження...</span>
+                              </div>
+
 
                     </form>
                 </div>
@@ -62,7 +65,10 @@
 
                         &nbsp;<input onclick="$('#loader2').removeAttr('style')" type="submit"
                                      class="  btn btn-outline-success btn-sm  " value="Відправити">
-                        <img id="loader2" style="display:none" src="/assets/images/ajax-loader.gif">
+                         <div style="display:none" id="loader2" class="spinner-border spinner-border-sm " role="status">
+                                  <span class="sr-only">Відправлення...</span>
+                              </div>
+
                     </div>
                 </form>
             </div>
@@ -79,10 +85,16 @@
                             <option value="0">Всi</option>
                         </select>
                     <a zippy="updateqty" class="  btn btn-outline-success  ">Оновити кількість</a>
-                    <img id="loader3" style="display:none" src="/assets/images/ajax-loader.gif">
+                         <div style="display:none" id="loader3" class="spinner-border spinner-border-sm " role="status">
+                                  <span class="sr-only">Оновлення...</span>
+                              </div>
+
                     &nbsp;&nbsp;
                     <a zippy="updateprice" class="  btn btn-outline-success  ">Оновити ціни</a>
-                    <img id="loader4" style="display:none" src="/assets/images/ajax-loader.gif">
+                         <div style="display:none" id="loader4" class="spinner-border spinner-border-sm " role="status">
+                                  <span class="sr-only">Оновлення...</span>
+                              </div>
+
 
                      </form>
                 </div>
@@ -106,7 +118,11 @@
 
                         <input zippy="getitems" type="submit" class=" mr-2 btn btn-outline-success  "
                                value="Завантажити">
-                        <img id="loader6" style="display:none" src="/assets/images/ajax-loader.gif">
+                         <div style="display:none" id="loader6" class="spinner-border spinner-border-sm " role="status">
+                                  <span class="sr-only">Завантаження...</span>
+                              </div>
+                               
+
 
                     </form>
 
