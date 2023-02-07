@@ -157,7 +157,7 @@ class GoodsIssue extends Document
                         $itemp->quantity = $item->quantity * $part->qty;
 
                         if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
-                            throw new \Exception(H::l("nominus", H::fqty($itemp->getQuantity($this->headerdata['store'])), $itemp->itemname));
+                            throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']) )." ТМЦ {$itemp->itemname}. Списання у мінус заборонено" );
                         }
 
                         $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
@@ -176,7 +176,7 @@ class GoodsIssue extends Document
                 $price = $item->getProdprice();
 
                 if ($price == 0) {
-                    throw new \Exception(H::l('noselfprice', $item->itemname));
+                    throw new \Exception('Не розраховано собівартість готової продукції '. $item->itemname);
                 }
                 $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
 
@@ -188,7 +188,8 @@ class GoodsIssue extends Document
             }
 
             if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
-                throw new \Exception(H::l("nominus", H::fqty($item->getQuantity($this->headerdata['store'])), $item->itemname));
+                throw new \Exception("На складі всього ".H::fqty($item->getQuantity($this->headerdata['store']) )." ТМЦ {$item->itemname}. Списання у мінус заборонено" );
+                
             }
 
             //продажа

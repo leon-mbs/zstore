@@ -90,7 +90,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->add(new CheckBox('editjurid'));
         $this->customerdetail->add(new CheckBox('editisholding'));
         $this->customerdetail->add(new DropDownChoice('editholding', Customer::getHoldList(), 0));
-        $this->customerdetail->add(new DropDownChoice('edittype', array(1 => Helper::l("bayer"), 2 => Helper::l("seller")), 0));
+        $this->customerdetail->add(new DropDownChoice('edittype', array(1 => "Покупець", 2 => "Постачальник"), 0));
         $this->customerdetail->add(new DropDownChoice('editpricetype', \App\Entity\Item::getPriceTypeList(), Helper::getDefPriceType()));
 
         $this->customerdetail->add(new CheckBox('editallowedshop'))->setVisible($shop["uselogin"] == 1);
@@ -214,15 +214,15 @@ class CustomerList extends \App\Pages\Base
       
             $title="";
             if(intval( $this->_bonuses[$item->customer_id]  ) > 0) {
-                $title= Helper::l("actionbonustitile",$this->_bonuses[$item->customer_id]);                
+                $title= "Бонуси " . $this->_bonuses[$item->customer_id];                
             }
             $d = $item->getDiscount();
             if(doubleval($d) > 0) {
-                  $title= Helper::l("actionbulkdiscounttitile",Helper::fa($d));                
+                  $title=  "Накопичувальна знижка %s%" . Helper::fa($d) ."%";                
             }
             $d = $item->discount;   //постоянная  скидка
             if(doubleval($d) > 0) {
-                  $title= Helper::l("actiondiscounttitile",Helper::fa($d));                
+                  $title =  "Постійна знижка " . Helper::fa($d). "%";                
             }
             $row->add(new Label('hasaction'))->setVisible(strlen($title)>0);
             
@@ -313,7 +313,7 @@ class CustomerList extends \App\Pages\Base
         $this->_customer->customer_name = trim($this->_customer->customer_name);
          
         if ($this->_customer->customer_name == '') {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
         $this->_customer->phone = $this->customerdetail->editphone->getText();
@@ -334,11 +334,11 @@ class CustomerList extends \App\Pages\Base
             $this->_customer->leadstatus = $this->customerdetail->editleadstatus->getValue();
             $this->_customer->status = 2;
             if ($this->_customer->leadsource == "0") {
-                $this->setError("enterleadsource");
+                $this->setError("Не вказано джерело ліда");
                 return;
             }
             if ($this->_customer->leadstatus == "0") {
-                $this->setError("enterleadstatus");
+                $this->setError("Не вказано стан ліда");
                 return;
             }
         } else {
@@ -352,7 +352,7 @@ class CustomerList extends \App\Pages\Base
         $this->_customer->isholding = $this->customerdetail->editisholding->isChecked() ? 1 : 0;
 
         if ($this->_customer->isholding == 1 && $this->_customer->holding > 0) {
-            $this->setError('nothold');
+            $this->setError('Холдинг не може бути дочірньою компанією');
             return;
         }
 
@@ -360,20 +360,20 @@ class CustomerList extends \App\Pages\Base
         $c = Customer::getByEmail($this->_customer->email);
         if ($c != null) {
             if ($c->customer_id != $this->_customer->customer_id) {
-                $this->setError("existcustemail");
+                $this->setError("Вже існує контрагент з таким e-mail");
                 return;
             }
         }
         $this->_customer->phone = \App\Util::handlePhone($this->_customer->phone);
 
         if (strlen($this->_customer->phone) > 0 && strlen($this->_customer->phone) != Helper::PhoneL()) {
-            $this->setError("tel10", Helper::PhoneL());
+            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
             return;
         }
         $c = Customer::getByPhone($this->_customer->phone);
         if ($c != null) {
             if ($c->customer_id != $this->_customer->customer_id) {
-                $this->setError("existcustphone");
+                $this->setError("Вже існує контрагент з таким телефоном");
                 return;
             }
         }
@@ -389,12 +389,12 @@ class CustomerList extends \App\Pages\Base
 
         if ( strlen($pass)>0 ) {
             if ($confirm == '') {
-                $this->setError('confirmpass');
+                $this->setError('Підтвердіть пароль');
                 return;
             } else {
                 if ($confirm != $pass) {
 
-                    $this->setError('invalidconfirm');
+                    $this->setError('Невірне підтвердження');
                     return;
                 }
             }
@@ -436,11 +436,11 @@ class CustomerList extends \App\Pages\Base
         $lastdoc = '';
         if ($this->_customer->created > 0) {
             $user = \App\Entity\User::load($this->_customer->user_id);
-            $created = Helper::l('custcreated', Helper::fd($this->_customer->createdon), $user->username);
+            $created = "Доданий ".Helper::fd($this->_customer->createdon)." користувачем " .$user->username   ;
         }
         $doc = \App\Entity\Doc\Document::getFirst("customer_id=" . $this->_customer->customer_id, 'document_id desc');
         if ($doc instanceof \App\Entity\Doc\Document) {
-            $lastdoc = Helper::l('custlastdoc', $doc->document_number, Helper::fd($doc->document_date), $this->_customer->docs);
+            $lastdoc = "Останній документ {$doc->document_number} від ".Helper::fd($doc->document_date).". Всього " .$this->_customer->docs    ;
         }
 
         $this->contentview->b_total->setText($this->_customer->getBonus());
@@ -465,7 +465,7 @@ class CustomerList extends \App\Pages\Base
 
         $file = $this->contentview->addfileform->addfile->getFile();
         if ($file['size'] > 10000000) {
-            $this->setError("filemore10M");
+            $this->setError("Файл більше 10 МБ!");
             return;
         }
 
@@ -882,7 +882,7 @@ class CustomerList extends \App\Pages\Base
         }
 
 
-        $this->setSuccess("delcusts", $d, $u);
+        $this->setSuccess("Видалено {$d}, деактивовано {$u} ");
 
         $this->customertable->listform->customerlist->Reload();
 

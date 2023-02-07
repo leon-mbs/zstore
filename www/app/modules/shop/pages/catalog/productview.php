@@ -65,7 +65,7 @@ class ProductView extends Base
 
         $this->add(new Label('description', $product->getDescription(), true));
         $this->add(new TextInput('rated'))->setText($product->getRating());
-        $this->add(new Label('comments', \App\Helper::l("shopfeedbaks", intval($product->comments))));
+        $this->add(new Label('comments',"Відгуків (".intval($product->comments).") " ));
 
         $list = Helper::getAttributeValuesByProduct($product, false);
         $this->add(new \Zippy\Html\DataList\DataView('attributelist', new \Zippy\Html\DataList\ArrayDataSource($list), $this, 'OnAddAttributeRow'))->Reload();
@@ -88,16 +88,16 @@ class ProductView extends Base
         $this->commentlist->Reload();
 
         if ($product->disabled == 1 || $product->noshop == 1) {
-            $this->onstore = \App\Helper::l('cancelsell');
+            $this->onstore = 'Знято з продажу';
             $this->buy->setVisible(false);
         } else {
 
             if ($product->getQuantity() > 0 || $this->_tvars["isfood"]==true ) {
-                $this->onstore->setText(\App\Helper::l('isonstore'));
-                $this->buy->setValue(\App\Helper::l('tobay'));
+                $this->onstore->setText('В наявності');
+                $this->buy->setValue('Купити');
             } else {
-                $this->onstore->setText(\App\Helper::l('fororder'));
-                $this->buy->setValue(\App\Helper::l('toorder'));
+                $this->onstore->setText('Під замовлення');
+                $this->buy->setValue('Замовити');
             }
         }
 
@@ -142,9 +142,9 @@ class ProductView extends Base
         $item = $datarow->getDataItem();
         $datarow->add(new Label("attrname", $item->attributename));
         $meashure = "";
-        $nodata = \App\Helper::l("shopattrnodata");
-        $yes = \App\Helper::l("shopattryes");
-        $no = \App\Helper::l("shopattrno");
+        $nodata = "Немає даних";
+        $yes = "Є";
+        $no = "Немає";
         $value = $item->attributevalue;
         if ($item->attributetype == 2) {
             $meashure = $item->valueslist;
@@ -172,7 +172,7 @@ class ProductView extends Base
         \App\Modules\Shop\Basket::getBasket()->addProduct($product);
         \App\Modules\Shop\Basket::getBasket()->sendCookie()  ;
           
-        $this->setSuccess("addedtocart");
+        $this->setSuccess("Товар доданий до кошика");
         $this->resetURL();
         //  App::RedirectURI('/pcat/' . $product->cat_id);
     }
@@ -183,7 +183,7 @@ class ProductView extends Base
         $comparelist = \App\Modules\Shop\CompareList::getCompareList();
         if (false == $comparelist->addProduct($product)) {
 
-            $this->setWarn('onlythesamecategory');
+            $this->setWarn('Додавати можна тільки товари з однакової категорії');
             return;
         }
         // App::RedirectURI('/pcat/'.$product->group_id)  ;
@@ -195,7 +195,7 @@ class ProductView extends Base
         $entercode = $this->formcomment->capchacode->getText();
         $capchacode = $this->formcomment->capcha->getCode();
         if (strlen($entercode) == 0 || $entercode != $capchacode) {
-            $this->setError("invalidcapcha");
+            $this->setError("Невірний код капчі");
 
             return;
         }

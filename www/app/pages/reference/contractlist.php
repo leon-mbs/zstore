@@ -160,22 +160,22 @@ class ContractList extends \App\Pages\Base
 
         $this->_contract->contract_number = $this->contractdetail->editcontract_number->getText();
         if ($this->_contract->contract_number == '') {
-            $this->setError("notnumber");
+            $this->setError("Не введено номер");
             return;
         }
         $this->_contract->customer_id = $this->contractdetail->editcust->getKey();
         if ($this->_contract->customer_id == 0) {
-            $this->setError("noselcust");
+            $this->setError("Не задано контрагента");
             return;
         }
         $this->_contract->firm_id = $this->contractdetail->editcomp->getValue();
         if ($this->_contract->firm_id == 0) {
-            $this->setError("noselfirm");
+            $this->setError("Не обрано компанію");
             return;
         }
         $this->_contract->ctype = $this->contractdetail->editctype->getValue();
         if ($this->_contract->ctype == 0) {
-            $this->setError("noselctype");
+            $this->setError("Не обрано тип контракту");
             return;
         }
 

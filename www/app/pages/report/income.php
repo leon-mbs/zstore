@@ -27,7 +27,7 @@ class Income extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-        $this->filter->add(new DropDownChoice('type', array(1 => H::l('repbyitems'), 2 => H::l('repbysellers'), 3 => H::l('repbydates'),4 => H::l('repbyservices'),5 => H::l('repbysellersitem')) , 1))->onChange($this, "OnType");;
+        $this->filter->add(new DropDownChoice('type', array(1 => "За товарами", 2 => "За постачальниками", 3 => "За датами",4 => "Послуги, роботи",5 => "Товари за постачальниками") , 1))->onChange($this, "OnType");;
 
         
         $this->filter->add(new \Zippy\Html\Form\AutocompleteTextInput('cust'))->onText($this, 'OnAutoCustomer');

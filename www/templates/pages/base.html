@@ -36,10 +36,98 @@
         <link rel="stylesheet"
               href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
+     <script>
+   function beep(){
 
+     new Audio('/assets/beep.mp3').play()
+        
+  }
+       
+  function checkFormInput(id){
+
+    
+    $('#'+id+' input ').each(
+        function(index){  
+                   
+            var input = $(this);
+            
+            var v =   input.get(0).reportValidity() 
+            if(!v) {
+                return  false
+            }
+            
+        }
+    );   
+     
+    return true
+  }
+  
+  
+  function  callPM(method,params,postdata,callback =null   , callerror=null     )
+  {
+      callPageMethod(method,params,postdata,callback , callerror);
+  }     
+     
+     
+        function checkPMAnswer(ret){
+            
+            if(ret.error)  {
+                toastr.error(ret.error )   
+                return  false;
+            }
+            if(ret.success)  {
+                toastr.success(ret.success )   
+  
+            }
+            return  true;
+        }       
+       
+       
+     
+        function fixInput(val){
+            var _v = ""+val 
+            _v = _v.replace(/,/g, '.');
+            _v = _v.replace(/\s/g, '');     
+            return  _v;
+        }     
+     
+      function parseVal(v){
+          var _v = Number.parseFloat( fixInput(v) )
+          if (Number.isNaN(_v)) {
+            return 0;
+          }
+          return  _v        
+      }
+    
+     
+     function fa(v){
+          var d = {{amdigits}}     
+          var _v =  parseVal(v)
+          if(d>0) {
+             return _v.toFixed(2)    
+          }
+          return _v.toFixed(0)          
+          
+     }
+     function fqty(v){
+          var d = {{qtydigits}}
+          var _v =  parseVal(v)
+          
+          return _v.toFixed(d)
+         
+     }
+    
+    function arrayRemove(arr, value) { 
+    
+        return arr.filter(function(ele){ 
+            return ele != value; 
+        });
+    }        
+          
+     </script>
     </head>
     <body class="{{hidesidebar}} ">
-    
+ 
     
         {{#usemobilescanner}}
         <link rel="stylesheet" href="/assets/css/mscanner.css">
@@ -1062,8 +1150,8 @@ icon: 'fa fa-exclamation-triangle text-warning',
    
        //заміна коми
         $(document).on('change', 'input.qtyprice', function() {
-          var val =   $(this).val().replace(/,/g, '.');
-          val =   val.replace(/\s/g, '');
+          var val =   $(this).val()
+          val= fixInput(val)
           $(this).val(val)
         });    
                    
@@ -1126,7 +1214,9 @@ icon: 'fa fa-exclamation-triangle text-warning',
                 } )          
         }
              
-        
+
+      
+  
            
         </script>
         {{#usemobilescanner}}

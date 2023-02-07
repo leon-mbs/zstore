@@ -79,7 +79,7 @@ class ProdAreaList extends \App\Pages\Base
 
         $this->_pa->pa_name = $this->padetail->editpa_name->getText();
         if ($this->_pa->pa_name == '') {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
 

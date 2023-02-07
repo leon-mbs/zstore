@@ -17,7 +17,7 @@ class Options extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'promua') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg(\App\Helper::l('noaccesstopage'));
+            System::setErrorMsg("Немає права доступу до сторінки" );
 
             App::RedirectError();
             return;
@@ -52,7 +52,7 @@ class Options extends \App\Pages\Base
         $insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
          
         if (strlen($pricetype) < 2) {
-            $this->setError('noselpricetype');
+            $this->setError('Не вказано тип ціни');
             return;
         }
 
@@ -69,7 +69,7 @@ class Options extends \App\Pages\Base
         $modules['puinsertcust'] = $insertcust;
  
         System::setOptions("modules", $modules);
-        $this->setSuccess('saved');
+        $this->setSuccess('Збережено');
 
          \App\Modules\PU\Helper::connect();
 

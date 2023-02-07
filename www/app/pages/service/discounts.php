@@ -163,7 +163,7 @@ class Discounts extends \App\Pages\Base
         $disc["bonus4"] = $sender->bonus4->getText();
         $disc["summa4"] = $sender->summa4->getText();
         System::setOptions("discount", $disc);
-        $this->setSuccess('saved');
+        $this->setSuccess('Збережено');
     }
 
     
@@ -182,7 +182,7 @@ class Discounts extends \App\Pages\Base
         $disc["disc4"] = $sender->disc4->getText();
         $disc["discsumma4"] = $sender->discsumma4->getText();
         System::setOptions("discount", $disc);
-        $this->setSuccess('saved');
+        $this->setSuccess('Збережено');
     }
 
 
@@ -241,7 +241,7 @@ class Discounts extends \App\Pages\Base
         }
         $this->ctab->clistform->clist->Reload();
 
-        $this->setSuccess('saved');
+        $this->setSuccess('Збережено');
 
     }
 
@@ -271,7 +271,7 @@ class Discounts extends \App\Pages\Base
             $s->fromdate = $sender->ssearchfrom->getDate();
             $s->todate = $sender->ssearchto->getDate(true);;
             if ($s->fromdate > $s->todate) {
-                $this->setError("ts_invalidinterval");
+                $this->setError("Невірний інтервал");
                 return;
             }
             $s->save();
@@ -328,7 +328,7 @@ class Discounts extends \App\Pages\Base
             $i->fromdate = $sender->isearchfrom->getDate();
             $i->todate = $sender->isearchto->getDate(true);;
             if ($i->fromdate > $i->todate) {
-                $this->setError("ts_invalidinterval");
+                $this->setError("Невірний інтервал");
                 return;
             }
             $i->save();
@@ -344,7 +344,7 @@ class Discounts extends \App\Pages\Base
         $k = $sender->isearchokey->getKey();
         $i = Item::load($k);
         if ($i == null) {
-            $this->setError("noselitem") ;
+            $this->setError("Не выбрано товар") ;
             return;
         }
         $d1 = doubleval($sender->isearchoprice1->getText());
@@ -467,7 +467,7 @@ class Discounts extends \App\Pages\Base
             $g->fromdate = $sender->gsearchfrom->getDate();
             $g->todate = $sender->gsearchto->getDate(true);;
             if ($g->fromdate > $g->todate) {
-                $this->setError("ts_invalidinterval");
+                $this->setError("Невірний інтервал");
                 return;
             }
 

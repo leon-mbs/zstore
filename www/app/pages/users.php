@@ -60,7 +60,7 @@ class Users extends \App\Pages\Base
     public function onAdd($sender) {
 
         if (System::getUser()->rolename !== 'admins') {
-            $this->setError('onlyadminsuser');
+            $this->setError("Користувачами можуть управляти тільки користувачі з роллю admins  ");
 
             return;
         }
@@ -77,7 +77,7 @@ class Users extends \App\Pages\Base
     public function onEdit($sender) {
 
         if (System::getUser()->rolename !== 'admins') {
-            $this->setError('onlyadminsuser');
+            $this->setError("Користувачами можуть управляти тільки користувачі з роллю admins  ");
 
             return;
         }
@@ -117,7 +117,7 @@ class Users extends \App\Pages\Base
         $user = User::getByLogin($this->user->userlogin);
         if ($user instanceof User) {
             if ($user->user_id != $this->user->user_id) {
-                $this->setError('nouniquelogin');
+                $this->setError('Неунікальний логін');
 
                 return;
             }
@@ -127,7 +127,7 @@ class Users extends \App\Pages\Base
             if ($user instanceof User) {
                 if ($user->user_id != $this->user->user_id) {
 
-                    $this->setError('nouniqueemail');
+                    $this->setError('Неунікальний e-mail');
                     return;
                 }
             }
@@ -143,7 +143,7 @@ class Users extends \App\Pages\Base
         }
         if ($this->user->user_id == 0 && strlen($pass) == 0) {
 
-            $this->setError("enterpassword");
+            $this->setError("Введіть пароль");
             return;
         }
 
@@ -173,7 +173,7 @@ class Users extends \App\Pages\Base
     public function OnRemove($sender) {
 
         if (System::getUser()->rolename !== 'admins') {
-            $this->setError('onlyadminsuser');
+            $this->setError("Користувачами можуть управляти тільки користувачі з роллю admins  ");
 
             return;
         }

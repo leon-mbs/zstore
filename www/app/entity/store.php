@@ -23,7 +23,7 @@ class Store extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $sql = "  select count(*)  from  store_stock where   store_id = {$this->store_id}";
         $cnt = $conn->GetOne($sql);
-        return ($cnt > 0) ?  \App\Helper::l("nodelusedstore") : '';
+        return ($cnt > 0) ? "Не можна видалити склад, що використовується" : '';
     }
 
     /**

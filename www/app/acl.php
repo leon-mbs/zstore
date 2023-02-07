@@ -403,7 +403,7 @@ class ACL
         if ($id > 0) {
             return $id;
         }
-        \App\System::setErrorMsg(\App\Helper::l('selectbranch'));
+        \App\System::setErrorMsg('Для створення документа потрібно вибрати конкретну філію');
         \App\Application::Redirect("\\App\\Pages\\Main");
     }
  

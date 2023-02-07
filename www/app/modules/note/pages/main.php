@@ -163,13 +163,13 @@ class Main extends \App\Pages\Base
         $topic->acctype = $post->acctype;
 
         if (strlen($topic->title) == 0) {
-            return H::l('notitle');
+            return 'Не введено заголовок';
         }
 
 
         $node = Node::load($args[1]);
         if ($topic->acctype > 0 && $node->ispublic != 1) {
-             return  H::l("Не можна додавати приватний топік у публічний вузол") ;
+             return "Не можна додавати приватний топік у публічний вузол" ;
         }
 
         $topic->save();
@@ -199,7 +199,7 @@ class Main extends \App\Pages\Base
             $node->ispublic = $args[2]=="true"  ? 1:0;
             if ($parent->ispublic == 0 && $node->ispublic == 1) {
 
-                return H::l("noaddprivate") ;
+                return "Не можна додавати публічний вузол до приватного" ;
             }
 
             $node->save();
@@ -212,7 +212,7 @@ class Main extends \App\Pages\Base
             $node->ispublic = $args[2]=="true" ? 1 : 0;
             $parent = Node::load($node->pid);
             if ($parent->ispublic == 0 && $node->ispublic == 1) {
-                 return H::l("noaddprivate") ;
+                 return "Не можна додавати публічний вузол до приватного" ;
             }
 
             $node->save();
@@ -235,7 +235,7 @@ class Main extends \App\Pages\Base
             if (strpos($dest->mpath, $node->mpath) === 0) {
 
 
-                return H::l("nomovedesc");
+                return "Не можна переміщувати в свого спадкоємця";
             }
 
             $node->moveTo($dest->node_id);

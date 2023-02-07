@@ -86,12 +86,12 @@ class ProdIssue extends \App\Pages\Base
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'Task') {
 
-                        $this->docform->notes->setText(H::l('basedon') . $basedoc->document_number);
+                        $this->docform->notes->setText('Підстава ' . $basedoc->document_number);
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
                     }
                     if ($basedoc->meta_name == 'ServiceAct') {
 
-                        $this->docform->notes->setText(H::l('basedon') . $basedoc->document_number);
+                        $this->docform->notes->setText('Підстава ' . $basedoc->document_number);
                     }
                     if ($basedoc->meta_name == 'ProdIssue') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
@@ -204,7 +204,7 @@ class ProdIssue extends \App\Pages\Base
         }
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("noselitem");
+            $this->setError("Не обрано товар");
             return;
         }
         $store_id = $this->docform->store->getValue();
@@ -214,12 +214,12 @@ class ProdIssue extends \App\Pages\Base
         $item->snumber = $this->editdetail->editserial->getText();
         $qstock = $this->editdetail->qtystock->getText();
         if ($item->quantity > $qstock) {
-            $this->setWarn('inserted_extra_count');
+            $this->setWarn('Введено більше товару, чим є в наявності');
         }
 
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("needs_serial");
+            $this->setError("Потрібна партія виробника");
             return;
         }
 
@@ -227,7 +227,7 @@ class ProdIssue extends \App\Pages\Base
             $slist = $item->getSerials($store_id);
 
             if (in_array($item->snumber, $slist) == false) {
-                $this->setError('invalid_serialno');
+                $this->setError('Невірний номер серії');
                 return;
             }
         }
@@ -316,7 +316,7 @@ class ProdIssue extends \App\Pages\Base
                     foreach ($this->_itemlist as $item) {
                         $qty = $item->getQuantity($this->_doc->headerdata['store']);
                         if ($qty < $item->quantity) {
-                            $this->setError("nominus", H::fqty($qty), $item->itemname);
+                            $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
                             return;
                         }
                     }
@@ -355,7 +355,7 @@ class ProdIssue extends \App\Pages\Base
 
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
-            $this->setError('noselstore');
+            $this->setError('Не обрано склад');
             return;
         }
           $code0 = Item::qstr($code0);
@@ -364,7 +364,7 @@ class ProdIssue extends \App\Pages\Base
         $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and  (item_code = {$code_} or bar_code = {$code_} or item_code = {$code0} or bar_code = {$code0} )");
 
         if ($item == null) {
-            $this->setError("noitemcode", $code);
+            $this->setError("Товар з кодом `{$code}` не знайдено");
             return;
         }
 
@@ -373,7 +373,7 @@ class ProdIssue extends \App\Pages\Base
 
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
-            $this->setError("noitemonstore", $item->itemname);
+            $this->setError("Товару {$item->itemname} немає на складі");
         }
 
 
@@ -390,7 +390,7 @@ class ProdIssue extends \App\Pages\Base
 
 
                 if (strlen($serial) == 0) {
-                    $this->setWarn('needs_serial');
+                    $this->setWarn('Потрібна партія виробника');
                     $this->editdetail->setVisible(true);
                     $this->docform->setVisible(false);
 
@@ -415,21 +415,21 @@ class ProdIssue extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('enterdocnumber');
+            $this->setError('Введіть номер документа');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не створено унікальный номер документа');
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("noenteritem");
+            $this->setError("Не введено товар");
         }
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("noselstore");
+            $this->setError("Не обрано склад");
         }
 
         return !$this->isError();

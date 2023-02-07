@@ -141,29 +141,29 @@ class TransItem extends \App\Pages\Base
     private function checkForm() {
 
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
-            $this->setError("enterdocnumber");
+            $this->setError("Введіть номер документа");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не створено унікальный номер документа');
             }
         }
         if ($this->_doc->headerdata['fromquantity'] > 0 && $this->_doc->headerdata['toquantity'] > 0) {
 
         } else {
-            $this->setError("invalidquantity");
+            $this->setError("Невірна кількість");
         }
         if ($this->_doc->headerdata['fromitem'] > 0 && $this->_doc->headerdata['toitem'] > 0) {
 
         } else {
-            $this->setError("noenteritem");
+            $this->setError("Не введено товар");
         }
         if ($this->_doc->headerdata['fromitem'] == $this->_doc->headerdata['toitem']) {
 
-            $this->setError("thesameitems");
+            $this->setError("Однакові ТМЦ");
         }
 
         return !$this->isError();

@@ -54,7 +54,7 @@ class ARMFood extends \App\Pages\Base
         $food = System::getOptions("food");
         if (!is_array($food)) {
             $food = array();
-            $this->setWarn('nocommonoptions');
+            $this->setWarn('Не вказано параметри в загальних налаштуваннях');
         }
         $this->_worktype = $food['worktype'];
 
@@ -195,7 +195,7 @@ class ARMFood extends \App\Pages\Base
         $this->_pos = \App\Entity\Pos::load($this->setupform->pos->getValue());
 
         if ($store == 0 || $nal == 0 || $beznal == 0 || $this->_pos == null) {
-            $this->setError(H::l("notalldata"));
+            $this->setError("Не зазначено всі дані");
             return;
         }
         $filter = \App\Filter::getFilter("armfood");
@@ -389,7 +389,7 @@ class ARMFood extends \App\Pages\Base
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0 && $item->autoincome != 1) {
 
-            $this->setWarn("noitemonstore", $item->itemname);
+            $this->setWarn("Товару {$item->itemname} немає на складі");
         }
 
 
@@ -454,7 +454,7 @@ class ARMFood extends \App\Pages\Base
 
         if ($item == null) {
 
-            $this->setWarn("noitemcode", $code);
+            $this->setWarn("Товар з кодом `{$code}` не знайдено");
             return;
         }
 
@@ -462,7 +462,7 @@ class ARMFood extends \App\Pages\Base
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
 
-            $this->setWarn("noitemonstore", $item->itemname);
+            $this->setWarn("Товару {$item->itemname} немає на складі");
         }
 
 
@@ -694,11 +694,11 @@ class ARMFood extends \App\Pages\Base
         $dt = $this->docpanel->listsform->dt->getDate();
         $this->_doc->headerdata['deltime'] = $this->docpanel->listsform->time->getDateTime($dt);
         if ($this->_doc->headerdata['delivery'] > 1 && $this->_doc->headerdata['ship_address'] == "") {
-            $this->setError('enteraddress');
+            $this->setError('Введіть адресу');
             return;
         }
         if ($this->_doc->headerdata['delivery'] > 0 && $this->_doc->headerdata['contact'] == "") {
-            $this->setError('entercontact');
+            $this->setError('Введіть контактні дані');
             return;
         }
 
@@ -732,7 +732,7 @@ class ARMFood extends \App\Pages\Base
             $n->message = serialize(array('document_id' => $this->_doc->document_id));
 
             $n->save();
-            $this->setInfo('sentdelivary');
+            $this->setInfo('Відправлено в доставку');
 
         } else {  //в  производство
             $this->_doc->updateStatus(Document::STATE_INPROCESS);
@@ -743,7 +743,7 @@ class ARMFood extends \App\Pages\Base
 
             $n->save();
 
-            $this->setInfo('sentprod');
+            $this->setInfo('Відправлено у виробництво');
 
         }
 
@@ -799,7 +799,7 @@ class ARMFood extends \App\Pages\Base
         }
 
 
-        $this->setInfo('sentprod');
+        $this->setInfo('Відправлено у виробництво');
         $this->onNewOrder();
     }
 
@@ -840,7 +840,7 @@ class ARMFood extends \App\Pages\Base
         }
 
 
-        $this->setInfo('sentprod');
+        $this->setInfo('Відправлено у виробництво');
         $this->onNewOrder();
     }
 
@@ -896,7 +896,7 @@ class ARMFood extends \App\Pages\Base
     public function payandcloseOnClick() {
 
         if ($this->_pt != 1 && $this->_pt != 2) {
-            $this->setError("noselpaytype");
+            $this->setError("Не вказано спосіб оплати");
             return;
         }
 
@@ -923,21 +923,21 @@ class ARMFood extends \App\Pages\Base
             }
 
             if ($this->_doc->payamount > $this->_doc->payed) {
-                $this->setError("toolowamount");
+                $this->setError("Недостатня сума");
                 return;
             }
             
             if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $this->_doc->customer_id == 0) {
-                $this->setError("mustsel_cust");
+                $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
                 return;
             }  
             
             if ( doubleval($this->_doc->headerdata['bonus'] ) >0 && $this->_doc->customer_id == 0) {
-                $this->setError("mustsel_cust");
+                $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
                 return;
             }            
             if ( doubleval($this->_doc->headerdata['exch2b'] ) >0 && $this->_doc->customer_id == 0) {
-                $this->setError("mustsel_cust");
+                $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
                 return;
             }            
                       
@@ -956,7 +956,7 @@ class ARMFood extends \App\Pages\Base
             {
 
                 $this->_doc->updateStatus(Document::STATE_INPROCESS);
-                $this->setInfo('sentprod');
+                $this->setInfo('Відправлено у виробництво');
 
 
             }
@@ -1030,7 +1030,7 @@ class ARMFood extends \App\Pages\Base
         $idnew = $this->_doc->document_id == 0;
 
         if (count($this->_itemlist) == 0) {
-            $this->setError('noenterpos');
+            $this->setError('Не введено позиції');
             return false;  
         }
         if ($idnew) {
@@ -1040,7 +1040,7 @@ class ARMFood extends \App\Pages\Base
                 $next = $this->_doc->nextNumber();
                 $this->_doc->document_number = $next;
                 if (strlen($next) == 0) {
-                    $this->setError('docnumbercancreated');
+                    $this->setError('Не створено унікальный номер документа');
                     return false;   
                 }
             }
@@ -1100,7 +1100,7 @@ class ARMFood extends \App\Pages\Base
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
         $cust = new Customer();
@@ -1111,7 +1111,7 @@ class ARMFood extends \App\Pages\Base
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
             $this->setError("");
-            $this->setError("tel10", H::PhoneL());
+            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
             return;
         }
 
@@ -1119,7 +1119,7 @@ class ARMFood extends \App\Pages\Base
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
 
-                $this->setError("existcustphone");
+                $this->setError("Вже існує контрагент з таким телефоном");
                 return;
             }
         }

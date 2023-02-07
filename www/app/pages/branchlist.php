@@ -26,7 +26,7 @@ class BranchList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (System::getUser()->userlogin != 'admin') {
-            System::setErrorMsg(H::l('onlyadminpage'));
+            System::setErrorMsg('До сторінки має доступ тільки адміністратор');
             \App\Application::RedirectError();
             return false;
         }
@@ -98,7 +98,7 @@ class BranchList extends \App\Pages\Base
 
         $this->_branch->branch_name = $this->branchdetail->editbranchname->getText();
         if ($this->_branch->branch_name == '') {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
 

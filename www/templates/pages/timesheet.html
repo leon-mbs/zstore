@@ -84,10 +84,12 @@
                  
                     </div>
                    <div class="tab-pane    "  id="tstat" > 
-                      <table class="table table-sm" style="width:30%">
+                      <table class="table table-sm" style="width:40%">
+                            <tr><th></th><th  class="text-right">Години</th><th class="text-right">Днi</th></tr>
                             <tr v-for="st in stat" >
                                 <td  >  {{st.name}}</td>   
-                                <td align="right"><span :class="st.color">  {{st.cnt}} </span></td>
+                                <td class="text-right"><span :class="st.color">  {{st.cnt}} </span></td>
+                                <td class="text-right"><span :class="st.color">  {{st.days}} </span></td>
 
                             </tr>
                         </table>
@@ -172,6 +174,9 @@ var calendar
                   from:"",
                   to:"",
                   today:"",
+                  start:"",
+                  end:"",
+                  break:0,
                
                   stat:[] ,
                   times:[] ,
@@ -204,6 +209,9 @@ var calendar
                        this.to = tmp.to; 
                        this.from = tmp.from; 
                        this.today = tmp.today; 
+                       this.start = tmp.start; 
+                       this.end = tmp.end; 
+                       this.break = tmp.break; 
                  
                        this.loaddata() ;       
                       
@@ -257,17 +265,17 @@ var calendar
                 
                   this.edited = 0;
                   this.edittype = 1;
-                  this.editbreak = 60;
                   this.editdate = this.today;
-                  this.editfrom = "09:00";
-                  this.editto = "18:00";
+                  this.editfrom = this.start;
+                  this.editto = this.end;
+                  this.editbreak = this.break;
                   $('#editmodal').modal('show')   
 
                } ,    
                save:function(i){
                 
 
-                    var v = checkForm('fval');
+                    var v = checkFormInput('fval');
                     if(!v) return
  
 

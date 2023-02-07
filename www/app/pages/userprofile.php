@@ -59,23 +59,23 @@ class UserProfile extends \App\Pages\Base
 
                 case 1 :
                     $p = "\\App\\Pages\\Doc\\";
-                    $n = H::l("md_doc");
+                    $n = "Документ";
                     break;
                 case 2 :
                     $p = "\\App\\Pages\\Report\\";
-                    $n = H::l("md_rep");
+                    $n = 'Звіт';
                     break;
                 case 3 :
                     $p = "\\App\\Pages\\Register\\";
-                    $n = H::l("md_reg");
+                    $n = 'Журнал';
                     break;
                 case 4 :
                     $p = "\\App\\Pages\\Reference\\";
-                    $n = H::l("md_ref");
+                    $n = "Довідник";
                     break;
                 case 5 :
                     $p = "\\App\\Pages\\Service\\";
-                    $n = H::l("md_ser");
+                    $n = 'Сервісна сторінка';
                     break;
             }
 
@@ -136,7 +136,7 @@ class UserProfile extends \App\Pages\Base
         if (!$this->isError()) {
 
             $this->user->save();
-            $this->setSuccess('saved');
+            $this->setSuccess('Збережено');
             System::setUser($this->user);
         }
     }
@@ -148,14 +148,14 @@ class UserProfile extends \App\Pages\Base
         $confirm = $sender->confirmpassword->getText();
 
         if ($pass == '') {
-            $this->setError('enterpassword');
+            $this->setError('Введіть пароль');
         } else {
             if ($confirm == '') {
-                $this->setError('confirmpass');
+                $this->setError('Підтвердіть пароль');
             } else {
                 if ($confirm != $pass) {
 
-                    $this->setError('invalidconfirm');
+                    $this->setError('Невірне підтвердження');
                 }
             }
         }
@@ -169,7 +169,7 @@ class UserProfile extends \App\Pages\Base
             if ($this->user->userlogin != 'admin') {
 
                 
-                \App\Entity\Notify::toSystemLog(H::l('passchanged', $this->user->username, $pass)) ;
+                \App\Entity\Notify::toSystemLog("Користувач <b>{$this->user->username}</b> змінив пароль на <b>{$pass}</b>" ) ;
                 
             }
 
@@ -222,7 +222,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->pserver  = rtrim($this->user->pserver,"/") ;
 
         $this->user->save();
-        $this->setSuccess('saved');
+        $this->setSuccess('Збережено');
         System::setUser($this->user);
       
     }

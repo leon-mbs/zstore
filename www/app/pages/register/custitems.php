@@ -161,11 +161,11 @@ class CustItems extends \App\Pages\Base
     
         
         if ( $this->_item->item_id == 0) {
-            $this->setError('noselitem');
+            $this->setError('Не обрано товар');
             return;
         }
         if ( $this->_item->customer_id == 0) {
-            $this->setError('noselsender');
+            $this->setError('Не обрано постачальника');
             return;
         }
   
@@ -235,26 +235,26 @@ class CustItems extends \App\Pages\Base
       $colqty = $sender->colqty->getValue();
       $colcomment = $sender->colcomment->getValue();
       if ($colcustcode === '0') {
-            $this->setError('noselcolcustcode');
+            $this->setError('Не вказано колонку з кодом постачальника');
             return;
       }
       if ($colitemcode === '0') {
-            $this->setError('noselcolitemcode');
+            $this->setError('Не вказано колонку з артикулом');
             return;
       }
       if ($colprice === '0') {
-            $this->setError('noselcolprice');
+            $this->setError('Не вказано колонку з ціною');
             return;
       }
       if ( $cust == 0) {
-            $this->setError('noselsender');
+            $this->setError('Не обрано постачальника');
             return;
       }
     
       $file = $sender->filename->getFile();
       if (strlen($file['tmp_name']) == 0) {
 
-            $this->setError('noselfile');
+            $this->setError('Не обрано файл');
             return;
       }
 
@@ -314,7 +314,7 @@ class CustItems extends \App\Pages\Base
             $cnt++;
             
         }
-        $this->setSuccess("imported_items", $cnt);
+        $this->setSuccess("Імпортовано {$cnt} ТМЦ" );
         $this->itemtable->listform->itemlist->Reload();
   
         $this->itemtable->setVisible(true);

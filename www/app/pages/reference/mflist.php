@@ -116,7 +116,7 @@ class MFList extends \App\Pages\Base
 
         $this->_mf->mf_name = $this->mfdetail->editmf_name->getText();
         if (strlen($this->_mf->mf_name) == 0) {
-            $this->setError('entername');
+            $this->setError('Не введено назву');
             return;
         }
         $this->_mf->btran = $this->mfdetail->editbtran->getText();
@@ -127,7 +127,7 @@ class MFList extends \App\Pages\Base
 
         $this->_mf->description = $this->mfdetail->editmf_description->getText();
         if ($this->_mf->mf_name == '') {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
         $this->_mf->beznal = $this->mfdetail->editbeznal->isChecked() ? 1 : 0;

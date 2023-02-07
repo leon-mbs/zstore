@@ -127,11 +127,11 @@ class Helper
     // список  типов  атрибутов товара
     public static function getAttributeTypes() {
 
-        return array(1 => \App\Helper::l("shopattrynname"),
-            //  2 => \App\Helper::l("shopattrnumname")  , 
-                     3 => \App\Helper::l("shopattrlistname"),
-                     4 => \App\Helper::l("shopattrsetname"),
-                     5 => \App\Helper::l("shopattrstrname")
+        return array(1 => "Є/Немає",
+            //  2 => "Число"  , 
+                     3 => "Перелік",
+                     4 => "Набір",
+                     5 => "Строка"
         );
     }
 

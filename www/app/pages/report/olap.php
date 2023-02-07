@@ -429,7 +429,7 @@ class OLAP extends \App\Pages\Base
    
             
              $sql = "SELECT  pv.mf_name, 
-                COALESCE(c.customer_name,'Фіз. особа') AS customer_name, 
+                COALESCE(c.customer_name,'Н/Д') AS customer_name, 
                 {$concat} as document_date ,
                 COALESCE(b.branch_name,'Н/Д') AS branch_name,
                 COALESCE(f.firm_name,'Н/Д') AS firm_name,

@@ -207,66 +207,56 @@ class Helper
         $mdata = array();
         if ($modules['note'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'note') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10000, 'meta_name' => "/Note/Pages/Main", 'meta_type' => 6, 'description' => self::l('modnotemain')));
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10000, 'meta_name' => "/Note/Pages/Main", 'meta_type' => 6, 'description' => "База знань"));
             }
         }
 
 
         if ($modules['shop'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'shop') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10002, 'meta_name' => "/Shop/Pages/ProductList", 'meta_type' => 6, 'description' => self::l('modshopprlist')));
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10002, 'meta_name' => "/Shop/Pages/ProductList", 'meta_type' => 6, 'description' => "Товари в онлайн каталозі" ));
             }
         }
 
-        if ($modules['shop'] == 1) {
-            if ($role->rolename == 'admins' || strpos($role->modules, 'shop') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10019, 'meta_name' => "/Shop/Pages/Dashboard", 'meta_type' => 6, 'description' => self::l('modshopman')));
-            }
-        }
 
 
 
         if ($modules['wc'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'wc') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10009, 'meta_name' => "/WC/Orders", 'meta_type' => 6, 'description' => self::l('modwcorders')));
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10009, 'meta_name' => "/WC/Orders", 'meta_type' => 6, 'description' => "Замовлення (WC)" ));
             }
         }
         if ($modules['wc'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'wc') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10010, 'meta_name' => "/WC/Items", 'meta_type' => 6, 'description' => self::l('modwcitems')));
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10010, 'meta_name' => "/WC/Items", 'meta_type' => 6, 'description' => "Товари (WC)"));
             }
         }
   
         if ($modules['promua'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'promua') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10015, 'meta_name' => "/PU/Orders", 'meta_type' => 6, 'description' => self::l('modpuorders')));
-            }
-        }
-        if ($modules['promua'] == 1) {
-            if ($role->rolename == 'admins' || strpos($role->modules, 'promua') !== false) {
-               // $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10016, 'meta_name' => "/PU/Items", 'meta_type' => 6, 'description' => self::l('modpuitems')));
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10015, 'meta_name' => "/PU/Orders", 'meta_type' => 6, 'description' => "Замовлення (PU)"  ));
             }
         }
 
         if ($modules['issue'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'issue') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10014, 'meta_name' => "/Issue/Pages/IssueList", 'meta_type' => 6, 'description' => self::l('modissueslist')));
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10014, 'meta_name' => "/Issue/Pages/IssueList", 'meta_type' => 6, 'description' => "Завдання (Проекти)"));
             }
         }
         if ($modules['issue'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'issue') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10017, 'meta_name' => "/Issue/Pages/ProjectList", 'meta_type' => 6, 'description' => self::l('modprojectlist')));
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10017, 'meta_name' => "/Issue/Pages/ProjectList", 'meta_type' => 6, 'description' =>   "Проекти"  , ));
             }
         }
    
           if ($modules['ocstore'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'ocstore') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10005, 'meta_name' => "/OCStore/Orders", 'meta_type' => 6, 'description' => self::l('modocstoreorders')));
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10005, 'meta_name' => "/OCStore/Orders", 'meta_type' => 6, 'description' => "Замовлення (Опенкарт)" ));
             }
         }
         if ($modules['ocstore'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'ocstore') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10018, 'meta_name' => "/OCStore/Items", 'meta_type' => 6, 'description' => self::l('modocstoreitems')));
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10018, 'meta_name' => "/OCStore/Items", 'meta_type' => 6, 'description' => "Товари (Опенкарт)"));
             }
         }       
         return $mdata;
@@ -326,7 +316,7 @@ class Helper
             if ($mail->send() === false) {
                 System::setErrorMsg($mail->ErrorInfo);
             } else {
-                //  System::setSuccessMsg(Helper::l('email_sent'));
+                //  System::setSuccessMsg('E-mail відправлено');
             }
         } catch(\Exception $e) {
             System::setErrorMsg($e->getMessage());
@@ -760,43 +750,11 @@ class Helper
      * @param mixed $label
      * @param mixed $p1
      * @param mixed $p2
+     * @deprecated
      */
     public static function l($label, $p1 = "", $p2 = "", $p3 = "") {
-        global $_config;
-
-        $label = trim($label);
-        if (strlen($label) == 0) {
-            return '';
-        }
-
-        $labels = System::getCache('labels');
-        if ($labels == null) {
-            $lang = $_config['common']['lang'];
-            $filename = _ROOT . 'templates/lang.json';
-            if ($lang == 'ua') {
-                $filename = _ROOT . 'templates_ua/lang.json';
-            }
-            $file = @file_get_contents($filename);
-
-            if (strlen($file) == 0) {
-                echo "Не найден файл локализации  " . $filename;
-                die;
-            }
-            $labels = @json_decode($file, true);
-            if ($labels == null) {
-                echo "Неверный файл локализации  " . $filename;
-                die;
-            }
-            System::setCache('labels', $labels);
-        }
-        if (isset($labels[$label])) {
-            $text = $labels[$label];
-            $text = sprintf($text, $p1, $p2, $p3);
-            $text = str_replace("\'", "`", $text);
-            return $text;
-        } else {
-            return $label;
-        }
+       return $label;
+    
     }
 
  
@@ -813,19 +771,19 @@ class Helper
     }
 
     public static function getValName($vn) {
-        if ($vn == 'valuan') {
+        if ($vn == 'Гривня') {
             return 'UAH';
         }
-        if ($vn == 'valusd') {
+        if ($vn == 'Долар') {
             return 'USD';
         }
-        if ($vn == 'valeuro') {
+        if ($vn == 'Євро') {
             return 'EUR';
         }
-        if ($vn == 'valrub') {
+        if ($vn == 'Рубль') {
             return 'RUB';
         }
-        if ($vn == 'valmdl') {
+        if ($vn == 'Лей') {
             return 'MDL';
         }
     }

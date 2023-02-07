@@ -237,9 +237,9 @@ class Subscribe extends \ZCL\DB\Entity
             }
             
             if ($mf->beznal == 1) {
-                $header['nal'] = \App\Helper::l("cbeznal");
+                $header['nal'] = "Безготівка";
             } else {
-                $header['nal'] = \App\Helper::l("cnal");
+                $header['nal'] = "Готівка";
             }
         } else {
             if ($doc->payamount > 0 && $doc->headerdata['payed'] == 0) {
@@ -366,7 +366,7 @@ class Subscribe extends \ZCL\DB\Entity
                 H::logerror($mail->ErrorInfo) ;
                   return "See log";
             } else {
-                //  System::setSuccessMsg(Helper::l('email_sent'));
+                //  System::setSuccessMsg('E-mail відправлено');
             }
         } catch(\Exception $e) {
 

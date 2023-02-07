@@ -33,7 +33,7 @@ class Options extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (System::getUser()->userlogin != 'admin') {
-            System::setErrorMsg(H::l('onlyadminpage'));
+            System::setErrorMsg('До сторінки має доступ тільки адміністратор');
             App::RedirectError();
             return false;
         }
@@ -46,8 +46,8 @@ class Options extends \App\Pages\Base
   
         $this->common->add(new DropDownChoice('phonel', array('10' => '10', '12' => '12'), '10'));
         $pt = array(
-            "1" => H::l('opt_lastprice'),
-            "2" => H::l('opt_partion')
+            "1" => "По останній закупівельній ціні",
+            "2" => "Окремо по кожній закупівельній ціні"
         );
         $this->common->add(new DropDownChoice('partiontype', $pt, "1"));
 
@@ -348,7 +348,7 @@ class Options extends \App\Pages\Base
 
         $this->_tvars["useval"] = $common['useval'] == 1;
 
-        $this->setSuccess('saved');
+        $this->setSuccess('Збережено');
         System::setCache('labels', null);
         App::Redirect("\\App\\Pages\\Options");
         
@@ -370,7 +370,7 @@ class Options extends \App\Pages\Base
         $bot = new \App\ChatBot($common['tbtoken']) ;
         $res = $bot->doGet('setWebhook',array('url'=>$url)) ;
         if($res['error_code'] == 404)  {
-            $this->setError(H::l("btinvalidtoken")) ;
+            $this->setError("Невірний токен") ;
             return;
         }
         if($res['ok'] != true)  {
@@ -381,7 +381,7 @@ class Options extends \App\Pages\Base
         H::log("set hook ".$url);
         
         System::setOptions("common", $common);
-        $this->setSuccess('saved');
+        $this->setSuccess('Збережено');
    
     }
  
@@ -402,7 +402,7 @@ class Options extends \App\Pages\Base
         $printer['pprice'] = $this->printer->pprice->isChecked() ? 1 : 0;
         $printer['pcolor'] = $this->printer->pcolor->isChecked() ? 1 : 0;
         System::setOptions("printer", $printer);
-        $this->setSuccess('saved');
+        $this->setSuccess('Збережено');
     }
 
     public function onApiType($sender) {
@@ -420,7 +420,7 @@ class Options extends \App\Pages\Base
         $api['atype'] = $this->api->atype->getValue();
 
         System::setOptions("api", $api);
-        $this->setSuccess('saved');
+        $this->setSuccess('Збережено');
     }
 
     public function onSMSType($sender) {
@@ -458,7 +458,7 @@ class Options extends \App\Pages\Base
         $sms['smstype'] = $this->sms->smstype->getValue();
 
         System::setOptions("sms", $sms);
-        $this->setSuccess('saved');
+        $this->setSuccess('Збережено');
     }
 
 
@@ -488,7 +488,7 @@ class Options extends \App\Pages\Base
 
 
         System::setOptions("food", $food);
-        $this->setSuccess('saved');
+        $this->setSuccess('Збережено');
     }
 
 
@@ -524,7 +524,7 @@ class Options extends \App\Pages\Base
         System::setOptions("common", $common);
 
 
-        $this->setSuccess('saved');
+        $this->setSuccess('Збережено');
     }
     
     
@@ -564,7 +564,7 @@ class Options extends \App\Pages\Base
         $val['valprice'] = $this->valform->valprice->isChecked() ? 1 : 0;
 
         System::setOptions("val", $val);
-        $this->setSuccess('saved');
+        $this->setSuccess('Збережено');
     }
     
     public function onModules($sender) {
@@ -580,7 +580,7 @@ class Options extends \App\Pages\Base
          $modules['note'] = $sender->modnote->isChecked() ? 1:0;
          
          System::setOptions("modules", $modules);
-         $this->setSuccess('saved');      
+         $this->setSuccess('Збережено');      
          App::Redirect("\\App\\Pages\\Options");
          
     }    

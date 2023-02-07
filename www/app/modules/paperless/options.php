@@ -18,7 +18,7 @@ class Options extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'paperless') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg(\App\Helper::l('noaccesstopage'));
+            System::setErrorMsg("Немає права доступу до сторінки");
 
             App::RedirectError();
             return;
@@ -44,7 +44,7 @@ class Options extends \App\Pages\Base
         $modules['plsecret'] =trim($this->cform->secret->getText());
 
         System::setOptions("modules", $modules);
-        $this->setSuccess('saved');
+        $this->setSuccess('Збережено');
          
     }
 
@@ -52,7 +52,7 @@ class Options extends \App\Pages\Base
         list($code,$result) =        Helper::connect();
         if($code=='ok') {
              System::getSession()->pltoken = $result;
-             $this->setSuccess("connected") ;
+             $this->setSuccess("Успішне з`єднання") ;
         }
         if($code=='error') {
            $this->setError($result) ;

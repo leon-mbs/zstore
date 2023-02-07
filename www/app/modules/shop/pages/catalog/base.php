@@ -129,22 +129,22 @@ class Base extends \Zippy\Html\WebPage
 
     //вывод ошибки,  используется   в дочерних страницах
     public function setError($msg, $p1 = "", $p2 = "") {
-        $msg = Helper::l($msg, $p1, $p2);
+        
         System::setErrorMsg($msg);
     }
 
     public function setSuccess($msg, $p1 = "", $p2 = "") {
-        $msg = Helper::l($msg, $p1, $p2);
+       
         System::setSuccessMsg($msg);
     }
 
     public function setWarn($msg, $p1 = "", $p2 = "") {
-        $msg = Helper::l($msg, $p1, $p2);
+      
         System::setWarnMsg($msg);
     }
 
     public function setInfo($msg, $p1 = "", $p2 = "") {
-        $msg = Helper::l($msg, $p1, $p2);
+         
         System::setInfoMsg($msg);
     }
 

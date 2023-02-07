@@ -625,11 +625,11 @@ class Item extends \ZCL\DB\Entity
     public static function getTypes() {
         $list = array();
 
-        $list[Item::TYPE_TOVAR] = \App\Helper::l('it_tovar');
-        $list[Item::TYPE_MAT] = \App\Helper::l('it_mat');
-        $list[Item::TYPE_MBP] = \App\Helper::l('it_mbp');
-        $list[Item::TYPE_PROD] = \App\Helper::l('it_prod');
-        $list[Item::TYPE_HALFPROD] = \App\Helper::l('it_hprod');
+        $list[Item::TYPE_TOVAR] = "Товар";
+        $list[Item::TYPE_MAT] = "Матеріали та комплектуючі";
+        $list[Item::TYPE_MBP] = "МБП (малоцінка)";
+        $list[Item::TYPE_PROD] = "Готова продукція";
+        $list[Item::TYPE_HALFPROD] = "Напівфабрикати";
 
         return $list;
     }

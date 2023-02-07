@@ -168,7 +168,7 @@ class Chat extends \App\Pages\Base
         $file = $sender->msgfile->getFile();
         if (strlen($file["tmp_name"]) > 0) {
             if ($file['size'] > 10000000) {
-                $this->getOwnerPage()->setError("filemore10M");
+                $this->getOwnerPage()->setError("Файл більше 10 МБ!");
                 return;
             }
             $id = H::addFile($file, 0, '', \App\Entity\Message::TYPE_NOTIFY);
@@ -186,7 +186,7 @@ class Chat extends \App\Pages\Base
         $up = $sender->msgpersonal->getValue();
         if ($up > 0) {
             $n->user_id = $up;  //личное
-            $this->setSuccess("sent");
+            $this->setSuccess("Відправлено");
         }
         $n->save();
         $sender->clean();

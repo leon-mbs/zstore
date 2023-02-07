@@ -18,7 +18,7 @@ class Options extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg(\App\Helper::l('noaccesstopage'));
+            System::setErrorMsg("Немає права доступу до сторінки");
 
             App::RedirectError();
             return;
@@ -56,7 +56,7 @@ class Options extends \App\Pages\Base
         
         if (strlen($pricetype) < 2) {
 
-            $this->setError('noselpricetype');
+            $this->setError('Не вказано тип ціни');
             return;
         }
 
@@ -78,7 +78,7 @@ class Options extends \App\Pages\Base
         System::setOptions("modules", $modules);
 
 
-        $this->setSuccess('saved');
+        $this->setSuccess('Збережено');
 
         \App\Modules\OCStore\Helper::connect();
 

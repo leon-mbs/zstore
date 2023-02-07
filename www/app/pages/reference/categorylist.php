@@ -139,11 +139,11 @@ class CategoryList extends \App\Pages\Base
 
         $cat_id = $sender->owner->getDataItem()->cat_id;
         if ($this->_catlist[$cat_id]->qty > 0) {
-            $this->setError('nodelcat');
+            $this->setError('Не можна видалити категорію з ТМЦ');
             return;
         }
         if ($this->_catlist[$cat_id]->hasChild()) {
-            $this->setError('nodelcatchild');
+            $this->setError('Категорія має дочірні категорії');
             return;
         }
 
@@ -203,7 +203,7 @@ class CategoryList extends \App\Pages\Base
         $this->_category->noshop = $this->categorydetail->editnoshop->isChecked() ? 1 : 0;
         $this->_category->nofastfood = $this->categorydetail->editnofastfood->isChecked() ? 1 : 0;
         if ($this->_category->cat_name == '') {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
 
@@ -228,13 +228,13 @@ class CategoryList extends \App\Pages\Base
             $imagedata = getimagesize($file["tmp_name"]);
 
             if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {
-                $this->setError('invalidformatimage');
+                $this->setError('Невірний формат  зображення');
                 return;
             }
 
             if ($imagedata[0] * $imagedata[1] > 10000000) {
 
-                $this->setError('toobigimage');
+                $this->setError('Занадто великий розмір зображення');
                 return;
             }
 

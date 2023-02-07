@@ -167,7 +167,7 @@ class Import extends \App\Pages\Base
      
       
         if ($t == 1 && $colqty === '0') {
-            $this->setError('noselcolqty');
+            $this->setError('Не вказано колонку з кількістю');
             return;
         }
         $file = $this->iform->filename->getFile();
@@ -440,7 +440,7 @@ class Import extends \App\Pages\Base
             $doc->updateStatus(\App\Entity\Doc\Document::STATE_EXECUTED);
         }
 
-        $this->setSuccess("imported_items", $cnt);
+        $this->setSuccess("Імпортовано {$cnt} ТМЦ");
     }
 
     public function onCImport($sender) {
@@ -457,7 +457,7 @@ class Import extends \App\Pages\Base
         $coladdress = $this->cform->coladdress->getValue();
 
         if ($colcname === '0') {
-            $this->setError('noselcolname');
+            $this->setError('Не вказано колонку з назвою');
             return;
         }
 
@@ -547,7 +547,7 @@ class Import extends \App\Pages\Base
             }
         }
 
-        $this->setSuccess("imported_customers ", $cnt);
+        $this->setSuccess("Імпортовано {$cnt} контрагентів "  );
     }
 
     public function onNImport($sender) {
@@ -568,16 +568,16 @@ class Import extends \App\Pages\Base
         $coldesc = $this->nform->ncoldesc->getValue();
 
         if ($colname === '0') {
-            $this->setError('noselcolname');
+            $this->setError('Не вказано колонку з назвою');
             return;
         }
         if ($colqty === '0') {
-            $this->setError('noselcolqty');
+            $this->setError('Не вказано колонку з кількістю');
             return;
         }
 
         if ($c == 0) {
-            $this->setError('noselsender');
+            $this->setError('Не обрано постачальника');
             return;
         }
 

@@ -41,7 +41,7 @@ class GRList extends \App\Pages\Base
 
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => H::l('opened'), 1 => H::l('notexecuted'), 2 => H::l('notpayed'), 3 => H::l('all')), 0));
+        $this->filter->add(new DropDownChoice('status', array(0 => 'Відкриті', 1 => 'Не проведені', 2 => 'Не сплачені', 3 => 'Всі'), 0));
         $this->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
         $this->filter->add(new DropDownChoice('fstore', \App\Entity\Store::getList(), 0));
 
@@ -121,7 +121,7 @@ class GRList extends \App\Pages\Base
             $d = $this->_doc->getChildren('GoodsReceipt');
 
             if (count($d) > 0) {
-                $this->setWarn('goodsreceipt_exists');
+                $this->setWarn('Вже існує документ Прибуткова накладна');
             }
             App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", 0, $this->_doc->document_id);
             return;
@@ -131,7 +131,7 @@ class GRList extends \App\Pages\Base
 
             if (count($d) > 0) {
 
-                $this->setWarn('return_exists');
+                $this->setWarn('Вже існує документ Повернення');
             }
             App::Redirect("\\App\\Pages\\Doc\\RetCustIssue", 0, $this->_doc->document_id);
             return;
