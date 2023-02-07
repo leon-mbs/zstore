@@ -44,6 +44,9 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["showsidemenu"] = !(System::getUser()->hidemenu == true);
         $this->_tvars["twodigit"] = round($options['amdigits']) > 0;
 
+        $this->_tvars['qtydigits']  = intval( $common['qtydigits'] );     
+        $this->_tvars['amdigits']  = intval( $common['amdigits'] );     
+        
 
         $blist = array();
         if ($this->_tvars["usebranch"] == true) {
@@ -446,4 +449,21 @@ class Base extends \Zippy\Html\WebPage
         \App\Session::getSession()->toasts = true;
     }
 
+    
+  
+    //callPM
+
+    public function onTextCust($args,$post=null) {
+    
+       $list =\App\Util::tokv( \App\Entity\Customer::getList($args[0], $args[1]));
+     
+       return json_encode($list, JSON_UNESCAPED_UNICODE);          
+    }  
+ 
+ 
+    
 }
+
+ 
+
+ 
