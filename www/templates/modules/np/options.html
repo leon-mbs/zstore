@@ -28,8 +28,11 @@
 
                 <form zippy="formcache"> 
                     <input type="submit" onclick=" $('#loader').show()" value="Оновити" class="btn   btn-primary  "/>
-                    <img id="loader" style="display:none"   src="/assets/images/ajax-loader.gif"  />
 
+                           <div style="display:none"  id="loader" class="spinner-border spinner-border-sm " role="status">
+                                  <span class="sr-only">Завантаження...</span>
+                              </div>
+ 
                 </form>
                 <br>
                 <h5>Данi вiдправника за замовчуванням</h5>
