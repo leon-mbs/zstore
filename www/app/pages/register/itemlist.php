@@ -294,7 +294,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         $this->page = $page;
     }
 
-    private function getWhere() {
+    private function getWhere($p=false) {
         $conn = $conn = \ZDB\DB::getConnect();
 
         $form = $this->page->filter;
@@ -321,11 +321,15 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         $text = trim($form->searchkey->getText());
         if (strlen($text) > 0) {
 
-            $text = Stock::qstr('%' . $text . '%');
+           if ($p == false) {
+                $text = Item::qstr('%' . $text . '%');
+                $where = $where . " and (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  or description like {$text} )  ";
+            } else {
+                $text = Item::qstr($text);
+                $where = $where . " and (itemname = {$text} or item_code = {$text}  or bar_code = {$text} )  ";
+            }
 
-          //  $where = "   disabled <> 1 and  ( select sum(st1.qty) from store_stock st1 where st1.item_id= item_id ) <>0 ";
-
-            $where .= " and   (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  )  ";
+            
         }
 
 
@@ -338,8 +342,13 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
+        $l = Item::find($this->getWhere(), "itemname asc", $count, $start);
+        $f = Item::find($this->getWhere(true), "itemname asc", $count, $start);
+        foreach ($f as $k => $v) {
+            $l[$k] = $v;
+        }
+        return $l;
 
-        return Item::find($this->getWhere(), "itemname asc", $count, $start);
     }
 
     public function getItem($id) {
