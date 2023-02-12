@@ -102,6 +102,7 @@ class POSCheck extends Document
             $detail[] = array(
                 "tovar_name" => $name,
                 "quantity"   => H::fqty($item->quantity),
+                "price"   => H::fa($item->price),
                 "amount"     => H::fa($item->quantity * $item->price)
             );
         }
@@ -110,6 +111,7 @@ class POSCheck extends Document
             $detail[] = array("no"         => $i++,
                               "tovar_name" => $ser->service_name,
                               "quantity"   => H::fqty($ser->quantity),
+                              "price"   => H::fa($ser->price),
                               "amount"     => H::fa($ser->quantity * $ser->price)
             );
         }

@@ -401,7 +401,7 @@
                 <a  class="btn btn-success" zippy="neworder">Нове замовлення</a>  &nbsp;&nbsp;&nbsp;
             </div>
 
-            <div class="col-12 col-md-8 xl-6" >
+            <div class="col-12 col-md-10 xl-8" >
                 <div class="card">
                     <div class="card-body">
                         <div class="navbar nav">
@@ -428,7 +428,7 @@
 
                 <table class="table  table-sm">
                     <tr>
-                        <th>Дата</th>
+
                         <th>Номер</th>
                         {{#tables}}
                         <th>Стiл</th>
@@ -436,31 +436,53 @@
 
 
                         <th >Статус</th>
-                        <th ></th>
+                                          
+                        <th >Товари</th>
 
-
-                        <th ></th>
-                        <th ></th>
                         <th class="text-right">Сума</th>
-
-
                         <th ></th>
+                        <th ></th>
+
+
+
+                       
+                        <th ></th>
+                        <th ></th>
+                        <th > </th>
                     </tr>
                     <tr zippy="orderlist">
-                        <td zippy="docdate"  >   </td>
+                       
 
                         <td ><a zippy="docnumber"></a></td>
-                        {{#tables}} <td zippy="tablenumber"></td>  {{/tables}}
+                        {{#tables}} <td zippy="tablenumber" class="text-center"></td>  {{/tables}}
 
                         <td class="text-nowrap  " zippy="state">  </td>
-                        <td >   </td>
+                      
+                        <td  zippy="rtlist"> <table   style="font-size:smaller" >
+                           <tr>
+                           <td> </td>
+                           <td>кофе с  молоком</td>
+                           <td class="text-right"> 2</td>
+                           <td class="text-right"> 34</td>
+                           <td class="text-right"> 34</td>
+                           </tr>
+                           <tr>
+                           <td><i class="fa fa-bag-shopping"></i></td>
+                           <td>Пицца</td>
+                           <td class="text-right"> 2</td>
+                           <td class="text-right"> 34</td>
+                           <td class="text-right"> 34</td>
+                           </tr>
+                        </table>  </td>
 
-                        <td   ><i title="Доставка" zippy="isdel" class="fa fa-truck" /></td>
-                        <td   ><i title="Чекає оплату" zippy="wp" class="fa fa-credit-card" /></td>
                         <td class="text-right" zippy="docamount"></td>
-
+  
 
                         <td zippy="docnotes"></td>
+                        <td ><a zippy="brpay" class="btn btn-sm btn-primary"><i class="fa fa-credit-card"></i> Оплатити</a></td>
+                        <td ><a zippy="bredit" class="btn btn-sm btn-info"><i class="fa fa-edit"></i> Редагувати</a></td>
+                        <td ><a zippy="brclose" class="btn btn-sm btn-success"><i class="fa fa-stamp"></i> Закрити</a></td>
+                        <td ><a zippy="brrefuse" class="text-danger"> Анулювати</a></td>
                     </tr>
 
                 </table> 
@@ -470,28 +492,8 @@
             </div>
             <div class="col-12 col-md-10 xl-8" >
                 <div   zippy="statuspan">
-
-
-
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="navbar nav">
-                                <form zippy="statusform" class="form-inline ">
-                                    <button zippy="bedit" type="submit" class="  btn btn-info  mr-2 ">Редагувати</button>
-
-                                    <button zippy="bpay" type="submit" class="  btn btn-primary  mr-2 ">Оплатити</button>
-
-
-                                    <button zippy="bclose" type="submit" class="  btn btn-success  mr-2 ">Закрити</button>
-                                    <button zippy="brefuse" type="submit" class="  btn btn-danger  mr-2 ">Анулювати</button>
-
-
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-
+  
+ 
 
 
                     <div class="card">
@@ -501,7 +503,7 @@
                         </div>
                     </div>
                 </div>
-
+         
             </div>
 
 
@@ -631,7 +633,7 @@
                 $('#btocheck').attr('disabled', 'disabled');
                 return true;
             }            
-            
+                
         </script>  
 
             
