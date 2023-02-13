@@ -21,7 +21,7 @@ class Session
     }
 
     public function __get($name) {
-        return @$this->values[$name];
+        return  $this->values[$name]  ?? null;
     }
 
     /**

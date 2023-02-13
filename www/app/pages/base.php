@@ -44,8 +44,8 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["showsidemenu"] = !(System::getUser()->hidemenu == true);
         $this->_tvars["twodigit"] = round($options['amdigits']) > 0;
 
-        $this->_tvars['qtydigits']  = intval( $common['qtydigits'] );     
-        $this->_tvars['amdigits']  = intval( $common['amdigits'] );     
+        $this->_tvars['qtydigits']  = intval( $common['qtydigits'] ?? 0 );     
+        $this->_tvars['amdigits']  = intval( $common['amdigits'] ?? 0);     
         
 
         $blist = array();
@@ -222,7 +222,7 @@ class Base extends \Zippy\Html\WebPage
         if ($options['showchat'] == 1) {
             $this->_tvars["showchat"] = true;
 
-            $cnt = \App\Entity\Notify::findCnt("user_id=" . \App\Entity\Notify::CHAT . " and notify_id>" . intval($_COOKIE['last_chat_id']));
+            $cnt = \App\Entity\Notify::findCnt("user_id=" . \App\Entity\Notify::CHAT . " and notify_id>" . intval($_COOKIE['last_chat_id'] ?? 0));
 
             $this->_tvars["chatcnt"] = $cnt > 0 ? $cnt : false;;
 

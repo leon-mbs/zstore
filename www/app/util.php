@@ -193,7 +193,7 @@ class Util
         $dt = new \App\DateTime();
         $dt->subMonth(1);
         for ($i = 1; $i <= $num; $i++) {
-            $mon[] = $mlist[$dt->month];
+         //   $mon[] = $mlist[$dt->month];
             $to = $dt->endOfMonth()->getTimestamp();
             $from = $dt->startOfMonth()->getTimestamp();
             $list[] = array('number' => $dt->monthNumber(), 'name' => $mlist[$dt->monthNumber()], 'start' => $from, 'end' => $to);
