@@ -592,9 +592,21 @@ class Item extends \ZCL\DB\Entity
     public static function getNextArticle() {
         $conn = \ZDB\DB::getConnect();
 
-        $sql = "  select max(item_id)  from  items ";
+        $sql = "  select coalesce(max(item_id),0)   from  items ";
         $id = $conn->GetOne($sql);
+        if($id>0) {
+            $last = Item::load($id);
 
+            if(strpos($last->item_code,"ID") == 0) {
+               $a =  str_replace( "ID","", $last->item_code);
+               $a = intval($a) ;            
+               if($a >0) {
+                    $id = $a+1;       
+               }
+               
+            }
+        }
+        
         return "ID" . sprintf("%04d", ++$id);
     }
 
