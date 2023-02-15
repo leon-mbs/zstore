@@ -38,7 +38,7 @@ class Order extends Base
         
         $form = $this->add(new Form('orderform'));
         $form->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np'] == 1)))->onChange($this, 'OnDelivery');
-     //   $form->add(new DropDownChoice('payment', array(),0)) ;
+        $form->add(new DropDownChoice('payment', array(),0)) ;
         
 
         if ($this->_tvars["isfood"]) {
@@ -143,7 +143,9 @@ class Order extends Base
             $this->setError("Введіть адресу");
             return;
         }
-  
+        if($shop["paysystem"]==0 ) {
+             $payment = 2;
+        }
         if ($payment == 0) {
 
             $this->setError("Виберіть оплату");
@@ -265,7 +267,7 @@ class Order extends Base
                 $order->updateStatus(Document::STATE_EXECUTED);
             }  else {
                 $order->updateStatus(Document::STATE_INPROCESS);
-                $order->updateStatus(Document::STATE_WP);
+              //  $order->updateStatus(Document::STATE_WP);
               
             }
 
