@@ -107,7 +107,7 @@ class Options extends \App\Pages\Base
         }
         $shop['paysystem'] = $sender->paysystem->getValue();
         $shop['mf_id'] =  intval($sender->mf->getValue() ); 
-        if($shop['mf_id']==0) {
+        if($shop['mf_id']==0 && $shop['paysystem'] > 0) {
             $this->setError('Не обрано касу');
             return;
         }
