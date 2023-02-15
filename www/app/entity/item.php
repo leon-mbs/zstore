@@ -601,7 +601,7 @@ class Item extends \ZCL\DB\Entity
                $a =  str_replace( "ID","", $last->item_code);
                $a = intval($a) ;            
                if($a >0) {
-                    $id = $a+1;       
+                    $id = $a;       
                }
                
             }
