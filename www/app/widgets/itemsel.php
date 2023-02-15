@@ -51,6 +51,7 @@ class ItemSel extends \Zippy\Html\PageFragment
         $this->witempan->wisfilter->add(new TextInput('wissearchkey'));
         $this->witempan->wisfilter->add(new DropDownChoice('wissearchcat', Category::getList(false,false), 0));
         $this->witempan->wisfilter->add(new TextInput('wissearchmanufacturer'));
+        $this->witempan->wisfilter->wissearchmanufacturer->setDataList(Item::getManufacturers());
 
         $ds = new ArrayDataSource($this, '_list');
 

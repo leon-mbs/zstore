@@ -19,18 +19,19 @@
                     </div>
 
                     <div class="form-group  ">
+                        <label for="firm">Покупець</label>
+                        <select class="form-control" zippy="firm">
+                            <option value="0">Не обрано</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group  ">
                         <label for="customer">Постачальник</label>
                         <input placeholder="Почніть вводити..." class="form-control " zippy="customer"/>
                         <a style="font-size:smaller" zippy="addcust">Додати нового</a>
 
                     </div>
 
-                    <div class="form-group  ">
-                        <label for="firm">Покупець</label>
-                        <select class="form-control" zippy="firm">
-                            <option value="0">Не обрано</option>
-                        </select>
-                    </div>
 
                     <div class="form-group  ">
                         <label for="contract" data-label="contract">Договір</label>
@@ -40,13 +41,7 @@
 
 
                     </div>
-                    <div class="form-group  ">
-                        <label for="basedoc">Підстава </label>
-
-                        <input readonly class="form-control plaintext " type="text" zippy="basedoc">
-
-                    </div>
-
+ 
                 </div>
                 <div class="col-12 col-md-3">
 
@@ -87,7 +82,17 @@
                         <input class="form-control" type="text" zippy="outnumber">
 
                     </div>
+
+                </div>
+                <div class="col-12 col-md-3">
                    <div class="form-group  ">
+                        <label for="basedoc">Підстава </label>
+
+                        <input readonly class="form-control plaintext " type="text" zippy="basedoc">
+
+                    </div>
+ 
+                    <div class="form-group  ">
                         <label for="notes">Примітка </label>
 
                         <input class="form-control" type="text" zippy="notes">

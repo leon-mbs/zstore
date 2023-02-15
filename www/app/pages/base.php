@@ -44,8 +44,8 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["showsidemenu"] = !(System::getUser()->hidemenu == true);
         $this->_tvars["twodigit"] = round($options['amdigits']) > 0;
 
-        $this->_tvars['qtydigits']  = intval( $common['qtydigits'] );     
-        $this->_tvars['amdigits']  = intval( $common['amdigits'] );     
+        $this->_tvars['qtydigits']  = intval( $common['qtydigits'] ?? 0 );     
+        $this->_tvars['amdigits']  = intval( $common['amdigits'] ?? 0);     
         
 
         $blist = array();
@@ -222,7 +222,7 @@ class Base extends \Zippy\Html\WebPage
         if ($options['showchat'] == 1) {
             $this->_tvars["showchat"] = true;
 
-            $cnt = \App\Entity\Notify::findCnt("user_id=" . \App\Entity\Notify::CHAT . " and notify_id>" . intval($_COOKIE['last_chat_id']));
+            $cnt = \App\Entity\Notify::findCnt("user_id=" . \App\Entity\Notify::CHAT . " and notify_id>" . intval($_COOKIE['last_chat_id'] ?? 0));
 
             $this->_tvars["chatcnt"] = $cnt > 0 ? $cnt : false;;
 
@@ -453,14 +453,99 @@ class Base extends \Zippy\Html\WebPage
   
     //callPM
 
-    public function onTextCust($args,$post=null) {
+    public function vonTextCust($args,$post=null) {
     
        $list =\App\Util::tokv( \App\Entity\Customer::getList($args[0], $args[1]));
      
        return json_encode($list, JSON_UNESCAPED_UNICODE);          
     }  
  
+    public function vonTextItem($args,$post=null) {
  
+       $list =\App\Util::tokv( \App\Entity\Item::findArrayAC($args[0], $args[1], $args[2]));
+     
+       return json_encode($list, JSON_UNESCAPED_UNICODE);          
+    }  
+ 
+    public function vLoadItem($args,$post=null) {
+       $item_id=$args[0];
+       $p = strlen($post)==null ?  array() : json_decode($post,true)  ;
+       
+       $store_id= intval($p['store'] );
+       $pricetype=  strlen($p['pt'])>0 ? $p['pt']   : 'price1';
+       
+       $item =   \App\Entity\Item::load($item_id) ;
+       $ret = [];
+       if($item != null) {
+          $ret['item_id'] = $item_id;   
+          $ret['itemname'] = $item->itemname;   
+          $ret['price'] = $item->getPrice($pricetype,$store_id);   
+          $ret['lastpartion'] = $item->getLastPartion($store_id); //последняя  закупка  
+          $ret['qtystock'] = $item->getQuantity($store_id); // на  складе  
+          $ret['item_code'] = $item->item_code;   
+
+       }
+                                 
+       
+       return json_encode($ret, JSON_UNESCAPED_UNICODE);          
+    }  
+ 
+    
+    public function vSaveNewitem($args,$post=null) {
+        
+       $post=json_decode($post) ; 
+       
+       $item = new  \App\Entity\Item()  ;
+       $item->itemname = $post->itemname;
+       $item->item_code = $post->item_code;
+       $item->msr = $post->msr;
+       $item->manufacturer = $post->brand;
+       $item->cat_id = $post->cat_id;
+       
+       
+       
+        if (strlen($item->item_code) > 0 && System::getOption("common", "nocheckarticle") != 1) {
+            $code = \App\Entity\Item::qstr($this->_item->item_code);
+            $cnt = \App\Entity\Item::findCnt("item_id <> {$item->item_id} and item_code={$code} ");
+            if ($cnt > 0) {
+                    return json_encode(array('error'=>'Такий артикул вже існує'), JSON_UNESCAPED_UNICODE);     
+            }
+        }       
+       
+        if (strlen($item->item_code) == 0 && System::getOption("common", "autoarticle") == 1) {
+             $item->item_code = \App\Entity\Item::getNextArticle();
+        }          
+  
+        $itemname = \App\Entity\Item::qstr($item->itemname);
+        $code = \App\Entity\Item::qstr($item->item_code);
+        $cnt = \App\Entity\Item::findCnt("item_id <> {$item->item_id} and itemname={$itemname} and item_code={$code} ");
+        if ($cnt > 0) {
+   
+            return json_encode(array('error'=>'ТМЦ з такою назвою і артикулом вже існує'), JSON_UNESCAPED_UNICODE);     
+              
+        }       
+       
+       $item->save() ;
+       
+       $ret=array('item_id'=>$item->item_id) ;
+       
+       return json_encode($ret, JSON_UNESCAPED_UNICODE);          
+    }  
+      //загрузка  категорий  и брендов
+    public  function vLoadLists($args,$post){
+         
+         $ret = [];
+         
+         $cats =  \App\Entity\Category::getList() ;
+         $brands = \App\Entity\Item::getManufacturers(true) ;
+         
+         $ret['cats'] =  \App\Util::tokv($cats) ;
+         $ret['brands'] =  \App\Util::tokv($brands) ;
+          
+         return json_encode($ret, JSON_UNESCAPED_UNICODE);   
+     } 
+  
+
     
 }
 

@@ -39,7 +39,8 @@
 <text>{{tovar_name}}</text>     
  
  <row>
-  <col align="right" length="22" >{{quantity}}</col>
+  <col align="right" length="14" >{{quantity}}</col>
+  <col align="right" length="8" >{{price}}</col>
   <col align="right" length="10" >{{amount}}</col>
 </row>
  

@@ -97,14 +97,7 @@ class ARMFood extends \App\Pages\Base
         //панель статуса,  просмотр
         $this->orderlistpan->add(new Panel('statuspan'))->setVisible(false);
 
-        $sf = $this->orderlistpan->statuspan->add(new Form('statusform'));
-        $sf->add(new  SubmitButton('bedit'))->onClick($this, 'onStatus');
-
-        $sf->add(new  SubmitButton('bpay'))->onClick($this, 'onStatus');
-
-        $sf->add(new  SubmitButton('bclose'))->onClick($this, 'onStatus');
-        $sf->add(new  SubmitButton('brefuse'))->onClick($this, 'onStatus');
-
+     
 
         $this->orderlistpan->statuspan->add(new \App\Widgets\DocView('docview'))->setVisible(false);
 
@@ -305,19 +298,58 @@ class ARMFood extends \App\Pages\Base
         $doc = $row->getDataItem();
         $row->add(new ClickLink('docnumber', $this, 'OnDocViewClick'))->setValue($doc->document_number);
         $row->add(new Label('state', Document::getStateName($doc->state)));
-        $row->add(new Label('docdate', H::fd($doc->document_date)));
+      //  $row->add(new Label('docdate', H::fd($doc->document_date)));
 
         $row->add(new Label('docamount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
         
         $row->add(new Label('docnotes', $doc->notes));
         $row->add(new Label('tablenumber', $doc->headerdata['table']));
-        $row->add(new Label('wp'))->setVisible($doc->payamount > $doc->payed);
-        $row->add(new Label('isdel'))->setVisible($doc->headerdata['delivery'] > 0);
+        $row->add(new Label('rtlist'));
+        $t ="<table   style=\"font-size:smaller\"> " ;
+        
+        $tlist=  $doc->unpackDetails('detaildata')  ;
+        
+        foreach($tlist as $prod ) {
+           $t .="<tr> " ;            
+           $t .="<td style=\"padding:2px\" >{$prod->itemname} </td>" ;            
+           $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->quantity) ."</td>" ;            
+           $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->price) ."</td>" ;            
+           $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->quantity * $prod->price) ."</td>" ;            
+           $t .=  ($prod->myself==1 ? "<td style=\"padding:2px\"> <i class=\"fa fa-bag-shopping\"></i>  </td>" : "<td style=\"padding:2px\">   </td>"   )    ;            
+           $t .="</tr> " ;            
+        }
+        
+        $t .="</table> " ;
+        
+        $row->rtlist->setText($t,true);
+        
+ 
+        $row->add(new ClickLink('brpay', $this, 'OnStatus')) ;
+        $row->add(new ClickLink('bredit', $this, 'OnStatus')) ;
+        $row->add(new ClickLink('brclose', $this, 'OnStatus')) ;
+        $row->add(new ClickLink('brrefuse', $this, 'OnStatus')) ;
+        
+        $row->brpay->setVisible(false);
+        $row->brclose->setVisible(false);
+        $row->brrefuse->setVisible(false);
+        $row->bredit->setVisible(false);
 
-        if ($doc->document_id == $this->_doc->document_id) {
-            $row->setAttribute('class', 'table-success');
+        if ($doc->state == Document::STATE_DELIVERED && $doc->payamount <= $doc->payed) {
+
+            $row->brclose->setVisible(true);
         }
 
+        if ($doc->state < 4 || $doc->state == Document::STATE_INPROCESS || $doc->state == Document::STATE_READYTOSHIP) {
+            $row->bredit->setVisible(true);
+            $row->brrefuse->setVisible(true);
+        }
+        if ($doc->payamount > $doc->payed && $doc->state > 4 && $doc->state != Document::STATE_CLOSED && $doc->state != Document::STATE_FAIL) { //к  оплате
+            $row->brpay->setVisible(true);
+        }
+        if ($doc->hasPayments()  || $doc->hasPayments() ) { //оплачено
+            $row->bredit->setVisible(false);
+            $row->brrefuse->setVisible(false);
+        }
     }
 
     public function updateorderlist($sender) {
@@ -547,33 +579,8 @@ class ARMFood extends \App\Pages\Base
 
     public function OnDocView() {
         $this->orderlistpan->statuspan->setVisible(true);
-        $this->orderlistpan->statuspan->statusform->setVisible(true);
 
-        $sf = $this->orderlistpan->statuspan->statusform;
-
-        $sf->bedit->setVisible(false);
-
-        $sf->bpay->setVisible(false);
-        $sf->bclose->setVisible(false);
-        $sf->brefuse->setVisible(false);
-
-        if ($this->_doc->state == Document::STATE_DELIVERED && $this->_doc->payamount <= $this->_doc->payed) {
-
-            $sf->bclose->setVisible(true);
-        }
-
-        if ($this->_doc->state < 4 || $this->_doc->state == Document::STATE_INPROCESS || $this->_doc->state == Document::STATE_READYTOSHIP) {
-            $sf->bedit->setVisible(true);
-            $sf->brefuse->setVisible(true);
-        }
-        if ($this->_doc->payamount > $this->_doc->payed && $this->_doc->state > 4 && $this->_doc->state != Document::STATE_CLOSED && $this->_doc->state != Document::STATE_FAIL) { //к  оплате
-            $sf->bpay->setVisible(true);
-        }
-        if ($this->_doc->hasPayments()  || $this->_doc->hasPayments() ) { //оплачено
-            $sf->bedit->setVisible(false);
-            $sf->brefuse->setVisible(false);
-        }
-
+     
 
         $this->orderlistpan->statuspan->docview->setDoc($this->_doc);
         $this->orderlistpan->orderlist->Reload(false);
@@ -582,11 +589,11 @@ class ARMFood extends \App\Pages\Base
     }
 
     public function onStatus($sender) {
-        if ($sender->id == 'bedit') {
+        $this->_doc = Document::load($sender->getOwner()->getDataItem()->document_id);
+         
+        if ( strpos($sender->id,  'bredit') === 0) {
             $this->orderlistpan->setVisible(false);
             $this->orderlistpan->statuspan->setVisible(false);
-            //   $this->orderlistpan->statuspan->docview->setVisible(false);
-            //   $this->orderlistpan->statuspan->statusform->setVisible(false);
             $this->docpanel->setVisible(true);
             $this->docpanel->listsform->clean();
 
@@ -614,15 +621,15 @@ class ARMFood extends \App\Pages\Base
             $this->calcTotal();
             return;
         }
-        if ($sender->id == 'bclose') {
+        if (strpos($sender->id , 'brclose') === 0) {
             $this->_doc->updateStatus(Document::STATE_CLOSED);
 
         }
-        if ($sender->id == 'brefuse') {
+        if (strpos($sender->id , 'brrefuse') === 0) {
             $this->_doc->updateStatus(Document::STATE_FAIL);
 
         }
-        if ($sender->id == 'bpay') {
+        if (strpos($sender->id , 'brpay') === 0) {
 
             $this->docpanel->setVisible(true);
 
@@ -664,7 +671,7 @@ class ARMFood extends \App\Pages\Base
 
             return;
         }
-        $this->orderlistpan->statuspan->setVisible(false);
+     //   $this->orderlistpan->statuspan->setVisible(false);
 
 
         $this->updateorderlist(null);
