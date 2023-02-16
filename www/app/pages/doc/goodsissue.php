@@ -330,6 +330,10 @@ class GoodsIssue extends \App\Pages\Base
                         $this->calcPay();                     
                     }
                 }
+            }  else {
+                if(  intval($common['paytypeout']) == 1) {
+                    $this->setWarn('Накладну слід створювати на  підставі   рахунку-фактуры') ;
+                }
             }
         }
        
@@ -783,6 +787,9 @@ class GoodsIssue extends \App\Pages\Base
     }
 
     private function calcPay() {
+    
+        $common = System::getOptions("common");
+
         $total = $this->docform->total->getText();
         $disc = $this->docform->paydisc->getText();
         if($disc >0){
@@ -800,6 +807,10 @@ class GoodsIssue extends \App\Pages\Base
             $total -= $prepaid;
         }
         //внесена  оплата
+        if(  intval($common['paytypeout']) == 2) {
+           $total = 0; 
+        }        
+        
         $this->docform->editpayed->setText(H::fa($total));
         $this->docform->payed->setText(H::fa($total));
 
