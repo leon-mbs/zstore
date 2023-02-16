@@ -54,10 +54,11 @@
                             <div class="ribbon-wrap" zippy="saction">
                                 <div class="ribbon bg-warning">Акцiя</div>
                             </div>
-
+                             {{^nouseimages}}
                             <a zippy="simage" data-toggle="lightbox" data-gallery="simage">
                                 <img class="card-img-top"/>
                             </a>
+                             {{/nouseimages}}
                             <div class="card-body p-2 d-flex card-custom-body">
                                 <b class="card-custom-title"><a class="card-title card-link text-dark  clip" zippy="scatname"></a></b>
                                 <div>
@@ -88,7 +89,9 @@
                     <div class="row">
                         <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" zippy="rlist">
                             <div class="card h-100">
+                             {{^nouseimages}}
                                 <a zippy="rimage"><img class="card-img-top"></a>
+                                 {{/nouseimages}}
                                 <div class="card-body p-2">
                                     <a class="card-title card-link text-dark  clip" zippy="rname"></a>
                                 </div>
