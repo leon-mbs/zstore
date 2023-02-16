@@ -77,5 +77,13 @@ class IncomeMoney extends Document
     protected function getNumberTemplate() {
         return 'ПКО-000000';
     }
+    
+
+    public function getRelationBased() {
+        $list = array();
+        $list['GoodsIssue'] = self::getDesc('GoodsIssue');
+     
+        return $list;
+    }     
 
 }
