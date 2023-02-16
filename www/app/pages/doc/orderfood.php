@@ -61,7 +61,7 @@ class OrderFood extends \App\Pages\Base
         $this->docform->add(new Label('exchange', 0));
 
 
-        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
+        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
         $this->docform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', '')));
 
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
@@ -552,11 +552,6 @@ class OrderFood extends \App\Pages\Base
         App::RedirectBack();
     }
 
-    public function OnChangeStore($sender) {
-        //очистка  списка  товаров
-        $this->_itemlist = array();
-        $this->docform->detail->Reload();
-    }
 
     public function OnChangeItem($sender) {
         $id = $sender->getValue();

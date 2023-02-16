@@ -34,7 +34,7 @@ class TransItem extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
 
-        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
+        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
         $this->docform->add(new DropDownChoice('tostore', Store::getList(), H::getDefStore()));
         $this->docform->add(new AutocompleteTextInput('fromitem'))->onText($this, 'OnAutocompleteItem');
         $this->docform->add(new AutocompleteTextInput('toitem'))->onText($this, 'OnAutocompleteItem');
@@ -169,14 +169,6 @@ class TransItem extends \App\Pages\Base
         return !$this->isError();
     }
 
-    public function OnChangeStore($sender) {
-        $this->docform->fromitem->setText('');
-        $this->docform->fromitem->setKey(0);
-        $this->docform->fromquantity->setText('');
-        $this->docform->toitem->setText('');
-        $this->docform->toitem->setKey(0);
-        $this->docform->toquantity->setText('');
-    }
 
     public function OnAutocompleteItem($sender) {
         $store_id = $this->docform->store->getValue();

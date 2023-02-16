@@ -38,7 +38,7 @@ class OutcomeItem extends \App\Pages\Base
         $this->docform->add(new Date('document_date', time()));
         $bid = \App\System::getBranch();
      
-        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
+        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
 
         $tostore = array();
         $conn = \ZDB\DB::getConnect();
@@ -383,13 +383,6 @@ class OutcomeItem extends \App\Pages\Base
       
     }
 
-    public function OnChangeStore($sender) {
-        if ($sender->id == 'store') {
-            //очистка  списка  товаров
-            $this->_itemlist = array();
-            $this->docform->detail->Reload();
-        }
-    }
 
     public function OnItemType($sender) {
         $this->editdetail->edititem->setKey(0);
