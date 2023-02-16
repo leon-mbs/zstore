@@ -73,4 +73,10 @@ class OutcomeMoney extends Document
         return 'ВКО-000000';
     }
 
+    public function getRelationBased() {
+        $list = array();
+        $list['GoodsReceipt'] = self::getDesc('GoodsReceipt');
+     
+        return $list;
+    }    
 }

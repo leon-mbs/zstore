@@ -34,6 +34,7 @@ class GoodsIssue extends \App\Pages\Base
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = 0;
+    private $_rownumber = 1;
     private $_orderid   = 0;
     private $_prevcust  = 0;   // преыдущий контрагент
     private $_changedpos  = false;    
@@ -319,6 +320,16 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
                     }
+                    if ($basedoc->meta_name == 'IncomeMoney') {
+
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        $this->docform->customer->setText($basedoc->customer_name);
+                 
+                       // $this->docform->order->setText(  $basedoc->document_number);
+             
+                    }
+                    
+                    
                     if ($basedoc->meta_name == 'GoodsReceipt') {
 
                          
@@ -350,7 +361,7 @@ class GoodsIssue extends \App\Pages\Base
     public function detailOnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new Label('num', $row->getNumber()));
+        $row->add(new Label('num', $this->_rownumber++));
         $row->add(new Label('tovar', $item->itemname));
 
         $row->add(new Label('code', $item->item_code));
@@ -380,6 +391,7 @@ class GoodsIssue extends \App\Pages\Base
         }
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($item->rowid => $this->_itemlist[$item->rowid]));
+        $this->_rownumber  = 1;
 
         $this->docform->detail->Reload();
         $this->calcTotal();
@@ -410,6 +422,8 @@ class GoodsIssue extends \App\Pages\Base
         foreach ($this->_itemlist as $ri => $_item) {
             if ($_item->bar_code == $code || $_item->item_code == $code  || $_item->bar_code == $code0 || $_item->item_code == $code0 ) {
                 $this->_itemlist[$ri]->quantity += 1;
+                $this->_rownumber  = 1;
+                
                 $this->docform->detail->Reload();
                 $this->calcTotal();
                 $this->CalcPay();
@@ -476,6 +490,7 @@ class GoodsIssue extends \App\Pages\Base
         $item->rowid = $next + 1;
 
         $this->_itemlist[$item->rowid] = $item;
+        $this->_rownumber  = 1;
 
         $this->docform->detail->Reload();
         $this->calcTotal();
@@ -565,6 +580,7 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->_rowid = 0;
 
+        $this->_rownumber  = 1;
 
         $this->docform->detail->Reload();
 
@@ -990,6 +1006,8 @@ class GoodsIssue extends \App\Pages\Base
     public function onOpenItemSel($sender) {
         $this->wselitem->setVisible(true);
         $this->wselitem->setPriceType($this->docform->pricetype->getValue());
+        $this->_rownumber  = 1;
+        
         $this->wselitem->Reload();
     }
 
@@ -1030,6 +1048,7 @@ class GoodsIssue extends \App\Pages\Base
 
             $this->_itemlist[$item->item_id] = $item;
         }
+        $this->_rownumber  = 1;
 
         $this->docform->detail->Reload();
 
