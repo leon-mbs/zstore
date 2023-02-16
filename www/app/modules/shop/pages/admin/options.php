@@ -48,6 +48,7 @@ class Options extends \App\Pages\Base
         $this->shop->add(new CheckBox('usefilter'));
         $this->shop->add(new CheckBox('usefeedback'));
         $this->shop->add(new CheckBox('usemainpage'));
+        $this->shop->add(new CheckBox('nouseimages'));
         $this->shop->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), "0"));
         
         
@@ -82,6 +83,7 @@ class Options extends \App\Pages\Base
         
         $this->shop->usefeedback->setChecked($shop['usefeedback']);
         $this->shop->usemainpage->setChecked($shop['usemainpage']);
+        $this->shop->nouseimages->setChecked($shop['nouseimages']);
         $this->shop->shopname->setText($shop['shopname']);
         $this->shop->email->setText($shop['email']);
         $this->shop->currencyname->setText($shop['currencyname']);
@@ -154,6 +156,7 @@ class Options extends \App\Pages\Base
         
         $shop['usefeedback'] = $this->shop->usefeedback->isChecked() ? 1 : 0;
         $shop['usemainpage'] = $this->shop->usemainpage->isChecked() ? 1 : 0;
+        $shop['nouseimages'] = $this->shop->nouseimages->isChecked() ? 1 : 0;
 
         $file = $sender->logo->getFile();
         if (strlen($file["tmp_name"]) > 0) {

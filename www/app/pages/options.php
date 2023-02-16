@@ -45,94 +45,111 @@ class Options extends \App\Pages\Base
         
   
         $this->common->add(new DropDownChoice('phonel', array('10' => '10', '12' => '12'), '10'));
-        $pt = array(
-            "1" => "По останній закупівельній ціні",
-            "2" => "Окремо по кожній закупівельній ціні"
-        );
-        $this->common->add(new DropDownChoice('partiontype', $pt, "1"));
+   
 
-        $this->common->add(new CheckBox('autoarticle'));
-        $this->common->add(new CheckBox('usesnumber'));
-
-        $this->common->add(new CheckBox('useval'));
         $this->common->add(new TextInput('shopname'));
 
-        $this->common->add(new CheckBox('useimages'));
         $this->common->add(new CheckBox('usescanner'));
         $this->common->add(new CheckBox('usemobilescanner'));
         $this->common->add(new CheckBox('usebranch'));
-        $this->common->add(new CheckBox('usecattree'));
         $this->common->add(new CheckBox('showactiveusers'));
         $this->common->add(new CheckBox('showchat'));
 
 
         
-        $this->common->add(new CheckBox('printoutqrcode'));
-        $this->common->add(new CheckBox('nocheckarticle'));
         
-        $this->common->add(new CheckBox('allowminus'));
-        $this->common->add(new CheckBox('noallowfiz'));
         $this->common->add(new CheckBox('capcha'));
-        $this->common->add(new CheckBox('numberttn'));
-        $this->common->add(new TextInput('price1'));
-        $this->common->add(new TextInput('price2'));
-        $this->common->add(new TextInput('price3'));
-        $this->common->add(new TextInput('price4'));
-        $this->common->add(new TextInput('price5'));
-        $this->common->add(new TextInput('defprice'));
 
         $this->common->add(new TextInput('ts_break'));
         $this->common->add(new TextInput('ts_start'));
         $this->common->add(new TextInput('ts_end'));
-        $this->common->add(new TextArea('checkslogan'));
 
+        
         $common = System::getOptions("common");
         if (!is_array($common)) {
             $common = array();
-        }
+        }  
 
         $this->common->qtydigits->setValue($common['qtydigits']);
         $this->common->amdigits->setValue($common['amdigits']);
         $this->common->dateformat->setValue($common['dateformat']);
-        $this->common->partiontype->setValue($common['partiontype']);
         
         $this->common->phonel->setValue($common['phonel']);
 
-        $this->common->price1->setText($common['price1']);
-        $this->common->price2->setText($common['price2']);
-        $this->common->price3->setText($common['price3']);
-        $this->common->price4->setText($common['price4']);
-        $this->common->price5->setText($common['price5']);
-        $this->common->defprice->setText($common['defprice']);
         $this->common->shopname->setText($common['shopname']);
 
-        $this->common->autoarticle->setChecked($common['autoarticle']);
-
-        $this->common->usesnumber->setChecked($common['usesnumber']);
-
-
-        
-        $this->common->printoutqrcode->setChecked($common['printoutqrcode']);
-        $this->common->nocheckarticle->setChecked($common['nocheckarticle']);
         
         $this->common->showactiveusers->setChecked($common['showactiveusers']);
         $this->common->showchat->setChecked($common['showchat']);
-        $this->common->usecattree->setChecked($common['usecattree']);
         $this->common->usescanner->setChecked($common['usescanner']);
         $this->common->usemobilescanner->setChecked($common['usemobilescanner']);
-        $this->common->useimages->setChecked($common['useimages']);
-        $this->common->usebranch->setChecked($common['usebranch']);
-        $this->common->noallowfiz->setChecked($common['noallowfiz']);
-        $this->common->allowminus->setChecked($common['allowminus']);
-        $this->common->capcha->setChecked($common['capcha']);
-        $this->common->numberttn->setChecked($common['numberttn']);
-        $this->common->useval->setChecked($common['useval']);
 
+        $this->common->usebranch->setChecked($common['usebranch']);
+        $this->common->capcha->setChecked($common['capcha']);
+ 
         $this->common->ts_break->setText($common['ts_break'] == null ? '60' : $common['ts_break']);
         $this->common->ts_start->setText($common['ts_start'] == null ? '09:00' : $common['ts_start']);
         $this->common->ts_end->setText($common['ts_end'] == null ? '18:00' : $common['ts_end']);
-        $this->common->checkslogan->setText($common['checkslogan']);
 
+        
+        $this->add(new Form('business'))->onSubmit($this, 'saveBusinessOnClick');
+        $pt = array(
+            "1" => "По останній закупівельній ціні",
+            "2" => "Окремо по кожній закупівельній ціні"
+        );
+        $this->business->add(new DropDownChoice('partiontype', $pt, "1"));
+        $pt = array(
+            "0" => "По факту",
+            "1" => "Передплата",
+            "2" => "Післяплата"
+        );
+        $this->business->add(new DropDownChoice('paytypein', $pt, "1"));
+        $this->business->add(new DropDownChoice('paytypeout', $pt, "1"));
+        $this->business->add(new TextInput('price1'));
+        $this->business->add(new TextInput('price2'));
+        $this->business->add(new TextInput('price3'));
+        $this->business->add(new TextInput('price4'));
+        $this->business->add(new TextInput('price5'));
+        $this->business->add(new TextInput('defprice'));
+        $this->business->add(new CheckBox('allowminus'));
+        $this->business->add(new CheckBox('noallowfiz'));
+        $this->business->add(new CheckBox('useval'));
+        $this->business->add(new CheckBox('printoutqrcode'));
+        $this->business->add(new CheckBox('autoarticle'));
+        $this->business->add(new CheckBox('usesnumber'));
+        $this->business->add(new CheckBox('useimages'));
+        $this->business->add(new CheckBox('numberttn'));
+        $this->business->add(new CheckBox('usecattree'));
+        $this->business->add(new CheckBox('nocheckarticle'));
+        $this->business->add(new TextArea('checkslogan'));
+
+    
+       
+        $this->business->partiontype->setValue($common['partiontype']);
+        $this->business->paytypein->setValue($common['paytypein']);
+        $this->business->paytypeout->setValue($common['paytypeout']);
+        $this->business->price1->setText($common['price1']);
+        $this->business->price2->setText($common['price2']);
+        $this->business->price3->setText($common['price3']);
+        $this->business->price4->setText($common['price4']);
+        $this->business->price5->setText($common['price5']);
+        $this->business->defprice->setText($common['defprice']);
+        $this->business->allowminus->setChecked($common['allowminus']);
+        $this->business->noallowfiz->setChecked($common['noallowfiz']);
+        $this->business->useval->setChecked($common['useval']);
+        $this->business->printoutqrcode->setChecked($common['printoutqrcode']);
+        $this->business->autoarticle->setChecked($common['autoarticle']);
+        $this->business->usesnumber->setChecked($common['usesnumber']);
+        $this->business->useimages->setChecked($common['useimages']);    
+        $this->business->numberttn->setChecked($common['numberttn']);
+        $this->business->usecattree->setChecked($common['usecattree']);
+        $this->business->nocheckarticle->setChecked($common['nocheckarticle']);
+        $this->business->checkslogan->setText($common['checkslogan']);
+      
+        
+        
+        
+        
         //валюты
   
         $this->add(new Form('valform'));
@@ -297,6 +314,7 @@ class Options extends \App\Pages\Base
         
     }
 
+    
     public function saveCommonOnClick($sender) {
         $common = System::getOptions("common");
         if (!is_array($common)) {
@@ -306,55 +324,70 @@ class Options extends \App\Pages\Base
         $common['qtydigits'] = $this->common->qtydigits->getValue();
         $common['amdigits'] = $this->common->amdigits->getValue();
         $common['dateformat'] = $this->common->dateformat->getValue();
-        $common['partiontype'] = $this->common->partiontype->getValue();
         
         $common['phonel'] = $this->common->phonel->getValue();
 
-        $common['price1'] = trim($this->common->price1->getText() );
-        $common['price2'] = trim($this->common->price2->getText() );
-        $common['price3'] = trim($this->common->price3->getText() );
-        $common['price4'] = trim($this->common->price4->getText() );
-        $common['price5'] = trim($this->common->price5->getText() );
-        $common['defprice'] = $this->common->defprice->getText();
         $common['shopname'] = $this->common->shopname->getText();
         $common['ts_break'] = $this->common->ts_break->getText();
         $common['ts_start'] = $this->common->ts_start->getText();
         $common['ts_end'] = $this->common->ts_end->getText();
-        $common['checkslogan'] = trim($this->common->checkslogan->getText() );
-
- 
-        $common['autoarticle'] = $this->common->autoarticle->isChecked() ? 1 : 0;
-
-        $common['usesnumber'] = $this->common->usesnumber->isChecked() ? 1 : 0;
         $common['usescanner'] = $this->common->usescanner->isChecked() ? 1 : 0;
         $common['usemobilescanner'] = $this->common->usemobilescanner->isChecked() ? 1 : 0;
-        $common['useimages'] = $this->common->useimages->isChecked() ? 1 : 0;
 
-        $common['printoutqrcode'] = $this->common->printoutqrcode->isChecked() ? 1 : 0;
-        
-        $common['nocheckarticle'] = $this->common->nocheckarticle->isChecked() ? 1 : 0;
 
         $common['showactiveusers'] = $this->common->showactiveusers->isChecked() ? 1 : 0;
         $common['showchat'] = $this->common->showchat->isChecked() ? 1 : 0;
-        $common['usecattree'] = $this->common->usecattree->isChecked() ? 1 : 0;
         $common['usebranch'] = $this->common->usebranch->isChecked() ? 1 : 0;
-        $common['noallowfiz'] = $this->common->noallowfiz->isChecked() ? 1 : 0;
-        $common['allowminus'] = $this->common->allowminus->isChecked() ? 1 : 0;
-        $common['useval'] = $this->common->useval->isChecked() ? 1 : 0;
         $common['capcha'] = $this->common->capcha->isChecked() ? 1 : 0;
-        $common['numberttn'] = $this->common->numberttn->isChecked() ? 1 : 0;
 
         System::setOptions("common", $common);
 
-        $this->_tvars["useval"] = $common['useval'] == 1;
 
         $this->setSuccess('Збережено');
-        System::setCache('labels', null);
+
         App::Redirect("\\App\\Pages\\Options");
         
     }
 
+     public function saveBusinessOnClick($sender) {
+        $common = System::getOptions("common");
+        if (!is_array($common)) {
+            $common = array();
+        }
+        $common['partiontype'] = $this->business->partiontype->getValue();
+        $common['paytypein'] = $this->business->paytypein->getValue();
+        $common['paytypeout'] = $this->business->paytypeout->getValue();
  
+        $common['price1'] = trim($this->business->price1->getText() );
+        $common['price2'] = trim($this->business->price2->getText() );
+        $common['price3'] = trim($this->business->price3->getText() );
+        $common['price4'] = trim($this->business->price4->getText() );
+        $common['price5'] = trim($this->business->price5->getText() );
+        $common['defprice'] = $this->business->defprice->getText();
+
+        $common['noallowfiz'] = $this->business->noallowfiz->isChecked() ? 1 : 0;
+        $common['allowminus'] = $this->business->allowminus->isChecked() ? 1 : 0;
+        $common['useval'] = $this->business->useval->isChecked() ? 1 : 0;
+        $common['checkslogan'] = trim($this->business->checkslogan->getText() );
+        $common['printoutqrcode'] = $this->business->printoutqrcode->isChecked() ? 1 : 0;
+        $common['autoarticle'] = $this->business->autoarticle->isChecked() ? 1 : 0;
+        $common['usesnumber'] = $this->business->usesnumber->isChecked() ? 1 : 0;
+        $common['useimages'] = $this->business->useimages->isChecked() ? 1 : 0;
+        $common['nocheckarticle'] = $this->business->nocheckarticle->isChecked() ? 1 : 0;
+        $common['numberttn'] = $this->business->numberttn->isChecked() ? 1 : 0;
+        $common['usecattree'] = $this->business->usecattree->isChecked() ? 1 : 0;
+       
+        
+        System::setOptions("common", $common);
+        $this->_tvars["useval"] = $common['useval'] == 1;
+    
+        $this->setSuccess('Збережено');
+
+        App::Redirect("\\App\\Pages\\Options");
+        
+        
+    }
+
     public function onBot($sender) {
         
         

@@ -253,6 +253,10 @@ class GoodsReceipt extends \App\Pages\Base
                         $this->CalcPay();
                     }
                 }
+            }  else {
+                if(  intval($common['paytypein']) == 1) {
+                    $this->setWarn('Накладну слід створювати на  підставі вхідного рахунку') ;
+                }
             }
         }
 
@@ -682,6 +686,8 @@ class GoodsReceipt extends \App\Pages\Base
     }
 
     private function CalcPay() {
+        $common = System::getOptions("common");
+
         $total = $this->docform->total->getText();
         $disc = doubleval($this->docform->disc->getText());
         $delivery = doubleval($this->docform->delivery->getText());
@@ -697,6 +703,10 @@ class GoodsReceipt extends \App\Pages\Base
         }  
         
         
+        
+        if(  intval($common['paytypein']) == 2) {
+           $total = 0; 
+        }        
         $this->docform->editpayed->setText(H::fa($total));
         $this->docform->payed->setText(H::fa($total));
     }
