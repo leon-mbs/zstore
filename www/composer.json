@@ -13,7 +13,7 @@
         "monolog/monolog": "1.26.1",
        
         "dompdf/dompdf": "2.0.3",
-        "firebase/php-jwt": "5.5.1",
+        "firebase/php-jwt": "6.0.0",
         "roave/security-advisories": "dev-master",
         "picqer/php-barcode-generator": "2.2.1",
         "endroid/qr-code": "4.4.7",
