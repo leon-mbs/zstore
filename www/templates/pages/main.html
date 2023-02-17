@@ -8,7 +8,7 @@
     <body>
         {{#winfo}}
 
-        <div class="row">
+        <div class="row  justify-content">
             <div class="col-auto ">
                 <div class="info-box">
                     <span class="info-box-icon bg-info elevation-1"><i class="fa fa-file-invoice "></i></span>
@@ -118,7 +118,7 @@
         <div class="row">
 
             <div   class="col-12  col-lg-4   ">
-                <div   class="card ">
+                <div style="height:250px;"  class="card ">
 
 
                         <div style="width:100%" id="paystructure"></div>
@@ -130,7 +130,7 @@
   
  
            <div   class="col-12  col-lg-4 ">
-                <div   class="card ">
+                <div  style="height:250px;" class="card ">
                     
                         <div style="width:100%" id="paycompare"></div>
                   
@@ -138,10 +138,10 @@
             </div>
          
           <div   class="col-12  col-lg-4 ">
-                <div   class="card ">
+                <div  style="height:250px;" class="card ">
                     <div   class="card-body">
 
-                        <div style="width:100%" id="sellstat"></div>
+                        <div style="width:100%;" id="sellstat"></div>
                     </div>
                 </div>    
             </div>
@@ -334,7 +334,9 @@
           titleTextStyle:{
              "color":fontcolor ,"bold":true
           } ,
-                   
+           chartArea : {
+                       
+          },                
           chartArea:{
              "top":25,"bottom":5,"left":10 , "right":60
           } ,
@@ -374,7 +376,9 @@
           titleTextStyle:{
              "color":fontcolor ,"bold":true
           } ,
-                   
+            chartArea : {
+                     
+          },               
       
                   
           legendTextStyle:{
@@ -417,6 +421,9 @@
           title: 'Реалiзацiя',
           curveType: 'function',
           legend: { position: 'bottom' } ,
+          chartArea : {
+              top:20 ,         
+          },
           backgroundColor: {
             "fill":bgcolor 
           } , 

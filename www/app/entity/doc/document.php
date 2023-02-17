@@ -201,39 +201,7 @@ class Document extends \ZCL\DB\Entity
             $this->headerdata[(string)$child->getName()] = $ch;
         }
 
-        /*
-        $this->detaildata = array();
-
-        //deprecated
-        if (isset($xml->detail)) {
-
-            foreach ($xml->detail->children() as $row) {
-                $_row = array();
-                foreach ($row->children() as $item) {
-                    $_row[(string)$item->getName()] = (string)$item;
-                }
-                $this->detaildata[] = $_row;
-            }
-        }
-        //перепаковываем в новый вариант
-        if (count($this->detaildata) > 0) {
-            $detaildata = array();
-
-            foreach ($this->detaildata as $row) {
-                if ($row['service_id'] > 0) {
-                    $detaildata[$row['service_id']] = new \App\Entity\Service($row);
-                } else {
-                    if ($row['stock_id'] > 0) {
-                        $detaildata[$row['stock_id']] = new \App\Entity\Stock($row);
-                    } else {
-                        $id = (strlen($row['item_id']) > 0 ? $row['item_id'] : '');
-                        $detaildata[$id] = new \App\Entity\Item($row);
-                    }
-                }
-            }
-            $this->packDetails('detaildata', $detaildata);
-            
-        }  */
+        
 
 
     }

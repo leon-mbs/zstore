@@ -139,21 +139,55 @@ class Pay extends \ZCL\DB\Entity
 
     //начисление  (списание)  бонусов
     public static function addBonus($document_id ,$amount =0 ) {
-    
+         
         $conn = \Zdb\DB::getConnect();
 
         $customer_id = (int)$conn->GetOne("select  customer_id  from  documents where  document_id=" . $document_id);
-
-        $c = \App\Entity\Customer::load($customer_id);
-        if ($c == null) {
+        if($customer_id ==0) {
             return;
         }
-
-      //  $cnt = (int)$conn->GetOne("select  count(*)  from paylist_view where  customer_id=" . $customer_id);
-
-
+        $c = \App\Entity\Customer::load($customer_id);
         $doc = \App\Entity\Doc\Document::load($document_id);
-        //$bonus = $c->getBonus();
+        $pastbonus = intval($doc->getBonus() ); 
+        if($pastbonus != 0) {
+            return; //уже  начисленые
+        }
+
+        if($doc->meta_name == 'ReturnIssue')  { //возврат
+
+            if($doc->parent_id == 0) return;
+            $parent = \App\Entity\Doc\Document::load($doc->parent_id);
+            $parentbonus = intval($parent->getBonus() ); 
+            
+            if($parentbonus==0)   return;
+            if($parent->headerdata['exch2b'] > 0  ){
+                $parentbonus = $parentbonus - $parent->headerdata['exch2b'];
+            }
+            $k = 1 - ($parent->amount - $doc->amount) / $parent->amount;
+            
+            $retbonus = intval($parentbonus * $k) ;// доля     
+
+            if($retbonus > 0) {
+                $pay = new \App\Entity\Pay();
+
+                $pay->document_id = $document_id;
+                $pay->bonus = 0 -  $retbonus;
+                $pay->paytype = self::PAY_BONUS;
+                $pay->paydate = time();
+                $pay->user_id = \App\System::getUser()->user_id;
+             
+                $pay->save();
+               
+            }
+            
+            return;
+        }
+        
+        if(  in_array($doc->meta_name,['GoodsIssue','ServiceAct','Invoice','POSCheck','Order','OrderFood']) == false)  {
+            return;
+        }
+        
+        $bonus = 0;
         
         if ($doc->headerdata['bonus'] > 0 ) { //списание
         
