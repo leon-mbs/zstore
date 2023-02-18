@@ -28,6 +28,8 @@ class Main extends Base
 
         $this->_tvars['curversion'] = System::CURR_VERSION;
         $this->_tvars['curversionbd'] = System::getOptions('version',false);
+        $qtymounths = $this->_tvars['qtymounts'] = System::getOptions('common');
+        $qtym = $qtymounths["qtymounths"];
 
         $user = System::getUser();
 
@@ -174,7 +176,7 @@ class Main extends Base
         $dt = new \App\DateTime();
 
         $to = $dt->startOfMonth()->getTimestamp();
-        $dt = $dt->subMonth(12);
+        $dt = $dt->subMonth($qtym);
         $from = $dt->startOfMonth()->getTimestamp();
 
         $names = \App\Entity\IOState::getTypeList();
@@ -213,7 +215,7 @@ class Main extends Base
 
         $pc=[];
         
-        $mlist = Util::genPastMonths(12);
+        $mlist = Util::genPastMonths($qtym);
 
         foreach ($mlist as $m) {
             $sql = " 
@@ -247,7 +249,7 @@ class Main extends Base
         $ts = [];
       //  $ts[] = ['Month','Goods','Service'];
 
-        $mlist = Util::genPastMonths(12);
+        $mlist = Util::genPastMonths($qtym);
 
         foreach ($mlist as $m) {
 
