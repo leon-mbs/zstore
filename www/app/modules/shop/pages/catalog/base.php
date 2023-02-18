@@ -54,7 +54,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["custname"] = System::getSession()->custname;
         
         
-        $this->_tvars["currencyname"] = $shop["currencyname"];
+        $this->_tvars["currencyname"] = $shop["currencyname"] ?? '';
         $this->_tvars["basketcnt"] = false;
         $this->_tvars["comparecnt"] = false;
         $this->_tvars["phone"] = strlen($shop["phone"]) > 0 ? $shop["phone"] : false;
