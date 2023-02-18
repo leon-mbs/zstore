@@ -174,7 +174,7 @@ class Main extends Base
         $dt = new \App\DateTime();
 
         $to = $dt->startOfMonth()->getTimestamp();
-        $dt = $dt->subMonth(6);
+        $dt = $dt->subMonth(12);
         $from = $dt->startOfMonth()->getTimestamp();
 
         $names = \App\Entity\IOState::getTypeList();
@@ -213,7 +213,7 @@ class Main extends Base
 
         $pc=[];
         
-        $mlist = Util::genPastMonths(6);
+        $mlist = Util::genPastMonths(12);
 
         foreach ($mlist as $m) {
             $sql = " 
@@ -247,7 +247,7 @@ class Main extends Base
         $ts = [];
       //  $ts[] = ['Month','Goods','Service'];
 
-        $mlist = Util::genPastMonths(6);
+        $mlist = Util::genPastMonths(12);
 
         foreach ($mlist as $m) {
 
