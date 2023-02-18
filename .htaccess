@@ -1,0 +1,12 @@
+AddDefaultCharset utf-8
+DirectoryIndex index.php
+
+#php_value error_reporting 5
+ 
+RewriteEngine on
+RewriteBase / 
+
+RewriteCond %{REQUEST_FILENAME} !-f
+ 
+RewriteRule ^(\/index\.php.{0,}|[-#a-zA-Z0-9\/_]+)$ /index.php [L,QSA]
+

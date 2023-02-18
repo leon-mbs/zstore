@@ -1,0 +1,120 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <div class="row">
+            <div class="col-12 col-xl-10   ">
+
+                <h3>Імпорт замовлень</h3>
+                <a zippy="checkconn"><i class="fa fa fa-sync"></i> Перевiрити  з'єднання</a>
+ 
+
+                <div class="navbar nav">
+                    <form zippy="filter" class="form-inline ">
+
+                        <input onclick="$('#loader1').removeAttr('style')" type="submit" class=" mr-2 btn btn-outline-success  "
+                               value="Завантажити">
+                         <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Замовлення  мають  бути в  статусi Pending"></i>
+                  
+                        <div id="loader1" style="display:none" class="spinner-border spinner-border-sm"></div>
+                    </form>
+                </div>
+
+
+                <table class="table   table-sm   ">
+                    <tr>
+
+
+                        <th>Номер</th>
+                        <th>Дата</th>
+
+                        <th>Клієнт</th>
+                        <th class="text-right">Сума</th>
+                        <th> Коментар</th>
+
+
+                    </tr>
+                    <tr zippy="neworderslist">
+
+
+                        <td zippy="number"></td>
+                        <td class="text-nowrap" zippy="date"></td>
+
+                        <td zippy="customer"></td>
+                        <td zippy="amount" class="text-right"></td>
+                        <td zippy="comment"></td>
+
+
+                    </tr>
+
+                </table>
+                <div class="navbar nav">
+                    <a zippy="importbtn" class="  btn btn-outline-success  ">Імпортувати</a>
+
+                </div>
+            </div>
+            <div class="col-12 col-xl-10    ">
+
+                <h3>Експорт статусів в магазин</h3>
+                <div class="navbar nav">
+                    <a zippy="refreshbtn" class="  btn btn-outline-success  ">Оновити</a>
+
+                </div>
+                <form zippy="updateform">
+                    <table class="table   table-sm   ">
+                        <tr>
+                            <th style="width:30px"><input type="checkbox" id="chall" onchange="chclick()"></th>
+                            <th>Номер</th>
+                            <th>WC Номер</th>
+                            <th>Дата</th>
+
+                            <th>Клієнт</th>
+                            <th class="text-right">Сума</th>
+                            <th>Статус</th>
+
+
+                        </tr>
+                        <tr zippy="orderslist">
+                            <td><input type="checkbox" zippy="ch" class="chc"></td>
+                            <td zippy="number2"></td>
+                            <td zippy="number3"></td>
+                            <td class="text-nowrap" zippy="date2"></td>
+
+                            <td zippy="customer2"></td>
+                            <td zippy="amount2" class="text-right"></td>
+                            <td zippy="state"></td>
+
+
+                        </tr>
+
+                    </table>
+
+
+                    <div class="ml-2 form-group row  ">
+                        <label for="estatus">Статус в магазині </label>
+
+                        <select class="  mr-2" zippy="estatus">
+                            <option value="0">Не обрано</option>
+                        </select>
+
+                        <input onclick="$('#loader3').removeAttr('style')" type="submit" class="  btn btn-outline-success  "
+                               value="Відправити">
+                        <div id="loader3" style="display:none" class="spinner-border spinner-border-sm"></div>
+
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+        <script>
+            function chclick() {
+                var ch = $("#chall").prop('checked');
+                $('.chc').prop('checked', ch)
+            }
+
+
+        </script>
+    </body>
+</html>

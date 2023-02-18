@@ -1,0 +1,374 @@
+<html>
+
+    <head>
+    <title> Облiк часу  по  задачах  </title>
+
+    </head>
+
+    <body>
+   {{={| |}=}}   
+          
+        <div class="row"  id="vapp" >
+            <div class="col-12 "  >
+ 
+
+
+                <h3>Облiк часу  по  задачах</h3>
+                <div class="navbar nav">
+                    <form zippy="filter" class="form-inline ">
+
+                        <label for="from">З </label>
+                        <input v-model="from" type="date" class="form-control mr-sm-2  "  style="width:110px">
+
+
+                        <label for="to"> по </label>
+                        <input v-model="to" type="date" class="form-control mr-sm-2 " style="width:110px" >
+                        <label   for="searchemp">виконавець </label>
+                        <select v-model="user_id" class="form-control  mr-2  " >
+                            <option value="0">Не обрано</option>
+                            <option v-for="u in users" :value="u.key">{{u.value}}</option>
+                         
+                            
+                        </select> 
+                        <label for="searchproject"> проект </label>
+                        <select v-model="project_id" class="form-control mr-2" zippy="searchproject">
+                            <option value="0">Не обрано</option>
+                            <option v-for="p in projects" :value="p.key">{{p.value}}</option>
+                        </select>
+                        <input   v-on:click.prevent="onFilter" type="button" class="  btn btn-success  " value="ОК">
+
+                    </form>
+                </div>
+
+            </div>
+            <div class="col-12 "  >
+                   <ul class="nav nav-tabs">
+                  
+                       <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#ttable">Облiк часу</a>
+                      </li>
+                      
+                       <li class="nav-item">
+                        <a class="nav-link " data-toggle="tab" href="#tstat"> Статистика </a>
+                      </li>
+                      
+                  </ul>
+                <div class="tab-content"  >   
+                    <div class="tab-pane  show active "  id="ttable"> 
+                      <div class="col-12 col-md-8 col-xl-10">       
+               
+                       <a v-on:click.prevent="add"  class="btn btn-info mt-2 mb-3">Додати</a>
+
+          <table class="table   table-sm table-hover">
+                                <tr>
+
+                                    <th>Дата</th>
+                                    <th>Час</th>
+
+                                    <th>Виконавець</th>
+                                    <th>Завдання</th>
+
+                                    <th>Проект</th>
+                                    <th>Коментар</th>
+
+                                    <th ></th>
+
+
+                                </tr>
+                                <tr v-for="t in times" >
+
+                                    <td >{{t.date}}</td>
+                                    <td >{{t.time}}</td>
+
+                                    <td >{{t.user}}</td>
+                                    <td >{{t.issue}}</td>
+                                    <td >{{t.project}}</td>
+                                    <td >{{t.notes}}</td>
+
+                                    <td>
+
+                                        
+                                        <a  v-on:click.prevent="del(t.id)"  title="Видалити"><i class="fa fa-trash"></i></a>
+
+                                    </td>
+
+                                </tr>
+
+                            </table>
+      
+                       </div>     
+                         
+                    </div>
+                   <div class="tab-pane    "  id="tstat"> 
+                     <div class="col-12 col-md-8 col-xl-5">       
+                        <h4>Статистика </h4>
+                       <table   class="table   table-sm     ">
+
+                        <tr v-for="s in stat"  >
+                            <td >{{s.username}}</td>
+                            <td >{{s.project_name}}</td>
+                            <td style="width:100px;"  class="text-right">{{s.amount}}</td>
+                        </tr>
+                        <tr>
+                            <td  colspan="2" class="text-right text-bold">Всього:</td>
+                            <td  class="text-right  text-bold">{{total}}</td>
+                        </tr>
+                    </table>
+
+                </div>   
+                   </div>
+                </div>
+            </div>
+       
+     <div class="modal" tabindex="-1" id="editmodal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+ 
+      <div class="modal-body">
+
+                    <h4 v-show="edited>0">Редагування</h4>
+                    <h4 v-show="edited==0">Новий запис</h4>    
+                <form zippy="editform">
+                    <div class="form-group  "  v-show="isadmin">
+                        <label   for="edituser">виконавець </label>
+                        <select v-model="edituser" class="form-control    " >
+
+                                <option value="0">Не обрано</option>
+                        <option v-for="u in editusers" :value="u.key">{{u.value}}</option>
+                         
+                            
+                        </select> 
+                    </div>
+                    <div class="form-group  ">
+                        <label for="editproject">Проект</label>
+                        <select   v-model="editproject" class="form-control  "  >
+                            <option value="0">Не обрано</option>
+                             <option v-for="p in editprojects" :value="p.key">{{p.value}}</option>
+                                             
+                        </select>
+                    </div>
+                    <div class="form-group  ">
+                        <label for="editissue">Завдання</label>
+                        <select v-model="editissue" class="form-control   "  >
+                                   <option value="0">Не обрано</option>
+                      <option v-for="i in editissues" :value="i.key">{{i.value}}</option>
+                      
+                        </select>
+                    </div>
+                    <div class="form-group  ">
+                        <label for="editdate">Дата</label>
+                         <input v-model="editdate" type="date"  class="form-control" >
+                    </div>
+                    <div class="form-group  ">
+                        <label for="edittime">Годин</label>
+                        <input v-model="edittime" required="required" pattern="[0-9,\.]+" style="width:100px;" zippy="ehours" class="form-control qtyprice">
+                    </div>
+                    <div class="form-group  ">
+                        <label for="editnotes">Коментар</label>
+                        <input v-model="editnotes" class="form-control">
+                    </div>
+             
+
+                </form>
+                 </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Скасувати</button>
+                <button v-on:click.prevent="save" type="button" class="btn btn-primary">Зберегти</button>
+              </div>
+            </div>
+          </div>
+        </div>        
+            
+       
+    </div>
+      {|={{ }}=|}        
+    
+
+  <script>
+     
+     var vapp = new Vue({
+            el: '#vapp',
+                data() { return  {
+                   
+                  isadmin:true,
+                  user_id:0,
+                  project_id:0,
+                  users:[],
+                  from:"",
+                  to:"",
+                  today:"",
+               
+                  stat:[] ,
+                  times:[] ,
+                  projects:[] ,
+                   
+                  total:0 ,
+                  edited:0 ,
+                  editnotes:"" ,
+                  editdate:"" ,
+                  editproject:0 ,
+                  editissue:0 ,
+                  edituser:0 ,
+                  edittime:0 ,
+                  editprojects:[],
+                  editissues:[],
+                  editusers:[],
+                  
+                  
+                     
+              } 
+          }            
+    ,         
+       
+           methods: {
+                  init:function(){
+                    
+                      callPageMethod('init',[], null,(data)=> 
+                      {
+                           let tmp =   JSON.parse(data)  
+                           this.user_id = tmp.user_id; 
+
+                           this.isadmin = tmp.isadmin; 
+                           this.users = tmp.users; 
+                           this.editusers = tmp.users; 
+                           this.projects = tmp.projects; 
+                           this.to = tmp.to; 
+                           this.from = tmp.from; 
+                           this.today = tmp.today; 
+                     
+                           this.loaddata() ;       
+                          
+                      });
+                                
+                              
+                } ,
+                
+               loaddata:function(){
+                 
+                  let body={
+                     user_id:this.user_id ,
+                     project_id:this.project_id ,
+                     from:this.from  ,
+                     to:this.to 
+                  } 
+                     
+                  callPageMethod('loaddata',[], JSON.stringify(body),(data)=> 
+                  {
+                       let tmp =   JSON.parse(data)  
+                       this.stat = tmp.stat 
+                       this.times = tmp.times 
+                       this.total = tmp.total 
+       
+                       
+                  });
+                      
+          
+               } ,    
+               
+               onFilter:function(){
+                
+                    this.loaddata() ;       
+          
+               } ,    
+               del:function(id){
+                
+                  callPageMethod('del',[id], null,(data)=> 
+                  {
+                       this.loaddata() ;  
+                  
+                  });     
+          
+               } ,    
+               
+                
+               add:function(){
+                
+                  this.edited = 0;
+                  this.edituser = this.user_id;
+                  this.editproject = 0;
+                  this.editissue = 0;
+                  this.editnotes = "";
+                  this.edittime = 0;
+                  this.editdate = this.today;
+
+
+
+                  $('#editmodal').modal('show')   
+
+               } ,    
+               save:function(i){
+                
+                     let body={
+                     user_id:this.edituser ,
+                     issue_id:this.editissue ,
+                     notes:this.editnotes ,
+                     time:this.edittime ,
+                     date:this.editdate ,
+
+                     
+                  } 
+                     
+                  callPageMethod('save',[this.edited], JSON.stringify(body),(data)=> 
+                  {
+                         if(data=="") {
+                            this.loaddata() ;                               
+                            $('#editmodal').modal('hide')   
+                         } else {
+                             toastr.error(data,'',{'timeOut':'5000'})
+                         }
+                         
+                      
+
+                  });        
+                   
+                  
+          
+               }      
+               
+           },    
+       
+          watch:   { 
+              edituser(newVal, oldVal) { 
+                 
+                  this.editprojects =[] 
+                  this.editproject =0 
+                  this.editissue =0 
+                  if(newVal >0) {
+                      callPageMethod('loadprojects',[newVal], null,(data)=> 
+                      {
+                            let tmp =   JSON.parse(data)  
+                            this.editprojects = tmp
+
+                      
+                      }); 
+                  }
+                  
+              } ,
+              editproject(newVal, oldVal) { 
+                 
+                  this.editissues =[] 
+                  this.editissue =0 
+                  if(newVal > 0) {
+                
+                      callPageMethod('loadissues',[newVal], null,(data)=> 
+                      {
+                             
+                            let tmp =   JSON.parse(data)  
+                            this.editissues = tmp
+                      
+                      }); 
+                  }    
+              } ,
+              
+           }  
+         , 
+          mounted: function(){
+             
+              this.init();      
+              
+         }             
+        })    
+  
+  </script>  
+ </body>   
+</html>

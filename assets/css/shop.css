@@ -1,0 +1,193 @@
+ body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f1f1f1;
+  position: relative;
+  padding-bottom: 0px;
+  min-height: 100vh;
+ }
+.container-fluid {
+  height: 65px;
+ 
+  
+}
+
+.container-fluid-img img {
+  height: 65px;
+ 
+  
+}
+
+.logo-text:hover {
+  text-decoration: none !important;
+}
+
+a.container-fluid-img   {
+   font-size: 24px; 
+  
+}
+.wrapper {
+  min-height: 100vh;
+}
+.content {
+  flex: 1 0 auto;
+}
+
+.ribbon-wrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.ribbon {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 2px 15px;
+  color: #000;
+}
+  
+ .header {
+   border-bottom: 1px solid #ced4da;
+   background-color: #eee;    
+ }
+ .footer {
+  text-align: center;
+  background-color: #333;
+  color: #fff;
+  
+  flex: 0 0 auto;
+  bottom: 0;
+ 
+}
+
+.footer   a {
+    color: #fff;
+    text-decoration: none;
+}
+
+ 
+.card-custom-title {
+  flex: 1 1 auto;
+}
+.card-custom-body {
+  flex-direction: column;
+  height: 100%;
+}
+.card-custom-card {
+  height: 100%;
+}
+.searchform-search {
+  cursor: pointer;
+  border-radius: 0 4px 4px 0;
+}
+ 
+
+.newlist {
+
+}
+
+
+ .filtertiem {
+    color:black; 
+
+ }
+ 
+ .fa-star {
+   color: orange; 
+ }
+
+.card-body {
+  padding: 0; 
+}
+
+a:not([href]) {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:not([href]):hover {
+  color: inherit;
+  text-decoration: none;
+}
+
+.row  {
+    color:black; 
+
+ }
+
+ 
+ h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+ color: #17a2b8;
+}
+
+.form-group {
+ color: #17a2b8;
+} 
+
+.form-inline {
+ color: #17a2b8;
+}  
+ 
+ 
+ 
+ .rating-symbol-foreground {
+    color: red;
+ }
+ 
+ .ctable td {
+    padding: 2px;
+
+}
+
+.ctable th {
+    padding: 2px;
+    text-align: center;
+}
+
+.price-arrow{
+     font-size:14px;
+   
+}
+
+.list-group-item-action {
+
+  color: #495057;
+  text-align: inherit;
+  background-color: #343a40;
+  color: #fff;
+}
+.list-group-item + .list-group-item {
+  border-top-width: 1px;
+  /* border-top-style: dashed; */
+  border-top-color: #fff;
+}
+
+.list-group-item {
+  padding:04px;
+}
+
+.compareimage {
+   height:256px  ; 
+}
+.comparetable {
+   
+}
+.comparetable td {
+    padding:8px;
+} 
+.comparetable th {
+    padding:8px;
+} 
+
+a.clip {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height:42px /* fallback */
+}

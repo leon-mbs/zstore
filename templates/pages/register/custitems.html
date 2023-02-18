@@ -1,0 +1,232 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="/assets/css/ekko-lightbox.css">
+        <script src="/assets/js/ekko-lightbox.js" type="text/javascript"></script>
+            <title> Товари у постачальникiв </title>
+ 
+    </head>
+
+    <body>
+        <div class="row">
+
+            <div class="col-12  " zippy="itemtable">
+                <h3>Товари у постачальникiв               </h3>
+
+                <div class="navbar nav">
+
+                    <form zippy="filter" class="form-inline">
+
+                        <label for="searchkey">Пошук</label>
+                        <input class="form-control mr-2" type="text" zippy="searchkey" onkeydown="onSearch()">
+                        <label for="searchcat">категорія</label>
+
+                        <select class="form-control mr-2" zippy="searchcat">
+                            <option value="0">Не вказано</option>
+                        </select>
+                        <label for="searchcust">постачальник </label>
+
+                        <select class="form-control select2 mr-2" zippy="searchcust">
+                            <option   value="0">Не вказано</option>
+                        </select>
+                 
+   
+                        <input class="btn btn-outline-success  " type="submit" value="ОК">
+
+                    </form>
+                </div>
+                <a zippy="addnew" class="btn btn-success  ">Додати</a>
+               <br> <a zippy="csv">Експорт у Excel</a>&nbsp;&nbsp;&nbsp;&nbsp;                  <a zippy="imports" >Iмпорт</a>
+                  <form zippy="listform">
+                    <table class="table table-hover  table-sm  ">
+                        <tr>
+                            <th><i onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
+                                style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"
+                                    class="fa fa-check-double "></i></th>                    
+                   
+                            <th>Найменування</th>
+
+                            <th>Артикул</th>
+                            <th>Код у постачальника</th>
+                            <th>Постачальник</th>
+                            <th class="text-right  ">Кiл.</th>
+                            <th class="text-right  ">Цiна </th>
+                         
+                            <th>Оновлено</th>
+                            <th></th>
+                           
+                        </tr>
+                        <tr zippy="itemlist">
+                            <td><input  zippy="seldel" class="seldel" type="checkbox"></td>
+                
+                            <td zippy="itemname"></td>
+
+                            <td zippy="item_code"></td>
+                            <td zippy="cust_code"></td>
+                            <td zippy="customer_name"></td>
+                            <td zippy="qty" class="text-right  "></td>
+                            <td zippy="price" class="text-right  "></td>
+                            <td zippy="updatedon"  ></td>
+            
+                            <td zippy="comment">  </td>
+                            <td  > <a zippy="edit"><i class="fa fa-edit"></i></a> </td>
+                        </tr>
+                        <tr><td colspan="8">
+                                <a class="text-danger" zippy="deleteall" title="Видалити"><i class="fa fa-trash"></i></a>&nbsp;&nbsp;
+                              </td>
+                        </tr>                 
+                    </table>
+                    <div zippy="pag"></div>   
+                </form>
+            </div>
+
+
+            <div class="col-12  ">
+                <form zippy="itemdetail"  >
+                    <h4>Редагування   </h4>
+                    <div class="row">
+                        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                            <div class="form-group row">
+                                <label class="col-5 col-form-label" for="edititem">Товар</label>
+                                <div class="col-7">
+                                   <input placeholder="Почнiть вводити..."     class="form-control" zippy="edititem"/>
+                                 
+                                </div>
+                            </div>
+    
+                            <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editcust">Постачальник </label>
+                                <div class="col-7">
+                                     <select class="form-control   select2" zippy="editcust">
+                                        <option value="0">Не вказано</option>
+                                     </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editcustcode">Код товару у постачальника</label>
+                                <div class="col-7">
+                                   <input     class="form-control" zippy="editcustcode"/>
+                                 
+                                </div>
+                            </div>
+  
+
+                            <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editprice">Ціна</label>
+                                <div class="col-7">
+                                    <input style="width: 150px" pattern="[0-9\.\%]+" class="form-control" zippy="editprice"/>
+                               </div>
+                            </div>
+ 
+                            <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editqty">Кількість</label>
+                                <div class="col-7">
+                                    <input  class="form-control" zippy="editqty"/>
+                                  
+                                </div>
+                            </div>
+ 
+
+                            <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editdescription">Коментар</label>
+                                <div class="col-7">
+                                    <textarea class="form-control" zippy="editdescription"></textarea>
+                                </div>
+                            </div>       
+                        </div>
+
+                        <div class="col-12  ">
+
+                            <div class="form-group">
+                                <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">&nbsp;&nbsp;
+                                <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-secondary  "> 
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            
+            
+            <div class="col-12 col-md-6 col-lg-4 col-xl-3  " >
+                <form zippy="importform" enctype="multipart/form-data"  >
+                <h4>Iмпорт з Excel</h4>
+                    <a zippy="back"  >До переліку</a>
+                        <div class="form-group  ">
+                            <label data-label="icust" for="icust">Постачальник</label>
+                            <select zippy="icust" class="form-control select2 ">
+                            </select>
+                        </div>
+
+                      <div class="form-group  ">
+                            <label for="filename">Файл імпорту</label>
+                            <input type="file" zippy="filename" class="form-control  "/>
+                     </div>
+                          <div class="  form-check">
+                            <input zippy="passfirst" type="checkbox" class="form-check-input">
+                            <label class="form-check-label" for="passfirst">Пропустити першу строку</label>
+                        </div>
+        
+   
+                         <div class="form-group  ">
+                            <label><b>Номери колонок Excel файлу</b> </label>
+
+                        </div>
+                          <div class="form-group row">
+                            <label  class="col-8 col-form-label" for="colitemcode">Артикул</label>
+                            <div class="col-4">
+                                <select style="width:100px;" zippy="colitemcode" class="form-control  ">
+                            </select>  
+                             </div> 
+                        </div>                        <div class="form-group row">
+                            <label  class="col-8 col-form-label" for="colcustcode">Код постачальника</label>
+                            <div class="col-4">
+                                <select style="width:100px;" zippy="colcustcode" class="form-control  ">
+                            </select>   </div> 
+                        </div>                                                                                
+                                                                              
+                        <div class="form-group row">
+                            <label  class="col-8 col-form-label" for="colprice">Цiна</label>
+                            <div class="col-4">
+                                <select style="width:100px;" zippy="colprice" class="form-control  ">
+                            </select>  
+                             </div> 
+                        </div>                                                                                
+                        <div class="form-group row">
+                            <label  class="col-8 col-form-label" for="colqty">Кiлькiсть</label>
+                            <div class="col-4">
+                                <select style="width:100px;" zippy="colqty" class="form-control  ">
+                            </select>  
+                             </div> 
+                        </div>                                                                                
+                        <div class="form-group row">
+                            <label  class="col-8 col-form-label" for="colcomment">Коментар</label>
+                            <div class="col-4">
+                                <select style="width:100px;" zippy="colcomment" class="form-control  ">
+                            </select>  
+                             </div> 
+                        </div>                                                                                
+
+                        <input   type="submit" value="Iмпортувати" class="btn btn-primary  "> 
+                        
+                 </form>
+            </div>
+            
+            
+        </div>
+
+    
+
+
+        <script>
+     
+
+       
+
+            function check_deleteall() {
+                return confirm("Видалити?")
+            }
+
+        </script>
+
+    </body>
+</html>

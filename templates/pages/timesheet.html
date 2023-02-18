@@ -1,0 +1,411 @@
+<html>
+ <head>
+        <title>  Табель облiку робочого часу  </title>
+
+    </head>
+    <head>
+        <link rel="stylesheet" type="text/css" href="/assets/js/fullcalendar/main.css"/>
+
+        <script language="javascript" src="/assets/js/moment/moment.min.js"></script>
+        <script language="javascript" src="/assets/js/moment/locale/ua.js"></script>
+        <script language="javascript" src="/assets/js/fullcalendar/main.js"></script>
+        <script language="javascript" src="/assets/js/fullcalendar/locales/ua.js"></script>
+
+
+    </head>
+    <body>
+ 
+          {{={| |}=}}   
+         <div class="row">
+            <div class="col-12 col-lg-10" id="vapp" >
+                <h4>Табель облiку робочого часу</h4>
+                     <div class="navbar nav">
+                    <form   class="form-inline ">
+
+                        <label for="from">З</label>
+                        <input v-model="from"  class="form-control mr-2" style="width: 120px" type="date" >
+
+                        <label for="to">По</label>
+                        <input v-model="to" class="form-control mr-2" style="width: 120px" type="date" >
+
+
+                        <label v-show="isadmin==true" >Спiвробiтник</label>
+                        <select2     v-model="empid" :options="emps"   >
+
+                        </select2>
+
+                        <input v-on:click.prevent="onFilter"  type="button" class="ml-2  btn btn-success  " value="ОК">
+
+
+                    </form>
+                </div>
+                       <a v-on:click.prevent="add"  class="btn  btn-success">Додати</a>
+                
+                   <ul class="nav nav-tabs">
+                  
+                       <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#tcal">Календар</a>
+                      </li>
+                      
+                       <li class="nav-item">
+                        <a class="nav-link " data-toggle="tab" href="#ttable"> Таблиця </a>
+                      </li>
+                       <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#tstat">Статистика  </a>
+                      </li>
+                  </ul>
+                <div class="tab-content"  >   
+                    <div class="tab-pane  show active "  id="tcal"> 
+                        
+                        <div id="cal"></div>
+                    </div>
+                   <div class="tab-pane    "  id="ttable"> 
+
+                            <table class="table table-sm" style="width:75%">
+                            <tr  v-for="tm in times"  >
+                                <td  style="width:100px;">{{tm.date}}</td>
+                                <td  style="width:50px;">{{tm.from}}</td>
+                                <td  style="width:50px;">{{tm.to}}</td>
+                                <td style="width:50px;"><span :class="tm.color">{{tm.dur}}</span></td>
+                                <td >{{tm.name}}</td>
+                                
+                                
+                                <td >{{tm.desc}}</td>
+                                <td >{{tm.branch}}</td>
+                               
+
+                                <td aling="center">
+
+                                    <a v-on:click.prevent="edit(tm.time_id)"   title="Редагувати"><i class="fa fa-edit"></i></a>
+                                    &nbsp; &nbsp;<a v-on:click.prevent="del(tm.time_id)"  title="Видалити"><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+                        </table>
+                 
+                    </div>
+                   <div class="tab-pane    "  id="tstat" > 
+                      <table class="table table-sm" style="width:40%">
+                            <tr><th></th><th  class="text-right">Години</th><th class="text-right">Днi</th></tr>
+                            <tr v-for="st in stat" >
+                                <td  >  {{st.name}}</td>   
+                                <td class="text-right"><span :class="st.color">  {{st.cnt}} </span></td>
+                                <td class="text-right"><span :class="st.color">  {{st.days}} </span></td>
+
+                            </tr>
+                        </table>
+        
+                       
+                    </div>
+                </div>
+   
+ 
+<div class="modal" tabindex="-1" id="editmodal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+ 
+      <div class="modal-body">
+    <form id="fval" >
+                    <h4 v-show="edited>0">Редагування</h4>
+                    <h4 v-show="edited==0">Новий запис</h4>
+                    
+                    <div    class="form-group">
+                    
+                     <label  >Спiвробiтник</label>
+                        <select2     v-model="editempid" :options="emps"   >
+
+                       </select2>
+                    </div>
+
+                    
+                    <div class="form-group">
+                        <label for="editdate">Дата</label>
+                        <input v-model="editdate" required="required" class="form-control"  type="date" />
+                    </div>
+                    <div class="form-group">
+                        <label for="editfrom">З</label>
+                        <input v-model="editfrom" required="required"  class="form-control"  type="time" />
+                    </div>
+                    <div class="form-group">
+                        <label for="editto">По</label>
+                        <input  v-model="editto" required="required" type="time" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="edittype">Тип</label>
+                        <select v-model="edittype"  class="form-control">
+                            <option value="0">Не обрано</option>
+                            <option v-for="t in types" :value="t.key">{{t.value}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editbreak">Перерва, хв.</label>
+                        <input   v-model="editbreak" required="required" style="width:75px;" pattern="[0-9]+" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="editnote">Примiтка</label>
+                        <input  v-model="editdesc" class="form-control" />
+                    </div>
+
+
+                </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Скасувати</button>
+        <button v-on:click.prevent="save" type="button" class="btn btn-primary">Зберегти</button>
+      </div>
+    </div>
+  </div>
+</div>
+   
+             </div>
+        </div>
+           {|={{ }}=|}  
+           
+<script>
+
+var calendar
+
+     var vapp = new Vue({
+            el: '#vapp',
+                data() { return  {
+                   
+                  isadmin:true,
+                  empid:0,
+                  emps:[],
+                  from:"",
+                  to:"",
+                  today:"",
+                  start:"",
+                  end:"",
+                  break:0,
+               
+                  stat:[] ,
+                  times:[] ,
+                  types:[] ,
+                  edited:0 ,
+                  editempid:0 ,
+                  editdesc:"" ,
+                  editdate:"" ,
+                  editfrom:"" ,
+                  editto:"" ,
+                  edittype:1 ,
+                  editbreak:0 ,
+                  
+                  
+                     
+              } }            
+    ,         
+       
+           methods: {
+                  init:function(){
+                      
+                  callPageMethod('init',[], null,(data)=> 
+                  {
+                       let tmp =   JSON.parse(data)  
+                       this.empid = tmp.empid; 
+                       this.editempid = tmp.empid; 
+                       this.isadmin = tmp.isadmin; 
+                       this.emps = tmp.emps; 
+                       this.types = tmp.types; 
+                       this.to = tmp.to; 
+                       this.from = tmp.from; 
+                       this.today = tmp.today; 
+                       this.start = tmp.start; 
+                       this.end = tmp.end; 
+                       this.break = tmp.break; 
+                 
+                       this.loaddata() ;       
+                      
+                  });
+                            
+                              
+                } ,
+                
+                
+               onFilter:function(){
+                   if(Number.isNaN( Number.parseInt(this.empid)) ) {
+                      alert('Спiвробiтника не обрано');
+                      return;
+                  }     
+                    this.loaddata() ;       
+          
+               } ,    
+               del:function(id){
+                
+                  callPageMethod('del',[id], null,(data)=> 
+                  {
+                       this.loaddata() ;  
+                  
+                  });     
+          
+               } ,    
+               edit:function(time_id){
+                  var tm ={} 
+                  for( var _t  of  this.times){
+                      if(_t.time_id == time_id) {
+                          tm = _t
+                          break
+                      }
+                  } 
+                  
+                  
+                  
+                  this.edited = time_id
+                  this.editdesc = tm.desc
+                  this.edittype = tm.type
+                  this.editdate = tm.date;
+                  this.editfrom = tm.from;
+                  this.editto = tm.to;
+                  this.editempid = tm.to;
+                  
+                   
+                  $('#editmodal').modal('show')   
+          
+               } ,    
+               add:function(){
+                
+                  this.edited = 0;
+                  this.edittype = 1;
+                  this.editdate = this.today;
+                  this.editfrom = this.start;
+                  this.editto = this.end;
+                  this.editbreak = this.break;
+                  $('#editmodal').modal('show')   
+
+               } ,    
+               save:function(i){
+                
+
+                    var v = checkFormInput('fval');
+                    if(!v) return
+ 
+
+                    
+                     let body={
+                     empid:this.editempid ,
+                     desc:this.editdesc ,
+                     type:this.edittype ,
+                     break:this.editbreak ,
+                     date:this.editdate ,
+                     from:this.editfrom ,
+                     to:this.editto ,
+
+                     
+                  } 
+                     
+                  callPageMethod('save',[this.edited], JSON.stringify(body),(data)=> 
+                  {
+                         if(data=="") {
+                            this.loaddata() ;                               
+                            $('#editmodal').modal('hide')   
+                         } else {
+                             toastr.error(data,'',{'timeOut':'5000'})
+                         }
+                         
+                      
+
+                  });        
+                   
+                  
+          
+               } ,    
+               loaddata:function(){
+                   
+          
+                  let body={
+                     empid:this.empid ,
+                     from:this.from  ,
+                     to:this.to 
+                  } 
+                     
+                  callPageMethod('loaddata',[], JSON.stringify(body),(data)=> 
+                  {
+                       let tmp =   JSON.parse(data)  
+                       this.stat = tmp.stat 
+                       this.times = tmp.times 
+ 
+
+                       calendar.removeAllEventSources(   );
+                       calendar.addEventSource( tmp.events );
+                        
+                       calendar.render()
+                      
+                       
+                       
+                  });
+                      
+          
+               } ,    
+           },    
+       
+    
+          mounted: function(){
+             
+              this.init();      
+              
+         }  ,       
+            components: {   
+               'select2': httpVueLoader('/assets/js/vue/select2.vue')
+                     
+               }            
+        })  
+        
+        
+        
+        
+           var calendarEl = document.getElementById('cal');
+       
+              calendar = new FullCalendar.Calendar(calendarEl, { 
+           
+              
+      headerToolbar: {
+        left  : 'prev,next today',
+        center: 'title',
+        right : 'dayGridMonth,timeGridWeek,timeGridDay'
+      },
+//      initialView: '{$this->view}' ,
+      
+      themeSystem: 'bootstrap' ,
+     // editable: true,
+  //    droppable: true,
+     
+         eventClick: function(info) {
+                     
+             vapp.edit(info.event.id)
+         
+        }, 
+         dateClick: function(info) {
+               
+             vapp.add()
+             
+              
+         
+        },   
+             
+  eventResize: function(info) {
+
+           
+               
+
+  } ,       
+ eventDrop: function(info) {
+               
+           
+
+  } ,        
+         locale: 'ua' 
+       
+    
+      
+      });   
+        
+        
+        
+     
+        
+          
+</script>
+
+           
+           
+   </body>
+</html>
