@@ -7,8 +7,8 @@
 
     <body>
         {{#winfo}}
-
-        <div class="row">
+<!-- Выравнивание блока с информацией -->
+        <div class="row justify-content-between align-items-center">
             <div class="col-auto ">
                 <div class="info-box">
                     <span class="info-box-icon bg-info elevation-1"><i class="fa fa-file-invoice "></i></span>
@@ -114,15 +114,15 @@
         {{/winfo}}
 
         {{#wgraph}}
-
-        <div class="row">
+<!-- Выравнивание блока с информацией -->
+        <div class="row justify-content-between align-items-center">
 
             <div   class="col-12  col-lg-4   ">
-                <div   class="card ">
-
+                <div   class="card height-block">
 
                         <div style="width:100%" id="paystructure"></div>
-                    </div>
+                    
+                </div>
 
             </div>
  
@@ -130,7 +130,7 @@
   
  
            <div   class="col-12  col-lg-4 ">
-                <div   class="card ">
+                <div   class="card height-block">
                     
                         <div style="width:100%" id="paycompare"></div>
                   
@@ -138,11 +138,12 @@
             </div>
          
           <div   class="col-12  col-lg-4 ">
-                <div   class="card ">
-                    <div   class="card-body">
+                <div   class="card height-block">
+                    <!-- Убран бишний блок
+                    <div   class="card-body"> -->
 
                         <div style="width:100%" id="sellstat"></div>
-                    </div>
+
                 </div>    
             </div>
         </div>     

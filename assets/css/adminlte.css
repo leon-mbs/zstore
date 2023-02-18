@@ -587,6 +587,11 @@ pre code {
   }
 }
 
+/* Высота блока */
+.height-block {
+  height: 220px;
+}
+
 .row {
   display: -ms-flexbox;
   display: flex;
