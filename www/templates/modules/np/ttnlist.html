@@ -1,0 +1,55 @@
+<html >
+  <head>
+      <title> Стан  доставок   </title>
+
+    </head>
+    <body>
+        <div class="row">
+            <div class="col-12   col-xl-10"  >
+
+                <h3>Стан  доставок</h3>
+                    <div class="col-12 col-md-10 col-xl-8" >
+              
+                            <div class="navbar nav">
+                                <form zippy="searchform" class="form-inline ">
+                                    <label for="searchnumber"> ЕН </label>
+
+                                    <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:200px">
+                                    <label for="searchcust"> Покупець </label>
+                                    <select class="form-control select2" zippy="searchcust" >
+                                       <option value="0">Не обрано </option>
+                                    </select>
+
+                                    <input type="submit" class=" ml-2 btn btn-outline-success  " value="Шукати">
+
+
+                                </form>
+                            </div>
+                  
+                </div>
+
+                
+                &nbsp; &nbsp;  <a zippy="refresh">Оновити</a>
+                <table class="table  table">
+                    <tr>
+                        <th>ТТН</th>
+                        <th>Сума</th>
+                        <th>Покупець</th>
+                        <th>Експрес-накладна</th>
+                        <th>Стан</th>
+                        <th> </th>
+                    </tr>
+                    <tr zippy="doclist">
+                        <td zippy="document_number"></td>
+                        <td zippy="amount"></td>
+                        <td zippy="customer_name"></td>
+                        <td zippy="ship_number"></td>
+                        <td zippy="state"></td>
+                        <td><a target="_blank" zippy="print" title="Друк маркування"><i class="fa fa-print"></i></a> </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </body>
+</html>

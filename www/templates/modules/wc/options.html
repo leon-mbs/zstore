@@ -1,0 +1,76 @@
+<html>
+
+    <body>
+
+        <div class="row  ">
+            <div class="col-12  col-sm-10 col-md-6    col-xl-4  ">
+                <h4>Налаштування з'єднання</h4>
+                <form zippy="cform">
+                    <div class="form-group">
+                        <label for="site">Адреса сайту</label>
+                        <input type="text" zippy="site" class="form-control" required="required"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="keyc">Ключ</label>
+                        <input placeholder="ck_XXXXXXXXXXXXXXXXXXXX" zippy="keyc" class="form-control" required="required"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="keys">Секретний ключ</label>
+                        <input placeholder="cs_XXXXXXXXXXXXXXXXXXXX" zippy="keys" class="form-control" required="required"/>
+                    </div>
+                    <div class="form-group   ">
+                        <label for="api">Версія API </label>
+
+                        <select class="form-control" zippy="api"> </select>
+
+                    </div>
+                    <div class="form-check">
+                        <input zippy="ssl" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="ssl">Перевiрка SSL сертифiката </label>
+
+                    </div>
+
+              
+                 <div class="form-group  ">
+                        <label for="salesource">Джерело продаж</label>
+                        <select class="form-control" zippy="salesource">
+                            <option value="0">Не обрано</option>
+                        </select>
+                    </div>                    
+                     
+                    <div class="form-group   ">
+                        <label for="defpricetype">Тип ціни </label>
+
+                        <select class="form-control" zippy="defpricetype">
+                            <option value='0'>Не обрано</option>
+
+                        </select>
+
+                    </div>
+   <div class="form-check">
+                        <input zippy="setpayamount" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="setpayamount">Ставити статус  До сплати  </label>
+                        
+                        <br>
+                    </div>
+                                   
+                    <div class="form-group">
+                        <input type="submit" value="Зберегти" zippy="save" class="btn   btn-primary mr-2"/>
+                        
+                        <div id="loader" style="display:none" class="spinner-border spinner-border-sm"></div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script>
+
+            function check_check() {
+
+                $('#loader').removeAttr('style');
+            }
+
+        </script>
+
+    </body>
+</html>

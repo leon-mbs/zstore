@@ -1,0 +1,463 @@
+<html>
+    <head>
+       
+       
+
+    </head>
+
+    <body>
+        {{#winfo}}
+
+        <div class="row">
+            <div class="col-auto ">
+                <div class="info-box">
+                    <span class="info-box-icon bg-info elevation-1"><i class="fa fa-file-invoice "></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Замовлень</span>
+                        <span class="info-box-number">
+                            {{biorders}}
+
+                        </span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+
+            <div class="col-auto  ">
+                <div class="info-box">
+                    <span class="info-box-icon bg-success elevation-1"><i class="fa  fa-pallet"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Товарiв на складi</span>
+                        <span class="info-box-number">
+                            На суму  {{biitemscnt}}
+
+
+                        </span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+
+          <div class="col-auto ">
+                <div class="info-box">
+                    <span class="info-box-icon bg-success elevation-1"><i class="fa fa-money-bill "></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Готiвка</span>
+                        <span class="info-box-number">
+                            На суму  {{binal}}
+
+
+                        </span>
+                    </div>
+
+                </div>
+                <!-- /.info-box -->
+            </div>
+             <div class="col-auto ">
+                <div class="info-box">
+                    <span class="info-box-icon bg-success elevation-1"><i class="fa fa-credit-card "></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Безготiвка</span>
+                        <span class="info-box-number">
+                            На суму  {{bibeznal}}
+
+
+                        </span>
+                    </div>
+
+                </div>
+                <!-- /.info-box -->
+            </div>
+          
+            
+            
+            <div class="col-auto   ">
+                <div class="info-box">
+                    <span class="info-box-icon bg-success elevation-1"><i class="fa fa-sign-out-alt"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Кред. борг</span>
+                        <span class="info-box-number">
+                            На суму  {{bicredit}}
+
+
+                        </span>
+                    </div>
+
+                </div>
+                <!-- /.info-box -->
+            </div>
+            <div class="col-auto  ">
+                <div class="info-box">
+                    <span class="info-box-icon bg-success elevation-1"><i class="fa fa-sign-in-alt "></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Деб. борг</span>
+                        <span class="info-box-number">
+                            На суму  {{bidebet}}
+
+
+                        </span>
+                    </div>
+
+                </div>
+                <!-- /.info-box -->
+            </div>
+
+        </div>
+        {{/winfo}}
+
+        {{#wgraph}}
+
+        <div class="row">
+
+            <div   class="col-12  col-lg-4   ">
+                <div   class="card ">
+
+
+                        <div style="width:100%" id="paystructure"></div>
+                    </div>
+
+            </div>
+ 
+
+  
+ 
+           <div   class="col-12  col-lg-4 ">
+                <div   class="card ">
+                    
+                        <div style="width:100%" id="paycompare"></div>
+                  
+                </div>    
+            </div>
+         
+          <div   class="col-12  col-lg-4 ">
+                <div   class="card ">
+                    <div   class="card-body">
+
+                        <div style="width:100%" id="sellstat"></div>
+                    </div>
+                </div>    
+            </div>
+        </div>     
+        {{/wgraph}}    
+
+        <div class="row">  
+
+
+            {{#wsdate}}
+            <div   class="col-12 col-lg-6 ">
+
+                <div   class="card ">
+                    <div   class="card-body">
+                        <h4>Простроченi товари</h4>
+                        <br><a zippy="sdcsv">Експорт у Excel</a>
+                        <small>Товари для котрих закiнчився термін придатностi</small>
+                        <table class="table   table-sm">
+                            <tr>
+
+                                <th>Склад</th>
+                                <th>Товар</th>
+                                <th>Серiя</th>
+                                <th>Придатний до</th>
+                                <th class="text-right">Кiл.</th>
+                            </tr>
+                            <tr zippy="sdlist" >
+                                <td zippy="wsd_storename"></td>
+                                <td zippy="wsd_itemname"></td>
+                                <td zippy="wsd_snumber"></td>
+                                <td><span zippy="wsd_edate"></span></td>
+                                <td zippy="wsd_qty" class="text-right"></td>
+                            </tr>
+                        </table>
+                        <div zippy="sdpag" ></div>               
+
+                    </div>
+                </div>
+            </div>
+            {{/wsdate}}
+            {{#wminqty}}
+            <div   class="col-12 col-lg-6 ">
+
+                <div   class="card ">
+                    <div   class="card-body">
+                        <h4>Мiнiмальна кiлькiсть </h4>
+                        <small>Товари для яких задана мiнiмальна кiлькiсть на складi та актуальна кiлькiсть менше заданої</small>
+                        <br><a zippy="mqcsv">Експорт у Excel</a>
+                        <table class="table   table-sm">
+                            <tr>
+                                  <th>Склад</th>
+                           
+                                <th>Товар</th>
+                                <th>Код</th>
+
+                                <th class="text-right">Факт</th>
+                                <th class="text-right">Мiн.</th>
+                            </tr>
+                            <tr zippy="mqlist">
+                                <td zippy="wmq_storename"></td>
+           
+                                <td zippy="wmq_itemname"></td>
+                                <td zippy="wmq_item_code"></td>
+                                <td zippy="wmq_qty" class="text-right"></td>
+                                <td zippy="wmq_minqty" class="text-right"></td>
+                            </tr>
+                        </table>             
+                        <div zippy="mqpag"></div>        
+                    </div>
+                </div>
+            </div>      
+            {{/wminqty}}
+
+
+            {{#wrdoc}}
+            <div   class="col-12 col-lg-6 ">
+
+                <div   class="card ">
+                    <div   class="card-body">
+                        <h4>Останні документи</h4>
+                        <small>Документи з нещодавно змiненим статусом</small>
+                        <br><a zippy="rdcsv">Експорт у Excel</a>
+                        <table class="table   table-sm">
+                            <tr>
+                                <th>Номер</th>
+                                <th>Тип</th>
+                                <th>Статус</th>
+                                <th class="text-right">Сума</th>
+                                <th>Змiнив</th>
+                                <th>Дата</th>
+                                
+
+                            </tr>
+                            <tr zippy="rdoclist">
+                               <td><a zippy="wrd_number"></a></td>
+                                <td zippy="wrd_type"></td>
+                                <td zippy="wrd_state"></td>
+                                <td class="text-right" zippy="wrd_amount"></td>
+                                <td zippy="wrd_user"></td>
+                                <td zippy="wrd_date"></td>
+                                
+                            </tr>
+                        </table>
+                        <div zippy="wrpag"></div>    
+                    </div>
+                </div>
+            </div>      
+            {{/wrdoc}}
+               {{#wmdoc}}
+            <div   class="col-12 col-lg-6 ">
+
+                <div   class="card ">
+                    <div   class="card-body">
+                        <h4>Мої документи</h4>
+                        <small>Документи, створені поточним користувачем</small>
+                        <br><a zippy="mdcsv">Експорт у Excel</a>
+                        <table class="table   table-sm">
+                            <tr>
+                                <th>Номер</th>
+                                <th>Тип</th>
+                                <th>Дата</th>
+                                <th class="text-right">Сума</th>
+
+                            </tr>
+                            <tr zippy="mdoclist">
+                                <td><a zippy="wmd_number"></a></td>
+                                <td zippy="wmd_type"></td>
+                                <td zippy="wmd_date"></td>
+                                <td class="text-right" zippy="wmd_amount"></td>
+                            </tr>
+                        </table>
+                        <div zippy="wmpag"></div>    
+                    </div>
+                </div>
+            </div>      
+            {{/wmdoc}}
+
+      
+        </div>
+            {{#isadmins}}
+           <div class="row justify-content-center">
+            
+            <div class="col-12 pl-4"  >
+               <small>  Версiя програми v{{curversion}}. Версiя БД v{{curversionbd}}  </small>
+            </div>
+        </div>
+           {{/isadmins}}
+
+     
+
+
+
+
+ 
+ 
+ 
+     <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart'], 'language': 'uk'});
+      google.charts.setOnLoadCallback(drawChart);
+
+      
+    var fontcolor='#000' ;
+    var bgcolor='#fff' ;
+        {{#darkmode}}
+            fontcolor='#fff' ;
+            bgcolor='#333' ;
+        {{/darkmode}}            
+      
+      
+      
+      function drawChart() {
+
+        //структура видатків
+          
+        var psdata = google.visualization.arrayToDataTable( 
+        
+          {{{ps}}}
+        
+        );
+
+        
+        
+        
+        var psoptions = {
+          title: 'Структура видаткiв за шiсть мiсяцiв' ,
+          sliceVisibilityThreshold: 0.01,         
+          backgroundColor: {
+            "fill":bgcolor 
+          } , 
+          titleTextStyle:{
+             "color":fontcolor ,"bold":true
+          } ,
+                   
+          chartArea:{
+             "top":25,"bottom":5,"left":10 , "right":60
+          } ,
+                  
+          legendTextStyle:{
+             "color":fontcolor 
+          } ,
+                  
+        };
+
+  
+       //старвнение
+        var pschart = new google.visualization.PieChart(document.getElementById('paystructure'));
+
+        pschart.draw(psdata, psoptions);
+        
+        
+  
+     
+      var pcdata = new google.visualization.DataTable();
+      pcdata.addColumn('string', 'Мiсяць');
+      pcdata.addColumn('number', 'Прибутки');
+      pcdata.addColumn('number', 'Видатки');
+
+      pcdata.addRows(
+          {{{pc}}}
+      );
+
+      var pcoptions = {
+        title: 'Прибутки та видатки',
+        legend:{
+            position:"bottom"
+        }  ,
+          backgroundColor: {
+            "fill":bgcolor 
+          } , 
+          titleTextStyle:{
+             "color":fontcolor ,"bold":true
+          } ,
+                   
+      
+                  
+          legendTextStyle:{
+             "color":fontcolor 
+          } , 
+          
+          hAxis:{
+           
+              textStyle: {
+                color: fontcolor
+              }
+            } ,
+          vAxis:{
+              gridlines:null,
+              textStyle: {
+                color: fontcolor
+              }
+            } ,                 
+      };
+      
+      var pcchart = new google.visualization.ColumnChart(document.getElementById('paycompare'));
+      pcchart.draw(pcdata, pcoptions);
+      
+     
+       //продажи
+          
+         
+        var tsdata = new google.visualization.DataTable();
+      tsdata.addColumn('string', 'Мiсяць');
+      tsdata.addColumn('number', 'Послуги');
+      tsdata.addColumn('number', 'Товари');
+
+      tsdata.addRows( 
+       {{{ts}}}
+     )
+        
+        
+        
+        var tsoptions = {
+          title: 'Реалiзацiя',
+          curveType: 'function',
+          legend: { position: 'bottom' } ,
+          backgroundColor: {
+            "fill":bgcolor 
+          } , 
+          titleTextStyle:{
+             "color":fontcolor ,"bold":true
+          } ,
+                   
+      
+          legendTextStyle:{
+             "color":fontcolor 
+          } , 
+          
+          hAxis:{
+           
+              textStyle: {
+                color: fontcolor
+              }
+            } ,
+          vAxis:{
+              gridlines:null,
+              textStyle: {
+                color: fontcolor
+              }
+            } ,
+            
+                   
+        };
+
+        var tschart = new google.visualization.LineChart(document.getElementById('sellstat'));
+
+        tschart.draw(tsdata, tsoptions);       
+        
+        
+        
+        
+        
+        
+        
+        
+      }
+    </script
+  
+    </body>
+</html>

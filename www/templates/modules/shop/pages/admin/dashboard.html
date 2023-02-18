@@ -1,0 +1,215 @@
+<html>
+
+        <head>
+        <title> Дашборд  </title>
+
+    </head>
+    <body>
+       
+
+        <div class="row "  >
+        
+           
+            <div class="col-12 ">
+                <h3>Дашборд</h3>
+                 
+            </div>
+           <div class="col-12 text-center ">
+                <h4>Статистика за останнi 30 днiв</h4>
+
+                
+            </div>
+            <div class="col-12 col-md-6">
+               
+                 <div   class="card ">
+                   
+
+                        <div style="width:100%" id="grvisit"></div>
+                    
+                </div>                  
+            </div>
+            <div class="col-12 col-md-6">
+                
+               <div   class="card ">
+                   
+                        <div style="width:100%" id="grorders"></div>
+                 
+                </div>                  
+            
+            </div>
+         
+          <div class="col-12    ">   </div> 
+             <div class="col-12 col-md-4   ">
+                
+                  <h5>Топ проданих товарiв </h5>             
+                  <table class="table table-sm">
+                    <tr> <th>Товар</th><th class="text-right">На суму</th>  </tr>
+                    {{#topitems}}
+                    <tr> <td>{{n}}</td><td class="text-right">{{v}}</td>  </tr>                       
+                    {{/topitems}}
+                  </table>  
+            </div>      
+      
+                 <div class="col-12 col-md-4   ">
+                
+                  <h5>Топ  проданих категорiй</h5>             
+                  <table class="table table-sm">
+                     <tr> <th>Категорiя</th><th class="text-right">На суму</th>  </tr>
+                    {{#topcats}}
+                    <tr> <td>{{n}}</td><td class="text-right">{{v}}</td>  </tr>                       
+                    {{/topcats}}
+                  </table>  
+                  
+            
+            </div>      
+             <div class="col-12 col-md-4   ">
+                
+                  <h5>Топ переглядiв</h5>             
+                  <table class="table table-sm">
+                     <tr> <th>Товар</th><th class="text-right">Кiл.</th>  </tr>
+                    {{#topview}}
+                    <tr> <td>{{n}}</td><td class="text-right">{{v}}</td>  </tr>                       
+                    {{/topview}}
+                  </table>  
+                  
+            
+            </div>      
+        </div>
+        
+        
+        
+        
+      
+  
+ 
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart'], 'language': 'uk'});
+      google.charts.setOnLoadCallback(drawChart);
+
+
+        
+    var fontcolor='#000' ;
+    var bgcolor='#fff' ;
+        {{#darkmode}}
+            fontcolor='#fff' ;
+            bgcolor='#333' ;
+        {{/darkmode}}        
+     
+     
+     function drawChart() {
+         
+          var visdata = new google.visualization.DataTable();
+          visdata.addColumn('string', 'Дата');
+          visdata.addColumn('number', 'Кiл.');
+         
+          visdata.addRows( 
+           {{{vis}}}
+         )
+        
+        
+        
+        var visoptions = {
+          title: 'Вiдвiдувачi сайту',
+          curveType: 'function',
+          legend: { position: 'none' } ,
+          backgroundColor: {
+            "fill":bgcolor 
+          } , 
+          titleTextStyle:{
+             "color":fontcolor ,"bold":true
+          } ,
+                   
+      
+          legendTextStyle:{
+             "color":fontcolor 
+          } , 
+          
+          hAxis:{
+           
+              textStyle: {
+                color: fontcolor
+              }
+            } ,
+          vAxis:{
+              gridlines:null,
+              textStyle: {
+                color: fontcolor
+              }
+            } ,
+            
+                   
+        };
+
+        var vischart = new google.visualization.LineChart(document.getElementById('grvisit'));
+
+        vischart.draw(visdata, visoptions);  
+        
+        
+         var orddata = new google.visualization.DataTable();
+          orddata.addColumn('string', 'Дата');
+          orddata.addColumn('number', 'Кiл.');
+         
+          orddata.addRows( 
+           {{{ord}}}
+         )
+        
+        
+        
+        var ordoptions = {
+          title: 'Замовлення',
+          curveType: 'function',
+          legend: { position: 'none' } ,
+          backgroundColor: {
+            "fill":bgcolor 
+          } , 
+          titleTextStyle:{
+             "color":fontcolor ,"bold":true
+          } ,
+                   
+      
+          legendTextStyle:{
+             "color":fontcolor 
+          } , 
+          
+          hAxis:{
+           
+              textStyle: {
+                color: fontcolor
+              }
+            } ,
+          vAxis:{
+              gridlines:null,
+              textStyle: {
+                color: fontcolor
+              }
+            } ,
+            
+                   
+        };
+
+        var ordchart = new google.visualization.LineChart(document.getElementById('grorders'));
+
+        ordchart.draw(orddata, ordoptions);  
+        
+        
+          
+ 
+}   
+     
+     
+ 
+
+
+   function updateSiteMap(){
+            
+          callPageMethod('updateSiteMap',null,null,(data)=> 
+          {
+             toastr.success('Оновлено','',{'timeOut':'2000'})  
+          });           
+      
+   }
+
+        </script>
+
+    </body>
+</html>

@@ -1,0 +1,49 @@
+<html>
+    <head>
+           <title> Виробничі дільниці </title>
+   </head>
+
+    <body>
+        <div class="row">
+            <div class="col-12">
+                <div zippy="patable">
+                    <h3>Виробничі дільниці </h3>
+                    <a zippy="addnew" class="btn btn-outline-primary  ">Додати</a>
+                    <table class="table table-bordered   table-sm" style="width:400px">
+                        <tr>
+                            <th>Назва</th>
+
+                            <th></th>
+                        </tr>
+                        <tr zippy="palist">
+                            <td zippy="pa_name"></td>
+
+
+                            <td style="width:75px"><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> <a
+                                    zippy="delete" title="Видалити"><i class="fa fa-trash"></i></a></td>
+                        </tr>
+                    </table>
+
+
+                </div>
+
+                <form class="col-6 col-md-4" zippy="padetail">
+                    <div class="form-group">
+                        <label for="editpa_name">Назва</label>
+                        <input required="required" class="form-control" zippy="editpa_name"/>
+                    </div>
+
+
+                    <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">&nbsp;&nbsp;
+                    <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary  ">
+
+                </form>
+            </div>
+        </div>
+           <script>               
+         function check_delete() {
+                return confirm("Видалити?")
+            }
+        </script>     
+    </body>
+</html>

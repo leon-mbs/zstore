@@ -1,0 +1,72 @@
+<html>
+   <head>
+        <title> Рух по складу   </title>
+
+    </head>
+    <body>
+        <div class="row">
+            <div class="col-12   ">
+                <h3>Рух по складу</h3>
+                <div class="navbar nav">
+                    <form zippy="filter" class="form-inline">
+
+                        <label for="from">З</label>
+                        <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="from">
+
+                        <label for="to">по</label>
+                        <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="to">
+
+                        <label for="store">Склад</label>
+                        <select class="form-control mr-sm-2" zippy="store"> 
+                         
+                        </select>
+
+                        <label for="item">ТМЦ</label>
+                        <input placeholder="Почніть вводити..." class="form-control mr-sm-2" zippy="item">
+                             {{#usesnumber}}
+               
+                        <label data-label="snumber" for="snumber">Серія, с/н </label>
+                        <input class="form-control mr-sm-2" zippy="snumber">
+                             {{/usesnumber}}
+                   
+
+                        <input class="btn btn-outline-primary  " type="submit" value="ОК">
+
+
+                    </form>
+                </div>
+
+                <div zippy="detail">
+                    <div>
+                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
+                        <a href="/showreport/xls/itemactivity" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                        <a href="/showreport/pdf/itemactivity" target="_blank" title="Експорт у PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
+                                                                         
+
+                    </div>
+
+
+                    <div zippy="preview" class="table-responsive-sm">
+                     <div class="spinner-border m-3" role="status">
+                      <span class="sr-only">Завантаження...</span>
+                    </div>                 
+                    </div>
+
+                </div>
+            </div>
+        </div>
+   <script>
+                    function loadRep(){
+                        
+                        callPageMethod('getData',null,null,(data)=> 
+                        {
+                           
+                              
+                               $('#preview').html(data);  
+
+
+                        });
+                    }
+        </script>        
+    </body>
+</html>

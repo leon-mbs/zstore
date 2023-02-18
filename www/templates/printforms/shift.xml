@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<CHECK >
+
+    <CHECKHEAD>
+        <DOCTYPE>{{doctype}}</DOCTYPE>
+
+        <UID>{{guid}}</UID>
+
+        <TIN>{{tin}}</TIN>
+
+        {{#inn}}
+        <IPN>{{inn}}</IPN>
+        {{/inn}}
+
+        <ORGNM>{{firmname}}</ORGNM>
+
+        <POINTNM>{{pointname}}</POINTNM>
+
+        <POINTADDR>{{address}}</POINTADDR>
+
+        <ORDERDATE>{{date}}</ORDERDATE>
+
+        <ORDERTIME>{{time}}</ORDERTIME>
+
+        <ORDERNUM>{{docnumber}}</ORDERNUM>
+
+        <CASHDESKNUM>{{posinner}}</CASHDESKNUM>
+        <CASHREGISTERNUM>{{posnumber}}</CASHREGISTERNUM>
+
+
+        <CASHIER>{{username}}</CASHIER>
+
+        <VER>1</VER>
+          {{#testing}}
+        <TESTING>1</TESTING>
+        {{/testing}}
+  </CHECKHEAD>
+
+
+</CHECK>

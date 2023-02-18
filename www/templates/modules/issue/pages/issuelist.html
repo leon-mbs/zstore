@@ -1,0 +1,658 @@
+<html>
+
+    <head>
+      <title> Перелік завдань   </title>
+
+    </head>
+
+    <body>
+
+ {{={| |}=}}   
+    
+        <div class="row"  id="vapp" >
+  
+            <div class="col-12  ">
+                <h3>Перелік завдань </h3>
+                <div class="navbar nav">
+
+
+                    <form   class="form-inline ">
+                        <input v-model="searchnumber" placeholder="Пошук..." class="form-control mr-2" >
+                                             
+                        <label for="searchstatus">Статус </label>
+                        <select v-model="searchstatus"  class="form-control mr-sm-2  " >
+                            <option value="0">Відкриті</option>                           
+                           <option v-for="option in stlist" :value="option.key">
+                              {{ option.value }}
+                          </option> 
+                        </select>
+                        <label for="searchemp">виконавець </label>
+                        <select v-model="searchemp"   class="form-control mr-sm-2  "  >
+                            <option value="0">Не обрано</option>
+                           <option v-for="option in emps" :value="option.key">
+                              {{ option.value }}
+                          </option> 
+                        </select>
+                        <label for="searchproject"> проект </label>
+                        <select v-model="searchproject"   class="form-control mr-sm-2  "  >
+                            <option value="0">Не обрано</option>
+                           <option v-for="option in projects" :value="option.key">
+                              {{ option.value }}
+                          </option> 
+                        </select>
+
+                       <label for="searchproject"> сортувати </label>
+                        <select v-model="searchsort"   class="form-control mr-sm-2  "  >
+                            <option value="0">За пріоритетом</option>
+                            <option value="1">За номером</option>
+                            <option value="2">За оновленням</option>
+                        </select>
+
+                        <input v-on:click.prevent="onfilter" type="button" class="mr-2  btn btn-outline-success  " value="ОК">
+                    </form>
+                </div>
+
+                <a v-on:click.prevent="addnew" class="btn btn-sm btn-outline-success">Нове завдання</a>
+
+            </div>
+    
+ 
+            <div class="col-12 col-md-3  col-xl-2">
+
+                <table class="table   table-sm  table-hover   ">
+
+                    <tr v-for="issue,index  in issuelist"  >
+                        <td > 
+
+                            <table class="ctable" style="width:100%">
+                                <tr>
+                                    <td><a :class="issue.prcl" :href="issue.url"  title="Пряме посилання"  >{{issue.issue_id}}</a></td>
+
+                                    <td class="text-right"><h5><span :title="issue.emptitle"  class="badge badge-info badge-pill">{{issue.emp}}</span>
+                                        </h5></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><a  v-on:click.prevent="open(issue.issue_id)">{{issue.issue_name}}</a></td>
+                                </tr>
+
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+
+               
+            </div>
+           
+           
+           
+            <div v-show="issue>0" class="col-12 col-md-9  col-xl">
+                <div class="row"  >
+                    <div class="col-12 col-md-7  ">
+
+                        <h4 >{{title}}</h4>
+                        <span  >Автор <b>{{creator}}</b>  Створено  <b>{{createdon}}</b> Оновлено <b>{{updateddon}}</b></span>
+                        <details class="mt-2 mb-2">
+                           <summary><b>Опис</b></summary>
+                            {{desc}}   
+                        </details>  
+                        
+                        <a v-on:click.prevent="edit"  class="text-info  "><i class="fa fa-edit"></i> Редагувати</a>&nbsp;&nbsp;
+                        <a v-on:click.prevent="del" class="text-danger"><i class="fa fa-trash"></i> Вилучити</a>
+                        <hr>
+                        <form class="form-inline" id="fileaddform" enctype="multipart/form-data">
+
+                            <label> Вибрати файл: </label>
+
+                            <input name="pfile" class="form-control mr-2" type="file"  >
+
+                            <input v-on:click.prevent="onfile" class="btn btn-info  " type="button" value="Додати:">
+
+                        </form>
+                    <div v-for="f in filelist"  style="float:left">
+
+                        <i class="fa fa-paperclip"></i> <a :href="f.url" target="_blank">{{f.filename}}</a>
+                        &nbsp;<a v-show="f.candel" v-on:click.prevent="delfile(f.file_id)"   class="text-danger  text-bold" title="Вилучити">x</a>&nbsp;&nbsp;
+
+                    </div>
+
+
+                        <hr>
+                        <h5>Коментарі</h5>
+                        <table style="width:400px" class="table table-sm">
+                            <tr v-for="msg in msglist">
+                            <td>
+                                <span><b >{{msg.user}}</b> <span  class="text-muted float-right">{{msg.date}}</span></span>
+
+                                <br><span  >{{msg.data}}</span>
+
+                            </td>
+                               <td v-show="msg.candel" valign="top"><a  v-on:click.prevent="delmsg(msg.message_id)"  class="   text-danger" title="Вилучити">x</a></td>
+                            </tr>
+                        </table>
+                        
+                       
+                        <form    >
+                            <label> Коментар: </label>
+                            <div class="form-group">
+                                <textarea class="form-control" v-model="msg"
+                                          style="width:400px;height:120px;"></textarea>
+                            </div>
+                            <div class="form-group">
+                               
+                               <details>
+                        <summary>Повiдомити</summary>
+                      
+                                <div v-for="user in editemps">
+                                  <input type="checkbox" :id="user.key" :value="user" v-model="selectedUsers">
+                                  <label :for="user.key">{{user.value}}</label>
+                                </div>
+                            </details>            
+                            
+                            </div>
+                         
+                            <div class="form-group">
+                                <input  v-on:click.prevent="onmsg" class="btn btn-success  " type="button" value="Додати">
+                            </div>
+                        </form>
+
+
+                    </div>
+                    <div class="col-12 col-md-4  ">
+
+                        <form zippy="stform">
+
+                            <div class="form-group  ">
+                                <label for="ststatus">Статус </label>
+
+                                <select v-on:change="onstatus" v-model="ststatus" class="form-control   "  >
+                                       <option v-for="option in stlist" :value="option.key">
+                                      {{ option.value }}
+                                      </option> 
+                                     </select>
+      
+
+
+                            </div>
+                            <div class="form-group  ">
+                                <label for="stuser">Перевести на </label>
+
+
+                                <select v-on:change="onstatus" class="form-control     " v-model="stemp">
+                                      <option v-for="option in editemps" :value="option.key">
+                                         {{ option.value }}
+                                      </option> 
+    
+                                </select>
+
+
+                            </div>
+                            <div class="form-group  ">
+                                <label for="stpr">Пріоритет </label>
+
+
+                                <select v-on:change="onstatus" class="form-control   " v-model="stpr">
+                                   <option v-for="option in prlist" :value="option.key">
+                                      {{ option.value }}
+                                      </option> 
+                             
+                                </select>
+                            </div>
+                           
+
+
+                        </form>
+                        <details>
+                        <summary>Iсторiя</summary>
+                        <table class=" table table-sm">
+                            <tr v-for="h in hist"  >
+                                <td> {{h.time}}  {{h.user}}  
+                                 <br>
+                                <span v-html="h.desc"></span>
+                                </td>
+                            </tr>
+                        </table>
+                        </details><br><br>
+                     
+                    </div>
+                    
+                                         
+                    
+                </div>
+            </div>
+
+
+        
+
+       
+            <div  v-show="editissue != -1" class="col-12 col-md-8 col-xl-4">
+                <form id="fval">
+                    <div class="form-group">
+                        <label for="edittitle">Назва</label>
+                        <input type="text" required="required" class="form-control" v-model="edittitle">
+                    </div>
+                    <div class="form-group">
+                        <label for="editdesc">Опис</label>
+                        <textarea style="height:100px;" class="form-control" v-model="editdesc"></textarea>
+                    </div>
+                    <div v-show="editissue==0" class="form-group">
+                        <label for="editproj">Проект </label>
+                        <select v-on:change="onprchanged"   class="form-control    " v-model="editproj" style="width:200px">
+                        <option value="0">Не обрано</option>
+                           <option v-for="option in projects" :value="option.key">
+                              {{ option.value }}
+                          </option> 
+   
+                        </select>
+                    </div>
+                    <div  v-show="editissue==0"  class="form-group">
+                        <label for="editpr">Пріоритет </label>
+                        <select class="form-control    " v-model="editpr" style="width:200px">
+                                  <option v-for="option in prlist" :value="option.key">
+                                      {{ option.value }}
+                                      </option> 
+                             
+                    
+                        </select>
+                    </div>
+                    <div  v-show="editissue==0"  class="form-group">
+                        <label for="editemp">Виконавець </label>
+                        <select class="form-control     " v-model="editemp" style="width:200px">
+                            <option value="0">Не обрано</option>
+                           <option v-for="option in editemps" :value="option.key">
+                              {{ option.value }}
+                          </option> 
+                               
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edithours">Планований час, годин</label>
+
+                        <input pattern="[0-9]+" style="width:60px" v-model="edithours"   type="text" class="form-control qtyprice">
+
+                    </div>
+
+
+                    <div class="form-group">
+                        <a  v-on:click.prevent="cancel" class="btn btn-outline-secondary">Скасувати</a>&nbsp;
+                        <input  v-on:click.prevent="save" type="button" class="btn btn-outline-primary" value="Зберегти">
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+     {|={{ }}=|}     
+
+        <script>
+       var vapp = new Vue({
+            el: '#vapp',
+            data() { return {
+
+                 projects:[]  ,
+                 emps:[]  ,
+                 stlist:[]  ,
+                 prlist:[]  ,
+                 issuelist:[]  ,
+                 hist:[]  ,
+                  
+                 selectedUsers:[]  ,
+                 searchnumber:''  ,
+                 searchstatus:0  ,
+                 searchproject:0  ,
+                 searchemp:0  ,
+                 searchsort:0  ,
+                 issue:0  ,
+                 title:""  ,
+                 desc:""  ,
+                
+                
+                 editissue:-1, 
+                 editpr:2, 
+                 editemp:0, 
+                 edithours:0, 
+                 editproj:0, 
+                 edittitle:"", 
+                 editdesc:"", 
+                 editemps:[],
+                 
+                  
+                 cuser_id:0, 
+                 ststatus:0, 
+                 stpr:0, 
+                 stemp:0, 
+                 creator:"", 
+                 createdon:"", 
+                 updateddon:"", 
+                 msg:"" ,
+                  
+                 msglist:[] ,
+                 filelist:[] ,
+               
+            } } ,    
+            components: {
+            
+               'typeahead': httpVueLoader('/assets/js/vue/typeahead.vue') 
+
+            },
+            methods: {             
+                loaddata: function(){
+                    let body={
+                        searchnumber:this.searchnumber,
+                        searchstatus:this.searchstatus,
+                        searchproject:this.searchproject,
+                        searchemp:this.searchemp,
+                        searchsort:this.searchsort,
+
+
+
+                    };
+                    
+                      callPageMethod('getList',null, JSON.stringify(body),(data)=> 
+                      {
+                          let tmp =   JSON.parse(data)  
+                          this.issuelist=  tmp.issuelist
+                          
+                          
+     
+                          
+                      });
+                }  ,
+                onfilter:function (){
+                    
+                    this.loaddata();
+                }   ,
+                open:function (id){
+
+                   this.issue = id
+                   this.editissue =-1
+                   
+                   this.editemps=[]                  
+                  callPageMethod('loadissue',[this.issue], null,(data)=> 
+                  {
+                      
+                      let tmp     =  JSON.parse(data)  
+                                                
+                      
+                      this.ststatus = tmp.status
+                      this.editpr = tmp.priority
+                      this.stpr = tmp.priority
+                      this.editemp = tmp.user_id
+                      this.stemp = tmp.user_id
+                      this.editproj = tmp.project_id
+                      this.edithours = tmp.hours
+                      this.edittitle =tmp.issue_name
+                      this.title =tmp.issue_name
+                      this.editdesc=tmp.desc
+                      this.desc=tmp.desc
+                      this.creator=tmp.creator
+                      this.createdon=tmp.createdon
+                      this.updateddon=tmp.updateddon
+                      this.loadempsbypr(this.editproj);
+    
+
+                  });            
+                  this.loadhistory();
+                  this.getmsglist();
+                  this.getfilelist();
+
+                
+                }  , 
+                edit:function ( ){
+                  this.editissue = this.issue;
+                  this.issue  = 0                 
+                  this.loadempsbypr(this.editproj);
+       
+                } ,  
+                
+                cancel:function ( ){
+                   this.editissue=-1
+                   
+                } ,  
+                save:function ( ){
+                    
+                    
+                     var v = checkFormInput('fval');
+                    if(!v) return
+ 
+                    
+                   if(this.editproj==0) {
+                        toastr.error("Проект не обрано!" )
+                        return;
+                   }
+                    
+                   if(this.editemp==0) {
+                        toastr.error("Виконавця не обрано!" )
+                        return;
+                   }
+              
+                   let body={
+                      id:this.editissue ,
+                      priority:this.editpr ,
+                      user_id:this.editemp , 
+                      project_id:this.editproj , 
+                      hours:this.edithours , 
+                      issue_name:this.edittitle , 
+                      desc:this.editdesc 
+                
+
+                    };
+                               
+                    callPageMethod('saveissue',null, JSON.stringify(body),(data)=> 
+                    {
+                      if(data=="") { 
+                        this.editissue = -1;                                  
+
+                        this.loaddata();
+                      }
+                      else {
+                        toastr.error(data )
+              
+                      }
+                    
+                  });            
+                 
+
+                   
+                } ,  
+                addnew:function ( ){
+                   this.issue  = 0                 
+                   this.editissue = 0
+                   this.editpr = 2
+                   this.editproj = 0
+                   this.editemp = 0
+                   this.edithours = 0
+                   this.edittitle =""
+                   this.editdesc=""
+                   this.editemps=[]
+               
+                } ,  
+                del:function ( ){
+                  if( confirm("Видалити завдання?")==false )  return
+                   
+                  callPageMethod('del',[this.issue], null,(data)=> 
+                  {
+                     this.editissue = -1
+                     this.issue = 0
+                     this.loaddata();
+                     
+                  });                    
+                   
+                   
+                } ,  
+             
+                onprchanged:function ( ){
+                    this.loadempsbypr(this.editproj);
+                    this.editemp = 0
+                } ,  
+             
+                onstatus:function ( ){
+                    let body={
+                      id:this.issue ,
+                      priority:this.stpr ,
+                      user_id:this.stemp , 
+                      status:this.ststatus   
+                
+
+                    };
+                    
+                    
+                    
+                      callPageMethod('update',[], JSON.stringify(body),(data)=> 
+                      {
+                         this.loaddata()
+                         this.loadhistory()
+                         
+                      });                    
+  
+
+                } ,  
+             
+                loadempsbypr(id){
+                          callPageMethod('empbyproj',[id], null,(data)=> 
+                          {
+                              
+                              let tmp     =  JSON.parse(data)  
+                              this.editemps =  tmp.emps
+                              
+                             
+                          });            
+                },
+                loadhistory(){
+                          callPageMethod('loadhistory',[this.issue], null,(data)=> 
+                          {
+
+                              let tmp     =  JSON.parse(data)  
+                              this.hist =  tmp.hist
+                              
+                             
+                          });            
+                }  ,
+            onmsg:function(){
+                  var data = new  FormData();
+                  
+                  var u ="";
+                  this.selectedUsers.forEach((us) => u = u + ","+ us.key );
+                  data.append('msg', this.msg);
+                  data.append('users',  u);
+         
+                
+                  callPageMethod('addMsg',[this.issue], data,(data)=> 
+                  {     
+                        this.msg='' 
+                        this.selectedUsers  = []                         
+                        this.getmsglist();
+                  });               
+             
+            } ,
+            delmsg:function(id){
+                  callPageMethod('delMsg',[id], null,(data)=> 
+                  {                                
+                        this.getmsglist();
+                  });               
+             
+            } ,
+            getmsglist:function(){
+                  callPageMethod('getMsgList',[this.issue], null,(data)=> 
+                  {                                
+                      let tmp =   JSON.parse(data)  
+                      this.msglist = tmp.list
+                  });               
+             
+            } ,
+            onfile:function(){
+                   var el = document.getElementById('fileaddform') ;
+                   var f = new  FormData(el)  
+          
+                  callPageMethod('addFile',[this.issue], f,(data)=> 
+                  {     
+          
+                        this.getfilelist();
+                  });               
+                  el.reset();
+
+            } ,
+            delfile:function(id){
+                  callPageMethod('delFile',[id], null,(data)=> 
+                  {                                
+                        this.getfilelist();
+                  });               
+             
+            } ,
+            getfilelist:function(){
+                  callPageMethod('getFileList',[this.issue], null,(data)=> 
+                  {                                
+                      let tmp =   JSON.parse(data)  
+                      this.filelist = tmp
+                  });               
+             
+            } ,
+        
+              
+                 
+            },
+            watch:{
+                  
+            }    ,
+            mounted: function(){
+                  callPageMethod('init',null, null,(data)=> 
+                  {
+                      
+                      let tmp     =  JSON.parse(data)  
+                      this.stlist =  tmp.stlist
+                      this.prlist =  tmp.prlist
+                      this.emps  =  tmp.emps
+                      this.projects  =  tmp.projects
+                      this.issue  =  tmp.id
+                      this.cuser_id  =  tmp.cuser_id
+                      if(tmp.isnew==true) {
+                          this.edited = true
+                          this.issue = 0
+                          this.editpr = 2
+                          this.editproj = tmp.project_id;
+               
+                         
+                          
+                      }
+                      this.pagesize=tmp.pagesize
+                      this.loaddata();
+                      
+                      if(tmp.id >0) this.show(tmp.id)
+                  });            
+            
+       
+           
+       }   
+               
+       })       
+          
+         
+         
+         
+                $('#editdesc').summernote({
+                    height: 200,
+                    lang: 'uk-UA',
+
+                    callbacks: {
+                        onEnter: function (e) {
+                            if (e.keyCode === key.code.ENTER) {
+                                e.shiftKey = true;
+                                context.triggerEvent('enter', e);
+                            }
+                        },
+                        onPaste: function (e) {
+
+                            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                            e.preventDefault();
+                            document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
+                        }
+                    }
+                });
+
+          
+
+           
+        </script>
+    </body>
+
+</html>

@@ -1,0 +1,215 @@
+<html>
+
+    <head>
+        <title>  OLAP аналіз  </title>
+
+    </head>
+
+    <body>
+        <div class="row">
+            <div class="col-12 col-md-8  col-xl-6">
+                <h3>OLAP аналіз</h3>
+                 <form zippy="startform">
+                          <div class="form-group row">
+                            <label class="col-5 col-form-label" for="stfrom">З</label>
+                            <div class="col-7">
+                                 <input class="form-control " style="width: 130px" type="text" zippy="stfrom">
+                           </div>
+                        </div>
+                         <div class="form-group row">
+                            <label class="col-5 col-form-label" for="stto">По</label>
+                            <div class="col-7">
+                                 <input class="form-control " style="width: 130px" type="text" zippy="stto">
+                           </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label" for="sttype">Тип</label>
+                            <div class="col-7">
+                                 <select class="form-control  " zippy="sttype"> 
+                                     <option value="0">Не вибрано</option>
+                                     <option value="1">Продаж, виторг</option>
+                                     <option value="2">Продаж, прибуток</option>
+                                     <option value="3">Закупка</option>
+                                     <option value="4">Послуги</option>
+
+                                     <option value="5">Розрахунки</option>
+                                 </select>
+                           </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label" for="stver">По вертикалі</label>
+                            <div class="col-7">
+                                 <select class="form-control  " zippy="stver"> 
+
+                                 </select>
+                           </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label" for="sthor">По горизонталі</label>
+                            <div class="col-7">
+                                 <select class="form-control  " zippy="sthor"> 
+                                    
+                                 </select>
+                           </div>
+                        </div>
+                        <div class="form-group">
+                               <input   type="submit" value="Далі &gt;" class="btn btn-primary  ">
+                                
+                        </div>
+                 </form>
+                </div> 
+                <div class="col-12">                
+                <div zippy="reppan">
+                    <a class="btn btn-info mb-2" zippy="back">&lt; Назад</a> 
+                    <br><b style="font-size:larger">Зріз по:</b>
+                    
+                        <form zippy="filter" class="row" >
+                             <div class="col-12 col-md-6  col-xl-4">
+                                 {{#cat_name}}
+                                 <div class="form-group row">
+                                    <label class="col-3 col-form-label" for="slcat_name">Категорія</label>
+                                    <div class="col-9">
+                                         <select class="form-control  select2 " zippy="slcat_name"> 
+                                              <option value="0">Не вказано</option>     
+                                         </select>
+                                   </div>
+                                </div>
+                                 {{/cat_name}}
+                                 {{#itemname}}
+                                 <div class="form-group row">
+                                    <label class="col-3 col-form-label" for="slitemname">ТМЦ</label>
+                                    <div class="col-9">
+                                         <select class="form-control select2 " zippy="slitemname"> 
+                                           <option value="0">Не вказано</option>            
+                                         </select>
+                                   </div>
+                                </div>
+                                 {{/itemname}}
+                                 {{#customer_name}}
+                              <div class="form-group row">
+                                    <label class="col-3 col-form-label" for="slcustomer_name">Контрагент</label>
+                                    <div class="col-9">
+                                         <select class="form-control select2  " zippy="slcustomer_name"> 
+                                           <option value="0">Не вказано</option>                                     
+                                         </select>
+                                   </div>
+                              </div>
+                               {{/customer_name}}
+                               {{#service_name}}
+                                    
+                              <div class="form-group row">
+                                    <label class="col-3 col-form-label" for="slservice_name">Послуга</label>
+                                    <div class="col-9">
+                                         <select class="form-control  select2 " zippy="slservice_name"> 
+                                                  <option value="0">Не вказано</option>                              
+                                         </select>
+                                   </div>
+                                </div>
+                               {{/service_name}}
+
+                            
+                            </div>
+                             <div class="col-12 col-md-4  col-xl-3">
+                                 {{#document_date}}
+  
+                                 <div class="form-group row">
+                                    <label class="col-5 col-form-label" for="sldocument_date">Дата</label>
+                                    <div class="col-7">
+                                         <select class="form-control  select2 " zippy="sldocument_date"> 
+                                                         <option value="0">Не вказано</option>                       
+                                         </select>
+                                   </div>
+                                </div>
+                                 {{/document_date}}
+                                 {{#firm_name}}
+              
+                                <div class="form-group row">
+                                    <label class="col-5 col-form-label" for="slfirm_name">Фірма</label>
+                                    <div class="col-7">
+                                         <select class="form-control  select2 " zippy="slfirm_name"> 
+                                           <option value="0">Не вказано</option>                                  
+                                         </select>
+                                   </div>
+                                </div>
+                                 {{/firm_name}}
+                                  {{#username}}
+                                <div class="form-group row">
+                                    <label class="col-5 col-form-label" for="slusername">Співробітник</label>
+                                    <div class="col-7">
+                                         <select class="form-control  select2 " zippy="slusername"> 
+                                             <option value="0">Не вказано</option>                                   
+                                         </select>
+                                   </div>
+                                </div>
+                                 {{/username}}
+                                  {{#mf_name}}
+                               <div class="form-group row">
+                                    <label class="col-5 col-form-label" for="slmf_name">Рахунок</label>
+                                    <div class="col-7">
+                                         <select class="form-control  select2 " zippy="slmf_name"> 
+                                               <option value="0">Не вказано</option>                                 
+                                         </select>
+                                   </div>
+                                </div>
+                                  {{/mf_name}}
+                            </div>
+                                 
+                                  
+                          <div class="col-12 col-md-4  col-xl-3">
+                                 {{#storename}}
+                                 <div class="form-group row">
+                                    <label class="col-5 col-form-label" for="slstorename">Склад</label>
+                                    <div class="col-7">
+                                         <select class="form-control  select2 " zippy="slstorename"> 
+                                               <option value="0">Не вказано</option>                                 
+                                         </select>
+                                   </div>
+                                </div>
+                                  {{/storename}}
+                                  {{#branch_name}}
+                              <div class="form-group row">
+                                    <label class="col-5 col-form-label" for="slbranch_name">Філія</label>
+                                    <div class="col-7">
+                                         <select class="form-control select2  " zippy="slbranch_name"> 
+                                               <option value="0">Не вказано</option>                                 
+                                         </select>
+                                   </div>
+                                </div>
+                               {{/branch_name}}
+                               
+                    
+                            </div>
+                            
+                             <div class="col-12">
+          
+                               <input   type="submit" value="Оновити" class="btn btn-primary  ">
+                        
+                            </div>
+                         
+
+                          
+
+                        </form>
+
+                    
+
+                    <div zippy="detail">
+                        <div>
+
+                            <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
+                            <a href="/showreport/xls/olap" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i></a>
+
+
+                        </div>
+
+                        <div zippy="preview" class="table-responsive-sm">
+                        </div>
+
+                      </div>
+                    </div>                     
+               </div>
+            
+        </div>
+    </body>
+
+</html>
