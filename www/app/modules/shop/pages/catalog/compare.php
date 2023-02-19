@@ -78,7 +78,7 @@ class Compare extends Base
                 $diff["-".$value]= "-".$value;
                 
             }
-            if(count(array_keys($diff))>1)  { //есть различные
+            if(count(array_keys($diff))>1  )  { //есть различные
                $attrvalues[] = array('name'=>$attr->attributename,'values'=>$values)  ;     
             }
             
