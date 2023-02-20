@@ -140,8 +140,12 @@
                                
             }}  ,   
         mounted: function(){
-             
-              callPM('vLoadLists',[ ], null,(data)=> 
+              var data= {
+                  cats:true,
+                  brands:true,
+              }
+ 
+              callPM('vLoadLists',[ ], JSON.stringify(data),(data)=> 
               {
                    var data = JSON.parse(data)
                    

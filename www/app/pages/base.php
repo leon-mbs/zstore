@@ -491,6 +491,20 @@ class Base extends \Zippy\Html\WebPage
     }  
  
     
+    public function vSaveNewcust($args,$post=null) {
+        $post=json_decode($post) ; 
+      
+        $c = new  \App\Entity\Customer() ;
+        $c->customer_name = $post->name;
+        $c->phone =  $post->phone;
+        $c->email =  $post->email;
+        
+        $c->save() ;
+        $ret = array('customer_id'=>$c->customer_id) ;
+       
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);          
+   }
+    
     public function vSaveNewitem($args,$post=null) {
         
        $post=json_decode($post) ; 
@@ -531,20 +545,64 @@ class Base extends \Zippy\Html\WebPage
        
        return json_encode($ret, JSON_UNESCAPED_UNICODE);          
     }  
-      //загрузка  категорий  и брендов
+
+    //загрузка  категорий  и брендов
     public  function vLoadLists($args,$post){
-         
+         $post = json_decode($post) ;
          $ret = [];
-         
-         $cats =  \App\Entity\Category::getList() ;
-         $brands = \App\Entity\Item::getManufacturers(true) ;
-         
-         $ret['cats'] =  \App\Util::tokv($cats) ;
-         $ret['brands'] =  \App\Util::tokv($brands) ;
+         if($post->cats) {
+             $cats =  \App\Entity\Category::getList() ;
+             $ret['cats'] =  \App\Util::tokv($cats) ;
+         }
+         if($post->brands) {
+             $brands = \App\Entity\Item::getManufacturers(true) ;
+             $ret['brands'] =  \App\Util::tokv($brands) ;
+         }
+         if($post->stores) {
+             $stores = \App\Entity\Store::getList() ;
+             $ret['stores'] =  \App\Util::tokv($stores) ;
+         }
+         if($post->firms) {
+             $firms = \App\Entity\Firm::getList() ;
+             $ret['firms'] =  \App\Util::tokv($firms) ;
+         }
           
          return json_encode($ret, JSON_UNESCAPED_UNICODE);   
      } 
   
+     public  function vLoadContracts($args,$post){
+         
+         $ret=[];
+         $ret['contracts'] =   \App\Util::tokv( \App\Entity\Contract::getList($args[0], $args[1]) );
+ 
+
+         return json_encode($ret, JSON_UNESCAPED_UNICODE);   
+  
+     }
+     public  function vLoadCust($args,$post){
+         
+         $ret=[];
+         $info=[] ;
+         $c = \App\Entity\Customer::load($args[0]) ;
+         if($c != null) {
+             $info['customer_name'] = $c->customer_name;
+             $info['disctext'] = '';
+             $info['discount']  = $c->getDiscount()  ;
+             $info['bonus']  = $c->getBonus()  ;
+             if (doubleval($info['discount']) > 0) {
+                $info['disctext'] =  "Постійна знижка {$info['discount']}%";
+             } else {
+                if ($info['bonus'] > 0) {
+                    $info['disctext'] = "Нараховано бонусів " . $info['bonus'];
+                }
+             }          
+         }
+         $ret['custinfo'] = $info;
+ 
+
+         return json_encode($ret, JSON_UNESCAPED_UNICODE);   
+  
+     }
 
     
 }

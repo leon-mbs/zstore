@@ -9,9 +9,8 @@
        <div class="row" id="vapp">
            <div v-show="showdoc" class="col-12">
    
-           <form  id="docform"  >
+           <form class="row" id="docform"  >
 
-            <div class="row">
               <div class="col-12 col-md-6 col-xl-4">
                    <div class="form-group row">
                         <label class="col-5 col-form-label" for="document_number">Номер документа</label>
@@ -40,11 +39,8 @@
                         </div>
                   </div>
            
-              </div> 
-            </div> 
-          <div class="row">
-              
-             <div class="col-10  col-lg-8">
+            </div>    
+      <div class="col-10  col-lg-8">
                     <a  v-on:click.prevent="addrow" class="btn btn-info  ">Додати позицію</a>
 
                     <table class="table  table-sm">
@@ -98,12 +94,10 @@
 
                
                </div>  
-            </div>  
                
           </form>
-           </div>        
-          
-           <div v-show="showedit" class="col-12 col-md-4 col-xl-3">
+        </div>        
+         <div v-show="showedit" class="col-12 col-md-4 col-xl-3">
 
            <form id="editform"  >
             <h4>Введення товару </h4>
@@ -159,8 +153,9 @@
                
         </form>
            </div>     
+         
             
-           <div id="modalnewitem" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+          <div id="modalnewitem" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered   ">
                     <div class="modal-content">
@@ -336,12 +331,12 @@
             onAddNew:function (){
             
               $('#modalnewitem').modal('show') 
-              this.nname ='' ,
-              this.ncode ='' ,
-              this.nmsr ='' ,
-              this.ncat =0 ,
-              this.nbrand ='' ,
-
+              this.nname =''  
+              this.ncode =''  
+              this.nmsr =''  
+              this.ncat =0  
+              this.nbrand =''  
+         
    
               callPM('vLoadLists',[ ], null,(data)=> 
               {
@@ -542,7 +537,15 @@
     }
   
   
-  
+    function _onItemSelByWidget(){
+         var url = getMethodUrl("onItemSelByWidget",[12]) 
+         
+         url = url.replace('&ajax=true','')
+         
+         window.location = url
+          
+
+    }   
   </script>
     
     </body>

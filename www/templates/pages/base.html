@@ -44,7 +44,7 @@
   }
        
   function checkFormInput(id){
-
+    var ret = true
     
     $('#'+id+' input ').each(
         function(index){  
@@ -53,13 +53,13 @@
             
             var v =   input.get(0).reportValidity() 
             if(!v) {
-                return  false
+               ret =  false
             }
             
         }
     );   
      
-    return true
+    return ret
   }
   
   
