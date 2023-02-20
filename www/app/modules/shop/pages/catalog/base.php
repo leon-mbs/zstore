@@ -54,7 +54,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["custname"] = System::getSession()->custname;
         
         
-        $this->_tvars["currencyname"] = $shop["currencyname"];
+        $this->_tvars["currencyname"] = $shop["currencyname"] ?? '';
         $this->_tvars["basketcnt"] = false;
         $this->_tvars["comparecnt"] = false;
         $this->_tvars["phone"] = strlen($shop["phone"]) > 0 ? $shop["phone"] : false;
@@ -75,8 +75,9 @@ class Base extends \Zippy\Html\WebPage
         $this->add(new \Zippy\Html\Link\BookmarkableLink('logo', "/"))->setVisible(strlen($this->op['logo']) > 0);
         $this->logo->setValue($this->op['logo']);
         $this->_tvars["shopname"] = $this->op['shopname'];
-        $this->_tvars["usefilter"] = strlen($this->op['usefilter']) > 0;
-        $this->_tvars["usefeedback"] = strlen($this->op['usefeedback']) > 0;
+        $this->_tvars["usefilter"] = $this->op['usefilter'] == 1;
+        $this->_tvars["usefeedback"] = $this->op['usefeedback'] == 1;
+        $this->_tvars["nouseimages"] =  $this->op['nouseimages'] ==1;
         $this->_tvars["isfood"] = $this->op['ordertype'] == 2;
 
         $this->_tvars["np"] = $modules['np'] == 1 && $this->op['ordertype'] != 2;

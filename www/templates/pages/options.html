@@ -4,7 +4,7 @@
 
     </head>
     <body>
-        <h2>Налаштування </h2>
+        <h2>Загальнi налаштування </h2>
         <div class="row">
 
 
@@ -12,7 +12,7 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <h4>Загальнi налаштування</h4>
+                        <h4>Основнi налаштування</h4>
                         <small>Після зміни налаштувань слід перелогінитись</small>
 
                         <form zippy="common">
@@ -22,25 +22,8 @@
                                 <small> Назва для логотипу та сторiнки логiну. </small>
                             </div>
 
-                            <div class="form-group  ">
-                                <label for="partiontype">Тип партійного обліку</label>
-                                <select class="form-control" zippy="partiontype"> </select>
-                                <small>Облік окремо по кожній закупівельній ціні дозволяє точно враховувати
-                                    прибуток, але ускладнює списання партій.</small>
-
-                            </div>
-
-                            <div class="form-group  ">
-                                <label>Типи відпускних цін</label>
-                                <input class="form-control" type="text" zippy="price1" required="required">
-                                <input class="form-control" type="text" zippy="price2">
-                                <input class="form-control" type="text" zippy="price3">
-                                <input class="form-control" type="text" zippy="price4">
-                                <input class="form-control" type="text" zippy="price5">
-                                <small>Введіть найменування типів цін. Непотрібні поля залиште
-                                    порожніми</small>
-
-                            </div>
+ 
+  
                             <div class="form-group  ">
                                 <label for="qtydigits">Знаків після крапки в кількості</label>
 
@@ -84,40 +67,9 @@
                                 </select>
                             </div>
 
-                            <div class="form-group">
-                                <label for="defprice">Націнка за замовчуванням, у відсотках</label>
-                                <input style="width:100px" pattern="[0-9]+" class="form-control" type="text"
-                                       zippy="defprice">
-                                <small>Використовується, якщо не задана ціна в товарі або в категорії
-                                    товару</small>
-                            </div>
-            
+ 
 
 
-                            <div class="form-check">
-                                <input zippy="autoarticle" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="autoarticle"> Автоматично створювати
-                                    артикули</label>
-                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Автоматична генерація номерів артикулів для товарів"></i>
-                            </div>
-
-
-                            <div class="form-check">
-                                <input zippy="usesnumber" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="usesnumber">Облік ТМЦ за серіями
-                                    (партіями) виробника</label>
-                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Окремий облік по кожній партії виробника з урахуванням терміну придатності або по серiйному номеру виробу. Чи використовує конкретний товар облік по партіях вказується в картці товару."></i>
-                            </div>
-
-                            <div class="form-check">
-                                <input zippy="useimages" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="useimages">Зображення в
-                                    номенклатурі </label>
-                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="   Можливість додавання зображень в довідник товарів"></i>
-                            </div>
                             <div class="form-check">
                                 <input zippy="usescanner" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="usescanner">Підтримка сканера штрих
@@ -141,51 +93,12 @@
 
 
                             <div class="form-check">
-                                <input zippy="allowminus" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="allowminus">Дозволити списання в
-                                    мiнус </label>
-                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title=" Дозвiл списувати таку кiлькiсть, що призводить до мiнусового залишку на складi "></i>
-                            </div>
-                            <div class="form-check">
-                                <input zippy="noallowfiz" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="noallowfiz">Не дозволяти накладнi без
-                                    контрагента </label>
-                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title=" Покупець обовязково має бути зазначений та занесений у довiдник "></i>
-                            </div>
-
-                            <div class="form-check">
-                                <input zippy="useval" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="useval">Валюта в закупiвлi</label>
-                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title=" Можливiсть вводити накладну в валютi та перерахунку курсової рiзнимцi при продажі.  "></i>
-                            </div>
-                            <div class="form-check">
                                 <input zippy="capcha" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="capcha">Капча на формi логiну</label>
                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                                    title=" Додатковий захист вiд несанкцiонованого доступу "></i>
                             </div>
-                            <div class="form-check">
-                                <input zippy="numberttn" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="numberttn">Кiлька вiдправок на одне замовлення</label>
-                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title=" Можливiсть створити кiлька накладних на одне замовлення, але якщо увiмкнено - не виконується перевiрка наявностi ТТН та автоматичної змiни статусу замовленя по ТТН "></i>
-                            </div>
-                            <div class="form-check">
-                                <input zippy="usecattree" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="usecattree">Ієрархiя категорiй ТМЦ </label>
-                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title=" Можливість вибудовувати деревоподібну ієрархію категорій. Має сенс, якщо передбачається використання в онлайн каталозі "></i>
-                            </div>
-                           <div class="form-check">
-                                <input zippy="nocheckarticle" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="nocheckarticle">Не перевіряти унікальність артикулів</label>
-                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Використовується, наприклад, в обліку автозапчастин, де ідентифікація товару йде по артикулу виробника й імені виробника.
-                                    Не слід вмикати без необхідності - невірно буде працювати підбір зі сканером штрих коду. "></i>
-                            </div>                   
+                
                             <div class="form-check">
                                 <input zippy="showactiveusers" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="showactiveusers">Показувати активних користувачiв </label>
@@ -200,15 +113,7 @@
                             </div>
 
 
-                     
-                              {{#ppo}} 
-                            <div class="form-check">
-                                <input zippy="printoutqrcode" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="printoutqrcode">Друкувати QR коди на фiскальних чеках</label>
-                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Дозволяє за допомогою сканера QR кода знайти документ на сайтi податкової "></i>
-                            </div>
-                               {{/ppo}}
+
                        
               
                             <div class="form-group  "><br>
@@ -234,13 +139,7 @@
                                 <input style="width:75px;" pattern="[0-9]+" class="form-control" type="text"
                                        zippy="ts_break">
                             </div>
-                            <div class="form-group">
-                                <label for="checkslogan">Фраза в кiнцi чеку</label>
-                                <textarea   class="form-control"   zippy="checkslogan"></textarea>
-                                <small>Наприклад, 'Дякуємо за довiру до нас!'. Кожна строка - окрема фраза. 
-                                 Якщо бiльш нiж одна - буде вибиратись випадково.</small>
 
-                            </div>
 
                             <div class="form-group">
                                 <button class="btn btn-primary" type="submit">Зберегти</button>
@@ -249,57 +148,56 @@
                         </form>
                     </div>
                 </div>
-            </div>
-            <div class="col-12  col-md-5 col-xl-4  ">
-              <div class="card">
+                
+  <div class="card">
                     <div class="card-body">
                         <h4>Підключення модулів</h4>
                            <form zippy="modules">
 
                             <div class="form-check">
                                 <input zippy="modocstore" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="modocstore"> Iнтеграція з опенкарт
+                                <label class="form-check-label" for="modocstore"> Iнтеграція з опенкарт</label>
                                 <a href="https://zippy.com.ua/ext#1" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
                             </div>
                             <div class="form-check">
                                 <input zippy="modshop" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="modshop"> Онлайн каталог
+                                <label class="form-check-label" for="modshop"> Онлайн каталог</label>
                                 <a href="https://zippy.com.ua/ext#3" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
                             </div>
                             <div class="form-check">
                                 <input zippy="modnote" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="modnote"> Органайзер (база знань)
+                                <label class="form-check-label" for="modnote"> Органайзер (база знань)</label>
                                 <a href="https://zippy.com.ua/ext#2" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
                             </div>
                             <div class="form-check">
                                 <input zippy="modissue" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="modissue"> Проекти та завдання
+                                <label class="form-check-label" for="modissue"> Проекти та завдання</label>
                                 <a href="https://zippy.com.ua/ext#4" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
                             </div>
                             <div class="form-check">
                                 <input zippy="modwoocomerce" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="modwoocomerce"> Iнтеграція з woocomerce
+                                <label class="form-check-label" for="modwoocomerce"> Iнтеграція з woocomerce</label>
                                 <a href="https://zippy.com.ua/ext#5" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
                             </div>
                             <div class="form-check">
                                 <input zippy="modppo" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="modppo"> Фіскалізація (ПРРО)
+                                <label class="form-check-label" for="modppo"> Фіскалізація (ПРРО)</label>
                                 <a href="https://zippy.com.ua/ext#6" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
                             </div>
                             <div class="form-check">
                                 <input zippy="modnp" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="modnp"> Iнтеграція з Нова Пошта
+                                <label class="form-check-label" for="modnp"> Iнтеграція з Нова Пошта</label>
                                 <a href="https://zippy.com.ua/ext#8" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
                             </div>
                             
                             <div class="form-check">
                                 <input zippy="modpromua" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="modpromua"> Iнтеграція з PromUA
+                                <label class="form-check-label" for="modpromua"> Iнтеграція з PromUA</label>
                                 <a href="https://zippy.com.ua/ext#9" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
                             </div>
                            <div class="form-check">
                                 <input zippy="modpaperless" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="modpaperless"> Iнтеграція з paperless.com.ua
+                                <label class="form-check-label" for="modpaperless"> Iнтеграція з paperless.com.ua</label>
                                 <a href="https://zippy.com.ua/ext#7" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
                             </div>
                             
@@ -310,7 +208,144 @@
                             </div>
                         </form>
                     </div>
-                </div>
+                </div>                
+                
+            </div>
+            <div class="col-12  col-md-5 col-xl-4  ">
+              <div class="card">
+                <div class="card-body">
+                   <h4>Налаштування бізнес-процесів</h4>
+                     
+                         <form zippy="business">
+                             <div class="form-group  ">
+                                <label for="partiontype">Тип партійного обліку</label>
+                                <select class="form-control" zippy="partiontype"> </select>
+                                <small>Облік окремо по кожній закупівельній ціні дозволяє точно враховувати
+                                    прибуток, але ускладнює списання партій.</small>
+
+                            </div>
+                             <div class="form-group  ">
+                                <label>Типи відпускних цін</label>
+                                <input class="form-control" type="text" zippy="price1" required="required">
+                                <input class="form-control" type="text" zippy="price2">
+                                <input class="form-control" type="text" zippy="price3">
+                                <input class="form-control" type="text" zippy="price4">
+                                <input class="form-control" type="text" zippy="price5">
+                                <small>Введіть найменування типів цін. Непотрібні поля залиште
+                                    порожніми</small>
+
+                            </div>
+                              <div class="form-group">
+                                <label for="defprice">Націнка за замовчуванням, у відсотках</label>
+                                <input style="width:100px" pattern="[0-9]+" class="form-control" type="text"
+                                       zippy="defprice">
+                                <small>Використовується, якщо не задана ціна в товарі або в категорії
+                                    товару</small>
+                            </div>
+                           <div class="form-group  ">
+                                <label for="paytypein">Процес оплати по  ПН </label>
+                                <select class="form-control" zippy="paytypein"> </select>
+                                <small>Переважна  послідовність  оплати  при  закупівлі</small>
+
+                            </div>
+                           <div class="form-group  ">
+                                <label for="paytypeout">Процес оплати по РН </label>
+                                <select class="form-control" zippy="paytypeout"> </select>
+                                <small>Переважна  послідовність  оплати  при  продажі</small>
+
+                            </div>
+              
+  
+                            <div class="form-check">
+                                <input zippy="allowminus" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="allowminus">Дозволити списання в
+                                    мiнус </label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title=" Дозвiл списувати таку кiлькiсть, що призводить до мiнусового залишку на складi "></i>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="noallowfiz" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="noallowfiz">Не дозволяти накладнi без
+                                    контрагента </label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title=" Покупець обовязково має бути зазначений та занесений у довiдник "></i>
+                            </div>
+
+                            <div class="form-check">
+                                <input zippy="useval" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="useval">Валюта в закупiвлi</label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title=" Можливiсть вводити накладну в валютi та перерахунку курсової рiзнимцi при продажі.  "></i>
+                            </div>
+                       
+                              {{#ppo}} 
+                            <div class="form-check">
+                                <input zippy="printoutqrcode" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="printoutqrcode">Друкувати QR коди на фiскальних чеках</label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Дозволяє за допомогою сканера QR кода знайти документ на сайтi податкової "></i>
+                            </div>
+                               {{/ppo}} 
+                            <div class="form-check">
+                                <input zippy="autoarticle" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="autoarticle"> Автоматично створювати
+                                    артикули</label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Автоматична генерація номерів артикулів для товарів"></i>
+                            </div>
+
+
+                            <div class="form-check">
+                                <input zippy="usesnumber" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="usesnumber">Облік ТМЦ за серіями
+                                    (партіями) виробника</label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Окремий облік по кожній партії виробника з урахуванням терміну придатності або по серiйному номеру виробу. Чи використовує конкретний товар облік по партіях вказується в картці товару."></i>
+                            </div>
+
+                            <div class="form-check">
+                                <input zippy="useimages" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="useimages">Зображення в
+                                    номенклатурі </label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="   Можливість додавання зображень в довідник товарів"></i>
+                            </div>  
+                            <div class="form-check">
+                                <input zippy="numberttn" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="numberttn">Кiлька вiдправок на одне замовлення</label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title=" Можливiсть створити кiлька накладних на одне замовлення, але якщо увiмкнено - не виконується перевiрка наявностi ТТН та автоматичної змiни статусу замовленя по ТТН "></i>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="usecattree" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="usecattree">Ієрархiя категорiй ТМЦ </label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title=" Можливість вибудовувати деревоподібну ієрархію категорій. Має сенс, якщо передбачається використання в онлайн каталозі "></i>
+                            </div>
+                           <div class="form-check">
+                                <input zippy="nocheckarticle" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="nocheckarticle">Не перевіряти унікальність артикулів</label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Використовується, наприклад, в обліку автозапчастин, де ідентифікація товару йде по артикулу виробника й імені виробника.
+                                    Не слід вмикати без необхідності - невірно буде працювати підбір зі сканером штрих коду. "></i>
+                            </div>                                                            
+                               <div class="form-group">
+                                <label for="checkslogan">Фраза в кiнцi чеку</label>
+                                <textarea   class="form-control"   zippy="checkslogan"></textarea>
+                                <small>Наприклад, 'Дякуємо за довiру до нас!'. Кожна строка - окрема фраза. 
+                                 Якщо бiльш нiж одна - буде вибиратись випадково.</small>
+
+                            </div>                            
+                                 
+                           <div class="form-group">
+                                <button class="btn btn-primary" type="submit">Зберегти</button>
+                           </div>
+
+                        </form>           
+               </div>
+              </div>
+            
+            
 
                 {{#useval}}
                 <div class="card">

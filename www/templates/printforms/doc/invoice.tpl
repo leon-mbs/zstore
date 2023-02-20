@@ -149,8 +149,8 @@
         <td colspan="9">На суму <b>{{totalstr}}</b></td>
    </tr>
    {{/totalstr}}      
-  {{/payamount}}                     
-                        <td colspan="5">
+  {{/payamount}}
+    <tr>                  <td colspan="5">
                             {{#isstamp}}
                             <img style="height:100px;" src='{{stamp}}'/>
                             {{/isstamp}}

@@ -45,7 +45,7 @@
                     
                 <div class="row mt-2">
                             <div class="col-12 col-sm-4 d-flex align-items-center">
-                                <a class="container-fluid-img" zippy="logo" href="/"> <img></a> 
+                                <a class="container-fluid-img" zippy="logo" href="/"> <img/> </a>
                                 <a  class="container-fluid-img logo-text ml-2 text-dark" href="/" style="font-family: 'Georgia';"> {{shopname}} </a>
                             </div>
                             <div class="col-12 col-sm-8 d-flex align-items-center justify-content-end">
@@ -72,17 +72,17 @@
                                  
                                   <li class="nav-item">
                                      <a class="btn btn-outline-info   mr-sm-2" zippy="shopcart"><i class="fa fa-shopping-cart"></i>
-                                            Кошик <span class="badge badge-danger  navbar-badge">{{basketcnt}}</span> </a>
+                                              <span class="badge badge-danger  navbar-badge">{{basketcnt}}</span> </a>  
                                       
                                    </li>
                                   <li class="nav-item">
                                        <a class="btn btn-outline-info  " zippy="showcompare"><i class="fas fa-balance-scale "></i>
-                                            Порiвняти <span class="badge badge-danger  navbar-badge">{{comparecnt}}</span></a>
+                                              <span class="badge badge-danger  navbar-badge">{{comparecnt}}</span></a> 
                                         
                                    </li>
                                    {{^islogined}}
-                                   <li class="nav-item">
-                                       <a    href="/index.php?p=App/Modules/Shop/Pages/Catalog/Userlogin"> Мiй кабiнет</a>
+                                   <li class="nav-item ml-3">
+                                       <a  class="btn btn-outline-secondary  "  href="/index.php?p=App/Modules/Shop/Pages/Catalog/Userlogin" title="Мій кабінет"> <i class="fa fa-user"></i> </a>
                                         
                                    </li>
                                    {{/islogined}}    

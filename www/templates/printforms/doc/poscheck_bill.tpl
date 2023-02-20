@@ -71,9 +71,12 @@
     </tr>
     {{#_detail}}
     <tr>
-        <td colspan="3">{{tovar_name}}</td>
-        <td valign="top"  align="right">{{quantity}}</td>
-        <td valign="top"  align="right">{{amount}}</td>
+        <td  colspan="3">{{tovar_name}}</td> 
+    </tr>
+    <tr>
+        <td    align="right">{{quantity}}</td>
+        <td    align="right">{{price}}</td>
+        <td    align="right">{{amount}}</td>
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">

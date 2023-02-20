@@ -56,12 +56,18 @@ $h2->setFormatter($formatter);
 $logger->pushHandler($h1);
 $logger->pushHandler($h2);
 $logger->pushProcessor(new \Monolog\Processor\IntrospectionProcessor());
-@mkdir(_ROOT . "logs");
+ 
+if( !file_exists(_ROOT . "logs") ) {
+   mkdir(_ROOT . "logs");    
+}
+if( !file_exists(_ROOT . "upload") ) {
+   mkdir(_ROOT . "upload");    
+}
 
 
 //  phpQuery::$debug = true;
 //Параметры   соединения  с  БД
-if($_config['db']['driver'] =='postgres') {
+if( ( $_config['db']['driver'] ?? '' ) =='postgres') {
   
   \ZDB\DB::config($_config['db']['host'], $_config['db']['name'], $_config['db']['user'], $_config['db']['pass'],"postgres");    
    $ADODB_QUOTE_FIELDNAMES = false;

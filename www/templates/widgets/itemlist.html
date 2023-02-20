@@ -1,0 +1,177 @@
+<html>
+    <body>
+         <span zippy="_path_"  ></span>   
+          {{={| |}=}}    
+          <div id="modalitemlist" class="modal fade  " tabindex="-1" role="dialog" 
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-xl  ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Новий товар</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div id="vitemlist" class="modal-body">    
+                             <form   class="form-inline">
+
+                                <label for="wissearchkey">пошук</label>
+                                <input v-model="wissearchkey" class="form-control mr-sm-2" type="text"  >
+                                <label for="wissearchcat">категорiя</label>
+
+                                <select v-model="wissearchcat" class="form-control mr-sm-2"  >
+                                    <option value="0">Не задано</option>
+                                    <option v-for="cat in cats"    v-bind:value="cat.key">{{cat.value}}</option>
+                                                                       
+                                </select>
+                                <label for="wissearchmanufacturer">Бренд </label>
+                                <input v-model="wissearchbrand" autocomplete="off" list="wissearchmanlist" class="form-control mr-sm-2" zippy="wissearchmanufacturer"/>
+                                <datalist id="wissearchmanlist">
+                                      <option v-for="br in brands" v-bind:value="br.value" v-bind:label="br.value" >
+            
+                                </datalist>
+
+
+                                <input v-on:click.prevent="onSearch" class="btn btn-outline-success  " type="button" value="ОК">
+
+                            </form>     
+                            <table class="table table-sm table-hover">
+                        <tr >
+                          <th    > Назва</th>
+                          <th    > Артикул </th>
+                          <th    > Штрих-код</th>
+                          <th    > Бренд</th>
+                   
+                        </tr>
+                        
+                             
+                        <tr v-for="(item ) in items" >
+                          <td style="cursor:pointer" v-on:click="click( item.item_id)"    >
+                              {{item.itemname}}
+                                
+                          </td>
+                          <td>  {{item.item_code}}</td>
+                          <td>  {{item.bar_code}} </td>
+                          <td>  {{item.brand}}</td>
+                        </tr>   
+                   
+                     </table>
+                            <paginator  v-on:onpage="changepage"  v-bind:rows="rowscnt" v-bind:pagesize="pagesize" buttonscnt="10"></paginator>
+ 
+                        </div>
+
+                    </div>
+                </div>
+            </div>       
+        {|={{ }}=|}  
+        <script>
+        
+   var vitemlist = new Vue({
+            el: '#vitemlist',
+            
+       methods: {
+            changepage:function( page){    //кнопка  пагинатора
+                 this.currpage = page-1
+                 
+                 this.refresh(  );
+            }       
+            ,click:function (item_id){
+                this.wissearchkey =  ""
+                this.searchcat =  0
+                this.searchbrand =  ""
+
+    
+               $("#modalitemlist").modal('hide')
+    
+               onItemSelByWidget(item_id) 
+            }
+            ,onSearch:function (){
+               this.currpage = 0; 
+               this.refresh() 
+            }
+            ,refresh:function (){
+              
+                var path = $('#_path_').attr('path') 
+                
+                var data ={}
+                data.pagesize =  this.pagesize
+                data.currpage =  this.currpage  
+                data.searchkey =  this.wissearchkey
+                data.searchcat =  this.wissearchcat
+                data.searchbrand =  this.wissearchbrand
+                
+                callPM(path +'::loaditems',[ ], JSON.stringify(data),(data)=> 
+                  {
+                      
+                       var data = JSON.parse(data)
+                       this.rowscnt = data.rowscnt
+                        
+                       this.items = data.items
+                    
+                  });          
+                        
+                
+                
+            }
+           
+             
+        ,
+            
+         
+         
+                 
+        } ,
+       
+         data()  {
+            return {
+                items:[] ,
+                cats:[]  ,
+                brands:[]  ,
+
+                wissearchkey:'',
+                wissearchcat:'',
+                wissearchbrand:'',
+          
+                currpage:1,
+                pagesize:15,
+                rowscnt:1,
+            
+                 
+                               
+            }}  ,   
+        mounted: function(){
+              var data= {
+                  cats:true,
+                  brands:true,
+              }
+ 
+              callPM('vLoadLists',[ ], JSON.stringify(data),(data)=> 
+              {
+                   var data = JSON.parse(data)
+                   
+                   this.cats = data.cats
+                   this.brands = data.cats
+                
+              });               
+                         
+        }  ,      
+        components: {   
+               'paginator': httpVueLoader('/assets/js/vue/paginator.vue')
+                     
+               }            
+        })        
+        
+        
+        
+      function onOpenItemList(){
+         
+        $("#modalitemlist").modal('show')
+        
+        vitemlist.refresh()
+       
+
+        
+      }      
+        </script>              
+    </body>
+</html>

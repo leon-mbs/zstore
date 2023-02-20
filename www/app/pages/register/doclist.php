@@ -116,6 +116,10 @@ class DocList extends \App\Pages\Base
         if ($docid > 0) {
             $this->docview->setVisible(true);
             $this->_doc = Document::load($docid);
+            if($this->_doc == null) {
+                $this->setError('Документ вже видалений') ;
+                return;
+            }
             $this->_doc = $this->_doc->cast() ;    
             $this->show($this->_doc);            
             $doclist->Reload(false);

@@ -44,7 +44,7 @@
   }
        
   function checkFormInput(id){
-
+    var ret = true
     
     $('#'+id+' input ').each(
         function(index){  
@@ -53,13 +53,13 @@
             
             var v =   input.get(0).reportValidity() 
             if(!v) {
-                return  false
+               ret =  false
             }
             
         }
     );   
      
-    return true
+    return ret
   }
   
   
@@ -182,7 +182,7 @@
                                   <td>
                                   {{#auserid}}
                                   
-                                  <i onclick="openSendMsg({{auserid}},'{{ausername}}')" style="cursor:pointer" class="fa fa-comment-alt" title="Відправити повідомлення" />
+                                  <i onclick="openSendMsg({{auserid}},'{{ausername}}')" style="cursor:pointer" class="fa fa-comment-alt" title="Відправити повідомлення" ></i>
                                   
                                   {{/auserid}} 
                                   </td>
@@ -322,7 +322,7 @@
                                             {{/items}}
                                         </ul>
 
-                                        </il>
+                                        </li>
                                         {{/groups}}
 
                                         {{#items}}
@@ -370,7 +370,7 @@
                                             {{/items}}
                                         </ul>
 
-                                        </il>
+                                        </li>
                                         {{/groups}}
 
                                         {{#items}}
@@ -418,7 +418,7 @@
                                             {{/items}}
                                         </ul>
 
-                                        </il>
+                                        </li>
                                         {{/groups}}
 
                                         {{#items}}
@@ -465,7 +465,7 @@
                                             {{/items}}
                                         </ul>
 
-                                        </il>
+                                        </li>
                                         {{/groups}}
 
                                         {{#items}}
@@ -515,7 +515,7 @@
                                             {{/items}}
                                         </ul>
 
-                                        </il>
+                                        </li>
                                         {{/groups}}
 
                                         {{#items}}
@@ -952,7 +952,7 @@
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper mb-4">
                 <!-- Main content -->
-                <section class="content"> <a id="topankor" />
+                <section class="content"> <a id="topankor" ></a>
                     <div class="row justify-content-center mt-2 mb-1">
                         <div class="col-12 col-md-10 col-lg-9 col-xl-8   ">
 
@@ -968,7 +968,7 @@
                         <div class="col-12    ">
                             {{#smart}}
 
-                            <div class=" card navbar nav justify-content-start d-none d-sm-block">
+                            <div style="justify-content: space-between" class=" card navbar nav   d-none d-sm-block">
                                 {{{smart}}}
                             </div>
 

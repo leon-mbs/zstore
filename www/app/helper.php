@@ -205,14 +205,14 @@ class Helper
         $modules = \App\System::getOptions("modules");
 
         $mdata = array();
-        if ($modules['note'] == 1) {
+        if( ($modules['note'] ?? 0)== 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'note') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10000, 'meta_name' => "/Note/Pages/Main", 'meta_type' => 6, 'description' => "База знань"));
             }
         }
 
 
-        if ($modules['shop'] == 1) {
+        if( ($modules['shop'] ?? 0)== 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'shop') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10002, 'meta_name' => "/Shop/Pages/ProductList", 'meta_type' => 6, 'description' => "Товари в онлайн каталозі" ));
             }
@@ -221,40 +221,40 @@ class Helper
 
 
 
-        if ($modules['wc'] == 1) {
+        if( ($modules['wc'] ?? 0) == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'wc') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10009, 'meta_name' => "/WC/Orders", 'meta_type' => 6, 'description' => "Замовлення (WC)" ));
             }
         }
-        if ($modules['wc'] == 1) {
+        if( ($modules['wc']?? 0)  == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'wc') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10010, 'meta_name' => "/WC/Items", 'meta_type' => 6, 'description' => "Товари (WC)"));
             }
         }
   
-        if ($modules['promua'] == 1) {
+        if( ($modules['promua'] ?? 0) == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'promua') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10015, 'meta_name' => "/PU/Orders", 'meta_type' => 6, 'description' => "Замовлення (PU)"  ));
             }
         }
 
-        if ($modules['issue'] == 1) {
+        if( ($modules['issue'] ?? 0) == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'issue') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10014, 'meta_name' => "/Issue/Pages/IssueList", 'meta_type' => 6, 'description' => "Завдання (Проекти)"));
             }
         }
-        if ($modules['issue'] == 1) {
+        if( ($modules['issue'] ?? 0) == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'issue') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10017, 'meta_name' => "/Issue/Pages/ProjectList", 'meta_type' => 6, 'description' =>   "Проекти"  , ));
             }
         }
    
-          if ($modules['ocstore'] == 1) {
+        if( ($modules['ocstore'] ?? 0) == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'ocstore') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10005, 'meta_name' => "/OCStore/Orders", 'meta_type' => 6, 'description' => "Замовлення (Опенкарт)" ));
             }
         }
-        if ($modules['ocstore'] == 1) {
+        if( ($modules['ocstore'] ?? 0) == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'ocstore') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10018, 'meta_name' => "/OCStore/Items", 'meta_type' => 6, 'description' => "Товари (Опенкарт)"));
             }

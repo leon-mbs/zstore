@@ -5,6 +5,29 @@
                 <a zippy="backtolist" class="btn btn-outline-success mb-3 mt-2"><i class="fa fa-arrow-alt-circle-left"></i> до переліку</a>
                 <h3>Порiвняння товарiв</h3>
 
+                <small>Виводяться  тiльки атрибути що вiдрiзняются</small>
+                <table class="ctable">
+                <tr ><td> </td>
+                   <td zippy="plist" class="pb-4">
+                     <img style="width:200pz" zippy="pim" >
+                      <br><br><a zippy="pname" class="mt-2 text-dark" ></a>
+                      <br>   <b zippy="pprice"></b> {{currencyname}}&nbsp;  &nbsp;  &nbsp;  &nbsp; 
+                      <a zippy="pdel"><i class="fa fa-trash text-danger" ></i></a>
+                      
+                    </td>
+                </tr>
+                {{#cattr}}
+                <tr>
+                  <td><b>{{name}} </b></td>
+                  {{#values}}
+                    <td>{{value}} </td>
+                  {{/values}}
+                  
+                </tr>
+                {{/cattr}}
+                
+                </table>
+                
                 <div zippy="comparegrid"></div>
 
             </div>

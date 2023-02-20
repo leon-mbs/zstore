@@ -43,7 +43,7 @@ class ReturnIssue extends \App\Pages\Base
 
         $this->docform->add(new Date('document_date'))->setDate(time());
 
-        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
+        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
 
@@ -464,12 +464,6 @@ class ReturnIssue extends \App\Pages\Base
         App::RedirectBack();
     }
 
-    public function OnChangeStore($sender) {
-        //очистка  списка  товаров
-        $this->_tovarlist = array();
-        $this->docform->detail->Reload();
-        $this->calcTotal();
-    }
 
     public function OnAutoCustomer($sender) {
         return Customer::getList($sender->getText(), 1);

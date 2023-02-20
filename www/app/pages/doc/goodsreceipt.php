@@ -35,7 +35,8 @@ class GoodsReceipt extends \App\Pages\Base
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = 0;
-    public $_sllist    = [];
+    public  $_sllist     = [];
+    private $_rownumber = 1;
   
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -195,6 +196,16 @@ class GoodsReceipt extends \App\Pages\Base
                         $this->CalcTotal();
                         $this->CalcPay();
                     }
+                    if ($basedoc->meta_name == 'OutcomeMoney') {
+
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        $this->docform->customer->setText($basedoc->customer_name);
+                        $this->docform->val->setValue(0);
+                        $this->docform->rate->setText(1);
+                 
+                        $this->docform->basedoc->setText(  $basedoc->document_number);
+             
+                    }
                     if ($basedoc->meta_name == 'InvoiceCust') {
 
                         $this->docform->customer->setKey($basedoc->customer_id);
@@ -253,6 +264,10 @@ class GoodsReceipt extends \App\Pages\Base
                         $this->CalcPay();
                     }
                 }
+            }  else {
+                if(  intval($common['paytypein']) == 1) {
+                    $this->setWarn('Накладну слід створювати на  підставі вхідного рахунку') ;
+                }
             }
         }
 
@@ -275,7 +290,7 @@ class GoodsReceipt extends \App\Pages\Base
 
     public function detailOnRow($row) {
         $item = $row->getDataItem();
-        $row->add(new Label('num', $row->getNumber()));
+        $row->add(new Label('num', $this->_rownumber++));
 
         $row->add(new Label('item', $item->itemname));
         $row->add(new Label('code', $item->item_code));
@@ -309,6 +324,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->calcTotal();
         $this->calcPay();
+        $this->_rownumber  = 1;
 
         $this->docform->detail->Reload();
     }
@@ -326,6 +342,8 @@ class GoodsReceipt extends \App\Pages\Base
         foreach ($this->_itemlist as $ri => $_item) {
             if ($_item->bar_code == $code || $_item->item_code == $code || $_item->bar_code == $code0 || $_item->item_code == $code0 ) {
                 $this->_itemlist[$ri]->quantity += 1;
+                $this->_rownumber  = 1;
+
                 $this->docform->detail->Reload();
                 $this->calcTotal();
                 $this->CalcPay();
@@ -448,7 +466,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->_rowid = 0;
 
-
+        $this->_rownumber  = 1;
         $this->docform->detail->Reload();
         $this->calcTotal();
         $this->calcPay();
@@ -682,6 +700,8 @@ class GoodsReceipt extends \App\Pages\Base
     }
 
     private function CalcPay() {
+        $common = System::getOptions("common");
+
         $total = $this->docform->total->getText();
         $disc = doubleval($this->docform->disc->getText());
         $delivery = doubleval($this->docform->delivery->getText());
@@ -697,6 +717,10 @@ class GoodsReceipt extends \App\Pages\Base
         }  
         
         
+        
+        if(  intval($common['paytypein']) == 2) {
+           $total = 0; 
+        }        
         $this->docform->editpayed->setText(H::fa($total));
         $this->docform->payed->setText(H::fa($total));
     }

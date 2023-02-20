@@ -201,39 +201,7 @@ class Document extends \ZCL\DB\Entity
             $this->headerdata[(string)$child->getName()] = $ch;
         }
 
-        /*
-        $this->detaildata = array();
-
-        //deprecated
-        if (isset($xml->detail)) {
-
-            foreach ($xml->detail->children() as $row) {
-                $_row = array();
-                foreach ($row->children() as $item) {
-                    $_row[(string)$item->getName()] = (string)$item;
-                }
-                $this->detaildata[] = $_row;
-            }
-        }
-        //перепаковываем в новый вариант
-        if (count($this->detaildata) > 0) {
-            $detaildata = array();
-
-            foreach ($this->detaildata as $row) {
-                if ($row['service_id'] > 0) {
-                    $detaildata[$row['service_id']] = new \App\Entity\Service($row);
-                } else {
-                    if ($row['stock_id'] > 0) {
-                        $detaildata[$row['stock_id']] = new \App\Entity\Stock($row);
-                    } else {
-                        $id = (strlen($row['item_id']) > 0 ? $row['item_id'] : '');
-                        $detaildata[$id] = new \App\Entity\Item($row);
-                    }
-                }
-            }
-            $this->packDetails('detaildata', $detaildata);
-            
-        }  */
+        
 
 
     }
@@ -498,7 +466,7 @@ class Document extends \ZCL\DB\Entity
             case Document::STATE_INPROCESS:
                 return "Виконується";
             case Document::STATE_READYTOSHIP:
-                return "Готовий до відправлення";
+                return "Готовий до відправки";
             case Document::STATE_WP:
                 return "Очікує оплату";
             case Document::STATE_PAYED:
@@ -517,7 +485,7 @@ class Document extends \ZCL\DB\Entity
         $list[Document::STATE_EXECUTED] = "Проведений";
         $list[Document::STATE_CLOSED] = "Закритий";
         $list[Document::STATE_APPROVED] = "Готовий до виконання";
-        $list[Document::STATE_WA] = "Очікує затвердження";
+        $list[Document::STATE_WA] =       "Очікує затвердження";
         $list[Document::STATE_INSHIPMENT] = "На доставці";
         $list[Document::STATE_FINISHED] = "Виконаний";
         $list[Document::STATE_DELIVERED] = "Доставлений";
@@ -525,7 +493,7 @@ class Document extends \ZCL\DB\Entity
         $list[Document::STATE_SHIFTED] = "Відкладений";
         $list[Document::STATE_FAIL] = "Анульований";
         $list[Document::STATE_INPROCESS] = "Виконується";
-        $list[Document::STATE_READYTOSHIP] = "Готовий до відправлення";
+        $list[Document::STATE_READYTOSHIP] = "Готовий до відправки";
         $list[Document::STATE_WP] = "Очікує оплату";
         $list[Document::STATE_PAYED] = "Оплачений";
 
