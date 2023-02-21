@@ -231,7 +231,7 @@ class Order extends Base
                 $c = new  Customer();
                 $c->firstname = $firstname;
                 $c->lastname= $lastname;
-                $c->customer_name = $firstname.' '.$lastname;
+                $c->customer_name = trim($firstname.' '.$lastname);
                 $c->email = $email;
                 $c->phone = $phone;
                 $c->address = $address;
