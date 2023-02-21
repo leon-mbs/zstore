@@ -24,10 +24,9 @@ use Zippy\Html\Panel;
 
 class Options extends \App\Pages\Base
 {
-
     private $metadatads;
-    public  $pricelist        = array();
-    public  $_vallist       = array();
+    public  $pricelist = array();
+    public  $_vallist = array();
     public  $_salesourceslist = array();
 
     public function __construct() {
@@ -42,7 +41,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new DropDownChoice('qtydigits'));
         $this->common->add(new DropDownChoice('amdigits'));
         $this->common->add(new DropDownChoice('dateformat'));
-        $this->common->add(new DropDownChoice('qtymounths'));
+        // $this->common->add(new DropDownChoice('qtymounths'));
         
   
         $this->common->add(new DropDownChoice('phonel', array('10' => '10', '12' => '12'), '10'));
@@ -72,7 +71,7 @@ class Options extends \App\Pages\Base
         }  
 
         $this->common->qtydigits->setValue($common['qtydigits']);
-        $this->common->qtymounths->setValue($common['qtymounths']);
+        // $this->common->qtymounths->setValue($common['qtymounths']);
         $this->common->amdigits->setValue($common['amdigits']);
         $this->common->dateformat->setValue($common['dateformat']);
         
@@ -324,7 +323,7 @@ class Options extends \App\Pages\Base
         }
 
         $common['qtydigits'] = $this->common->qtydigits->getValue();
-        $common['qtymounths'] = $this->common->qtymounths->getValue();
+        // $common['qtymounths'] = $this->common->qtymounths->getValue();
         $common['amdigits'] = $this->common->amdigits->getValue();
         $common['dateformat'] = $this->common->dateformat->getValue();
         
