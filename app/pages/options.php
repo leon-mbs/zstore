@@ -40,6 +40,7 @@ class Options extends \App\Pages\Base
 
         $this->add(new Form('common'))->onSubmit($this, 'saveCommonOnClick');
         $this->common->add(new DropDownChoice('qtydigits'));
+        $this->common->add(new DropDownChoice('qtymounths'));
         $this->common->add(new DropDownChoice('amdigits'));
         $this->common->add(new DropDownChoice('dateformat'));
         $this->common->add(new DropDownChoice('qtymounths'));
@@ -77,6 +78,7 @@ class Options extends \App\Pages\Base
         $this->common->dateformat->setValue($common['dateformat']);
         
         $this->common->phonel->setValue($common['phonel']);
+
 
         $this->common->shopname->setText($common['shopname']);
 
