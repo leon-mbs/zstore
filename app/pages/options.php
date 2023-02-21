@@ -43,6 +43,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new DropDownChoice('qtymounths'));
         $this->common->add(new DropDownChoice('amdigits'));
         $this->common->add(new DropDownChoice('dateformat'));
+        $this->common->add(new DropDownChoice('qtymounths'));
         
   
         $this->common->add(new DropDownChoice('phonel', array('10' => '10', '12' => '12'), '10'));
