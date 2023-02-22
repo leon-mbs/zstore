@@ -100,6 +100,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editdetail->add(new SubmitLink('addnewitem'))->onClick($this, 'addnewitemOnClick');
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
+        $this->editdetail->add(new TextInput('sumprice'));
         $this->editdetail->add(new TextInput('editsellprice'));
         $this->editdetail->add(new TextInput('editsnumber'));
         $this->editdetail->add(new Date('editsdate'));
@@ -367,6 +368,7 @@ class GoodsReceipt extends \App\Pages\Base
             $this->editdetail->edititem->setKey($item->item_id);
             $this->editdetail->edititem->setText($item->itemname);
             $this->editdetail->editprice->setText('');
+            $this->editdetail->sumprice->setText('');
             $this->editdetail->editsellprice->setText('');
         }
     }
@@ -384,6 +386,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->editdetail->editquantity->setText($item->quantity);
         $this->editdetail->editprice->setText($item->price);
+        $this->editdetail->sumprice->setText($item->sumprice);
 
         $olditem = Item::load($item->item_id);
         if ($olditem != null) {
@@ -423,6 +426,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
+        // $item->sumprice = $this->editdetail->sumprice->getText();
         $sellprice = $this->editdetail->editsellprice->getText();
         if (strlen($sellprice) > 0) {
             $olditem = Item::load($item->item_id);
@@ -479,6 +483,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editdetail->editquantity->setText("1");
 
         $this->editdetail->editprice->setText("");
+        $this->editdetail->sumprice->setText("");
         $this->editdetail->editsnumber->setText("");
         $this->editdetail->editsdate->setText("");
         $this->editdetail->editsellprice->setText("");
@@ -945,6 +950,7 @@ class GoodsReceipt extends \App\Pages\Base
         }
      
         $this->editdetail->editprice->setText(H::fa($price));
+        $this->editdetail->sumprice->setText(H::fa($price*2));
         $this->editdetail->editsellprice->setText(H::fa($item->price1));
     }
 
@@ -967,7 +973,9 @@ class GoodsReceipt extends \App\Pages\Base
         $id = $sender->getKey();
         $item = Item::load($id);
         $price = $item->getLastPartion($this->docform->store->getValue()   , null, false);
+        $sumprice = $item->getLastPartion($this->docform->store->getValue()   , null, false);
         $this->editdetail->editprice->setText(H::fa($price));
+        $this->editdetail->sumprice->setText(H::fa($sumprice));
  
         $this->editdetail->editsellprice->setText($item->price1);
   

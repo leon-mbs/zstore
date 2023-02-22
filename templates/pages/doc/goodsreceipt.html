@@ -375,17 +375,21 @@
 
                     <div class="form-group">
                         <label for="editquantity">Кількість</label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity" required="required"                               pattern="[0-9,\.\s]+"                               style="width: 100px;"/>
+                        <input autocomplete="off" class="form-control qtyprice editquantity" type="text" zippy="editquantity" required="required"                               pattern="[0-9,\.\s]+"                               style="width: 100px;"/>
                     </div>
 
 
                     <div class="form-group">
                         <label for="editprice">Ціна </label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice" required="required"                               pattern="[0-9,\.\s]+"                               style="width: 100px;">
+                        <input autocomplete="off" class="form-control qtyprice editprice" type="text" zippy="editprice" required="required"                               pattern="[0-9,\.\s]+"                               style="width: 100px;">
+                    </div>
+                    <div class="form-group">
+                        <label for="sumprice">Сума </label>
+                        <input autocomplete="off" class="form-control qtyprice sumprice" type="text" zippy="sumprice" required="required"                               pattern="[0-9,\.\s]+"                               style="width: 100px;">
                     </div>
                     <div class="form-group">
                         <label for="editsellprice">{{price1name}} цiна (нацiнка) </label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editsellprice"  pattern="[0-9,\.\%]+"   style="width: 100px;">
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editsellprice"  pattern="[0-9,\.\s]+"   style="width: 100px;">
                          <small>Якщо задано,  коригує вiдпускну цiну</small>
                     </div>
 
@@ -642,6 +646,7 @@
         </div>
         {{#usescanner}}
         <script>
+
             $(document).ready(function () {
 
                 $('#barcode').focus();
@@ -684,5 +689,23 @@
         </script>
  
         {{/usescanner}}
+        <script>
+            const quantity = $('.editquantity').change(setSumPrice)
+
+            $('.editprice').change(setSumPrice)
+                    
+            const sumprice = $(".sumprice").change(function(){
+                let price = (sumprice.val() / quantity.val()).toFixed(2)
+                setPrice(price)
+            })
+
+            function setPrice(price) {
+                $('.editprice').val(price)
+            }
+            function setSumPrice() {
+                $('.sumprice').val(quantity.val() * $('.editprice').val())
+            }
+            
+        </script>
     </body>
 </html>
