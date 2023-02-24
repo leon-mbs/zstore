@@ -30,8 +30,7 @@ use Zippy\Html\Link\SubmitLink;
 class ServiceAct extends \App\Pages\Base
 {
 
-    public  $_servicelist = array();
-    public  $_itemlist = array();
+ 
     private $_doc;
     private $_basedocid   = 0;
 
@@ -42,193 +41,81 @@ class ServiceAct extends \App\Pages\Base
    
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
-            $this->_servicelist = $this->_doc->unpackDetails('detaildata');
-            $this->_itemlist = $this->_doc->unpackDetails('detail2data');
+          
         }
         else {
             $this->_doc = Document::create('ServiceAct');
             $this->_doc->document_number = $this->_doc->nextNumber();
+            $this->_doc->document_date = time();
             if ($basedocid > 0) {  //создание на  основании
                 $basedoc = Document::load($basedocid)->cast();
+                $this->_doc->document_date = time();                
+                $this->_doc->customer_id = $basedoc->customer_id;                
+                $this->_doc->firm_id = $basedoc->firm_id;                
+                $this->_doc->customer_id = $basedoc->customer_id;                
+                
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'ServiceAct') {
-                        $this->_servicelist = $basedoc->unpackDetails('detaildata');
-                        $this->_itemlist = $basedoc->unpackDetails('detail2data');
+           
+                        $this->_doc->headerdata['detaildata'] = $basedoc->headerdata['detaildata'];
+                        $this->_doc->headerdata['detail2data'] = $basedoc->headerdata['detail2data'];
+
+                    
                     }
                 }
+                if ($basedoc instanceof Document) {
+                    $this->_basedocid = $basedocid;
+                    if ($basedoc->meta_name == 'Task') {
+                        $i=0;
+                        foreach($basedoc->unpackDetails('detaildata') as $v ) {
+                           if($v->service_id>0) {
+                               $list[++$i] = $v ;                               
+                           }
+                        }                      
+                        $this->_doc->packDetails('detaildata', $list);
+                   }
+                }
+                if ($basedoc instanceof Document) {
+                    $this->_basedocid = $basedocid;
+                    if ($basedoc->meta_name == 'Invoice') {
+                        $i=0;
+                        $list=[];
+                        foreach($basedoc->unpackDetails('detaildata') as $v ) {
+                           if($v->service_id>0) {
+                               $list[++$i] = $v ;                               
+                           }
+                        }                      
+                        $this->_doc->packDetails('detaildata', $list);
+                        $i=0;
+                        $list=[];
+                        foreach($basedoc->unpackDetails('detaildata') as $v ) {
+                           if($v->item_id>0) {
+                               $list[++$i] = $v ;                               
+                           }
+                        }                      
+                        $this->_doc->packDetails('detail2data', $list);
+
+                    }
+                }
+   
+                
             }          
         }   
    
-   
-        if (false == \App\ACL::checkShowDoc($this->_doc)) {
-            return;
-        }   
-   
-   
-        /*
-        $this->add(new Form('docform'));
-        $this->docform->add(new TextInput('document_number'));
-        $this->docform->add(new Date('document_date'))->setDate(time());
-        $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
-        $this->docform->customer->onChange($this, 'OnCustomerFirm');
-
-        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), H::getDefFirm()))->onChange($this, 'OnCustomerFirm');
-        $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);;
-        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
-
-        $this->docform->add(new TextInput('notes'));
-        $this->docform->add(new TextInput('gar'));
-        $this->docform->add(new TextInput('device'));
-        $this->docform->add(new TextInput('devsn'));
-
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), 0));
-
-        $this->docform->add(new TextInput('editpayamount'));
-        $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
-
-
-        $this->docform->add(new TextInput('payed', 0));
-        $this->docform->add(new Label('payamount', 0));
-
-        $this->docform->add(new Label('discount'));
-        $this->docform->add(new TextInput('editpaydisc'));
-        $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
-        $this->docform->add(new Label('paydisc', 0));
-
-        $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
-        $this->docform->add(new SubmitLink('additemrow'))->onClick($this, 'addItemrowOnClick');
-        $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
-        $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
-        $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
-        $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
-        $this->docform->add(new SubmitButton('paydoc'))->onClick($this, 'savedocOnClick');
-
-        $this->docform->add(new Label('total'));
-        $this->add(new Form('editdetail'))->setVisible(false);
-        $this->editdetail->add(new DropDownChoice('editservice', Service::findArray("service_name", "disabled<>1", "service_name")))->onChange($this, 'OnChangeServive', true);
-
-        $this->editdetail->add(new TextInput('editqty'));
-        $this->editdetail->add(new TextInput('editprice'));
-        $this->editdetail->add(new TextArea('editdesc'));
-
-        $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
-        $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
-
-        
-        $this->add(new Form('edititemdetail'))->setVisible(false);
-        $this->edititemdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutoItem');
-        $this->edititemdetail->edititem->onChange($this, 'OnChangeItem', true);
-
-        $this->edititemdetail->add(new TextInput('edititemqty'));
-        $this->edititemdetail->add(new TextInput('edititemprice'));
-        $this->edititemdetail->add(new Label('qtystock'));
-
-        $this->edititemdetail->add(new Button('cancelrowitem'))->onClick($this, 'cancelrowOnClick');
-        $this->edititemdetail->add(new SubmitButton('saverowitem'))->onClick($this, 'saveitemrowOnClick');
-           
-        
-        //добавление нового кантрагента
-        $this->add(new Form('editcust'))->setVisible(false);
-        $this->editcust->add(new TextInput('editcustname'));
-        $this->editcust->add(new TextInput('editphone'));
-        $this->editcust->add(new TextInput('editemail'));
-        $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
-        $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
-
-        if ($docid > 0) { //загружаем   содержимое   документа на страницу
-            $this->_doc = Document::load($docid)->cast();
-            $this->docform->document_number->setText($this->_doc->document_number);
-            $this->docform->notes->setText($this->_doc->notes);
-            $this->docform->gar->setText($this->_doc->headerdata['gar']);
-            $this->docform->store->setValue($this->_doc->headerdata['store']);
-  
-            $this->docform->payment->setValue($this->_doc->headerdata['payment']);
-            $this->docform->payamount->setText($this->_doc->payamount);
-            $this->docform->editpayamount->setText($this->_doc->payamount);
-            $this->docform->payment->setValue($this->_doc->headerdata['payment']);
-
-            if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
-                $this->_doc->payed = $this->_doc->headerdata['payed'];
-            }
-
-            $this->docform->payed->setText(H::fa($this->_doc->payed));
-
-            $this->docform->device->setText($this->_doc->device);
-            $this->docform->devsn->setText($this->_doc->devsn);
-            $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
-            $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
-
-            $this->docform->total->setText($this->_doc->amount);
-
-            $this->docform->document_date->setDate($this->_doc->document_date);
-            $this->docform->customer->setKey($this->_doc->customer_id);
-            $this->docform->customer->setText($this->_doc->customer_name);
-            $this->docform->firm->setValue($this->_doc->firm_id);
-            $this->OnCustomerFirm(null);
-            $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
-
-            $this->_servicelist = $this->_doc->unpackDetails('detaildata');
-            $this->_itemlist = $this->_doc->unpackDetails('detail2data');
-        } else {
-            $this->_doc = Document::create('ServiceAct');
-            $this->docform->document_number->setText($this->_doc->nextNumber());
-            if ($basedocid > 0) {  //создание на  основании
-                $basedoc = Document::load($basedocid);
-
-                if ($basedoc->meta_name == 'Task') {
-                    $this->docform->customer->setKey($basedoc->customer_id);
-                    $this->docform->customer->setText($basedoc->customer_name);
-                    $this->_servicelist = array();
-                    foreach($basedoc->unpackDetails('detaildata') as $v ) {
-                       $this->_servicelist[$v->service_id]= $v ;    
-                    }
-                    
-                }
-                if ($basedoc->meta_name == 'Invoice') {
-                    $this->docform->customer->setKey($basedoc->customer_id);
-                    $this->docform->customer->setText($basedoc->customer_name);
-
-                    $this->_servicelist = array();
-                    foreach($basedoc->unpackDetails('detaildata') as $v ) {
-                       if($v->service_id>0) {
-                           $this->_servicelist[$v->service_id]= $v ;                               
-                       }
-
-                    }
-                    foreach($basedoc->unpackDetails('detaildata') as $v ) {
-                       if($v->item_id>0) {
-                           $this->_itemlist[$v->item_id]= $v ;                               
-                       }
-
-                    }
-                }
-                if ($basedoc->meta_name == 'ServiceAct') {
-                    $this->docform->customer->setKey($basedoc->customer_id);
-                    $this->docform->customer->setText($basedoc->customer_name);
-
-                    $this->_servicelist = array();
-                    foreach($basedoc->unpackDetails('detaildata') as $v ) {
-                       $this->_servicelist[$v->service_id]= $v ;    
-                    }
-                    $this->_itemlist = array();
-                    foreach($basedoc->unpackDetails('detail2data') as $v ) {
-                       $this->_itemlist[$v->item_id]= $v ;    
-                    }
-                }
-            }
-        }
-
-        $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_servicelist')), $this, 'detailOnRow'))->Reload();
-        $this->docform->add(new DataView('detail2', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detail2OnRow'))->Reload();
-        $this->calcTotal();
-       
-        */
+ 
        
 
     }
      
     public  function loaddata($args,$post){
+        
+        // if (false == \App\ACL::checkShowDoc($this->_doc,false,false)) {
+
+             return json_encode(['error'=>'Нема прав на  доступ до документу' ], JSON_UNESCAPED_UNICODE);              
+        // }        
+        
+        
             $ret =[];
             $ret['doc'] = [];
             $ret['doc']['document_date']   =  date('Y-m-d', $this->_doc->document_date) ;
@@ -249,7 +136,8 @@ class ServiceAct extends \App\Pages\Base
             $ret['doc']['payed']   = H::fa( $this->_doc->headerdata['payed']);
 
             $ret['doc']['services'] = [];
-            foreach($this->_servicelist as $ser) {
+            $servicelist =  $this->_doc->unpackDetails('detaildata') ;
+            foreach($servicelist as $ser) {
                 $ret['doc']['services'][]  = array(
                    'service_id'=>$ser->service_id,
                    'service_name'=>$ser->service_name ,
@@ -262,7 +150,8 @@ class ServiceAct extends \App\Pages\Base
             }
 
             $ret['doc']['items'] = [];
-            foreach($this->_itemlist as $item) {
+            $itemlist =  $this->_doc->unpackDetails('detail2data') ;
+            foreach($itemlist as $item) {
                 $ret['doc']['items'][]  = array(
                    'item_id'=>$item->item_id,
                    'itemname'=>$item->itemname ,
@@ -313,30 +202,29 @@ class ServiceAct extends \App\Pages\Base
          
          $i=0;
      
-         $this->_itemlist=[];
+         $itemlist=[];
          foreach($post->doc->items as $it) {
              $item = Item::load($it->item_id);
      
              $item->quantity = $it->quantity;
              $item->price = $it->price;
                           
-             $this->_itemlist[++$i]=$item;
+             $itemlist[++$i]=$item;
          }
-         $this->_doc->packDetails('detail2data', $this->_itemlist);
+         $this->_doc->packDetails('detail2data', $itemlist);
         
          $i=0;
-         $this->_servicelist=[];
+         $servicelist=[];
          foreach($post->doc->services as $s) {
              $ser = Service::load($s->service_id);
      
              $ser->quantity = $s->quantity;
              $ser->price = $s->price;
                           
-             $this->_servicelist[++$i]=$ser;
+             $servicelist[++$i]=$ser;
          }
          
-         $this->_doc->packDetails('detaildata', $this->_servicelist);
-         
+         $this->_doc->packDetails('detaildata', $servicelist);
          
          
          $conn = \ZDB\DB::getConnect();
@@ -346,8 +234,7 @@ class ServiceAct extends \App\Pages\Base
                 $this->_doc->parent_id = $this->_basedocid;
                 $this->_basedocid = 0;
             }
-       
-   
+    
   
             $this->_doc->save();
 
