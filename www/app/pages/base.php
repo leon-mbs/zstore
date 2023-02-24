@@ -467,6 +467,20 @@ class Base extends \Zippy\Html\WebPage
        return json_encode($list, JSON_UNESCAPED_UNICODE);          
     }  
  
+    public function vLoadService($args,$post=null) {
+         $service_id = $args[0];
+         $ser =   \App\Entity\Service::load($service_id) ;
+         $ret = [];
+         if($ser != null) {
+             $ret['service_id'] = $service_id;   
+             $ret['service_name'] = $ser->service_name;   
+             $ret['price'] = $ser->getPrice( );   
+         }      
+       
+         return json_encode($ret, JSON_UNESCAPED_UNICODE);          
+   
+    }
+    
     public function vLoadItem($args,$post=null) {
        $item_id=$args[0];
        $p = strlen($post)==null ?  array() : json_decode($post,true)  ;
@@ -566,6 +580,10 @@ class Base extends \Zippy\Html\WebPage
              $firms = \App\Entity\Firm::getList() ;
              $ret['firms'] =  \App\Util::tokv($firms) ;
          }
+         if($post->mfs) {
+             $mfs = \App\Entity\MoneyFund::getList() ;
+             $ret['mfs'] =  \App\Util::tokv($mfs) ;
+         }
           
          return json_encode($ret, JSON_UNESCAPED_UNICODE);   
      } 
@@ -577,6 +595,19 @@ class Base extends \Zippy\Html\WebPage
  
 
          return json_encode($ret, JSON_UNESCAPED_UNICODE);   
+  
+     }
+
+    public  function vgetPriceByQty($args,$post){
+        $post = json_decode($post) ;
+
+        $item =  \App\Entity\Item::load($post->item) ;
+        $price = $item->getPrice('', $post->store,0,$post->qty);
+        
+        $ret=[];
+        $ret['price'] = $price;
+
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);   
   
      }
      public  function vLoadCust($args,$post){
@@ -591,6 +622,7 @@ class Base extends \Zippy\Html\WebPage
              $info['bonus']  = $c->getBonus()  ;
              if (doubleval($info['discount']) > 0) {
                 $info['disctext'] =  "Постійна знижка {$info['discount']}%";
+                $info['bonus'] =0;
              } else {
                 if ($info['bonus'] > 0) {
                     $info['disctext'] = "Нараховано бонусів " . $info['bonus'];
