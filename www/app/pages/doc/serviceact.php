@@ -110,10 +110,10 @@ class ServiceAct extends \App\Pages\Base
      
     public  function loaddata($args,$post){
         
-        // if (false == \App\ACL::checkShowDoc($this->_doc,false,false)) {
+         if (false == \App\ACL::checkShowDoc($this->_doc,false,false)) {
 
              return json_encode(['error'=>'Нема прав на  доступ до документу' ], JSON_UNESCAPED_UNICODE);              
-        // }        
+         }        
         
         
             $ret =[];
@@ -276,4 +276,4 @@ class ServiceAct extends \App\Pages\Base
          return json_encode([], JSON_UNESCAPED_UNICODE);          
            
      }   
-}
+}        
