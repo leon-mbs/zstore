@@ -67,6 +67,7 @@ class Item extends \ZCL\DB\Entity
         $this->sef = (string)$xml->sef[0];
         $this->url = (string)$xml->url[0];
         $this->foodstate = (int)$xml->foodstate[0];
+        $this->state = (int)$xml->state[0];
 
         $this->cell = (string)$xml->cell[0];
         //  $this->octoreoptions = (string) $xml->octoreoptions[0];
@@ -145,6 +146,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<sef>{$this->sef}</sef>";
         $this->detail .= "<url>{$this->url}</url>";
         $this->detail .= "<foodstate>{$this->foodstate}</foodstate>";
+        $this->detail .= "<state>{$this->state}</state>";
 
         //упаковываем  цены  по  филиалам
         $brprice = serialize($this->brprice);
@@ -292,7 +294,7 @@ class Item extends \ZCL\DB\Entity
                 $partion = $this->getLastPartion($store);
             }
 
-            $price = $partion + (int)$partion / 100 * $common['defprice'];
+            $price = $partion + (doubleval($partion) / 100) * $common['defprice'];
             //курсовая разница
             $opv = \App\System::getOptions("val");
             if (strlen($this->val) > 1 && $opv['valprice'] == 1) {
@@ -642,6 +644,17 @@ class Item extends \ZCL\DB\Entity
         $list[Item::TYPE_MBP] = "МБП (малоцінка)";
         $list[Item::TYPE_PROD] = "Готова продукція";
         $list[Item::TYPE_HALFPROD] = "Напівфабрикати";
+
+        return $list;
+    }
+    
+    public static function getStates() {
+        $list = array();
+
+        $list[0] = "Новий";
+        $list[1] = "Вживаний";
+        $list[2] = "Відновлений";
+ 
 
         return $list;
     }
