@@ -16,7 +16,7 @@
                              <form   class="form-inline">
 
                                 <label for="wissearchkey">пошук</label>
-                                <input v-model="wissearchkey" class="form-control mr-sm-2" type="text"  >
+                                <input v-on:keyup.enter="onSearch" v-model="wissearchkey" class="form-control mr-sm-2" type="text"  >
                                 <label for="wissearchcat">категорiя</label>
 
                                 <select v-model="wissearchcat" class="form-control mr-sm-2"  >
