@@ -467,6 +467,20 @@ class Base extends \Zippy\Html\WebPage
        return json_encode($list, JSON_UNESCAPED_UNICODE);          
     }  
  
+    public function vLoadService($args,$post=null) {
+         $service_id = $args[0];
+         $ser =   \App\Entity\Service::load($service_id) ;
+         $ret = [];
+         if($ser != null) {
+             $ret['service_id'] = $service_id;   
+             $ret['service_name'] = $ser->service_name;   
+             $ret['price'] = $ser->getPrice( );   
+         }      
+       
+         return json_encode($ret, JSON_UNESCAPED_UNICODE);          
+   
+    }
+    
     public function vLoadItem($args,$post=null) {
        $item_id=$args[0];
        $p = strlen($post)==null ?  array() : json_decode($post,true)  ;
@@ -490,6 +504,20 @@ class Base extends \Zippy\Html\WebPage
        return json_encode($ret, JSON_UNESCAPED_UNICODE);          
     }  
  
+    
+    public function vSaveNewcust($args,$post=null) {
+        $post=json_decode($post) ; 
+      
+        $c = new  \App\Entity\Customer() ;
+        $c->customer_name = $post->name;
+        $c->phone =  $post->phone;
+        $c->email =  $post->email;
+        
+        $c->save() ;
+        $ret = array('customer_id'=>$c->customer_id) ;
+       
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);          
+   }
     
     public function vSaveNewitem($args,$post=null) {
         
@@ -531,20 +559,82 @@ class Base extends \Zippy\Html\WebPage
        
        return json_encode($ret, JSON_UNESCAPED_UNICODE);          
     }  
-      //загрузка  категорий  и брендов
+
+    //загрузка  категорий  и брендов
     public  function vLoadLists($args,$post){
-         
+         $post = json_decode($post) ;
          $ret = [];
-         
-         $cats =  \App\Entity\Category::getList() ;
-         $brands = \App\Entity\Item::getManufacturers(true) ;
-         
-         $ret['cats'] =  \App\Util::tokv($cats) ;
-         $ret['brands'] =  \App\Util::tokv($brands) ;
+         if($post->cats) {
+             $cats =  \App\Entity\Category::getList() ;
+             $ret['cats'] =  \App\Util::tokv($cats) ;
+         }
+         if($post->brands) {
+             $brands = \App\Entity\Item::getManufacturers(true) ;
+             $ret['brands'] =  \App\Util::tokv($brands) ;
+         }
+         if($post->stores) {
+             $stores = \App\Entity\Store::getList() ;
+             $ret['stores'] =  \App\Util::tokv($stores) ;
+         }
+         if($post->firms) {
+             $firms = \App\Entity\Firm::getList() ;
+             $ret['firms'] =  \App\Util::tokv($firms) ;
+         }
+         if($post->mfs) {
+             $mfs = \App\Entity\MoneyFund::getList() ;
+             $ret['mfs'] =  \App\Util::tokv($mfs) ;
+         }
           
          return json_encode($ret, JSON_UNESCAPED_UNICODE);   
      } 
   
+     public  function vLoadContracts($args,$post){
+         
+         $ret=[];
+         $ret['contracts'] =   \App\Util::tokv( \App\Entity\Contract::getList($args[0], $args[1]) );
+ 
+
+         return json_encode($ret, JSON_UNESCAPED_UNICODE);   
+  
+     }
+
+    public  function vgetPriceByQty($args,$post){
+        $post = json_decode($post) ;
+
+        $item =  \App\Entity\Item::load($post->item) ;
+        $price = $item->getPrice('', $post->store,0,$post->qty);
+        
+        $ret=[];
+        $ret['price'] = $price;
+
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);   
+  
+     }
+     public  function vLoadCust($args,$post){
+         
+         $ret=[];
+         $info=[] ;
+         $c = \App\Entity\Customer::load($args[0]) ;
+         if($c != null) {
+             $info['customer_name'] = $c->customer_name;
+             $info['disctext'] = '';
+             $info['discount']  = $c->getDiscount()  ;
+             $info['bonus']  = $c->getBonus()  ;
+             if (doubleval($info['discount']) > 0) {
+                $info['disctext'] =  "Постійна знижка {$info['discount']}%";
+                $info['bonus'] =0;
+             } else {
+                if ($info['bonus'] > 0) {
+                    $info['disctext'] = "Нараховано бонусів " . $info['bonus'];
+                }
+             }          
+         }
+         $ret['custinfo'] = $info;
+ 
+
+         return json_encode($ret, JSON_UNESCAPED_UNICODE);   
+  
+     }
 
     
 }

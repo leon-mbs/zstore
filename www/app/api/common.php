@@ -24,8 +24,8 @@ class common extends  JsonRPC
                 "exp"     => time() + $exp * 60
             );
 
-            $jwt = \Firebase\JWT\JWT::encode($payload, $key);
-     // v6.3.0       $jwt = \Firebase\JWT\JWT::encode($payload, $key, 'HS256');
+//            $jwt = \Firebase\JWT\JWT::encode($payload, $key);
+              $jwt = \Firebase\JWT\JWT::encode($payload, $key, 'HS256');
           
         } else {
             throw new \Exception("Невірний логін", -1000);

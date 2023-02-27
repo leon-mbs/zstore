@@ -93,4 +93,8 @@ class Service extends \ZCL\DB\Entity
         return \App\Helper::fa($price);
     }
 
+    public static function getList() {
+        return Service::findArray("service_name", "disabled<>1", "service_name");
+    }    
+    
 }

@@ -44,7 +44,7 @@
   }
        
   function checkFormInput(id){
-
+    var ret = true
     
     $('#'+id+' input ').each(
         function(index){  
@@ -53,13 +53,13 @@
             
             var v =   input.get(0).reportValidity() 
             if(!v) {
-                return  false
+               ret =  false
             }
             
         }
     );   
      
-    return true
+    return ret
   }
   
   
@@ -106,14 +106,14 @@
           if(d>0) {
              return _v.toFixed(2)    
           }
-          return _v.toFixed(0)          
+          return   _v.toFixed(0)          
           
      }
      function fqty(v){
           var d = {{qtydigits}}
           var _v =  parseVal(v)
           
-          return _v.toFixed(d)
+          return   _v.toFixed(d) 
          
      }
     
@@ -123,6 +123,7 @@
             return ele != value; 
         });
     }        
+       
           
      </script>
     </head>
@@ -968,7 +969,7 @@
                         <div class="col-12    ">
                             {{#smart}}
 
-                            <div class=" card navbar nav justify-content-start d-none d-sm-block">
+                            <div style="justify-content: space-between" class=" card navbar nav   d-none d-sm-block">
                                 {{{smart}}}
                             </div>
 

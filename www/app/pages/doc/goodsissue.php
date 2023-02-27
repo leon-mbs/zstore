@@ -868,7 +868,7 @@ class GoodsIssue extends \App\Pages\Base
 
 
         if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $c == 0) {
-            $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
+            $this->setError("Якщо у борг або передоплата або списання бонусів має бути обраний контрагент");
         }
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
             $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");

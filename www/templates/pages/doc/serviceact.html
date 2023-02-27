@@ -4,195 +4,307 @@
     </head>
 
     <body>
-
-
-        <form zippy="docform">
-            <h3> Замовлення (послуги)
-                <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover"
+     {{={| |}=}}   
+       <h3> Замовлення (послуги) 
+       <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover"
                    data-html="true" data-placement="bottom" data-content="Документ введення робіт або послуг, які потрібні замовнику.
                    На підставі замовленя може бути створений 'Наряд' на виконання робіт. Робота з документами типу 'Акт' проводиться в журналі 'Послуги'. 
                    <br><br>Є можливість друку квитанцій на вузькому (чековому) принтері."></i>
+       </h3>
+       <div class="row" id="vapp">
+            <div v-show="showdoc"  class="col-12">
+               <form   id="docform"  >
+                  <div class="row">
+                    <div class="col-6 col-md-4 col-lg-3">
+                    
+                        <div class="form-group  ">
+                            <label for="customer">Замовник</label>
 
-            </h3>
-
-            <div class="row">
-                <div class="col-6 col-md-4 col-lg-3">
-                
-                    <div class="form-group  ">
-                        <label for="customer">Замовник</label>
-
-                        <input placeholder="Почніть вводити..." class="form-control " zippy="customer"/>
-                        <span zippy="discount" style="display:block;font-size:smaller"></span>
-                        <a style="font-size:smaller" zippy="addcust">Додати нового</a>
-                    </div>
-
-
-                    <div class="form-group  ">
-                        <label for="firm">Виконавець</label>
-                        <select class="form-control" zippy="firm">
-                            <option value="0">Не обрано</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group  ">
-                        <label for="contract" data-label="contract">Договір</label>
-                        <select class="form-control" zippy="contract">
-                            <option value="0">Не обрано</option>
-                        </select>
+                            <typeahead required="required"      ref="cust"  :onquery="oncusttext"  :onhit="hitcust" placeholder="Почнiть вводити ..."></typeahead>   
+                   
+                            <small style="display:block" v-html="customerinfo.disctext" > </small>
+                            <a  v-on:click.prevent="onAddNew"><small> Додати нового </small> </a>
+                        </div>
 
 
-                    </div>
+                        <div class="form-group  ">
+                            <label for="firm">Виконавець</label>
+                            <select v-on:change="onContract" name="firm" class="form-control" v-model="firm_id">
+                                <option value="0">Не обрано</option>
+                                <option v-for="firm in firms"    v-bind:value="firm.key">{{firm.value}}</option>
+                           </select>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="device"> Виріб, матеріали, прийняті від замовника</label>
-                        <input class="form-control" type="text" zippy="device"/>
-                        <small>Заповнюється в сервісних центрах, майстеренях, СТО...</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="devsn">Серійний номер виробу</label>
-                        <input class="form-control" type="text" zippy="devsn"/>
+                        <div v-show="contracts.length >0" class="form-group  ">
+                            <label for="contract" data-label="contract">Договір</label>
+                            <select class="form-control" v-model="contract">
+                                <option value="0">Не обрано</option>
+                                <option v-for="contract in contracts"    v-bind:value="contract.key">{{contract.value}}</option>
+                            </select>
 
-                    </div>
 
-                </div>
-                <div class="col-6 col-md-4 col-lg-3">
-                   <div class="form-group">
-                        <label for="document_number">Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number" required="required">
-                    </div>                   
-                    <div class="form-group">
-                        <label for="document_date"> Дата</label>
-                        <input class="form-control" type="text" zippy="document_date" required="required">
-                    </div>
-                                  <div class="form-group  ">
-                        <label for="store">Склад  комплектуючих</label>
+                        </div>
 
-                        <select class="form-control" zippy="store">
-                            <option value="0">Не обрано</option>
-                        </select>
-                    </div>
- 
-                    <div class="form-group  ">
-                        <label for="gar">Гарантійний термін</label>
+                        <div class="form-group">
+                            <label for="device"> Виріб, матеріали, прийняті від замовника</label>
+                            <input class="form-control" type="text" v-model="device"/>
+                            <small>Заповнюється в сервісних центрах, майстеренях, СТО...</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="devsn">Серійний номер виробу</label>
+                            <input class="form-control" type="text" v-model="devsn"/>
 
-                        <input class="form-control" type="text" zippy="gar">
+                        </div>
 
                     </div>
-                
-                    <div class="form-group  ">
-                        <label for="notes">Примітка</label>
+                    <div class="col-6 col-md-4 col-lg-3">
+                       <div class="form-group">
+                            <label for="document_number">Номер документа</label>
+                            <input class="form-control" type="text" v-model="document_number" name="document_number" required="required">
+                        </div>                   
+                        <div class="form-group">
+                            <label for="document_date"> Дата</label>
+                            <input class="form-control" type="text" v-model="document_date"  name="document_date" required="required">
+                        </div>
+                        <div class="form-group  ">
+                            <label for="store">Склад  комплектуючих</label>
 
-                        <input class="form-control" type="text" zippy="notes">
-
-                    </div>
-                </div>
-
-            </div>
-            <div class="row">
-                <div class="col-10 col-lg-8">
-                    <a zippy="addrow"  class="btn btn-info mr-4">Додати роботу</a> 
-                    <a zippy="additemrow"  class="btn btn-info ">Додати комплектуючі</a> 
-                    <br>
-                    <small>Документ може бути збережений без позицій, якщо обсяг робіт ще невідомий, а потрібно роздрукувати (з журналу послуг) квитанцію про прийом у замовника виробу</small>
-                    <table class="table  table-sm">
-                        <tr>
-                            <th>Назва</th>
-                            <th> </th>
-                            <th>Кiл.</th>
-
-
-                            <th class="text-right">Вартість</th>
-                            <th class="text-right">Сума</th>
-                
-
-                            <th  ></th>
-                        </tr>
-                        <tr zippy="detail">
-                            <td zippy="service"></td>
-                            <td zippy="desc"></td>
-                            <td zippy="qty" class="text-right"></td>
-
-                            <td zippy="price" class="text-right"></td>
-                            <td zippy="amount" class="text-right"></td>
-
-
-                            <td><a zippy="edit"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;&nbsp;<a zippy="delete"><i
-                                        class="fa fa-trash"></i></a>
-                            </td>
-                        </tr>
-                      <tr zippy="detail2">
-                            <td   zippy="itemname"></td>
-                            <td   zippy="item_code"></td>
-
-                            <td zippy="qtyitem" class="text-right"></td>
-
-                            <td zippy="priceitem" class="text-right"></td>
-                            <td zippy="amountitem" class="text-right"></td>
-
-
-                            <td><a zippy="edititem"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;&nbsp;<a zippy="deleteitem"><i
-                                        class="fa fa-trash"></i></a>
-                            </td>
-                        </tr>
-                        
-                        <tr style="font-weight: bolder;">
-                            <td colspan="4" class="text-right">На суму:</td>
-                            <td zippy="total" class="text-right"></td>
-                            <td></td>
-                        </tr>
-                        <tr style="font-weight: bolder;">
-                            <td colspan="4" class="text-right"><span data-label="paydisc">Знижка:</span></td>
-                            <td zippy="paydisc" class="text-right"></td>
-                            <td><a data-label="paydisc" href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i
-                                        class="fa fa-edit"></i></a></td>
-                        </tr>
-                        <tr style="font-weight: bolder;">
-                            <td colspan="4" class="text-right"><span data-label="payamount">Всього:</span></td>
-                            <td zippy="payamount" class="text-right"></td>
-                            <td><a data-label="payamount" href="javascript:void(0);" data-toggle="modal"
-                                   data-target="#modalpayamount"><i class="fa fa-edit"></i></a></td>
-                        </tr>
-            
-
-                    </table>
-
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-outline-secondary  ">
-                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-outline-primary  ">
-                    &nbsp;<input zippy="execdoc" type="submit" value="На виконання" class="btn btn-outline-primary  ">
-
-                   &nbsp;<a data-toggle="modal"
-                                   data-target="#modalpayed"  href="javascript:void(0);"  class="btn btn-outline-info  ">Оплата</a>
+                            <select class="form-control" v-model="store" name="store">
+                                <option value="0">Не обрано</option>
+                                <option v-for="store in stores"    v-bind:value="store.key">{{store.value}}</option>
+                         </select>
+                        </div>
      
+                        <div class="form-group  ">
+                            <label for="gar">Гарантійний термін</label>
+
+                            <input class="form-control" v-model="gar" name="gar">
+
+                        </div>
+                    
+                        <div class="form-group  ">
+                            <label for="notes">Примітка</label>
+
+                            <input class="form-control" v-model="notes" name="notes" zippy="notes">
+
+                        </div>
+                    </div>
+
                 </div>
-            </div>
-            <div id="modalpayamount" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+
+                <div class="row">
+                    <div class="col-10 col-lg-8">
+                        <a v-on:click.prevent="addservice"  class="btn btn-info mr-4">Додати роботу</a> 
+                        <a v-on:click.prevent="additem"  class="btn btn-info ">Додати комплектуючі</a> 
+                        <br>
+                        <small>Документ може бути збережений без позицій, якщо обсяг робіт ще невідомий, а потрібно роздрукувати (з журналу послуг) квитанцію про прийом у замовника виробу</small>
+                          <table class="table  table-sm">
+                            <tr>
+                                <th>Назва</th>
+                                <th> </th>
+                                <th class="text-right">Кiл.</th>
+
+                                <th class="text-right">Вартість</th>
+                                <th style="width:100px" class="text-right">Сума</th>
+
+                                <th  ></th>
+                            </tr>
+                            <tr  v-for="(service, index)  in services" >
+                                <td >{{service.service_name}}</td>
+                                <td >{{service.desc}}</td>
+                                <td  class="text-right"> {{service.quantity}}</td>
+
+                                <td   class="text-right">{{service.price}}</td>
+                                <td   class="text-right">{{service.amount}}</td>
+
+
+                                <td><a  v-on:click.prevent="editservice(service,index)"  ><i class="fa fa-edit"></i></a> 
+                                &nbsp;&nbsp;&nbsp;<a v-on:click.prevent="dels(service)" ><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+                             <tr v-for="(item, index)   in items">
+                                <td   >{{item.itemname}}</td>
+                                <td   >{{item.item_code}}</td>
+
+                                <td  class="text-right">{{item.quantity}}</td>
+
+                                <td  class="text-right">{{item.price}}</td>
+                                <td  class="text-right">{{item.amount}}</td>
+
+
+                                <td><a v-on:click.prevent="edititem(item,index)"><i class="fa fa-edit"></i></a> 
+                                &nbsp;&nbsp;&nbsp;<a v-on:click.prevent="deli(item)"><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>                 
+                        
+                            <tr style="font-weight: bolder;">
+                                <td colspan="4" class="text-right">На суму:</td>
+                                <td   class="text-right">{{total}}</td>
+                                <td></td>
+                            </tr>                    
+                           <tr style="font-weight: bolder;">
+                                <td colspan="4" class="text-right">Знижка:</td>
+                                <td  class="text-right"><input pattern="[0-9,\.]+" class="form-control" v-model="paydisc" style="width:100px" > </td>
+                                <td> </td>
+                            </tr>
+                           <tr v-show="this.customerinfo.bonus >0"  style="font-weight: bolder;">
+                                <td colspan="4" class="text-right"><span data-label="paydisc">Бонуси:</span></td>
+                                <td   class="text-right"><input pattern="[0-9,\.]+" class="form-control" v-model="bonus" style="width:100px;" ></td>
+                                <td> </td>
+                            </tr>                                 
+                            <tr style="font-weight: bolder;">
+                                <td colspan="4" class="text-right">До сплати:</td>
+                                <td   class="text-right"> {{payamount}}</td>
+                                <td> </td>
+                            </tr>    
+                          </table>
+                            
+
+
+              </div>           
+                
+                </div>  
+                 <div class="row">
+                    <div class="col-6">
+                        <input type="button" onclick="history.back()" value="Скасувати"   class="btn btn-outline-secondary  ">
+                        <input v-on:click.prevent="onbtn('savedoc')"   type="submit" value="Зберегти" class="btn btn-outline-primary  ">
+                        &nbsp;<input v-on:click.prevent="onbtn('execdoc')"   type="submit" value="На виконання" class="btn btn-outline-primary  ">
+
+                        &nbsp;<a data-toggle="modal" data-target="#modalpayed"  href="javascript:void(0);"  class="btn btn-outline-info  ">Оплата</a>
+         
+                    </div>
+                </div>   
+               </form>
+            </div> 
+            
+         <div id="modaleditserv" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                  aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered  modal-sm">
+                <div class="modal-dialog modal-dialog-centered   ">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">До сплати</h5>
+                            <h5 class="modal-title">Редагування</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <div class="input-group  ">
-                                <input class="form-control qtyprice" type="text" zippy="editpayamount" pattern="[0-9,\.]+">
-                                <div class="input-group-append">
-                                    <input type="submit" value="OK" zippy="bpayamount" class="ml-2 btn btn-info  ">
-
-                                </div>
+                          <form id="serviceform" >
+  
+                            <div class="form-group">
+                                <label for="editservice">Робота, послуга </label>
+                                <select v-on:change="hitser" v-model="service" class="form-control  ">
+                                    <option value="0">Не обрано</option>
+                                    <option v-for="service in servicelist"    v-bind:value="service.key">{{service.value}}</option>
+                                </select>
                             </div>
+                            <div class="form-group">
+                                <label for="editdesc">Опис </label>
+                                <textarea class="form-control " v-model="editservicedesc"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="editqty">Кiлькiсть </label>
+                                <input   class="form-control " v-model="editservicequantity">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="editprice">Вартість </label>
+                                <input class="form-control qtyprice"   v-model="editserviceprice" required="required" pattern="[0-9,\.]+"
+                                       value="0" style="width: 100px;">
+                            </div>                           
+
+                                  <div class="form-group">
+                                    <input v-on:click.prevent="onSaveService"   type="button" value="Зберегти" class="btn btn-outline-primary">
+                                    <input  type="button" onclick="$('#modaleditserv').modal('hide')"   value="Скасувати" class="btn btn-outline-secondary ">
+                                  </div>
+                               
+                        </form>
                         </div>
 
                     </div>
                 </div>
-            </div>
-      <div id="modalpayed" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            </div>                 
+         <div id="modaledititem" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered   ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Редагування</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                          <form id="itemform" >
+                                      
+                            <div class="form-group">
+                              <label for="edititem">Назва </label>
+                               <typeahead    :onquery="onitemtext"  :onhit="hititem" required="required"  ref="edititem" placeholder="Почніть вводити..."   />
+                               Наявність: <span  >{{qtystock}}</span>
+                 
+                            </div>
+                          
+                            <div class="form-group">
+                                <label for="edititemqty">Кiлькiсть </label>
+                                <input class="form-control " v-model="edititemquantity">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edititemprice">Ціна </label>
+                                <input class="form-control qtyprice" type="text" v-model="edititemprice" required="required" pattern="[0-9,\.]+"
+                                       value="0" style="width: 100px;">
+                            </div>                              
+                              
+
+                              <div class="form-group">
+                                <input v-on:click.prevent="onSaveItem"   type="button" value="Зберегти" class="btn btn-outline-primary">
+                                <input  type="button" onclick="$('#modaledititem').modal('hide')"   value="Скасувати" class="btn btn-outline-secondary ">
+                              </div>
+                               
+                        </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>                 
+           
+         <div id="modalnewcust" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered   ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Новий контрагент</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                          <form id="newcustform" >
+                                <div class="form-group">
+                                    <label for="editcustname">Назва </label>
+                                    <input v-model="ncustname" class="form-control " name="editcustname" required="required"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editphone">Телефон</label>
+                                    <input v-model="nphone" pattern="[0-9]+" class="form-control" type="text" name="editphone"/>
+                                </div>
+                                 <div class="form-group">
+                                    <label for="editemail">E-mail</label>
+                                    <input v-model="nemail" class="form-control" type="email" name="editemail"/>
+                                 </div>
+
+                                  <div class="form-group">
+                                    <input v-on:click.prevent="onSaveNewCust"   type="button" value="Зберегти" class="btn btn-outline-primary">
+                                    <input  type="button" onclick="$('#modalnewcust').modal('hide')"   value="Скасувати" class="btn btn-outline-secondary ">
+                                  </div>
+                               
+                        </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>  
+            
+         <div id="modalpayed" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -204,8 +316,9 @@
                         <div class="modal-body">
                             <div class="form-group  ">
                                 <label for="payment">Каса, рахунок</label>
-                                <select class="form-control" zippy="payment">
+                                <select class="form-control" v-model="payment">
                                     <option value="0">Не обрано</option>
+                                    <option v-for="mf in mflist"    v-bind:value="mf.key">{{mf.value}}</option>      
                                 </select>
                                
                             </div>
@@ -213,136 +326,487 @@
                             <div class="form-group  ">
                                 <label for="payment">Внесено  оплату</label>
                                                          
-                                <input class="form-control qtyprice" type="text" zippy="payed" pattern="[0-9,\.]+">
+                                <input class="form-control qtyprice" type="text" v-model="payed" pattern="[0-9,\.]+">
                                 
                             </div>
-                                <div class="input-group">
-                                    <input type="submit" value="Оплатити" zippy="paydoc" class="   btn btn-info  ">
+                             <div class="input-group">
+                                <input type="submit" value="Оплатити" v-on:click.prevent="onbtn('paydoc')"   class="   btn btn-info  ">
 
-                                </div>
-                            
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-      
-            <div id="modaldisc" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered  modal-sm">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Знижка</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="input-group  ">
-                                <input class="form-control qtyprice" type="text" zippy="editpaydisc" pattern="[0-9,\.]+">
-                                <div class="input-group-append">
-                                    <input type="submit" value="OK" zippy="bpaydisc" class="ml-2 btn btn-info  ">
-
-                                </div>
                             </div>
+                        
                         </div>
 
                     </div>
                 </div>
-            </div>
-  
-        </form>
-
-
-        <form zippy="editdetail">
-            <h3>Редагування </h3>
-            <div class="row">
-                <div class="col-12 col-md-4 col-xl-3">
-
-                    <div class="form-group">
-                        <label for="editservice">Робота, послуга </label>
-                        <select zippy="editservice" class="form-control select2">
-                            <option value="0">Не обрано</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="editdesc">Опис </label>
-                        <textarea class="form-control " zippy="editdesc"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="editqty">Кiлькiсть </label>
-                        <input class="form-control " zippy="editqty">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="editprice">Вартість </label>
-                        <input class="form-control qtyprice" type="text" zippy="editprice" required="required" pattern="[0-9,\.]+"
-                               value="0" style="width: 100px;">
-                    </div>
-
-                    <div class="form-group">
-                        <input zippy="saverow" type="submit" value="Зберегти" class="btn btn-outline-primary">
-                        <input type="button" zippy="cancelrow" value="Скасувати" class="btn btn-outline-secondary ">
-                    </div>
-                </div>
-            </div>
-        </form>
-   <form zippy="edititemdetail">
-            <h3>Редагування ТМЦ</h3>
-            <div class="row">
-                <div class="col-12 col-md-4 col-xl-3">
-
-                    <div class="form-group">
-                        <label for="edititem">Назва </label>
-                       <input placeholder="Почніть вводити..." class="form-control " zippy="edititem"/>
-                       Наявність: <span zippy="qtystock"></span>
+            </div>                           
+         </div> 
+       
+            
+       
+    {|={{ }}=|}  
+ 
+        
+      <script>
+        
+      var vapp = new Vue({
+      el: '#vapp',
+      data() {  
+          return {
+             showdoc:false ,
+     
+             document_date:"",
+             document_number:"",
          
-                    </div>
+             notes:"",
+             device:"",
+             devsn:"",
+             gar:"",
+             store:0,
+             contract:0,
+             custlist:[] ,
+             contracts:[] ,
+             customer_id:0,
+             customerinfo:{},
+             firm_id:0,
+           
+             items:[],
+             services:[],
+             stores:[],
+             firms:[],
+             mflist:[],
+             ncustname:"",
+             nphone:"",
+             nemail:"",
+
+             servicelist:[],
+             
+             item:0,
+             edititemquantity:0,
+             edititemprice:0,
+             service:0,
+             editservicequantity:0,
+             editserviceprice:0,
+             editservicedesc:'',
+             editedindex:-1,
+             qtystock:0,
+      
+             total:0,
+             paydisc:0,
+             bonus:0,
+             payment:0,
+             payed:0,
+           
+             
+             loadedservice:{},
+             loadeditem:{},
+             
+             
+          }
+      } ,
+      methods: {
+                addservice: function (){
+                    this.editedindex = -1
+        
+                    this.service=0
+                    this.editservicequantity=1
+                    this.editserviceprice=0 
+                    this.editservicedesc='' 
                   
-                    <div class="form-group">
-                        <label for="edititemqty">Кiлькiсть </label>
-                        <input class="form-control " zippy="edititemqty">
-                    </div>
+                    $('#modaleditserv').modal('show')            
+                },  
+                editservice: function (ser,index){
+                    this.editedindex = index
+    
+                    this.service=ser.service_id
+                    this.editservicequantity=ser.quantity
+                    this.editserviceprice=ser.price 
+                    this.editservicedesc=ser.desc 
+                  
+                    $('#modaleditserv').modal('show')            
+            //     
+                },  
+                onSaveService: function (){
+                   
+                    if(checkFormInput('serviceform')==false) return;
+                    if(this.service == 0) {
+                        toastr.error('Не задана робота')
+                        return;
+                    }
+                      
+                    if(this.editedindex == -1)  {  //новый
+                        this.editedindex = this.services.length
+                        this.services[this.editedindex]  = {}  
+                         
+                        this.services[this.editedindex].service_id  =  this.service  
+                    }
+                      
+                    this.services[this.editedindex].service_name = this.loadedservice.service_name 
+                    this.services[this.editedindex].desc = this.editservicedesc 
+                    this.services[this.editedindex].price = fa(this.editserviceprice) 
+                    this.services[this.editedindex].quantity = fqty(this.editservicequantity) 
+                    this.services[this.editedindex].amount = fa(this.editserviceprice * this.editservicequantity ) 
+                            
+                    $('#modaleditserv').modal('hide')              
+                    this.calctotal()
 
-                    <div class="form-group">
-                        <label for="edititemprice">Ціна </label>
-                        <input class="form-control qtyprice" type="text" zippy="edititemprice" required="required" pattern="[0-9,\.]+"
-                               value="0" style="width: 100px;">
-                    </div>
+                }  ,
+                dels:function (el){  
+                   this.services =   arrayRemove(this.services,el)
+                   this.calctotal()
+                 
+         
+                },
+                    
+                additem: function (){
+             
+                    this.qtystock=0
+                    this.item=0
+                    this.edititemquantity=1
+                    this.edititemprice=0 
+                    this.editedindex = -1
+      
+                    this.$refs.edititem.query = "";  
+    
+                    $('#modaledititem').modal('show')                               
+                               
+                },
+                
+                  edititem: function (item,index){
+                    this.editedindex = index
+    
+                    this.item=item.item_id
+                    this.edititemquantity=item.quantity
+                    this.edititemprice=item.price 
 
-                    <div class="form-group">
-                        <input zippy="saverowitem" type="submit" value="Зберегти" class="btn btn-outline-primary">
-                        <input type="button" zippy="cancelrowitem" value="Скасувати" class="btn btn-outline-secondary ">
-                    </div>
-                </div>
-            </div>
-        </form>
+                    this.$refs.edititem.query = item.itemname;  
+                    this.hititem(item.item_id)
+                    $('#modaledititem').modal('show')            
+                     
+                },  
+              
+                onSaveItem: function (){
+                   
+                    if(checkFormInput('itemform')==false) return;
+                    if(this.item == 0) {
+                        toastr.error('Не заданий ТМЦ')
+                        return;
+                    }
+                    
+                    if(this.editedindex == -1)  {  //новый
+                        this.editedindex = this.items.length
+                        this.items[this.editedindex]  = {}  
+                         
+                        this.items[this.editedindex].item_id  =  this.item  
+                    }
 
-        <form zippy="editcust">
-            <h3>&nbsp;Новий контрагент </h3>
-            <div class="row">
-                <div class="col-12 col-md-4 col-xl-3">
+                     
+                    this.items[this.editedindex].itemname = this.loadeditem.itemname 
+                    this.items[this.editedindex].item_code = this.loadeditem.item_code 
+                    this.items[this.editedindex].price = fa(this.edititemprice) 
+                    this.items[this.editedindex].quantity = fqty(this.edititemquantity) 
+                    this.items[this.editedindex].amount = fa(this.edititemprice * this.edititemquantity ) 
+                     
+                    $('#modaledititem').modal('hide')              
+                    this.calctotal()
+              },            
+                 deli:function (el){  
+                   this.items =   arrayRemove(this.items,el)
+                   this.calctotal()
+                 
+         
+                },       
+                hitser: function (){
+                    // this.editservice
+                      callPM('vLoadService',[this.service ], null,(data)=> 
+                      {
+                           var data = JSON.parse(data)
+                           this.loadedservice = data
+                           this.editserviceprice  = this.loadedservice.price
+                      }); 
+                } ,
+                hitcust: function (id){
+                   
+                    this.customer_id = id 
+                    this.onContract()
+                      callPM('vLoadCust',[id ], null,(data)=> 
+                      {
+                           var data = JSON.parse(data)
+                           this.customerinfo = data.custinfo
+                           this.calctotal()
+                      });                  
+                },
+                onContract: function (){
+                  this.contract = 0  
+                  callPM('vLoadContracts',[this.customer_id,this.firm_id ], null,(data)=> 
+                  {
+                       var data = JSON.parse(data)
+             
+                       this.contracts = data.contracts
+ 
+                  });     
 
-                    <div class="form-group">
-                        <label for="editcustname">Назва </label>
-                        <input class="form-control " zippy="editcustname" required="required"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="editphone">Телефон</label>
-                        <input pattern="[0-9]+" class="form-control" type="text" zippy="editphone"/>
-                    </div>
-                     <div class="form-group">
-                        <label for="editemail">E-mail</label>
-                        <input class="form-control" type="email" zippy="editemail"/>
-                    </div>
+                },
+                oncusttext: async function (query){
+                   
+                    var url  = getMethodUrl('vonTextCust',[query,2 ])
+                    let response = await fetch(url);
+             
+                    return  await response.json()  ;
+     
+                }  ,                
+                onbtn:function (bname){
+                      
+                    if(checkFormInput('docform')==false) return;
+                    var data={
+                        doc:{
+                        }
+                    }                
+                     
+       
+                    data.op = bname
+                    data.doc.notes = this.notes
+                    data.doc.document_date = this.document_date
+                    data.doc.document_number = this.document_number
+                    data.doc.customer_id = this.customer_id
+                    data.doc.firm_id = this.firm_id
+                    data.doc.contract_id = this.contract
+                    data.doc.items = this.items
+                    data.doc.services = this.services
+                    data.doc.total = parseVal( this.total )
+                    data.doc.payamount = parseVal(this.payamount)
+                    data.doc.bonus = parseVal(this.bonus)
+                    data.doc.discount = parseVal(this.discount)
+                    data.doc.store = this.store
+                    data.doc.devsn = this.devsn
+                    data.doc.device = this.device
+                    data.doc.gar = this.gar
+          
+            
+                    if(this.store == 0 && this.items.length > 0 ) {
+                          toastr.error("Не вибраний склад") 
+                          return  
+                    }
+                    if(bname == 'execdoc'  && data.doc.customer_id == 0 ) {
+                          toastr.error("Якщо післяплата, необхідно вибрати контрагента") 
+                          return  
+                    }
+                    if(bname == 'paydoc'  ) {
+                       data.doc.payment = this.payment
+                       data.doc.payed = parseVal(this.payed )
 
-
-                    <div class="form-group">
-                        <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-outline-primary">
-                        <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-outline-secondary ">
-                    </div>
-                </div>
-            </div>
-        </form>
+      
+                       if( data.doc.payment == 0 ) {
+                          toastr.error("Не вибрана каса") 
+                          return  
+                       }
+                       if( parseVal(this.payed ) == 0 ) {
+                          toastr.error("Не вкаана сума") 
+                          return  
+                       }
+                       if(parseVal(this.payamount) > parseVal(this.payed ) && data.doc.customer_id == 0) {
+                          toastr.error("Якщо кредит, необхідно вибрати контрагента") 
+                          return  
+                       }
+                       if(parseVal(this.payamount) < parseVal(this.payed ) ) {
+                          toastr.error("Внесена сума більше необхідної") 
+                          return  
+                       }
+                     }          
+                     
+                
+                    callPM('save',[ ], JSON.stringify(data),(data)=> 
+                      {
+                           var data = JSON.parse(data)
+                           
+                           if(false==checkPMAnswer(data) )   {
+                               if(data.newnumber)  this.document_number = data.newnumber
+                               return
+                           }
+                          
+                           window.location = '/index.php?p=App/Pages/Register/SerList'
+                      });
+                          
+                    
+                }  ,  
+                
+                onAddNew:function (){
+                    $('#modalnewcust').modal('show') 
+                    this.ncustname = ''  
+                    this.nphone = ''  
+                    this.nemail = ''  
+                },                             
+                onSaveNewCust:function (){
+                   if(checkFormInput('newcustform')==false) return;
+                   
+                   let  data = {}
+                   data.name = this.ncustname
+                   data.email = this.nemail
+                   data.phone = this.nphone
+                   
+                   callPM('vSaveNewcust',[ ], JSON.stringify( data),(data)=> 
+                   {
+                       var data = JSON.parse(data)
+                       if(false==checkPMAnswer(data) )   {
+                          return
+                       }   
+                       this.$refs.cust.query = this.ncustname;  
+                       this.hitcust(data.customer_id) ;
+                       $('#modalnewcust').modal('hide') 
+                    
+                   });           
+                         
+                }, 
+                
+                calctotal:function (){
+                    var _sum = 0
+                    for( var _item  of  this.items){
+                         _sum +=    Number.parseFloat(_item.amount)
+                        
+                    }      
+                    for( var _ser  of  this.services){
+                         _sum +=    Number.parseFloat(_ser.amount) 
+                    }   
+                    this.$forceUpdate();
+             
+                    this.total = fa(_sum)  
+                    
+                    if(this.customerinfo.discount > 0)  {
+                        
+                        this.paydisc = fa( _sum * (this.customerinfo.discount/100)    )                          
+                    }
+                             
+                } ,
+     
+         
+             
+                onitemtext: async function (query){
+                   
+                    var url  = getMethodUrl('vonTextItem',[query ])
+                    let response = await fetch(url);
+             
+                    return  await response.json()  ;
+     
+                }  ,                          
+            
+                hititem: function (id){
+                  
+                  this.item = id 
+                  var data = {}
+                  callPM('vLoadItem',[id ], JSON.stringify(data),(data)=> 
+                  {
+                       var data = JSON.parse(data)
+                       
+                       if(false==checkPMAnswer(data) )   {
+                           return
+                       }
+                        
+                       this.qtystock = fqty( data.qtystock)
+                       if(this.editedindex == -1) {
+                          this.edititemprice = fa( data.price)    
+               
+                        
+                       }
+                       this.$refs.edititem.query = data.itemname;  
+    
+                       this.loadeditem = data;
+                        
+                  });        
+                    
+                    
+                },
+      
+            }   ,   
+    
+       computed:{
+         payamount:function(){
+             
+            var tmp = fa( parseVal(this.total) - parseVal(this.paydisc) - parseVal(this.bonus) ) 
+            this.payed = tmp
+            return tmp
+         } ,
+          
+         
+       },    
+  
+       watch:{
+       
+     
+            edititemquantity(newVal, oldVal) { 
+                  
+                  let qty  =  parseVal(this.edititemquantity)   
+                  if(qty > 0 && this.item > 0) {
+                      let data = {}
+                      data.item= this.item
+                      data.store= this.store
+                      data.qty = this.edititemquantity
+                      
+                      callPM('vgetPriceByQty',[  ], JSON.stringify(data),(data)=> 
+                      {
+                           var data = JSON.parse(data)
+                           this.edititemprice = data.price
+                      });        
+                      
+                  }              
+            }         
+        } ,  
+        
+        mounted: function  (){
+                this.contract = 3
+                callPM('loaddata',[ ], null,(data)=> 
+                  {
+                       var data = JSON.parse(data)
+                       
+                       if(false==checkPMAnswer(data) )   {
+                           return
+                       }
+                       this.showdoc = true
+ 
+                       this.document_date = data.doc.document_date
+                       this.document_number = data.doc.document_number
+                       this.notes = data.doc.notes
+                       this.gar = data.doc.gar
+                       this.$refs.cust.query = data.doc.customer_name;  
+                       this.customer_id = data.doc.customer_id;  
+                       this.items = data.doc.items;  
+                       this.services = data.doc.services;  
+                       this.store = data.doc.store;  
+                       this.device = data.doc.device;  
+                       this.devsn = data.doc.devsn;  
+                       this.total = data.doc.amount;  
+                       this.payment = data.doc.payment;  
+                       this.bonus = data.doc.bonus;  
+                       this.paydisc = data.doc.paydisc;  
+                      // this.payamount = data.doc.payamount;  
+                       this.payed = data.doc.payed;  
+                       this.firm_id = data.doc.firm_id;  
+                       this.hitcust(this.customer_id)
+                       this.servicelist = data.servicelist;  
+                       this.contract = data.doc.contract_id;  
+                     
+                        
+                  });
+                  
+              var data= {
+                  stores:true ,
+                  mfs:true ,
+                  firms:true 
+               
+              }
+              callPM('vLoadLists',[ ], JSON.stringify(data),(data)=> 
+              {
+                   var data = JSON.parse(data)
+                   this.stores = data.stores
+                   this.firms = data.firms
+                   this.mflist = data.mfs
+                
+              });    
+        }  
+,
+        components: {   
+               'typeahead': httpVueLoader('/assets/js/vue/typeahead.vue')  
+               }          
+    })      
+    
+             
     </body>
 </html>

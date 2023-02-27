@@ -8,7 +8,7 @@
     <body>
         {{#winfo}}
 
-        <div class="row">
+        <div class="row  " style="justify-content: space-between">
             <div class="col-auto ">
                 <div class="info-box">
                     <span class="info-box-icon bg-info elevation-1"><i class="fa fa-file-invoice "></i></span>
@@ -118,7 +118,7 @@
         <div class="row">
 
             <div   class="col-12  col-lg-4   ">
-                <div   class="card ">
+                <div    class="card pb-3">
 
 
                         <div style="width:100%" id="paystructure"></div>
@@ -130,7 +130,7 @@
   
  
            <div   class="col-12  col-lg-4 ">
-                <div   class="card ">
+                <div    class="card pb-3">
                     
                         <div style="width:100%" id="paycompare"></div>
                   
@@ -138,11 +138,11 @@
             </div>
          
           <div   class="col-12  col-lg-4 ">
-                <div   class="card ">
-                    <div   class="card-body">
+                <div    class="card pb-3">
+                   
 
-                        <div style="width:100%" id="sellstat"></div>
-                    </div>
+                        <div style="width:100%;" id="sellstat"></div>
+                     
                 </div>    
             </div>
         </div>     
@@ -326,17 +326,17 @@
         
         
         var psoptions = {
-          title: 'Структура видаткiв за шiсть мiсяцiв' ,
-          sliceVisibilityThreshold: 0.01,         
+          title: 'Структура видаткiв за дванадцять мiсяцiв' ,
+          sliceVisibilityThreshold: 0.05,         
           backgroundColor: {
             "fill":bgcolor 
           } , 
           titleTextStyle:{
              "color":fontcolor ,"bold":true
           } ,
-                   
+                      
           chartArea:{
-             "top":25,"bottom":5,"left":10 , "right":60
+              "left":10 , "right":60
           } ,
                   
           legendTextStyle:{
@@ -374,7 +374,9 @@
           titleTextStyle:{
              "color":fontcolor ,"bold":true
           } ,
-                   
+            chartArea : {
+                     
+          },               
       
                   
           legendTextStyle:{
@@ -417,6 +419,9 @@
           title: 'Реалiзацiя',
           curveType: 'function',
           legend: { position: 'bottom' } ,
+          chartArea : {
+                      
+          },
           backgroundColor: {
             "fill":bgcolor 
           } , 

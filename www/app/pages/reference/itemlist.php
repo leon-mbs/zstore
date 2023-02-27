@@ -137,6 +137,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new \Zippy\Html\Form\File('editaddfile'));
         $this->itemdetail->add(new CheckBox('editdelimage'));
         $this->itemdetail->add(new DropDownChoice('edittype', Item::getTypes()));
+        $this->itemdetail->add(new DropDownChoice('editstate', Item::getStates(),0));
 
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
@@ -447,7 +448,7 @@ class ItemList extends \App\Pages\Base
         if (strlen($file["tmp_name"]) > 0) {
             $imagedata = getimagesize($file["tmp_name"]);
 
-            if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {
+            if (preg_match('/(png|jpeg)$/', $imagedata['mime']) == 0) {
                 $this->setError('Невірний формат зображення');
                 return;
             }
