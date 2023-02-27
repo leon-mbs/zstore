@@ -575,7 +575,7 @@
                     data.doc.total = parseVal( this.total )
                     data.doc.payamount = parseVal(this.payamount)
                     data.doc.bonus = parseVal(this.bonus)
-                    data.doc.discount = parseVal(this.discount)
+                    data.doc.paydisc = parseVal(this.paydisc)
                     data.doc.store = this.store
                     data.doc.devsn = this.devsn
                     data.doc.device = this.device
@@ -671,6 +671,7 @@
                     this.total = fa(_sum)  
                     
                     if(this.customerinfo.discount > 0)  {
+                        
                         
                         this.paydisc = fa( _sum * (this.customerinfo.discount/100)    )                          
                     }

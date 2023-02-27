@@ -32,7 +32,7 @@ class Invoice extends \App\Pages\Base
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = 0;
-    private $_prevcust  = 0;   // преыдущий контрагент
+    private $_prevcust  = 0;   // предыдущий контрагент
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -168,6 +168,28 @@ class Invoice extends \App\Pages\Base
                         $this->calcPay();
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                    }
+                    if ($basedoc->meta_name == 'ServiceAct') {
+
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        $this->docform->customer->setText($basedoc->customer_name);
+                        $this->OnChangeCustomer($this->docform->customer);
+                        $this->docform->paydisc->setText($basedoc->headerdata['paydisc']);
+                        $this->docform->editpaydisc->setText($basedoc->headerdata['paydisc']);
+                        $this->docform->pricetype->setValue('price1');
+                       
+
+                        $this->docform->notes->setText("Рахунок для ". $basedoc->document_number);
+                        $order = $basedoc->cast();
+
+                        $this->docform->total->setText($order->amount);
+
+                        $this->calcPay();
+
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                        $this->_itemlist = array_merge($this->_itemlist,$basedoc->unpackDetails('detail2data') );
+                        
+                        
                     }
                     if ($basedoc->meta_name == 'GoodsIssue') {
 
