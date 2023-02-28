@@ -13,56 +13,55 @@
                             </button>
                         </div>
                         <div id="vcatitemlist" class="modal-body">    
-                             <form   class="form-inline">
-
-                                <label for="wissearchkey">пошук</label>
-                                <input v-on:keyup.enter="onSearch" v-model="wissearchkey" class="form-control mr-sm-2" type="text"  >
-                                <label for="wissearchcat">категорiя</label>
-
-                                <select v-model="wissearchcat" class="form-control mr-sm-2"  >
-                                    <option value="0">Не задано</option>
-                                    <option v-for="cat in cats"    v-bind:value="cat.key">{{cat.value}}</option>
-                                                                       
-                                </select>
-                                <label for="wissearchmanufacturer">Бренд </label>
-                                <input v-model="wissearchbrand" autocomplete="off" list="wissearchmanlist" class="form-control mr-sm-2" zippy="wissearchmanufacturer"/>
-                                <datalist id="wissearchmanlist">
-                                      <option v-for="br in brands" v-bind:value="br.value" v-bind:label="br.value" >
-            
-                                </datalist>
-
-
-                                <input v-on:click.prevent="onSearch" class="btn btn-outline-success  " type="button" value="ОК">
-
-                            </form>     
-                            <table class="table table-sm table-hover">
-                        <tr >
-                          <th    > Назва</th>
-                          <th    > Артикул </th>
-                          <th    > Штрих-код</th>
-                          <th    > Бренд</th>
-                   
-                        </tr>
-                        
+                             <a v-show="back"  v-on:click.prevent="oncat(-1)" > <i class="fa fa-arrow-alt-circle-left"></i> Назад</a>
+                             <div v-show="cats.length > 0" class="row mt-2">
                              
-                        <tr v-for="(item ) in items" >
-                          <td style="cursor:pointer" v-on:click="click( item.item_id)"    >
-                              {{item.itemname}}
-                                
-                          </td>
-                          <td>  {{item.item_code}}</td>
-                          <td>  {{item.bar_code}} </td>
-                          <td>  {{item.brand}}</td>
-                        </tr>   
-                   
-                     </table>
-                            <paginator  v-on:onpage="changepage"  v-bind:rows="rowscnt" v-bind:pagesize="pagesize" buttonscnt="10"></paginator>
- 
+                                     <div  v-for="cat in cats" class="col-12 col-sm-6 col-md-4  col-xl-3">
+                                        <div v-on:click="oncat(cat.cat_id)" class="card mb-2"    style="cursor:pointer" >
+
+                                            <table style="height:100%;width:100%;"  >
+                                                <tr><td>
+                                                        <img :src="cat.image"  style="height:100px "  >
+                                                    </td>
+                                                    <td valign="middle" align="left">
+
+                                                        <b    >{{cat.cat_name}} </b>
+                                                    </td></tr>
+                                            </table>  
+                                     
+
+                                        </div>
+
+                                    </div> 
+                             </div>
+                             <div v-show="items.length > 0" class="row">
+                                        <div  v-for="item in items" class="col-12 col-sm-6 col-md-4  col-xl-3">
+                                            <div v-on:click="onitem(item.item_id)" class="card mb-2"   style="cursor:pointer;;">
+                                                <table style="height:100%;width:100%;"  >
+                                                    <tr><td rowspan="2">
+                                                            <img :src="item.image" style="height:100px "  >
+                                                        </td>
+                                                        <td   align="left">
+
+                                                            <b   >{{item.itemname}} </b> 
+
+                                                        </td></tr>
+                                                    <tr><td><b   style="font-size:large">{{item.price}}</b></td></tr>
+
+                                                </table>  
+
+
+
+                                            </div>
+
+                                        </div>  
+                             
+                             </div>
                         </div>
 
                     </div>
                 </div>
-            </div>       
+         </div>       
         {|={{ }}=|}  
         <script>
    
@@ -72,95 +71,58 @@
             el: '#vcatitemlist',
             
        methods: {
-            changepage:function( page){    //кнопка  пагинатора
-                 this.currpage = page-1
-                 
-                 this.refresh(  );
-            }       
-            ,click:function (item_id){
-                this.wissearchkey =  ""
-                this.searchcat =  0
-                this.searchbrand =  ""
-
-    
+               
+             onitem:function (item_id){
+      
                $("#modalcatitemlist").modal('hide')
     
                _cb(item_id) 
             }
-            ,onSearch:function (){
-               this.currpage = 0; 
-               this.refresh() 
-            }
-            ,refresh:function (){
-              
+          
+            ,open:function (){
+               this.back = false
+               this.prev = 0
+               this.oncat(0)
+               
+            } 
+            ,oncat:function (cat_id){
+                if(cat_id == -1)  cat_id = this.prev
+                if(cat_id >0)  this.back = true
+                
                 var path = $('#_catitemlist_').attr('path') 
                 
-                var data ={}
-                data.pagesize =  this.pagesize
-                data.currpage =  this.currpage  
-                data.searchkey =  this.wissearchkey
-                data.searchcat =  this.wissearchcat
-                data.searchbrand =  this.wissearchbrand
                 
-                callPM(path +'::loaditems',[ ], JSON.stringify(data),(data)=> 
+                callPM(path +'::loaddata',[cat_id ], null,(data)=> 
                   {
                       
                        var data = JSON.parse(data)
-                       this.rowscnt = data.rowscnt
+                       
                         
+                       this.cats = data.cats
                        this.items = data.items
+                       this.prev = data.prev
                     
                   });          
                         
-                
-                
-            }
-           
-             
+              }
+              
         ,
-            
-         
-         
-                 
+                  
         } ,
        
          data()  {
             return {
                 items:[] ,
                 cats:[]  ,
-                brands:[]  ,
-
-                wissearchkey:'',
-                wissearchcat:'',
-                wissearchbrand:'',
-          
-                currpage:1,
-                pagesize:15,
-                rowscnt:1,
-            
-                 
+                back:false ,
+                prev:0 ,
                                
             }}  ,   
-        mounted: function(){
-              var data= {
-                  cats:true,
-                  brands:true,
-              }
- 
-              callPM('vLoadLists',[ ], JSON.stringify(data),(data)=> 
-              {
-                   var data = JSON.parse(data)
-                   
-                   this.cats = data.cats
-                   this.brands = data.cats
-                
-              });               
-                         
-        }  ,      
-        components: {   
-               'paginator': httpVueLoader('/assets/js/vue/paginator.vue')
-                     
-               }            
+           mounted: function(){
+                      
+                             
+           }        
+                  
         })        
         
         
@@ -168,10 +130,10 @@
       function onOpenCatItemList(_f){
         _cb = _f    // каддбек  при выборе  итема
           
-        $("#modalitemlist").modal('show')
+        $("#modalcatitemlist").modal('show')
         
-        vcatitemlist.refresh()
-       
+        vcatitemlist.open() 
+
 
         
       }      

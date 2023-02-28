@@ -16,7 +16,7 @@ class CatItemList extends \Zippy\Html\PageFragment
 {
 
  
-
+    private $_food = false;
 
     /**
      *
@@ -26,9 +26,10 @@ class CatItemList extends \Zippy\Html\PageFragment
      * @param mixed $event
      * @param mixed $pricetype
      */
-    public function __construct($id ) {
+    public function __construct($id,$food = false ) {
         parent::__construct($id);
-    
+        $this->_food = $food;
+        
         $this->add(new Label('_catitemlist_')) ;
   
   
@@ -49,6 +50,52 @@ class CatItemList extends \Zippy\Html\PageFragment
     }
  
  
+      public function loaddata($args,$post=null) {
+          $post = json_decode($post)   ;
+          
+          $ret=[];
+          $ret['cats'] = [];
+          $ret['items']= [];
+          $ret['prev'] = 0;
+          if($args[0] > 0) {
+              $cat = Category::load($args[0]) ;
+              $ret['prev'] = (int)$cat->parent_id ;
+          }
+          
+          $where= "coalesce(parent_id,0)=".$args[0] ;
+          if($this->_food == true) {
+              $where .= " and detail  not  like '%<nofastfood>1</nofastfood>%' ";
+              
+          }
+          
+          $catlist = Category::find($where,"cat_name");
+          if(count($catlist) > 0) {
+              
+              foreach($catlist as $cat) {  
+                  $ret['cats'][] = array(
+                    'cat_id'=>$cat->cat_id,
+                    'cat_name'=>$cat->cat_name,
+                    'image'=>"/loadimage.php?id=" . $cat->image_id
+                  ) ;      
+              }
+              
+          }   else {
+              $prodlist = Item::find('disabled<>1  and  item_type in (1,4 )  and cat_id=' . $args[0] );
+              
+                foreach($prodlist as $prod) {  
+                  $ret['items'][] = array(
+                    'item_id'=>$prod->item_id,
+                    'itemname'=>$prod->itemname,
+                    'price'=>$prod->getPrice(),
+                    'image'=>"/loadimage.php?id=" . $prod->image_id
+                  ) ;      
+                }            
+              
+              
+          }
+          return json_encode($ret, JSON_UNESCAPED_UNICODE);     
+      }
+          
       public function loaditems($args,$post=null) {
           $post = json_decode($post)   ;
           

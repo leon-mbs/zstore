@@ -559,7 +559,7 @@ class POSCheck extends \App\Pages\Base
         
         $pos = \App\Entity\Pos::load($this->_doc->headerdata['pos']);
 
-        if ($this->_tvars["ppo"] == true && $pos->usefisc == 1 && $sender->id == 'execdoc') {
+        if (strlen($this->_doc->headerdata["fiscalnumber"])  == 0 &&  $this->_tvars["ppo"] == true && $pos->usefisc == 1 && $sender->id == 'execdoc') {
             $this->_doc->headerdata["fiscalnumberpos"]  =  $pos->fiscalnumber;
             
                    
