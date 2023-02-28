@@ -10,9 +10,9 @@ use Zippy\Html\Panel;
  
 
 /**
- * Виджет для подбора  товаров
+ * Виджет для подбора  товаров через  картинки 
  */
-class ItemList extends \Zippy\Html\PageFragment
+class CatItemList extends \Zippy\Html\PageFragment
 {
 
  
@@ -29,7 +29,7 @@ class ItemList extends \Zippy\Html\PageFragment
     public function __construct($id ) {
         parent::__construct($id);
     
-        $this->add(new Label('_itemlist_')) ;
+        $this->add(new Label('_catitemlist_')) ;
   
   
   
@@ -44,7 +44,7 @@ class ItemList extends \Zippy\Html\PageFragment
              $path = $owner->id.'::'.$path ;
              $owner =  $owner->getOwner() ; 
         }                                   
-        $this->_itemlist_->setAttribute('path',$path);  
+        $this->_catitemlist_->setAttribute('path',$path);  
   
     }
  
