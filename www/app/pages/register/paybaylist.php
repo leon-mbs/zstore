@@ -322,9 +322,25 @@ class PayBayList extends \App\Pages\Base
         }
         $type = \App\Entity\IOState::TYPE_BASE_INCOME;
 
-        if (in_array($this->_doc->meta_name, array('GoodsReceipt', 'InvoiceCust', 'ReturnIssue'))) {
+        if (in_array($this->_doc->meta_name, array(  'ReturnIssue'))) {
+            
+            $options=\App\System::getOptions('common')  ;
+            if($options['allowminusmf'] !=1 ) {
+                $mf= $form->payment->getValue();
+                $b = \App\Entity\MoneyFund::Balance() ;
+                
+                if($b[$mf] < $amount) {
+                    $this->setError('Сума на рахунку недостатня  для  повернення');
+                    return;
+                }
+            }
             $amount = 0 - $amount;
             $type = \App\Entity\IOState::TYPE_BASE_OUTCOME;
+            
+            
+            
+            
+            
         }
 
 

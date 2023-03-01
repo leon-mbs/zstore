@@ -140,15 +140,34 @@ class PayList extends \App\Pages\Base
         $pl = Pay::load($id);
 
         $doc = Document::load($pl->document_id);
-        Pay::cancelPayment($id, $sender->notes->getText());
-
+      
         $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
+         
+        try{
+        
+            Pay::cancelPayment($id, $sender->notes->getText());
 
-        $sql = "select coalesce(abs(sum(amount)),0) from paylist_view where document_id=" . $pl->document_id;
-        $payed = $conn->GetOne($sql);
+  
+            $sql = "select coalesce(abs(sum(amount)),0) from paylist_view where document_id=" . $pl->document_id;
+            $payed = $conn->GetOne($sql);
 
-        $conn->Execute("update documents set payed={$payed} where   document_id =" . $pl->document_id);
+            $conn->Execute("update documents set payed={$payed} where   document_id =" . $pl->document_id);
+  
+            $conn->CommitTrans();
+  
+            
+        } catch(\Throwable $ee) {
+            global $logger;
+            $conn->RollbackTrans();
+    
+            $this->setError($ee->getMessage());
 
+            $logger->error($ee->getMessage() . " Документ " . $doc->meta_desc);
+            return;
+        }
+        
+        
         $this->doclist->Reload(true);
 
         $user = \App\System::getUser();

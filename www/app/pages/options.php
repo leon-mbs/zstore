@@ -112,6 +112,7 @@ class Options extends \App\Pages\Base
         $this->business->add(new TextInput('price5'));
         $this->business->add(new TextInput('defprice'));
         $this->business->add(new CheckBox('allowminus'));
+        $this->business->add(new CheckBox('allowminusmf'));
         $this->business->add(new CheckBox('noallowfiz'));
         $this->business->add(new CheckBox('useval'));
         $this->business->add(new CheckBox('printoutqrcode'));
@@ -135,6 +136,7 @@ class Options extends \App\Pages\Base
         $this->business->price5->setText($common['price5']);
         $this->business->defprice->setText($common['defprice']);
         $this->business->allowminus->setChecked($common['allowminus']);
+        $this->business->allowminusmf->setChecked($common['allowminusmf']);
         $this->business->noallowfiz->setChecked($common['noallowfiz']);
         $this->business->useval->setChecked($common['useval']);
         $this->business->printoutqrcode->setChecked($common['printoutqrcode']);
@@ -367,6 +369,7 @@ class Options extends \App\Pages\Base
 
         $common['noallowfiz'] = $this->business->noallowfiz->isChecked() ? 1 : 0;
         $common['allowminus'] = $this->business->allowminus->isChecked() ? 1 : 0;
+        $common['allowminusmf'] = $this->business->allowminusmf->isChecked() ? 1 : 0;
         $common['useval'] = $this->business->useval->isChecked() ? 1 : 0;
         $common['checkslogan'] = trim($this->business->checkslogan->getText() );
         $common['printoutqrcode'] = $this->business->printoutqrcode->isChecked() ? 1 : 0;
