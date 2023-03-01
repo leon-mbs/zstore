@@ -133,4 +133,39 @@
 </table>
 
 {{/_type4}}
+{{#_type5}}
+<tr style="font-size:larger; font-weight: bolder;">
+    <td align="center" colspan="5">
+        Закупівлі по категорiям <br> <br>
+    </td>
+</tr>
+<tr style="font-weight: bolder;">
+    <th colspan="3" style="border: solid black 1px">Найменування</th>
 
+
+    <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
+ 
+
+ 
+</tr>
+{{#_detail}}
+<tr>
+
+
+    <td colspan="3">{{name}}</td>
+
+
+    <td align="right">{{summa}}</td>
+ 
+  
+ 
+</tr>
+{{/_detail}}
+<tr><td colspan="3" ></td> <td align="right" ><b>{{totsumma}}</b></td> 
+ 
+
+
+</tr>
+
+</table>
+{{/_type5}}   
