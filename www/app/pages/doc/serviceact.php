@@ -128,6 +128,7 @@ class ServiceAct extends \App\Pages\Base
             $ret['doc']['contract_id']   =   $this->_doc->headerdata['contract_id'] ?? 0;
             $ret['doc']['device']   =   $this->_doc->headerdata['device'] ?? '';
             $ret['doc']['devsn']   =   $this->_doc->headerdata['devsn'] ?? '';
+            $ret['doc']['devdesc']   =   $this->_doc->headerdata['devdesc'] ?? '';
             $ret['doc']['gar']   =   $this->_doc->headerdata['gar'] ?? '';
             $ret['doc']['amount']   = H::fa( $this->_doc->amount);
             $ret['doc']['payamount']   = H::fa( $this->_doc->payamount);
@@ -188,6 +189,7 @@ class ServiceAct extends \App\Pages\Base
          $this->_doc->headerdata['payed'] = $post->doc->payed;
          $this->_doc->headerdata['store'] = $post->doc->store;
          $this->_doc->headerdata['devsn'] = $post->doc->devsn;
+         $this->_doc->headerdata['devdesc'] = $post->doc->devdesc;
          $this->_doc->headerdata['device'] = $post->doc->device;
          $this->_doc->headerdata['gar'] = $post->doc->gar;
          $this->_doc->headerdata['contract_id'] = $post->doc->contract_id;
