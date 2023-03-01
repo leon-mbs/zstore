@@ -311,11 +311,25 @@ class PaySelList extends \App\Pages\Base
 
             $this->setWarn('Сума більше необхідної');
         }
-        $type = \App\Entity\IOState::TYPE_BASE_INCOME;
+        $type = \App\Entity\IOState::TYPE_BASE_OUTCOME;
 
-        if (in_array($this->_doc->meta_name, array('GoodsReceipt', 'InvoiceCust', 'ReturnIssue'))) {
+        
+        
+        if (in_array($this->_doc->meta_name, array( 'RetCustIssue'))) {
             $amount = 0 - $amount;
-            $type = \App\Entity\IOState::TYPE_BASE_OUTCOME;
+            $type = \App\Entity\IOState::TYPE_BASE_INCOME;
+        } else {
+            $options=\App\System::getOptions('common')  ;
+            if($options['allowminusmf'] !=1 ) {
+                $mf= $form->payment->getValue();
+                $b = \App\Entity\MoneyFund::Balance() ;
+                
+                if($b[$mf] < $amount) {
+                    $this->setError('Сума  на рахунку недостатня  для  оплати');
+                    return;
+                }
+            }
+             
         }
 
 

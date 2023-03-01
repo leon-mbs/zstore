@@ -51,7 +51,7 @@ class SerList extends \App\Pages\Base
 
         $this->statuspan->add(new Form('statusform'));
 
-        $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('binvoice'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bfin'))->onClick($this, 'statusOnSubmit');
 
         $this->statuspan->statusform->add(new SubmitButton('binproc'))->onClick($this, 'statusOnSubmit');
@@ -106,7 +106,7 @@ class SerList extends \App\Pages\Base
 
         $state = $this->_doc->state;
 
-        $ttn = count($this->_doc->getChildren('GoodsIssue')) > 0;
+        $invoice = count($this->_doc->getChildren('Invoice')) > 0;
         $task = count($this->_doc->getChildren('Task')) > 0;
 
         if ($sender->id == "btask") {
@@ -116,11 +116,11 @@ class SerList extends \App\Pages\Base
             }
             App::Redirect("\\App\\Pages\\Doc\\Task", 0, $this->_doc->document_id);
         }
-        if ($sender->id == "bttn") {
-            if ($ttn) {
-                $this->setWarn('Вже існує документ Видаткова накладна');
+        if ($sender->id == "binvoice") {
+            if ($invoice) {
+                $this->setWarn('Вже існує документ РФ');
             }
-            App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
+            App::Redirect("\\App\\Pages\\Doc\\Invoice", 0, $this->_doc->document_id);
         }
         if ($sender->id == "bref") {
             if ($ttn || $task) {
@@ -163,7 +163,7 @@ class SerList extends \App\Pages\Base
         if ($state < Document::STATE_EXECUTED) {
             $this->statuspan->statusform->binproc->setVisible(true);
 
-            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->binvoice->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bfin->setVisible(false);
@@ -175,7 +175,7 @@ class SerList extends \App\Pages\Base
 
             $this->statuspan->statusform->binproc->setVisible(false);
 
-            $this->statuspan->statusform->bttn->setVisible(true);
+            $this->statuspan->statusform->binvoice->setVisible(true);
             $this->statuspan->statusform->bref->setVisible(true);
             $this->statuspan->statusform->btask->setVisible(true);
             $this->statuspan->statusform->bfin->setVisible(true);
@@ -186,7 +186,7 @@ class SerList extends \App\Pages\Base
 
             $this->statuspan->statusform->binproc->setVisible(false);
 
-            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->binvoice->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bfin->setVisible(false);
@@ -196,7 +196,7 @@ class SerList extends \App\Pages\Base
 
             $this->statuspan->statusform->binproc->setVisible(false);
 
-            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->binvoice->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bfin->setVisible(false);
@@ -215,7 +215,7 @@ class SerList extends \App\Pages\Base
         if ($state == Document::STATE_CLOSED) {
             $this->statuspan->statusform->binproc->setVisible(false);
 
-            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->binvoice->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bfin->setVisible(false);

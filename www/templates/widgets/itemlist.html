@@ -1,13 +1,13 @@
 <html>
     <body>
-         <span zippy="_path_"  ></span>   
+         <span zippy="_itemlist_"  ></span>   
           {{={| |}=}}    
           <div id="modalitemlist" class="modal fade  " tabindex="-1" role="dialog" 
                  aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-xl  ">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Новий товар</h5>
+                            <h5 class="modal-title">Вибiр ТМЦ</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -16,7 +16,7 @@
                              <form   class="form-inline">
 
                                 <label for="wissearchkey">пошук</label>
-                                <input v-model="wissearchkey" class="form-control mr-sm-2" type="text"  >
+                                <input v-on:keyup.enter="onSearch" v-model="wissearchkey" class="form-control mr-sm-2" type="text"  >
                                 <label for="wissearchcat">категорiя</label>
 
                                 <select v-model="wissearchcat" class="form-control mr-sm-2"  >
@@ -65,6 +65,8 @@
             </div>       
         {|={{ }}=|}  
         <script>
+   
+   var  _cb=  null;
         
    var vitemlist = new Vue({
             el: '#vitemlist',
@@ -83,7 +85,7 @@
     
                $("#modalitemlist").modal('hide')
     
-               onItemSelByWidget(item_id) 
+               _cb(item_id) 
             }
             ,onSearch:function (){
                this.currpage = 0; 
@@ -91,7 +93,7 @@
             }
             ,refresh:function (){
               
-                var path = $('#_path_').attr('path') 
+                var path = $('#_itemlist_').attr('path') 
                 
                 var data ={}
                 data.pagesize =  this.pagesize
@@ -162,9 +164,10 @@
         })        
         
         
-        
-      function onOpenItemList(){
-         
+      //открыть  виджет  
+      function onOpenItemList(_f){
+        _cb = _f    // каддбек  при выборе  итема
+          
         $("#modalitemlist").modal('show')
         
         vitemlist.refresh()

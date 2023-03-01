@@ -17,8 +17,9 @@
 
             <div class="row">
            
-                <div class="col-12 col-md-4 col-xl-3">
+                <div class="col-12 col-md-4 col-xl-4">
                 <form zippy="docform">            
+                     <div class="col-12">
                     <div class="form-group">
                         <label for="document_number">Номер документа</label>
                         <input style="width:120px;" class="form-control" type="text" zippy="document_number" required="required">
@@ -47,7 +48,7 @@
 
                         <input style="width:100px;" pattern="[0-9,\.]+" class="form-control qtyprice" type="text" zippy="taskhours">
                     </div>
-                              <div class="form-group">
+                   <div class="form-group">
                         <label for="customer">Замовник</label>
                         <input placeholder="Почнiть вводити..." class="form-control" type="text" zippy="customer">
                     </div>
@@ -57,15 +58,15 @@
                         <textarea class="form-control" type="text" zippy="notes"></textarea>
 
                     </div>
-                
+                 </div>  
                 <div class="col-12">
                     <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-secondary  ">
                     <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-primary  ">
                     &nbsp;<input zippy="execdoc" type="submit" value="На виконання" class="btn btn-primary  ">
                 </div>
               </form> 
-            </div> 
-                </div>
+                </div> 
+                
                 <div class="col-12 col-md-8 col-xl-6 offset-xl-1">
                  <div class="row">
                   <div class="col-12  ">
@@ -223,7 +224,7 @@
                </div>
             
 
-      
+        </div> 
         
       
 

@@ -50,6 +50,8 @@ class ServiceAct extends Document
                          "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
                         "devsn"           => $this->headerdata["devsn"],
+                        "devdesc"           => $this->headerdata["devdesc"],
+                        "notes"           => $this->notes,
                         "document_number" => $this->document_number,
                         "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false,
@@ -216,7 +218,7 @@ class ServiceAct extends Document
         $list = array();
         $list['Task'] = self::getDesc('Task');
         $list['ProdIssue'] = self::getDesc('ProdIssue');
-    //    $list['GoodsIssue'] = self::getDesc('GoodsIssue');
+        $list['Invoice'] = self::getDesc('Invoice');
         $list['ServiceAct'] = self::getDesc('ServiceAct');
 
         return $list;

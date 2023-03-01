@@ -259,7 +259,9 @@
    
         methods: {
             onOpenIL:function (){
-                onOpenItemList()
+                onOpenItemList((id)=>{
+                     vapp.hititem(id)
+                })
             },
             addrow:function (){
             
@@ -362,8 +364,8 @@
                data.msr=this.nmsr
                data.cat_id=this.ncat
                
-              callPM('vSaveNewitem',[ ], JSON.stringify( data),(data)=> 
-              {
+               callPM('vSaveNewitem',[ ], JSON.stringify( data),(data)=> 
+               {
                    var data = JSON.parse(data)
                    if(false==checkPMAnswer(data) )   {
                       return
@@ -373,7 +375,7 @@
                      
                    $('#modalnewitem').modal('hide') 
                 
-              });           
+               });           
                      
             },
             del:function (el){  
@@ -532,20 +534,7 @@
 
     
     
-    function onItemSelByWidget(id){
-        vapp.hititem(id)
-    }
   
-  
-    function _onItemSelByWidget(){
-         var url = getMethodUrl("onItemSelByWidget",[12]) 
-         
-         url = url.replace('&ajax=true','')
-         
-         window.location = url
-          
-
-    }   
   </script>
     
     </body>
