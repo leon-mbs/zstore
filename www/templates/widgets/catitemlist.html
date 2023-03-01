@@ -1,0 +1,142 @@
+<html>
+    <body>
+         <span zippy="_catitemlist_"  ></span>   
+          {{={| |}=}}    
+          <div id="modalcatitemlist" class="modal fade  " tabindex="-1" role="dialog" 
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-xl  ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Вибiр ТМЦ</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div id="vcatitemlist" class="modal-body">    
+                             <a v-show="back"  v-on:click.prevent="oncat(-1)" > <i class="fa fa-arrow-alt-circle-left"></i> Назад</a>
+                             <div v-show="cats.length > 0" class="row mt-2">
+                             
+                                     <div  v-for="cat in cats" class="col-12 col-sm-6 col-md-4  col-xl-3">
+                                        <div v-on:click="oncat(cat.cat_id)" class="card mb-2"    style="cursor:pointer" >
+
+                                            <table style="height:100%;width:100%;"  >
+                                                <tr><td>
+                                                        <img :src="cat.image"  style="height:100px "  >
+                                                    </td>
+                                                    <td valign="middle" align="left">
+
+                                                        <b    >{{cat.cat_name}} </b>
+                                                    </td></tr>
+                                            </table>  
+                                     
+
+                                        </div>
+
+                                    </div> 
+                             </div>
+                             <div v-show="items.length > 0" class="row">
+                                        <div  v-for="item in items" class="col-12 col-sm-6 col-md-4  col-xl-3">
+                                            <div v-on:click="onitem(item.item_id)" class="card mb-2"   style="cursor:pointer;;">
+                                                <table style="height:100%;width:100%;"  >
+                                                    <tr><td rowspan="2">
+                                                            <img :src="item.image" style="height:100px "  >
+                                                        </td>
+                                                        <td   align="left">
+
+                                                            <b   >{{item.itemname}} </b> 
+
+                                                        </td></tr>
+                                                    <tr><td><b   style="font-size:large">{{item.price}}</b></td></tr>
+
+                                                </table>  
+
+
+
+                                            </div>
+
+                                        </div>  
+                             
+                             </div>
+                        </div>
+
+                    </div>
+                </div>
+         </div>       
+        {|={{ }}=|}  
+        <script>
+   
+   var  _cb=  null;
+        
+   var vcatitemlist = new Vue({
+            el: '#vcatitemlist',
+            
+       methods: {
+               
+             onitem:function (item_id){
+      
+               $("#modalcatitemlist").modal('hide')
+    
+               _cb(item_id) 
+            }
+          
+            ,open:function (){
+               this.back = false
+               this.prev = 0
+               this.oncat(0)
+               
+            } 
+            ,oncat:function (cat_id){
+                if(cat_id == -1)  cat_id = this.prev
+                if(cat_id >0)  this.back = true
+                
+                var path = $('#_catitemlist_').attr('path') 
+                
+                
+                callPM(path +'::loaddata',[cat_id ], null,(data)=> 
+                  {
+                      
+                       var data = JSON.parse(data)
+                       
+                        
+                       this.cats = data.cats
+                       this.items = data.items
+                       this.prev = data.prev
+                    
+                  });          
+                        
+              }
+              
+        ,
+                  
+        } ,
+       
+         data()  {
+            return {
+                items:[] ,
+                cats:[]  ,
+                back:false ,
+                prev:0 ,
+                               
+            }}  ,   
+           mounted: function(){
+                      
+                             
+           }        
+                  
+        })        
+        
+        
+      //открыть  виджет  
+      function onOpenCatItemList(_f){
+        _cb = _f    // каддбек  при выборе  итема
+          
+        $("#modalcatitemlist").modal('show')
+        
+        vcatitemlist.open() 
+
+
+        
+      }      
+        </script>              
+    </body>
+</html>

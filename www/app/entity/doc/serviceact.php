@@ -50,6 +50,8 @@ class ServiceAct extends Document
                          "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
                         "devsn"           => $this->headerdata["devsn"],
+                        "devdesc"           => $this->headerdata["devdesc"],
+                        "notes"           => $this->notes,
                         "document_number" => $this->document_number,
                         "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false,

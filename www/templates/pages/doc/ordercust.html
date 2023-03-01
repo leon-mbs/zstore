@@ -259,7 +259,9 @@
    
         methods: {
             onOpenIL:function (){
-                onOpenItemList()
+                onOpenItemList((id)=>{
+                     vapp.hititem(id)
+                })
             },
             addrow:function (){
             
@@ -532,20 +534,7 @@
 
     
     
-    function onItemSelByWidget(id){
-        vapp.hititem(id)
-    }
   
-  
-    function _onItemSelByWidget(){
-         var url = getMethodUrl("onItemSelByWidget",[12]) 
-         
-         url = url.replace('&ajax=true','')
-         
-         window.location = url
-          
-
-    }   
   </script>
     
     </body>

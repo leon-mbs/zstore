@@ -91,7 +91,10 @@
         </td>
     </tr>
     <tr>
-        <td colspan="5">{{{notes}}}</td>
+        <td colspan="5"  ><small>{{{devdesc}}}</small></td>
+    </tr>
+    <tr>
+        <td colspan="5"><small>{{{notes}}}</small></td>
     </tr>
 
 </table>
