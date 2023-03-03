@@ -103,7 +103,7 @@
                  </td>
                  <td v-for=" v in stlist  ">
                   
-                    <input  v-on:blur="calc(emp)"  v-model="emp[v.salcode]" class="form-control" style="width:85px" pattern="[0-9\\.]+" >
+                    <input  v-on:blur="calc(emp)"  v-model="emp[v.salcode]" class="form-control" style="width:85px" pattern="[0-9\.]+" >
                     
                  </td>
                  <td><a href="javascript:return false" v-on:click="del(emp )"><i class="fa fa-trash"></i></a></td>

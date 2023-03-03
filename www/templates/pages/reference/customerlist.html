@@ -12,7 +12,7 @@
                     <h2>Довідник контрагентів </h2>
                     <div class="navbar nav  ">
                         <form zippy="leadf" class="form-inline ">
-                            <input   zippy="chleads" type="checkbox"> <b>Режим роботи з лідами </b>
+                            <input   zippy="chleads" type="checkbox"> <label for="chleads">Режим роботи з лідами </label>
                         </form>
                     </div>
                     <div class="navbar nav  ">
@@ -410,6 +410,7 @@
                     </div>
                 </div>
             </div>
+              {{^leadmode}}
             <div class="col-4 col-xl-3 ">
                 <div class="card">
                     <div class="card-body">
@@ -439,6 +440,7 @@
 
                     </div>
                 </div>
+                 {{/leadmode}} 
             </div>
         </div>
 

@@ -91,14 +91,16 @@ class OrderCust extends \App\Pages\Base
      
          $this->_itemlist=[];
          foreach($post->doc->items as $it) {
+             $i++;
              $item = Item::load($it->item_id);
              $item->custcode = $it->custcode;
              $item->desc = $it->desc;
              $item->quantity = $it->quantity;
              $item->price = $it->price;
+             $item->rowid = $i;
                                        
                           
-             $this->_itemlist[++$i]=$item;
+             $this->_itemlist[$i]=$item;
          }
          $this->_doc->packDetails('detaildata', $this->_itemlist);
         
