@@ -66,8 +66,8 @@ class Item extends \ZCL\DB\Entity
         $this->extdata = (string)$xml->extdata[0];
         $this->sef = (string)$xml->sef[0];
         $this->url = (string)$xml->url[0];
-        $this->foodstate = (int)$xml->foodstate[0];
-        $this->state = (int)$xml->state[0];
+
+
 
         $this->cell = (string)$xml->cell[0];
         //  $this->octoreoptions = (string) $xml->octoreoptions[0];
@@ -647,17 +647,7 @@ class Item extends \ZCL\DB\Entity
 
         return $list;
     }
-    
-    public static function getStates() {
-        $list = array();
-
-        $list[0] = "Новий";
-        $list[1] = "Вживаний";
-        $list[2] = "Відновлений";
  
-
-        return $list;
-    }
 
     /**
      * себестоимость  для  готовой продукции

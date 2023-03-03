@@ -206,24 +206,28 @@ class ServiceAct extends \App\Pages\Base
      
          $itemlist=[];
          foreach($post->doc->items as $it) {
+             $i++;
              $item = Item::load($it->item_id);
      
              $item->quantity = $it->quantity;
              $item->price = $it->price;
+             $item->rowid = $i;
                           
-             $itemlist[++$i]=$item;
+             $itemlist[$i]=$item;
          }
          $this->_doc->packDetails('detail2data', $itemlist);
         
          $i=0;
          $servicelist=[];
          foreach($post->doc->services as $s) {
+             $i++;
              $ser = Service::load($s->service_id);
      
              $ser->quantity = $s->quantity;
              $ser->price = $s->price;
+             $ser->rowid = $i;
                           
-             $servicelist[++$i]=$ser;
+             $servicelist[$i]=$ser;
          }
          
          $this->_doc->packDetails('detaildata', $servicelist);

@@ -60,6 +60,17 @@ class Pay extends \ZCL\DB\Entity
             return;
         }
 
+        $mf = \App\Entity\MoneyFund::load($mf_id);
+
+        $options=\App\System::getOptions('common')  ;
+        if($options['allowminusmf'] !=1 && $amount < 0) {
+            $b = \App\Entity\MoneyFund::Balance() ;
+            
+            if($b[$mf_id] < abs($amount) ) {
+                throw new \Exception('Сума  на рахунку недостатня  для  оплати')  ;
+            }
+        }
+
     
         $pay = new \App\Entity\Pay();
         $pay->mf_id = $mf_id;
@@ -72,7 +83,6 @@ class Pay extends \ZCL\DB\Entity
         $pay->save();
 
 
-        $mf = \App\Entity\MoneyFund::load($mf_id);
         if ($mf instanceof \App\Entity\MoneyFund) {
             //банковский процент
 

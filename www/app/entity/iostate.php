@@ -92,8 +92,8 @@ class IOState extends \ZCL\DB\Entity
             $list[self::TYPE_COMMON_OUTCOME] = "Загальновиробничі витрати";
             $list[self::TYPE_ADMIN_OUTCOME] = "Адміністративні витрати";
             $list[self::TYPE_SALE_OUTCOME] = "Витрати на збут";
-            $list[self::TYPE_SALARY_OUTCOME] = "Виплата заробітної плати";
-            $list[self::TYPE_TAX_OUTCOME] =  "Оплата податків та зборів";
+            $list[self::TYPE_SALARY_OUTCOME] = "Виплата зарплати";
+            $list[self::TYPE_TAX_OUTCOME] =  "Податки та збори";
             $list[self::TYPE_BILL_OUTCOME] = "Витрати на оренду та комуналку";
             $list[self::TYPE_DIVIDEND_OUTCOME] = "Розподіл прибутку";
             $list[self::TYPE_INV] = "Інвестиції";
