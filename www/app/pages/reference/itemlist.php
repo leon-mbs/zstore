@@ -137,7 +137,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new \Zippy\Html\Form\File('editaddfile'));
         $this->itemdetail->add(new CheckBox('editdelimage'));
         $this->itemdetail->add(new DropDownChoice('edittype', Item::getTypes()));
-        $this->itemdetail->add(new DropDownChoice('editstate', Item::getStates(),0));
+
 
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
