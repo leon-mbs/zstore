@@ -64,7 +64,7 @@ class Task extends \App\Pages\Base
 
         //service
         $this->add(new Form('editdetail'));
-        $this->editdetail->add(new DropDownChoice('editservice', Service::findArray("service_name", "disabled<>1", "service_name")));
+        $this->editdetail->add(new DropDownChoice('editservice', Service::getList()));
 
         $this->editdetail->add(new TextInput('editqty'));
         $this->editdetail->add(new TextInput('editdesc'));
@@ -146,6 +146,7 @@ class Task extends \App\Pages\Base
         $service = $row->getDataItem();
 
         $row->add(new Label('service', $service->service_name));
+        $row->add(new Label('category', $service->category));
 
         $row->add(new Label('quantity', $service->quantity));
         $row->add(new Label('desc', $service->desc));
@@ -197,6 +198,7 @@ class Task extends \App\Pages\Base
         $item = $row->getDataItem();
 
         $row->add(new Label('prod', $item->itemname));
+        $row->add(new Label('item_code', $item->item_code));
 
         $row->add(new Label('quantityprod', $item->quantity));
         $row->add(new Label('descprod', $item->desc));

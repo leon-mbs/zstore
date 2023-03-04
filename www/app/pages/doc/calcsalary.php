@@ -244,13 +244,13 @@ class CalcSalary extends \App\Pages\Base
         
         $calc = "var daysmon =". $this->docform->dayscnt->getText() .";\n ";
         //  var vin  =  parseFloat(emp["vin"] );
+        $calc .= "var invalid = emp.invalid==1  ;\n" ;
            
         foreach($this->_stlist as $st){
                $ret['stlist'][]  = array("salname"=>$st->salshortname,"salcode"=>'_c'.$st->salcode);    
                
                $calc .= "var v{$st->salcode} =  parseFloat(emp['_c{$st->salcode}'] ) ;\n ";
                      
-               $calc .= "var invalid = emp.invalid==1  ;\n" ;
         };     
         
         $calc .= "\n\n";
