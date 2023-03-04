@@ -437,7 +437,7 @@ class GoodsReceipt extends \App\Pages\Base
 
             $this->setWarn("Не вказана ціна");
         }
-        $item->snumber = $this->editdetail->editsnumber->getText();
+        $item->snumber = trim($this->editdetail->editsnumber->getText() );
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
             $this->setError("Потрібна партія виробника");

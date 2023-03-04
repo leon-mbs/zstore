@@ -97,7 +97,7 @@
                       <td zippy="emp_name"></td>
                                 
                     
-                      <td  ><input onblur="calcTotal()" class="salsum" zippy="amount" style="width:100px;"   ></td>
+                      <td  ><input onblur="calcTotal()" class="form-control salsum" zippy="amount" style="width:100px;"   ></td>
                             
                           
                   </tr>
@@ -128,10 +128,9 @@
 
                 $('.salsum').each(function (index, value) {
                     var a = $(this).val();
-                    a = parseFloat(a);
-                    if (Number.isNaN(a) == false) {
-                        total = total + a;
-                    }
+                    a = parseVal(a);
+                    total = total + a;
+
 
 
                 });
