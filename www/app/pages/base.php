@@ -472,8 +472,9 @@ class Base extends \Zippy\Html\WebPage
          $ser =   \App\Entity\Service::load($service_id) ;
          $ret = [];
          if($ser != null) {
-             $ret['service_id'] = $service_id;   
+             $ret['service_id']   = $service_id;   
              $ret['service_name'] = $ser->service_name;   
+             $ret['category'] = $ser->category;   
              $ret['price'] = $ser->getPrice( );   
          }      
        
