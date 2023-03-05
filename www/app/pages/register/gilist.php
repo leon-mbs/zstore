@@ -696,7 +696,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
 
         $status = $this->page->listpan->filter->status->getValue();
         if ($status == 0) {
-            $where .= "  and    state >3 and  state  not in(14,5,9)        ";
+            $where .= "  and    state >3 and  state  not in(14,5,9,22)        ";
         }
         if ($status == 1) {
             $where .= " and  state =  " . Document::STATE_NEW;

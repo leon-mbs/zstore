@@ -48,7 +48,8 @@ class SalaryTypeList extends \App\Pages\Base
         $opt = System::getOptions("salary");
 
         $this->add(new Form('calcform'));
-        $this->calcform->add(new TextArea('algo', $opt['calc']));
+        $this->calcform->add(new TextArea('calc', $opt['calc']));
+        $this->calcform->add(new TextArea('calcbase', $opt['calcbase']));
         $this->calcform->add(new SubmitLink('savecalc'))->onClick($this, "onSaveCalc", true);
 
 
@@ -168,7 +169,8 @@ class SalaryTypeList extends \App\Pages\Base
 
     public function onSaveCalc($sender) {
         $opt = System::getOptions("salary");
-        $opt['calc'] = $this->calcform->algo->getText();
+        $opt['calc'] = $this->calcform->calc->getText();
+        $opt['calcbase'] = $this->calcform->calcbase->getText();
         System::setOptions('salary', $opt);
 
 
