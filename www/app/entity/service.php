@@ -94,7 +94,19 @@ class Service extends \ZCL\DB\Entity
     }
 
     public static function getList() {
-        return Service::findArray("service_name", "disabled<>1", "service_name");
+        
+        $list=[];
+        
+        foreach(Service::find("disabled<>1", "service_name") as $s){
+            $name=$s->service_name;
+            if(strlen($s->category)>0) {
+                $name  = $name . ', '. $s->category;
+            }
+            
+            $list[$s->service_id]=$name;
+        } ;
+        
+        return  $list;
     }    
     
 }

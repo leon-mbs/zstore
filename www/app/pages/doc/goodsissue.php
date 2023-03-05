@@ -534,7 +534,7 @@ class GoodsIssue extends \App\Pages\Base
         $store_id = $this->docform->store->getValue();
 
         $item->quantity = $this->editdetail->editquantity->getText();
-        $item->snumber = $this->editdetail->editserial->getText();
+        $item->snumber = trim($this->editdetail->editserial->getText());
         $qstock = $this->editdetail->qtystock->getText();
 
         $item->price = $this->editdetail->editprice->getText();

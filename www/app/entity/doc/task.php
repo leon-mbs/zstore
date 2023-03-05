@@ -36,6 +36,7 @@ class Task extends Document
                               "desc"         => $ser->desc,
                               "quantity"     => H::fqty($ser->quantity),
                               "cost"         => H::fa($ser->cost * $ser->quantity),
+                              "category"     => $ser->category,
                               "hours"        => $ser->hours * $ser->quantity
             );
         }
@@ -65,6 +66,7 @@ class Task extends Document
             $detailprod[] = array("no"       => $i++,
                                   "itemname" => $item->itemname,
                                   "desc"     => $item->desc,
+                                  "item_code"     => $item->item_code,
                                   "quantity" => H::fqty($item->quantity));
         }
 

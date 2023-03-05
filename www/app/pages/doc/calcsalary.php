@@ -10,19 +10,9 @@ use App\Entity\SalType;
 use App\Entity\EmpAcc;
 use App\Helper as H;
 use App\System;
-use Zippy\Html\DataList\ArrayDataSource;
-use Zippy\Html\DataList\DataView;
-use Zippy\Html\Form\Button;
-use Zippy\Html\Form\Date;
-use Zippy\Html\Form\DropDownChoice;
-use Zippy\Html\Form\Form;
-use Zippy\Html\Form\SubmitButton;
-use Zippy\Html\Form\TextInput;
-use Zippy\Html\Form\TextArea;
-use Zippy\Html\Form\CheckBox;
-use Zippy\Html\Link\SubmitLink;
+ 
 use Zippy\Html\Label;
-use \Zippy\Binding\PropertyBinding as Bind;
+ 
 
 /**
  * Страница   начисление  зарплаты
@@ -31,188 +21,32 @@ class CalcSalary extends \App\Pages\Base
 {
 
     private $_doc;
-    public  $_list   = array();
-    public  $_stlist = array();
+    private $_list;
+ 
 
     public function __construct($docid = 0) {
         parent::__construct();
 
-        $this->add(new Form('docform'));
-
-        $this->docform->add(new TextInput('document_number'));
-        $this->docform->add(new Date('document_date', time()));
-
-
-        $this->docform->add(new DropDownChoice('year', \App\Util::getYears(), round(date('Y'))));
-        $this->docform->add(new DropDownChoice('month', \App\Util::getMonth(), round(date('m'))));
-        $this->docform->add(new TextArea('notes'));
-        $this->docform->add(new TextInput('dayscnt'));
-
-        $this->docform->add(new SubmitButton('tocalc'))->onClick($this, 'tocalcOnClick');
-
-        $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
-
+    
         $this->_list = Employee::find('disabled<>1', 'emp_name');
-
-        $this->add(new Form('calcform'))->setVisible(false);
-
-        $this->calcform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
-        $this->calcform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
-        $this->calcform->add(new SubmitButton('todoc'))->onClick($this, 'todocOnClick');
-        $this->calcform->add(new TextInput('elist'));
-
+        $this->_stlist = SalType::find("disabled<>1", "salcode");
+  
+   
 
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
-            $this->docform->document_number->setText($this->_doc->document_number);
-            $this->docform->document_date->setDate($this->_doc->document_date);
-
-
-            $this->docform->year->setValue($this->_doc->headerdata['year']);
-            $this->docform->month->setValue($this->_doc->headerdata['month']);
-            $this->docform->notes->setText($this->_doc->notes);
-            $this->docform->dayscnt->setText($this->_doc->headerdata['dayscnt']);
-            //   $this->docform->total->setText(H::fa($this->_doc->amount));
+        
             $this->_list = $this->_doc->unpackDetails('detaildata');
         } else {
             $this->_doc = Document::create('CalcSalary');
-            $this->docform->document_number->setText($this->_doc->nextNumber());
+            $this->_doc->document_number = $this->_doc->nextNumber();
+            $this->_doc->document_date = time();
+            $this->_doc->headerdata['dayscnt'] =22;
+            $this->_doc->headerdata['year'] = round(date('Y') );
+            $this->_doc->headerdata['month'] = round(date('m') );
         }
 
-
- 
-        $this->_stlist = SalType::find("disabled<>1", "salcode");
-
-        $opt = System::getOptions("salary");
-
-
-     //   $this->_tvars['colemps'] = count($this->_list);
-      //  $this->_tvars['totst'] = $opt['coderesult'];
-
-
-        if (false == \App\ACL::checkShowDoc($this->_doc)) {
-            return;
-        }
-    }
-
-
-    public function savedocOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc)) {
-            return;
-        }
         
-        $opt = System::getOptions("salary");
-        
-        $this->_doc->notes = $this->docform->notes->getText();
-   
-        $this->_doc->headerdata['year'] = $this->docform->year->getValue();
-        $this->_doc->headerdata['month'] = $this->docform->month->getValue();
-        $this->_doc->headerdata['monthname'] = $this->docform->month->getValueName();
-        $this->_doc->headerdata['dayscnt'] = $this->docform->dayscnt->getText();
-
-        $this->_doc->document_number = trim($this->docform->document_number->getText());
-        $this->_doc->document_date = strtotime($this->docform->document_date->getText());
-
-     //   $this->_doc->amount = $this->calcform->total->getText();
-          $elist = $this->calcform->elist->getText();
-          $elist = json_decode($elist,true) ;
-          $this->_doc->amount = 0 ;
-          $this->_list = array();
-          
-          $emps = Employee::find('disabled<>1', 'emp_name');
-
-          
-          foreach($elist as $e)  {
-             $emp = $emps[$e['id']];
-             $this->_doc->amount +=  $e['_c'.$opt['coderesult']]   ;
-             
-               foreach ($this->_stlist as $st) {
-                  $c   = "_c".$st->salcode ;
-                  $emp->{$c} = $e[$c];
-               }       
-             
-             
-             $this->_list[]= $emp; 
-          }
-  
-        $this->_doc->packDetails('detaildata', $this->_list);
- 
-        $isEdited = $this->_doc->document_id > 0;
-
-        $conn = \ZDB\DB::getConnect();
-        $conn->BeginTrans();
-        try {
-
-            $this->_doc->save();
-            if ($sender->id == 'execdoc') {
-                if (!$isEdited) {
-                    $this->_doc->updateStatus(Document::STATE_NEW);
-                }
-                $this->_doc->updateStatus(Document::STATE_EXECUTED);
-            } else {
-                $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
-            }
-            $conn->CommitTrans();
-            App::Redirect("\\App\\Pages\\Register\\SalaryList");
-
-        } catch(\Throwable $ee) {
-            global $logger;
-            $conn->RollbackTrans();
-            if ($isEdited == false) {
-                $this->_doc->document_id = 0;
-            }
-            $this->setError($ee->getMessage());
-
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
-
-            return;
-        }
-    }
-
-    /**
-     * Валидация   формы
-     *
-     */
-    private function checkForm() {
-
-        if (strlen($this->_doc->document_number) == 0) {
-            $this->setError("Введіть номер документа");
-        }
-        if (false == $this->_doc->checkUniqueNumber()) {
-            $next = $this->_doc->nextNumber();
-            $this->docform->document_number->setText($next);
-            $this->_doc->document_number = $next;
-            if (strlen($next) == 0) {
-                $this->setError('Не створено унікальный номер документа');
-            }
-        }
-
-
-        return !$this->isError();
-    }
-
-    public function backtolistOnClick($sender) {
-        App::RedirectBack();
-    }
-
-    public function todocOnClick($sender) {
-        $this->calcform->setVisible(false);
-        $this->docform->setVisible(true);
-    }
-
-    public function tocalcOnClick($sender) {
-       $this->_doc->document_number = trim($this->docform->document_number->getText());
-       $this->_doc->document_date = strtotime($this->docform->document_date->getText());
-    
-      if ($this->checkForm() == false) {
-            return;
-      }      
-      
-       $this->calcform->setVisible(true);
-        $this->docform->setVisible(false);
-
-        $opt = System::getOptions("salary");
-
         if ($this->_doc->document_id == 0) {
             
              foreach ($this->_list as $emp) {
@@ -232,61 +66,214 @@ class CalcSalary extends \App\Pages\Base
                     $this->_list[$row['emp_id']]->{$c} = 0 - H::fa($row['am']);
                 }
             }
-            if ($opt['codebaseincom'] > 0) {  //основная  зарплата
-                $c = '_c' . $opt['codebaseincom'];
-                foreach ($this->_list as $emp) {
-                    $emp->{$c} = 0;
-                }
-            }
+ 
+
+        }        
+      
+       $opt = System::getOptions("salary");
 
 
-        }
+        $calcvar ='';
+        //переменные  из настроек
+        $calcvar .= "var daysmon = this.doc.daysmon \n"  ;
+        $calcvar .= "var invalid = emp.invalid   \n" ;
+        $calcvar .= "var salarytype = emp.salarytype   \n" ;
+        $calcvar .= "var sellvalue = emp.sellvalue   \n" ;
+        $calcvar .= "var salarym = emp.salarym   \n" ;
+        $calcvar .= "var salaryh = emp.salaryh   \n" ;
+        $calcvar .= "var hours = emp.hours   \n" ;
+        $calcvar .= "var days = emp.days   \n" ;
         
-        $calc = "var daysmon =". $this->docform->dayscnt->getText() .";\n ";
-        //  var vin  =  parseFloat(emp["vin"] );
-           
+        // из  строки сотрудника  в переменные
         foreach($this->_stlist as $st){
                $ret['stlist'][]  = array("salname"=>$st->salshortname,"salcode"=>'_c'.$st->salcode);    
                
-               $calc .= "var v{$st->salcode} =  parseFloat(emp['_c{$st->salcode}'] ) ;\n ";
+               $calcvar .= "var v{$st->salcode} =  parseVal(emp['_c{$st->salcode}'] ) ;\n ";
                      
-               $calc .= "var invalid = emp.invalid==1  ;\n" ;
         };     
         
+        $calc = $calcvar;
         $calc .= "\n\n";
         $calc .= $opt['calc'];  //формулы
         $calc .= "\n\n";
+
+        $calcbase = $calcvar;
+        $calcbase .= "\n\n";
+        $calcbase .= $opt['calcbase'];  //формулы
+        $calcbase .= "\n\n";
+
+        // из  переменных в строку  сотрудника
         
         foreach($this->_stlist as $st){
                
-               $calc .= "emp['_c{$st->salcode}']  =  v{$st->salcode}.toFixed(0) ;\n ";
+               $calc .= "emp['_c{$st->salcode}']  = parseVal( v{$st->salcode}) ;\n ";
+               $calcbase .= "emp['_c{$st->salcode}']  = parseVal( v{$st->salcode}) ;\n ";
                
         };  
         
         $this->_tvars['calcs'] = $calc;
-        $this->_tvars['calctotal'] = " tot +=  parseFloat(emp['_c" . $opt['coderesult']."'] );  ";
+        $this->_tvars['calcbases'] = $calcbase;
+      
         
-                 
-
-    }
-  
  
+    }
+
+
+    public  function save($args,$post){
+         $post = json_decode($post) ;
+         if (false == \App\ACL::checkEditDoc($this->_doc,false,false)) {
+
+             return json_encode(['error'=>'Нема прав редагування документу' ], JSON_UNESCAPED_UNICODE);              
+         }
+
+         $this->_doc->document_number = $post->doc->document_number;
+         $this->_doc->document_date = strtotime( $post->doc->document_date);
+         $this->_doc->notes = $post->doc->notes;
+         $this->_doc->headerdata['dayscnt'] = $post->doc->dayscnt;
+         $this->_doc->headerdata['year'] = $post->doc->year;
+         $this->_doc->headerdata['month'] = $post->doc->month;
+         $mlist = \App\Util::getMonth();
+         $this->_doc->headerdata['monthname'] = $mlist[$post->doc->month] ;
+
+        
+        
+         if (false == $this->_doc->checkUniqueNumber()) {
+             return json_encode(['error'=>'Не унікальний номер документу. Створено новий.','newnumber'=>$this->_doc->nextNumber()], JSON_UNESCAPED_UNICODE);              
+         }           
+        
+        
+          $opt = System::getOptions("salary");
+ 
+
+          $elist = $post->emps;
+       
+          $this->_doc->amount = 0 ;
+          $this->_list = array();
+          
+          $emps = Employee::find('disabled<>1', 'emp_name');
+
+          
+          foreach($elist as $e)  {
+             $emp = $emps[$e->id];
+             $this->_doc->amount +=  $e->{'_c'.$opt['coderesult']}    ;
+             
+               foreach ($this->_stlist as $st) {
+                  $c   = "_c".$st->salcode ;
+                  $emp->{$c} = $e->{$c};
+               }       
+             
+             
+             $this->_list[]= $emp; 
+          }
   
+        $this->_doc->packDetails('detaildata', $this->_list);
+ 
+        $isEdited = $this->_doc->document_id > 0;
+
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
+        try {
+
+            $this->_doc->save();
+            if ($post->op == 'execdoc') {
+                if (!$isEdited) {
+                    $this->_doc->updateStatus(Document::STATE_NEW);
+                }
+                $this->_doc->updateStatus(Document::STATE_EXECUTED);
+            } else {
+                $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
+            }
+            $conn->CommitTrans();
+            
+         } catch(\Throwable $ee) {
+            global $logger;
+            $conn->RollbackTrans();
+            if ($isEdited == false) {
+                $this->_doc->document_id = 0;
+            }
+            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+
+            return json_encode(['error'=>$ee->getMessage()], JSON_UNESCAPED_UNICODE);              
+
+            
+         }        
+    
+         return json_encode([], JSON_UNESCAPED_UNICODE); 
+    }
+
    
+   
+    
     public  function loaddata($args,$post){
-            $ret['stlist'] = array() ;
+            $opt = System::getOptions("salary");
+  
+            $post = json_decode($post) ;
+             $conn = \ZDB\DB::getConnect();
+     
+            $from =''.$post->year .'-'. $post->month .'-01' ;
+            $from =  strtotime( $from);
+            $to =   strtotime('+1 month',$from) - 1 ;
+        
+            $from = $conn->DBDate($from) ;
+            $to = $conn->DBDate($to) ;
+        
+        
+              $br = "";
+                $brids = \App\ACL::getBranchIDsConstraint();
+                if (strlen($brids) > 0) {
+                    $br = " and d.branch_id in ({$brids}) ";
+                }
+        
+               $sqlitem = "
+                  select   sum(0-e.quantity*e.partion) as summa 
+                      from entrylist_view  e
+
+                      join items i on e.item_id = i.item_id
+                     join documents_view d on d.document_id = e.document_id
+                       where e.item_id >0  and (e.tag = 0 or e.tag = -1  or e.tag = -4) 
+                      and d.meta_name in ('GoodsIssue','ServiceAct' ,'POSCheck','ReturnIssue','TTN','OrderCust','OrderFood')           
+                       {$br} {$u} AND DATE(e.document_date) >= {$from}   AND DATE(e.document_date) <= " .$to  ;
+                     
+                     
+                                             
+                  
+            $ret=[];
+            $ret['newdoc'] = $this->_doc->document_id == 0 ;
             $ret['emps'] = array() ;
             
-            foreach($this->_stlist as $st){
-               $ret['stlist'][]  = array("salname"=>$st->salshortname,"salcode"=>'_c'.$st->salcode);    
-            };
-            foreach ($this->_list as  $emp) {
-                
-                $e = array('emp_name'=>$emp->emp_name,'id'=>$emp->employee_id);
-                 
-            
+            $ret['opt'] = array() ;
+            $ret['opt']['coderesult']  =  $opt['coderesult'];
+            $ret['opt']['codebaseincom']  =  $opt['codebaseincom'];
+
+
+          
+             foreach ($this->_list as $emp) {
+                   $e = array('emp_name'=>$emp->emp_name,'id'=>$emp->employee_id);
+                   $e['sellvalue'] = 0;
+                   $u = \App\Entity\User::getByLogin($emp->login) ;
+                   if($u != null){
+                       $sql= $sqlitem ." and d.user_id=" .$u->user_id;
+                       $e['sellvalue'] = intval($conn->GetOne($sql) ) ;    
+                   }
+
+                   
+                   $sql="select sum(tm) as tm, count(distinct dd) as dd   from (select  date(t_start) as dd, (UNIX_TIMESTAMP(t_end)-UNIX_TIMESTAMP(t_start)  - t_break*60)   as  tm from timesheet where t_type=1  and  emp_id = {$emp->employee_id} and  date(t_start)>=date({$from}) and  date( t_start)<= date( {$to} ) ) t   ";
+                   if($conn->dataProvider=="postgres") {
+                       $sql="select sum(tm) as tm, count(distinct dd) as dd   from (select  date(t_start) as dd, (extract(epoch from t_end) - extract(epoch from t_start)  - t_break*60)   as  tm from timesheet where t_type=1  and  emp_id = {$emp->employee_id} and  date(t_start)>=date({$from}) and  date( t_start)<= date( {$to} ) ) t   ";
+                   }
+                   
+                   $t = $conn->GetRow($sql);
+                   $e['hours']  = intval($t['tm']/3600);
+                   $e['days']   = doubleval($t['dd']);
+                   
+                   $e['invalid'] = $emp->invalid == 1  ;
+                   $e['salarytype'] = $emp->ztype ;
+                   $e['salarym'] = $emp->zmon  ;
+                   $e['salaryh'] = $emp->zhour  ;
+                     
+              
                    foreach($this->_stlist as $st){
-                       $e['_c'.$st->salcode]=  $emp->{'_c'.$st->salcode};    
+                       $e['_c'.$st->salcode]  =  $emp->{'_c'.$st->salcode};    
                    };
         
                 $ret['emps'][] = $e;  
@@ -294,4 +281,37 @@ class CalcSalary extends \App\Pages\Base
        
             return json_encode($ret, JSON_UNESCAPED_UNICODE);   
     }
+    
+    
+    public  function loaddoc($args,$post){
+        
+       if (false == \App\ACL::checkShowDoc($this->_doc,false,false)) {
+
+             return json_encode(['error'=>'Нема прав на  доступ до документу' ], JSON_UNESCAPED_UNICODE);              
+       }              
+        
+        
+       $opt = System::getOptions("salary");
+       $ret=[];
+       
+       $ret['years'] =  \App\Util::tokv( \App\Util::getYears() );
+       $ret['monthes'] = \App\Util::tokv(  \App\Util::getMonth() ) ;
+        
+       
+       foreach($this->_stlist as $st){
+           $ret['stlist'][]  = array("salname"=>$st->salshortname,"salcode"=>'_c'.$st->salcode);    
+       };
+       
+       $ret['doc'] = [] ;
+       $ret['doc']['document_date']   =  date('Y-m-d', $this->_doc->document_date) ;
+       $ret['doc']['document_number']   =   $this->_doc->document_number ;
+       $ret['doc']['notes']   =   $this->_doc->notes ;
+       $ret['doc']['dayscnt']   =   $this->_doc->headerdata['dayscnt'] ;
+       $ret['doc']['year']   =   $this->_doc->headerdata['year'] ;
+       $ret['doc']['month']   =   $this->_doc->headerdata['month'] ;
+
+  
+       return json_encode($ret, JSON_UNESCAPED_UNICODE);   
+    }
+
 }
