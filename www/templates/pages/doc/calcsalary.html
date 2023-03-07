@@ -4,27 +4,29 @@
     </head>
     <body>
       <div class="row">
-        <div class="col-12">
+        <div class="col-12" id="vapp">
              <h3> Нарахування зарплати</h3>
-        
+           
+       {{={| |}=}}   
+   
 
-        <form zippy="docform">
+        <form v-show="showheader" id="docform">
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
                         <label for="document_number">Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number">
+                        <input class="form-control" type="text" v-model="doc.document_number" required="required"> 
                     </div>
                     <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input class="form-control" type="text" zippy="document_date" required="required">
+                        <input class="form-control" type="date" v-model="doc.document_date" required="required">
                     </div>
 
 
                     <div class="form-group  ">
                         <label for="notes">Примiтка </label>
 
-                        <textarea class="form-control" type="text" zippy="notes"></textarea>
+                        <textarea class="form-control" type="text" v-model="doc.notes"></textarea>
 
                     </div>
 
@@ -32,17 +34,19 @@
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group  ">
                         <label for="year">Рiк</label>
-                        <select class="form-control" zippy="year">
+                        <select v-on:change="hch()" class="form-control" v-model="doc.year">
+                             <option v-for="year in years "  v-bind:value="year.key">{{year.value}}</option>
                         </select>
                     </div>
                     <div class="form-group  ">
                         <label for="month">Мiсяць</label>
-                        <select class="form-control" zippy="month">
-                        </select>
+                        <select v-on:change="hch()" class="form-control" v-model="doc.month">
+                            <option v-for="month in monthes "  v-bind:value="month.key">{{month.value}}</option>
+                       </select>
                     </div>
                     <div class="form-group  ">
                         <label for="dayscnt">Кiл. роб. днiв </label>
-                        <input style="width:100px;" required="required" pattern="[0-9]+" class="form-control" type="text" zippy="dayscnt">
+                        <input v-on:change="hch()" style="width:100px;"  type="number" required="required"  class="form-control" v-model="doc.dayscnt">
                         <small>Кiлькiсть робочих днiв в  мiсяцi</small>
                     </div>
  
@@ -52,19 +56,17 @@
 
             <div class="row">
                 <div class="col-12 col-md-6">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-outline-secondary">
-                    &nbsp; <input zippy="tocalc" type="submit" value="Далi " class="btn   btn-outline-primary">
+                    <input onclick="history.back()" type="button" value="Скасувати"   class="btn   btn-outline-secondary">
+                    &nbsp; <input v-on:click.prevent="tocalc()" type="submit" value="Далi " class="btn   btn-outline-primary">
            
                 </div>
             </div>
 
 
         </form>
-        
-       {{={| |}=}}   
-        <div   id="vapp">    
-        <form zippy="calcform">
-          
+   
+        <form v-show="showcalc" >
+             <a v-on:click.prevent="toback()"> <i class="fa fa-arrow-circle-left"></i>  Назад</a>
             <div class="form-group row">
                 <div class="col-auto pt-2">
                   <label   > Спiвробiтник</label>
@@ -84,13 +86,13 @@
                 
                 
             </div>
-      
+            <a v-on:click.prevent="recalc()">Перерахувати</a>
            <table class="table table-sm">
                 <tr>
                  <th>
                  П I Б
                  </th>
-                 <th v-for=" v in stlist ">
+                 <th class="text-right" v-for=" v in stlist ">
                     {{v.salname}}
                  </th>
                  <th>
@@ -101,33 +103,36 @@
                  <td >
                    {{emp.emp_name}}  
                  </td>
-                 <td v-for=" v in stlist  ">
-                  
-                    <input  v-on:blur="calc(emp)"  v-model="emp[v.salcode]" class="form-control" style="width:85px" pattern="[0-9\.]+" >
+                 <td class="text-right" v-for=" v in stlist  ">
+                    <input v-if="v.salcode == '_c'+opt.codebaseincom" v-on:blur="calcemp(emp)"  v-model="emp[v.salcode]" class="form-control" style="display:inline !important;width:85px" pattern="[0-9\.]+" >
+                    <!--
+                    <i v-if="v.salcode == '_c'+opt.codebaseincom" class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"                                   :title="emp.info"></i>
+                    -->
+                    <span v-if="v.salcode != '_c'+opt.codebaseincom">{{emp[v.salcode]}} </span>                     
+
                     
                  </td>
-                 <td><a href="javascript:return false" v-on:click="del(emp )"><i class="fa fa-trash"></i></a></td>
+                 <td class="text-right"><a href="javascript:return false" v-on:click="del(emp )"><i class="fa fa-trash"></i></a></td>
                 </tr>
                 
                 
                 
               </table>
                <b>  Всього: {{total}}</b>
-               <input zippy="elist" type="hidden"   v-model="this.totallist" />
- 
+              
              
         
              <div class="col-12 col-md-6 mt-4">
-                    <input type="submit" value="Назад" zippy="todoc" class="btn   btn-outline-secondary">
-                    &nbsp; <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-info">
-                    &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
+                    <input type="button" value="Скасувати" onclick="history.back()" class="btn   btn-outline-secondary">
+                    &nbsp; <input v-on:click.prevent="onbtn('savedoc')"  type="button" value="Зберегти" class="btn   btn-info">
+                    &nbsp;<input  v-on:click.prevent="onbtn('execdoc')" type="button" value="Провести" class="btn btn-primary  ">
 
              </div>
             
         </form>
       
                  
-        </div>
+      
           {|={{ }}=|}  
       
        
@@ -142,10 +147,25 @@
       el: '#vapp',
        data() { return {
 
+          hchanged:false ,
+          showcalc:false ,
+          showheader:false ,
           stlist:[] ,
+          monthes:[] ,
+          years:[] ,
           emps : [] ,
           deleted : [] ,
-          selectednewemp:0
+          selectednewemp:0 ,
+          opt:{},
+          doc:{
+              document_number:"" ,
+              document_date:"" ,
+              notes:"" ,
+              year:0 ,
+              month:0 ,
+              dayscnt:1,
+          },
+        
           
       } } ,
        computed:{
@@ -153,22 +173,19 @@
                   var tot=0
                      for(var emp  of this.emps) {
                     
-                         
-                       {{{calctotal}}}
+                       tot +=  parseVal(emp['_c'+this.opt.coderesult] ) 
+                       
                      }
                   return tot 
-             } ,
-             totallist:function(){
-                  return  JSON.stringify(this.emps)
-             } 
+             }  
         }  ,    
-       
+        
         methods: {
-             calc:function (emp){
-                  calcemp(emp)
-                 
-             }  ,
+         
              
+             hch:function(emp ){
+                 this.hchanged = true
+             },
              del:function(emp ){
                  
                   const index = this.emps.indexOf(emp);
@@ -188,19 +205,118 @@
                       }
                   }
                   
-             }   
+             } ,  
+            
+ 
+             tocalc:  function ( ){
+               if(checkFormInput('docform')==false) return;
+                 
+                 
+                 this.showheader = false
+                this.showcalc = true
+                
+                var data = {
+                    year:this.doc.year,
+                    month:this.doc.month
+                    
+             }
+                
+                
+             callPageMethod('loaddata',[ ], JSON.stringify(data),(data)=> 
+                  {
+                       var data = JSON.parse(data)
+                        
+              
+                       this.opt = data.opt 
+                       this.emps = data.emps 
+                       
+                       if(data.newdoc || this.hchanged ) {
+                            this.recalc()
+                       }
+                        
+                  });                
+                
+                
+             },
+             toback:  function ( ){
+                this.showheader = true
+                this.showcalc = false
+                 
+             },
+             
+             recalc:  function ( ){
+             
+
+                       
+                   for(var e of this.emps) {
+                       this.calcbaseemp(e)
+                       this.calcemp(e)
+                   }                   
+
+             
+             }  ,            
+            
+             calcbaseemp:  function (emp){
+                 
+                {{{calcbases}}}
+                
+        
+                
+             }  ,            
+            
+             calcemp:  function (emp){
+                
+                {{{calcs}}}
+                 
+             } ,
+             
+             onbtn:function (bname){
+                      
+                    if(checkFormInput('docform')==false) return;
+                    var data={
+                        doc:{
+                        }
+                    }                
+                    data.op = bname
+                    data.doc = this.doc
+                    data.emps = this.emps
+            
+            
+            
+                    callPM('save',[ ], JSON.stringify(data),(data)=> 
+                      {
+                           var data = JSON.parse(data)
+                           
+                           if(false==checkPMAnswer(data) )   {
+                               if(data.newnumber)  this.document_number = data.newnumber
+                               return
+                           }
+                          
+                           window.location = '/index.php?p=App/Pages/Register/SalaryList'
+                      });            
+            
+            
+            
+            
+             }                    
             
         }   ,   
         mounted: function  (){
             
-           callPageMethod('loaddata',[ ], null,(data)=> 
+           callPageMethod('loaddoc',[ ], null,(data)=> 
                   {
-                       var d =   JSON.parse(data)
-                       this.stlist = d.stlist 
-                       this.emps = d.emps 
-                       this.emps.forEach(function (e) {
-                        calcemp(e)
-                      });        
+                       var data = JSON.parse(data)
+                        
+                       if(false==checkPMAnswer(data) )   {
+                           return
+                       }
+                       this.showheader = true
+                       this.stlist  = data.stlist 
+                       this.years   = data.years 
+                       this.monthes = data.monthes 
+                       this.doc = data.doc 
+                       
+                        
                         
                   });
               
@@ -212,13 +328,7 @@
  
       
               
- //вичисления  по строеке  
- function     calcemp  (emp){
-                     
-               
-                {{{calcs}}}
-                 
-             }   
+ 
              
              
                

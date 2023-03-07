@@ -87,8 +87,12 @@
          
          <form zippy="calcform"  >
              <div class="form-group">
-             
-               <textarea style="height:600px" class="form-control" zippy="algo" ></textarea>
+                <label for="calcbase">Розрахунок  нарахування</label.             
+               <textarea style="height:400px;width:300px" class="form-control" zippy="calcbase" ></textarea>
+             </div> 
+             <div class="form-group">
+                <label for="calc">Розрахунок утримань </label.
+               <textarea style="height:400px;width:300px" class="form-control" zippy="calc" ></textarea>
              </div> 
              <div class="form-group">
                     
@@ -102,9 +106,15 @@
           </div>
  <div class="col-12 col-md-6  "    >
      <h5>Коди контексту      </h5>
-       <b>daysmon</b>  - кiлькiсть днiв у мiсяцi   
-       <br>
-       <b>invalid</b> - особа з iнвалiдністю (true або false)
+       <b>daysmon</b>  - кiлькiсть днiв у мiсяцi   <br>
+       <b>invalid</b> - особа з iнвалiдністю (true або false) <br>
+       <b>salarytype</b> - тип  зарплати   1 - оклад, 2 - Погодинна оплата, 3 - відрядна оплата   
+       <b>salarym</b> - оклад
+       <b>salaryh</b> - погодинна  сума
+       <b>sellvalue</b> - виручка   по продажних документах співробітника <br>
+       <b>hours</b> - години з облiку часу <br>
+       <b>days</b> - днi з облiку часу <br>
+
      
       
        <br>
@@ -144,7 +154,7 @@
                 <select  class="form-control" zippy="optbaseincom" >
                    <option value="0"></option>
                 </select>
-                <span>Якщо встановлено, автоматично підставляються початкові значення, наприклад, ставки</span>
+                <span>Якщо встановлено, показуєтся  як  поле ручного вводу </span>
              </div> 
              <div class="form-group">
                 <label for="optadvance">Видані аванси</label>

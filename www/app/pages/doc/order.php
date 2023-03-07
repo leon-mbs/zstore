@@ -711,7 +711,8 @@ class Order extends \App\Pages\Base
     public function addnewitemOnClick($sender) {
         $this->editnewitem->setVisible(true);
         $this->editdetail->setVisible(false);
-
+        $this->wselitem->setVisible(false);
+      
         $this->editnewitem->clean();
         $this->editnewitem->editnewbrand->setDataList(Item::getManufacturers());
     }
