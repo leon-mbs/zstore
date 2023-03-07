@@ -437,14 +437,25 @@ class GoodsIssue extends \App\Pages\Base
             $this->setError('Не обрано склад');
             return;
         }
-
+ 
         $code_ = Item::qstr($code);
         $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and   (item_code = {$code_} or bar_code = {$code_})");
 
         if ($item == null) {
-
-            $this->setWarn("Товар з кодом `{$code}` не знайдено" );
-            return;
+            
+            $st = Stock::getFirst("store_id={$store_id} and  snumber=" . $code_ );
+            if($st != null) {
+                $item = Item::load($st->item_id);
+                
+            }     
+            if ($item == null) {
+                $this->setWarn("Товар з кодом `{$code}` не знайдено" );
+                return;
+            }  else {
+               $item->snumber =   $code;
+               
+               
+            }
         }
 
 
@@ -459,7 +470,7 @@ class GoodsIssue extends \App\Pages\Base
         $item->price = $price;
         $item->quantity = 1;
 
-        if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
+        if ( strlen($item->snumber) == 0  &&  $this->_tvars["usesnumber"] == true && $item->useserial == 1) {
 
             $serial = '';
             $slist = $item->getSerials($store_id);
