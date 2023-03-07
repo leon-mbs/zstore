@@ -443,9 +443,10 @@ class GoodsIssue extends \App\Pages\Base
 
         if ($item == null) {
             
-            $st = Stock::getFirst("store_id={$store_id} and  snumber=" . $code_ );
-            if($st != null) {
-                $item = Item::load($st->item_id);
+            $st = Stock::find("store_id={$store_id} and  snumber=" . $code_ );
+            if(count($st)==1) {
+                $st = array_pop($st) ;
+                $item = Item::load(  $st->item_id);
                 
             }     
             if ($item == null) {
