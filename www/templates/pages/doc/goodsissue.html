@@ -78,9 +78,7 @@
 
                         <input class="form-control" type="text" zippy="notes">
 
-
                     </div>
-
 
                 </div>
 
@@ -89,7 +87,7 @@
                 <div class="col-12  col-xl-10">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих код &nbsp;<input style="width:150px;" autocomplete="off" autofocus type="text" zippy="barcode"
+                        Штрих код або С/Н &nbsp;<input style="width:150px;" autocomplete="off" autofocus type="text" zippy="barcode"
                                                onkeydown="onBarCode()">
                         &nbsp; &nbsp; &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
                       {{#usemobilescanner}}  
@@ -169,10 +167,7 @@
                             <td><a data-label="paydisc" href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i
                                         class="fa fa-edit"></i></a></td>
                         </tr>
-                  
-        
-                        
-
+ 
                         <tr style="font-weight: bolder;">
 
                             <td colspan={{colspan}} class="text-right"><span data-label="payamount">Всього:</span></td>
@@ -182,7 +177,7 @@
                             <td><a data-label="payamount" href="javascript:void(0);" data-toggle="modal"
                                    data-target="#modalpayamount"><i class="fa fa-edit"></i></a></td>
                         </tr>
-              {{#prepaid}}
+                        {{#prepaid}}
                        <tr style="font-weight: bolder;">
                             <td data-label="prepaid" colspan={{colspan}} class="text-right">Передплата:</td>
                             <td zippy="prepaid" class="text-right">  {{prepaid}}</td>
