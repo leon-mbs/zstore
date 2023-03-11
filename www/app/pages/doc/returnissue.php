@@ -178,7 +178,7 @@ class ReturnIssue extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
-        // unset($this->_itemlist[$tovar->tovar_id]);
+
         $rowid =  array_search($item,$this->_itemlist,true);
  
         $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
@@ -191,7 +191,7 @@ class ReturnIssue extends \App\Pages\Base
         $this->editdetail->editquantity->setText("1");
         $this->editdetail->editprice->setText("0");
         $this->docform->setVisible(false);
-        $this->_rowid = 0;
+        $this->_rowid = -1;
     }
 
     public function editOnClick($sender) {
@@ -219,21 +219,20 @@ class ReturnIssue extends \App\Pages\Base
 
         
    
-        if($this->_rowid >0) {
-            $item = $this->_itemlist[$this->_rowid] ;    
-        } else {
+        if($this->_rowid == -1) {
             $item = Item::load($id);
+        } else {
+            $item = $this->_itemlist[$this->_rowid] ;    
         }
    
         $item->quantity = $this->editdetail->editquantity->getText();
 
         $item->price = $this->editdetail->editprice->getText();
-        if($this->_rowid >0) {
-           $this->_itemlist[$this->_rowid] = $item;    
-        } else {
+        if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
-        }
-        
+        } else {
+           $this->_itemlist[$this->_rowid] = $item;            
+        }        
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
