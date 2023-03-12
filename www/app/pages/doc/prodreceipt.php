@@ -96,7 +96,7 @@ class ProdReceipt extends \App\Pages\Base
                     if ($basedoc->meta_name == 'Order') {
                       foreach ($basedoc->unpackDetails('detaildata') as $item) {
                         $item->price = $item->getLastPartion();
-                        $this->_itemlist[$item->item_id] = $item;
+                        $this->_itemlist[] = $item;
                       }
                         
                     }
@@ -108,7 +108,7 @@ class ProdReceipt extends \App\Pages\Base
 
                     foreach ($basedoc->unpackDetails('prodlist') as $item) {
                         $item->price = $item->getProdprice();
-                        $this->_itemlist[$item->item_id] = $item;
+                        $this->_itemlist[] = $item;
                     }
                 }
             }
@@ -162,7 +162,8 @@ class ProdReceipt extends \App\Pages\Base
 
         $this->editdetail->edititem->setValue($item->item_id);
 
-        $this->_rowid = $item->item_id;
+        $this->_rowid =  array_search($item,$this->_itemlist,true);
+
     }
 
     public function deleteOnClick($sender) {
@@ -170,9 +171,10 @@ class ProdReceipt extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
-        // unset($this->_itemlist[$item->item_id]);
-
-        $this->_itemlist = array_diff_key($this->_itemlist, array($item->item_id => $this->_itemlist[$item->item_id]));
+        $rowid =  array_search($item,$this->_itemlist,true);
+ 
+        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
+        
         $this->calcTotal();
         $this->docform->detail->Reload();
     }
@@ -180,7 +182,7 @@ class ProdReceipt extends \App\Pages\Base
     public function addrowOnClick($sender) {
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
-        $this->_rowid = 0;
+        $this->_rowid = -1;
     }
 
     public function saverowOnClick($sender) {
@@ -197,7 +199,11 @@ class ProdReceipt extends \App\Pages\Base
         }
 
 
-        $item = Item::load($id);
+        if($this->_rowid == -1) {
+            $item = Item::load($id);
+        } else {
+            $item = $this->_itemlist[$this->_rowid] ;    
+        }
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
@@ -214,26 +220,12 @@ class ProdReceipt extends \App\Pages\Base
             return;
         }
 
-
-        $tarr = array();
-
-        foreach ($this->_itemlist as $k => $value) {
-
-            if ($this->_rowid > 0 && $this->_rowid == $k) {
-                $tarr[$item->item_id] = $item;    // заменяем
-            } else {
-                $tarr[$k] = $value;    // старый
-            }
-        }
-
-        if ($this->_rowid == 0) {        // в конец
-            $tarr[$item->item_id] = $item;
-        }
-        $this->_itemlist = $tarr;
-        $this->_rowid = 0;
-
-      //  $this->editdetail->setVisible(false);
-      //  $this->docform->setVisible(true);
+        if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
+        } else {
+           $this->_itemlist[$this->_rowid] = $item;            
+        }        
+ 
 
         //очищаем  форму
         $this->editdetail->edititem->setValue(0);
