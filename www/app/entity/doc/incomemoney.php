@@ -14,19 +14,7 @@ class IncomeMoney extends Document
 
     public function Execute() {
 
-        if($this->headerdata['begval']==2) {
-          $pay = new \App\Entity\Pay();
-          $pay->mf_id = $this->headerdata['payment'];
-          $pay->document_id = $this->document_id;
-          $pay->amount = $this->amount;
-          $pay->paytype = 0;
-          $pay->paydate = $this->docunent_date;
-          $pay->notes = $this->notes;
-          $pay->user_id = \App\System::getUser()->user_id;
-          $pay->save();
-          
-          return;
-        }
+ 
 
         
       
