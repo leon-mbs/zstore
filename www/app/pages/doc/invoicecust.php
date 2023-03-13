@@ -182,15 +182,8 @@ class InvoiceCust extends \App\Pages\Base
         $this->editdetail->edititem->setKey($item->item_id);
         $this->editdetail->edititem->setText($item->itemname);
 
-        if ($item->rowid > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $item->rowid = $item->item_id;
+        $this->_rowid =  array_search($item,$this->_itemlist,true);
 
-        }
-
-        $this->_rowid = $item->rowid;
     }
 
     public function deleteOnClick($sender) {
@@ -200,15 +193,9 @@ class InvoiceCust extends \App\Pages\Base
         $item = $sender->owner->getDataItem();
 
 
-        if ($item->rowid > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $item->rowid = $item->item_id;
-
-        }
-
-        $this->_itemlist = array_diff_key($this->_itemlist, array($item->rowid => $this->_itemlist[$item->rowid]));
+        $rowid =  array_search($item,$this->_itemlist,true);
+ 
+        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
 
         $this->docform->detail->Reload();
 
@@ -219,7 +206,7 @@ class InvoiceCust extends \App\Pages\Base
     public function addrowOnClick($sender) {
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
-        $this->_rowid = 0;
+        $this->_rowid = -1;
         $this->editdetail->editprice->setText("0");
         $this->editdetail->editcustcode->setText("");
     }
@@ -233,7 +220,11 @@ class InvoiceCust extends \App\Pages\Base
             return;
         }
 
-        $item = Item::load($id);
+        if($this->_rowid == -1) {
+            $item = Item::load($id);
+        } else {
+            $item = $this->_itemlist[$this->_rowid] ;    
+        }
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
@@ -242,15 +233,12 @@ class InvoiceCust extends \App\Pages\Base
             $this->setWarn("Не вказана ціна");
         }
 
-        if ($this->_rowid > 0) {
-            $item->rowid = $this->_rowid;
+        if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
         } else {
-            $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
-            $item->rowid = $next + 1;
-        }
-        $this->_itemlist[$item->rowid] = $item;
+           $this->_itemlist[$this->_rowid] = $item;            
+        }        
 
-        $this->_rowid = 0;
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);

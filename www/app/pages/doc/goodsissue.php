@@ -305,7 +305,7 @@ class GoodsIssue extends \App\Pages\Base
 
                         foreach ($basedoc->unpackDetails('detaildata') as $item) {
                             $item->price = $item->getPrice($basedoc->headerdata['pricetype']); //последние  цены
-                            $this->_itemlist[$item->rowid] = $item;
+                            $this->_itemlist[ ] = $item;
                         }
                        // $this->OnChangeCustomer($this->docform->customer);                        
                         //$this->calcTotal();
@@ -335,7 +335,7 @@ class GoodsIssue extends \App\Pages\Base
                          
                         foreach ($basedoc->unpackDetails('detaildata') as $item) {
                             $item->price = $item->getPrice( ); //последние  цены
-                            $this->_itemlist[$item->rowid] = $item;
+                            $this->_itemlist[ ] = $item;
                         }
                         $this->calcTotal();
                         $this->calcPay();                     
@@ -383,14 +383,9 @@ class GoodsIssue extends \App\Pages\Base
         }
 
         $item = $sender->owner->getDataItem();
-        if ($item->rowid > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $item->rowid = $item->item_id;
-        }
+        $rowid =  array_search($item,$this->_itemlist,true);
 
-        $this->_itemlist = array_diff_key($this->_itemlist, array($item->rowid => $this->_itemlist[$item->rowid]));
+        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
         $this->_rownumber  = 1;
 
         $this->docform->detail->Reload();
@@ -406,7 +401,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->editdetail->qtystock->setText("");
         $this->editdetail->pricestock->setText("");
         $this->docform->setVisible(false);
-        $this->_rowid = 0;
+        $this->_rowid = -1;
     }
 
     public function addcodeOnClick($sender) {
@@ -498,17 +493,15 @@ class GoodsIssue extends \App\Pages\Base
         }
 
 
-        $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
-        $item->rowid = $next + 1;
-
-        $this->_itemlist[$item->rowid] = $item;
+     
+        $this->_itemlist[ ] = $item;
         $this->_rownumber  = 1;
 
         $this->docform->detail->Reload();
         $this->calcTotal();
         $this->calcPay();
 
-        $this->_rowid = 0;
+        $this->_rowid = -1;
     }
 
     public function editOnClick($sender) {
@@ -523,16 +516,10 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->editdetail->editprice->setText($item->price);
         $this->editdetail->editquantity->setText($item->quantity);
-        $this->editdetail->editserial->setText($item->serial);
+        $this->editdetail->editserial->setText($item->snumber);
 
-        if ($item->rowid > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $item->rowid = $item->item_id;
-        }
+        $this->_rowid =  array_search($item,$this->_itemlist,true);
 
-        $this->_rowid = $item->rowid;
     }
 
     public function saverowOnClick($sender) {
@@ -542,7 +529,11 @@ class GoodsIssue extends \App\Pages\Base
             $this->setError("Не обрано товар");
             return;
         }
-        $item = Item::load($id);
+        if($this->_rowid == -1) {
+            $item = Item::load($id);
+        } else {
+            $item = $this->_itemlist[$this->_rowid] ;    
+        }
         $store_id = $this->docform->store->getValue();
 
         $item->quantity = $this->editdetail->editquantity->getText();
@@ -577,20 +568,16 @@ class GoodsIssue extends \App\Pages\Base
             }
         }
 
-        if ($this->_rowid > 0) {
-            $item->rowid = $this->_rowid;
-            
+ 
+        if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
+        } else {
+           $this->_itemlist[$this->_rowid] = $item;            
+        }        
+
             $this->editdetail->setVisible(false);
             $this->wselitem->setVisible(false);
             $this->docform->setVisible(true);            
-            
-        } else {
-            $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
-            $item->rowid = $next + 1;
-        }
-        $this->_itemlist[$item->rowid] = $item;
-
-        $this->_rowid = 0;
 
         $this->_rownumber  = 1;
 

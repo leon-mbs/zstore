@@ -148,9 +148,11 @@ class IncomeItem extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
-        $id = $item->item_id;
+        $rowid =  array_search($item,$this->_itemlist,true);
 
-        $this->_itemlist = array_diff_key($this->_itemlist, array($id => $this->_itemlist[$id]));
+        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
+        $this->calcTotal();
+        
         $this->docform->detail->Reload();
     }
 
@@ -160,6 +162,8 @@ class IncomeItem extends \App\Pages\Base
         $this->docform->setVisible(false);
         $this->editdetail->edititem->setKey(0);
         $this->editdetail->edititem->setValue('');
+        $this->_rowid = -1;
+        
     }
 
     public function editOnClick($sender) {
@@ -175,7 +179,7 @@ class IncomeItem extends \App\Pages\Base
         $this->editdetail->editsnumber->setText($item->snumber);
         $this->editdetail->editsdate->setDate($item->sdate);
 
-        $this->_rowid = $item->item_id;
+        $this->_rowid =  array_search($item,$this->_itemlist,true);
     }
 
     public function saverowOnClick($sender) {
@@ -188,7 +192,11 @@ class IncomeItem extends \App\Pages\Base
             return;
         }
 
-        $item = Item::load($id);
+        if($this->_rowid == -1) {
+            $item = Item::load($id);
+        } else {
+            $item = $this->_itemlist[$this->_rowid] ;    
+        }
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
@@ -212,22 +220,12 @@ class IncomeItem extends \App\Pages\Base
         }
 
 
-        $tarr = array();
+        if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
+        } else {
+           $this->_itemlist[$this->_rowid] = $item;            
+        }        
 
-        foreach ($this->_itemlist as $k => $value) {
-
-            if ($this->_rowid > 0 && $this->_rowid == $k) {
-                $tarr[$item->item_id] = $item;    // заменяем
-            } else {
-                $tarr[$k] = $value;    // старый
-            }
-        }
-
-        if ($this->_rowid == 0) {        // в конец
-            $tarr[$item->item_id] = $item;
-        }
-        $this->_itemlist = $tarr;
-        $this->_rowid = 0;
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
