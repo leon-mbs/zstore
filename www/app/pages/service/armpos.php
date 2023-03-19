@@ -402,11 +402,9 @@ class ARMPos extends \App\Pages\Base
                 $item->snumber = $serial;
             }
         }
-        $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
-        $item->rowid = $next + 1;
+  
 
-
-        $this->_itemlist[$item->rowid] = $item;
+        $this->_itemlist[ ] = $item;
 
         $this->docpanel->form2->detail->Reload();
         $this->calcTotal();
@@ -427,8 +425,9 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->editdetail->qtystock->setText(H::fqty($qty));
 
         $this->docpanel->form2->setVisible(false);
-        $this->_rowid = $tovar->rowid;
-    }
+         
+        $this->_rowid =  array_search($tovar,$this->_itemlist,true);
+   }
 
     public function plusOnClick($sender) {
         $tovar = $sender->owner->getDataItem();
@@ -457,8 +456,9 @@ class ARMPos extends \App\Pages\Base
     public function deleteOnClick($sender) {
 
         $tovar = $sender->owner->getDataItem();
+        $rowid =  array_search($tovar,$this->_itemlist,true);
 
-        $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->rowid => $this->_itemlist[$tovar->rowid]));
+        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
         $this->docpanel->form2->detail->Reload();
         $this->calcTotal();
     }
@@ -472,8 +472,8 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->editserdetail->editserprice->setText($ser->price);
 
         $this->docpanel->form2->setVisible(false);
-        $this->_rowid = $ser->rowid;
-    }
+        $this->_rowid =  array_search($ser,$this->_serlist,true);
+   }
 
     public function serdeleteOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
@@ -481,8 +481,9 @@ class ARMPos extends \App\Pages\Base
         }
 
         $ser = $sender->owner->getDataItem();
+        $rowid =  array_search($ser,$this->_serlist,true);
 
-        $this->_serlist = array_diff_key($this->_serlist, array($ser->rowid => $this->_serlist[$ser->rowid]));
+        $this->_serlist = array_diff_key($this->_serlist, array($rowid => $this->_serlist[$rowid]));
         $this->docpanel->form2->detailser->Reload();
         $this->calcTotal();
     }
@@ -493,7 +494,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->editdetail->editprice->setText("0");
         $this->docpanel->editdetail->qtystock->setText("");
         $this->docpanel->form2->setVisible(false);
-        $this->_rowid = 0;
+        $this->_rowid = -1;
         $this->docpanel->tochecklist->setVisible(false);        
     }
 
@@ -503,7 +504,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->editserdetail->editserprice->setText("0");
 
         $this->docpanel->form2->setVisible(false);
-        $this->_rowid = 0;
+        $this->_rowid = -1;
     }
 
     public function saverowOnClick($sender) {
@@ -514,7 +515,13 @@ class ARMPos extends \App\Pages\Base
             $this->setError("Не выбрано товар");
             return;
         }
-        $item = Item::load($id);
+  
+        if($this->_rowid == -1) {
+          $item = Item::load($id);
+ 
+        } else {
+            $item = $this->_itemlist[$this->_rowid] ;    
+        }
 
         $item->quantity = $this->docpanel->editdetail->editquantity->getText();
         $item->snumber = $this->docpanel->editdetail->editserial->getText();
@@ -541,35 +548,31 @@ class ARMPos extends \App\Pages\Base
             }
         }
 
-        if ($this->_rowid > 0) {
-            $item->rowid = $this->_rowid;
-            
-                    
-                $this->docpanel->editdetail->setVisible(false);
-                $this->docpanel->form2->setVisible(true);
-
-                $this->docpanel->editdetail->edittovar->setKey(0);
-                $this->docpanel->editdetail->edittovar->setText('');
-
-                $this->docpanel->editdetail->editquantity->setText("1");
-
-                $this->docpanel->editdetail->editprice->setText("");
-                $this->docpanel->editdetail->editserial->setText("");
-                $this->docpanel->wselitem->setVisible(false);           
-            
-            
+        if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
         } else {
-            $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
-            $item->rowid = $next + 1;
-        }
-        $this->_itemlist[$item->rowid] = $item;
+           $this->_itemlist[$this->_rowid] = $item;            
+        } 
+        
+                      
+     //   $this->docpanel->editdetail->setVisible(false);
+    //    $this->docpanel->form2->setVisible(true);
 
-        $this->_rowid = 0;
+        $this->docpanel->editdetail->edittovar->setKey(0);
+        $this->docpanel->editdetail->edittovar->setText('');
+
+        $this->docpanel->editdetail->editquantity->setText("1");
+
+        $this->docpanel->editdetail->editprice->setText("");
+        $this->docpanel->editdetail->editserial->setText("");
+        $this->docpanel->wselitem->setVisible(false);           
+            
+ 
+        $this->_rowid = -1;
 
 
         $this->docpanel->form2->detail->Reload();
-       
-    
+     
 
         $this->calcTotal();
         
@@ -592,21 +595,25 @@ class ARMPos extends \App\Pages\Base
             $this->setError("Не обрано послугу або роботу");
             return;
         }
-        $ser = Service::load($id);
+       
+        if($this->_rowid == -1) {
+            $ser = Service::load($id);
+        } else {
+            $ser = $this->_serlist[$this->_rowid] ;    
+        }
 
         $ser->quantity = $this->docpanel->editserdetail->editserquantity->getText();
 
         $ser->price = H::fa($this->docpanel->editserdetail->editserprice->getText());
 
-        if ($this->_rowid > 0) {
-            $ser->rowid = $this->_rowid;
+        if($this->_rowid == -1) {
+            $this->_serlist[] = $ser;
         } else {
-            $next = count($this->_serlist) > 0 ? max(array_keys($this->_serlist)) : 0;
-            $ser->rowid = $next + 1;
-        }
-        $this->_serlist[$ser->rowid] = $ser;
+           $this->_serlist[$this->_rowid] = $ser;            
+        }        
 
-        $this->_rowid = 0;
+
+        $this->_rowid = -1;
 
         $this->docpanel->editserdetail->setVisible(false);
         $this->docpanel->form2->setVisible(true);
@@ -1174,3 +1181,4 @@ class ARMPos extends \App\Pages\Base
  
     }    
 }
+

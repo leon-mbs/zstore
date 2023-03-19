@@ -378,7 +378,12 @@ class POSCheck extends \App\Pages\Base
             $this->setError("Не обрано товар");
             return;
         }
-        $item = Item::load($id);
+        if($this->_rowid == -1) {
+          $item = Item::load($id);
+ 
+        } else {
+            $item = $this->_itemlist[$this->_rowid] ;    
+        }
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->snumber = $this->editdetail->editserial->getText();
@@ -404,15 +409,13 @@ class POSCheck extends \App\Pages\Base
             }
         }
 
-        if ($this->_rowid > 0) {
-            $item->rowid = $this->_rowid;
+        if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
         } else {
-            $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
-            $item->rowid = $next + 1;
-        }
-        $this->_itemlist[$item->rowid] = $item;
+           $this->_itemlist[$this->_rowid] = $item;            
+        } 
 
-        $this->_rowid = 0;
+        $this->_rowid = -1;
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);

@@ -125,7 +125,7 @@ class Application extends \Zippy\WebApplication
         $shoppages =      \App\Modules\Shop\Helper::getPages() ;
         
         if ( in_array($uri,$shoppages)  ) {
-            self::$app->LoadPage("\\App\\Modules\\Shop\\Pages\\CustomPage",$uri);
+            self::$app->LoadPage("\\App\\Modules\\Shop\\Pages\\Catalog\\CustomPage",$uri);
             return;
         }      
         //товары в онлайн каталоге
