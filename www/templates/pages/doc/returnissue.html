@@ -98,13 +98,36 @@
                         <tr style="font-weight: bolder;">
 
                             {{^usesnumber}}
+                            <td colspan="4" class="text-right">На суму:</td>
+                            {{/usesnumber}}
+                            {{#usesnumber}}
+                            <td colspan="6" class="text-right">На суму:</td>
+                            {{/usesnumber}}
+
+                            <td zippy="total" class="text-right"></td>
+                            <td></td>
+                        </tr>
+                        <tr style="font-weight: bolder;">
+
+                            {{^usesnumber}}
+                            <td colspan="4" class="text-right">Знижка:</td>
+                            {{/usesnumber}}
+                            {{#usesnumber}}
+                            <td colspan="6" class="text-right">Знижка:</td>
+                            {{/usesnumber}}
+
+                            <td zippy="discount" class="text-right"></td>
+                            <td></td>
+                       <tr style="font-weight: bolder;">
+
+                            {{^usesnumber}}
                             <td colspan="4" class="text-right">Всього:</td>
                             {{/usesnumber}}
                             {{#usesnumber}}
                             <td colspan="6" class="text-right">Всього:</td>
                             {{/usesnumber}}
 
-                            <td zippy="total" class="text-right"></td>
+                            <td zippy="payamount" class="text-right"></td>
                             <td></td>
                         </tr>
 

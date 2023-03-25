@@ -39,6 +39,10 @@
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
     <tr style="font-weight: bolder;">
+        <td style="border-top:1px #000 solid;" colspan="5" align="right">До сплати:</td>
+        <td style="border-top:1px #000 solid;" align="right">{{payamount}}</td>
+    </tr>
+    <tr style="font-weight: bolder;">
         <td style="border-top:1px #000 solid;" colspan="5" align="right">Оплачено:</td>
         <td style="border-top:1px #000 solid;" align="right">{{payed}}</td>
     </tr>

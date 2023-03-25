@@ -149,10 +149,8 @@ class IncomeService extends \App\Pages\Base
                     $this->docform->customer->setKey($basedoc->customer_id);
                     $this->docform->customer->setText($basedoc->customer_name);
 
-                    $this->_servicelist = array();
-                    foreach($basedoc->unpackDetails('detaildata') as $v ) {
-                       $this->_servicelist[$v->service_id]= $v ;    
-                    }
+                    $this->_servicelist = $basedoc->unpackDetails('detaildata') ;
+
                 }
             }
         }
@@ -192,14 +190,8 @@ class IncomeService extends \App\Pages\Base
 
         $this->editdetail->editservice->setValue($service->service_id);
 
-        if ($service->rowid > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $service->rowid = $service->service_id;
-        }
+        $this->_rowid =  array_search($item,$this->_servicelist,true);
 
-        $this->_rowid = $service->rowid;
     }
 
     public function deleteOnClick($sender) {
@@ -208,16 +200,11 @@ class IncomeService extends \App\Pages\Base
         }
 
         $item = $sender->owner->getDataItem();
+        $rowid =  array_search($item,$this->_servicelist,true);
+ 
 
-        if ($item->rowid > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $item->rowid = $item->item_id;
-        }
-
-        $this->_servicelist = array_diff_key($this->_servicelist, array($item->rowid => $this->_servicelist[$item->rowid]));
-        $this->_itemset = array_diff_key($this->_itemset, array($item->rowid => $this->_itemset[$item->rowid]));
+        $this->_servicelist = array_diff_key($this->_servicelist, array($rowid => $this->_servicelist[$rowid]));
+        $this->_itemset = array_diff_key($this->_itemset, array($rowid => $this->_itemset[$rowid]));
 
         $this->docform->detail->Reload();
         $this->calcTotal();
@@ -229,7 +216,8 @@ class IncomeService extends \App\Pages\Base
     public function addrowOnClick($sender) {
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
-        $this->_rowid = 0;
+        $this->_rowid = -1;
+
         $this->editdetail->editdesc->setText('');
 
         $this->editdetail->editprice->setText(0);
@@ -243,23 +231,22 @@ class IncomeService extends \App\Pages\Base
             return;
         }
         $service = Service::load($id);
+        if($this->_rowid == -1) {
+            $service = Service::load($id);
+        } else {
+            $service = $this->_servicelist[$this->_rowid] ;    
+        }
 
         $service->price = $this->editdetail->editprice->getText();
         $service->quantity = $this->editdetail->editqty->getText();
         $service->desc = $this->editdetail->editdesc->getText();
 
-        if ($this->_rowid > 0) {
-            $service->rowid = $this->_rowid;
+        if($this->_rowid == -1) {
+            $this->_servicelist[] = $service;
         } else {
-            $next = count($this->_servicelist) > 0 ? max(array_keys($this->_servicelist)) : 0;
-            $service->rowid = $next + 1;
-        }
-        
-        $kk = array_keys($this->_servicelist) ;
-        $this->_servicelist[$service->rowid] = $service;
-        
+           $this->_servicelist[$this->_rowid] = $service;            
+        }        
 
-        $this->_rowid = 0;
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);

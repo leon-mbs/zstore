@@ -64,7 +64,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-12 col-md-8 col-xl-6">
+                <div class="col-12 col-md-10 col-xl-8">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
                         Штрих код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
@@ -108,10 +108,10 @@
                         </tr>
                         <tr style="font-weight: bolder;" id="tankor">
                             {{^usesnumber}}
-                            <td colspan="4" class="text-right">Всього:</td>
+                            <td colspan="5" class="text-right">Всього:</td>
                             {{/usesnumber}}
                             {{#usesnumber}}
-                            <td colspan="6" class="text-right">Всього:</td>
+                            <td colspan="7" class="text-right">Всього:</td>
                             {{/usesnumber}}
                             <td zippy="total" class="text-right"></td>
                             <td></td>

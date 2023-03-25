@@ -116,6 +116,7 @@ class GroupList extends \App\Pages\Base
     public function OnAddAttribute($sender) {
         $form = $this->attrpanel->attreditform;
         $form->setVisible(true);
+        $form->tt->setVisible(true);
         $form->attrtype->setVisible(true);
         $form->attrvaluespanel->setVisible(false);
         $form->attrvaluespanel->attrvalues->setValue('');
@@ -167,6 +168,7 @@ class GroupList extends \App\Pages\Base
         $form->attrvaluespanel->attrvalues->setValue($item->valueslist);
 
         $form->attrtype->setVisible(false);
+        $form->tt->setVisible(false);
         $form->attrvaluespanel->setVisible(false);
         $form->meashurepanel->setVisible(false);
         $form->attrtypename->setVisible(true);
@@ -181,6 +183,7 @@ class GroupList extends \App\Pages\Base
         if ($item->attributetype == 3 || $item->attributetype == 4) {
             $form->attrvaluespanel->setVisible(true);
         }
+         
     }
 
     public function OnSaveAttribute($sender) {
@@ -206,7 +209,20 @@ class GroupList extends \App\Pages\Base
         }
         if ($attr->attributetype == 3 || $attr->attributetype == 4) {
             $attr->valueslist = $form->attrvaluespanel->attrvalues->getText();
-            $attr->valueslist = preg_replace('/\s+/', "", $attr->valueslist);
+            
+            $r = array();
+            
+            foreach(explode(',',trim($attr->valueslist)) as $l ){
+               $l = trim($l) ;
+               $l = trim($l) ;
+               if(strlen($l) > 0) {
+                   $r[] = $l ;    
+               }
+               
+            }            
+            
+            
+            $attr->valueslist = implode(",",$r);
         }
 
         $attr->Save();
