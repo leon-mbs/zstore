@@ -31,6 +31,8 @@ class ReturnIssue extends \App\Pages\Base
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = 0;
+    private $_orig_discount  = 0; 
+    private $_orig_total  = 0; 
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -59,6 +61,8 @@ class ReturnIssue extends \App\Pages\Base
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total'));
+        $this->docform->add(new Label('discount'));
+        $this->docform->add(new Label('payamount'));
         $this->docform->add(new TextInput('editpayed', "0"));
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
         $this->docform->add(new Label('payed', 0));
@@ -72,7 +76,7 @@ class ReturnIssue extends \App\Pages\Base
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
 
-        if ($docid > 0) {    //загружаем   содержимое  документа настраницу
+        if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
 
@@ -91,8 +95,16 @@ class ReturnIssue extends \App\Pages\Base
             $this->docform->payed->setText(H::fa($this->_doc->payed));
 
             $this->docform->total->setText(H::fa($this->_doc->amount));
+            $this->docform->payamount->setText(H::fa($this->_doc->payamount));
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
+            
+            $this->_orig_total = $this->_doc->amount; 
+            $this->_orig_discount = $this->_doc->amount - $this->_doc->payamount ; 
+
+            $this->docform->discount->setText(H::fa($this->_orig_discount));
+       
+            
         } else {
             $this->_doc = Document::create('ReturnIssue');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -118,6 +130,9 @@ class ReturnIssue extends \App\Pages\Base
                         $this->docform->customer->setText($basedoc->customer_name);
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
+               
+                        $this->_orig_total = $basedoc->amount; 
+                        $this->_orig_discount =  $basedoc->amount - $basedoc->payamount ; 
 
                         
                     }
@@ -145,6 +160,11 @@ class ReturnIssue extends \App\Pages\Base
                             }
                             
                         }
+                        $this->_orig_total = $basedoc->amount; 
+                        $this->_orig_discount = $basedoc->amount - $basedoc->payamount ; 
+                        
+                        
+                        
                     }
                 }
                 $this->calcTotal();
@@ -285,9 +305,9 @@ class ReturnIssue extends \App\Pages\Base
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->amount = $this->docform->total->getText();
-        $this->_doc->payamount = $this->docform->total->getText();
+        $this->_doc->payamount = $this->docform->payamount->getText();
 
-      $this->_doc->payed = $this->docform->payed->getText();
+        $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
 
         $isEdited = $this->_doc->document_id > 0;
@@ -352,7 +372,7 @@ class ReturnIssue extends \App\Pages\Base
                 $this->_doc->updateStatus(Document::STATE_WP);
             }
 
-                $this->_doc->updateStatus(Document::STATE_EXECUTED);
+            $this->_doc->updateStatus(Document::STATE_EXECUTED);
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
@@ -388,8 +408,19 @@ class ReturnIssue extends \App\Pages\Base
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
-        $this->docform->payed->setText(H::fa($total));
-        $this->docform->editpayed->setText(H::fa($total));
+        $discount = $this->_orig_discount ;
+        
+        if($total > 0 && $this->_orig_total > $total) {
+           $k = $total / $this->_orig_total  ;     
+           $discount =  $discount * $k;
+        }
+        $payamount= $total - $discount;
+      
+        
+        $this->docform->payamount->setText(H::fa($payamount));
+        $this->docform->discount->setText(H::fa($discount));
+        $this->docform->payed->setText(H::fa($payamount));
+        $this->docform->editpayed->setText(H::fa($payamount));
     }
 
     public function onPayed($sender) {
