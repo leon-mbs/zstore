@@ -218,7 +218,7 @@ class CustomerList extends \App\Pages\Base
             }
             $d = $item->getDiscount();
             if(doubleval($d) > 0) {
-                  $title=  "Накопичувальна знижка %s%" . Helper::fa($d) ."%";                
+                  $title=  "Накопичувальна знижка " . Helper::fa($d) ."%";                
             }
             $d = $item->discount;   //постоянная  скидка
             if(doubleval($d) > 0) {

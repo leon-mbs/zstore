@@ -77,7 +77,8 @@ class Warranty extends \App\Pages\Base
                     $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
                     if ($basedoc->meta_name == 'GoodsIssue') {
-
+                       $this->_doc->customer_id= $basedoc->customer_id;
+                       $this->_doc->firm_id= $basedoc->firm_id;
                     }
 
                     if (count($basedoc->getChildren('Warranty')) > 0) {
