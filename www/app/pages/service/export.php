@@ -88,6 +88,7 @@ class Export extends \App\Pages\Base
         $header['C1'] = "Email";
         $header['D1'] = "Місто";
         $header['E1'] = "Адреса";
+        $header['F1'] = "ЕДРПОУ";
         $root="<root>";
         $i = 1;
         foreach ($list as $item) {
@@ -97,6 +98,7 @@ class Export extends \App\Pages\Base
             $data['C' . $i] = $item->email;
             $data['D' . $i] = $item->city;
             $data['E' . $i] = $item->address;
+            $data['F' . $i] = $item->edrpou;
             
             $root.="<item>";
             $root.="<name><![CDATA[" . $item->customer_name . "]]></name>";
@@ -104,6 +106,7 @@ class Export extends \App\Pages\Base
             $root.="<email>" . $item->email . "</email>";
             $root.="<city><![CDATA[" . $item->city . "]]></city>";
             $root.="<address><![CDATA[" . $item->address . "]]></address>";
+            $root.="<edrpou><![CDATA[" . $item->edrpou . "]]></edrpou>";
                   
             $root.="</item>";
             

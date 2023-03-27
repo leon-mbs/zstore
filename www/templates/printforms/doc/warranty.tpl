@@ -20,11 +20,11 @@
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
         <th colspan="2" width="230" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Найменування</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="50">Кіл.</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Ціна</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="70">Сума</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="140">Сер. номер</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="70">Гар., міс.</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Кіл.</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Ціна</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Сума</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Сер. номер</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Гар., міс.</th>
     </tr>
     {{#_detail}}
     <tr>
@@ -50,14 +50,14 @@
             <b> Покупець</b> {{customer_name}}
         </td>
         <td colspan="4">
-            <b> Продавець</b> {{firmname}}
+            <b> Продавець</b> {{firm_name}}
         </td>
 
     </tr>
     <tr>
         <td></td>
         <td colspan="8">
-            Підпис
+            Підписи
         </td>
 
 

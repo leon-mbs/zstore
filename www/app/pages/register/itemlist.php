@@ -30,7 +30,14 @@ class ItemList extends \App\Pages\Base
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new TextInput('searchkey'));
-        $this->filter->add(new DropDownChoice('searchcat', Category::getList(), 0));
+        
+        $catlist = array();
+        $catlist[-1] = "Без категорії";
+        foreach (Category::getList() as $k => $v) {
+            $catlist[$k] = $v;
+        }        
+        
+        $this->filter->add(new DropDownChoice('searchcat', $catlist, 0));
         
           
         $prices = [];
@@ -326,8 +333,19 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         $cat = $form->searchcat->getValue();
         $store = $form->searchstore->getValue();
 
-        if ($cat > 0) {
-            $where = $where . " and cat_id=" . $cat;
+        if ($cat != 0) {
+            if ($cat == -1) {
+                $where = $where . " and cat_id=0";
+            } else {
+                
+                
+                $c = Category::load($cat) ;
+                $ch = $c->getChildren();
+                $ch[]=$cat;
+                                
+                $cats = implode(",",$ch)  ;              
+                $where = $where . " and cat_id in ({$cats}) " ;
+            }
         }
         if ($store > 0) {
             $where = $where . " and item_id in (select item_id from store_stock where {$cstr}  qty <> 0 and store_id={$store}) ";
