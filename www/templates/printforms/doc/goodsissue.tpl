@@ -178,9 +178,16 @@
                     <tr>
                         <td> </td>
                         <td colspan="6">
+                            {{#isstamp}}
+                            <img style="height:100px;" src='{{stamp}}'/>
+                            {{/isstamp}}
+
+                            {{^isstamp}}
+                        
                             <br><br>
                             &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;    &nbsp; М.П.
                             <br><br>
+                            {{/isstamp}}
                         </td>
 
 

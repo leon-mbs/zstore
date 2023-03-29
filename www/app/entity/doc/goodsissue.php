@@ -69,6 +69,8 @@ class GoodsIssue extends Document
                         "total"           => H::fa($this->amount),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
+                        "stamp"           => _BASEURL . $firm['stamp'],
+                        "isstamp"         => strlen($firm['stamp']) > 0,
 
                         "bank"            => @$mf->bank,
                         "bankacc"         => @$mf->bankacc,
