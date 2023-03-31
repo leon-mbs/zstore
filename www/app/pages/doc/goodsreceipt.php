@@ -495,11 +495,7 @@ class GoodsReceipt extends \App\Pages\Base
         }
 
 
-         if($this->_rowid == -1) {
-            $item = Item::load($id);
-        } else {
-            $item = $this->_itemlist[$this->_rowid] ;    
-        }
+        $item = Item::load($id);
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();

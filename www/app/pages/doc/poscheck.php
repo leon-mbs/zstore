@@ -378,12 +378,7 @@ class POSCheck extends \App\Pages\Base
             $this->setError("Не обрано товар");
             return;
         }
-        if($this->_rowid == -1) {
-          $item = Item::load($id);
- 
-        } else {
-            $item = $this->_itemlist[$this->_rowid] ;    
-        }
+        $item = Item::load($id);
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->snumber = $this->editdetail->editserial->getText();
@@ -443,11 +438,8 @@ class POSCheck extends \App\Pages\Base
         }
         
         
-        if($this->_rowid == -1) {
-            $ser = Service::load($id);
-        } else {
-            $ser = $this->_serlist[$this->_rowid] ;    
-        }
+        
+        $ser = Service::load($id);
          
         $ser->quantity = $this->editserdetail->editserquantity->getText();
         $ser->price = $this->editserdetail->editserprice->getText();

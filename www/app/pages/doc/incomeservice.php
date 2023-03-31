@@ -231,11 +231,8 @@ class IncomeService extends \App\Pages\Base
             return;
         }
         $service = Service::load($id);
-        if($this->_rowid == -1) {
-            $service = Service::load($id);
-        } else {
-            $service = $this->_servicelist[$this->_rowid] ;    
-        }
+      
+      
 
         $service->price = $this->editdetail->editprice->getText();
         $service->quantity = $this->editdetail->editqty->getText();

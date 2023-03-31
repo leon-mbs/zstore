@@ -212,11 +212,7 @@ class ProdIssue extends \App\Pages\Base
         }
         $store_id = $this->docform->store->getValue();
 
-        if($this->_rowid == -1) {
-            $item = Item::load($id);
-        } else {
-            $item = $this->_itemlist[$this->_rowid] ;    
-        }
+        $item = Item::load($id);
 
 
         $item->quantity = $this->editdetail->editquantity->getText();
