@@ -250,11 +250,7 @@ class Order extends \App\Pages\Base
             return;
         }
 
-        if($this->_rowid == -1) {
-            $item = Item::load($id);
-        } else {
-            $item = $this->_tovarlist[$this->_rowid] ;    
-        }
+        $item = Item::load($id);
         
         $item->quantity = $this->editdetail->editquantity->getText();
 
@@ -264,7 +260,10 @@ class Order extends \App\Pages\Base
         if($this->_rowid == -1) {
             $this->_tovarlist[] = $item;
         } else {
-           $this->_tovarlist[$this->_rowid] = $item;            
+           $this->_tovarlist[$this->_rowid] = $item; 
+           $this->editdetail->setVisible(false);
+           $this->cancelrowOnClick(null);
+           return;                  
         }        
 
         //очищаем  форму
