@@ -98,7 +98,21 @@
     </tr>
      {{/payed}}  
  
+          
+                    {{#qrpay}}
+                   <tr>
+                        <td colspan="10" > 
+                            {{{qrpayimg}}}
+                        </td>
 
+                    </tr>
+                   <tr>
+                        <td colspan="10"> 
+                            {{{qrpayurl}}}
+                        </td>
+
+                    </tr>
+                          {{/qrpay}}
 
     
 </table>

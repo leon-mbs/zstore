@@ -65,17 +65,26 @@ class Order extends \App\Entity\Doc\Document
                         "outnumber"       => $this->headerdata["outnumber"],
                         "isoutnumber"     => strlen($this->headerdata["outnumber"]) > 0,
                         "document_number" => $this->document_number,
+                        "qrpay"           => true,
                         "total"           => H::fa($this->amount),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
-                         "addbonus"           => $addbonus > 0 ? H::fa($addbonus) : false,
-                        "delbonus"           => $delbonus > 0 ? H::fa($delbonus) : false,
-                        "allbonus"           => $allbonus > 0 ? H::fa($allbonus) : false,
-                       "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
+                        "addbonus"        => $addbonus > 0 ? H::fa($addbonus) : false,
+                        "delbonus"        => $delbonus > 0 ? H::fa($delbonus) : false,
+                        "allbonus"        => $allbonus > 0 ? H::fa($allbonus) : false,
+                        "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
         );
         $header['outnumber'] = strlen($this->headerdata['outnumber']) > 0 ? $this->headerdata['outnumber'] : false;
 
+        $qrpay=$this->getQRPay();
+        if(is_array($qrpay)){
+            $header['qrpay']    = true;            
+            $header['qrpayurl'] = $qrpay['url'];            
+            $header['qrpayimg'] = $qrpay['qr'];            
+        }
+        
+        
         $report = new \App\Report('doc/order.tpl');
 
         $html = $report->generate($header);

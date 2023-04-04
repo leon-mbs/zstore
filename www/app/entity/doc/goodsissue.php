@@ -77,6 +77,7 @@ class GoodsIssue extends Document
                         "isbank"          => (strlen($mf->bankacc) > 0 && strlen($mf->bank) > 0),
                         "notes"           => nl2br($this->notes),
                        
+                        "qrpay"      =>  false,
                         "payed"      => $this->payed > 0 ? H::fa($this->payed) : false,
                         "payamount"  => $this->payamount > 0 ? H::fa($this->payamount) : false
 
@@ -125,6 +126,14 @@ class GoodsIssue extends Document
             $header['createdon'] = H::fd($contract->createdon);
         }
 
+        $qrpay=$this->getQRPay();
+        if(is_array($qrpay)){
+            $header['qrpay'] = true;            
+            $header['qrpayurl'] = $qrpay['url'];            
+            $header['qrpayimg'] = $qrpay['qr'];            
+            
+            
+        }
 
         $report = new \App\Report('doc/goodsissue.tpl');
 

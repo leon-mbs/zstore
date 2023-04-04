@@ -999,6 +999,39 @@ class Document extends \ZCL\DB\Entity
         return $img;
     }
 
+    /**
+    * put your comment there...
+    * 
+    * @param mixed $text
+    * @return mixed
+    */
+    protected function getQRPay() {
+        
+        $print = System::getOption('common', 'printqrpay');
+        
+        if($print==0)  return false;
+
+        $mf =  \App\Entity\MoneyFund::load( $this->headerdata['payment'] ) ;
+        if($mf == null)  return false;
+        if($mf->beznal != 1 || strlen($mf->iban) == 0 )  return false;
+        
+        $c =  \App\Entity\Customer::load( $this->customer_id ) ;
+        if($c == null)  return false;
+    
+        $url = "BCD\n002\n1\nUCT\n\n";
+        $url = $url . $c->customer_name."\n";
+        $url = $url . $mf->iban."\n";
+        $url = $url .  "UAN". \App\Helper::fa($this->pyamount)."\n";
+        $url = $url .    $c->edrpou."\n\n\n";
+//        $url = $url .  $doc->notes. ."\n";
+        $url = "https://bank.gov.ua/qr/".base64_encode($url);
+   
+        $dataUri = \App\Util::generateQR($url,240,10)  ;
+        $img = "<img style=\"width:260px\"  src=\"{$dataUri}\"  />";
+
+        return array('qr'=>$img,'url'=>"<a href=\"{$url}\">{$url}</a>");
+    }
+
     
   
     

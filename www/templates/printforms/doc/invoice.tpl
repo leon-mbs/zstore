@@ -166,5 +166,20 @@
                         </td>
 
                     </tr>
+          
+                    {{#qrpay}}
+                   <tr>
+                        <td colspan="9" > 
+                            {{{qrpayimg}}}
+                        </td>
+
+                    </tr>
+                   <tr>
+                        <td colspan="9"> 
+                            {{{qrpayurl}}}
+                        </td>
+
+                    </tr>
+                          {{/qrpay}}                    
                     </table>
 

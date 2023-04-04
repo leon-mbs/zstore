@@ -54,6 +54,7 @@ class Invoice extends \App\Entity\Doc\Document
                         "customer_print"  => $this->headerdata["customer_print"],
                         "bank"            => @$mf->bank,
                         "bankacc"         => @$mf->bankacc,
+                        "qrpay"           => true,
                         "isbank"          => (strlen($mf->bankacc) > 0 && strlen($mf->bank) > 0),
                         "email"           => $this->headerdata["email"],
                         "notes"           => nl2br($this->notes),
@@ -98,7 +99,14 @@ class Invoice extends \App\Entity\Doc\Document
             $header['createdon'] = H::fd($contract->createdon);
         }
 
-
+        $qrpay=$this->getQRPay();
+        if(is_array($qrpay)){
+            $header['qrpay'] = true;            
+            $header['qrpayurl'] = $qrpay['url'];            
+            $header['qrpayimg'] = $qrpay['qr'];            
+            
+            
+        }
         $report = new \App\Report('doc/invoice.tpl');
 
         $html = $report->generate($header);
