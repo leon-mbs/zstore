@@ -46,7 +46,7 @@ class MFList extends \App\Pages\Base
         $this->mfdetail->add(new TextArea('editmf_description'));
         $this->mfdetail->add(new TextInput('editbank'));
         $this->mfdetail->add(new TextInput('editbankacc'));
-        $this->mfdetail->add(new TextInput('editiban'));
+
         $this->mfdetail->add(new CheckBox('editdisabled'));
 
         $this->mfdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
@@ -87,7 +87,7 @@ class MFList extends \App\Pages\Base
         $this->_mf = $sender->owner->getDataItem();
         $this->mftable->setVisible(false);
         $this->mfdetail->setVisible(true);
-        $this->mfdetail->editiban->setText($this->_mf->iban);
+
         $this->mfdetail->editbtran->setText($this->_mf->btran);
         $this->mfdetail->editbtranin->setText($this->_mf->btranin);
         $this->mfdetail->editmf_name->setText($this->_mf->mf_name);
@@ -121,7 +121,7 @@ class MFList extends \App\Pages\Base
             $this->setError('Не введено назву');
             return;
         }
-        $this->_mf->iban = $this->mfdetail->editiban->getText();
+
         $this->_mf->btran = $this->mfdetail->editbtran->getText();
         $this->_mf->btranin = $this->mfdetail->editbtranin->getText();
         $this->_mf->bank = $this->mfdetail->editbank->getText();
@@ -154,7 +154,7 @@ class MFList extends \App\Pages\Base
         $this->mfdetail->editbankacc->setVisible($b);
         $this->mfdetail->editbtran->setVisible($b);
         $this->mfdetail->editbtranin->setVisible($b);
-        $this->mfdetail->editiban->setVisible($b);
+
     }
 
 }

@@ -38,6 +38,7 @@ class Firm extends \ZCL\DB\Entity
         $this->pposigntype = (int)($xml->pposigntype[0]);
         $this->ppoisjks = (int)($xml->ppoisjks[0]);
         $this->ppokeyid = (string)($xml->ppokeyid[0]);
+        $this->iban = (string)($xml->iban[0]);
 
         parent::afterLoad();
     }
@@ -61,6 +62,7 @@ class Firm extends \ZCL\DB\Entity
         $this->details .= "<ppokeyid>{$this->ppokeyid}</ppokeyid>";
         $this->details .= "<ppoisjks>{$this->ppoisjks}</ppoisjks>";
         $this->details .= "<inn>{$this->inn}</inn>";
+        $this->details .= "<iban>{$this->iban}</iban>";
 
         $this->details .= "<phone>{$this->phone}</phone>";
         $this->details .= "<tin>{$this->tin}</tin>";

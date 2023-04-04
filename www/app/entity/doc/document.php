@@ -1011,18 +1011,23 @@ class Document extends \ZCL\DB\Entity
         
         if($print==0)  return false;
 
-        $mf =  \App\Entity\MoneyFund::load( $this->headerdata['payment'] ) ;
-        if($mf == null)  return false;
-        if($mf->beznal != 1 || strlen($mf->iban) == 0 )  return false;
+        if($this->firm_id >0){
+           $f =  \App\Entity\Firm::load( $this->firm_id) ;            
+        }  else {
+           $f =  \App\Entity\Firm::load(          \App\Helper::getDefFirm()   );
+        }
+
+        if($f == null)  return false;
+        if(strlen($f->tin)==0 || strlen($f->iban) == 0 )  return false;
         
-        $c =  \App\Entity\Customer::load( $this->customer_id ) ;
-        if($c == null)  return false;
+      //  $c =  \App\Entity\Customer::load( $this->customer_id ) ;
+       // if($c == null)  return false;
     
         $url = "BCD\n002\n1\nUCT\n\n";
-        $url = $url . $c->customer_name."\n";
-        $url = $url . $mf->iban."\n";
+        $url = $url . $f->firm_name."\n";
+        $url = $url .  $f->iban."\n";
         $url = $url .  "UAN". \App\Helper::fa($this->pyamount)."\n";
-        $url = $url .    $c->edrpou."\n\n\n";
+        $url = $url .    $f->tin."\n\n\n";
 //        $url = $url .  $doc->notes. ."\n";
         $url = "https://bank.gov.ua/qr/".base64_encode($url);
    
