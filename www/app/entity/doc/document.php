@@ -1026,9 +1026,9 @@ class Document extends \ZCL\DB\Entity
         $url = "BCD\n002\n1\nUCT\n\n";
         $url = $url . $f->firm_name."\n";
         $url = $url .  $f->iban."\n";
-        $url = $url .  "UAN". \App\Helper::fa($this->pyamount)."\n";
+        $url = $url .  "UAN". \App\Helper::fa($this->paymount)."\n";
         $url = $url .    $f->tin."\n\n\n";
-//        $url = $url .  $doc->notes. ."\n";
+        $url = $url .  $doc->meta_desc ." ".$doc->document_number." від ".  \App\Helper::fd($this->document_date) ."\n";
         $url = "https://bank.gov.ua/qr/".base64_encode($url);
    
         $dataUri = \App\Util::generateQR($url,240,10)  ;
