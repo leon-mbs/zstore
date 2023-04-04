@@ -65,7 +65,7 @@ class Order extends \App\Entity\Doc\Document
                         "outnumber"       => $this->headerdata["outnumber"],
                         "isoutnumber"     => strlen($this->headerdata["outnumber"]) > 0,
                         "document_number" => $this->document_number,
-                        "qrpay"           => true,
+
                         "total"           => H::fa($this->amount),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
@@ -77,12 +77,7 @@ class Order extends \App\Entity\Doc\Document
         );
         $header['outnumber'] = strlen($this->headerdata['outnumber']) > 0 ? $this->headerdata['outnumber'] : false;
 
-        $qrpay=$this->getQRPay();
-        if(is_array($qrpay)){
-            $header['qrpay']    = true;            
-            $header['qrpayurl'] = $qrpay['url'];            
-            $header['qrpayimg'] = $qrpay['qr'];            
-        }
+     
         
         
         $report = new \App\Report('doc/order.tpl');

@@ -1005,11 +1005,9 @@ class Document extends \ZCL\DB\Entity
     * @param mixed $text
     * @return mixed
     */
-    protected function getQRPay() {
+    public function getQRPay() {
         
-        $print = System::getOption('common', 'printqrpay');
-        
-        if($print==0)  return false;
+        if(in_array($this->meta_name,['GoodsIssue','Invoice','Order'])  ==false) return false;       
 
         if($this->firm_id >0){
            $f =  \App\Entity\Firm::load( $this->firm_id) ;            
@@ -1024,17 +1022,26 @@ class Document extends \ZCL\DB\Entity
        // if($c == null)  return false;
     
         $url = "BCD\n002\n1\nUCT\n\n";
-        $url = $url . $f->firm_name."\n";
+        $url = $url .  $f->firm_name."\n";
         $url = $url .  $f->iban."\n";
-        $url = $url .  "UAN". \App\Helper::fa($this->paymount)."\n";
-        $url = $url .    $f->tin."\n\n\n";
-        $url = $url .  $doc->meta_desc ." ".$doc->document_number." від ".  \App\Helper::fd($this->document_date) ."\n";
+        $url = $url .  "UAH".round($this->payamount)."\n";
+        $url = $url .  $f->tin."\n\n\n";
+        $url = $url .  $this->meta_desc ." ".$this->document_number." від ".  \App\Helper::fd($this->document_date) ."\n";
+//        $url =   iconv('utf-8','windows-1251',  $url);
+
         $url = "https://bank.gov.ua/qr/".base64_encode($url);
-   
+     //   $url = "https://bank.gov.ua/qr/QkNECjAwMgoyClVDVAoK1M7PIMDy8O755e3q7uIg0O7s4O0gy-Xu7bPk7uLo9wpVQTM1MzIyMDAxMDAwMDAyNjAwMzMyMDAzNDc1OApVQUg2MDAKMzE0MTAyMDAzNgoKCsfg7O7i6-Xt7f8guSDHLTA2NDI5IOKz5CAwNC4wNC4yMDIzCgo";
+
+        $w= base64_decode( "QkNECjAwMgoyClVDVAoK1M7PIMDy8O755e3q7uIg0O7s4O0gyXu7bPk7uLo9wpVQTM1MzIyMDAxMDAwMDAyNjAwMzMyMDAzNDc1OApVQUg2MDAKMzE0MTAyMDAzNgoKCsfg7O7i6Xt7f8guSDHLTA2NDI5IOKz5CAwNC4wNC4yMDIzCgo");
+      //  "BCD\n002\n2\nUCT\n\nФОП Атрощенков Роман Й{»lщ;ёє=В•PLНLМЊЊ\xC\xCL\xC\xC\xC\xC\xCЌЊ\xC\xCММЊ\xC\xCН\rНN\x2•PR\rЊ\xC\x2ЊМM\xCL\xCЊ\xC\xCН‚‚‚±ш;;ёє^ЮЯт\xB’\xCrУ\x3cC#’\xE+>B\x3\x3Bг\x3Bг#\x3#0 "
         $dataUri = \App\Util::generateQR($url,240,10)  ;
         $img = "<img style=\"width:260px\"  src=\"{$dataUri}\"  />";
 
-        return array('qr'=>$img,'url'=>"<a href=\"{$url}\">{$url}</a>");
+        return array('qr'=>$img,
+          'url'=>$url,
+          'link'=>"<a href=\"{$url}\">{$url}</a>", 
+          "urlshort"=>"<a href=\"{$url}\">Відкрити посилання</a>"
+        );
     }
 
     

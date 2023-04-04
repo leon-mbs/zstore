@@ -193,20 +193,7 @@
 
                     </tr>
           
-                    {{#qrpay}}
-                   <tr>
-                        <td colspan="7" > 
-                            {{{qrpayimg}}}
-                        </td>
-
-                    </tr>
-                   <tr>
-                        <td colspan="7"> 
-                            {{{qrpayurl}}}
-                        </td>
-
-                    </tr>
-                          {{/qrpay}}
+              
                           
                     </table>
 
