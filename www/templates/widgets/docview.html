@@ -242,7 +242,7 @@
                         </div>
                         <div class="modal-body justify-content-center">
                           <div    v-html="docdata.qr.img" >          </div>
-                          <span    v-html="docdata.qr.url" >          </span>
+                          <span    v-html="docdata.qr.urlshort" >          </span>
 
                           &nbsp;<a v-on:click.prevent="copycb"  ><i title="Скопіювати в кліпборд" class="fa fa-copy"</a>
  
@@ -421,7 +421,7 @@
  
             
                 if(navigator.clipboard){
-                    navigator.clipboard.writeText(this.docdata.qr.link);
+                    navigator.clipboard.writeText(this.docdata.qr.url);
                 }else alert('Ваш браузер не підтримує Clipboard'); 
   
       
