@@ -284,9 +284,9 @@ class Subscribe extends \ZCL\DB\Entity
         }
         $header['docview'] = _BASEURL . 'doclist/' . $doc->document_id;
 
-        $qr=$doc->->getQRPay() ;
+        $qr=$doc->getQRPay() ;
         if(is_array($qr))  {
-           $header['payurl']   = $qr['link']  ;
+           $header['payurl']   = $qr['url']  ;
         }   
         
         
