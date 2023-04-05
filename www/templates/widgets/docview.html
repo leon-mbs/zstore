@@ -241,10 +241,10 @@
                             </button>
                         </div>
                         <div class="modal-body justify-content-center">
-                          <div    v-html="docdata.qr.img" >          </div>
-                          <span    v-html="docdata.qr.urlshort" >          </span>
+                          <div class="mb-2"   v-html="docdata.qr.img" >          </div>
+                          <a    :href="docdata.qr.url" >  Відкрити посилання        </a>
 
-                          &nbsp;<a v-on:click.prevent="copycb"  ><i title="Скопіювати в кліпборд" class="fa fa-copy"</a>
+                          &nbsp; &nbsp;<a v-on:click.prevent="copycb" title="Скопіювати в кліпборд" >Скопіювати </a>
  
                         </div>
 

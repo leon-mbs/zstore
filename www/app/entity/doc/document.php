@@ -1040,8 +1040,8 @@ class Document extends \ZCL\DB\Entity
 
         return array('qr'=>$img,
           'url'=>$url,
-          'link'=>"<a href=\"{$url}\">{$url}</a>", 
-          "urlshort"=>"<a href=\"{$url}\">Відкрити посилання</a>"
+//          "urlshort"=>"<a href=\"{$url}\">Відкрити посилання</a>",
+          'link'=>"<a href=\"{$url}\">{$url}</a>" 
         );
     }
 
