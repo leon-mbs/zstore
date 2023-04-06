@@ -88,6 +88,25 @@ class ProdIssue extends \App\Pages\Base
 
                         $this->docform->notes->setText('Підстава ' . $basedoc->document_number);
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
+                        
+                        foreach($basedoc->unpackDetails('prodlist') as $prod) {
+                             $set =  \App\Entity\ItemSet::find("item_id > 0  and pitem_id=" . $prod->item_id);
+                             foreach($set as $m) {
+                                if( !isset($this->_itemlist[$m->item_id]) ) {
+                                    
+                                    $this->_itemlist[$m->item_id] = Item::load($m->item_id);
+                                    $this->_itemlist[$m->item_id]->quantity = 0;
+                                }   
+                                $this->_itemlist[$m->item_id]->quantity += ($prod->quantity * $m->qty);
+
+                                
+                             }
+                             
+                             $this->_itemlist = array_values($this->_itemlist) ;
+                        }
+                        
+                        
+                        
                     }
                     if ($basedoc->meta_name == 'ServiceAct') {
 
@@ -124,7 +143,7 @@ class ProdIssue extends \App\Pages\Base
                             $it = Item::load($p->item_id);
                             $it->quantity = $p->qty;
 
-                            $this->_itemlist[$it->item_id] = $it;
+                            $this->_itemlist[] = $it;
                         }
                     }
                 }
@@ -168,10 +187,12 @@ class ProdIssue extends \App\Pages\Base
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
-        $tovar = $sender->owner->getDataItem();
+        $item = $sender->owner->getDataItem();
 
-        $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->item_id => $this->_itemlist[$tovar->item_id]));
-
+        $rowid =  array_search($item,$this->_itemlist,true);
+ 
+        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
+  
         $this->docform->detail->Reload();
     }
 
@@ -180,7 +201,7 @@ class ProdIssue extends \App\Pages\Base
         $this->editdetail->editquantity->setText("1");
 
         $this->docform->setVisible(false);
-        $this->_rowid = 0;
+        $this->_rowid = -1;
     }
 
     public function editOnClick($sender) {
@@ -195,7 +216,8 @@ class ProdIssue extends \App\Pages\Base
         $this->editdetail->editserial->setValue($item->snumber);
 
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
-        $this->_rowid = $item->item_id;
+        $this->_rowid =  array_search($item,$this->_itemlist,true);
+
     }
 
     public function saverowOnClick($sender) {
@@ -210,6 +232,8 @@ class ProdIssue extends \App\Pages\Base
         $store_id = $this->docform->store->getValue();
 
         $item = Item::load($id);
+
+
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->snumber = $this->editdetail->editserial->getText();
         $qstock = $this->editdetail->qtystock->getText();
@@ -233,22 +257,13 @@ class ProdIssue extends \App\Pages\Base
         }
 
 
-        $tarr = array();
+        if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
+        } else {
+           $this->_itemlist[$this->_rowid] = $item;            
+        }        
 
-        foreach ($this->_itemlist as $k => $value) {
 
-            if ($this->_rowid > 0 && $this->_rowid == $k) {
-                $tarr[$item->item_id] = $item;    // заменяем
-            } else {
-                $tarr[$k] = $value;    // старый
-            }
-        }
-
-        if ($this->_rowid == 0) {        // в конец
-            $tarr[$item->item_id] = $item;
-        }
-        $this->_itemlist = $tarr;
-        $this->_rowid = 0;
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);

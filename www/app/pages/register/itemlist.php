@@ -30,7 +30,28 @@ class ItemList extends \App\Pages\Base
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new TextInput('searchkey'));
-        $this->filter->add(new DropDownChoice('searchcat', Category::getList(), 0));
+        
+        $catlist = array();
+        $catlist[-1] = "Без категорії";
+        foreach (Category::getList() as $k => $v) {
+            $catlist[$k] = $v;
+        }        
+        
+        $this->filter->add(new DropDownChoice('searchcat', $catlist, 0));
+        
+          
+        $prices = [];
+        if($this->_tvars["noshowpartion"] == false) {
+            $prices['price'] = "Закупівельна ціна";   
+        }
+        
+        foreach( Item::getPriceTypeList() as $k=>$v ) {
+            $prices[$k] = $v ;  
+        }
+        
+        $p=array_shift(array_keys($prices)); 
+        
+        $this->filter->add(new DropDownChoice('searchprice', $prices, $p));
         $storelist = Store::getList() ;
         
         if(\App\System::getUser()->showotherstores) {
@@ -82,7 +103,15 @@ class ItemList extends \App\Pages\Base
         $qty = $item->getQuantity($store);
         $row->add(new Label('iqty', H::fqty($qty)));
         $row->add(new Label('minqty', H::fqty($item->minqty)));
-        $am = $item->getAmount($store);
+        
+        $pt = $this->filter->searchprice->getValue();
+        if($pt=='price') {
+           $am = $item->getAmount($store);    
+        }  else {
+           $am = $qty * $item->getPrice($pt, $store) ;
+        }
+        
+        
         $row->add(new Label('iamount', H::fa(abs($am))));
 
         $row->add(new Label('cat_name', $item->cat_name));
@@ -122,33 +151,25 @@ class ItemList extends \App\Pages\Base
 
     public function getTotalAmount() {
 
-        $cstr = \App\Acl::getStoreBranchConstraint();
-        if (strlen($cstr) > 0) {
-            $cstr = "    store_id in ({$cstr})  and   ";
-        }
-
-        $conn = \ZDB\DB::getConnect();
-        $sql = "select  coalesce(sum(qty*partion),0) from store_stock_view where {$cstr} qty <>0 and item_id in (select item_id from items where disabled<>1 ) ";
-
-
-        $cat = $this->filter->searchcat->getValue();
         $store = $this->filter->searchstore->getValue();
-        if ($store > 0) {
-            $sql = $sql . " and  store_id={$store}  ";
+        $pt = $this->filter->searchprice->getValue();
+ 
+        $src = new ItemDataSource($this) ;
+        
+        $items = $src->getItems(-1,-1) ;
+        $total = 0;
+        foreach($items as $item) {
+            $qty = $item->getQuantity($store);            
+            if($pt=='price') {
+               $total += $item->getAmount($store);    
+            }  else {
+               $total += $qty * $item->getPrice($pt, $store) ;
+            }
+            
         }
-
-
-        $text = trim($this->filter->searchkey->getText());
-        if (strlen($text) > 0) {
-
-            $text = Stock::qstr('%' . $text . '%');
-            $sql = $sql . "  and (itemname like {$text} or item_code like {$text}    )  ";
-            $cat = 0;
-        }
-        if ($cat > 0) {
-            $sql = $sql . " and cat_id=" . $cat;
-        }
-        return $conn->GetOne($sql);
+ 
+   
+        return $total;
     }
 
     public function detailistOnRow($row) {
@@ -312,8 +333,19 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         $cat = $form->searchcat->getValue();
         $store = $form->searchstore->getValue();
 
-        if ($cat > 0) {
-            $where = $where . " and cat_id=" . $cat;
+        if ($cat != 0) {
+            if ($cat == -1) {
+                $where = $where . " and cat_id=0";
+            } else {
+                
+                
+                $c = Category::load($cat) ;
+                $ch = $c->getChildren();
+                $ch[]=$cat;
+                                
+                $cats = implode(",",$ch)  ;              
+                $where = $where . " and cat_id in ({$cats}) " ;
+            }
         }
         if ($store > 0) {
             $where = $where . " and item_id in (select item_id from store_stock where {$cstr}  qty <> 0 and store_id={$store}) ";

@@ -109,12 +109,9 @@ class RetCustIssue extends \App\Pages\Base
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
-                        $itemlist = $basedoc->unpackDetails('detaildata');
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
-                        $this->_itemlist = array();
-                        foreach ($itemlist as $item) {
-                            $this->_itemlist[$item->item_id] = $item;
-                        }
+                        
                     }
                 }
                 $this->calcTotal();
@@ -149,10 +146,11 @@ class RetCustIssue extends \App\Pages\Base
             return;
         }
 
-        $tovar = $sender->owner->getDataItem();
-        // unset($this->_itemlist[$tovar->tovar_id]);
-
-        $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->item_id => $this->_itemlist[$tovar->item_id]));
+        $item = $sender->owner->getDataItem();
+        $rowid =  array_search($item,$this->_itemlist,true);
+ 
+        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
+        
         $this->docform->detail->Reload();
         $this->calcTotal();
     }
@@ -163,7 +161,7 @@ class RetCustIssue extends \App\Pages\Base
         $this->editdetail->editprice->setText("0");
         $this->editdetail->qtystock->setText("");
         $this->docform->setVisible(false);
-        $this->_rowid = 0;
+        $this->_rowid = -1;
     }
 
     public function editOnClick($sender) {
@@ -180,7 +178,8 @@ class RetCustIssue extends \App\Pages\Base
         $qty = $item->getQuantity();
         $this->editdetail->qtystock->setText(H::fqty($qty));
 
-        $this->_rowid = $item->item_id;
+        $this->_rowid =  array_search($item,$this->_itemlist,true);
+ 
     }
 
     public function saverowOnClick($sender) {
@@ -192,13 +191,18 @@ class RetCustIssue extends \App\Pages\Base
         }
 
         $item = Item::load($id);
+        
+        
         $item->quantity = $this->editdetail->editquantity->getText();
 
         $item->price = $this->editdetail->editprice->getText();
 
-        unset($this->_itemlist[$this->_rowid]);
-        $this->_itemlist[$item->item_id] = $item;
-      //  $this->editdetail->setVisible(false);
+        if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
+        } else {
+           $this->_itemlist[$this->_rowid] = $item;            
+        }        
+
      //   $this->docform->setVisible(true);
  
         //очищаем  форму

@@ -281,11 +281,11 @@ class TTN extends \App\Pages\Base
                         }
                         $this->_doc->headerdata['prepaid']  = $basedoc->payamount ;
   
-                        $i = 1;
+                        
                         foreach ($basedoc->unpackDetails('detaildata') as $item) {
                             // $item->price = $item->getPrice($basedoc->headerdata['pricetype']);
                             $item->price = $item->price * $k;
-                            $this->_itemlist[$i++] = $item;
+                            $this->_itemlist[ ] = $item;
                         }
                         $this->calcTotal();
                     }
@@ -312,11 +312,11 @@ class TTN extends \App\Pages\Base
                             $k = ($basedoc->amount - $basedoc->headerdata["paydisc"]) / $basedoc->amount;
                         }
   
-                        $i = 1;
+                         
                         foreach ($basedoc->unpackDetails('detaildata') as $item) {
                             // $item->price = $item->getPrice($basedoc->headerdata['pricetype']);
                             $item->price = $item->price * $k;
-                            $this->_itemlist[$i++] = $item;
+                            $this->_itemlist[] = $item;
                         }
                         $this->calcTotal();
                     }
@@ -359,14 +359,10 @@ class TTN extends \App\Pages\Base
 
 
         $item = $sender->owner->getDataItem();
-        if ($item->rowid > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $item->rowid = $item->item_id;
-        }
+        $rowid =  array_search($item,$this->_itemlist,true);
 
-        $this->_itemlist = array_diff_key($this->_itemlist, array($item->rowid => $this->_itemlist[$item->rowid]));
+
+        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
 
         $this->docform->detail->Reload();
         $this->calcTotal();
@@ -447,15 +443,13 @@ class TTN extends \App\Pages\Base
                 $item->snumber = $serial;
             }
         }
-        $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
-        $item->rowid = $next + 1;
 
-        $this->_itemlist[$item->rowid] = $item;
+        $this->_itemlist[ ] = $item;
 
         $this->docform->detail->Reload();
         $this->calcTotal();
 
-        $this->_rowid = 0;
+        $this->_rowid = -1;
     }
 
     public function addrowOnClick($sender) {
@@ -464,7 +458,7 @@ class TTN extends \App\Pages\Base
         $this->editdetail->editprice->setText("0");
         $this->editdetail->qtystock->setText("");
         $this->docform->setVisible(false);
-        $this->_rowid = 0;
+        $this->_rowid = -1;
     }
 
     public function editOnClick($sender) {
@@ -479,16 +473,10 @@ class TTN extends \App\Pages\Base
 
         $this->editdetail->editprice->setText($item->price);
         $this->editdetail->editquantity->setText($item->quantity);
-        $this->editdetail->editserial->setText($item->serial);
+        $this->editdetail->editserial->setText($item->snumber);
 
-        if ($item->rowid > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $item->rowid = $item->item_id;
-        }
+        $this->_rowid = array_search($item,$this->_itemlist,true) ;
 
-        $this->_rowid = $item->rowid;
     }
 
     public function saverowOnClick($sender) {
@@ -498,7 +486,10 @@ class TTN extends \App\Pages\Base
             $this->setError("Не обрано товар");
             return;
         }
-        $item = Item::load($id);
+ 
+        $item = Item::load($id);       
+        
+
         $store_id = $this->docform->store->getValue();
 
         $item->quantity = $this->editdetail->editquantity->getText();
@@ -532,15 +523,11 @@ class TTN extends \App\Pages\Base
             }
         }
 
-        if ($this->_rowid > 0) {
-            $item->rowid = $this->_rowid;
+        if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
         } else {
-            $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
-            $item->rowid = $next + 1;
-        }
-        $this->_itemlist[$item->rowid] = $item;
-
-        $this->_rowid = 0;
+            $this->_itemlist[$this->_rowid] = $item;    
+        }   
 
         $this->editdetail->setVisible(false);
         $this->wselitem->setVisible(false);

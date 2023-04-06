@@ -116,6 +116,8 @@
                                                        title="Сканувати  мобiльним пристроєм"
                                                        style="cursor:pointer;font-size:28px" class="fa fa-mobile-alt"></i>
                       {{/usemobilescanner}}  
+                      &nbsp;
+                      <a zippy="opensn"  >Ввод за  серійними номерами</a>
                     </div>
                     {{/usescanner}}
                     &nbsp;<a class="btn btn-info btn-sm" zippy="addrow">Додати позицію</a>
@@ -384,7 +386,7 @@
                         <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice" required="required"                               pattern="[0-9,\.\s]+"                               style="width: 100px;">
                     </div>
                     <div class="form-group">
-                        <label for="editsellprice">{{price1name}} цiна (нацiнка) </label>
+                        <label for="editsellprice">Вiдпускна цiна (нацiнка) </label>
                         <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editsellprice"  pattern="[0-9,\.\%]+"   style="width: 100px;">
                          <small>Якщо задано,  коригує вiдпускну цiну</small>
                     </div>
@@ -640,6 +642,37 @@
                 </div>
             </div>
         </div>
+        
+        
+        <form zippy="editsnitem">
+            <h3>&nbsp;Ввод за  серійними номерами</h3>
+            <div class="row">
+                <div class="col-12 col-md-4 col-xl-3">
+
+                    <div class="form-group">
+                        <label for="editsnitemname">Назва </label>
+                        <input placeholder="Почніть вводити..." class="form-control " zippy="editsnitemname" required="required"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="editsn">Серійні номери</label>
+                        <textarea style="height:400px;" class="form-control" type="text" zippy="editsn"> </textarea>
+                        <small>По номеру в  рядку</small>
+                    </div>
+          
+                     <div class="form-group">
+                        <label for="editsnprice">Ціна </label>
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editsnprice" required="required"                               pattern="[0-9,\.\s]+"                               style="width: 100px;">
+                    </div>
+                    
+                    <div class="form-group">
+                        <input zippy="savesnitem" type="submit" value="Зберегти" class="btn btn-outline-primary">
+                        <input type="button" zippy="cancelsnitem" value="Скасувати" class="btn btn-outline-secondary ">
+                    </div>
+                </div>
+            </div>
+        </form>        
+        
+        
         {{#usescanner}}
         <script>
             $(document).ready(function () {

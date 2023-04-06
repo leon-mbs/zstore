@@ -178,22 +178,22 @@
                     <tr>
                         <td> </td>
                         <td colspan="6">
+                            {{#isstamp}}
+                            <img style="height:100px;" src='{{stamp}}'/>
+                            {{/isstamp}}
+
+                            {{^isstamp}}
+                        
                             <br><br>
                             &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;    &nbsp; М.П.
                             <br><br>
+                            {{/isstamp}}
                         </td>
 
 
                     </tr>
-                     <tr>
-                        <td colspan="3" > 
-                            {{{docbarcode}}}
-                        </td>
-                        <td colspan="4"> 
-                            {{{docqrcode}}}
-                        </td>
-
-                    </tr>
-
+          
+              
+                          
                     </table>
 

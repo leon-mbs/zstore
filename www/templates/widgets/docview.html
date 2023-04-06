@@ -40,7 +40,8 @@
         <a v-show="docdata.exports.word" :href="word"  target="_blank" title="Експорт у Word"><i class="fa fa-file-word mr-2"></i>   </a>
         <a v-show="docdata.exports.excel"  :href="excel"   target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i>  </a>
         <a v-show="docdata.exports.pdf"   :href="pdf"  target="_blank" title="Експорт у PDF"> <i class="fa fa-file-pdf mr-2"></i>  </a>
-        <a v-show="docdata.exports.email" v-on:click="sendmail"   href="javascript:void(0)"  title="Вiдправка електронною поштою "> <i class="fa fa-envelope mr-2"></i>  </a>
+        <a v-show="docdata.exports.email" v-on:click.prevent="sendmail"     title="Вiдправка електронною поштою "> <i class="fa fa-envelope mr-2"></i>  </a>
+        <a v-show="docdata.exports.qrpay" v-on:click.prevent="qrpay"      title="QR код для  оплати "> <i class="fa fa-qrcode mr-2"></i>  </a>
     
         <span v-show="docdata.exports.pos">
        
@@ -225,12 +226,37 @@
   <div class="tab-pane  " id="tscan" v-show="docdata.isscan">
        <img   :src="docdata.scanimage"  />
 
-  </div>
+  </div>                          
+       
  
 </div>
+              <div id="modalqr" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered   ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">QR код для  оплати</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body justify-content-center">
+                          <div class="mb-2"   v-html="docdata.qr.img" >          </div>
+                          <a  class="btn btn-info btn-sm"  :href="docdata.qr.url" >  Відкрити посилання        </a>
 
+                           <a class="btn btn-success  btn-sm" v-on:click.prevent="copycb" title="Скопіювати в кліпборд" >Скопіювати </a>
+ 
+                        </div>
+
+                    </div>
+                </div>
+            </div> 
   
         </div>
+        
+        
+      
+        
       {|={{ }}=|}  
         <script>
 
@@ -285,7 +311,8 @@
                    path:'',
                    loaded:false,
                   docdata:{
-                      exports:{}
+                      exports:{} ,
+                      qr:{}
                   } ,
                   reldocs:[] ,
                   childdocid:0,
@@ -384,10 +411,31 @@
                   
                } 
                ,
+               qrpay:function( ){
+                   
+                 $('#modalqr').modal('show')  
+                  
+               }   ,
+           
+             copycb:function( ){
+ 
+            
+                if(navigator.clipboard){
+                    navigator.clipboard.writeText(this.docdata.qr.url);
+                }else alert('Ваш браузер не підтримує Clipboard'); 
+  
+      
+                  
+               }   ,
+           
                opendoc:function(id){
                    
-                  this.docid = id 
-                  _docid = id 
+                 // this.docid = id 
+                 // _docid = id 
+                  
+                  window.location="index.php?p=App/Pages/Register/DocList&arg="+id
+                  
+                  
                }   ,
              
              

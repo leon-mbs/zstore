@@ -23,7 +23,7 @@ use Zippy\Html\Link\SubmitLink;
 class Warranty extends \App\Pages\Base
 {
 
-    public  $_tovarlist = array();
+    public  $_itemlist = array();
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = 0;
@@ -54,7 +54,7 @@ class Warranty extends \App\Pages\Base
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
-        $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'));
+        $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'));
 
         if ($docid > 0) {    //загружаем   содержимое  документа настраницу
             $this->_doc = Document::load($docid)->cast();
@@ -65,7 +65,7 @@ class Warranty extends \App\Pages\Base
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->notes->setText($this->_doc->notes);
 
-            $this->_tovarlist = $this->_doc->unpackDetails('detaildata');
+            $this->_itemlist = $this->_doc->unpackDetails('detaildata');
         } else {
             $this->_doc = Document::create('Warranty');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -74,10 +74,11 @@ class Warranty extends \App\Pages\Base
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
                     $this->docform->customer->setText($basedoc->headerdata['customer_name']);
-                    $this->_tovarlist = $basedoc->unpackDetails('detaildata');
+                    $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
                     if ($basedoc->meta_name == 'GoodsIssue') {
-
+                       $this->_doc->customer_id= $basedoc->customer_id;
+                       $this->_doc->firm_id= $basedoc->firm_id;
                     }
 
                     if (count($basedoc->getChildren('Warranty')) > 0) {
@@ -117,7 +118,9 @@ class Warranty extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
-        $this->_tovarlist = array_diff_key($this->_tovarlist, array($item->rowid => $this->_tovarlist[$item->rowid]));
+        $rowid =  array_search($item,$this->_itemlist,true);
+         
+        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
 
 
         $this->docform->detail->Reload();
@@ -125,6 +128,9 @@ class Warranty extends \App\Pages\Base
 
     public function editOnClick($sender) {
         $item = $sender->owner->getDataItem();
+        
+        $this->_rowid = array_search($item,$this->_itemlist,true) ;
+        
         $this->editdetail->edittovar->setKey($item->item_id);
         $this->editdetail->edittovar->setText($item->itemname);
 
@@ -135,13 +141,13 @@ class Warranty extends \App\Pages\Base
         $this->editdetail->editsn->setText($item->snumber);
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
-        $this->_rowid = $item->rowid;
+
     }
 
     public function addrowOnClick($sender) {
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
-        $this->_rowid = 0;
+        $this->_rowid = -1;
         $this->editdetail->edittovar->setKey(0);
         $this->editdetail->edittovar->setText('');
         $this->editdetail->editquantity->setText('1');
@@ -154,21 +160,22 @@ class Warranty extends \App\Pages\Base
             $this->setError("Не обрано товар");
             return;
         }
+        
         $item = Item::load($id);
+        
+   
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
         $item->snumber = $this->editdetail->editsn->getText();
         $item->warranty = $this->editdetail->editwarranty->getText();
 
-        if ($this->_rowid > 0) {
-            $item->rowid = $this->_rowid;
+        if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
         } else {
-            $next = count($this->_tovarlist) > 0 ? max(array_keys($this->_tovarlist)) : 0;
-            $item->rowid = $next + 1;
-        }
-        $this->_tovarlist[$item->rowid] = $item;
+            $this->_itemlist[$this->_rowid] = $item;    
+        }     
 
-        $this->_rowid = 0;
+       
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
@@ -209,7 +216,7 @@ class Warranty extends \App\Pages\Base
         $firm = H::getFirmData($this->_doc->firm_id, $this->branch_id);
         $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
 
-        $this->_doc->packDetails('detaildata', $this->_tovarlist);
+        $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
@@ -256,7 +263,7 @@ class Warranty extends \App\Pages\Base
      */
     private function checkForm() {
 
-        if (count($this->_tovarlist) == 0) {
+        if (count($this->_itemlist) == 0) {
             $this->setError("Не введено товар");
         }
         if (false == $this->_doc->checkUniqueNumber()) {

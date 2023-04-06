@@ -214,7 +214,7 @@ class Helper
 
         if( ($modules['shop'] ?? 0)== 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'shop') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10002, 'meta_name' => "/Shop/Pages/ProductList", 'meta_type' => 6, 'description' => "Товари в онлайн каталозі" ));
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10002, 'meta_name' => "/Shop/Pages/Admin/ProductList", 'meta_type' => 6, 'description' => "Товари в онлайн каталозі" ));
             }
         }
 

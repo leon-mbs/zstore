@@ -206,15 +206,10 @@ class Order extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
-        if ($item->rowid > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $item->rowid = $item->item_id;
-        }
-
-        $this->_tovarlist = array_diff_key($this->_tovarlist, array($item->rowid => $this->_tovarlist[$item->rowid]));
-
+        $rowid =  array_search($item,$this->_tovarlist,true);
+ 
+        $this->_tovarlist = array_diff_key($this->_tovarlist, array($rowid => $this->_tovarlist[$rowid]));
+ 
         $this->docform->detail->Reload();
         $this->calcTotal();
         $this->calcPay();
@@ -226,7 +221,7 @@ class Order extends \App\Pages\Base
         $this->editdetail->editprice->setText("0");
         $this->editdetail->editdesc->setText("");
         $this->docform->setVisible(false);
-        $this->_rowid = 0;
+        $this->_rowid = -1;
     }
 
     public function editOnClick($sender) {
@@ -241,14 +236,8 @@ class Order extends \App\Pages\Base
         $this->editdetail->edittovar->setKey($item->item_id);
         $this->editdetail->edittovar->setText($item->itemname);
 
-        if ($item->rowid > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $item->rowid = $item->item_id;
-        }
+        $this->_rowid =  array_search($item,$this->_tovarlist,true);
 
-        $this->_rowid = $item->rowid;
     }
 
     public function saverowOnClick($sender) {
@@ -262,23 +251,20 @@ class Order extends \App\Pages\Base
         }
 
         $item = Item::load($id);
+        
         $item->quantity = $this->editdetail->editquantity->getText();
 
         $item->price = $this->editdetail->editprice->getText();
         $item->desc = $this->editdetail->editdesc->getText();
 
-        if ($this->_rowid > 0) {
-            $item->rowid = $this->_rowid;
+        if($this->_rowid == -1) {
+            $this->_tovarlist[] = $item;
         } else {
-            $next = count($this->_tovarlist) > 0 ? max(array_keys($this->_tovarlist)) : 0;
-            $item->rowid = $next + 1;
-        }
-        $this->_tovarlist[$item->rowid] = $item;
-
-        $this->_rowid = 0;
-
-      //  $this->editdetail->setVisible(false);
-     //   $this->docform->setVisible(true);
+           $this->_tovarlist[$this->_rowid] = $item; 
+           $this->editdetail->setVisible(false);
+           $this->cancelrowOnClick(null);
+           return;                  
+        }        
 
         //очищаем  форму
         $this->editdetail->edittovar->setKey(0);
@@ -288,6 +274,8 @@ class Order extends \App\Pages\Base
 
         $this->editdetail->editprice->setText("");
         $this->wselitem->setVisible(false);
+        
+        
     }
 
     public function cancelrowOnClick($sender) {
@@ -711,7 +699,8 @@ class Order extends \App\Pages\Base
     public function addnewitemOnClick($sender) {
         $this->editnewitem->setVisible(true);
         $this->editdetail->setVisible(false);
-
+        $this->wselitem->setVisible(false);
+      
         $this->editnewitem->clean();
         $this->editnewitem->editnewbrand->setDataList(Item::getManufacturers());
     }

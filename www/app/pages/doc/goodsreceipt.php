@@ -19,6 +19,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Panel;
@@ -134,6 +135,17 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
+        $this->add(new Form('editsnitem'))->setVisible(false);
+        $this->editsnitem->add(new AutocompleteTextInput('editsnitemname'))->onText($this, 'OnAutoItem');
+        $this->editsnitem->editsnitemname->onChange($this, 'OnChangeItem', true);
+        $this->editsnitem->add(new TextInput('editsnprice'));
+        $this->editsnitem->add(new TextArea('editsn'));
+        $this->editsnitem->add(new Button('cancelsnitem'))->onClick($this, 'cancelrowOnClick');
+        $this->editsnitem->add(new SubmitButton('savesnitem'))->onClick($this, 'savesnOnClick');
+    
+        $this->docform->add(new ClickLink('opensn',$this,"onOpensn"));
+        
+        
         if ($docid > 0) {    //загружаем   содержимое  документа настраницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
@@ -273,7 +285,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->_tvars["prepaid"] = (doubleval($this->_doc->headerdata['prepaid'])>0) ?  H::fa($this->_doc->headerdata['prepaid']) : false;
         $common = System::getOptions("common");
-        $this->_tvars['price1name'] = $common['price1'];
+
  
         
         $this->docform->add(new DataView('detail', new ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
@@ -307,20 +319,16 @@ class GoodsReceipt extends \App\Pages\Base
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
 
+    
     public function deleteOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
         $item = $sender->owner->getDataItem();
 
-        if ($item->rowid > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $item->rowid = $item->item_id;
-        }
+        $rowid =  array_search($item,$this->_itemlist,true);
 
-        $this->_itemlist = array_diff_key($this->_itemlist, array($item->rowid => $this->_itemlist[$item->rowid]));
+        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid=> $this->_itemlist[$rowid]));
 
         $this->calcTotal();
         $this->calcPay();
@@ -329,6 +337,18 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->detail->Reload();
     }
 
+    public function onOpensn($sender) {
+        $this->docform->setVisible(false) ;
+        $this->editsnitem->setVisible(true) ;
+        $this->editsnitem->editsnitemname->setKey(0);
+        $this->editsnitem->editsnitemname->setText('');
+
+        $this->editsnitem->editsn->setText("");
+        $this->editsnitem->editsnprice->setText("");
+         
+    }
+    
+    
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
          
@@ -357,7 +377,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
-        $this->_rowid = 0;
+        $this->_rowid = -1;
 
         if ($item == null) {
 
@@ -374,7 +394,19 @@ class GoodsReceipt extends \App\Pages\Base
     public function addrowOnClick($sender) {
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
-        $this->_rowid = 0;
+        $this->_rowid = -1;
+        
+        //очищаем  форму
+        $this->editdetail->edititem->setKey(0);
+        $this->editdetail->edititem->setText('');
+
+        $this->editdetail->editquantity->setText("1");
+
+        $this->editdetail->editprice->setText("");
+        $this->editdetail->editsnumber->setText("");
+        $this->editdetail->editsdate->setText("");
+        $this->editdetail->editsellprice->setText("");        
+        
     }
 
     public function editOnClick($sender) {
@@ -398,16 +430,60 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editdetail->edititem->setKey($item->item_id);
         $this->editdetail->edititem->setText($item->itemname);
 
-        if ($item->rowid > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $item->rowid = $item->item_id;
-        }
+        $this->_rowid =  array_search($item,$this->_itemlist,true);
 
-        $this->_rowid = $item->rowid;
     }
 
+    public function savesnOnClick($sender) {
+
+        $id = $this->editsnitem->editsnitemname->getKey();
+        $name = trim($this->editsnitem->editsnitemname->getText());
+        if ($id == 0) {
+            $this->setError("Не обрано товар");
+            return;
+        }
+        $price = doubleVal( $this->editsnitem->editsnprice->getText() );
+        if ($price == 0) {
+
+            $this->setError("Не вказана ціна");
+            return;
+        }
+        $sns =  $this->editsnitem->editsn->getText();
+
+        $list = [];
+        foreach(explode("\n",$sns) as $s){
+            if(strlen($s) > 0) $list[] = $s;
+        }
+        if (count($list) == 0) {
+
+            $this->setError("Не вказана ціна");
+            return;
+        }
+        $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
+ 
+        foreach($list as $s ) {
+            ++$next;
+            $item = Item::load($id);
+
+            $item->quantity = 1;
+            $item->price = $price;
+            $item->snumber = trim($s);
+            $item->rowid = $next;
+            $this->_itemlist[$next] = $item;            
+                
+        }
+        
+
+  
+        $this->docform->detail->Reload();
+        $this->calcTotal();
+        $this->calcPay();
+         
+        $this->editsnitem->setVisible(false);
+        $this->docform->setVisible(true);
+        $this->goAnkor("lankor");        
+       
+    }
     public function saverowOnClick($sender) {
 
 
@@ -450,21 +526,16 @@ class GoodsReceipt extends \App\Pages\Base
             $item->sdate = '';
         }
 
-
-        if ($this->_rowid > 0) {
-            $item->rowid = $this->_rowid;
-            
+         if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
+        } else {
+           $this->_itemlist[$this->_rowid] = $item;            
+        }  
             $this->editdetail->setVisible(false);
             $this->docform->setVisible(true);            
             $this->wselitem->setVisible(false);           
             $this->sellastitem->setVisible(false);           
-        } else {
-            $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
-            $item->rowid = $next + 1;
-        }
-        $this->_itemlist[$item->rowid] = $item;
 
-        $this->_rowid = 0;
 
         $this->_rownumber  = 1;
         $this->docform->detail->Reload();
@@ -487,6 +558,7 @@ class GoodsReceipt extends \App\Pages\Base
 
     public function cancelrowOnClick($sender) {
         $this->editdetail->setVisible(false);
+        $this->editsnitem->setVisible(false);
         $this->docform->setVisible(true);
         $this->wselitem->setVisible(false);
         $this->sellastitem->setVisible(false);
@@ -943,7 +1015,8 @@ class GoodsReceipt extends \App\Pages\Base
           $price = $item->getLastPartion($this->docform->store->getValue()   , null, false);
             
         }
-     
+        $this->editsnitem->editsnprice->setText(H::fa($price));
+   
         $this->editdetail->editprice->setText(H::fa($price));
         $this->editdetail->editsellprice->setText(H::fa($item->price1));
     }
@@ -968,8 +1041,8 @@ class GoodsReceipt extends \App\Pages\Base
         $item = Item::load($id);
         $price = $item->getLastPartion($this->docform->store->getValue()   , null, false);
         $this->editdetail->editprice->setText(H::fa($price));
- 
         $this->editdetail->editsellprice->setText($item->price1);
+        $this->editsnitem->editsnprice->setText(H::fa($price));
   
     }
         

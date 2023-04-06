@@ -198,6 +198,25 @@ class OrderPay extends Base
                    
                 
    }
+   
+   public  function dataQR($args,$post=null) {
+            $shop = System::getOptions("shop");
+   
+            $data=[];
+            $qr = $this->order->getQRPay() ;
+            
+            if(is_array($qr))  {
+               $data['qrerror'] = false;                
+               $data['img'] = $qr['qr'] ;
+               $data['url'] = $qr['url'] ;
+            } else {
+               $data['qrerror'] = true;    
+            }      
+       
+           
+           return json_encode($data,JSON_UNESCAPED_UNICODE)  ;       
+   }
+   
     const FIELDS_DELIMITER  = ';';
     const DEFAULT_CHARSET   = 'utf8';
 

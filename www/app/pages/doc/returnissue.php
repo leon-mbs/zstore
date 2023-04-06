@@ -27,10 +27,12 @@ use Zippy\Html\Link\SubmitLink;
 class ReturnIssue extends \App\Pages\Base
 {
 
-    public  $_tovarlist = array();
+    public  $_itemlist = array();
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = 0;
+    private $_orig_discount  = 0; 
+    private $_orig_total  = 0; 
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -59,6 +61,8 @@ class ReturnIssue extends \App\Pages\Base
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total'));
+        $this->docform->add(new Label('discount'));
+        $this->docform->add(new Label('payamount'));
         $this->docform->add(new TextInput('editpayed', "0"));
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
         $this->docform->add(new Label('payed', 0));
@@ -72,7 +76,7 @@ class ReturnIssue extends \App\Pages\Base
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
 
-        if ($docid > 0) {    //загружаем   содержимое  документа настраницу
+        if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
 
@@ -91,8 +95,16 @@ class ReturnIssue extends \App\Pages\Base
             $this->docform->payed->setText(H::fa($this->_doc->payed));
 
             $this->docform->total->setText(H::fa($this->_doc->amount));
+            $this->docform->payamount->setText(H::fa($this->_doc->payamount));
 
-            $this->_tovarlist = $this->_doc->unpackDetails('detaildata');
+            $this->_itemlist = $this->_doc->unpackDetails('detaildata');
+            
+            $this->_orig_total = $this->_doc->amount; 
+            $this->_orig_discount = $this->_doc->amount - $this->_doc->payamount ; 
+
+            $this->docform->discount->setText(H::fa($this->_orig_discount));
+       
+            
         } else {
             $this->_doc = Document::create('ReturnIssue');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -117,24 +129,21 @@ class ReturnIssue extends \App\Pages\Base
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
-                        $itemlist = $basedoc->unpackDetails('detaildata');
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+               
+                        $this->_orig_total = $basedoc->amount; 
+                        $this->_orig_discount =  $basedoc->amount - $basedoc->payamount ; 
 
-                        $this->_itemlist = array();
-                        foreach ($itemlist as $item) {
-                            $this->_tovarlist[$item->item_id] = $item;
-                        }
+                        
                     }
                     if ($basedoc->meta_name == 'TTN') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
-                        $itemlist = $basedoc->unpackDetails('detaildata');
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
-                        $this->_itemlist = array();
-                        foreach ($itemlist as $item) {
-                            $this->_tovarlist[$item->item_id] = $item;
-                        }
+                        
                     }
                     if ($basedoc->meta_name == 'POSCheck') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
@@ -146,15 +155,23 @@ class ReturnIssue extends \App\Pages\Base
 
                         $this->_itemlist = array();
                         foreach ($itemlist as $item) {
-                            $this->_tovarlist[$item->item_id] = $item;
+                            if($item->item_id >0) {
+                                $this->_itemlist[] = $item;    
+                            }
+                            
                         }
+                        $this->_orig_total = $basedoc->amount; 
+                        $this->_orig_discount = $basedoc->amount - $basedoc->payamount ; 
+                        
+                        
+                        
                     }
                 }
                 $this->calcTotal();
             }
         }
 
-        $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
+        $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
@@ -180,10 +197,11 @@ class ReturnIssue extends \App\Pages\Base
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
-        $tovar = $sender->owner->getDataItem();
-        // unset($this->_tovarlist[$tovar->tovar_id]);
+        $item = $sender->owner->getDataItem();
 
-        $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->item_id => $this->_tovarlist[$tovar->item_id]));
+        $rowid =  array_search($item,$this->_itemlist,true);
+ 
+        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
         $this->docform->detail->Reload();
         $this->calcTotal();
     }
@@ -193,7 +211,7 @@ class ReturnIssue extends \App\Pages\Base
         $this->editdetail->editquantity->setText("1");
         $this->editdetail->editprice->setText("0");
         $this->docform->setVisible(false);
-        $this->_rowid = 0;
+        $this->_rowid = -1;
     }
 
     public function editOnClick($sender) {
@@ -206,8 +224,7 @@ class ReturnIssue extends \App\Pages\Base
 
         $this->editdetail->edittovar->setKey($item->item_id);
         $this->editdetail->edittovar->setText($item->itemname);
-
-        $this->_rowid = $item->item_id;
+        $this->_rowid =  array_search($item,$this->_itemlist,true);
     }
 
     public function saverowOnClick($sender) {
@@ -220,13 +237,18 @@ class ReturnIssue extends \App\Pages\Base
             return;
         }
 
+        
+   
         $item = Item::load($id);
+   
         $item->quantity = $this->editdetail->editquantity->getText();
 
         $item->price = $this->editdetail->editprice->getText();
-
-        unset($this->_tovarlist[$this->_rowid]);
-        $this->_tovarlist[$item->item_id] = $item;
+        if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
+        } else {
+           $this->_itemlist[$this->_rowid] = $item;            
+        }        
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -276,12 +298,12 @@ class ReturnIssue extends \App\Pages\Base
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
 
-        $this->_doc->packDetails('detaildata', $this->_tovarlist);
+        $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->amount = $this->docform->total->getText();
-        $this->_doc->payamount = $this->docform->total->getText();
+        $this->_doc->payamount = $this->docform->payamount->getText();
 
-      $this->_doc->payed = $this->docform->payed->getText();
+        $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
 
         $isEdited = $this->_doc->document_id > 0;
@@ -346,7 +368,7 @@ class ReturnIssue extends \App\Pages\Base
                 $this->_doc->updateStatus(Document::STATE_WP);
             }
 
-                $this->_doc->updateStatus(Document::STATE_EXECUTED);
+            $this->_doc->updateStatus(Document::STATE_EXECUTED);
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
@@ -376,14 +398,25 @@ class ReturnIssue extends \App\Pages\Base
 
         $total = 0;
 
-        foreach ($this->_tovarlist as $item) {
+        foreach ($this->_itemlist as $item) {
             $item->amount = $item->price * $item->quantity;
 
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
-        $this->docform->payed->setText(H::fa($total));
-        $this->docform->editpayed->setText(H::fa($total));
+        $discount = $this->_orig_discount ;
+        
+        if($total > 0 && $this->_orig_total > $total) {
+           $k = $total / $this->_orig_total  ;     
+           $discount =  $discount * $k;
+        }
+        $payamount= $total - $discount;
+      
+        
+        $this->docform->payamount->setText(H::fa($payamount));
+        $this->docform->discount->setText(H::fa($discount));
+        $this->docform->payed->setText(H::fa($payamount));
+        $this->docform->editpayed->setText(H::fa($payamount));
     }
 
     public function onPayed($sender) {
@@ -413,7 +446,7 @@ class ReturnIssue extends \App\Pages\Base
                 $this->setError('Не створено унікальный номер документа');
             }
         }
-        if (count($this->_tovarlist) == 0) {
+        if (count($this->_itemlist) == 0) {
             $this->setError("Не введено товар");
         }
         if (($this->docform->store->getValue() > 0) == false) {
@@ -439,7 +472,7 @@ class ReturnIssue extends \App\Pages\Base
 
             if (is_array($bt)) {
 
-                foreach ($this->_tovarlist as $t) {
+                foreach ($this->_itemlist as $t) {
                     $ok = false;
                     foreach ($bt as $b) {
                         if ($b->item_id == $t->item_id && $b->price == $t->price) {

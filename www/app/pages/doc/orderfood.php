@@ -185,9 +185,10 @@ class OrderFood extends \App\Pages\Base
             return;
         }
 
-        $tovar = $sender->owner->getDataItem();
-
-        $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->item_id => $this->_itemlist[$tovar->item_id]));
+        $item = $sender->owner->getDataItem();
+        $rowid =  array_search($item,$this->_itemlist,true);
+ 
+        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
         $this->docform->detail->Reload();
         $this->calcTotal();
         $this->calcPay();
@@ -200,7 +201,7 @@ class OrderFood extends \App\Pages\Base
         $this->editdetail->editprice->setText("0");
 
         $this->docform->setVisible(false);
-        $this->_rowid = 0;
+        $this->_rowid = -1;
     }
 
 
@@ -218,7 +219,8 @@ class OrderFood extends \App\Pages\Base
         $this->editdetail->editquantity->setText($item->quantity);
 
 
-        $this->_rowid = $item->item_id;
+        $this->_rowid =  array_search($item,$this->_itemlist,true);
+
     }
 
 
@@ -229,7 +231,11 @@ class OrderFood extends \App\Pages\Base
             $this->setError("Не обрано товар");
             return;
         }
-        $item = Item::load($id);
+        if($this->_rowid == -1) {
+            $item = Item::load($id);
+        } else {
+            $item = $this->_itemlist[$this->_rowid] ;    
+        }
 
         $item->quantity = $this->editdetail->editquantity->getText();
 
@@ -240,11 +246,11 @@ class OrderFood extends \App\Pages\Base
             $this->setWarn('Введено більше товару, чим є в наявності');
         }
 
-        $this->_itemlist = array_diff_key($this->_itemlist, array($this->_rowid => $this->_itemlist[$this->_rowid]));
-   
-        $this->_itemlist[$item->item_id] = $item;
-
-        $this->_rowid = 0;
+        if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
+        } else {
+           $this->_itemlist[$this->_rowid] = $item;            
+        }        
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);

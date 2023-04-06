@@ -239,17 +239,10 @@ class Invoice extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
-        if ($item->rowid > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $item->rowid = $item->item_id;
-            if ($item->service_id > 0) {
-                $item->rowid = $item->service_id;
-            }
-        }
-
-        $this->_itemlist = array_diff_key($this->_itemlist, array($item->rowid => $this->_itemlist[$item->rowid]));
+        $rowid =  array_search($item,$this->_itemlist,true);
+ 
+        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
+        
         $this->docform->detail->Reload();
         $this->calcTotal();
         $this->calcPay();
@@ -260,7 +253,7 @@ class Invoice extends \App\Pages\Base
         $this->editdetail->editquantity->setText("1");
         $this->editdetail->editprice->setText("0");
         $this->docform->setVisible(false);
-        $this->_rowid = 0;
+        $this->_rowid = -1;
     }
 
     public function addserrowOnClick($sender) {
@@ -268,7 +261,7 @@ class Invoice extends \App\Pages\Base
         $this->editserdetail->editserquantity->setText("1");
         $this->editserdetail->editserprice->setText("");
         $this->docform->setVisible(false);
-        $this->_rowid = 0;
+        $this->_rowid = -1;
     }
 
     public function editOnClick($sender) {
@@ -294,17 +287,8 @@ class Invoice extends \App\Pages\Base
         }
 
 
-        if ($item->rowid > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $item->rowid = $item->item_id;
-            if ($item->service_id > 0) {
-                $item->rowid = $item->service_id;
-            }
-        }
-
-        $this->_rowid = $item->rowid;
+        $this->_rowid =  array_search($item,$this->_itemlist,true);
+ 
     }
 
     public function saverowOnClick($sender) {
@@ -318,19 +302,17 @@ class Invoice extends \App\Pages\Base
         }
 
         $item = Item::load($id);
+   
         $item->quantity = $this->editdetail->editquantity->getText();
 
         $item->price = $this->editdetail->editprice->getText();
 
-        if ($this->_rowid > 0) {
-            $item->rowid = $this->_rowid;
+        if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
         } else {
-            $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
-            $item->rowid = $next + 1;
-        }
-        $this->_itemlist[$item->rowid] = $item;
+           $this->_itemlist[$this->_rowid] = $item;            
+        }        
 
-        $this->_rowid = 0;
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
@@ -356,22 +338,24 @@ class Invoice extends \App\Pages\Base
             return;
         }
 
+       
+     
         $item = Service::load($id);
+      
+ 
+ 
         $item->quantity = $this->editserdetail->editserquantity->getText();
 
         $item->price = $this->editserdetail->editserprice->getText();
 
-        if ($this->_rowid > 0) {
-            $item->rowid = $this->_rowid;
+        if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
         } else {
-            $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
-            $item->rowid = $next + 1;
-        }
-        $this->_itemlist[$item->rowid] = $item;
+            $this->_itemlist[$this->_rowid] = $item;            
+        }        
 
-        $this->_rowid = 0;
-
-        $this->editdetail->setVisible(false);
+        $this->editserdetail->setVisible(false);
+ 
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
         $this->calcTotal();
@@ -382,7 +366,7 @@ class Invoice extends \App\Pages\Base
 
         $this->editserdetail->editserquantity->setText("1");
 
-
+ 
     }
 
     public function cancelrowOnClick($sender) {

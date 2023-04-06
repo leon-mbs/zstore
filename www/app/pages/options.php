@@ -122,6 +122,7 @@ class Options extends \App\Pages\Base
         $this->business->add(new CheckBox('numberttn'));
         $this->business->add(new CheckBox('usecattree'));
         $this->business->add(new CheckBox('nocheckarticle'));
+
         $this->business->add(new TextArea('checkslogan'));
 
     
@@ -146,6 +147,7 @@ class Options extends \App\Pages\Base
         $this->business->numberttn->setChecked($common['numberttn']);
         $this->business->usecattree->setChecked($common['usecattree']);
         $this->business->nocheckarticle->setChecked($common['nocheckarticle']);
+
         $this->business->checkslogan->setText($common['checkslogan']);
       
         
@@ -377,6 +379,7 @@ class Options extends \App\Pages\Base
         $common['usesnumber'] = $this->business->usesnumber->isChecked() ? 1 : 0;
         $common['useimages'] = $this->business->useimages->isChecked() ? 1 : 0;
         $common['nocheckarticle'] = $this->business->nocheckarticle->isChecked() ? 1 : 0;
+
         $common['numberttn'] = $this->business->numberttn->isChecked() ? 1 : 0;
         $common['usecattree'] = $this->business->usecattree->isChecked() ? 1 : 0;
        

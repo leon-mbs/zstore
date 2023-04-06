@@ -91,6 +91,18 @@ class DocView extends \Zippy\Html\PageFragment
         $ret['exports']['pdf']   =  in_array(Document::EX_PDF, $exportlist) ;
         $ret['exports']['pos']   =  in_array(Document::EX_POS, $exportlist) ;
         $ret['exports']['email'] =  in_array(Document::EX_MAIL, $exportlist) ;
+        $ret['qr']['img'] = '';
+        $ret['qr']['url'] = '';
+          
+  
+        $qr = $doc->getQRPay() ;
+        $ret['exports']['qrpay'] =  is_array($qr); 
+     
+        if(is_array($qr))  {
+           $ret['qr']['img'] = $qr['qr'] ;
+            
+           $ret['qr']['url'] = $qr['url'] ;
+        }
           
         $ret['html'] = $html   ;
         $ret['htmlpos'] = $htmlpos   ;

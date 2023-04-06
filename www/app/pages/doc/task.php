@@ -35,8 +35,8 @@ class Task extends \App\Pages\Base
     public  $_eqlist      = array();
     public  $_emplist     = array();
     private $_basedocid   = 0;
-    private $_rowidser    = 0;
-    private $_rowidprod   = 0;
+
+ 
 
     public function __construct($docid = 0, $basedocid = 0, $date = null) {
         parent::__construct();
@@ -161,8 +161,9 @@ class Task extends \App\Pages\Base
             return;
         }
         $service = $sender->owner->getDataItem();
+        $rowid =  array_search($service,$this->_servicelist,true);
 
-        $this->_servicelist = array_diff_key($this->_servicelist, array($service->_rowidser => $this->_servicelist[$service->_rowidser]));
+        $this->_servicelist = array_diff_key($this->_servicelist, array($rowid => $this->_servicelist[$rowid]));
         $this->detail->Reload();
 
     }
@@ -182,9 +183,7 @@ class Task extends \App\Pages\Base
             $service->price = 0;
         }
 
-        $next = count($this->_servicelist) > 0 ? max(array_keys($this->_servicelist)) : 0;
-        $service->_rowidser =  $next + 1 ;
-        $this->_servicelist[$service->_rowidser] = $service;
+        $this->_servicelist[] = $service;
  
         $this->detail->Reload();
 
@@ -213,8 +212,9 @@ class Task extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
+        $rowid =  array_search($item,$this->_prodlist,true);
  
-        $this->_prodlist = array_diff_key($this->_prodlist, array($item->_rowidprod => $this->_prodlist[$item->_rowidprod]));
+        $this->_prodlist = array_diff_key($this->_prodlist, array($rowid => $this->_prodlist[$rowid]));
 
         $this->detailprod->Reload();
     }
@@ -231,13 +231,10 @@ class Task extends \App\Pages\Base
         $item->desc = $this->editdetailprod->editdescprod->getText();
 
  
-        $next = count($this->_prodlist) > 0 ? max(array_keys($this->_prodlist)) : 0;
-        $item->_rowidprod = $next + 1;
-       
-        $this->_prodlist[$item->_rowidprod] = $item;
+        
+        $this->_prodlist[ ] = $item;
 
-        $this->_rowidprod = 0;
-
+     
 
         $this->detailprod->Reload();
 

@@ -294,9 +294,10 @@ class POSCheck extends \App\Pages\Base
             return;
         }
 
-        $tovar = $sender->owner->getDataItem();
+        $item = $sender->owner->getDataItem();
+        $rowid =  array_search($item,$this->_itemlist,true);
 
-        $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->rowid => $this->_itemlist[$tovar->rowid]));
+        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
         $this->docform->detail->Reload();
         $this->calcTotal();
         $this->calcPay();
@@ -308,8 +309,9 @@ class POSCheck extends \App\Pages\Base
         }
 
         $ser = $sender->owner->getDataItem();
+        $rowid =  array_search($ser,$this->_serlist,true);
 
-        $this->_serlist = array_diff_key($this->_serlist, array($ser->rowid => $this->_serlist[$ser->rowid]));
+        $this->_serlist = array_diff_key($this->_serlist, array($rowid => $this->_serlist[$rowid]));
         $this->docform->detailser->Reload();
         $this->calcTotal();
         $this->calcPay();
@@ -321,7 +323,7 @@ class POSCheck extends \App\Pages\Base
         $this->editdetail->editprice->setText("0");
         $this->editdetail->qtystock->setText("");
         $this->docform->setVisible(false);
-        $this->_rowid = 0;
+        $this->_rowid = -1;
     }
 
     public function addserOnClick($sender) {
@@ -330,7 +332,7 @@ class POSCheck extends \App\Pages\Base
         $this->editserdetail->editserprice->setText("0");
 
         $this->docform->setVisible(false);
-        $this->_rowid = 0;
+        $this->_rowid = -1;
     }
 
     public function editOnClick($sender) {
@@ -346,14 +348,10 @@ class POSCheck extends \App\Pages\Base
         $this->editdetail->editprice->setText($item->price);
         $this->editdetail->editquantity->setText($item->quantity);
         $this->editdetail->editserial->setText($item->serial);
-        if ($item->rowid > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $item->rowid = $item->item_id;
-        }
+ 
 
-        $this->_rowid = $item->rowid;
+        $this->_rowid =  array_search($item,$this->_itemlist,true);
+
     }
 
     public function sereditOnClick($sender) {
@@ -367,14 +365,10 @@ class POSCheck extends \App\Pages\Base
         $this->editserdetail->editserprice->setText($ser->price);
         $this->editserdetail->editserquantity->setText($ser->quantity);
 
-        if ($ser->rowid > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $ser->rowid = $ser->service_id;
-        }
+ 
 
-        $this->_rowid = $ser->rowid;
+        $this->_rowid =  array_search($ser,$this->_serlist,true);
+
     }
 
     public function saverowOnClick($sender) {
@@ -410,15 +404,13 @@ class POSCheck extends \App\Pages\Base
             }
         }
 
-        if ($this->_rowid > 0) {
-            $item->rowid = $this->_rowid;
+        if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
         } else {
-            $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
-            $item->rowid = $next + 1;
-        }
-        $this->_itemlist[$item->rowid] = $item;
+           $this->_itemlist[$this->_rowid] = $item;            
+        } 
 
-        $this->_rowid = 0;
+        $this->_rowid = -1;
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
@@ -444,21 +436,21 @@ class POSCheck extends \App\Pages\Base
             $this->setError("Не обрано послугу або роботу");
             return;
         }
+        
+        
+        
         $ser = Service::load($id);
-
+         
         $ser->quantity = $this->editserdetail->editserquantity->getText();
-
         $ser->price = $this->editserdetail->editserprice->getText();
 
-        if ($this->_rowid > 0) {
-            $ser->rowid = $this->_rowid;
+ 
+        if($this->_rowid == -1) {
+            $this->_serlist[] = $ser;
         } else {
-            $next = count($this->_serlist) > 0 ? max(array_keys($this->_serlist)) : 0;
-            $ser->rowid = $next + 1;
-        }
-        $this->_serlist[$ser->rowid] = $ser;
+           $this->_serlist[$this->_rowid] = $ser;            
+        }        
 
-        $this->_rowid = 0;
 
         $this->editserdetail->setVisible(false);
         $this->docform->setVisible(true);

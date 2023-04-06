@@ -557,7 +557,7 @@
                 },
                 oncusttext: async function (query){
                    
-                    var url  = getMethodUrl('vonTextCust',[query,2 ])
+                    var url  = getMethodUrl('vonTextCust',[query,1 ])
                     let response = await fetch(url);
              
                     return  await response.json()  ;

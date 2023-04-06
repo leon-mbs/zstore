@@ -124,15 +124,11 @@ class MoveItem extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
-        if ($item->rowid > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $item->rowid = $item->item_id;
-        }
-
-        $this->_itemlist = array_diff_key($this->_itemlist, array($item->rowid => $this->_itemlist[$item->rowid]));
-      $this->docform->detail->Reload();
+        $rowid =  array_search($item,$this->_itemlist,true);
+ 
+        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
+   
+        $this->docform->detail->Reload();
     }
 
     public function addrowOnClick($sender) {
@@ -146,7 +142,7 @@ class MoveItem extends \App\Pages\Base
         $this->editdetail->edititem->setValue('');
         $this->editdetail->qtystock->setText('');
         $this->editdetail->editsnumber->setText('');
-        $this->_rowid = 0;
+        $this->_rowid = -1;
          
     }
 
@@ -163,14 +159,8 @@ class MoveItem extends \App\Pages\Base
 
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
 
-        if ($item->rowid > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $item->rowid = $item->item_id;
-        }
-
-        $this->_rowid = $item->rowid;
+        $this->_rowid =  array_search($item,$this->_itemlist,true);
+    
     }
 
     public function saverowOnClick($sender) {
@@ -184,6 +174,7 @@ class MoveItem extends \App\Pages\Base
         }
 
         $item = Item::load($id);
+       
         $item->snumber = trim($this->editdetail->editsnumber->getText());
         $item->quantity = $this->editdetail->editquantity->getText();
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
@@ -200,17 +191,12 @@ class MoveItem extends \App\Pages\Base
         }
 
 
-        if ($this->_rowid > 0) {
-            $item->rowid = $this->_rowid;
-             
-            
+        if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
         } else {
-            $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
-            $item->rowid = $next + 1;
-        }
-        $this->_itemlist[$item->rowid] = $item;
+           $this->_itemlist[$this->_rowid] = $item;            
+        }        
 
-        $this->_rowid = 0;
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);

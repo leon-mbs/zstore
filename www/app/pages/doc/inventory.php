@@ -117,9 +117,9 @@ class Inventory extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
-        $id = $item->item_id . $item->snumber;
-
-        $this->_itemlist = array_diff_key($this->_itemlist, array($id => $this->_itemlist[$id]));
+        $rowid =  array_search($item,$this->_itemlist,true);
+ 
+        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
         $this->docform->detail->Reload();
     }
 
@@ -132,6 +132,8 @@ class Inventory extends \App\Pages\Base
         $this->docform->setVisible(false);
         $this->editdetail->edititem->setKey(0);
         $this->editdetail->edititem->setValue('');
+        $this->_rowid = -1;
+        
     }
 
     public function saverowOnClick($sender) {
@@ -152,22 +154,9 @@ class Inventory extends \App\Pages\Base
         $item->qfact = $this->editdetail->editquantity->getText();
         $item->snumber = $sn;
 
-        $tarr = array();
-
-        foreach ($this->_itemlist as $k => $value) {
-
-            if ($this->_rowid > 0 && $this->_rowid == $k) {
-                $tarr[$item->item_id] = $item;    // заменяем
-            } else {
-                $tarr[$k] = $value;    // старый
-            }
-        }
-
-        if ($this->_rowid == 0) {        // в конец
-            $tarr[$item->item_id] = $item;
-        }
-        $this->_itemlist = $tarr;
-        $this->_rowid = 0;
+ 
+        $this->_itemlist[] = $item;
+      
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
