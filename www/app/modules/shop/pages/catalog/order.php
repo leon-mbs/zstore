@@ -248,7 +248,8 @@ class Order extends Base
             $order->notes = trim($this->orderform->notes->getText());
             $order->amount = $amount;
             $order->payamount = $amount;
-            $order->branch_id = $op["defbranch"];
+            $order->branch_id = $shop["defbranch"];
+            $order->firm_id = $shop["firm"];
             
             if($order->user_id==0) {
                 $user = \App\Entity\user::getByLogin('admin') ;
@@ -266,8 +267,14 @@ class Order extends Base
             if ($shop['ordertype'] == 1  ) {  //Кассовый чек
                 $order->updateStatus(Document::STATE_EXECUTED);
             }  else {
-                $order->updateStatus(Document::STATE_INPROCESS);
-              //  $order->updateStatus(Document::STATE_WP);
+              
+                if($payment == 1) {
+                   $order->updateStatus(Document::STATE_WP);    
+                }
+                else {
+                   $order->updateStatus(Document::STATE_INPROCESS);
+                }
+                
               
             }
 

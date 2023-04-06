@@ -88,6 +88,25 @@ class ProdIssue extends \App\Pages\Base
 
                         $this->docform->notes->setText('Підстава ' . $basedoc->document_number);
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
+                        
+                        foreach($basedoc->unpackDetails('prodlist') as $prod) {
+                             $set =  \App\Entity\ItemSet::find("item_id > 0  and pitem_id=" . $prod->item_id);
+                             foreach($set as $m) {
+                                if( !isset($this->_itemlist[$m->item_id]) ) {
+                                    
+                                    $this->_itemlist[$m->item_id] = Item::load($m->item_id);
+                                    $this->_itemlist[$m->item_id]->quantity = 0;
+                                }   
+                                $this->_itemlist[$m->item_id]->quantity += ($prod->quantity * $m->qty);
+
+                                
+                             }
+                             
+                             $this->_itemlist = array_values($this->_itemlist) ;
+                        }
+                        
+                        
+                        
                     }
                     if ($basedoc->meta_name == 'ServiceAct') {
 

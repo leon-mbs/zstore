@@ -59,7 +59,15 @@
                             
                        
                     </div>
-                    {{#usebranch}}
+                    <div class="form-group   ">
+                        <label   for="firm">Продавець </label>
+                            
+                            <select class="form-control" zippy="firm">
+                                <option value="0">Не обрано</option>
+                            </select>
+                            
+                      
+                    </div>         {{#usebranch}}
                     <div class="form-group   ">
                         <label   for="shopdefbranch">Фiлiя </label>
                               <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
@@ -153,6 +161,7 @@
                                 <option value="0">Не використовувати</option>
                                 <option value="1">WayForPay</option>
                                 <option value="2">Liqpay</option>
+                                <option value="3">Оплата по  QR коду</option>
                             </select>
                    </div>
                    <div class="form-group   ">
@@ -178,27 +187,22 @@
                      <div class="form-group   ">
                         <label data-label="wpsecret" for="wpsecret">Секретний ключ</label>
                   
-                            <input required="wpsecret" class="form-control " zippy="wpsecret"/>
+                            <input required="required" class="form-control " zippy="wpsecret"/>
                        
                     </div>
                     <div class="form-group   ">
                         <label data-label="wpmacc" for="wpmacc">Merchant аккаунт</label>
                   
-                            <input required="wpmacc" class="form-control " zippy="wpmacc"/>
+                            <input required="required" class="form-control " zippy="wpmacc"/>
                        
                     </div>
                  <div class="form-group   ">
                         <label data-label="wpsite" for="wpsite">Merchant домен (адреса  сайту)</label>
                   
-                            <input required="wpsite" class="form-control " zippy="wpsite"/>
+                            <input required="required" class="form-control " zippy="wpsite"/>
                        
                     </div>
-                   
-                   <div class="form-group mt-2  ">
-                        <div class="col-sm-4">
-                            <button class="btn btn-primary" type="submit">Зберегти</button>
-                        </div>
-                   </div>
+        
                 </form>
              </div>
            

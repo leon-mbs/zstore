@@ -3,13 +3,10 @@
     <body>
      
             
-         <div class="row justify-content-md-center" style="min-height:400px;">
-             
-      
-          
- 
+         <div class="row justify-content-md-center"  >
           
             <div class="col-12 col-md-auto">
+
                 <h3 class="mt-2 mb-3">Оплата замовлення {{onumber}}</h3>
                  <table class="table table-sm">
                     {{#detail}}
@@ -145,6 +142,70 @@
      <script src="https://static.liqpay.ua/libjs/checkout.js" async></script>
       
         {{/lp}} 
+        
+  {{#qr}} 
+  
+     <div class="row justify-content-md-center mt-4"  >
+        <div class="col-12 col-md-auto">
+               <h5 id="qrerror" style="display:none"   class="text-danger">Не задані параметри  отримувача</h5>
+             
+               <div id = "qrpan" style="display:none">
+                <h4  >QR код для  оплати</h4>
+               
+                <div class="modal-body justify-content-center">
+                  <div class="mb-2" id="qrimg" >          </div>
+                   <a  class="btn btn-info btn-sm" id="qrurl" >  Відкрити посилання        </a>
+
+                   <a class="btn btn-success  btn-sm" href="javascript:void(0)" onclick="copycb()" title="Скопіювати в кліпборд" >Скопіювати </a>
+
+                </div>        
+             </div>        
+        
+        
+        </div>
+    </div>
+       
+ 
+   <script type="text/javascript">
+   
+      
+       let pay = function () {
+               
+          callPageMethod('dataQR',null, null,(data)=> 
+          {
+             
+                 data =  JSON.parse(data) 
+                
+                 if(data.qrerror== false) {
+                    $("#qrpan").show();                     
+                    url = data.url
+                    $("#qrimg").html(data.img);  
+                    $("#qrurl").attr('href',url);  
+                 }  else {
+                    $("#qrerror").show();    
+                 }
+                 
+                 
+                
+              
+          }); 
+         
+                 
+        }  
+    
+        function copycb( ){
+               var url=    $("#qrurl").attr('href');  
+               
+                if(navigator.clipboard){
+                    navigator.clipboard.writeText(url);
+                }else alert('Ваш браузер не підтримує Clipboard'); 
+  
+      
+                  
+               }  
+  </script>  
+  {{/qr}} 
+          
     </body>
 </html>
         
