@@ -112,6 +112,9 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["np"] = $modules['np'] == 1;
         $this->_tvars["promua"] = $modules['promua'] == 1;
         $this->_tvars["paperless"] = $modules['paperless'] == 1;
+        $this->_tvars["checkbox"] = $modules['checkbox'] == 1;
+        $this->_tvars["fiscal"] = $this->_tvars["checkbox"] || $this->_tvars["ppo"];
+        
 
       //  $printer = System::getOptions('printer');
 

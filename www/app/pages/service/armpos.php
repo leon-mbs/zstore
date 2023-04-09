@@ -990,6 +990,20 @@ class ARMPos extends \App\Pages\Base
 
 
     public function OnOpenShift() {
+        
+        if($this->_tvars['checkbox'] == true) {
+            
+            $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey,$this->pos->cbpin) ;
+            $ret = $cb->OpenShift() ;
+            
+            if($ret !== true) {
+                $this->setError($ret);
+            }
+            
+            return;
+        }
+        
+        
         $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, true);
         if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
             //повторяем для  нового номера
