@@ -195,21 +195,17 @@ class CheckBox
         $check["goods"] = [] ;
         $check["payments"] = [] ;
         $check["discounts"] = [] ;
-      //  $check["delivery"] = [] ;
-         
-     //   $check['id'] = \App\Util::guid() ;
-     //   $check['id'] = random_int(1,100000) ;
-     //   $check['type'] ="SELL" ;
+ 
         $sum = 0;
         
 
-        foreach($basedoc->unpackDetails('detaildata') as $item ){
+        foreach($doc->unpackDetails('detaildata') as $item ){
             $good=[];
             
             $g=[];
             $g['name'] = $item->itemname;
             $g['price'] =$item->price*100;
-            $g['code'] = $item->item_code;
+            $g['code'] = $item->item_id;
           
             $good["good"] = $g ;  
             
@@ -217,7 +213,28 @@ class CheckBox
         //    $good["sum"] =1000000;
             $good["is_return"] = $doc->meta_name=="ReturnIssue";
          
-            $sum +=  round($item->item_code*$item->item_code);
+            $sum +=  round($g['price'] * $item->quantity);
+            
+            $check["goods"][] = $good;
+              
+                    
+        }
+   
+      foreach($doc->unpackDetails('services') as $item ){
+            $good=[];
+            
+            $g=[];
+            $g['name'] = $item->service_name;
+            $g['price'] =$item->price*100;
+            $g['code'] = $item->service_id;
+          
+            $good["good"] = $g ;  
+            
+            $good["quantity"] = $item->quantity * 1000 ;
+        //    $good["sum"] =1000000;
+            $good["is_return"] = false;
+         
+            $sum +=  round(['price'] * $item->quantity);
             
             $check["goods"][] = $good;
               
@@ -225,14 +242,14 @@ class CheckBox
         }
    
 
-          $check['total_sum'] = $sum ;
+          $check['total_sum'] = $sum  ;
           
           $disc =  $sum - $doc->payamount*100;
           if($disc > 0) {
-             $check["discounts"][] = array("type"=>"DISCOUNT","name": "Знижка ". ($disc/100)  ." грн", "value": $disc,  "mode": "VALUE");  
+             $check["discounts"][] = array("type"=>"DISCOUNT","name"=> "Знижка ". ($disc/100)  ." грн", "value"=> $disc,  "mode"=> "VALUE");  
           }
           
-   //     $check['total_payment'] = 1000000 ;
+      //  $check['total_payment'] = $sum;
      //   $check['total_rest'] = 0 ;
        
    
@@ -257,10 +274,9 @@ class CheckBox
            $payment=array("type"=>"CREDIT","label"=>"Кредит","value"=> ($doc->payamount - $doc->payed) * 100);
            $check["payments"][] = $payment;
             
-        }Ъ
+        } ;
         
         $receipt =  json_encode($check, JSON_UNESCAPED_UNICODE);   
-        
         $curl = curl_init();
 
         curl_setopt_array($curl, [

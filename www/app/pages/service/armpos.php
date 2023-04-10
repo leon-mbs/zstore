@@ -516,12 +516,9 @@ class ARMPos extends \App\Pages\Base
             return;
         }
   
-        if($this->_rowid == -1) {
-          $item = Item::load($id);
- 
-        } else {
-            $item = $this->_itemlist[$this->_rowid] ;    
-        }
+       
+        $item = Item::load($id);
+        
 
         $item->quantity = $this->docpanel->editdetail->editquantity->getText();
         $item->snumber = $this->docpanel->editdetail->editserial->getText();
@@ -596,11 +593,7 @@ class ARMPos extends \App\Pages\Base
             return;
         }
        
-        if($this->_rowid == -1) {
-            $ser = Service::load($id);
-        } else {
-            $ser = $this->_serlist[$this->_rowid] ;    
-        }
+        $ser = Service::load($id);
 
         $ser->quantity = $this->docpanel->editserdetail->editserquantity->getText();
 
@@ -934,7 +927,7 @@ class ARMPos extends \App\Pages\Base
                 $this->setError($ret);
             }
             
-            return;
+            
         }          
             
             
