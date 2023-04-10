@@ -920,6 +920,25 @@ class ARMPos extends \App\Pages\Base
                 }
             }
 
+            
+          if($this->pos->usefisc == 1 && $this->_tvars['checkbox'] == true) {
+            
+            $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey,$this->pos->cbpin) ;
+            $ret = $cb->Check($this->_doc) ;
+            
+            if(is_array($ret)) {
+              $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+              $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
+              $this->_doc->headerdata["checkbox"] = $ret['checkid'];
+            } else {
+                $this->setError($ret);
+            }
+            
+            return;
+        }          
+            
+            
+          
             if ($this->pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
               
                 if($this->docpanel->form3->passfisc->isChecked()) {
@@ -992,13 +1011,18 @@ class ARMPos extends \App\Pages\Base
     public function OnOpenShift() {
         
         if($this->_tvars['checkbox'] == true) {
-            
+       
+         
             $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey,$this->pos->cbpin) ;
             $ret = $cb->OpenShift() ;
             
-            if($ret !== true) {
+            if($ret === true) {
+                $this->setSuccess("Зміна відкрита");
+            } else {
                 $this->setError($ret);
             }
+         
+          
             
             return;
         }
@@ -1030,6 +1054,21 @@ class ARMPos extends \App\Pages\Base
     }
 
     public function OnCloseShift($sender) {
+        
+       if($this->_tvars['checkbox'] == true) {
+            
+            $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey,$this->pos->cbpin) ;
+            $ret = $cb->CloseShift() ;
+            
+            if($ret === true) {
+                $this->setSuccess("Зміна закрита");
+            } else {
+                $this->setError($ret);
+            }
+            
+            return;
+        }
+          
         $ret = $this->zform();
         if ($ret == true) {
             $this->closeshift();
