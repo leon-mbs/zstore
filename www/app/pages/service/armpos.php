@@ -285,7 +285,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form3->payed->setText('0');
         $this->docpanel->form3->exchange->setText('0');
         $this->docpanel->form3->discount->setText('');
-
+        $this->docpanel->form3->trans->setText('') ;
         $this->docpanel->form2->setVisible(true);
         $this->docpanel->formcheck->setVisible(false);
     }
@@ -1231,4 +1231,5 @@ class ARMPos extends \App\Pages\Base
  
     }    
 }
+
 
