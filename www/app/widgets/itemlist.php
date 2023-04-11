@@ -53,6 +53,11 @@ class ItemList extends \Zippy\Html\PageFragment
           $post = json_decode($post)   ;
           
           $where = "disabled <> 1 ";
+          if($post->wissearchonstore ==true) {
+               $where = "   disabled <> 1 and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id ) >0 ";
+          }     
+          
+          
           if(strlen($post->searchkey) > 0) {
               $_sk= Item::qstr($post->searchkey);
               $_skn= Item::qstr('%'.$post->searchkey.'%');

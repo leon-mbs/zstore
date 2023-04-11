@@ -32,6 +32,8 @@ class Pos extends \ZCL\DB\Entity
         $this->details .= "<usefisc>{$this->usefisc}</usefisc>";
         $this->details .= "<testing>{$this->testing}</testing>";
         $this->details .= "<firm_id>{$this->firm_id}</firm_id>";
+        $this->details .= "<cbkey>{$this->cbkey}</cbkey>";
+        $this->details .= "<cbpin>{$this->cbpin}</cbpin>";
         $this->details .= "</details>";
 
         return true;
@@ -44,6 +46,8 @@ class Pos extends \ZCL\DB\Entity
         $this->comment = (string)($xml->comment[0]);
         $this->address = (string)($xml->address[0]);
         $this->pointname = (string)($xml->pointname[0]);
+        $this->cbkey = (string)($xml->cbkey[0]);
+        $this->cbpin = (string)($xml->cbpin[0]);
         $this->fiscalnumber = (string)($xml->fiscalnumber[0]);
         $this->fiscallocnumber = (int)($xml->fiscallocnumber[0]);
         $this->fiscdocnumber = (int)($xml->fiscdocnumber[0]);

@@ -313,6 +313,7 @@ class Options extends \App\Pages\Base
         $this->modules->add(new CheckBox('modnp', $modules['np']));
         $this->modules->add(new CheckBox('modpromua', $modules['promua']));
         $this->modules->add(new CheckBox('modpaperless', $modules['paperless']));
+        $this->modules->add(new CheckBox('modcheckbox', $modules['checkbox']));
        
         
         
@@ -615,8 +616,14 @@ class Options extends \App\Pages\Base
          $modules['np'] = $sender->modnp->isChecked() ? 1:0;
          $modules['promua'] = $sender->modpromua->isChecked() ? 1:0;
          $modules['paperless'] = $sender->modpaperless->isChecked() ? 1:0;
+         $modules['checkbox'] = $sender->modcheckbox->isChecked() ? 1:0;
          $modules['issue'] = $sender->modissue->isChecked() ? 1:0;
          $modules['note'] = $sender->modnote->isChecked() ? 1:0;
+         
+         if($modules['checkbox']==1 && $modules['ppo'] ==1 ){
+               $this->setError('CheckBox та  вбудований ППРО не  можуть працювати  одночасно') ;
+               return;
+         }
          
          System::setOptions("modules", $modules);
          $this->setSuccess('Збережено');      

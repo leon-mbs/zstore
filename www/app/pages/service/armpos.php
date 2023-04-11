@@ -516,12 +516,9 @@ class ARMPos extends \App\Pages\Base
             return;
         }
   
-        if($this->_rowid == -1) {
-          $item = Item::load($id);
- 
-        } else {
-            $item = $this->_itemlist[$this->_rowid] ;    
-        }
+       
+        $item = Item::load($id);
+        
 
         $item->quantity = $this->docpanel->editdetail->editquantity->getText();
         $item->snumber = $this->docpanel->editdetail->editserial->getText();
@@ -596,11 +593,7 @@ class ARMPos extends \App\Pages\Base
             return;
         }
        
-        if($this->_rowid == -1) {
-            $ser = Service::load($id);
-        } else {
-            $ser = $this->_serlist[$this->_rowid] ;    
-        }
+        $ser = Service::load($id);
 
         $ser->quantity = $this->docpanel->editserdetail->editserquantity->getText();
 
@@ -915,11 +908,34 @@ class ARMPos extends \App\Pages\Base
                     $qty = $item->getQuantity($this->_doc->headerdata['store']);
                     if ($qty < $item->quantity) {
                         $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено" );
+                        $conn->RollbackTrans();
                         return;
                     }
                 }
             }
 
+            
+          if($this->pos->usefisc == 1 && $this->_tvars['checkbox'] == true) {
+            
+            $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey,$this->pos->cbpin) ;
+            $ret = $cb->Check($this->_doc) ;
+            
+            if(is_array($ret)) {
+              $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+              $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
+              $this->_doc->headerdata["checkbox"] = $ret['checkid'];
+            } else {
+                $this->setError($ret);
+                $conn->RollbackTrans();
+                return;
+                          
+            }
+            
+            
+        }          
+            
+            
+          
             if ($this->pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
               
                 if($this->docpanel->form3->passfisc->isChecked()) {
@@ -990,6 +1006,25 @@ class ARMPos extends \App\Pages\Base
 
 
     public function OnOpenShift() {
+        
+        if($this->_tvars['checkbox'] == true) {
+       
+         
+            $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey,$this->pos->cbpin) ;
+            $ret = $cb->OpenShift() ;
+            
+            if($ret === true) {
+                $this->setSuccess("Зміна відкрита");
+            } else {
+                $this->setError($ret);
+            }
+         
+          
+            
+            return;
+        }
+        
+        
         $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, true);
         if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
             //повторяем для  нового номера
@@ -1016,6 +1051,21 @@ class ARMPos extends \App\Pages\Base
     }
 
     public function OnCloseShift($sender) {
+        
+       if($this->_tvars['checkbox'] == true) {
+            
+            $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey,$this->pos->cbpin) ;
+            $ret = $cb->CloseShift() ;
+            
+            if($ret === true) {
+                $this->setSuccess("Зміна закрита");
+            } else {
+                $this->setError($ret);
+            }
+            
+            return;
+        }
+          
         $ret = $this->zform();
         if ($ret == true) {
             $this->closeshift();

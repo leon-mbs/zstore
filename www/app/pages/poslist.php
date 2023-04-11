@@ -50,6 +50,8 @@ class PosList extends \App\Pages\Base
         $this->posdetail->add(new TextInput('editfiscalnumber'));
         $this->posdetail->add(new TextInput('editaddress'));
         $this->posdetail->add(new TextInput('editpointname'));
+        $this->posdetail->add(new TextInput('editcbpin'));
+        $this->posdetail->add(new TextInput('editcbkey'));
         $this->posdetail->add(new TextArea('editcomment'));
 
         $this->posdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
@@ -89,6 +91,8 @@ class PosList extends \App\Pages\Base
         $this->posdetail->editcomp->setValue($this->_pos->firm_id);
         $this->posdetail->editaddress->setText($this->_pos->address);
         $this->posdetail->editpointname->setText($this->_pos->pointname);
+        $this->posdetail->editcbkey->setText($this->_pos->cbkey);
+        $this->posdetail->editcbpin->setText($this->_pos->cbpin);
         $this->posdetail->editposinner->setText($this->_pos->fiscallocnumber);
         $this->posdetail->editfisc->setText($this->_pos->fiscalnumber);
         $this->posdetail->editfiscalnumber->setText($this->_pos->fiscdocnumber);
@@ -121,6 +125,8 @@ class PosList extends \App\Pages\Base
 
         $this->_pos->address = $this->posdetail->editaddress->getText();
         $this->_pos->pointname = $this->posdetail->editpointname->getText();
+        $this->_pos->cbkey = $this->posdetail->editcbkey->getText();
+        $this->_pos->cbpin = $this->posdetail->editcbpin->getText();
         $this->_pos->fiscallocnumber = $this->posdetail->editposinner->getText();
         $this->_pos->fiscalnumber = $this->posdetail->editfisc->getText();
         $this->_pos->fiscdocnumber = $this->posdetail->editfiscalnumber->getText();

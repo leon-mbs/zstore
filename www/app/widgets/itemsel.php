@@ -15,6 +15,7 @@ use Zippy\Html\DataList\DataTable;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Image;
 /**
  * Виджет для подбора  товаров
@@ -48,6 +49,7 @@ class ItemSel extends \Zippy\Html\PageFragment
         
         $this->witempan->add(new Form('wisfilter'))->onSubmit($this, 'ReloadData');
 
+        $this->witempan->wisfilter->add(new CheckBox('wissearchonstore'));
         $this->witempan->wisfilter->add(new TextInput('wissearchkey'));
         $this->witempan->wisfilter->add(new DropDownChoice('wissearchcat', Category::getList(false,false), 0));
         $this->witempan->wisfilter->add(new TextInput('wissearchmanufacturer'));
@@ -119,6 +121,13 @@ class ItemSel extends \Zippy\Html\PageFragment
     public function ReloadData($sender) {
 
         $where = "disabled <> 1";
+        if($this->witempan->wisfilter->wissearchonstore->IsChecked()) {
+             $where = "   disabled <> 1 and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id ) <>0 ";
+        }     
+ 
+              
+     
+     
         $text = trim($this->witempan->wisfilter->wissearchkey->getText());
         $man = trim($this->witempan->wisfilter->wissearchmanufacturer->getText());
         $cat = $this->witempan->wisfilter->wissearchcat->getValue();
@@ -138,7 +147,7 @@ class ItemSel extends \Zippy\Html\PageFragment
             $where = $where . " and  manufacturer like {$man}      ";
         }
 
-
+        H::log($where)   ;
         $list = Item::find($where);
 
         $this->_list = array();

@@ -343,9 +343,32 @@ class PayBayList extends \App\Pages\Base
             
         }
 
-
+        /*
         if ($pos_id > 0) {
             $pos = \App\Entity\Pos::load($pos_id);
+         
+            if($pos->usefisc == 1 && $this->_tvars['checkbox'] == true) {
+            
+                    $cb = new  \App\Modules\CB\CheckBox($pos->cbkey,$pos->cbpin) ;
+                    $ret = $cb->Payment($this->_doc, $amount, $form->payment->getValue()) ;
+                    
+                    if(is_array($ret)) {
+                      $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                      $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
+                      $this->_doc->headerdata["checkbox"] = $ret['checkid'];
+                    } else {
+                        $this->setError($ret);
+                      
+                        return;
+                                  
+                    }
+                    
+                    
+                }   
+         
+         
+         
+         
             if ($pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
                  $this->_doc->headerdata["fiscalnumberpos"]  =  $pos->fiscalnumber;
  
@@ -372,7 +395,7 @@ class PayBayList extends \App\Pages\Base
                 }
            }
         }
-
+         */
 
        $payed =   Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(),   $form->pcomment->getText());
           \App\Entity\IOState::addIOState($this->_doc->document_id, $amount, $type);
