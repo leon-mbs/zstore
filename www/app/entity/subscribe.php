@@ -221,6 +221,7 @@ class Subscribe extends \ZCL\DB\Entity
         $header['source'] = '';
         $header['payed'] = '';
         $header['credit'] = '';
+        $header['payurl'] = '';
         $header['device'] = $doc->headerdata['device'];
         $header['ttnnp'] = $doc->headerdata['ship_number'];
         if (strlen($doc->headerdata['device']) > 0 && strlen($doc->headerdata['devsn']) > 0) {
@@ -283,6 +284,13 @@ class Subscribe extends \ZCL\DB\Entity
         }
         $header['docview'] = _BASEURL . 'doclist/' . $doc->document_id;
 
+        $qr=$doc->getQRPay() ;
+        if(is_array($qr))  {
+           $header['payurl']   = $qr['url']  ;
+        }   
+        
+        
+        
         $table = array();
         foreach ($doc->unpackDetails('detaildata') as $item) {
             $table[] = array('item_name'    => $item->itemname,

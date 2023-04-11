@@ -77,6 +77,7 @@ class GoodsIssue extends Document
                         "isbank"          => (strlen($mf->bankacc) > 0 && strlen($mf->bank) > 0),
                         "notes"           => nl2br($this->notes),
                        
+
                         "payed"      => $this->payed > 0 ? H::fa($this->payed) : false,
                         "payamount"  => $this->payamount > 0 ? H::fa($this->payamount) : false
 
@@ -125,6 +126,7 @@ class GoodsIssue extends Document
             $header['createdon'] = H::fd($contract->createdon);
         }
 
+     
 
         $report = new \App\Report('doc/goodsissue.tpl');
 

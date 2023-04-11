@@ -112,6 +112,8 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["np"] = $modules['np'] == 1;
         $this->_tvars["promua"] = $modules['promua'] == 1;
         $this->_tvars["paperless"] = $modules['paperless'] == 1;
+        $this->_tvars["checkbox"] = $modules['checkbox'] == 1;
+        
 
       //  $printer = System::getOptions('printer');
 
@@ -149,7 +151,12 @@ class Base extends \Zippy\Html\WebPage
         if (strpos(System::getUser()->modules, 'paperless') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["paperless"] = false;
         }
+        if (strpos(System::getUser()->modules, 'checkbox') === false && System::getUser()->rolename != 'admins') {
+            $this->_tvars["checkbox"] = false;
+        }
 
+        $this->_tvars["fiscal"] = $this->_tvars["checkbox"] || $this->_tvars["ppo"];
+        
         if ($this->_tvars["shop"] ||
             $this->_tvars["ocstore"] ||
             $this->_tvars["woocomerce"] ||

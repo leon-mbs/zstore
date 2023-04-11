@@ -437,8 +437,10 @@ class PPOHelper
         $header['details'] = array();
         $n = 1;
         $disc = 1;
-        if ($doc->headerdata["paydisc"] > 0) {
-            $disc = 1 - ($doc->headerdata["paydisc"] / $doc->amount);
+        $discsum = doubleval($doc->headerdata["paydisc"]) + doubleval($doc->headerdata["bonus"]);
+        
+        if ( $discsum > 0) {
+            $disc = 1 - ( $discsum / $doc->amount);
         }
         $header['amount'] = 0;
         foreach ($doc->unpackDetails('detaildata') as $item) {

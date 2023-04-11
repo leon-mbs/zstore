@@ -310,8 +310,40 @@ class ReturnIssue extends \App\Pages\Base
 
         $pos_id = $this->docform->pos->getValue();
 
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
+        try {
+            if ($this->_basedocid > 0) {
+                $this->_doc->parent_id = $this->_basedocid;
+                $this->_basedocid = 0;
+            }        
+        
         if ($pos_id > 0 && $sender->id == 'execdoc') {
             $pos = \App\Entity\Pos::load($pos_id);
+           
+           
+          if($pos->usefisc == 1 && $this->_tvars['checkbox'] == true) {
+            
+            $cb = new  \App\Modules\CB\CheckBox($pos->cbkey,$pos->cbpin) ;
+            $ret = $cb->Check($this->_doc) ;
+            
+            if(is_array($ret)) {
+              $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+              $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
+              $this->_doc->headerdata["checkbox"] = $ret['checkid'];
+            } else {
+                $this->setError($ret);
+                $conn->RollbackTrans();
+                return;
+                          
+            }
+            
+            
+        }            
+           
+           
+           
+           
             if ($pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
                 $this->_doc->headerdata["fiscalnumberpos"]  =  $pos->fiscalnumber;
  
@@ -352,13 +384,7 @@ class ReturnIssue extends \App\Pages\Base
         }
 
 
-        $conn = \ZDB\DB::getConnect();
-        $conn->BeginTrans();
-        try {
-            if ($this->_basedocid > 0) {
-                $this->_doc->parent_id = $this->_basedocid;
-                $this->_basedocid = 0;
-            }
+
             $this->_doc->save();
             if ($sender->id == 'execdoc') {
                 if (!$isEdited) {

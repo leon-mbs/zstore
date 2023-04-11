@@ -1,6 +1,6 @@
 <html>
  <head>
-        <title> Довідник POS терміналів   </title>
+        <title> Довідник кас (POS терміналів)    </title>
 
     </head>
 
@@ -8,7 +8,7 @@
         <div class="row">
             <div class="col-12">
                 <div zippy="postable">
-                    <h3>Довідник POS терміналів </h3>
+                    <h3>Довідник кас (POS терміналів) </h3>
                     <a zippy="addnew" class="btn btn-outline-primary  ">Додати</a>
                     <table class="table table-bordered   table-sm" style="width:600px">
                         <tr>
@@ -84,15 +84,19 @@
                             </div>
                         </div>
                             <div class="col-6 col-md-4 col-xl-3">
-                            {{#ppo}}
+                            
+                            {{#fiscal}}
                             <div class="form-group">
                                 <div class="form-check">
                                     <input zippy="editusefisc" type="checkbox" class="form-check-input">
                                     <label class="form-check-label text-bold" for="editusefisc">Використовувати
                                         фiскалізацiю</label>
-                                    <br><small>Чеки з цього термiналу будуть вiдправлятись в ФСУ</small>
+                                    <br><small>Чеки з цього термiналу будуть вiдправлятись в ДПI</small>
                                 </div>
                             </div>
+                            {{/fiscal}}
+                            
+                            {{#ppo}}
                            <div class="form-group">
                                 <div class="form-check">
                                     <input zippy="edittesting" type="checkbox" class="form-check-input">
@@ -113,6 +117,17 @@
                                 <input class="form-control" zippy="editfiscalnumber"/>
                             </div>
                             {{/ppo}}
+                            {{#checkbox}}
+                             <div class="form-group">
+                                <label for="editcbkey"> Лiцензiйний ключ ChecBox</label>
+                                <input class="form-control" zippy="editcbkey"/>
+                            </div>
+                             <div class="form-group">
+                                <label for="editcbpin"> ПIН код касира</label>
+                                <input class="form-control" zippy="editcbpin"/>
+                            </div>
+                           
+                            {{/checkbox}}
                             
                             </div>
                     </div>

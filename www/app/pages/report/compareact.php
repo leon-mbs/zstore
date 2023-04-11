@@ -45,10 +45,10 @@ class CompareAct extends \App\Pages\Base
          $this->filter->cust->setValue(0);
 
          if($type==1) {
-             $list = \App\Entity\Customer::findArray("customer_name","status=0 and  customer_id  in (select coalesce(customer_id,0) as  id from documents_view  where  meta_name  in('Invoice','GoodsIssue','Order','POSCheck'))","customer_name");
+             $list = \App\Entity\Customer::findArray("customer_name","status=0 and  customer_id  in (select coalesce(customer_id,0) as  id from documents_view  where  meta_name  in('Invoice','GoodsIssue','Order','POSCheck','ServiceAct', 'IncomeMoney' ))","customer_name");
          }
          if($type==2) {
-             $list = \App\Entity\Customer::findArray("customer_name","status=0 and  customer_id  in (select coalesce(customer_id,0) as  id from documents_view  where  meta_name  in('InvoiceCust','GoodsReceipt','IncomeService'))","customer_name");
+             $list = \App\Entity\Customer::findArray("customer_name","status=0 and  customer_id  in (select coalesce(customer_id,0) as  id from documents_view  where  meta_name  in('InvoiceCust','GoodsReceipt','IncomeService', 'OutcomeMoney'))","customer_name");
          }
 
 
@@ -87,7 +87,7 @@ class CompareAct extends \App\Pages\Base
         
 if($type==1){
 
-        $list = \App\Entity\Doc\Document::find($where   , "  document_id asc",-1,-1,"*, COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'TTN', 'PosCheck', 'OrderFood', 'ServiceAct')) THEN payamount WHEN ((meta_name = 'OutcomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payed ELSE 0 END)), 0) AS b_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN payed WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payamount ELSE 0 END)), 0) AS b_active");
+        $list = \App\Entity\Doc\Document::find($where   , "  document_id asc",-1,-1,"*, COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Invoice',  'PosCheck', 'Order', 'ServiceAct')) THEN payamount WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payed ELSE 0 END)), 0) AS b_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN payed WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payamount ELSE 0 END)), 0) AS b_active");
   
         $bal=0;
 
@@ -119,7 +119,7 @@ if($type==1){
         
 if($type==2){
 
-        $list = \App\Entity\Doc\Document::find($where , "document_id asc ",-1,-1,"*,  COALESCE( ((CASE WHEN (meta_name IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService', 'OutcomeMoney')) THEN payed WHEN ((meta_name = 'OutcomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payamount ELSE 0 END)), 0) AS s_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsReceipt','IncomeService') ) THEN payamount WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payed ELSE 0 END)), 0) AS s_active ");
+        $list = \App\Entity\Doc\Document::find($where , "document_id asc ",-1,-1,"*,  COALESCE( ((CASE WHEN (meta_name IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService')) THEN payed WHEN ((meta_name = 'OutcomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payamount ELSE 0 END)), 0) AS s_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsReceipt','IncomeService') ) THEN payamount WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payed ELSE 0 END)), 0) AS s_active ");
 
         $bal=0;
 

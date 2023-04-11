@@ -999,6 +999,52 @@ class Document extends \ZCL\DB\Entity
         return $img;
     }
 
+    /**
+    * put your comment there...
+    * 
+    * @param mixed $text
+    * @return mixed
+    */
+    public function getQRPay() {
+        
+        if(in_array($this->meta_name,['GoodsIssue','Invoice','Order'])  ==false) return false;       
+
+        if($this->firm_id >0){
+           $f =  \App\Entity\Firm::load( $this->firm_id) ;            
+        }  else {
+           $f =  \App\Entity\Firm::load(          \App\Helper::getDefFirm()   );
+        }
+
+        if($f == null)  return false;
+        if(strlen($f->tin)==0 || strlen($f->iban) == 0 )  return false;
+        
+      //  $c =  \App\Entity\Customer::load( $this->customer_id ) ;
+       // if($c == null)  return false;
+
+        $url = "BCD\n002\n1\nUCT\n\n";
+        $url = $url . ( strlen($f->payname)>0 ? $f->payname : $f->firm_name ) ."\n";
+        $url = $url .  $f->iban."\n";
+        $url = $url .  "UAH". \App\Helper::fa($this->payamount)."\n";
+        $url = $url .  $f->tin."\n\n\n";
+        $url = $url .  $this->meta_desc ." ".$this->document_number." від ".  \App\Helper::fd($this->document_date) ."\n\n";
+
+        $url = base64_encode($url);
+        $url = str_replace("+","-",$url) ;
+        $url = str_replace("/","_",$url) ;
+        $url = str_replace("=","",$url) ;
+        
+        $url = "https://bank.gov.ua/qr/".$url;
+
+        $dataUri = \App\Util::generateQR($url,240,10)  ;
+        $img = "<img style=\"width:260px\"  src=\"{$dataUri}\"  />";
+
+        return array('qr'=>$img,
+          'url'=>$url,
+//          "urlshort"=>"<a href=\"{$url}\">Відкрити посилання</a>",
+          'link'=>"<a href=\"{$url}\">{$url}</a>" 
+        );
+    }
+
     
   
     
@@ -1008,6 +1054,8 @@ class Document extends \ZCL\DB\Entity
     *    https://cabinet.tax.gov.ua/cashregs/check?fn=4000191957&id=165093488&date=20220105&time=132430&sum=840
     */
       public function getFiscUrl( ) {
+        if(strlen($this->headerdata["tax_url"])>0) return $this->headerdata["tax_url"];
+       
         if(strlen($this->headerdata["fiscalnumber"])==0) return "";
         
         $pos = \App\Entity\Pos::load($this->headerdata['pos']);

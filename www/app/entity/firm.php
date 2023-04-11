@@ -38,6 +38,8 @@ class Firm extends \ZCL\DB\Entity
         $this->pposigntype = (int)($xml->pposigntype[0]);
         $this->ppoisjks = (int)($xml->ppoisjks[0]);
         $this->ppokeyid = (string)($xml->ppokeyid[0]);
+        $this->iban = (string)($xml->iban[0]);
+        $this->payname = (string)($xml->payname[0]);
 
         parent::afterLoad();
     }
@@ -53,6 +55,7 @@ class Firm extends \ZCL\DB\Entity
         $this->details .= "<ppoowner><![CDATA[{$this->ppoowner}]]></ppoowner>";
         $this->details .= "<ppocert><![CDATA[{$this->ppocert}]]></ppocert>";
         $this->details .= "<ppokey><![CDATA[{$this->ppokey}]]></ppokey>";
+        $this->details .= "<payname><![CDATA[{$this->payname}]]></payname>";
         $this->details .= "<ppopassword>{$this->ppopassword}</ppopassword>";
         $this->details .= "<ppohost>{$this->ppohost}</ppohost>";
         $this->details .= "<ppoport>{$this->ppoport}</ppoport>";
@@ -61,6 +64,7 @@ class Firm extends \ZCL\DB\Entity
         $this->details .= "<ppokeyid>{$this->ppokeyid}</ppokeyid>";
         $this->details .= "<ppoisjks>{$this->ppoisjks}</ppoisjks>";
         $this->details .= "<inn>{$this->inn}</inn>";
+        $this->details .= "<iban>{$this->iban}</iban>";
 
         $this->details .= "<phone>{$this->phone}</phone>";
         $this->details .= "<tin>{$this->tin}</tin>";

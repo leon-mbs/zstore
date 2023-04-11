@@ -122,6 +122,7 @@ class Options extends \App\Pages\Base
         $this->business->add(new CheckBox('numberttn'));
         $this->business->add(new CheckBox('usecattree'));
         $this->business->add(new CheckBox('nocheckarticle'));
+
         $this->business->add(new TextArea('checkslogan'));
 
     
@@ -146,6 +147,7 @@ class Options extends \App\Pages\Base
         $this->business->numberttn->setChecked($common['numberttn']);
         $this->business->usecattree->setChecked($common['usecattree']);
         $this->business->nocheckarticle->setChecked($common['nocheckarticle']);
+
         $this->business->checkslogan->setText($common['checkslogan']);
       
         
@@ -311,6 +313,7 @@ class Options extends \App\Pages\Base
         $this->modules->add(new CheckBox('modnp', $modules['np']));
         $this->modules->add(new CheckBox('modpromua', $modules['promua']));
         $this->modules->add(new CheckBox('modpaperless', $modules['paperless']));
+        $this->modules->add(new CheckBox('modcheckbox', $modules['checkbox']));
        
         
         
@@ -377,6 +380,7 @@ class Options extends \App\Pages\Base
         $common['usesnumber'] = $this->business->usesnumber->isChecked() ? 1 : 0;
         $common['useimages'] = $this->business->useimages->isChecked() ? 1 : 0;
         $common['nocheckarticle'] = $this->business->nocheckarticle->isChecked() ? 1 : 0;
+
         $common['numberttn'] = $this->business->numberttn->isChecked() ? 1 : 0;
         $common['usecattree'] = $this->business->usecattree->isChecked() ? 1 : 0;
        
@@ -612,8 +616,14 @@ class Options extends \App\Pages\Base
          $modules['np'] = $sender->modnp->isChecked() ? 1:0;
          $modules['promua'] = $sender->modpromua->isChecked() ? 1:0;
          $modules['paperless'] = $sender->modpaperless->isChecked() ? 1:0;
+         $modules['checkbox'] = $sender->modcheckbox->isChecked() ? 1:0;
          $modules['issue'] = $sender->modissue->isChecked() ? 1:0;
          $modules['note'] = $sender->modnote->isChecked() ? 1:0;
+         
+         if($modules['checkbox']==1 && $modules['ppo'] ==1 ){
+               $this->setError('CheckBox та  вбудований ППРО не  можуть працювати  одночасно') ;
+               return;
+         }
          
          System::setOptions("modules", $modules);
          $this->setSuccess('Збережено');      

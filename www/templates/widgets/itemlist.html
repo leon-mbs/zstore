@@ -30,7 +30,10 @@
                                       <option v-for="br in brands" v-bind:value="br.value" v-bind:label="br.value" >
             
                                 </datalist>
-
+                                   <div class="form-check  mr-sm-2">
+                                     <label for="wissearchonstore" class="form-check-label">В наявностi </label> 
+                                     <input type="checkbox" v-model="wissearchonstore" id="wissearchonstore" class="form-check-input  mr-2"  >
+                                  </div> 
 
                                 <input v-on:click.prevent="onSearch" class="btn btn-outline-success  " type="button" value="ОК">
 
@@ -101,6 +104,7 @@
                 data.searchkey =  this.wissearchkey
                 data.searchcat =  this.wissearchcat
                 data.searchbrand =  this.wissearchbrand
+                data.wissearchonstore =  this.wissearchonstore  
                 
                 callPM(path +'::loaditems',[ ], JSON.stringify(data),(data)=> 
                   {
@@ -133,7 +137,7 @@
                 wissearchkey:'',
                 wissearchcat:'',
                 wissearchbrand:'',
-          
+                wissearchonstore:false,
                 currpage:1,
                 pagesize:15,
                 rowscnt:1,
