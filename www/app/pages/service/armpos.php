@@ -908,6 +908,7 @@ class ARMPos extends \App\Pages\Base
                     $qty = $item->getQuantity($this->_doc->headerdata['store']);
                     if ($qty < $item->quantity) {
                         $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено" );
+                        $conn->RollbackTrans();
                         return;
                     }
                 }
@@ -925,6 +926,9 @@ class ARMPos extends \App\Pages\Base
               $this->_doc->headerdata["checkbox"] = $ret['checkid'];
             } else {
                 $this->setError($ret);
+                $conn->RollbackTrans();
+                return;
+                          
             }
             
             

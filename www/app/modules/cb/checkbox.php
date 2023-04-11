@@ -198,6 +198,20 @@ class CheckBox
  
         $sum = 0;
         
+        if($doc->meta_name=="ReturnIssue") {
+            
+           if($doc->parent_id >0) {
+               $p = \App\Entity\Doc\Document::load($doc->parent_id) ;
+               if(  strlen($p->headerdata['checkbox']) > 0  )    {
+                  $check["related_receipt_id"] = $p->headerdata['checkbox'];    
+               }
+               
+           }
+            
+           
+        }
+        
+        
 
         foreach($doc->unpackDetails('detaildata') as $item ){
             $good=[];
@@ -249,21 +263,21 @@ class CheckBox
              $check["discounts"][] = array("type"=>"DISCOUNT","name"=> "Знижка ". ($disc/100)  ." грн", "value"=> $disc,  "mode"=> "VALUE");  
           }
           
-      //  $check['total_payment'] = $sum;
+       // $check['total_payment'] = $doc->payamount*100;
      //   $check['total_rest'] = 0 ;
        
-   
-        if ($doc->headerdata['payment'] == 0 && $doc->payed > 0) {
-           $payment=array("type"=>"CASH","label"=>"Готівка","value"=>$doc->payed*100);
+        $payed =  doubleval($doc->payed) ;
+        if ($doc->headerdata['payment'] == 0 && $payed > 0) {
+           $payment=array("type"=>"CASH","label"=>"Готівка","value"=>$payed*100);
            $check["payments"][] = $payment;
             
         }
         if ($doc->headerdata['payment'] > 0 && $doc->payed > 0) {
             $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
             if (  $mf->beznal == 1) {  
-               $payment=array("type"=>"CASHLESS","label"=>"Банківська карта","value"=>$doc->payed*100);     
+               $payment=array("type"=>"CASHLESS","label"=>"Банківська карта","value"=>$payed*100);     
             } else {
-               $payment=array("type"=>"CASH","label"=>"Готівка","value"=>$doc->payed*100);
+               $payment=array("type"=>"CASH","label"=>"Готівка","value"=>$payed*100);
             }
             $check["payments"][] = $payment;
             
@@ -271,10 +285,129 @@ class CheckBox
            
         if ($doc->payed < $doc->payamount) {
  
-           $payment=array("type"=>"CREDIT","label"=>"Кредит","value"=> ($doc->payamount - $doc->payed) * 100);
+           $payment=array("type"=>"CASH","label"=>"Кредит","value"=> ($doc->payamount - $payed) * 100);
            $check["payments"][] = $payment;
             
         } ;
+        
+        $receipt =  json_encode($check, JSON_UNESCAPED_UNICODE);   
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_URL => self::API_URL."/receipts/sell",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_SSL_VERIFYPEER =>false,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => $receipt,
+            CURLOPT_HTTPHEADER => [
+                "Authorization: Bearer {$this->access_token}",
+                "Content-Type: application/json"
+            ],
+        ]);
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+
+
+        if ($err) {
+           return "cURL Error #:" . $err;
+        }
+
+        $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+        if ($status_code !== 201) {
+            if( $status_code == 422 || $status_code == 400 ){
+                $response = json_decode($response, true);
+                return $response['message'] ;
+            }
+            return "HTTP Error #:" . $status_code. ' ' . $response;
+        }
+         
+        $response = json_decode($response, true);
+
+        $ret =[];
+
+        $ret["checkid"] = $response['id'];
+         
+        
+        $receipt = $this->GetRawReceipt($ret["checkid"]);
+        $response = json_decode($receipt, true);
+        
+        $ret["fiscnumber"] = $response['fiscal_code']  ;        
+        $ret["tax_url"] = $response['tax_url']  ;        
+
+        
+        return $ret;        
+        
+    } 
+    
+   public function Payment($doc,$payed,$mf){
+        $ret = $this->PinCodeAuth() ;
+        if($ret !== true){
+            return $ret;
+        }   
+        
+        $check = [] ;
+        $check["goods"] = [] ;
+        $check["payments"] = [] ;
+        $check["discounts"] = [] ;
+ 
+        $sum = 0;
+        
+        $payed =  doubleval($payed) ;
+
+
+             $good=[];
+            
+            $g=[];
+            $g['name'] = $doc->document_number;
+            $g['price'] = $payed*100;
+            $g['code'] = $doc->document_id;
+          
+            $good["good"] = $g ;  
+            
+            $good["quantity"] =   1000 ;
+        //    $good["sum"] =1000000;
+            $good["is_return"] = false;
+         
+            $sum +=  round($g['price'] * $item->quantity);
+            
+            $check["goods"][] = $good;
+              
+      
+
+          $check['total_sum'] = $sum  ;
+          
+          $disc =  $sum - $doc->payamount*100;
+          if($disc > 0) {
+             $check["discounts"][] = array("type"=>"DISCOUNT","name"=> "Знижка ". ($disc/100)  ." грн", "value"=> $disc,  "mode"=> "VALUE");  
+          }
+          
+       // $check['total_payment'] = $doc->payamount*100;
+     //   $check['total_rest'] = 0 ;
+       
+         if ($mf == 0 && $payed > 0) {
+           $payment=array("type"=>"CASH","label"=>"Готівка","value"=>$payed*100);
+           $check["payments"][] = $payment;
+            
+        }
+        if ($mf > 0 && $payed > 0) {
+            $mf = \App\Entity\MoneyFund::load($mf);
+            if (  $mf->beznal == 1) {  
+               $payment=array("type"=>"CASHLESS","label"=>"Банківська карта","value"=>$payed*100);     
+            } else {
+               $payment=array("type"=>"CASH","label"=>"Готівка","value"=>$payed*100);
+            }
+            $check["payments"][] = $payment;
+            
+        }
+    
         
         $receipt =  json_encode($check, JSON_UNESCAPED_UNICODE);   
         $curl = curl_init();

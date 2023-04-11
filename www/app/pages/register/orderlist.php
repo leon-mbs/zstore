@@ -42,7 +42,7 @@ class OrderList extends \App\Pages\Base
 
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 3 => 'Все'), 0));
+        $this->filter->add(new DropDownChoice('status', array(0 => 'Вiдкритi', 1 => 'Новi',2 => 'До сплати', 3 => 'Всi'), 0));
         $this->filter->add(new DropDownChoice('salesource', H::getSaleSources(), 0));
 
         $doclist = $this->add(new DataView('doclist', new OrderDataSource($this), $this, 'doclistOnRow'));
@@ -539,7 +539,7 @@ class OrderList extends \App\Pages\Base
 
         H::exportExcel($data, $header, 'orderlist.xlsx');
     }
-
+     /*
     public function payOnClick($sender) {
         $this->statuspan->setVisible(false);
         $this->payform->setVisible(true);
@@ -590,26 +590,50 @@ class OrderList extends \App\Pages\Base
         if ($pos_id > 0) {
             $pos = \App\Entity\Pos::load($pos_id);
 
-            $ret = \App\Modules\PPO\PPOHelper::checkpay($this->_doc, $pos_id, $amount, $form->payment->getValue());
-            if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
-                //повторяем для  нового номера
-                $pos->fiscdocnumber = $ret['doclocnumber'];
-                $pos->save();
-                $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
+            if($this->pos->usefisc == 1 && $this->_tvars['checkbox'] == true) {
+                
+                    $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey,$this->pos->cbpin) ;
+                    $ret = $cb->Payment($this->_doc) ;
+                    
+                    if(is_array($ret)) {
+                      $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                      $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
+                      $this->_doc->headerdata["checkbox"] = $ret['checkid'];
+                    } else {
+                        $this->setError($ret);
+                        
+                        return;
+                                  
+                    }       
+                
+                
             }
-            if ($ret['success'] == false) {
-                $this->setErrorTopPage($ret['data']);
-                return;
-            } else {
-
-                if ($ret['docnumber'] > 0) {
-                    $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+            
+            if($this->pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
+       
+            
+                $ret = \App\Modules\PPO\PPOHelper::checkpay($this->_doc, $pos_id, $amount, $form->payment->getValue());
+                if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
+                    //повторяем для  нового номера
+                    $pos->fiscdocnumber = $ret['doclocnumber'];
                     $pos->save();
-                    $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
-                } else {
-                    $this->setError("Не повернено фіскальний номер");
-                    return;
+                    $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
                 }
+                if ($ret['success'] == false) {
+                    $this->setErrorTopPage($ret['data']);
+                    return;
+                } else {
+
+                    if ($ret['docnumber'] > 0) {
+                        $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                        $pos->save();
+                        $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+                    } else {
+                        $this->setError("Не повернено фіскальний номер");
+                        return;
+                    }
+                }
+                
             }
         }
 
@@ -627,7 +651,7 @@ class OrderList extends \App\Pages\Base
         $this->doclist->Reload(false);
         $this->payform->setVisible(false);
     }
-    
+      */
     public function onBranch($sender){
        $id = $sender->getValue();   
        $users = array(0=> "Не обрано" ); 
@@ -691,6 +715,9 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
         }
         if ($status == 1) {
             $where .= " and  state =1 ";
+        }
+        if ($status == 2) {
+            $where .= " and  state =21 ";
         }
 
 
