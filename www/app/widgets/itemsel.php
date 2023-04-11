@@ -121,7 +121,7 @@ class ItemSel extends \Zippy\Html\PageFragment
     public function ReloadData($sender) {
 
         $where = "disabled <> 1";
-        if($this->witempan->wisfilter->wissearchonstore->IsChecked()) {
+        if($this->witempan->wisfilter->wissearchonstore->isChecked()) {
              $where = "   disabled <> 1 and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id ) <>0 ";
         }     
  
