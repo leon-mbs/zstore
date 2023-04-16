@@ -1165,10 +1165,7 @@ FROM (items
   LEFT JOIN item_cat
     ON ((items.cat_id = item_cat.cat_id)));
 
-CREATE
-
-VIEW item_set_view
-AS
+ 
 CREATE
 VIEW item_set_view
 AS
@@ -1297,7 +1294,7 @@ SELECT
   pv.pa_id AS pa_id,
   pv.pp_id AS pp_id
 FROM (prodstageagenda a
-  JOIN prodstage_view pv
+  JOIN prodstage pv
     ON ((a.st_id = pv.st_id)));
 
 
