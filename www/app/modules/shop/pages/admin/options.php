@@ -49,6 +49,7 @@ class Options extends \App\Pages\Base
         $this->shop->add(new CheckBox('usefeedback'));
         $this->shop->add(new CheckBox('usemainpage'));
         $this->shop->add(new CheckBox('nouseimages'));
+
         $this->shop->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), "0"));
         $this->shop->add(new DropDownChoice('firm', \App\Entity\Firm::findArray("firm_name","disabled <>1"), "0"));
         
@@ -61,7 +62,7 @@ class Options extends \App\Pages\Base
         $this->pay->add(new TextInput('wpsecret'  ));
         $this->pay->add(new TextInput('wpmacc'  ));
         $this->pay->add(new TextInput('wpsite'  ));
-        
+        $this->pay->add(new CheckBox('addqr'));       
         
    
  
@@ -98,6 +99,7 @@ class Options extends \App\Pages\Base
         $this->pay->wpsecret->setText($shop['wpsecret']);
         $this->pay->wpmacc->setText($shop['wpmacc']);
         $this->pay->wpsite->setText($shop['wpsite']);
+        $this->pay->addqr->setChecked($shop['addqr']);
         $this->onPaySystem(null);
         
 
@@ -120,6 +122,7 @@ class Options extends \App\Pages\Base
         $shop['wpsecret'] = $sender->wpsecret->getText() ; 
         $shop['wpmacc'] = $sender->wpmacc->getText() ; 
         $shop['wpsite'] = $sender->wpsite->getText() ; 
+        $shop['addqr'] = $sender->addqr->isChecked() ? 1 : 0; 
 
         System::setOptions("shop", $shop);
         $this->setSuccess('Збережено');
@@ -135,6 +138,7 @@ class Options extends \App\Pages\Base
          $this->pay->wpsecret->setVisible($ps==1);
          $this->pay->wpmacc->setVisible($ps==1);
          $this->pay->wpsite->setVisible($ps==1);
+         $this->pay->addqr->setVisible($ps==1 || $ps==2);
 
     }    
     
