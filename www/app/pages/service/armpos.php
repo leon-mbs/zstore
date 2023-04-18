@@ -562,7 +562,7 @@ class ARMPos extends \App\Pages\Base
 
         $this->docpanel->editdetail->editprice->setText("");
         $this->docpanel->editdetail->editserial->setText("");
-        $this->docpanel->wselitem->setVisible(false);           
+      //  $this->docpanel->wselitem->setVisible(false);           
             
  
         $this->_rowid = -1;
@@ -581,7 +581,7 @@ class ARMPos extends \App\Pages\Base
 
         $this->docpanel->editdetail->editprice->setText("");
         $this->docpanel->editdetail->qtystock->setText("");
-        
+        $this->setSuccess("Позиція додана");
         
     }
 

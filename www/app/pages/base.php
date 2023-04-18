@@ -236,6 +236,8 @@ class Base extends \Zippy\Html\WebPage
         }
         $this->generateToasts();
         
+        $duration = \App\Session::getSession()->duration() ;
+        $this->_tvars['showtips'] = $duration < 300   ;
      }
 
     public function LogoutClick($sender) {
