@@ -11,9 +11,10 @@ class Session
 
     private $values = array();
     public  $filter = array();
+    public  $start = 0;
 
     public function __construct() {
-
+        
     }
 
     public function __set($name, $value) {
@@ -38,6 +39,17 @@ class Session
     public function clean() {
         $this->values = array();
         $this->filter = array();
+        $this->start = 0;
+    }
+    //длительность сеанса
+    public function duration() {
+        if(intval($this->start) > 0) {
+           return  time() - $this->start; 
+        } else {
+           $this->start  = time();
+           return  0;
+        }
+        
     }
 
 }

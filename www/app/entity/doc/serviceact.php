@@ -57,6 +57,18 @@ class ServiceAct extends Document
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false,
                         "total"           => H::fa($this->amount)
         );
+        
+        if(strlen($firm['phone']) > 0) {
+             $header['firm_name']  =   $header['firm_name'] .', '. $firm['phone'] ;
+        }       
+        if($this->customer_id > 0) {
+             $c = \App\Entity\Customer::load($this->customer_id) ; 
+             if(strlen($c->phone)>0) {
+                 $header['customer_name']  =   $header['customer_name'] .', '. $c->phone ;    
+             }
+             
+        }       
+        
         if ($this->headerdata["contract_id"] > 0) {
             $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);
             $header['contract'] = $contract->contract_number;
