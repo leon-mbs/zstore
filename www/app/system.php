@@ -171,6 +171,6 @@ class System
     }
     public static function clean() {
         self::$_cache = [] ;
-        self::$_cache = [] ;
+
     }
 }

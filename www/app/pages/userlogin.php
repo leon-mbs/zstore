@@ -93,7 +93,7 @@ class UserLogin extends \Zippy\Html\WebPage
 
                 if ($modules['shop'] == 1) {
                     App::Redirect('\App\Pages\Main');
-                } else {
+                } else {    
                     App::RedirectHome();
                 }
                 return;
