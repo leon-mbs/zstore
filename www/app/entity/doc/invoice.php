@@ -54,7 +54,8 @@ class Invoice extends \App\Entity\Doc\Document
                         "customer_print"  => $this->headerdata["customer_print"],
                         "bank"            => @$mf->bank,
                         "bankacc"         => @$mf->bankacc,
-                       
+                        "iban"      => strlen($firm['iban'] ) > 0 ? $firm['iban'] : false,
+    
                         "isbank"          => (strlen($mf->bankacc) > 0 && strlen($mf->bank) > 0),
                         "email"           => $this->headerdata["email"],
                         "notes"           => nl2br($this->notes),

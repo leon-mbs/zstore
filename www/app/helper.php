@@ -485,7 +485,7 @@ class Helper
 
         if (count($st) > 0) {
             $keys = array_keys($st);
-            return $keys[0];
+            return $keys[count($keys)-1];
         }
         return 0;
     }
