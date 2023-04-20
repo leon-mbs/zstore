@@ -29,6 +29,27 @@
     </tr>
 
     {{/isoutnumber}}
+   
+    {{#isfirm}}
+    <tr>
+
+        <td></td>
+        <td><b> Продавець</b></td>
+        <td colspan="8"><b>{{firm_name}}</b></td>
+
+    </tr>  
+     {{#iban}}
+    <tr>
+
+        <td></td>
+        <td> IBAN</td>
+        <td colspan="8">{{iban}}   </td>
+
+    </tr>
+    {{/iban}}    
+     
+    {{/isfirm}}   
+    
      <tr>
         <td colspan="10">{{{notes}}}</td>
     </tr>

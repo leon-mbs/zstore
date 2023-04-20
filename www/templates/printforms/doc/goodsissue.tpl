@@ -63,7 +63,17 @@
         <td colspan="7">{{bankacc}}    {{bank}}</td>
 
     </tr>
-    {{/isbank}}    
+    {{/isbank}}  
+     {{#iban}}
+    <tr>
+
+        <td></td>
+        <td> IBAN</td>
+        <td colspan="7">{{iban}}   </td>
+
+    </tr>
+    {{/iban}}    
+      
     {{/isfirm}}
     {{#iscontract}}
     <tr>

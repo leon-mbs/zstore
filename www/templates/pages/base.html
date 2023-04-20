@@ -1205,6 +1205,38 @@ icon: 'fa fa-exclamation-triangle text-warning',
        
         } 
         
+       function sendPSlabel( buf){
+          
+           var url="{{psurllabel}}"  
+            
+   //  console.log(buf)     
+               
+    
+       var opt={
+           method: 'POST' ,
+  
+           body:   buf
+       };    
+             
+          fetch(url+"/print",opt)                                            
+  
+              .then((response) => {
+                  return response.text();
+              })
+              .then((data) => {
+                 if(data == ""){
+                     toastr.success("Вiдправлено на принтер" )   
+                 }   else {
+                    toastr.error(data )        
+                 }
+              })
+               .catch(function (error) {
+                    toastr.error(error )       
+                      });  
+            
+       
+        } 
+        
         
         function customerInfo(id){
                 callPageMethod('getCustomerInfo',[id],null,(data)=> 

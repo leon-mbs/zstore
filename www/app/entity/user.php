@@ -103,9 +103,14 @@ class User extends \ZCL\DB\Entity
         $this->emailnotify = (int)$options['emailnotify'];
         $this->hidesidebar = (int)$options['hidesidebar'];
         $this->usemobileprinter = (int)$options['usemobileprinter'];
+      
         $this->prtype = (int)$options['prtype'];
         $this->pwsym = (int)$options['pwsym'];
         $this->pserver = $options['pserver'];
+        $this->prtypelabel = (int)$options['prtypelabel'];
+        $this->pwsymlabel = (int)$options['pwsymlabel'];
+        $this->pserverlabel = $options['pserverlabel'];
+      
         $this->mainpage = $options['mainpage'];
         $this->favs = $options['favs'];
         $this->chat_id = $options['chat_id'];
@@ -140,9 +145,14 @@ class User extends \ZCL\DB\Entity
         $options['darkmode'] = $this->darkmode;
         $options['emailnotify'] = $this->emailnotify;
         $options['usemobileprinter'] = $this->usemobileprinter;
+    
         $options['pserver'] = $this->pserver;
         $options['prtype'] = $this->prtype;
         $options['pwsym'] = $this->pwsym;
+        $options['pserverlabel'] = $this->pserverlabel;
+        $options['prtypelabel'] = $this->prtypelabel;
+        $options['pwsymlabel'] = $this->pwsymlabel;
+    
         $options['mainpage'] = $this->mainpage;
         $options['phone'] = $this->phone;
         $options['viber'] = $this->viber;

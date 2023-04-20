@@ -630,7 +630,7 @@ class ItemList extends \App\Pages\Base
         
         $item = $sender->getOwner()->getDataItem();
 
-        if(intval($user->prtype ) == 0){
+        if(intval($user->prtypelabel ) == 0){
             $dataUri = \App\Util::generateQR($item->url,100,5)  ;
             $html = "<img src=\"{$dataUri}\"  />";
             $this->addAjaxResponse("  $('#tag').html('{$html}') ; $('#pform').modal()");
@@ -673,7 +673,7 @@ class ItemList extends \App\Pages\Base
               
             $buf = $pr->getBuffer() ;
             $b = json_encode($buf) ;
-            $this->addAjaxResponse(" sendPS('{$b}') ");  
+            $this->addAjaxResponse(" sendPSlabel('{$b}') ");  
             
         }catch(\Exception $e){
            $message = $e->getMessage()  ;
@@ -770,7 +770,7 @@ class ItemList extends \App\Pages\Base
         if (count($items) == 0) {
             return;
         }
-        if(intval(\App\System::getUser()->prtype ) == 0){
+        if(intval(\App\System::getUser()->prtypelabel ) == 0){
   
             $htmls = H::printItems($items);
             
@@ -792,7 +792,7 @@ class ItemList extends \App\Pages\Base
         $buf = \App\Printer::xml2comm($xml);
         $b = json_encode($buf) ;                   
           
-        $this->addAjaxResponse("$('.seldel').prop('checked',null); sendPS('{$b}') ");      
+        $this->addAjaxResponse("$('.seldel').prop('checked',null); sendPSlabel('{$b}') ");      
       }catch(\Exception $e){
            $message = $e->getMessage()  ;
            $message = str_replace(";","`",$message)  ;

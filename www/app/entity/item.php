@@ -240,12 +240,7 @@ class Item extends \ZCL\DB\Entity
                     $partion = $this->getLastPartion($store);
                 }
                 $price = $partion + (int)$partion / 100 * $ret;
-                //курсовая разница
-                $opv = \App\System::getOptions("val");
-                if (strlen($this->val) > 1 && $opv['valprice'] == 1) {
-                    $k = $opv[$this->val] / $this->rate;
-                    $price = $price * $k;
-                }
+      
             }
         } else {
             if ($_price > 0) {
@@ -276,12 +271,7 @@ class Item extends \ZCL\DB\Entity
                     $price = $partion + (int)$partion / 100 * $cat->price5;
                 }
 
-                //курсовая разница
-                $opv = \App\System::getOptions("val");
-                if (strlen($this->val) > 1 && $opv['valprice'] == 1) {
-                    $k = $opv[$this->val] / $this->rate;
-                    $price = $price * $k;
-                }
+ 
             }
         }
 
@@ -295,12 +285,7 @@ class Item extends \ZCL\DB\Entity
             }
 
             $price = $partion + (doubleval($partion) / 100) * $common['defprice'];
-            //курсовая разница
-            $opv = \App\System::getOptions("val");
-            if (strlen($this->val) > 1 && $opv['valprice'] == 1) {
-                $k = $opv[$this->val] / $this->rate;
-                $price = $price * $k;
-            }
+        
         }
 
          
@@ -313,15 +298,23 @@ class Item extends \ZCL\DB\Entity
             }
             $price =  $partion;
             
-            //курсовая разница
-            $opv = \App\System::getOptions("val");
-            if (strlen($this->val) > 1 && $opv['valprice'] == 1) {
-                $k = $opv[$this->val] / $this->rate;
-                $price = $price * $k;
-            }
+
         }
 
-
+        //курсовая разница
+        $opv = \App\System::getOptions("val");
+        if (strlen($this->val) > 1 && $opv['valprice'] == 1) {
+            
+            foreach($opv['vallist'] as $v) {
+               if($v->code==$this->val){
+                 $k = $v->rate / $this->rate;
+                 $price = $price * $k;      
+               } 
+            }
+            
+            
+        }
+      
         return $price;
     }
 
