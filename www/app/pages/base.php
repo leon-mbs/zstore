@@ -119,6 +119,8 @@ class Base extends \Zippy\Html\WebPage
 
         $this->_tvars["psurl"] =  $user->pserver ;  
         $this->_tvars["printserver"] = $user->prtype == 1;  
+        $this->_tvars["psurllabel"] =  $user->pserverlabel ;  
+        $this->_tvars["printserverlabel"] = $user->prtypelabel == 1;  
 
         
         

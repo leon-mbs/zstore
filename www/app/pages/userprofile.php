@@ -112,7 +112,22 @@ class UserProfile extends \App\Pages\Base
         $form->add(new SubmitButton('savep'))->onClick($this, 'savePrinterOnClick');
         $this->add($form);
   
+         
+ 
+  
         $this->onPSType(null);
+      
+        $form = new Form('printerlabel');
+        $form->add(new DropDownChoice('prtypelabel',0 ))->onChange($this,"onPSTypelabel");
+        $form->prtypelabel->setValue($this->user->prtypelabel);
+
+        $form->add(new TextInput('pserverlabel',$this->user->pserverlabel));
+        $form->add(new ClickLink('pstestlabel'))->onClick($this,'onPSTestlabel',true);
+        $form->add(new TextInput('pwsymlabel',$this->user->pwsymlabel));
+        $form->add(new SubmitButton('saveplabel'))->onClick($this, 'savePrinterlabelOnClick');
+        $this->add($form);
+  
+        $this->onPSTypelabel(null);
        
     }
 
@@ -220,6 +235,50 @@ class UserProfile extends \App\Pages\Base
         $this->user->pwsym = trim($this->printer->pwsym->getText() );
         $this->user->pserver = trim($this->printer->pserver->getText() );
         $this->user->pserver  = rtrim($this->user->pserver,"/") ;
+
+        $this->user->save();
+        $this->setSuccess('Збережено');
+        System::setUser($this->user);
+      
+    }
+  
+    public function onPSTypelabel($sender) {
+       $prtype = (int)$this->printerlabel->prtypelabel->getValue();
+       $this->printerlabel->pserverlabel->setVisible($prtype==1) ;      
+       $this->printerlabel->pwsymlabel->setVisible($prtype==1) ;      
+
+        
+    }
+    public function onPSTestlabel($sender) {
+      
+        try{
+     
+            $pr = new \App\Printer() ;
+          
+            $pr->text("Printer text");
+            $pr->text("Тест принтера");
+              
+            $buf = $pr->getBuffer() ;
+            $b = json_encode($buf) ;
+            $this->addAjaxResponse(" sendPSlabel('{$b}') ");  
+            
+        }catch(\Exception $e){
+           $message = $e->getMessage()  ;
+           $message = str_replace(";","`",$message)  ;
+           $this->addAjaxResponse(" toastr.error( '{$message}' )         ");  
+                    
+        }   
+        
+    }
+    
+    public function savePrinterlabelOnClick($sender) {
+    
+ 
+
+        $this->user->prtypelabel = $this->printerlabel->prtypelabel->getValue() ;
+        $this->user->pwsymlabel = trim($this->printerlabel->pwsymlabel->getText() );
+        $this->user->pserverlabel = trim($this->printerlabel->pserverlabel->getText() );
+        $this->user->pserverlabel  = rtrim($this->user->pserverlabel,"/") ;
 
         $this->user->save();
         $this->setSuccess('Збережено');
