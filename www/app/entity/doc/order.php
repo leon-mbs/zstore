@@ -53,7 +53,9 @@ class Order extends \App\Entity\Doc\Document
             $allbonus = $c->getBonus();
         }
 
-
+        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+       
+ 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
                         "customer_name"   => $this->customer_name,
@@ -65,7 +67,11 @@ class Order extends \App\Entity\Doc\Document
                         "outnumber"       => $this->headerdata["outnumber"],
                         "isoutnumber"     => strlen($this->headerdata["outnumber"]) > 0,
                         "document_number" => $this->document_number,
+                         "iban"      => strlen($firm['iban'] ) > 0 ? $firm['iban'] : false,
+                         "firm_name" => $firm['firm_name'],
 
+                        "isfirm"          => strlen($firm["firm_name"]) > 0,
+                    
                         "total"           => H::fa($this->amount),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,

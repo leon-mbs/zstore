@@ -88,6 +88,15 @@
 
     </tr>
     {{/isbank}}
+     {{#iban}}
+    <tr>
+
+        <td></td>
+        <td> IBAN</td>
+        <td colspan="7">{{iban}}   </td>
+
+    </tr>
+    {{/iban}}
    <tr>
         <td colspan="9">{{{notes}}}</td>
     </tr>

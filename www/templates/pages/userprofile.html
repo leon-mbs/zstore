@@ -155,7 +155,34 @@
                                 <input zippy="savep" class="btn btn-primary" type="submit" value="Зберегти">
                             </div>                            
                          </form>   
-            </div>
+                             <h4>Принтер етикеток</h4>
+                         <form zippy="printerlabel">
+                            <div class="form-group  ">
+                                <label for="prtypelabel">Тип підключення</label>
+                                <select class="form-control" zippy="prtypelabel">
+                                     <option value="0">Системний принтер</option>
+                                     <option value="1">Print сервер</option>
+                                </select>
+                                <small data-label="pserverlabel">Опис <a href="https://zippy.com.ua/ext#10" target="_blank">тут</a>  </small>
+                            </div>    
+                                 
+                                
+                             <div class="form-group  ">
+                                <label data-label="pserverlabel" for="pserverlabel">Адреса серверу</label>
+                                <input class="form-control" zippy="pserverlabel">
+                                 
+                            </div>
+                             <div class="form-group  ">
+                                <label data-label="pwsymlabel" for="pwsymlabel">Ширина (кiл. символiв)</label>
+                                <input type="number"  style="width:100px"   class="form-control" zippy="pwsymlabel">
+                                <a  data-label="pwsymlabel" zippy="pstestlabel" >Тест принтера</a>
+                            </div>
+                                          
+                             <div class="form-group">
+                                <input zippy="saveplabel" class="btn btn-primary" type="submit" value="Зберегти">
+                            </div>                            
+                         </form>   
+        </div>
             <div class="col-10 col-lg-3 col-md-3 col-xl-2">
 
                 <h4>Зміна пароля</h4>
