@@ -49,7 +49,10 @@
         <div   zippy="docpanel">
 
             <h4 class="mb-2  ">Оформлення чеку</h4>
+            <div zippy="navbar" class="navbar nav justify-content-start">
+
             <a zippy="tochecklist"  ><i class="fa fa-list"></i> Список чекiв</a>    &nbsp;  &nbsp; &nbsp;  &nbsp; 
+            <a  href="/index.php?p=App/Pages/Service/ARMSimple"  ><i class="fa fa-repeat"></i> Спрощена версія АРМ</a>    &nbsp;  &nbsp; &nbsp;  &nbsp; 
              {{#fiscal}}
                 
                         <a zippy="openshift"><i class="fa fa-bullhorn"></i> Вiдкрити змiну</a>
@@ -57,6 +60,8 @@
                         
              
                 {{/fiscal}}
+             </div>
+                
             <form zippy="form2" class="mt-2 ">
              
                 <div class="row">
@@ -306,7 +311,7 @@
                             <label for="edittovar">Назва</label>
                             <input placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
                             <br> <a zippy="openitemsel">Вiдкрити довiдник</a>
-                            <br> <a zippy="opencatpan">Відкрити Категорії</a>
+                            &nbsp; <a zippy="opencatpan">Відкрити Категорії</a>
                            <br>
                             Наявність: <span zippy="qtystock"></span>
 
@@ -319,19 +324,21 @@
                         </div>
 
                         {{/usesnumber}}
-                        <div class="form-group">
-                            <label for="editquantity">Кількість</label>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label" for="editquantity">Кількість</label>
+                             <div class="col-7">
                             <input class="form-control qtyprice" type="text" zippy="editquantity" required="required" pattern="[0-9,\.]+"
                                    style="width: 70px;">
-
+                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="editprice">Ціна </label>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label" for="editprice">Ціна </label>
+                            <div class="col-7">
                             <input autocomplete="off" class="form-control" type="text" zippy="editprice" required="required"
                                    pattern="[,0-9\.]+"
                                    style="width: 70px;">
-
+                             </div>
                         </div>
 
 
