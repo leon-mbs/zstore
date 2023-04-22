@@ -136,8 +136,9 @@ class Discounts extends \App\Pages\Base
 
         $this->itab->add(new Form('iofilter'))->onSubmit($this, 'OnIOAdd');
         $this->itab->iofilter->add(new AutocompleteTextInput('isearchokey'))->onText($this, 'OnAutoItem');
+        $this->itab->iofilter->isearchokey->onChange($this,"OnIsearchoKey",true);
         $this->itab->iofilter->add(new TextInput('isearchoqty1'));
-        $this->itab->iofilter->add(new TextInput('isearchoprice1'));
+        $this->itab->iofilter->add(new TextInput('isearchoprice1'));    
         $this->itab->iofilter->add(new TextInput('isearchoqty2'));
         $this->itab->iofilter->add(new TextInput('isearchoprice2'));
         $this->itab->add(new DataView('iolist', new DiscItemODataSource($this), $this, 'oitemlistOnRow'));
@@ -340,6 +341,13 @@ class Discounts extends \App\Pages\Base
         $sender->isearchkey->setKey(0);
     }
    
+    public function OnIsearchoKey($sender) {
+        $key = $sender->getKey();
+        $it = Item::load($key) ;
+        $pureprice= $it->getPurePrice();
+        $this->itab->iofilter->isearchoprice1->setText($pureprice) ;       
+        $this->itab->iofilter->isearchoprice2->setText($pureprice) ;       
+    }
     public function OnIOAdd($sender) {
         $k = $sender->isearchokey->getKey();
         $i = Item::load($k);

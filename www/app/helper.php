@@ -1014,7 +1014,16 @@ class Helper
 
             
             $qty =  intval($item->quantity);
-            if($qty==0) $qty = 1;
+            $printqty =  intval($item->printqty);
+            if($printqty==0) $printqty = 4;
+
+            if($printqty==1)  $qty = 1;
+            if($printqty==2)  $qty = 2;
+            if($printqty==3)  ;
+            if($printqty==4)  {
+                if($qty > 10) $qty = 10;    
+            }
+            
             for($i=0;$i<$qty;$i++){
                $htmls = $htmls . $report->generate($header);
             }

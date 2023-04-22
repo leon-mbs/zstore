@@ -137,6 +137,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new \Zippy\Html\Form\File('editaddfile'));
         $this->itemdetail->add(new CheckBox('editdelimage'));
         $this->itemdetail->add(new DropDownChoice('edittype', Item::getTypes()));
+        $this->itemdetail->add(new DropDownChoice('editprintqty', array(),1));
 
 
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
@@ -273,6 +274,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editcustomsize->setText($this->_item->customsize);
         $this->itemdetail->editwarranty->setText($this->_item->warranty);
         $this->itemdetail->edittype->setValue($this->_item->item_type);
+        $this->itemdetail->editprintqty->setValue($this->_item->printqty);
 
         $this->itemdetail->editurl->setText($this->_item->url);
         $this->itemdetail->editweight->setText($this->_item->weight);
@@ -367,6 +369,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->customsize = $this->itemdetail->editcustomsize->getText();
         $this->_item->warranty = $this->itemdetail->editwarranty->getText();
         $this->_item->item_type = $this->itemdetail->edittype->getValue();
+        $this->_item->printqty = $this->itemdetail->editprintqty->getValue();
 
         $this->_item->cell = $this->itemdetail->editcell->getText();
         $this->_item->minqty = $this->itemdetail->editminqty->getText();
