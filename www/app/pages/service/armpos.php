@@ -91,6 +91,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->add(new Panel('navbar')) ;
     
         $this->docpanel->navbar->add(new ClickLink('tochecklist', $this, 'onCheckList'));
+        $this->docpanel->navbar->add(new ClickLink('tosimple', $this, 'onSimpleOn'));
         $this->docpanel->navbar->add(new ClickLink('openshift', $this, 'OnOpenShift'));
         $this->docpanel->navbar->add(new ClickLink('closeshift', $this, 'OnCloseShift'));
 

@@ -118,11 +118,14 @@ class Discounts extends \App\Pages\Base
 
         //товары
 
-        $this->itab->add(new Form('ifilter'))->onSubmit($this, 'OnIAdd');
+        $this->itab->add(new Form('ifilter'));
         $this->itab->ifilter->add(new AutocompleteTextInput('isearchkey'))->onText($this, 'OnAutoItem');
+        $this->itab->ifilter->isearchkey->onChange($this,"OnIsearchKey",true);
+      
         $this->itab->ifilter->add(new Date('isearchfrom'))->setDate(time());
         $this->itab->ifilter->add(new Date('isearchto'))->setDate(strtotime("+7day", time()));
         $this->itab->ifilter->add(new TextInput('isearchdisc'));
+        $this->itab->ifilter->add(new SubmitButton('ifiltersbm'))->onClick($this, 'OnIAdd');
 
         
         $this->itab->add(new Form('itform'));
@@ -134,13 +137,17 @@ class Discounts extends \App\Pages\Base
  
         $this->itab->itform->ilist->Reload();
 
-        $this->itab->add(new Form('iofilter'))->onSubmit($this, 'OnIOAdd');
+        $this->itab->add(new Form('iofilter')) ;
         $this->itab->iofilter->add(new AutocompleteTextInput('isearchokey'))->onText($this, 'OnAutoItem');
         $this->itab->iofilter->isearchokey->onChange($this,"OnIsearchoKey",true);
         $this->itab->iofilter->add(new TextInput('isearchoqty1'));
         $this->itab->iofilter->add(new TextInput('isearchoprice1'));    
         $this->itab->iofilter->add(new TextInput('isearchoqty2'));
         $this->itab->iofilter->add(new TextInput('isearchoprice2'));
+        
+        $this->itab->iofilter->add(new SubmitButton('iofiltersbm'))->onClick($this, 'OnIOAdd');
+        
+        
         $this->itab->add(new DataView('iolist', new DiscItemODataSource($this), $this, 'oitemlistOnRow'));
         $this->itab->iolist->setPageSize(H::getPG());
         $this->itab->add(new \Zippy\Html\DataList\Paginator('iopag', $this->itab->iolist));
@@ -314,20 +321,32 @@ class Discounts extends \App\Pages\Base
 
 
     //товары
+    
+    public function OnAutoItem($sender) {
+        $text = trim($sender->getText());
+        return Item::findArrayAC($text);
+    } 
+     public function OnIsearchKey($sender) {
+        $key = $sender->getKey();
+        $it = Item::load($key) ;
+        $pureprice= $it->getPurePrice();
+        $this->itab->ifilter->isearchdisc->setText($pureprice) ;       
+
+    }      
     public function OnIAdd($sender) {
-        $k = $sender->isearchkey->getKey();
+        $k =  $this->itab->ifilter->isearchkey->getKey();
         $i = Item::load($k);
         if ($i == null) {
             return;
         }
-        $d = doubleval($sender->isearchdisc->getText());
+        $d = doubleval($this->itab->ifilter->isearchdisc->getText());
         if ($d > 0) {
             $i->actionprice = $d;
             $i->actiondisc = 0;
             $i->actionqty1 = 0;
             $i->actionprice1 = 0;
-            $i->fromdate = $sender->isearchfrom->getDate();
-            $i->todate = $sender->isearchto->getDate(true);;
+            $i->fromdate = $this->itab->ifilter->isearchfrom->getDate();
+            $i->todate = $this->itab->ifilter->isearchto->getDate(true);;
             if ($i->fromdate > $i->todate) {
                 $this->setError("Невірний інтервал");
                 return;
@@ -336,9 +355,9 @@ class Discounts extends \App\Pages\Base
             $this->itab->itform->ilist->Reload();
         }
 
-        $sender->isearchdisc->setText("");
-        $sender->isearchkey->setText("");
-        $sender->isearchkey->setKey(0);
+         $this->itab->ifilter->isearchdisc->setText("");
+         $this->itab->ifilter->isearchkey->setText("");
+         $this->itab->ifilter->isearchkey->setKey(0);
     }
    
     public function OnIsearchoKey($sender) {
@@ -349,14 +368,14 @@ class Discounts extends \App\Pages\Base
         $this->itab->iofilter->isearchoprice2->setText($pureprice) ;       
     }
     public function OnIOAdd($sender) {
-        $k = $sender->isearchokey->getKey();
+        $k = $this->itab->iofilter->isearchokey->getKey();
         $i = Item::load($k);
         if ($i == null) {
             $this->setError("Не выбрано товар") ;
             return;
         }
-        $d1 = doubleval($sender->isearchoprice1->getText());
-        $q1 = doubleval($sender->isearchoqty1->getText());
+        $d1 = doubleval($this->itab->iofilter->isearchoprice1->getText());
+        $q1 = doubleval($this->itab->iofilter->isearchoqty1->getText());
         if ($d1 > 0 && $q1 > 1) {
             $i->actionprice1 = $d1;
             $i->actionqty1  = $q1;
@@ -364,8 +383,8 @@ class Discounts extends \App\Pages\Base
             $i->actionprice  = 0;
             $i->fromdate  = 0;
             $i->todate  = 0;
-            $d2 = doubleval($sender->isearchoprice2->getText());
-            $q2 = doubleval($sender->isearchoqty2->getText());
+            $d2 = doubleval($this->itab->iofilter->isearchoprice2->getText());
+            $q2 = doubleval($this->itab->iofilter->isearchoqty2->getText());
             if ($d2 > 0 && $q2 > 1) {
                 $i->actionprice2 = $d2;
                 $i->actionqty2 = $q2;
@@ -374,12 +393,12 @@ class Discounts extends \App\Pages\Base
             $this->itab->itform->ilist->Reload();
         }
 
-        $sender->isearchoprice1->setText("");
-        $sender->isearchoprice2->setText("");
-        $sender->isearchoqty1->setText("");
-        $sender->isearchoqty2->setText("");
-        $sender->isearchokey->setText("");
-        $sender->isearchokey->setKey(0);
+        $this->itab->iofilter->isearchoprice1->setText("");
+        $this->itab->iofilter->isearchoprice2->setText("");
+        $this->itab->iofilter->isearchoqty1->setText("");
+        $this->itab->iofilter->isearchoqty2->setText("");
+        $this->itab->iofilter->isearchokey->setText("");
+        $this->itab->iofilter->isearchokey->setKey(0);
         
         $this->itab->iolist->Reload();
         $this->goAnkor('iofilter')  ;
@@ -496,10 +515,7 @@ class Discounts extends \App\Pages\Base
     }
 
 
-    public function OnAutoItem($sender) {
-        $text = trim($sender->getText());
-        return Item::findArrayAC($text);
-    }
+
 
 
 }
