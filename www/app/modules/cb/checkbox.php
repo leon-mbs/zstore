@@ -260,7 +260,13 @@ class CheckBox
           
           $disc =  $sum - $doc->payamount*100;
           if($disc > 0) {
-             $check["discounts"][] = array("type"=>"DISCOUNT","name"=> "Знижка ". ($disc/100)  ." грн", "value"=> $disc,  "mode"=> "VALUE");  
+             if($doc->headerdata['bonus'] >0){
+                 $check["discounts"][] = array("type"=>"DISCOUNT","name"=> "Бонуси ". $doc->headerdata['bonus'] ." грн", "value"=> $doc->headerdata['bonus'],  "mode"=> "VALUE");      
+                 $disc  = $disc -  $doc->headerdata['bonus'] ;
+             }
+             if($disc >0) {
+                $check["discounts"][] = array("type"=>"DISCOUNT","name"=> "Знижка ". $disc ." грн", "value"=> $disc,  "mode"=> "VALUE");                       
+             }             
           }
           
        // $check['total_payment'] = $doc->payamount*100;
@@ -386,7 +392,15 @@ class CheckBox
           
           $disc =  $sum - $doc->payamount*100;
           if($disc > 0) {
-             $check["discounts"][] = array("type"=>"DISCOUNT","name"=> "Знижка ". ($disc/100)  ." грн", "value"=> $disc,  "mode"=> "VALUE");  
+             if($doc->headerdata['bonus'] >0){
+                 $check["discounts"][] = array("type"=>"DISCOUNT","name"=> "Бонуси ". $doc->headerdata['bonus'] ." грн", "value"=> $doc->headerdata['bonus'],  "mode"=> "VALUE");      
+                 $disc  = $disc -  $doc->headerdata['bonus'] ;
+             }
+             if($disc >0) {
+                $check["discounts"][] = array("type"=>"DISCOUNT","name"=> "Знижка ". $disc ." грн", "value"=> $disc,  "mode"=> "VALUE");                       
+             }
+              
+             
           }
           
        // $check['total_payment'] = $doc->payamount*100;

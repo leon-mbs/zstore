@@ -88,7 +88,12 @@ class ARMPos extends \App\Pages\Base
 
 
         $this->add(new Panel('docpanel'))->setVisible(false);
-        $this->docpanel->add(new ClickLink('tochecklist', $this, 'onCheckList'));
+        $this->docpanel->add(new Panel('navbar')) ;
+    
+        $this->docpanel->navbar->add(new ClickLink('tochecklist', $this, 'onCheckList'));
+        $this->docpanel->navbar->add(new ClickLink('tosimple', $this, 'onSimpleOn'));
+        $this->docpanel->navbar->add(new ClickLink('openshift', $this, 'OnOpenShift'));
+        $this->docpanel->navbar->add(new ClickLink('closeshift', $this, 'OnCloseShift'));
 
 
         $this->docpanel->add(new Form('form2'))->setVisible(false);
@@ -105,9 +110,7 @@ class ARMPos extends \App\Pages\Base
 
         $this->docpanel->form2->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'));
         $this->docpanel->form2->add(new DataView('detailser', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_serlist')), $this, 'serOnRow'));
-        $this->docpanel->add(new ClickLink('openshift', $this, 'OnOpenShift'));
-        $this->docpanel->add(new ClickLink('closeshift', $this, 'OnCloseShift'));
-
+  
         //оплата
         $this->docpanel->add(new Form('form3'))->setVisible(false);
         $this->docpanel->form3->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
@@ -495,7 +498,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->editdetail->qtystock->setText("");
         $this->docpanel->form2->setVisible(false);
         $this->_rowid = -1;
-        $this->docpanel->tochecklist->setVisible(false);        
+        $this->docpanel->navbar->setVisible(false);        
     }
 
     public function addserOnClick($sender) {
@@ -636,7 +639,7 @@ class ARMPos extends \App\Pages\Base
 
         $this->docpanel->editdetail->editprice->setText("");
         $this->docpanel->editdetail->qtystock->setText("");
-        $this->docpanel->tochecklist->setVisible(true);
+        $this->docpanel->navbar->setVisible(true);
         
     }
 

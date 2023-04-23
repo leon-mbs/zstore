@@ -26,7 +26,7 @@ class ABC extends \App\Pages\Base
             return;
         }
 
-        $this->typelist[1] = "Товари, дохід";
+        $this->typelist[1] = "Товари, прибуток";
         $this->typelist[2] = "Постачальники, об`єм поставок";
         $this->typelist[3] = "Покупці, об`єм продаж";
         $this->typelist[4] = "Послуги, виторг";

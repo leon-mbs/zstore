@@ -95,6 +95,7 @@ class Item extends \ZCL\DB\Entity
         $this->actiondisc = doubleval($xml->actiondisc[0]);
         $this->todate = intval($xml->todate[0]);
         $this->fromdate = intval($xml->fromdate[0]);
+        $this->printqty = intval($xml->printqty[0]);
 
 
         parent::afterLoad();
@@ -169,6 +170,7 @@ class Item extends \ZCL\DB\Entity
         }
         $this->detail .= "<todate>{$this->todate}</todate>";
         $this->detail .= "<fromdate>{$this->fromdate}</fromdate>";
+        $this->detail .= "<printqty>{$this->printqty}</printqty>";
 
 
         $this->detail .= "</detail>";

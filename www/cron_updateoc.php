@@ -12,6 +12,9 @@ try {
     
         \App\Modules\OCStore\Helper::connect() ;
     
+        $user = \App\Entity\User::getByLogin('admin') ;
+        \App\System::setUser($user)   ;
+    
         $statuses =  \App\System::getSession()->statuses;
         if(is_array($statuses)== false  || count($statuses)==0) {
             
@@ -238,6 +241,8 @@ try {
 
 
                 $neworder = \App\Entity\Doc\Document::create('Order');
+                
+                   
                 $neworder->document_number = $neworder->nextNumber();
                 $neworder->document_date = strtotime($shoporder->date_added);
 

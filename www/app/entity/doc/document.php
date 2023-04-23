@@ -672,9 +672,16 @@ class Document extends \ZCL\DB\Entity
      */
     public function insertLog($state) {
         $conn = \ZDB\DB::getConnect();
-        $host = $conn->qstr($_SERVER["REMOTE_ADDR"]);
+        $host = $_SERVER["REMOTE_ADDR"];
+        if($host==null){
+          $host = "";  
+        } 
+        $host = $conn->qstr($host);
         $user = \App\System::getUser();
-
+        if($user == null){
+            $user = \App\Entity\User::getByLogin('admin') ;
+        }
+        
         $sql = "insert into docstatelog (document_id,user_id,createdon,docstate,hostname) values({$this->document_id},{$user->user_id},now(),{$state},{$host})";
         $conn->Execute($sql);
     }

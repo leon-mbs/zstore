@@ -49,7 +49,13 @@
         <div   zippy="docpanel">
 
             <h4 class="mb-2  ">Оформлення чеку</h4>
+            <div zippy="navbar" class="navbar nav justify-content-start">
+
             <a zippy="tochecklist"  ><i class="fa fa-list"></i> Список чекiв</a>    &nbsp;  &nbsp; &nbsp;  &nbsp; 
+          
+            <a zippy="tosimple"     ><i class="fa fa-repeat"></i> Спрощена версія АРМ</a>    &nbsp;  &nbsp; &nbsp;  &nbsp; 
+            
+            
              {{#fiscal}}
                 
                         <a zippy="openshift"><i class="fa fa-bullhorn"></i> Вiдкрити змiну</a>
@@ -57,6 +63,8 @@
                         
              
                 {{/fiscal}}
+             </div>
+                
             <form zippy="form2" class="mt-2 ">
              
                 <div class="row">
@@ -64,7 +72,7 @@
                         {{#usescanner}}
                         <div class="navbar nav justify-content-start">
                             Штрих код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
-                            &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
+                            <a zippy="addcode"  ></a>
 
                         </div>
                         {{/usescanner}}
@@ -150,75 +158,24 @@
             <form zippy="form3">
 
                 <div class="row">
-                    <div class="col-12 col-md-4">
-                        <div class="form-group row">
-                            <label class="col-4" for="document_number">Номер документа</label>
-                            <div class="col-6">
-                            <input class="form-control" type="text" zippy="document_number" required="required">
-                            </div>
-                        </div>
+   
 
-                        <div class="form-group row">
-                            <label class="col-4" for="document_date"> Дата</label>
-                            <div class="col-6">
-                           <input style="width:120px;" class="form-control" type="text" zippy="document_date" required="required">
-                            </div>
-                        </div>
-                   
-
- 
-                        <div class="form-group  row ">
-                            <label class="col-4" for="customer">Покупець</label>
-                            <div class="col-6">
-                           <input placeholder="Почніть вводити..." class="form-control " zippy="customer"/>
-                            <span zippy="discount" style="display:block;font-size:smaller"></span>
-                            <a style="font-size:smaller" zippy="addcust">Додати нового</a>
-
-                              </div>
-                      </div>
-
-                        <div class="form-group  row ">
+                    <div class="col-12 col-md-5  ">
+                      <div class="form-group  row ">
                             <label class="col-4" for="payment">Тип оплати </label>
                             <div class="col-6">
                            <select class="form-control" zippy="payment">
 
                             </select>
                                           </div>
-                        </div>
-                         <div class="form-group  row ">
-                            <label class="col-4" data-label="trans"  for="trans">№ транзакції</label>
-                            <div class="col-6">
-                           <input zippy="trans" class="form-control "  />
-                            <small  data-label="trans" >Код з банківського терміналу при оплаті карткою</small>
-                            
-                             </div>
-                           
-                        </div>
-                         <div class="form-group  row ">
-                            <label class="col-4" for="notes">Примітка </label>
-
-                            <div class="col-6">
-                           <textarea class="form-control" zippy="notes"></textarea>
-
-                          </div> 
-                        </div>
-
-                    </div>
-
-
-                    <div class="col-12 col-md-5  ">
+                        </div>                     
                         <div class="form-group row">
                           <label class="col-4" for="total2">На суму</label>
                            <div class="col-2">
                              <input class="form-control-plaintext" type="text" zippy="total2" readonly>
                          </div>
                         </div>
-                        <div class="form-group row">
-                            <label class="col-4" for="paydisc" data-label="paydisc">Знижка</label>
-                           <div class="col-2">
-                            <input autocomplete="off" class="form-control" type="text" zippy="paydisc">
-                         </div>
-                        </div>
+  
                         <div class="form-group row">
                             <label class="col-4" for="bonus" data-label="paydisc">Бонуси</label>
                            <div class="col-2">
@@ -257,6 +214,63 @@
                         </div>
 
                     </div>
+     
+                 <div class="col-12 col-md-4">
+                      
+                      <div class="form-group row">
+                            <label class="col-4" for="paydisc" data-label="paydisc">Знижка</label>
+                           <div class="col-2">
+                            <input autocomplete="off" class="form-control" type="text" zippy="paydisc">
+                         </div>
+                        </div>                      
+                      
+                        <div class="form-group row">
+                            <label class="col-4" for="document_number">Номер документа</label>
+                            <div class="col-6">
+                            <input class="form-control" type="text" zippy="document_number" required="required">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-4" for="document_date"> Дата</label>
+                            <div class="col-6">
+                           <input style="width:120px;" class="form-control" type="text" zippy="document_date" required="required">
+                            </div>
+                        </div>
+                   
+
+ 
+                        <div class="form-group  row ">
+                            <label class="col-4" for="customer">Покупець</label>
+                            <div class="col-6">
+                           <input placeholder="Почніть вводити..." class="form-control " zippy="customer"/>
+                            <span zippy="discount" style="display:block;font-size:smaller"></span>
+                            <a style="font-size:smaller" zippy="addcust">Додати нового</a>
+
+                              </div>
+                      </div>
+
+  
+                         <div class="form-group  row ">
+                            <label class="col-4" data-label="trans"  for="trans">№ транзакції</label>
+                            <div class="col-6">
+                           <input zippy="trans" class="form-control "  />
+                            <small  data-label="trans" >Код з банківського терміналу при оплаті карткою</small>
+                            
+                             </div>
+                           
+                        </div>
+                         <div class="form-group  row ">
+                            <label class="col-4" for="notes">Примітка </label>
+
+                            <div class="col-6">
+                           <textarea class="form-control" zippy="notes"></textarea>
+
+                          </div> 
+                        </div>
+
+                    </div>
+     
                 </div>
 
 
@@ -306,7 +320,7 @@
                             <label for="edittovar">Назва</label>
                             <input placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
                             <br> <a zippy="openitemsel">Вiдкрити довiдник</a>
-                            <br> <a zippy="opencatpan">Відкрити Категорії</a>
+                            &nbsp; <a zippy="opencatpan">Відкрити Категорії</a>
                            <br>
                             Наявність: <span zippy="qtystock"></span>
 
@@ -319,19 +333,21 @@
                         </div>
 
                         {{/usesnumber}}
-                        <div class="form-group">
-                            <label for="editquantity">Кількість</label>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label" for="editquantity">Кількість</label>
+                             <div class="col-7">
                             <input class="form-control qtyprice" type="text" zippy="editquantity" required="required" pattern="[0-9,\.]+"
                                    style="width: 70px;">
-
+                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="editprice">Ціна </label>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label" for="editprice">Ціна </label>
+                            <div class="col-7">
                             <input autocomplete="off" class="form-control" type="text" zippy="editprice" required="required"
                                    pattern="[,0-9\.]+"
                                    style="width: 70px;">
-
+                             </div>
                         </div>
 
 
