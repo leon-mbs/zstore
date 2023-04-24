@@ -67,7 +67,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new TextInput('payed', 0));
         $this->docform->add(new Label('payamount', 0));
 
-        $this->docform->add(new Label('discount'))->setVisible(false);
+        $this->docform->add(new Label('custinfo'))->setVisible(false);
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
 
         $this->docform->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np'] == 1)))->onChange($this, 'OnDelivery');
@@ -528,13 +528,17 @@ class Order extends \App\Pages\Base
             $this->docform->email->setText($customer->email);
             $this->docform->address->setText($customer->address);
             $d= $customer->getDiscount();
-            if ($d > 0) {
-                $this->docform->discount->setText("Постійна знижка {$d}%");
-                $this->docform->discount->setVisible(true);
-                  
+            
+            if (doubleval($d) > 0) {
+                $disctext = "Постійна знижка {$d}%";
             } else {
-                
-            }
+                $bonus = $customer->getBonus();
+                if ($bonus > 0) {
+                    $disctext = "Нараховано бонусів {$bonus} ";
+                }
+            }            
+            $this->docform->custinfo->setText($disctext);
+            $this->docform->custinfo->setVisible(strlen($disctext) >0);
             
             
             $this->OnCinfo($customer_id);
@@ -601,7 +605,7 @@ class Order extends \App\Pages\Base
 
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
-        $this->docform->discount->setVisible(false);
+        $this->docform->custinfo->setVisible(false);
 
         $this->docform->phone->setText($cust->phone);
     }

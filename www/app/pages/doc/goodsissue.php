@@ -55,7 +55,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
         $this->docform->add(new DropDownChoice('salesource', H::getSaleSources(), H::getDefSaleSource()));
 
-        $this->docform->add(new Label('discount'));
+        $this->docform->add(new Label('custinfo'));
         $this->docform->add(new TextInput('editpaydisc'));
         $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
         $this->docform->add(new Label('paydisc', 0));
@@ -911,7 +911,7 @@ class GoodsIssue extends \App\Pages\Base
     }
 
     public function OnChangeCustomer($sender) {
-        $this->docform->discount->setVisible(false);
+        $this->docform->custinfo->setVisible(false);
 
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
@@ -932,8 +932,8 @@ class GoodsIssue extends \App\Pages\Base
                     $disctext = "Нараховано бонусів {$bonus} ";
                 }
             }
-            $this->docform->discount->setText($disctext);
-            $this->docform->discount->setVisible(true);
+            $this->docform->custinfo->setText($disctext);
+            $this->docform->custinfo->setVisible(strlen($disctext) >0);
 
         }
         if ($this->_prevcust != $customer_id) {//сменился контрагент
@@ -990,7 +990,7 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
-        $this->docform->discount->setVisible(false);
+        $this->docform->custinfo->setVisible(false);
     }
 
     public function cancelcustOnClick($sender) {
