@@ -544,41 +544,11 @@ class POSCheck extends \App\Pages\Base
         
         }        
         
-        
-        
-        
-        
+ 
         
         $pos = \App\Entity\Pos::load($this->_doc->headerdata['pos']);
 
-        if (strlen($this->_doc->headerdata["fiscalnumber"])  == 0 &&  $this->_tvars["ppo"] == true && $pos->usefisc == 1 && $sender->id == 'execdoc') {
-            $this->_doc->headerdata["fiscalnumberpos"]  =  $pos->fiscalnumber;
-            
-                   
-            $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
-            if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
-                //повторяем для  нового номера
-                $pos->fiscdocnumber = $ret['doclocnumber'];
-                $pos->save();
-                $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
-            }
-            if ($ret['success'] == false) {
-                $this->setErrorTopPage($ret['data']);
-                return;
-            } else {
-                //  $this->setSuccess("Выполнено") ;
-                if ($ret['docnumber'] > 0) {
-                    $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                    $pos->save();
-                    $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
-                } else {
-                    $this->setError("Не повернено фіскальний номер");
-                    return;
-                }
-            }
-            
-        }
-
+ 
 
         $isEdited = $this->_doc->document_id > 0;
         if ($isEdited == false) {

@@ -24,10 +24,13 @@
                     </div>
                      <div class="form-group  ">
                         <label for="customer">Покупець</label>
-                        <input placeholder="Почніть вводити..." class="form-control " zippy="customer"/>
-                        <span zippy="discount" style="display:block;font-size:smaller"></span>
-                        <a style="font-size:smaller" zippy="addcust">Додати нового</a>
-
+                         <div class="input-group  ">
+                             <input placeholder="Почніть вводити..." class="form-control " zippy="customer"/>
+                             <div class="input-group-append">
+                                 <a title="Додати нового" class="btn btn-success" zippy="addcust" >+</a>
+                            </div>                    
+                        </div>                               
+                        <span zippy="custinfo"> </span>
                     </div>
                      <div class="form-group  ">
                         <label for="pricetype">Тип ціни</label>
