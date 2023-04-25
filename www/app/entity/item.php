@@ -338,26 +338,22 @@ class Item extends \ZCL\DB\Entity
 
     //цена  со  скидкой
     public function getActionPrice($qty=0) {
+         //по  количеству
+        if ( $this->actionprice2 >0 && doubleval($this->actionqty2) <= $qty && $qty>1) {
+            return $this->actionprice2;
+        }
+        if ($this->actionprice1 >0 &&  doubleval($this->actionqty1) <= $qty && $qty>1 ) {
+            return $this->actionprice1;
+        }        
         
-            if ( $this->actionprice2 >0 && doubleval($this->actionqty2) <= $qty && $qty>1) {
-                return $this->actionprice2;
-            }
-            if ($this->actionprice1 >0 &&  doubleval($this->actionqty1) <= $qty && $qty>1 ) {
-                return $this->actionprice1;
-            }        
-        
+        //акционная цена
         if (doubleval($this->actionprice) > 0) {
-            
             if ( intval($this->fromdate) < time() && intval($this->todate) > time()) {
                 return $this->actionprice;
             }
-            
-            
-            
         }
         
-
-        
+        // скидка
         if (doubleval($this->actiondisc) > 0 && intval($this->fromdate) < time() && intval($this->todate) > time()) {   //по  категории
             return ($price - $price * $this->actiondisc / 100);
         }
@@ -372,7 +368,6 @@ class Item extends \ZCL\DB\Entity
         $price = $this->getPurePrice($_price_, $store, $partion);
         if ($this->hasAction() && $_price_ == 'price1') {
             $price = $this->getActionPrice($qty);
-
         }
 
         return \App\Helper::fa($price);
@@ -396,7 +391,7 @@ class Item extends \ZCL\DB\Entity
         $p['store']   = intval( $p['store'] );
         $p['partion']   = intval( $p['partion'] );
         $p['quantity']   = intval( $p['quantity'] );
-        $p['customer_id']   = intval( $p['customer_id'] );
+        $p['customer']   = intval( $p['customer_id'] );
        
         $pureprice = $this->getPurePrice($p['pricetype'] , $p['store'], $p['partion'] );
         $price = $pureprice;

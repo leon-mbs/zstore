@@ -479,6 +479,7 @@ class Base extends \Zippy\Html\WebPage
     }  
  
     public function vLoadService($args,$post=null) {
+         
          $service_id = $args[0];
          $ser =   \App\Entity\Service::load($service_id) ;
          $ret = [];
@@ -486,7 +487,12 @@ class Base extends \Zippy\Html\WebPage
              $ret['service_id']   = $service_id;   
              $ret['service_name'] = $ser->service_name;   
              $ret['category'] = $ser->category;   
-             $ret['price'] = $ser->getPrice( );   
+             $ret['pureprice'] = $ser->getPurePrice( );   
+             $ret['price'] = $ser->getPrice($args[1] ); 
+             if($ret['pureprice'] > $ret['price']) {
+                $ret['disc']  = number_format((1 - ($ret['price']/($ret['pureprice'])))*100, 1, '.', '') ;    
+             }
+                 
          }      
        
          return json_encode($ret, JSON_UNESCAPED_UNICODE);          
@@ -497,19 +503,35 @@ class Base extends \Zippy\Html\WebPage
        $item_id=$args[0];
        $p = strlen($post)==null ?  array() : json_decode($post,true)  ;
        
-       $store_id= intval($p['store'] );
-       $pricetype=  strlen($p['pt'])>0 ? $p['pt']   : 'price1';
-       
+         
        $item =   \App\Entity\Item::load($item_id) ;
        $ret = [];
        if($item != null) {
           $ret['item_id'] = $item_id;   
           $ret['itemname'] = $item->itemname;   
-          $ret['price'] = $item->getPrice($pricetype,$store_id);   
+          
+          $ret['price'] = $item->getPriceEx(array(
+               'pricetype'=>$p['pt'],
+               'store'=>$p['store'] ,  
+               'customer'=>$p['customer']
+        
+          )); 
+          
+          
+            
           $ret['lastpartion'] = $item->getLastPartion($store_id); //последняя  закупка  
           $ret['qtystock'] = $item->getQuantity($store_id); // на  складе  
           $ret['item_code'] = $item->item_code;   
+             
 
+        $ret['disc'] = '';
+        $ret['pureprice'] = $item->getPurePrice();
+        if($ret['pureprice'] > $ret['price']) {
+             $ret['disc']  = number_format((1 - ($ret['price']/($ret['pureprice'])))*100, 1, '.', '') ;    
+        }
+              
+          
+          
        }
                                  
        
@@ -615,7 +637,11 @@ class Base extends \Zippy\Html\WebPage
         $post = json_decode($post) ;
 
         $item =  \App\Entity\Item::load($post->item) ;
-        $price = $item->getPrice('', $post->store,0,$post->qty);
+        $price = $item->getPriceEx( array(
+           "store"=>$post->store,
+           "customer"=> $post->customer,
+           "quantity"=>$post->qty
+        ) ) ;
         
         $ret=[];
         $ret['price'] = $price;

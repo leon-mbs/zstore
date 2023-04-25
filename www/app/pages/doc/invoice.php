@@ -572,9 +572,11 @@ class Invoice extends \App\Pages\Base
      
         $customer_id = $this->docform->customer->getKey()  ;
         $pt=     $this->docform->pricetype->getValue() ;
-        $price = $item->getPriceEx(array('pricetype'=>$pt,
+        $price = $item->getPriceEx(array(
+         'pricetype'=>$pt,
          'store'=>$store_id,  
-         'customer_id'=>$customer_id));
+         'customer'=>$customer_id
+         ));
           
         
         $this->editdetail->editprice->setText(H::fa($price));
