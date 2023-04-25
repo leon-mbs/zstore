@@ -63,6 +63,7 @@ class Invoice extends \App\Entity\Doc\Document
                         "totalstr"        => $totalstr,
                         "total"           => H::fa($this->amount),
                         "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
+                        "totaldisc"           => $this->headerdata["totaldisc"] > 0 ? H::fa($this->headerdata["totaldisc"]) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false,
                         "paydisc"         => H::fa($this->headerdata["paydisc"])
         );

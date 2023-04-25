@@ -36,7 +36,7 @@ class GoodsIssue extends \App\Pages\Base
     private $_rowid     = 0;
     private $_rownumber = 1;
     private $_orderid   = 0;
-    private $_prevcust  = 0;   // преыдущий контрагент
+
     private $_changedpos  = false;    
  
 
@@ -158,7 +158,7 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->order->setText($this->_doc->headerdata['order']);
             $this->_orderid = $this->_doc->headerdata['order_id'];
-            $this->_prevcust = $this->_doc->customer_id;
+
 
             $this->docform->firm->setValue($this->_doc->firm_id);
             $this->OnChangeCustomer($this->docform->customer);
@@ -936,12 +936,7 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->custinfo->setVisible(strlen($disctext) >0);
 
         }
-        if ($this->_prevcust != $customer_id) {//сменился контрагент
-            $this->_prevcust = $customer_id;
-            $this->calcTotal();
-
-            $this->calcPay();
-        }
+    
         $this->OnCustomerFirm(null);
 
 

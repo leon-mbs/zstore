@@ -290,8 +290,9 @@ try {
                    $neworder->payamount = $neworder->amount;
                  
                 }
+                $neworder->headerdata['salesource'] = $modules['ocsalesource'];
+     
                 
-                $neworder->headerdata['salesource'] = \App\Helper::getDefSaleSource();
                 $neworder->headerdata['outnumber'] = $shoporder->order_id;
                 $neworder->headerdata['ocorder'] = $shoporder->order_id;
                 $neworder->headerdata['ocorderback'] = 0;

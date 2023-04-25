@@ -304,23 +304,27 @@ class Item extends \ZCL\DB\Entity
         }
 
         //курсовая разница
-        $opv = \App\System::getOptions("val");
-        if (strlen($this->val) > 1 && $opv['valprice'] == 1) {
-            
-            foreach($opv['vallist'] as $v) {
-               if($v->code==$this->val){
-                 $k = $v->rate / $this->rate;
-                 $price = $price * $k;      
-               } 
+        if($common['useval']==1)   {
+            $opv = \App\System::getOptions("val");
+            if (strlen($this->val) > 1 && $opv['valprice'] == 1) {
+                
+                foreach($opv['vallist'] as $v) {
+                   if($v->code==$this->val){
+                     $k = $v->rate / $this->rate;
+                     $price = $price * $k;      
+                   } 
+                }
+                
             }
-            
-            
         }
-      
         return $price;
     }
 
     public function hasAction() {
+        if( doubleval($this->actionqty1) > 0) {
+            return true;
+        }
+       
         if (doubleval($this->actionprice) > 0 || doubleval($this->actiondisc > 0)) {
 
             if ( intval($this->fromdate) < time() && intval($this->todate) > time()) {
@@ -328,14 +332,20 @@ class Item extends \ZCL\DB\Entity
             }
 
         }
-        if( doubleval($this->actionqty1) > 0) {
-            return true;
-        }
+ 
         return false;
     }
 
     //цена  со  скидкой
-    public function getActionPrice($price,$qty=0) {
+    public function getActionPrice($qty=0) {
+        
+            if ( $this->actionprice2 >0 && doubleval($this->actionqty2) <= $qty && $qty>1) {
+                return $this->actionprice2;
+            }
+            if ($this->actionprice1 >0 &&  doubleval($this->actionqty1) <= $qty && $qty>1 ) {
+                return $this->actionprice1;
+            }        
+        
         if (doubleval($this->actionprice) > 0) {
             
             if ( intval($this->fromdate) < time() && intval($this->todate) > time()) {
@@ -346,12 +356,7 @@ class Item extends \ZCL\DB\Entity
             
         }
         
-            if ( $this->actionprice2 >0 && doubleval($this->actionqty2) <= $qty && $qty>1) {
-                return $this->actionprice2;
-            }
-            if ($this->actionprice1 >0 &&  doubleval($this->actionqty1) <= $qty && $qty>1 ) {
-                return $this->actionprice1;
-            }
+
         
         if (doubleval($this->actiondisc) > 0 && intval($this->fromdate) < time() && intval($this->todate) > time()) {   //по  категории
             return ($price - $price * $this->actiondisc / 100);
@@ -366,10 +371,49 @@ class Item extends \ZCL\DB\Entity
         if(strlen($_price_)==0) $_price_ = 'price1';
         $price = $this->getPurePrice($_price_, $store, $partion);
         if ($this->hasAction() && $_price_ == 'price1') {
-            $price = $this->getActionPrice($price,$qty);
+            $price = $this->getActionPrice($qty);
 
         }
 
+        return \App\Helper::fa($price);
+    }
+    
+
+    /**
+    * цена  со  скидками (если  есть)
+    * 
+    * @param mixed $p   массив 
+    *                  pricetype
+    *                  store
+    *                  partion
+    *                  quantity
+    *                  customer_id
+    */
+    public function getPriceEx($p=array()) {
+        
+          
+        if(strlen($p['pricetype'])==0) $p['pricetype'] = 'price1';
+        $p['store']   = intval( $p['store'] );
+        $p['partion']   = intval( $p['partion'] );
+        $p['quantity']   = intval( $p['quantity'] );
+        $p['customer_id']   = intval( $p['customer_id'] );
+       
+        $pureprice = $this->getPurePrice($p['pricetype'] , $p['store'], $p['partion'] );
+        $price = $pureprice;
+        if ($this->hasAction() && $p['pricetype']  == 'price1') {
+            $price = $this->getActionPrice($p['quantity'] );
+
+        }
+        //если  нет скидок  проверям  по  контрагенту
+        if($price == $pureprice &&  $p['customer_id']  >0) {
+            $c = \App\Entity\Customer::load($p['customer_id']) ;
+            $d = $c->getDiscount();
+            if($d >0) {
+                $price = \App\Helper::fa($pureprice - ($pureprice*$d/100)) ;
+            }                 
+        }
+        
+        
         return \App\Helper::fa($price);
     }
 
@@ -681,3 +725,5 @@ class Item extends \ZCL\DB\Entity
         return $this->item_id;
     }
 }
+ 
+ 

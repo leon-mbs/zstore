@@ -852,18 +852,26 @@ class ItemList extends \App\Pages\Base
         $conn = \ZDB\DB::getConnect();
         $d = 0;
         $u = 0;
+        $onstore=[] ;
         foreach ($items as $it) {
+            
+            $cnt = $it->getQuantity();
+            if($cnt != 0){
+               $onstore[]=$it->itemname;
+               continue;
+            }
+            
             $sql = "  select count(*)  from  store_stock where   item_id = {$it->item_id}  ";
             $cnt = $conn->GetOne($sql);
             if ($cnt > 0) {
                 $u++;
-                //$conn->Execute("update items  set  disabled=1 where   item_id={$id}");
+
                 $it->disabled=1;
                 $it->save();
             } else {
                 $d++;
                 Item::delete($it->item_id) ;
-                //$conn->Execute("delete from items  where   item_id={$id}");
+
 
             }
         }
@@ -871,6 +879,18 @@ class ItemList extends \App\Pages\Base
 
         $this->setSuccess("Видалено {$d}, деактивовано {$u}");
 
+        if(count($onstore)>0 ) {
+            $w = "Товари ";   
+            $w .=  implode(",",$onstore)  ;
+            
+            $w .= " ще є на складі";   
+            $w = str_replace("'","`",$w) ;
+            $w = str_replace("\"","`",$w) ;
+            $this->setWarn($w);
+             
+            
+        }
+                
         $this->itemtable->listform->itemlist->Reload();
 
     }
@@ -966,3 +986,6 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
     }
 
 }
+
+
+

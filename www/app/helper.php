@@ -1008,7 +1008,7 @@ class Helper
 
             $header['action'] = $item->hasAction();;
             if ($header['action']) {
-                $header['actionprice'] = $item->getActionPrice($header['price']);
+                $header['actionprice'] = $item->getActionPrice();
             }
             $header['iscolor'] = $printer['pcolor'] == 1;
 

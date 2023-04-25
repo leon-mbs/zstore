@@ -609,7 +609,8 @@ class Base extends \Zippy\Html\WebPage
          return json_encode($ret, JSON_UNESCAPED_UNICODE);   
   
      }
-
+    
+     //для vue
     public  function vgetPriceByQty($args,$post){
         $post = json_decode($post) ;
 

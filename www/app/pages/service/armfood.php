@@ -708,7 +708,7 @@ class ARMFood extends \App\Pages\Base
         $disc = 0;
         foreach ($this->_itemlist as $item) {
             $amount += ($item->quantity * $item->price);
-            $disc += ($item->pureprice - $item->price);
+            $disc += ($item->quantity * ($item->pureprice - $item->price) );
         }
         $this->docpanel->listsform->totalamount->setText(H::fa($amount));
         $this->docpanel->listsform->totaldisc->setText(H::fa($disc));
