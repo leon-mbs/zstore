@@ -320,14 +320,16 @@ class Item extends \ZCL\DB\Entity
         return $price;
     }
 
-    public function hasAction() {
+    public function hasAction($date=0) {
+        $date = intval($date) ;
+        if($date==0)$date=time();
         if( doubleval($this->actionqty1) > 0) {
             return true;
         }
        
         if (doubleval($this->actionprice) > 0 || doubleval($this->actiondisc > 0)) {
 
-            if ( intval($this->fromdate) < time() && intval($this->todate) > time()) {
+            if ( intval($this->fromdate) < $date && intval($this->todate) > $date) {
                 return true;
             }
 
@@ -377,12 +379,13 @@ class Item extends \ZCL\DB\Entity
     /**
     * цена  со  скидками (если  есть)
     * 
-    * @param mixed $p   массив 
+    * @param mixed $p  массив 
     *                  pricetype
     *                  store
     *                  partion
     *                  quantity
-    *                  customer_id
+    *                  customer
+    *                  date
     */
     public function getPriceEx($p=array()) {
         
@@ -391,7 +394,8 @@ class Item extends \ZCL\DB\Entity
         $p['store']   = intval( $p['store'] );
         $p['partion']   = intval( $p['partion'] );
         $p['quantity']   = intval( $p['quantity'] );
-        $p['customer']   = intval( $p['customer_id'] );
+        $p['customer']   = intval( $p['customer'] );
+        $p['date']   = intval( $p['date'] );
        
         $pureprice = $this->getPurePrice($p['pricetype'] , $p['store'], $p['partion'] );
         $price = $pureprice;
@@ -399,9 +403,9 @@ class Item extends \ZCL\DB\Entity
             $price = $this->getActionPrice($p['quantity'] );
 
         }
-        //если  нет скидок  проверям  по  контрагенту
-        if($price == $pureprice &&  $p['customer_id']  >0) {
-            $c = \App\Entity\Customer::load($p['customer_id']) ;
+        //если  нет скидок  проверяем  по  контрагенту
+        if($price == $pureprice &&  $p['customer']  >0) {
+            $c = \App\Entity\Customer::load($p['customer']) ;
             $d = $c->getDiscount();
             if($d >0) {
                 $price = \App\Helper::fa($pureprice - ($pureprice*$d/100)) ;

@@ -499,8 +499,6 @@ class Invoice extends \App\Pages\Base
             if($item->disc >0) {
                $disc += ($item->quantity * ($item->pureprice - $item->price) );    
             }
-            
-    
    
             $total = $total + $item->amount;
         }

@@ -116,6 +116,7 @@
 
 
                             <th class="text-right">Кіл.</th>
+                            <th class="text-right">Знижка,%</th>
                             <th class="text-right">Ціна</th>
 
                             <th class="text-right">Сума</th>
@@ -133,6 +134,7 @@
 
 
                             <td zippy="quantity" class="text-right"></td>
+                            <td zippy="disc" class="text-right"></td>
                             <td zippy="price" class="text-right"></td>
 
                             <td zippy="amount" class="text-right"></td>
@@ -153,6 +155,7 @@
 
 
                             <td class="text-right"></td>
+                            <td class="text-right"></td>
                             <td class="text-right">На суму:</td>
 
 
@@ -160,16 +163,29 @@
                             <td></td>
                         </tr>
                      
+       <tr style="font-weight: bolder;" id="tankor">
 
-                        <tr style="font-weight: bolder;">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            {{#usesnumber}}
+                            <td></td>
+                            <td></td>
+                            {{/usesnumber}}
 
-                            <td colspan={{colspan}} class="text-right"><span data-label="paydisc">Знижка:</span></td>
+
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right">В т.ч. знижка:</td>
 
 
-                            <td zippy="paydisc" class="text-right"></td>
-                            <td><a data-label="paydisc" href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i
-                                        class="fa fa-edit"></i></a></td>
+                            <td zippy="totaldisc" class="text-right"></td>
+                            <td></td>
                         </tr>
+                     
+
+               
  
                         <tr style="font-weight: bolder;">
 
@@ -209,30 +225,7 @@
 
                 </div>
             </div>
-            <div id="modaldisc" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered  modal-sm">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Знижка</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="input-group  ">
-                                <input class="form-control qtyprice" type="text" zippy="editpaydisc" pattern="[0-9,\.]+">
-                                <div class="input-group-append">
-                                    <input type="submit" value="OK" zippy="bpaydisc" class="ml-2 btn btn-info  ">
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
+          
             <div id="modalpayamount" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
