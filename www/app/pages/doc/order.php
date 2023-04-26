@@ -53,10 +53,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('salesource', H::getSaleSources(), H::getDefSaleSource()));
 
 
-        $this->docform->add(new TextInput('editpaydisc'));
-        $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
-        $this->docform->add(new Label('paydisc', 0));
-       
+          
         $this->docform->add(new TextInput('editbonus'));
         $this->docform->add(new SubmitButton('bbonus'))->onClick($this, 'onBonus');
         $this->docform->add(new Label('bonus', 0));
@@ -86,6 +83,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total'));
+        $this->docform->add(new Label('totaldisc'));
 
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
@@ -129,6 +127,7 @@ class Order extends \App\Pages\Base
 
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
+            $this->docform->totaldisc->setText($this->_doc->headerdata['totaldisc']);
 
 
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
@@ -140,8 +139,6 @@ class Order extends \App\Pages\Base
 
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
-            $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
-            $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->bonus->setText($this->_doc->headerdata['bonus']);
             $this->docform->editbonus->setText($this->_doc->headerdata['bonus']);
             
@@ -166,7 +163,7 @@ class Order extends \App\Pages\Base
         } else {
             $this->_doc = Document::create('Order');
             $this->docform->document_number->setText($this->_doc->nextNumber());
-            $this->_doc->headerdata['paydisc'] = 0;
+
             if ($basedocid > 0) {  //создание на  основании
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
@@ -194,6 +191,7 @@ class Order extends \App\Pages\Base
         $row->add(new Label('desc', $item->desc));
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
+        $row->add(new Label('disc', H::fa($item->disc)));
         $row->add(new Label('price', H::fa($item->price)));
 
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
@@ -255,6 +253,16 @@ class Order extends \App\Pages\Base
         $item->quantity = $this->editdetail->editquantity->getText();
 
         $item->price = $this->editdetail->editprice->getText();
+     
+
+        $item->disc = '';
+        $item->pureprice = $item->getPurePrice();
+        if($item->pureprice > $item->price) {
+             $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;    
+        }
+     
+     
+     
         $item->desc = $this->editdetail->editdesc->getText();
 
         if($this->_rowid == -1) {
@@ -309,6 +317,7 @@ class Order extends \App\Pages\Base
         }
 
 
+        $this->_doc->headerdata['totaldisc'] = $this->docform->totaldisc->getText();
 
         $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
         $this->_doc->headerdata['delivery_name'] = $this->docform->delivery->getValueName();
@@ -324,7 +333,7 @@ class Order extends \App\Pages\Base
 
         $this->_doc->payamount = $this->docform->payamount->getText();
   
-        $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
+
         $this->_doc->headerdata['bonus'] = $this->docform->bonus->getText();
 
         $this->_doc->headerdata['salesource'] = $this->docform->salesource->getValue();
@@ -424,38 +433,17 @@ class Order extends \App\Pages\Base
  
         foreach ($this->_tovarlist as $item) {
             $item->amount = $item->price * $item->quantity;
-
+            if($item->disc >0) {
+               $disc += ($item->quantity * ($item->pureprice - $item->price) );    
+            }
+ 
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
+        $this->docform->totaldisc->setText(H::fa($disc));
 
-        $customer_id = $this->docform->customer->getKey();
-        if ($customer_id > 0) {
-            $customer = Customer::load($customer_id);
-            $d = $customer->getDiscount();
-            if ($d > 0) {
-                $disc = round($total * ($d / 100));
-                $this->docform->bonus->setText(0);
-                $this->docform->editbonus->setText(0);
+    
 
-            }  else {
-                $bonus = $customer->getBonus();
-                if ($bonus > 0) {
-                    
-     
-
-                    if ($total < $bonus) {
-                        $bonus = $bonus - $total; 
-                    }
-                }
-          
-            }
-            
-        }
-
-
-        $this->docform->paydisc->setText($disc);
-        $this->docform->editpaydisc->setText($disc);
         $this->docform->bonus->setText($bonus);
         $this->docform->editbonus->setText($bonus);
     }
@@ -497,7 +485,12 @@ class Order extends \App\Pages\Base
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $item = Item::load($id);
-        $price = $item->getPrice($this->docform->pricetype->getValue());
+        $customer_id = $this->docform->customer->getKey()  ;
+        $pt=     $this->docform->pricetype->getValue() ;
+        $price = $item->getPriceEx(array(
+           'pricetype'=>$pt,
+           'customer'=>$customer_id
+         ));   
 
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity()));
         $this->editdetail->editprice->setText($price);
@@ -644,15 +637,7 @@ class Order extends \App\Pages\Base
     }
 
  
-
-    public function onPayDisc() {
-        $this->docform->paydisc->setText($this->docform->editpaydisc->getText());
-        $this->docform->bonus->setText(0);
-        $this->docform->editbonus->setText(0);
-        
-        $this->calcPay();
-        $this->goAnkor("tankor");
-    }
+ 
     public function onBonus() {
         $this->docform->bonus->setText($this->docform->editbonus->getText());
         $this->calcPay();
@@ -661,12 +646,9 @@ class Order extends \App\Pages\Base
 
     private function calcPay() {
         $total = $this->docform->total->getText();
-        $disc = $this->docform->paydisc->getText();
-        $bonus = $this->docform->bonus->getText();
 
-        if ($disc > 0) {
-            $total -= $disc;
-        }
+        $bonus = $this->docform->bonus->getText();
+      
         if ($bonus > 0) {
             $total -= $bonus;
         }
@@ -754,8 +736,7 @@ class Order extends \App\Pages\Base
     public function getPriceByQty($args,$post=null)  {
         $item = Item::load($args[0]) ;
         $args[1] = str_replace(',','.',$args[1]) ;
-        $price = $item->getPrice($this->docform->pricetype->getValue(), 0,0,$args[1]);
-        
+        $price = $item->getActionPriceByQuantity($args[1] );
         return  $price;
         
     }    

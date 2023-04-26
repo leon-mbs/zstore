@@ -69,19 +69,31 @@
              
                 <div class="row">
                     <div class="col-12 col-md-10 col-lg-8 col-xl-7">
-                        {{#usescanner}}
-                        <div class="navbar nav justify-content-start">
-                            Штрих код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
-                            <a zippy="addcode"  ></a>
+                    
+                        <div   class="navbar nav justify-content-start">
+                            Покупець       
+                           <input   placeholder="Почніть вводити..."   zippy="customer"/>
+                            <a class="btn btn-success btn-sm mr-2" title="Додати нового" zippy="addcust">+</a>
+                            <span zippy="custinfo" style="display:block;font-size:smaller"></span>
+                            
 
-                        </div>
+
+                       </div>
+                        <div   class="navbar nav justify-content-start">
+
+                        {{#usescanner}}
+                       
+                            Штрих код &nbsp;<input autocomplete="off" style="width:120px" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
+                            <a zippy="addcode"  ></a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                         
                         {{/usescanner}}
 
 
                         <a class="btn btn-info  " zippy="addrow">Додати товар</a>
                         &nbsp;&nbsp;<a class="btn btn-info  " zippy="addser">Додати послугу</a>
                         &nbsp;&nbsp;<input type="submit" value="Перейти до оплати >" zippy="topay" class="btn  btn-info">
-
+                        </div>
 
                         <table class="table table-sm">
                             <tr>
@@ -95,6 +107,7 @@
 
 
                                 <th  style="width:40px" class="text-right">Кіл.</th>
+                                <th class="text-right">Знижка,%</th>
                                 <th class="text-right">Ціна</th>
 
                                 <th class="text-right">Сума</th>
@@ -112,6 +125,7 @@
                                 {{/usesnumber}}
 
                                 <td  class="text-right text-nowrap"><b><a  zippy="minus">-</a></b>&nbsp;&nbsp;<span zippy="quantity"></span>&nbsp;&nbsp;<b><a zippy="plus">+</a></b>  </td>
+                                <td zippy="disc" class="text-right"></td>
                                 <td zippy="price" class="text-right"></td>
 
                                 <td zippy="amount" class="text-right"></td>
@@ -130,6 +144,7 @@
 
 
                                 <td zippy="serquantity" class="text-right"></td>
+                                <td zippy="serdisc" class="text-right"></td>
                                 <td zippy="serprice" class="text-right"></td>
 
                                 <td zippy="seramount" class="text-right"></td>
@@ -139,13 +154,26 @@
                             <tr style="font-weight: bolder;" id="tankor">
 
                                 {{^usesnumber}}
-                                <td colspan="5" class="text-right">Всього:</td>
+                                <td colspan="6" class="text-right">Всього:</td>
                                 {{/usesnumber}}
                                 {{#usesnumber}}
-                                <td colspan="7" class="text-right">Всього:</td>
+                                <td colspan="8" class="text-right">Всього:</td>
                                 {{/usesnumber}}
 
                                 <td zippy="total" class="text-right"></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                          <tr style="font-weight: bolder;" id="tankor">
+
+                                {{^usesnumber}}
+                                <td colspan="6" class="text-right">Всього:</td>
+                                {{/usesnumber}}
+                                {{#usesnumber}}
+                                <td colspan="8" class="text-right">В т.ч. знижка:</td>
+                                {{/usesnumber}}
+
+                                <td zippy="totaldisc" class="text-right"></td>
                                 <td></td>
                                 <td></td>
                             </tr>
@@ -177,7 +205,7 @@
                         </div>
   
                         <div class="form-group row">
-                            <label class="col-4" for="bonus" data-label="paydisc">Бонуси</label>
+                            <label class="col-4" for="bonus" data-label="bonus">Бонуси</label>
                            <div class="col-2">
                             <input autocomplete="off" class="form-control" type="text" zippy="bonus">
                          </div>
@@ -217,12 +245,7 @@
      
                  <div class="col-12 col-md-4">
                       
-                      <div class="form-group row">
-                            <label class="col-4" for="paydisc" data-label="paydisc">Знижка</label>
-                           <div class="col-2">
-                            <input autocomplete="off" class="form-control" type="text" zippy="paydisc">
-                         </div>
-                        </div>                      
+                                         
                       
                         <div class="form-group row">
                             <label class="col-4" for="document_number">Номер документа</label>
@@ -238,19 +261,7 @@
                             </div>
                         </div>
                    
-
- 
-                        <div class="form-group  row ">
-                            <label class="col-4" for="customer">Покупець</label>
-                            <div class="col-6">
-                           <input placeholder="Почніть вводити..." class="form-control " zippy="customer"/>
-                            <span zippy="discount" style="display:block;font-size:smaller"></span>
-                            <a style="font-size:smaller" zippy="addcust">Додати нового</a>
-
-                              </div>
-                      </div>
-
-  
+           
                          <div class="form-group  row ">
                             <label class="col-4" data-label="trans"  for="trans">№ транзакції</label>
                             <div class="col-6">
@@ -541,19 +552,12 @@
                 $('#barcode').focus();
 
 
-                $("#paydisc").change(function () {
-                    var total2 = $("#total2").val();
-                    var paydisc = $("#paydisc").val();
-                    var bonus = $("#bonus").val();
-                    var payamount = parseFloat(total2) - parseFloat(paydisc) - parseFloat(bonus);
-                    $("#payamount").val(payamount.toFixed(2));
-                     $("#payed").val(payamount.toFixed(2));
-                });
+        
                $("#bonus").change(function () {
                     var total2 = $("#total2").val();
-                    var paydisc = $("#paydisc").val();
+                   
                     var bonus = $("#bonus").val();
-                    var payamount = parseFloat(total2) - parseFloat(paydisc) - parseFloat(bonus);
+                    var payamount = parseFloat(total2)   - parseFloat(bonus);
                     $("#payamount").val(payamount.toFixed(2));
                      $("#payed").val(payamount.toFixed(2));
                 });
@@ -580,7 +584,9 @@
                    $('#submitrow').attr('disabled','disabled')                     
                       callPageMethod('getPriceByQty',[id,q], null,(data)=> 
                       {
-                               $('#editprice').val(data)
+                               if(parseVal(data)) {
+                                  $('#editprice').val(data)
+                               }
                                $('#submitrow').attr('disabled',null)                     
      
                           

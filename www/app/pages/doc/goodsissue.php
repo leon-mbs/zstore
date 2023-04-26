@@ -763,7 +763,7 @@ class GoodsIssue extends \App\Pages\Base
     private function calcTotal() {
 
         $total = 0;
-          $disc = 0;
+        $disc = 0;
  
         foreach ($this->_itemlist as $item) {
             $item->amount = $item->price * $item->quantity;
@@ -1033,10 +1033,7 @@ class GoodsIssue extends \App\Pages\Base
     public function getPriceByQty($args,$post=null)  {
         $item = Item::load($args[0]) ;
         $args[1] = str_replace(',','.',$args[1]) ;
-        $price = $item->getPriceEx(array(
-                   'pricetype'=>$this->docform->pricetype->getValue() ,
-                   'quantity'=>$args[1] ) 
-                   );
+        $price = $item->getActionPriceByQuantity($args[1] );
        
         return  $price;
         

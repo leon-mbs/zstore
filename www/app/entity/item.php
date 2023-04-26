@@ -338,6 +338,26 @@ class Item extends \ZCL\DB\Entity
         return false;
     }
 
+    
+    
+    /**
+    * цена  со  скидкой по  количксиву
+    * возвращает null если  нет  акции
+    * @param mixed $qty
+    */
+    public function getActionPriceByQuantity($qty) {
+         //по  количеству
+        if ( $this->actionprice2 >0 && doubleval($this->actionqty2) <= $qty && $qty>1) {
+            return $this->actionprice2;
+        }
+        if ($this->actionprice1 >0 &&  doubleval($this->actionqty1) <= $qty && $qty>1 ) {
+            return $this->actionprice1;
+        } 
+        
+        
+        return null;
+    }    
+    
     //цена  со  скидкой
     public function getActionPrice($qty=0) {
          //по  количеству
@@ -369,7 +389,7 @@ class Item extends \ZCL\DB\Entity
         if(strlen($_price_)==0) $_price_ = 'price1';
         $price = $this->getPurePrice($_price_, $store, $partion);
         if ($this->hasAction() && $_price_ == 'price1') {
-            $price = $this->getActionPrice($qty);
+            $price = $this->getActionPrice($qty) ?? $price;
         }
 
         return \App\Helper::fa($price);
@@ -400,7 +420,7 @@ class Item extends \ZCL\DB\Entity
         $pureprice = $this->getPurePrice($p['pricetype'] , $p['store'], $p['partion'] );
         $price = $pureprice;
         if ($this->hasAction() && $p['pricetype']  == 'price1') {
-            $price = $this->getActionPrice($p['quantity'] );
+            $price = $this->getActionPrice($p['quantity'] ) ?? $price;
 
         }
         //если  нет скидок  проверяем  по  контрагенту

@@ -762,7 +762,10 @@
                       callPM('vgetPriceByQty',[  ], JSON.stringify(data),(data)=> 
                       {
                            var data = JSON.parse(data)
-                           this.edititemprice = data.price
+                           if(parseVal(data)) {
+                             this.edititemprice = data.price    
+                           }
+                           
                       });        
                       
                   }              

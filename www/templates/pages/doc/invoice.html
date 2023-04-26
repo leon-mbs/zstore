@@ -303,7 +303,10 @@
                    $('#submitrow').attr('disabled','disabled')                     
                       callPageMethod('getPriceByQty',[id,q], null,(data)=> 
                       {
-                               $('#editprice').val(data)
+                               if(parseVal(data)) {
+                                  $('#editprice').val(data)
+                               }
+                      
                                $('#submitrow').attr('disabled',null)                     
      
                           

@@ -107,10 +107,15 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->add(new SubmitLink('addser'))->onClick($this, 'addserOnClick');
         $this->docpanel->form2->addser->setVisible(Service::findCnt('disabled<>1') > 0);  //показываем  если  есть  услуги
         $this->docpanel->form2->add(new Label('total'));
+        $this->docpanel->form2->add(new Label('totaldisc'));
 
         $this->docpanel->form2->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'));
         $this->docpanel->form2->add(new DataView('detailser', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_serlist')), $this, 'serOnRow'));
-  
+        $this->docpanel->form2->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
+        $this->docpanel->form2->customer->onChange($this, 'OnChangeCustomer');
+        $this->docpanel->form2->add(new Label('custinfo'));
+        $this->docpanel->form2->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
+       
         //оплата
         $this->docpanel->add(new Form('form3'))->setVisible(false);
         $this->docpanel->form3->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
@@ -119,14 +124,12 @@ class ARMPos extends \App\Pages\Base
 
         $this->docpanel->form3->add(new Date('document_date'))->setDate(time());
         $this->docpanel->form3->add(new TextArea('notes'));
-        $this->docpanel->form3->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
 
-        $this->docpanel->form3->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
-        $this->docpanel->form3->customer->onChange($this, 'OnChangeCustomer');
+        
         $this->docpanel->form3->add(new Button('cancel2'))->onClick($this, 'cancel2docOnClick');
         $this->docpanel->form3->add(new SubmitButton('save'))->onClick($this, 'savedocOnClick');
         $this->docpanel->form3->add(new TextInput('total2'));
-        $this->docpanel->form3->add(new TextInput('paydisc'));
+
         $this->docpanel->form3->add(new TextInput('payamount'));
         $this->docpanel->form3->add(new TextInput('payed'));
         $this->docpanel->form3->add(new TextInput('exchange'));
@@ -134,7 +137,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form3->add(new TextInput('trans'));
         $this->docpanel->form3->add(new TextInput('exch2b'));
 
-        $this->docpanel->form3->add(new Label('discount'));
+
         $this->docpanel->form3->add(new CheckBox('passfisc'));
         //печать
         $this->docpanel->add(new Form('formcheck'))->setVisible(false);
@@ -280,14 +283,14 @@ class ARMPos extends \App\Pages\Base
 
         $this->docpanel->form3->document_date->setDate(time());
         $this->docpanel->form3->document_number->setText($this->_doc->nextNumber());
-        $this->docpanel->form3->customer->setKey(0);
-        $this->docpanel->form3->customer->setText('');
-        $this->docpanel->form3->paydisc->setText('0');
+        $this->docpanel->form2->customer->setKey(0);
+        $this->docpanel->form2->customer->setText('');
+
         $this->docpanel->form3->bonus->setText('0');
         $this->docpanel->form3->payamount->setText('0');
         $this->docpanel->form3->payed->setText('0');
         $this->docpanel->form3->exchange->setText('0');
-        $this->docpanel->form3->discount->setText('');
+        $this->docpanel->form2->custinfo->setText('');
         $this->docpanel->form3->trans->setText('') ;
         $this->docpanel->form2->setVisible(true);
         $this->docpanel->formcheck->setVisible(false);
@@ -304,7 +307,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form3->setVisible(true);
 
         $this->docpanel->form3->exch2b->setText('');
-        $this->OnChangeCustomer($this->docpanel->form3->customer);
+
     }
 
     public function detailOnRow($row) {
@@ -318,6 +321,7 @@ class ARMPos extends \App\Pages\Base
         $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd($item->sdate) : ''));
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
+        $row->add(new Label('disc', H::fa($item->disc)));
         $row->add(new Label('price', H::fa($item->price)));
         $row->add(new ClickLink('plus', $this, 'plusOnClick'));
         $row->add(new ClickLink('minus', $this, 'minusOnClick'))->setVisible($item->quantity > 1);
@@ -334,6 +338,7 @@ class ARMPos extends \App\Pages\Base
 
         $row->add(new Label('serquantity', H::fqty($item->quantity)));
         $row->add(new Label('serprice', H::fa($item->price)));
+        $row->add(new Label('serdisc', H::fa($item->disc)));
 
         $row->add(new Label('seramount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('serdelete'))->onClick($this, 'serdeleteOnClick');
@@ -377,7 +382,14 @@ class ARMPos extends \App\Pages\Base
         }
 
 
-        $price = $item->getPrice($this->getPriceType(), $store);
+        $customer_id = $this->docpanel->form2->customer->getKey();
+
+        $pt=     $this->getPriceType() ;
+        $price = $item->getPriceEx(array(
+           'pricetype'=>$pt,
+           'store'=>$store,  
+           'customer'=>$customer_id
+         ));          
         $item->price = $price;
         $item->quantity = 1;
 
@@ -529,7 +541,11 @@ class ARMPos extends \App\Pages\Base
         $qstock = $item->getQuantity($store);
 
         $item->price = H::fa($this->docpanel->editdetail->editprice->getText());
-
+        $item->disc = '';
+        $item->pureprice = $item->getPurePrice();
+        if($item->pureprice > $item->price) {
+             $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;    
+        }
         if ($item->quantity > $qstock) {
             $this->setWarn('Введено більше товару, чим є в наявності');
         }
@@ -599,9 +615,15 @@ class ARMPos extends \App\Pages\Base
         $ser = Service::load($id);
 
         $ser->quantity = $this->docpanel->editserdetail->editserquantity->getText();
+        $ser->pureprice = $ser->getPurePrice();
 
         $ser->price = H::fa($this->docpanel->editserdetail->editserprice->getText());
-
+        $ser->disc = '';
+        if($ser->pureprice > $price) {
+             $ser->disc = number_format((1 - ($ser->price/($ser->pureprice)))*100, 1, '.', '') ;    
+        }
+        
+        
         if($this->_rowid == -1) {
             $this->_serlist[] = $ser;
         } else {
@@ -669,18 +691,26 @@ class ARMPos extends \App\Pages\Base
     private function calcTotal() {
 
         $total = 0;
+        $disc = 0;
 
         foreach ($this->_itemlist as $item) {
             $item->amount = $item->price * $item->quantity;
-
+            if($item->disc >0) {
+               $disc += ($item->quantity * ($item->pureprice - $item->price) );    
+            }
+ 
             $total = $total + $item->amount;
         }
         foreach ($this->_serlist as $item) {
             $item->amount = $item->price * $item->quantity;
-
+            if($item->disc >0) {
+               $disc += ($item->quantity * ($item->pureprice - $item->price) );    
+            }
+ 
             $total = $total + $item->amount;
         }
         $this->docpanel->form2->total->setText(H::fa($total));
+        $this->docpanel->form2->totaldisc->setText(H::fa($disc));
         $this->docpanel->form3->total2->setText(H::fa($total));
         $this->docpanel->form3->payamount->setText(H::fa($total));
         $this->docpanel->form3->payed->setText(H::fa($total));
@@ -691,7 +721,16 @@ class ARMPos extends \App\Pages\Base
         $item = Item::load($id);
         $store = $this->form1->store->getValue();
 
-        $price = $item->getPrice($this->getPriceType(), $store);
+          
+        $customer_id = $this->docpanel->form2->customer->getKey();
+
+        $pt=     $this->getPriceType() ;
+        $price = $item->getPriceEx(array(
+         'pricetype'=>$pt,
+         'store'=>$store,  
+         'customer'=>$customer_id
+         ));        
+        
         $qty = $item->getQuantity($store);
 
         $this->docpanel->editdetail->qtystock->setText(H::fqty($qty));
@@ -726,7 +765,11 @@ class ARMPos extends \App\Pages\Base
     public function OnChangeSer($sender) {
         $id = $sender->getKey();
         $ser = Service::load($id);
-        $this->docpanel->editserdetail->editserprice->setText($ser->price);
+        $customer_id = $this->docpanel->form2->customer->getKey();
+
+        $price = $item->getPrice($customer_id);
+        
+        $this->docpanel->editserdetail->editserprice->setText($price);
 
 
     }
@@ -736,12 +779,12 @@ class ARMPos extends \App\Pages\Base
     }
 
     public function OnChangeCustomer($sender) {
-        $this->docpanel->form3->discount->setVisible(false);
-        $total = $this->docpanel->form3->total2->getText();
+        $this->docpanel->form2->custinfo->setVisible(false);
+     
         $disc = 0;
         $bonus = 0;
 
-        $customer_id = $this->docpanel->form3->customer->getKey();
+        $customer_id = $this->docpanel->form2->customer->getKey();
 
         if ($customer_id > 0) {
             $cust = Customer::load($customer_id);
@@ -750,36 +793,25 @@ class ARMPos extends \App\Pages\Base
             $d = $cust->getDiscount() ;
             if (doubleval($d) > 0) {
                 $disctext = "Постійна знижка {$d}%";
-                $disc = round($total * ($d / 100));
-                
-                $this->docpanel->form3->discount->setText($disctext);
-                $this->docpanel->form3->discount->setVisible(true);
-                
-                
+                  
             } else {
                 $bonus = $cust->getBonus();
                 if ($bonus > 0) {
-                    
-                    $total = $this->docpanel->form2->total->getText();
-
-
-                    if ($total < $bonus) {
-                        $bonus = $bonus - $total; 
-                    }
+                    $disctext = "Нараховано бонусів {$bonus} ";
                 }
             }
- 
+            $this->docpanel->form2->custinfo->setText($disctext);
+            $this->docpanel->form2->custinfo->setVisible(strlen($disctext) >0);
+
         }
-        $this->docpanel->form3->paydisc->setText(H::fa($disc));
-        $this->docpanel->form3->bonus->setText(H::fa($bonus));
-        $this->docpanel->form3->payamount->setText(H::fa($total - $disc - $bonus));
-        $this->docpanel->form3->payed->setText(H::fa($total - $disc - $bonus));
+
+   
     }
 
     //добавление нового контрагента
     public function addcustOnClick($sender) {
         $this->editcust->setVisible(true);
-        $this->docpanel->form3->setVisible(false);
+        $this->docpanel->form2->setVisible(false);
 
         $this->editcust->editcustname->setText('');
         $this->editcust->editphone->setText('');
@@ -813,18 +845,18 @@ class ARMPos extends \App\Pages\Base
 
         $cust->type = 1;
         $cust->save();
-        $this->docpanel->form3->customer->setText($cust->customer_name);
-        $this->docpanel->form3->customer->setKey($cust->customer_id);
+        $this->docpanel->form2->customer->setText($cust->customer_name);
+        $this->docpanel->form2->customer->setKey($cust->customer_id);
 
         $this->editcust->setVisible(false);
-        $this->docpanel->form3->setVisible(true);
-        $this->docpanel->form3->discount->setVisible(false);
-        $this->_discount = 0;
+        $this->docpanel->form2->setVisible(true);
+        $this->docpanel->form2->custinfo->setVisible(false);
+         
     }
 
     public function cancelcustOnClick($sender) {
         $this->editcust->setVisible(false);
-        $this->docpanel->form3->setVisible(true);
+        $this->docpanel->form2->setVisible(true);
     }
 
     public function savedocOnClick($sender) {
@@ -847,7 +879,7 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->document_date = $this->docpanel->form3->document_date->getDate();
         $this->_doc->notes = $this->docpanel->form3->notes->getText();
 
-        $this->_doc->customer_id = $this->docpanel->form3->customer->getKey();
+        $this->_doc->customer_id = $this->docpanel->form2->customer->getKey();
         $this->_doc->payamount = $this->docpanel->form3->payamount->getText();
 
         $this->_doc->headerdata['time'] = time();
@@ -857,7 +889,7 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['exch2b'] = $this->docpanel->form3->exch2b->getText() ;
         $this->_doc->headerdata['trans'] = trim($this->docpanel->form3->trans->getText());
         $this->_doc->notes = $this->_doc->notes . ' ' . $this->_doc->headerdata['trans']  ;
-        $this->_doc->headerdata['paydisc'] = $this->docpanel->form3->paydisc->getText();
+        $this->_doc->headerdata['totaldisc'] = $this->docpanel->form2->totaldisc->getText();
         $this->_doc->headerdata['payment'] = $this->docpanel->form3->payment->getValue();
         $this->_doc->headerdata['bonus'] = $this->docpanel->form3->bonus->getText();
 
@@ -996,8 +1028,8 @@ class ARMPos extends \App\Pages\Base
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
             return;
         }
-        $this->docpanel->form3->customer->setKey(0);
-        $this->docpanel->form3->customer->setText('');
+        $this->docpanel->form2->customer->setKey(0);
+        $this->docpanel->form2->customer->setText('');
         $this->docpanel->form3->payment->setValue(H::getDefMF());
         $this->docpanel->form3->setVisible(false);
         $this->docpanel->form2->setVisible(false);
@@ -1183,7 +1215,7 @@ class ARMPos extends \App\Pages\Base
 
     //тип  цены с  учетом  контрагента
     private function getPriceType() {
-        $id = $this->docpanel->form3->customer->getKey();
+        $id = $this->docpanel->form2->customer->getKey();
         if ($id > 0) {
             $cust = \App\Entity\Customer::load($id);
             if (strlen($cust->pricetype) > 4) {
@@ -1200,8 +1232,8 @@ class ARMPos extends \App\Pages\Base
     public function getPriceByQty($args,$post=null)  {
         $item = Item::load($args[0]) ;
         $args[1] = str_replace(',','.',$args[1]) ;
-        $price = $item->getPrice($this->getPriceType(), $this->form1->store->getValue() ,0,$args[1]);
-        
+        $price = $item->getActionPriceByQuantity($args[1] );
+       
         return  $price;
         
     }   
@@ -1236,3 +1268,4 @@ class ARMPos extends \App\Pages\Base
 }
 
 
+ 

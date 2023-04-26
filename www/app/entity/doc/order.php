@@ -73,8 +73,7 @@ class Order extends \App\Entity\Doc\Document
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                     
                         "total"           => H::fa($this->amount),
-                        "paydisc"         => H::fa($this->headerdata["paydisc"]),
-                        "isdisc"          => $this->headerdata["paydisc"] > 0,
+                        "totaldisc"           => $this->headerdata["totaldisc"] > 0 ? H::fa($this->headerdata["totaldisc"]) : false,
                         "addbonus"        => $addbonus > 0 ? H::fa($addbonus) : false,
                         "delbonus"        => $delbonus > 0 ? H::fa($delbonus) : false,
                         "allbonus"        => $allbonus > 0 ? H::fa($allbonus) : false,

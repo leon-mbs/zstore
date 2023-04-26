@@ -637,11 +637,8 @@ class Base extends \Zippy\Html\WebPage
         $post = json_decode($post) ;
 
         $item =  \App\Entity\Item::load($post->item) ;
-        $price = $item->getPriceEx( array(
-           "store"=>$post->store,
-           "customer"=> $post->customer,
-           "quantity"=>$post->qty
-        ) ) ;
+ 
+        $price = $item->getActionPriceByQuantity($post->qty );
         
         $ret=[];
         $ret['price'] = $price;
