@@ -52,9 +52,9 @@
             <div zippy="navbar" class="navbar nav justify-content-start">
 
             <a zippy="tochecklist"  ><i class="fa fa-list"></i> Список чекiв</a>    &nbsp;  &nbsp; &nbsp;  &nbsp; 
-          
-            <a zippy="tosimple"     ><i class="fa fa-repeat"></i> Спрощена версія АРМ</a>    &nbsp;  &nbsp; &nbsp;  &nbsp; 
-            
+              {{#hideblock}}
+               <a zippy="tosimple"     ><i class="fa fa-repeat"></i> Спрощена версія АРМ</a>    &nbsp;  &nbsp; &nbsp;  &nbsp; 
+              {{/hideblock}}            
             
              {{#fiscal}}
                 
@@ -71,10 +71,10 @@
                     <div class="col-12 col-md-10 col-lg-8 col-xl-7">
                     
                         <div   class="navbar nav justify-content-start">
-                            Покупець       
+                            Покупець &nbsp;      
                            <input   placeholder="Почніть вводити..."   zippy="customer"/>
                             <a class="btn btn-success btn-sm mr-2" title="Додати нового" zippy="addcust">+</a>
-                            <span zippy="custinfo" style="display:block;font-size:smaller"></span>
+                            <span zippy="custinfo"  ></span>
                             
 
 
@@ -124,12 +124,12 @@
                                 <td zippy="sdate"></td>
                                 {{/usesnumber}}
 
-                                <td  class="text-right text-nowrap"><b><a  zippy="minus">-</a></b>&nbsp;&nbsp;<span zippy="quantity"></span>&nbsp;&nbsp;<b><a zippy="plus">+</a></b>  </td>
+                                <td  class="text-right text-nowrap"><a  zippy="minus" class="btn btn-sm btn-info mr-2">-</a><span zippy="quantity"></span><a class="btn btn-sm btn-info ml-2" zippy="plus">+</a>  </td>
                                 <td zippy="disc" class="text-right"></td>
                                 <td zippy="price" class="text-right"></td>
 
                                 <td zippy="amount" class="text-right"></td>
-                                <td><a zippy="edit"><i class="fa fa-edit"></i></a></td>
+                                <td><a zippy="edit" ><i class="fa fa-edit"></i></a></td>
                                 <td><a zippy="delete"><i class="fa fa-trash"></i></a></td>
 
                             </tr>

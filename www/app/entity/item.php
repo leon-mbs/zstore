@@ -417,8 +417,15 @@ class Item extends \ZCL\DB\Entity
         $p['customer']   = intval( $p['customer'] );
         $p['date']   = intval( $p['date'] );
        
+       
+       
         $pureprice = $this->getPurePrice($p['pricetype'] , $p['store'], $p['partion'] );
         $price = $pureprice;
+        
+        $pq=$this->getActionPriceByQuantity($p['quantity']);
+        if($pq != null){
+            return \App\Helper::fa($price);
+        }
         if ($this->hasAction() && $p['pricetype']  == 'price1') {
             $price = $this->getActionPrice($p['quantity'] ) ?? $price;
 

@@ -445,24 +445,53 @@ class ARMPos extends \App\Pages\Base
    }
 
     public function plusOnClick($sender) {
-        $tovar = $sender->owner->getDataItem();
-        $tovar->quantity++;
-        
-        $tovar->price = $tovar->getPrice($this->getPriceType(), $this->form1->store->getValue(),0,$tovar->quantity);
-        
+        $item = $sender->owner->getDataItem();
+        $item->quantity++;
+        $price = $item->getActionPriceByQuantity($item->quantity);
+        if($price != null) {
+            $item->price = $price; 
+            $item->disc = '';
+            $item->pureprice = $item->getPurePrice();
+            if($item->pureprice > $item->price) {
+                $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;    
+            }              
+        }
         
         $this->docpanel->form2->detail->Reload();
         $this->calcTotal();
     }
 
     public function minusOnClick($sender) {
-        $tovar = $sender->owner->getDataItem();
-        if ($tovar->quantity > 1) {
-            $tovar->quantity--;
+        $item = $sender->owner->getDataItem();
+        if ($item->quantity > 1) {
+            $item->quantity--;
         }
         
-        $tovar->price = $tovar->getPrice($this->getPriceType(), $this->form1->store->getValue(),0,$tovar->quantity);
-       
+        $price = $item->getActionPriceByQuantity($item->quantity);
+        if($price==null){
+      
+            $store = $this->form1->store->getValue();
+            $customer_id = $this->docpanel->form2->customer->getKey();
+
+            $pt=     $this->getPriceType() ;
+            $item->price = $item->getPriceEx(array(
+             'pricetype'=>$pt,
+             'store'=>$store,  
+             'customer'=>$customer_id
+             ));    
+             
+        }   else {
+            $item->price = $price; 
+              
+        }
+             
+        $item->disc = '';
+        $item->pureprice = $item->getPurePrice();
+        if($item->pureprice > $item->price) {
+            $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;    
+        }              
+                 
+             
         
         $this->docpanel->form2->detail->Reload();
         $this->calcTotal();
