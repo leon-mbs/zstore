@@ -82,14 +82,31 @@ class Service extends \ZCL\DB\Entity
         return false;
     }
 
-    public function getPrice() {
+    public function getPurePrice() {
+         return $this->price;
+    }
+    public function getActionPrice() {
+         return $this->actionprice;
+    }
+    
+    public function getPrice($customer_id =0) {
 
-        $price = $this->price;
+        $pureprice = $this->getPurePrice();
+        $price = $pureprice;
         if ($this->hasAction()) {
-            $price = $this->actionprice;
+            $price = $this->getActionPrice();
 
         }
 
+       //если  нет скидок  проверям  по  контрагенту
+        if($pureprice == $price &&  $customer_id  >0) {
+            $c = \App\Entity\Customer::load($customer_id) ;
+            $d = $c->getDiscount();
+            if($d >0) {
+                $price = \App\Helper::fa($pureprice - ($pureprice*$d/100)) ;
+            }                 
+        }        
+        
         return \App\Helper::fa($price);
     }
 

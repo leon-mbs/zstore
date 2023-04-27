@@ -31,9 +31,7 @@ class ReturnIssue extends \App\Pages\Base
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = 0;
-    private $_orig_discount  = 0; 
-    private $_orig_total  = 0; 
-
+   
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
         if ($docid == 0 && $basedocid == 0) {
@@ -99,9 +97,7 @@ class ReturnIssue extends \App\Pages\Base
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
             
-            $this->_orig_total = $this->_doc->amount; 
-            $this->_orig_discount = $this->_doc->amount - $this->_doc->payamount ; 
-
+        
             $this->docform->discount->setText(H::fa($this->_orig_discount));
        
             
@@ -131,10 +127,7 @@ class ReturnIssue extends \App\Pages\Base
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                
-                        $this->_orig_total = $basedoc->amount; 
-                        $this->_orig_discount =  $basedoc->amount - $basedoc->payamount ; 
-
-                        
+                     
                     }
                     if ($basedoc->meta_name == 'TTN') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
@@ -160,9 +153,7 @@ class ReturnIssue extends \App\Pages\Base
                             }
                             
                         }
-                        $this->_orig_total = $basedoc->amount; 
-                        $this->_orig_discount = $basedoc->amount - $basedoc->payamount ; 
-                        
+                       
                         
                         
                     }
@@ -430,13 +421,8 @@ class ReturnIssue extends \App\Pages\Base
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
-        $discount = $this->_orig_discount ;
-        
-        if($total > 0 && $this->_orig_total > $total) {
-           $k = $total / $this->_orig_total  ;     
-           $discount =  $discount * $k;
-        }
-        $payamount= $total - $discount;
+   
+        $payamount= $total  ;
       
         
         $this->docform->payamount->setText(H::fa($payamount));

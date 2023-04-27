@@ -59,6 +59,11 @@ body {
    color: #ccf;
 }
 
+.dark-mode input[type=text] {
+   color: #FFF;
+   background-color: rgb(52,58,64);
+}
+
 .icon20 {
     height: 24px; margin-left:4px;
 }

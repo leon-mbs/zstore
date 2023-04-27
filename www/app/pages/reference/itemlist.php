@@ -137,6 +137,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new \Zippy\Html\Form\File('editaddfile'));
         $this->itemdetail->add(new CheckBox('editdelimage'));
         $this->itemdetail->add(new DropDownChoice('edittype', Item::getTypes()));
+        $this->itemdetail->add(new DropDownChoice('editprintqty', array(),1));
 
 
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
@@ -273,6 +274,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editcustomsize->setText($this->_item->customsize);
         $this->itemdetail->editwarranty->setText($this->_item->warranty);
         $this->itemdetail->edittype->setValue($this->_item->item_type);
+        $this->itemdetail->editprintqty->setValue($this->_item->printqty);
 
         $this->itemdetail->editurl->setText($this->_item->url);
         $this->itemdetail->editweight->setText($this->_item->weight);
@@ -367,6 +369,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->customsize = $this->itemdetail->editcustomsize->getText();
         $this->_item->warranty = $this->itemdetail->editwarranty->getText();
         $this->_item->item_type = $this->itemdetail->edittype->getValue();
+        $this->_item->printqty = $this->itemdetail->editprintqty->getValue();
 
         $this->_item->cell = $this->itemdetail->editcell->getText();
         $this->_item->minqty = $this->itemdetail->editminqty->getText();
@@ -849,18 +852,26 @@ class ItemList extends \App\Pages\Base
         $conn = \ZDB\DB::getConnect();
         $d = 0;
         $u = 0;
+        $onstore=[] ;
         foreach ($items as $it) {
+            
+            $cnt = $it->getQuantity();
+            if($cnt != 0){
+               $onstore[]=$it->itemname;
+               continue;
+            }
+            
             $sql = "  select count(*)  from  store_stock where   item_id = {$it->item_id}  ";
             $cnt = $conn->GetOne($sql);
             if ($cnt > 0) {
                 $u++;
-                //$conn->Execute("update items  set  disabled=1 where   item_id={$id}");
+
                 $it->disabled=1;
                 $it->save();
             } else {
                 $d++;
                 Item::delete($it->item_id) ;
-                //$conn->Execute("delete from items  where   item_id={$id}");
+
 
             }
         }
@@ -868,6 +879,18 @@ class ItemList extends \App\Pages\Base
 
         $this->setSuccess("Видалено {$d}, деактивовано {$u}");
 
+        if(count($onstore)>0 ) {
+            $w = "Товари ";   
+            $w .=  implode(",",$onstore)  ;
+            
+            $w .= " ще є на складі";   
+            $w = str_replace("'","`",$w) ;
+            $w = str_replace("\"","`",$w) ;
+            $this->setWarn($w);
+             
+            
+        }
+                
         $this->itemtable->listform->itemlist->Reload();
 
     }
@@ -963,3 +986,6 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
     }
 
 }
+
+
+

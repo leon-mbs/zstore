@@ -16,6 +16,7 @@ class PPOHelper
       const FORM_CARD    =  "Банківська карта";
       const FORM_CREDIT  =  "В кредит";
       const FORM_PREPAID =  "Передоплата";
+      const FORM_BONUS   =  "Бонуси";
 
 
     /**
@@ -437,10 +438,10 @@ class PPOHelper
         $header['details'] = array();
         $n = 1;
         $disc = 1;
-        $discsum = doubleval($doc->headerdata["paydisc"]) + doubleval($doc->headerdata["bonus"]);
+        $discsum =   doubleval($doc->headerdata["bonus"]);
         
         if ( $discsum > 0) {
-            $disc = 1 - ( $discsum / $doc->amount);
+          //  $disc = 1 - ( $discsum / $doc->amount);
         }
         $header['amount'] = 0;
         foreach ($doc->unpackDetails('detaildata') as $item) {
@@ -531,6 +532,23 @@ class PPOHelper
                 $n++;
                 $amount0 = $pay['paysum'];
             }
+            
+            if ( $discsum > 0) {            
+               
+                $pay = array(
+                    'formname' => self::FORM_BONUS,
+                    'formcode' => 4,
+                    'paysum'   => number_format($discsum, 2, '.', ''),
+                    'payed'    => number_format($discsum, 2, '.', ''),
+                    'rest'     => false,
+                    'num'      => "ROWNUM=\"{$n}\""
+                );               
+                
+                $header['pays'][] = $pay;
+                $n++;
+           
+           Ъ}            
+            
         }
         // в долг
         if ($doc->payed < $doc->payamount) {

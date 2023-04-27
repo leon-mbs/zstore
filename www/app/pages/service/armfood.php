@@ -133,6 +133,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->listsform->add(new SubmitButton('btoprod'))->onClick($this, 'toprodOnClick');
         $this->docpanel->listsform->add(new SubmitButton('btodel'))->onClick($this, 'todelOnClick');
         $this->docpanel->listsform->add(new Label('totalamount', "0"));
+        $this->docpanel->listsform->add(new Label('totaldisc', "0"));
 
         $this->docpanel->listsform->add(new TextInput('address'));
         $this->docpanel->listsform->add(new Date('dt', time()));
@@ -143,11 +144,12 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->listsform->add(new DropDownChoice('delivery', Document::getDeliveryTypes(), 0))->onChange($this, 'OnDelivery');
         $this->docpanel->listsform->add(new ClickLink('addcust'))->onClick($this, 'addcustOnClick');
         $this->docpanel->listsform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
-        $this->docpanel->listsform->customer->onChange($this, 'OnChangeCustomer', true);
+        $this->docpanel->listsform->customer->onChange($this, 'OnChangeCustomer');
+        $this->docpanel->listsform->add(new Label('custinfo'));
 
         $this->docpanel->add(new Form('payform'))->setVisible(false);
         $this->docpanel->payform->add(new TextInput('pfamount'));
-        $this->docpanel->payform->add(new TextInput('pfdisc'));
+
         $this->docpanel->payform->add(new TextInput('pfforpay'));
         $this->docpanel->payform->add(new TextInput('pfpayed'));
         $this->docpanel->payform->add(new TextInput('pfrest'));
@@ -289,7 +291,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->navform->setVisible(false);
 
 
-        $this->_catlist = Category::find(" cat_id in(select cat_id from  items where  disabled <>1  ) and  coalesce(parent_id,0)=0 and detail  not  like '%<nofastfood>1</nofastfood>%' ");
+        $this->_catlist = Category::find(" cat_id in(select cat_id from  items where  disabled <>1  ) and  coalesce(parent_id,0)=0 and detail  not  like '%<nofastfood>1</nofastfood>%' ","cat_name");
         $this->docpanel->catpan->catlist->Reload();
     }
 
@@ -391,6 +393,22 @@ class ARMFood extends \App\Pages\Base
 
         $prod = $row->getDataItem();
         $prod->price = $prod->getPrice($this->_pricetype, $this->_store);
+        $prod->pureprice = $prod->getPurePrice($this->_pricetype, $this->_store);
+        $prod->disc=0;
+        if($prod->price >0 && $prod->pureprice >0) {
+           $prod->disc = number_format((1 - ($prod->price/($prod->pureprice)))*100, 1, '.', '') ;    
+        }
+        if($prod->disc < 0) $prod->disc=0;        
+        $customer_id = $this->docpanel->listsform->customer->getKey()  ;
+        
+        if($prod->disc ==0 && $customer_id >0) {
+            $c = Customer::load($customer_id) ;
+            $d = $c->getDiscount();
+            if($d >0) {
+                $prod->disc = $d;
+                $prod->price = H::fa($prod->pureprice - ($prod->pureprice*$d/100)) ;
+            }
+        }
         $row->add(new Panel('prodbtn'))->onClick($this, 'onProdBtnClick');
         $row->prodbtn->add(new Label('prodname', $prod->itemname));
         $row->prodbtn->add(new Label('prodprice', H::fa($prod->price)));
@@ -400,7 +418,7 @@ class ARMFood extends \App\Pages\Base
     //выбрана  группа
     public function onCatBtnClick($sender) {
         $cat = $sender->getOwner()->getDataItem();
-        $catlist = Category::find("  detail  not  like '%<nofastfood>1</nofastfood>%' and   coalesce(parent_id,0)= " . $cat->cat_id);
+        $catlist = Category::find(" cat_id in(select cat_id from  items where  disabled <>1  ) and detail  not  like '%<nofastfood>1</nofastfood>%' and   coalesce(parent_id,0)= " . $cat->cat_id,"cat_name");
         if (count($catlist) > 0) {
             $this->_catlist = $catlist;
             $this->docpanel->catpan->catlist->Reload();
@@ -437,9 +455,9 @@ class ARMFood extends \App\Pages\Base
             $this->_itemlist[$item->item_id] = $item;
         }
 
-        $this->_catlist = Category::find(" coalesce(parent_id,0)=0 and detail  not  like '%<nofastfood>1</nofastfood>%' ");
+        $this->_catlist = Category::find("cat_id in(select cat_id from  items where  disabled <>1  ) and coalesce(parent_id,0)=0 and detail  not  like '%<nofastfood>1</nofastfood>%' ","cat_name");
         $this->docpanel->catpan->catlist->Reload();
-
+        $this->setSuccess("Позиція додана");
 
         $this->docpanel->catpan->setVisible(true);
         $this->docpanel->prodpan->setVisible(false);
@@ -500,6 +518,27 @@ class ARMFood extends \App\Pages\Base
 
         $price = $item->getPrice($this->_pricetype, $store_id);
         $item->price = $price;
+        $pureprice = $item->getPurePrice($this->_pricetype, $store_id);
+        $item->pureprice = $pureprice;
+        $item->disc=0;
+        if($item->price >0 && $item->pureprice >0) {
+           $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;    
+        }
+        if($item->disc < 0) $item->disc=0;        
+       
+        $customer_id = $this->docpanel->listsform->customer->getKey()  ;
+        
+        if($item->disc ==0 && $customer_id >0) {
+            $c = Customer::load($customer_id) ;
+            $d = $c->getDiscount();
+            if($d >0) {
+                $item->disc = $d;
+                $item->price = H::fa($item->pureprice - ($item->pureprice*$d/100 )) ;
+                
+            }
+        }
+        
+ 
         $item->quantity = 1;
         $item->myself = $this->_worktype == 0;
         if ($this->_tvars['pack'] == false) {
@@ -522,6 +561,9 @@ class ARMFood extends \App\Pages\Base
         $row->add(new Label('itemname', $item->itemname));
         $row->add(new Label('item_code', $item->item_code));
         $row->add(new Label('qty', H::fqty($item->quantity)));
+         
+        
+        $row->add(new Label('disc', $item->disc));
         $row->add(new Label('price', H::fa($item->price)));
         $row->add(new Label('amount', H::fa($item->price * $item->quantity)));
         $row->add(new ClickLink('myselfon', $this, 'onMyselfClick'))->setVisible($item->myself == 1);
@@ -642,29 +684,11 @@ class ARMFood extends \App\Pages\Base
             $this->docpanel->payform->clean();
             $amount = $this->_doc->payamount;
             $this->docpanel->payform->pfamount->setText(H::fa($amount));
-            $disc = 0;
-            $bonus = 0;
-            if ($this->_doc->customer_id > 0) {
-                $customer = \App\Entity\Customer::load($this->_doc->customer_id);
-                $d = $customer->getDiscount() ;
-                if ($d > 0) {
-                    $disc = round($amount * ($d / 100));
-                } else {
-                    $bonus = $customer->getBonus();
-                    if ($bonus > 0) {
-                       if ($amount < $bonus) {
-                           $bonus = $bonus - $amount; 
-                       }
+         
 
-                        
-                    }
-                }
 
-            }
 
-            $this->docpanel->payform->pfdisc->setText(H::fa($disc));
-            $this->docpanel->payform->pfbonus->setText(H::fa($bonus));
-            $this->docpanel->payform->pfforpay->setText(H::fa($amount - $disc - $bonus));
+            $this->docpanel->payform->pfforpay->setText(H::fa($amount  ));
             //  $this->docpanel->payform->pfpayed->setText(H::fa($amount))  ;
             $this->docpanel->payform->pfrest->setText(H::fa(0));
             $this->docpanel->payform->bbackitems->setVisible(false);
@@ -681,10 +705,15 @@ class ARMFood extends \App\Pages\Base
 
     public function calcTotal() {
         $amount = 0;
+        $disc = 0;
         foreach ($this->_itemlist as $item) {
             $amount += ($item->quantity * $item->price);
+            $disc += ($item->quantity * ($item->pureprice - $item->price) );
         }
         $this->docpanel->listsform->totalamount->setText(H::fa($amount));
+        $this->docpanel->listsform->totaldisc->setText(H::fa($disc));
+        
+        
     }
 
     public function OnAutoCustomer($sender) {
@@ -867,31 +896,10 @@ class ARMFood extends \App\Pages\Base
 
         $amount = $this->docpanel->listsform->totalamount->getText();
         $this->docpanel->payform->pfamount->setText(H::fa($amount));
-        $disc = 0;
-        $bonus = 0;
-        if ($this->_doc->customer_id > 0) {
-            $customer = \App\Entity\Customer::load($this->_doc->customer_id);
-            $d= $customer->getDiscount();
-            if ($d > 0) {
-                $disc = round($amount * ($d / 100));
-            } else {
-                $bonus = $customer->getBonus();
-                if ($bonus > 0) {
-                    if ($amount < $bonus) {
-
-                        $bonus = $amount;
-
-                    }
-                }
-            }
 
 
-        }
-
-
-        $this->docpanel->payform->pfdisc->setText(H::fa($disc));
-        $this->docpanel->payform->pfbonus->setText(H::fa($bonus));
-        $this->docpanel->payform->pfforpay->setText(H::fa($amount - $disc));
+     //   $this->docpanel->payform->pfbonus->setText(H::fa($bonus));
+        $this->docpanel->payform->pfforpay->setText(H::fa($amount ));
         //  $this->docpanel->payform->pfpayed->setText(H::fa($amount))  ;
         $this->docpanel->payform->pfrest->setText(H::fa(0));
         $this->docpanel->payform->bbackitems->setVisible(true);
@@ -917,11 +925,11 @@ class ARMFood extends \App\Pages\Base
             $this->_doc->payamount = $this->docpanel->payform->pfforpay->getText();
             $this->_doc->payed = $this->docpanel->payform->pfpayed->getText();
             $this->_doc->headerdata['exchange'] = $this->docpanel->payform->pfrest->getText();
-            $this->_doc->headerdata['payed'] = $this->docpanel->payform->pfpayed->getText();
+            $this->_doc->headerdata['payed'] = $this->_doc->payed;
             $this->_doc->headerdata['exch2b'] = $this->docpanel->payform->pfexch2b->getText();
 
             $this->_doc->headerdata['bonus'] = $this->docpanel->payform->pfbonus->getText();
-            $this->_doc->headerdata['paydisc'] = $this->docpanel->payform->pfdisc->getText();
+
             $this->_doc->headerdata['trans'] = $this->docpanel->payform->pftrans->getText();
             if ($this->_pt == 2) {
                 $this->_doc->headerdata['payment'] = $this->setupform->beznal->getValue();
@@ -942,6 +950,15 @@ class ARMFood extends \App\Pages\Base
             if ( doubleval($this->_doc->headerdata['bonus'] ) >0 && $this->_doc->customer_id == 0) {
                 $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
                 return;
+            }            
+            if ( doubleval($this->_doc->headerdata['bonus'] ) >0  ) {
+                $c = Customer::load($this->_doc->customer_id);
+                if($this->_doc->headerdata['bonus']  > $c->getBonus() ) {
+                   $this->setError("Недостатньо бонусів");    
+                   return;                   
+                }
+                
+                
             }            
             if ( doubleval($this->_doc->headerdata['exch2b'] ) >0 && $this->_doc->customer_id == 0) {
                 $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
@@ -969,6 +986,25 @@ class ARMFood extends \App\Pages\Base
             }
             //если  оплачен и  закончен   закрываем
             if ($this->_doc->payamount <= $this->_doc->payed && ($this->_doc->state == Document::STATE_EXECUTED || $this->_doc->state == Document::STATE_DELIVERED || $this->_doc->state == Document::STATE_FINISHED)) {
+
+              if($this->_pos->usefisc == 1 && $this->_tvars['checkbox'] == true) {
+                
+                    $cb = new  \App\Modules\CB\CheckBox($this->_pos->cbkey,$this->_pos->cbpin) ;
+                    $ret = $cb->Check($this->_doc) ;
+                    
+                    if(is_array($ret)) {
+                      $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                      $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
+                      $this->_doc->headerdata["checkbox"] = $ret['checkid'];
+                    } else {
+                        $this->setError($ret);
+                        $conn->RollbackTrans();
+                        return;
+                                  
+                    }
+                
+              }   
+
                     if($this->docpanel->payform->passfisc->isChecked()) {
                       $ret = \App\Modules\PPO\PPOHelper::check($this->_doc,true);
   
@@ -1003,7 +1039,7 @@ class ARMFood extends \App\Pages\Base
                         }
                     }
      
-                }
+                    }
          
                 $this->_doc->updateStatus(Document::STATE_CLOSED);
             }
@@ -1077,6 +1113,7 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->headerdata["inn"] = $firm['inn'];
         $this->_doc->headerdata["address"] = $firm['address'];
         $this->_doc->headerdata["phone"] = $firm['phone'];
+        $this->_doc->headerdata["paydisc"] = $this->docpanel->listsform->totaldisc->getText();
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
         $this->_doc->amount = $this->docpanel->listsform->totalamount->getText();
@@ -1147,6 +1184,7 @@ class ARMFood extends \App\Pages\Base
 
     public function OnChangeCustomer($sender) {
 
+        $this->docpanel->listsform->custinfo->setText('');
 
         $customer_id = $sender->getKey();
         if ($customer_id > 0) {
@@ -1159,7 +1197,31 @@ class ARMFood extends \App\Pages\Base
 
                 $this->docpanel->listsform->contact->setText($customer->customer_name . ', ' . $customer->phone);
             }
+            $d = $customer->getDiscount();
+            if($d >0) {
+               $this->docpanel->listsform->custinfo->setText("Знижка {$d}%");
+            }  else{
+                $b= $customer->getBonus();
+                if($b>0){
+                  $this->docpanel->listsform->custinfo->setText("Бонусiв {$b}");                
+                }
+            }          
+            
+            
+            if($d > 0) {
+                
+                  foreach($this->_itemlist as $it) {
+                      if($it->disc == 0  ) {
 
+                          $it->disc = $d;
+                          $it->price = H::fa($it->pureprice - ($it->pureprice*$d/100 )) ;
+                      }  
+                      
+                  } 
+
+                  $this->docpanel->listsform->itemlist->Reload();
+                  $this->calcTotal();            
+            }
 
 
         } else {
@@ -1194,6 +1256,26 @@ class ARMFood extends \App\Pages\Base
 
     //фискализация
     public function OnOpenShift() {
+        
+        
+        if($this->_tvars['checkbox'] == true) {
+       
+         
+            $cb = new  \App\Modules\CB\CheckBox($this->_pos->cbkey,$this->_pos->cbpin) ;
+            $ret = $cb->OpenShift() ;
+            
+            if($ret === true) {
+                $this->setSuccess("Зміна відкрита");
+            } else {
+                $this->setError($ret);
+            }
+         
+          
+            
+            return;
+        }        
+        
+        
         $ret = \App\Modules\PPO\PPOHelper::shift($this->_pos->pos_id, true);
         if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
             //повторяем для  нового номера
@@ -1220,6 +1302,22 @@ class ARMFood extends \App\Pages\Base
     }
 
     public function OnCloseShift($sender) {
+
+       if($this->_tvars['checkbox'] == true) {
+            
+            $cb = new  \App\Modules\CB\CheckBox($this->_pos->cbkey,$this->_pos->cbpin) ;
+            $ret = $cb->CloseShift() ;
+            
+            if($ret === true) {
+                $this->setSuccess("Зміна закрита");
+            } else {
+                $this->setError($ret);
+            }
+            
+            return;
+        }
+
+
         $ret = $this->zform();
         if ($ret == true) {
             $this->closeshift();

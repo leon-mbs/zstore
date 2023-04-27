@@ -49,7 +49,13 @@
         <div   zippy="docpanel">
 
             <h4 class="mb-2  ">Оформлення чеку</h4>
+            <div zippy="navbar" class="navbar nav justify-content-start">
+
             <a zippy="tochecklist"  ><i class="fa fa-list"></i> Список чекiв</a>    &nbsp;  &nbsp; &nbsp;  &nbsp; 
+              {{#hideblock}}
+               <a zippy="tosimple"     ><i class="fa fa-repeat"></i> Спрощена версія АРМ</a>    &nbsp;  &nbsp; &nbsp;  &nbsp; 
+              {{/hideblock}}            
+            
              {{#fiscal}}
                 
                         <a zippy="openshift"><i class="fa fa-bullhorn"></i> Вiдкрити змiну</a>
@@ -57,23 +63,37 @@
                         
              
                 {{/fiscal}}
+             </div>
+                
             <form zippy="form2" class="mt-2 ">
              
                 <div class="row">
                     <div class="col-12 col-md-10 col-lg-8 col-xl-7">
-                        {{#usescanner}}
-                        <div class="navbar nav justify-content-start">
-                            Штрих код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
-                            &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
+                    
+                        <div   class="navbar nav justify-content-start">
+                            Покупець &nbsp;      
+                           <input   placeholder="Почніть вводити..."   zippy="customer"/>
+                            <a class="btn btn-success btn-sm mr-2" title="Додати нового" zippy="addcust">+</a>
+                            <span zippy="custinfo"  ></span>
+                            
 
-                        </div>
+
+                       </div>
+                        <div   class="navbar nav justify-content-start">
+
+                        {{#usescanner}}
+                       
+                            Штрих код &nbsp;<input autocomplete="off" style="width:120px" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
+                            <a zippy="addcode"  ></a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                         
                         {{/usescanner}}
 
 
                         <a class="btn btn-info  " zippy="addrow">Додати товар</a>
                         &nbsp;&nbsp;<a class="btn btn-info  " zippy="addser">Додати послугу</a>
                         &nbsp;&nbsp;<input type="submit" value="Перейти до оплати >" zippy="topay" class="btn  btn-info">
-
+                        </div>
 
                         <table class="table table-sm">
                             <tr>
@@ -87,6 +107,7 @@
 
 
                                 <th  style="width:40px" class="text-right">Кіл.</th>
+                                <th class="text-right">Знижка,%</th>
                                 <th class="text-right">Ціна</th>
 
                                 <th class="text-right">Сума</th>
@@ -103,11 +124,12 @@
                                 <td zippy="sdate"></td>
                                 {{/usesnumber}}
 
-                                <td  class="text-right text-nowrap"><b><a  zippy="minus">-</a></b>&nbsp;&nbsp;<span zippy="quantity"></span>&nbsp;&nbsp;<b><a zippy="plus">+</a></b>  </td>
+                                <td  class="text-right text-nowrap"><a  zippy="minus" class="btn btn-sm btn-info mr-2">-</a><span zippy="quantity"></span><a class="btn btn-sm btn-info ml-2" zippy="plus">+</a>  </td>
+                                <td zippy="disc" class="text-right"></td>
                                 <td zippy="price" class="text-right"></td>
 
                                 <td zippy="amount" class="text-right"></td>
-                                <td><a zippy="edit"><i class="fa fa-edit"></i></a></td>
+                                <td><a zippy="edit" ><i class="fa fa-edit"></i></a></td>
                                 <td><a zippy="delete"><i class="fa fa-trash"></i></a></td>
 
                             </tr>
@@ -122,6 +144,7 @@
 
 
                                 <td zippy="serquantity" class="text-right"></td>
+                                <td zippy="serdisc" class="text-right"></td>
                                 <td zippy="serprice" class="text-right"></td>
 
                                 <td zippy="seramount" class="text-right"></td>
@@ -131,13 +154,26 @@
                             <tr style="font-weight: bolder;" id="tankor">
 
                                 {{^usesnumber}}
-                                <td colspan="5" class="text-right">Всього:</td>
+                                <td colspan="6" class="text-right">Всього:</td>
                                 {{/usesnumber}}
                                 {{#usesnumber}}
-                                <td colspan="7" class="text-right">Всього:</td>
+                                <td colspan="8" class="text-right">Всього:</td>
                                 {{/usesnumber}}
 
                                 <td zippy="total" class="text-right"></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                          <tr style="font-weight: bolder;" id="tankor">
+
+                                {{^usesnumber}}
+                                <td colspan="6" class="text-right">Всього:</td>
+                                {{/usesnumber}}
+                                {{#usesnumber}}
+                                <td colspan="8" class="text-right">В т.ч. знижка:</td>
+                                {{/usesnumber}}
+
+                                <td zippy="totaldisc" class="text-right"></td>
                                 <td></td>
                                 <td></td>
                             </tr>
@@ -150,77 +186,26 @@
             <form zippy="form3">
 
                 <div class="row">
-                    <div class="col-12 col-md-4">
-                        <div class="form-group row">
-                            <label class="col-4" for="document_number">Номер документа</label>
-                            <div class="col-6">
-                            <input class="form-control" type="text" zippy="document_number" required="required">
-                            </div>
-                        </div>
+   
 
-                        <div class="form-group row">
-                            <label class="col-4" for="document_date"> Дата</label>
-                            <div class="col-6">
-                           <input style="width:120px;" class="form-control" type="text" zippy="document_date" required="required">
-                            </div>
-                        </div>
-                   
-
- 
-                        <div class="form-group  row ">
-                            <label class="col-4" for="customer">Покупець</label>
-                            <div class="col-6">
-                           <input placeholder="Почніть вводити..." class="form-control " zippy="customer"/>
-                            <span zippy="discount" style="display:block;font-size:smaller"></span>
-                            <a style="font-size:smaller" zippy="addcust">Додати нового</a>
-
-                              </div>
-                      </div>
-
-                        <div class="form-group  row ">
+                    <div class="col-12 col-md-5  ">
+                      <div class="form-group  row ">
                             <label class="col-4" for="payment">Тип оплати </label>
                             <div class="col-6">
                            <select class="form-control" zippy="payment">
 
                             </select>
                                           </div>
-                        </div>
-                         <div class="form-group  row ">
-                            <label class="col-4" data-label="trans"  for="trans">№ транзакції</label>
-                            <div class="col-6">
-                           <input zippy="trans" class="form-control "  />
-                            <small  data-label="trans" >Код з банківського терміналу при оплаті карткою</small>
-                            
-                             </div>
-                           
-                        </div>
-                         <div class="form-group  row ">
-                            <label class="col-4" for="notes">Примітка </label>
-
-                            <div class="col-6">
-                           <textarea class="form-control" zippy="notes"></textarea>
-
-                          </div> 
-                        </div>
-
-                    </div>
-
-
-                    <div class="col-12 col-md-5  ">
+                        </div>                     
                         <div class="form-group row">
                           <label class="col-4" for="total2">На суму</label>
                            <div class="col-2">
                              <input class="form-control-plaintext" type="text" zippy="total2" readonly>
                          </div>
                         </div>
+  
                         <div class="form-group row">
-                            <label class="col-4" for="paydisc" data-label="paydisc">Знижка</label>
-                           <div class="col-2">
-                            <input autocomplete="off" class="form-control" type="text" zippy="paydisc">
-                         </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-4" for="bonus" data-label="paydisc">Бонуси</label>
+                            <label class="col-4" for="bonus" data-label="bonus">Бонуси</label>
                            <div class="col-2">
                             <input autocomplete="off" class="form-control" type="text" zippy="bonus">
                          </div>
@@ -257,6 +242,46 @@
                         </div>
 
                     </div>
+     
+                 <div class="col-12 col-md-4">
+                      
+                                         
+                      
+                        <div class="form-group row">
+                            <label class="col-4" for="document_number">Номер документа</label>
+                            <div class="col-6">
+                            <input class="form-control" type="text" zippy="document_number" required="required">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-4" for="document_date"> Дата</label>
+                            <div class="col-6">
+                           <input style="width:120px;" class="form-control" type="text" zippy="document_date" required="required">
+                            </div>
+                        </div>
+                   
+           
+                         <div class="form-group  row ">
+                            <label class="col-4" data-label="trans"  for="trans">№ транзакції</label>
+                            <div class="col-6">
+                           <input zippy="trans" class="form-control "  />
+                            <small  data-label="trans" >Код з банківського терміналу при оплаті карткою</small>
+                            
+                             </div>
+                           
+                        </div>
+                         <div class="form-group  row ">
+                            <label class="col-4" for="notes">Примітка </label>
+
+                            <div class="col-6">
+                           <textarea class="form-control" zippy="notes"></textarea>
+
+                          </div> 
+                        </div>
+
+                    </div>
+     
                 </div>
 
 
@@ -306,7 +331,7 @@
                             <label for="edittovar">Назва</label>
                             <input placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
                             <br> <a zippy="openitemsel">Вiдкрити довiдник</a>
-                            <br> <a zippy="opencatpan">Відкрити Категорії</a>
+                            &nbsp; <a zippy="opencatpan">Відкрити Категорії</a>
                            <br>
                             Наявність: <span zippy="qtystock"></span>
 
@@ -319,19 +344,21 @@
                         </div>
 
                         {{/usesnumber}}
-                        <div class="form-group">
-                            <label for="editquantity">Кількість</label>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label" for="editquantity">Кількість</label>
+                             <div class="col-7">
                             <input class="form-control qtyprice" type="text" zippy="editquantity" required="required" pattern="[0-9,\.]+"
                                    style="width: 70px;">
-
+                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="editprice">Ціна </label>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label" for="editprice">Ціна </label>
+                            <div class="col-7">
                             <input autocomplete="off" class="form-control" type="text" zippy="editprice" required="required"
                                    pattern="[,0-9\.]+"
                                    style="width: 70px;">
-
+                             </div>
                         </div>
 
 
@@ -525,19 +552,12 @@
                 $('#barcode').focus();
 
 
-                $("#paydisc").change(function () {
-                    var total2 = $("#total2").val();
-                    var paydisc = $("#paydisc").val();
-                    var bonus = $("#bonus").val();
-                    var payamount = parseFloat(total2) - parseFloat(paydisc) - parseFloat(bonus);
-                    $("#payamount").val(payamount.toFixed(2));
-                     $("#payed").val(payamount.toFixed(2));
-                });
+        
                $("#bonus").change(function () {
                     var total2 = $("#total2").val();
-                    var paydisc = $("#paydisc").val();
+                   
                     var bonus = $("#bonus").val();
-                    var payamount = parseFloat(total2) - parseFloat(paydisc) - parseFloat(bonus);
+                    var payamount = parseFloat(total2)   - parseFloat(bonus);
                     $("#payamount").val(payamount.toFixed(2));
                      $("#payed").val(payamount.toFixed(2));
                 });
@@ -564,7 +584,9 @@
                    $('#submitrow').attr('disabled','disabled')                     
                       callPageMethod('getPriceByQty',[id,q], null,(data)=> 
                       {
-                               $('#editprice').val(data)
+                               if(parseVal(data)) {
+                                  $('#editprice').val(data)
+                               }
                                $('#submitrow').attr('disabled',null)                     
      
                           
