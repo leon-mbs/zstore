@@ -144,6 +144,9 @@ class ServiceAct extends \App\Pages\Base
                    'service_name'=>$ser->service_name ,
                    'desc'=>$ser->desc ,
                    'price'=>H::fa($ser->price) ,
+                   'disc'=>$ser->disc ,
+                   'pureprice'=>$ser->pureprice ,
+
                    'quantity'=>H::fqty($ser->quantity) ,
                    'amount'=>H::fa($ser->quantity * $ser->price) 
                    
@@ -158,6 +161,9 @@ class ServiceAct extends \App\Pages\Base
                    'itemname'=>$item->itemname ,
                    'item_code'=>$item->item_code ,
                    'price'=>H::fa($item->price) ,
+                   'disc'=>$item->disc ,
+                   'pureprice'=>$item->pureprice ,
+
                    'quantity'=>H::fqty($item->quantity) ,
                    'amount'=>H::fa($item->quantity * $item->price) 
                    
@@ -194,7 +200,7 @@ class ServiceAct extends \App\Pages\Base
          $this->_doc->headerdata['gar'] = $post->doc->gar;
          $this->_doc->headerdata['contract_id'] = $post->doc->contract_id;
          $this->_doc->headerdata['payment'] = $post->doc->payment;
-         $this->_doc->headerdata['paydisc'] = $post->doc->paydisc;
+         $this->_doc->headerdata['totaldisc'] = $post->doc->totaldisc;
          $this->_doc->headerdata['bonus'] = $post->doc->bonus;
     
          if (false == $this->_doc->checkUniqueNumber()) {
@@ -210,7 +216,9 @@ class ServiceAct extends \App\Pages\Base
              $item = Item::load($it->item_id);
      
              $item->quantity = $it->quantity;
+             $item->disc = $it->disc;
              $item->price = $it->price;
+             $item->pureprice = $it->pureprice;
              $item->rowid = $i;
                           
              $itemlist[$i]=$item;
@@ -224,7 +232,9 @@ class ServiceAct extends \App\Pages\Base
              $ser = Service::load($s->service_id);
      
              $ser->quantity = $s->quantity;
+             $ser->disc = $s->disc;
              $ser->price = $s->price;
+             $ser->pureprice = $s->pureprice;
              $ser->rowid = $i;
                           
              $servicelist[$i]=$ser;

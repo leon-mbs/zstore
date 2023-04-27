@@ -54,7 +54,7 @@
 
     {{^prepaid}}
     {{#isdisc}}
-<text>Знижка: {{paydisc}}</text>
+<text>В т.ч. знижка: {{paydisc}}</text>
  
     {{/isdisc}}
    {{#delbonus}}

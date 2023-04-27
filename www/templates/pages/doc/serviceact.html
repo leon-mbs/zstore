@@ -107,11 +107,14 @@
                             <tr>
                                 <th>Назва</th>
                                 <th> </th>
+                                <th> </th>
                                 <th class="text-right">Кiл.</th>
 
+                                <th class="text-right">Знижка,%</th>
                                 <th class="text-right">Вартість</th>
                                 <th style="width:100px" class="text-right">Сума</th>
 
+                                <th  ></th>
                                 <th  ></th>
                             </tr>
                             <tr  v-for="(service, index)  in services" >
@@ -120,6 +123,7 @@
                                 <td >{{service.desc}}</td>
                                 <td  class="text-right"> {{service.quantity}}</td>
 
+                                <td   class="text-right">{{service.disc}}</td>
                                 <td   class="text-right">{{service.price}}</td>
                                 <td   class="text-right">{{service.amount}}</td>
 
@@ -135,6 +139,7 @@
 
                                 <td  class="text-right">{{item.quantity}}</td>
 
+                                <td  class="text-right">{{item.disc}}</td>
                                 <td  class="text-right">{{item.price}}</td>
                                 <td  class="text-right">{{item.amount}}</td>
 
@@ -145,22 +150,22 @@
                             </tr>                 
                         
                             <tr style="font-weight: bolder;">
-                                <td colspan="4" class="text-right">На суму:</td>
+                                <td colspan="6" class="text-right">На суму:</td>
                                 <td   class="text-right">{{total}}</td>
                                 <td></td>
                             </tr>                    
                            <tr style="font-weight: bolder;">
-                                <td colspan="4" class="text-right">Знижка:</td>
-                                <td  class="text-right"><input pattern="[0-9,\.]+" class="form-control" v-model="paydisc" style="width:100px" > </td>
+                                <td colspan="6" class="text-right">В т.ч. знижка:</td>
+                                <td  class="text-right"> {{totaldisc}} </td>
                                 <td> </td>
                             </tr>
                            <tr v-show="this.customerinfo.bonus >0"  style="font-weight: bolder;">
-                                <td colspan="4" class="text-right"><span data-label="paydisc">Бонуси:</span></td>
+                                <td colspan="6" class="text-right"><span data-label="bonus">Бонуси:</span></td>
                                 <td   class="text-right"><input pattern="[0-9,\.]+" class="form-control" v-model="bonus" style="width:100px;" ></td>
                                 <td> </td>
                             </tr>                                 
                             <tr style="font-weight: bolder;">
-                                <td colspan="4" class="text-right">До сплати:</td>
+                                <td colspan="6" class="text-right">До сплати:</td>
                                 <td   class="text-right"> {{payamount}}</td>
                                 <td> </td>
                             </tr>    
@@ -252,7 +257,7 @@
                           
                             <div class="form-group">
                                 <label for="edititemqty">Кiлькiсть </label>
-                                <input class="form-control " v-model="edititemquantity">
+                                <input v-on:keyup="onchangeqty" class="form-control " v-model="edititemquantity">
                             </div>
 
                             <div class="form-group">
@@ -399,7 +404,7 @@
              qtystock:0,
       
              total:0,
-             paydisc:0,
+             totaldisc:0,
              bonus:0,
              payment:0,
              payed:0,
@@ -454,7 +459,9 @@
                     this.services[this.editedindex].price = fa(this.editserviceprice) 
                     this.services[this.editedindex].quantity = fqty(this.editservicequantity) 
                     this.services[this.editedindex].amount = fa(this.editserviceprice * this.editservicequantity ) 
-                            
+                    this.services[this.editedindex].disc = this.loadedservice.disc 
+                    this.services[this.editedindex].pureprice = this.loadedservice.pureprice 
+                           
                     $('#modaleditserv').modal('hide')              
                     this.calctotal()
 
@@ -486,7 +493,6 @@
                     this.item=item.item_id
                     this.edititemquantity=item.quantity
                     this.edititemprice=item.price 
-
                     this.$refs.edititem.query = item.itemname;  
                     this.hititem(item.item_id)
                     $('#modaledititem').modal('show')            
@@ -511,6 +517,8 @@
                      
                     this.items[this.editedindex].itemname = this.loadeditem.itemname 
                     this.items[this.editedindex].item_code = this.loadeditem.item_code 
+                    this.items[this.editedindex].disc = this.loadeditem.disc 
+                    this.items[this.editedindex].pureprice = this.loadeditem.pureprice 
                     this.items[this.editedindex].price = fa(this.edititemprice) 
                     this.items[this.editedindex].quantity = fqty(this.edititemquantity) 
                     this.items[this.editedindex].amount = fa(this.edititemprice * this.edititemquantity ) 
@@ -526,11 +534,12 @@
                 },       
                 hitser: function (){
                     // this.editservice
-                      callPM('vLoadService',[this.service ], null,(data)=> 
+                      callPM('vLoadService',[this.service,this.customer_id ], null,(data)=> 
                       {
                            var data = JSON.parse(data)
                            this.loadedservice = data
                            this.editserviceprice  = this.loadedservice.price
+                        
                       }); 
                 } ,
                 hitcust: function (id){
@@ -582,9 +591,10 @@
                     data.doc.items = this.items
                     data.doc.services = this.services
                     data.doc.total = parseVal( this.total )
+                    data.doc.totaldisc = parseVal( this.totaldisc )
                     data.doc.payamount = parseVal(this.payamount)
                     data.doc.bonus = parseVal(this.bonus)
-                    data.doc.paydisc = parseVal(this.paydisc)
+
                     data.doc.store = this.store
                     data.doc.devsn = this.devsn
                     data.doc.devdesc = this.devdesc
@@ -669,22 +679,28 @@
                 
                 calctotal:function (){
                     var _sum = 0
+                    var _disc = 0
                     for( var _item  of  this.items){
                          _sum +=    Number.parseFloat(_item.amount)
+                         if(_item.disc >0) {
+                            _disc +=   Number.parseFloat((_item.pureprice - _item.price)*_item.quantity )    
+                         }
+                         
                         
                     }      
                     for( var _ser  of  this.services){
                          _sum +=    Number.parseFloat(_ser.amount) 
+                         if(_ser.disc >0) {
+                            _disc +=   Number.parseFloat((_ser.pureprice - _ser.price)*_ser.quantity )    
+                         }                         
+
                     }   
                     this.$forceUpdate();
              
                     this.total = fa(_sum)  
-                    
-                    if(this.customerinfo.discount > 0)  {
                         
-                        
-                        this.paydisc = fa( _sum * (this.customerinfo.discount/100)    )                          
-                    }
+                    this.totaldisc = fa( _disc  )                          
+
                              
                 } ,
      
@@ -702,7 +718,11 @@
                 hititem: function (id){
                   
                   this.item = id 
-                  var data = {}
+                  var data = {
+                      customer:this.customer_id,
+                      store:this.store,
+                      
+                  }
                   callPM('vLoadItem',[id ], JSON.stringify(data),(data)=> 
                   {
                        var data = JSON.parse(data)
@@ -712,6 +732,7 @@
                        }
                         
                        this.qtystock = fqty( data.qtystock)
+                       
                        if(this.editedindex == -1) {
                           this.edititemprice = fa( data.price)    
                
@@ -726,12 +747,37 @@
                     
                 },
       
+      
+              onchangeqty: function( ) { 
+                  
+                  let qty  =  parseVal(this.edititemquantity)   
+                  console.log(qty);
+                  if(qty > 0 && this.item > 0) {
+                      let data = {}
+                      data.item= this.item
+                      data.store= this.store
+                      data.customer= this.customer_id
+                      data.qty = this.edititemquantity
+                      
+                      callPM('vgetPriceByQty',[  ], JSON.stringify(data),(data)=> 
+                      {
+                           var data = JSON.parse(data)
+                           if(parseVal(data)) {
+                             this.edititemprice = data.price    
+                           }
+                           
+                      });        
+                      
+                  }              
+            }  
+      
+      
             }   ,   
     
        computed:{
          payamount:function(){
              
-            var tmp = fa( parseVal(this.total) - parseVal(this.paydisc) - parseVal(this.bonus) ) 
+            var tmp = fa( parseVal(this.total) -   parseVal(this.bonus) ) 
             this.payed = tmp
             return tmp
          } ,
@@ -742,23 +788,7 @@
        watch:{
        
      
-            edititemquantity(newVal, oldVal) { 
-                  
-                  let qty  =  parseVal(this.edititemquantity)   
-                  if(qty > 0 && this.item > 0) {
-                      let data = {}
-                      data.item= this.item
-                      data.store= this.store
-                      data.qty = this.edititemquantity
-                      
-                      callPM('vgetPriceByQty',[  ], JSON.stringify(data),(data)=> 
-                      {
-                           var data = JSON.parse(data)
-                           this.edititemprice = data.price
-                      });        
-                      
-                  }              
-            }         
+                   
         } ,  
         
         mounted: function  (){
@@ -787,8 +817,8 @@
                        this.total = data.doc.amount;  
                        this.payment = data.doc.payment;  
                        this.bonus = data.doc.bonus;  
-                       this.paydisc = data.doc.paydisc;  
-                      // this.payamount = data.doc.payamount;  
+                       this.totaldisc = data.doc.totaldisc;  
+                       this.payamount = data.doc.payamount;  
                        this.payed = data.doc.payed;  
                        this.firm_id = data.doc.firm_id;  
                        this.hitcust(this.customer_id)

@@ -109,35 +109,38 @@
 
                          <typeahead  v-model="edititem"   ref="edititem"  :onquery="onitemtext"  :onhit="hititem"   placeholder="Почнiть вводити ..."></typeahead>     
                           <a  v-on:click.prevent="onOpenIL"  >Відкрити довідник</a>
-                        <br><a  v-on:click.prevent="onAddNew" >Додати новий</a>
+                        &nbsp;&nbsp;<a  v-on:click.prevent="onAddNew" >Додати новий</a>
                              
                     <br>Наявнiсть: <span>{{qtystock}}</span>
 
 
                     </div>
 
-                    <div class="form-group">
-                        <label for="editquantity">Кількість</label>
+                    <div class="form-group row">
+                        <label class="col-7 col-form-label" for="editquantity">Кількість</label>
+                        <div class="col-4" >
                         <input autocomplete="off" class="form-control qtyprice" type="text" v-model="editquantity" id="editquantity" required="required"
-                               pattern="[0-9,\.]+"
-                               style="width: 100px;"/>
+                               pattern="[0-9,\.]+"    />
+                         </div>      
                     </div>
 
 
-                    <div class="form-group">
-                        <label for="editprice">Ціна </label>
+                    <div class="form-group row">
+                        <label class="col-7 col-form-label" for="editprice">Ціна </label>
+                        <div class="col-4" >
                         <input autocomplete="off" class="form-control qtyprice" type="text" v-model="editprice" id="editprice" required="required"
-                               pattern="[0-9,\.]+"
-                               style="width: 100px;">
+                               pattern="[0-9,\.]+"                               >
+                            </div>    
                     </div>
                   
-                    <div class="form-group">
+                    <div class="form-group  row">
 
-                        <label for="editcustcode">Код постачальника </label>
+                        <label class="col-7 col-form-label" for="editcustcode">Код постачальника </label>
+                        <div class="col-5" >
                         <input class="form-control " v-model="editcustcode" id="editcustcode"/>
+                        
+                        </div>
                         <small>Наприклад, код з прайсу продавця</small>
-
-
                     </div>
                   
                     <div class="form-group">

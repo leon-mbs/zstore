@@ -66,7 +66,7 @@ class OrderFood extends Document
                         "time"            => H::fdt($this->headerdata["time"]),
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount),
-                        "payed"           => H::fa($this->payed),
+                        "payed"           => H::fa($this->headerdata['payed']),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "delbonus"           => $delbonus > 0 ? H::fa($delbonus) : false,
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
@@ -125,7 +125,7 @@ class OrderFood extends Document
                         "time"            => H::fdt($this->headerdata["time"]),
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount),
-                        "payed"           => H::fa($this->payed),
+                        "payed"           => H::fa($this->headerdata['payed']),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
                         "isdisc"          => $this->headerdata["paydisc"] > 0,
                          "addbonus"           => $addbonus > 0 ? H::fa($addbonus) : false,
@@ -177,9 +177,7 @@ class OrderFood extends Document
     public function DoPayment() {
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
            
-     
-           
-           
+             
            
             $payed = $this->payed;
             if ($this->headerdata['exchange'] > 0 && $this->payed > $this->headerdata['exchange']) {
@@ -202,13 +200,7 @@ class OrderFood extends Document
     public function DoStore() {
         if($this->hasStore()) return;
       
-      
-        $dd =   doubleval($this->headerdata['bonus'] ) + doubleval($this->headerdata['paydisc'] ) ;
-        $k = 1;   //учитываем  скидку
-        if ($dd > 0 && $this->amount > 0) {
-            $k = ($this->amount - $dd) / $this->amount;
-        }
-        
+ 
         foreach ($this->unpackDetails('detaildata') as $item) {
 
 

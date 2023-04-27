@@ -76,7 +76,7 @@
     {{^prepaid}}
     {{#isdisc}}
     <tr style="font-weight: bolder;">
-        <td colspan="6" align="right">Знижка:</td>
+        <td colspan="6" align="right">В т.ч. знижка:</td>
         <td align="right">{{paydisc}}</td>
     </tr>
     {{/isdisc}}  

@@ -67,12 +67,18 @@
         <td colspan="4" style="border-top: 1px solid black;" align="right">Всього:</td>
         <td style="border-top: 1px solid black;" align="right">{{total}}</td>
     </tr>
-    {{#isdisc}}
+    {{#totaldisc}}
     <tr style="font-weight: bolder;">
-        <td colspan="4" align="right">Знижка:</td>
-        <td align="right">{{paydisc}}</td>
+        <td colspan="4" align="right">В т.ч. знижка:</td>
+        <td align="right">{{totaldisc}}</td>
     </tr>
-    {{/isdisc}}    
+    {{/totaldisc}}    
+   {{#bonus}}
+    <tr style="font-weight: bolder;">
+        <td colspan="4" align="right">Списано  бонуси:</td>
+        <td align="right">{{bonus}}</td>
+    </tr>
+    {{/bonus}}    
    {{#payamount}}
     <tr style="font-weight: bolder;">
         <td colspan="4" align="right">До сплати:</td>

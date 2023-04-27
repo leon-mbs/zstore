@@ -34,7 +34,8 @@ class IOState extends \ZCL\DB\Entity
     const TYPE_INV              = 59;   //Инвестиции
     const TYPE_BANK             = 60;   //Банковское  обслуживание
     const TYPE_CANCEL           = 61;    //отмена  платежа  продажи
-    const TYPE_NAKL           = 62;    //накладные  расходы
+    const TYPE_NAKL             = 62;    //накладные  расходы
+    const TYPE_ADS              = 63;    //   расходы на  маркетинг
 
     //потери ТМЦ
     const TYPE_LOST  = 80;     //потери при инвентаризации
@@ -100,6 +101,7 @@ class IOState extends \ZCL\DB\Entity
             $list[self::TYPE_BANK] = "Послуги банку";
             $list[self::TYPE_CANCEL] =  "Скасування платежу продажу";
             $list[self::TYPE_NAKL] =  "Накладні витрати";
+            $list[self::TYPE_ADS] =  "Витрати на маркетинг та  рекламу";
             $list[self::TYPE_OTHER_OUTCOME] = "Інші витрати";
         }
 

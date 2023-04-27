@@ -92,12 +92,13 @@
     </tr>
 
 
-    {{#isdisc}}
+
+    {{#totaldisc}}
     <tr style="font-weight: bolder;">
-        <td colspan="9" align="right">Знижка:</td>
-        <td align="right">{{paydisc}}</td>
+        <td colspan="9" align="right">В т.ч. знижка:</td>
+        <td align="right">{{totaldisc}}</td>
     </tr>
-    {{/isdisc}}
+    {{/totaldisc}}
     {{#delbonus}}
     <tr style="font-weight: bolder;">
         <td colspan="9" align="right">Списано бонусiв::</td>

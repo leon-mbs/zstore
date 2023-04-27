@@ -140,13 +140,12 @@
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
 
-   
-    {{#isdisc}}
+    {{#totaldisc}}
     <tr style="font-weight: bolder;">
-        <td colspan="6" align="right">Знижка:</td>
-        <td align="right">{{paydisc}}</td>
+        <td colspan="6" align="right">В т.ч. знижка:</td>
+        <td align="right">{{totaldisc}}</td>
     </tr>
-    {{/isdisc}}
+    {{/totaldisc}}
 
 
    {{#payamount}}

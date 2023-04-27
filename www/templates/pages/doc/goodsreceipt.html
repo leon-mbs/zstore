@@ -20,6 +20,7 @@
 
                     <div class="form-group  ">
                         <label for="firm">Покупець</label>
+                        
                         <select class="form-control" zippy="firm">
                             <option value="0">Не обрано</option>
                         </select>
@@ -27,8 +28,13 @@
 
                     <div class="form-group  ">
                         <label for="customer">Постачальник</label>
-                        <input placeholder="Почніть вводити..." class="form-control " zippy="customer"/>
-                        <a style="font-size:smaller" zippy="addcust">Додати нового</a>
+                          <div class="input-group  ">
+                            <input placeholder="Почніть вводити..." class="form-control " zippy="customer"/>
+                              <div class="input-group-append">
+                                 <a title="Додати нового" class="btn btn-success" zippy="addcust" >+</a>
+                            </div>                    
+                        </div>             
+                        
 
                     </div>
 

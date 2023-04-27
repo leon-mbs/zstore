@@ -134,12 +134,12 @@
         <td style="border-top:1px #000 solid;" colspan="8" align="right">Разом:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
-    {{#paydisc}}
+    {{#totaldisc}}
     <tr style="font-weight: bolder;">
-        <td colspan="8" align="right">Знижка:</td>
-        <td align="right">{{paydisc}}</td>
+        <td colspan="8" align="right">В т.ч. знижка:</td>
+        <td align="right">{{totaldisc}}</td>
     </tr>
-    {{/paydisc}}
+    {{/totaldisc}}
    {{#payamount}}
     <tr style="font-weight: bolder;">
         <td colspan="8" align="right">До сплати:</td>

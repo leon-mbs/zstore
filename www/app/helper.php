@@ -1008,13 +1008,22 @@ class Helper
 
             $header['action'] = $item->hasAction();;
             if ($header['action']) {
-                $header['actionprice'] = $item->getActionPrice($header['price']);
+                $header['actionprice'] = $item->getActionPrice();
             }
             $header['iscolor'] = $printer['pcolor'] == 1;
 
             
             $qty =  intval($item->quantity);
-            if($qty==0) $qty = 1;
+            $printqty =  intval($item->printqty);
+            if($printqty==0) $printqty = 4;
+
+            if($printqty==1)  $qty = 1;
+            if($printqty==2)  $qty = 2;
+            if($printqty==3)  ;
+            if($printqty==4)  {
+                if($qty > 10) $qty = 10;    
+            }
+            
             for($i=0;$i<$qty;$i++){
                $htmls = $htmls . $report->generate($header);
             }
