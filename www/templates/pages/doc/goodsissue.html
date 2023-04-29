@@ -181,7 +181,8 @@
 
 
                             <td zippy="totaldisc" class="text-right"></td>
-                            <td></td>
+                            <td><a data-label="totaldisc" href="javascript:void(0);" data-toggle="modal" data-target="#modalalldisc"><i
+                                        class="fa fa-edit"></i></a></td>
                         </tr>
                      
 
@@ -225,7 +226,30 @@
 
                 </div>
             </div>
-          
+             <div id="modalalldisc" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered  modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Загальна знижка</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group  ">
+                                <input required="required" class="form-control qtyprice" type="text" zippy="editalldisc" pattern="[0-9,\.]+">
+                                <div class="input-group-append">
+                                    <input type="submit" value="OK" zippy="balldisc" class="ml-2 btn btn-info  ">
+
+                                </div>
+                                <small>Задає знижку (в %) для всіх позицій</small>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+         
             <div id="modalpayamount" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered  modal-sm">

@@ -63,6 +63,8 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
         $this->docform->add(new Label('payed', 0));
         $this->docform->add(new Label('payamount', 0));
+        $this->docform->add(new TextInput('editalldisc'));
+        $this->docform->add(new SubmitButton('balldisc'))->onClick($this, 'onAlldisc');
 
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -882,7 +884,25 @@ class GoodsIssue extends \App\Pages\Base
 
 
     }
-
+     public function onAlldisc() {
+        $alldisc= doubleval( str_replace(',','.',  $this->docform->editalldisc->getText() ) );
+        if($alldisc >100) {
+            return;
+        }
+      
+        foreach ($this->_itemlist as $item) {
+            $item->disc =  $alldisc;
+            $item->price  = $item->pureprice - (  $item->pureprice * $alldisc/100);
+            $item->amount = $item->price * $item->quantity;
+            
+        }       
+          
+        $this->calcTotal();
+        $this->calcPay();
+        $this->docform->detail->Reload();
+          
+        $this->goAnkor("tankor");
+    }
     public function OnAutoItem($sender) {
         $store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
