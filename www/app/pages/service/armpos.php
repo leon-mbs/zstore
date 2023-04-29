@@ -40,6 +40,8 @@ class ARMPos extends \App\Pages\Base
     private $_pt         = 0;
     private $_store_id   = 0;
     private $_salesource = 0;
+    private $_mfbeznal = 0;
+    private $_mfnal = 0;
    
     public $_doclist = array();
 
@@ -55,6 +57,8 @@ class ARMPos extends \App\Pages\Base
             $filter->store = H::getDefStore();
             $filter->pricetype = H::getDefPriceType();
             $filter->salesource = H::getDefSaleSource();
+            $filter->mfnal = H::getDefSaleSource();
+            $filter->mfbeznal = H::getDefSaleSource();
 
 
         }
@@ -67,6 +71,8 @@ class ARMPos extends \App\Pages\Base
         $this->form1->add(new DropDownChoice('store', \App\Entity\Store::getList(), $filter->store));
         $this->form1->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList(), $filter->pricetype));
         $this->form1->add(new DropDownChoice('salesource', H::getSaleSources(), $filter->salesource));
+        $this->form1->add(new DropDownChoice('mfnal', \App\Entity\MoneyFund::getList(1), $filter->mfnal));
+        $this->form1->add(new DropDownChoice('mfbeznal', \App\Entity\MoneyFund::getList(2), $filter->mfbeznal));
 
         $this->form1->add(new SubmitButton('next1'))->onClick($this, 'next1docOnClick');
 
@@ -114,12 +120,14 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docpanel->form2->customer->onChange($this, 'OnChangeCustomer');
         $this->docpanel->form2->add(new Label('custinfo'));
+        $this->docpanel->form2->add(new DropDownChoice('paytype',array()));
         $this->docpanel->form2->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
-       
+                  
         //оплата
         $this->docpanel->add(new Form('form3'))->setVisible(false);
-        $this->docpanel->form3->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
 
+
+        $this->docpanel->form3->add(new TextInput('paytypeh'));
         $this->docpanel->form3->add(new TextInput('document_number'));
 
         $this->docpanel->form3->add(new Date('document_date'))->setDate(time());
@@ -132,6 +140,7 @@ class ARMPos extends \App\Pages\Base
 
         $this->docpanel->form3->add(new TextInput('payamount'));
         $this->docpanel->form3->add(new TextInput('payed'));
+        $this->docpanel->form3->add(new TextInput('payedcard'));
         $this->docpanel->form3->add(new TextInput('exchange'));
         $this->docpanel->form3->add(new TextInput('bonus'));
         $this->docpanel->form3->add(new TextInput('trans'));
@@ -234,11 +243,18 @@ class ARMPos extends \App\Pages\Base
         $this->_store_id = $this->form1->store->getValue();
         $this->_salesource = $this->form1->salesource->getValue();
         $this->_pt = $this->form1->pricetype->getValue();
+        $this->_mfnal = $this->form1->mfnal->getValue();
+        $this->_mfbeznal = $this->form1->mfbeznal->getValue();
 
         if ($this->pos == null) {
             $this->setError("Не обрано термінал");
             return;
         }
+        if ($this->_mfnal == 0) {
+            $this->setError("Не обрана готівкова каса");
+            return;
+        }
+      
 
         if ($this->_store_id == 0) {
             $this->setError("Не обрано склад");
@@ -255,12 +271,29 @@ class ARMPos extends \App\Pages\Base
         $filter->store = $this->_store_id;
         $filter->pricetype = $this->_pt;
         $filter->salesource = $this->_salesource;
+        $filter->mfnal = $this->_mfnal;
+        $filter->mfbeznal = $this->_mfbeznal;
 
         $this->form1->setVisible(false);
         $this->docpanel->form2->setVisible(true);
+ 
+        if($filter->mfbeznal==0) {
 
-    //    $this->docpanel->form3->exch2b->setVisible( $this->pos->usefisc != 1);
-                  
+          $this->docpanel->form2->paytype->setOptionList( array( "1"=>"Готівка" ));
+          $this->docpanel->form2->paytype->setValue(1);
+        }  else {
+          $this->docpanel->form2->paytype->setOptionList( array( 
+            "0"=>"Не  обрано",
+            "1"=>"Готівка",
+            "2"=>"Картка",
+            "3"=>"Комбінована"
+          ));
+          $this->docpanel->form2->paytype->setValue(0);
+          
+            
+        }
+        
+             
         $this->newdoc(null);
     }
 
@@ -289,6 +322,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form3->bonus->setText('0');
         $this->docpanel->form3->payamount->setText('0');
         $this->docpanel->form3->payed->setText('0');
+        $this->docpanel->form3->payedcard->setText('0');
         $this->docpanel->form3->exchange->setText('0');
         $this->docpanel->form2->custinfo->setText('');
         $this->docpanel->form3->trans->setText('') ;
@@ -301,13 +335,54 @@ class ARMPos extends \App\Pages\Base
             $this->setError('Не введено позиції');
             return;
         }
-
+        $paytype=$this->docpanel->form2->paytype->getValue();
+        
+        if($paytype==0){
+            $this->setError('Не вказаний тип оплати');
+            return;
+            
+        }
+        $this->docpanel->form3->paytypeh->setValue($paytype);
+           
         $this->form1->setVisible(false);
         $this->docpanel->form2->setVisible(false);
         $this->docpanel->form3->setVisible(true);
 
         $this->docpanel->form3->exch2b->setText('');
+    
+        $total= doubleval( $this->docpanel->form3->total2->getText() );      
+        
 
+        
+        if($this->_mfbeznal ==0) {
+           $this->docpanel->form3->payed->setText($total);  
+           $this->docpanel->form3->payedcard->setVisible(false);            
+        }  else {
+            $this->docpanel->form3->payed->setAttribute('disabled',null); 
+            $this->docpanel->form3->payedcard->setAttribute('disabled',null); 
+            
+            if($paytype == 1) {
+                $this->docpanel->form3->payed->setText($total); 
+                $this->docpanel->form3->payedcard->setAttribute('disabled','disabled'); 
+                $this->docpanel->form3->payedcard->setText(0);                 
+            }
+            if($paytype == 2) {
+                $this->docpanel->form3->payedcard->setText($total); 
+                $this->docpanel->form3->payed->setAttribute('disabled','disabled'); 
+                $this->docpanel->form3->payed->setText(0); 
+                
+            }
+            if($paytype == 3) {
+                $half= H::fa($total/2);; 
+                $this->docpanel->form3->payed->setText($half); 
+                $this->docpanel->form3->payedcard->setText($total - $half); 
+             
+             
+                
+            }
+            
+        }
+        
     }
 
     public function detailOnRow($row) {
@@ -742,7 +817,8 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->totaldisc->setText(H::fa($disc));
         $this->docpanel->form3->total2->setText(H::fa($total));
         $this->docpanel->form3->payamount->setText(H::fa($total));
-        $this->docpanel->form3->payed->setText(H::fa($total));
+    
+        
     }
 
     public function OnChangeItem($sender) {
@@ -912,24 +988,26 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->payamount = $this->docpanel->form3->payamount->getText();
 
         $this->_doc->headerdata['time'] = time();
-        $this->_doc->payed = $this->docpanel->form3->payed->getText();
+        $this->_doc->payed = doubleval($this->docpanel->form3->payed->getText()) + doubleval($this->docpanel->form3->payedcard->getText()) ;
         $this->_doc->headerdata['payed'] = $this->docpanel->form3->payed->getText();
+        $this->_doc->headerdata['payedcard'] = $this->docpanel->form3->payedcard->getText();
         $this->_doc->headerdata['exchange'] = $this->docpanel->form3->exchange->getText();
         $this->_doc->headerdata['exch2b'] = $this->docpanel->form3->exch2b->getText() ;
         $this->_doc->headerdata['trans'] = trim($this->docpanel->form3->trans->getText());
         $this->_doc->notes = $this->_doc->notes . ' ' . $this->_doc->headerdata['trans']  ;
         $this->_doc->headerdata['totaldisc'] = $this->docpanel->form2->totaldisc->getText();
-        $this->_doc->headerdata['payment'] = $this->docpanel->form3->payment->getValue();
+      
+        $this->_doc->headerdata['mfnal'] = $this->form1->mfnal->getValue();
+        $this->_doc->headerdata['mfbeznal'] = $this->form1->mfbeznal->getValue();
+          
         $this->_doc->headerdata['bonus'] = $this->docpanel->form3->bonus->getText();
 
         if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $this->_doc->customer_id == 0) {
             $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
             return;
         }
-        if ($this->docpanel->form3->payment->getValue() == 0 && $this->_doc->payed > 0) {
-            $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
-            return;
-        }
+         
+  
    
         if ( doubleval($this->_doc->headerdata['bonus'] ) >0 && $this->_doc->customer_id == 0) {
             $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
@@ -937,6 +1015,10 @@ class ARMPos extends \App\Pages\Base
         }
         if ( doubleval($this->_doc->headerdata['exch2b'] ) >0 && $this->_doc->customer_id == 0) {
             $this->setError("Для нарахування бонуса повинен бути обраний контрагент");
+            return;
+        }
+        if ( doubleval($this->_doc->headerdata['exchange'] ) >0 && doubleval($this->_doc->headerdata['payedcard'] >0 )) {
+            $this->setError("При оплаті карткою здача повиная бути 0");
             return;
         }
  
@@ -1059,7 +1141,7 @@ class ARMPos extends \App\Pages\Base
         }
         $this->docpanel->form2->customer->setKey(0);
         $this->docpanel->form2->customer->setText('');
-        $this->docpanel->form3->payment->setValue(H::getDefMF());
+
         $this->docpanel->form3->setVisible(false);
         $this->docpanel->form2->setVisible(false);
         $this->docpanel->formcheck->setVisible(true);

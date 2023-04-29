@@ -474,7 +474,9 @@ class PPOHelper
         $n = 1;
 
         
-        //
+ 
+        
+        /*
         if ($doc->headerdata['payment'] == 0) {
             $pay = array(
                 'formname' => self::FORM_PREPAID,
@@ -547,101 +549,108 @@ class PPOHelper
 
             $amount2 = $pay['paysum'];
         }
-        //
-        
-        
-        /*   
-        
-        
-       if ( $discsum > 0) {            
-               
+             
+        */
+        $payed  =    doubleval($doc->headerdata['payed']) + doubleval($doc->headerdata['payedcard']);
+      
+        if($this->headerdata['payment']  >0) {
+            if (  $mf->beznal == 1) {
                 $pay = array(
-                    'formname' => self::FORM_BONUS,
-                    'formcode' => 4,
-                    'paysum'   => number_format($discsum, 2, '.', ''),
-                    'payed'    => number_format($discsum, 2, '.', ''),
-                    'rest'     => false,
+                    'formname' => self::FORM_CARD,
+                    'formcode' => 1,
+                    'paysum'   => number_format($doc->payamount, 2, '.', ''),
+                    'payed'    => number_format($doc->payamount, 2, '.', ''),
                     'num'      => "ROWNUM=\"{$n}\""
-                );               
-                
+                );
+                // в долг
+                if ($payed < $doc->payamount) {
+                    $pay['paysum'] = number_format($doc->payamount, 2, '.', '');
+                    $pay['payed'] = number_format($payed, 2, '.', '');
+                }
                 $header['pays'][] = $pay;
                 $n++;
-           
-           }          
-        
-        
-        
-        if ($doc->payamount == 0) {
-            $pay = array(
-                'formname' => self::FORM_PREPAID,
-                'formcode' => 3,
-                'paysum'   => number_format($header['amount'], 2, '.', ''),
-                'payed'    => number_format($header['amount'], 2, '.', ''),
-                'num'      => "ROWNUM=\"{$n}\""
-            );
+                $amount1 = $pay['paysum'];
+            } else {
 
-            $header['pays'][] = $pay;
-            $n++;
-            $amount3 = $pay['paysum'];
-        } else {
-            
-            if($ms != null &&   $doc->payed  >0){ 
-            
-                if (  $mf->beznal == 1) {
-                    $pay = array(
-                        'formname' => self::FORM_CARD,
-                        'formcode' => 1,
-                        'paysum'   => number_format($doc->payed, 2, '.', ''),
-                        'payed'    => number_format($doc->payed, 2, '.', ''),
-                        'num'      => "ROWNUM=\"{$n}\""
-                    );
-                
-                    $header['pays'][] = $pay;
-                    $n++;
-                    $amount1 = $pay['paysum'];
-                } else {
-
-                    $pay = array(
-                        'formname' => self::FORM_NAL,
-                        'formcode' => 0,
-                        'paysum'   => number_format($doc->payed, 2, '.', ''),
-                        'payed'    => number_format($doc->payed, 2, '.', ''),
-                        'rest'     => false,
-                        'num'      => "ROWNUM=\"{$n}\""
-                    );
-                    //сдача
-                    if ($doc->headerdata["exchange"] > 0) {
-                        $pay['rest'] = number_format($doc->headerdata["exchange"], 2, '.', '');
-                      //  $pay['paysum']  = number_format($doc->payed -$pay['exchange'], 2, '.', '') ;
-                   }
-                
-
-                    $header['pays'][] = $pay;
-                    $n++;
-                    $amount0 = $pay['paysum'];
-                }
-            }
-            
-                
-       // в долг
-            if ($doc->payed < $doc->payamount) {
                 $pay = array(
-                    'formname' => self::FORM_CREDIT,
-                    'formcode' => 2,
-                    'paysum'   => number_format($doc->payamount - $doc->payed, 2, '.', ''),
-                    'payed'    => number_format($doc->payamount - $doc->payed, 2, '.', ''),
+                    'formname' => self::FORM_NAL,
+                    'formcode' => 0,
+                    'paysum'   => number_format($doc->payamount, 2, '.', ''),
+                    'payed'    => number_format($payed, 2, '.', ''),
                     'rest'     => false,
                     'num'      => "ROWNUM=\"{$n}\""
                 );
+                //сдача
+                if ($doc->headerdata["exchange"] > 0) {
+                    $pay['rest'] = number_format($doc->headerdata["exchange"], 2, '.', '');
+                }
+                // в долг
+                if ($payed < $doc->payamount) {
+                    $pay['paysum'] = number_format($payed, 2, '.', '');
+                    $pay['payed'] = number_format($payed, 2, '.', '');
+                }
+
                 $header['pays'][] = $pay;
                 $n++;
-
-                $amount2 = $pay['paysum'];
+                $amount0 = $pay['paysum'];
             }
-            
-        }        
+        } 
+        else {
+              if($doc->headerdata['mfnal']  >0 && $doc->headerdata['payed'] > 0) {
+                   $pay = array(
+                        'formname' => self::FORM_NAL,
+                        'formcode' => 0,
+                        'paysum'   => number_format($doc->headerdata['payed'], 2, '.', ''),
+                        'payed'    => number_format($doc->headerdata['payed'], 2, '.', ''),
+                        'rest'     => false,
+                        'num'      => "ROWNUM=\"{$n}\""
+                    );
+                   //сдача
+                    if ($doc->headerdata["exchange"] > 0) {
+                        $pay['rest'] = number_format($doc->headerdata["exchange"], 2, '.', '');
+                    }
+                    
+                    $header['pays'][] = $pay;
+                    $n++;
+                    $amount1 = $pay['paysum'];   
+
+              }
+              if($doc->headerdata['mfbeznal']  >0 && $doc->headerdata['payedcard'] > 0) {
+                    $pay = array(
+                        'formname' => self::FORM_CARD,
+                        'formcode' => 1,
+                        'paysum'   => number_format($doc->headerdata['payedcard'], 2, '.', ''),
+                        'payed'    => number_format($doc->headerdata['payedcard'], 2, '.', ''),
+                        'num'      => "ROWNUM=\"{$n}\""
+                    );
+              
+                    $header['pays'][] = $pay;
+                    $n++;
+                    $amount1 = $pay['paysum'];   
+              }
         
-        */
+        }       
+            
+        
+       
+         // в долг
+        if ($payed < $doc->payamount) {
+            $pay = array(
+                'formname' => self::FORM_CREDIT,
+                'formcode' => 2,
+                'paysum'   => number_format($doc->payamount - $payed, 2, '.', ''),
+                'payed'    => number_format($doc->payamount - $payed, 2, '.', ''),
+                'rest'     => false,
+                'num'      => "ROWNUM=\"{$n}\""
+            );
+            $header['pays'][] = $pay;
+            $n++;
+
+            $amount2 = $pay['paysum'];
+        }  
+       
+        
+     
         $header['pay'] = count($header['pays']) > 0;
         $header['disc'] = false;
 

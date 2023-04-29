@@ -54,7 +54,7 @@ class POSCheck extends Document
         $firm = H::getFirmData($this->firm_id);
         $printer = System::getOptions('printer');
 
-     
+        $pp = doubleval($this->headerdata['payed'])+ doubleval($this->headerdata['payedcard']);
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
@@ -72,9 +72,9 @@ class POSCheck extends Document
                         "time"            => H::fdt($this->headerdata["time"]),
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount),
-                        "payed"           => H::fa($this->headerdata['payed']),
+                        "payed"           => H::fa($pp),
                         "totaldisc"           => $this->headerdata["totaldisc"] > 0 ? H::fa($this->headerdata["totaldisc"]) : false,
-                        "prepaid"         => $this->headerdata['payment'] == 0,
+                     //   "prepaid"         => ($this->headerdata['payment'] == 0 ||$this->headerdata['mfnal'] == 0  || $this->headerdata['mfbeznal'] == 0  ),
             
                         "docqrcode"       => $this->getQRCodeImage(),
                         "payamount"       => H::fa($this->payamount)
@@ -130,7 +130,8 @@ class POSCheck extends Document
             $c=\App\Entity\Customer::load($this->customer_id);    
             $allbonus = $c->getBonus();
         }
-        
+        $pp = doubleval($this->headerdata['payed'])+ doubleval($this->headerdata['payedcard']);
+      
         
         $header = array('date'          => H::fd($this->document_date),
                         "_detail"       => $detail,
@@ -160,7 +161,7 @@ class POSCheck extends Document
                         "trans"           => $this->headerdata["trans"] > 0 ? $this->headerdata["trans"] : false,
                         "docqrcodeurl"     =>  $this->getQRCodeImage(true),             
                         "docqrcode"       => $this->getQRCodeImage(),
-                        "payed"           => $this->headerdata['payed'] > 0 ? H::fa($this->headerdata['payed']) : false,
+                        "payed"           => $pp > 0 ? H::fa($pp) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
         );
         
@@ -174,13 +175,29 @@ class POSCheck extends Document
             $header['checkslogan']   =   $frases[$i];        
         }
         
-        
+        $header['form1']  = false;       
+        $header['form2']  = false;       
+        $header['form3']  = false;       
+
         
         if($this->headerdata['payment']  >0){
             $mf = \App\Entity\MoneyFund::load($this->headerdata['payment'] );
-            $header['nal']  = $mf->beznal!=1;
+            $header['form1']  = $mf->beznal!=1;
+            $header['form2']  = $mf->beznal==1;
         }
-
+        else {
+            if($this->headerdata['payed']>0) {
+                $header['form1']  = true;
+            }
+            if($this->headerdata['payedcard']>0) {
+                $header['form2']  = true;
+            }
+            if($this->headerdata['payed']>0  && $this->headerdata['payedcard']) {
+                $header['form1']  = false;
+                $header['form2']  = false;
+                $header['form3']  = true;
+            }
+        }
 
        if($ps)   {
           $report = new \App\Report('doc/poscheck_bill_ps.tpl');
@@ -196,13 +213,13 @@ class POSCheck extends Document
     public function Execute() {
         //$conn = \ZDB\DB::getConnect();
 
-        $dd =   doubleval($this->headerdata['bonus'] ) + doubleval($this->headerdata['paydisc'] ) ;
+        $dd =   doubleval($this->headerdata['bonus'] )    ;
         $k = 1;   //учитываем  скидку
         if ($dd > 0 && $this->amount > 0) {
             $k = ($this->amount - $dd) / $this->amount;
         }
             
-            
+        // товары    
         foreach ($this->unpackDetails('detaildata') as $item) {
 
 
@@ -262,14 +279,9 @@ class POSCheck extends Document
                 $sc->save();
             }
         }
-
  
-        $payed = $this->payed;
-        if ($this->headerdata['exchange'] > 0 && $this->payed > $this->headerdata['exchange']) {
-
-            $payed = $this->payed - $this->headerdata['exchange']; //без здачи
-        }
-        foreach ($this->unpackDetails('services') as $ser) {
+         // работы
+         foreach ($this->unpackDetails('services') as $ser) {
 
             $sc = new Entry($this->document_id, 0 - ($ser->price * $k * $ser->quantity), 0);
             $sc->setService($ser->service_id);
@@ -278,14 +290,33 @@ class POSCheck extends Document
     
             $sc->save();
         }
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $payed, $this->headerdata['payment'] );
-            if ($payed > 0) {
-                $this->payed = $payed;
-            }
-            \App\Entity\IOState::addIOState($this->document_id, $payed, \App\Entity\IOState::TYPE_BASE_INCOME);
-
+      
+        //оплата 
         
 
+        if ($this->headerdata['exchange'] > 0  ) {
+
+            $this->headerdata['payed'] = $this->headerdata['payed'] - $this->headerdata['exchange']; //без здачи
+        }
+        $payed = 0;
+        if($this->headerdata['payment']  >0) {
+           $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['payed'] , $this->headerdata['payment'] );
+        }
+        else {
+            if($this->headerdata['mfnal']  >0 && $this->headerdata['payed'] >0) {
+               $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['payed'] , $this->headerdata['mfnal'] );
+            }
+            if($this->headerdata['mfbeznal']  >0 && $this->headerdata['payedcard'] >0) {
+               $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['payedcard'] , $this->headerdata['mfbeznal'] );
+            }
+        }
+   
+        
+        if ($payed > 0) {
+            $this->payed = $payed;
+        }
+        \App\Entity\IOState::addIOState($this->document_id, $payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+   
         return true;
     }
 
