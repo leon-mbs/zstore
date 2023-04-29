@@ -337,6 +337,8 @@ class Discounts extends \App\Pages\Base
         $k =  $this->itab->ifilter->isearchkey->getKey();
         $i = Item::load($k);
         if ($i == null) {
+            $this->setError("Не вказано товар");
+             
             return;
         }
         $d = doubleval($this->itab->ifilter->isearchdisc->getText());
@@ -371,7 +373,7 @@ class Discounts extends \App\Pages\Base
         $k = $this->itab->iofilter->isearchokey->getKey();
         $i = Item::load($k);
         if ($i == null) {
-            $this->setError("Не выбрано товар") ;
+            $this->setError("Не вказано товар") ;
             return;
         }
         $d1 = doubleval($this->itab->iofilter->isearchoprice1->getText());
@@ -486,6 +488,8 @@ class Discounts extends \App\Pages\Base
     public function OnGAdd($sender) {
         $g = \App\Entity\Category::load($sender->gsearchkey->getValue());
         if ($g == null) {
+            $this->setError("Не вказано категорію");
+            
             return;
         }
         $d = doubleval($sender->gsearchdisc->getText());
