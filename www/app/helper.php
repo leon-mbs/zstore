@@ -1013,7 +1013,7 @@ class Helper
             $header['iscolor'] = $printer['pcolor'] == 1;
 
             
-            $qty =  intval($item->quantity);
+            $qty =  intval($item->getQuantity());
             $printqty =  intval($item->printqty);
             if($printqty==0) $printqty = 4;
 
