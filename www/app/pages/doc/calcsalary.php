@@ -225,15 +225,25 @@ class CalcSalary extends \App\Pages\Base
                 }
         
                $sqlitem = "
-                  select   sum(0-e.quantity*e.partion) as summa 
+                  select   sum(0-e.quantity*e.outprice) as summa 
                       from entrylist_view  e
 
                       join items i on e.item_id = i.item_id
                      join documents_view d on d.document_id = e.document_id
                        where e.item_id >0  and (e.tag = 0 or e.tag = -1  or e.tag = -4) 
                       and d.meta_name in ('GoodsIssue','ServiceAct' ,'POSCheck','ReturnIssue','TTN','OrderCust','OrderFood')           
-                       {$br} {$u} AND DATE(e.document_date) >= {$from}   AND DATE(e.document_date) <= " .$to  ;
+                       {$br}  AND DATE(e.document_date) >= {$from}   AND DATE(e.document_date) <= " .$to  ;
                      
+            
+              $sqlservice ="        select  sum(0-e.outprice*e.quantity) as summa    
+                      from entrylist_view  e
+
+                      join services s on e.service_id = s.service_id
+                     join documents_view d on d.document_id = e.document_id
+                       where e.service_id >0  and e.quantity <>0      {$cust}  
+                      and d.meta_name in (  'ServiceAct' ,'POSCheck' )
+                       {$br}  AND DATE(e.document_date) >={$from} 
+                      AND DATE(e.document_date) <= " . $to ;
                      
                                              
                   
@@ -254,6 +264,8 @@ class CalcSalary extends \App\Pages\Base
                    if($u != null){
                        $sql= $sqlitem ." and d.user_id=" .$u->user_id;
                        $e['sellvalue'] = intval($conn->GetOne($sql) ) ;    
+                       $sql= $sqlservice ." and d.user_id=" .$u->user_id;
+                       $e['sellvalue'] = $e['sellvalue'] + intval($conn->GetOne($sql) ) ;    
                    }
 
                    
