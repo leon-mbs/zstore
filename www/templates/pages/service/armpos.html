@@ -76,9 +76,12 @@
             <div zippy="navbar" class="navbar nav justify-content-start">
 
             <a zippy="tochecklist"  ><i class="fa fa-list"></i> Список чекiв</a>    &nbsp;  &nbsp; &nbsp;  &nbsp; 
-              {{#hideblock}}
-               <a zippy="tosimple"     ><i class="fa fa-repeat"></i> Спрощена версія АРМ</a>    &nbsp;  &nbsp; &nbsp;  &nbsp; 
-              {{/hideblock}}            
+                {{^simplemode}}
+               <a zippy="tosimple"     ><i class="fa fa-repeat"></i> Спрощений режим</a>    &nbsp;  &nbsp; &nbsp;  &nbsp; 
+                {{/simplemode}}
+                {{#simplemode}}
+               <a zippy="tostandard"     ><i class="fa fa-repeat"></i> Стардартний режим</a>    &nbsp;  &nbsp; &nbsp;  &nbsp; 
+               {{/simplemode}}    
             
              {{#fiscal}}
                 
@@ -94,6 +97,7 @@
                 <div class="row">
                     <div class="col-12  col-xl-10">
                     
+                      {{^simplemode}}
                         <div   class="form row  ">
                             <div class="col-auto">
                             Покупець 
@@ -108,12 +112,15 @@
                             
                             </div>
                           <div class="col-auto">
-                            <span zippy="custinfo"  >777</span>
+                            <span zippy="custinfo"  ></span>
 
                        </div>     
 
 
                        </div>
+                      {{/simplemode}} 
+                       
+                       
                         <div   class="form row mb-3 mt-2">
 
                         {{#usescanner}}
@@ -128,17 +135,32 @@
                             
                          
                         {{/usescanner}}
-
+                        {{^simplemode}}
+                            <div class="col-auto">
+                              <a class="btn btn-info  " zippy="addrow">Додати товар</a>
+                            </div>
+                            <div class="col-auto">
+                              <a class="btn btn-info  " zippy="addser">Додати послугу</a>
+                           </div>
+                         {{/simplemode}}
+                       {{#simplemode}}  
+                           <div class="col-auto pt-2">
+                           Товар
+                            </div>
+                          <div class="col-auto">
+                            <input placeholder="Почніть вводити..." class="form-control " zippy="addtovarsm"/>
+                          
+                           </div>
+                         <div class="col-auto pt-2">
+                           Кіл.
+                            </div>
+                         <div class="col-auto">
+                            <input zippy="qtysm" class="form-control qtyprice"   style="width:100px;">
+                            </div>                              
                         <div class="col-auto">
-                        <a class="btn btn-info  " zippy="addrow">Додати товар</a>
-                        </div>
-                        <div class="col-auto">
-                        <a class="btn btn-info  " zippy="addser">Додати послугу</a>
-                       </div><div class="col-auto">
-                          Тип оплати <select   zippy="paytype"></select>
-                        </div><div class="col-auto">
-                        <input type="submit" value="Оплатити" zippy="topay" class="btn  btn-info">
-                        </div>
+                            <a class="btn btn-success  " zippy="additemsm">Додати </a>  
+                            </div>                              
+                       {{/simplemode}}
                         </div>
                     </div>
 
@@ -174,12 +196,16 @@
                                 <td zippy="sdate"></td>
                                 {{/usesnumber}}
 
-                                <td  class="text-right text-nowrap"><a  zippy="minus" class="btn btn-sm btn-info mr-2">-</a><span zippy="quantity"></span><a class="btn btn-sm btn-info ml-2" zippy="plus">+</a>  </td>
+                                <td zippy="quantity" class="text-right  "> </td>
                                 <td zippy="disc" class="text-right"></td>
                                 <td zippy="price" class="text-right"></td>
 
                                 <td zippy="amount" class="text-right"></td>
-                                <td><a zippy="edit" ><i class="fa fa-edit"></i></a></td>
+                                <td>&nbsp;
+                                {{^simplemode}}
+                                 <a zippy="edit" ><i class="fa fa-edit"></i></a>
+                                {{/simplemode}}
+                                </td>
                                 <td><a zippy="delete"><i class="fa fa-trash"></i></a></td>
 
                             </tr>
@@ -198,7 +224,7 @@
                                 <td zippy="serprice" class="text-right"></td>
 
                                 <td zippy="seramount" class="text-right"></td>
-                                <td><a zippy="seredit"><i class="fa fa-edit"></i></a></td>
+                                <td>&nbsp;<a zippy="seredit"><i class="fa fa-edit"></i></a></td>
                                 <td><a zippy="serdelete"><i class="fa fa-trash"></i></a></td>
 
                             <tr style="font-weight: bolder;" id="tankor">
@@ -217,7 +243,7 @@
                           <tr style="font-weight: bolder;" id="tankor">
 
                                 {{^usesnumber}}
-                                <td colspan="6" class="text-right">Всього:</td>
+                                <td colspan="6" class="text-right">В т.ч. знижка:</td>
                                 {{/usesnumber}}
                                 {{#usesnumber}}
                                 <td colspan="8" class="text-right">В т.ч. знижка:</td>
@@ -227,8 +253,27 @@
                                 <td></td>
                                 <td></td>
                             </tr>
-                        </table>
-                    </div>
+                        </table> 
+                       </div>
+                     
+                 <div class="col-12   col-lg-6 col-xl-4 offset-lg-4 offset-xl-4">                       
+                      <div class="form row">
+                     
+                         <div class="col-auto pt-2">
+                          Тип оплати  
+                          </div>
+                          <div class="col-auto">
+                          <select class="form-control"   zippy="paytype"></select>
+                        </div>
+                        <div class="col-auto">
+                         <input type="submit" value="Оплатити" zippy="topay" class="btn  btn-info">
+                        </div>              
+                        
+                             
+                         </div>
+                     </div>
+                    
+                    
                 </div>
 
 
@@ -247,13 +292,14 @@
                          </div>
                         </div>
               
-  
+                      {{^simplemode}}
                         <div class="form-group row">
                             <label class="col-4" for="bonus" data-label="bonus">Бонуси</label>
                            <div class="col-2">
                             <input autocomplete="off" class="form-control" type="text" zippy="bonus">
                          </div>
                         </div>
+                       {{/simplemode}}   
                         <div class="form-group row">
                             <label class="col-4" for="payamount" data-label="payamount">До сплати</label>
                           <div class="col-2">
@@ -280,18 +326,18 @@
                             <input class="form-control-plaintext" type="text" zippy="exchange" readonly>
                          </div>
                         </div>
-                     
+                          {{^simplemode}}
                        <div class="form-group row">
                             <label class="col-4" for="exch2b" data-label="exch2b">Бонуси</label>
                          
                             <div class="col-2">
                             <input autocomplete="off" class="form-control" type="text" zippy="exch2b">
-                         </div>     
+                            </div>     
                              <div class="col-12">
-                  <small>    Занести частину або всю решту в бонуси </small>
-                      </div>     
+                            <small>    Занести частину або всю решту в бонуси </small>
+                            </div>     
                         </div>
-
+                       {{/simplemode}}
                     </div>
      
                  <div class="col-12 col-md-4">
@@ -312,7 +358,7 @@
                             </div>
                         </div>
                    
-           
+                         
                          <div class="form-group  row ">
                             <label class="col-4" data-label="trans"  for="trans">№ транзакції</label>
                             <div class="col-6">
@@ -322,6 +368,7 @@
                              </div>
                            
                         </div>
+                         
                          <div class="form-group  row ">
                             <label class="col-4" for="notes">Примітка </label>
 
@@ -340,7 +387,7 @@
                     <div class="col-12">
                         <div class="form-group  ">
                             <input type="button" value="< назад" zippy="cancel2" class="btn  btn-outline-info">
-                            &nbsp;&nbsp;<input type="submit" value="Зберегти  " zippy="save" class="btn  btn-info">
+                            &nbsp;&nbsp;<input type="submit" value="Створити чек  " zippy="save" class="btn  btn-info">
                             {{#ppo}}
                             &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Вiдкласти фiскалiзацiю  
                            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"

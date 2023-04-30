@@ -97,7 +97,8 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->add(new Panel('navbar')) ;
     
         $this->docpanel->navbar->add(new ClickLink('tochecklist', $this, 'onCheckList'));
-        $this->docpanel->navbar->add(new ClickLink('tosimple', $this, 'onSimpleOn'));
+        $this->docpanel->navbar->add(new ClickLink('tosimple', $this, 'onModeOn'));
+        $this->docpanel->navbar->add(new ClickLink('tostandard', $this, 'onModeOn'));
         $this->docpanel->navbar->add(new ClickLink('openshift', $this, 'OnOpenShift'));
         $this->docpanel->navbar->add(new ClickLink('closeshift', $this, 'OnCloseShift'));
 
@@ -122,6 +123,13 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->add(new Label('custinfo'));
         $this->docpanel->form2->add(new DropDownChoice('paytype',array()));
         $this->docpanel->form2->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
+        
+           
+        $this->docpanel->form2->add(new AutocompleteTextInput('addtovarsm'))->onText($this, 'OnAutoItemSm');
+        $this->docpanel->form2->addtovarsm->onChange($this, 'OnChangeItemSm', true);
+        $this->docpanel->form2->add(new TextInput('qtysm'));
+        $this->docpanel->form2->add(new SubmitLink('additemsm'))->onClick($this, 'addItemSmOnClick');
+      
                   
         //оплата
         $this->docpanel->add(new Form('form3'))->setVisible(false);
@@ -194,22 +202,22 @@ class ARMPos extends \App\Pages\Base
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
-        /*
-          //Закрытие  смены
-          $this->add(new Form('zform'))->setVisible(false);
-          $this->zform->add(new TextInput('zformqnt'));
-          $this->zform->add(new TextInput('zformnal'));
-          $this->zform->add(new TextInput('zformbnal'));
-          $this->zform->add(new TextInput('zformcredit'));
-          $this->zform->add(new TextInput('zformprepaid'));
-          $this->zform->add(new TextInput('zformtotal'));
-          $this->zform->add(new Button('cancelzform'))->onClick($this, 'cancelzformOnClick');
-          $this->zform->add(new SubmitButton('savezform'))->onClick($this, 'savezformOnClick');
-
-         */
+        $this->_tvars['simplemode']  = false;
+     
     }
 
 
+    public function onModeOn($sender) {
+        $this->_tvars['simplemode']  = $sender->id == 'tosimple';
+        if($this->_tvars['simplemode'] == true)  {
+            $this->_tvars['usesnumber']  = false;    ;
+        }   else {
+             $options = System::getOptions('common');
+             $this->_tvars["usesnumber"] = $options['usesnumber'] == 1;
+                
+        }
+        
+    }
     public function onCheckList($sender) {
         $this->docpanel->setVisible(false);
         $this->docpanel->form2->setVisible(false);
@@ -327,6 +335,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->custinfo->setText('');
         $this->docpanel->form3->trans->setText('') ;
         $this->docpanel->form2->setVisible(true);
+
         $this->docpanel->formcheck->setVisible(false);
     }
 
@@ -398,12 +407,11 @@ class ARMPos extends \App\Pages\Base
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('disc', H::fa($item->disc)));
         $row->add(new Label('price', H::fa($item->price)));
-        $row->add(new ClickLink('plus', $this, 'plusOnClick'));
-        $row->add(new ClickLink('minus', $this, 'minusOnClick'))->setVisible($item->quantity > 1);
 
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
+
     }
 
     public function serOnRow($row) {
@@ -519,59 +527,7 @@ class ARMPos extends \App\Pages\Base
         $this->_rowid =  array_search($tovar,$this->_itemlist,true);
    }
 
-    public function plusOnClick($sender) {
-        $item = $sender->owner->getDataItem();
-        $item->quantity++;
-        $price = $item->getActionPriceByQuantity($item->quantity);
-        if($price != null) {
-            $item->price = $price; 
-            $item->disc = '';
-            $item->pureprice = $item->getPurePrice();
-            if($item->pureprice > $item->price) {
-                $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;    
-            }              
-        }
-        
-        $this->docpanel->form2->detail->Reload();
-        $this->calcTotal();
-    }
-
-    public function minusOnClick($sender) {
-        $item = $sender->owner->getDataItem();
-        if ($item->quantity > 1) {
-            $item->quantity--;
-        }
-        
-        $price = $item->getActionPriceByQuantity($item->quantity);
-        if($price==null){
-      
-            $store = $this->form1->store->getValue();
-            $customer_id = $this->docpanel->form2->customer->getKey();
-
-            $pt=     $this->getPriceType() ;
-            $item->price = $item->getPriceEx(array(
-             'pricetype'=>$pt,
-             'store'=>$store,  
-             'customer'=>$customer_id
-             ));    
-             
-        }   else {
-            $item->price = $price; 
-              
-        }
-             
-        $item->disc = '';
-        $item->pureprice = $item->getPurePrice();
-        if($item->pureprice > $item->price) {
-            $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;    
-        }              
-                 
-             
-        
-        $this->docpanel->form2->detail->Reload();
-        $this->calcTotal();
-    }
-
+ 
     public function deleteOnClick($sender) {
 
         $tovar = $sender->owner->getDataItem();
@@ -631,7 +587,7 @@ class ARMPos extends \App\Pages\Base
 
         $id = $this->docpanel->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("Не выбрано товар");
+            $this->setError("Не вибраний товар");
             return;
         }
   
@@ -1376,6 +1332,137 @@ class ARMPos extends \App\Pages\Base
         }
  
     }    
+    
+    
+  
+  public function OnChangeItemSm($sender) {
+        $id = $sender->getKey();
+        $item = Item::load($id);
+        $store = $this->form1->store->getValue();
+
+          
+        $customer_id = $this->docpanel->form2->customer->getKey();
+
+        $pt=     $this->getPriceType() ;
+        $price = $item->getPriceEx(array(
+         'pricetype'=>$pt,
+         'store'=>$store,  
+         'customer'=>$customer_id
+         ));        
+        
+        $qty = $item->getQuantity($store);
+
+      
+
+    }
+
+    public function OnAutoItemSm($sender) {
+        $store = $this->form1->store->getValue();
+
+        $partname = trim($sender->getText());
+
+        
+        $criteria = "  disabled <> 1 ";
+        if ($store > 0) {
+            $criteria .= "     and item_id in (select item_id from store_stock  where  store_id={$store})";
+        }
+   
+
+        if (strlen($partname) > 0) {
+            $like = Item::qstr('%' . $partname . '%');
+            $partname = Item::qstr($partname);
+            $criteria .= "  and  (itemname like {$like} or item_code like {$like}   or   bar_code like {$like} )";
+        }
+
+        $itemlist = Item::find($criteria);
+
+        $list = array();
+        foreach ($itemlist as $key => $value) {
+            
+            if(intval($value->useserial) != 0) continue;
+             
+            $list[$key] = $value->itemname;
+            if (strlen($value->item_code) > 0) {
+                $list[$key] = $value->itemname . '  (' . $value->item_code .')';
+            }
+            $price = $value->getPrice();
+             $list[$key] =  $list[$key]  . ' ,' . H::fa($price);
+        }
+
+        return $list;        
+        
+        
+    }
+    
+   public function addItemSmOnClick($sender) {
+         $store = $this->form1->store->getValue();
+
+        $id = $this->docpanel->form2->addtovarsm->getKey();
+        if ($id == 0) {
+            $this->setError("Не вибраний товар");
+            return;
+        }
+  
+       
+        $item = Item::load($id);
+        
+
+        $item->quantity = $this->docpanel->form2->qtysm->getText();
+        if ($item->quantity == 0) {
+            $this->setError("Не введена  кількість");
+            return;
+        }
+
+        $qstock = $item->getQuantity($store);
+        if ($item->quantity > $qstock) {
+            $this->setWarn('Введено більше товару, чим є в наявності');
+        }
+
+ 
+        $pt=     $this->getPriceType() ;
+        $price = $item->getPriceEx(array(
+         'pricetype'=>$pt,
+         'quantity'=>$qstock,
+         'store'=>$store  
+         
+         ));        
+        
+           
+        $item->price = H::fa($price);
+        
+        $item->disc = '';
+        $item->pureprice = $item->getPurePrice();
+        if($item->pureprice > $item->price) {
+             $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;    
+        }
+
+ 
+
+        if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
+        } else {
+           $this->_itemlist[$this->_rowid] = $item;            
+        } 
+        
+                      
+  
+       $this->docpanel->form2->addtovarsm->setKey(0);
+       $this->docpanel->form2->addtovarsm->setText('');
+
+       $this->docpanel->form2->qtysm->setText("");
+ 
+       $this->_rowid = -1;
+
+
+        $this->docpanel->form2->detail->Reload();
+     
+
+        $this->calcTotal();
+        
+        $this->setSuccess("Позиція додана");
+          
+   }
+   
 }
 
 
