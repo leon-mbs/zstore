@@ -1019,7 +1019,7 @@ class Document extends \ZCL\DB\Entity
         if($this->firm_id >0){
            $f =  \App\Entity\Firm::load( $this->firm_id) ;            
         }  else {
-           $f =  \App\Entity\Firm::load(          \App\Helper::getDefFirm()   );
+           $f =  \App\Entity\Firm::load(    \App\Helper::getDefFirm()   );
         }
 
         if($f == null)  return false;

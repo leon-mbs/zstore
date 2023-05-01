@@ -137,9 +137,9 @@ class POSCheck extends \App\Pages\Base
             $this->docform->editpayamount->setText(H::fa($this->_doc->payamount));
             $this->docform->paydisc->setText(H::fa($this->_doc->headerdata['paydisc']));
             $this->docform->editpaydisc->setText(H::fa($this->_doc->headerdata['paydisc']));
-
-            if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
-                $this->_doc->payed = $this->_doc->headerdata['payed'];
+            $p  =  doubleval($this->_doc->headerdata['payed']) + doubleval($this->_doc->headerdata['payedcard']) ;
+            if ($this->_doc->payed == 0 && $p > 0) {
+                $this->_doc->payed = $p;
             }
            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
             $this->docform->payed->setText(H::fa($this->_doc->payed));

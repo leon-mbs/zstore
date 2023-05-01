@@ -24,16 +24,7 @@ class Order extends \App\Entity\Doc\Document
                 $detail[$item->item_id]['quantity'] += $item->quantity;
             } else {
 
-                /*
-                  $ocstoreopt = @unserialize($item->octoreoptions);  //опции с  опенкарта
-                  if (is_array($ocstoreopt)) {
-                  $t = "<table cellspacing='0' cellpadding='1' style='font-size:smaller'><tr><td style='padding: 1px;'>Опции:</td><td style='padding: 1px;'></td></tr>";
-                  foreach ($ocstoreopt as $k => $v) {
-                  $t .= "<tr><td style='padding: 1px;'>{$k}</td><td style='padding: 1px;'>{$v}</td></tr>";
-                  }
-                  $t .= "</table>";
-                  $item->itemname = $item->itemname . $t;
-                  } */
+        
                 $detail[] = array("no"         => $i++,
                                   "tovar_name" => $item->itemname,
                                   "tovar_code" => $item->item_code,

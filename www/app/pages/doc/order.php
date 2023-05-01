@@ -57,6 +57,10 @@ class Order extends \App\Pages\Base
         $this->docform->add(new TextInput('editbonus'));
         $this->docform->add(new SubmitButton('bbonus'))->onClick($this, 'onBonus');
         $this->docform->add(new Label('bonus', 0));
+       
+        $this->docform->add(new TextInput('editalldisc'));
+        $this->docform->add(new SubmitButton('balldisc'))->onClick($this, 'onAlldisc');
+       
 
         $this->docform->add(new TextInput('editpayamount'));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
@@ -429,8 +433,7 @@ class Order extends \App\Pages\Base
 
         $total = 0;
         $disc = 0;
-        $bonus = 0;
- 
+    
         foreach ($this->_tovarlist as $item) {
             $item->amount = $item->price * $item->quantity;
             if($item->disc >0) {
@@ -443,9 +446,7 @@ class Order extends \App\Pages\Base
         $this->docform->totaldisc->setText(H::fa($disc));
 
     
-
-        $this->docform->bonus->setText($bonus);
-        $this->docform->editbonus->setText($bonus);
+       
     }
 
     /**
@@ -641,6 +642,25 @@ class Order extends \App\Pages\Base
     public function onBonus() {
         $this->docform->bonus->setText($this->docform->editbonus->getText());
         $this->calcPay();
+        $this->goAnkor("tankor");
+    }
+    public function onAlldisc() {
+        $alldisc= doubleval( str_replace(',','.',  $this->docform->editalldisc->getText() ) );
+        if($alldisc >100) {
+            return;
+        }
+      
+        foreach ($this->_tovarlist as $item) {
+            $item->disc =  $alldisc;
+            $item->price  = $item->pureprice - (  $item->pureprice * $alldisc/100);
+            $item->amount = $item->price * $item->quantity;
+            
+        }       
+          
+        $this->calcTotal();
+        $this->calcPay();
+        $this->docform->detail->Reload();
+          
         $this->goAnkor("tankor");
     }
 

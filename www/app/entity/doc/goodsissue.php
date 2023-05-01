@@ -141,9 +141,7 @@ class GoodsIssue extends Document
         
         $parts = array();
         $k = 1;   //учитываем  скидку
-        if ($this->headerdata["paydisc"] > 0 && $this->amount > 0) {
-            $k = ($this->amount - $this->headerdata["paydisc"]) / $this->amount;
-        }
+      
         $amount = 0;
         foreach ($this->unpackDetails('detaildata') as $item) {
 

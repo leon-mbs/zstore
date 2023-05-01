@@ -71,14 +71,15 @@
     {{/prepaid}}
     
     
-        {{#nal}}
+        {{#form1}}
  <text>Форма оплати: готiвка</text>        
-
-        {{/nal}}
-        {{^nal}}
+        {{/form1}}
+        {{#form2}}
  <text>Форма оплати: банкiвська карта</text>        
-
-        {{/nal}}    
+        {{/form2}}    
+        {{#form3}}
+ <text>Форма оплати: готiвка + карта</text>        
+        {{/form3}}    
     
         {{#trans}}
  <text>№ транзакції  {{trans}}</text>        
