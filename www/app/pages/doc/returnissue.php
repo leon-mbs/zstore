@@ -98,7 +98,7 @@ class ReturnIssue extends \App\Pages\Base
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
             
         
-            $this->docform->discount->setText(H::fa($this->_orig_discount));
+
        
             
         } else {
