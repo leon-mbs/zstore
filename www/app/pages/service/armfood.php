@@ -146,7 +146,10 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->listsform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docpanel->listsform->customer->onChange($this, 'OnChangeCustomer');
         $this->docpanel->listsform->add(new Label('custinfo'));
+        $this->docpanel->listsform->add(new TextInput('editalldisc'));
+        $this->docpanel->listsform->add(new SubmitButton('balldisc'))->onClick($this, 'onAlldisc');
 
+ 
         $this->docpanel->add(new Form('payform'))->setVisible(false);
         $this->docpanel->payform->add(new TextInput('pfamount'));
 
@@ -1409,5 +1412,21 @@ class ARMFood extends \App\Pages\Base
         }
  
     }        
-    
+      public function onAlldisc() {
+        $alldisc= doubleval( str_replace(',','.',  $this->docpanel->listsform->editalldisc->getText() ) );
+        if($alldisc >100) {
+            return;
+        }
+      
+        foreach ($this->_itemlist as $item) {
+            $item->disc =  $alldisc;
+            $item->price  = $item->pureprice - (  $item->pureprice * $alldisc/100);
+            $item->amount = $item->price * $item->quantity;
+            
+        }       
+          
+        $this->docpanel->listsform->itemlist->Reload();
+        $this->calcTotal();          
+        $this->goAnkor("tankor");
+    }   
 }
