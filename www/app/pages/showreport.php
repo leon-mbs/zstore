@@ -31,19 +31,14 @@ class ShowReport extends \Zippy\Html\WebPage
         }
         if ($type == "xls") {
            
-           
-        
-           
-            
                 $file = tempnam(sys_get_temp_dir(),"".time() );
              
-                $handle = fopen($file, "w");
-                fwrite($handle, $html);
+                file_put_contents($file,$html);
+                 
                 $reader =  new \PhpOffice\PhpSpreadsheet\Reader\Html()  ;
                 $spreadsheet = $reader->load($file);
-                fclose($handle);
-                unlink($file);              
-            
+                             
+                         
                 $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
 
                 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
