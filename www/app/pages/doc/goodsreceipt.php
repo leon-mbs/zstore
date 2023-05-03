@@ -528,13 +528,13 @@ class GoodsReceipt extends \App\Pages\Base
 
          if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
+            $this->addrowOnClick(null);  
+            $this->setInfo("Позиція додана") ;         
         } else {
-           $this->_itemlist[$this->_rowid] = $item;            
+           $this->_itemlist[$this->_rowid] = $item;
+           $this->cancelrowOnClick(null);
         }  
-            $this->editdetail->setVisible(false);
-            $this->docform->setVisible(true);            
-            $this->wselitem->setVisible(false);           
-            $this->sellastitem->setVisible(false);           
+          
 
 
         $this->_rownumber  = 1;
@@ -542,17 +542,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->calcTotal();
         $this->calcPay();
 
-        
-        //очищаем  форму
-        $this->editdetail->edititem->setKey(0);
-        $this->editdetail->edititem->setText('');
-
-        $this->editdetail->editquantity->setText("1");
-
-        $this->editdetail->editprice->setText("");
-        $this->editdetail->editsnumber->setText("");
-        $this->editdetail->editsdate->setText("");
-        $this->editdetail->editsellprice->setText("");
+ 
         
     }
 

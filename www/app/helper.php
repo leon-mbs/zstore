@@ -1012,18 +1012,20 @@ class Helper
             }
             $header['iscolor'] = $printer['pcolor'] == 1;
 
-            
-            $qty =  intval($item->getQuantity());
-            $printqty =  intval($item->printqty);
-            if($printqty==0) $printqty = 4;
+            $qty = $item->quantity;  //по  документу
 
-            if($printqty==1)  $qty = 1;
-            if($printqty==2)  $qty = 2;
-            if($printqty==3)  ;
-            if($printqty==4)  {
-                if($qty > 10) $qty = 10;    
+            if( intval($qty) == 0){
+                $qty =  intval($item->getQuantity());
+                $printqty =  intval($item->printqty);
+                if($printqty==0) $printqty = 4;
+
+                if($printqty==1)  $qty = 1;
+                if($printqty==2)  $qty = 2;
+                if($printqty==3)  ;
+                if($printqty==4)  {
+                    if($qty > 10) $qty = 10;    
+                }
             }
-            
             for($i=0;$i<$qty;$i++){
                $htmls = $htmls . $report->generate($header);
             }

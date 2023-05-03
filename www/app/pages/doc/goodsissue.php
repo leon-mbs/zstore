@@ -576,26 +576,21 @@ class GoodsIssue extends \App\Pages\Base
  
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
+            $this->addrowOnClick(null);  
+            $this->setInfo("Позиція додана") ;             
         } else {
-           $this->_itemlist[$this->_rowid] = $item;            
+           $this->_itemlist[$this->_rowid] = $item;   
+           $this->cancelrowOnClick(null);
+                      
         }        
 
-            $this->editdetail->setVisible(false);
-            $this->wselitem->setVisible(false);
-            $this->docform->setVisible(true);            
+            
 
         $this->_rownumber  = 1;
 
         $this->docform->detail->Reload();
 
-        //очищаем  форму
-        $this->editdetail->edittovar->setKey(0);
-        $this->editdetail->edittovar->setText('');
-
-        $this->editdetail->editquantity->setText("1");
-
-        $this->editdetail->editprice->setText("");
-        $this->editdetail->editserial->setText("");
+   
         $this->calcTotal();
         $this->calcPay();
         $this->_changedpos = true;
