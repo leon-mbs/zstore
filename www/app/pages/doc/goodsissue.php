@@ -879,7 +879,7 @@ class GoodsIssue extends \App\Pages\Base
 
 
     }
-     public function onAlldisc() {
+     public function onAlldisc($sender) {
         $alldisc= doubleval( str_replace(',','.',  $this->docform->editalldisc->getText() ) );
         if($alldisc >100) {
             return;

@@ -639,7 +639,7 @@ class Order extends \App\Pages\Base
         $this->calcPay();
         $this->goAnkor("tankor");
     }
-    public function onAlldisc() {
+    public function onAlldisc($sender) {
         $alldisc= doubleval( str_replace(',','.',  $this->docform->editalldisc->getText() ) );
         if($alldisc >100) {
             return;
