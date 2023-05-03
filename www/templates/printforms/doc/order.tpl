@@ -109,7 +109,7 @@
 
    {{#payamount}}
     <tr style="font-weight: bolder;">
-        <td colspan="9" align="right">Всього:</td>
+        <td colspan="9" align="right">До сплати:</td>
         <td align="right">{{payamount}}</td>
     </tr>
     {{/payamount}} 

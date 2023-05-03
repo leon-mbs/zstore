@@ -271,22 +271,19 @@ class Order extends \App\Pages\Base
 
         if($this->_rowid == -1) {
             $this->_tovarlist[] = $item;
+            $this->addrowOnClick(null);  
+            $this->setInfo("Позиція додана") ;         
+            
         } else {
            $this->_tovarlist[$this->_rowid] = $item; 
-           $this->editdetail->setVisible(false);
            $this->cancelrowOnClick(null);
-           return;                  
+
         }        
 
-        //очищаем  форму
-        $this->editdetail->edittovar->setKey(0);
-        $this->editdetail->edittovar->setText('');
-
-        $this->editdetail->editquantity->setText("1");
-
-        $this->editdetail->editprice->setText("");
-        $this->wselitem->setVisible(false);
-        
+     
+        $this->docform->detail->Reload();
+        $this->calcTotal();
+        $this->calcPay();        
         
     }
 
@@ -301,9 +298,7 @@ class Order extends \App\Pages\Base
 
         $this->editdetail->editprice->setText("");
         $this->wselitem->setVisible(false);
-        $this->docform->detail->Reload();
-        $this->calcTotal();
-        $this->calcPay();        
+          
         
     }
 
@@ -644,7 +639,7 @@ class Order extends \App\Pages\Base
         $this->calcPay();
         $this->goAnkor("tankor");
     }
-    public function onAlldisc() {
+    public function onAlldisc($sender) {
         $alldisc= doubleval( str_replace(',','.',  $this->docform->editalldisc->getText() ) );
         if($alldisc >100) {
             return;

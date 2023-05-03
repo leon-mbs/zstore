@@ -272,24 +272,40 @@ class CheckBox
        // $check['total_payment'] = $doc->payamount*100;
      //   $check['total_rest'] = 0 ;
        
-        $payed =  doubleval($doc->payed) ;
-        if ($doc->headerdata['payment'] == 0 && $payed > 0) {
-           $payment=array("type"=>"CASH","label"=>"Готівка","value"=>$payed*100);
-           $check["payments"][] = $payment;
-            
-        }
-        if ($doc->headerdata['payment'] > 0 && $doc->payed > 0) {
-            $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
-            if (  $mf->beznal == 1) {  
-               $payment=array("type"=>"CASHLESS","label"=>"Банківська карта","value"=>$payed*100);     
-            } else {
+        if($this->headerdata['payment']  >0) {
+ 
+       
+            $payed =  doubleval($doc->payed) ;
+            if ($doc->headerdata['payment'] == 0 && $payed > 0) {
                $payment=array("type"=>"CASH","label"=>"Готівка","value"=>$payed*100);
+               $check["payments"][] = $payment;
+                
             }
-            $check["payments"][] = $payment;
-            
-        }
-           
-        if ($doc->payed < $doc->payamount) {
+            if ($doc->headerdata['payment'] > 0 && $doc->payed > 0) {
+                $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
+                if (  $mf->beznal == 1) {  
+                   $payment=array("type"=>"CASHLESS","label"=>"Банківська карта","value"=>$payed*100);     
+                } else {
+                   $payment=array("type"=>"CASH","label"=>"Готівка","value"=>$payed*100);
+                }
+                $check["payments"][] = $payment;
+                
+            }
+        } 
+        else {
+              if($doc->headerdata['mfnal']  >0 && $doc->headerdata['payed'] > 0) {
+                   $payment=array("type"=>"CASH","label"=>"Готівка","value"=>$doc->headerdata['payed'] * 100);                  
+                   $check["payments"][] = $payment;                   
+              }
+              if($doc->headerdata['mfbeznal']  >0 && $doc->headerdata['payedcard'] > 0) {
+                   $payment=array("type"=>"CASHLESS","label"=>"Банківська карта","value"=>$doc->headerdata['payedcard'] * 100);                  
+                   $check["payments"][] = $payment;
+              }
+    
+        }  
+        $payed  =    doubleval($doc->headerdata['payed']) + doubleval($doc->headerdata['payedcard']);
+        
+        if ($payed < $doc->payamount) {
  
            $payment=array("type"=>"CASH","label"=>"Кредит","value"=> ($doc->payamount - $payed) * 100);
            $check["payments"][] = $payment;

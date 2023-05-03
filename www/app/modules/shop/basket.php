@@ -21,7 +21,7 @@ class Basket implements \Zippy\Interfaces\DataSource
                   $item=\App\Entity\Item::load($k) ;
                   if($item !=null && $item->disabled !=1){
                       $item->quantity = $v;
-                      $this->addProduct($item) ;
+                      $basket->addProduct($item) ;
                   }
                }
                   
