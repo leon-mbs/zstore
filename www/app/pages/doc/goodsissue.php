@@ -577,8 +577,15 @@ class GoodsIssue extends \App\Pages\Base
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
             $this->addrowOnClick(null);  
-            $this->setInfo("Позиція додана") ;             
-        } else {
+            $this->setInfo("Позиція додана") ;  
+            //очищаем  форму
+            $this->editdetail->edittovar->setKey(0);
+            $this->editdetail->edittovar->setText('');
+
+            $this->editdetail->editquantity->setText("1");
+
+            $this->editdetail->editprice->setText("");                       
+            } else {
            $this->_itemlist[$this->_rowid] = $item;   
            $this->cancelrowOnClick(null);
                       
