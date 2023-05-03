@@ -332,14 +332,13 @@ class ReturnIssue extends \App\Pages\Base
             
         }            
            
-           
-           
+             
            
             if ($pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
                 $this->_doc->headerdata["fiscalnumberpos"]  =  $pos->fiscalnumber;
  
-                if ($this->_basedocid > 0) {
-                    $basedoc = Document::load($this->_basedocid);
+                if ($this->_doc->parent_id > 0) {
+                    $basedoc = Document::load($this->_doc->parent_id);
                     $this->_doc->headerdata["docnumberback"] = $basedoc->headerdata["fiscalnumber"];
                 }
 

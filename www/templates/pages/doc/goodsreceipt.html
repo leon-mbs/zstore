@@ -362,11 +362,18 @@
 
                     <div class="form-group">
                         <label for="edititem">Назва </label>
+                        
+                        
+                        <div class="input-group  ">
                         <input placeholder="Почніть вводити..." class="form-control " zippy="edititem"/>
-                        <a zippy="openitemsel">Вiдкрити довiдник</a>
-                        <br><a zippy="openlast">Останнi закупівлі</a>
+                              <div class="input-group-append">
+                                 <a title="Додати новий" class="btn btn-success" zippy="addnewitem" >+</a>
+                            </div>                    
+                         </div>
+                        <a zippy="openitemsel">Вiдкрити довiдник</a>  &nbsp; &nbsp;
+                        <a zippy="openlast">Останнi закупівлі</a>
 
-                        <br><a style="font-size:smaller" zippy="addnewitem">Додати новий</a>
+                        
                     </div>
                     {{#usesnumber}}
                     <div class="form-group">

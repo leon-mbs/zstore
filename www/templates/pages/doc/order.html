@@ -291,11 +291,15 @@
                     <h4>Введення товару </h4>
                     <div class="form-group">
                         <label for="edittovar">Назва</label>
-                        <input placeholder="Почнiть вводити..." class="form-control " zippy="edittovar"/>
+                        <div class="input-group  ">
+                        <input placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
+                              <div class="input-group-append">
+                                 <a title="Додати новий" class="btn btn-success" zippy="addnewitem" >+</a>
+                            </div>                    
+                         </div>                        
                         <a zippy="openitemsel">Відкрити довідник</a>
                         &nbsp; <a zippy="opencatpan">Відкрити Категорії</a>
                           
-                        <br> <a   zippy="addnewitem">Додати новий</a>
 
                         <br>Наявність: <span zippy="qtystock"></span>
                          {{^noshowpartion}}

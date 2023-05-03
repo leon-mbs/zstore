@@ -993,7 +993,7 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata["inn"] = $firm['inn'];
         $this->_doc->headerdata["address"] = $firm['address'];
         $this->_doc->headerdata["phone"] = $firm['phone'];
-
+    
         $this->_doc->packDetails('detaildata', $this->_itemlist);
         $this->_doc->packDetails('services', $this->_serlist);
 
@@ -1240,7 +1240,8 @@ class ARMPos extends \App\Pages\Base
       
         $row->add(new Label('rowdate', H::fd($doc->document_date)));
         $row->add(new Label('rownotes', $doc->notes));
-
+        $row->add(new \Zippy\Html\Link\RedirectLink('checkreturn',"\\App\\Pages\\Doc\\ReturnIssue", array(0,$doc->document_id) ));
+        $row->checkreturn->setVisible($doc->state > 4 );
         if ($doc->document_id == $this->_doc->document_id) {
             $row->setAttribute('class', 'table-success');
         }
