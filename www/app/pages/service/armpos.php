@@ -129,6 +129,8 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->addtovarsm->onChange($this, 'OnChangeItemSm', true);
         $this->docpanel->form2->add(new TextInput('qtysm'));
         $this->docpanel->form2->add(new SubmitLink('additemsm'))->onClick($this, 'addItemSmOnClick');
+        $this->docpanel->form2->add(new TextInput('editalldisc'));
+        $this->docpanel->form2->add(new SubmitButton('balldisc'))->onClick($this, 'onAlldisc');
       
                   
         //оплата
@@ -676,7 +678,7 @@ class ARMPos extends \App\Pages\Base
 
         $ser->quantity = $this->docpanel->editserdetail->editserquantity->getText();
         $ser->pureprice = $ser->getPurePrice();
-
+      
         $ser->price = H::fa($this->docpanel->editserdetail->editserprice->getText());
         $ser->disc = '';
         if($ser->pureprice > $price) {
@@ -828,7 +830,7 @@ class ARMPos extends \App\Pages\Base
         $ser = Service::load($id);
         $customer_id = $this->docpanel->form2->customer->getKey();
 
-        $price = $item->getPrice($customer_id);
+        $price = $ser->getPrice($customer_id);
         
         $this->docpanel->editserdetail->editserprice->setText($price);
 
@@ -1463,7 +1465,33 @@ class ARMPos extends \App\Pages\Base
         $this->setSuccess("Позиція додана");
           
    }
-   
+ 
+ 
+    public function onAlldisc($sender) {
+        $alldisc= doubleval( str_replace(',','.', $this->docpanel->form2->editalldisc->getText() ) );
+        if($alldisc >100) {
+            return;
+        }
+      
+        foreach ($this->_itemlist as $item) {
+            $item->disc =  $alldisc;
+            $item->price  = $item->pureprice - (  $item->pureprice * $alldisc/100);
+            $item->amount = $item->price * $item->quantity;
+            
+        }       
+        foreach ($this->_serlist as $ser) {
+            $ser->disc =  $alldisc;
+            $ser->price  = $ser->pureprice - (  $ser->pureprice * $alldisc/100);
+            $ser->amount = $ser->price * $ser->quantity;
+            
+        }       
+          
+        $this->docpanel->form2->detail->Reload();
+        $this->docpanel->form2->detailser->Reload();
+        $this->calcTotal();        
+
+    }  
+     
 }
 
 
