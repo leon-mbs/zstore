@@ -83,6 +83,7 @@ class SerList extends \App\Pages\Base
         $row->add(new Label('amount', H::fa($doc->amount)));
 
         $row->add(new Label('customer', $doc->customer_name));
+        $row->add(new Label('customerphone', $doc->headerdata['customerphone']));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
 
