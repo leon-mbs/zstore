@@ -188,7 +188,11 @@ class ServiceAct extends \App\Pages\Base
          $this->_doc->notes = $post->doc->notes;
          $this->_doc->firm_id = $post->doc->firm_id;
          $this->_doc->customer_id = $post->doc->customer_id;
-            
+         if($this->_doc->customer_id >0) {
+             $c = \App\Entity\Customer::load($this->_doc->customer_id);  
+             $this->_doc->headerdata['customerphone'] = $c->phone;           
+         }
+         
          $this->_doc->amount = $post->doc->total;
          $this->_doc->payamount = $post->doc->payamount;
          $this->_doc->payed = $post->doc->payed;

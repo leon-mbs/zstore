@@ -553,7 +553,7 @@ class PPOHelper
         */
         $payed  =    doubleval($doc->headerdata['payed']) + doubleval($doc->headerdata['payedcard']);
       
-        if($this->headerdata['payment']  >0) {
+        if($doc->headerdata['payment']  >0) {
             if (  $mf->beznal == 1) {
                 $pay = array(
                     'formname' => self::FORM_CARD,

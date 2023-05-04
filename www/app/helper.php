@@ -991,7 +991,7 @@ class Helper
                     $barcode = $item->item_code;
                 }
                 if (strlen($barcode) == 0) {
-                    continue;
+                  //  continue;
                 }
 
                 $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
