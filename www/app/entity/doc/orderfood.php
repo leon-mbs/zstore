@@ -271,6 +271,13 @@ class OrderFood extends Document
                 throw new \Exception("На складі всього ".H::fqty($item->getQuantity($this->headerdata['store']) )." ТМЦ {$item->itemname}. Списання у мінус заборонено" );
             }
 
+            $k = 1;   //учитываем  скидку
+            
+            $dd =   doubleval($this->headerdata['bonus'] ) + doubleval($this->headerdata['paydisc'] ) ;
+               
+            if ($dd > 0 && $this->amount > 0) {
+              //  $k = ($this->amount - $this->headerdata["paydisc"]) / $this->amount;
+            }
 
 
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
