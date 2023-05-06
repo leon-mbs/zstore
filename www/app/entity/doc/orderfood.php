@@ -48,7 +48,7 @@ class OrderFood extends Document
             $deliverydata = $deliverydata . ', ' . $this->headerdata["ship_address"];
         }
         $deliverydata = $deliverydata . ', ' . date("Y-m-d H:i", $this->headerdata["deltime"]);
-           $delbonus = $this->getBonus(false) ;
+     //   $delbonus = $this->getBonus(false) ;
 
         $header = array('date'         => H::fd($this->document_date),
                         "_detail"      => $detail,
@@ -66,10 +66,9 @@ class OrderFood extends Document
                         "time"            => H::fdt($this->headerdata["time"]),
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount),
-                        "payed"           => H::fa($this->headerdata['payed']),
-                        "paydisc"         => H::fa($this->headerdata["paydisc"]),
-                        "delbonus"           => $delbonus > 0 ? H::fa($delbonus) : false,
-                        "isdisc"          => $this->headerdata["paydisc"] > 0,
+                        "bonus"           => H::fa($this->headerdata["bonus"] >0) ?   H::fa($this->headerdata["bonus"]) :false,
+                        "totaldisc"         => H::fa($this->headerdata["totaldisc"]),
+                        "isdisc"          => $this->headerdata["totaldisc"] > 0,
                         "payamount"       => H::fa($this->payamount)
         );
 
@@ -126,8 +125,8 @@ class OrderFood extends Document
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount),
                         "payed"           => H::fa($this->headerdata['payed']),
-                        "paydisc"         => H::fa($this->headerdata["paydisc"]),
-                        "isdisc"          => $this->headerdata["paydisc"] > 0,
+                        "totaldisc"         => H::fa($this->headerdata["totaldisc"]),
+                        "isdisc"          => $this->headerdata["totaldisc"] > 0,
                          "addbonus"           => $addbonus > 0 ? H::fa($addbonus) : false,
                         "delbonus"           => $delbonus > 0 ? H::fa($delbonus) : false,
                         "allbonus"           => $allbonus > 0 ? H::fa($allbonus) : false,
@@ -273,10 +272,10 @@ class OrderFood extends Document
 
             $k = 1;   //учитываем  скидку
             
-            $dd =   doubleval($this->headerdata['bonus'] ) + doubleval($this->headerdata['paydisc'] ) ;
+            $dd =   doubleval($this->headerdata['bonus'] ) + doubleval($this->headerdata['totaldisc'] ) ;
                
             if ($dd > 0 && $this->amount > 0) {
-              //  $k = ($this->amount - $this->headerdata["paydisc"]) / $this->amount;
+                $k =   ($this->amount - $dd )/ $this->amount;
             }
 
 

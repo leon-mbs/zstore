@@ -600,6 +600,28 @@ class Helper
     }
 
     /**
+     * форматирование  сумм  c  одной   цифрой  после  зарятой
+     * например  для  сккидок
+     * @param mixed $am
+     * @return mixed
+     */
+    public static function fa1($am) {
+        $am = str_replace(',', '.', $am);
+
+        $am = preg_replace("/[^0-9\.\-]/", "",$am);        
+        $am = trim($am);   
+        if (strlen($am) == 0) {
+            return '';
+        }
+
+        $am  = doubleval($am)  ;   
+        return @number_format($am, 1, '.', '');
+ 
+ 
+
+    }
+
+    /**
      * форматирование  сумм    с копейками
      *
      * @param mixed $am

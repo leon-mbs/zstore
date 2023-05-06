@@ -51,6 +51,10 @@ class OrderFood extends \App\Pages\Base
         $this->docform->add(new TextInput('editpaybonus'));
         $this->docform->add(new SubmitButton('bpaybonus'))->onClick($this, 'onPayBonus');
         $this->docform->add(new Label('paybonus', 0));
+      
+        $this->docform->add(new Label('totaldisc'));
+        $this->docform->add(new TextInput('edittotaldisc'));
+        $this->docform->add(new SubmitButton('btotaldisc'))->onClick($this, 'onTotalDisc');
 
         $this->docform->add(new TextInput('editpayamount'));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
@@ -82,7 +86,6 @@ class OrderFood extends \App\Pages\Base
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total'));
-        $this->docform->add(new Label('totaldisc'));
 
         //товар
         $this->add(new Form('editdetail'))->setVisible(false);
@@ -125,6 +128,8 @@ class OrderFood extends \App\Pages\Base
             $this->docform->editpayamount->setText(H::fa($this->_doc->payamount));
             $this->docform->paybonus->setText(H::fa($this->_doc->headerdata['bonus']));
             $this->docform->editpaybonus->setText($this->_doc->headerdata['bonus']);
+            $this->docform->totaldisc->setText(H::fa($this->_doc->headerdata['totaldisc']));
+            $this->docform->edittotaldisc->setText($this->_doc->headerdata['totaldisc']);
 
             if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
                 $this->_doc->payed = $this->_doc->headerdata['payed'];
@@ -182,7 +187,7 @@ class OrderFood extends \App\Pages\Base
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));
-        $row->add(new Label('disc', $item->disc));
+        $row->add(new Label('disc', H::fa1( $item->disc) )) ;
 
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -299,6 +304,7 @@ class OrderFood extends \App\Pages\Base
         $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['exchange'] = $this->docform->exchange->getText();
         $this->_doc->headerdata['bonus'] = $this->docform->paybonus->getText();
+        $this->_doc->headerdata['totaldisc'] = $this->docform->totaldisc->getText();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         if ($this->_doc->headerdata['payment'] == 0) {
           
@@ -433,6 +439,11 @@ class OrderFood extends \App\Pages\Base
         $this->calcPay();
         $this->goAnkor("tankor");
     }
+    public function onTotalDisc() {
+        $this->docform->totaldisc->setText($this->docform->edittotaldisc->getText());
+        $this->calcPay();
+        $this->goAnkor("tankor");
+    }
 
     /**
      * Расчет  итого
@@ -441,19 +452,14 @@ class OrderFood extends \App\Pages\Base
     private function calcTotal() {
 
         $total = 0;
-        $disc = 0;
- 
+  
         foreach ($this->_itemlist as $item) {
             $item->amount = $item->price * $item->quantity;
-            $disc += ($item->pureprice - $item->price);
- 
+          
             $total = $total + $item->amount;
         }
 
         $this->docform->total->setText(H::fa($total));
-        $this->docform->totaldisc->setText(H::fa($disc));
-
- 
 
     
     }
@@ -461,11 +467,12 @@ class OrderFood extends \App\Pages\Base
     private function calcPay() {
         $total = $this->docform->total->getText();
         $bonus = intval($this->docform->paybonus->getText());
+        $totaldisc = intval($this->docform->totaldisc->getText());
 
-        $this->docform->editpayamount->setText(H::fa($total - $bonus));
-        $this->docform->payamount->setText(H::fa($total - $bonus));
-        $this->docform->editpayed->setText(H::fa($total - $bonus));
-        $this->docform->payed->setText(H::fa($total - $bonus));
+        $this->docform->editpayamount->setText(H::fa($total - $bonus -$totaldisc));
+        $this->docform->payamount->setText(H::fa($total - $bonus-$totaldisc));
+        $this->docform->editpayed->setText(H::fa($total - $bonus-$totaldisc));
+        $this->docform->payed->setText(H::fa($total - $bonus-$totaldisc));
         $this->docform->exchange->setText(H::fa(0));
     }
 
