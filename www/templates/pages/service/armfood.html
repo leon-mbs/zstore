@@ -130,7 +130,7 @@
                     </div >        
                 </div>   
 
-                <div class="col-12 col-md-11 col-xl-9  ">         
+                <div class="col-12 col-md-10 col-xl-8  ">         
 
                     <div class="navbar mt-4">        
                         <form zippy="navform" class="form-inline   ">                   
@@ -158,12 +158,14 @@
                                     <th>Назва</th>
                                     <th>Код</th>
                                     <th class="text-right ">Кiл.</th>
-                                    <th class="text-right">Знижка,%</th>
+                                    <th class="text-right"><i title="Акцiйна знижка" class="fa fa-gift"></i> ,%</th>
                                     <th class="text-right">Цiна</th>
                                     <th class="text-right">Сума</th>
-                                    {{#pack}}
-                                    <th class="text-center text-nowrap">Із собою</th>
-                                    {{/pack}}
+                                    
+                                    <th class="text-center text-nowrap">
+                                    {{#pack}}  Із собою  {{/pack}}
+                                      </th>
+                                   
 
                                     <th > </th>
                                 </tr>
@@ -180,9 +182,13 @@
                                     <td zippy="disc" class="text-right"></td>
                                     <td zippy="price" class="text-right"></td>
                                     <td zippy="amount" class="text-right"></td>
+                                    
+                                    <td class="text-center"> 
                                     {{#pack}}
-                                    <td class="text-center"> <a zippy="myselfon"><i class="fa fa-toggle-on text-success"></i></a> <a zippy="myselfoff"><i class="fa fa-toggle-off"></i></a> </td>
+                                    <a zippy="myselfon"><i class="fa fa-toggle-on text-success"></i></a> <a zippy="myselfoff"><i class="fa fa-toggle-off"></i></a> 
                                     {{/pack}}
+                                    </td>
+                                    
                                     <td><a zippy="removeitem"  ><i class="fa fa-trash text-danger" ></i></a></td>
                                 </tr>
                                 <tr>
@@ -192,11 +198,20 @@
                                     <td ></td>
                                 </tr>
                               <tr>
-                                    <td colspan="5" class="text-right   ">В т.ч. знижка:</td>
-                                    <td zippy="totaldisc" class="text-right  "></td>
+                                    <td colspan="5" class="text-right   ">Знижка:</td>
+                                    <td  class="text-right  ">
+                                      <input style="width:100px" zippy="totaldisc" class="form-control qtyprice"></input>
+                                    </td>
                                     <td ></td>
-                                    <td ><a data-label="totaldisc" href="javascript:void(0);" data-toggle="modal" data-target="#modalalldisc"><i
-                                        class="fa fa-edit"></i></a></td>
+                                    <td > </td>
+                                </tr>
+                             <tr>
+                                    <td colspan="5" class="text-right   ">Списати  бонуси:</td>
+                                    <td  class="text-right  ">
+                                      <input style="width:100px" zippy="bonus" class="form-control qtyprice"></input>
+                                    </td>
+                                    <td ></td>
+                                    <td > </td>
                                 </tr>
                             </table>
                         </div>
@@ -247,7 +262,7 @@
                                     <label   for="delivery">Доставка</label>
 
                                     <select class="form-control" zippy="delivery">
-                                        <option value="0">Доставки немає</option>
+                                        <option value="0">Без доставки </option>
                                     </select>
 
 
@@ -300,30 +315,7 @@
    
                         </div>
                         
-     <div id="modalalldisc" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered  modal-sm">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Загальна знижка</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="input-group  ">
-                                <input   class="form-control qtyprice" type="text" zippy="editalldisc" pattern="[0-9,\.]+">
-                                <div class="input-group-append">
-                                    <input type="submit" value="OK" zippy="balldisc" class="ml-2 btn btn-info  ">
-
-                                </div>
-                                <small>Задає знижку (в %) для всіх позицій</small>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-                               
+                                
                         
                     </form>  
                 </div>
@@ -347,53 +339,48 @@
 
 
                             </div>
-                            <div class="form-group   ">
-                                <label for="pfamount"  >На суму</label>
-
-                                <input zippy="pfamount" readonly="readonly" style="width:100px;"  class="form-control  qtyprice "  pattern="[0-9,\.]+">
-
-                            </div>
                       
-                       <div class="form-group">
-                            <label for="pfbonus" data-label="paydisc">Бонуси</label>
-                            <input autocomplete="off" class="form-control" type="text" zippy="pfbonus">
-                        </div>
+                      
                             
-                            <div class="form-group   ">
-                                <label  for="pfforpay" >До сплати</label>
-
+                            <div class="form-group  row ">
+                                <label class="col-7 col-form-label"  for="pfforpay" >До сплати</label>
+                                 <div class="col-5">
                                 <input zippy="pfforpay" readonly="readonly" style="width:100px;" class="form-control  qtyprice "  pattern="[0-9,\.]+">
+                                </div>
 
                             </div>
-                        </div>
-                        <div class="col-12 col-md-4 col-xl-3  ">  
-
+                        
 
                  
                             
-                            <div class="form-group   ">
-                                <label for="pfpayed"  >Внесено оплату</label>
-
+                            <div class="form-group  row ">
+                                <label class="col-7 col-form-label" for="pfpayed"  >Внесено оплату</label>
+                                <div class="col-5">
                                 <input autocomplete="off" zippy="pfpayed" style="width:100px;" class="form-control  qtyprice "  pattern="[0-9,\.]+">
-
+                                </div>
                             </div>
-                            <div class="form-group   ">
+                            <div class="form-group  row ">
 
-                                <label for="pfrest"  >Решта   </label>
-
+                                <label class="col-7 col-form-label" for="pfrest"  >Решта   </label>
+                                  <div class="col-5">
                                 <input readonly="readonly" zippy="pfrest" style="width:100px;" class="form-control-plaintext    "  pattern="[0-9,\.]+">
-
+                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group row">
                       
-                                <label class="col-4" for="pfexch2b" data-label="pfexch2b">Бонуси</label>
-                                <input autocomplete="off" class="form-control" type="text" zippy="pfexch2b">
+                                <label class="col-7 col-form-label"   for="pfexch2b" data-label="pfexch2b">Бонуси</label>
+                                 <div class="col-5">
+                                <input   class="form-control" type="text" style="width:100px;" zippy="pfexch2b">
+                                </div>
                                 <small>     Занести частину або всю решту в бонуси </small>
                                  
                            </div>                            
-                   <div class="form-group  ">
-                            <label data-label="pftrans"  for="trans">№ транзакції</label>
-                            <input zippy="pftrans" class="form-control "  />
+                            <div class="form-group row ">
+                             
+                              <label  class="col-5 col-form-label" data-label="pftrans"  for="trans">№ транзакції</label>
+                            <div class="col-7">                              
+                              <input zippy="pftrans" class="form-control "  />
+                            </div>  
                             <small  data-label="pftrans" >Код з банківського терміналу при оплаті карткою</small>
                             
 
@@ -583,14 +570,7 @@
                 $('#pfpayed').focus();
 
    
-                $("#pfbonus").change(function () {
-                    var amount = $("#pfamount").val();
-                   
-                    var bonus = $("#pfbonus").val();
-                    var payamount = parseFloat(amount)  - parseFloat(bonus);
-                    $("#pfforpay").val(payamount.toFixed(2));
-
-                });
+       
 
                 $("#pfpayed").change(function () {
                     var payed = $("#pfpayed").val();
