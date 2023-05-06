@@ -96,7 +96,6 @@ class ARMFood extends \App\Pages\Base
 
         //панель статуса,  просмотр
         $this->orderlistpan->add(new Panel('statuspan'))->setVisible(false);
-
      
 
         $this->orderlistpan->statuspan->add(new \App\Widgets\DocView('docview'))->setVisible(false);
@@ -133,7 +132,8 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->listsform->add(new SubmitButton('btoprod'))->onClick($this, 'toprodOnClick');
         $this->docpanel->listsform->add(new SubmitButton('btodel'))->onClick($this, 'todelOnClick');
         $this->docpanel->listsform->add(new Label('totalamount', "0"));
-        $this->docpanel->listsform->add(new Label('totaldisc', "0"));
+        $this->docpanel->listsform->add(new TextInput('totaldisc', "0"));
+        $this->docpanel->listsform->add(new TextInput('bonus', "0"));
 
         $this->docpanel->listsform->add(new TextInput('address'));
         $this->docpanel->listsform->add(new Date('dt', time()));
@@ -146,17 +146,15 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->listsform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docpanel->listsform->customer->onChange($this, 'OnChangeCustomer');
         $this->docpanel->listsform->add(new Label('custinfo'));
-        $this->docpanel->listsform->add(new TextInput('editalldisc'));
-        $this->docpanel->listsform->add(new SubmitButton('balldisc'))->onClick($this, 'onAlldisc');
 
         $this->docpanel->add(new Form('payform'))->setVisible(false);
-        $this->docpanel->payform->add(new TextInput('pfamount'));
+
 
         $this->docpanel->payform->add(new TextInput('pfforpay'));
         $this->docpanel->payform->add(new TextInput('pfpayed'));
         $this->docpanel->payform->add(new TextInput('pfrest'));
         $this->docpanel->payform->add(new TextInput('pftrans'));
-        $this->docpanel->payform->add(new TextInput('pfbonus'));
+
         $this->docpanel->payform->add(new TextInput('pfexch2b'));
 
 
@@ -484,7 +482,6 @@ class ARMFood extends \App\Pages\Base
         $this->calcTotal();
     }
 
-
     public function addcodeOnClick($sender) {
         $code = trim($this->docpanel->navform->barcode->getText());
          $code0 = $code;
@@ -562,7 +559,6 @@ class ARMFood extends \App\Pages\Base
 
     }
 
-
     //список позиций
     public function onItemRow($row) {
         $item = $row->getDataItem();
@@ -572,7 +568,7 @@ class ARMFood extends \App\Pages\Base
         $row->add(new Label('qty', H::fqty($item->quantity)));
          
         
-        $row->add(new Label('disc', $item->disc));
+        $row->add(new Label('disc', '-'. H::fa1($item->disc)));
         $row->add(new Label('price', H::fa($item->price)));
         $row->add(new Label('amount', H::fa($item->price * $item->quantity)));
         $row->add(new ClickLink('myselfon', $this, 'onMyselfClick'))->setVisible($item->myself == 1);
@@ -619,8 +615,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->listsform->itemlist->Reload();
         $this->calcTotal();
     }
-
-
+ 
     public function OnDocViewClick($sender) {
 
         $this->_doc = Document::load($sender->getOwner()->getDataItem()->document_id);
@@ -650,6 +645,8 @@ class ARMFood extends \App\Pages\Base
 
             $this->docpanel->listsform->notes->setText($this->_doc->notes);
             $this->docpanel->listsform->table->setText($this->_doc->headerdata['table']);
+            $this->docpanel->listsform->bonus->setText($this->_doc->headerdata['bonus']);
+            $this->docpanel->listsform->totaldisc->setText($this->_doc->headerdata['totaldisc']);
 
             if ($this->_doc->customer_id > 0) {
                 $this->docpanel->listsform->customer->setKey($this->_doc->customer_id);
@@ -692,13 +689,10 @@ class ARMFood extends \App\Pages\Base
             $this->docpanel->navform->setVisible(false);
             $this->docpanel->payform->clean();
             $amount = $this->_doc->payamount;
-            $this->docpanel->payform->pfamount->setText(H::fa($amount));
-         
-
-
+       
 
             $this->docpanel->payform->pfforpay->setText(H::fa($amount  ));
-            //  $this->docpanel->payform->pfpayed->setText(H::fa($amount))  ;
+       
             $this->docpanel->payform->pfrest->setText(H::fa(0));
             $this->docpanel->payform->bbackitems->setVisible(false);
 
@@ -710,17 +704,15 @@ class ARMFood extends \App\Pages\Base
         $this->updateorderlist(null);
 
     }
-
-
+  
     public function calcTotal() {
         $amount = 0;
-        $disc = 0;
+       
         foreach ($this->_itemlist as $item) {
             $amount += ($item->quantity * $item->price);
-            $disc += ($item->quantity * ($item->pureprice - $item->price) );
         }
         $this->docpanel->listsform->totalamount->setText(H::fa($amount));
-        $this->docpanel->listsform->totaldisc->setText(H::fa($disc));
+
         
         
     }
@@ -728,8 +720,7 @@ class ARMFood extends \App\Pages\Base
     public function OnAutoCustomer($sender) {
         return \App\Entity\Customer::getList($sender->getText(), 1);
     }
-
-
+ 
     // в   доставку
     public function todelOnClick($sender) {
         $this->_doc->headerdata['delivery'] = $this->docpanel->listsform->delivery->getValue();
@@ -888,8 +879,7 @@ class ARMFood extends \App\Pages\Base
         $this->setInfo('Відправлено у виробництво');
         $this->onNewOrder();
     }
-
-
+ 
     //к  оплате
     public function topayOnClick($sender) {
 
@@ -904,12 +894,12 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->payform->clean();
 
         $amount = $this->docpanel->listsform->totalamount->getText();
-        $this->docpanel->payform->pfamount->setText(H::fa($amount));
+        $bonus = $this->docpanel->listsform->bonus->getText();
+        $totaldisc = $this->docpanel->listsform->totaldisc->getText();
+        $amount =  H::fa($amount - floatval($totaldisc)  - floatval($bonus) ) ;
+   
 
-
-     //   $this->docpanel->payform->pfbonus->setText(H::fa($bonus));
         $this->docpanel->payform->pfforpay->setText(H::fa($amount ));
-        //  $this->docpanel->payform->pfpayed->setText(H::fa($amount))  ;
         $this->docpanel->payform->pfrest->setText(H::fa(0));
         $this->docpanel->payform->bbackitems->setVisible(true);
 
@@ -937,7 +927,6 @@ class ARMFood extends \App\Pages\Base
             $this->_doc->headerdata['payed'] = $this->_doc->payed;
             $this->_doc->headerdata['exch2b'] = $this->docpanel->payform->pfexch2b->getText();
 
-            $this->_doc->headerdata['bonus'] = $this->docpanel->payform->pfbonus->getText();
 
             $this->_doc->headerdata['trans'] = $this->docpanel->payform->pftrans->getText();
             if ($this->_pt == 2) {
@@ -1122,7 +1111,8 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->headerdata["inn"] = $firm['inn'];
         $this->_doc->headerdata["address"] = $firm['address'];
         $this->_doc->headerdata["phone"] = $firm['phone'];
-        $this->_doc->headerdata["paydisc"] = $this->docpanel->listsform->totaldisc->getText();
+        $this->_doc->headerdata["totaldisc"] = $this->docpanel->listsform->totaldisc->getText();
+        $this->_doc->headerdata["bonus"] = $this->docpanel->listsform->bonus->getText();
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
         $this->_doc->amount = $this->docpanel->listsform->totalamount->getText();
@@ -1137,8 +1127,7 @@ class ARMFood extends \App\Pages\Base
 
         return true;
     }
-
-
+ 
     //добавление нового контрагента
     public function addcustOnClick($sender) {
         $this->editcust->setVisible(true);
@@ -1148,7 +1137,6 @@ class ARMFood extends \App\Pages\Base
         $this->editcust->editaddress->setText('');
         $this->editcust->editphone->setText('');
     }
-
 
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
@@ -1239,7 +1227,6 @@ class ARMFood extends \App\Pages\Base
 
 
     }
-
 
     public function getMessages($args, $post) {
 
@@ -1389,7 +1376,6 @@ class ARMFood extends \App\Pages\Base
 
         return true;
     }
-
    
     public function OnPrint($sender) {
      
@@ -1418,24 +1404,5 @@ class ARMFood extends \App\Pages\Base
         }
  
     }        
-  
-  
-     public function onAlldisc($sender) {
-        $alldisc= doubleval( str_replace(',','.',  $this->docpanel->listsform->editalldisc->getText() ) );
-        if($alldisc >100) {
-            return;
-        }
-      
-        foreach ($this->_itemlist as $item) {
-            $item->disc =  $alldisc;
-            $item->price  = $item->pureprice - (  $item->pureprice * $alldisc/100);
-            $item->amount = $item->price * $item->quantity;
-            
-        }       
-          
-        $this->docpanel->listsform->itemlist->Reload();
-        $this->calcTotal();          
-
-    }  
     
 }
