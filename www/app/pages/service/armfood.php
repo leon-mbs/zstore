@@ -392,16 +392,23 @@ class ARMFood extends \App\Pages\Base
     //товары
     public function onProdRow($row) {
         //  $store_id = $this->setupform->store->getValue();
-
+        $customer_id = $this->docpanel->listsform->customer->getKey()  ;
+ 
         $prod = $row->getDataItem();
-        $prod->price = $prod->getPrice($this->_pricetype, $this->_store);
+        
+        $prod->price = $prod->getPriceEx( array(
+              'pricetype'=>$this->_pricetype,
+              'store'=>$this->_store,
+              'customer'=>$customer_id) 
+             );
+        
         $prod->pureprice = $prod->getPurePrice($this->_pricetype, $this->_store);
+        
         $prod->disc=0;
         if($prod->price >0 && $prod->pureprice >0) {
            $prod->disc = number_format((1 - ($prod->price/($prod->pureprice)))*100, 1, '.', '') ;    
         }
         if($prod->disc < 0) $prod->disc=0;        
-        $customer_id = $this->docpanel->listsform->customer->getKey()  ;
         
         if($prod->disc ==0 && $customer_id >0) {
             $c = Customer::load($customer_id) ;

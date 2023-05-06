@@ -273,7 +273,12 @@ class Order extends \App\Pages\Base
             $this->_tovarlist[] = $item;
             $this->addrowOnClick(null);  
             $this->setInfo("Позиція додана") ;         
-            
+            //очищаем  форму
+            $this->editdetail->edittovar->setKey(0);
+            $this->editdetail->edittovar->setText('');
+
+            $this->editdetail->editquantity->setText("1");
+              
         } else {
            $this->_tovarlist[$this->_rowid] = $item; 
            $this->cancelrowOnClick(null);

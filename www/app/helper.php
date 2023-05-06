@@ -991,7 +991,7 @@ class Helper
                     $barcode = $item->item_code;
                 }
                 if (strlen($barcode) == 0) {
-                    continue;
+                  //  continue;
                 }
 
                 $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
@@ -1012,10 +1012,15 @@ class Helper
             }
             $header['iscolor'] = $printer['pcolor'] == 1;
 
-            $qty = $item->quantity;  //по  документу
 
             if( intval($qty) == 0){
-                $qty =  intval($item->getQuantity());
+                
+                if(intval($item->quantity) > 0) {
+                    $qty = intval($item->quantity);  //по  документу
+                } else {
+                    $qty =  intval($item->getQuantity());    
+                }
+                
                 $printqty =  intval($item->printqty);
                 if($printqty==0) $printqty = 4;
 
