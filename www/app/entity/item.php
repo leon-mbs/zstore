@@ -378,7 +378,7 @@ class Item extends \ZCL\DB\Entity
         // скидка
         $price = $this->getPurePrice() ;
         if (doubleval($this->actiondisc) > 0 && intval($this->fromdate) < time() && intval($this->todate) > time()) {   //по  категории
-            return ($price - $price * $this->actiondisc / 100);
+            return  \App\Helper::fa1($price - $price * $this->actiondisc / 100);
         }
 
         return $price;
