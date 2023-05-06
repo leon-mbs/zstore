@@ -990,14 +990,14 @@ class Helper
                 if (strlen($barcode) == 0) {
                     $barcode = $item->item_code;
                 }
-                if (strlen($barcode) == 0) {
-                  //  continue;
+                if (strlen($barcode) > 0) {
+                    $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+                    $img = '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($barcode, $printer['barcodetype'])) . '">';
+                    $header['img'] = $img;
+                    $header['barcode'] = \App\Util::addSpaces($barcode);
+
                 }
 
-                $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-                $img = '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($barcode, $printer['barcodetype'])) . '">';
-                $header['img'] = $img;
-                $header['barcode'] = \App\Util::addSpaces($barcode);
             }
 
             $header['isap'] = false;
@@ -1013,25 +1013,24 @@ class Helper
             $header['iscolor'] = $printer['pcolor'] == 1;
 
 
-            if( intval($qty) == 0){
-                
-                if(intval($item->quantity) > 0) {
-                    $qty = intval($item->quantity);  //по  документу
-                } else {
-                    $qty =  intval($item->getQuantity());    
-                }
-                
-                $printqty =  intval($item->printqty);
-                if($printqty==0) $printqty = 4;
-
-                if($printqty==1)  $qty = 1;
-                if($printqty==2)  $qty = 2;
-                if($printqty==3)  ;
-                if($printqty==4)  {
-                    if($qty > 10) $qty = 10;    
-                }
+               
+            if(intval($item->quantity) > 0) {
+                $qty = intval($item->quantity);  //по  документу
+            } else {
+                $qty =  intval($item->getQuantity());    
             }
-            for($i=0;$i<$qty;$i++){
+            
+            $printqty =  intval($item->printqty);
+            if($printqty==0) $printqty = 4;
+
+            if($printqty==1)  $qty = 1;
+            if($printqty==2)  $qty = 2;
+            if($printqty==3)  ;
+            if($printqty==4)  {
+                if($qty > 10) $qty = 10;    
+            }
+        
+            for($i=0;$i< intval( $qty) ;$i++){
                $htmls = $htmls . $report->generate($header);
             }
 
