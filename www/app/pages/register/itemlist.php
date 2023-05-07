@@ -16,6 +16,9 @@ use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
 
+/**
+* Товари на складі
+*/
 class ItemList extends \App\Pages\Base
 {
 
@@ -70,6 +73,7 @@ class ItemList extends \App\Pages\Base
         $this->itempanel->add(new \Zippy\Html\DataList\Paginator('pag', $this->itempanel->itemlist));
 
         $this->itempanel->add(new ClickLink('csv', $this, 'oncsv'));
+        $this->itempanel->add(new ClickLink('printqty', $this, 'onprint',true));
         $this->itempanel->add(new Label('totamount'));
 
         $this->add(new Panel('detailpanel'))->setVisible(false);
@@ -304,6 +308,56 @@ class ItemList extends \App\Pages\Base
         
 
         H::exportExcel($data, $header, 'itemlist.xlsx');
+    }
+
+    public function onprint($sender) {
+        $store = $this->filter->searchstore->getValue();
+
+        $items = array();
+        $onpage = (new ItemDataSource($this))->getItems(-1,-1,"itemname") ;
+        foreach ( $onpage as $it) {
+
+           $qty = intval($it->getQuantity($store) );
+           if($qty >0){
+               $it->quantity = $qty;  
+               $items[] = $it;    
+           } 
+           
+
+        }
+        if (count($items) == 0) {
+            return;
+        }
+        if(intval(\App\System::getUser()->prtypelabel ) == 0){
+  
+            $htmls = H::printItems($items);
+            
+            if( \App\System::getUser()->usemobileprinter == 1) {
+                \App\Session::getSession()->printform =  $htmls;
+
+               $this->addAjaxResponse("   $('.seldel').prop('checked',null); window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
+            }
+            else {
+               $this->addAjaxResponse("  $('#tag').html('{$htmls}') ;$('.seldel').prop('checked',null); $('#pform').modal()");
+             
+            }
+            return;
+        }
+        
+     try{
+          
+        $xml = H::printItemsEP($items);
+        $buf = \App\Printer::xml2comm($xml);
+        $b = json_encode($buf) ;                   
+          
+        $this->addAjaxResponse("$('.seldel').prop('checked',null); sendPSlabel('{$b}') ");      
+      }catch(\Exception $e){
+           $message = $e->getMessage()  ;
+           $message = str_replace(";","`",$message)  ;
+           $this->addAjaxResponse(" toastr.error( '{$message}' )         ");  
+                   
+        }
+ 
     }
 
 }
