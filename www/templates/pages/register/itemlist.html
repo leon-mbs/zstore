@@ -40,7 +40,7 @@
                     </form>
                 </div>
                 <a zippy="csv">Експорт у Excel</a>
-
+                <a zippy="printqty" class=" ml-4  " title="Друкувати вiдфiльтрованi по кiлькостi наявних"> <i class="fa fa-print"></i> </a>
                 <table class="table      table-sm  table-hover ">
                     <tr>
                         {{#useimages}}
@@ -180,6 +180,28 @@
 
 
         </div>
+        
+<div id="pform" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog  ">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <table>
+                            <tr>
+                                <td align="center" id="tag"></td>
+                            <tr>
+                            <tr>
+                                <td align="center"><a href="javascript:void(0)"
+                                                      onclick="$('#tag').printThis();$('#pform').modal('hide')"
+                                                      class="btn btn-success  ">Друк</a></td>
+                            <tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
         <script>
             function check_delete() {
                 return confirm("Видалити партію?")
