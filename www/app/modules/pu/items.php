@@ -18,7 +18,6 @@ use Zippy\WebApplication as App;
 
 class Items extends \App\Pages\Base
 {
-
     public $_items = array();
 
     public function __construct() {

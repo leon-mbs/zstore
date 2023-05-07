@@ -110,7 +110,7 @@
                                 <th> </th>
                                 <th class="text-right">Кiл.</th>
 
-                                <th class="text-right">Знижка,%</th>
+                                <th class="text-right"><i class="fa fa-gift"></i>,%</th>
                                 <th class="text-right">Вартість</th>
                                 <th style="width:100px" class="text-right">Сума</th>
 
@@ -155,8 +155,8 @@
                                 <td></td>
                             </tr>                    
                            <tr style="font-weight: bolder;">
-                                <td colspan="6" class="text-right">В т.ч. знижка:</td>
-                                <td  class="text-right"> {{totaldisc}} </td>
+                                <td colspan="6" class="text-right">Знижка:</td>
+                                <td  class="text-right"><input pattern="[0-9,\.]+" class="form-control" v-model="totaldisc" style="width:100px;" > </td>
                                 <td> </td>
                             </tr>
                            <tr v-show="this.customerinfo.bonus >0"  style="font-weight: bolder;">
@@ -459,7 +459,7 @@
                     this.services[this.editedindex].price = fa(this.editserviceprice) 
                     this.services[this.editedindex].quantity = fqty(this.editservicequantity) 
                     this.services[this.editedindex].amount = fa(this.editserviceprice * this.editservicequantity ) 
-                    this.services[this.editedindex].disc = this.loadedservice.disc 
+                    this.services[this.editedindex].disc =  this.loadedservice.disc >0 ? 0- this.loadedservice.disc: "" 
                     this.services[this.editedindex].pureprice = this.loadedservice.pureprice 
                            
                     $('#modaleditserv').modal('hide')              
@@ -517,7 +517,7 @@
                      
                     this.items[this.editedindex].itemname = this.loadeditem.itemname 
                     this.items[this.editedindex].item_code = this.loadeditem.item_code 
-                    this.items[this.editedindex].disc = this.loadeditem.disc 
+                    this.items[this.editedindex].disc = this.loadeditem.disc > 0 ? 0- this.loadeditem.disc :"" 
                     this.items[this.editedindex].pureprice = this.loadeditem.pureprice 
                     this.items[this.editedindex].price = fa(this.edititemprice) 
                     this.items[this.editedindex].quantity = fqty(this.edititemquantity) 
@@ -594,6 +594,7 @@
                     data.doc.totaldisc = parseVal( this.totaldisc )
                     data.doc.payamount = parseVal(this.payamount)
                     data.doc.bonus = parseVal(this.bonus)
+
 
                     data.doc.store = this.store
                     data.doc.devsn = this.devsn
@@ -679,27 +680,21 @@
                 
                 calctotal:function (){
                     var _sum = 0
-                    var _disc = 0
+
                     for( var _item  of  this.items){
                          _sum +=    Number.parseFloat(_item.amount)
-                         if(_item.disc >0) {
-                            _disc +=   Number.parseFloat((_item.pureprice - _item.price)*_item.quantity )    
-                         }
                          
                         
                     }      
                     for( var _ser  of  this.services){
                          _sum +=    Number.parseFloat(_ser.amount) 
-                         if(_ser.disc >0) {
-                            _disc +=   Number.parseFloat((_ser.pureprice - _ser.price)*_ser.quantity )    
-                         }                         
 
                     }   
                     this.$forceUpdate();
              
                     this.total = fa(_sum)  
                         
-                    this.totaldisc = fa( _disc  )                          
+
 
                              
                 } ,
@@ -777,7 +772,7 @@
        computed:{
          payamount:function(){
              
-            var tmp = fa( parseVal(this.total) -   parseVal(this.bonus) ) 
+            var tmp = fa( parseVal(this.total) - parseVal(this.totaldisc) - parseVal(this.bonus) ) 
             this.payed = tmp
             return tmp
          } ,
