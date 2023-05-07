@@ -11,8 +11,6 @@ use App\Helper as H;
 class Helper
 {
 
-   
-
     public static function connect() {
 
         $modules = System::getOptions("modules");

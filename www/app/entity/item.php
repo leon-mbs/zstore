@@ -66,6 +66,7 @@ class Item extends \ZCL\DB\Entity
         $this->extdata = (string)$xml->extdata[0];
         $this->sef = (string)$xml->sef[0];
         $this->url = (string)$xml->url[0];
+        $this->country = (string)$xml->country[0];
 
 
 
@@ -127,6 +128,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<shortname><![CDATA[{$this->shortname}]]></shortname>";
         $this->detail .= "<warranty><![CDATA[{$this->warranty}]]></warranty>";
         $this->detail .= "<extdata><![CDATA[{$this->extdata}]]></extdata>";
+        $this->detail .= "<country><![CDATA[{$this->country}]]></country>";
 
         $this->detail .= "<price1>{$this->price1}</price1>";
         $this->detail .= "<price2>{$this->price2}</price2>";

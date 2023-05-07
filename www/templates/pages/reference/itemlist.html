@@ -229,18 +229,7 @@
                                     <input class="form-control" zippy="editcell"/>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label class="col-5 col-form-label" for="editmanufacturer">Бренд, виробник (країна-виробник) </label>
-                                <div class="col-7">
-                                    <input list="manlist" class="form-control" zippy="editmanufacturer"/>
-                                    <datalist id="manlist">
-                                        {{#manlist}}
-                                        <option label='{{mitem}}' value='{{mitem}}'>
-                                            {{/manlist}}
-
-                                    </datalist>
-                                </div>
-                            </div>
+        
 
 
                             <div class="form-group row">
@@ -251,13 +240,7 @@
                                         відрядній оплаті</small>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label class="col-5 col-form-label" for="editwarranty">Гарантiйний термін</label>
-                                <div class="col-7">
-                                    <input class="form-control" zippy="editwarranty"/>
-
-                                </div>
-                            </div>
+                      
                             {{#usesnumber}}
                             <div class="form-check">
                                 <input zippy="edituseserial" type="checkbox" class="form-check-input">
@@ -300,7 +283,27 @@
 
                         </div>
                         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                             <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editmanufacturer">Бренд, виробник   </label>
+                                <div class="col-7">
+                                    <input list="manlist" class="form-control" zippy="editmanufacturer"/>
+                                    <datalist id="manlist">
+                                        {{#manlist}}
+                                        <option label='{{mitem}}' value='{{mitem}}'>
+                                            {{/manlist}}
+
+                                    </datalist>
+                                </div>
+                            </div>                        
+                        
+                        
                             <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editcountry">Країна-виробник</label>
+                                <div class="col-7">
+                                    <input autocomplete="on" class="form-control" zippy="editcountry"/>
+                                </div>
+                            </div>
+                          <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editmsr">Од. виміру</label>
                                 <div class="col-7">
                                     <input class="form-control" zippy="editmsr"/>
@@ -333,6 +336,13 @@
                                     <small>Наприклад, для меню в кафе (300 г, 250 мл...)</small>
                                 </div>
                             </div>   
+                             <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editwarranty">Гарантiйний термін</label>
+                                <div class="col-7">
+                                    <input class="form-control" zippy="editwarranty"/>
+
+                                </div>
+                            </div>                            
                             <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editlost">Вiдходи, %</label>
                                 <div class="col-7">

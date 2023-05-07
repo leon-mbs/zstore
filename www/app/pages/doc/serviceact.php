@@ -239,6 +239,7 @@ class ServiceAct extends \App\Pages\Base
      
              $ser->quantity = $s->quantity;
              $ser->disc = $s->disc;
+             $ser->desc = $s->desc;
              $ser->price = $s->price;
              $ser->pureprice = $s->pureprice;
              $ser->rowid = $i;
