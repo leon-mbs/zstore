@@ -69,13 +69,13 @@
     </tr>
     {{#totaldisc}}
     <tr style="font-weight: bolder;">
-        <td colspan="4" align="right">В т.ч. знижка:</td>
+        <td colspan="4" align="right">Знижка:</td>
         <td align="right">{{totaldisc}}</td>
     </tr>
     {{/totaldisc}}    
    {{#bonus}}
     <tr style="font-weight: bolder;">
-        <td colspan="4" align="right">Списано  бонуси:</td>
+        <td colspan="4" align="right">Списані бонуси:</td>
         <td align="right">{{bonus}}</td>
     </tr>
     {{/bonus}}    

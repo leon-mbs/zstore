@@ -79,6 +79,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editprice4'));
         $this->itemdetail->add(new TextInput('editprice5'));
         $this->itemdetail->add(new TextInput('editmanufacturer'));
+        $this->itemdetail->add(new TextInput('editcountry'));
         $this->itemdetail->add(new TextInput('editurl'));
         $common = System::getOptions('common');
         if (strlen($common['price1']) > 0) {
@@ -261,6 +262,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editcat->setValue($this->_item->cat_id);
 
         $this->itemdetail->editmanufacturer->setText($this->_item->manufacturer);
+        $this->itemdetail->editcountry->setText($this->_item->country);
         $this->itemdetail->editmanufacturer->setDataList(Item::getManufacturers());
 
 
@@ -301,7 +303,9 @@ class ItemList extends \App\Pages\Base
         $this->itemtable->listform->itemlist->Reload(false);
 
         $this->filter->searchbrand->setDataList(Item::getManufacturers());
-
+        if (strlen($this->_item->item_code)==0  && System::getOption("common", "autoarticle") == 1) {
+            $this->itemdetail->editcode->setText(Item::getNextArticle());
+        }
     }
 
     public function addOnClick($sender) {
@@ -358,6 +362,7 @@ class ItemList extends \App\Pages\Base
 
         $this->_item->item_code = trim($this->itemdetail->editcode->getText());
         $this->_item->manufacturer = trim($this->itemdetail->editmanufacturer->getText());
+        $this->_item->country = trim($this->itemdetail->editcountry->getText());
 
         $this->_item->bar_code = trim($this->itemdetail->editbarcode->getText());
         $this->_item->url = trim($this->itemdetail->editurl->getText());

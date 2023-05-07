@@ -326,13 +326,13 @@ class FilterAttributeComponent extends \Zippy\Html\CustomComponent implements \Z
             if (in_array("1", $this->value)) {
                 $checked = ' checked="on"';
             }
-            $ret .= "<input type=\"checkbox\"  name=\"{$this->id}[]\" value=\"1\" {$checked} /> Есть<br>";
+            $ret .= "<input type=\"checkbox\"  name=\"{$this->id}[]\" value=\"1\" {$checked} /> Є<br>";
             $checked = "";
             if (in_array("0", $this->value)) {
                 $checked = ' checked="on"';
             }
 
-            $ret .= "<input type=\"checkbox\"  name=\"{$this->id}[]\" value=\"0\"  {$checked} /> Нет ";
+            $ret .= "<input type=\"checkbox\"  name=\"{$this->id}[]\" value=\"0\"  {$checked} /> Нема ";
             $ret .= "</div>";
         }
         //'Число'
