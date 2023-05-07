@@ -1251,7 +1251,25 @@ icon: 'fa fa-exclamation-triangle text-warning',
         }
              
 
-      
+        function sendSMSCust(phone,code) {
+            
+                callPageMethod('sendSMSCode',[phone,code],null,(data)=> 
+                {
+                    
+                    
+                  if(data=="") {
+                     toastr.info('Відправлено' )              
+                  } else {
+                       toastr.error(data)   
+                  }
+                 
+                  
+         
+                } )              
+            
+            
+           
+        }
   
            
         </script>
