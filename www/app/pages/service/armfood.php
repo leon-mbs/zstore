@@ -143,9 +143,11 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->listsform->add(new TextInput('table'));
         $this->docpanel->listsform->add(new DropDownChoice('delivery', Document::getDeliveryTypes(), 0))->onChange($this, 'OnDelivery');
         $this->docpanel->listsform->add(new ClickLink('addcust'))->onClick($this, 'addcustOnClick');
+        $this->docpanel->listsform->add(new Label('custinfo'))->setVisible(false);
+       
         $this->docpanel->listsform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docpanel->listsform->customer->onChange($this, 'OnChangeCustomer');
-        $this->docpanel->listsform->add(new Label('custinfo'));
+        $this->docpanel->listsform->add(new \Zippy\Html\Link\BookmarkableLink('cinfo'));
 
         $this->docpanel->add(new Form('payform'))->setVisible(false);
 
@@ -235,6 +237,11 @@ class ARMFood extends \App\Pages\Base
 
         $this->docpanel->listsform->delivery->setValue(0);
         $this->OnDelivery($this->docpanel->listsform->delivery);
+        
+        $this->docpanel->listsform->addcust->setVisible(true) ;
+        $this->docpanel->listsform->cinfo->setVisible(false) ;
+          
+        
     }
 
 
@@ -647,10 +654,13 @@ class ARMFood extends \App\Pages\Base
             $this->docpanel->listsform->table->setText($this->_doc->headerdata['table']);
             $this->docpanel->listsform->bonus->setText($this->_doc->headerdata['bonus']);
             $this->docpanel->listsform->totaldisc->setText($this->_doc->headerdata['totaldisc']);
+            $this->docpanel->listsform->addcust->setVisible(false) ;
+            $this->docpanel->listsform->cinfo->setVisible(true) ;
 
             if ($this->_doc->customer_id > 0) {
                 $this->docpanel->listsform->customer->setKey($this->_doc->customer_id);
                 $this->docpanel->listsform->customer->setText($this->_doc->customer_name);
+                $this->OnChangeCustomer($this->docpanel->listsform->customer) ;
             }
 
             if (intval($this->_doc->headerdata['delivery']) > 0) {
@@ -1219,7 +1229,10 @@ class ARMFood extends \App\Pages\Base
                   $this->docpanel->listsform->itemlist->Reload();
                   $this->calcTotal();            
             }
-
+             $this->docpanel->listsform->addcust->setVisible(false) ;
+             $this->docpanel->listsform->cinfo->setVisible(true) ;
+             $this->docpanel->listsform->cinfo->setAttribute('onclick',"customerInfo({$customer_id});" ) ;
+ 
 
         } else {
             return;

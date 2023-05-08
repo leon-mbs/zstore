@@ -19,11 +19,17 @@
                     
                         <div class="form-group  ">
                             <label for="customer">Замовник</label>
-
+                            <div class="input-group  ">
                             <typeahead required="required"      ref="cust"  :onquery="oncusttext"  :onhit="hitcust" placeholder="Почнiть вводити ..."></typeahead>   
-                   
+                                 <div v-show="customer_id>0" class="input-group-append"  >
+                                     <a  v-on:click.prevent="customerInfo(customer_id)" class="btn btn-success"><i class="fa fa-info-circle"></i></a>
+                                </div>  
+                                 <div class="input-group-append">
+                                     <a v-on:click.prevent="onAddNew" title="Додати нового" class="btn btn-success" zippy="addcust" >+</a>
+                                </div>                    
+                            </div>  
                             <small style="display:block" v-html="customerinfo.disctext" > </small>
-                            <a  v-on:click.prevent="onAddNew"><small> Додати нового </small> </a>
+                           
                         </div>
 
 

@@ -107,6 +107,7 @@ class ARMPos extends \App\Pages\Base
 
         //  ввод товаров
 
+        $this->docpanel->form2->add(new SubmitButton('tosave'))->onClick($this, 'tosaveOnClick');
         $this->docpanel->form2->add(new SubmitButton('topay'))->onClick($this, 'topayOnClick');
         $this->docpanel->form2->add(new TextInput('barcode'));
         $this->docpanel->form2->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -120,9 +121,11 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->add(new DataView('detailser', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_serlist')), $this, 'serOnRow'));
         $this->docpanel->form2->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docpanel->form2->customer->onChange($this, 'OnChangeCustomer');
-        $this->docpanel->form2->add(new Label('custinfo'));
+
         $this->docpanel->form2->add(new DropDownChoice('paytype',array()));
         $this->docpanel->form2->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
+        $this->docpanel->form2->add(new Label('custinfo'))->setVisible(false);
+        $this->docpanel->form2->add(new \Zippy\Html\Link\BookmarkableLink('cinfo'))->setVisible(false);
         
            
         $this->docpanel->form2->add(new AutocompleteTextInput('addtovarsm'))->onText($this, 'OnAutoItemSm');
@@ -220,6 +223,7 @@ class ARMPos extends \App\Pages\Base
         }
         
     }
+  
     public function onCheckList($sender) {
         $this->docpanel->setVisible(false);
         $this->docpanel->form2->setVisible(false);
@@ -233,7 +237,6 @@ class ARMPos extends \App\Pages\Base
         $this->checklistpan->statuspan->setVisible(true);
         $this->updatechecklist(null);
     }
-
 
     public function cancel2docOnClick($sender) {
 
@@ -316,7 +319,6 @@ class ARMPos extends \App\Pages\Base
         $this->checklistpan->setVisible(false);
         $this->checklistpan->searchform->clean();
 
-        $this->_doc = \App\Entity\Doc\Document::create('POSCheck');
 
         $this->_itemlist = array();
         $this->_serlist = array();
@@ -324,8 +326,16 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->detailser->Reload();
         $this->calcTotal();
 
+        
+        
         $this->docpanel->form3->document_date->setDate(time());
-        $this->docpanel->form3->document_number->setText($this->_doc->nextNumber());
+        if(strlen($this->_doc->document_number)>0) {
+            $this->docpanel->form3->document_number->setText(document_number);            
+        } else {
+            $this->_doc = \App\Entity\Doc\Document::create('POSCheck');
+            $this->docpanel->form3->document_number->setText($this->_doc->nextNumber());    
+        }
+        
         $this->docpanel->form2->customer->setKey(0);
         $this->docpanel->form2->customer->setText('');
 
@@ -339,8 +349,10 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->setVisible(true);
 
         $this->docpanel->formcheck->setVisible(false);
+        $this->docpanel->form2->addcust->setVisible(true) ;
+        $this->docpanel->form2->cinfo->setVisible(false) ;
     }
-
+      
     public function topayOnClick($sender) {
         if (count($this->_itemlist) == 0 && count($this->_serlist) == 0) {
             $this->setError('Не введено позиції');
@@ -353,6 +365,11 @@ class ARMPos extends \App\Pages\Base
             return;
             
         }
+        if(strlen($this->_doc->document_number) > 0) {
+            $this->docpanel->form3->document_number->setText($this->_doc->document_number);
+        }        
+          
+        
         $this->docpanel->form3->paytypeh->setValue($paytype);
            
         $this->form1->setVisible(false);
@@ -867,7 +884,10 @@ class ARMPos extends \App\Pages\Base
             $this->docpanel->form2->custinfo->setVisible(strlen($disctext) >0);
 
         }
-
+        $this->docpanel->form2->addcust->setVisible(false) ;
+        $this->docpanel->form2->cinfo->setVisible(true) ;
+        $this->docpanel->form2->cinfo->setAttribute('onclick',"customerInfo({$customer_id});" ) ;
+ 
    
     }
 
@@ -922,11 +942,55 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->setVisible(true);
     }
 
-    public function savedocOnClick($sender) {
+    //по  кнопке
+    public function tosaveOnClick($sender) {
+    
+        if (count($this->_itemlist) == 0 && count($this->_serlist) == 0) {
+            $this->setError('Не введено позиції');
+            return;
+        }       
+        $this->_doc->document_number = $this->_doc->nextNumber();
 
+        if (false == $this->_doc->checkUniqueNumber()) {
+            $next = $this->_doc->nextNumber();
+            $this->_doc->document_number = $next;
+            if (strlen($next) == 0) {
+                $this->setError('Не створено унікальный номер документа');
+                return  ;   
+            }
+        } 
+        $this->_doc->document_date = time();
+        $this->_doc->customer_id = $this->docpanel->form2->customer->getKey();
+        $this->_doc->packDetails('detaildata', $this->_itemlist);
+        $this->_doc->packDetails('services', $this->_serlist);
+        $this->_doc->headerdata['pos'] = $this->pos->pos_id;
+        $this->_doc->headerdata['pos_name'] = $this->pos->pos_name;
+        $this->_doc->headerdata['store'] = $this->_store_id;
+        $this->_doc->headerdata['salesource'] = $this->_salesource;
+        $this->_doc->headerdata['pricetype'] = $this->getPriceType();
+
+        $this->_doc->firm_id = $this->pos->firm_id;
+        $this->_doc->username =System::getUser()->username;
+        $this->calcTotal()  ;
+        $this->_doc->amount = $this->docpanel->form3->total2->getText();
+           
+        $this->_doc->save()  ;
+        if(strlen($this->_doc->document_number)>0) {
+           $this->_doc->updateStatus(Document::STATE_EDITED);
+        } else {
+           $this->_doc->updateStatus(Document::STATE_NEW);    
+        }
+        
+      
+        $this->newdoc(null)  ;  
+    }
+     
+    
+    public function savedocOnClick($sender) {
+        
         $this->_doc->document_number = $this->docpanel->form3->document_number->getText();
 
-        $doc = Document::getFirst("   document_number = '{$this->_doc->document_number}' ");
+        $doc = Document::getFirst(" document_id <> {$this->_doc->document_id}  and   document_number = '{$this->_doc->document_number}' ");
         if ($doc instanceof Document) {   //если уже  кто то  сохранил  с таким номером
             $this->_doc->document_number = $this->_doc->nextNumber();
             $this->docpanel->form3->document_number->setText($this->_doc->document_number);
@@ -1077,9 +1141,12 @@ class ARMPos extends \App\Pages\Base
                 }
             }
 
-
+            $isnew  = $this->_doc->document_id ==0;
             $this->_doc->save();
-            $this->_doc->updateStatus(Document::STATE_NEW);
+            if($isnew) {
+               $this->_doc->updateStatus(Document::STATE_NEW);    
+            }
+            
 
             $this->_doc->updateStatus(Document::STATE_EXECUTED);
             
@@ -1242,6 +1309,9 @@ class ARMPos extends \App\Pages\Base
       
         $row->add(new Label('rowdate', H::fd($doc->document_date)));
         $row->add(new Label('rownotes', $doc->notes));
+        $row->add(new ClickLink('checkedit'))->onClick($this,"onEdit");
+        $row->checkedit->setVisible($doc->state < 4 );
+
         $row->add(new \Zippy\Html\Link\RedirectLink('checkreturn',"\\App\\Pages\\Doc\\ReturnIssue", array(0,$doc->document_id) ));
         $row->checkreturn->setVisible($doc->state > 4 );
         if ($doc->document_id == $this->_doc->document_id) {
@@ -1268,6 +1338,50 @@ class ARMPos extends \App\Pages\Base
         $this->checklistpan->checklist->Reload();
     }
 
+    public function onEdit($sender) {
+        $doc =  $sender->getOwner()->getDataItem();
+        $this->_doc = Document::load( $doc->document_id)->cast();
+         
+        $this->docpanel->setVisible(true);
+        $this->docpanel->form2->setVisible(true);
+        $this->checklistpan->setVisible(false);
+        $this->checklistpan->searchform->clean();
+
+
+        $this->_itemlist = $this->_doc->unpackDetails('detaildata');
+        $this->_serlist = $this->_doc->unpackDetails('services');
+
+        $this->docpanel->form2->detail->Reload();
+        $this->docpanel->form2->detailser->Reload();
+        $this->calcTotal();
+
+        $this->docpanel->form2->addcust->setVisible(true) ;
+        $this->docpanel->form2->cinfo->setVisible(false) ;
+        $this->docpanel->form2->custinfo->setText('');
+        
+        $this->docpanel->form2->customer->setKey(0);
+        $this->docpanel->form2->customer->setText('');
+        if($this->_doc->customer_id >0){
+            $this->docpanel->form2->customer->setKey($this->_doc->customer_id);
+            $this->docpanel->form2->customer->setText($this->_doc->customer_name);
+            $this->OnChangeCustomer($this->docpanel->form2->customer) ;
+        }
+        
+        
+        $this->docpanel->form3->bonus->setText('0');
+        $this->docpanel->form3->payamount->setText('0');
+        $this->docpanel->form3->payed->setText('0');
+        $this->docpanel->form3->payedcard->setText('0');
+        $this->docpanel->form3->exchange->setText('0');
+        $this->docpanel->form3->trans->setText('') ;
+        $this->docpanel->form2->setVisible(true);
+
+ 
+         
+ 
+
+          
+    }
     public function OnDocViewClick($sender) {
         $this->_doc = $sender->getOwner()->getDataItem();
         $this->OnDocView();
