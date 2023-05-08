@@ -1317,6 +1317,39 @@ class ARMPos extends \App\Pages\Base
         if ($doc->document_id == $this->_doc->document_id) {
             $row->setAttribute('class', 'table-success');
         }
+        
+        
+        $row->add(new Label('rtlist'));
+        $t ="<table   style=\"font-size:smaller\"> " ;
+        
+        $tlist=  $doc->unpackDetails('detaildata')  ;
+        
+        foreach($tlist as $prod ) {
+           $t .="<tr> " ;            
+           $t .="<td style=\"padding:2px\" >{$prod->itemname} </td>" ;            
+           $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->quantity) ."</td>" ;            
+           $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->price) ."</td>" ;            
+           $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->quantity * $prod->price) ."</td>" ;            
+
+           $t .="</tr> " ;            
+        }
+        $tlist=  $doc->unpackDetails('services')  ;
+        
+        foreach($tlist as $prod ) {
+           $t .="<tr> " ;            
+           $t .="<td style=\"padding:2px\" >{$prod->service_name} </td>" ;            
+           $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->quantity) ."</td>" ;            
+           $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->price) ."</td>" ;            
+           $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->quantity * $prod->price) ."</td>" ;            
+
+           $t .="</tr> " ;            
+        }
+         
+        $t .="</table> " ;
+        
+        $row->rtlist->setText($t,true);        
+        
+        
 
     }
 
