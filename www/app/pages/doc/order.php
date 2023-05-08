@@ -549,6 +549,7 @@ class Order extends \App\Pages\Base
     private  function OnCinfo($customer_id){
         $customer_id=intval($customer_id)  ;
         if($customer_id==0) return;
+        $this->docform->addcust->setVisible(false) ;
         $this->docform->cinfo->setVisible(true) ;
         $this->docform->cinfo->setAttribute('onclick',"customerInfo({$customer_id});" ) ;
        

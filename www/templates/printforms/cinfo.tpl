@@ -1,6 +1,11 @@
  <table class="table  table-sm">
    <tr><td>Назва</td><td>{{name}}</td></tr>
    <tr><td>Тел.</td><td>{{phone}}</td></tr>
+   {{#smscode}} 
+   <tr><td colspan="2">   СМС код &nbsp;&nbsp;<b>{{smscode}}   </b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a {{{click}}} href="javascript:void(0);return false;">Відправити</a>   
+   <br><small> Відправка  коду на  телефон. Наприклад при списанні  бонусів   </small>
+   </td></tr>
+  {{/smscode}}
    <tr><td>E-mail</td><td>{{email}}</td></tr>
    <tr><td>Адреса</td><td>{{address}}</td></tr>
    {{#bonus}}
@@ -10,7 +15,7 @@
    <tr><td>Борг  </td><td>   {{dolg}} <small>(+дебет -кредит)</small></td></tr>
    {{/dolg}}
   {{#disc}}
-   <tr><td>Знижка</td><td>   {{disc}}</td></tr>
+   <tr><td>Постійна знижка</td><td>   {{disc}}</td></tr>
    {{/disc}}
 
  {{#last}}
