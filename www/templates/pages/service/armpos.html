@@ -107,7 +107,10 @@
                                  <input class="form-control"  placeholder="Почніть вводити..."   zippy="customer"/>
                                  <div class="input-group-append">
                                    <a class="btn btn-success btn-sm mr-2" title="Додати нового" zippy="addcust">+</a>
-                                </div>                    
+                                </div>
+                                <div class="input-group-append"  >
+                                    <a href="return false; void(0)" zippy="cinfo" class="btn btn-success"><i class="fa fa-info-circle"></i></a>
+                                </div>                                                      
                              </div>     
                             
                             </div>
@@ -256,8 +259,13 @@
                             </tr>
                         </table> 
                        </div>
-                     
-                 <div class="col-12   col-lg-6 col-xl-4 offset-lg-4 offset-xl-4">                       
+                  <div class="w-100" ></div>   
+                 <div class="col-12   col-lg-3 col-xl-2  ">   
+                     <input type="submit" value="Зберегти" zippy="tosave" class="btn  btn-info">
+                </div>
+                   
+                                       
+                 <div class="col-12   col-lg-6 col-xl-4 offset-lg-2 offset-xl-2">                       
                       <div class="form row">
                      
                          <div class="col-auto pt-2">
@@ -405,13 +413,13 @@
                     </div>
      
                 </div>
-
+                     
 
                 <div class="row">
                     <div class="col-12">
                         <div class="form-group  ">
                             <input type="button" value="< назад" zippy="cancel2" class="btn  btn-outline-info">
-                            &nbsp;&nbsp;<input type="submit" value="Створити чек  " zippy="save" class="btn  btn-info">
+                            &nbsp;&nbsp;<input type="submit" value="Провести чек  " zippy="save" class="btn  btn-info">
                             {{#ppo}}
                             &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Вiдкласти фiскалiзацiю  
                            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
@@ -572,10 +580,12 @@
                     <tr>
                         <th>Дата</th>
                         <th>Номер</th>
+                         <th >Товари</th>
 
                         <th class="text-right">Сума</th>
+                    
 
-
+                        <th ></th>
                         <th ></th>
                         <th ></th>
 
@@ -584,10 +594,12 @@
                     <tr zippy="checklist">
                         <td zippy="rowdate"> </td>
                         <td ><a zippy="rownumber"></a></td>
-
+                        <td  zippy="rtlist">   </td>
+                     
                         <td class="text-right" zippy="rowamount"> </td>
 
                         <td zippy="rownotes"></td>
+                        <td  ><a zippy="checkedit" title="Редагувати"><i class="fa fa-edit"></i></a></td>
                         <td  ><a zippy="checkreturn" title="Повернення"><i class="fa fa-arrow-left-long"></i></a></td>
                     </tr>
 

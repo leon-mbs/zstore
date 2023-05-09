@@ -540,9 +540,6 @@ class Subscribe extends \ZCL\DB\Entity
                 return  ""  ;             
             }            
 
-
-
-
             if ($sms['smstype'] == 3) {  //sms  fly
 
                 $an = '';

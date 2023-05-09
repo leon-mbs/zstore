@@ -393,13 +393,41 @@ class Base extends \Zippy\Html\WebPage
            $header['laststatus']   =  \App\Entity\doc\Document::getStateName($doc->state)  ;
         }
      
+     
+     
+    
+        $header['smscode'] = false;
+   
+        $sms = System::getOptions("sms");
+        if(intval($sms) > 0 && strlen($c->phone)>0 )
+        {
+             $header['smscode'] = "".rand(100,990)  ;
+             $header['click'] = "onclick=\"sendSMSCust('{$c->phone}',{$header['smscode']})\"" ;
+                
+        }      
+     
+     
         $data = $report->generate($header); 
         $data = str_replace("'","`",$data)  ;
       //  $data = str_replace("\"","`",$data)  ;
+      
+      
+      
+      
         return $data;
 
     }
 
+    
+    public function sendSMSCode($args, $post) {
+        
+        
+          $ret = \App\Entity\Subscribe::sendSMS($args[0],$args[1])  ;
+          return $ret ?? "";
+        
+    }
+
+    
     private function generateToasts() {
 
 
