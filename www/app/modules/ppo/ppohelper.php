@@ -612,7 +612,7 @@ class PPOHelper
                     
                     $header['pays'][] = $pay;
                     $n++;
-                    $amount1 = $pay['paysum'];   
+                    $amount0 = $pay['paysum'];   
 
               }
               if($doc->headerdata['mfbeznal']  >0 && $doc->headerdata['payedcard'] > 0) {
