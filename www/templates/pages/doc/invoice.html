@@ -114,7 +114,7 @@
 
 
                             <th class="text-right">Кіл.</th>
-                            <th class="text-right">Знижка,%</th>
+                            <th class="text-right"><i class="fa fa-gift"></i>,%</th>
                             <th class="text-right">Ціна</th>
 
                             <th class="text-right">Сума</th>
@@ -142,16 +142,16 @@
                             <td></td>
                         </tr>
                        <tr style="font-weight: bolder;">
-                            <td colspan="6" class="text-right">В т.ч. знижка:</td>
+                            <td colspan="6" class="text-right">Знижка:</td>
                             <td zippy="totaldisc" class="text-right"></td>
-                            <td></td>
+                            <td><a data-label="totaldisc" href="javascript:void(0);" data-toggle="modal"
+                                   data-target="#modaltotaldisc"><i class="fa fa-edit"></i></a></td>
                         </tr>
                       
                         <tr style="font-weight: bolder;">
                             <td colspan="6" class="text-right"><span data-label="payamount">До сплати:</span></td>
                             <td zippy="payamount" class="text-right"></td>
-                            <td><a data-label="payamount" href="javascript:void(0);" data-toggle="modal"
-                                   data-target="#modalpayamount"><i class="fa fa-edit"></i></a></td>
+                            <td></td>
                         </tr>
                   
 
@@ -168,7 +168,7 @@
             </div>
           
 
-            <div id="modalpayamount" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+            <div id="modaltotaldisc" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
@@ -180,9 +180,9 @@
                         </div>
                         <div class="modal-body">
                             <div class="input-group  ">
-                                <input class="form-control qtyprice" type="text" zippy="editpayamount" pattern="[0-9,\.]+">
+                                <input class="form-control qtyprice" type="text" zippy="edittotaldisc" pattern="[0-9,\.]+">
                                 <div class="input-group-append">
-                                    <input type="submit" value="OK" zippy="bpayamount" class="ml-2 btn btn-info  ">
+                                    <input type="submit" value="OK" zippy="btotaldisc" class="ml-2 btn btn-info  ">
 
                                 </div>
                             </div>

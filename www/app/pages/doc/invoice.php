@@ -61,8 +61,6 @@ class Invoice extends \App\Pages\Base
 
         $this->docform->add(new Label('custdisc'));
 
-        $this->docform->add(new TextInput('editpayamount'));
-        $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
         $this->docform->add(new Label('payamount', 0));
 
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
@@ -76,6 +74,8 @@ class Invoice extends \App\Pages\Base
 
         $this->docform->add(new Label('total', 0));
         $this->docform->add(new Label('totaldisc', 0));
+        $this->docform->add(new TextInput('edittotaldisc'));
+        $this->docform->add(new SubmitButton('btotaldisc'))->onClick($this, 'onTotaldisc');
        
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -124,7 +124,7 @@ class Invoice extends \App\Pages\Base
          
 
             $this->docform->payamount->setText($this->_doc->payamount);
-            $this->docform->editpayamount->setText($this->_doc->payamount);
+
 
             $this->docform->total->setText($this->_doc->amount);
 
@@ -157,6 +157,7 @@ class Invoice extends \App\Pages\Base
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->totaldisc->setText($basedoc->headerdata['totaldisc']);
+                        $this->docform->edittotaldisc->setText($basedoc->headerdata['totaldisc']);
 
                         $this->docform->notes->setText("Рахунок для ". $basedoc->document_number);
                         $order = $basedoc->cast();
@@ -172,7 +173,9 @@ class Invoice extends \App\Pages\Base
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
                         $this->OnChangeCustomer($this->docform->customer);
-
+                        $this->docform->totaldisc->setText($basedoc->headerdata['totaldisc']);
+                        $this->docform->edittotaldisc->setText($basedoc->headerdata['totaldisc']);
+                     
 
                         $this->docform->pricetype->setValue('price1');
                        
@@ -196,6 +199,8 @@ class Invoice extends \App\Pages\Base
                         $this->OnChangeCustomer($this->docform->customer);
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
+                        $this->docform->totaldisc->setText($basedoc->headerdata['totaldisc']);
+                        $this->docform->edittotaldisc->setText($basedoc->headerdata['totaldisc']);
 
                         $this->docform->notes->setText("Рахунок для ". $basedoc->document_number);
                         $order = $basedoc->cast();
@@ -480,8 +485,9 @@ class Invoice extends \App\Pages\Base
     }
 
 
-    public function onPayAmount($sender) {
-        $this->docform->payamount->setText(H::fa($this->docform->editpayamount->getText()));
+    public function onTotaldisc($sender) {
+        $this->docform->totaldisc->setText(H::fa($this->docform->edittotaldisc->getText()));
+        $this->calcPay() ;
     }
 
 
@@ -493,16 +499,13 @@ class Invoice extends \App\Pages\Base
     private function calcTotal() {
 
         $total = 0;
-        $disc = 0;
+
         foreach ($this->_itemlist as $item) {
             $item->amount = $item->price * $item->quantity;
-            if($item->disc >0) {
-               $disc += ($item->quantity * ($item->pureprice - $item->price) );    
-            }
    
             $total = $total + $item->amount;
         }
-        $this->docform->totaldisc->setText(H::fa($disc));
+
         $this->docform->total->setText(H::fa($total));
         
 
@@ -513,10 +516,13 @@ class Invoice extends \App\Pages\Base
 
     private function calcPay() {
         $total = $this->docform->total->getText();
+        $totaldisc = $this->docform->totaldisc->getText();
+
+        if($totaldisc) {
+            $total = $total - $totaldisc;
+        }
 
 
-
-        $this->docform->editpayamount->setText(H::fa($total  ));
         $this->docform->payamount->setText(H::fa($total  ));
 
         
