@@ -57,14 +57,13 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->docform->add(new Label('custinfo'));
 
-        $this->docform->add(new TextInput('editpayamount'));
-        $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
         $this->docform->add(new TextInput('editpayed', "0"));
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
         $this->docform->add(new Label('payed', 0));
         $this->docform->add(new Label('payamount', 0));
-        $this->docform->add(new TextInput('editalldisc'));
-        $this->docform->add(new SubmitButton('balldisc'))->onClick($this, 'onAlldisc');
+        $this->docform->add(new TextInput('edittotaldisc'));
+        $this->docform->add(new SubmitButton('btotaldisc'))->onClick($this, 'onTotaldisc');
+        $this->docform->add(new Label('totaldisc'));
 
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -95,8 +94,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total'));
-        $this->docform->add(new Label('totaldisc'));
-
+   
         $this->add(new \App\Widgets\ItemSel('wselitem', $this, 'onSelectItem'))->setVisible(false);
         
         $this->add(new Form('editdetail'))->setVisible(false);
@@ -129,6 +127,7 @@ class GoodsIssue extends \App\Pages\Base
 
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
             $this->docform->totaldisc->setText($this->_doc->headerdata['totaldisc']);
+            $this->docform->edittotaldisc->setText($this->_doc->headerdata['totaldisc']);
             $this->docform->total->setText(H::fa($this->_doc->amount));
 
             $this->docform->document_date->setDate($this->_doc->document_date);
@@ -136,8 +135,6 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->salesource->setValue($this->_doc->headerdata['salesource']);
 
-            $this->docform->payamount->setText(H::fa($this->_doc->payamount));
-            $this->docform->editpayamount->setText(H::fa($this->_doc->payamount));
             if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
                 $this->_doc->payed = $this->_doc->headerdata['payed'];
             }
@@ -182,6 +179,7 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->salesource->setValue($basedoc->headerdata['salesource']);
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->totaldisc->setText($basedoc->headerdata['totaldisc']);
+                        $this->docform->eidttotaldisc->setText($basedoc->headerdata['totaldisc']);
                         // $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->_orderid = $basedocid;
                         $this->docform->order->setText($basedoc->document_number);
@@ -245,6 +243,7 @@ class GoodsIssue extends \App\Pages\Base
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
+                        $this->docform->edittotaldisc->setText($basedoc->headerdata['totaldisc']);
                         $this->docform->totaldisc->setText($basedoc->headerdata['totaldisc']);
 
                         $notfound = array();
@@ -284,6 +283,7 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->totaldisc->setText($basedoc->headerdata['totaldisc']);
+                        $this->docform->edittotaldisc->setText($basedoc->headerdata['totaldisc']);
                         $this->docform->salesource->setValue($basedoc->headerdata['salesource']);
 
                         $this->docform->firm->setValue($basedoc->firm_id);
@@ -740,10 +740,9 @@ class GoodsIssue extends \App\Pages\Base
         }
     }
 
-    public function onPayAmount($sender) {
-        $this->docform->payamount->setText($this->docform->editpayamount->getText());
-        $this->docform->editpayed->setText($this->docform->editpayamount->getText());
-        $this->docform->payed->setText($this->docform->editpayamount->getText());
+    public function onTotaldisc($sender) {
+        $this->docform->totaldisc->setText($this->docform->edittotaldisc->getText());
+        $this->calcPay() ;
         $this->goAnkor("tankor");
     }
 
@@ -767,18 +766,15 @@ class GoodsIssue extends \App\Pages\Base
     private function calcTotal() {
 
         $total = 0;
-        $disc = 0;
- 
+      
         foreach ($this->_itemlist as $item) {
             $item->amount = $item->price * $item->quantity;
-            if($item->disc >0) {
-               $disc += ($item->quantity * ($item->pureprice - $item->price) );    
-            }
+        
   
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
-        $this->docform->totaldisc->setText(H::fa($disc));
+
 
        
     }
@@ -788,10 +784,12 @@ class GoodsIssue extends \App\Pages\Base
         $common = System::getOptions("common");
 
         $total = $this->docform->total->getText();
+        $totaldisc = $this->docform->totaldisc->getText();
  
-        
+        if($totaldisc > 0){
+            $total = $total - $totaldisc;
+        }
 
-        $this->docform->editpayamount->setText(H::fa($total));
         $this->docform->payamount->setText(H::fa($total));
         $prepaid = doubleval($this->_doc->headerdata['prepaid'] ) ;
         if ($prepaid > 0) {
@@ -886,25 +884,7 @@ class GoodsIssue extends \App\Pages\Base
 
 
     }
-     public function onAlldisc($sender) {
-        $alldisc= doubleval( str_replace(',','.',  $this->docform->editalldisc->getText() ) );
-        if($alldisc >100) {
-            return;
-        }
-      
-        foreach ($this->_itemlist as $item) {
-            $item->disc =  $alldisc;
-            $item->price  = $item->pureprice - (  $item->pureprice * $alldisc/100);
-            $item->amount = $item->price * $item->quantity;
-            
-        }       
-          
-        $this->calcTotal();
-        $this->calcPay();
-        $this->docform->detail->Reload();
-          
-        $this->goAnkor("tankor");
-    }
+ 
     public function OnAutoItem($sender) {
         $store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());

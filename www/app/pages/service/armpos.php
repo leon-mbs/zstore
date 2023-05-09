@@ -42,6 +42,7 @@ class ARMPos extends \App\Pages\Base
     private $_salesource = 0;
     private $_mfbeznal = 0;
     private $_mfnal = 0;
+    private $_editrow =false;
    
     public $_doclist = array();
 
@@ -115,7 +116,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->add(new SubmitLink('addser'))->onClick($this, 'addserOnClick');
         $this->docpanel->form2->addser->setVisible(Service::findCnt('disabled<>1') > 0);  //показываем  если  есть  услуги
         $this->docpanel->form2->add(new Label('total'));
-        $this->docpanel->form2->add(new Label('totaldisc'));
+
 
         $this->docpanel->form2->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'));
         $this->docpanel->form2->add(new DataView('detailser', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_serlist')), $this, 'serOnRow'));
@@ -132,9 +133,8 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->addtovarsm->onChange($this, 'OnChangeItemSm', true);
         $this->docpanel->form2->add(new TextInput('qtysm'));
         $this->docpanel->form2->add(new SubmitLink('additemsm'))->onClick($this, 'addItemSmOnClick');
-        $this->docpanel->form2->add(new TextInput('editalldisc'));
-        $this->docpanel->form2->add(new SubmitButton('balldisc'))->onClick($this, 'onAlldisc');
-      
+        $this->docpanel->form2->add(new TextInput('bonus'));      
+        $this->docpanel->form2->add(new TextInput('totaldisc'));      
                   
         //оплата
         $this->docpanel->add(new Form('form3'))->setVisible(false);
@@ -149,13 +149,13 @@ class ARMPos extends \App\Pages\Base
         
         $this->docpanel->form3->add(new Button('cancel2'))->onClick($this, 'cancel2docOnClick');
         $this->docpanel->form3->add(new SubmitButton('save'))->onClick($this, 'savedocOnClick');
-        $this->docpanel->form3->add(new TextInput('total2'));
+
 
         $this->docpanel->form3->add(new TextInput('payamount'));
         $this->docpanel->form3->add(new TextInput('payed'));
         $this->docpanel->form3->add(new TextInput('payedcard'));
         $this->docpanel->form3->add(new TextInput('exchange'));
-        $this->docpanel->form3->add(new TextInput('bonus'));
+
         $this->docpanel->form3->add(new TextInput('trans'));
         $this->docpanel->form3->add(new TextInput('exch2b'));
 
@@ -242,6 +242,7 @@ class ARMPos extends \App\Pages\Base
 
         $this->docpanel->form2->setVisible(true);
         $this->docpanel->form3->setVisible(false);
+        $this->_editrow =  false;        
     }
 
     public function cancel3docOnClick($sender) {
@@ -339,7 +340,9 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->customer->setKey(0);
         $this->docpanel->form2->customer->setText('');
 
-        $this->docpanel->form3->bonus->setText('0');
+        $this->docpanel->form2->bonus->setText('0');
+        $this->docpanel->form2->totaldisc->setText('0');
+        
         $this->docpanel->form3->payamount->setText('0');
         $this->docpanel->form3->payed->setText('0');
         $this->docpanel->form3->payedcard->setText('0');
@@ -378,11 +381,11 @@ class ARMPos extends \App\Pages\Base
 
         $this->docpanel->form3->exch2b->setText('');
     
-        $total= doubleval( $this->docpanel->form3->total2->getText() );      
+        //к  оплате
+        $total =   floatval( $this->docpanel->form2->total->getText() ) - floatval( $this->docpanel->form2->bonus->getText() ) - floatval( $this->docpanel->form2->totaldisc->getText() ) ;      
+        $this->docpanel->form3->payamount->setText(H::fa($total));
         
-
-        
-        if($this->_mfbeznal ==0) {
+        if($this->_mfbeznal == 0) {
            $this->docpanel->form3->payed->setText($total);  
            $this->docpanel->form3->payedcard->setVisible(false);            
         }  else {
@@ -544,6 +547,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->setVisible(false);
          
         $this->_rowid =  array_search($tovar,$this->_itemlist,true);
+        $this->_editrow =  true;
    }
 
  
@@ -589,7 +593,8 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->editdetail->qtystock->setText("");
         $this->docpanel->form2->setVisible(false);
         $this->_rowid = -1;
-        $this->docpanel->navbar->setVisible(false);        
+        $this->docpanel->navbar->setVisible(false); 
+        $this->_editrow =  false;               
     }
 
     public function addserOnClick($sender) {
@@ -599,6 +604,7 @@ class ARMPos extends \App\Pages\Base
 
         $this->docpanel->form2->setVisible(false);
         $this->_rowid = -1;
+        $this->_editrow =  false;
     }
 
     public function saverowOnClick($sender) {
@@ -663,8 +669,7 @@ class ARMPos extends \App\Pages\Base
       //  $this->docpanel->wselitem->setVisible(false);           
             
  
-        $this->_rowid = -1;
-
+ 
 
         $this->docpanel->form2->detail->Reload();
      
@@ -679,6 +684,14 @@ class ARMPos extends \App\Pages\Base
 
         $this->docpanel->editdetail->editprice->setText("");
         $this->docpanel->editdetail->qtystock->setText("");
+        
+        if($this->_editrow) {
+          $this->docpanel->editdetail->setVisible(false);
+          $this->docpanel->form2->setVisible(true);
+            
+        }
+        $this->_rowid = -1;
+        $this->_editrow =  false;    
         $this->setSuccess("Позиція додана");
         
     }
@@ -789,9 +802,8 @@ class ARMPos extends \App\Pages\Base
             $total = $total + $item->amount;
         }
         $this->docpanel->form2->total->setText(H::fa($total));
-        $this->docpanel->form2->totaldisc->setText(H::fa($disc));
-        $this->docpanel->form3->total2->setText(H::fa($total));
-        $this->docpanel->form3->payamount->setText(H::fa($total));
+
+ 
     
         
     }
@@ -967,12 +979,14 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['pos_name'] = $this->pos->pos_name;
         $this->_doc->headerdata['store'] = $this->_store_id;
         $this->_doc->headerdata['salesource'] = $this->_salesource;
+        $this->_doc->headerdata['totaldisc'] = $this->docpanel->form2->totaldisc->getText();
+        $this->_doc->headerdata['bonus'] = $this->docpanel->form2->bonus->getText();
         $this->_doc->headerdata['pricetype'] = $this->getPriceType();
 
         $this->_doc->firm_id = $this->pos->firm_id;
         $this->_doc->username =System::getUser()->username;
         $this->calcTotal()  ;
-        $this->_doc->amount = $this->docpanel->form3->total2->getText();
+        $this->_doc->amount = $this->docpanel->form2->total->getText();
            
         $this->_doc->save()  ;
         if(strlen($this->_doc->document_number)>0) {
@@ -1017,12 +1031,13 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['exch2b'] = $this->docpanel->form3->exch2b->getText() ;
         $this->_doc->headerdata['trans'] = trim($this->docpanel->form3->trans->getText());
         $this->_doc->notes = $this->_doc->notes . ' ' . $this->_doc->headerdata['trans']  ;
-        $this->_doc->headerdata['totaldisc'] = $this->docpanel->form2->totaldisc->getText();
+//        $this->_doc->headerdata['totaldisc'] = $this->docpanel->form2->totaldisc->getText();
       
         $this->_doc->headerdata['mfnal'] = $this->form1->mfnal->getValue();
         $this->_doc->headerdata['mfbeznal'] = $this->form1->mfbeznal->getValue();
           
-        $this->_doc->headerdata['bonus'] = $this->docpanel->form3->bonus->getText();
+        $this->_doc->headerdata['bonus'] = $this->docpanel->form2->bonus->getText();
+        $this->_doc->headerdata['totaldisc'] = $this->docpanel->form2->totaldisc->getText();
 
         if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $this->_doc->customer_id == 0) {
             $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
@@ -1063,7 +1078,7 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->packDetails('detaildata', $this->_itemlist);
         $this->_doc->packDetails('services', $this->_serlist);
 
-        $this->_doc->amount = $this->docpanel->form3->total2->getText();
+        $this->_doc->amount = $this->docpanel->form2->total->getText();
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
@@ -1401,18 +1416,15 @@ class ARMPos extends \App\Pages\Base
         }
         
         
-        $this->docpanel->form3->bonus->setText('0');
+        $this->docpanel->form2->bonus->setText($this->_doc->headerdata['bonus']);
+        $this->docpanel->form2->totaldisc->setText($this->_doc->headerdata['totaldisc']);
         $this->docpanel->form3->payamount->setText('0');
         $this->docpanel->form3->payed->setText('0');
         $this->docpanel->form3->payedcard->setText('0');
         $this->docpanel->form3->exchange->setText('0');
         $this->docpanel->form3->trans->setText('') ;
         $this->docpanel->form2->setVisible(true);
-
- 
-         
- 
-
+  
           
     }
     public function OnDocViewClick($sender) {
@@ -1444,7 +1456,6 @@ class ARMPos extends \App\Pages\Base
 
         return $this->_pt;
     }
-
    
     public function getPriceByQty($args,$post=null)  {
         $item = Item::load($args[0]) ;
@@ -1482,10 +1493,8 @@ class ARMPos extends \App\Pages\Base
         }
  
     }    
-    
-    
-  
-  public function OnChangeItemSm($sender) {
+   
+    public function OnChangeItemSm($sender) {
         $id = $sender->getKey();
         $item = Item::load($id);
         $store = $this->form1->store->getValue();
@@ -1544,7 +1553,7 @@ class ARMPos extends \App\Pages\Base
         
     }
     
-   public function addItemSmOnClick($sender) {
+    public function addItemSmOnClick($sender) {
          $store = $this->form1->store->getValue();
 
         $id = $this->docpanel->form2->addtovarsm->getKey();
@@ -1613,32 +1622,7 @@ class ARMPos extends \App\Pages\Base
           
    }
  
- 
-    public function onAlldisc($sender) {
-        $alldisc= doubleval( str_replace(',','.', $this->docpanel->form2->editalldisc->getText() ) );
-        if($alldisc >100) {
-            return;
-        }
       
-        foreach ($this->_itemlist as $item) {
-            $item->disc =  $alldisc;
-            $item->price  = $item->pureprice - (  $item->pureprice * $alldisc/100);
-            $item->amount = $item->price * $item->quantity;
-            
-        }       
-        foreach ($this->_serlist as $ser) {
-            $ser->disc =  $alldisc;
-            $ser->price  = $ser->pureprice - (  $ser->pureprice * $alldisc/100);
-            $ser->amount = $ser->price * $ser->quantity;
-            
-        }       
-          
-        $this->docpanel->form2->detail->Reload();
-        $this->docpanel->form2->detailser->Reload();
-        $this->calcTotal();        
-
-    }  
-     
 }
 
 

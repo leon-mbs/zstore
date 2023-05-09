@@ -433,11 +433,11 @@ class PPOHelper
         $header['username'] = $user->username;
         $header['guid'] = \App\Util::guid();
 
-        $header['disc'] = $doc->headerdata["paydisc"] > 0 ? number_format($doc->headerdata["paydisc"], 2, '.', '') : false;
+    //    $header['disc'] = $doc->headerdata["paydisc"] > 0 ? number_format($doc->headerdata["paydisc"], 2, '.', '') : false;
         $header['details'] = array();
         $n = 1;
         $disc = 1;
-        $discsum =  doubleval($doc->headerdata["bonus"]);
+        $discsum =  doubleval($doc->headerdata["bonus"]) + doubleval($doc->headerdata["totaldisc"]);
         
         if ( $discsum > 0) {
             $disc = 1 - ( $discsum / $doc->amount);
@@ -612,7 +612,7 @@ class PPOHelper
                     
                     $header['pays'][] = $pay;
                     $n++;
-                    $amount1 = $pay['paysum'];   
+                    $amount0 = $pay['paysum'];   
 
               }
               if($doc->headerdata['mfbeznal']  >0 && $doc->headerdata['payedcard'] > 0) {

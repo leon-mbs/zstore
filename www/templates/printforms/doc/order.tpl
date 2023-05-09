@@ -95,7 +95,7 @@
 
     {{#totaldisc}}
     <tr style="font-weight: bolder;">
-        <td colspan="9" align="right">В т.ч. знижка:</td>
+        <td colspan="9" align="right">Знижка:</td>
         <td align="right">{{totaldisc}}</td>
     </tr>
     {{/totaldisc}}
