@@ -41,7 +41,7 @@ class CalcSalary extends \App\Pages\Base
             $this->_doc = Document::create('CalcSalary');
             $this->_doc->document_number = $this->_doc->nextNumber();
             $this->_doc->document_date = time();
-            $this->_doc->headerdata['dayscnt'] =22;
+            $this->_doc->headerdata['daysmon'] =22;
             $this->_doc->headerdata['year'] = round(date('Y') );
             $this->_doc->headerdata['month'] = round(date('m') );
         }
@@ -129,7 +129,7 @@ class CalcSalary extends \App\Pages\Base
          $this->_doc->document_number = $post->doc->document_number;
          $this->_doc->document_date = strtotime( $post->doc->document_date);
          $this->_doc->notes = $post->doc->notes;
-         $this->_doc->headerdata['dayscnt'] = $post->doc->dayscnt;
+         $this->_doc->headerdata['daysmon'] = $post->doc->daysmon;
          $this->_doc->headerdata['year'] = $post->doc->year;
          $this->_doc->headerdata['month'] = $post->doc->month;
          $mlist = \App\Util::getMonth();
@@ -318,7 +318,7 @@ class CalcSalary extends \App\Pages\Base
        $ret['doc']['document_date']   =  date('Y-m-d', $this->_doc->document_date) ;
        $ret['doc']['document_number']   =   $this->_doc->document_number ;
        $ret['doc']['notes']   =   $this->_doc->notes ;
-       $ret['doc']['dayscnt']   =   $this->_doc->headerdata['dayscnt'] ;
+       $ret['doc']['daysmon']   =   $this->_doc->headerdata['daysmon'] ;
        $ret['doc']['year']   =   $this->_doc->headerdata['year'] ;
        $ret['doc']['month']   =   $this->_doc->headerdata['month'] ;
 
