@@ -140,7 +140,7 @@ class Orders extends \App\Pages\Base
             if (strlen($neworder->document_number) == 0) {
                 $neworder->document_number = 'OC00001';
             }
-            
+            $total =0;
             $j=0;           //товары
             $tlist = array();
             foreach ($shoporder->_products_ as $product) {
@@ -168,15 +168,17 @@ class Orders extends \App\Pages\Base
                 $tovar->desc = $desc;
                 $j++;
                 $tovar->rowid = $j;
-
+                $total  = $total +  ($tovar->quantity * $tovar->price) ;
                 $tlist[$j] = $tovar;
             }
             if(count($tlist)==0)  {
                 return;
             }
             $neworder->packDetails('detaildata', $tlist);
-            $neworder->amount = \App\Helper::fa($shoporder->total);
-            $neworder->payamount = $neworder->amount;
+            $neworder->amount = \App\Helper::fa($total);
+            $neworder->payamount = \App\Helper::fa($shoporder->total);
+            $neworder->headerdata['totaldisc']  = $neworder->amount - $neworder->payamount;
+
               
             $neworder->headerdata['outnumber'] = $shoporder->order_id;
             $neworder->headerdata['ocorder'] = $shoporder->order_id;
@@ -220,10 +222,12 @@ class Orders extends \App\Pages\Base
             $neworder->notes .= " Коментар:" . $shoporder->comment . ";";
             $neworder->save();
             $neworder->updateStatus(Document::STATE_NEW);
-            $neworder->updateStatus(Document::STATE_INPROCESS);
             if($modules['ocsetpayamount']==1){
-                 $neworder->updateStatus(Document::STATE_WP);
-            }
+                $neworder->updateStatus(\App\Entity\Doc\Document::STATE_WP;                    
+            }   else {
+                $neworder->updateStatus(\App\Entity\Doc\Document::STATE_INPROCESS);                    
+            }             
+
 
             $i++;
         }
