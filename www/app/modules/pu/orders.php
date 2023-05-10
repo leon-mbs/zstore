@@ -125,9 +125,9 @@ class Orders extends \App\Pages\Base
                 
                 $neworder->headerdata['puclient'] = $puorder['client_first_name'] . ' ' . $puorder['client_last_name'];
                 
-                $neworder->amount = H::fa($puorder['full_price']);
-                $neworder->payamount = $neworder->amount;
-                
+                $neworder->amount = H::fa($puorder['price']);
+                $neworder->payamount = H::fa($puorder['full_price']);
+               
                
                 $neworder->document_date = time();
                 $neworder->notes = "PU номер:{$puorder['id']};";

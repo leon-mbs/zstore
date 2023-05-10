@@ -88,7 +88,7 @@ class System
             self::$_options[$group] = $d;
         }
          
-        return @self::$_options[$group];
+        return self::$_options[$group] ?? [];
     }
 
     /**
