@@ -250,6 +250,7 @@ try {
                     $neworder->document_number = 'OC00001';
                 }
                 $neworder->customer_id = $modules['occustomer_id'];
+                $total =0;
                 $j=0;           //товары
                 $tlist = array();
                 foreach ($shoporder->_products_ as $product) {
@@ -277,19 +278,18 @@ try {
                     $tovar->desc = $desc;
                     $j++;
                     $tovar->rowid = $j;
-
+                    $total  = $total +  ($tovar->quantity * $tovar->price) ;
+ 
                     $tlist[$j] = $tovar;
                 }
                 if(count($tlist)==0)  {
                     return;
                 }
                 $neworder->packDetails('detaildata', $tlist);
-                $neworder->amount = \App\Helper::fa($shoporder->total);
-                
-                if($modules['ocsetpayamount']==1){
-                   $neworder->payamount = $neworder->amount;
-                 
-                }
+                $neworder->amount = \App\Helper::fa($total);
+                $neworder->payamount = \App\Helper::fa($shoporder->total);
+                $neworder->headerdata['totaldisc']  = $neworder->amount - $neworder->payamount;
+               
                 $neworder->headerdata['salesource'] = $modules['ocsalesource'];
      
                 
@@ -331,7 +331,14 @@ try {
                 $neworder->notes .= " Комментар:" . $shoporder->comment . ";";
                 $neworder->save();
                 $neworder->updateStatus(\App\Entity\Doc\Document::STATE_NEW);
-                $neworder->updateStatus(\App\Entity\Doc\Document::STATE_INPROCESS);
+                $neworder->updateStatus(\App\Entity\Doc\Document::STATE_INPROCESS);                
+                if($modules['ocsetpayamount']==1){
+                   $neworder->updateStatus(\App\Entity\Doc\Document::STATE_WP;                    
+                }   else {
+                   $neworder->updateStatus(\App\Entity\Doc\Document::STATE_INPROCESS);                    
+                }             
+                
+
 
                 $i++;
             }
