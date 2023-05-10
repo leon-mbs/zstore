@@ -103,7 +103,7 @@
 {{#docqrcodeurl}}
 <font >a</font>
 <newline ></newline>
-<qrcode type="code128"> {{docqrcodeurl}}</qrcode>
+<qrcode  > {{docqrcodeurl}}</qrcode>
 {{/docqrcodeurl}}
 <newline ></newline>
  

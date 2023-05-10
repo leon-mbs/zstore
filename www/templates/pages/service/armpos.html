@@ -182,7 +182,7 @@
 
 
                                 <th  style="width:40px" class="text-right">Кіл.</th>
-                                <th class="text-right">Знижка,%</th>
+                                <th class="text-right"><i class="fa fa-gift"></i>,%</th>
                                 <th class="text-right">Ціна</th>
 
                                 <th class="text-right">Сума</th>
@@ -243,20 +243,35 @@
                                 <td></td>
                                 <td></td>
                             </tr>
-                          <tr style="font-weight: bolder;" id="tankor">
+                            
+                            {{^simplemode}} 
+                           <tr style="font-weight: bolder;" id="tankor">
 
                                 {{^usesnumber}}
-                                <td colspan="6" class="text-right">В т.ч. знижка:</td>
+                                <td colspan="6" class="text-right">Знижка:</td>
                                 {{/usesnumber}}
                                 {{#usesnumber}}
-                                <td colspan="8" class="text-right">В т.ч. знижка:</td>
+                                <td colspan="8" class="text-right">Знижка:</td>
                                 {{/usesnumber}}
 
-                                <td zippy="totaldisc" class="text-right"></td>
+                                <td class="text-right" ><input style="width:75px" autocomplete="off" class="form-control" type="text" zippy="totaldisc"></td>
                                 <td></td>
-                                <td><a data-label="totaldisc" href="javascript:void(0);" data-toggle="modal" data-target="#modalalldisc"><i
-                                        class="fa fa-edit"></i></a></td>
+                                <td></td>
                             </tr>
+                           <tr style="font-weight: bolder;" id="tankor">
+
+                                {{^usesnumber}}
+                                <td colspan="6" class="text-right">Списати  бонуси:</td>
+                                {{/usesnumber}}
+                                {{#usesnumber}}
+                                <td colspan="8" class="text-right">Списати  бонуси:</td>
+                                {{/usesnumber}}
+
+                                <td class="text-right" ><input style="width:75px" autocomplete="off" class="form-control" type="text" zippy="bonus"></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                             {{/simplemode}}
                         </table> 
                        </div>
                   <div class="w-100" ></div>   
@@ -284,29 +299,7 @@
                     
                     
                 </div>
-                <div id="modalalldisc" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered  modal-sm">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Загальна знижка</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="input-group  ">
-                                <input   class="form-control qtyprice" type="text" zippy="editalldisc" pattern="[0-9,\.]+">
-                                <div class="input-group-append">
-                                    <input type="submit" value="OK" zippy="balldisc" class="ml-2 btn btn-info  ">
-
-                                </div>
-                                <small>Задає знижку (в %) для всіх позицій</small>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
+             
        
 
             </form>
@@ -317,21 +310,10 @@
 
                     <div class="col-12 col-md-5  ">
                                          
-                        <div class="form-group row">
-                          <label class="col-4" for="total2">Всього</label>
-                           <div class="col-2">
-                             <input class="form-control-plaintext" type="text" zippy="total2" readonly>
-                         </div>
-                        </div>
+                       
               
-                      {{^simplemode}}
-                        <div class="form-group row">
-                            <label class="col-4" for="bonus" data-label="bonus">Бонуси</label>
-                           <div class="col-2">
-                            <input autocomplete="off" class="form-control" type="text" zippy="bonus">
-                         </div>
-                        </div>
-                       {{/simplemode}}   
+                     
+           
                         <div class="form-group row">
                             <label class="col-4" for="payamount" data-label="payamount">До сплати</label>
                           <div class="col-2">
@@ -698,27 +680,7 @@
 
 
         
-               $("#bonus").change(function () {
-                    var total2 = $("#total2").val();
-                   
-                    var bonus = $("#bonus").val();
-                    var payamount = parseFloat(total2)   - parseFloat(bonus);
-                    $("#payamount").val(payamount.toFixed(2));
-                    if(paytype==1) {
-                       $("#payed").val(payamount.toFixed(2));
-                    }
-                    if(paytype==2) {
-                       $("#payedcard").val(payamount.toFixed(2));
-                    }
-                    if(paytype==3) {
-                       $("#payed").val(payamount.toFixed(2));
-                       $("#payedcard").val(0);
-                    }
-
-                    
-
-                    
-                });
+          
                 
                 $("#payed").change(function () {
                     var payed = $("#payed").val();  

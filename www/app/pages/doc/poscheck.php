@@ -49,9 +49,9 @@ class POSCheck extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('salesource', H::getSaleSources(), H::getDefSaleSource()));
 
         $this->docform->add(new Label('discount'))->setVisible(false);
-        $this->docform->add(new TextInput('editpaydisc'));
-        $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
-        $this->docform->add(new Label('paydisc', 0));
+        $this->docform->add(new TextInput('edittotaldisc'));
+        $this->docform->add(new SubmitButton('btotaldisc'))->onClick($this, 'ontotaldisc');
+        $this->docform->add(new Label('totaldisc', 0));
 
         $this->docform->add(new TextInput('editpayamount'));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
@@ -135,8 +135,8 @@ class POSCheck extends \App\Pages\Base
             $this->docform->exchange->setText($this->_doc->exchange);
             $this->docform->payamount->setText(H::fa($this->_doc->payamount));
             $this->docform->editpayamount->setText(H::fa($this->_doc->payamount));
-            $this->docform->paydisc->setText(H::fa($this->_doc->headerdata['paydisc']));
-            $this->docform->editpaydisc->setText(H::fa($this->_doc->headerdata['paydisc']));
+            $this->docform->totaldisc->setText(H::fa($this->_doc->headerdata['totaldisc']));
+            $this->docform->edittotaldisc->setText(H::fa($this->_doc->headerdata['totaldisc']));
             $p  =  doubleval($this->_doc->headerdata['payed']) + doubleval($this->_doc->headerdata['payedcard']) ;
             if ($this->_doc->payed == 0 && $p > 0) {
                 $this->_doc->payed = $p;
@@ -180,9 +180,9 @@ class POSCheck extends \App\Pages\Base
                         //  $this->docform->pos->setValue($basedoc->headerdata['pos']);
                         $this->_orderid = $basedocid;
                         $this->docform->order->setText($basedoc->document_number);
-                        $this->docform->paydisc->setText($basedoc->headerdata['paydisc']);
-                        $this->docform->editpaydisc->setText($basedoc->headerdata['paydisc']);
-
+                        $this->docform->totaldisc->setText($basedoc->headerdata['totaldisc']);
+                        $this->docform->edittotaldisc->setText($basedoc->headerdata['totaldisc']);
+        
                         $notfound = array();
                         $order = $basedoc->cast();
 
@@ -206,8 +206,8 @@ class POSCheck extends \App\Pages\Base
                             $this->docform->payed->setText(H::fa(0));
                             $this->docform->editpayamount->setText(H::fa(0));
                             $this->docform->payamount->setText(H::fa(0));
-                            $this->docform->editpaydisc->setText(H::fa(0));
-                            $this->docform->paydisc->setText(H::fa(0));
+                            $this->docform->edittotaldisc->setText(H::fa(0));
+                            $this->docform->totaldisc->setText(H::fa(0));
                         } else {
                             $this->docform->editpayed->setText($this->docform->editpayamount->getText());
                             $this->docform->payed->setText($this->docform->payamount->getText());
@@ -503,7 +503,7 @@ class POSCheck extends \App\Pages\Base
 
         $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['exchange'] = $this->docform->exchange->getText();
-        $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
+        $this->_doc->headerdata['totaldisc'] = $this->docform->totaldisc->getText();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
 
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
@@ -640,8 +640,8 @@ class POSCheck extends \App\Pages\Base
         $this->goAnkor("tankor");
     }
 
-    public function onPayDisc() {
-        $this->docform->paydisc->setText($this->docform->editpaydisc->getText());
+    public function ontotaldisc() {
+        $this->docform->totaldisc->setText($this->docform->edittotaldisc->getText());
         $this->calcPay();
         $this->goAnkor("tankor");
     }
@@ -686,13 +686,13 @@ class POSCheck extends \App\Pages\Base
         }
 
 
-        $this->docform->paydisc->setText($disc);
-        $this->docform->editpaydisc->setText($disc);
+        $this->docform->totaldisc->setText($disc);
+        $this->docform->edittotaldisc->setText($disc);
     }
 
     private function calcPay() {
         $total = $this->docform->total->getText();
-        $disc = $this->docform->paydisc->getText();
+        $disc = $this->docform->totaldisc->getText();
         $disc = doubleval($disc) ;
         $this->docform->editpayamount->setText(H::fa($total - $disc));
         $this->docform->payamount->setText(H::fa($total - $disc));
