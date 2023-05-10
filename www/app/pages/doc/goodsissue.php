@@ -179,7 +179,7 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->salesource->setValue($basedoc->headerdata['salesource']);
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->totaldisc->setText($basedoc->headerdata['totaldisc']);
-                        $this->docform->eidttotaldisc->setText($basedoc->headerdata['totaldisc']);
+                        $this->docform->edittotaldisc->setText($basedoc->headerdata['totaldisc']);
                         // $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->_orderid = $basedocid;
                         $this->docform->order->setText($basedoc->document_number);
