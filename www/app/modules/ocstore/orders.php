@@ -223,7 +223,7 @@ class Orders extends \App\Pages\Base
             $neworder->save();
             $neworder->updateStatus(Document::STATE_NEW);
             if($modules['ocsetpayamount']==1){
-                $neworder->updateStatus(\App\Entity\Doc\Document::STATE_WP;                    
+                $neworder->updateStatus(\App\Entity\Doc\Document::STATE_WP);                    
             }   else {
                 $neworder->updateStatus(\App\Entity\Doc\Document::STATE_INPROCESS);                    
             }             
