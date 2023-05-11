@@ -977,6 +977,9 @@ class Helper
         $htmls = "";
 
         foreach ($items as $item) {
+            if( intval($item->item_id)==0){
+                continue;
+            }
             $report = new \App\Report('item_tag.tpl');
             $header = [];
             if ($printer['pname'] == 1) {
