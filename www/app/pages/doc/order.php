@@ -110,6 +110,7 @@ class Order extends \App\Pages\Base
         $this->add(new Form('editcust'))->setVisible(false);
         $this->editcust->add(new TextInput('editcustname'));
         $this->editcust->add(new TextInput('editcustphone'));
+        $this->editcust->add(new TextArea('editcustcomment'));
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
@@ -564,16 +565,18 @@ class Order extends \App\Pages\Base
 
         $this->editcust->editcustname->setText('');
         $this->editcust->editcustphone->setText('');
+        $this->editcust->editcustcomment->setText('');
     }
 
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
             $this->setError("Не введено назву");
-            return;
+            return;                         
         }
         $cust = new Customer();
         $cust->customer_name = $custname;
+        $cust->customer_name = $this->editcust->editcustname->getText();
         $cust->phone = $this->editcust->editcustphone->getText();
         $cust->phone = \App\Util::handlePhone($cust->phone);
 
@@ -590,6 +593,8 @@ class Order extends \App\Pages\Base
             }
         }
 
+        $cust->comment = $this->editcust->editcustcomment->getText();
+        
         $cust->type = 1;
         $cust->save();
         $this->docform->customer->setText($cust->customer_name);
