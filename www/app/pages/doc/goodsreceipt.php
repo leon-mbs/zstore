@@ -594,9 +594,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
-
-        
-        
+         
 
         if ($this->checkForm() == false) {
             return;
@@ -635,7 +633,10 @@ class GoodsReceipt extends \App\Pages\Base
 
  
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                if($this->_doc->headerdata['payamount'] > $this->_doc->headerdata['payed'] && $this->_doc->headerdata['payamount'] > doubleval($this->_doc->headerdata['prepaid'] ) ) {
+
+                 
+                
+                if(($this->_doc->headerdata['payamount'] - doubleval($this->_doc->headerdata['prepaid']) )> $this->_doc->headerdata['payed']  )  {
                       $this->_doc->updateStatus(Document::STATE_WP);                    
                 }
 
