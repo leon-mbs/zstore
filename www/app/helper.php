@@ -978,6 +978,9 @@ class Helper
         $htmls = "";
 
         foreach ($items as $item) {
+            if( intval($item->item_id)==0){
+                continue;
+            }
             $report = new \App\Report('item_tag.tpl');
             $header = [];
 
@@ -1040,11 +1043,8 @@ class Helper
             
 
                
-            if(intval($item->quantity) > 0) {
-                $qty = intval($item->quantity);  //по  документу
-            } else {
-                $qty =  intval($item->getQuantity());    
-            }
+            $qty =  intval($item->getQuantity());    
+            
             
             $printqty =  intval($item->printqty);
             if($printqty==0) $printqty = 4;
@@ -1055,6 +1055,9 @@ class Helper
             if($printqty==4)  {
                 if($qty > 10) $qty = 10;    
             }
+            if(intval($item->quantity) > 0) {
+                $qty = intval($item->quantity);  //по  документу
+            } ;
         
             for($i=0;$i< intval( $qty) ;$i++){
                $htmls = $htmls . $report->generate($header);
