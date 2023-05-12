@@ -331,7 +331,7 @@ class ARMPos extends \App\Pages\Base
         
         $this->docpanel->form3->document_date->setDate(time());
         if(strlen($this->_doc->document_number)>0) {
-            $this->docpanel->form3->document_number->setText(document_number);            
+            $this->docpanel->form3->document_number->setText($this->_doc->document_number);            
         } else {
             $this->_doc = \App\Entity\Doc\Document::create('POSCheck');
             $this->docpanel->form3->document_number->setText($this->_doc->nextNumber());    

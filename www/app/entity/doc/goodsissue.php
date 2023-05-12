@@ -135,7 +135,10 @@ class GoodsIssue extends Document
     }
 
     public function Execute() {
-          
+        
+        
+  
+        
         $parts = array();
         $k = 1;   //учитываем  скидку
       
