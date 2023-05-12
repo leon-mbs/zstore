@@ -506,7 +506,8 @@ class Helper
         }
         return 0;
     }
-
+ 
+ 
     /**
      * Возвращает расчетный счет  по  умолчанию
      *
@@ -982,20 +983,22 @@ class Helper
             }
             $report = new \App\Report('item_tag.tpl');
             $header = [];
-            if ($printer['pname'] == 1) {
 
-                if (strlen($item->shortname) > 0) {
-                    $header['name'] = $item->shortname;
-                } else {
-                    $header['name'] = $item->itemname;
-                }
+            if (strlen($item->shortname) > 0) {
+                $header['name'] = $item->shortname;
+            } else {
+                $header['name'] = $item->itemname;
             }
+
             $header['name'] = str_replace("'","`", $header['name'])  ;
-            if ($printer['pcode'] == 1) {
-                $header['article'] = $item->item_code;
-                $header['isap'] = true;
-            }
-            if ($printer['pqrcode'] == 1 && strlen($item->url) > 0) {
+
+            $header['article'] = $item->item_code;
+            $header['garterm'] = $item->warranty;
+            $header['country'] = $item->country;
+            $header['brand'] = $item->manufacturer;
+
+            
+            if (  strlen($item->url) > 0) {
                 $writer = new \Endroid\QrCode\Writer\PngWriter();
  
       
@@ -1007,36 +1010,37 @@ class Helper
                  $result = $writer->write($qrCode );
      
                  $dataUri = $result->getDataUri();
-                 $header['qrcode'] = "<img style=\"width:100px\" src=\"{$dataUri}\"  />";
+                 $header['qrcodeattr'] = "src=\"{$dataUri}\"  ";
+                 $header['qrcode'] = $item->url;
 
             }
-            if ($printer['pbarcode'] == 1) {
-                $barcode = $item->bar_code;
-                if (strlen($barcode) == 0) {
-                    $barcode = $item->item_code;
-                }
-                if (strlen($barcode) > 0) {
-                    $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-                    $img = '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($barcode, $printer['barcodetype'])) . '">';
-                    $header['img'] = $img;
-                    $header['barcode'] = \App\Util::addSpaces($barcode);
-
-                }
+         
+            $barcode = $item->bar_code;
+            if (strlen($barcode) == 0) {
+                $barcode = $item->item_code;
+            }
+            if (strlen($barcode) > 0) {
+                $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+                $da = " src=\"data:image/png;base64," . base64_encode($generator->getBarcode($barcode, $printer['barcodetype']))."\"" ;
+                $header['barcodeattr'] = $da;
+                $header['barcodewide'] = \App\Util::addSpaces($barcode);
+                $header['barcode'] = $barcode;
 
             }
 
-            $header['isap'] = false;
+           
+
+         
             if ($printer['pprice'] == 1) {
                 $header['price'] = self::fa($item->getPurePrice($printer['pricetype']));
-                $header['isap'] = true;
+              
             }
 
             $header['action'] = $item->hasAction();;
             if ($header['action']) {
                 $header['actionprice'] = $item->getActionPrice();
             }
-            $header['iscolor'] = $printer['pcolor'] == 1;
-
+            
 
                
             $qty =  intval($item->getQuantity());    

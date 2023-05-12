@@ -184,12 +184,7 @@ class Options extends \App\Pages\Base
         $this->printer->add(new DropDownChoice('barcodetype', array('EAN13' => 'EAN13', 'C128' => 'Code128', 'C39' => 'Code39'), 'Code128'));
 
 
-        $this->printer->add(new CheckBox('pname'));
-        $this->printer->add(new CheckBox('pcode'));
-        $this->printer->add(new CheckBox('pbarcode'));
-        $this->printer->add(new CheckBox('pprice'));
-        $this->printer->add(new CheckBox('pqrcode'));
-        $this->printer->add(new CheckBox('pcolor'));
+ 
         $this->printer->add(new SubmitButton('savep'))->onClick($this, 'savePrinterOnClick');
 
         $printer = System::getOptions("printer");
@@ -202,15 +197,7 @@ class Options extends \App\Pages\Base
         $this->printer->pricetype->setValue($printer['pricetype']);
         $this->printer->barcodetype->setValue($printer['barcodetype']);
 
-
-        $this->printer->pname->setChecked($printer['pname']);
-        $this->printer->pcode->setChecked($printer['pcode']);
-        $this->printer->pbarcode->setChecked($printer['pbarcode']);
-        $this->printer->pqrcode->setChecked($printer['pqrcode']);
-        $this->printer->pprice->setChecked($printer['pprice']);
-        $this->printer->pcolor->setChecked($printer['pcolor']);
-
-
+ 
         
         //API
         $this->add(new Form('api'))->onSubmit($this, 'saveApiOnClick');
@@ -435,13 +422,7 @@ class Options extends \App\Pages\Base
         $printer['barcodetype'] = $this->printer->barcodetype->getValue();
 
 
-        $printer['pname'] = $this->printer->pname->isChecked() ? 1 : 0;
-        $printer['pcode'] = $this->printer->pcode->isChecked() ? 1 : 0;
-        $printer['pbarcode'] = $this->printer->pbarcode->isChecked() ? 1 : 0;
-        $printer['pqrcode'] = $this->printer->pqrcode->isChecked() ? 1 : 0;
-        $printer['pprice'] = $this->printer->pprice->isChecked() ? 1 : 0;
-        $printer['pcolor'] = $this->printer->pcolor->isChecked() ? 1 : 0;
-        System::setOptions("printer", $printer);
+            System::setOptions("printer", $printer);
         $this->setSuccess('Збережено');
     }
 
