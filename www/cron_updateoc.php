@@ -313,7 +313,7 @@ try {
                         $cust->type = \App\Entity\Customer::TYPE_BAYER;
                         $cust->phone = \App\Util::handlePhone($shoporder->telephone);
                         $cust->email = $shoporder->email;
-                        $cust->comment = "Клієнт ІМ";
+                        $cust->comment = "Клiєнт OpenCart";
                         $cust->save();
                     }
                     $neworder->customer_id = $cust->customer_id;
@@ -331,9 +331,9 @@ try {
                 $neworder->notes .= " Комментар:" . $shoporder->comment . ";";
                 $neworder->save();
                 $neworder->updateStatus(\App\Entity\Doc\Document::STATE_NEW);
-                $neworder->updateStatus(\App\Entity\Doc\Document::STATE_INPROCESS);                
+
                 if($modules['ocsetpayamount']==1){
-                   $neworder->updateStatus(\App\Entity\Doc\Document::STATE_WP;                    
+                   $neworder->updateStatus(\App\Entity\Doc\Document::STATE_WP);                    
                 }   else {
                    $neworder->updateStatus(\App\Entity\Doc\Document::STATE_INPROCESS);                    
                 }             
