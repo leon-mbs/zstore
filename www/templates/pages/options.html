@@ -267,13 +267,12 @@
 
                             </div>
                            <div class="form-group  ">
-                                <label for="paytypeout">Процес оплати по ВН </label>
+                                <label for="paytypeout">Процес оплати по РН </label>
                                 <select class="form-control" zippy="paytypeout"> </select>
                                 <small>Переважна  послідовність  оплати  при  продажі</small>
 
                             </div>
-                       
-                  
+              
   
                             <div class="form-check">
                                 <input zippy="allowminus" type="checkbox" class="form-check-input">
@@ -408,31 +407,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h4>Параметри для етикеток і цінників</h4>
-                          
-                          <details>
-                            <summary>Перелік тегів шаблону</summary>
-                            <small>Детально  про  роботу  з  принтерами  <a href="" target="_blank">тут</a></small>
-                            <table class="ctable">
-                              <tr><td><b>name</b></td><td>Назва ТМЦ</td></tr>
-                              <tr><td><b>price</b></td><td>Ціна</td></tr>
-                              <tr><td><b>actionprice</b></td><td>Акційна ціна</td></tr>
-                              <tr><td><b>country</b></td><td>Країна-виробник</td></tr>
-                              <tr><td><b>garterm</b></td><td>Гарантiйний термін</td></tr>
-                              <tr><td><b>brand</b></td><td>Бренд</td></tr>
-                              
-                              <tr><td colspan="2" align="center">Управляючi теги</td></tr>
-                              <tr><td><b>isaction</b></td><td>Якщо є акція (true/false)</td></tr>
-                              <tr><td colspan="2" align="center">Для  системного  принтера</td></tr>
-                              <tr><td><b>qrcodeattr</b></td><td>вставляеться  в  тег img</td></tr>
-                              <tr><td><b>barcodeattr</b></td><td>вставляеться  в  тег img</td></tr>
-                              <tr><td><b>barcodewide</b></td><td>Надпис під штрих-кодом </td></tr>
-                              <tr><td colspan="2" align="center">ДЛя ESCPOS принтера (принт-сервера)</td></tr>
-                              <tr><td><b>qrcode</b></td><td>Текст для  QR коду</td></tr>                              
-                              <tr><td><b>barcode</b></td><td>Текст для штрих коду</td></tr>                              
-                            </table>
-                          </details>
-                          <small>Файл шаблону этикеток /templates/printforms/item_tag.tpl. (item_tag_ps.tpl для  принт сервера)</small>
-                         <form zippy="printer" class="mt-2">
+                         <form zippy="printer">
                         
     
                          
@@ -446,15 +421,36 @@
                                 <select class="form-control" zippy="pricetype">
                                 </select>
                             </div>
-                      
-                      
-                          
+                            <div class="form-check">
+                                <input zippy="pname" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="pname">Друкувати назву</label>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="pcode" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="pcode">Друкувати артикул</label>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="pprice" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="pprice">Друкувати ціну</label>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="pbarcode" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="pbarcode">Друкувати штрих код</label>
+                            </div>
                             <div class="form-group  ">
-                                <label for="barcodetype">Тип штрих коду</label>
+                                <label for="barcodetype">Тип коду</label>
                                 <select class="form-control" zippy="barcodetype">
                                 </select>
                             </div>
-                    
+                            <div class="form-check">
+                                <input zippy="pqrcode" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="pqrcode">Друкувати QR код</label>
+                            </div>
+
+                                       <div class="form-check">
+                                <input zippy="pcolor" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="pcolor">Кольоровий принтер</label>
+                            </div>
                          
 
                             <div class="form-group">
