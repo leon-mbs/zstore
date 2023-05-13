@@ -22,7 +22,7 @@ class CheckBox
     public function PinCodeAuth( ) 
     {
         if(strlen($this->pin_code)==0 || strlen($this->license_key)==0) {
-           return "";            
+           return "Не задано параметри  для  CheckBox ";            
         }
         $body = [
             'pin_code' => $this->pin_code

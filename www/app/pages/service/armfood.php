@@ -995,7 +995,7 @@ class ARMFood extends \App\Pages\Base
             //если  оплачен и  закончен   закрываем
             if ($this->_doc->payamount <= $this->_doc->payed && ($this->_doc->state == Document::STATE_EXECUTED || $this->_doc->state == Document::STATE_DELIVERED || $this->_doc->state == Document::STATE_FINISHED)) {
 
-              if($this->_pos->usefisc == 1 && $this->_tvars['checkbox'] == true) {
+                if($this->_pos->usefisc == 1 && $this->_tvars['checkbox'] == true) {
                 
                     $cb = new  \App\Modules\CB\CheckBox($this->_pos->cbkey,$this->_pos->cbpin) ;
                     $ret = $cb->Check($this->_doc) ;
@@ -1011,16 +1011,16 @@ class ARMFood extends \App\Pages\Base
                                   
                     }
                 
-              }   
+                }   
 
-                    if($this->docpanel->payform->passfisc->isChecked()) {
-                      $ret = \App\Modules\PPO\PPOHelper::check($this->_doc,true);
-  
-                    }   else {
-          
-                      if ($this->_pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
+                if($this->docpanel->payform->passfisc->isChecked()) {
+                  $ret = \App\Modules\PPO\PPOHelper::check($this->_doc,true);
+
+                }   else {
+      
+                    if ($this->_pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
                         $this->_doc->headerdata["fiscalnumberpos"]  =  $this->_pos->fiscalnumber;
-         
+     
 
                         $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
                         if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
@@ -1046,8 +1046,8 @@ class ARMFood extends \App\Pages\Base
                             }
                         }
                     }
-     
-                    }
+ 
+                }
          
                 $this->_doc->updateStatus(Document::STATE_CLOSED);
             }
