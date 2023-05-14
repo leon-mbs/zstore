@@ -506,9 +506,8 @@ class Helper
         }
         return 0;
     }
- 
- 
-    /**
+
+     /**
      * Возвращает расчетный счет  по  умолчанию
      *
      */
@@ -970,7 +969,7 @@ class Helper
     * 
     * @param array $items
     */
-    public  static  function printItems(array $items){
+    public  static  function printItems(array $items,$pqty=0){
         $printer = \App\System::getOptions('printer');
  
 
@@ -992,56 +991,59 @@ class Helper
 
             $header['name'] = str_replace("'","`", $header['name'])  ;
 
+            
+            $header['isprice']   = $printer['pprice'] == 1;
+            $header['isarticle']    = $printer['pcode'] == 1;
+            $header['isbarcode'] = false;
+            $header['isqrcode']  = false;
+            
+            
             $header['article'] = $item->item_code;
             $header['garterm'] = $item->warranty;
             $header['country'] = $item->country;
-            $header['brand'] = $item->manufacturer;
+            $header['brand']   = $item->manufacturer;
 
             
-            if (  strlen($item->url) > 0) {
+            if (  strlen($item->url) > 0 && $printer['pqrcode'] == 1) {
                 $writer = new \Endroid\QrCode\Writer\PngWriter();
- 
       
                 $qrCode = new \Endroid\QrCode\QrCode($item->url);
                  
                 $qrCode->setSize(500);
                 $qrCode->setMargin(5);
               
-                 $result = $writer->write($qrCode );
+                $result = $writer->write($qrCode );
      
-                 $dataUri = $result->getDataUri();
-                 $header['qrcodeattr'] = "src=\"{$dataUri}\"  ";
-                 $header['qrcode'] = $item->url;
-
-            }
-         
-            $barcode = $item->bar_code;
-            if (strlen($barcode) == 0) {
-                $barcode = $item->item_code;
-            }
-            if (strlen($barcode) > 0) {
-                $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-                $da = " src=\"data:image/png;base64," . base64_encode($generator->getBarcode($barcode, $printer['barcodetype']))."\"" ;
-                $header['barcodeattr'] = $da;
-                $header['barcodewide'] = \App\Util::addSpaces($barcode);
-                $header['barcode'] = $barcode;
+                $dataUri = $result->getDataUri();
+                $header['qrcodeattr'] = "src=\"{$dataUri}\"  ";
+                $header['qrcode'] = $item->url;
+                $header['isqrcode'] = true;
 
             }
 
+       
+            if ($printer['pbarcode'] == 1) {
+    
+                $barcode = $item->bar_code;
+                if (strlen($barcode) == 0) {
+                    $barcode = $item->item_code;
+                }
+                if (strlen($barcode) > 0) {
+                    $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+                    $da = " src=\"data:image/png;base64," . base64_encode($generator->getBarcode($barcode, $printer['barcodetype']))."\"" ;
+                    $header['barcodeattr'] = $da;
+                    $header['barcodewide'] = \App\Util::addSpaces($barcode);
+                    $header['barcode'] = $barcode;
+                    $header['isbarcode'] = true;
+
+                }
+            }
            
-
-         
-            if ($printer['pprice'] == 1) {
-                $header['price'] = self::fa($item->getPurePrice($printer['pricetype']));
-              
-            }
-
-            $header['action'] = $item->hasAction();;
-            if ($header['action']) {
-                $header['actionprice'] = $item->getActionPrice();
-            }
-            
-
+            $header['price'] = self::fa($item->getPrice($printer['pricetype']));
+            if(intval($item->price) > 0) {
+                $header['price'] = self::fa($item->price);  //по  документу
+            } ;
+ 
                
             $qty =  intval($item->getQuantity());    
             
@@ -1058,7 +1060,9 @@ class Helper
             if(intval($item->quantity) > 0) {
                 $qty = intval($item->quantity);  //по  документу
             } ;
-        
+            if($pqty >0)  {
+                $qty = $pqty;
+            }
             for($i=0;$i< intval( $qty) ;$i++){
                $htmls = $htmls . $report->generate($header);
             }
@@ -1076,7 +1080,7 @@ class Helper
     * 
     * @param array $items
     */
-    public  static  function printItemsEP(array $items){
+    public  static  function printItemsEP(array $items,$pqty=0){
         $printer = \App\System::getOptions('printer');
     
         $htmls = "";
@@ -1084,29 +1088,70 @@ class Helper
         foreach ($items as $item) {
             $report = new \App\Report('item_tag_ps.tpl');
             $header = [];
-            if ($printer['pname'] == 1) {
+            if (strlen($item->shortname) > 0) {
+                $header['name'] = $item->shortname;
+            } else {
+                $header['name'] = $item->itemname;
+            }
+            $header['name'] = str_replace("'","`", $header['name'])  ;
 
-                if (strlen($item->shortname) > 0) {
-                    $header['name'] = $item->shortname;
-                } else {
-                    $header['name'] = $item->itemname;
+            
+            $header['isprice']   = $printer['pprice'] == 1;
+            $header['isarticle'] = $printer['pcode'] == 1;
+            $header['isbarcode'] = false;
+            $header['isqrcode']  = false;
+             
+            
+            $header['article'] = $item->item_code;
+            $header['garterm'] = $item->warranty;
+            $header['country'] = $item->country;
+            $header['brand']   = $item->manufacturer;
+       
+            $header['price'] = self::fa($item->getPrice($printer['pricetype']));
+            if(intval($item->price) > 0) {
+                $header['price'] = self::fa($item->price);  //по  документу
+            } ;
+          
+      
+            if (  strlen($item->url) > 0 && $printer['pqrcode'] == 1) {
+                  $header['qrcode'] = $item->url;
+                  $header['isqrcode']  = true;
+            
+            }
+            if ($printer['pbarcode'] == 1) {
+    
+                $barcode = $item->bar_code;
+                if (strlen($barcode) == 0) {
+                    $barcode = $item->item_code;
+                }
+                if (strlen($barcode) > 0) {
+                    $header['barcode'] = $barcode;
+                    $header['isbarcode'] = true;
                 }
             }
+             
+            $qty =  intval($item->getQuantity());    
+            
+            $printqty =  intval($item->printqty);
+            if($printqty==0) $printqty = 4;
 
-            if ($printer['pcode'] == 1) {
-                $header['article'] = $item->item_code;
-                 
+            if($printqty==1)  $qty = 1;
+            if($printqty==2)  $qty = 2;
+            if($printqty==3)  ;
+            if($printqty==4)  {
+                if($qty > 10) $qty = 10;    
             }
-            $header['price'] = self::fa($item->getPurePrice($printer['pricetype']));
-          
-            $header['barcode'] == false;
-            if ($printer['pbarcode'] == 1) {
-                $header['barcode'] = $item->bar_code;
-            
+            if(intval($item->quantity) > 0) {
+                $qty = intval($item->quantity);  //по  документу
+            } ;
+            if($pqty >0)  {
+                $qty = $pqty;
+            }
+       
+            for($i=0;$i< intval( $qty) ;$i++){
+               $htmls = $htmls . $report->generate($header);
             }
             
-            $qty =  intval($item->quantity);
-            if($qty==0) $qty = 1;
             for($i=0;$i<$qty;$i++){
                $htmls = $htmls .   $report->generate($header) ;
             }

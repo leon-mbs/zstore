@@ -108,8 +108,9 @@ class DocList extends \App\Pages\Base
         $this->statusform->add(new TextInput('refcomment'));
         $this->statusform->add(new DropDownChoice('mstates',Document::getStateListMan()));
         $this->statusform->add(new DropDownChoice('musers',array()));
+        $this->statusform->add(new CheckBox('print1'));
     
-        $this->statusform->add(new ClickLink('bprint'))->onClick($this, 'printlabels',true);
+        $this->statusform->add(new SubmitButton('bprint'))->onClick($this, 'printlabels',true);
         $this->add(new ClickLink('csv', $this, 'oncsv'));
 
 
@@ -612,11 +613,11 @@ class DocList extends \App\Pages\Base
 
     public function printlabels($sender){
         
-        $items = $this->_doc->unpackDetails('detaildata')  ;
-               
-                     
+        $one = $this->statusform->print1->isChecked();
         
-        $htmls = H::printItems($items);
+        $items = $this->_doc->unpackDetails('detaildata')  ;
+        
+        $htmls = H::printItems($items,$one ? 1:0);
         
         if( \App\System::getUser()->usemobileprinter == 1) {
             \App\Session::getSession()->printform =  $htmls;

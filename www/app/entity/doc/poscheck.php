@@ -212,7 +212,7 @@ class POSCheck extends Document
     public function Execute() {
         //$conn = \ZDB\DB::getConnect();
 
-        $dd =   doubleval($this->headerdata['bonus'] )    ;
+        $dd =   doubleval($this->headerdata['bonus'] ) +  doubleval($this->headerdata['totaldisc'] )   ;
         $k = 1;   //учитываем  скидку
         if ($dd > 0 && $this->amount > 0) {
             $k = ($this->amount - $dd) / $this->amount;
