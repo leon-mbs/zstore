@@ -255,7 +255,7 @@ class UserProfile extends \App\Pages\Base
      
             $pr = new \App\Printer() ;
           
-            $pr->text("Printer text");
+            $pr->text("Printer test");
             $pr->text("Тест принтера");
               
             $buf = $pr->getBuffer() ;
