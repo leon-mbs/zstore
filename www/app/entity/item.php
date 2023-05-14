@@ -31,6 +31,7 @@ class Item extends \ZCL\DB\Entity
         $this->noprice = 0;
         $this->noshop = 0;
         $this->foodstate = 0;
+        $this->reclist = array();
     }
 
     protected function afterLoad() {
@@ -67,7 +68,11 @@ class Item extends \ZCL\DB\Entity
         $this->sef = (string)$xml->sef[0];
         $this->url = (string)$xml->url[0];
         $this->country = (string)$xml->country[0];
+        $reclist = (string)$xml->reclist[0];
 
+        if(strlen($reclist) >0) {
+            $this->reclist = @unserialize( @base64_decode( $reclist ))   ;
+        }
 
 
         $this->cell = (string)$xml->cell[0];
@@ -173,6 +178,12 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<todate>{$this->todate}</todate>";
         $this->detail .= "<fromdate>{$this->fromdate}</fromdate>";
         $this->detail .= "<printqty>{$this->printqty}</printqty>";
+        if(count($this->reclist) > 0) {
+            $this->detail .= "<reclist>";
+            $ss =    serialize($this->reclist) ;
+            $this->detail .= base64_encode( serialize($this->reclist));
+            $this->detail .= "</reclist>";
+        }
 
 
         $this->detail .= "</detail>";
