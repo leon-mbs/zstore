@@ -16,6 +16,7 @@ use Zippy\Html\Label;
 use Zippy\Html\Panel;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\RedirectLink;
+use Zippy\Html\Link\BookmarkableLink;
 
 //детализация  по товару, отзывы
 class ProductView extends Base
@@ -116,6 +117,17 @@ class ProductView extends Base
         $this->varpan->add(new DataView('varlist', new ArrayDataSource($vars), $this, 'varlistOnRow'))->Reload();
         $this->varpan->add(new Label("vattrname",$product->vattrname))  ;
    
+   
+
+        $this->add(new Panel('recpan'))->setVisible(count($product->reclist)>0);
+        $reclist=[];
+        foreach($product->reclist as $r) {
+            $reclist[] = Product::load($r->item_id);
+        }
+        $this->recpan->add(new DataView('reclist', new ArrayDataSource($reclist), $this, 'reclistOnRow'))->Reload();
+        
+     
+   
         $recently = \App\Session::getSession()->recently;
         if (!is_array($recently)) {
             $recently = array();
@@ -194,6 +206,7 @@ class ProductView extends Base
 
         $entercode = $this->formcomment->capchacode->getText();
         $capchacode = $this->formcomment->capcha->getCode();
+        $this->formcomment->capchacode->setText('');        
         if (strlen($entercode) == 0 || $entercode != $capchacode) {
             $this->setError("Невірний код капчі");
 
@@ -272,6 +285,7 @@ class ProductView extends Base
         $row->add(new \Zippy\Html\Link\BookmarkableLink('product_thumb'))->setValue("/loadshopimage.php?id={$image->image_id}&t=t");
         $row->product_thumb->setAttribute('href', "/loadshopimage.php?id={$image->image_id}");
    }
+   
     public function varlistOnRow($row) {
         $vi = $row->getDataItem();
         $options = \App\System::getOptions('shop');
@@ -292,5 +306,11 @@ class ProductView extends Base
         }
         
     }
-
+   
+    public function reclistOnRow($row) {
+        $item = $row->getDataItem();
+        $row->add(new BookmarkableLink("rcimage", $item->getSEF()))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
+        $row->add(new BookmarkableLink("rcname", $item->getSEF()))->setValue($item->itemname);
+        
+    }
 }
