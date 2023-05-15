@@ -80,16 +80,37 @@
 
             </div>
             <div class="w-100"></div>
-            <div class="col-12 col-sm-8 col-lg-6  col-xl-4">
+            <div class="col-12 col-sm-8 col-lg-6 mt-2  ">
 
-                <a data-toggle="collapse" href="#description" aria-expanded="false" aria-controls="collapseExample">
-                    <h5>Опис  <i style="font-size:smaller" class="fa fa-angle-down"></i></h5>
-                </a>
-                <div zippy="description"   class="collapse  ">
-                </div>
+
+             
+                <h5>Детальний опис</h5>
+                 <span style="font-sizw:smaller" zippy="description" >
+                </span>
+
+                
+                
             </div>
+             <div class="w-100"></div>
+            <div   zippy="recpan" class="col-12 col-sm-8 col-lg-6 col-xl-4 mt-2  ">
+                 <h5>Рекомендованi  товари</h5>
+                 
+                 <div  class="row">
+                 <div zippy="reclist" class="col-3">
+                       <div class="card h-100">
+                         {{^nouseimages}}
+                            <a zippy="rcimage"><img class="card-img-top"></a>
+                             {{/nouseimages}}
+                            <div class="card-body p-2">
+                                <a class="card-title card-link text-dark  clip" zippy="rcname"></a>
+                            </div>
+                       </div>
+                 </div>
+                 </div>
+                   
+           </div>
             <div class="w-100"></div>
-            <div class="col-12 col-sm-8 col-lg-6  col-xl-4">
+            <div class="col-12 col-sm-8 col-lg-6  col-xl-4 mt-2">
                 <h5>Характеристики</h5>
                 <table class="table table-sm   table-stripped  ">
                     <tr zippy="attributelist">
@@ -98,10 +119,10 @@
                     </tr>
                 </table>
             </div>
-            <div class="w-100"></div>
+        
 
             {{#usefeedback}}
-            <div class="col-12 col-sm-8 col-lg-6  col-xl-4">
+            <div class="col-12 col-sm-8 col-lg-6  col-xl-4 mt-2">
                 <h5>Вiдгуки</h5>
                 <table class="table">
                     <tr zippy="commentlist">
