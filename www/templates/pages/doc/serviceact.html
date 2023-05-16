@@ -20,7 +20,7 @@
                         <div class="form-group  ">
                             <label for="customer">Замовник</label>
                             <div class="input-group  ">
-                            <typeahead required="required"      ref="cust"  :onquery="oncusttext"  :onhit="hitcust" placeholder="Почнiть вводити ..."></typeahead>   
+                            <typeahead v-model="customer_id" required="required"      ref="cust"  :onquery="oncusttext"   placeholder="Почнiть вводити ..."></typeahead>   
                                  <div v-show="customer_id>0" class="input-group-append"  >
                                      <a  v-on:click.prevent="customerInfo(customer_id)" class="btn btn-success"><i class="fa fa-info-circle"></i></a>
                                 </div>  
@@ -256,7 +256,7 @@
                                       
                             <div class="form-group">
                               <label for="edititem">Назва </label>
-                               <typeahead    :onquery="onitemtext"  :onhit="hititem" required="required"  ref="edititem" placeholder="Почніть вводити..."   />
+                               <typeahead  v-model="item"  :onquery="onitemtext"   required="required"  ref="edititem" placeholder="Почніть вводити..."   />
                                Наявність: <span  >{{qtystock}}</span>
                  
                             </div>
@@ -718,7 +718,7 @@
             
                 hititem: function (id){
                   
-                  this.item = id 
+               
                   var data = {
                       customer:this.customer_id,
                       store:this.store,
@@ -788,7 +788,12 @@
   
        watch:{
        
-     
+           customer_id(n,o){
+              this.hitcust(n) 
+           }  ,
+           item(n,o){
+              this.hititem(n) 
+           }
                    
         } ,  
         

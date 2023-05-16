@@ -89,7 +89,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="editcust"> Замовник </label>
-                                <typeahead     ref="cust"  :onquery="ontext"  :onhit="hitcust" placeholder="Почнiть вводити ..."></typeahead>   
+                                <typeahead   v-model="editcust"  v-model="customer_id"  ref="cust"  :onquery="ontext"   placeholder="Почнiть вводити ..."></typeahead>   
 
                             </div>
                             <div class="form-group">
@@ -209,6 +209,7 @@
           editid:0 ,
           editname:'' ,
           editcust:0,
+         
 
           desc:'' ,
           title:'' ,
@@ -228,6 +229,12 @@
    
            
         }, 
+
+         watch:   { 
+             
+                  
+                
+           } ,         
         methods: {
             del:function( project_id,name){    
                 
@@ -270,10 +277,7 @@
                 
 
                   });                 
-                 
-                 
-                  
-                
+                   
             } ,
             edit:function( project_id){    
                   this.editid = project_id;
@@ -300,16 +304,14 @@
                   this.editid = 0
                   this.editname =""
                   $('#editdesc').summernote("code","")                
-                  this.$refs.cust.query = "";       
+                 // this.$refs.cust.query = "";       
                   this.mode='edit'  
+                  this.editcust=0
                   
                 
                  
             }   ,
-            hitcust: function (id){
-            
-                    this.editcust = id 
-                },
+       
             ontext: async function (query){
                    
                     var url  = getMethodUrl('ontextCustomers',[query ])
@@ -450,7 +452,7 @@
             
                   callPageMethod('init',null, null,(data)=> 
                   {
-                      console.log(data)
+
                       let tmp     =  JSON.parse(data)  
                       this.stlist =  tmp.stlist
                       this.users  =  tmp.userlist
