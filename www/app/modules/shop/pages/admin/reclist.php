@@ -180,7 +180,10 @@ class RecList extends \App\Pages\Base
     public function OnSaveItem($sender) {
         $form = $this->recpanel->itemeditform;
         $item_id = $form->edititem->getValue();
-        if($item_id==0)  return;
+        if($item_id==0) {
+           $this->setError('Не введений  товар') ;
+           return;  
+        };
         
         $item = Item::load($item_id);
         $item->reclist = $this->_reclist;
@@ -212,6 +215,8 @@ class RecList extends \App\Pages\Base
             return;
         }
         $id = $this->recpanel->itemeditform->editrec->getKey();
+  
+          
         $name = $this->recpanel->itemeditform->editrec->getText();
         $this->recpanel->itemeditform->editrec->setKey(0) ;
         $this->recpanel->itemeditform->editrec->setText("") ;
