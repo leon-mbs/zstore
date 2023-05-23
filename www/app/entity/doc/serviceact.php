@@ -92,16 +92,66 @@ class ServiceAct extends Document
         if ($state == self::STATE_INPROCESS) {
           
 
+             if($this->payed >0) {
+                 $this->DoPayment() ;    
+             }
+             
+             
+             $this->DoStore() ;
 
-                $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment']);
-                if ($payed > 0) {
-                    $this->payed = $payed;
-                }
-                \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+              
+            
+        }
+        
+        
+         if ($state == self::STATE_FINISHED) {
+             
+           $this->DoStore() ;             
+             
+           $dd =      doubleval($this->headerdata['totaldisc'] )   ;
+           $k = 1;   //учитываем  скидку
+           if ($dd > 0 && $this->amount > 0) {
+               $k = ($this->amount - $dd) / $this->amount;
+           }
+           
+           foreach ($this->unpackDetails('detaildata') as $ser) {
 
+                $sc = new Entry($this->document_id, 0 - ($ser->price * $ser->quantity), 0 - $ser->quantity);
+                $sc->setService($ser->service_id);
+
+                $sc->setOutPrice($ser->price * $k);
             
+         
+                $sc->save();
+            }
+                  
+         }        
+        
+    }
+  
+    public function DoPayment() {
+            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment']);
+            if ($payed > 0) {
+                $this->payed = $payed;
+            }
+            \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
             
-            foreach ($this->unpackDetails('detail2data') as $item) {
+    }
+    
+    public function DoStore() {
+     
+           $conn = \ZDB\DB::getConnect();
+           $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
+  
+           $dd =      doubleval($this->headerdata['totaldisc'] )   ;
+           $k = 1;   //учитываем  скидку
+           if ($dd > 0 && $this->amount > 0) {
+               $k = ($this->amount - $dd) / $this->amount;
+           }
+  
+ 
+ 
+           foreach ($this->unpackDetails('detail2data') as $item) {
 
                 $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
@@ -109,34 +159,14 @@ class ServiceAct extends Document
                     $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                     $sc->setStock($st->stock_id);
 
-                    $sc->setOutPrice($item->price  );
-                    $sc->tag=Entry::TAG_SELL;
+                    $sc->setOutPrice($item->price * $k );
+                    $sc->tag = Entry::TAG_SELL;
                     $sc->save();
                    
                 }
-            }            
-            
-        }
-        
-        
-         if ($state == self::STATE_FINISHED) {
-           foreach ($this->unpackDetails('detaildata') as $ser) {
-
-                $sc = new Entry($this->document_id, 0 - ($ser->price * $ser->quantity), 0 - $ser->quantity);
-                $sc->setService($ser->service_id);
-
-                //  $sc->setExtCode($ser->price); //Для АВС
-                //$sc->setCustomer($this->customer_id);
-                $sc->setOutPrice($ser->price);
-           
-                $sc->save();
-            }
-                  
-         }        
-        
+            } 
     }
- 
-
+    
     public function supportedExport() {
         return array(self::EX_EXCEL, self::EX_PDF, self::EX_POS);
     }
