@@ -6,8 +6,14 @@
    <br><small> Відправка  коду на  телефон. Наприклад при списанні  бонусів   </small>
    </td></tr>
   {{/smscode}}
-   <tr><td>E-mail</td><td>{{email}}</td></tr>
-   <tr><td>Адреса</td><td>{{address}}</td></tr>
+   
+   {{#email}}
+     <tr><td>E-mail</td><td>{{email}}</td></tr>
+   {{/email}}  
+   {{#address}}   
+     <tr><td>Адреса</td><td>{{address}}</td></tr>
+   {{/address}}   
+      
    {{#bonus}}
    <tr><td>Бонуси</td><td>   {{bonus}}</td></tr>
    {{/bonus}}
@@ -18,11 +24,26 @@
    <tr><td>Постійна знижка</td><td>   {{disc}}</td></tr>
    {{/disc}}
 
- {{#last}}
-   <tr><td colspan="2"> Останній документ: {{last}} від {{lastdate}} на суму  {{lastsum}}. Статус {{laststatus}}</td></tr>
+   
+   {{#comment}}   
+   <tr><td colspan="2">Примітка: {{comment}}</td></tr>
+   {{/comment}}    
+   
+   {{#last}}
+     <tr><td colspan="2"> Останній документ: {{last}} від {{lastdate}} на суму  {{lastsum}}. Статус {{laststatus}}</td></tr>
+     <tr><td colspan="2"> Останні товари: <td></tr>
+     <tr><td colspan="2"> 
+         <table class="ctable" style="font-size:smaller">
+            {{#goods}}
+             <tr><td>{{itemname}} </td><td class="text-nowrap  ">{{item_code}}</td></tr>
+            {{/goods}}
+         
+         </table>
+       <td></tr>
+      
+      
+     
    {{/last}}
    
-   <tr><td colspan="2">Примітка: {{comment}}</td></tr>
- 
 
  </table>

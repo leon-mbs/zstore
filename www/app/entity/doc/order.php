@@ -95,6 +95,7 @@ class Order extends \App\Entity\Doc\Document
         $list['POSCheck'] = self::getDesc('POSCheck');
         $list['Task'] = self::getDesc('Task');
         $list['TTN'] = self::getDesc('TTN');
+        $list['Order'] = self::getDesc('Order');
         $list['OrderCust'] = self::getDesc('OrderCust');
 
         return $list;

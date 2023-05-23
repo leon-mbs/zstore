@@ -62,6 +62,7 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bgi'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bco'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bcopy'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('btask'))->onClick($this, 'statusOnSubmit');
 
@@ -248,6 +249,11 @@ class OrderList extends \App\Pages\Base
             App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
             return;
         }
+        if ($sender->id == "bcopy") {
+       
+            App::Redirect("\\App\\Pages\\Doc\\Order", 0, $this->_doc->document_id);
+            return;
+        }
         if ($sender->id == "bpos") {
             if ($pos) {
                 $this->setWarn('Вже існує документ Чек');
@@ -319,6 +325,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bclose->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->bcopy->setVisible(false);
             $this->statuspan->statusform->bpos->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(false);
             $this->statuspan->statusform->bco->setVisible(false);
@@ -326,6 +333,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->brd->setVisible(false);
         } else {
 
+            $this->statuspan->statusform->bcopy->setVisible(true);
             $this->statuspan->statusform->bclose->setVisible(true);
             $this->statuspan->statusform->bref->setVisible(true);
             $this->statuspan->statusform->binp->setVisible(false);
@@ -539,119 +547,7 @@ class OrderList extends \App\Pages\Base
 
         H::exportExcel($data, $header, 'orderlist.xlsx');
     }
-     /*
-    public function payOnClick($sender) {
-        $this->statuspan->setVisible(false);
-        $this->payform->setVisible(true);
-        $this->doclist->setSelectedRow($sender->getOwner());
-        $this->doclist->Reload(true);
-
-        $this->_doc = $sender->owner->getDataItem();
-
-        $this->goAnkor('dankor');
-
-        $this->payform->pamount->setText($this->_doc->payamount - $this->_doc->payed);;
-        $this->payform->pcomment->setText("");;
-
-        $this->payform->pos->setVisible(false); //пока  без  фискализации
-
-        $this->payform->closeorder->setVisible(false);
-
-        $delivered = 0;
-        $list = $this->_doc->getChildren('TTN');
-        foreach ($list as $ttn) {
-            if ($ttn->state == Document::STATE_DELIVERED) {
-                $delivered++;
-            }
-        }
-        if ($delivered > 0 && $delivered == count($list)) {
-            $this->payform->closeorder->setVisible(true);
-        }
-
-        $this->payform->closeorder->setChecked(false);
-    }
-
-    public function payOnSubmit($sender) {
-        $form = $this->payform;
-        $pos_id = $form->pos->getValue();
-        $amount = $form->pamount->getText();
-        $pdate = $form->pdate->getDate();
-        if ($amount == 0) {
-            return;
-        }
-
-
-        if ($amount > $this->_doc->payamount - $this->_doc->payed) {
-
-            $this->setWarn('Сума більше необхідної');
-        }
-
-
-        if ($pos_id > 0) {
-            $pos = \App\Entity\Pos::load($pos_id);
-
-            if($this->pos->usefisc == 1 && $this->_tvars['checkbox'] == true) {
-                
-                    $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey,$this->pos->cbpin) ;
-                    $ret = $cb->Payment($this->_doc) ;
-                    
-                    if(is_array($ret)) {
-                      $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
-                      $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
-                      $this->_doc->headerdata["checkbox"] = $ret['checkid'];
-                    } else {
-                        $this->setError($ret);
-                        
-                        return;
-                                  
-                    }       
-                
-                
-            }
-            
-            if($this->pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
-       
-            
-                $ret = \App\Modules\PPO\PPOHelper::checkpay($this->_doc, $pos_id, $amount, $form->payment->getValue());
-                if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
-                    //повторяем для  нового номера
-                    $pos->fiscdocnumber = $ret['doclocnumber'];
-                    $pos->save();
-                    $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
-                }
-                if ($ret['success'] == false) {
-                    $this->setErrorTopPage($ret['data']);
-                    return;
-                } else {
-
-                    if ($ret['docnumber'] > 0) {
-                        $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                        $pos->save();
-                        $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
-                    } else {
-                        $this->setError("Не повернено фіскальний номер");
-                        return;
-                    }
-                }
-                
-            }
-        }
-
-        Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(),  $form->pcomment->getText());
-        \App\Entity\IOState::addIOState($this->_doc->document_id, $amount, \App\Entity\IOState::TYPE_BASE_INCOME);
-
-        $this->setSuccess('Оплата додана');
-
-        if ($this->payform->closeorder->isChecked() == true) {
-            $doc = Document::load($this->_doc->document_id);     //загружаем  тобы  обновить  оплату
-            $doc->updateStatus(Document::STATE_CLOSED);
-        }
-
-
-        $this->doclist->Reload(false);
-        $this->payform->setVisible(false);
-    }
-      */
+ 
     public function onBranch($sender){
        $id = $sender->getValue();   
        $users = array(0=> "Не обрано" ); 
