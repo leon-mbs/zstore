@@ -165,7 +165,7 @@ class Outcome extends \App\Pages\Base
               join items_view i on e.item_id = i.item_id
              join documents_view d on d.document_id = e.document_id
                where e.partion  is  not null and  e.item_id >0  and (e.tag = 0 or e.tag = -1 or e.tag = -4 )   {$cat}   {$cust}  
-               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood' )
+               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood','ServiceAct' )
                {$br}  {$u}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "

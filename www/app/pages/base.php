@@ -363,6 +363,7 @@ class Base extends \Zippy\Html\WebPage
     }
 
     public function getCustomerInfo($args, $post) {
+        $conn= \ZDB\DB::getConnect() ;
         
         $c = \App\Entity\Customer::load($args[0]);
         if($c==null) return  "N/A";
@@ -371,10 +372,10 @@ class Base extends \Zippy\Html\WebPage
         $header = [];
      
         $header['name'] = $c->customer_name;
-        $header['email'] = $c->email;
         $header['phone'] = $c->phone;
-        $header['address'] = $c->address;
-        $header['comment'] = $c->comment;
+        $header['email'] = strlen($c->email) > 0 ? $c->email : false;
+        $header['address'] = strlen($c->address) > 0 ? $c->address : false;
+        $header['comment'] = strlen($c->comment) > 0 ? $c->comment : false;
         
         $header['bonus'] = intval($c->getBonus() );
         if($header['bonus']==0)  $header['bonus'] = false;
@@ -391,10 +392,22 @@ class Base extends \Zippy\Html\WebPage
            $header['lastdate']=Helper::fd($doc->document_date);
            $header['lastsum']=Helper::fa($doc->amount);
            $header['laststatus']   =  \App\Entity\doc\Document::getStateName($doc->state)  ;
+           
+           $goods = [];
+           
+           $sql = "select items.item_id, items.itemname,items.item_code    from 
+             entrylist_view  join items  on items.item_id = entrylist_view.item_id 
+             where customer_id={$c->customer_id}  
+             order  by  entry_id desc  limit 0,10 "    ;
+                       
+           foreach($conn->Execute($sql) as $i) {
+              $header['goods'][$i['item_id']] = $i;    
+           }
+           
+           $header['goods']  =  array_values($header['goods']) ;
+           
         }
-     
-     
-     
+       
     
         $header['smscode'] = false;
    

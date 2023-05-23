@@ -185,7 +185,7 @@ class Helper
                     break;
             }
 
-            $textmenu .= " <a class=\"btn btn-sm btn-outline-primary mb-1 mr-2\" href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$icon} {$item['description']}</a> ";
+            $textmenu .= " <a class=\"btn btn-sm btn-outline-primary mb-1  \" href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$icon} {$item['description']}</a> ";
         }
         $role = \App\Entity\UserRole::load($user->role_id);
 
