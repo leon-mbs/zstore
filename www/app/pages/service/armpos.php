@@ -1048,11 +1048,11 @@ class ARMPos extends \App\Pages\Base
             return;
         }
         if ( doubleval($this->_doc->headerdata['exch2b'] ) >0 && $this->_doc->customer_id == 0) {
-            $this->setError("Для нарахування бонуса повинен бути обраний контрагент");
+            $this->setError("Для нарахування бонуса має бути обраний контрагент");
             return;
         }
         if ( doubleval($this->_doc->headerdata['exchange'] ) >0 && doubleval($this->_doc->headerdata['payedcard'] >0 )) {
-            $this->setError("При оплаті карткою здача повиная бути 0");
+            $this->setError("При оплаті карткою решта має бути 0");
             return;
         }
  
