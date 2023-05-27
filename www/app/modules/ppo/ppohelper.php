@@ -433,16 +433,20 @@ class PPOHelper
         $header['username'] = $user->username;
         $header['guid'] = \App\Util::guid();
 
-    //    $header['disc'] = $doc->headerdata["paydisc"] > 0 ? number_format($doc->headerdata["paydisc"], 2, '.', '') : false;
+   
         $header['details'] = array();
         $n = 1;
         $disc = 1;
+        $header['amount'] = $doc->payamount;
         $discsum =  doubleval($doc->headerdata["bonus"]) + doubleval($doc->headerdata["totaldisc"]);
-        
+        $header['disc']   = false;
         if ( $discsum > 0) {
-            $disc = 1 - ( $discsum / $doc->amount);
+           // $disc = 1 - ( $discsum / $doc->amount);
+          $header['disc'] = number_format($discsum, 2, '.', '');
+        //  $header['amount'] -= $header['disc'];
         }
-        $header['amount'] = 0;
+   //     $header['amount'] = 0;
+        
         foreach ($doc->unpackDetails('detaildata') as $item) {
             $header['details'][] = array(
                 'num'   => "ROWNUM=\"{$n}\"",
@@ -453,7 +457,7 @@ class PPOHelper
             );
             $n++;
 
-            $header['amount'] = $header['amount'] + $item->quantity * $item->price * $disc;
+        //    $header['amount'] = $header['amount'] + $item->quantity * $item->price * $disc;
         }
         foreach ($doc->unpackDetails('services') as $item) {
             $header['details'][] = array(
@@ -464,7 +468,7 @@ class PPOHelper
                 'cost'  => number_format($item->quantity * $item->price * $disc, 2, '.', '')
             );
             $n++;
-            $header['amount'] = $header['amount'] + $item->quantity * $item->price * $disc;
+          //  $header['amount'] = $header['amount'] + $item->quantity * $item->price * $disc;
         }
         $amount0 = 0;
         $amount1 = 0;
@@ -475,82 +479,7 @@ class PPOHelper
 
         
  
-        
-        /*
-        if ($doc->headerdata['payment'] == 0) {
-            $pay = array(
-                'formname' => self::FORM_PREPAID,
-                'formcode' => 3,
-                'paysum'   => number_format($header['amount'], 2, '.', ''),
-                'payed'    => number_format($header['amount'], 2, '.', ''),
-                'num'      => "ROWNUM=\"{$n}\""
-            );
-
-            $header['pays'][] = $pay;
-            $n++;
-            $amount3 = $pay['paysum'];
-        } else {
-            
-            
-            
-            if (  $mf->beznal == 1) {
-                $pay = array(
-                    'formname' => self::FORM_CARD,
-                    'formcode' => 1,
-                    'paysum'   => number_format($doc->payamount, 2, '.', ''),
-                    'payed'    => number_format($doc->payamount, 2, '.', ''),
-                    'num'      => "ROWNUM=\"{$n}\""
-                );
-                // в долг
-                if ($doc->payed < $doc->payamount) {
-                    $pay['paysum'] = number_format($doc->payamount, 2, '.', '');
-                    $pay['payed'] = number_format($doc->payed, 2, '.', '');
-                }
-                $header['pays'][] = $pay;
-                $n++;
-                $amount1 = $pay['paysum'];
-            } else {
-
-                $pay = array(
-                    'formname' => self::FORM_NAL,
-                    'formcode' => 0,
-                    'paysum'   => number_format($doc->payamount, 2, '.', ''),
-                    'payed'    => number_format($doc->payed, 2, '.', ''),
-                    'rest'     => false,
-                    'num'      => "ROWNUM=\"{$n}\""
-                );
-                //сдача
-                if ($doc->headerdata["exchange"] > 0) {
-                    $pay['rest'] = number_format($doc->headerdata["exchange"], 2, '.', '');
-                }
-                // в долг
-                if ($doc->payed < $doc->payamount) {
-                    $pay['paysum'] = number_format($doc->payed, 2, '.', '');
-                    $pay['payed'] = number_format($doc->payed, 2, '.', '');
-                }
-
-                $header['pays'][] = $pay;
-                $n++;
-                $amount0 = $pay['paysum'];
-            }
-        }
-        // в долг
-        if ($doc->payed < $doc->payamount) {
-            $pay = array(
-                'formname' => self::FORM_CREDIT,
-                'formcode' => 2,
-                'paysum'   => number_format($doc->payamount - $doc->payed, 2, '.', ''),
-                'payed'    => number_format($doc->payamount - $doc->payed, 2, '.', ''),
-                'rest'     => false,
-                'num'      => "ROWNUM=\"{$n}\""
-            );
-            $header['pays'][] = $pay;
-            $n++;
-
-            $amount2 = $pay['paysum'];
-        }
-             
-        */
+  
         $payed  =    doubleval($doc->headerdata['payed']) + doubleval($doc->headerdata['payedcard']);
       
         if($doc->headerdata['payment']  >0) {
@@ -652,12 +581,9 @@ class PPOHelper
         
      
         $header['pay'] = count($header['pays']) > 0;
-        $header['disc'] = false;
-
+    
         $header['amount'] = number_format($header['amount'], 2, '.', '');
-        if ($doc->headerdata["paydisc"] > 0) {
-            // $header['disc']  = number_format($doc->headerdata["paydisc"], 2, '.', '') ;
-        }
+      
         $report = new \App\Report('check.xml');
 
         $xml = $report->generate($header);

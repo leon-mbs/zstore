@@ -195,9 +195,10 @@ class Order extends \App\Pages\Base
                         $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
                         $this->OnDelivery($this->docform->delivery);
                         $this->docform->production->setChecked($basedoc->headerdata['production']);
-   
+                        $this->_tovarlist = $basedoc->unpackDetails('detaildata');
+  
  
-                        $this->docform->total->setText($basedoc->amount);
+                        $this->docform->total->setText( H::fa($basedoc->amount));
 
                         $this->calcPay();
                  
