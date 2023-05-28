@@ -15,6 +15,8 @@ class Product extends \App\Entity\Item
     public $productdata;
 
     protected function init() {
+        parent::init() ;
+        
         $this->productdata = new ProductData();
 
         $this->productdata->desc = '';
@@ -23,8 +25,9 @@ class Product extends \App\Entity\Item
 
         $this->productdata->rating = 0;  //рейтинг
         $this->productdata->comments = 0; //кол отзывов
-        $this->productdata->attributevalues = array();
-        $this->productdata->images = array();
+        $this->productdata->attributevalues = [];
+        $this->productdata->images = [];
+       
     }
 
     protected function afterLoad() {
