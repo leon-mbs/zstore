@@ -438,7 +438,7 @@ class PPOHelper
         $n = 1;
         $disc = 1;
         $header['amount'] = $doc->payamount;
-        $discsum =  doubleval($doc->headerdata["bonus"]) + doubleval($doc->headerdata["totaldisc"]);
+        $discsum =  doubleval($doc->headerdata["bonus"]) + doubleval($doc->headerdata["totaldisc"])+ doubleval($doc->headerdata["paydisc"]);
         $header['disc']   = false;
         if ( $discsum > 0) {
            // $disc = 1 - ( $discsum / $doc->amount);
