@@ -21,7 +21,7 @@
                   <div class="form-group row">
                         <label class="col-5 col-form-label" for="customer">Постачальник</label>
                         <div class="col-7">
-                             <typeahead  v-model="customer_id"   ref="cust"  :onquery="oncusttext"  :onhit="hitcust" placeholder="Почнiть вводити ..."></typeahead>   
+                             <typeahead  v-model="customer_id"   ref="cust"  :onquery="oncusttext"  placeholder="Почнiть вводити ..."></typeahead>   
                         </div>
                   </div>
               </div> 
@@ -107,7 +107,7 @@
 
                         <label for="edititem">Назва </label>
 
-                         <typeahead  v-model="edititem"   ref="edititem"  :onquery="onitemtext"  :onhit="hititem"   placeholder="Почнiть вводити ..."></typeahead>     
+                         <typeahead  v-model="edititem"   ref="edititem"  :onquery="onitemtext"      placeholder="Почнiть вводити ..."></typeahead>     
                           <a  v-on:click.prevent="onOpenIL"  >Відкрити довідник</a>
                         &nbsp;&nbsp;<a  v-on:click.prevent="onAddNew" >Додати новий</a>
                              
@@ -423,7 +423,7 @@
             }  ,
             hititem: function (id){
 
-                  this.edititem = id 
+                   
                   var data= {}
                   callPageMethod('vLoadItem',[id ], JSON.stringify(data),(data)=> 
                   {
@@ -472,10 +472,7 @@
      
                 }  ,
           
-            hitcust: function (id){
-            
-                    this.customer_id = id 
-                },
+          
             oncusttext: async function (query){
                    
                     var url  = getMethodUrl('vonTextCust',[query,2 ])
@@ -495,7 +492,11 @@
             
         }   ,   
         
-          
+        watch: {
+             edititem(newVal, oldVal){
+                 this.hititem(newVal) 
+             }
+        }   ,
         
         mounted: function  (){
             

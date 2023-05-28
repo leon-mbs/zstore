@@ -77,7 +77,7 @@
 
                 <label for="addrel">Додати дочiрнiй документ:</label>
                 <div class="form-group">
-                    <typeahead  ref="docth"  :onquery="ontext"  :onhit="selectdoc" placeholder="Почнiть вводити номер..."></typeahead>   
+                    <typeahead v-model="childdocid" ref="docth"  :onquery="ontext"    placeholder="Почнiть вводити номер..."></typeahead>   
 
                 </div>
 
@@ -461,10 +461,6 @@
                                   this.loaddocs() 
                               });
                } ,
-                selectdoc: function (id){
-            
-                    this.childdocid = id 
-                },
                 ontext: async function (query){
                    
                     var url  = getMethodUrl(this.path +'::getDocs',[query, this.docid])
