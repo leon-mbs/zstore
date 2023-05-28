@@ -785,7 +785,7 @@ class ARMPos extends \App\Pages\Base
         foreach ($this->_itemlist as $item) {
             $item->amount = $item->price * $item->quantity;
             if($item->disc >0) {
-               $disc += ($item->quantity * ($item->pureprice - $item->price) );    
+             //  $disc += ($item->quantity * ($item->pureprice - $item->price) );    
             }
  
             $total = $total + $item->amount;
@@ -793,7 +793,7 @@ class ARMPos extends \App\Pages\Base
         foreach ($this->_serlist as $item) {
             $item->amount = $item->price * $item->quantity;
             if($item->disc >0) {
-               $disc += ($item->quantity * ($item->pureprice - $item->price) );    
+              // $disc += ($item->quantity * ($item->pureprice - $item->price) );    
             }
  
             $total = $total + $item->amount;
@@ -882,6 +882,29 @@ class ARMPos extends \App\Pages\Base
             $d = $cust->getDiscount() ;
             if (doubleval($d) > 0) {
                 $disctext = "Постійна знижка {$d}%";
+                
+                $tmp=[];
+                foreach($this->_itemlist as $i) {
+                    if(floatval($i->disc)==0) {
+                        $i->disc = $d; 
+                        $i->price = $i->pureprice - ($i->pureprice * $i->disc / 100  )  ;
+                    }
+                    $tmp[]=$i;
+                }
+                $this->_itemlist  = $tmp;
+                $tmp=[];
+                foreach($this->_serlist as $i) {
+                    if(floatval($i->disc)==0) {
+                        $i->disc = $d;
+                        $i->price = $i->pureprice - ($i->pureprice * $i->disc / 100  )  ;
+                    }
+                    $tmp[]=$i;
+                }
+                $this->_serlist  = $tmp;
+                $this->docpanel->form2->detail->Reload();
+                $this->docpanel->form2->detailser->Reload();
+                $this->calcTotal();
+                        
                   
             } else {
                 $bonus = $cust->getBonus();
