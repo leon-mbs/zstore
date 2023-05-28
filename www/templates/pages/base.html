@@ -65,7 +65,30 @@
   
   function  callPM(method,params,postdata,callback =null   , callerror=null     )
   {
-      callPageMethod(method,params,postdata,callback , callerror);
+      try{
+      
+          if(postdata){
+             postdata =    JSON.stringify(postdata)
+          }
+          
+          callPageMethod(method,params,postdata,(data)=> 
+          {
+               var data = JSON.parse(data)
+               callback(data)
+            
+          } , (error)=> 
+          {
+               console.log(method+" "+error) 
+               if(callerror) {
+                   callerror(error)
+               }
+            
+          });
+      
+      }
+      catch(error) {
+           console.log(method+" "+error)           
+      }
   }     
      
      

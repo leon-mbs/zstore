@@ -16,6 +16,7 @@ use Zippy\Html\Image;
 use Zippy\Html\Label;
 use Zippy\Html\Panel;
 use Zippy\Html\Link\ClickLink;
+use App\Modules\Shop\Entity\Product;
 
 //страница формирования заказа  пользователя
 class Order extends Base
@@ -86,36 +87,45 @@ class Order extends Base
 
         $this->listform->pitem->Reload();
         $this->sum = 0;
-
-        $rows = $this->listform->pitem->getDataRows();
-        foreach ($rows as $row) {
-            $product = $row->GetDataItem();
+    
+      
+        foreach ( $this->basketlist as $product) {
+              
             if (!is_numeric($product->quantity)) {
 
-                $this->setError('Невірна кількість');
+                $this->setWarn('Невірна кількість');
                 break;
             }
+    
+    
+            $this->sum = $this->sum + ($product->price  * $product->quantity);
+            
+            
+        }    
 
-            $this->sum = $this->sum + $product->getPriceFinal() * $product->quantity;
-        }
        
-        Basket::getBasket()->list = $this->basketlist;
-        Basket::getBasket()->sendCookie()  ;
+        $basket = Basket::getBasket();
+        $basket->list = $this->basketlist   ;
+        $basket->sendCookie()  ;
     }
 
     
     public function OnDelete($sender) {
         $item_id = $sender->owner->getDataItem()->item_id;
-        Basket::getBasket()->deleteProduct($item_id);
-        $this->basketlist = Basket::getBasket()->list;
+ 
+        $basket = Basket::getBasket();
+        $basket->deleteProduct($item_id) ;
+        $this->basketlist = $basket->list   ;        
 
-        if (Basket::getBasket()->isEmpty()) {
+        $this->sum = 0;
+        foreach ($this->basketlist as $p) {
+            $this->sum = $this->sum + ($p->price  * $p->quantity);
+        }    
+      
+        if (count($this->basketlist)==0) {
             App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog\\Main", 0);
-        } else {
-            $this->OnUpdate($this);
-        }
+        }  
     }
-
     //формирование  заказа
     public function OnSave($sender) {
         if (count($this->basketlist) == 0) {
@@ -194,10 +204,10 @@ class Order extends Base
             $itlist = array();
             foreach ($this->basketlist as $product) {
                 $item = \App\Entity\Item::load($product->item_id);
-                $item->price = $product->getPriceFinal();
+                $item->price = $product->price;
                 $item->quantity = $product->quantity;
-                $item->item_id = $product->item_id;
-                $amount += ($product->getPriceFinal() * $product->quantity);
+             
+                $amount += ($item->price * $item->quantity);
                 $itlist[$item->item_id] = $item;
             }
 
@@ -322,8 +332,8 @@ class Order extends Base
     public function OnAddRow(\Zippy\Html\DataList\DataRow $datarow) {
         $item = $datarow->getDataItem();
         $datarow->setDataItem($item);
-        $datarow->add(new \Zippy\Html\Link\RedirectLink('pname', '\App\Modules\Shop\Pages\ProductView', $item->item_id))->setValue($item->itemname);
-        $datarow->add(new Label('price', $item->getPriceFinal()));
+        $datarow->add(new \Zippy\Html\Link\RedirectLink('pname', '\App\Modules\Shop\Pages\Catalog\ProductView', $item->item_id))->setValue($item->itemname);
+        $datarow->add(new Label('price', $item->price));
         $datarow->add(new TextInput('quantity', new \Zippy\Binding\PropertyBinding($item, 'quantity'))) ;
         $datarow->add(new \Zippy\Html\Link\ClickLink('delete', $this, 'OnDelete'));
         $datarow->add(new Image('photo', "/loadshopimage.php?id={$item->image_id}&t=t"));
@@ -332,3 +342,5 @@ class Order extends Base
 
     
 }
+
+

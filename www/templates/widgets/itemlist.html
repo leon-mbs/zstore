@@ -106,7 +106,7 @@
                 data.searchbrand =  this.wissearchbrand
                 data.wissearchonstore =  this.wissearchonstore  
                 
-                callPM(path +'::loaditems',[ ], JSON.stringify(data),(data)=> 
+                callPageMethod(path +'::loaditems',[ ], JSON.stringify(data),(data)=> 
                   {
                       
                        var data = JSON.parse(data)
@@ -151,7 +151,7 @@
                   brands:true,
               }
  
-              callPM('vLoadLists',[ ], JSON.stringify(data),(data)=> 
+              callPageMethod('vLoadLists',[ ], JSON.stringify(data),(data)=> 
               {
                    var data = JSON.parse(data)
                    

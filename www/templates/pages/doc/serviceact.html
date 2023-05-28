@@ -542,7 +542,7 @@
                     // this.editservice
                       callPM('vLoadService',[this.service,this.customer_id ], null,(data)=> 
                       {
-                           var data = JSON.parse(data)
+
                            this.loadedservice = data
                            this.editserviceprice  = this.loadedservice.price
                         
@@ -554,7 +554,7 @@
                     this.onContract()
                       callPM('vLoadCust',[id ], null,(data)=> 
                       {
-                           var data = JSON.parse(data)
+
                            this.customerinfo = data.custinfo
                            this.calctotal()
                       });                  
@@ -563,7 +563,7 @@
                   this.contract = 0  
                   callPM('vLoadContracts',[this.customer_id,this.firm_id ], null,(data)=> 
                   {
-                       var data = JSON.parse(data)
+                      
              
                        this.contracts = data.contracts
  
@@ -641,9 +641,9 @@
                      }          
                      
                 
-                    callPM('save',[ ], JSON.stringify(data),(data)=> 
+                    callPM('save',[ ], data,(data)=> 
                       {
-                           var data = JSON.parse(data)
+                           
                            
                            if(false==checkPMAnswer(data) )   {
                                if(data.newnumber)  this.document_number = data.newnumber
@@ -670,9 +670,9 @@
                    data.email = this.nemail
                    data.phone = this.nphone
                    
-                   callPM('vSaveNewcust',[ ], JSON.stringify( data),(data)=> 
+                   callPM('vSaveNewcust',[ ],  data,(data)=> 
                    {
-                       var data = JSON.parse(data)
+                       
                        if(false==checkPMAnswer(data) )   {
                           return
                        }   
@@ -724,9 +724,9 @@
                       store:this.store,
                       
                   }
-                  callPM('vLoadItem',[id ], JSON.stringify(data),(data)=> 
+                  callPM('vLoadItem',[id ], data,(data)=> 
                   {
-                       var data = JSON.parse(data)
+
                        
                        if(false==checkPMAnswer(data) )   {
                            return
@@ -760,9 +760,9 @@
                       data.customer= this.customer_id
                       data.qty = this.edititemquantity
                       
-                      callPM('vgetPriceByQty',[  ], JSON.stringify(data),(data)=> 
+                      callPM('vgetPriceByQty',[  ], data,(data)=> 
                       {
-                           var data = JSON.parse(data)
+
                            if(parseVal(data)) {
                              this.edititemprice = data.price    
                            }
@@ -801,7 +801,7 @@
                 this.contract = 3
                 callPM('loaddata',[ ], null,(data)=> 
                   {
-                       var data = JSON.parse(data)
+                      
                        
                        if(false==checkPMAnswer(data) )   {
                            return
@@ -840,9 +840,9 @@
                   firms:true 
                
               }
-              callPM('vLoadLists',[ ], JSON.stringify(data),(data)=> 
+              callPM('vLoadLists',[ ], data,(data)=> 
               {
-                   var data = JSON.parse(data)
+
                    this.stores = data.stores
                    this.firms = data.firms
                    this.mflist = data.mfs
