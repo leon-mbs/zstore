@@ -174,7 +174,7 @@ class TTN extends Document
 
 
             //оприходуем  с  производства
-            if ($item->autoincome == 1 && $item->item_type == Item::TYPE_PROD) {
+            if ($item->autoincome == 1 && ( $item->item_type == Item::TYPE_PROD) || $item->item_type == Item::TYPE_HALFPROD) {
 
                 if ($item->autooutcome == 1) { //комплекты
                     $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
