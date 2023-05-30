@@ -1096,7 +1096,8 @@ class ARMFood extends \App\Pages\Base
                 }
             }
         }
-
+ 
+        $this->_doc->headerdata['arm'] = 1;
         $this->_doc->document_date = time();
         $this->_doc->headerdata['time'] = time();
         $this->_doc->headerdata['contact'] = $this->docpanel->listsform->contact->getText();

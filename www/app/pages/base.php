@@ -418,7 +418,8 @@ class Base extends \Zippy\Html\WebPage
              $header['click'] = "onclick=\"sendSMSCust('{$c->phone}',{$header['smscode']})\"" ;
                 
         }      
-     
+        $header['sumall'] = \App\Helper::fa($c->sumAll());
+      
      
         $data = $report->generate($header); 
         $data = str_replace("'","`",$data)  ;
@@ -704,7 +705,8 @@ class Base extends \Zippy\Html\WebPage
                 if ($info['bonus'] > 0) {
                     $info['disctext'] = "Нараховано бонусів " . $info['bonus'];
                 }
-             }          
+             }      
+                  
          }
          $ret['custinfo'] = $info;
  

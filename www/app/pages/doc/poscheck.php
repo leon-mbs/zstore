@@ -119,9 +119,15 @@ class POSCheck extends \App\Pages\Base
         $this->editcust->add(new TextInput('editphone'));
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
-
+ 
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
+            if($this->_doc->headerdata['arm']==1) {
+                 $this->setWarn('Чек створено в АРМ касира')  ;
+                 App::Redirect("\\App\\Pages\\Service\\ARMPos");
+
+                 return;
+            }
             $this->docform->document_number->setText($this->_doc->document_number);
 
             $this->docform->salesource->setValue($this->_doc->headerdata['salesource']);
@@ -141,7 +147,7 @@ class POSCheck extends \App\Pages\Base
             if ($this->_doc->payed == 0 && $p > 0) {
                 $this->_doc->payed = $p;
             }
-           $this->docform->editpayed->setText(H::fa($this->_doc->payed));
+            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
             $this->docform->payed->setText(H::fa($this->_doc->payed));
             $this->docform->exchange->setText(H::fa($this->_doc->headerdata['exchange']));
 
@@ -247,6 +253,8 @@ class POSCheck extends \App\Pages\Base
                         $this->_serlist = $basedoc->unpackDetails('detaildata');
                     }
                 }
+            } else{
+                $this->setWarn('Чек слід створювати через  АРМ касира')  ;
             }
         }
 
