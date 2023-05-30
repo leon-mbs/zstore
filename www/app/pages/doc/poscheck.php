@@ -35,7 +35,7 @@ class POSCheck extends \App\Pages\Base
     private $_basedocid = 0;
     private $_rowid     = 0;
     private $_order_id  = 0;
-    private $_prevcust  = 0;   // преыдущий контрагент
+    private $_prevcust  = 0;   // предыдущий контрагент
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -236,9 +236,8 @@ class POSCheck extends \App\Pages\Base
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
-                        if ($invoice->payamount > 0) {
-                            $this->docform->payment->setValie(0); // предоплата
-                        }
+                        $this->docform->payment->setValue(0); // предоплата
+
                     }
                     if ($basedoc->meta_name == 'Task') {
                         $this->docform->customer->setKey($basedoc->customer_id);
