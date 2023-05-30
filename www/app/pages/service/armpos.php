@@ -331,6 +331,7 @@ class ARMPos extends \App\Pages\Base
         
         $this->docpanel->form3->document_date->setDate(time());
         $this->_doc = \App\Entity\Doc\Document::create('POSCheck');
+        $this->_doc->headerdata['arm'] = 1;
         $this->docpanel->form3->document_number->setText($this->_doc->nextNumber());    
 
         
@@ -494,7 +495,11 @@ class ARMPos extends \App\Pages\Base
          ));          
         $item->price = $price;
         $item->quantity = 1;
-
+        $item->pureprice = $item->getPurePrice();
+        if($item->pureprice > $item->price) {
+             $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;    
+        }
+ 
         if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
 
             $serial = '';
@@ -1573,6 +1578,7 @@ class ARMPos extends \App\Pages\Base
         
     }
     
+    //simple mode
     public function addItemSmOnClick($sender) {
          $store = $this->form1->store->getValue();
 
