@@ -77,10 +77,17 @@
  
     {{#totaldisc}}
     <tr style="font-weight: bolder;">
-        <td colspan="6" align="right">В т.ч. знижка:</td>
+        <td colspan="6" align="right">Знижка:</td>
         <td align="right">{{totaldisc}}</td>
     </tr>
     {{/totaldisc}}
+   {{#prepaid}}
+    <tr style="font-weight: bolder;">
+        <td colspan="6" align="right">Передплата:</td>
+        <td align="right">{{prepaid}}</td>
+    </tr>
+    {{/prepaid}} 
+
    {{#payamount}}
     <tr style="font-weight: bolder;">
         <td colspan="6" align="right">До сплати:</td>

@@ -54,12 +54,15 @@ class POSCheck extends \App\Pages\Base
         $this->docform->add(new Label('totaldisc', 0));
 
         $this->docform->add(new TextInput('editpayamount'));
-        $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
+        $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayamount');
         $this->docform->add(new TextInput('editpayed', "0"));
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
+        $this->docform->add(new TextInput('editprepaid', "0"));
+        $this->docform->add(new SubmitButton('bprepaid'))->onClick($this, 'onPrepaid');
         $this->docform->add(new Label('payed', 0));
         $this->docform->add(new Label('payamount', 0));
         $this->docform->add(new Label('exchange', 0));
+        $this->docform->add(new Label('prepaid', 0));
 
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -143,6 +146,8 @@ class POSCheck extends \App\Pages\Base
             $this->docform->editpayamount->setText(H::fa($this->_doc->payamount));
             $this->docform->totaldisc->setText(H::fa($this->_doc->headerdata['totaldisc']));
             $this->docform->edittotaldisc->setText(H::fa($this->_doc->headerdata['totaldisc']));
+            $this->docform->prepaid->setText(H::fa($this->_doc->headerdata['prepaid']));
+            $this->docform->editprepaid->setText(H::fa($this->_doc->headerdata['prepaid']));
             $p  =  doubleval($this->_doc->headerdata['payed']) + doubleval($this->_doc->headerdata['payedcard']) ;
             if ($this->_doc->payed == 0 && $p > 0) {
                 $this->_doc->payed = $p;
@@ -201,10 +206,10 @@ class POSCheck extends \App\Pages\Base
 
                             $this->setWarn('У замовлення вже є продажі');
                         }
-                        $this->docform->total->setText($order->amount);
+                        
 
-                        $this->OnChangeCustomer($this->docform->customer);
-                        $this->calcPay();
+                    //    $this->OnChangeCustomer($this->docform->customer);
+                        $this->docform->total->setText($order->amount);
 
                         if ($order->headerdata['payment'] > 0) {
                             $this->docform->payment->setValue(0); // предоплата
@@ -214,7 +219,9 @@ class POSCheck extends \App\Pages\Base
                             $this->docform->payamount->setText(H::fa(0));
                             $this->docform->edittotaldisc->setText(H::fa(0));
                             $this->docform->totaldisc->setText(H::fa(0));
-                        } else {
+                            $this->docform->prepaid->setText($order->amount);
+                            $this->docform->editprepaid->setText($order->amount);
+                       } else {
                             $this->docform->editpayed->setText($this->docform->editpayamount->getText());
                             $this->docform->payed->setText($this->docform->payamount->getText());
 
@@ -222,6 +229,10 @@ class POSCheck extends \App\Pages\Base
                         
                         
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                        
+                        $this->calcPay(); 
+                        
+                        
                     }
 
                     if ($basedoc->meta_name == 'Invoice') {
@@ -237,13 +248,15 @@ class POSCheck extends \App\Pages\Base
 
                         $this->docform->total->setText($invoice->amount);
 
-                        $this->OnChangeCustomer($this->docform->customer);
-                        $this->calcPay();
+                    //    $this->OnChangeCustomer($this->docform->customer);
+                        
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
                         $this->docform->payment->setValue(0); // предоплата
-
+                        $this->docform->prepaid->setText($invoice->amount);
+                        $this->docform->editprepaid->setText($invoice->amount);
+                        $this->calcPay(); 
                     }
                     if ($basedoc->meta_name == 'Task') {
                         $this->docform->customer->setKey($basedoc->customer_id);
@@ -512,6 +525,8 @@ class POSCheck extends \App\Pages\Base
         $this->_doc->headerdata['exchange'] = $this->docform->exchange->getText();
         $this->_doc->headerdata['totaldisc'] = $this->docform->totaldisc->getText();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
+        $this->_doc->headerdata['prepaid'] = $this->docform->prepaid->getText();
+
 
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
 
@@ -627,7 +642,12 @@ class POSCheck extends \App\Pages\Base
         }
     }
 
-    public function onPayAmount($sender) {
+    public function onPrepaid($sender) {
+        $this->docform->prepaid->setText($this->docform->editprepaid->getText());
+        $this->calcPay(); 
+        $this->goAnkor("tankor");
+    }
+  public function onPayamount($sender) {
         $this->docform->payamount->setText($this->docform->editpayamount->getText());
         $this->docform->editpayed->setText($this->docform->editpayamount->getText());
         $this->docform->payed->setText($this->docform->editpayamount->getText());
@@ -698,13 +718,17 @@ class POSCheck extends \App\Pages\Base
     }
 
     private function calcPay() {
+        $prepaid =  doubleval($this->docform->prepaid->getText());
         $total = $this->docform->total->getText();
         $disc = $this->docform->totaldisc->getText();
         $disc = doubleval($disc) ;
-        $this->docform->editpayamount->setText(H::fa($total - $disc));
-        $this->docform->payamount->setText(H::fa($total - $disc));
-        $this->docform->editpayed->setText(H::fa($total - $disc));
-        $this->docform->payed->setText(H::fa($total - $disc));
+        
+        $payamount= $total - $disc - $prepaid;
+        
+        $this->docform->editpayamount->setText(H::fa($payamount));
+        $this->docform->payamount->setText(H::fa($payamount));
+        $this->docform->editpayed->setText(H::fa($payamount));
+        $this->docform->payed->setText(H::fa($payamount));
         $this->docform->exchange->setText(H::fa(0));
     }
 

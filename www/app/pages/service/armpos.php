@@ -135,7 +135,8 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->add(new SubmitLink('additemsm'))->onClick($this, 'addItemSmOnClick');
         $this->docpanel->form2->add(new TextInput('bonus'));      
         $this->docpanel->form2->add(new TextInput('totaldisc'));      
-                  
+        $this->docpanel->form2->add(new TextInput('prepaid'));
+                 
         //оплата
         $this->docpanel->add(new Form('form3'))->setVisible(false);
 
@@ -145,6 +146,7 @@ class ARMPos extends \App\Pages\Base
 
         $this->docpanel->form3->add(new Date('document_date'))->setDate(time());
         $this->docpanel->form3->add(new TextArea('notes'));
+        $this->docpanel->form3->add(new TextInput('exch2b'));
 
         
         $this->docpanel->form3->add(new Button('cancel2'))->onClick($this, 'cancel2docOnClick');
@@ -157,7 +159,6 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form3->add(new TextInput('exchange'));
 
         $this->docpanel->form3->add(new TextInput('trans'));
-        $this->docpanel->form3->add(new TextInput('exch2b'));
 
 
         $this->docpanel->form3->add(new CheckBox('passfisc'));
@@ -380,31 +381,38 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form3->exch2b->setText('');
     
         //к  оплате
-        $total =   floatval( $this->docpanel->form2->total->getText() ) - floatval( $this->docpanel->form2->bonus->getText() ) - floatval( $this->docpanel->form2->totaldisc->getText() ) ;      
-        $this->docpanel->form3->payamount->setText(H::fa($total));
+    
+        $total =   floatval( $this->docpanel->form2->total->getText() ) ;
+        $bonus =   floatval( $this->docpanel->form2->bonus->getText() ) ;
+        $totaldisc =   floatval( $this->docpanel->form2->totaldisc->getText() ) ;
+        $prepaid =   floatval( $this->docpanel->form2->prepaid->getText() ) ;
+
+        $payamount = $total - $bonus - $totaldisc - $prepaid;
+     
+        $this->docpanel->form3->payamount->setText(H::fa($payamount));
         
         if($this->_mfbeznal == 0) {
-           $this->docpanel->form3->payed->setText($total);  
+           $this->docpanel->form3->payed->setText($payamount);  
            $this->docpanel->form3->payedcard->setVisible(false);            
         }  else {
-            $this->docpanel->form3->payed->setAttribute('disabled',null); 
+            $this->docpanel->form3->payed->setVisible('disabled',null); 
             $this->docpanel->form3->payedcard->setAttribute('disabled',null); 
             
             if($paytype == 1) {
-                $this->docpanel->form3->payed->setText($total); 
+                $this->docpanel->form3->payed->setText($payamount); 
                 $this->docpanel->form3->payedcard->setAttribute('disabled','disabled'); 
                 $this->docpanel->form3->payedcard->setText(0);                 
             }
             if($paytype == 2) {
-                $this->docpanel->form3->payedcard->setText($total); 
+                $this->docpanel->form3->payedcard->setText($payamount); 
                 $this->docpanel->form3->payed->setAttribute('disabled','disabled'); 
                 $this->docpanel->form3->payed->setText(0); 
                 
             }
             if($paytype == 3) {
-                $half= H::fa($total/2);; 
+                $half= H::fa($payamount/2);; 
                 $this->docpanel->form3->payed->setText($half); 
-                $this->docpanel->form3->payedcard->setText($total - $half); 
+                $this->docpanel->form3->payedcard->setText($payamount - $half); 
              
              
                 
@@ -1006,6 +1014,7 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['salesource'] = $this->_salesource;
         $this->_doc->headerdata['totaldisc'] = $this->docpanel->form2->totaldisc->getText();
         $this->_doc->headerdata['bonus'] = $this->docpanel->form2->bonus->getText();
+        $this->_doc->headerdata['prepaid'] = $this->docpanel->form2->prepaid->getText();
         $this->_doc->headerdata['pricetype'] = $this->getPriceType();
 
         $this->_doc->firm_id = $this->pos->firm_id;
@@ -1443,6 +1452,7 @@ class ARMPos extends \App\Pages\Base
         
         $this->docpanel->form2->bonus->setText($this->_doc->headerdata['bonus']);
         $this->docpanel->form2->totaldisc->setText($this->_doc->headerdata['totaldisc']);
+        $this->docpanel->form2->prepaid->setText($this->_doc->headerdata['prepaid']);
         $this->docpanel->form3->payamount->setText('0');
         $this->docpanel->form3->payed->setText('0');
         $this->docpanel->form3->payedcard->setText('0');
