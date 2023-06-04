@@ -359,7 +359,7 @@
                             <input autocomplete="off" class="form-control" type="text" zippy="exch2b">
                             </div>     
                              <div class="col-12">
-                            <small>    Занести частину або всю решту в бонуси </small>
+                            <small data-label="exch2b">    Занести частину або всю решту в бонуси </small>
                             </div>     
                         </div>
                        {{/simplemode}}
@@ -413,12 +413,13 @@
                         <div class="form-group  ">
                             <input type="button" value="< назад" zippy="cancel2" class="btn  btn-outline-info">
                             &nbsp;&nbsp;<input type="submit" value="Провести чек  " zippy="save" class="btn  btn-info">
-                            {{#ppo}}
+                            {{#fiscal}}
                             &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Вiдкласти фiскалiзацiю  
                            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="На випадок збою інтернету фіскалізацію можна пропустити. Чек може бути фіскалізований до закриття зміни на сторінці ручного закриття зміни в модулі РРО "></i>
+                                   title="На випадок збою інтернету фіскалізацію можна пропустити.
+                                    Чек може бути фіскалізований зі списку чеків "></i>
                                               
-                            {{/ppo}}
+                            {{/fiscal}}
                             
                         </div>
 
@@ -581,6 +582,7 @@
                         <th ></th>
                         <th ></th>
                         <th ></th>
+                   {{#fiscal}}      <th ></th>     {{/fiscal}}
 
 
                     </tr>
@@ -594,6 +596,9 @@
                         <td zippy="rownotes"></td>
                         <td  ><a zippy="checkedit" title="Редагувати"><i class="fa fa-edit"></i></a></td>
                         <td  ><a zippy="checkreturn" title="Повернення"><i class="fa fa-arrow-left-long"></i></a></td>
+                         {{#fiscal}}
+                        <td  ><a zippy="checkfisc" title="Фiскалiзувати"><i class="fa fa-stamp"></i></a></td>
+                         {{/fiscal}}
                     </tr>
 
                 </table> 

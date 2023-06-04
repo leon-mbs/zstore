@@ -68,7 +68,7 @@ class POSCheck extends \App\Pages\Base
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
-        $this->docform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', '')));
+
 
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
 
@@ -158,7 +158,7 @@ class POSCheck extends \App\Pages\Base
 
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
-            $this->docform->pos->setValue($this->_doc->headerdata['pos']);
+
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
 
@@ -187,8 +187,7 @@ class POSCheck extends \App\Pages\Base
 
                         $this->docform->salesource->setValue($basedoc->headerdata['salesource']);
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
-                       // $this->docform->store->setValue($basedoc->headerdata['store']);
-                        //  $this->docform->pos->setValue($basedoc->headerdata['pos']);
+
                         $this->_orderid = $basedocid;
                         $this->docform->order->setText($basedoc->document_number);
                         $this->docform->totaldisc->setText($basedoc->headerdata['totaldisc']);
@@ -208,24 +207,14 @@ class POSCheck extends \App\Pages\Base
                         }
                         
 
-                    //    $this->OnChangeCustomer($this->docform->customer);
                         $this->docform->total->setText($order->amount);
-
-                        if ($order->headerdata['payment'] > 0) {
-                            $this->docform->payment->setValue(0); // предоплата
-                            $this->docform->editpayed->setText(H::fa(0));
-                            $this->docform->payed->setText(H::fa(0));
-                            $this->docform->editpayamount->setText(H::fa(0));
-                            $this->docform->payamount->setText(H::fa(0));
-                            $this->docform->edittotaldisc->setText(H::fa(0));
-                            $this->docform->totaldisc->setText(H::fa(0));
-                            $this->docform->prepaid->setText($order->amount);
-                            $this->docform->editprepaid->setText($order->amount);
-                       } else {
-                            $this->docform->editpayed->setText($this->docform->editpayamount->getText());
-                            $this->docform->payed->setText($this->docform->payamount->getText());
-
-                        }                        
+                              
+                        
+                        $payed = $order->getPayAmount();
+                        if($payed >0 || $order->state== Document::STATE_WP ) {
+                            $this->docform->prepaid->setText($order->payamount);
+                            $this->docform->editprepaid->setText($order->payamount);
+                        }
                         
                         
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
@@ -247,9 +236,7 @@ class POSCheck extends \App\Pages\Base
                         $invoice = $basedoc->cast();
 
                         $this->docform->total->setText($invoice->amount);
-
-                    //    $this->OnChangeCustomer($this->docform->customer);
-                        
+                          
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
@@ -545,7 +532,6 @@ class POSCheck extends \App\Pages\Base
         $this->_doc->packDetails('detaildata', $this->_itemlist);
         $this->_doc->packDetails('services', $this->_serlist);
         $this->_doc->amount = $this->docform->total->getText();
-        $this->_doc->headerdata['pos'] = $this->docform->pos->getValue();
 
         
         
@@ -565,12 +551,7 @@ class POSCheck extends \App\Pages\Base
                 }       
         
         }        
-        
- 
-        
-        $pos = \App\Entity\Pos::load($this->_doc->headerdata['pos']);
-
- 
+  
 
         $isEdited = $this->_doc->document_id > 0;
         if ($isEdited == false) {
@@ -838,9 +819,6 @@ class POSCheck extends \App\Pages\Base
         }
         if (($this->docform->store->getValue() > 0) == false) {
             $this->setError("Не обрано склад");
-        }
-        if (($this->docform->pos->getValue() > 0) == false) {
-            $this->setError("Не обрано POS термінал");
         }
         $p = $this->docform->payment->getValue();
         $c = $this->docform->customer->getKey();

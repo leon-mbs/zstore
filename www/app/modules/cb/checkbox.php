@@ -11,7 +11,7 @@ class CheckBox
     protected string $access_token;
     protected string $license_key;    //test16741de6daf9c3ec07b18743
     protected string $pin_code;      //2591384368
-    protected const API_URL = 'https://api.checkbox.ua/api/v1';
+    protected const API_URL = 'https://api.checkbox.ua/api/v1';   //https://wiki.checkbox.ua/uk/api/specification
 
     public function __construct($license_key,$pin_code) {
        $this->license_key = $license_key;
@@ -258,16 +258,22 @@ class CheckBox
 
           $check['total_sum'] = $sum  ;
           
-          $disc =  $sum - $doc->payamount*100;
+          $disc =  $sum - $doc->payamount*100 - doubleval($doc->headerdata["prepaid"]) * 100 ;
           if($disc > 0) {
              if($doc->headerdata['bonus'] >0){
-                 $check["discounts"][] = array("type"=>"DISCOUNT","name"=> "Бонуси ". $doc->headerdata['bonus'] ." грн", "value"=> $doc->headerdata['bonus'],  "mode"=> "VALUE");      
+                 $check["discounts"][] = array("type"=>"DISCOUNT","name"=> "Бонуси ". $doc->headerdata['bonus'] ." грн", "value"=> $doc->headerdata['bonus']*100,  "mode"=> "VALUE");      
                  $disc  = $disc -  $doc->headerdata['bonus'] ;
              }
              if($disc >0) {
-                $check["discounts"][] = array("type"=>"DISCOUNT","name"=> "Знижка ". $disc ." грн", "value"=> $disc,  "mode"=> "VALUE");                       
+                $check["discounts"][] = array("type"=>"DISCOUNT","name"=> "Знижка ". $disc/100 ." грн", "value"=> $disc,  "mode"=> "VALUE");                       
              }             
           }
+          
+          if($doc->headerdata["prepaid"] >0) {
+           //   $check["discounts"][] = array("type"=>"EXTRA_CHARGE","name"=> "Передплата ". $doc->headerdata['prepaid'] ." грн", "value"=> $doc->headerdata['prepaid']*100,  "mode"=> "VALUE");      
+          }
+          
+          
           
        // $check['total_payment'] = $doc->payamount*100;
      //   $check['total_rest'] = 0 ;
@@ -311,6 +317,13 @@ class CheckBox
            $check["payments"][] = $payment;
             
         } ;
+        
+        
+        if($doc->headerdata["prepaid"] >0) {
+           $payment=array("type"=>"CASH","label"=>"Передплата","value"=> $doc->headerdata["prepaid"] * 100);
+           $check["payments"][] = $payment;
+        }
+ 
         
         $receipt =  json_encode($check, JSON_UNESCAPED_UNICODE);   
         $curl = curl_init();

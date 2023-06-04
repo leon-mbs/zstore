@@ -280,9 +280,17 @@ class ARMPos extends \App\Pages\Base
             $this->setError("Не вказано тип ціни");
             return;
         }
+      
+        if($this->pos->usefisc != 1)   {
+            $this->_tvars['fiscal']  = false;
+        }      
+      
         $filter = \App\Filter::getFilter("armpos");
 
         $filter->pos = $this->form1->pos->getValue();
+        
+
+        
         $filter->store = $this->_store_id;
         $filter->pricetype = $this->_pt;
         $filter->salesource = $this->_salesource;
@@ -360,9 +368,17 @@ class ARMPos extends \App\Pages\Base
             $this->setError('Не введено позиції');
             return;
         }
+ 
+        $total =   floatval( $this->docpanel->form2->total->getText() ) ;
+        $bonus =   floatval( $this->docpanel->form2->bonus->getText() ) ;
+        $totaldisc =   floatval( $this->docpanel->form2->totaldisc->getText() ) ;
+        $prepaid =   floatval( $this->docpanel->form2->prepaid->getText() ) ;
+
+        $payamount = $total - $bonus - $totaldisc - $prepaid;
+ 
         $paytype=$this->docpanel->form2->paytype->getValue();
         
-        if($paytype==0){
+        if($paytype==0 && $payamount > 0){
             $this->setError('Не вказаний тип оплати');
             return;
             
@@ -382,12 +398,7 @@ class ARMPos extends \App\Pages\Base
     
         //к  оплате
     
-        $total =   floatval( $this->docpanel->form2->total->getText() ) ;
-        $bonus =   floatval( $this->docpanel->form2->bonus->getText() ) ;
-        $totaldisc =   floatval( $this->docpanel->form2->totaldisc->getText() ) ;
-        $prepaid =   floatval( $this->docpanel->form2->prepaid->getText() ) ;
-
-        $payamount = $total - $bonus - $totaldisc - $prepaid;
+        
      
         $this->docpanel->form3->payamount->setText(H::fa($payamount));
         
@@ -395,7 +406,7 @@ class ARMPos extends \App\Pages\Base
            $this->docpanel->form3->payed->setText($payamount);  
            $this->docpanel->form3->payedcard->setVisible(false);            
         }  else {
-            $this->docpanel->form3->payed->setVisible('disabled',null); 
+            $this->docpanel->form3->payed->setAttribute('disabled',null); 
             $this->docpanel->form3->payedcard->setAttribute('disabled',null); 
             
             if($paytype == 1) {
@@ -419,6 +430,16 @@ class ARMPos extends \App\Pages\Base
             }
             
         }
+        
+        //если  предоплата
+        $hidep = ($payamount ==0 && $prepaid >0) ;
+        $this->docpanel->form3->payed->setVisible(!$hidep); 
+        $this->docpanel->form3->payedcard->setVisible(!$hidep); 
+        $this->docpanel->form3->exchange->setVisible(!$hidep); 
+        $this->docpanel->form3->exch2b->setVisible(!$hidep); 
+
+
+          
         
     }
 
@@ -1063,6 +1084,7 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['payedcard'] = $this->docpanel->form3->payedcard->getText();
         $this->_doc->headerdata['exchange'] = $this->docpanel->form3->exchange->getText();
         $this->_doc->headerdata['exch2b'] = $this->docpanel->form3->exch2b->getText() ;
+        $this->_doc->headerdata['prepaid'] = $this->docpanel->form2->prepaid->getText() ;
         $this->_doc->headerdata['trans'] = trim($this->docpanel->form3->trans->getText());
         $this->_doc->notes = $this->_doc->notes . ' ' . $this->_doc->headerdata['trans']  ;
 //        $this->_doc->headerdata['totaldisc'] = $this->docpanel->form2->totaldisc->getText();
@@ -1081,11 +1103,15 @@ class ARMPos extends \App\Pages\Base
   
    
         if ( doubleval($this->_doc->headerdata['bonus'] ) >0 && $this->_doc->customer_id == 0) {
-            $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
+            $this->setError("Якщо у борг    або нарахування бонусів має бути обраний контрагент");
             return;
         }
         if ( doubleval($this->_doc->headerdata['exch2b'] ) >0 && $this->_doc->customer_id == 0) {
             $this->setError("Для нарахування бонуса має бути обраний контрагент");
+            return;
+        }
+        if ( doubleval($this->_doc->headerdata['prepaid'] ) >0 && $this->_doc->customer_id == 0) {
+            $this->setError("Якщо передоплата має бути обраний контрагент");
             return;
         }
         if ( doubleval($this->_doc->headerdata['exchange'] ) >0 && doubleval($this->_doc->headerdata['payedcard'] >0 )) {
@@ -1130,66 +1156,67 @@ class ARMPos extends \App\Pages\Base
                     }
                 }
             }
-
-            
-          if($this->pos->usefisc == 1 && $this->_tvars['checkbox'] == true) {
-            
-            $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey,$this->pos->cbpin) ;
-            $ret = $cb->Check($this->_doc) ;
-            
-            if(is_array($ret)) {
-              $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
-              $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
-              $this->_doc->headerdata["checkbox"] = $ret['checkid'];
-            } else {
-                $this->setError($ret);
-                $conn->RollbackTrans();
-                return;
-                          
-            }
-            
-            
-        }          
-            
-            
-          
-            if ($this->pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
-              
-                if($this->docpanel->form3->passfisc->isChecked()) {
-                      $ret = \App\Modules\PPO\PPOHelper::check($this->_doc,true);
-  
-                }   else {
-              
-              
-                    $this->_doc->headerdata["fiscalnumberpos"]  = $this->pos->fiscalnumber;
-             
-
-                    $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
-                    if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
-                        //повторяем для  нового номера
-                        $this->pos->fiscdocnumber = $ret['doclocnumber'];
-                        $this->pos->save();
-                        $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
-                    }
-                    if ($ret['success'] == false) {
-                        $this->setErrorTopPage($ret['data']);
-                         $conn->RollbackTrans();
-                        return;
+     
+     
+           if($this->pos->usefisc == 1) {
+               if($this->docpanel->form3->passfisc->isChecked()) {
+                  $this->_doc->headerdata["passfisc"]  = 1;  
+               }
+               else { 
+                    
+                    if(   $this->_tvars['checkbox'] == true) {
+                    
+                    $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey,$this->pos->cbpin) ;
+                    $ret = $cb->Check($this->_doc) ;
+                    
+                    if(is_array($ret)) {
+                      $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                      $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
+                      $this->_doc->headerdata["checkbox"] = $ret['checkid'];
                     } else {
-                        //  $this->setSuccess("Выполнено") ;
-                        if ($ret['docnumber'] > 0) {
-                            $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                            $this->pos->save();
-                            $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
-                        } else {
-                            $this->setError("Не повернено фіскальний номер");
-                             $conn->RollbackTrans();
-                            return;
-                        }
+                        $this->setError($ret);
+                        $conn->RollbackTrans();
+                        return;
+                                  
                     }
-                }
-            }
+                    
+                    
+                }          
+                    
+                  
+                    if (  $this->_tvars['ppo'] == true) {
+                      
+                       
+                            $this->_doc->headerdata["fiscalnumberpos"]  = $this->pos->fiscalnumber;
+                     
 
+                            $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
+                            if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
+                                //повторяем для  нового номера
+                                $this->pos->fiscdocnumber = $ret['doclocnumber'];
+                                $this->pos->save();
+                                $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
+                            }
+                            if ($ret['success'] == false) {
+                                $this->setErrorTopPage($ret['data']);
+                                 $conn->RollbackTrans();
+                                return;
+                            } else {
+                                //  $this->setSuccess("Выполнено") ;
+                                if ($ret['docnumber'] > 0) {
+                                    $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                                    $this->pos->save();
+                                    $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+                                } else {
+                                    $this->setError("Не повернено фіскальний номер");
+                                     $conn->RollbackTrans();
+                                    return;
+                                }
+                            }
+                        
+                    }
+                  }
+            }
             $isnew  = $this->_doc->document_id ==0;
             $this->_doc->save();
             if($isnew) {
@@ -1359,6 +1386,7 @@ class ARMPos extends \App\Pages\Base
         $row->add(new Label('rowdate', H::fd($doc->document_date)));
         $row->add(new Label('rownotes', $doc->notes));
         $row->add(new ClickLink('checkedit'))->onClick($this,"onEdit");
+        $row->add(new ClickLink('checkfisc',$this,"onFisc"))->setVisible($doc->headerdata['passfisc']==1) ;
         $row->checkedit->setVisible($doc->state < 4 );
 
         $row->add(new \Zippy\Html\Link\RedirectLink('checkreturn',"\\App\\Pages\\Doc\\ReturnIssue", array(0,$doc->document_id) ));
@@ -1420,6 +1448,72 @@ class ARMPos extends \App\Pages\Base
         $this->checklistpan->checklist->Reload();
     }
 
+    public function onFisc($sender) {
+
+             $doc =  $sender->getOwner()->getDataItem();
+                   
+             if(   $this->_tvars['checkbox'] == true) {
+                    
+                    $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey,$this->pos->cbpin) ;
+                    $ret = $cb->Check($doc) ;
+                    
+                    if(is_array($ret)) {
+                      $doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                      $doc->headerdata["tax_url"] = $ret['tax_url'];
+                      $doc->headerdata["checkbox"] = $ret['checkid'];
+                      $doc->headerdata["passfisc"] = 0;
+                      $doc->save();
+                      
+                    } else {
+                        $this->setError($ret);
+                       
+                        return;
+                                  
+                    }
+                    
+                    
+                }          
+                    
+                  
+            if (  $this->_tvars['ppo'] == true) {
+                      
+               
+                    $doc->headerdata["fiscalnumberpos"]  = $this->pos->fiscalnumber;
+             
+
+                    $ret = \App\Modules\PPO\PPOHelper::check($doc);
+                    if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
+                        //повторяем для  нового номера
+                        $this->pos->fiscdocnumber = $ret['doclocnumber'];
+                        $this->pos->save();
+                        $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
+                    }
+                    if ($ret['success'] == false) {
+                        $this->setErrorTopPage($ret['data']);
+                         
+                        return;
+                    } else {
+                        //  $this->setSuccess("Выполнено") ;
+                        if ($ret['docnumber'] > 0) {
+                            $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                            $this->pos->save();
+                            $doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+                            $doc->headerdata["passfisc"] = 0;
+                            $doc->save();
+                             
+                        } else {
+                            $this->setError("Не повернено фіскальний номер");
+                          
+                            return;
+                        }
+                    }
+                
+            }
+   
+        
+        $this->checklistpan->checklist->Reload(false);
+ 
+    }
     public function onEdit($sender) {
         $doc =  $sender->getOwner()->getDataItem();
         $this->_doc = Document::load( $doc->document_id)->cast();
