@@ -1456,25 +1456,25 @@ class ARMPos extends \App\Pages\Base
                    
              if(   $this->_tvars['checkbox'] == true) {
                     
-                    $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey,$this->pos->cbpin) ;
-                    $ret = $cb->Check($doc) ;
-                    
-                    if(is_array($ret)) {
+                $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey,$this->pos->cbpin) ;
+                $ret = $cb->Check($doc) ;
+                
+                if(is_array($ret)) {
                       $doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
                       $doc->headerdata["tax_url"] = $ret['tax_url'];
                       $doc->headerdata["checkbox"] = $ret['checkid'];
                       $doc->headerdata["passfisc"] = 0;
                       $doc->save();
                       $this->setSuccess("Виконано");   
-                    } else {
-                        $this->setError($ret);
-                       
-                        return;
-                                  
-                    }
+                } else {
+                    $this->setError($ret);
+                   
+                    return;
+                              
+                }
+                
                     
-                    
-                }          
+            }          
                     
                   
             if (  $this->_tvars['ppo'] == true) {
