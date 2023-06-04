@@ -356,6 +356,8 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form3->exchange->setText('0');
         $this->docpanel->form2->custinfo->setText('');
         $this->docpanel->form3->trans->setText('') ;
+        $this->docpanel->form2->prepaid->setText('') ;
+        $this->docpanel->form3->passfisc->setChecked(false) ;
         $this->docpanel->form2->setVisible(true);
 
         $this->docpanel->formcheck->setVisible(false);
@@ -1463,7 +1465,7 @@ class ARMPos extends \App\Pages\Base
                       $doc->headerdata["checkbox"] = $ret['checkid'];
                       $doc->headerdata["passfisc"] = 0;
                       $doc->save();
-                      
+                      $this->setSuccess("Виконано");   
                     } else {
                         $this->setError($ret);
                        
@@ -1500,7 +1502,7 @@ class ARMPos extends \App\Pages\Base
                             $doc->headerdata["fiscalnumber"] = $ret['docnumber'];
                             $doc->headerdata["passfisc"] = 0;
                             $doc->save();
-                             
+                            $this->setSuccess("Виконано");      
                         } else {
                             $this->setError("Не повернено фіскальний номер");
                           
@@ -1510,7 +1512,8 @@ class ARMPos extends \App\Pages\Base
                 
             }
    
-        
+
+                        
         $this->checklistpan->checklist->Reload(false);
  
     }

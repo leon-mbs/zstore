@@ -691,11 +691,7 @@
                 if(paytype==2) {
                    $('#payedcard').focus();    
                 }
-                
-               
-
-
-           
+            
           
                 
                 $("#payed").change(function () {
@@ -754,16 +750,20 @@
                 }
             }
             function check_save(ele) {
-                $('#save').attr('disabled', 'disabled');
+                $("#modalwait").modal("show") ;
                 return true;
             }
             function check_openshift(ele) {
                 
-                $('#openshift').attr('disabled', 'disabled');
+                $("#modalwait").modal("show") ;
                 return true;
             }
             function check_closeshift(ele) {
-                $('#closeshift').attr('disabled', 'disabled');
+                $("#modalwait").modal("show") ;
+                return true;
+            }
+            function check_checkfisc(ele) {
+                $("#modalwait").modal("show") ;
                 return true;
             }
 

@@ -591,7 +591,8 @@ class PPOHelper
             $header['pays'][] = $pay;
             $n++;
                         
-            $amount3 = $pay['paysum'];
+            $amount3 = $pay['paysum']; 
+            $header['amount'] += $doc->headerdata['prepaid'];
         }  
      
         $header['pay'] = count($header['pays']) > 0;
