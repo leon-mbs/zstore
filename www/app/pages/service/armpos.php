@@ -167,6 +167,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->formcheck->add(new Label('showcheck'));
         $this->docpanel->formcheck->add(new Button('newdoc'))->onClick($this, 'newdoc');
         $this->docpanel->formcheck->add(new Button('print'))->onClick($this,"OnPrint",true);
+        $this->docpanel->formcheck->add(new Button('qrpaybtn'));
 
         $this->docpanel->add(new Form('editdetail'))->setVisible(false);
         $this->docpanel->editdetail->add(new TextInput('editquantity'))->setText("1");
@@ -208,8 +209,10 @@ class ARMPos extends \App\Pages\Base
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
+        $this->add(new Label('qrimg')) ;
+        
         $this->_tvars['simplemode']  = false;
-     
+
     }
 
 
@@ -363,6 +366,12 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->formcheck->setVisible(false);
         $this->docpanel->form2->addcust->setVisible(true) ;
         $this->docpanel->form2->cinfo->setVisible(false) ;
+        
+        $l=  $this->docpanel->form2->paytype->getOptionList();        
+        if(count($l) >1) {
+           $this->docpanel->form2->paytype->setValue(0); 
+        }
+        
     }
       
     public function topayOnClick($sender) {
@@ -1251,6 +1260,17 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form3->notes->setText('');
         $check = $this->_doc->generatePosReport();
         $this->docpanel->formcheck->showcheck->setText($check, true);
+        
+        $this->docpanel->formcheck->qrpaybtn->setVisible(false); 
+        $qr = $this->_doc->getQRPay()   ;
+        if(is_array($qr)){
+           $this->docpanel->formcheck->qrpaybtn->setVisible(true); 
+           $this->qrimg->setText($qr['qr'],true); 
+        }  
+        
+        
+        
+        
     }
 
 

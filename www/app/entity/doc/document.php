@@ -1014,7 +1014,7 @@ class Document extends \ZCL\DB\Entity
     */
     public function getQRPay() {
         
-        if(in_array($this->meta_name,['GoodsIssue','Invoice','Order'])  ==false) return false;       
+        if(in_array($this->meta_name,['GoodsIssue','Invoice','Order','POSCheck'])  ==  false) return false;       
 
         if($this->firm_id >0){
            $f =  \App\Entity\Firm::load( $this->firm_id) ;            
@@ -1025,17 +1025,21 @@ class Document extends \ZCL\DB\Entity
         if($f == null)  return false;
         if(strlen($f->tin)==0 || strlen($f->iban) == 0 )  return false;
         
-        //  $c =  \App\Entity\Customer::load( $this->customer_id ) ;
-        // if($c == null)  return false;
-
+  
         $number = $this->document_number;
-        if(strlen($this->headerdata['outnumber'])>0) {
+        if(strlen($this->headerdata['outnumber']) > 0) {
            $number  =    $this->headerdata['outnumber']  ;
         }
+        
+        $payment=$this->payamount;
+        if($this->headerdata['payedcard'] > 0) {
+           $payment =  $this->headerdata['payedcard'];
+        }
+        
         $url = "BCD\n002\n1\nUCT\n\n";
         $url = $url . ( strlen($f->payname) > 0 ? $f->payname : $f->firm_name ) ."\n";
-        $url = $url .  $f->iban."\n";
-        $url = $url .  "UAH". \App\Helper::fa($this->payamount)."\n";
+        $url = $url .  $f->iban."\n";        
+        $url = $url .  "UAH". \App\Helper::fa($payment)."\n";
         $url = $url .  $f->tin."\n\n\n";
         $url = $url .  $this->meta_desc ." ".$number." від ".  \App\Helper::fd($this->document_date) ."\n\n";
 
