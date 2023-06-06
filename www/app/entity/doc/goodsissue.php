@@ -71,8 +71,8 @@ class GoodsIssue extends Document
                          "stamp"           => _BASEURL . $firm['stamp'],
                         "isstamp"         => strlen($firm['stamp']) > 0,
 
-                        "bank"            => @$mf->bank,
-                        "bankacc"         => @$mf->bankacc,
+                        "bank"            => $mf->bank ?? "",
+                        "bankacc"         => $mf->bankacc ?? "",
                         "isbank"          => (strlen($mf->bankacc) > 0 && strlen($mf->bank) > 0),
                         "notes"           => nl2br($this->notes),
                        
@@ -257,6 +257,7 @@ class GoodsIssue extends Document
         }
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $mf = \App\Entity\MoneyFund::load($this->headerdata["payment"]);
 
         $printer = System::getOptions('printer');
         $style = "";
@@ -271,6 +272,9 @@ class GoodsIssue extends Document
                         "firm_name"       => $firm["firm_name"],
                         "style"           => $style,
                         "phone"           => $firm["phone"],
+                        "bank"            => $mf->bank ?? "",
+                        "bankacc"         => $mf->bankacc ?? "",
+                        "isbank"          => (strlen($mf->bankacc) > 0 && strlen($mf->bank) > 0),
                         "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
                         "document_number" => $this->document_number,
                          
