@@ -41,7 +41,7 @@ try {
         $app->Run($mainpage);
     }
 
-    die;
+    
 } catch (Throwable $e) {
     if ($e instanceof ADODB_Exception) {
 
@@ -54,6 +54,6 @@ try {
         echo $e->getLine() . '<br>';
         echo $e->getFile() . '<br>';
     }
-    die;
+  
 }  
  
