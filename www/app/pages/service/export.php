@@ -41,7 +41,6 @@ class Export extends \App\Pages\Base
 
         $this->onType($form->itype);
 
-        $form = $this->add(new Form("cform"));
 
         $form->add(new DropDownChoice("ctype", array(), 0));
         $form->add(new CheckBox("custxml"));
@@ -59,9 +58,13 @@ class Export extends \App\Pages\Base
 
         $form = $this->add(new Form("dformlist"));
         $form->add(new DataView('doclist', new ArrayDataSource(new Prop($this, '_docs')), $this, 'expDRow'));
-      $form->add(new CheckBox("docxml"));
+        $form->add(new CheckBox("docxml"));
         
         $form->onSubmit($this, "onDExport");
+        
+        $form = $this->add(new Form("oform"));
+        $form->onSubmit($this, "onOExport");
+        
     }
 
     public function onType($sender) {
@@ -268,4 +271,27 @@ class Export extends \App\Pages\Base
           H::exportExcel($data, $header, 'exportdoc_' . date('Y_m_d', time()) . '.xlsx');
     }
 
+    public function onOExport($sender) {
+        $conn= \ZDB\DB::getConnect() ;
+        
+        $list = $conn->Execute("select * from  options");
+    
+        $root="<root>";
+    
+        foreach ($list as $row) {
+ 
+            $root.="<item>";
+            $root.="<optname>" . $row['optname'] . "</optname>";
+            $root.="<optvalue>" . $row['optvalue'] . "</optvalue>";
+            $root.="</item>";
+            
+        }
+        $root.="</root>";
+        
+        H::exportXML($root, 'options_' . date('Y_m_d', time()) . '.xml');
+      
+    
+    }
+    
+    
 }
