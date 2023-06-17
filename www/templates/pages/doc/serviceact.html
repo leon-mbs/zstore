@@ -554,6 +554,8 @@
                    
                     this.customer_id = id 
                     this.onContract()
+                    
+                      
                       callPM('vLoadCust',[id ], null,(data)=> 
                       {
 
@@ -642,7 +644,7 @@
                        }
                      }          
                      
-                
+                    $("#modalwait").modal("show") ;           
                     callPM('save',[ ], data,(data)=> 
                       {
                            
