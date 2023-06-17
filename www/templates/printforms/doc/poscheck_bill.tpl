@@ -84,10 +84,10 @@
         <td align="right">{{total}}</td>
     </tr>
 
-    {{^prepaid}}
+ 
     {{#totaldisc}}
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">В т.ч. знижка:</td>
+        <td colspan="2" align="right">Знижка:</td>
         <td align="right">{{totaldisc}}</td>
     </tr>
     {{/totaldisc}}
@@ -97,6 +97,12 @@
         <td align="right">{{delbonus}}</td>
     </tr>
     {{/delbonus}}
+   {{#prepaid}}
+    <tr style="font-weight: bolder;">
+        <td colspan="2" align="right">Передплата:</td>
+        <td align="right">{{prepaid}}</td>
+    </tr>
+    {{/prepaid}}
     <tr style="font-weight: bolder;">
         <td colspan="2" align="right">До сплати:</td>
         <td align="right">{{payamount}}</td>
@@ -146,7 +152,7 @@
    {{/allbonus}}          
      
   
-    {{/prepaid}}
+   
     
     
     

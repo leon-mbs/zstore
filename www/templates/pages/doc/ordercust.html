@@ -21,7 +21,7 @@
                   <div class="form-group row">
                         <label class="col-5 col-form-label" for="customer">Постачальник</label>
                         <div class="col-7">
-                             <typeahead  v-model="customer_id"   ref="cust"  :onquery="oncusttext"  :onhit="hitcust" placeholder="Почнiть вводити ..."></typeahead>   
+                             <typeahead  v-model="customer_id"   ref="cust"  :onquery="oncusttext"  placeholder="Почнiть вводити ..."></typeahead>   
                         </div>
                   </div>
               </div> 
@@ -107,7 +107,7 @@
 
                         <label for="edititem">Назва </label>
 
-                         <typeahead  v-model="edititem"   ref="edititem"  :onquery="onitemtext"  :onhit="hititem"   placeholder="Почнiть вводити ..."></typeahead>     
+                         <typeahead  v-model="edititem"   ref="edititem"  :onquery="onitemtext"      placeholder="Почнiть вводити ..."></typeahead>     
                           <a  v-on:click.prevent="onOpenIL"  >Відкрити довідник</a>
                         &nbsp;&nbsp;<a  v-on:click.prevent="onAddNew" >Додати новий</a>
                              
@@ -343,7 +343,7 @@
               this.nbrand =''  
          
    
-              callPM('vLoadLists',[ ], null,(data)=> 
+              callPageMethod('vLoadLists',[ ], null,(data)=> 
               {
                    var data = JSON.parse(data)
          
@@ -367,7 +367,7 @@
                data.msr=this.nmsr
                data.cat_id=this.ncat
                
-               callPM('vSaveNewitem',[ ], JSON.stringify( data),(data)=> 
+               callPageMethod('vSaveNewitem',[ ], JSON.stringify( data),(data)=> 
                {
                    var data = JSON.parse(data)
                    if(false==checkPMAnswer(data) )   {
@@ -407,7 +407,7 @@
                 data.doc.total = this.total
                  
                 
-                callPM('save',[ ], JSON.stringify(data),(data)=> 
+                callPageMethod('save',[ ], JSON.stringify(data),(data)=> 
                   {
                        var data = JSON.parse(data)
                        
@@ -423,9 +423,9 @@
             }  ,
             hititem: function (id){
 
-                  this.edititem = id 
+                   
                   var data= {}
-                  callPM('vLoadItem',[id ], JSON.stringify(data),(data)=> 
+                  callPageMethod('vLoadItem',[id ], JSON.stringify(data),(data)=> 
                   {
                        var data = JSON.parse(data)
                        
@@ -472,10 +472,7 @@
      
                 }  ,
           
-            hitcust: function (id){
-            
-                    this.customer_id = id 
-                },
+          
             oncusttext: async function (query){
                    
                     var url  = getMethodUrl('vonTextCust',[query,2 ])
@@ -495,11 +492,15 @@
             
         }   ,   
         
-          
+        watch: {
+             edititem(newVal, oldVal){
+                 this.hititem(newVal) 
+             }
+        }   ,
         
         mounted: function  (){
             
-           callPM('loaddata',[ ], null,(data)=> 
+           callPageMethod('loaddata',[ ], null,(data)=> 
                   {
                        var data = JSON.parse(data)
                     // 

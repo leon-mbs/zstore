@@ -65,7 +65,30 @@
   
   function  callPM(method,params,postdata,callback =null   , callerror=null     )
   {
-      callPageMethod(method,params,postdata,callback , callerror);
+      try{
+      
+          if(postdata){
+             postdata =    JSON.stringify(postdata)
+          }
+          
+          callPageMethod(method,params,postdata,(data)=> 
+          {
+               var data = JSON.parse(data)
+               callback(data)
+            
+          } , (error)=> 
+          {
+               console.log(method+" "+error) 
+               if(callerror) {
+                   callerror(error)
+               }
+            
+          });
+      
+      }
+      catch(error) {
+           console.log(method+" "+error)           
+      }
   }     
      
      
@@ -949,6 +972,16 @@
                             </li>
                       
                             {{/isadmins}}
+                          <li class="nav-item  ">
+                                <a href="https://zippy.com.ua/zstoreusage" class="nav-link">
+                                    <i class="nav-icon fa fa-info-circle"></i>
+                                    <p>
+                                        Документація  
+
+                                    </p>
+                                </a>
+                            </li>
+
                         </ul>
                     </nav>
                 </div>
@@ -1040,13 +1073,32 @@
                         <div id="mcinfo" class="modal-body">
                              
                         </div>
-                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрити</button>
+                     <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрити</button>
 
-                  </div>
+                      </div>
                     </div>
                 </div>
             </div>
+            
+        <div id="modalwait" class="modal fade   "    tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm modal-dialog-centered ">
+                    <div class="modal-content  ">
+                 
+                        <table class="w-100"> 
+                        <tr>
+                        <td style="height:100px;" align="center" valign="middle">
+                            
+                            <div class="spinner-border" role="status">
+                              <span class="sr-only">Загрузка...</span>
+                            </div>
+                        </td>
+                        </tr>
+                       </table>
+                    </div>
+                </div>
+            </div>            
+            
          <script>
         {{#toasts}}
       
@@ -1166,13 +1218,13 @@ icon: 'fa fa-exclamation-triangle text-warning',
                    
        function check_execdoc(ele){
             
-            $('#execdoc').attr('disabled','disabled')
+            $("#modalwait").modal("show") ;
             return true;
        
         }
         function check_savedoc(ele){
             
-            $('#savedoc').attr('disabled','disabled')
+            $("#modalwait").modal("show") ;
             return true;
        
         } 
@@ -1267,16 +1319,23 @@ icon: 'fa fa-exclamation-triangle text-warning',
                   } else {
                        toastr.error(data)   
                   }
-                 
-                  
          
                 } )              
-            
-            
            
         }
-  
-           
+ 
+ //закрывание формы со  спинером
+ $('#modalwait').on('shown.bs.modal', function (event) {
+
+    setTimeout(
+      function() 
+      {
+         $("#modalwait").modal("hide") ;
+      }, 500);     
+   
+     
+ })
+ 
         </script>
         {{#usemobilescanner}}
         <script src="/assets/js/quagga.min.js" type="text/javascript"></script>

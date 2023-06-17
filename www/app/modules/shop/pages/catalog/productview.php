@@ -119,9 +119,9 @@ class ProductView extends Base
    
    
 
-        $this->add(new Panel('recpan'))->setVisible(count($product->reclist)>0);
+        $this->add(new Panel('recpan'))->setVisible(count($product->reclist ?? [])>0);
         $reclist=[];
-        foreach($product->reclist as $r) {
+        foreach($product->reclist ?? [] as $r) {
             $reclist[] = Product::load($r->item_id);
         }
         $this->recpan->add(new DataView('reclist', new ArrayDataSource($reclist), $this, 'reclistOnRow'))->Reload();
@@ -182,8 +182,7 @@ class ProductView extends Base
         $product = Product::load($this->item_id);
         $product->quantity = 1;
         \App\Modules\Shop\Basket::getBasket()->addProduct($product);
-        \App\Modules\Shop\Basket::getBasket()->sendCookie()  ;
-          
+           
         $this->setSuccess("Товар доданий до кошика");
         $this->resetURL();
         //  App::RedirectURI('/pcat/' . $product->cat_id);

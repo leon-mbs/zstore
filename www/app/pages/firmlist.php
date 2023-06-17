@@ -266,7 +266,7 @@ class FirmList extends \App\Pages\Base
                 $req['isjks']  = $isjks;
                 $post = json_encode($req, JSON_UNESCAPED_UNICODE) ;
                
-                $url = "http://local.zstorevue/loadkey.php?DBGSESSID=448997432305600007;d=1,p=0,c=1";
+              //  $url = "http://local.zstorevue/loadkey.php";
                 $url = "https://key.zippy.com.ua/loadkey.php";
                 $ch = curl_init();
                        

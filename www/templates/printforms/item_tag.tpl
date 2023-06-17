@@ -31,7 +31,7 @@
             {{/isbarcode}}            
 
             {{#isqrcode}}
-               <tr><td align="center">
+               <tr><td align="center" colspan="2">
                 <img style="width:80%" {{{qrcodeattr}}}  >
                
                </td> </tr>

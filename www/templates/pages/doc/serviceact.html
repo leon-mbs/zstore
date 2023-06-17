@@ -20,7 +20,7 @@
                         <div class="form-group  ">
                             <label for="customer">Замовник</label>
                             <div class="input-group  ">
-                            <typeahead required="required"      ref="cust"  :onquery="oncusttext"  :onhit="hitcust" placeholder="Почнiть вводити ..."></typeahead>   
+                            <typeahead v-model="customer_id" required="required"      ref="cust"  :onquery="oncusttext"   placeholder="Почнiть вводити ..."></typeahead>   
                                  <div v-show="customer_id>0" class="input-group-append"  >
                                      <a  v-on:click.prevent="customerInfo(customer_id)" class="btn btn-success"><i class="fa fa-info-circle"></i></a>
                                 </div>  
@@ -231,8 +231,8 @@
                             </div>                           
 
                                   <div class="form-group">
-                                    <input v-on:click.prevent="onSaveService"   type="button" value="Зберегти" class="btn btn-outline-primary">
-                                    <input  type="button" onclick="$('#modaleditserv').modal('hide')"   value="Скасувати" class="btn btn-outline-secondary ">
+                                      <input  type="button" onclick="$('#modaleditserv').modal('hide')"   value="Скасувати" class="btn btn-outline-secondary ">
+                                      <input v-on:click.prevent="onSaveService"   type="button" value="Зберегти" class="btn btn-outline-primary">
                                   </div>
                                
                         </form>
@@ -256,7 +256,7 @@
                                       
                             <div class="form-group">
                               <label for="edititem">Назва </label>
-                               <typeahead    :onquery="onitemtext"  :onhit="hititem" required="required"  ref="edititem" placeholder="Почніть вводити..."   />
+                               <typeahead  v-model="item"  :onquery="onitemtext"   required="required"  ref="edititem" placeholder="Почніть вводити..."   />
                                Наявність: <span  >{{qtystock}}</span>
                  
                             </div>
@@ -274,8 +274,9 @@
                               
 
                               <div class="form-group">
-                                <input v-on:click.prevent="onSaveItem"   type="button" value="Зберегти" class="btn btn-outline-primary">
                                 <input  type="button" onclick="$('#modaledititem').modal('hide')"   value="Скасувати" class="btn btn-outline-secondary ">
+                                <input v-on:click.prevent="onSaveItem"   type="button" value="Зберегти" class="btn btn-outline-primary">
+                                
                               </div>
                                
                         </form>
@@ -311,8 +312,9 @@
                                  </div>
 
                                   <div class="form-group">
-                                    <input v-on:click.prevent="onSaveNewCust"   type="button" value="Зберегти" class="btn btn-outline-primary">
                                     <input  type="button" onclick="$('#modalnewcust').modal('hide')"   value="Скасувати" class="btn btn-outline-secondary ">
+                                    <input v-on:click.prevent="onSaveNewCust"   type="button" value="Зберегти" class="btn btn-outline-primary">
+                                    
                                   </div>
                                
                         </form>
@@ -542,7 +544,7 @@
                     // this.editservice
                       callPM('vLoadService',[this.service,this.customer_id ], null,(data)=> 
                       {
-                           var data = JSON.parse(data)
+
                            this.loadedservice = data
                            this.editserviceprice  = this.loadedservice.price
                         
@@ -552,9 +554,11 @@
                    
                     this.customer_id = id 
                     this.onContract()
+                    
+                      
                       callPM('vLoadCust',[id ], null,(data)=> 
                       {
-                           var data = JSON.parse(data)
+
                            this.customerinfo = data.custinfo
                            this.calctotal()
                       });                  
@@ -563,7 +567,7 @@
                   this.contract = 0  
                   callPM('vLoadContracts',[this.customer_id,this.firm_id ], null,(data)=> 
                   {
-                       var data = JSON.parse(data)
+                      
              
                        this.contracts = data.contracts
  
@@ -640,10 +644,10 @@
                        }
                      }          
                      
-                
-                    callPM('save',[ ], JSON.stringify(data),(data)=> 
+                    $("#modalwait").modal("show") ;           
+                    callPM('save',[ ], data,(data)=> 
                       {
-                           var data = JSON.parse(data)
+                           
                            
                            if(false==checkPMAnswer(data) )   {
                                if(data.newnumber)  this.document_number = data.newnumber
@@ -670,9 +674,9 @@
                    data.email = this.nemail
                    data.phone = this.nphone
                    
-                   callPM('vSaveNewcust',[ ], JSON.stringify( data),(data)=> 
+                   callPM('vSaveNewcust',[ ],  data,(data)=> 
                    {
-                       var data = JSON.parse(data)
+                       
                        if(false==checkPMAnswer(data) )   {
                           return
                        }   
@@ -718,15 +722,15 @@
             
                 hititem: function (id){
                   
-                  this.item = id 
+               
                   var data = {
                       customer:this.customer_id,
                       store:this.store,
                       
                   }
-                  callPM('vLoadItem',[id ], JSON.stringify(data),(data)=> 
+                  callPM('vLoadItem',[id ], data,(data)=> 
                   {
-                       var data = JSON.parse(data)
+
                        
                        if(false==checkPMAnswer(data) )   {
                            return
@@ -760,9 +764,9 @@
                       data.customer= this.customer_id
                       data.qty = this.edititemquantity
                       
-                      callPM('vgetPriceByQty',[  ], JSON.stringify(data),(data)=> 
+                      callPM('vgetPriceByQty',[  ], data,(data)=> 
                       {
-                           var data = JSON.parse(data)
+
                            if(parseVal(data)) {
                              this.edititemprice = data.price    
                            }
@@ -788,7 +792,12 @@
   
        watch:{
        
-     
+           customer_id(n,o){
+              this.hitcust(n) 
+           }  ,
+           item(n,o){
+              this.hititem(n) 
+           }
                    
         } ,  
         
@@ -796,7 +805,7 @@
                 this.contract = 3
                 callPM('loaddata',[ ], null,(data)=> 
                   {
-                       var data = JSON.parse(data)
+                      
                        
                        if(false==checkPMAnswer(data) )   {
                            return
@@ -835,9 +844,9 @@
                   firms:true 
                
               }
-              callPM('vLoadLists',[ ], JSON.stringify(data),(data)=> 
+              callPM('vLoadLists',[ ], data,(data)=> 
               {
-                   var data = JSON.parse(data)
+
                    this.stores = data.stores
                    this.firms = data.firms
                    this.mflist = data.mfs
