@@ -690,7 +690,12 @@
         <script>
             $(document).ready(function () {
 
-                $('#barcode').focus();
+                if( $('#edititem').length )         // use this if you are using id to check
+                {
+                    $('#edititem').focus();
+                } else {
+                    $('#barcode').focus();  
+                }
 
 
                 var val = sessionStorage.getItem('decoder_readers');

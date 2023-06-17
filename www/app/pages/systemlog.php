@@ -13,6 +13,7 @@ use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
 use Zippy\WebApplication as App;
 
 class SystemLog extends \App\Pages\Base
@@ -33,6 +34,8 @@ class SystemLog extends \App\Pages\Base
 
         $this->ds = new EntityDataSource("\\App\\Entity\\Notify", "  user_id=" .   Notify::SYSTEM, " dateshow desc");
   
+        $this->add(new ClickLink("delall", $this, 'OnDel'));
+        
         $this->add(new DataView("nlist", $this->ds, $this, 'OnRow'));
         $this->nlist->setPageSize(H::getPG());
         $this->add(new \Zippy\Html\DataList\Pager("pag", $this->nlist));
@@ -63,6 +66,13 @@ class SystemLog extends \App\Pages\Base
         $this->nlist->Reload();  
     } 
     
+   public function OnDel($row) {
+         $conn = \Zdb\DB::getConnect() ;
+         
+         $conn->Execute("delete from notifies where   user_id=" . Notify::SYSTEM)  ;
+         $this->nlist->Reload();  
+   }
+   
    public function OnRow($row) {
         $notify = $row->getDataItem();
         
