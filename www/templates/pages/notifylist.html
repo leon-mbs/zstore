@@ -8,7 +8,7 @@
         <div class="row">
             <div class="col-12 col-md-8 col-xl-6">
                 <h4>Повідомлення</h4>
-                <div class="navbar nav">
+                <div class="navbar nav justify-content-start">
                     <form zippy="filter" class="form-inline ">
 
 
@@ -18,6 +18,8 @@
 
 
                     </form>
+                    <a zippy="delall" title="Очистити лог" class="btn btn-outline-danger"><i class="fa fa-trash"></i></a> 
+
                 </div>
 
                 <table class="table table-sm    ">
@@ -40,7 +42,14 @@
             </div>
                      
         </div>
+  
+<script>
 
+   function check_delall() {
+       return confirm("Очистити?")
+   }
+
+</script>   
     </body>
 
 </html>

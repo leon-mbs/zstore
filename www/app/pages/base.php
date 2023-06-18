@@ -462,7 +462,7 @@ class Base extends \Zippy\Html\WebPage
         }
         if ($user->userlogin == "admin") {
             if ($user->userpass == "admin" || $user->userpass == '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.') {
-                $this->_tvars["toasts"][] = array('title' => "title:\"Зміність у профілі пароль за замовчуванням\"");
+                $this->_tvars["toasts"][] = array('title' => "title:\"Змініть у профілі пароль за замовчуванням\"");
 
             }
         }

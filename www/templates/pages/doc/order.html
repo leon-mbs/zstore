@@ -385,7 +385,11 @@
         </form>
    <script>
             $(document).ready(function () {
-     
+    
+                if( $('#edittovar').length )         // use this if you are using id to check
+                {
+                    $('#edittovar').focus();
+                }  
         
             $('#editquantity').on('input',function( ) {
                    if(editquantity.reportValidity()==false) return
