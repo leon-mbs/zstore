@@ -19,7 +19,7 @@
                     <form zippy="filter" class="form-inline ">
                         <label for="searchnumber">№ </label>
                         <input placeholder="Пошук..." class="form-control mr-2" type="text" zippy="searchnumber"
-                               autocomplete="off" autofocus  onkeydown="onBarCode()" style="width:175px" title="Якщо пошук по номеру, iншi елементи фiльтру iгноруються">
+                               autocomplete="off"    onkeydown="onSearch()" style="width:175px" title="Якщо пошук по номеру, iншi елементи фiльтру iгноруються">
 
                         <label for="from">З </label>
                         <input type="text" class="form-control mr-sm-1  " zippy="from" style="width:110px">
@@ -186,7 +186,8 @@
             $('#searchnumber').focus();
 
 
-            function onBarCode(ele) {
+            function onSearch( ) {
+
 
                 if (event.key === 'Enter' || event.keyCode == 13) {
                     // alert($('#barcode').val());

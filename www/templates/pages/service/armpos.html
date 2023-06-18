@@ -131,7 +131,7 @@
                             Штрих код 
                             </div>
                               <div class="col-auto">
-                            <input autocomplete="off" style="width:120px" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
+                            <input autocomplete="off" style="width:120px"  type="text" zippy="barcode" onkeydown="onBarCode()">
                             <a zippy="addcode"  ></a>
                             
                             </div> 
@@ -702,9 +702,15 @@
             </div> 
         <script>
             $(document).ready(function () {
-                $('#barcode').focus();
+
+                if( $('#edittovar').length )         // use this if you are using id to check
+                {
+                    $('#edittovar').focus();
+                } else {
+                    $('#barcode').focus();  
+                }
                 
-                var paytype= $('#paytypeh').val();
+                var paytype = $('#paytypeh').val();
                 
                 if(paytype==1) {
                    $('#payed').focus();    
