@@ -68,7 +68,7 @@
                 <div class="col-12 col-md-8 col-xl-6">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
+                        Штрих код &nbsp;<input autocomplete="off" autofocus="on" type="text" zippy="barcode" onkeydown="onBarCode()">
                         &nbsp; &nbsp; &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
                         
                          {{#usemobilescanner}}  
@@ -141,7 +141,7 @@
 
                 <div class="form-group">
                     <label for="edititem">Найменування</label>
-                    <input class="form-control" zippy="edititem" placeholder="Почнiть вводити...  ">
+                    <input autofocus="on" class="form-control" zippy="edititem" placeholder="Почнiть вводити...  ">
 
                 </div>
                 {{#usesnumber}}
@@ -162,8 +162,9 @@
                 </div>
 
                 <div class="form-group">
-                    <input zippy="saverow" type="submit" value="Зберегти" class="btn  btn-outline-primary">&nbsp;<input
-                        type="button" zippy="cancelrow" value="Скасувати" class="btn   btn-outline-secondary">
+                    <input type="button" zippy="cancelrow" value="Скасувати" class="btn   btn-outline-secondary  mr-2">
+                    <input zippy="saverow" type="submit" value="Зберегти" class="btn  btn-outline-primary">
+                    
                 </div>
             </div>
         </div>
@@ -308,9 +309,7 @@
 
     <script>
         $(document).ready(function () {
-
-            $('#barcode').focus();
-
+ 
 
             var val = sessionStorage.getItem('decoder_readers');
             if (val != null) {

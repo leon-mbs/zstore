@@ -56,7 +56,7 @@
                 <div class="col-12 col-md-9 col-xl-7">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
+                        Штрих код &nbsp;<input autocomplete="off"   type="text" zippy="barcode" onkeydown="onBarCode()">
                         &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
 
 
@@ -142,8 +142,9 @@
                 </div>
 
                 <div class="form-group">
-                    <input zippy="saverow" type="submit" value="Зберегти" class="btn  btn-outline-primary">&nbsp;<input
-                        type="button" zippy="cancelrow" value="Скасувати" class="btn   btn-outline-secondary">
+                    <input type="button" zippy="cancelrow" value="До переліку" class="btn   btn-outline-secondary mr-2">
+                    <input zippy="saverow" type="submit" value="Зберегти" class="btn  btn-outline-primary">
+                    
                 </div>
             </div>
         </div>
@@ -152,7 +153,13 @@
     <script>
         $(document).ready(function () {
 
-            $('#barcode').focus();
+           if( $('#edititem').length )         
+            {
+                $('#edititem').focus();
+            } else {
+                $('#barcode').focus();  
+            }
+
         });
 
         function onBarCode(ele) {
