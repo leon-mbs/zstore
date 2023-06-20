@@ -769,7 +769,7 @@ class Invoice extends \App\Pages\Base
 
         
       
-        $customer_id = $this->docpanel->listsform->customer->getKey()  ;
+        $customer_id = $this->docform->customer->getKey()  ;
         $pt=     $this->docform->pricetype->getValue() ;
         $item->price = $item->getPriceEx(array('pricetype'=>$pt,
                                                'store'=>$store_id,   
