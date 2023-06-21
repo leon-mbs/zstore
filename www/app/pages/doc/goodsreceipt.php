@@ -481,7 +481,7 @@ class GoodsReceipt extends \App\Pages\Base
          
         $this->editsnitem->setVisible(false);
         $this->docform->setVisible(true);
-        $this->goAnkor("lankor");        
+              
        
     }
     public function saverowOnClick($sender) {
@@ -552,14 +552,14 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->setVisible(true);
         $this->wselitem->setVisible(false);
         $this->sellastitem->setVisible(false);
-        $this->goAnkor("lankor");        
+
     }
 
     public function savedocOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
-        $this->goAnkor("");
+
 
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
@@ -715,36 +715,36 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->payamount->setText($this->docform->editpayamount->getText());
         $this->docform->payed->setText($this->docform->editpayamount->getText());
         $this->docform->editpayed->setText($this->docform->editpayamount->getText());
-        $this->goAnkor("tankor");
+
     }
 
     public function onPayed($sender) {
         $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
-        $this->goAnkor("tankor");
+
     }
 
 
     public function onDisc($sender) {
         $this->docform->disc->setText(H::fa($this->docform->editdisc->getText()));
         $this->CalcPay();
-        $this->goAnkor("tankor");
+
     }
     public function onDelivery($sender) {
         $this->docform->delivery->setText(H::fa($this->docform->editdelivery->getText()));
         $this->CalcPay();
-        $this->goAnkor("tankor");
+
     }
 
     public function onNds($sender) {
         $this->docform->nds->setText($this->docform->editnds->getText());
         $this->CalcPay();
-        $this->goAnkor("tankor");
+
     }
 
     public function onRate($sender) {
         $this->docform->rate->setText($this->docform->editrate->getText());
         $this->CalcPay();
-        $this->goAnkor("tankor");
+
     }
 
     /**

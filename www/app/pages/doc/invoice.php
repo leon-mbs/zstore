@@ -722,7 +722,8 @@ class Invoice extends \App\Pages\Base
         
         return $price;
         
-    }    
+    }  
+      
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
@@ -765,18 +766,12 @@ class Invoice extends \App\Pages\Base
 
             $this->setWarn("Товару {$item->itemname} немає на складі");
         }
-
-
-        
+         
       
         $customer_id = $this->docform->customer->getKey()  ;
         $pt=     $this->docform->pricetype->getValue() ;
         $item->price = $item->getPriceEx(array('pricetype'=>$pt,
-                                               'store'=>$store_id,   
-                                               'customer_id'=>$customer_id));
-           
-        
-        
+         
         
         $item->quantity = 1;
 

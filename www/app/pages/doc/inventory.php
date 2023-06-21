@@ -101,7 +101,7 @@ class Inventory extends \App\Pages\Base
         //  $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new TextInput('qfact', new \Zippy\Binding\PropertyBinding($item, 'qfact')))->onChange($this,"onText",true);
 
-        $row->item->setAttribute('class', "text-success");
+      //  $row->item->setAttribute('class', "text-success");
 
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
 
@@ -142,7 +142,7 @@ class Inventory extends \App\Pages\Base
         }
         $id = $this->editdetail->edititem->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError("Не обрано ТМЦ");
             return;
         }
         $item = Item::load($id);
@@ -154,7 +154,12 @@ class Inventory extends \App\Pages\Base
         $item->qfact = $this->editdetail->editquantity->getText();
         $item->snumber = $sn;
 
- 
+        foreach($this->_itemlist as $i=> $it){
+          if($it->item_id==$item->item_id && $it->snumber==$item->snumber ){
+              $this->setError("ТМЦ  уже  в  списку") ;
+              return;
+          }                
+        } 
         $this->_itemlist[] = $item;
       
 
@@ -268,7 +273,7 @@ class Inventory extends \App\Pages\Base
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не введено товар");
+            $this->setError("Не введено ТМЦ");
         }
         if (($this->docform->store->getValue() > 0) == false) {
             $this->setError("Не обрано склад");
@@ -366,9 +371,9 @@ class Inventory extends \App\Pages\Base
         $code0 = $code;
         $code = ltrim($code,'0');
 
-        foreach($this->_itemlist as $it){
+        foreach($this->_itemlist as $i=> $it){
           if($it->item_code==$code || $it->bar_code==$code ){
-              $this->_itemlist[$it->item_id]->qfact += 1;
+              $this->_itemlist[$i]->qfact += 1;
                                            
               $this->docform->detail->Reload();
               return;
@@ -396,7 +401,7 @@ class Inventory extends \App\Pages\Base
         }
         $item = Item::getFirst($w);
         if ($item == null) {
-            $this->setError("Товар з кодом `{$code}` не знайдено");
+            $this->setError("ТМЦ з кодом `{$code}` не знайдено");
             return;
         }
 
