@@ -200,7 +200,7 @@
 
                     <div class="form-group">
                         <label for="edittovar">Назва</label>
-                        <input autofocus="on" placeholder="Почнiть вводити..." class="form-control " zippy="edittovar"/>
+                        <input   placeholder="Почнiть вводити..." class="form-control " zippy="edittovar"/>
 
                         Наявність: <span zippy="qtystock"></span>
                          {{^noshowpartion}}
@@ -290,7 +290,12 @@
             </div>
         </form>
         <script>
-            $(document).ready(function () {
+         $(document).ready(function () {
+ 
+            if( $('#edittovar').length )         
+            {
+                $('#edittovar').focus();
+            } 
      
         
             $('#editquantity').on('input',function( ) {

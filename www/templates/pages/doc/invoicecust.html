@@ -1,6 +1,6 @@
 <html>
    <head>
-          <title> Видаткова накладна</title>
+          <title> Рахунок вхідний</title>
     </head>
     <body>
 
@@ -345,7 +345,14 @@
                 </div>
             </div>
         </form>
-
-
+   <script>
+        $(document).ready(function () {
+ 
+            if( $('#edititem').length )         
+            {
+                $('#edititem').focus();
+            } 
+        });
+    </script>
     </body>
 </html>

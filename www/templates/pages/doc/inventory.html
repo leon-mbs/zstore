@@ -78,7 +78,7 @@
                       {{/usemobilescanner}}  
                     </div>
                     {{/usescanner}}
-                    &nbsp; <a zippy="addrow" class="btn  btn-info">Додати товар</a>
+                    &nbsp; <a zippy="addrow" class="btn  btn-info">Додати ТМЦ</a>
 
                     <table class="table table-sm">
                         <tr>
@@ -98,7 +98,7 @@
                         </tr>
                         <tr zippy="detail">
                             <td zippy="item"></td>
-                                                   <td zippy="item_code"></td>
+                            <td zippy="item_code"></td>
 
                             {{#usesnumber}}
                             <td zippy="snumber"></td>
@@ -107,7 +107,7 @@
                             <!--    <td zippy="quantity"  class="text-right" ></td>-->
 
                             <td class="text-center">
-                                <input class=" qtyprice" type="input" pattern="[0-9,\.]+" style="width:75px;" zippy="qfact">
+                                <input class="form-control qtyprice" type="input" pattern="[0-9,\.]+" style="width:75px;" zippy="qfact">
 
                             </td>
 
@@ -135,13 +135,13 @@
 
     </form>
     <form zippy="editdetail">
-        <h4>Введення товару </h4>
+        <h4>Введення ТМЦ </h4>
         <div class="row">
             <div class="col-12 col-md-4">
 
                 <div class="form-group">
                     <label for="edititem">Найменування</label>
-                    <input autofocus="on" class="form-control" zippy="edititem" placeholder="Почнiть вводити...  ">
+                    <input class="form-control" zippy="edititem" placeholder="Почнiть вводити...  ">
 
                 </div>
                 {{#usesnumber}}
@@ -310,7 +310,11 @@
     <script>
         $(document).ready(function () {
  
-
+            if( $('#edititem').length )         
+            {
+                $('#edititem').focus();
+            } 
+             
             var val = sessionStorage.getItem('decoder_readers');
             if (val != null) {
                 $('#decoder_readers').val(val);
