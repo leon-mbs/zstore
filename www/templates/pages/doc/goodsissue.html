@@ -283,7 +283,7 @@
 
                     <div class="form-group">
                         <label for="edittovar">Назва</label>
-                        <input autofocus="on" placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
+                        <input  placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
                         <a zippy="openitemsel">Відкрити довідник</a>
                         <br>Наявність: <span zippy="qtystock"></span>
                          {{^noshowpartion}}
@@ -543,6 +543,11 @@
         {{/usescanner}}   
           <script>
             $(document).ready(function () {
+  
+            if( $('#edittovar').length )         
+            {
+                $('#edittovar').focus();
+            } 
      
         
             $('#editquantity').on('input',function( ) {

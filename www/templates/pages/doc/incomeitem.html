@@ -141,7 +141,7 @@
 
                 <div class="form-group">
                     <label for="edititem">Найменування</label>
-                    <input autofocus="on" class="form-control" zippy="edititem" placeholder="Почніть вводити...  ">
+                    <input  class="form-control" zippy="edititem" placeholder="Почніть вводити...  ">
 
 
                 </div>
@@ -230,6 +230,16 @@
     <script>
  
 
+        $(document).ready(function () {
+
+            if( $('#edititem').length )         
+            {
+                $('#edititem').focus();
+            } 
+
+        });
+
+ 
         function onBarCode(ele) {
 
             if (event.key === 'Enter' || event.keyCode == 13) {
