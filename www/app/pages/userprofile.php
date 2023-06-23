@@ -40,6 +40,7 @@ class UserProfile extends \App\Pages\Base
         $form->add(new CheckBox('hidesidebar', $this->user->hidesidebar));
         $form->add(new CheckBox('darkmode', $this->user->darkmode));
         $form->add(new CheckBox('emailnotify', $this->user->emailnotify));
+        $form->add(new CheckBox('botnotify', $this->user->botnotify))->setVisible(strlen($this->user->chat_id)>0);
         $form->add(new CheckBox('usemobileprinter', $this->user->usemobileprinter));
 
         $form->add(new DropDownChoice('deffirm', \App\Entity\Firm::getList(), $this->user->deffirm));
@@ -138,6 +139,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->viber = $sender->viber->getText();
         $this->user->hidesidebar = $sender->hidesidebar->isChecked() ? 1 : 0;
         $this->user->darkmode = $sender->darkmode->isChecked() ? 1 : 0;
+        $this->user->botnotify = $sender->botnotify->isChecked() ? 1 : 0;
         $this->user->emailnotify = $sender->emailnotify->isChecked() ? 1 : 0;
 
         $this->user->deffirm = $sender->deffirm->getValue();

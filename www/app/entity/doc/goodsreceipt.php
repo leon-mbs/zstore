@@ -150,19 +150,17 @@ class GoodsReceipt extends Document
 
         $payed = $payed * $rate; 
         $this->payamount = $this->headerdata['payamount'] * $rate; 
-    
          
- 
-            \App\Entity\IOState::addIOState($this->document_id, 0 - $payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
                 
-            $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment']);
+        $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment']);
        
 
-    
- 
-       
-           
-        
+        if($this->headerdata['delivery'] > 0   ) {
+           \App\Entity\IOState::addIOState($this->document_id, 0 - $payed + $this->headerdata["delivery"], \App\Entity\IOState::TYPE_BASE_OUTCOME);
+           \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata["delivery"], \App\Entity\IOState::TYPE_NAKL);
+        } else {
+           \App\Entity\IOState::addIOState($this->document_id, 0 - $payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+        }
  
 
         return true;
