@@ -41,6 +41,7 @@ class Export extends \App\Pages\Base
 
         $this->onType($form->itype);
 
+        $form = $this->add(new Form("cform"));
 
         $form->add(new DropDownChoice("ctype", array(), 0));
         $form->add(new CheckBox("custxml"));

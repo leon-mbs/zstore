@@ -30,6 +30,7 @@ class Category extends \ZCL\DB\Entity
         $this->price3 = (string)($xml->price3[0]);
         $this->price4 = (string)($xml->price4[0]);
         $this->price5 = (string)($xml->price5[0]);
+        $this->cat_desc = (string)($xml->cat_desc[0]);
         $this->image_id = (int)$xml->image_id[0];
         $this->noshop = (int)$xml->noshop[0];
         $this->nofastfood = (int)$xml->nofastfood[0];
@@ -45,6 +46,7 @@ class Category extends \ZCL\DB\Entity
 
         $this->detail = "<detail>";
 
+        $this->detail .= "<cat_desc><![CDATA[{$this->cat_desc}]]></cat_desc>";
         $this->detail .= "<price1>{$this->price1}</price1>";
         $this->detail .= "<price2>{$this->price2}</price2>";
         $this->detail .= "<price3>{$this->price3}</price3>";

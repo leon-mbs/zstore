@@ -36,6 +36,7 @@ class CategoryList extends \App\Pages\Base
         $this->categorytable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->add(new Form('categorydetail'))->setVisible(false);
         $this->categorydetail->add(new TextInput('editcat_name'));
+        $this->categorydetail->add(new TextInput('editcat_desc'));
         $this->categorydetail->add(new DropDownChoice('editparent', 0));
 
         $this->categorydetail->add(new TextInput('editprice1'));
@@ -160,6 +161,7 @@ class CategoryList extends \App\Pages\Base
         $this->categorytable->setVisible(false);
         $this->categorydetail->setVisible(true);
         $this->categorydetail->editcat_name->setText($this->_category->cat_name);
+        $this->categorydetail->editcat_desc->setText($this->_category->cat_desc);
         $this->categorydetail->editparent->setValue($this->_category->parent_id);
         $this->categorydetail->editnoshop->setChecked($this->_category->noshop);
         $this->categorydetail->editnofastfood->setChecked($this->_category->nofastfood);
@@ -200,6 +202,7 @@ class CategoryList extends \App\Pages\Base
 
         $this->_category->parent_id = $this->categorydetail->editparent->getValue();
         $this->_category->cat_name = $this->categorydetail->editcat_name->getText();
+        $this->_category->cat_desc = $this->categorydetail->editcat_desc->getText();
         $this->_category->noshop = $this->categorydetail->editnoshop->isChecked() ? 1 : 0;
         $this->_category->nofastfood = $this->categorydetail->editnofastfood->isChecked() ? 1 : 0;
         if ($this->_category->cat_name == '') {
