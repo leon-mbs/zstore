@@ -181,6 +181,9 @@ class Subscribe extends \ZCL\DB\Entity
             if ($notify > 0 && $sub->msg_type == self::MSG_NOTIFY) {
                 self::sendNotify($notify, $text);
             }
+            if ($notify == 0 && $sub->msg_type == self::MSG_NOTIFY) {
+                self::sendNotify(\App\Entity\Notify::SYSTEM, $text);
+            }
             
             if(strlen($ret)>0) {
                 \App\Helper::logerror($ret); 
@@ -250,14 +253,49 @@ class Subscribe extends \ZCL\DB\Entity
                 $header['mf'] = "Передоплата";
             }
         }
-        if ($doc->headerdata['payed'] == 0 && $doc->payamount > 0) {
+        if($doc->meta_name == 'POSCheck') {
+            
+             if( doubleval($doc->headerdata['payedcard'] ) ==0 &&  $doc->headerdata['mfnal']  >0 && $doc->headerdata['payed'] > 0) {
+                    $header['nal'] = "Готівка";
+                    $mf = \App\Entity\MoneyFund::load($doc->headerdata['mfnal']);
+                    $header['mf'] = $mf->mf_name;
+           
+             } 
+             if( doubleval($doc->headerdata['payed'] ) ==0 && $doc->headerdata['mfbeznal']  >0 && $doc->headerdata['payedcard'] > 0) {
+                    $header['nal'] = "Безготівка";
+                    $mfb = \App\Entity\MoneyFund::load($doc->headerdata['mfbeznal']);
+                    $header['mf'] = $mfb->mf_name;
+                    if(strlen($mfb->bank)>0)   {
+                        $header['mf'] = $mf->bank;    
+                        $header['mfacc'] = $mf->bankacc;    
+                    }
+     
+             }            
+             if($doc->headerdata['mfnal']  >0 && $doc->headerdata['payed'] > 0 && $doc->headerdata['mfbeznal']  >0 && $doc->headerdata['payedcard'] > 0 ) {
+                    $mf = \App\Entity\MoneyFund::load($doc->headerdata['mfnal']);
+                    $mfb = \App\Entity\MoneyFund::load($doc->headerdata['mfbeznal']);
+                    $header['mf'] = $mf->mf_name." + ".$mfb->mf_name;
+                    if(strlen($mfb->bank)>0)   {
+                        $header['mf'] =  $mf->mf_name." + ".$mfb->bank;    
+                        $header['mfacc'] = $mfb->bankacc;    
+                    }
+                     
+                 
+                    $header['nal'] = "Комбінована";                 
+             }           
+            
+        }
+        
+        $payed= doubleval($doc->headerdata['payed']) + doubleval($doc->headerdata['payedcard']) ;
+        
+        if ($payed == 0 && $doc->payamount > 0) {
             $header['mf'] = "Постоплата (кредит)";
         }
-        if ($doc->headerdata['payed'] == 0 && $doc->payamount == 0) {
+        if ($payed == 0 && $doc->payamount == 0) {
             $header['mf'] = "Передоплата";
         }
-        if ($doc->headerdata['payed'] > 0) {
-            $header['payed'] = \App\Helper::fa($doc->headerdata['payed']);
+        if ($payed > 0) {
+            $header['payed'] = \App\Helper::fa($payed);
         }
 
         if ($doc->headerdata['pos']) {

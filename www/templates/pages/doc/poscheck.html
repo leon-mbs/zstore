@@ -33,12 +33,7 @@
                         <a style="font-size:smaller" zippy="addcust">Додати нового</a>
 
                     </div>
-                    <div class="form-group  ">
-                        <label for="pos">POS термiнал</label>
-                        <select class="form-control" zippy="pos">
-                            <option value="0">Не обрано</option>
-                        </select>
-                    </div>
+               
 
 
                 </div>
@@ -80,7 +75,7 @@
                 <div class="col-12 col-md-10 col-xl-8">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
+                        Штрих код &nbsp;<input autocomplete="off"   type="text" zippy="barcode" onkeydown="onBarCode()">
                         &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
 
                     </div>
@@ -180,6 +175,18 @@
                             <td><a data-label="payamount" href="javascript:void(0);" data-toggle="modal"
                                    data-target="#modalpayamount"><i class="fa fa-edit"></i></a></td>
                         </tr>
+                       <tr style="font-weight: bolder;">
+                            {{^usesnumber}}
+                            <td colspan="5" class="text-right"><span data-label="prepaid">Передплата:</span></td>
+                            {{/usesnumber}}
+                            {{#usesnumber}}
+                            <td colspan="7" class="text-right"><span data-label="prepaid">Передплата:</span></td>
+                            {{/usesnumber}}
+
+                            <td zippy="prepaid" class="text-right"></td>
+                            <td><a data-label="prepaid" href="javascript:void(0);" data-toggle="modal"
+                                   data-target="#modalprepaid"><i class="fa fa-edit"></i></a></td>
+                        </tr>
                         <tr style="font-weight: bolder;">
                             {{^usesnumber}}
                             <td colspan="5" class="text-right"><span data-label="payed">Внесено оплату:</span></td>
@@ -264,6 +271,29 @@
                     </div>
                 </div>
             </div>
+            <div id="modalprepaid" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered  modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Всього</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group  ">
+                                <input class="form-control qtyprice" type="text" zippy="editprepaid" pattern="[0-9,\.]+">
+                                <div class="input-group-append">
+                                    <input type="submit" value="OK" zippy="bprepaid" class="ml-2 btn btn-info  ">
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
             <div id="modalpayed" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
@@ -324,8 +354,9 @@
 
 
                     <div class="form-group">
+                        <input type="button" zippy="cancelrow" value="Скасувати" class="btn btn-outline-secondary  mr-2">
                         <input type="submit" zippy="submitrow" value="Зберегти" class="btn btn-outline-primary ">
-                        &nbsp; <input type="button" zippy="cancelrow" value="Скасувати" class="btn btn-outline-secondary ">
+                        
                     </div>
 
 
@@ -360,8 +391,9 @@
 
 
                     <div class="form-group">
+                        <input type="button" zippy="cancelser" value="Скасувати" class="btn btn-outline-secondary  mr-2">
                         <input type="submit" zippy="submitser" value="Зберегти" class="btn btn-outline-primary ">
-                        &nbsp; <input type="button" zippy="cancelser" value="Скасувати" class="btn btn-outline-secondary ">
+                        
                     </div>
 
 
@@ -384,8 +416,9 @@
 
 
                     <div class="form-group">
+                        <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-outline-secondary  mr-2">
                         <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-outline-primary">
-                        <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-outline-secondary ">
+                        
                     </div>
                 </div>
             </div>

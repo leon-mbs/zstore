@@ -114,6 +114,13 @@ class Import extends \App\Pages\Base
 
         $form->onSubmit($this, "onCImport");
 
+        
+        $form = $this->add(new Form("oform"));
+        $form->add(new \Zippy\Html\Form\File("ofilename"));
+        $form->onSubmit($this, "onOImport");
+        
+        
+        
         $this->_tvars['preview'] = false;
         $this->_tvars['preview2'] = false;
         $this->_tvars['preview3'] = false;
@@ -173,7 +180,7 @@ class Import extends \App\Pages\Base
         $file = $this->iform->filename->getFile();
         if (strlen($file['tmp_name']) == 0) {
 
-            $this->setError('noselfile');
+            $this->setError('Не вибраний файл');
             return;
         }
 
@@ -463,7 +470,7 @@ class Import extends \App\Pages\Base
 
         $file = $this->cform->cfilename->getFile();
         if (strlen($file['tmp_name']) == 0) {
-            $this->setError('noselfile');
+            $this->setError('Не вибраний файл');
             return;
         }
 
@@ -584,7 +591,7 @@ class Import extends \App\Pages\Base
         $file = $this->nform->nfilename->getFile();
         if (strlen($file['tmp_name']) == 0) {
 
-            $this->setError('noselfile');
+            $this->setError('Не вибраний файл');
             return;
         }
 
@@ -700,4 +707,63 @@ class Import extends \App\Pages\Base
         }
     }
 
+    
+  public function onOImport($sender) {
+
+        $file = $this->oform->ofilename->getFile();
+        if (strlen($file['tmp_name']) == 0) {
+            $this->setError('Не вибраний файл');
+            return;
+        }
+       
+        $conn= \ZDB\DB::getConnect() ;
+   
+         $xml = @simplexml_load_file($file['tmp_name']) ;
+        if($xml==false) {
+
+           $logger->error("Невірний  контент" );
+
+           return;
+        }
+            
+        $list=[];
+            
+        foreach ($xml->children() as $row) {
+            
+            
+            $name= (string)$row->optname[0] ;
+            $value= (string)$row->optvalue[0] ;
+            $list[$name]=$value;
+
+        }
+      
+      
+        $conn->BeginTrans();
+      
+         
+        try {       
+      
+           foreach($list as $n=>$v) {
+               $n = $conn->qstr($n);
+               $v = $conn->qstr($v);
+               
+               $conn->Execute("delete from options where  optname={$n}")  ;
+               $conn->Execute("insert into options (optname,optvalue) values({$n},{$v}) ")  ;
+               
+           }
+            
+           $conn->CommitTrans();
+              
+        } catch(\Throwable $ee) {
+            $conn->RollbackTrans();
+            $this->setError($ee->getMessage());
+
+            return;
+        }
+
+        
+        $this->setSuccess("Імпортовано  "  );
+    }
+    
+    
 }

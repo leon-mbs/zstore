@@ -385,7 +385,11 @@
         </form>
    <script>
             $(document).ready(function () {
-     
+    
+                if( $('#edittovar').length )         
+                {
+                    $('#edittovar').focus();
+                }  
         
             $('#editquantity').on('input',function( ) {
                    if(editquantity.reportValidity()==false) return

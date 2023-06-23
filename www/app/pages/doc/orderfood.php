@@ -114,6 +114,11 @@ class OrderFood extends \App\Pages\Base
   
         if ($docid > 0) {    //загружаем   содержимое  документа настраницу
             $this->_doc = Document::load($docid)->cast();
+            if($this->_doc->headerdata['arm']==1) {
+                 $this->setWarn('Замовлення створено в АРМ кафе')  ;
+                 App::Redirect("\\App\\Pages\\Service\\ARMFood");
+                 return;
+            }
             $this->docform->document_number->setText($this->_doc->document_number);
 
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
@@ -165,6 +170,8 @@ class OrderFood extends \App\Pages\Base
 
 
                 }
+            } else{
+                $this->setWarn('Замовлення слід створювати через  АРМ касира для кафе')  ;
             }
         }
 

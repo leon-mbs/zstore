@@ -53,22 +53,26 @@
 <font >a</font>
  
 
-    {{^prepaid}}
+  
     {{#totaldisc}}
-<text>В т.ч. знижка: {{totaldisc}}</text>
+<text>Знижка: {{totaldisc}}</text>
  
     {{/totaldisc}}
    {{#delbonus}}
  <text>Списано бонусiв: {{delbonus}}</text>
  
     {{/delbonus}}
+   {{#prepaid}}
+ <text>Передплата: {{prepaid}}</text>
+ 
+    {{/prepaid}}
 
  <text>До сплати: {{payamount}}</text>
  <text>Оплата: {{payed}}</text>
  {{#exchange}}
  <text>Решта: {{exchange}}</text>
  {{/exchange}} 
-    {{/prepaid}}
+ 
     
     
         {{#form1}}

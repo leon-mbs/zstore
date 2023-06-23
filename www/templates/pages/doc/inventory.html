@@ -68,7 +68,7 @@
                 <div class="col-12 col-md-8 col-xl-6">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
+                        Штрих код &nbsp;<input autocomplete="off" autofocus="on" type="text" zippy="barcode" onkeydown="onBarCode()">
                         &nbsp; &nbsp; &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
                         
                          {{#usemobilescanner}}  
@@ -78,7 +78,7 @@
                       {{/usemobilescanner}}  
                     </div>
                     {{/usescanner}}
-                    &nbsp; <a zippy="addrow" class="btn  btn-info">Додати товар</a>
+                    &nbsp; <a zippy="addrow" class="btn  btn-info">Додати ТМЦ</a>
 
                     <table class="table table-sm">
                         <tr>
@@ -98,7 +98,7 @@
                         </tr>
                         <tr zippy="detail">
                             <td zippy="item"></td>
-                                                   <td zippy="item_code"></td>
+                            <td zippy="item_code"></td>
 
                             {{#usesnumber}}
                             <td zippy="snumber"></td>
@@ -107,7 +107,7 @@
                             <!--    <td zippy="quantity"  class="text-right" ></td>-->
 
                             <td class="text-center">
-                                <input class=" qtyprice" type="input" pattern="[0-9,\.]+" style="width:75px;" zippy="qfact">
+                                <input class="form-control qtyprice" type="input" pattern="[0-9,\.]+" style="width:75px;" zippy="qfact">
 
                             </td>
 
@@ -135,7 +135,7 @@
 
     </form>
     <form zippy="editdetail">
-        <h4>Введення товару </h4>
+        <h4>Введення ТМЦ </h4>
         <div class="row">
             <div class="col-12 col-md-4">
 
@@ -162,8 +162,9 @@
                 </div>
 
                 <div class="form-group">
-                    <input zippy="saverow" type="submit" value="Зберегти" class="btn  btn-outline-primary">&nbsp;<input
-                        type="button" zippy="cancelrow" value="Скасувати" class="btn   btn-outline-secondary">
+                    <input type="button" zippy="cancelrow" value="Скасувати" class="btn   btn-outline-secondary  mr-2">
+                    <input zippy="saverow" type="submit" value="Зберегти" class="btn  btn-outline-primary">
+                    
                 </div>
             </div>
         </div>
@@ -308,10 +309,12 @@
 
     <script>
         $(document).ready(function () {
-
-            $('#barcode').focus();
-
-
+ 
+            if( $('#edititem').length )         
+            {
+                $('#edititem').focus();
+            } 
+             
             var val = sessionStorage.getItem('decoder_readers');
             if (val != null) {
                 $('#decoder_readers').val(val);

@@ -75,9 +75,7 @@
             <div class="col-12 col-md-6 col-lg-8  "  >
                 Документи  в  z-звiтi
                <br><a zippy="sync"><b>Синхронизацiя  з  фiскальним  сервером</b></a> 
-                           <div style="display:none" id="aloader" class="spinner-border spinner-border-sm " role="status">
-                                  <span class="sr-only">Завантаження...</span>
-                              </div>
+                            
                
                         
                 <table class="table table-sm">
@@ -90,7 +88,7 @@
                         <th class="text-right">Пов. нал</th>
                         <th class="text-right">Пов. безнал</th>
                        
-                        <th> </th>
+                     
                         <th> </th>
                     </tr>
                     <tr  zippy="list">
@@ -101,7 +99,7 @@
                         <td zippy="amount3" class="text-right"> </td>
                         <td zippy="amount0r" class="text-right"> </td>
                         <td zippy="amount1r" class="text-right"> </td>
-                        <td> <a zippy="fisc"> Фiскалiзувати </a> </td>
+                      
                         <td> <a zippy="del"> <i class="fa fa-trash"></i> </a> </td>
                         
                     </tr>
@@ -115,9 +113,13 @@
 
         </div>
          <script>
+        
          function check_sync(){
-              $("#aloader").show()      
-         }
+             $("#modalwait").modal("show") ;
+                  
+         } 
+              
+         
          </script>
     </body>
 </html>

@@ -50,8 +50,8 @@
                         </form>
                         {{#leadmode}}  
 
-                        <a class="btn btn-outline-success"   zippy="leadsourcesedit"  ><i class="fa fa-cog"> Джерело лідів</i> </a>
-                        &nbsp; <a class="btn btn-outline-success    " zippy="leadstatusesedit"  ><i class="fa fa-cog"> Стан лідів</i> </a>
+                        <a class="btn btn-outline-success mr-2"   zippy="leadsourcesedit"  ><i class="fa fa-cog"> Джерело лідів</i> </a>
+                         <a class="btn btn-outline-success    " zippy="leadstatusesedit"  ><i class="fa fa-cog"> Стан лідів</i> </a>
                         {{/leadmode}}            
                     </div>
                     {{#leadmode}}  
@@ -136,7 +136,7 @@
 
                 <div class="form-group">
                     <label for="editcustomername">Назва</label>
-                    <input required="required" class="form-control" zippy="editcustomername"/>
+                    <input autofocus="on" required="required" class="form-control" zippy="editcustomername"/>
                     {{#leadmode}}  
                     <small>Можна використати контакт як тимчасове ім'я</small>
                     {{/leadmode}}  
@@ -260,8 +260,9 @@
             <div class="w-100"></div>
             <div class="col-12 col-md-4 ">
                 <div class="form-group">
-                    <button zippy="save" type="submit" class="btn btn-primary ">Зберегти</button> &nbsp;&nbsp;
-                    <button zippy="cancel" type="button" class="btn btn-outline-secondary">Відмінити</button>
+                    <button zippy="cancel" type="button" class="btn btn-outline-secondary mr-2">Скасувати</button>
+                    <button zippy="save" type="submit" class="btn btn-primary ">Зберегти</button> 
+                    
 
                 </div>
             </div>
@@ -272,7 +273,7 @@
         <div class="row mt-2" zippy="contentview">
             <div class="col-12 pb-4">
                 <a zippy="back"><i class="fa fa-arrow-circle-left"></i> До переліку</a>
-                <h4 zippy=concname></h4>
+                <h4 zippy="concname"</h4>
 
                 <table>
                     <tr><td colspan="2">

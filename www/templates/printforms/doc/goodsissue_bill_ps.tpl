@@ -5,6 +5,11 @@
 <text>вiд {{date}}</text>
 <align>left</align>
 <text>Продавець: {{firm_name}}</text>
+
+    {{#isbank}}
+<text>{{bank}}</text>
+<text>р/р {{bankacc}}</text>    
+
 <text>Тел. {{phone}}</text>
 <text>Покупець: {{customer_name}}</text>
 <separator>-</separator>

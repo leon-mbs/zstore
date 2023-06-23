@@ -114,9 +114,8 @@
                 <div class="col-12  col-xl-10">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих код &nbsp;<input style="width:150px;" autocomplete="off" autofocus type="text" zippy="barcode"
-                                               onkeydown="onBarCode()">
-                        &nbsp; &nbsp; &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
+                        Штрих код &nbsp;<input autofocus="on" style="width:150px;" autocomplete="off"  type="text" zippy="barcode"  onkeydown="onBarCode()">
+                        &nbsp;   &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
                       {{#usemobilescanner}}  
                         &nbsp; &nbsp; &nbsp; &nbsp; <i id="mobilescanner" data-toggle="modal" data-target="#modalscanner"
                                                        title="Сканувати  мобiльним пристроєм"
@@ -127,7 +126,7 @@
                     </div>
                     {{/usescanner}}
                     &nbsp;<a class="btn btn-info btn-sm" zippy="addrow">Додати позицію</a>
-                    <table class="table  table-sm" id="lankor">
+                    <table class="table  table-sm" >
                         <tr>
                             <th></th>
                             <th>Найменування</th>
@@ -365,7 +364,7 @@
                         
                         
                         <div class="input-group  ">
-                        <input placeholder="Почніть вводити..." class="form-control " zippy="edititem"/>
+                        <input  placeholder="Почніть вводити..." class="form-control " zippy="edititem"/>
                               <div class="input-group-append">
                                  <a title="Додати новий" class="btn btn-success" zippy="addnewitem" >+</a>
                             </div>                    
@@ -405,8 +404,9 @@
                     </div>
 
                     <div class="form-group">
-                        <input zippy="saverow" type="submit" value="Зберегти" class="btn btn-outline-primary"> <input
-                            type="button" zippy="cancelrow" value="До переліку" class="btn btn-outline-secondary ">
+                        <input  type="button" zippy="cancelrow" value="До переліку" class="btn btn-outline-secondary  mr-2">
+                        <input zippy="saverow" type="submit" value="Зберегти" class="btn btn-outline-primary"> 
+                        
                     </div>
 
 
@@ -446,7 +446,7 @@
 
                     <div class="form-group">
                         <label for="editnewitemname">Назва </label>
-                        <input class="form-control " zippy="editnewitemname" required="required"/>
+                        <input autofocus="on" class="form-control " zippy="editnewitemname" required="required"/>
                     </div>
                     <div class="form-group">
                         <label for="editnewitemcode">Код</label>
@@ -488,8 +488,9 @@
                     
                     
                     <div class="form-group">
+                        <input type="button" zippy="cancelnewitem" value="Скасувати" class="btn btn-outline-secondary  mr-2">
                         <input zippy="savenewitem" type="submit" value="Зберегти" class="btn btn-outline-primary">
-                        <input type="button" zippy="cancelnewitem" value="Скасувати" class="btn btn-outline-secondary ">
+                        
                     </div>
                 </div>
             </div>
@@ -501,7 +502,7 @@
 
                     <div class="form-group">
                         <label for="editcustname">Назва </label>
-                        <input class="form-control " zippy="editcustname" required="required"/>
+                        <input autofocus="on" class="form-control " zippy="editcustname" required="required"/>
                     </div>
                     <div class="form-group">
                         <label for="editphone">Телефон</label>
@@ -514,8 +515,9 @@
 
 
                     <div class="form-group">
+                        <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-outline-secondary mr-2">
                         <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-outline-primary">
-                        <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-outline-secondary ">
+                        
                     </div>
                 </div>
             </div>
@@ -664,7 +666,7 @@
 
                     <div class="form-group">
                         <label for="editsnitemname">Назва </label>
-                        <input placeholder="Почніть вводити..." class="form-control " zippy="editsnitemname" required="required"/>
+                        <input  autofocus="on" placeholder="Почніть вводити..." class="form-control " zippy="editsnitemname" required="required"/>
                     </div>
                     <div class="form-group">
                         <label for="editsn">Серійні номери</label>
@@ -678,8 +680,9 @@
                     </div>
                     
                     <div class="form-group">
+                        <input type="button" zippy="cancelsnitem" value="Скасувати" class="btn btn-outline-secondary mr-2">
                         <input zippy="savesnitem" type="submit" value="Зберегти" class="btn btn-outline-primary">
-                        <input type="button" zippy="cancelsnitem" value="Скасувати" class="btn btn-outline-secondary ">
+                        
                     </div>
                 </div>
             </div>
@@ -689,9 +692,13 @@
         {{#usescanner}}
         <script>
             $(document).ready(function () {
-
-                $('#barcode').focus();
-
+      
+      
+                if( $('#edititem').length )         
+                {
+                    $('#edititem').focus();
+                } 
+    
 
                 var val = sessionStorage.getItem('decoder_readers');
                 if (val != null) {

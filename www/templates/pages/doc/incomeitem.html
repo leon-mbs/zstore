@@ -67,7 +67,7 @@
                 <div class="col-12 col-md-10 col-xl-8">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
+                        Штрих код &nbsp;<input  autofocus="on" autocomplete="off"   type="text" zippy="barcode" onkeydown="onBarCode()">
                         &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
 
 
@@ -141,7 +141,7 @@
 
                 <div class="form-group">
                     <label for="edititem">Найменування</label>
-                    <input class="form-control" zippy="edititem" placeholder="Почніть вводити...  ">
+                    <input  class="form-control" zippy="edititem" placeholder="Почніть вводити...  ">
 
 
                 </div>
@@ -176,8 +176,9 @@
             
             
                 <div class="form-group">
-                    <input zippy="saverow" type="submit" value="Зберегти" class="btn  btn-outline-primary">&nbsp;<input
-                        type="button" zippy="cancelrow" value="Скасувати" class="btn   btn-outline-secondary">
+                    <input  type="button" zippy="cancelrow" value="До переліку" class="btn   btn-outline-secondary mr-2">
+                    <input zippy="saverow" type="submit" value="Зберегти" class="btn  btn-outline-primary">
+                    
                 </div>
             </div>
         </div>
@@ -218,19 +219,27 @@
                     
 
                     <div class="form-group">
+                        <input type="button" zippy="cancelnewitem" value="Скасувати" class="btn btn-outline-secondary  mr-2">
                         <input zippy="savenewitem" type="submit" value="Зберегти" class="btn btn-outline-primary">
-                        <input type="button" zippy="cancelnewitem" value="Скасувати" class="btn btn-outline-secondary ">
+                        
                     </div>
                 </div>
             </div>
         </form>
     
     <script>
+ 
+
         $(document).ready(function () {
 
-            $('#barcode').focus();
+            if( $('#edititem').length )         
+            {
+                $('#edititem').focus();
+            } 
+
         });
 
+ 
         function onBarCode(ele) {
 
             if (event.key === 'Enter' || event.keyCode == 13) {

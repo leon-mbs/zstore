@@ -207,8 +207,9 @@
 
 
                     <div class="form-group">
+                        <input type="button" zippy="cancelrow" value="Скасувати" class="btn btn-outline-secondary mr-2">
                         <input type="submit" zippy="submitrow" value="Зберегти" class="btn btn-outline-primary ">
-                        &nbsp; <input type="button" zippy="cancelrow" value="Скасувати" class="btn btn-outline-secondary ">
+                        
                     </div>
 
 
@@ -216,6 +217,14 @@
             </div>
         </form>
 
-
+      <script>
+        $(document).ready(function () {
+ 
+            if( $('#edittovar').length )         
+            {
+                $('#edittovar').focus();
+            } 
+        });
+    </script>
     </body>
 </html>

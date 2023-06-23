@@ -21,7 +21,7 @@ class Warranty extends Document
                 "quantity"   => H::fqty($item->quantity),
                 "price"      => H::fa($item->price),
                 "amount"     => H::fa($item->quantity * $item->price),
-                "sn"         => $item->sn,
+                "sn"         => $item->snumber,
                 "msr"        => $item->msr,
                 "warranty"   => $item->warranty
             );

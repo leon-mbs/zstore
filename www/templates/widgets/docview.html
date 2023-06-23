@@ -164,7 +164,7 @@
                                 </tr>
                                 <tr  v-for="item   in docdata.loglist"  >
                                     <td >{{item.statename}}</td>
-                                    <td class="text-nowrap "  >{{item.statedate}}</td>
+                                    <td class="text-nowrap "  ><small>{{item.statedate}}</small></td>
                                     <td zippy="stateuser">{{item.stateuser}}</td>
 
 
@@ -177,17 +177,17 @@
                                 <tr>
                                     <th>Дата</th>
                                     <th>Рахунок</th>
-                                    <th class="text-right">Прибуток</th>
-                                    <th class="text-right">Видаток</th>
+                                    <th class="text-center">+</th>
+                                    <th class="text-center">-</th>
                                   
 
 
                                 </tr>
                                 <tr v-for="item   in docdata.paylist">
-                                    <td class="text-nowrap " zippy="paydate">{{item.paydate}}</td>
+                                    <td class="text-nowrap " zippy="paydate"><small>{{item.paydate}}</small></td>
                                     <td zippy="paymf">{{item.paymf}}</td>
-                                    <td class="text-right " zippy="payamountp">{{item.payamountp}}</td>
-                                    <td class="text-right " zippy="payamountm">{{item.payamountm}}</td>
+                                    <td class="text-right " zippy="payamountp">&nbsp;{{item.payamountp}}</td>
+                                    <td class="text-right " zippy="payamountm">&nbsp;{{item.payamountm}}</td>
                                 
 
                                 </tr>

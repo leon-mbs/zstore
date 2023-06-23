@@ -48,7 +48,7 @@
                 <form zippy="mfdetail">
                     <div class="form-group">
                         <label for="editmf_name">Назва</label>
-                        <input class="form-control" zippy="editmf_name"/>
+                        <input autofocus="on" class="form-control" zippy="editmf_name"/>
                     </div>
                     <div class="form-check">
                         <input zippy="editbeznal" type="checkbox" class="form-check-input">
@@ -90,10 +90,11 @@
                     <input zippy="editdisabled" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="editdisabled">Не використовується</label>
                 </div>
-
-                    <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">&nbsp;&nbsp;
-                    <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary  ">
-
+                  <div class="form-group">
+                    <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary mr-2 ">
+                    <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">
+                    
+                 </div>
                 </form>
             </div>
         </div>

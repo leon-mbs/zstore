@@ -40,6 +40,9 @@ class Notify extends \ZCL\DB\Entity
             if ($user->emailnotify == 1 && strlen($user->email) > 0) {
                 \App\Helper::sendLetter($user->email,$this->message, "Нове повідомлення");
             }
+            if ($user->botnotify == 1 && strlen($user->chat_id) > 0) {
+                \App\Entity\Subscribe::sendBot($user->chat_id,$this->message );
+            }
         }
     }
 

@@ -47,7 +47,7 @@
                 <div class="col-12 col-md-10 col-xl-8">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
+                        Штрих код &nbsp;<input autocomplete="off"  type="text" zippy="barcode" onkeydown="onBarCode()">
                         &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
 
                     </div>
@@ -94,9 +94,9 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-outline-secondary  ">
-                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-outline-primary  ">
-                    &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-outline-primary  ">
+                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-outline-secondary  mr-2 ">
+                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-outline-primary   mr-2">
+                    <input zippy="execdoc" type="submit" value="Провести" class="btn btn-outline-primary  ">
 
 
                 </div>
@@ -131,8 +131,9 @@
 
 
                     <div class="form-group">
+                        <input type="button" zippy="cancelrow" value="До переліку" class="btn btn-outline-secondary  mr-2">
                         <input type="submit" zippy="submitrow" value="Зберегти" class="btn btn-outline-primary ">
-                        &nbsp; <input type="button" zippy="cancelrow" value="До переліку" class="btn btn-outline-secondary ">
+                        
                     </div>
 
 
@@ -143,7 +144,12 @@
         <script>
             $(document).ready(function () {
 
-                $('#barcode').focus();
+               if( $('#edittovar').length )         
+                {
+                    $('#edittovar').focus();
+                } else {
+                    $('#barcode').focus();  
+                }
             });
 
             function onBarCode(ele) {

@@ -67,7 +67,7 @@
                     <form zippy="categorydetail" enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="editcat_name">Назва</label>
-                            <input required="required" class="form-control" zippy="editcat_name"/>
+                            <input autofocus="on" required="required" class="form-control" zippy="editcat_name"/>
                         </div>
                         {{#usecattree}}
                         <div class="form-group">
@@ -110,8 +110,9 @@
                             <label class="form-check-label" for="editnofastfood">Не показувати в кафе</label>
                         </div>
                         <div class="form-group">
-                            <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">&nbsp;&nbsp;
-                            <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary  ">
+                            <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary mr-2 ">
+                            <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">
+                            
                         </div>
                     </form>
                 </div>

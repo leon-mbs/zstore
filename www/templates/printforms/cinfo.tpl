@@ -22,8 +22,9 @@
    {{/dolg}}
   {{#disc}}
    <tr><td>Постійна знижка</td><td>   {{disc}}</td></tr>
-   {{/disc}}
 
+   {{/disc}}
+   <tr><td>Покупок на  суму</td><td>   {{sumall}}</td></tr>
    
    {{#comment}}   
    <tr><td colspan="2">Примітка: {{comment}}</td></tr>
@@ -33,9 +34,9 @@
      <tr><td colspan="2"> Останній документ: {{last}} від {{lastdate}} на суму  {{lastsum}}. Статус {{laststatus}}</td></tr>
      <tr><td colspan="2"> Останні товари: <td></tr>
      <tr><td colspan="2"> 
-         <table class="ctable" style="font-size:smaller">
+         <table      style="font-size:smaller">
             {{#goods}}
-             <tr><td>{{itemname}} </td><td class="text-nowrap  ">{{item_code}}</td></tr>
+             <tr><td >{{itemname}} </td><td class="text-nowrap  ">{{item_code}}</td></tr>
             {{/goods}}
          
          </table>

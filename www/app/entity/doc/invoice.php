@@ -52,11 +52,10 @@ class Invoice extends \App\Entity\Doc\Document
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "phone"           => $this->headerdata["phone"],
                         "customer_print"  => $this->headerdata["customer_print"],
-                        "bank"            => @$mf->bank,
-                        "bankacc"         => @$mf->bankacc,
-                        "iban"      => strlen($firm['iban'] ) > 0 ? $firm['iban'] : false,
-    
+                        "bank"            => $mf->bank ?? "",
+                        "bankacc"         => $mf->bankacc ?? "",
                         "isbank"          => (strlen($mf->bankacc) > 0 && strlen($mf->bank) > 0),
+                        "iban"      => strlen($firm['iban'] ) > 0 ? $firm['iban'] : false,
                         "email"           => $this->headerdata["email"],
                         "notes"           => nl2br($this->notes),
                         "document_number" => $this->document_number,
@@ -134,6 +133,7 @@ class Invoice extends \App\Entity\Doc\Document
       //  $list['Invoice'] = self::getDesc('Invoice');
         $list['TTN'] = self::getDesc('TTN');
         $list['ServiceAct'] = self::getDesc('ServiceAct');
+        $list['POSCheck'] = self::getDesc('POSCheck');
 
         return $list;
     }

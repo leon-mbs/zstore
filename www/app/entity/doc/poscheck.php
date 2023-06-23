@@ -73,9 +73,9 @@ class POSCheck extends Document
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount),
                         "payed"           => H::fa($pp),
-                        "totaldisc"           => $this->headerdata["totaldisc"] > 0 ? H::fa($this->headerdata["totaldisc"]) : false,
-                     //   "prepaid"         => ($this->headerdata['payment'] == 0 ||$this->headerdata['mfnal'] == 0  || $this->headerdata['mfbeznal'] == 0  ),
-            
+                        "totaldisc"       => $this->headerdata["totaldisc"] > 0 ? H::fa($this->headerdata["totaldisc"]) : false,
+                        "prepaid"         => $this->headerdata['prepaid'] > 0  ? H::fa($this->headerdata['prepaid']) : false   ,
+                
                         "docqrcode"       => $this->getQRCodeImage(),
                         "payamount"       => H::fa($this->payamount)
         );
@@ -147,7 +147,9 @@ class POSCheck extends Document
                         "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
                         "fiscalnumberpos"  => strlen($this->headerdata["fiscalnumberpos"]) > 0 ? $this->headerdata["fiscalnumberpos"] : false,
                         "notes"           => nl2br($this->notes),
-
+                        "prepaid"         => $this->headerdata['prepaid'] > 0  ? H::fa($this->headerdata['prepaid']) : false   ,
+                   
+   
                         "pos_name"        => $this->headerdata["pos_name"],
                         "time"            => H::fdt($this->headerdata["time"]),
                         "document_number" => $this->document_number,
@@ -223,7 +225,7 @@ class POSCheck extends Document
 
 
             //оприходуем  с  производства
-            if ($item->autoincome == 1 && $item->item_type == Item::TYPE_PROD) {
+            if ($item->autoincome == 1 && ( $item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD)) {
 
                 if ($item->autooutcome == 1) {    //комплекты
                     $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);

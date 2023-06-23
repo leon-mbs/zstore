@@ -231,8 +231,8 @@
                             </div>                           
 
                                   <div class="form-group">
-                                    <input v-on:click.prevent="onSaveService"   type="button" value="Зберегти" class="btn btn-outline-primary">
-                                    <input  type="button" onclick="$('#modaleditserv').modal('hide')"   value="Скасувати" class="btn btn-outline-secondary ">
+                                      <input  type="button" onclick="$('#modaleditserv').modal('hide')"   value="Скасувати" class="btn btn-outline-secondary ">
+                                      <input v-on:click.prevent="onSaveService"   type="button" value="Зберегти" class="btn btn-outline-primary">
                                   </div>
                                
                         </form>
@@ -274,8 +274,9 @@
                               
 
                               <div class="form-group">
-                                <input v-on:click.prevent="onSaveItem"   type="button" value="Зберегти" class="btn btn-outline-primary">
                                 <input  type="button" onclick="$('#modaledititem').modal('hide')"   value="Скасувати" class="btn btn-outline-secondary ">
+                                <input v-on:click.prevent="onSaveItem"   type="button" value="Зберегти" class="btn btn-outline-primary">
+                                
                               </div>
                                
                         </form>
@@ -311,8 +312,9 @@
                                  </div>
 
                                   <div class="form-group">
-                                    <input v-on:click.prevent="onSaveNewCust"   type="button" value="Зберегти" class="btn btn-outline-primary">
                                     <input  type="button" onclick="$('#modalnewcust').modal('hide')"   value="Скасувати" class="btn btn-outline-secondary ">
+                                    <input v-on:click.prevent="onSaveNewCust"   type="button" value="Зберегти" class="btn btn-outline-primary">
+                                    
                                   </div>
                                
                         </form>
@@ -552,6 +554,8 @@
                    
                     this.customer_id = id 
                     this.onContract()
+                    
+                      
                       callPM('vLoadCust',[id ], null,(data)=> 
                       {
 
@@ -640,7 +644,7 @@
                        }
                      }          
                      
-                
+                    $("#modalwait").modal("show") ;           
                     callPM('save',[ ], data,(data)=> 
                       {
                            
