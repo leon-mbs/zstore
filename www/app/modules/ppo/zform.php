@@ -118,9 +118,6 @@ class ZForm extends \App\Pages\Base
         
     }
     
-    
-
-    
     public function onFisc($sender) {
            $item = $sender->getOwner()->getDataItem();
            $doc=\App\Entity\Doc\Document::getFirst("document_number=" . \App\Entity\Doc\Document::qstr($item->document_number) ) ;
@@ -162,15 +159,21 @@ class ZForm extends \App\Pages\Base
            $this->OnRefresh($this->filter) ;       
         
     }
-   public function onDel($sender) {
+  
+    public function onDel($sender) {
            $item = $sender->getOwner()->getDataItem();
            \App\Modules\PPO\PPOHelper::delStat($item->zf_id );
    
            $this->OnRefresh($this->filter) ;       
         
     }
+  
     public function OnClose($sender) {
-
+         if ($this->_pos->pos_id == 0) {
+            $this->setError('Не вибраний термiнал');
+            return;
+         }     
+ 
         $ret=true;
         if($this->stat->onlyshift->isChecked()==false){
            $ret = $this->zform();    
@@ -253,6 +256,7 @@ class ZForm extends \App\Pages\Base
         
         $pos_id = $this->filter->pos->getValue();
         if ($pos_id == 0) {
+            $this->setError('Не вибраний термiнал');
             return;
         }
   
@@ -267,6 +271,8 @@ class ZForm extends \App\Pages\Base
          $this->ztres->setText("");
          $pos_id = $this->filter->pos->getValue();
          if ($pos_id == 0) {
+            $this->setError('Не вибраний термiнал');
+             
             return;
          }     
          
@@ -292,7 +298,7 @@ class ZForm extends \App\Pages\Base
              $zt .= " Чекiв ".$ret['Totals']['Real']['OrdersCount'] ;
          }
          if(is_array($ret['Totals']['Ret']['PayForm'])) {
-             $zt .="<b>Повернення</b><br>";
+             $zt .="<br><b>Повернення</b><br>";
              foreach($ret['Totals']['Ret']['PayForm'] as $form){
                  $zt .= $form['PayFormName']." ".$form['Sum']."<br>" ;
                             

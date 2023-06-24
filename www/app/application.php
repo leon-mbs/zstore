@@ -90,6 +90,7 @@ class Application extends \Zippy\WebApplication
             "store"          => "\\App\\Pages\\Main",
             "admin"          => "\\App\\Pages\\Main",
             "shop"           => "\\App\\Modules\\Shop\\Pages\\Catalog\\Main",
+            "menu"           => "\\App\\Modules\\Shop\\Pages\\Catalog\\Menu",
             "sp"             => "\\App\\Modules\\Shop\\Pages\\Catalog\\ProductView",
             "showreport"     => "\\App\\Pages\\ShowReport",
             "showdoc"        => "\\App\\Pages\\ShowDoc",

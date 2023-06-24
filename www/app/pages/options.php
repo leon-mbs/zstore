@@ -273,6 +273,7 @@ class Options extends \App\Pages\Base
         $this->food->add(new CheckBox('fooddelivery', $food['delivery']));
         $this->food->add(new CheckBox('foodtables', $food['tables']));
         $this->food->add(new CheckBox('foodpack', $food['pack']));
+        $this->food->add(new CheckBox('foodmenu', $food['menu']));
 
 
        //телеграм бот
@@ -519,6 +520,7 @@ class Options extends \App\Pages\Base
         $food['tables'] = $sender->foodtables->isChecked() ? 1 : 0;
 
         $food['pack'] = $sender->foodpack->isChecked() ? 1 : 0;
+        $food['menu'] = $sender->foodmenu->isChecked() ? 1 : 0;
 
 
         System::setOptions("food", $food);

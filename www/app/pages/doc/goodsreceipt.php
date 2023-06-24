@@ -58,6 +58,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('outnumber'));
         $this->docform->add(new TextInput('basedoc'));
+        $this->docform->add(new CheckBox('spreaddelivery'));
 
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -151,6 +152,7 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->document_number);
 
             $this->docform->notes->setText($this->_doc->notes);
+            $this->docform->spreaddelivery->setChecked($this->_doc->headerdata['spreaddelivery']);
             $this->docform->basedoc->setText($this->_doc->basedoc);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->customer->setKey($this->_doc->customer_id);
@@ -577,6 +579,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['spreaddelivery'] = $this->docform->spreaddelivery->isChecked() ? 1:0;
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         $this->_doc->headerdata['val'] = $this->docform->val->getValue();

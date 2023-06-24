@@ -213,21 +213,27 @@
                             </div>
                         </form>
                     </div>
-                </div>                
-     <div class="card">
+                </div>  
+                
+<div class="card">
                     <div class="card-body">
-                        <h4>Телеграм бот</h4>
-                        <form zippy="tbform">
-                             <div class="form-group">
-                                <label for="tbtoken">Токен бота </label>
-                                <input class="form-control" type="text" zippy="tbtoken">
-                            </div>
-              
-                            <input    type="submit"  value="Зберегти" class="btn  btn-success">
+                        <h4>Джерела продаж</h4>
+                        <form zippy="salesourcesform">
+                            <a  zippy="addnewsalesource">Додати</a>
+
+                            <table class="table table-sm">
+                                <tr zippy="salesourceslist">
+                                    <td><input class="form-control" style="width:100%;" zippy="salesourcename"  ></td>
+                                    <td><a zippy="delsalesource"> <i class="fa fa-trash"></i></a></td>
+                            </table>
+                            <input zippy="salesourcesave"  type="submit"  value="Зберегти" class="btn  btn-success">
 
                         </form>         
                     </div>
-                </div>                  
+                </div>                   
+                
+                              
+                
             </div>
             <div class="col-12  col-md-5 col-xl-4  ">
               <div class="card">
@@ -488,8 +494,65 @@
 
             </div>
             <div class="col-12  col-md-5 col-xl-4  ">
+     <div class="card">
+                    <div class="card-body">
+                        <h4>Громадське харчування</h4>
+
+                        <form zippy="food">
+
+                            <div class="form-check">
+                                <label for="foodworktype">Тип закладу</label>
+                                <select class="form-control" zippy="foodworktype">
+                                    <option value="0">Фастфуд</option>
+                                    <option value="1">Фастфуд (з кухнею)</option>
+                                    <option value="2">Кафе</option>
+
+                                </select>
+                                <small>Кафе означає розрахунок офіціантом після винесення замовлення.
+                                    Наявність кухні (виробництва) означає, що замовлення спочатку відправляється
+                                    на виконання</small> 
+                            </div>    
+                            <div class="form-group  ">
+                                <label for="foodpricetype">Тип цiн</label>
+                                <select class="form-control" zippy="foodpricetype">
+                                </select>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="foodtables" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="foodtables">Показувати номери столикiв</label>
+                                <br><small>Для кафе</small>
+                            </div>
+
+
+                            <div class="form-check">
+                                <input zippy="fooddelivery" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="fooddelivery">Можливiсть доставки</label>
+                                <br><small>Можливiсть створювати доставку з АРМ касира (по дзвiнку клiєнта)</small>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="foodpack" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="foodpack">Вибiр можливостi упакування з собою.</label>
+                                <br><small>Ставиться, якщо є обидва варіанти (з собою і на місці), тоді потрібно уточнювати в замовленні</small>
+                            </div>
+
+                              {{#hideblock}}
+                             <div class="form-check">
+                                <input zippy="foodmenu" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="foodmenu">Сторiнка меню.</label>
+                                <br><small>Доступ до сторiнки меню за адресою <адреса  сайту>/menu. Детальнiше <a href="https://zippy.com.ua/zstoreusage#food" target="_blank">тут</a></small>
+                            </div>
+                              {{/hideblock}}
+
+
+                            <div class="form-group">
+                                <button class="btn btn-success" type="submit">Зберегти</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>   
+   
             
-<div class="card">
+   <div class="card">
                     <div class="card-body">
                         <h4>Налаштування SMS сервiсу    </h4>
                         <form zippy="sms">    
@@ -580,71 +643,8 @@
                     </div>
                 </div>            
             
-<div class="card">
-                    <div class="card-body">
-                        <h4>Джерела продаж</h4>
-                        <form zippy="salesourcesform">
-                            <a  zippy="addnewsalesource">Додати</a>
-
-                            <table class="table table-sm">
-                                <tr zippy="salesourceslist">
-                                    <td><input class="form-control" style="width:100%;" zippy="salesourcename"  ></td>
-                                    <td><a zippy="delsalesource"> <i class="fa fa-trash"></i></a></td>
-                            </table>
-                            <input zippy="salesourcesave"  type="submit"  value="Зберегти" class="btn  btn-success">
-
-                        </form>         
-                    </div>
-                </div>            
-                <div class="card">
-                    <div class="card-body">
-                        <h4>Громадське харчування</h4>
-
-                        <form zippy="food">
-
-                            <div class="form-check">
-                                <label for="foodworktype">Тип закладу</label>
-                                <select class="form-control" zippy="foodworktype">
-                                    <option value="0">Фастфуд</option>
-                                    <option value="1">Фастфуд (з кухнею)</option>
-                                    <option value="2">Кафе</option>
-
-                                </select>
-                                <small>Кафе означає розрахунок офіціантом після винесення замовлення.
-                                    Наявність кухні (виробництва) означає, що замовлення спочатку відправляється
-                                    на виконання</small> 
-                            </div>    
-                            <div class="form-group  ">
-                                <label for="foodpricetype">Тип цiн</label>
-                                <select class="form-control" zippy="foodpricetype">
-                                </select>
-                            </div>
-                            <div class="form-check">
-                                <input zippy="foodtables" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="foodtables">Показувати номери столикiв</label>
-                                <br><small>Для кафе</small>
-                            </div>
-
-
-                            <div class="form-check">
-                                <input zippy="fooddelivery" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="fooddelivery">Можливiсть доставки</label>
-                                <br><small>Можливiсть створювати доставку з АРМ касира (по дзвiнку клiєнта)</small>
-                            </div>
-                            <div class="form-check">
-                                <input zippy="foodpack" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="foodpack">Вибiр можливостi упакування з собою.</label>
-                                <br><small>Ставиться, якщо є обидва варіанти (з собою і на місці), тоді потрібно уточнювати в замовленні</small>
-                            </div>
-
-
-
-                            <div class="form-group">
-                                <button class="btn btn-success" type="submit">Зберегти</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+         
+           
        <div class="card">
                     <div class="card-body">
                         <h4>Налаштування API</h4>
@@ -676,6 +676,22 @@
                     </div>
                 </div>
 
+                
+     <div class="card">
+                    <div class="card-body">
+                        <h4>Телеграм бот</h4>
+                        <form zippy="tbform">
+                             <div class="form-group">
+                                <label for="tbtoken">Токен бота </label>
+                                <input class="form-control" type="text" zippy="tbtoken">
+                            </div>
+              
+                            <input    type="submit"  value="Зберегти" class="btn  btn-success">
+
+                        </form>         
+                    </div>
+                </div>                  
+                
             </div>
         </div>
 
