@@ -527,7 +527,7 @@
                     <div class="card-body">
                         <h4>Громадське харчування</h4>
 
-                        <form zippy="food">
+                        <form zippy="food" enctype="multipart/form-data">
 
                             <div class="form-check">
                                 <label for="foodworktype">Тип закладу</label>
@@ -565,6 +565,8 @@
                             </div>
 
                               {{#hideblock}} 
+
+
                              <div class="form-check">
                                 <input zippy="foodmenu" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="foodmenu">Сторiнка меню.</label>
@@ -591,8 +593,14 @@
                                 
 
                             </div>                            
-                              
-                  {{/hideblock}}
+                         <div class="form-group   ">
+                            <label   for="foodlogo">Логотип</label>
+                            <input  accept="image/png,image/jpeg" type="file" class="form-control " zippy="foodlogo"/>
+                         
+                        </div>
+
+                  {{/hideblock}}                       
+
 
                             <div class="form-group">
                                 <button class="btn btn-success" type="submit">Зберегти</button>

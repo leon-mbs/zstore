@@ -279,6 +279,7 @@ class Options extends \App\Pages\Base
         $this->food->add(new Textinput('timepn', $food['timepn']));
         $this->food->add(new Textinput('timesa', $food['timesa']));
         $this->food->add(new Textinput('timesu', $food['timesu']));
+        $this->food->add(new File('foodlogo'));
 
 
        //телеграм бот
@@ -532,6 +533,26 @@ class Options extends \App\Pages\Base
         $food['timesa'] = $sender->timesa->getText('timesa') ;
         $food['timesu'] = $sender->timesu->getText('timesu') ;
 
+        $file = $sender->foodlogo->getFile();
+        if (strlen($file["tmp_name"]) > 0) {
+            $imagedata = getimagesize($file["tmp_name"]);
+
+            if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {
+                $this->setError('Невірний формат');
+                return;
+            }
+
+            if ($imagedata[0] * $imagedata[1] > 10000000) {
+                $this->setError('Занадто великий розмір зображення');
+                return;
+            }
+
+            $name = basename($file["name"]);
+            move_uploaded_file($file["tmp_name"], _ROOT . "upload/" . $name);
+
+            $food['logo'] = "/upload/" . $name;
+        }
+         
 
         System::setOptions("food", $food);
         $this->setSuccess('Збережено');
