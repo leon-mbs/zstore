@@ -231,7 +231,36 @@
                         </form>         
                     </div>
                 </div>                   
-                
+       <div class="card">
+                    <div class="card-body">
+                        <h4>Налаштування API</h4>
+                        <small>Налаштування API для доступу до даних з iнших систем</small>
+                        <form zippy="api">
+
+                            <div class="form-group  ">
+                                <label for="atype">Тип авторизацiї</label>
+                                <select class="form-control" zippy="atype">
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label data-label="akey" for="akey">Ключ</label>
+                                <input zippy="akey" pattern="[a-zA-Z0-9]+" class="form-control">
+                                <small data-label="akey">Довiльне латиничне слово для шифрування
+                                    токену</small>
+                            </div>
+                            <div class="form-group">
+                                <label data-label="aexp" for="aexp">Час життя токену в хв.</label>
+                                <input zippy="aexp" pattern="[0-9]+" class="form-control" value="0">
+
+                            </div>
+
+
+                            <div class="form-group">
+                                <button class="btn btn-success" type="submit">Зберегти</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>                
                               
                 
             </div>
@@ -535,14 +564,35 @@
                                 <br><small>Ставиться, якщо є обидва варіанти (з собою і на місці), тоді потрібно уточнювати в замовленні</small>
                             </div>
 
-                              {{#hideblock}}
+                              {{#hideblock}} 
                              <div class="form-check">
                                 <input zippy="foodmenu" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="foodmenu">Сторiнка меню.</label>
-                                <br><small>Доступ до сторiнки меню за адресою <адреса  сайту>/menu. Детальнiше <a href="https://zippy.com.ua/zstoreusage#food" target="_blank">тут</a></small>
+                                <br><small>Доступ до сторiнки меню за адресою <адреса  сайту>/menu. Детальнiше <a href="https://zippy.com.ua/zstoreusage#food" target="_blank">тут</a><
+                                <br> Параметри нижче в  основному  для  сторiнки меню
+                                /small>
                             </div>
-                              {{/hideblock}}
+                            <div class="form-group">
+                                <label for="goodname">Назва</label>
+                                <input class="form-control" type="text" zippy="goodname">
+                            </div>                            
+                            <div class="form-group">
+                                <label for="goodphone">Телефон</label>
+                                <input class="form-control" type="text" zippy="goodphone">
+                            </div>                            
+                              
+                         <div class="form-group">
+                                <label  >Розклад роботи</label>
+                                <table class="ctable">
+                                  <tr><td>Пн. </td><td><input zippy="timepn" style="width:150px" class="form-control"  > </td></tr>
+                                  <tr><td>Сб. </td><td><input zippy="timesa" style="width:150px" class="form-control"  > </td></tr>
+                                  <tr><td>Нд. </td><td><input zippy="timesu" style="width:150px" class="form-control"  > </td></tr>
+                                </table>
+                                
 
+                            </div>                            
+                              
+                  {{/hideblock}}
 
                             <div class="form-group">
                                 <button class="btn btn-success" type="submit">Зберегти</button>
@@ -645,36 +695,7 @@
             
          
            
-       <div class="card">
-                    <div class="card-body">
-                        <h4>Налаштування API</h4>
-                        <small>Налаштування API для доступу до даних з iнших систем</small>
-                        <form zippy="api">
 
-                            <div class="form-group  ">
-                                <label for="atype">Тип авторизацiї</label>
-                                <select class="form-control" zippy="atype">
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label data-label="akey" for="akey">Ключ</label>
-                                <input zippy="akey" pattern="[a-zA-Z0-9]+" class="form-control">
-                                <small data-label="akey">Довiльне латиничне слово для шифрування
-                                    токену</small>
-                            </div>
-                            <div class="form-group">
-                                <label data-label="aexp" for="aexp">Час життя токену в хв.</label>
-                                <input zippy="aexp" pattern="[0-9]+" class="form-control" value="0">
-
-                            </div>
-
-
-                            <div class="form-group">
-                                <button class="btn btn-success" type="submit">Зберегти</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
 
                 
      <div class="card">
