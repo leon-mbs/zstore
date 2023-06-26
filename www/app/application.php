@@ -24,14 +24,21 @@ class Application extends \Zippy\WebApplication
 
         if (strpos($className, 'App/') === 0) {
             $path = $templatepath . (str_replace("App/", "", $className)) . ".html";
+            $cpath = $templatepath . (str_replace("App/", "", $className)) . "_custom.html";
         }
 
         $path = _ROOT . strtolower($path);
+        $cpath = _ROOT . strtolower($cpath);
 
-        if (file_exists($path) == false) {
-            throw new \Exception('Invalid template path: ' . $path);
+        if(file_exists($cpath)) {
+           $template = @file_get_contents($cpath);    
+        } else 
+        if(file_exists($path)) {
+           $template = @file_get_contents($path);    
+        } else  {
+           throw new \Exception('Invalid template path: ' . $path);    
         }
-        $template = @file_get_contents($path);
+   
  
 
         return $template;

@@ -65,8 +65,12 @@
              onReady( document_id,item_id, index) {
                  // onBell()
                   $('#newordersalert').hide();
-                  callPageMethod('onReady',[document_id,item_id],null,(data)=> 
+                  callPM('onReady',[document_id,item_id],null,(data)=> 
                   {
+                      if(false==checkPMAnswer(data) )   {
+                           return
+                      }
+                      
                       this.updateItems() ;
                   });     
              

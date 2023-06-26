@@ -27,7 +27,8 @@ class Menu extends \Zippy\Html\WebPage
         $cats= Category::find("")  ;
         foreach($cats as $cat) {
             if($cat->nofastfood == 1) continue;
-            if( $pcat > 0 &&  $catc->parent_id != $pcat) continue;
+            if( $pcat > 0  &&  $cat->parent_id != $pcat) continue;
+            if( $pcat == 0 &&  $cat->parent_id > 0) continue;
             
             $iw="disabled<>1 and cat_id=".$cat->cat_id;
 

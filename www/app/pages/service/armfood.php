@@ -343,7 +343,11 @@ class ARMFood extends \App\Pages\Base
         $row->brrefuse->setVisible(false);
         $row->bredit->setVisible(false);
 
-        if ($doc->state == Document::STATE_DELIVERED && $doc->payamount <= $doc->payed) {
+        if (intval($this->_doc->headerdata['delivery']) > 0  && $doc->state == Document::STATE_DELIVERED && $doc->payamount <= $doc->payed) {
+
+            $row->brclose->setVisible(true);
+        }
+        if (intval($this->_doc->headerdata['delivery']) == 0  && $doc->state == Document::STATE_FINISHED && $doc->payamount <= $doc->payed) {
 
             $row->brclose->setVisible(true);
         }
