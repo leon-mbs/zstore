@@ -273,6 +273,13 @@ class Options extends \App\Pages\Base
         $this->food->add(new CheckBox('fooddelivery', $food['delivery']));
         $this->food->add(new CheckBox('foodtables', $food['tables']));
         $this->food->add(new CheckBox('foodpack', $food['pack']));
+        $this->food->add(new CheckBox('foodmenu', $food['menu']));
+        $this->food->add(new Textinput('goodname', $food['name']));
+        $this->food->add(new Textinput('goodphone', $food['phone']));
+        $this->food->add(new Textinput('timepn', $food['timepn']));
+        $this->food->add(new Textinput('timesa', $food['timesa']));
+        $this->food->add(new Textinput('timesu', $food['timesu']));
+        $this->food->add(new File('foodlogo'));
 
 
        //телеграм бот
@@ -519,7 +526,33 @@ class Options extends \App\Pages\Base
         $food['tables'] = $sender->foodtables->isChecked() ? 1 : 0;
 
         $food['pack'] = $sender->foodpack->isChecked() ? 1 : 0;
+        $food['menu'] = $sender->foodmenu->isChecked() ? 1 : 0;
+        $food['name'] = $sender->goodname->getText('name') ;
+        $food['phone'] = $sender->goodphone->getText('phone') ;
+        $food['timepn'] = $sender->timepn->getText('timepn') ;
+        $food['timesa'] = $sender->timesa->getText('timesa') ;
+        $food['timesu'] = $sender->timesu->getText('timesu') ;
 
+        $file = $sender->foodlogo->getFile();
+        if (strlen($file["tmp_name"]) > 0) {
+            $imagedata = getimagesize($file["tmp_name"]);
+
+            if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {
+                $this->setError('Невірний формат');
+                return;
+            }
+
+            if ($imagedata[0] * $imagedata[1] > 10000000) {
+                $this->setError('Занадто великий розмір зображення');
+                return;
+            }
+
+            $name = basename($file["name"]);
+            move_uploaded_file($file["tmp_name"], _ROOT . "upload/" . $name);
+
+            $food['logo'] = "/upload/" . $name;
+        }
+         
 
         System::setOptions("food", $food);
         $this->setSuccess('Збережено');

@@ -37,60 +37,82 @@ class ArmProdFood extends \App\Pages\Base
 
  
     public function onReady($args, $post) {
-        
+     
+         
         $doc = Document::load($args[0]);
         $doc = $doc->cast();
         
-        
-        $items = $doc->unpackDetails('detaildata');
-        if(isset($items[$args[1]]))  {
-           $items[$args[1]]->foodstate = 1;    
-        }
-        
-        $doc->packDetails('detaildata', $items);
-        $doc->save();
-        
-
-        $hasinproces = false;
-        foreach ($items as $it) {
-            if ($it->foodstate !== 1) {
-                $hasinproces = true;
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
+        try {
+      
+             
+            $items = $doc->unpackDetails('detaildata');
+            if(isset($items[$args[1]]))  {
+               $items[$args[1]]->foodstate = 1;    
             }
-        }
-        if ($hasinproces == false) {
-            $doc->DoStore();
-            $doc->updateStatus(Document::STATE_FINISHED);
+            
+            $doc->packDetails('detaildata', $items);
+            $doc->save();
+            
 
-            if ($doc->headerdata['delivery'] > 0) {
-                $doc->updateStatus(Document::STATE_READYTOSHIP);
-
-                $n = new \App\Entity\Notify();
-                $n->user_id = \App\Entity\Notify::DELIV;
-                $n->dateshow = time();
-
-                $n->message = serialize(array('document_id' => $doc->document_id));
-
-                $n->save();
-            } else {
-                $n = new \App\Entity\Notify();
-                $n->user_id = \App\Entity\Notify::ARMFOOD;
-                $n->dateshow = time();
-
-                $n->message = serialize(array('document_id' => $doc->document_id));
-
-                $n->save();
-
+            $hasinproces = false;
+            foreach ($items as $it) {
+                if ($it->foodstate !== 1) {
+                    $hasinproces = true;
+                }
+            }
+            if ($hasinproces == false) {
+                $doc->DoStore();
                 $doc->updateStatus(Document::STATE_FINISHED);
-                
-                
-                if ($doc->payed == $doc->payamount ) {
-//                    $doc->updateStatus(Document::STATE_CLOSED);
+
+                if ($doc->headerdata['delivery'] > 0) {
+                    $doc->updateStatus(Document::STATE_READYTOSHIP);
+
+                    $n = new \App\Entity\Notify();
+                    $n->user_id = \App\Entity\Notify::DELIV;
+                    $n->dateshow = time();
+
+                    $n->message = serialize(array('document_id' => $doc->document_id));
+
+                    $n->save();
+                } else {
+                    $n = new \App\Entity\Notify();
+                    $n->user_id = \App\Entity\Notify::ARMFOOD;
+                    $n->dateshow = time();
+
+                    $n->message = serialize(array('document_id' => $doc->document_id));
+
+                    $n->save();
+
+                    $doc->updateStatus(Document::STATE_FINISHED);
+                    
+                    
+                    if ($doc->payed == $doc->payamount ) {
+    //                    $doc->updateStatus(Document::STATE_CLOSED);
+                    }
+
                 }
 
             }
-
-        }
+       
+         
+           $conn->CommitTrans();
         
+        } catch(\Throwable $ee) {
+            global $logger;
+            $conn->RollbackTrans();
+       
+            $logger->error(  " Арм  кухни " . $ee->getMessage());
+            
+            return json_encode(['error'=>$ee->getMessage() ], JSON_UNESCAPED_UNICODE);              
+
+           
+        }  
+   
+        return json_encode([], JSON_UNESCAPED_UNICODE);          
+        
+              
     }
 
     public function getItems($args, $post) {

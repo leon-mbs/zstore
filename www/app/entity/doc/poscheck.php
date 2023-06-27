@@ -234,6 +234,13 @@ class POSCheck extends Document
                         $itemp = \App\Entity\Item::load($part->item_id);
                         if($itemp == null)  continue;
                         $itemp->quantity = $item->quantity * $part->qty;
+                        
+                        if ($itemp->checkMinus($itemp->quantity, $this->headerdata['store']) == false) {
+                            throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']) )." ТМЦ {$itemp->itemname}. Списання у мінус заборонено" );
+                            
+                        }
+                        
+                        
                         $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
 
                         foreach ($listst as $st) {

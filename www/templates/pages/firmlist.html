@@ -107,14 +107,16 @@
                     <input zippy="editdisabled" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="editdisabled">Не використовується</label>
                 </div>
-                <input zippy="save" type="submit" value="Зберегти" class="btn btn-outline-primary  ">&nbsp;&nbsp;
-                <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary  ">
+                <div class="form-check">
+                  <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary mr-1 ">
+                  <input zippy="save" type="submit" value="Зберегти" class="btn btn-outline-primary  ">
+                </div>                
 
             </form>
         </div>
           <div class="row">
             
-            <form class="col-6 col-md-4  col-xl-3" zippy="keyform" enctype="multipart/form-data">
+            <form class="col-6 col-md-6  col-xl-4" zippy="keyform" enctype="multipart/form-data">
                 <h5>Завантаження ключа та сертифiкату</h5>
             <small>Опис роботи з ключами <a  target="_blank" href="https://zippy.com.ua/ext#6">тут</a> </small>
                   <div class="form-group">
@@ -166,9 +168,10 @@
                </div>                              
                  
                 <span style="display:block" id="progress"></span>
-                <input zippy="send" type="button" value="Завантажити" class="btn btn-primary  ">&nbsp;&nbsp;
-                <input zippy="cancelppo" type="button" value="Закрити" class="btn btn-outline-primary  ">
-                <input zippy="delppo" type="button" value="Видалити" class="btn btn-outline-danger  "> &nbsp;&nbsp; 
+                <input zippy="cancelppo" type="button" value="До переліку" class="btn btn-outline-primary mr-1 ">
+                <input zippy="send" type="button" value="Завантажити" class="btn btn-primary  mr-2 ">
+                
+                <input zippy="delppo" type="button" value="Видалити" class="btn btn-outline-danger  ">  
       
 
             </form>

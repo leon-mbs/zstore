@@ -770,7 +770,7 @@ class Invoice extends \App\Pages\Base
       
         $customer_id = $this->docform->customer->getKey()  ;
         $pt=     $this->docform->pricetype->getValue() ;
-        $item->price = $item->getPriceEx(array('pricetype'=>$pt,
+        $item->price = $item->getPriceEx(array('pricetype'=>$pt));
          
         
         $item->quantity = 1;
