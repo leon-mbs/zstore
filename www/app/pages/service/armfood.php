@@ -366,7 +366,7 @@ class ARMFood extends \App\Pages\Base
     }
 
     public function updateorderlist($sender) {
-        $where = " state not in(9,17) ";
+        $where = " state not in(9,17,3) ";
         if ($sender instanceof Form) {
             $text = trim($sender->searchnumber->getText());
             $cust = $sender->searchcust->getKey();

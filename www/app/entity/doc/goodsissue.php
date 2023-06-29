@@ -148,10 +148,13 @@ class GoodsIssue extends Document
                
         $amount = 0;
         foreach ($this->unpackDetails('detaildata') as $item) {
-
+       
+            $onstore = H::fqty($item->getQuantity($this->headerdata['store']) ) ;
+            $required = $item->quantity - $onstore;     
+ 
 
             //оприходуем  с  производства
-            if ($item->autoincome == 1 && ($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD) ) {
+            if ($required >0 && $item->autoincome == 1 && ($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD) ) {
 
                 if ($item->autooutcome == 1) {    //комплекты
                     $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
@@ -159,7 +162,7 @@ class GoodsIssue extends Document
 
                         $itemp = \App\Entity\Item::load($part->item_id);
                         if($itemp == null)  continue;
-                        $itemp->quantity = $item->quantity * $part->qty;
+                        $itemp->quantity = $required * $part->qty;
 
                         if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
                             throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']) )." ТМЦ {$itemp->itemname}. Списання у мінус заборонено" );
@@ -185,7 +188,7 @@ class GoodsIssue extends Document
                 }
                 $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
 
-                $sc = new Entry($this->document_id, $item->quantity * $price, $item->quantity);
+                $sc = new Entry($this->document_id, $required * $price, $required);
                 $sc->setStock($stock->stock_id);
                 $sc->tag=Entry::TAG_FROMPROD;
 
