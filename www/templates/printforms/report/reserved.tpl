@@ -9,6 +9,7 @@
    
     <tr style="font-weight: bolder;">
         <th style="border: solid black 1px">Товар</th>
+        <th style="border: solid black 1px">Код</th>
         <th style="border: solid black 1px">Склад</th>
         <th style="border: solid black 1px">Документ</th>
         <th style="border: solid black 1px">Покупець</th>
@@ -20,6 +21,7 @@
     <tr>
 
         <td>{{itemname}}</td>
+        <td>{{item_code}}</td>
 
         <td>{{store}}</td>
         <td>{{document_number}}</td>

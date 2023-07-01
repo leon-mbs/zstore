@@ -44,11 +44,11 @@ class Reserved extends \App\Pages\Base
 
          $conn = \ZDB\DB::getConnect() ;
         
-         $sql = "SELECT i.itemname,ev.document_id,sum(ev.quantity) as qty  FROM entrylist_view ev 
+         $sql = "SELECT i.itemname,i.item_code,ev.document_id,sum(ev.quantity) as qty  FROM entrylist_view ev 
                  JOIN items i ON ev.item_id = i.item_id
                  WHERE  tag = -64 
 
-                 GROUP  BY  i.itemname,ev.document_id
+                 GROUP  BY  i.itemname,i.item_code,ev.document_id
                  ORDER  BY  i.itemname";
         
          $res = $conn->Execute($sql);
@@ -56,6 +56,7 @@ class Reserved extends \App\Pages\Base
          foreach($res as $r){
             $row = array();
             $row['itemname']  = $r['itemname'] ;
+            $row['item_code']  = $r['item_code'] ;
             $doc = Document::load($r['document_id']);
             $row['store']  = $doc->headerdata['storename'];
             $row['document_number']  = $doc->document_number;
