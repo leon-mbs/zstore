@@ -95,7 +95,7 @@
         function checkPMAnswer(ret){
             
             if(ret.error)  {
-                toastr.error(ret.error )   
+                toastr.error(ret.error,{'timeOut':'5000'} )   
                 return  false;
             }
             if(ret.success)  {

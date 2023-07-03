@@ -316,6 +316,7 @@ class ARMFood extends \App\Pages\Base
 
         $row->add(new Label('docamount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
         
+        $row->add(new Label('author', $doc->username));
         $row->add(new Label('docnotes', $doc->notes));
         $row->add(new Label('tablenumber', $doc->headerdata['table']));
         $row->add(new Label('rtlist'));
