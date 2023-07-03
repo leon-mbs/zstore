@@ -239,14 +239,21 @@
 
 
                                 {{#tables}}
-                                <div class="form-group   ">
-                                    <label  for="table">Номер столу</label>
-
+                                <div class="form-group  row ">
+                                    <label class="col-5 col-form-label" for="table">Номер столу</label>
+                                   <div class="col-7">
                                     <input  style="width:100px;" zippy="table" class="form-control"  > 
-
+                                   </div>
 
                                 </div>
                                 {{/tables}}
+                                       
+                            <div class="form-check">
+                                <input zippy="forbar" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="forbar">Замовлення для  бару</label> 
+
+                            </div>
+ 
                                 <div class="form-group   ">
                                     <label   for="notes">Коментар </label>
 
@@ -256,11 +263,20 @@
                                 </div>                          
 
                             </div>  
-                            <div class="  col-6  col-xl-4">
+                            <div class="  col-6  col-xl-5">
 
                                 {{#delivery}}  
 
 
+                                <div class="form-group   ">
+                                    <label   for="execuser">Виконавець</label>
+
+                                    <select class="form-control" zippy="execuser">
+                                        <option value="0">Поточний користувач </option>
+                                    </select>
+
+
+                                </div>
                                 <div class="form-group   ">
                                     <label   for="delivery">Доставка</label>
 
@@ -287,14 +303,14 @@
 
                                 </div>
 
-                                <div class="form-group   ">
+                                <div class="form-group  row ">
 
-                                    <label   for="time" >Час доставки</label>
-
-
-                                       <div class="input-group">
+                                    <label  class="col-5 col-form-label" for="time" >Час доставки</label>
+                                     <div class="col-5">
                                         <input   class="form-control"   zippy="dt"  >
-                                        <span class="input-group-text">:</span>
+                                    </div> 
+                                     <div class="col-1">
+
                                         <input   zippy="time" class="form-control">
                                     </div> 
                                 </div>                        

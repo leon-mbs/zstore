@@ -119,8 +119,12 @@ class ArmProdFood extends \App\Pages\Base
         
         
         $itemlist = array();
-       $where = "meta_name='OrderFood' and state in (7) ";
-
+        $where = "meta_name='OrderFood' and state in (7) ";
+        if($args[0]=="true") {
+             $where .= " and content like '%<forbar>1</forbar>%'";
+        }   else {
+             $where .= " and (content like '%<forbar>0</forbar>%' or content not  like '%<forbar>%' ) ";
+        }
         $docs = Document::find($where, "  document_id");
 
         foreach ($docs as $doc) {

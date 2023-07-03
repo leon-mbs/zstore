@@ -23,7 +23,7 @@
     {{={| |}=}}             
   <div  id="vapp" class="col-12 col-md-10 col-lg-8" >
         <a onclick="updateItems()" href="javascript:void(0)"   class="btn btn-info">Оновити</a>
-        
+        <input  class="ml-2" type="checkbox" v-model="forbar"  > Бар
         <table class="table table-striped">
     <tr v-for="item, index in itemlist">
         <td>{{item.ordern}}</td>
@@ -54,9 +54,12 @@
      var vapp = new Vue({
             el: '#vapp',
        
-      data() {return  {
-          itemlist:[]
-      }    }  ,
+      data() {
+          return  {
+             forbar:false ,
+             itemlist:[]
+           }   
+      }  ,
      components: {
           'paginator': httpVueLoader('/assets/js/vue/paginator.vue')
    
@@ -80,7 +83,7 @@
             
       
             
-          callPageMethod('getItems',null,null,(data)=> 
+          callPageMethod('getItems',[this.forbar],null,(data)=> 
           {
                    
               this.itemlist= JSON.parse(data)  
@@ -134,11 +137,4 @@
 
     </body>
 </html>
- const app = Vue.createApp({
-  methods: {
-    initialize() { /* ... */ }
-  }
-});
-
-const vm = app.mount("#app");
-vm.initialize();
+ 
