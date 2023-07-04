@@ -51,14 +51,15 @@
        </div>   
        
                 <form zippy="addeventform" class="row" >
-                   <div class="col-12 col-md-4  col-xl-3">
+                   <div class="col-12 col-md-5  col-xl-4">
  
                     <small>Завдання, пов'язанi з контрагентом, слiд задавати з довiдника контрагентiв</small>
-                    <div class="form-group">
-                        <label for="addeventdate">Дата, час</label>
-                        <div class="input-group">
+                    <div class="form-group row">
+                        <label  class="col-3 col-form-label" for="addeventdate">Дата, час</label>
+                        <div class="col-4">
                             <input   class="form-control"   zippy="addeventdate" required="required">
-                            <span class="input-group-text">:</span>
+                        </div>   
+                        <div class="col-3">    
                             <input   class="form-control"   zippy="addeventtime" required="required">
                         </div>
                     </div>
@@ -76,7 +77,7 @@
                     
                      </div>
                     
-                     <div class="col-12 col-md-4  col-xl-3">
+                     <div class="col-12 col-md-5  col-xl-4">
                       <div class="form-group">
                         <label for="addeventnotify">Нагадати повiдомленням за</label>
                         <select class="form-control" zippy="addeventnotify">
