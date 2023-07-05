@@ -217,12 +217,15 @@ class ItemList extends \App\Pages\Base
         }
 
         $row->add(new Label('price', implode(',', $plist)));
+        
+        //документпосдеднего обновления  
+        $entry =  \App\Entity\Entry::getFirst("quantity > 0 and stock_id=".$stock->stock_id,"entry_id desc") ;
+        $doc =  \App\Entity\Doc\Document::load($entry->document_id) ;                                                                                      
+        $row->add(new \Zippy\Html\Link\RedirectLink("blameddoc", "\\App\\Pages\\Register\\DocList", array($doc == null ? 0 : $doc->document_id )))->setValue($doc == null ? '' : $doc->document_number );
+        
         $row->add(new \Zippy\Html\Link\RedirectLink("createmove", "\\App\\Pages\\Doc\\MovePart", array(0, $stock->stock_id)))->setVisible($stock->qty < 0);
+        
 
-        if (\App\System::getUser()->noshowpartion  ) {
-          //  $row->partion->setText('');
-          //   $row->amount->setText('');
-        }
     }
 
     public function backOnClick($sender) {
