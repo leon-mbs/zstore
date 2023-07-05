@@ -135,6 +135,8 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->listsform->add(new TextInput('totaldisc', "0"));
         $this->docpanel->listsform->add(new TextInput('bonus', "0"));
 
+        $this->docpanel->listsform->add(new DropDownChoice('execuser', \App\Entity\User::findArray('username','disabled<>1','username') ));
+        $this->docpanel->listsform->add(new CheckBox('forbar'));
         $this->docpanel->listsform->add(new TextInput('address'));
         $this->docpanel->listsform->add(new Date('dt', time()));
         $this->docpanel->listsform->add(new \Zippy\Html\Form\Time('time'));
@@ -217,7 +219,9 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->setVisible(true);
 
         $this->docpanel->listsform->setVisible(true);
+        $forbar=$this->docpanel->listsform->forbar->isChecked() ? 1:0;
         $this->docpanel->listsform->clean();
+        $this->docpanel->listsform->forbar->setChecked($forbar) ;       
         $this->docpanel->listsform->dt->setDate(time());
         $this->docpanel->listsform->time->setDateTime(time() + 3600);
         $this->docpanel->navform->setVisible(true);
@@ -236,6 +240,7 @@ class ARMFood extends \App\Pages\Base
         $this->orderlistpan->searchform->clean();
 
         $this->docpanel->listsform->delivery->setValue(0);
+  //      $this->docpanel->listsform->execuser->setValue(0);
         $this->OnDelivery($this->docpanel->listsform->delivery);
         
         $this->docpanel->listsform->addcust->setVisible(true) ;
@@ -311,6 +316,7 @@ class ARMFood extends \App\Pages\Base
 
         $row->add(new Label('docamount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
         
+        $row->add(new Label('author', $doc->username));
         $row->add(new Label('docnotes', $doc->notes));
         $row->add(new Label('tablenumber', $doc->headerdata['table']));
         $row->add(new Label('rtlist'));
@@ -366,7 +372,7 @@ class ARMFood extends \App\Pages\Base
     }
 
     public function updateorderlist($sender) {
-        $where = " state not in(9,17) ";
+        $where = " state not in(9,17,3) ";
         if ($sender instanceof Form) {
             $text = trim($sender->searchnumber->getText());
             $cust = $sender->searchcust->getKey();
@@ -660,6 +666,8 @@ class ARMFood extends \App\Pages\Base
             $this->docpanel->listsform->totaldisc->setText($this->_doc->headerdata['totaldisc']);
             $this->docpanel->listsform->addcust->setVisible(false) ;
             $this->docpanel->listsform->cinfo->setVisible(true) ;
+            $this->docpanel->listsform->forbar->setChecked($this->_doc->headerdata['forbar']);
+            $this->docpanel->listsform->execuser->SetValue($this->_doc->user_id);
 
             if ($this->_doc->customer_id > 0) {
                 $this->docpanel->listsform->customer->setKey($this->_doc->customer_id);
@@ -1101,6 +1109,11 @@ class ARMFood extends \App\Pages\Base
             }
         }
  
+        $execuser = $this->docpanel->listsform->execuser->getValue() ;
+        if($execuser >0) {
+           $this->_doc->user_id = $execuser; 
+        }
+        $this->_doc->headerdata['forbar'] =  $this->docpanel->listsform->forbar->isChecked() ? 1:0;
         $this->_doc->headerdata['arm'] = 1;
         $this->_doc->document_date = time();
         $this->_doc->headerdata['time'] = time();

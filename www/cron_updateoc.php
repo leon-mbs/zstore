@@ -22,12 +22,14 @@ try {
       
             return;
         }
-        $status=0;
+        $status = -1;
         foreach($statuses as  $k=>$v){
             if($v==$status_name) $status = $k;
-            
         }
-    
+        if($status == -1)  {
+            $logger->error("Не знайдено статус " . $status_name);
+            return;
+        }
         $modules = \App\System::getOptions("modules");
          
         $site = $modules['ocsite'];

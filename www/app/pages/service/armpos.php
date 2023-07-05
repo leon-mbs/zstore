@@ -1407,6 +1407,7 @@ class ARMPos extends \App\Pages\Base
       
         $row->add(new Label('rowdate', H::fd($doc->document_date)));
         $row->add(new Label('rownotes', $doc->notes));
+        $row->add(new Label('rowauthor', $doc->username));
         $row->add(new ClickLink('checkedit'))->onClick($this,"onEdit");
         $row->add(new ClickLink('checkfisc',$this,"onFisc"))->setVisible($doc->headerdata['passfisc']==1) ;
         $row->checkedit->setVisible($doc->state < 4 );

@@ -52,6 +52,7 @@ class Inventory extends \App\Pages\Base
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
+        $this->docform->add(new SubmitLink('delall'))->onClick($this, 'OnDelAll' );
 
         $this->add(new Form('editdetail'))->setVisible(false);
 
@@ -101,27 +102,35 @@ class Inventory extends \App\Pages\Base
         //  $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new TextInput('qfact', new \Zippy\Binding\PropertyBinding($item, 'qfact')))->onChange($this,"onText",true);
 
-      //  $row->item->setAttribute('class', "text-success");
-
-        $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
 
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
+        
+        $row->add(new CheckBox('seldel', new \Zippy\Binding\PropertyBinding($item, 'seldel')));
+        
     }
 
     //для  сохранения формы
     public function onText($sender) {
         
     }
-    public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc)) {
-            return;
+
+
+    public function OnDelAll($sender) {
+
+        $items = [];
+        foreach ($this->docform->detail->getDataRows() as $row) {
+            $item = $row->getDataItem();
+            if ($item->seldel != true) {
+                $item->seldel = false;
+                $items[]=$item;  
+                
+            }
         }
-        $item = $sender->owner->getDataItem();
-        $rowid =  array_search($item,$this->_itemlist,true);
- 
-        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
+        $this->_itemlist = $items;
+        
         $this->docform->detail->Reload();
-    }
+     }
+ 
 
     public function addrowOnClick($sender) {
         if ($this->docform->store->getValue() == 0) {

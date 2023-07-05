@@ -15,8 +15,8 @@
     <tr>
 
         <td   style="background-color: {{color}} ;">{{name}}</td>
-        <td   style="background-color: {{color}} ;" align="right">{{value}} &nbsp;</td>
-        <td   style="background-color: {{color}} ;" align="right">{{perc}} &nbsp;</td>
+        <td   style="background-color: {{color}} ;" align="right">{{value}} </td>
+        <td   style="background-color: {{color}} ;" align="right">{{perc}} </td>
         <td   style="background-color: {{color}} ;">{{group}}</td>
 
     </tr>
@@ -24,23 +24,23 @@
     <tr>
 
         <td   align="right"><b>Всього A:</b></td>
-        <td   align="right"><b>{{totala}}</b> &nbsp;</td>
-        <td   align="right"> &nbsp;</td>
+        <td   align="right"><b>{{totala}}</b> </td>
+        <td   align="right"> </td>
         <td  ></td>
 
     </tr>
     <tr>
 
         <td   align="right"><b>Всього B:</b></td>
-        <td   align="right"><b>{{totalb}}</b> &nbsp;</td>
-        <td   align="right"> &nbsp;</td>
+        <td   align="right"><b>{{totalb}}</b> </td>
+        <td   align="right"> </td>
         <td  ></td>
 
     </tr>
     <tr>
 
         <td   align="right"><b>Всього C:</b></td>
-        <td   align="right"><b>{{totalc}}</b> &nbsp;</td>
+        <td   align="right"><b>{{totalc}}</b> </td>
         <td   align="right"> &nbsp;</td>
         <td  ></td>
 

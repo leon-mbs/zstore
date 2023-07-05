@@ -82,6 +82,9 @@
 
                     <table class="table table-sm">
                         <tr>
+                            <th> <i onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
+                                style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"
+                                    class="fa fa-check-double "></i></th>
                             <th>Назва</th>
                             <th>Артикул</th>
 
@@ -94,9 +97,11 @@
                             <th width="40" class="text-center">Кіл.</th>
 
 
-                            <th width="50"></th>
+
                         </tr>
                         <tr zippy="detail">
+                            <td><input  zippy="seldel" class="seldel" type="checkbox"></td>
+                     
                             <td zippy="item"></td>
                             <td zippy="item_code"></td>
 
@@ -116,6 +121,14 @@
 
 
                         </tr>
+                         
+                        <tr><td >
+                            <a class="text-danger" zippy="delall" title="Видалити"><i class="fa fa-trash"></i></a>
+                          </td> 
+                         <td colspan="3"></td>   
+                         
+                            </tr>                 
+                       
                     </table>
 
 

@@ -49,6 +49,7 @@ class Options extends \App\Pages\Base
         $this->shop->add(new CheckBox('usefeedback'));
         $this->shop->add(new CheckBox('usemainpage'));
         $this->shop->add(new CheckBox('nouseimages'));
+        $this->shop->add(new CheckBox('noshowempty'));
 
         $this->shop->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), "0"));
         $this->shop->add(new DropDownChoice('firm', \App\Entity\Firm::findArray("firm_name","disabled <>1"), "0"));
@@ -83,6 +84,7 @@ class Options extends \App\Pages\Base
         $this->shop->currencyname->setText($shop['currencyname']);
         $this->shop->uselogin->setChecked($shop['uselogin']);
         $this->shop->usefilter->setChecked($shop['usefilter']);
+        $this->shop->noshowempty->setChecked($shop['noshowempty']);
         
         $this->shop->usefeedback->setChecked($shop['usefeedback']);
         $this->shop->usemainpage->setChecked($shop['usemainpage']);
@@ -164,6 +166,7 @@ class Options extends \App\Pages\Base
         $shop['usefeedback'] = $this->shop->usefeedback->isChecked() ? 1 : 0;
         $shop['usemainpage'] = $this->shop->usemainpage->isChecked() ? 1 : 0;
         $shop['nouseimages'] = $this->shop->nouseimages->isChecked() ? 1 : 0;
+        $shop['noshowempty'] = $this->shop->noshowempty->isChecked() ? 1 : 0;
 
         $file = $sender->logo->getFile();
         if (strlen($file["tmp_name"]) > 0) {
