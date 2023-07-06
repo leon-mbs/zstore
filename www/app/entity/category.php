@@ -34,6 +34,7 @@ class Category extends \ZCL\DB\Entity
         $this->image_id = (int)$xml->image_id[0];
         $this->noshop = (int)$xml->noshop[0];
         $this->nofastfood = (int)$xml->nofastfood[0];
+        $this->order = (int)$xml->order[0];
         $this->discount = doubleval($xml->discount[0]);
         $this->todate = intval($xml->todate[0]);
         $this->fromdate = intval($xml->fromdate[0]);
@@ -54,6 +55,7 @@ class Category extends \ZCL\DB\Entity
         $this->detail .= "<price5>{$this->price5}</price5>";
         $this->detail .= "<image_id>{$this->image_id}</image_id>";
         $this->detail .= "<noshop>{$this->noshop}</noshop>";
+        $this->detail .= "<order>{$this->order}</order>";
         $this->detail .= "<nofastfood>{$this->nofastfood}</nofastfood>";
         if ($this->discount > 0) {
             $this->detail .= "<discount>{$this->discount}</discount>";

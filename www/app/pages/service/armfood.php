@@ -303,7 +303,11 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->navform->setVisible(false);
 
 
-        $this->_catlist = Category::find(" cat_id in(select cat_id from  items where  disabled <>1  ) and  coalesce(parent_id,0)=0 and detail  not  like '%<nofastfood>1</nofastfood>%' ","cat_name");
+        $this->_catlist = Category::find(" cat_id in(select cat_id from  items where  disabled <>1  ) and detail  not  like '%<nofastfood>1</nofastfood>%' ");
+        usort($this->_catlist, function($a, $b) {
+            return $a->order > $b->order;
+        });
+        
         $this->docpanel->catpan->catlist->Reload();
     }
 

@@ -60,9 +60,8 @@
                    {{#cats}}
                       <tr><td colspan="2" align="center">
                           {{^hasitems}}
-                          <a href="{{link}}"  >
-                                          
-                               <label style="cursor:pointer" class="badge badge-light badge-pill p-2 textcat"> {{cat_name}}</label>
+                          <a href="{{link}}" class="badge badge-light badge-pill p-2 textcat" >
+                                {{cat_name}}
                           </a>
                           {{/hasitems}}
                           {{#hasitems}}
@@ -93,7 +92,7 @@
                      
                     {{/cats}}
                     
-                    <tr><td colspan="2" align="center"><b>Розклад роботи</b></td></tr>
+                    <tr><td colspan="2" align="center"><br><b>Розклад роботи</b></td></tr>
                     <tr><td colspan="2" align="center">
                        <table class="ctable">
                           <tr><td>Пн - Пт</td><td> {{timepn}}</td></tr>

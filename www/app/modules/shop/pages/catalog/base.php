@@ -17,9 +17,8 @@ class Base extends \Zippy\Html\WebPage
         global $_config;
         $modules = \App\System::getOptions("modules");
         if($modules['shop'] != 1) {
-            App::RedirectHome()  ;
-       
-            return;
+            http_response_code(404);
+            die;
         }
         $shop = System::getOptions("shop");
         if (!is_array($shop)) {
