@@ -676,7 +676,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
             // игнорируем другие поля
            
 
-            $where = "   document_number like ".$conn->qstr('%' . $sn . '%')." or document_id =   ".$conn->qstr( $sn );
+            $where = "   document_number like ".$conn->qstr('%' . $sn . '%');
         }
 
 
