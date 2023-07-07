@@ -136,7 +136,7 @@
                         <form zippy="navform" class="form-inline   ">                   
                             <input  zippy="baddnewpos"  type="submit" value="Додати позицiю  "   class="btn btn-info mr-4"> 
                             {{#usescanner}}
-                            Штрих код &nbsp;<input class="form-control"   style="width:150px;" autocomplete="off"  autofocus="on"  type="text" zippy="barcode"
+                            Штрих код &nbsp;<input class="form-control"   style="width:150px;" autocomplete="off"    type="text" zippy="barcode"
                                                    onkeydown="onBarCode()"> <a zippy="addcode"></a>
 
                             {{/usescanner}}
@@ -157,7 +157,7 @@
                                 <tr>
                                     <th>Назва</th>
                                     <th>Код</th>
-                                    <th class="text-right ">Кiл.</th>
+                                    <th class="text-center ">Кiл.</th>
                                     <th class="text-right"><i title="Акцiйна знижка" class="fa fa-gift"></i> ,%</th>
                                     <th class="text-right">Цiна</th>
                                     <th class="text-right">Сума</th>
@@ -178,6 +178,7 @@
                                          <a zippy="qtymin" class="btn btn-info btn-sm mr-1">-</a>
                                         <span zippy="qty"></span>
                                         <a zippy="qtyplus" class="btn btn-info  btn-sm ml-1">+</a>
+                                        <a zippy="qtyedit"  ><i class="fa fa-edit"></i></a>
                                     </td>
                                     <td zippy="disc" class="text-right"></td>
                                     <td zippy="price" class="text-right"></td>
@@ -334,7 +335,30 @@
    
                         </div>
                         
+               <div id="modalqty" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered  modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Кількість</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group  ">
+                                <input   class="form-control qtyprice" type="text" zippy="editqtyq" pattern="[0-9,\.]+">
+                                <input    type="hidden" zippy="editqtyi" >
+                                <div class="input-group-append">
+                                    <input type="submit" value="OK" zippy="beditqty" class="ml-2 btn btn-info  ">
+
+                                </div>
                                 
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>                               
                         
                     </form>  
                 </div>
@@ -571,6 +595,7 @@
         </form>
 
 
+
         <script>
             $(document).ready(function () {
                 $('#pfpayed').focus();
@@ -626,8 +651,16 @@
 
            function onBell(el){
                     $(el).attr('class','fa fa-bell  text-success')
-                }
+           }
 
+                
+          function qtyedit(id,qty){
+             $('#editqtyq').val(qty)
+             $('#editqtyi').val(id)
+             $('#modalqty').modal('show')
+          } 
+                
+                
         </script>
 
         {{#usescanner}} 
@@ -650,6 +683,8 @@
                 $('#btocheck').attr('disabled', 'disabled');
                 return true;
             }            
+           
+           
                 
         </script>  
 

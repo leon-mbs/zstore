@@ -151,6 +151,12 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->listsform->customer->onChange($this, 'OnChangeCustomer');
         $this->docpanel->listsform->add(new \Zippy\Html\Link\BookmarkableLink('cinfo'));
 
+        $this->docpanel->listsform->add(new TextInput('editqtyi'));
+        $this->docpanel->listsform->add(new TextInput('editqtyq'));
+        $this->docpanel->listsform->add(new SubmitButton('beditqty'))->onClick($this, 'editqtyOnClick');
+        
+        
+        
         $this->docpanel->add(new Form('payform'))->setVisible(false);
 
 
@@ -586,7 +592,8 @@ class ARMFood extends \App\Pages\Base
 
         $row->add(new Label('itemname', $item->itemname));
         $row->add(new Label('item_code', $item->item_code));
-        $row->add(new Label('qty', H::fqty($item->quantity)));
+        $qty = H::fqty($item->quantity) ;
+        $row->add(new Label('qty', $qty));
          
         
         $row->add(new Label('disc', '-'. H::fa1($item->disc)));
@@ -597,6 +604,9 @@ class ARMFood extends \App\Pages\Base
         $row->add(new ClickLink('qtymin'))->onClick($this, 'onQtyClick');
         $row->add(new ClickLink('qtyplus'))->onClick($this, 'onQtyClick');
         $row->add(new ClickLink('removeitem'))->onClick($this, 'onDelItemClick');
+        $row->add(new Label('qtyedit'))->setAttribute('onclick',"qtyedit({$item->item_id},{$qty})") ;
+      
+      
         if ($item->foodstate == 1) {
             $row->removeitem->setVisible(false);
             $row->myselfon->setVisible(false);
@@ -932,6 +942,16 @@ class ARMFood extends \App\Pages\Base
 
     }
 
+    public function editqtyOnClick($sender) {
+       $qty =  $this->docpanel->listsform->editqtyq->getText();
+       $id  =  $this->docpanel->listsform->editqtyi->getText();
+       $this->_itemlist[$id]->quantity = H::fqty($qty); 
+       $this->docpanel->listsform->itemlist->Reload();
+       $this->calcTotal();
+       
+    }    
+    
+    
     //Оплата
     public function payandcloseOnClick() {
 
