@@ -221,7 +221,7 @@ class POSCheck extends Document
         }
             
         // товары    
-        foreach ($required >0 && $this->unpackDetails('detaildata') as $item) {
+        foreach ( $this->unpackDetails('detaildata') as $item) {
 
             $onstore = H::fqty($item->getQuantity($this->headerdata['store']) ) ;
             $required = $item->quantity - $onstore;     
