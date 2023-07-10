@@ -1409,7 +1409,7 @@ class ARMPos extends \App\Pages\Base
         $row->add(new Label('rownotes', $doc->notes));
         $row->add(new Label('rowauthor', $doc->username));
         $row->add(new ClickLink('checkedit'))->onClick($this,"onEdit");
-        $row->add(new ClickLink('checkfisc',$this,"onFisc"))->setVisible($doc->headerdata['passfisc']==1) ;
+        $row->add(new ClickLink('checkfisc',$this,"onFisc"))->setVisible(($doc->headerdata['passfisc'] ?? "") ==1) ;
         $row->checkedit->setVisible($doc->state < 4 );
 
         $row->add(new \Zippy\Html\Link\RedirectLink('checkreturn',"\\App\\Pages\\Doc\\ReturnIssue", array(0,$doc->document_id) ));
