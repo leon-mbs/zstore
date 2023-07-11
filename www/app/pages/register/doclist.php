@@ -205,9 +205,9 @@ class DocList extends \App\Pages\Base
         $row->hasnotes->setAttribute('title', $doc->notes);
 
         $row->add(new ClickLink('parentdoc', $this, 'basedOnClick'))->setVisible($doc->parent_id > 0);
-        $row->parentdoc->setValue($doc->headerdata['parent_number']);
+        $row->parentdoc->setValue($doc->headerdata['parent_number'] ?? '');
 
-        $row->add(new Label('hasscan'))->setVisible($doc->headerdata['scan'] > 0);
+        $row->add(new Label('hasscan'))->setVisible(($doc->headerdata['scan'] ?? 0) > 0);
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -246,7 +246,7 @@ class DocList extends \App\Pages\Base
             $row->cancel->setVisible(true);
         }
 
-        if ($doc->document_id == @$this->_doc->document_id) {
+        if ($doc->document_id == ($this->_doc->document_id ?? null)) {
             $row->setAttribute('class', 'table-success');
         }
          

@@ -9,7 +9,7 @@ if (isset($_REQUEST['id']) > 0) {
     if ($image instanceof \App\Entity\Image) {
 
         header("Content-Type: " . $image->mime);
-        if ($_REQUEST['t'] == "t" && strlen($image->thumb) > 0) {
+        if (($_REQUEST['t']  ?? null) == "t" && strlen($image->thumb  ?? null) > 0) {
             header("Content-Length: " . strlen($image->thumb));
             echo $image->thumb;
         } else {

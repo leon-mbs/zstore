@@ -27,7 +27,7 @@ class Base extends \Zippy\Html\WebPage
         $customer_id =   System::getCustomer();
         
         
-        if ($_COOKIE['remembercust'] && $customer_id == 0) {
+        if (($_COOKIE['remembercust'] ?? NULL) && $customer_id == 0) {
             $arr = explode('_', $_COOKIE['remembercust']);
           
             if ($arr[0] > 0 && $arr[1] === md5($arr[0] . $_config['common']['salt'])) {
@@ -99,7 +99,7 @@ class Base extends \Zippy\Html\WebPage
            $this->_tvars['pages'][]=array('link'=> $link  ,'title'=>$p->title);    
         }
         
-        if(strlen($_COOKIE['zippy_shop'])==0) {
+        if(strlen($_COOKIE['zippy_shop'] ?? null)==0) {
            \App\Helper::insertstat(\App\Helper::STAT_HIT_SHOP,0,0) ;
            setcookie("zippy_shop","visited" , time() + 60 * 60 * 24);
        
