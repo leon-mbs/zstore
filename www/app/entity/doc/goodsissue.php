@@ -305,29 +305,20 @@ class GoodsIssue extends Document
 
     protected function onState($state,$oldstate) {
         if($state == Document::STATE_EXECUTED) {
-           if($this->hasStore() && $this->payed > 0 && $this->payamount == $this->payed ) { //провеен  и оплачен
-             //  $this->updateStatus(Document::STATE_CLOSED) ;
-               return;
-           }          
-               if($this->parent_id > 0)   {;
-                   $parent = Document::load($this->parent_id);              
-                   if($parent->meta_name == 'Order' || $parent->meta_name == 'Invoice') {   
-                     if($parent->state== Document::STATE_PAYED) {   //оплачено
-                         //$this->updateStatus(Document::STATE_CLOSED) ;                                  
-                     }         
-                   }         
-               }
+            
+           if($this->parent_id > 0)   {;
+               $order = Document::load($this->parent_id);              
+               if($order->meta_name == 'Order') {   
+                   
+                 if($order->payamount == 0 || ($order->payamount > 0 && $order->payamount == $order->payed) ) {   
+                     $this->updateStatus(Document::STATE_DELIVERED) ;                                  
+                 }         
+               }         
+           }
               
             
         } 
-        if($state == Document::STATE_CLOSED) {
-           if($this->parent_id > 0)   {;
-               $parent = Document::load($this->parent_id);              
-               if($parent->meta_name == 'Order' || $parent->meta_name == 'Invoice') {
-                   $parent->updateStatus(Document::STATE_CLOSED) ;                                  
-               }         
-           }
-       }        
+         
               
     }    
     

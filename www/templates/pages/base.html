@@ -1,5 +1,6 @@
 <html>
     <head>
+        <meta charset="utf-8">
         <meta lang="ua" >
         <title>Zippy Склад</title>
         <meta name="description" content="">
@@ -159,7 +160,7 @@
         <a id="top"></a>
         <div class="wrapper">
             <!-- Navbar -->
-            <div class="main-header navbar navbar-expand   ">
+            <nav class="main-header navbar navbar-expand   ">
                {{#showsidemenu}}
                 <ul class="navbar-nav">
                     <li class="nav-item">
@@ -282,9 +283,9 @@
                 </ul>
 
 
-            </div>
+            </nav>
             {{#showsidemenu}}
-            <div class="main-sidebar sidebar-dark-primary elevation-4">
+            <aside class="main-sidebar sidebar-dark-primary elevation-4">
                 <!-- Brand Logo -->
                 <a href="/index.php" class="brand-link">
 
@@ -293,7 +294,7 @@
 
                 <!-- Sidebar -->
                 <div class="sidebar">
-                    <div class="mt-2">
+                    <nav class="mt-2">
                         <ul class="nav  nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
                             <li class="nav-item  ">
@@ -982,15 +983,15 @@
                             </li>
 
                         </ul>
-                    </div>
+                    </nav>
                 </div>
                 <!-- /.sidebar -->     
-            </div>
+            </aside>
             {{/showsidemenu}}
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper mb-4">
                 <!-- Main content -->
-                <div class="content"> <a id="topankor" ></a>
+                <section class="content"> <a id="topankor" ></a>
                     <div class="row justify-content-center mt-2 mb-1">
                         <div class="col-12 col-md-10 col-lg-9 col-xl-8   ">
 
@@ -1012,14 +1013,14 @@
                              
                             {{/smart}}
                              {{#showtips}}
-                                <small> <i class="fa fa-info-circle"></i> Оперативне меню налаштовується в  довіднику ролей</small>
+                                <small> <i class="fa fa-info-circle"> Оперативне меню налаштовується в  довіднику ролей</small>
                              {{/showtips}}
 
 
                             <childpage/>
                         </div>
                     </div>
-                </div>
+                </section>
                 <!-- /.content -->
             </div>
             <!-- /.content-wrapper -->
