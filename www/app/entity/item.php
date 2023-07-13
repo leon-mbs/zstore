@@ -483,7 +483,13 @@ class Item extends \ZCL\DB\Entity
     public static function getPriceTypeList() {
 
         $common = \App\System::getOptions("common");
-        $list = array();
+        $list = array(
+         'price1'=>'',
+         'price2'=>'',
+         'price3'=>'',
+         'price4'=>'',
+         'price5'=>''
+        );
         if (strlen($common['price1']) > 0) {
             $list['price1'] = $common['price1'];
         }

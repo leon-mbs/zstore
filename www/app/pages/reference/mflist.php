@@ -57,7 +57,7 @@ class MFList extends \App\Pages\Base
         $item = $row->getDataItem();
 
         $row->add(new Label('mf_name', $item->mf_name));
-        $row->add(new Label('branch', $this->_blist[$item->branch_id]));
+        $row->add(new Label('branch', $this->_blist[$item->branch_id] ?? ''));
 
         $row->add(new Label('description', $item->description));
         $row->add(new Label('amount', \App\Helper::fa($this->_balance[$item->mf_id])));

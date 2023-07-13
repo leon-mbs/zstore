@@ -87,7 +87,7 @@ class EmployeeList extends \App\Pages\Base
 
         $row->add(new Label('emp_name', $item->emp_name));
         $row->add(new Label('login', $item->login));
-        $row->add(new Label('branch', $this->_blist[$item->branch_id]));
+        $row->add(new Label('branch', $this->_blist[$item->branch_id] ??''));
         //  $row->add(new Label('balance', $item->balance));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');

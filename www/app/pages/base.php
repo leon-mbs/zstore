@@ -640,23 +640,23 @@ class Base extends \Zippy\Html\WebPage
     public  function vLoadLists($args,$post){
          $post = json_decode($post) ;
          $ret = [];
-         if($post->cats) {
+         if($post->cats ?? null) {
              $cats =  \App\Entity\Category::getList() ;
              $ret['cats'] =  \App\Util::tokv($cats) ;
          }
-         if($post->brands) {
+         if($post->brands ?? null) {
              $brands = \App\Entity\Item::getManufacturers(true) ;
              $ret['brands'] =  \App\Util::tokv($brands) ;
          }
-         if($post->stores) {
+         if($post->stores ?? null) {
              $stores = \App\Entity\Store::getList() ;
              $ret['stores'] =  \App\Util::tokv($stores) ;
          }
-         if($post->firms) {
+         if($post->firms ?? null) {
              $firms = \App\Entity\Firm::getList() ;
              $ret['firms'] =  \App\Util::tokv($firms) ;
          }
-         if($post->mfs) {
+         if($post->mfs ?? null) {
              $mfs = \App\Entity\MoneyFund::getList() ;
              $ret['mfs'] =  \App\Util::tokv($mfs) ;
          }

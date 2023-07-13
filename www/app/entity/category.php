@@ -106,7 +106,7 @@ class Category extends \ZCL\DB\Entity
 
         $p = array();
 
-        if ($clist[$this->parent_id] instanceof Category) {
+        if (($clist[$this->parent_id] ?? null) instanceof Category) {
             $p[] = $this->parent_id;
             $pp = $clist[$this->parent_id]->getParents($clist);
             if (count($pp) > 0) {

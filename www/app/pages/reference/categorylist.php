@@ -125,8 +125,8 @@ class CategoryList extends \App\Pages\Base
         $item = $row->getDataItem();
 
         $row->add(new Label('cat_name', $item->cat_name));
-        $row->add(new Label('p_name', $this->_catlist[$item->parent_id]->full_name));
-        $row->add(new Label('qty', $item->qty))->setVisible($item->qty > 0);
+        $row->add(new Label('p_name', isset($this->_catlist[$item->parent_id] ) ? ($this->_catlist[$item->parent_id]->full_name) : ''));
+        $row->add(new Label('qty', $item->qty))->setVisible( ($item->qty ?? 0) > 0);
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
 

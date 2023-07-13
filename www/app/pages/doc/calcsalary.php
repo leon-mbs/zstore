@@ -58,7 +58,7 @@ class CalcSalary extends \App\Pages\Base
             
             
 
-            if ($opt['codeadvance'] > 0) { //аванс
+            if (($opt['codeadvance'] ??0) > 0) { //аванс
 
                 $rows = EmpAcc::getAmountByType($this->_doc->headerdata['year'], $this->_doc->headerdata['month'], EmpAcc::ADVANCE);
                 foreach ($rows as $row) {

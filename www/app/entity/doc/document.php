@@ -798,7 +798,7 @@ class Document extends \ZCL\DB\Entity
      *
      */
     public function unpackDetails($dataname) {
-        $list = @unserialize(@base64_decode($this->headerdata[$dataname]));
+        $list = @unserialize(@base64_decode($this->headerdata[$dataname] ??''));
         if (is_array($list)) {
             return $list;
         } else {
