@@ -129,6 +129,7 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->totaldisc->setText($this->_doc->headerdata['totaldisc']);
             $this->docform->edittotaldisc->setText($this->_doc->headerdata['totaldisc']);
             $this->docform->total->setText(H::fa($this->_doc->amount));
+            $this->docform->payamount->setText(H::fa($this->_doc->payamount));
 
             $this->docform->document_date->setDate($this->_doc->document_date);
 

@@ -425,11 +425,11 @@ class Item extends \ZCL\DB\Entity
         
           
         if(strlen($p['pricetype'])==0) $p['pricetype'] = 'price1';
-        $p['store']   = intval( $p['store'] );
-        $p['partion']   = intval( $p['partion'] );
-        $p['quantity']   = intval( $p['quantity'] );
-        $p['customer']   = intval( $p['customer'] );
-        $p['date']   = intval( $p['date'] );
+        $p['store']   = intval( $p['store'] ?? null);
+        $p['partion']   = intval( $p['partion']?? null );
+        $p['quantity']   = intval( $p['quantity']?? null );
+        $p['customer']   = intval( $p['customer'] ?? null);
+        $p['date']   = intval( $p['date'] ?? null);
        
        
        

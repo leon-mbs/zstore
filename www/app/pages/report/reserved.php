@@ -58,7 +58,7 @@ class Reserved extends \App\Pages\Base
             $row['itemname']  = $r['itemname'] ;
             $row['item_code']  = $r['item_code'] ;
             $doc = Document::load($r['document_id']);
-            $row['store']  = $doc->headerdata['storename'];
+            $row['store']  = $doc->headerdata['storename'] ??'';
             $row['document_number']  = $doc->document_number;
             $row['customer']  = $doc->customer_name;
             $row['qty']  = H::fqty(0-$r['qty']);

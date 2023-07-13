@@ -66,7 +66,7 @@ class POSCheck extends Document
                         "inn"           => strlen($firm["inn"]) >0 ? $firm["inn"] :false,
                         "tin"           => strlen($firm["tin"]) >0 ? $firm["tin"] :false,
                         "customer_name"   => strlen($this->customer_name) > 0 ? $this->customer_name : false,
-                        "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
+                        "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"] ?? null) > 0 ? $this->headerdata["fiscalnumber"] : false,
                         "exchange"        => H::fa($this->headerdata["exchange"]),
                         "pos_name"        => $this->headerdata["pos_name"],
                         "time"            => H::fdt($this->headerdata["time"]),
@@ -79,7 +79,7 @@ class POSCheck extends Document
                         "docqrcode"       => $this->getQRCodeImage(),
                         "payamount"       => H::fa($this->payamount)
         );
-        if($this->headerdata['payment']  >0){
+        if($this->headerdata['payment'] ?? null  >0){
             $mf = \App\Entity\MoneyFund::load($this->headerdata['payment'] );
             $header['nal']  = $mf->beznal!=1;
         }
@@ -117,7 +117,7 @@ class POSCheck extends Document
         $common = System::getOptions('common');
         $printer = System::getOptions('printer');
         $style = "";
-        if (strlen($printer['pdocfontsize']) > 0 || strlen($printer['pdocwidth']) > 0) {
+        if (strlen($printer['pdocfontsize']?? null) > 0 || strlen($printer['pdocwidth']?? null) > 0) {
             $style = 'style="font-size:' . $printer['pdocfontsize'] . 'px;width:' . $printer['pdocwidth'] . ';"';
 
         }
@@ -143,9 +143,9 @@ class POSCheck extends Document
                         "inn"           => strlen($firm["inn"]) >0 ? $firm["inn"] :false,
                         "tin"           => strlen($firm["tin"]) >0 ? $firm["tin"] :false,
                         "checkslogan"   => $common["checkslogan"],
-                        "customer_name" => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
-                        "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
-                        "fiscalnumberpos"  => strlen($this->headerdata["fiscalnumberpos"]) > 0 ? $this->headerdata["fiscalnumberpos"] : false,
+                        "customer_name" => strlen($this->headerdata["customer_name"]?? null) > 0 ? $this->headerdata["customer_name"] : false,
+                        "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]?? null) > 0 ? $this->headerdata["fiscalnumber"] : false,
+                        "fiscalnumberpos"  => strlen($this->headerdata["fiscalnumberpos"]?? null) > 0 ? $this->headerdata["fiscalnumberpos"] : false,
                         "notes"           => nl2br($this->notes),
                         "prepaid"         => $this->headerdata['prepaid'] > 0  ? H::fa($this->headerdata['prepaid']) : false   ,
                    
@@ -181,7 +181,7 @@ class POSCheck extends Document
         $header['form3']  = false;       
 
         
-        if($this->headerdata['payment']  >0){
+        if($this->headerdata['payment']?? 0  >0){
             $mf = \App\Entity\MoneyFund::load($this->headerdata['payment'] );
             $header['form1']  = $mf->beznal!=1;
             $header['form2']  = $mf->beznal==1;

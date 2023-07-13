@@ -302,7 +302,7 @@ class OLAP extends \App\Pages\Base
            
            foreach($dhor as $_h) {
                
-              $da[]=array('val'=> $detail[$n][$_h])  ;
+              $da[]=array('val'=> $detail[$n][$_h] ?? '')  ;
            }
            
                        

@@ -109,7 +109,7 @@ class DocView extends \Zippy\Html\PageFragment
         
         $ret['isscan'] = false   ;
          
-        if ( is_numeric($doc->headerdata['scan'] )) {
+        if ( is_numeric($doc->headerdata['scan'] ?? null)) {
             $ret['scanimage'] = '/loadfile.php?im=1&id=' . $doc->headerdata['scan']   ;
             $ret['isscan'] = true  ;
         }     
