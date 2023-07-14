@@ -22,8 +22,8 @@
             <div class="w-100"></div>
     {{={| |}=}}             
   <div  id="vapp" class="col-12 col-md-10 col-lg-8" >
-        <a onclick="updateItems()" href="javascript:void(0)"   class="btn btn-info">Оновити</a>
-        <input  class="ml-2" type="checkbox" v-model="forbar"  > Бар
+        <input id="forbar"  class="ml-2" type="checkbox" v-model="forbar"  > <label for="forbar">Бар</label> <a onclick="updateItems()" href="javascript:void(0)"   class="btn btn-info  ml-2">Оновити</a>
+         
         <table class="table table-striped">
     <tr v-for="item, index in itemlist">
         <td>{{item.ordern}}</td>

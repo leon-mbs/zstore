@@ -85,7 +85,7 @@ class ArmProdFood extends \App\Pages\Base
 
                     $n->save();
 
-                    $doc->updateStatus(Document::STATE_FINISHED);
+                 //   $doc->updateStatus(Document::STATE_FINISHED);
                     
                     
                     if ($doc->payed == $doc->payamount ) {
