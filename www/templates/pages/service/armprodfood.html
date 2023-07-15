@@ -30,45 +30,38 @@
         <td>{{item.name}}</td> 
         <td>{{item.qty}}</td> 
         <td>{{item.notes}}</td> 
-        <td><a    v-on:click="onReady(item.document_id,item.item_id, index) " class="btn btn-success">Готово</a></td> 
+        <td><a    v-on:click="onReady(item.document_id,item.rowid, index) " class="btn btn-success">Готово</a></td> 
     </tr>    
         </table>
-        <paginator></paginator>
+        
    
   </div>
              </div>
             {|={{ }}=|}
-            <script>
-            
-                function onBell(){
-                    $("#bell").attr('class','fa fa-bell  text-success')
-                    // beep()
-                }
-               
-            
-                window.setInterval(onNewOrder, 5000);
-
-            
+        <script>
+        
+            function onBell(){
+                $("#bell").attr('class','fa fa-bell  text-success')
+                // beep()
+            }
+        
+            window.setInterval(onNewOrder, 5000);
      
     
-     var vapp = new Vue({
-            el: '#vapp',
-       
-      data() {
-          return  {
-             forbar:false ,
-             itemlist:[]
-           }   
-      }  ,
-     components: {
-          'paginator': httpVueLoader('/assets/js/vue/paginator.vue')
-   
-        }, 
-        methods: {
-             onReady( document_id,item_id, index) {
+          var vapp = new Vue({
+                el: '#vapp',
+           
+          data() {
+              return  {
+                 forbar:false ,
+                 itemlist:[]
+               }   
+          }  ,
+          methods: {
+             onReady( document_id,rowid, index) {
                  // onBell()
                   $('#newordersalert').hide();
-                  callPM('onReady',[document_id,item_id],null,(data)=> 
+                  callPM('onReady',[document_id,rowid],null,(data)=> 
                   {
                       if(false==checkPMAnswer(data) )   {
                            return
@@ -79,26 +72,31 @@
              
            } ,
            
-        updateItems(){
+          updateItems(){
             
       
             
-          callPageMethod('getItems',[this.forbar],null,(data)=> 
-          {
-                   
-              this.itemlist= JSON.parse(data)  
+              callPageMethod('getItems',[this.forbar],null,(data)=> 
+              {
+                       
+                  this.itemlist= JSON.parse(data)  
+                  
               
-          
-          });
-            
-      }           
-        }      
+              });
+                
+          }           
+        },
+        
+        mounted: function  (){ 
+
+          this.updateItems() ;  
+        }     
       
     })   
 
     function updateItems() {
       vapp.updateItems() ;
-  }
+    }
   
   
              function onNewOrder() {

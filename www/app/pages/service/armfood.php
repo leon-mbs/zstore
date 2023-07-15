@@ -255,7 +255,6 @@ class ARMFood extends \App\Pages\Base
         
     }
 
-
     public function OnDelivery($sender) {
         $this->docpanel->listsform->contact->setVisible(false);
         $this->docpanel->listsform->address->setVisible(false);
@@ -476,25 +475,35 @@ class ARMFood extends \App\Pages\Base
             $this->setWarn("Товару {$item->itemname} немає на складі");
         }
 
-
-        if (isset($this->_itemlist[$item->item_id])) {
-            $this->_itemlist[$item->item_id]->quantity++;
-        } else {
+        $found=false;
+        foreach($this->_itemlist as $i=>$it) {
+             if($it->item_id==$item->item_id && intval($it->foodstate )==0 )            {
+                $this->_itemlist[$i]->quantity++;
+                $found = true;
+                break;        
+             }
+        }
+        
+        if (!$found) {
             $item->myself = $this->_worktype == 0;
             if ($this->_tvars['pack'] == false) {
                 $item->myself = 0;
             }
             $item->quantity = 1;
+            $item->foodstate = 0;
             // $item->price = $item->getPrice($this->_pricetype, $this->_store);
-            $this->_itemlist[$item->item_id] = $item;
+            $this->_itemlist[] = $item;
         }
 
-        $this->_catlist = Category::find("cat_id in(select cat_id from  items where  disabled <>1  ) and coalesce(parent_id,0)=0 and detail  not  like '%<nofastfood>1</nofastfood>%' ","cat_name");
+        $this->_catlist = Category::find(" cat_id in(select cat_id from  items where  disabled <>1  ) and detail  not  like '%<nofastfood>1</nofastfood>%' ");
+        usort($this->_catlist, function($a, $b) {
+            return $a->order > $b->order;
+        });
         $this->docpanel->catpan->catlist->Reload();
-        $this->setSuccess("Позиція додана");
 
         $this->docpanel->catpan->setVisible(true);
         $this->docpanel->prodpan->setVisible(false);
+        $this->setSuccess("Позиція додана");
 
     }
 
@@ -577,7 +586,7 @@ class ARMFood extends \App\Pages\Base
         if ($this->_tvars['pack'] == false) {
             $item->myself = 0;
         }
-        $this->_itemlist[$item->item_id] = $item;
+        $this->_itemlist[] = $item;
 
 
         $this->docpanel->listsform->itemlist->Reload();
@@ -604,16 +613,33 @@ class ARMFood extends \App\Pages\Base
         $row->add(new ClickLink('qtymin'))->onClick($this, 'onQtyClick');
         $row->add(new ClickLink('qtyplus'))->onClick($this, 'onQtyClick');
         $row->add(new ClickLink('removeitem'))->onClick($this, 'onDelItemClick');
-        $row->add(new Label('qtyedit'))->setAttribute('onclick',"qtyedit({$item->item_id},{$qty})") ;
+        $rowid =  array_search($item,$this->_itemlist,true);
+        
+        $row->add(new Label('qtyedit'))->setAttribute('onclick',"qtyedit({$rowid},{$qty})") ;
+
+
+
       
-      
-        if ($item->foodstate == 1) {
+        $state="Новий";
+        if ($item->foodstate == 1) {        
+           $state="Готуєтся";            
+        }
+        if ($item->foodstate == 2) {        
+           $state="Готово";            
+        }
+        if ($item->foodstate == 3) {        
+           $state="Видано";            
+        }
+        $row->add(new Label('state', $state));
+        
+        if ($item->foodstate > 0) {
             $row->removeitem->setVisible(false);
             $row->myselfon->setVisible(false);
             $row->myselfoff->setVisible(false);
             $row->qtymin->setVisible(false);
             $row->qtyplus->setVisible(false);
-            $row->removeitem->setVisible(false);
+            $row->qtyedit->setVisible(false);
+
         }
     }
 
@@ -641,7 +667,10 @@ class ARMFood extends \App\Pages\Base
 
     public function onDelItemClick($sender) {
         $item = $sender->getOwner()->getDataItem();
-        $this->_itemlist = array_diff_key($this->_itemlist, array($item->item_id => $this->_itemlist[$item->item_id]));
+        
+        $rowid =  array_search($item,$this->_itemlist,true);
+
+        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
 
         $this->docpanel->listsform->itemlist->Reload();
         $this->calcTotal();
@@ -830,46 +859,28 @@ class ARMFood extends \App\Pages\Base
             return;
         }
 
-        $conn = \ZDB\DB::getConnect();
-        $conn->BeginTrans();
-      
-        try {
+        $n = new \App\Entity\Notify();
+        $n->user_id = \App\Entity\Notify::ARMFOODPROD;
+        $n->dateshow = time();
+        $n->message = serialize(array('cmd' => 'update'));
+
+        
+        foreach($this->_itemlist as $i=>$p){
+           $this->_itemlist[$i]->foodstate = 1; 
+        }       
+        
+        $this->_doc->packDetails('detaildata', $this->_itemlist);
+        $this->_doc->save();
+        
             
-                $conn->Execute("delete from entrylist where document_id =" . $this->_doc->document_id);
-                $conn->Execute("delete from iostate where document_id=" . $this->_doc->document_id);
-
-
-     
-
-                $n = new \App\Entity\Notify();
-                $n->user_id = \App\Entity\Notify::ARMFOODPROD;
-                $n->dateshow = time();
-                $n->message = serialize(array('cmd' => 'update'));
-
+        if( $this->_doc->state== Document::STATE_NEW)  {
+            $this->_doc->updateStatus(Document::STATE_INPROCESS);
+            $n->message = serialize(array('cmd' => 'new','document_id'=>$this->_doc->document_id));
             
-            if( $this->_doc->state== Document::STATE_NEW)  {
-                $this->_doc->updateStatus(Document::STATE_INPROCESS);
-                $n->message = serialize(array('cmd' => 'new','document_id'=>$this->_doc->document_id));
-                
-            }
-            $n->save();            
+        }
+        $n->save();            
 
               
-            $this->_doc = $this->_doc->cast();
-
-            $this->_doc->DoStore();
-            $this->_doc->save();
-   
-            $conn->CommitTrans();
-        } catch(\Throwable $ee) {
-            global $logger;
-            $conn->RollbackTrans();
-            $this->setErrorTopPage($ee->getMessage());
-
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
-            return;
-        }
-
 
         $this->setInfo('Відправлено у виробництво');
         $this->onNewOrder();
@@ -883,12 +894,6 @@ class ARMFood extends \App\Pages\Base
             return;
         }
 
-        $conn = \ZDB\DB::getConnect();
-        $conn->BeginTrans();
-      
-        try {
-        
-
      
             
             if( $this->_doc->state != Document::STATE_NEW)  {
@@ -897,23 +902,12 @@ class ARMFood extends \App\Pages\Base
             }
 
               
-            $this->_doc = $this->_doc->cast();
+//            $this->_doc = $this->_doc->cast();
 
             $this->_doc->save();
    
-            $conn->CommitTrans();
-        } catch(\Throwable $ee) {
-            global $logger;
-            $conn->RollbackTrans();
-            $this->setErrorTopPage($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
-            return;
-        }
-
-
-        $this->setInfo('Відправлено у виробництво');
-        $this->onNewOrder();
+            $this->onNewOrder();
     }
  
     //к  оплате
@@ -951,7 +945,6 @@ class ARMFood extends \App\Pages\Base
        
     }    
     
-    
     //Оплата
     public function payandcloseOnClick() {
 
@@ -960,12 +953,13 @@ class ARMFood extends \App\Pages\Base
             return;
         }
 
-
+        
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
 
-        try {
 
+        try {
+            $this->_doc = $this->_doc->cast();
 
             $this->_doc->payamount = $this->docpanel->payform->pfforpay->getText();
             $this->_doc->payed = $this->docpanel->payform->pfpayed->getText();
@@ -1010,12 +1004,11 @@ class ARMFood extends \App\Pages\Base
             }            
                       
             $this->_doc->save();
-            $this->_doc = $this->_doc->cast();
+            $this->_doc->DoStore();
             $this->_doc->DoPayment();
 
             if ($this->_worktype == 0) {
                 if ($this->_doc->state < 4) {
-                    $this->_doc->DoStore();
                     $this->_doc->updateStatus(Document::STATE_EXECUTED);
                 }
 
@@ -1029,7 +1022,7 @@ class ARMFood extends \App\Pages\Base
 
             }
             //если  оплачен и  закончен   закрываем
-            if ($this->_doc->payamount <= $this->_doc->payed && ($this->_doc->state == Document::STATE_EXECUTED || $this->_doc->state == Document::STATE_DELIVERED || $this->_doc->state == Document::STATE_FINISHED)) {
+            if ($this->_doc->payamount <= $this->_doc->payed ) {
 
                 if($this->_pos->usefisc == 1 && $this->_tvars['checkbox'] == true) {
                 
@@ -1085,8 +1078,23 @@ class ARMFood extends \App\Pages\Base
  
                 }
          
-                $this->_doc->updateStatus(Document::STATE_CLOSED);
+                
             }
+  
+            if ($this->_doc->payamount <= $this->_doc->payed ) {
+                if ($this->_worktype == 0)  
+                {
+                     $this->_doc->updateStatus(Document::STATE_CLOSED);                         
+                }
+                else {
+                    if($this->_doc->inProcess() == false){
+                        $this->_doc->updateStatus(Document::STATE_CLOSED);                         
+                    }
+                }
+            }
+            
+            
+            
             $conn->CommitTrans();
 
         } catch(\Throwable $ee) {
@@ -1292,9 +1300,7 @@ class ARMFood extends \App\Pages\Base
             $msg = @unserialize($n->message);
 
             $doc = Document::load(intval($msg['document_id']));
-            if ($doc->state == Document::STATE_FINISHED || $doc->state == Document::STATE_CLOSED) {
-                $cntprod++;
-            }
+         
             if ($doc->state == Document::STATE_NEW) {
                 $cntorder++;
             }
@@ -1302,9 +1308,73 @@ class ARMFood extends \App\Pages\Base
 
         \App\Entity\Notify::markRead(\App\Entity\Notify::ARMFOOD);
 
-        return json_encode(array("cntprod" => $cntprod, 'cntorder' => $cntorder), JSON_UNESCAPED_UNICODE);
+        
+        
+        return json_encode(array( 'cntorder' => $cntorder), JSON_UNESCAPED_UNICODE);
     }
 
+    public  function getProdItems ($args,$post=null){
+         $itemlist = [];
+         $docs = Document::find(" meta_name='OrderFood' and  state=". Document::STATE_INPROCESS,'document_id desc'); 
+         foreach($docs as $doc) {
+            foreach ($doc->unpackDetails('detaildata') as $rowid=>$item) {
+              $fs = intval($item->foodstate);
+              if($fs==2) {
+                  $itemlist[] = array(
+                     'name'=>$item->itemname,
+                     'table'=>$doc->headerdata['table'] ?? '',
+                     'document_id'=>$doc->document_id,
+                     'rowid'=>$rowid,
+                     'ordern' =>$doc->document_number
+                  );       
+              }
+              
+            }            
+         }
+          
+        
+         return json_encode($itemlist, JSON_UNESCAPED_UNICODE);      
+    }
+    
+    //выдан
+    public function onReady($args, $post) {
+     
+         
+        $doc = Document::load($args[0]);
+        $doc = $doc->cast();
+        
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
+        try {
+      
+             
+            $items = $doc->unpackDetails('detaildata');
+            if(isset($items[$args[1]]))  {
+               $items[$args[1]]->foodstate = 3;  //выдан
+            }
+            
+            $doc->packDetails('detaildata', $items);
+            $doc->save();
+            
+    
+            $conn->CommitTrans();
+        
+        } catch(\Throwable $ee) {
+            global $logger;
+            $conn->RollbackTrans();
+       
+            $logger->error(  " Арм  кухни " . $ee->getMessage());
+            
+            return json_encode(['error'=>$ee->getMessage() ], JSON_UNESCAPED_UNICODE);              
+
+           
+        }  
+   
+        return json_encode([], JSON_UNESCAPED_UNICODE);          
+        
+              
+    }
+   
     //фискализация
     public function OnOpenShift() {
         
@@ -1461,3 +1531,5 @@ class ARMFood extends \App\Pages\Base
     }        
     
 }
+
+ 

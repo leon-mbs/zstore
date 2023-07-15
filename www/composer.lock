@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f6500ce66806884ed0a1ddf8479f61b6",
+    "content-hash": "ccd8cd107731dfd6203da19470aee11d",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -611,16 +611,16 @@
         },
         {
             "name": "leon-mbs/zippy",
-            "version": "2.5.21",
+            "version": "2.5.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/zippy.git",
-                "reference": "8366a9d19f432e1862146d3d8191ee1d003060f3"
+                "reference": "4dfc8e4f203159200ee00938312e5c01b374df29"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/8366a9d19f432e1862146d3d8191ee1d003060f3",
-                "reference": "8366a9d19f432e1862146d3d8191ee1d003060f3",
+                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/4dfc8e4f203159200ee00938312e5c01b374df29",
+                "reference": "4dfc8e4f203159200ee00938312e5c01b374df29",
                 "shasum": ""
             },
             "require": {
@@ -647,9 +647,9 @@
             ],
             "support": {
                 "issues": "https://github.com/leon-mbs/zippy/issues",
-                "source": "https://github.com/leon-mbs/zippy/tree/2.5.21"
+                "source": "https://github.com/leon-mbs/zippy/tree/2.5.22"
             },
-            "time": "2023-07-13T19:34:23+00:00"
+            "time": "2023-07-14T18:39:04+00:00"
         },
         {
             "name": "lis-dev/nova-poshta-api-2",
@@ -1837,12 +1837,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "39b9d4167aa4e88daa0065003004fab86dae8134"
+                "reference": "5ced5b632481a3bb99d61f394aad75b4c4e2c9ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/39b9d4167aa4e88daa0065003004fab86dae8134",
-                "reference": "39b9d4167aa4e88daa0065003004fab86dae8134",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/5ced5b632481a3bb99d61f394aad75b4c4e2c9ad",
+                "reference": "5ced5b632481a3bb99d61f394aad75b4c4e2c9ad",
                 "shasum": ""
             },
             "conflict": {
@@ -2046,7 +2046,7 @@
                 "illuminate/database": "<6.20.26|>=7,<7.30.5|>=8,<8.40",
                 "illuminate/encryption": ">=4,<=4.0.11|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.40|>=5.6,<5.6.15",
                 "illuminate/view": "<6.20.42|>=7,<7.30.6|>=8,<8.75",
-                "impresscms/impresscms": "<=1.4.3",
+                "impresscms/impresscms": "<=1.4.5",
                 "in2code/femanager": "<5.5.3|>=6,<6.3.4|>=7,<7.1",
                 "in2code/ipandlanguageredirect": "<5.1.2",
                 "in2code/lux": "<17.6.1|>=18,<24.0.2",
@@ -2097,7 +2097,7 @@
                 "lms/routes": "<2.1.1",
                 "localizationteam/l10nmgr": "<7.4|>=8,<8.7|>=9,<9.2",
                 "luyadev/yii-helpers": "<1.2.1",
-                "magento/community-edition": ">=2,<2.2.10|>=2.3,<2.3.3",
+                "magento/community-edition": "<=2.4",
                 "magento/magento1ce": "<1.9.4.3",
                 "magento/magento1ee": ">=1,<1.14.4.3",
                 "magento/product-community-edition": ">=2,<2.2.10|>=2.3,<2.3.2-p.2",
@@ -2113,14 +2113,14 @@
                 "melisplatform/melis-front": "<5.0.1",
                 "mezzio/mezzio-swoole": "<3.7|>=4,<4.3",
                 "mgallegos/laravel-jqgrid": "<=1.3",
-                "microweber/microweber": "<=1.3.4",
+                "microweber/microweber": "= 1.1.18|<=1.3.4",
                 "miniorange/miniorange-saml": "<1.4.3",
                 "mittwald/typo3_forum": "<1.2.1",
                 "mobiledetect/mobiledetectlib": "<2.8.32",
                 "modx/revolution": "<= 2.8.3-pl|<2.8",
                 "mojo42/jirafeau": "<4.4",
                 "monolog/monolog": ">=1.8,<1.12",
-                "moodle/moodle": "<4.2-rc.2|= 4.2.0|= 3.11",
+                "moodle/moodle": "<4.2-rc.2|= 3.9|= 3.8|= 4.2.0|= 3.11",
                 "movim/moxl": ">=0.8,<=0.10",
                 "mustache/mustache": ">=2,<2.14.1",
                 "namshi/jose": "<2.2",
@@ -2463,7 +2463,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-07-13T19:03:57+00:00"
+            "time": "2023-07-14T00:17:16+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",

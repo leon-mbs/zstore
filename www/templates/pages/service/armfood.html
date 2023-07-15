@@ -9,16 +9,39 @@
                 <div id="newordersalert" style="display:none;"  class="alert alert-info  ml-4"  >
                     <span id="neworderscnt"></span>
                 </div>   
-                <div id="newprodalert" style="display:none;"  class="alert alert-sucess  ml-4"  >
-                    <span id="newprodcnt"></span>
-                </div>   
-
+              
 
             </div>
-  <div class="col-12 col-md-4 col-xl-3   " >
+        <div class="col-12 col-md-4 col-xl-3   " >
              <i style="cursor:pointer"  onclick="onBell(this)" title="Звукове повiдомлення" class="fa fa-bell-slash text-secondary"></i>  
             </div>              
         </div>
+
+
+
+        {{={| |}=}}                 
+        <div id="vapp" class="row"  >
+            <div v-show="itemlist.length > 0" class="col-12 col-md-8 col-xl-6 mb-2"> 
+              <div class="nav navbar justify-content-start">
+             <h5 class="mr-2">Готових позицiй <span  class="badge badge-success badge-pill" > {{itemlist.length}}</span>                </h5>
+              
+             <i title="Закрити"  v-show="openpos" class="fa fa-folder-open" style="cursor:pointer" v-on:click="openpos=!openpos"></i> 
+             <i title="Вiдкрити" v-show="!openpos" class="fa fa-folder-closed" style="cursor:pointer" v-on:click="openpos=!openpos"></i> 
+
+              </div>
+            
+             <table v-show="openpos" class="table table-striped">
+                <tr v-for="item, index in itemlist">
+                    <td>{{item.ordern}}</td>
+                    <td>{{item.name}}</td> 
+                    <td>{{item.table}}</td> 
+                    <td><a    v-on:click="onReady(item.document_id,item.rowid, index) " class="btn btn-success">Видано</a></td> 
+                </tr>    
+            </table>
+           
+           </div>
+        </div>
+        {|={{ }}=|}    
 
         <form zippy="setupform">
             <h3>АРМ касира</h3>
@@ -68,15 +91,16 @@
 
             </div>
 
-        </form>
+        </form>        
+        
+        <div class="row"  zippy="docpanel">
+            <div class="col-12"> 
 
+               <h5><strong><a zippy="toorderlist"><i class="fa fa-list"></i> До переліку замовлень</a></strong> </h5>
+               <h3>Оформлення замовлення</h3>
 
-        <div   zippy="docpanel">
-            <h5><strong><a zippy="toorderlist"><i class="fa fa-list"></i> До переліку замовлень</a></strong> </h5>
-            <h3>Оформлення замовлення</h3>
+            </div> 
 
-
-            <div class="row"  >
                 <div class="col-12  col-xl-10"> 
 
                     <div   zippy="catpan" class="row">
@@ -161,8 +185,9 @@
                                     <th class="text-right"><i title="Акцiйна знижка" class="fa fa-gift"></i> ,%</th>
                                     <th class="text-right">Цiна</th>
                                     <th class="text-right">Сума</th>
+                                    <th >Стан </th>
                                     
-                                    <th class="text-center text-nowrap">
+                                    <th class="text-center">
                                     {{#pack}} <i title="Із собою" class="fa fa-bag-shopping"></i>    {{/pack}}
                                       </th>
                                    
@@ -183,6 +208,7 @@
                                     <td zippy="disc" class="text-right"></td>
                                     <td zippy="price" class="text-right"></td>
                                     <td zippy="amount" class="text-right"></td>
+                                    <td zippy="state"  ></td>
                                     
                                     <td class="text-center"> 
                                     {{#pack}}
@@ -434,7 +460,7 @@
                             <div class="form-group   ">
                                 <a zippy="bbackitems" class="btn btn-outline-info"> &lt; Назад</a>
 
-                                &nbsp;&nbsp; <input zippy="btocheck" type="submit" value="Друкувати чек > "   class="btn btn-success">
+                                &nbsp;&nbsp; <input zippy="btocheck" type="submit" value="Оплатити > "   class="btn btn-success">
                                      {{#ppo}}
                             &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Вiдкласти фiскалізацiю  
                            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
@@ -458,7 +484,7 @@
                     </div>
                 </div> 
 
-            </div  >    
+
         </div>
 
 
@@ -629,24 +655,20 @@
           
             function onNewOrder() {
                   
-                        callPageMethod('getMessages',null,null,(data)=> 
-                        {
-                           
-                            var  answer = JSON.parse(data)  
-      
-                            if (answer.cntorder > 0) {
-                                $('#newordersalert').show();
-                                $('#neworderscnt').text('Нових замовлень ' + answer.cntorder);
-                                beep()
-                            }
-                            if (answer.cntprod > 0) {
-                                $('#newprodalert').show();
-                                $('#newprodcnt').text('Готово в виробництвi ' + answer.cntprod);
-                                beep()
-                            }
+                callPageMethod('getMessages',null,null,(data)=> 
+                {
+                 
+                    var  answer = JSON.parse(data)  
+                 
+                    if (answer.cntorder > 0) {
+                        $('#newordersalert').show();
+                        $('#neworderscnt').text('Нових замовлень ' + answer.cntorder);
+                        beep()
+                    }
+                  
 
-
-                        });
+                });
+                updateReadyItems();                        
             }
 
            function onBell(el){
@@ -660,7 +682,57 @@
              $('#modalqty').modal('show')
           } 
                 
-                
+          function check_btocheck(ele) {
+             $("#modalwait").modal("show") ;
+             return true;
+          }            
+          
+    
+          var vapp = new Vue({
+              el: '#vapp',
+           
+              data() {
+                  return  {
+                     itemlist:[] ,
+                     openpos:false
+                   }   
+              }  ,
+              methods: {
+                 onReady( document_id,rowid, index) {
+
+                      callPM('onReady',[document_id,rowid],null,(data)=> 
+                      {
+                          if(false==checkPMAnswer(data) )   {
+                               return
+                          }
+                          
+                          this.updateReadyItems() ;
+                      });     
+                 
+               } ,
+               
+               updateReadyItems(){
+                    
+                  callPageMethod('getProdItems',[this.forbar],null,(data)=> 
+                  {
+                           
+                      this.itemlist= JSON.parse(data)  
+                      
+                  
+                  });
+                    
+              }           
+            } ,     
+           mounted: function  (){ 
+             this.updateReadyItems() ;  
+           }     
+       
+        })             
+          
+      function updateReadyItems() {
+          vapp.updateReadyItems() ;
+       }        
+                    
         </script>
 
         {{#usescanner}} 
@@ -679,10 +751,6 @@
             }
             
             
-            function check_btocheck(ele) {
-                $('#btocheck').attr('disabled', 'disabled');
-                return true;
-            }            
            
            
                 

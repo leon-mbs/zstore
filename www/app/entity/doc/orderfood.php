@@ -197,7 +197,10 @@ class OrderFood extends Document
     }
 
     public function DoStore() {
-        if($this->hasStore()) return;
+
+        $conn = \ZDB\DB::getConnect();
+        $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
+        $conn->Execute("delete from iostate where document_id=" . $this->document_id);
       
  
         foreach ($this->unpackDetails('detaildata') as $item) {
@@ -296,5 +299,17 @@ class OrderFood extends Document
         }
     }
 
+    //есть  ли  невыданные  блюда    
+    public  function inProcess(){
+         foreach ($this->unpackDetails('detaildata') as $item) {
+              $fs = intval($item->foodstate);
+              if($fs == 1 || $fs==2) {
+                 return true;  
+              }
+              
+         }
+         
+         return false;
+    }
 
 }

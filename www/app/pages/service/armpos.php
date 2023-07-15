@@ -215,7 +215,6 @@ class ARMPos extends \App\Pages\Base
 
     }
 
-
     public function onModeOn($sender) {
         $this->_tvars['simplemode']  = $sender->id == 'tosimple';
         if($this->_tvars['simplemode'] == true)  {
@@ -591,7 +590,6 @@ class ARMPos extends \App\Pages\Base
         $this->_rowid =  array_search($tovar,$this->_itemlist,true);
         $this->_editrow =  true;
    }
-
  
     public function deleteOnClick($sender) {
 
@@ -798,7 +796,6 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->navbar->setVisible(true);
         
     }
-
     
     //справочник
     public function onOpenItemSel($sender) {
@@ -820,7 +817,6 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->editdetail->edittovar->setText($itemname);
         $this->OnChangeItem($this->docpanel->editdetail->edittovar);
     }    
- 
 
     private function calcTotal() {
 
@@ -1064,7 +1060,6 @@ class ARMPos extends \App\Pages\Base
       
         $this->newdoc(null)  ;  
     }
-     
     
     public function savedocOnClick($sender) {
         
@@ -1273,7 +1268,6 @@ class ARMPos extends \App\Pages\Base
         
     }
 
-
     public function OnOpenShift() {
         
         if($this->_tvars['checkbox'] == true) {
@@ -1397,7 +1391,6 @@ class ARMPos extends \App\Pages\Base
 
         return true;
     }
-
 
     public function onDocRow($row) {
         $doc = $row->getDataItem();
@@ -1538,6 +1531,7 @@ class ARMPos extends \App\Pages\Base
         $this->checklistpan->checklist->Reload(false);
  
     }
+ 
     public function onEdit($sender) {
         $doc =  $sender->getOwner()->getDataItem();
         $this->_doc = Document::load( $doc->document_id)->cast();
@@ -1580,6 +1574,7 @@ class ARMPos extends \App\Pages\Base
   
           
     }
+ 
     public function OnDocViewClick($sender) {
         $this->_doc = $sender->getOwner()->getDataItem();
         $this->OnDocView();
