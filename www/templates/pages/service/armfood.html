@@ -23,12 +23,11 @@
         <div id="vapp" class="row"  >
             <div v-show="itemlist.length > 0" class="col-12 col-md-8 col-xl-6 mb-2"> 
               <div class="nav navbar justify-content-start">
-             <h5 class="mr-2">Готових позицiй <span  class="badge badge-success badge-pill" > {{itemlist.length}}</span>                </h5>
-              
-             <i title="Закрити"  v-show="openpos" class="fa fa-folder-open" style="cursor:pointer" v-on:click="openpos=!openpos"></i> 
-             <i title="Вiдкрити" v-show="!openpos" class="fa fa-folder-closed" style="cursor:pointer" v-on:click="openpos=!openpos"></i> 
-
-              </div>
+                 <h5 class="mr-2">Готових позицiй <span  class="badge badge-success badge-pill" > {{itemlist.length}}</span>                </h5>
+                  
+                 <i title="Закрити"  v-show="openpos" class="fa fa-folder-open" style="cursor:pointer"    v-on:click="openpos=!openpos"></i> 
+                 <i title="Вiдкрити" v-show="!openpos" class="fa fa-folder-closed" style="cursor:pointer" v-on:click="openpos=!openpos"></i> 
+             </div>
             
              <table v-show="openpos" class="table table-striped">
                 <tr v-for="item, index in itemlist">

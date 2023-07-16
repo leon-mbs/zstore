@@ -319,6 +319,7 @@ class ARMFood extends \App\Pages\Base
     //список  заказов
     public function onDocRow($row) {
         $doc = $row->getDataItem();
+        $doc = $doc->cast();
         $row->add(new ClickLink('docnumber', $this, 'OnDocViewClick'))->setValue($doc->document_number);
         $row->add(new Label('state', Document::getStateName($doc->state)));
       //  $row->add(new Label('docdate', H::fd($doc->document_date)));
@@ -358,26 +359,37 @@ class ARMFood extends \App\Pages\Base
         $row->brrefuse->setVisible(false);
         $row->bredit->setVisible(false);
 
-        if (intval($this->_doc->headerdata['delivery']) > 0  && $doc->state == Document::STATE_DELIVERED && $doc->payamount <= $doc->payed) {
-
-            $row->brclose->setVisible(true);
-        }
-        if (intval($this->_doc->headerdata['delivery']) == 0  && $doc->state == Document::STATE_FINISHED && $doc->payamount <= $doc->payed) {
-
-            $row->brclose->setVisible(true);
-        }
-
-        if ($doc->state < 4 || $doc->state == Document::STATE_INPROCESS || $doc->state == Document::STATE_READYTOSHIP) {
+        
+        $haspayment = $doc->hasPayments() ;
+     //   $inprod = $doc->inProcess()  ;
+        $hasstore = $doc->hasStore()  ;
+        
+        if ($doc->state < 4 || $doc->state == Document::STATE_INPROCESS ) {
             $row->bredit->setVisible(true);
             $row->brrefuse->setVisible(true);
         }
-        if ($doc->payamount > $doc->payed && $doc->state > 4 && $doc->state != Document::STATE_CLOSED && $doc->state != Document::STATE_FAIL) { //к  оплате
+        
+        if ($doc->payamount > $doc->payed && $doc->state > 4 ) { //к  оплате
             $row->brpay->setVisible(true);
         }
-        if ($doc->hasPayments()  || $doc->hasPayments() ) { //оплачено
-            $row->bredit->setVisible(false);
-            $row->brrefuse->setVisible(false);
+        if ($doc->payamount == $doc->payed && $hasstore ) { 
+            $row->brclose->setVisible(true);
         }
+        
+   
+
+        if ($doc->state == Document::STATE_READYTOSHIP 
+            || $doc->state == Document::STATE_DELIVERED 
+            || $doc->state == Document::STATE_CLOSED 
+            || $doc->state == Document::STATE_FAIL 
+            || $doc->state == Document::STATE_INSHIPMENT 
+            ) { 
+            $row->brpay->setVisible(false);
+            $row->brclose->setVisible(false);
+            $row->brrefuse->setVisible(false);
+            $row->bredit->setVisible(false);
+        }
+        
     }
 
     public function updateorderlist($sender) {
