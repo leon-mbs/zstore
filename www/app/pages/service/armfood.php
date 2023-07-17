@@ -90,6 +90,8 @@ class ARMFood extends \App\Pages\Base
         $this->orderlistpan->add(new \Zippy\Html\DataList\Paginator('pag',  $this->orderlistpan->orderlist));
         $this->orderlistpan->orderlist->setPageSize(H::getPG());
 
+        $this->orderlistpan->add(new ClickLink('refresh'))->onClick($this, 'updateorderlist');
+        
         $this->orderlistpan->add(new Form('searchform'))->onSubmit($this, 'updateorderlist');
         $this->orderlistpan->searchform->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');
         $this->orderlistpan->searchform->add(new TextInput('searchnumber', $filter->searchnumber));
@@ -322,7 +324,7 @@ class ARMFood extends \App\Pages\Base
         $doc = $doc->cast();
         $row->add(new ClickLink('docnumber', $this, 'OnDocViewClick'))->setValue($doc->document_number);
         $row->add(new Label('state', Document::getStateName($doc->state)));
-      //  $row->add(new Label('docdate', H::fd($doc->document_date)));
+        $row->add(new Label('delivery'))->setVisible( ($doc->headerdata['delivery'] ??0) >0 );
 
         $row->add(new Label('docamount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
         
@@ -361,7 +363,7 @@ class ARMFood extends \App\Pages\Base
 
         
         $haspayment = $doc->hasPayments() ;
-     //   $inprod = $doc->inProcess()  ;
+        $inprod = $doc->inProcess()  ;
         $hasstore = $doc->hasStore()  ;
         
         if ($doc->state < 4 || $doc->state == Document::STATE_INPROCESS ) {
@@ -375,8 +377,14 @@ class ARMFood extends \App\Pages\Base
         if ($doc->payamount == $doc->payed && $hasstore ) { 
             $row->brclose->setVisible(true);
         }
+        if ($haspayment ) { 
+            $row->bredit->setVisible(false);
+        }
+        if ($inprod ) { 
+            $row->brclose->setVisible(false);
+        }
         
-   
+      
 
         if ($doc->state == Document::STATE_READYTOSHIP 
             || $doc->state == Document::STATE_DELIVERED 
@@ -848,15 +856,7 @@ class ARMFood extends \App\Pages\Base
             $this->setInfo('Відправлено в доставку');
 
         } else {  //в  производство
-            $this->_doc->updateStatus(Document::STATE_INPROCESS);
-            $n = new \App\Entity\Notify();
-            $n->user_id = \App\Entity\Notify::ARMFOODPROD;
-            $n->dateshow = time();
-            $n->message = serialize(array('cmd' => 'new', 'document_id' => $this->_doc->document_id));
-
-            $n->save();
-
-            $this->setInfo('Відправлено у виробництво');
+            $this->toprod()  ;
 
         }
 
@@ -864,12 +864,19 @@ class ARMFood extends \App\Pages\Base
     }
 
     // в  производство
-    public function toprodOnClick($sender) {
-
-
+    public function toprodOnClick($sender) { 
+        
         if ($this->createdoc() == false) {
             return;
         }
+         
+        $this->toprod()  ;
+     
+        $this->onNewOrder();                
+    }
+    private function toprod() {
+
+
 
         $n = new \App\Entity\Notify();
         $n->user_id = \App\Entity\Notify::ARMFOODPROD;
@@ -878,7 +885,10 @@ class ARMFood extends \App\Pages\Base
 
         
         foreach($this->_itemlist as $i=>$p){
-           $this->_itemlist[$i]->foodstate = 1; 
+            if(intval($this->_itemlist[$i]->foodstate) ==0) {
+               $this->_itemlist[$i]->foodstate = 1;     
+            }
+            
         }       
         
         $this->_doc->packDetails('detaildata', $this->_itemlist);
@@ -895,9 +905,13 @@ class ARMFood extends \App\Pages\Base
               
 
         $this->setInfo('Відправлено у виробництво');
-        $this->onNewOrder();
+
     }
 
+    
+
+    
+    
   // сохранить  
     public function tosaveOnClick($sender) {
 
@@ -1019,21 +1033,7 @@ class ARMFood extends \App\Pages\Base
             $this->_doc->DoStore();
             $this->_doc->DoPayment();
 
-            if ($this->_worktype == 0) {
-                if ($this->_doc->state < 4) {
-                    $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                }
 
-            }
-            if ($this->_worktype == 1)  // в  производство
-            {
-
-                $this->_doc->updateStatus(Document::STATE_INPROCESS);
-                $this->setInfo('Відправлено у виробництво');
-
-
-            }
-            //если  оплачен и  закончен   закрываем
             if ($this->_doc->payamount <= $this->_doc->payed ) {
 
                 if($this->_pos->usefisc == 1 && $this->_tvars['checkbox'] == true) {
@@ -1082,7 +1082,7 @@ class ARMFood extends \App\Pages\Base
                                 $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
                             } else {
                                 $this->setError("Не повернено фіскальний номер");
-                                 $conn->RollbackTrans();
+                                $conn->RollbackTrans();
                                 return;
                             }
                         }
@@ -1093,15 +1093,20 @@ class ARMFood extends \App\Pages\Base
                 
             }
   
+  
+            // если оплачено
             if ($this->_doc->payamount <= $this->_doc->payed ) {
+                if ($this->_worktype == 1)  // в  производство
+                {
+                    $this->toprod()  ;
+                }
                 if ($this->_worktype == 0)  
                 {
+                     if ($this->_doc->state < 4) {
+                        $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                     }
+
                      $this->_doc->updateStatus(Document::STATE_CLOSED);                         
-                }
-                else {
-                    if($this->_doc->inProcess() == false){
-                        $this->_doc->updateStatus(Document::STATE_CLOSED);                         
-                    }
                 }
             }
             
@@ -1367,6 +1372,13 @@ class ARMFood extends \App\Pages\Base
             
             $doc->packDetails('detaildata', $items);
             $doc->save();
+
+            if ($this->_worktype ==1)  {
+                 $inprod = $doc->inProcess()  ;             
+                 if($inprod==false) {    //если  все  выданы
+                    $doc->updateStatus(Document::STATE_CLOSED);                         
+                 }
+            }
             
     
             $conn->CommitTrans();
@@ -1375,7 +1387,7 @@ class ARMFood extends \App\Pages\Base
             global $logger;
             $conn->RollbackTrans();
        
-            $logger->error(  " Арм  кухни " . $ee->getMessage());
+            $logger->error(  " Арм  кассира " . $ee->getMessage());
             
             return json_encode(['error'=>$ee->getMessage() ], JSON_UNESCAPED_UNICODE);              
 

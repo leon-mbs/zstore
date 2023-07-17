@@ -496,9 +496,7 @@
             </div>
 
             <div class="col-12 col-md-11 xl-9" >
-                <div class="card">
-                    <div class="card-body">
-                        <div class="navbar nav">
+                <div class="navbar nav">
                             <form zippy="searchform" class="form-inline ">
                                 <label for="searchnumber"> № </label>
 
@@ -513,13 +511,8 @@
 
                             </form>
                         </div>
-                    </div>
-                </div>
 
-
-
-
-
+                <a zippy="refresh" >Оновити</a>
                 <table class="table  table-sm">
                     <tr>
 
@@ -528,6 +521,7 @@
                         <th>Стiл</th>
                         {{/tables}}
 
+                        <th ></th>
 
                         <th >Статус</th>
                         <th >Автор</th>
@@ -537,11 +531,11 @@
                         <th class="text-right">Сума</th>
                         <th ></th>
                         <th ></th>
+                        <th ></th>
 
 
 
                        
-                        <th ></th>
                         <th ></th>
                         <th > </th>
                     </tr>
@@ -550,6 +544,7 @@
 
                         <td ><a zippy="docnumber"></a></td>
                         {{#tables}} <td zippy="tablenumber" class="text-center"></td>  {{/tables}}
+                        <td ><i zippy="delivery" title="Доставка" class="fa fa-bicycle"></i></td>
 
                         <td class="text-nowrap  " zippy="state">  </td>
                         <td  zippy="author">  </td>
@@ -573,8 +568,6 @@
             </div>
             <div class="col-12 col-md-10 xl-8" >
                 <div   zippy="statuspan">
-  
- 
 
 
                     <div class="card">
@@ -586,8 +579,6 @@
                 </div>
          
             </div>
-
-
 
 
         </div>
