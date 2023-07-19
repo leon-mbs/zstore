@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ccd8cd107731dfd6203da19470aee11d",
+    "content-hash": "99582000f5a1b59e53f193314d69da78",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -570,16 +570,16 @@
         },
         {
             "name": "leon-mbs/zdb",
-            "version": "1.5.6",
+            "version": "1.5.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/zdb.git",
-                "reference": "ba79c2923fd4817e7284b412a62681ea498b2ee4"
+                "reference": "3d85794b1bea94b9dfa3135f771c2b9913feb479"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/zdb/zipball/ba79c2923fd4817e7284b412a62681ea498b2ee4",
-                "reference": "ba79c2923fd4817e7284b412a62681ea498b2ee4",
+                "url": "https://api.github.com/repos/leon-mbs/zdb/zipball/3d85794b1bea94b9dfa3135f771c2b9913feb479",
+                "reference": "3d85794b1bea94b9dfa3135f771c2b9913feb479",
                 "shasum": ""
             },
             "require": {
@@ -605,27 +605,27 @@
             ],
             "support": {
                 "issues": "https://github.com/leon-mbs/zdb/issues",
-                "source": "https://github.com/leon-mbs/zdb/tree/1.5.6"
+                "source": "https://github.com/leon-mbs/zdb/tree/1.5.7"
             },
-            "time": "2023-07-13T17:54:57+00:00"
+            "time": "2023-07-19T16:44:39+00:00"
         },
         {
             "name": "leon-mbs/zippy",
-            "version": "2.5.22",
+            "version": "2.5.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/zippy.git",
-                "reference": "4dfc8e4f203159200ee00938312e5c01b374df29"
+                "reference": "e73d3937a83492a3271f6479e10a34d83817cfdb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/4dfc8e4f203159200ee00938312e5c01b374df29",
-                "reference": "4dfc8e4f203159200ee00938312e5c01b374df29",
+                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/e73d3937a83492a3271f6479e10a34d83817cfdb",
+                "reference": "e73d3937a83492a3271f6479e10a34d83817cfdb",
                 "shasum": ""
             },
             "require": {
                 "leon-mbs/phpquery": ">=1.0.0",
-                "leon-mbs/zdb": "1.5.6",
+                "leon-mbs/zdb": "1.5.7",
                 "mustache/mustache": "v2.14.2",
                 "php": ">=7.4.0"
             },
@@ -647,9 +647,9 @@
             ],
             "support": {
                 "issues": "https://github.com/leon-mbs/zippy/issues",
-                "source": "https://github.com/leon-mbs/zippy/tree/2.5.22"
+                "source": "https://github.com/leon-mbs/zippy/tree/2.5.23"
             },
-            "time": "2023-07-14T18:39:04+00:00"
+            "time": "2023-07-19T16:48:01+00:00"
         },
         {
             "name": "lis-dev/nova-poshta-api-2",
@@ -1381,16 +1381,16 @@
         },
         {
             "name": "phpoffice/phpspreadsheet",
-            "version": "1.26.0",
+            "version": "1.29.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPOffice/PhpSpreadsheet.git",
-                "reference": "5b6ceea9705b068f993e268e4debc566c2637063"
+                "reference": "fde2ccf55eaef7e86021ff1acce26479160a0fa0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/5b6ceea9705b068f993e268e4debc566c2637063",
-                "reference": "5b6ceea9705b068f993e268e4debc566c2637063",
+                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/fde2ccf55eaef7e86021ff1acce26479160a0fa0",
+                "reference": "fde2ccf55eaef7e86021ff1acce26479160a0fa0",
                 "shasum": ""
             },
             "require": {
@@ -1408,7 +1408,7 @@
                 "ext-zip": "*",
                 "ext-zlib": "*",
                 "ezyang/htmlpurifier": "^4.15",
-                "maennchen/zipstream-php": "^2.1",
+                "maennchen/zipstream-php": "^2.1 || ^3.0",
                 "markbaker/complex": "^3.0",
                 "markbaker/matrix": "^3.0",
                 "php": "^7.4 || ^8.0",
@@ -1417,15 +1417,15 @@
                 "psr/simple-cache": "^1.0 || ^2.0 || ^3.0"
             },
             "require-dev": {
-                "dealerdirect/phpcodesniffer-composer-installer": "dev-master",
+                "dealerdirect/phpcodesniffer-composer-installer": "dev-main",
                 "dompdf/dompdf": "^1.0 || ^2.0",
                 "friendsofphp/php-cs-fixer": "^3.2",
-                "mitoteam/jpgraph": "^10.2.4",
+                "mitoteam/jpgraph": "^10.3",
                 "mpdf/mpdf": "^8.1.1",
                 "phpcompatibility/php-compatibility": "^9.3",
                 "phpstan/phpstan": "^1.1",
                 "phpstan/phpstan-phpunit": "^1.0",
-                "phpunit/phpunit": "^8.5 || ^9.0",
+                "phpunit/phpunit": "^8.5 || ^9.0 || ^10.0",
                 "squizlabs/php_codesniffer": "^3.7",
                 "tecnickcom/tcpdf": "^6.5"
             },
@@ -1480,9 +1480,9 @@
             ],
             "support": {
                 "issues": "https://github.com/PHPOffice/PhpSpreadsheet/issues",
-                "source": "https://github.com/PHPOffice/PhpSpreadsheet/tree/1.26.0"
+                "source": "https://github.com/PHPOffice/PhpSpreadsheet/tree/1.29.0"
             },
-            "time": "2022-12-21T12:22:06+00:00"
+            "time": "2023-06-14T22:48:31+00:00"
         },
         {
             "name": "picqer/php-barcode-generator",
@@ -1837,17 +1837,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "5ced5b632481a3bb99d61f394aad75b4c4e2c9ad"
+                "reference": "86911611206b9f1f1af77dc0c58289145c4e3d93"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/5ced5b632481a3bb99d61f394aad75b4c4e2c9ad",
-                "reference": "5ced5b632481a3bb99d61f394aad75b4c4e2c9ad",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/86911611206b9f1f1af77dc0c58289145c4e3d93",
+                "reference": "86911611206b9f1f1af77dc0c58289145c4e3d93",
                 "shasum": ""
             },
             "conflict": {
                 "3f/pygmentize": "<1.2",
-                "admidio/admidio": "<4.2.9",
+                "admidio/admidio": "<4.2.10",
                 "adodb/adodb-php": "<=5.20.20|>=5.21,<=5.21.3",
                 "aheinze/cockpit": "<=2.2.1",
                 "aimeos/aimeos-typo3": "<19.10.12|>=20,<20.10.5",
@@ -2061,6 +2061,7 @@
                 "joomla/filesystem": "<1.6.2|>=2,<2.0.1",
                 "joomla/filter": "<1.4.4|>=2,<2.0.1",
                 "joomla/input": ">=2,<2.0.2",
+                "joomla/joomla-cms": ">=3,<3.9.12",
                 "joomla/session": "<1.3.1",
                 "joyqi/hyper-down": "<=2.4.27",
                 "jsdecena/laracom": "<2.0.9",
@@ -2120,7 +2121,7 @@
                 "modx/revolution": "<= 2.8.3-pl|<2.8",
                 "mojo42/jirafeau": "<4.4",
                 "monolog/monolog": ">=1.8,<1.12",
-                "moodle/moodle": "<4.2-rc.2|= 3.9|= 3.8|= 4.2.0|= 3.11",
+                "moodle/moodle": "<4.2-rc.2|= 3.7|= 3.9|= 3.8|= 4.2.0|= 3.11",
                 "movim/moxl": ">=0.8,<=0.10",
                 "mustache/mustache": ">=2,<2.14.1",
                 "namshi/jose": "<2.2",
@@ -2190,10 +2191,10 @@
                 "pimcore/customer-management-framework-bundle": "<3.4.1",
                 "pimcore/data-hub": "<1.2.4",
                 "pimcore/perspective-editor": "<1.5.1",
-                "pimcore/pimcore": "<10.5.23",
+                "pimcore/pimcore": "<10.5.24",
                 "pixelfed/pixelfed": "<=0.11.4",
                 "pocketmine/bedrock-protocol": "<8.0.2",
-                "pocketmine/pocketmine-mp": "<4.20.5|>=4.21,<4.21.1|< 4.18.0-ALPHA2|>= 4.0.0-BETA5, < 4.4.2",
+                "pocketmine/pocketmine-mp": "<4.22.3|>=5,<5.2.1|< 4.18.0-ALPHA2|>= 4.0.0-BETA5, < 4.4.2",
                 "pressbooks/pressbooks": "<5.18",
                 "prestashop/autoupgrade": ">=4,<4.10.1",
                 "prestashop/blockwishlist": ">=2,<2.1.1",
@@ -2230,6 +2231,7 @@
                 "scheb/two-factor-bundle": ">=0,<3.26|>=4,<4.11",
                 "sensiolabs/connect": "<4.2.3",
                 "serluck/phpwhois": "<=4.2.6",
+                "sfroemken/url_redirect": "<=1.2.1",
                 "sheng/yiicms": "<=1.2",
                 "shopware/core": "<=6.4.20",
                 "shopware/platform": "<=6.4.20",
@@ -2238,6 +2240,7 @@
                 "shopware/storefront": "<=6.4.8.1",
                 "shopxo/shopxo": "<2.2.6",
                 "showdoc/showdoc": "<2.10.4",
+                "silverstripe-australia/advancedreports": ">=1,<=2",
                 "silverstripe/admin": "<1.12.7",
                 "silverstripe/assets": ">=1,<1.11.1",
                 "silverstripe/cms": "<4.11.3",
@@ -2261,6 +2264,7 @@
                 "simplesamlphp/simplesamlphp-module-openidprovider": "<0.9",
                 "simplito/elliptic-php": "<1.0.6",
                 "sitegeist/fluid-components": "<3.5",
+                "sjbr/sr-freecap": "<=2.5.2",
                 "slim/psr7": "<1.4.1|>=1.5,<1.5.1|>=1.6,<1.6.1",
                 "slim/slim": "<2.6",
                 "smarty/smarty": "<3.1.48|>=4,<4.3.1",
@@ -2269,6 +2273,7 @@
                 "socialiteproviders/steam": "<1.1",
                 "spatie/browsershot": "<3.57.4",
                 "spipu/html2pdf": "<5.2.4",
+                "spoon/library": "<1.4.1",
                 "spoonity/tcpdf": "<6.2.22",
                 "squizlabs/php_codesniffer": ">=1,<2.8.1|>=3,<3.0.1",
                 "ssddanbrown/bookstack": "<22.2.3",
@@ -2422,6 +2427,7 @@
                 "zendframework/zendframework1": "<1.12.20",
                 "zendframework/zendopenid": ">=2,<2.0.2",
                 "zendframework/zendxml": ">=1,<1.0.1",
+                "zenstruck/collection": "<0.2.1",
                 "zetacomponents/mail": "<1.8.2",
                 "zf-commons/zfc-user": "<1.2.2",
                 "zfcampus/zf-apigility-doctrine": ">=1,<1.0.3",
@@ -2463,7 +2469,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-07-14T00:17:16+00:00"
+            "time": "2023-07-19T15:04:25+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",
