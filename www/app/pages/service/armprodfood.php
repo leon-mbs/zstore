@@ -49,22 +49,22 @@ class ArmProdFood extends \App\Pages\Base
              
             $items = $doc->unpackDetails('detaildata');
             if(isset($items[$args[1]]))  {
-               $items[$args[1]]->foodstate = 1;    
+               $items[$args[1]]->foodstate = 2;  //готово  
             }
             
             $doc->packDetails('detaildata', $items);
             $doc->save();
             
 
-            $hasinproces = false;
+            $isinproces = false;
             foreach ($items as $it) {
-                if ($it->foodstate !== 1) {
-                    $hasinproces = true;
+                if ($it->foodstate == 1) {
+                    $isinproces = true;
                 }
             }
-            if ($hasinproces == false) {
-                $doc->DoStore();
-                $doc->updateStatus(Document::STATE_FINISHED);
+            if ($isinproces == false) {    //все  сделаны
+              
+            //    $doc->updateStatus(Document::STATE_FINISHED);
 
                 if ($doc->headerdata['delivery'] > 0) {
                     $doc->updateStatus(Document::STATE_READYTOSHIP);
@@ -76,6 +76,8 @@ class ArmProdFood extends \App\Pages\Base
                     $n->message = serialize(array('document_id' => $doc->document_id));
 
                     $n->save();
+                    
+                    $doc->DoStore();                    
                 } else {
                     $n = new \App\Entity\Notify();
                     $n->user_id = \App\Entity\Notify::ARMFOOD;
@@ -85,12 +87,8 @@ class ArmProdFood extends \App\Pages\Base
 
                     $n->save();
 
-                    $doc->updateStatus(Document::STATE_FINISHED);
-                    
-                    
-                    if ($doc->payed == $doc->payamount ) {
-    //                    $doc->updateStatus(Document::STATE_CLOSED);
-                    }
+            
+                  
 
                 }
 
@@ -129,8 +127,8 @@ class ArmProdFood extends \App\Pages\Base
 
         foreach ($docs as $doc) {
             $items = $doc->unpackDetails('detaildata');
-            foreach ($items as $item) {
-                if ($item->foodstate == 1) {
+            foreach ($items as $rowid=>$item) {
+                if ($item->foodstate !== 1) {
                     continue;
                 }
 
@@ -140,13 +138,13 @@ class ArmProdFood extends \App\Pages\Base
                  
                 $item->del = $doc->headerdata['delivery'] > 0;
 
-        $notes = "";
-        if ($item->myself == 1) {
-            $notes = "Із собою";
-        }
-        if ($item->del == true) {
-            $notes = "Доставка";
-        }                
+                $notes = "";
+                if ($item->myself == 1) {
+                    $notes = "Із собою";
+                }
+                if ($item->del == true) {
+                    $notes = "Доставка";
+                }                
                 
                 $itemlist[]=array(
                    'ordern'=>$doc->document_number,
@@ -154,7 +152,7 @@ class ArmProdFood extends \App\Pages\Base
                    'document_id'=>$doc->document_id,
                    'name'=>$item->itemname,
                    'qty'=>$item->quantity,
-                   'item_id'=>$item->item_id,
+                   'rowid'=>$rowid,
                    'del'=>$doc->headerdata['delivery'] > 0
                 
                 );

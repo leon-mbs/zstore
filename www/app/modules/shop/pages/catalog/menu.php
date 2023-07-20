@@ -13,6 +13,12 @@ class Menu extends \Zippy\Html\WebPage
      
         $options = \App\System::getOptions('food');
  
+        if($options['menu'] != 1) {
+            http_response_code(404);
+            die;
+        }
+ 
+ 
         $this->_tvars['phone']   = $options['phone'] ;
         $this->_tvars['name']    = $options['name'] ;
         $this->_tvars['timepn']  = $options['timepn'] ;
@@ -24,9 +30,16 @@ class Menu extends \Zippy\Html\WebPage
 
         $this->_tvars['cats'] =[];
         
-        $cats= Category::find("")  ;
+        $cats= Category::find("detail  not  like '%<nofastfood>1</nofastfood>%'")  ;
+   
+
+        usort($cats, function($a, $b) {
+            return $a->order > $b->order;
+        });
+       
+        
         foreach($cats as $cat) {
-            if($cat->nofastfood == 1) continue;
+
             if( $pcat > 0  &&  $cat->parent_id != $pcat) continue;
             if( $pcat == 0 &&  $cat->parent_id > 0) continue;
             

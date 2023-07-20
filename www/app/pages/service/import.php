@@ -49,11 +49,11 @@ class Import extends \App\Pages\Base
 
         $pt = \App\Entity\Item::getPriceTypeList();
 
-        $form->add(new Label('pricename1', $pt['price1']));
-        $form->add(new Label('pricename2', $pt['price2']));
-        $form->add(new Label('pricename3', $pt['price3']));
-        $form->add(new Label('pricename4', $pt['price4']));
-        $form->add(new Label('pricename5', $pt['price5']));
+        $form->add(new Label('pricename1', $pt['price1'] ??''));
+        $form->add(new Label('pricename2', $pt['price2'] ??''));
+        $form->add(new Label('pricename3', $pt['price3'] ??''));
+        $form->add(new Label('pricename4', $pt['price4'] ??''));
+        $form->add(new Label('pricename5', $pt['price5'] ??''));
 
         $form->add(new DropDownChoice("colprice1", $cols))->setVisible(strlen($pt['price1'])>0);
         $form->add(new DropDownChoice("colprice2", $cols))->setVisible(strlen($pt['price2'])>0);

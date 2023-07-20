@@ -129,6 +129,7 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->totaldisc->setText($this->_doc->headerdata['totaldisc']);
             $this->docform->edittotaldisc->setText($this->_doc->headerdata['totaldisc']);
             $this->docform->total->setText(H::fa($this->_doc->amount));
+            $this->docform->payamount->setText(H::fa($this->_doc->payamount));
 
             $this->docform->document_date->setDate($this->_doc->document_date);
 
@@ -337,7 +338,7 @@ class GoodsIssue extends \App\Pages\Base
             }
         }
        
-        $this->_tvars["prepaid"] = (doubleval($this->_doc->headerdata['prepaid'])>0) ?  H::fa($this->_doc->headerdata['prepaid']) : false;
+        $this->_tvars["prepaid"] = (doubleval($this->_doc->headerdata['prepaid']??0)>0) ?  H::fa($this->_doc->headerdata['prepaid']) : false;
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc)) {

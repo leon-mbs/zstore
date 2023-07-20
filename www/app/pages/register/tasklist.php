@@ -97,7 +97,7 @@ class TaskList extends \App\Pages\Base
         $row->add(new Label('tasknumber', $task->document_number));
         $row->add(new Label('taskdesc', $task->notes));
 
-        $row->add(new Label('taskdocument_date', H::fdt($task->headerdata['start'])));
+        $row->add(new Label('taskdocument_date', H::fdt($task->headerdata['start']??null)));
         $row->add(new Label('taskhours', $task->headerdata['taskhours']));
         $stname = Document::getStateName($task->state);
         $row->add(new Label('taskstatus', $stname));
@@ -283,13 +283,13 @@ class TaskList extends \App\Pages\Base
             if ($item->state == Document::STATE_CLOSED) {
                 $col = "#dddddd";
             }
-            if (strlen($item->headerdata['taskhours']) == 0) {
+            if (strlen($item->headerdata['taskhours'] ?? '') == 0) {
                 $item->headerdata['taskhours'] = 0;
             }
-            $d = ($item->headerdata['taskhours']);
-            $end_date = $item->headerdata['start'] + round(3600 * $d);
+            $d = ($item->headerdata['taskhours']??0);
+            $end_date = $item->headerdata['start'] ??0 + round(3600 * $d);
 
-            $tasks[] = new \ZCL\Calendar\CEvent($item->document_id, $item->document_number, $item->headerdata['start'], $end_date, $col);
+            $tasks[] = new \ZCL\Calendar\CEvent($item->document_id, $item->document_number, $item->headerdata['start']??0, $end_date, $col);
         }
 
 

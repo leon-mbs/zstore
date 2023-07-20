@@ -26,7 +26,7 @@
         <td   align="right"><b>Всього A:</b></td>
         <td   align="right"><b>{{totala}}</b> </td>
         <td   align="right"> </td>
-        <td  ></td>
+        <td  > </td>
 
     </tr>
     <tr>

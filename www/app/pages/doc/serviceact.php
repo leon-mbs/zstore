@@ -132,11 +132,11 @@ class ServiceAct extends \App\Pages\Base
             $ret['doc']['gar']   =   $this->_doc->headerdata['gar'] ?? '';
             $ret['doc']['amount']   = H::fa( $this->_doc->amount);
             $ret['doc']['payamount']   = H::fa( $this->_doc->payamount);
-            $ret['doc']['paydisc']   = H::fa( $this->_doc->headerdata['paydisc']);
-            $ret['doc']['payment']   = H::fa( $this->_doc->headerdata['payment']);
-            $ret['doc']['payed']   = H::fa( $this->_doc->headerdata['payed']);
-            $ret['doc']['totaldisc']   = H::fa( $this->_doc->headerdata['totaldisc']);
-            $ret['doc']['bonus']   = H::fa( $this->_doc->headerdata['bonus']);
+            $ret['doc']['paydisc']   = H::fa( $this->_doc->headerdata['paydisc']??0);
+            $ret['doc']['payment']   = H::fa( $this->_doc->headerdata['payment']??0);
+            $ret['doc']['payed']   = H::fa( $this->_doc->headerdata['payed']??0);
+            $ret['doc']['totaldisc']   = H::fa( $this->_doc->headerdata['totaldisc']??0);
+            $ret['doc']['bonus']   = H::fa( $this->_doc->headerdata['bonus']??0);
 
             $ret['doc']['services'] = [];
             $servicelist =  $this->_doc->unpackDetails('detaildata') ;

@@ -564,6 +564,8 @@ class Order extends \App\Pages\Base
             }            
             $this->docform->custinfo->setText($disctext);
             $this->docform->custinfo->setVisible(strlen($disctext) >0);
+            $this->docform->cinfo->setVisible(false);
+            
             
             
             $this->OnCinfo($customer_id);
@@ -580,7 +582,7 @@ class Order extends \App\Pages\Base
     private  function OnCinfo($customer_id){
         $customer_id=intval($customer_id)  ;
         if($customer_id==0) return;
-        $this->docform->addcust->setVisible(false) ;
+
         $this->docform->cinfo->setVisible(true) ;
         $this->docform->cinfo->setAttribute('onclick',"customerInfo({$customer_id});" ) ;
        
@@ -636,6 +638,7 @@ class Order extends \App\Pages\Base
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->custinfo->setVisible(false);
+        $this->docform->cinfo->setVisible(false);
 
         $this->docform->phone->setText($cust->phone);
     }

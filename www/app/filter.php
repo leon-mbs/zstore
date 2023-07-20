@@ -16,7 +16,7 @@ class Filter
     }
 
     public final function __get($name) {
-        return @$this->data[$name];
+        return $this->data[$name] ?? "";
     }
 
     /**
@@ -26,7 +26,7 @@ class Filter
      * @return Filter
      */
     public static function getFilter($name) {
-        $filter = \App\System::getSession()->filter[$name];
+        $filter = \App\System::getSession()->filter[$name] ?? null;
 
         if (!isset($filter)) {
             $filter = new Filter();

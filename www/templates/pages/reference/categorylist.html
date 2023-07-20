@@ -30,9 +30,14 @@
                                 {{/useimages}}
                                 <th>Назва</th>
                                 {{#usecattree}}
-                                <th class="text-right"> Батькiвська</th>
+                                <th > Батькiвська</th>
                                 {{/usecattree}}
-                                <th class="text-right">Кiл. ТМЦ </th>
+                                <th colspan="2"  style="width:20px" >  
+                                &nbsp;&nbsp;<i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title=" Порядок виводу в меню та онлайн каталозi "></i>
+
+                                 </th>
+                                <th class="text-right"> ТМЦ </th>
 
                                 <th></th>
                             </tr>
@@ -48,6 +53,12 @@
                                 {{#usecattree}}
                                 <td zippy="p_name"></td>
                                 {{/usecattree}}
+                                 <td >
+                                  <a zippy="down"><i class="fa fa-arrow-down"></i></a> 
+                                </td>
+                                <td > 
+                                  <a zippy="up"><i class="fa fa-arrow-up"></i></a> &nbsp;    
+                                 </td> 
                                 <td class="text-right"><span  zippy="qty" class="badge badge-success badge-pill"></span></td>
 
                                 <td style="width:75px"><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> 

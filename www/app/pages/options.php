@@ -150,9 +150,7 @@ class Options extends \App\Pages\Base
 
         $this->business->checkslogan->setText($common['checkslogan']);
       
-        
-        
-        
+         
         
         //валюты
   

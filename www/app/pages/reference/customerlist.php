@@ -46,7 +46,7 @@ class CustomerList extends \App\Pages\Base
         }
         $this->_bonuses = Customer::getBonusAll()  ;
         $shop = System::getOptions("shop");
- 
+        $this->_customer = new Customer();
         $this->add(new Form('leadf'));
         $this->leadf->add(new CheckBox('chleads'))->onChange($this, 'OnLeadMode');
 
@@ -207,13 +207,14 @@ class CustomerList extends \App\Pages\Base
         $row->add(new CheckBox('seldel', new \Zippy\Binding\PropertyBinding($item, 'seldel')));
 
         $row->setAttribute('style', $item->status == 1 ? 'color: #aaa' : null);
-        if ($item->customer_id == $this->_customer->customer_id) {
+
+        if ($item->customer_id == $this->_customer->customer_id ) {
             $row->setAttribute('class', 'table-success');
-        }
+        }                              
         
       
             $title="";
-            if(intval( $this->_bonuses[$item->customer_id]  ) > 0) {
+            if(intval( $this->_bonuses[$item->customer_id] ??null ) > 0) {
                 $title= "Бонуси " . $this->_bonuses[$item->customer_id];                
             }
             $d = $item->getDiscount();

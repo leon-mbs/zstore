@@ -145,7 +145,7 @@ class Export extends \App\Pages\Base
 
         $header['A1'] = "Найменуванння";
         $header['B1'] = "Од.";
-        $header['C1'] = "Група";
+        $header['C1'] = "Категорія";
         $header['D1'] = "Бренд";
         $header['E1'] = "Артикул";
         $header['F1'] = "Штрих код";

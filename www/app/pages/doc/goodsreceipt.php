@@ -285,7 +285,7 @@ class GoodsReceipt extends \App\Pages\Base
             }
         }
 
-        $this->_tvars["prepaid"] = (doubleval($this->_doc->headerdata['prepaid'])>0) ?  H::fa($this->_doc->headerdata['prepaid']) : false;
+        $this->_tvars["prepaid"] = (doubleval($this->_doc->headerdata['prepaid']??0)>0) ?  H::fa($this->_doc->headerdata['prepaid']) : false;
         $common = System::getOptions("common");
 
  

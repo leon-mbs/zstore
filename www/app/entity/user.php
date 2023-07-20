@@ -84,7 +84,7 @@ class User extends \ZCL\DB\Entity
 
         $this->aclbranch = $acl['aclbranch'];
         $this->onlymy = $acl['onlymy'];
-        $this->hidemenu = $acl['hidemenu'];
+        $this->hidemenu = $acl['hidemenu']?? null;
 
         $options = @unserialize($this->options);
         if (!is_array($options)) {
@@ -94,26 +94,26 @@ class User extends \ZCL\DB\Entity
         $this->deffirm = (int)$options['deffirm'];
         $this->defstore = (int)$options['defstore'];
         $this->defmf = (int)$options['defmf'];
-        $this->defsalesource = (int)$options['defsalesource'];
+        $this->defsalesource = $options['defsalesource'] ??0 ;
         $this->pagesize = (int)$options['pagesize'];
-        $this->phone = (string)$options['phone'];
-        $this->viber = (string)$options['viber'];
+        $this->phone = $options['phone']?? '';
+        $this->viber = $options['viber']?? '';
 
-        $this->darkmode = (int)$options['darkmode'];
-        $this->emailnotify = (int)$options['emailnotify'];
-        $this->hidesidebar = (int)$options['hidesidebar'];
-        $this->usemobileprinter = (int)$options['usemobileprinter'];
+        $this->darkmode = $options['darkmode']?? 0;
+        $this->emailnotify = $options['emailnotify']?? 0;
+        $this->hidesidebar = $options['hidesidebar']?? 0;
+        $this->usemobileprinter = $options['usemobileprinter']?? 0;
       
-        $this->prtype = (int)$options['prtype'];
-        $this->pwsym = (int)$options['pwsym'];
-        $this->pserver = $options['pserver'];
-        $this->prtypelabel = (int)$options['prtypelabel'];
-        $this->pwsymlabel = (int)$options['pwsymlabel'];
-        $this->pserverlabel = $options['pserverlabel'];
+        $this->prtype = $options['prtype'] ?? 0;
+        $this->pwsym = $options['pwsym']?? 0;
+        $this->pserver = $options['pserver']?? '';
+        $this->prtypelabel = $options['prtypelabel']?? 0;
+        $this->pwsymlabel = $options['pwsymlabel']?? 0;
+        $this->pserverlabel = $options['pserverlabel']?? '';
       
-        $this->mainpage = $options['mainpage'];
-        $this->favs = $options['favs'];
-        $this->chat_id = $options['chat_id'];
+        $this->mainpage = $options['mainpage']??'';
+        $this->favs = $options['favs']?? '';
+        $this->chat_id = $options['chat_id']?? '';
 
         parent::afterLoad();
     }

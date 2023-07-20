@@ -105,7 +105,7 @@ class StoreItems extends \App\Pages\Base
              $r['stlist']  =  array() ;
              foreach($storelist as $store_id=>$storename) {
                  
-                 $qty =  $siqty[$store_id.'_'.$item->item_id] ;
+                 $qty =  $siqty[$store_id.'_'.$item->item_id] ?? 0;
                  if(strlen($qty)==0)  $qty=0;
                  
                  if($fminus) {

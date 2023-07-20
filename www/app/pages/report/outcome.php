@@ -123,7 +123,8 @@ class Outcome extends \App\Pages\Base
 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
-
+        $disc=0;
+        $brand="";
         $u = "";
 
         if ($user > 0) {
@@ -377,7 +378,7 @@ class Outcome extends \App\Pages\Base
             $detail[] = array(
                 "code"      => $row['item_code'],
                 "name"      => $row['itemname'],
-                "dt"        => \App\Helper::fd(strtotime($row['dt'])),
+                "dt"        => \App\Helper::fd(strtotime($row['dt'] ?? null)),
                 "qty"       => H::fqty($row['qty']),
                 "navar"     => H::fa($row['navar']),
                 "navarsign" => $row['navar'] > 0,

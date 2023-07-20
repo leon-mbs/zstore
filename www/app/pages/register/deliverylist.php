@@ -36,7 +36,7 @@ class DeliveryList extends \App\Pages\Base
         $this->add(new DataView('orderlist', new ArrayDataSource($this, '_doclist'), $this, 'onDocRow'));
 
         $this->add(new Form('searchform'))->onSubmit($this, 'updateorderlist');
-        $this->searchform->add(new TextInput('searchnumber', $filter->searchnumber));
+        $this->searchform->add(new TextInput('searchnumber'));
 
         //панель статуса,  просмотр
         $this->add(new Panel('statuspan'))->setVisible(false);

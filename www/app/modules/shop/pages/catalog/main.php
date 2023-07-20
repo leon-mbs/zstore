@@ -11,12 +11,14 @@ use Zippy\Html\Label;
 use Zippy\Html\Link\BookmarkableLink;
 use Zippy\Html\Panel;
 use Zippy\Html\DataList\ArrayDataSource;
+use App\Entity\Category;
 
 class Main extends Base
 {
 
     private $cat_id = 0;
     public $_newlist = array();
+    public $_catlist = array();
  
     public function __construct($id = 0) {
         parent::__construct();
@@ -28,7 +30,16 @@ class Main extends Base
 
         $this->add(new Panel("subcatlistp"));
 
-        $this->subcatlistp->add(new DataView("subcatlist", new EntityDataSource("\\App\\Entity\\Category", " detail  not  like '%<noshop>1</noshop>%' and  coalesce(parent_id,0)=" . $id), $this, 'OnCatRow'));
+        
+        
+        $this->_catlist  = Category::find(" detail  not  like '%<noshop>1</noshop>%' and  coalesce(parent_id,0)=" . $id);
+
+        usort($this->_catlist, function($a, $b) {
+            return $a->order > $b->order;
+        });
+
+        
+        $this->subcatlistp->add(new DataView("subcatlist", new ArrayDataSource($this,'_catlist'), $this, 'OnCatRow'));
 
         $this->subcatlistp->subcatlist->Reload();
 

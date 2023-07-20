@@ -9,16 +9,38 @@
                 <div id="newordersalert" style="display:none;"  class="alert alert-info  ml-4"  >
                     <span id="neworderscnt"></span>
                 </div>   
-                <div id="newprodalert" style="display:none;"  class="alert alert-sucess  ml-4"  >
-                    <span id="newprodcnt"></span>
-                </div>   
-
+              
 
             </div>
-  <div class="col-12 col-md-4 col-xl-3   " >
+        <div class="col-12 col-md-4 col-xl-3   " >
              <i style="cursor:pointer"  onclick="onBell(this)" title="Звукове повiдомлення" class="fa fa-bell-slash text-secondary"></i>  
             </div>              
         </div>
+
+
+
+        {{={| |}=}}                 
+        <div id="vapp" class="row"  >
+            <div v-show="itemlist.length > 0" class="col-12 col-md-8 col-xl-6 mb-2"> 
+              <div class="nav navbar justify-content-start">
+                 <h5 class="mr-2">Готових позицiй <span  class="badge badge-success badge-pill" > {{itemlist.length}}</span>                </h5>
+                  
+                 <i title="Закрити"  v-show="openpos" class="fa fa-folder-open" style="cursor:pointer"    v-on:click="openpos=!openpos"></i> 
+                 <i title="Вiдкрити" v-show="!openpos" class="fa fa-folder-closed" style="cursor:pointer" v-on:click="openpos=!openpos"></i> 
+             </div>
+            
+             <table v-show="openpos" class="table table-striped">
+                <tr v-for="item, index in itemlist">
+                    <td>{{item.ordern}}</td>
+                    <td>{{item.name}}</td> 
+                    <td>{{item.table}}</td> 
+                    <td><a    v-on:click="onReady(item.document_id,item.rowid, index) " class="btn btn-success">Видано</a></td> 
+                </tr>    
+            </table>
+           
+           </div>
+        </div>
+        {|={{ }}=|}    
 
         <form zippy="setupform">
             <h3>АРМ касира</h3>
@@ -68,15 +90,16 @@
 
             </div>
 
-        </form>
+        </form>        
+        
+        <div class="row"  zippy="docpanel">
+            <div class="col-12"> 
 
+               <h5><strong><a zippy="toorderlist"><i class="fa fa-list"></i> До переліку замовлень</a></strong> </h5>
+               <h3>Оформлення замовлення</h3>
 
-        <div   zippy="docpanel">
-            <h5><strong><a zippy="toorderlist"><i class="fa fa-list"></i> До переліку замовлень</a></strong> </h5>
-            <h3>Оформлення замовлення</h3>
+            </div> 
 
-
-            <div class="row"  >
                 <div class="col-12  col-xl-10"> 
 
                     <div   zippy="catpan" class="row">
@@ -136,7 +159,7 @@
                         <form zippy="navform" class="form-inline   ">                   
                             <input  zippy="baddnewpos"  type="submit" value="Додати позицiю  "   class="btn btn-info mr-4"> 
                             {{#usescanner}}
-                            Штрих код &nbsp;<input class="form-control"   style="width:150px;" autocomplete="off"  autofocus="on"  type="text" zippy="barcode"
+                            Штрих код &nbsp;<input class="form-control"   style="width:150px;" autocomplete="off"    type="text" zippy="barcode"
                                                    onkeydown="onBarCode()"> <a zippy="addcode"></a>
 
                             {{/usescanner}}
@@ -157,13 +180,14 @@
                                 <tr>
                                     <th>Назва</th>
                                     <th>Код</th>
-                                    <th class="text-right ">Кiл.</th>
+                                    <th class="text-center ">Кiл.</th>
                                     <th class="text-right"><i title="Акцiйна знижка" class="fa fa-gift"></i> ,%</th>
                                     <th class="text-right">Цiна</th>
                                     <th class="text-right">Сума</th>
+                                    <th >Стан </th>
                                     
-                                    <th class="text-center text-nowrap">
-                                    {{#pack}}  Із собою  {{/pack}}
+                                    <th class="text-center">
+                                    {{#pack}} <i title="Із собою" class="fa fa-bag-shopping"></i>    {{/pack}}
                                       </th>
                                    
 
@@ -178,10 +202,12 @@
                                          <a zippy="qtymin" class="btn btn-info btn-sm mr-1">-</a>
                                         <span zippy="qty"></span>
                                         <a zippy="qtyplus" class="btn btn-info  btn-sm ml-1">+</a>
+                                        <a zippy="qtyedit"  ><i class="fa fa-edit"></i></a>
                                     </td>
                                     <td zippy="disc" class="text-right"></td>
                                     <td zippy="price" class="text-right"></td>
                                     <td zippy="amount" class="text-right"></td>
+                                    <td zippy="state"  ></td>
                                     
                                     <td class="text-center"> 
                                     {{#pack}}
@@ -200,7 +226,7 @@
                               <tr>
                                     <td colspan="5" class="text-right   ">Знижка:</td>
                                     <td  class="text-right  ">
-                                      <input style="width:100px" zippy="totaldisc" class="form-control qtyprice"></input>
+                                      <input style="width:100px" zippy="totaldisc" class="form-control qtyprice">
                                     </td>
                                     <td ></td>
                                     <td > </td>
@@ -208,7 +234,7 @@
                              <tr>
                                     <td colspan="5" class="text-right   ">Списати  бонуси:</td>
                                     <td  class="text-right  ">
-                                      <input style="width:100px" zippy="bonus" class="form-control qtyprice"></input>
+                                      <input style="width:100px" zippy="bonus" class="form-control qtyprice">
                                     </td>
                                     <td ></td>
                                     <td > </td>
@@ -334,7 +360,30 @@
    
                         </div>
                         
+               <div id="modalqty" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered  modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Кількість</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group  ">
+                                <input   class="form-control qtyprice" type="text" zippy="editqtyq" pattern="[0-9,\.]+">
+                                <input    type="hidden" zippy="editqtyi" >
+                                <div class="input-group-append">
+                                    <input type="submit" value="OK" zippy="beditqty" class="ml-2 btn btn-info  ">
+
+                                </div>
                                 
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>                               
                         
                     </form>  
                 </div>
@@ -410,7 +459,7 @@
                             <div class="form-group   ">
                                 <a zippy="bbackitems" class="btn btn-outline-info"> &lt; Назад</a>
 
-                                &nbsp;&nbsp; <input zippy="btocheck" type="submit" value="Друкувати чек > "   class="btn btn-success">
+                                &nbsp;&nbsp; <input zippy="btocheck" type="submit" value="Оплатити > "   class="btn btn-success">
                                      {{#ppo}}
                             &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Вiдкласти фiскалізацiю  
                            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
@@ -434,7 +483,7 @@
                     </div>
                 </div> 
 
-            </div  >    
+
         </div>
 
 
@@ -447,9 +496,7 @@
             </div>
 
             <div class="col-12 col-md-11 xl-9" >
-                <div class="card">
-                    <div class="card-body">
-                        <div class="navbar nav">
+                <div class="navbar nav">
                             <form zippy="searchform" class="form-inline ">
                                 <label for="searchnumber"> № </label>
 
@@ -464,13 +511,8 @@
 
                             </form>
                         </div>
-                    </div>
-                </div>
 
-
-
-
-
+                <a zippy="refresh" >Оновити</a>
                 <table class="table  table-sm">
                     <tr>
 
@@ -479,6 +521,7 @@
                         <th>Стiл</th>
                         {{/tables}}
 
+                        <th ></th>
 
                         <th >Статус</th>
                         <th >Автор</th>
@@ -488,11 +531,11 @@
                         <th class="text-right">Сума</th>
                         <th ></th>
                         <th ></th>
+                        <th ></th>
 
 
 
                        
-                        <th ></th>
                         <th ></th>
                         <th > </th>
                     </tr>
@@ -501,6 +544,7 @@
 
                         <td ><a zippy="docnumber"></a></td>
                         {{#tables}} <td zippy="tablenumber" class="text-center"></td>  {{/tables}}
+                        <td ><i zippy="delivery" title="Доставка" class="fa fa-bicycle"></i></td>
 
                         <td class="text-nowrap  " zippy="state">  </td>
                         <td  zippy="author">  </td>
@@ -524,8 +568,6 @@
             </div>
             <div class="col-12 col-md-10 xl-8" >
                 <div   zippy="statuspan">
-  
- 
 
 
                     <div class="card">
@@ -537,8 +579,6 @@
                 </div>
          
             </div>
-
-
 
 
         </div>
@@ -569,6 +609,7 @@
                 </div>
             </div>
         </form>
+
 
 
         <script>
@@ -604,30 +645,84 @@
           
             function onNewOrder() {
                   
-                        callPageMethod('getMessages',null,null,(data)=> 
-                        {
-                           
-                            var  answer = JSON.parse(data)  
-      
-                            if (answer.cntorder > 0) {
-                                $('#newordersalert').show();
-                                $('#neworderscnt').text('Нових замовлень ' + answer.cntorder);
-                                beep()
-                            }
-                            if (answer.cntprod > 0) {
-                                $('#newprodalert').show();
-                                $('#newprodcnt').text('Готово в виробництвi ' + answer.cntprod);
-                                beep()
-                            }
+                callPageMethod('getMessages',null,null,(data)=> 
+                {
+                 
+                    var  answer = JSON.parse(data)  
+                 
+                    if (answer.cntorder > 0) {
+                        $('#newordersalert').show();
+                        $('#neworderscnt').text('Нових замовлень ' + answer.cntorder);
+                        beep()
+                    }
+                  
 
-
-                        });
+                });
+                updateReadyItems();                        
             }
 
            function onBell(el){
                     $(el).attr('class','fa fa-bell  text-success')
-                }
+           }
 
+                
+          function qtyedit(id,qty){
+             $('#editqtyq').val(qty)
+             $('#editqtyi').val(id)
+             $('#modalqty').modal('show')
+          } 
+                
+          function check_btocheck(ele) {
+             $("#modalwait").modal("show") ;
+             return true;
+          }            
+          
+    
+          var vapp = new Vue({
+              el: '#vapp',
+           
+              data() {
+                  return  {
+                     itemlist:[] ,
+                     openpos:false
+                   }   
+              }  ,
+              methods: {
+                 onReady( document_id,rowid, index) {
+
+                      callPM('onReady',[document_id,rowid],null,(data)=> 
+                      {
+                          if(false==checkPMAnswer(data) )   {
+                               return
+                          }
+                          
+                          this.updateReadyItems() ;
+                      });     
+                 
+               } ,
+               
+               updateReadyItems(){
+                    
+                  callPageMethod('getProdItems',[this.forbar],null,(data)=> 
+                  {
+                           
+                      this.itemlist= JSON.parse(data)  
+                      
+                  
+                  });
+                    
+              }           
+            } ,     
+           mounted: function  (){ 
+             this.updateReadyItems() ;  
+           }     
+       
+        })             
+          
+      function updateReadyItems() {
+          vapp.updateReadyItems() ;
+       }        
+                    
         </script>
 
         {{#usescanner}} 
@@ -646,10 +741,8 @@
             }
             
             
-            function check_btocheck(ele) {
-                $('#btocheck').attr('disabled', 'disabled');
-                return true;
-            }            
+           
+           
                 
         </script>  
 

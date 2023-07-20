@@ -121,7 +121,7 @@ class IOState extends \ZCL\DB\Entity
             $list[self::TYPE_OTHER_OUTCOME] = "Інші витрати";
 
         }
-        if ($type == 5 ) {
+        if ($type == 5 || $type == 0) {
             $list[self::TYPE_BASE_OUTCOME] = "Операційні витрати";
             $list[self::TYPE_COMMON_OUTCOME] = "Загальновиробничі витрати";
             $list[self::TYPE_ADMIN_OUTCOME] = "Адміністративні витрати";
