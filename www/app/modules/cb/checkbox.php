@@ -316,7 +316,7 @@ class CheckBox
            $payment=array("type"=>"CASH","label"=>"Кредит","value"=> ($doc->payamount - $payed) * 100);
            $check["payments"][] = $payment;
             
-        } ;
+        }
         
         
         if($doc->headerdata["prepaid"] >0) {

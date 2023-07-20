@@ -203,7 +203,7 @@ class ZForm extends \App\Pages\Base
                 
             }
 
-        };
+        }
     }
 
     public function zform() {

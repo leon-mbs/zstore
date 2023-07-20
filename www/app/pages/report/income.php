@@ -27,7 +27,7 @@ class Income extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-        $this->filter->add(new DropDownChoice('type', array(1 => "За товарами", 2 => "За постачальниками", 3 => "За датами",4 => "Послуги, роботи",5 => "Товари за постачальниками",6=>'За категоріями') , 1))->onChange($this, "OnType");;
+        $this->filter->add(new DropDownChoice('type', array(1 => "За товарами", 2 => "За постачальниками", 3 => "За датами",4 => "Послуги, роботи",5 => "Товари за постачальниками",6=>'За категоріями') , 1))->onChange($this, "OnType");
         $this->filter->add(new DropDownChoice('cat', \App\Entity\Category::getList(false,false), 0))->setVisible(false);
   
         

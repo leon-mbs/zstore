@@ -83,7 +83,7 @@ class System
             
             $d =    @unserialize(@base64_decode($rs) );
             if(!is_array($d) ) {
-               $d =  @unserialize( $rs );; //для  совместивости   
+               $d =  @unserialize( $rs ); //для  совместивости
             }
             self::$_options[$group] = $d;
         }

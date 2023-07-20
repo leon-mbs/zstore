@@ -115,7 +115,7 @@ class PaySelList extends \App\Pages\Base
         foreach( \App\DataItem::query($sql) as $_c){
             $_c->docs=0;
             $this->_custlist[$_c->customer_id]=$_c;         
-        };
+        }
                                     
         $sql = "SELECT c.customer_name,c.phone, c.customer_id, coalesce(count(*),0) as docs 
              FROM documents_view d  join customers c  on d.customer_id = c.customer_id and c.status=0    
@@ -132,7 +132,7 @@ class PaySelList extends \App\Pages\Base
                  $this->_custlist[$_c->customer_id] = $_c;                                                         
             }
             
-        };
+        }
 
   
         $this->_totamountc = 0;
@@ -281,8 +281,8 @@ class PaySelList extends \App\Pages\Base
         $amount = $this->_doc->payamount - $this->_doc->payed;
    
         $this->paypan->payform->pamount->setText(H::fa($amount));
-        $this->paypan->payform->pcomment->setText("");;
-        $this->paypan->pname->setText($this->_doc->document_number);;
+        $this->paypan->payform->pcomment->setText("");
+        $this->paypan->pname->setText($this->_doc->document_number);
 
         $this->_pays = \App\Entity\Pay::getPayments($this->_doc->document_id);
         $this->paypan->paylist->Reload();

@@ -306,7 +306,7 @@ class GoodsIssue extends Document
     protected function onState($state,$oldstate) {
         if($state == Document::STATE_EXECUTED) {
             
-           if($this->parent_id > 0)   {;
+           if($this->parent_id > 0)   {
                $order = Document::load($this->parent_id);              
                if($order->meta_name == 'Order') {   
                    

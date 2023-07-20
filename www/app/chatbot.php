@@ -61,7 +61,7 @@ class ChatBot{
        // $logger->info($request);
         if(false === $this->onMessage($ret['message']) ){
             $logger->error("bot answer " . $request );              
-        };
+        }
           
        
     
@@ -96,7 +96,7 @@ class ChatBot{
                 $user->save();
                 $this->sendMessage($chat_id,"Login OK") ; 
                 return;    
-            } ;
+            }
      
             $c = \App\Entity\Customer::getByPhone($s[1]);
             if (  $c = null) {
@@ -114,7 +114,7 @@ class ChatBot{
                 $c->save();
                 $this->sendMessage($chat_id,"Login OK") ; 
                 return;    
-            } ;
+            }
            
             
         }

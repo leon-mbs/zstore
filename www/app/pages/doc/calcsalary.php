@@ -90,7 +90,7 @@ class CalcSalary extends \App\Pages\Base
                
                $calcvar .= "var v{$st->salcode} =  parseVal(emp['_c{$st->salcode}'] ) ;\n ";
                      
-        };     
+        }
         
         $calc = $calcvar;
         $calc .= "\n\n";
@@ -109,7 +109,7 @@ class CalcSalary extends \App\Pages\Base
                $calc .= "emp['_c{$st->salcode}']  = parseVal( v{$st->salcode}) ;\n ";
                $calcbase .= "emp['_c{$st->salcode}']  = parseVal( v{$st->salcode}) ;\n ";
                
-        };  
+        }
         
         $this->_tvars['calcs'] = $calc;
         $this->_tvars['calcbases'] = $calcbase;
@@ -286,7 +286,7 @@ class CalcSalary extends \App\Pages\Base
               
                    foreach($this->_stlist as $st){
                        $e['_c'.$st->salcode]  =  $emp->{'_c'.$st->salcode};    
-                   };
+                   }
         
                 $ret['emps'][] = $e;  
             }
@@ -312,7 +312,7 @@ class CalcSalary extends \App\Pages\Base
        
        foreach($this->_stlist as $st){
            $ret['stlist'][]  = array("salname"=>$st->salshortname,"salcode"=>'_c'.$st->salcode);    
-       };
+       }
        
        $ret['doc'] = [] ;
        $ret['doc']['document_date']   =  date('Y-m-d', $this->_doc->document_date) ;

@@ -233,7 +233,7 @@ class Base extends \Zippy\Html\WebPage
 
             $cnt = \App\Entity\Notify::findCnt("user_id=" . \App\Entity\Notify::CHAT . " and notify_id>" . intval($_COOKIE['last_chat_id'] ?? 0));
 
-            $this->_tvars["chatcnt"] = $cnt > 0 ? $cnt : false;;
+            $this->_tvars["chatcnt"] = $cnt > 0 ? $cnt : false;
 
         }
         $this->generateToasts();

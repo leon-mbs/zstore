@@ -447,7 +447,7 @@ class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\I
                 }
             }
             $this->productattribute->attributevalue = implode(',', $values);
-        };
+        }
     }
 
     public function clean() {

@@ -176,7 +176,7 @@ class Items extends \App\Pages\Base
             }
              $c = count($data);
              
-             \App\Helper::log($page*$c); ;            
+             \App\Helper::log($page*$c);
              
                 if ($c == 0) {
                     break;

@@ -139,7 +139,7 @@ class Users extends \App\Pages\Base
 
         $pass = $this->editpan->editform->editpass->getText();
         if (strlen($pass) > 0) {
-            $this->user->userpass = (\password_hash($pass, PASSWORD_DEFAULT));;
+            $this->user->userpass = (\password_hash($pass, PASSWORD_DEFAULT));
         }
         if ($this->user->user_id == 0 && strlen($pass) == 0) {
 

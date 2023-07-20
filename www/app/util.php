@@ -95,7 +95,7 @@ class Util
         $_data = "";
         $strlen = mb_strlen($string);
         while($strlen) {
-            $_data .= (" " . mb_substr($string, 0, 1, 'UTF-8'));;
+            $_data .= (" " . mb_substr($string, 0, 1, 'UTF-8'));
             $string = mb_substr($string, 1, $strlen, 'UTF-8');
             $strlen = mb_strlen($string, 'UTF-8');
         }

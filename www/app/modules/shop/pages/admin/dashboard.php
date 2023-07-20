@@ -103,9 +103,9 @@ class Dashboard extends \App\Pages\Base
         $items = array_reverse($items,true) ;
         $cats = array_reverse($cats,true) ;
 
-        $this->_tvars['topitems']  = array();;
-        $this->_tvars['topcats'] = array();;
-        $this->_tvars['topview'] = array();;
+        $this->_tvars['topitems']  = array();
+        $this->_tvars['topcats'] = array();
+        $this->_tvars['topview'] = array();
         foreach($items as $k=>$v) {
             $this->_tvars['topitems'][]= array('v'=>$v,'n'=>$k);             
             if(count($this->_tvars['topitems'])==10) break;

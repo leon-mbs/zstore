@@ -59,7 +59,7 @@ class common extends  JsonRPC
         $list = array();
         foreach ($common['salesources'] as $s) {
             $list[$s->id] = $s->name;
-        };
+        }
 
         return $list;
     }

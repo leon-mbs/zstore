@@ -91,7 +91,7 @@ class DocList extends \App\Pages\Base
         foreach(Document::find("document_id  in ({$ids})") as $doc){
             $doc->headerdata['paperless'] = 0;
             $doc->save();
-        };
+        }
         
     }
 

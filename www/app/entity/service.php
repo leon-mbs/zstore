@@ -121,7 +121,7 @@ class Service extends \ZCL\DB\Entity
             }
             
             $list[$s->service_id]=$name;
-        } ;
+        }
         
         return  $list;
     }    

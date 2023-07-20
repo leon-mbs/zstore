@@ -622,7 +622,7 @@ class Printer{
                     $b=intval($b);
                     if($b <0 || $b>255)  return;
                     $bl[]=$b;
-                } ;
+                }
                 
                 $this->addBytes($bl)  ;
                 

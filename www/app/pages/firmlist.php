@@ -404,7 +404,7 @@ class FirmList extends \App\Pages\Base
                      $msg = $ret->error; 
                      if(strlen($ret->message)>0){
                         $msg = $ret->message  ; 
-                     }; 
+                     }
                        $msg = str_replace("'","\"",$msg) ;  
 
                      $this->addAjaxResponse("    $('#progress').text('{$msg}');   $('#send').attr('disabled',null);          ");

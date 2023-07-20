@@ -94,7 +94,7 @@ class EmpTask extends \App\Pages\Base
                 $elist[$emp->employee_id]->hours += $hours;
                 $elist[$emp->employee_id]->cnt += 1;
             }
-        };
+        }
 
         foreach ($elist as $emp_id => $emp) {
             if ($emp->cnt > 0) {

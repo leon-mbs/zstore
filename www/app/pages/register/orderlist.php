@@ -552,7 +552,7 @@ class OrderList extends \App\Pages\Base
        
        foreach(\App\Entity\User::getByBranch($id) as $id=>$u) {
           $users[$id] = $u ;  
-       }; 
+       }
        
        $this->statuspan->moveform->usmove->setOptionList($users);
     }

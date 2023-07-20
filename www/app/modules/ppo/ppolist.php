@@ -57,7 +57,7 @@ class PPOList extends \App\Pages\Base
 
         $this->add(new Panel('docpan'))->setVisible(false);
         $this->docpan->add(new ClickLink('backsh', $this, 'onBacksh'));
-        $this->docpan->add(new Label('docshow'))->setVisible(false);;
+        $this->docpan->add(new Label('docshow'))->setVisible(false);
         $this->docpan->add(new DataView('doclist', new ArrayDataSource(new Prop($this, '_doclist')), $this, 'docOnRow'));
         $this->docpan->doclist->setSelectedClass('table-success');
     }

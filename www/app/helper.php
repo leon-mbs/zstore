@@ -858,7 +858,7 @@ class Helper
                     $style->getFont()->setBold(true);
                 }
                 if ($v['align'] == 'right') {
-                    $style->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);;
+                    $style->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
                 }
             } else {
                 //  $sheet->setCellValue($k, $v );
@@ -1042,7 +1042,7 @@ class Helper
             $header['price'] = self::fa($item->getPrice($printer['pricetype']));
             if(intval($item->price) > 0) {
                 $header['price'] = self::fa($item->price);  //по  документу
-            } ;
+            }
  
                
             $qty =  intval($item->getQuantity());    
@@ -1059,7 +1059,7 @@ class Helper
             }
             if(intval($item->quantity) > 0) {
                 $qty = intval($item->quantity);  //по  документу
-            } ;
+            }
             if($pqty >0)  {
                 $qty = $pqty;
             }
@@ -1110,7 +1110,7 @@ class Helper
             $header['price'] = self::fa($item->getPrice($printer['pricetype']));
             if(intval($item->price) > 0) {
                 $header['price'] = self::fa($item->price);  //по  документу
-            } ;
+            }
           
       
             if (  strlen($item->url) > 0 && $printer['pqrcode'] == 1) {
@@ -1143,7 +1143,7 @@ class Helper
             }
             if(intval($item->quantity) > 0) {
                 $qty = intval($item->quantity);  //по  документу
-            } ;
+            }
             if($pqty >0)  {
                 $qty = $pqty;
             }

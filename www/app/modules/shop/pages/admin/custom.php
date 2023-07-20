@@ -60,7 +60,7 @@ class Custom extends \App\Pages\Base
         }   
   
         $this->add(new Form('newform'))->onSubmit($this, 'newaddOnClick');
-        $this->newform->add(new AutocompleteTextInput('newitem'))->onText($this, 'OnAutoItem');;
+        $this->newform->add(new AutocompleteTextInput('newitem'))->onText($this, 'OnAutoItem');
  
         $this->add(new DataView('newlist', new ArrayDataSource($this, "_newlist"), $this, 'newlistOnRow'));
  

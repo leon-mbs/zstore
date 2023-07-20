@@ -218,7 +218,7 @@ class ARMPos extends \App\Pages\Base
     public function onModeOn($sender) {
         $this->_tvars['simplemode']  = $sender->id == 'tosimple';
         if($this->_tvars['simplemode'] == true)  {
-            $this->_tvars['usesnumber']  = false;    ;
+            $this->_tvars['usesnumber']  = false;
         }   else {
              $options = System::getOptions('common');
              $this->_tvars["usesnumber"] = $options['usesnumber'] == 1;
@@ -431,7 +431,7 @@ class ARMPos extends \App\Pages\Base
                 
             }
             if($paytype == 3) {
-                $half= H::fa($payamount/2);; 
+                $half= H::fa($payamount/2);
                 $this->docpanel->form3->payed->setText($half); 
                 $this->docpanel->form3->payedcard->setText($payamount - $half); 
              

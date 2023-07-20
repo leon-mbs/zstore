@@ -197,10 +197,10 @@ class Discounts extends \App\Pages\Base
     public function onTab($sender) {
 
         $this->_tvars['tabcbadge'] = $sender->id == 'tabc' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
-        $this->_tvars['tabobadge'] = $sender->id == 'tabo' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";;
-        $this->_tvars['tabibadge'] = $sender->id == 'tabi' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";;
+        $this->_tvars['tabobadge'] = $sender->id == 'tabo' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
+        $this->_tvars['tabibadge'] = $sender->id == 'tabi' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
 
-        $this->_tvars['tabsbadge'] = $sender->id == 'tabs' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";;
+        $this->_tvars['tabsbadge'] = $sender->id == 'tabs' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
 
         $this->ctab->setVisible($sender->id == 'tabc');
         $this->otab->setVisible($sender->id == 'tabo');
@@ -277,7 +277,7 @@ class Discounts extends \App\Pages\Base
         if ($d > 0) {
             $s->actionprice = $d;
             $s->fromdate = $sender->ssearchfrom->getDate();
-            $s->todate = $sender->ssearchto->getDate(true);;
+            $s->todate = $sender->ssearchto->getDate(true);
             if ($s->fromdate > $s->todate) {
                 $this->setError("Невірний інтервал");
                 return;
@@ -348,7 +348,7 @@ class Discounts extends \App\Pages\Base
             $i->actionqty1 = 0;
             $i->actionprice1 = 0;
             $i->fromdate = $this->itab->ifilter->isearchfrom->getDate();
-            $i->todate = $this->itab->ifilter->isearchto->getDate(true);;
+            $i->todate = $this->itab->ifilter->isearchto->getDate(true);
             if ($i->fromdate > $i->todate) {
                 $this->setError("Невірний інтервал");
                 return;
@@ -496,7 +496,7 @@ class Discounts extends \App\Pages\Base
         if ($d > 0) {
             $g->discount = $d;
             $g->fromdate = $sender->gsearchfrom->getDate();
-            $g->todate = $sender->gsearchto->getDate(true);;
+            $g->todate = $sender->gsearchto->getDate(true);
             if ($g->fromdate > $g->todate) {
                 $this->setError("Невірний інтервал");
                 return;

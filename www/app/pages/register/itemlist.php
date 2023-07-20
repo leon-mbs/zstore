@@ -387,7 +387,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
             $cstr = "    store_id in ({$cstr})  and   ";
         }
         if(\App\System::getUser()->showotherstores) {
-            $cstr =""; ;
+            $cstr ="";
             
         }   
         $cat = $form->searchcat->getValue();

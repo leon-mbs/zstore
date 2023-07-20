@@ -39,7 +39,7 @@ class Chat extends \App\Pages\Base
         $this->msgform->add(new DropDownChoice('msgpersonal', \App\Entity\User::findArray("username", "disabled<>1 and user_id<>" . $this->user->user_id, "username"), 0));
         $this->msgform->add(new \Zippy\Html\Form\File('msgfile'));
         $this->msgform->add(new TextInput('msglink'));
-        $this->msgform->add(new \Zippy\Html\Form\AutocompleteTextInput('msgdoc'))->onText($this, 'OnAutoDoc');;
+        $this->msgform->add(new \Zippy\Html\Form\AutocompleteTextInput('msgdoc'))->onText($this, 'OnAutoDoc');
 
 
         $this->add(new Form('searchform'))->onSubmit($this, 'OnSearch');

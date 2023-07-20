@@ -140,7 +140,7 @@ class RecList extends \App\Pages\Base
                 $name = $name . " ,". $it->item_code;    
             }
             $list[$it->item_id] = $name; 
-        };
+        }
         
         $form->edititem->setOptionList($list);
        
@@ -165,7 +165,7 @@ class RecList extends \App\Pages\Base
                 $name = $name . " ,". $it->item_code;    
             }
             $list[$it->item_id] = $name; 
-        };
+        }
         
         $form->edititem->setOptionList($list);
         
@@ -183,7 +183,7 @@ class RecList extends \App\Pages\Base
         if($item_id==0) {
            $this->setError('Не введений  товар') ;
            return;  
-        };
+        }
         
         $item = Item::load($item_id);
         $item->reclist = $this->_reclist;

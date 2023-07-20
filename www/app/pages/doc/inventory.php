@@ -211,7 +211,7 @@ class Inventory extends \App\Pages\Base
                $sql = "select item_id,sum(0-quantity) as cnt from entrylist_view where tag=-64 and stock_id in(select stock_id from store_stock where  store_id= {$this->_doc->headerdata['store']}) group by item_id"  ;
                foreach($conn->Execute($sql) as $row){
                   $reserved[$row['item_id']]  = $row['cnt'] ;  
-               };
+               }
            }
            
         

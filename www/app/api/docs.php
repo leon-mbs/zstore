@@ -191,7 +191,7 @@ class docs extends JsonRPC
             throw new \Exception("Не задані позиції");
         }
         if (count($details) == 0) {
-            throw new \Exception("Не задані позиції"));
+            throw new \Exception("Не задані позиції");
         }
         $doc->packDetails('detaildata', $details);
         if ($args['total'] > 0) {
@@ -270,10 +270,10 @@ class docs extends JsonRPC
                 }
             }
         } else {
-            throw new \Exception("Не задані позиції"));
+            throw new \Exception("Не задані позиції");
         }
         if (count($details) == 0) {
-            throw new \Exception("Не задані позиції"));
+            throw new \Exception("Не задані позиції");
         }
         $doc->packDetails('detaildata', $details);
         if ($args['total'] > 0) {
@@ -552,10 +552,10 @@ class docs extends JsonRPC
                 }
             }
         } else {
-            throw new \Exception("Не задані позиції"));
+            throw new \Exception("Не задані позиції");
         }
         if (count($details) == 0) {
-            throw new \Exception("Не задані позиції"));
+            throw new \Exception("Не задані позиції");
         }
         $doc->packDetails('detaildata', $details);
 

@@ -120,7 +120,7 @@ class OrderPay extends Base
         
         $ret = array();
         $ret['data']  = $data;
-        $ret['sign']  =  base64_encode(sha1($private_key.$data.$private_key, 1));;
+        $ret['sign']  =  base64_encode(sha1($private_key.$data.$private_key, 1));
         
         
         return json_encode($ret, JSON_UNESCAPED_UNICODE);     

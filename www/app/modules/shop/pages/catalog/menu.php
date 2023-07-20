@@ -56,7 +56,7 @@ class Menu extends \Zippy\Html\WebPage
                     'vol'=> strlen($item->weight)>0 ? $item->weight." г" :  $item->volume." мл"
                 );
                 
-            };
+            }
             
             
             $this->_tvars['cats'][] = array(

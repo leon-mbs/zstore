@@ -315,7 +315,7 @@ class Main extends \App\Pages\Base
          $ret = array();
          $ret['acctype'] = $t->acctype;
          $ret['detail'] = $t->detail;
-         $ret['tags'] = $t->getTags();;
+         $ret['tags'] = $t->getTags();
          $ret['files'] = array();
     
          foreach(Helper::findFileByTopic($t->topic_id) as $f) {
@@ -344,7 +344,7 @@ class Main extends \App\Pages\Base
           foreach(Topic::findByNode($args[0]) as $t){
              $t->fav = in_array($t->topic_id, $favorites)  ;
              $arr[]=array("title"=>$t->title,"fav"=>$t->fav,"topic_id"=>$t->topic_id); 
-          };
+          }
  
           return json_encode($arr , JSON_UNESCAPED_UNICODE);     
       

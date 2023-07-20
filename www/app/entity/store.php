@@ -43,7 +43,7 @@ class Store extends \ZCL\DB\Entity
         $list = array();
         foreach($conn->Execute($sql) as $row){
            $list[$row['store_id']]  = $row['storename'];   
-        };
+        }
 
         
         return $list;

@@ -704,11 +704,11 @@ class PPOHelper
         $header['doctype'] = $doctype;
         $header['docsubtype'] = $docsubtype;
         $header['firmname'] = $firm['firm_name'];
-        $header['inn'] = strlen($firm['inn']) > 0 ? $firm['inn'] : false;;
+        $header['inn'] = strlen($firm['inn']) > 0 ? $firm['inn'] : false;
         $header['tin'] = $firm['tin'];
         $header['address'] = $pos->address;
-          $header['testing'] = $pos->testing==1;
-      $header['pointname'] = $pos->pointname;
+        $header['testing'] = $pos->testing==1;
+        $header['pointname'] = $pos->pointname;
         $header['date'] = date('dmY');
         $header['time'] = date('His');
         $header['docnumberback'] = $doc->headerdata["docnumberback"];
