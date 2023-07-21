@@ -1,17 +1,16 @@
 <?php
 
-error_reporting(E_ALL & ~E_WARNING & ~E_STRICT & ~ E_NOTICE & ~E_DEPRECATED );
- 
+error_reporting(E_ALL & ~E_WARNING & ~E_STRICT & ~ E_NOTICE & ~E_DEPRECATED);
+
 
 
 $http = 'http';
 if (isset($_SERVER['HTTPS']) &&  strtolower($_SERVER['HTTPS']) !== 'off') {
-   $http = 'https';
-}
-elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' || !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on') {
-   $http = 'https';
-} elseif(443 == intval($_SERVER['SERVER_PORT'] )) {
-   $http = 'https';    
+    $http = 'https';
+} elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' || !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on') {
+    $http = 'https';
+} elseif(443 == intval($_SERVER['SERVER_PORT'])) {
+    $http = 'https';
 }
 
 define('_BASEURL', $http . "://" . $_SERVER["HTTP_HOST"] . '/');
@@ -23,58 +22,57 @@ define('_ROOT', __DIR__ . '/');
 
 date_default_timezone_set('Europe/Kiev');
 
- 
+
 
 require_once _ROOT . 'vendor/autoload.php';
 include_once _ROOT . "vendor/adodb/adodb-php/adodb-exceptions.inc.php";
 
 //чтение  конфигурации
-if(file_exists(_ROOT . 'config/config.php')){
-   require_once _ROOT . 'config/config.php';
-    
-}   else {   // для  совместимости
-   $_config = parse_ini_file(_ROOT . 'config/config.ini', true);    
+if(file_exists(_ROOT . 'config/config.php')) {
+    require_once _ROOT . 'config/config.php';
+
+} else {   // для  совместимости
+    $_config = parse_ini_file(_ROOT . 'config/config.ini', true);
 }
 
 
 
-if(!is_array($_config)){
+if(!is_array($_config)) {
     die("Invalid config file") ;
 }
 
 // логгер
 $logger = new \Monolog\Logger("main");
- 
+
 $level = $_config['common']['loglevel'];
 //$output = "%datetime% > %level_name% > %message% %context% %extra%\n";
 $output = "%datetime%  %level_name% : %message% \n";
-$formatter = new \Monolog\Formatter\LineFormatter($output );
-$h1 = new \Monolog\Handler\RotatingFileHandler(_ROOT . "logs/app.log", 10,  $level);
+$formatter = new \Monolog\Formatter\LineFormatter($output);
+$h1 = new \Monolog\Handler\RotatingFileHandler(_ROOT . "logs/app.log", 10, $level);
 $h2 = new \Monolog\Handler\RotatingFileHandler(_ROOT . "logs/error.log", 10, \Monolog\Logger::ERROR);
 $h1->setFormatter($formatter);
 $h2->setFormatter($formatter);
 $logger->pushHandler($h1);
 $logger->pushHandler($h2);
 $logger->pushProcessor(new \Monolog\Processor\IntrospectionProcessor());
- 
-if( !file_exists(_ROOT . "logs") ) {
-   mkdir(_ROOT . "logs");    
+
+if(!file_exists(_ROOT . "logs")) {
+    mkdir(_ROOT . "logs");
 }
-if( !file_exists(_ROOT . "upload") ) {
-   mkdir(_ROOT . "upload");    
+if(!file_exists(_ROOT . "upload")) {
+    mkdir(_ROOT . "upload");
 }
 
 
 //  phpQuery::$debug = true;
 //Параметры   соединения  с  БД
-if( ( $_config['db']['driver'] ?? '' ) =='postgres') {
-  
-  \ZDB\DB::config($_config['db']['host'], $_config['db']['name'], $_config['db']['user'], $_config['db']['pass'],"postgres");    
-   $ADODB_QUOTE_FIELDNAMES = false;
-   
-}
-else {
-  \ZDB\DB::config($_config['db']['host'], $_config['db']['name'], $_config['db']['user'], $_config['db']['pass']);    
+if(($_config['db']['driver'] ?? '') =='postgres') {
+
+    \ZDB\DB::config($_config['db']['host'], $_config['db']['name'], $_config['db']['user'], $_config['db']['pass'], "postgres");
+    $ADODB_QUOTE_FIELDNAMES = false;
+
+} else {
+    \ZDB\DB::config($_config['db']['host'], $_config['db']['name'], $_config['db']['user'], $_config['db']['pass']);
 }
 
 
@@ -117,29 +115,27 @@ if (!function_exists('mb_ucfirst') && function_exists('mb_substr')) {
 
 }
 
-if( !function_exists('apache_request_headers') ) {
+if(!function_exists('apache_request_headers')) {
 
-function apache_request_headers() {
-  $arh = array();
-  $rx_http = '/\AHTTP_/';
-  foreach($_SERVER as $key => $val) {
-    if( preg_match($rx_http, $key) ) {
-      $arh_key = preg_replace($rx_http, '', $key);
-      $rx_matches = array();
-      // do some nasty string manipulations to restore the original letter case
-      // this should work in most cases
-      $rx_matches = explode('_', $arh_key);
-      if( count($rx_matches) > 0 and strlen($arh_key) > 2 ) {
-        foreach($rx_matches as $ak_key => $ak_val) $rx_matches[$ak_key] = ucfirst($ak_val);
-        $arh_key = implode('-', $rx_matches);
-      }
-      $arh[$arh_key] = $val;
+    function apache_request_headers() {
+        $arh = array();
+        $rx_http = '/\AHTTP_/';
+        foreach($_SERVER as $key => $val) {
+            if(preg_match($rx_http, $key)) {
+                $arh_key = preg_replace($rx_http, '', $key);
+                $rx_matches = array();
+                // do some nasty string manipulations to restore the original letter case
+                // this should work in most cases
+                $rx_matches = explode('_', $arh_key);
+                if(count($rx_matches) > 0 and strlen($arh_key) > 2) {
+                    foreach($rx_matches as $ak_key => $ak_val) {
+                        $rx_matches[$ak_key] = ucfirst($ak_val);
+                    }
+                    $arh_key = implode('-', $rx_matches);
+                }
+                $arh[$arh_key] = $val;
+            }
+        }
+        return($arh);
     }
-  }
-  return( $arh );
-  }
 }
-
- 
- 
- 
