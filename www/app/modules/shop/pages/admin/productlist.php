@@ -5,7 +5,7 @@ namespace App\Modules\Shop\Pages\Admin;
 use App\Application as App;
 use App\Entity\Item;
 use App\Modules\Shop\Entity\Product;
-use \App\Entity\Category;
+use App\Entity\Category;
 use App\System;
 use Zippy\Binding\PropertyBinding as PB;
 use Zippy\Html\DataList\ArrayDataSource;
@@ -22,13 +22,13 @@ use Zippy\Html\Panel;
 
 class ProductList extends \App\Pages\Base
 {
-
     private $_item;
     private $store      = "";
     private $op;
-    public  $attrlist   = array(), $imglist = array();
-    public  $group      = null;
-    public  $_grouplist = array();
+    public $attrlist   = array();
+    public $imglist = array();
+    public $group      = null;
+    public $_grouplist = array();
 
     public function __construct() {
         parent::__construct();
@@ -49,7 +49,7 @@ class ProductList extends \App\Pages\Base
 
         $this->_grouplist = Category::findFullData($clist);
 
-        usort($this->_grouplist, function($a, $b) {
+        usort($this->_grouplist, function ($a, $b) {
             return $a->full_name > $b->full_name;
         });
 
@@ -69,8 +69,8 @@ class ProductList extends \App\Pages\Base
         $this->listpanel->add(new Form('searchform'))->onSubmit($this, 'searchformOnSubmit');
         $this->listpanel->searchform->add(new TextInput('skeyword'));
 
-        $this->listpanel->searchform->add(new TextInput('smanuf' ));
-         
+        $this->listpanel->searchform->add(new TextInput('smanuf'));
+
         $this->listpanel->searchform->add(new ClickLink('sclear'))->onClick($this, 'onSClear');
 
         $this->listpanel->add(new ClickLink('addnew'))->onClick($this, 'addnewOnClick');
@@ -129,7 +129,7 @@ class ProductList extends \App\Pages\Base
         $this->listpanel->plist->Reload();
     }
 
-//строка товара
+    //строка товара
     public function plistOnRow($row) {
         $item = $row->getDataItem();
 
@@ -143,7 +143,7 @@ class ProductList extends \App\Pages\Base
         $row->add(new \Zippy\Html\Image("lphoto"))->setUrl('/loadshopimage.php?id=' . $item->image_id . '&t=t');
     }
 
-//редактирование
+    //редактирование
 
     public function lnameOnClick($sender) {
 
@@ -184,7 +184,7 @@ class ProductList extends \App\Pages\Base
         $this->listpanel->setVisible(true);
     }
 
-//строка  атрибута
+    //строка  атрибута
     public function attrlistOnRow($row) {
         $attr = $row->getDataItem();
 
@@ -246,9 +246,9 @@ class ProductList extends \App\Pages\Base
             $image->thumb = $thumb->getImageAsString();
             $conn =   \ZDB\DB::getConnect();
             if($conn->dataProvider=='postgres') {
-              $image->thumb = pg_escape_bytea($image->thumb);
-              $image->content = pg_escape_bytea($image->content);
-                
+                $image->thumb = pg_escape_bytea($image->thumb);
+                $image->content = pg_escape_bytea($image->content);
+
             }
 
             $image->save();
@@ -288,7 +288,6 @@ class ProductList extends \App\Pages\Base
 
 class ProductDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {
@@ -342,7 +341,6 @@ class ProductDataSource implements \Zippy\Interfaces\DataSource
 //выводит  элементы  формы  ввода   в  зависимости  от  типа  атрибута
 class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\Interfaces\SubmitDataRequest
 {
-
     protected $productattribute = null;
 
     public function __construct($id, $productattribute) {

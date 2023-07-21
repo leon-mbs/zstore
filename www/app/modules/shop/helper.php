@@ -10,7 +10,6 @@ use ZCL\DB\DB;
 //класс  вспомагательных функций
 class Helper
 {
-
     public static function getBreadScrumbs($id) {
 
         $bs = "<li class=\"breadcrumb-item\"><a href='/shop'>Каталог</a></li>";
@@ -28,7 +27,7 @@ class Helper
         return $bs;
     }
 
-    //список  производителей в  данной группе  товаров 
+    //список  производителей в  данной группе  товаров
     public static function getManufacturers($cat_id = 0) {
         $cat = '';
         if ($cat_id > 0) {
@@ -128,7 +127,7 @@ class Helper
     public static function getAttributeTypes() {
 
         return array(1 => "Є/Немає",
-            //  2 => "Число"  , 
+            //  2 => "Число"  ,
                      3 => "Перелік",
                      4 => "Набір",
                      5 => "Строка"
@@ -142,46 +141,48 @@ class Helper
         return $conn->GetCol($sql);
     }
 
-    public  static function getPages(){
+    public static function getPages() {
         $shop = \App\System::getOptions("shop");
         $pages = $shop['pages'] ;
-        if(!is_array($pages)) $pages = array();
-        
+        if(!is_array($pages)) {
+            $pages = array();
+        }
+
         return  array_keys($pages);
     }
-    
-  
+
+
     //список атрибутов для  вариации
-    public static function getAttrVar($cat_id ) {
+    public static function getAttrVar($cat_id) {
         $conn = DB::getConnect();
         $sql = "select attribute_id,   attributename   from  shop_attributes   
                     where   cat_id = {$cat_id} and attributetype = 3  order  by  attributename ";
         $rs =  $conn->Execute($sql);
         $attr  = array();
-        foreach($rs as $row){
-           $attr[ $row['attribute_id']]= $row['attributename'] ;
+        foreach($rs as $row) {
+            $attr[ $row['attribute_id']]= $row['attributename'] ;
         }
-        
+
         return $attr;
     }
-  
+
     /**
     * подпись для wayforpay
-    * 
+    *
     */
-    public static function signWP( ) {
-        
+    public static function signWP() {
+
     }
 
     /**
     * подпись для liqpay
-    * 
+    *
     */
-    public static function signLQ( ) {
-        
+    public static function signLQ() {
+
     }
-  
-    
+
+
     /*
       //формирование  условий отбора   по  выбранным  критериям
       private static function _getWhere($filter) {
