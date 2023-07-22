@@ -16,7 +16,6 @@ use Zippy\Html\Panel;
  */
 class ItemOrder extends \App\Pages\Base
 {
-
     public function __construct() {
         parent::__construct();
 
@@ -30,7 +29,7 @@ class ItemOrder extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('cust', Customer::findArray('customer_name', $where, 'customer_name'), 0));
 
         $this->add(new Panel('detail'))->setVisible(false);
- 
+
         $this->detail->add(new Label('preview'));
     }
 
@@ -41,7 +40,7 @@ class ItemOrder extends \App\Pages\Base
         $this->detail->preview->setText($html, true);
         \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
 
-  
+
         $this->detail->setVisible(true);
     }
 

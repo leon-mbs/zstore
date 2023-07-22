@@ -16,7 +16,6 @@ use Zippy\Html\Panel;
  */
 class Outcome extends \App\Pages\Base
 {
-
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReport('Outcome')) {
@@ -27,12 +26,12 @@ class Outcome extends \App\Pages\Base
         if (strlen($brids) > 0) {
             $br = " and  branch_id in ({$brids}) ";
         }
-        
+
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
         $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username', "user_id in (select user_id from documents_view  where  meta_name  in('GoodsIssue','ServiceAct','Task','Order','POSCheck','TTN','OrderFood')  {$br}  )", 'username'), 0));
-        $this->filter->add(new DropDownChoice('cat', \App\Entity\Category::getList(false,false), 0))->setVisible(false);
+        $this->filter->add(new DropDownChoice('cat', \App\Entity\Category::getList(false, false), 0))->setVisible(false);
         $this->filter->add(new DropDownChoice('salesource', H::getSaleSources(), 0))->setVisible(false);
 
         $hlist = \App\Entity\Customer::getHoldList();
@@ -64,10 +63,10 @@ class Outcome extends \App\Pages\Base
         $this->filter->add(new \Zippy\Html\Form\TextInput('brand'));
         $this->filter->brand->setDataList(Item::getManufacturers());
         $this->filter->brand->setVisible(false);
-        
+
 
         $this->add(new Panel('detail'))->setVisible(false);
- 
+
         $this->detail->add(new Label('preview'));
     }
 
@@ -103,7 +102,7 @@ class Outcome extends \App\Pages\Base
         $this->detail->preview->setText($html, true);
         \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
 
-  
+
         $this->detail->setVisible(true);
     }
 
@@ -312,7 +311,9 @@ class Outcome extends \App\Pages\Base
         }
 
         if ($type == 11) {    //по источникам
-            if(strlen($salesource)==0)  $salesource="0";
+            if(strlen($salesource)==0) {
+                $salesource="0";
+            }
             $sql = "
             select i.itemname,  sum(0-e.quantity) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
               from entrylist_view  e
@@ -331,14 +332,14 @@ class Outcome extends \App\Pages\Base
         ";
         }
 
-        if ($type == 12  ) {    //по брендам
-             
+        if ($type == 12) {    //по брендам
+
             $man="''";
             $brand = trim($this->filter->brand->getText());
             if(strlen($brand)>0) {
-               $man = $conn->qstr($brand) ;
+                $man = $conn->qstr($brand) ;
             }
-            
+
             $sql = "
             select  i.itemname,sum(0-e.quantity) as qty, sum(0- e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
               from entrylist_view  e
@@ -450,5 +451,3 @@ class Outcome extends \App\Pages\Base
     }
 
 }
-
-

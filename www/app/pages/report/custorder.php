@@ -16,7 +16,6 @@ use Zippy\Html\Panel;
  */
 class CustOrder extends \App\Pages\Base
 {
-
     public function __construct() {
         parent::__construct();
 
@@ -40,7 +39,7 @@ class CustOrder extends \App\Pages\Base
         $this->detail->preview->setText($html, true);
         \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
 
- 
+
         $this->detail->setVisible(true);
     }
 

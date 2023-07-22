@@ -14,7 +14,6 @@ use Zippy\Html\Panel;
  */
 class Price extends \App\Pages\Base
 {
-
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReport('Price')) {
@@ -38,7 +37,7 @@ class Price extends \App\Pages\Base
         $this->_tvars['price5name'] = $option['price5'];
 
         $this->add(new Panel('detail'))->setVisible(false);
- 
+
         $this->detail->add(new Label('preview'));
     }
 
@@ -49,7 +48,7 @@ class Price extends \App\Pages\Base
         $this->detail->preview->setText($html, true);
         \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
 
- 
+
         $this->detail->setVisible(true);
     }
 

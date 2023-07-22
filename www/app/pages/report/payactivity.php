@@ -17,7 +17,6 @@ use Zippy\Html\Panel;
  */
 class PayActivity extends \App\Pages\Base
 {
-
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReport('PayActivity')) {
@@ -33,7 +32,7 @@ class PayActivity extends \App\Pages\Base
         $this->add(new \Zippy\Html\Link\ClickLink('autoclick'))->onClick($this, 'OnAutoLoad', true);
 
         $this->add(new Panel('detail'))->setVisible(false);
- 
+
         $this->detail->add(new Label('preview'));
         \App\Session::getSession()->issubmit = false;
     }
@@ -45,7 +44,7 @@ class PayActivity extends \App\Pages\Base
         $this->detail->preview->setText($html, true);
         \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
 
-   
+
         $this->detail->setVisible(true);
 
         $this->detail->preview->setText("<b >Загрузка...</b>", true);
@@ -145,7 +144,7 @@ class PayActivity extends \App\Pages\Base
             $html = $this->generateReport();
             \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
             $this->detail->preview->setText($html, true);
-           
+
         }
     }
 

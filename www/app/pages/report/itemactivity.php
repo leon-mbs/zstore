@@ -22,7 +22,6 @@ use Zippy\Html\Panel;
  */
 class ItemActivity extends \App\Pages\Base
 {
-
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReport('ItemActivity')) {
@@ -32,7 +31,7 @@ class ItemActivity extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-       
+
         $this->filter->add(new TextInput('snumber'))->setVisible(false);
         $this->filter->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
 
@@ -40,7 +39,7 @@ class ItemActivity extends \App\Pages\Base
         $this->filter->item->onChange($this, "onItem");
 
         $this->add(new Panel('detail'))->setVisible(false);
- 
+
         $this->detail->add(new Label('preview'));
         \App\Session::getSession()->issubmit = false;
     }
@@ -72,7 +71,7 @@ class ItemActivity extends \App\Pages\Base
 
     public function OnSubmit($sender) {
 
- 
+
         $this->detail->setVisible(true);
 
         $html = $this->generateReport();
@@ -106,9 +105,9 @@ class ItemActivity extends \App\Pages\Base
         $conn = \ZDB\DB::getConnect();
         $gd = " GROUP_CONCAT(distinct dc.document_number) ";
         if($conn->dataProvider=="postgres") {
-           $gd = " string_agg(  dc.document_number,',') ";  
-        } 
-        
+            $gd = " string_agg(  dc.document_number,',') ";
+        }
+
         $sql = "
          SELECT  t.*,
           
@@ -202,7 +201,7 @@ class ItemActivity extends \App\Pages\Base
                 "out"       => H::fqty($row['begin_quantity'] + $row['obin'] - $row['obout'])
             );
 
-          
+
             $detail[] = $r;
             $ba = $ba + $row['begin_amount'];
             $bain = $bain + $row['obinamount'];
