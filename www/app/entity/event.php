@@ -10,7 +10,6 @@ namespace App\Entity;
  */
 class Event extends \ZCL\DB\Entity
 {
-
     protected function init() {
         $this->event_id = 0;
 

@@ -10,7 +10,6 @@ namespace App\Entity;
  */
 class Pos extends \ZCL\DB\Entity
 {
-
     protected function init() {
         $this->pos_id = 0;
         $this->fiscalnumber = 0;

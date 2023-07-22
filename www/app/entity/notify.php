@@ -9,14 +9,13 @@ namespace App\Entity;
  */
 class Notify extends \ZCL\DB\Entity
 {
-
-    const ARMFOODPROD = -1;  //арм  кухни    
-    const ARMFOOD     = -2;  //арм  кассира кафе
-    const DELIV       = -3;  //журнал  доставок
-    const SYSTEM      = -4;  //система
-    const EVENT       = -5;  //напоминание о событии
-    const CHAT        = -6;  //сообщение  в  чат
-    const SUBSCRIBE   = -7;  //рассылка
+    public const ARMFOODPROD = -1;  //арм  кухни
+    public const ARMFOOD     = -2;  //арм  кассира кафе
+    public const DELIV       = -3;  //журнал  доставок
+    public const SYSTEM      = -4;  //система
+    public const EVENT       = -5;  //напоминание о событии
+    public const CHAT        = -6;  //сообщение  в  чат
+    public const SUBSCRIBE   = -7;  //рассылка
 
     protected function init() {
 
@@ -38,15 +37,15 @@ class Notify extends \ZCL\DB\Entity
         if ($this->user_id > 0) {
             $user = User::load($this->user_id);
             if ($user->emailnotify == 1 && strlen($user->email) > 0) {
-                \App\Helper::sendLetter($user->email,$this->message, "Нове повідомлення");
+                \App\Helper::sendLetter($user->email, $this->message, "Нове повідомлення");
             }
             if ($user->botnotify == 1 && strlen($user->chat_id) > 0) {
-                \App\Entity\Subscribe::sendBot($user->chat_id,$this->message );
+                \App\Entity\Subscribe::sendBot($user->chat_id, $this->message);
             }
         }
     }
 
-    //количество непрочитанных уведомлений 
+    //количество непрочитанных уведомлений
     public static function isNotify($user_id) {
         $conn = \ZCL\DB\DB::getConnect();
         $cnt = Notify::findCnt("checked = 0 and dateshow <= now() and user_id={$user_id} ");
@@ -58,24 +57,24 @@ class Notify extends \ZCL\DB\Entity
         $sql = "update notifies set checked = 1 where dateshow <= " . $conn->DBTimeStamp(time()) . " and user_id =" . $user_id;
         $conn->Execute($sql);
     }
-   
+
     public static function toSystemLog($message) {
-            $n = new  Notify();
-            $n->user_id =  Notify::SYSTEM;
+        $n = new  Notify();
+        $n->user_id =  Notify::SYSTEM;
 
-            $n->message = $message;
-            $n->save();
+        $n->message = $message;
+        $n->save();
     }
-    
+
     public static function toAdmin($message) {
-            $admin = \App\Entity\User::getByLogin('admin');
+        $admin = \App\Entity\User::getByLogin('admin');
 
-            $n = new  Notify();
-            $n->user_id =  $admin->user_id;
-            $n->sender_id =  Notify::SYSTEM;
+        $n = new  Notify();
+        $n->user_id =  $admin->user_id;
+        $n->sender_id =  Notify::SYSTEM;
 
-            $n->message = $message;
-            $n->save();
+        $n->message = $message;
+        $n->save();
     }
 
 }

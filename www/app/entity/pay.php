@@ -11,11 +11,9 @@ namespace App\Entity;
  */
 class Pay extends \ZCL\DB\Entity
 {
-
-
-  //  const PAY_CUSTOMER = 1;   //расчеты  с  контрагентм
-    const PAY_BANK     = 1000;   //эквайринг
-    const PAY_BONUS    = 1001;   //бонусы
+    //  const PAY_CUSTOMER = 1;   //расчеты  с  контрагентм
+    public const PAY_BANK     = 1000;   //эквайринг
+    public const PAY_BONUS    = 1001;   //бонусы
 
 
     protected function init() {
@@ -48,10 +46,10 @@ class Pay extends \ZCL\DB\Entity
      * @param mixed $mf денежный счет
      * @param mixed $comment коментарий
      */
-    public static function addPayment($document_id, $paydate, $amount, $mf_id,   $comment = '',$nobank=false) {
-       
-        self::addBonus($document_id,$amount );
-       
+    public static function addPayment($document_id, $paydate, $amount, $mf_id, $comment = '', $nobank=false) {
+
+        self::addBonus($document_id, $amount);
+
         if (0 == (float)$amount || 0 == (int)$document_id || 0 == $mf_id) {
             return;
         }
@@ -65,13 +63,13 @@ class Pay extends \ZCL\DB\Entity
         $options=\App\System::getOptions('common')  ;
         if($options['allowminusmf'] !=1 && $amount < 0) {
             $b = \App\Entity\MoneyFund::Balance() ;
-            
-            if($b[$mf_id] < abs($amount) ) {
+
+            if($b[$mf_id] < abs($amount)) {
                 throw new \Exception('Сума  на рахунку недостатня  для  оплати')  ;
             }
         }
 
-    
+
         $pay = new \App\Entity\Pay();
         $pay->mf_id = $mf_id;
         $pay->document_id = $document_id;
@@ -113,8 +111,8 @@ class Pay extends \ZCL\DB\Entity
 
 
         }
-   
-      
+
+
 
         $conn = \ZDB\DB::getConnect();
 
@@ -148,8 +146,8 @@ class Pay extends \ZCL\DB\Entity
     }
 
     //начисление  (списание)  бонусов
-    public static function addBonus($document_id ,$amount =0 ) {
-         
+    public static function addBonus($document_id, $amount =0) {
+
         $conn = \Zdb\DB::getConnect();
 
         $customer_id = (int)$conn->GetOne("select  customer_id  from  documents where  document_id=" . $document_id);
@@ -158,24 +156,28 @@ class Pay extends \ZCL\DB\Entity
         }
         $c = \App\Entity\Customer::load($customer_id);
         $doc = \App\Entity\Doc\Document::load($document_id);
-        $pastbonus = intval($doc->getBonus() ); 
+        $pastbonus = intval($doc->getBonus());
         if($pastbonus != 0) {
             return; //уже  начисленые
         }
 
-        if($doc->meta_name == 'ReturnIssue')  { //возврат
+        if($doc->meta_name == 'ReturnIssue') { //возврат
 
-            if($doc->parent_id == 0) return;
+            if($doc->parent_id == 0) {
+                return;
+            }
             $parent = \App\Entity\Doc\Document::load($doc->parent_id);
-            $parentbonus = intval($parent->getBonus() ); 
-            
-            if($parentbonus==0)   return;
-            if($parent->headerdata['exch2b'] > 0  ){
+            $parentbonus = intval($parent->getBonus());
+
+            if($parentbonus==0) {
+                return;
+            }
+            if($parent->headerdata['exch2b'] > 0) {
                 $parentbonus = $parentbonus - $parent->headerdata['exch2b'];
             }
             $k = 1 - ($parent->amount - $doc->amount) / $parent->amount;
-            
-            $retbonus = intval($parentbonus * $k) ;// доля     
+
+            $retbonus = intval($parentbonus * $k) ;// доля
 
             if($retbonus > 0) {
                 $pay = new \App\Entity\Pay();
@@ -185,23 +187,23 @@ class Pay extends \ZCL\DB\Entity
                 $pay->paytype = self::PAY_BONUS;
                 $pay->paydate = time();
                 $pay->user_id = \App\System::getUser()->user_id;
-             
+
                 $pay->save();
-               
+
             }
-            
+
             return;
         }
-        
-        if(  in_array($doc->meta_name,['GoodsIssue','ServiceAct','Invoice','POSCheck','Order','OrderFood']) == false)  {
+
+        if(in_array($doc->meta_name, ['GoodsIssue','ServiceAct','Invoice','POSCheck','Order','OrderFood']) == false) {
             return;
         }
-        
+
         $bonus = 0;
-        
-        if ($doc->headerdata['bonus'] > 0 ) { //списание
-        
-          
+
+        if ($doc->headerdata['bonus'] > 0) { //списание
+
+
             $pay = new \App\Entity\Pay();
 
             $pay->document_id = $document_id;
@@ -209,51 +211,51 @@ class Pay extends \ZCL\DB\Entity
             $pay->paytype = self::PAY_BONUS;
             $pay->paydate = time();
             $pay->user_id = \App\System::getUser()->user_id;
-         
+
             $pay->save();
 
-           // return;
+            // return;
         }
-        
-        
-        
+
+
+
         //сдачу в  бонусы
-        if($doc->headerdata['exch2b'] > 0 && $doc->headerdata['exchange']>0  ) {
-            if( $doc->headerdata['exch2b'] > $doc->headerdata['exchange'] ){
-                $doc->headerdata['exch2b'] = $doc->headerdata['exchange']  ;           
+        if($doc->headerdata['exch2b'] > 0 && $doc->headerdata['exchange']>0) {
+            if($doc->headerdata['exch2b'] > $doc->headerdata['exchange']) {
+                $doc->headerdata['exch2b'] = $doc->headerdata['exchange']  ;
             }
-      
-      
+
+
             $pay = new \App\Entity\Pay();
 
             $pay->document_id = $document_id;
-        
+
             $pay->amount = 0;
             $pay->bonus = (int)$doc->headerdata['exch2b'];
-            if($doc->headerdata['exch2b'] > $doc->headerdata['exchange'])  {
-               $pay->bonus = (int)$doc->headerdata['exchange'];
-            }           
+            if($doc->headerdata['exch2b'] > $doc->headerdata['exchange']) {
+                $pay->bonus = (int)$doc->headerdata['exchange'];
+            }
             $pay->paytype = \App\Entity\Pay::PAY_BONUS;
             $pay->paydate = time();
             $pay->user_id = \App\System::getUser()->user_id;
 
-            $pay->save();          
-        }        
-        
-        
-        
+            $pay->save();
+        }
+
+
+
         if (doubleval($c->getDiscount()) > 0) { //если    скидка бонусы  не  начисляем
             return;
         }
 
         $bonus = 0;
-        if($doc->payamount >0 && $amount > $doc->payamount){
-           $amount= $doc->payamount; 
+        if($doc->payamount >0 && $amount > $doc->payamount) {
+            $amount= $doc->payamount;
         }
         if($amount==0) {
             return;
-        }  
-   
+        }
+
         $disc = \App\System::getOptions("discount");
 
         $cnt = (int)$conn->GetOne("select  count(*)  from paylist_view where  customer_id=" . $customer_id);
@@ -284,7 +286,7 @@ class Pay extends \ZCL\DB\Entity
 
             $pay->document_id = $document_id;
 
-          
+
             $pay->amount = 0;
             $pay->bonus = (int)$bonus;
             $pay->paytype = self::PAY_BONUS;
@@ -292,7 +294,7 @@ class Pay extends \ZCL\DB\Entity
             $pay->user_id = \App\System::getUser()->user_id;
 
             $pay->save();
-            
+
         }
     }
 

@@ -10,7 +10,6 @@ namespace App\Entity;
  */
 class SalType extends \ZCL\DB\Entity
 {
-
     protected function init() {
 
         $this->salcode = 0;

@@ -10,7 +10,6 @@ namespace App\Entity;
  */
 class Category extends \ZCL\DB\Entity
 {
-
     public $parents = array();
 
     protected function init() {
@@ -140,7 +139,9 @@ class Category extends \ZCL\DB\Entity
     //список  с  тмц
     public static function getList($fullname = false, $all=true) {
         $where="cat_id in (select cat_id from items where disabled <>1 )";
-        if($all)  $where="";
+        if($all) {
+            $where="";
+        }
         if ($fullname == false) {
             return Category::findArray("cat_name", $where, "cat_name");
         }
@@ -156,6 +157,6 @@ class Category extends \ZCL\DB\Entity
     }
 
 
-    
-    
+
+
 }

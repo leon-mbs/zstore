@@ -10,13 +10,11 @@ namespace App\Entity;
  */
 class MoneyFund extends \ZCL\DB\Entity
 {
-
-
     protected function init() {
         $this->mf_id = 0;
         $this->branch_id = 0;
         $this->disabled = 0;
-   }
+    }
 
     protected function beforeSave() {
         parent::beforeSave();

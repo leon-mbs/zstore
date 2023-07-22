@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Entity;
 
 use App\Helper;
@@ -15,7 +14,6 @@ use App\System;
  */
 class ProdStageAgenda extends \ZCL\DB\Entity
 {
-
     protected function init() {
         $this->sta_id = 0;
     }
@@ -25,4 +23,4 @@ class ProdStageAgenda extends \ZCL\DB\Entity
         $this->enddate = strtotime($this->enddate);
     }
 
-} 
+}

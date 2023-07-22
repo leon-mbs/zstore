@@ -10,7 +10,6 @@ namespace App\Entity;
  */
 class Service extends \ZCL\DB\Entity
 {
-
     protected function init() {
         $this->service_id = 0;
     }
@@ -83,12 +82,12 @@ class Service extends \ZCL\DB\Entity
     }
 
     public function getPurePrice() {
-         return $this->price;
+        return $this->price;
     }
     public function getActionPrice() {
-         return $this->actionprice;
+        return $this->actionprice;
     }
-    
+
     public function getPrice($customer_id =0) {
 
         $pureprice = $this->getPurePrice();
@@ -98,32 +97,32 @@ class Service extends \ZCL\DB\Entity
 
         }
 
-       //если  нет скидок  проверям  по  контрагенту
+        //если  нет скидок  проверям  по  контрагенту
         if($pureprice == $price &&  $customer_id  >0) {
             $c = \App\Entity\Customer::load($customer_id) ;
             $d = $c->getDiscount();
             if($d >0) {
                 $price = \App\Helper::fa($pureprice - ($pureprice*$d/100)) ;
-            }                 
-        }        
-        
+            }
+        }
+
         return \App\Helper::fa($price);
     }
 
     public static function getList() {
-        
+
         $list=[];
-        
-        foreach(Service::find("disabled<>1", "service_name") as $s){
+
+        foreach(Service::find("disabled<>1", "service_name") as $s) {
             $name=$s->service_name;
             if(strlen($s->category)>0) {
                 $name  = $name . ', '. $s->category;
             }
-            
+
             $list[$s->service_id]=$name;
         }
-        
+
         return  $list;
-    }    
-    
+    }
+
 }

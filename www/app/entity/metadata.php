@@ -10,12 +10,11 @@ namespace App\Entity;
  */
 class MetaData extends \ZCL\DB\Entity
 {
-
-    const METATYPE_DOC = 1;
-    const METATYPE_REP = 2;
-    const METATYPE_REG = 3;
-    const METATYPE_REF = 4;
-    const METATYPE_SER = 5;
+    public const METATYPE_DOC = 1;
+    public const METATYPE_REP = 2;
+    public const METATYPE_REG = 3;
+    public const METATYPE_REF = 4;
+    public const METATYPE_SER = 5;
 
     public static function getNames() {
         $list = array();
