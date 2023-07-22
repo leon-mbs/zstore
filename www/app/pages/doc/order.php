@@ -28,8 +28,7 @@ use Zippy\Html\Link\SubmitLink;
  */
 class Order extends \App\Pages\Base
 {
-
-    public  $_tovarlist = array();
+    public $_tovarlist = array();
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = 0;
@@ -53,15 +52,15 @@ class Order extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('salesource', H::getSaleSources(), H::getDefSaleSource()));
 
 
-          
+
         $this->docform->add(new TextInput('editbonus'));
         $this->docform->add(new SubmitButton('bbonus'))->onClick($this, 'onBonus');
         $this->docform->add(new Label('bonus', 0));
-       
+
         $this->docform->add(new TextInput('edittotaldisc'));
         $this->docform->add(new SubmitButton('btotaldisc'))->onClick($this, 'onTotaldisc');
         $this->docform->add(new Label('totaldisc', 0));
-        
+
 
 
         $this->docform->add(new TextInput('payed', 0));
@@ -97,7 +96,7 @@ class Order extends \App\Pages\Base
         $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
         $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
         $this->editdetail->add(new ClickLink('opencatpan', $this, 'onOpenCatPan'));
-  
+
         $this->editdetail->add(new Label('qtystock'));
         $this->editdetail->add(new Label('pricestock'));
         $this->editdetail->add(new SubmitLink('addnewitem'))->onClick($this, 'addnewitemOnClick');
@@ -145,14 +144,14 @@ class Order extends \App\Pages\Base
 
             $this->docform->bonus->setText($this->_doc->headerdata['bonus']);
             $this->docform->editbonus->setText($this->_doc->headerdata['bonus']);
-  
+
             $this->docform->totaldisc->setText($this->_doc->headerdata['totaldisc']);
             $this->docform->edittotaldisc->setText($this->_doc->headerdata['totaldisc']);
-            
+
             if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
                 $this->_doc->payed = $this->_doc->headerdata['payed'];
             }
-         
+
 
             $this->docform->payed->setText(H::fa($this->_doc->payed));
 
@@ -162,9 +161,9 @@ class Order extends \App\Pages\Base
             $this->docform->address->setText($this->_doc->headerdata['ship_address']);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
-            
+
             $this->OnCinfo($this->_doc->customer_id);
-            
+
 
             $this->_tovarlist = $this->_doc->unpackDetails('detaildata');
         } else {
@@ -196,17 +195,17 @@ class Order extends \App\Pages\Base
                         $this->OnDelivery($this->docform->delivery);
                         $this->docform->production->setChecked($basedoc->headerdata['production']);
                         $this->_tovarlist = $basedoc->unpackDetails('detaildata');
-  
- 
-                        $this->docform->total->setText( H::fa($basedoc->amount));
+
+
+                        $this->docform->total->setText(H::fa($basedoc->amount));
 
                         $this->calcPay();
-                 
+
 
                     }
-                     
-                    
-                    
+
+
+
                 }
             }
         }
@@ -243,10 +242,10 @@ class Order extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
-        $rowid =  array_search($item,$this->_tovarlist,true);
- 
+        $rowid =  array_search($item, $this->_tovarlist, true);
+
         $this->_tovarlist = array_diff_key($this->_tovarlist, array($rowid => $this->_tovarlist[$rowid]));
- 
+
         $this->docform->detail->Reload();
         $this->calcTotal();
         $this->calcPay();
@@ -273,7 +272,7 @@ class Order extends \App\Pages\Base
         $this->editdetail->edittovar->setKey($item->item_id);
         $this->editdetail->edittovar->setText($item->itemname);
 
-        $this->_rowid =  array_search($item,$this->_tovarlist,true);
+        $this->_rowid =  array_search($item, $this->_tovarlist, true);
 
     }
 
@@ -288,43 +287,43 @@ class Order extends \App\Pages\Base
         }
 
         $item = Item::load($id);
-        
+
         $item->quantity = $this->editdetail->editquantity->getText();
 
         $item->price = $this->editdetail->editprice->getText();
-     
+
 
         $item->disc = '';
         $item->pureprice = $item->getPurePrice();
         if($item->pureprice > $item->price) {
-             $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;    
+            $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;
         }
-     
-     
-     
+
+
+
         $item->desc = $this->editdetail->editdesc->getText();
 
         if($this->_rowid == -1) {
             $this->_tovarlist[] = $item;
-            $this->addrowOnClick(null);  
-            $this->setInfo("Позиція додана") ;         
+            $this->addrowOnClick(null);
+            $this->setInfo("Позиція додана") ;
             //очищаем  форму
             $this->editdetail->edittovar->setKey(0);
             $this->editdetail->edittovar->setText('');
 
             $this->editdetail->editquantity->setText("1");
-              
+
         } else {
-           $this->_tovarlist[$this->_rowid] = $item; 
-           $this->cancelrowOnClick(null);
+            $this->_tovarlist[$this->_rowid] = $item;
+            $this->cancelrowOnClick(null);
 
-        }        
+        }
 
-     
+
         $this->docform->detail->Reload();
         $this->calcTotal();
-        $this->calcPay();        
-        
+        $this->calcPay();
+
     }
 
     public function cancelrowOnClick($sender) {
@@ -338,8 +337,8 @@ class Order extends \App\Pages\Base
 
         $this->editdetail->editprice->setText("");
         $this->wselitem->setVisible(false);
-          
-        
+
+
     }
 
     public function savedocOnClick($sender) {
@@ -371,7 +370,7 @@ class Order extends \App\Pages\Base
         $this->_doc->amount = $this->docform->total->getText();
 
         $this->_doc->payamount = $this->docform->payamount->getText();
-  
+
 
         $this->_doc->headerdata['bonus'] = $this->docform->bonus->getText();
         $this->_doc->headerdata['totaldisc'] = $this->docform->totaldisc->getText();
@@ -386,44 +385,44 @@ class Order extends \App\Pages\Base
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
-      
-         
+
+
         try {
             if ($this->_basedocid > 0) {
                 $this->_doc->parent_id = $this->_basedocid;
                 $this->_basedocid = 0;
             }
-               $this->_doc->payed = 0;
-               $this->_doc->headerdata['payed'] = 0;
-               $this->_doc->headerdata['payment'] = 0;
-                  
+            $this->_doc->payed = 0;
+            $this->_doc->headerdata['payed'] = 0;
+            $this->_doc->headerdata['payment'] = 0;
+
             if ($sender->id == 'paydoc') {
-               $this->_doc->payed = $this->docform->payed->getText();
-               $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
-               $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-               
-               if ($this->_doc->payed > $this->_doc->payamount) {
+                $this->_doc->payed = $this->docform->payed->getText();
+                $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+                $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
+
+                if ($this->_doc->payed > $this->_doc->payamount) {
                     $this->setError('Внесена сума більше необхідної');
                     return;
-               }               
-               if ($this->_doc->payed == 0) {
+                }
+                if ($this->_doc->payed == 0) {
                     return;
-               }               
-               if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
+                }
+                if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
                     $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
                     return;
-               }             
-               
-              
+                }
+
+
             }
-            
+
             $this->_doc->save();
 
             if ($sender->id == 'savedoc') {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
 
-                                       
+
             if ($sender->id == 'execdoc' || $sender->id == 'paydoc' || $sender->id == 'topaydoc') {
                 $this->_doc->updateStatus(Document::STATE_INPROCESS);
             }
@@ -437,16 +436,15 @@ class Order extends \App\Pages\Base
             if ($sender->id == 'execdoc') {
                 // App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
             }
-            
-            
-            if (false == \App\ACL::checkShowReg('OrderList',false)) {
+
+
+            if (false == \App\ACL::checkShowReg('OrderList', false)) {
                 App::RedirectHome() ;
+            } else {
+                App::Redirect("\\App\\Pages\\Register\\OrderList");
             }
-            else {
-              App::Redirect("\\App\\Pages\\Register\\OrderList");
-            }
-            
-            
+
+
 
         } catch(\Throwable $ee) {
             global $logger;
@@ -468,16 +466,16 @@ class Order extends \App\Pages\Base
     private function calcTotal() {
 
         $total = 0;
-       
-    
+
+
         foreach ($this->_tovarlist as $item) {
             $item->amount = $item->price * $item->quantity;
-    
+
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
-    
-       
+
+
     }
 
     /**
@@ -504,7 +502,7 @@ class Order extends \App\Pages\Base
         if ($c == 0) {
             $this->setError("Не задано контрагента");
         }
-   
+
 
 
         return !$this->isError();
@@ -522,14 +520,14 @@ class Order extends \App\Pages\Base
         $price = $item->getPriceEx(array(
            'pricetype'=>$pt,
            'customer'=>$customer_id
-         ));   
+         ));
 
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity()));
         $this->editdetail->editprice->setText($price);
         $price = $item->getLastPartion();
-        $this->editdetail->pricestock->setText( H::fa($price));
+        $this->editdetail->pricestock->setText(H::fa($price));
 
-      
+
     }
 
     public function OnAutoCustomer($sender) {
@@ -539,7 +537,7 @@ class Order extends \App\Pages\Base
     public function OnChangeCustomer($sender) {
         $disc = 0;
         $bonus = 0;
-  
+
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
             $customer = Customer::load($customer_id);
@@ -547,13 +545,13 @@ class Order extends \App\Pages\Base
             if (strlen($customer->pricetype) > 4) {
                 $this->docform->pricetype->setValue($customer->pricetype);
             }
-            
-            
+
+
             $this->docform->phone->setText($customer->phone);
             $this->docform->email->setText($customer->email);
             $this->docform->address->setText($customer->address);
             $d= $customer->getDiscount();
-            
+
             if (doubleval($d) > 0) {
                 $disctext = "Постійна знижка {$d}%";
             } else {
@@ -561,15 +559,15 @@ class Order extends \App\Pages\Base
                 if ($bonus > 0) {
                     $disctext = "Нараховано бонусів {$bonus} ";
                 }
-            }            
+            }
             $this->docform->custinfo->setText($disctext);
             $this->docform->custinfo->setVisible(strlen($disctext) >0);
             $this->docform->cinfo->setVisible(false);
-            
-            
-            
+
+
+
             $this->OnCinfo($customer_id);
-            
+
         }
 
 
@@ -578,16 +576,18 @@ class Order extends \App\Pages\Base
         $this->calcPay();
     }
 
-    
-    private  function OnCinfo($customer_id){
+
+    private function OnCinfo($customer_id) {
         $customer_id=intval($customer_id)  ;
-        if($customer_id==0) return;
+        if($customer_id==0) {
+            return;
+        }
 
         $this->docform->cinfo->setVisible(true) ;
-        $this->docform->cinfo->setAttribute('onclick',"customerInfo({$customer_id});" ) ;
-       
+        $this->docform->cinfo->setAttribute('onclick', "customerInfo({$customer_id});") ;
+
     }
-    
+
     public function OnAutoItem($sender) {
         return Item::findArrayAC($sender->getText());
     }
@@ -606,7 +606,7 @@ class Order extends \App\Pages\Base
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
             $this->setError("Не введено назву");
-            return;                         
+            return;
         }
         $cust = new Customer();
         $cust->customer_name = $custname;
@@ -628,7 +628,7 @@ class Order extends \App\Pages\Base
         }
 
         $cust->comment = $this->editcust->editcustcomment->getText();
-        
+
         $cust->type = 1;
         $cust->save();
         $this->docform->customer->setText($cust->customer_name);
@@ -668,8 +668,8 @@ class Order extends \App\Pages\Base
         $this->calcTotal();
     }
 
-  
- 
+
+
     public function onBonus() {
         $this->docform->bonus->setText($this->docform->editbonus->getText());
         $this->calcPay();
@@ -678,10 +678,10 @@ class Order extends \App\Pages\Base
 
     public function onTotaldisc($sender) {
         $this->docform->totaldisc->setText($this->docform->edittotaldisc->getText());
-      
+
         $this->calcPay();
-     
-          
+
+
         $this->goAnkor("tankor");
     }
 
@@ -690,7 +690,7 @@ class Order extends \App\Pages\Base
 
         $bonus = $this->docform->bonus->getText();
         $totaldisc = $this->docform->totaldisc->getText();
-      
+
         if ($bonus > 0) {
             $total -= $bonus;
         }
@@ -698,7 +698,7 @@ class Order extends \App\Pages\Base
             $total -= $totaldisc;
         }
 
-        
+
 
         $this->docform->payamount->setText(H::fa($total));
 
@@ -730,7 +730,7 @@ class Order extends \App\Pages\Base
         $this->editnewitem->setVisible(true);
         $this->editdetail->setVisible(false);
         $this->wselitem->setVisible(false);
-      
+
         $this->editnewitem->clean();
         $this->editnewitem->editnewbrand->setDataList(Item::getManufacturers());
     }
@@ -776,15 +776,15 @@ class Order extends \App\Pages\Base
         $this->editnewitem->setVisible(false);
         $this->editdetail->setVisible(true);
     }
-    
-    public function getPriceByQty($args,$post=null)  {
-        $item = Item::load($args[0]) ;
-        $args[1] = str_replace(',','.',$args[1]) ;
-        $price = $item->getActionPriceByQuantity($args[1] );
-        return  $price;
-        
-    }    
 
-     
-    
+    public function getPriceByQty($args, $post=null) {
+        $item = Item::load($args[0]) ;
+        $args[1] = str_replace(',', '.', $args[1]) ;
+        $price = $item->getActionPriceByQuantity($args[1]);
+        return  $price;
+
+    }
+
+
+
 }

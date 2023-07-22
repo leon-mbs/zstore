@@ -12,7 +12,6 @@ use ZCL\DB\Entity;
  */
 class UserRole extends Entity
 {
-
     /**
      * @see Entity
      *

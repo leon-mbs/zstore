@@ -23,7 +23,6 @@ use App\Entity\Employee;
  */
 class IncomeMoney extends \App\Pages\Base
 {
-
     private $_doc;
 
     public function __construct($docid = 0, $pcustomer_id = 0, $pamount = 0) {
@@ -106,13 +105,13 @@ class IncomeMoney extends \App\Pages\Base
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->customer_id = $this->docform->customer->getKey();
         $this->_doc->payed = $this->_doc->amount;
-        $this->_doc->headerdata['payed'] = $this->_doc->amount;        
+        $this->_doc->headerdata['payed'] = $this->_doc->amount;
         $this->_doc->payment = 0;
 
         if ($this->checkForm() == false) {
             return;
         }
-        
+
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -167,21 +166,21 @@ class IncomeMoney extends \App\Pages\Base
 
             $this->setError("Не введено суму");
         }
-        if ($this->docform->mtype->getValue() == 0  ) {
+        if ($this->docform->mtype->getValue() == 0) {
 
             $this->setError("Не обрано тип доходу");
         }
 
         if ($this->docform->detail->getValue() == 1 || $this->docform->detail->getValue() == 2) {
 
-            if ($this->_doc->customer_id == 0  ) {
+            if ($this->_doc->customer_id == 0) {
                 $this->setError("Не задано контрагента");
             }
         }
 
         if ($this->docform->detail->getValue() == 3) {
 
-            if ($this->_doc->headerdata['emp'] == 0  ) {
+            if ($this->_doc->headerdata['emp'] == 0) {
                 $this->setError("Не обрано співробітника");
             }
         }

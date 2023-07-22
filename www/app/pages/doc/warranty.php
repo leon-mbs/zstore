@@ -22,8 +22,7 @@ use Zippy\Html\Link\SubmitLink;
  */
 class Warranty extends \App\Pages\Base
 {
-
-    public  $_itemlist = array();
+    public $_itemlist = array();
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = 0;
@@ -77,8 +76,8 @@ class Warranty extends \App\Pages\Base
                     $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
                     if ($basedoc->meta_name == 'GoodsIssue') {
-                       $this->_doc->customer_id= $basedoc->customer_id;
-                       $this->_doc->firm_id= $basedoc->firm_id;
+                        $this->_doc->customer_id= $basedoc->customer_id;
+                        $this->_doc->firm_id= $basedoc->firm_id;
                     }
 
                     if (count($basedoc->getChildren('Warranty')) > 0) {
@@ -118,8 +117,8 @@ class Warranty extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
-        $rowid =  array_search($item,$this->_itemlist,true);
-         
+        $rowid =  array_search($item, $this->_itemlist, true);
+
         $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
 
 
@@ -128,9 +127,9 @@ class Warranty extends \App\Pages\Base
 
     public function editOnClick($sender) {
         $item = $sender->owner->getDataItem();
-        
-        $this->_rowid = array_search($item,$this->_itemlist,true) ;
-        
+
+        $this->_rowid = array_search($item, $this->_itemlist, true) ;
+
         $this->editdetail->edittovar->setKey($item->item_id);
         $this->editdetail->edittovar->setText($item->itemname);
 
@@ -160,10 +159,10 @@ class Warranty extends \App\Pages\Base
             $this->setError("Не обрано товар");
             return;
         }
-        
+
         $item = Item::load($id);
-        
-   
+
+
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
         $item->snumber = $this->editdetail->editsn->getText();
@@ -172,10 +171,10 @@ class Warranty extends \App\Pages\Base
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
         } else {
-            $this->_itemlist[$this->_rowid] = $item;    
-        }     
+            $this->_itemlist[$this->_rowid] = $item;
+        }
 
-       
+
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
@@ -220,11 +219,11 @@ class Warranty extends \App\Pages\Base
 
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
-   
+
         if ($this->checkForm() == false) {
             return;
         }
-   
+
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -292,7 +291,7 @@ class Warranty extends \App\Pages\Base
         $item = Item::load($id);
         $this->editdetail->editwarranty->setText($item->warranty);
 
-      
+
     }
 
 }

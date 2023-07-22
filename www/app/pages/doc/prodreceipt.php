@@ -26,8 +26,7 @@ use Zippy\Html\Link\SubmitLink;
  */
 class ProdReceipt extends \App\Pages\Base
 {
-
-    public  $_itemlist  = array();
+    public $_itemlist  = array();
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = 0;
@@ -94,11 +93,11 @@ class ProdReceipt extends \App\Pages\Base
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'Order') {
-                      foreach ($basedoc->unpackDetails('detaildata') as $item) {
-                        $item->price = $item->getLastPartion();
-                        $this->_itemlist[] = $item;
-                      }
-                        
+                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
+                            $item->price = $item->getLastPartion();
+                            $this->_itemlist[] = $item;
+                        }
+
                     }
                 }
                 if ($basedoc->meta_name == 'Task') {
@@ -162,7 +161,7 @@ class ProdReceipt extends \App\Pages\Base
 
         $this->editdetail->edititem->setValue($item->item_id);
 
-        $this->_rowid =  array_search($item,$this->_itemlist,true);
+        $this->_rowid =  array_search($item, $this->_itemlist, true);
 
     }
 
@@ -171,10 +170,10 @@ class ProdReceipt extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
-        $rowid =  array_search($item,$this->_itemlist,true);
- 
+        $rowid =  array_search($item, $this->_itemlist, true);
+
         $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
-        
+
         $this->calcTotal();
         $this->docform->detail->Reload();
     }
@@ -219,9 +218,9 @@ class ProdReceipt extends \App\Pages\Base
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
         } else {
-           $this->_itemlist[$this->_rowid] = $item;            
-        }        
- 
+            $this->_itemlist[$this->_rowid] = $item;
+        }
+
 
         //очищаем  форму
         $this->editdetail->edititem->setValue(0);
@@ -237,7 +236,7 @@ class ProdReceipt extends \App\Pages\Base
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
-        $this->calcTotal();        
+        $this->calcTotal();
     }
 
     public function savedocOnClick($sender) {
@@ -360,7 +359,7 @@ class ProdReceipt extends \App\Pages\Base
         $price = $item->getProdprice();
         $this->editdetail->editprice->setText($price > 0 ? H::fa($price) : '');
 
-      
+
     }
 
 }
