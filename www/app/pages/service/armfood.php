@@ -31,19 +31,18 @@ use Zippy\Html\Link\SubmitLink;
  */
 class ARMFood extends \App\Pages\Base
 {
-
     private $_pricetype;
     private $_worktype = 0;
     private $_pos;
     private $_store;
-    public  $_pt       = -1;
+    public $_pt       = -1;
 
 
     private $_doc;
-    public  $_itemlist = array();
-    public  $_catlist  = array();
-    public  $_prodlist = array();
-    public  $_doclist  = array();
+    public $_itemlist = array();
+    public $_catlist  = array();
+    public $_prodlist = array();
+    public $_doclist  = array();
 
     public function __construct() {
         parent::__construct();
@@ -87,18 +86,18 @@ class ARMFood extends \App\Pages\Base
 
         $this->orderlistpan->add(new ClickLink('neworder', $this, 'onNewOrder'));
         $this->orderlistpan->add(new DataView('orderlist', new ArrayDataSource($this, '_doclist'), $this, 'onDocRow'));
-        $this->orderlistpan->add(new \Zippy\Html\DataList\Paginator('pag',  $this->orderlistpan->orderlist));
+        $this->orderlistpan->add(new \Zippy\Html\DataList\Paginator('pag', $this->orderlistpan->orderlist));
         $this->orderlistpan->orderlist->setPageSize(H::getPG());
 
         $this->orderlistpan->add(new ClickLink('refresh'))->onClick($this, 'updateorderlist');
-        
+
         $this->orderlistpan->add(new Form('searchform'))->onSubmit($this, 'updateorderlist');
         $this->orderlistpan->searchform->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');
         $this->orderlistpan->searchform->add(new TextInput('searchnumber', $filter->searchnumber));
 
         //панель статуса,  просмотр
         $this->orderlistpan->add(new Panel('statuspan'))->setVisible(false);
-     
+
 
         $this->orderlistpan->statuspan->add(new \App\Widgets\DocView('docview'))->setVisible(false);
 
@@ -124,8 +123,8 @@ class ARMFood extends \App\Pages\Base
 
         $this->docpanel->navform->add(new ClickLink('openshift', $this, 'OnOpenShift'));
         $this->docpanel->navform->add(new ClickLink('closeshift', $this, 'OnCloseShift'));
-        
-        
+
+
         $this->docpanel->add(new Form('listsform'))->setVisible(false);
         $this->docpanel->listsform->add(new DataView('itemlist', new ArrayDataSource($this, '_itemlist'), $this, 'onItemRow'));
 
@@ -137,7 +136,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->listsform->add(new TextInput('totaldisc', "0"));
         $this->docpanel->listsform->add(new TextInput('bonus', "0"));
 
-        $this->docpanel->listsform->add(new DropDownChoice('execuser', \App\Entity\User::findArray('username','disabled<>1','username') ));
+        $this->docpanel->listsform->add(new DropDownChoice('execuser', \App\Entity\User::findArray('username', 'disabled<>1', 'username')));
         $this->docpanel->listsform->add(new CheckBox('forbar'));
         $this->docpanel->listsform->add(new TextInput('address'));
         $this->docpanel->listsform->add(new Date('dt', time()));
@@ -148,7 +147,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->listsform->add(new DropDownChoice('delivery', Document::getDeliveryTypes(), 0))->onChange($this, 'OnDelivery');
         $this->docpanel->listsform->add(new ClickLink('addcust'))->onClick($this, 'addcustOnClick');
         $this->docpanel->listsform->add(new Label('custinfo'))->setVisible(false);
-       
+
         $this->docpanel->listsform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docpanel->listsform->customer->onChange($this, 'OnChangeCustomer');
         $this->docpanel->listsform->add(new \Zippy\Html\Link\BookmarkableLink('cinfo'));
@@ -156,9 +155,9 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->listsform->add(new TextInput('editqtyi'));
         $this->docpanel->listsform->add(new TextInput('editqtyq'));
         $this->docpanel->listsform->add(new SubmitButton('beditqty'))->onClick($this, 'editqtyOnClick');
-        
-        
-        
+
+
+
         $this->docpanel->add(new Form('payform'))->setVisible(false);
 
 
@@ -171,7 +170,7 @@ class ARMFood extends \App\Pages\Base
 
 
         $this->docpanel->payform->add(new CheckBox('passfisc'));
- 
+
         $bind = new  \Zippy\Binding\PropertyBinding($this, '_pt');
         $this->docpanel->payform->add(new \Zippy\Html\Form\RadioButton('pfnal', $bind, 1));
         $this->docpanel->payform->add(new \Zippy\Html\Form\RadioButton('pfbeznal', $bind, 2));
@@ -181,7 +180,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->add(new Panel('checkpan'))->setVisible(false);
         $this->docpanel->checkpan->add(new ClickLink('bnewcheck'))->onClick($this, 'onNewOrder');
         $this->docpanel->checkpan->add(new Label('checktext'));
-        $this->docpanel->checkpan->add(new Button('btoprint'))->onClick($this,"OnPrint",true);
+        $this->docpanel->checkpan->add(new Button('btoprint'))->onClick($this, "OnPrint", true);
 
         //добавление нового контрагента
         $this->add(new Form('editcust'))->setVisible(false);
@@ -227,9 +226,9 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->setVisible(true);
 
         $this->docpanel->listsform->setVisible(true);
-        $forbar=$this->docpanel->listsform->forbar->isChecked() ? 1:0;
+        $forbar=$this->docpanel->listsform->forbar->isChecked() ? 1 : 0;
         $this->docpanel->listsform->clean();
-        $this->docpanel->listsform->forbar->setChecked($forbar) ;       
+        $this->docpanel->listsform->forbar->setChecked($forbar) ;
         $this->docpanel->listsform->dt->setDate(time());
         $this->docpanel->listsform->time->setDateTime(time() + 3600);
         $this->docpanel->navform->setVisible(true);
@@ -248,13 +247,13 @@ class ARMFood extends \App\Pages\Base
         $this->orderlistpan->searchform->clean();
 
         $this->docpanel->listsform->delivery->setValue(0);
-  //      $this->docpanel->listsform->execuser->setValue(0);
+        //      $this->docpanel->listsform->execuser->setValue(0);
         $this->OnDelivery($this->docpanel->listsform->delivery);
-        
+
         $this->docpanel->listsform->addcust->setVisible(true) ;
         $this->docpanel->listsform->cinfo->setVisible(false) ;
-          
-        
+
+
     }
 
     public function OnDelivery($sender) {
@@ -311,10 +310,10 @@ class ARMFood extends \App\Pages\Base
 
 
         $this->_catlist = Category::find(" cat_id in(select cat_id from  items where  disabled <>1  ) and detail  not  like '%<nofastfood>1</nofastfood>%' ");
-        usort($this->_catlist, function($a, $b) {
+        usort($this->_catlist, function ($a, $b) {
             return $a->order > $b->order;
         });
-        
+
         $this->docpanel->catpan->catlist->Reload();
     }
 
@@ -324,80 +323,80 @@ class ARMFood extends \App\Pages\Base
         $doc = $doc->cast();
         $row->add(new ClickLink('docnumber', $this, 'OnDocViewClick'))->setValue($doc->document_number);
         $row->add(new Label('state', Document::getStateName($doc->state)));
-        $row->add(new Label('delivery'))->setVisible( ($doc->headerdata['delivery'] ??0) >0 );
+        $row->add(new Label('delivery'))->setVisible(($doc->headerdata['delivery'] ??0) >0);
 
         $row->add(new Label('docamount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
-        
+
         $row->add(new Label('author', $doc->username));
         $row->add(new Label('docnotes', $doc->notes));
         $row->add(new Label('tablenumber', $doc->headerdata['table']));
         $row->add(new Label('rtlist'));
         $t ="<table   style=\"font-size:smaller\"> " ;
-        
+
         $tlist=  $doc->unpackDetails('detaildata')  ;
-        
-        foreach($tlist as $prod ) {
-           $t .="<tr> " ;            
-           $t .="<td style=\"padding:2px\" >{$prod->itemname} </td>" ;            
-           $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->quantity) ."</td>" ;            
-           $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->price) ."</td>" ;            
-           $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->quantity * $prod->price) ."</td>" ;            
-           $t .=  ($prod->myself==1 ? "<td style=\"padding:2px\"> <i class=\"fa fa-bag-shopping\"></i>  </td>" : "<td style=\"padding:2px\">   </td>"   )    ;            
-           $t .="</tr> " ;            
+
+        foreach($tlist as $prod) {
+            $t .="<tr> " ;
+            $t .="<td style=\"padding:2px\" >{$prod->itemname} </td>" ;
+            $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->quantity) ."</td>" ;
+            $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->price) ."</td>" ;
+            $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->quantity * $prod->price) ."</td>" ;
+            $t .=  ($prod->myself==1 ? "<td style=\"padding:2px\"> <i class=\"fa fa-bag-shopping\"></i>  </td>" : "<td style=\"padding:2px\">   </td>")    ;
+            $t .="</tr> " ;
         }
-        
+
         $t .="</table> " ;
-        
-        $row->rtlist->setText($t,true);
-        
- 
+
+        $row->rtlist->setText($t, true);
+
+
         $row->add(new ClickLink('brpay', $this, 'OnStatus')) ;
         $row->add(new ClickLink('bredit', $this, 'OnStatus')) ;
         $row->add(new ClickLink('brclose', $this, 'OnStatus')) ;
         $row->add(new ClickLink('brrefuse', $this, 'OnStatus')) ;
-        
+
         $row->brpay->setVisible(false);
         $row->brclose->setVisible(false);
         $row->brrefuse->setVisible(false);
         $row->bredit->setVisible(false);
 
-        
+
         $haspayment = $doc->hasPayments() ;
         $inprod = $doc->inProcess()  ;
         $hasstore = $doc->hasStore()  ;
-        
-        if ($doc->state < 4 || $doc->state == Document::STATE_INPROCESS ) {
+
+        if ($doc->state < 4 || $doc->state == Document::STATE_INPROCESS) {
             $row->bredit->setVisible(true);
             $row->brrefuse->setVisible(true);
         }
-        
-        if ($doc->payamount > $doc->payed && $doc->state > 4 ) { //к  оплате
+
+        if ($doc->payamount > $doc->payed && $doc->state > 4) { //к  оплате
             $row->brpay->setVisible(true);
         }
-        if ($doc->payamount == $doc->payed && $hasstore ) { 
+        if ($doc->payamount == $doc->payed && $hasstore) {
             $row->brclose->setVisible(true);
         }
-        if ($haspayment ) { 
+        if ($haspayment) {
             $row->bredit->setVisible(false);
         }
-        if ($inprod ) { 
+        if ($inprod) {
             $row->brclose->setVisible(false);
         }
-        
-      
 
-        if ($doc->state == Document::STATE_READYTOSHIP 
-            || $doc->state == Document::STATE_DELIVERED 
-            || $doc->state == Document::STATE_CLOSED 
-            || $doc->state == Document::STATE_FAIL 
-            || $doc->state == Document::STATE_INSHIPMENT 
-            ) { 
+
+
+        if ($doc->state == Document::STATE_READYTOSHIP
+            || $doc->state == Document::STATE_DELIVERED
+            || $doc->state == Document::STATE_CLOSED
+            || $doc->state == Document::STATE_FAIL
+            || $doc->state == Document::STATE_INSHIPMENT
+        ) {
             $row->brpay->setVisible(false);
             $row->brclose->setVisible(false);
             $row->brrefuse->setVisible(false);
             $row->bredit->setVisible(false);
         }
-        
+
     }
 
     public function updateorderlist($sender) {
@@ -437,23 +436,26 @@ class ARMFood extends \App\Pages\Base
     public function onProdRow($row) {
         //  $store_id = $this->setupform->store->getValue();
         $customer_id = $this->docpanel->listsform->customer->getKey()  ;
- 
+
         $prod = $row->getDataItem();
-        
-        $prod->price = $prod->getPriceEx( array(
+
+        $prod->price = $prod->getPriceEx(
+            array(
               'pricetype'=>$this->_pricetype,
               'store'=>$this->_store,
-              'customer'=>$customer_id) 
-             );
-        
+              'customer'=>$customer_id)
+        );
+
         $prod->pureprice = $prod->getPurePrice($this->_pricetype, $this->_store);
-        
+
         $prod->disc=0;
         if($prod->price >0 && $prod->pureprice >0) {
-           $prod->disc = number_format((1 - ($prod->price/($prod->pureprice)))*100, 1, '.', '') ;    
+            $prod->disc = number_format((1 - ($prod->price/($prod->pureprice)))*100, 1, '.', '') ;
         }
-        if($prod->disc < 0) $prod->disc=0;        
-        
+        if($prod->disc < 0) {
+            $prod->disc=0;
+        }
+
         if($prod->disc ==0 && $customer_id >0) {
             $c = Customer::load($customer_id) ;
             $d = $c->getDiscount();
@@ -471,7 +473,7 @@ class ARMFood extends \App\Pages\Base
     //выбрана  группа
     public function onCatBtnClick($sender) {
         $cat = $sender->getOwner()->getDataItem();
-        $catlist = Category::find(" cat_id in(select cat_id from  items where  disabled <>1  ) and detail  not  like '%<nofastfood>1</nofastfood>%' and   coalesce(parent_id,0)= " . $cat->cat_id,"cat_name");
+        $catlist = Category::find(" cat_id in(select cat_id from  items where  disabled <>1  ) and detail  not  like '%<nofastfood>1</nofastfood>%' and   coalesce(parent_id,0)= " . $cat->cat_id, "cat_name");
         if (count($catlist) > 0) {
             $this->_catlist = $catlist;
             $this->docpanel->catpan->catlist->Reload();
@@ -497,13 +499,13 @@ class ARMFood extends \App\Pages\Base
 
         $found=false;
         foreach($this->_itemlist as $i=>$it) {
-             if($it->item_id==$item->item_id && intval($it->foodstate )==0 )            {
+            if($it->item_id==$item->item_id && intval($it->foodstate)==0) {
                 $this->_itemlist[$i]->quantity++;
                 $found = true;
-                break;        
-             }
+                break;
+            }
         }
-        
+
         if (!$found) {
             $item->myself = $this->_worktype == 0;
             if ($this->_tvars['pack'] == false) {
@@ -516,7 +518,7 @@ class ARMFood extends \App\Pages\Base
         }
 
         $this->_catlist = Category::find(" cat_id in(select cat_id from  items where  disabled <>1  ) and detail  not  like '%<nofastfood>1</nofastfood>%' ");
-        usort($this->_catlist, function($a, $b) {
+        usort($this->_catlist, function ($a, $b) {
             return $a->order > $b->order;
         });
         $this->docpanel->catpan->catlist->Reload();
@@ -540,8 +542,8 @@ class ARMFood extends \App\Pages\Base
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docpanel->navform->barcode->getText());
-         $code0 = $code;
-               $code = ltrim($code,'0');
+        $code0 = $code;
+        $code = ltrim($code, '0');
 
         $this->docpanel->navform->barcode->setText('');
         if ($code == '') {
@@ -584,23 +586,25 @@ class ARMFood extends \App\Pages\Base
         $item->pureprice = $pureprice;
         $item->disc=0;
         if($item->price >0 && $item->pureprice >0) {
-           $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;    
+            $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;
         }
-        if($item->disc < 0) $item->disc=0;        
-       
+        if($item->disc < 0) {
+            $item->disc=0;
+        }
+
         $customer_id = $this->docpanel->listsform->customer->getKey()  ;
-        
+
         if($item->disc ==0 && $customer_id >0) {
             $c = Customer::load($customer_id) ;
             $d = $c->getDiscount();
             if($d >0) {
                 $item->disc = $d;
-                $item->price = H::fa($item->pureprice - ($item->pureprice*$d/100 )) ;
-                
+                $item->price = H::fa($item->pureprice - ($item->pureprice*$d/100)) ;
+
             }
         }
-        
- 
+
+
         $item->quantity = 1;
         $item->myself = $this->_worktype == 0;
         if ($this->_tvars['pack'] == false) {
@@ -623,8 +627,8 @@ class ARMFood extends \App\Pages\Base
         $row->add(new Label('item_code', $item->item_code));
         $qty = H::fqty($item->quantity) ;
         $row->add(new Label('qty', $qty));
-         
-        
+
+
         $row->add(new Label('disc', '-'. H::fa1($item->disc)));
         $row->add(new Label('price', H::fa($item->price)));
         $row->add(new Label('amount', H::fa($item->price * $item->quantity)));
@@ -633,25 +637,25 @@ class ARMFood extends \App\Pages\Base
         $row->add(new ClickLink('qtymin'))->onClick($this, 'onQtyClick');
         $row->add(new ClickLink('qtyplus'))->onClick($this, 'onQtyClick');
         $row->add(new ClickLink('removeitem'))->onClick($this, 'onDelItemClick');
-        $rowid =  array_search($item,$this->_itemlist,true);
-        
-        $row->add(new Label('qtyedit'))->setAttribute('onclick',"qtyedit({$rowid},{$qty})") ;
+        $rowid =  array_search($item, $this->_itemlist, true);
+
+        $row->add(new Label('qtyedit'))->setAttribute('onclick', "qtyedit({$rowid},{$qty})") ;
 
 
 
-      
+
         $state="Новий";
-        if ($item->foodstate == 1) {        
-           $state="Готуєтся";            
+        if ($item->foodstate == 1) {
+            $state="Готуєтся";
         }
-        if ($item->foodstate == 2) {        
-           $state="Готово";            
+        if ($item->foodstate == 2) {
+            $state="Готово";
         }
-        if ($item->foodstate == 3) {        
-           $state="Видано";            
+        if ($item->foodstate == 3) {
+            $state="Видано";
         }
         $row->add(new Label('state', $state));
-        
+
         if ($item->foodstate > 0) {
             $row->removeitem->setVisible(false);
             $row->myselfon->setVisible(false);
@@ -687,15 +691,15 @@ class ARMFood extends \App\Pages\Base
 
     public function onDelItemClick($sender) {
         $item = $sender->getOwner()->getDataItem();
-        
-        $rowid =  array_search($item,$this->_itemlist,true);
+
+        $rowid =  array_search($item, $this->_itemlist, true);
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
 
         $this->docpanel->listsform->itemlist->Reload();
         $this->calcTotal();
     }
- 
+
     public function OnDocViewClick($sender) {
 
         $this->_doc = Document::load($sender->getOwner()->getDataItem()->document_id);
@@ -706,7 +710,7 @@ class ARMFood extends \App\Pages\Base
     public function OnDocView() {
         $this->orderlistpan->statuspan->setVisible(true);
 
-     
+
 
         $this->orderlistpan->statuspan->docview->setDoc($this->_doc);
         $this->orderlistpan->orderlist->Reload(false);
@@ -716,8 +720,8 @@ class ARMFood extends \App\Pages\Base
 
     public function onStatus($sender) {
         $this->_doc = Document::load($sender->getOwner()->getDataItem()->document_id);
-         
-        if ( strpos($sender->id,  'bredit') === 0) {
+
+        if (strpos($sender->id, 'bredit') === 0) {
             $this->orderlistpan->setVisible(false);
             $this->orderlistpan->statuspan->setVisible(false);
             $this->docpanel->setVisible(true);
@@ -754,15 +758,15 @@ class ARMFood extends \App\Pages\Base
             $this->calcTotal();
             return;
         }
-        if (strpos($sender->id , 'brclose') === 0) {
+        if (strpos($sender->id, 'brclose') === 0) {
             $this->_doc->updateStatus(Document::STATE_CLOSED);
 
         }
-        if (strpos($sender->id , 'brrefuse') === 0) {
+        if (strpos($sender->id, 'brrefuse') === 0) {
             $this->_doc->updateStatus(Document::STATE_FAIL);
 
         }
-        if (strpos($sender->id , 'brpay') === 0) {
+        if (strpos($sender->id, 'brpay') === 0) {
 
             $this->docpanel->setVisible(true);
 
@@ -774,38 +778,38 @@ class ARMFood extends \App\Pages\Base
             $this->docpanel->navform->setVisible(false);
             $this->docpanel->payform->clean();
             $amount = $this->_doc->payamount;
-       
 
-            $this->docpanel->payform->pfforpay->setText(H::fa($amount  ));
-       
+
+            $this->docpanel->payform->pfforpay->setText(H::fa($amount));
+
             $this->docpanel->payform->pfrest->setText(H::fa(0));
             $this->docpanel->payform->bbackitems->setVisible(false);
 
             return;
         }
-     //   $this->orderlistpan->statuspan->setVisible(false);
+        //   $this->orderlistpan->statuspan->setVisible(false);
 
 
         $this->updateorderlist(null);
 
     }
-  
+
     public function calcTotal() {
         $amount = 0;
-       
+
         foreach ($this->_itemlist as $item) {
             $amount += ($item->quantity * $item->price);
         }
         $this->docpanel->listsform->totalamount->setText(H::fa($amount));
 
-        
-        
+
+
     }
 
     public function OnAutoCustomer($sender) {
         return \App\Entity\Customer::getList($sender->getText(), 1);
     }
- 
+
     // в   доставку
     public function todelOnClick($sender) {
         $this->_doc->headerdata['delivery'] = $this->docpanel->listsform->delivery->getValue();
@@ -833,7 +837,7 @@ class ARMFood extends \App\Pages\Base
             //списываем  со  склада
             try {
                 $this->_doc = $this->_doc->cast();
-                
+
                 $this->_doc->DoStore();
                 $this->_doc->save();
 
@@ -864,15 +868,15 @@ class ARMFood extends \App\Pages\Base
     }
 
     // в  производство
-    public function toprodOnClick($sender) { 
-        
+    public function toprodOnClick($sender) {
+
         if ($this->createdoc() == false) {
             return;
         }
-         
+
         $this->toprod()  ;
-     
-        $this->onNewOrder();                
+
+        $this->onNewOrder();
     }
     private function toprod() {
 
@@ -883,36 +887,36 @@ class ARMFood extends \App\Pages\Base
         $n->dateshow = time();
         $n->message = serialize(array('cmd' => 'update'));
 
-        
-        foreach($this->_itemlist as $i=>$p){
+
+        foreach($this->_itemlist as $i=>$p) {
             if(intval($this->_itemlist[$i]->foodstate) ==0) {
-               $this->_itemlist[$i]->foodstate = 1;     
+                $this->_itemlist[$i]->foodstate = 1;
             }
-            
-        }       
-        
+
+        }
+
         $this->_doc->packDetails('detaildata', $this->_itemlist);
         $this->_doc->save();
-        
-            
-        if( $this->_doc->state== Document::STATE_NEW)  {
+
+
+        if($this->_doc->state== Document::STATE_NEW) {
             $this->_doc->updateStatus(Document::STATE_INPROCESS);
             $n->message = serialize(array('cmd' => 'new','document_id'=>$this->_doc->document_id));
-            
-        }
-        $n->save();            
 
-              
+        }
+        $n->save();
+
+
 
         $this->setInfo('Відправлено у виробництво');
 
     }
 
-    
 
-    
-    
-  // сохранить  
+
+
+
+    // сохранить
     public function tosaveOnClick($sender) {
 
 
@@ -920,22 +924,22 @@ class ARMFood extends \App\Pages\Base
             return;
         }
 
-     
-            
-            if( $this->_doc->state != Document::STATE_NEW)  {
-                $this->_doc->updateStatus(Document::STATE_EDITED);
-                
-            }
 
-              
-//            $this->_doc = $this->_doc->cast();
 
-            $this->_doc->save();
-   
+        if($this->_doc->state != Document::STATE_NEW) {
+            $this->_doc->updateStatus(Document::STATE_EDITED);
 
-            $this->onNewOrder();
+        }
+
+
+        //            $this->_doc = $this->_doc->cast();
+
+        $this->_doc->save();
+
+
+        $this->onNewOrder();
     }
- 
+
     //к  оплате
     public function topayOnClick($sender) {
 
@@ -943,7 +947,7 @@ class ARMFood extends \App\Pages\Base
             return;
         }
         $this->docpanel->payform->passfisc->setChecked(false);
- 
+
         $this->docpanel->payform->setVisible(true);
         $this->docpanel->listsform->setVisible(false);
         $this->docpanel->navform->setVisible(false);
@@ -952,10 +956,10 @@ class ARMFood extends \App\Pages\Base
         $amount = $this->docpanel->listsform->totalamount->getText();
         $bonus = $this->docpanel->listsform->bonus->getText();
         $totaldisc = $this->docpanel->listsform->totaldisc->getText();
-        $amount =  H::fa($amount - floatval($totaldisc)  - floatval($bonus) ) ;
-   
+        $amount =  H::fa($amount - floatval($totaldisc)  - floatval($bonus)) ;
 
-        $this->docpanel->payform->pfforpay->setText(H::fa($amount ));
+
+        $this->docpanel->payform->pfforpay->setText(H::fa($amount));
         $this->docpanel->payform->pfrest->setText(H::fa(0));
         $this->docpanel->payform->bbackitems->setVisible(true);
 
@@ -963,14 +967,14 @@ class ARMFood extends \App\Pages\Base
     }
 
     public function editqtyOnClick($sender) {
-       $qty =  $this->docpanel->listsform->editqtyq->getText();
-       $id  =  $this->docpanel->listsform->editqtyi->getText();
-       $this->_itemlist[$id]->quantity = H::fqty($qty); 
-       $this->docpanel->listsform->itemlist->Reload();
-       $this->calcTotal();
-       
-    }    
-    
+        $qty =  $this->docpanel->listsform->editqtyq->getText();
+        $id  =  $this->docpanel->listsform->editqtyi->getText();
+        $this->_itemlist[$id]->quantity = H::fqty($qty);
+        $this->docpanel->listsform->itemlist->Reload();
+        $this->calcTotal();
+
+    }
+
     //Оплата
     public function payandcloseOnClick() {
 
@@ -979,7 +983,7 @@ class ARMFood extends \App\Pages\Base
             return;
         }
 
-        
+
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
 
@@ -1005,63 +1009,63 @@ class ARMFood extends \App\Pages\Base
                 $this->setError("Недостатня сума");
                 return;
             }
-            
+
             if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $this->_doc->customer_id == 0) {
                 $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
                 return;
-            }  
-            
-            if ( doubleval($this->_doc->headerdata['bonus'] ) >0 && $this->_doc->customer_id == 0) {
+            }
+
+            if (doubleval($this->_doc->headerdata['bonus']) >0 && $this->_doc->customer_id == 0) {
                 $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
                 return;
-            }            
-            if ( doubleval($this->_doc->headerdata['bonus'] ) >0  ) {
+            }
+            if (doubleval($this->_doc->headerdata['bonus']) >0) {
                 $c = Customer::load($this->_doc->customer_id);
-                if($this->_doc->headerdata['bonus']  > $c->getBonus() ) {
-                   $this->setError("Недостатньо бонусів");    
-                   return;                   
+                if($this->_doc->headerdata['bonus']  > $c->getBonus()) {
+                    $this->setError("Недостатньо бонусів");
+                    return;
                 }
-                
-                
-            }            
-            if ( doubleval($this->_doc->headerdata['exch2b'] ) >0 && $this->_doc->customer_id == 0) {
+
+
+            }
+            if (doubleval($this->_doc->headerdata['exch2b']) >0 && $this->_doc->customer_id == 0) {
                 $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
                 return;
-            }            
-                      
+            }
+
             $this->_doc->save();
             $this->_doc->DoStore();
             $this->_doc->DoPayment();
 
 
-            if ($this->_doc->payamount <= $this->_doc->payed ) {
+            if ($this->_doc->payamount <= $this->_doc->payed) {
 
                 if($this->_pos->usefisc == 1 && $this->_tvars['checkbox'] == true) {
-                
-                    $cb = new  \App\Modules\CB\CheckBox($this->_pos->cbkey,$this->_pos->cbpin) ;
+
+                    $cb = new  \App\Modules\CB\CheckBox($this->_pos->cbkey, $this->_pos->cbpin) ;
                     $ret = $cb->Check($this->_doc) ;
-                    
+
                     if(is_array($ret)) {
-                      $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
-                      $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
-                      $this->_doc->headerdata["checkbox"] = $ret['checkid'];
+                        $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                        $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
+                        $this->_doc->headerdata["checkbox"] = $ret['checkid'];
                     } else {
                         $this->setError($ret);
                         $conn->RollbackTrans();
                         return;
-                                  
+
                     }
-                
-                }   
+
+                }
 
                 if($this->docpanel->payform->passfisc->isChecked()) {
-                  $ret = \App\Modules\PPO\PPOHelper::check($this->_doc,true);
+                    $ret = \App\Modules\PPO\PPOHelper::check($this->_doc, true);
 
-                }   else {
-      
+                } else {
+
                     if ($this->_pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
                         $this->_doc->headerdata["fiscalnumberpos"]  =  $this->_pos->fiscalnumber;
-     
+
 
                         $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
                         if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
@@ -1075,7 +1079,7 @@ class ARMFood extends \App\Pages\Base
                             $conn->RollbackTrans();
                             return;
                         } else {
-                            
+
                             if ($ret['docnumber'] > 0) {
                                 $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                                 $this->_pos->save();
@@ -1087,31 +1091,29 @@ class ARMFood extends \App\Pages\Base
                             }
                         }
                     }
- 
+
                 }
-         
-                
+
+
             }
-  
-  
+
+
             // если оплачено
-            if ($this->_doc->payamount <= $this->_doc->payed ) {
-                if ($this->_worktype == 1)  // в  производство
-                {
+            if ($this->_doc->payamount <= $this->_doc->payed) {
+                if ($this->_worktype == 1) {  // в  производство
                     $this->toprod()  ;
                 }
-                if ($this->_worktype == 0)  
-                {
-                     if ($this->_doc->state < 4) {
+                if ($this->_worktype == 0) {
+                    if ($this->_doc->state < 4) {
                         $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                     }
+                    }
 
-                     $this->_doc->updateStatus(Document::STATE_CLOSED);                         
+                    $this->_doc->updateStatus(Document::STATE_CLOSED);
                 }
             }
-            
-            
-            
+
+
+
             $conn->CommitTrans();
 
         } catch(\Throwable $ee) {
@@ -1143,7 +1145,7 @@ class ARMFood extends \App\Pages\Base
 
         if (count($this->_itemlist) == 0) {
             $this->setError('Не введено позиції');
-            return false;  
+            return false;
         }
         if ($idnew) {
             $this->_doc->document_number = $this->_doc->nextNumber();
@@ -1153,16 +1155,16 @@ class ARMFood extends \App\Pages\Base
                 $this->_doc->document_number = $next;
                 if (strlen($next) == 0) {
                     $this->setError('Не створено унікальный номер документа');
-                    return false;   
+                    return false;
                 }
             }
         }
- 
+
         $execuser = $this->docpanel->listsform->execuser->getValue() ;
         if($execuser >0) {
-           $this->_doc->user_id = $execuser; 
+            $this->_doc->user_id = $execuser;
         }
-        $this->_doc->headerdata['forbar'] =  $this->docpanel->listsform->forbar->isChecked() ? 1:0;
+        $this->_doc->headerdata['forbar'] =  $this->docpanel->listsform->forbar->isChecked() ? 1 : 0;
         $this->_doc->headerdata['arm'] = 1;
         $this->_doc->document_date = time();
         $this->_doc->headerdata['time'] = time();
@@ -1204,7 +1206,7 @@ class ARMFood extends \App\Pages\Base
 
         return true;
     }
- 
+
     //добавление нового контрагента
     public function addcustOnClick($sender) {
         $this->editcust->setVisible(true);
@@ -1273,33 +1275,33 @@ class ARMFood extends \App\Pages\Base
             }
             $d = $customer->getDiscount();
             if($d >0) {
-               $this->docpanel->listsform->custinfo->setText("Знижка {$d}%");
-            }  else{
+                $this->docpanel->listsform->custinfo->setText("Знижка {$d}%");
+            } else {
                 $b= $customer->getBonus();
-                if($b>0){
-                  $this->docpanel->listsform->custinfo->setText("Бонусiв {$b}");                
+                if($b>0) {
+                    $this->docpanel->listsform->custinfo->setText("Бонусiв {$b}");
                 }
-            }          
-            
-            
-            if($d > 0) {
-                
-                  foreach($this->_itemlist as $it) {
-                      if($it->disc == 0  ) {
-
-                          $it->disc = $d;
-                          $it->price = H::fa($it->pureprice - ($it->pureprice*$d/100 )) ;
-                      }  
-                      
-                  } 
-
-                  $this->docpanel->listsform->itemlist->Reload();
-                  $this->calcTotal();            
             }
-             $this->docpanel->listsform->addcust->setVisible(false) ;
-             $this->docpanel->listsform->cinfo->setVisible(true) ;
-             $this->docpanel->listsform->cinfo->setAttribute('onclick',"customerInfo({$customer_id});" ) ;
- 
+
+
+            if($d > 0) {
+
+                foreach($this->_itemlist as $it) {
+                    if($it->disc == 0) {
+
+                        $it->disc = $d;
+                        $it->price = H::fa($it->pureprice - ($it->pureprice*$d/100)) ;
+                    }
+
+                }
+
+                $this->docpanel->listsform->itemlist->Reload();
+                $this->calcTotal();
+            }
+            $this->docpanel->listsform->addcust->setVisible(false) ;
+            $this->docpanel->listsform->cinfo->setVisible(true) ;
+            $this->docpanel->listsform->cinfo->setAttribute('onclick', "customerInfo({$customer_id});") ;
+
 
         } else {
             return;
@@ -1317,7 +1319,7 @@ class ARMFood extends \App\Pages\Base
             $msg = @unserialize($n->message);
 
             $doc = Document::load(intval($msg['document_id']));
-         
+
             if ($doc->state == Document::STATE_NEW) {
                 $cntorder++;
             }
@@ -1325,102 +1327,102 @@ class ARMFood extends \App\Pages\Base
 
         \App\Entity\Notify::markRead(\App\Entity\Notify::ARMFOOD);
 
-        
-        
+
+
         return json_encode(array( 'cntorder' => $cntorder), JSON_UNESCAPED_UNICODE);
     }
 
-    public  function getProdItems ($args,$post=null){
-         $itemlist = [];
-         $docs = Document::find(" meta_name='OrderFood' and  state=". Document::STATE_INPROCESS,'document_id desc'); 
-         foreach($docs as $doc) {
+    public function getProdItems($args, $post=null) {
+        $itemlist = [];
+        $docs = Document::find(" meta_name='OrderFood' and  state=". Document::STATE_INPROCESS, 'document_id desc');
+        foreach($docs as $doc) {
             foreach ($doc->unpackDetails('detaildata') as $rowid=>$item) {
-              $fs = intval($item->foodstate);
-              if($fs==2) {
-                  $itemlist[] = array(
-                     'name'=>$item->itemname,
-                     'table'=>$doc->headerdata['table'] ?? '',
-                     'document_id'=>$doc->document_id,
-                     'rowid'=>$rowid,
-                     'ordern' =>$doc->document_number
-                  );       
-              }
-              
-            }            
-         }
-          
-        
-         return json_encode($itemlist, JSON_UNESCAPED_UNICODE);      
+                $fs = intval($item->foodstate);
+                if($fs==2) {
+                    $itemlist[] = array(
+                       'name'=>$item->itemname,
+                       'table'=>$doc->headerdata['table'] ?? '',
+                       'document_id'=>$doc->document_id,
+                       'rowid'=>$rowid,
+                       'ordern' =>$doc->document_number
+                    );
+                }
+
+            }
+        }
+
+
+        return json_encode($itemlist, JSON_UNESCAPED_UNICODE);
     }
-    
+
     //выдан
     public function onReady($args, $post) {
-     
-         
+
+
         $doc = Document::load($args[0]);
         $doc = $doc->cast();
-        
+
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
-      
-             
+
+
             $items = $doc->unpackDetails('detaildata');
-            if(isset($items[$args[1]]))  {
-               $items[$args[1]]->foodstate = 3;  //выдан
+            if(isset($items[$args[1]])) {
+                $items[$args[1]]->foodstate = 3;  //выдан
             }
-            
+
             $doc->packDetails('detaildata', $items);
             $doc->save();
 
-            if ($this->_worktype ==1)  {
-                 $inprod = $doc->inProcess()  ;             
-                 if($inprod==false) {    //если  все  выданы
-                    $doc->updateStatus(Document::STATE_CLOSED);                         
-                 }
+            if ($this->_worktype ==1) {
+                $inprod = $doc->inProcess()  ;
+                if($inprod==false) {    //если  все  выданы
+                    $doc->updateStatus(Document::STATE_CLOSED);
+                }
             }
-            
-    
+
+
             $conn->CommitTrans();
-        
+
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
-       
-            $logger->error(  " Арм  кассира " . $ee->getMessage());
-            
-            return json_encode(['error'=>$ee->getMessage() ], JSON_UNESCAPED_UNICODE);              
 
-           
-        }  
-   
-        return json_encode([], JSON_UNESCAPED_UNICODE);          
-        
-              
+            $logger->error(" Арм  кассира " . $ee->getMessage());
+
+            return json_encode(['error'=>$ee->getMessage() ], JSON_UNESCAPED_UNICODE);
+
+
+        }
+
+        return json_encode([], JSON_UNESCAPED_UNICODE);
+
+
     }
-   
+
     //фискализация
     public function OnOpenShift() {
-        
-        
+
+
         if($this->_tvars['checkbox'] == true) {
-       
-         
-            $cb = new  \App\Modules\CB\CheckBox($this->_pos->cbkey,$this->_pos->cbpin) ;
+
+
+            $cb = new  \App\Modules\CB\CheckBox($this->_pos->cbkey, $this->_pos->cbpin) ;
             $ret = $cb->OpenShift() ;
-            
+
             if($ret === true) {
                 $this->setSuccess("Зміна відкрита");
             } else {
                 $this->setError($ret);
             }
-         
-          
-            
+
+
+
             return;
-        }        
-        
-        
+        }
+
+
         $ret = \App\Modules\PPO\PPOHelper::shift($this->_pos->pos_id, true);
         if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
             //повторяем для  нового номера
@@ -1436,8 +1438,8 @@ class ARMFood extends \App\Pages\Base
             if ($ret['doclocnumber'] > 0) {
                 $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                 $this->_pos->save();
-             //   $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
-            }  
+                //   $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+            }
             \App\Modules\PPO\PPOHelper::clearStat($this->_pos->pos_id);
         }
 
@@ -1448,17 +1450,17 @@ class ARMFood extends \App\Pages\Base
 
     public function OnCloseShift($sender) {
 
-       if($this->_tvars['checkbox'] == true) {
-            
-            $cb = new  \App\Modules\CB\CheckBox($this->_pos->cbkey,$this->_pos->cbpin) ;
+        if($this->_tvars['checkbox'] == true) {
+
+            $cb = new  \App\Modules\CB\CheckBox($this->_pos->cbkey, $this->_pos->cbpin) ;
             $ret = $cb->CloseShift() ;
-            
+
             if($ret === true) {
                 $this->setSuccess("Зміна закрита");
             } else {
                 $this->setError($ret);
             }
-            
+
             return;
         }
 
@@ -1518,42 +1520,40 @@ class ARMFood extends \App\Pages\Base
             if ($ret['doclocnumber'] > 0) {
                 $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                 $this->_pos->save();
-            }  
+            }
             \App\Modules\PPO\PPOHelper::clearStat($this->_pos->pos_id);
         }
 
 
         return true;
     }
-   
+
     public function OnPrint($sender) {
-     
- 
-        if(intval(\App\System::getUser()->prtype ) == 0){
-  
-              
+
+
+        if(intval(\App\System::getUser()->prtype) == 0) {
+
+
             $this->addAjaxResponse("  $('#checktext').printThis() ");
-         
+
             return;
         }
-        
-     try{
-        $doc = $this->_doc->cast();
-        $xml = $doc->generatePosReport(true);
 
-        $buf = \App\Printer::xml2comm($xml);
-        $b = json_encode($buf) ;                   
-          
-        $this->addAjaxResponse("  sendPS('{$b}') ");      
-      }catch(\Exception $e){
-           $message = $e->getMessage()  ;
-           $message = str_replace(";","`",$message)  ;
-           $this->addAjaxResponse(" toastr.error( '{$message}' )         ");  
-                   
+        try {
+            $doc = $this->_doc->cast();
+            $xml = $doc->generatePosReport(true);
+
+            $buf = \App\Printer::xml2comm($xml);
+            $b = json_encode($buf) ;
+
+            $this->addAjaxResponse("  sendPS('{$b}') ");
+        } catch(\Exception $e) {
+            $message = $e->getMessage()  ;
+            $message = str_replace(";", "`", $message)  ;
+            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
+
         }
- 
-    }        
-    
-}
 
- 
+    }
+
+}

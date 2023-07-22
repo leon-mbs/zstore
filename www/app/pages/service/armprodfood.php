@@ -23,38 +23,35 @@ use Zippy\Html\Panel;
  */
 class ArmProdFood extends \App\Pages\Base
 {
-
- 
-
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowSer('ArmProdFood')) {
             return;
         }
- 
+
 
     }
 
- 
+
     public function onReady($args, $post) {
-     
-         
+
+
         $doc = Document::load($args[0]);
         $doc = $doc->cast();
-        
+
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
-      
-             
+
+
             $items = $doc->unpackDetails('detaildata');
-            if(isset($items[$args[1]]))  {
-               $items[$args[1]]->foodstate = 2;  //готово  
+            if(isset($items[$args[1]])) {
+                $items[$args[1]]->foodstate = 2;  //готово
             }
-            
+
             $doc->packDetails('detaildata', $items);
             $doc->save();
-            
+
 
             $isinproces = false;
             foreach ($items as $it) {
@@ -63,8 +60,8 @@ class ArmProdFood extends \App\Pages\Base
                 }
             }
             if ($isinproces == false) {    //все  сделаны
-              
-            //    $doc->updateStatus(Document::STATE_FINISHED);
+
+                //    $doc->updateStatus(Document::STATE_FINISHED);
 
                 if ($doc->headerdata['delivery'] > 0) {
                     $doc->updateStatus(Document::STATE_READYTOSHIP);
@@ -76,8 +73,8 @@ class ArmProdFood extends \App\Pages\Base
                     $n->message = serialize(array('document_id' => $doc->document_id));
 
                     $n->save();
-                    
-                    $doc->DoStore();                    
+
+                    $doc->DoStore();
                 } else {
                     $n = new \App\Entity\Notify();
                     $n->user_id = \App\Entity\Notify::ARMFOOD;
@@ -87,41 +84,41 @@ class ArmProdFood extends \App\Pages\Base
 
                     $n->save();
 
-            
-                  
+
+
 
                 }
 
             }
-       
-         
-           $conn->CommitTrans();
-        
+
+
+            $conn->CommitTrans();
+
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
-       
-            $logger->error(  " Арм  кухни " . $ee->getMessage());
-            
-            return json_encode(['error'=>$ee->getMessage() ], JSON_UNESCAPED_UNICODE);              
 
-           
-        }  
-   
-        return json_encode([], JSON_UNESCAPED_UNICODE);          
-        
-              
+            $logger->error(" Арм  кухни " . $ee->getMessage());
+
+            return json_encode(['error'=>$ee->getMessage() ], JSON_UNESCAPED_UNICODE);
+
+
+        }
+
+        return json_encode([], JSON_UNESCAPED_UNICODE);
+
+
     }
 
     public function getItems($args, $post) {
-        
-        
+
+
         $itemlist = array();
         $where = "meta_name='OrderFood' and state in (7) ";
         if($args[0]=="true") {
-             $where .= " and content like '%<forbar>1</forbar>%'";
-        }   else {
-             $where .= " and (content like '%<forbar>0</forbar>%' or content not  like '%<forbar>%' ) ";
+            $where .= " and content like '%<forbar>1</forbar>%'";
+        } else {
+            $where .= " and (content like '%<forbar>0</forbar>%' or content not  like '%<forbar>%' ) ";
         }
         $docs = Document::find($where, "  document_id");
 
@@ -135,7 +132,7 @@ class ArmProdFood extends \App\Pages\Base
                 $item->ordern = $doc->document_number;
                 $item->docnotes = $doc->notes;
                 $item->document_id = $doc->document_id;
-                 
+
                 $item->del = $doc->headerdata['delivery'] > 0;
 
                 $notes = "";
@@ -144,8 +141,8 @@ class ArmProdFood extends \App\Pages\Base
                 }
                 if ($item->del == true) {
                     $notes = "Доставка";
-                }                
-                
+                }
+
                 $itemlist[]=array(
                    'ordern'=>$doc->document_number,
                    'notes'=>$notes,
@@ -154,15 +151,15 @@ class ArmProdFood extends \App\Pages\Base
                    'qty'=>$item->quantity,
                    'rowid'=>$rowid,
                    'del'=>$doc->headerdata['delivery'] > 0
-                
+
                 );
             }
-        }     
-        
-        
-    
-    
-        return json_encode($itemlist, JSON_UNESCAPED_UNICODE);     
+        }
+
+
+
+
+        return json_encode($itemlist, JSON_UNESCAPED_UNICODE);
     }
     public function getMessages($args, $post) {
 
