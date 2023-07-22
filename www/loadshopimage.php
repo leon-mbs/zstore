@@ -1,10 +1,11 @@
 <?php
+
 require_once 'init.php';
-    $_REQUEST['id'] = intval($_REQUEST['id']);
+$_REQUEST['id'] = intval($_REQUEST['id']);
 
 if (isset($_REQUEST['id']) > 0) {
-    
- 
+
+
     $image = \App\Entity\Image::load($_REQUEST['id']);
     if ($image instanceof \App\Entity\Image) {
 
