@@ -23,7 +23,6 @@ use Zippy\Html\Link\BookmarkableLink;
  */
 class IOState extends \App\Pages\Base
 {
-
     private $_doc    = null;
     private $_ptlist = null;
 
@@ -126,7 +125,7 @@ class IOState extends \App\Pages\Base
 
         H::exportExcel($data, $header, 'paylist.xlsx');
     }
-  
+
 }
 
 /**
@@ -134,7 +133,6 @@ class IOState extends \App\Pages\Base
  */
 class IOStateListDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {
@@ -192,8 +190,8 @@ class IOStateListDataSource implements \Zippy\Interfaces\DataSource
             if($conn->dataProvider=="postgres") {
                 $limit =" limit {$count} offset {$start}";
             }
-                  
-           
+
+
             $sql .= $limit;
         }
 

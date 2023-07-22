@@ -23,9 +23,8 @@ use Zippy\Html\Panel;
  */
 class DeliveryList extends \App\Pages\Base
 {
-
     private $_doc     = null;
-    public  $_doclist = array();
+    public $_doclist = array();
 
     public function __construct() {
         parent::__construct();

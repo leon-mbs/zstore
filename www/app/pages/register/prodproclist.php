@@ -30,7 +30,6 @@ use Zippy\Html\Link\BookmarkableLink;
  */
 class ProdProcList extends \App\Pages\Base
 {
-
     public $_proc     = null;
     public $_stage    = null;
     public $_prodlist = array();
@@ -65,7 +64,7 @@ class ProdProcList extends \App\Pages\Base
 
         $this->editproc->add(new SubmitButton('save'))->onClick($this, 'OnSave');
         $this->editproc->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
-      //  $this->editproc->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+        //  $this->editproc->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
 
         //продукция
         $this->add(new Panel("prodspan"))->setVisible(false);
@@ -122,23 +121,23 @@ class ProdProcList extends \App\Pages\Base
         $row->add(new Label('basedoc', $p->basedoc));
         $row->add(new Label('snumber', $p->snumber));
         $row->add(new Label('state', ProdProc::getStateName($p->state)));
-           
+
         $row->add(new Label('startdate', H::fd($p->startdateplan)));
         $row->add(new Label('enddate', H::fd($p->enddateplan)));
-      
-          $row->add(new ClickLink('edit',$this, 'OnEdit'))->setVisible($p->state == 0);
-          $row->add(new ClickLink('view'))->onClick($this, 'onView');
-          $row->add(new ClickLink('stages'))->onClick($this, 'OnStages');
-          $row->add(new ClickLink('copy'))->onClick($this, 'OnCopy');
-          $row->add(new ClickLink('prods'))->onClick($this, 'OnProds');
-          $row->add(new ClickLink('delete', $this, 'deleteOnClick'))->setVisible($p->stagecnt == 0);
-          $row->add(new Label('hasnotes'))->setVisible(strlen($p->notes) > 0);
-          $row->hasnotes->setAttribute('title', $p->notes);
- 
-          if ($p->pp_id == @$this->_proc->pp_id) {
-              $row->setAttribute('class', 'table-success');
-          }
-           
+
+        $row->add(new ClickLink('edit', $this, 'OnEdit'))->setVisible($p->state == 0);
+        $row->add(new ClickLink('view'))->onClick($this, 'onView');
+        $row->add(new ClickLink('stages'))->onClick($this, 'OnStages');
+        $row->add(new ClickLink('copy'))->onClick($this, 'OnCopy');
+        $row->add(new ClickLink('prods'))->onClick($this, 'OnProds');
+        $row->add(new ClickLink('delete', $this, 'deleteOnClick'))->setVisible($p->stagecnt == 0);
+        $row->add(new Label('hasnotes'))->setVisible(strlen($p->notes) > 0);
+        $row->hasnotes->setAttribute('title', $p->notes);
+
+        if ($p->pp_id == @$this->_proc->pp_id) {
+            $row->setAttribute('class', 'table-success');
+        }
+
     }
 
 
@@ -157,8 +156,8 @@ class ProdProcList extends \App\Pages\Base
         $this->listpan->setVisible(false);
         $this->editproc->setVisible(true);
         $this->editproc->clean();
-        $this->editproc->editstartdateplan->setDate(time()  + (3600*24) );
-        $this->editproc->editenddateplan->setDate(time()  + (15 *3600*24) );
+        $this->editproc->editstartdateplan->setDate(time()  + (3600*24));
+        $this->editproc->editenddateplan->setDate(time()  + (15 *3600*24));
         $this->_proc = new ProdProc();
 
     }
@@ -278,7 +277,7 @@ class ProdProcList extends \App\Pages\Base
         $this->stagespan->setVisible(true);
         $this->listpan->setVisible(false);
         $this->_proc = $sender->getOwner()->getDataItem();
-        $this->stagespan->stagelist->getDataSource()->setWhere("pp_id=".$this->_proc->pp_id );  
+        $this->stagespan->stagelist->getDataSource()->setWhere("pp_id=".$this->_proc->pp_id);
         $this->stagespan->stagelist->Reload();
     }
 
@@ -287,9 +286,9 @@ class ProdProcList extends \App\Pages\Base
 
         $row->add(new Label('stagename', $s->stagename));
         $row->add(new Label('stageareaname', $s->pa_name));
-        $row->add(new Label('stagestartdate', H::fd($s->startdateplan)  ));
-        $row->add(new Label('stageenddate', H::fd($s->enddateplan)  ));
-        $row->add(new Label('stagehours', $s->hoursplan  ));
+        $row->add(new Label('stagestartdate', H::fd($s->startdateplan)));
+        $row->add(new Label('stageenddate', H::fd($s->enddateplan)));
+        $row->add(new Label('stagehours', $s->hoursplan));
         $row->add(new Label('stagestate', ProdStage::getStateName($s->state)));
 
         $row->add(new ClickLink('stageedit', $this, 'OnStageEdit'))->setVisible($s->state == 0);
@@ -391,7 +390,7 @@ class ProdProcList extends \App\Pages\Base
 
     }
 
-    //просмотр 
+    //просмотр
     public function onView($sender) {
         $pan = $this->listpan->showpan;
         $pan->setVisible(true);
@@ -500,21 +499,21 @@ class ProdProcList extends \App\Pages\Base
 
 
     public function onProcStatus($sender) {
-      
+
         $stages = ProdStage::find('pp_id=' . $this->_proc->pp_id);
-    
-      
+
+
         if ($sender->id == "btnstinprocess") {
             $this->_proc->state = ProdProc::STATE_INPROCESS;
         }
         if ($sender->id == "btnstsuspend") {
             $this->_proc->state = ProdProc::STATE_STOPPED;
-            
+
             foreach($stages as $st) {
                 $st->state= ProdStage::STATE_STOPPED;
                 $st->save();
             }
-            
+
         }
         if ($sender->id == "btnstclose") {
             $this->_proc->state = ProdProc::STATE_FINISHED;
@@ -522,9 +521,9 @@ class ProdProcList extends \App\Pages\Base
                 $st->state= ProdStage::STATE_FINISHED;
                 $st->save();
             }
-            
-            
-            
+
+
+
         }
         if ($sender->id == "btnstcancel") {
             $this->_proc->state = ProdProc::STATE_CANCELED;
@@ -532,8 +531,8 @@ class ProdProcList extends \App\Pages\Base
                 $st->state= ProdStage::STATE_STOPPED;
                 $st->save();
             }
-            
-            
+
+
         }
         $this->_proc->save();
         $this->listpan->showpan->setVisible(false);
@@ -548,7 +547,6 @@ class ProdProcList extends \App\Pages\Base
  */
 class PProcListDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {
@@ -572,5 +570,3 @@ class PProcListDataSource implements \Zippy\Interfaces\DataSource
     }
 
 }
-
- 

@@ -27,7 +27,6 @@ use Zippy\Html\Panel;
  */
 class DocList extends \App\Pages\Base
 {
-
     public $_doc;
     private $_favs=array();
 
@@ -41,19 +40,19 @@ class DocList extends \App\Pages\Base
         if (false == \App\ACL::checkShowReg('DocList')) {
             return;
         }
-        $docid = intval($docid); 
+        $docid = intval($docid);
         $user = System::getUser() ;
-        $this->_favs = explode(',',$user->favs) ;
-        if(is_array($this->_favs)==false)  {
-           $this->_favs = array();  
+        $this->_favs = explode(',', $user->favs) ;
+        if(is_array($this->_favs)==false) {
+            $this->_favs = array();
         }
-        
+
         $filter = Filter::getFilter("doclist");
         if ($filter->isEmpty()) {
             $filter->to = time();
-       //     $d = new \App\DateTime() ;
-//            $d = $d->startOfMonth()->subMonth(1) ;
-//            $filter->from = $d->getTimestamp();
+            //     $d = new \App\DateTime() ;
+            //            $d = $d->startOfMonth()->subMonth(1) ;
+            //            $filter->from = $d->getTimestamp();
             $filter->from = time() - (7 * 24 * 3600);
             $filter->page = 1;
             $filter->doctype = 0;
@@ -89,7 +88,7 @@ class DocList extends \App\Pages\Base
         $this->add(new SortLink("sortdate", "document_id", $this, "onSort"));
         $this->add(new SortLink("sortcust", "customer_name", $this, "onSort"));
         $this->add(new SortLink("sortamount", "amount", $this, "onSort"));
-        
+
 
         $doclist = $this->add(new DataView('doclist', new DocDataSource(), $this, 'doclistOnRow'));
 
@@ -106,11 +105,11 @@ class DocList extends \App\Pages\Base
         $this->statusform->add(new SubmitButton('bstatus'))->onClick($this, 'statusOnSubmit');
         $this->statusform->add(new SubmitButton('buser'))->onClick($this, 'statusOnSubmit');
         $this->statusform->add(new TextInput('refcomment'));
-        $this->statusform->add(new DropDownChoice('mstates',Document::getStateListMan()));
-        $this->statusform->add(new DropDownChoice('musers',array()));
+        $this->statusform->add(new DropDownChoice('mstates', Document::getStateListMan()));
+        $this->statusform->add(new DropDownChoice('musers', array()));
         $this->statusform->add(new CheckBox('print1'));
-    
-        $this->statusform->add(new SubmitButton('bprint'))->onClick($this, 'printlabels',true);
+
+        $this->statusform->add(new SubmitButton('bprint'))->onClick($this, 'printlabels', true);
         $this->add(new ClickLink('csv', $this, 'oncsv'));
 
 
@@ -121,14 +120,14 @@ class DocList extends \App\Pages\Base
                 $this->setError('Документ вже видалений') ;
                 return;
             }
-            $this->_doc = $this->_doc->cast() ;    
-            $this->show($this->_doc);            
+            $this->_doc = $this->_doc->cast() ;
+            $this->show($this->_doc);
             $doclist->Reload(false);
-        
-        
-            
+
+
+
         }
-        
+
     }
 
     public function onErase($sender) {
@@ -181,9 +180,9 @@ class DocList extends \App\Pages\Base
 
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
-       
-        $doc = $doc->cast();
-  
+
+        //   $doc = $doc->cast();
+
         $row->add(new Label('name', $doc->meta_desc));
         $row->add(new Label('number', $doc->document_number));
 
@@ -213,8 +212,8 @@ class DocList extends \App\Pages\Base
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('cancel'))->onClick($this, 'cancelOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
-        $row->add(new ClickLink('tofav',$this, 'favOnClick'))->setVisible(false==in_array( $doc->document_id,$this->_favs))  ;
-        $row->add(new ClickLink('fromfav',$this, 'favOnClick'))->setVisible(true==in_array( $doc->document_id,$this->_favs))  ;
+        $row->add(new ClickLink('tofav', $this, 'favOnClick'))->setVisible(false==in_array($doc->document_id, $this->_favs))  ;
+        $row->add(new ClickLink('fromfav', $this, 'favOnClick'))->setVisible(true==in_array($doc->document_id, $this->_favs))  ;
 
         //список документов   которые   могут  быть созданы  на  основании  текущего
         $row->add(new Panel('basedon'));
@@ -249,7 +248,7 @@ class DocList extends \App\Pages\Base
         if ($doc->document_id == ($this->_doc->document_id ?? null)) {
             $row->setAttribute('class', 'table-success');
         }
-         
+
     }
 
     public function onSort($sender) {
@@ -261,7 +260,7 @@ class DocList extends \App\Pages\Base
         $this->sortdate->Reset();
         $this->sortcust->Reset();
         $this->sortamount->Reset();
-        
+
 
         $this->doclist->setSorting($sortfield, $sortdir);
 
@@ -282,16 +281,18 @@ class DocList extends \App\Pages\Base
     public function showOnClick($sender) {
         $doc = $sender->getOwner()->getDataItem();
         $doc = Document::load($doc->document_id);
-        $doc = $doc->cast() ;
+        // $doc = $doc->cast() ;
         $this->show($doc);
     }
 
     public function show($doc) {
+        $doc = $doc->cast();
+
         $this->_doc = $doc;
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
         }
-        $ch = \App\ACL::checkExeDoc($this->_doc,true,false) ;
+        $ch = \App\ACL::checkExeDoc($this->_doc, true, false) ;
         $this->docview->setVisible(true);
         $this->docview->setDoc($this->_doc);
 
@@ -304,63 +305,62 @@ class DocList extends \App\Pages\Base
         $this->statusform->mstates->setValue(0);
 
         $this->statusform->btopay->setVisible(false);
-        if($this->_doc->customer_id >0 &&   $this->_doc->state == Document::STATE_WP){
-              $this->statusform->btopay->setVisible(true);
-              if( $this->_doc->payamount > 0 &&  $this->_doc->payamount >  $this->_doc->payed) { 
-                  
-                  if( in_array($this->_doc->meta_name,array('InvoiceCust','RetCustIssue','GoodsReceipt')))  {
-                      $this->statusform->btopay->setVisible(true);
-                      $this->statusform->btopay->setLink("App\\PAges\\Register\\PaySelList",array($this->_doc->document_id));
-                  }
-                  if( in_array($this->_doc->meta_name,array('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct')))  {
-                      $this->statusform->btopay->setVisible(true);
-                      $this->statusform->btopay->setLink("App\\PAges\\Register\\PayBayList",array($this->_doc->document_id));
-                  }
-                  
-              }
-                             
+        if($this->_doc->customer_id >0 &&   $this->_doc->state == Document::STATE_WP) {
+            $this->statusform->btopay->setVisible(true);
+            if($this->_doc->payamount > 0 &&  $this->_doc->payamount >  $this->_doc->payed) {
+
+                if(in_array($this->_doc->meta_name, array('InvoiceCust','RetCustIssue','GoodsReceipt'))) {
+                    $this->statusform->btopay->setVisible(true);
+                    $this->statusform->btopay->setLink("App\\PAges\\Register\\PaySelList", array($this->_doc->document_id));
+                }
+                if(in_array($this->_doc->meta_name, array('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct'))) {
+                    $this->statusform->btopay->setVisible(true);
+                    $this->statusform->btopay->setLink("App\\PAges\\Register\\PayBayList", array($this->_doc->document_id));
+                }
+
+            }
+
         }
-        
-        
-        $this->statusform->mstates->setVisible($ch==true && $this->_doc->state != Document::STATE_WA  );
+
+
+        $this->statusform->mstates->setVisible($ch==true && $this->_doc->state != Document::STATE_WA);
         $this->statusform->bstatus->setVisible($ch==true && $this->_doc->state != Document::STATE_WA);
-        $this->statusform->bprint->setVisible($this->_doc->meta_name=='GoodsReceipt' || 
-                                              $this->_doc->meta_name=='IncomeItem' || 
-                                              $this->_doc->meta_name=='Order' || 
-                                              $this->_doc->meta_name=='GoodsIssue' || 
-                                              $this->_doc->meta_name=='TTN' || 
-                                              $this->_doc->meta_name=='ProdReceipt'         );
-        
+        $this->statusform->bprint->setVisible($this->_doc->meta_name=='GoodsReceipt' ||
+                                              $this->_doc->meta_name=='IncomeItem' ||
+                                              $this->_doc->meta_name=='Order' ||
+                                              $this->_doc->meta_name=='GoodsIssue' ||
+                                              $this->_doc->meta_name=='TTN' ||
+                                              $this->_doc->meta_name=='ProdReceipt');
+
 
         $this->statusform->musers->setValue(0);
         $u = array() ;
-        
-        foreach(\App\Entity\User::find("disabled <> 1","username asc") as $_u)  
-        {
-            if($_u->rolename == 'admins')   {
+
+        foreach(\App\Entity\User::find("disabled <> 1", "username asc") as $_u) {
+            if($_u->rolename == 'admins') {
                 $u[$_u->user_id]=$_u->username;
-            }  else {
+            } else {
                 $aclexe = explode(',', $_u->aclexe);
 
                 if (in_array($this->_doc->meta_id, $aclexe)) {
-                     $u[$_u->user_id] = $_u->username;
+                    $u[$_u->user_id] = $_u->username;
 
                 }
                 $aclstate = explode(',', $_u->aclstate);
 
                 if (in_array($this->_doc->meta_id, $aclstate)) {
-                     $u[$_u->user_id] = $_u->username;
+                    $u[$_u->user_id] = $_u->username;
 
                 }
-                
+
             }
-        }         
+        }
         $this->statusform->musers->setOptionList($u);
         $user = System::getUser();
-        if(in_array($user->user_id,array_keys($u))) {
+        if(in_array($user->user_id, array_keys($u))) {
             $this->statusform->musers->setValue($user->user_id);
         }
-        
+
     }
 
     //редактирование
@@ -384,6 +384,8 @@ class DocList extends \App\Pages\Base
         $this->docview->setVisible(false);
 
         $doc = $sender->owner->getDataItem();
+        $doc = $doc->cast();
+
         if (false == \App\ACL::checkDelDoc($doc, true)) {
             return;
         }
@@ -436,24 +438,26 @@ class DocList extends \App\Pages\Base
 
     public function favOnClick($sender) {
         $doc = $sender->owner->getDataItem();
-        if(strpos($sender->id,"tofav") !==false) {
-           $this->_favs[]=$doc->document_id;
-        } 
-        if(strpos($sender->id,"fromfav") !==false) {
-           $ar = array();
-           foreach($this->_favs as $v) {
-             if($v==$doc->document_id) continue; 
-             $ar[]=$v;  
-           }
-           $this->_favs = $ar;
+        if(strpos($sender->id, "tofav") !==false) {
+            $this->_favs[]=$doc->document_id;
+        }
+        if(strpos($sender->id, "fromfav") !==false) {
+            $ar = array();
+            foreach($this->_favs as $v) {
+                if($v==$doc->document_id) {
+                    continue;
+                }
+                $ar[]=$v;
+            }
+            $this->_favs = $ar;
 
-        } 
+        }
         $user = System::getUser() ;
         $user->favs  = implode(',', $this->_favs);
         $user->save();
 
         $this->doclist->Reload(true);
-      
+
     }
     public function cancelOnClick($sender) {
         $this->docview->setVisible(false);
@@ -514,11 +518,11 @@ class DocList extends \App\Pages\Base
         }
         if(strlen($doc->headerdata["fiscalnumber"])>0) {
             $this->setWarn('Відмінено фіскалізований документ') ;
-            
+
         }
-     
-        
-        
+
+
+
         $this->doclist->setSelectedRow($sender->getOwner());
         $this->doclist->Reload(false);
         $this->resetURL();
@@ -528,7 +532,7 @@ class DocList extends \App\Pages\Base
         return Customer::getList($sender->getText());
     }
 
-  
+
     public function statusOnSubmit($sender) {
         if (\App\ACL::checkExeDoc($this->_doc, true, false) == false) {
             $this->setError('Немає права виконувати документ');
@@ -567,25 +571,27 @@ class DocList extends \App\Pages\Base
             $this->statusform->refcomment->setText('');
         }
 
-        
-       if ($sender->id == "bstatus") {
-           $newst =   $this->statusform->mstates->getValue() ;
-           if($newst >0  && $newst != $this->_doc->state ) {
-              $this->_doc->updateStatus($newst,true); 
-           }
-           
-           
-       }        
-       if ($sender->id == "buser") {
-           $user_id = intval( $this->statusform->musers->getValue() );
-           if($user_id==0)  return;
-           
-           $this->_doc->user_id = $user_id;
-           $this->_doc->save();
-           
-           
-       }        
-        
+
+        if ($sender->id == "bstatus") {
+            $newst =   $this->statusform->mstates->getValue() ;
+            if($newst >0  && $newst != $this->_doc->state) {
+                $this->_doc->updateStatus($newst, true);
+            }
+
+
+        }
+        if ($sender->id == "buser") {
+            $user_id = intval($this->statusform->musers->getValue());
+            if($user_id==0) {
+                return;
+            }
+
+            $this->_doc->user_id = $user_id;
+            $this->_doc->save();
+
+
+        }
+
         $this->statusform->setVisible(false);
         $this->docview->setVisible(false);
         $this->doclist->Reload($sender->id != "bstatus");
@@ -611,26 +617,25 @@ class DocList extends \App\Pages\Base
         H::exportExcel($data, $header, 'doclist.xlsx');
     }
 
-    public function printlabels($sender){
-        
+    public function printlabels($sender) {
+
         $one = $this->statusform->print1->isChecked();
-        
+
         $items = $this->_doc->unpackDetails('detaildata')  ;
-        
-        $htmls = H::printItems($items,$one ? 1:0);
-        
-        if( \App\System::getUser()->usemobileprinter == 1) {
+
+        $htmls = H::printItems($items, $one ? 1 : 0);
+
+        if(\App\System::getUser()->usemobileprinter == 1) {
             \App\Session::getSession()->printform =  $htmls;
 
             $this->addAjaxResponse("     window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
-        }
-        else {
+        } else {
 
             $this->addAjaxResponse("  $('#tag').html('{$htmls}') ; $('#pform').modal()");
-             
-        }        
+
+        }
     }
-    
+
 }
 
 /**
@@ -638,16 +643,15 @@ class DocList extends \App\Pages\Base
  */
 class DocDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private function getWhere($usedate=true) {
         //$user = System::getUser();
 
         $conn = \ZDB\DB::getConnect();
         $filter = Filter::getFilter("doclist");
-        if($usedate){
-          $where = " date(document_date) >= " . $conn->DBDate($filter->from) . " and  date(document_date) <= " . $conn->DBDate($filter->to);
+        if($usedate) {
+            $where = " date(document_date) >= " . $conn->DBDate($filter->from) . " and  date(document_date) <= " . $conn->DBDate($filter->to);
         } else {
-          $where = " 1=1 ";  
+            $where = " 1=1 ";
         }
         if ($filter->doctype > 0) {
             $where .= " and meta_id  ={$filter->doctype} ";
@@ -674,7 +678,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
 
         if (strlen($sn) > 1) {
             // игнорируем другие поля
-           
+
 
             $where = "   document_number like ".$conn->qstr('%' . $sn . '%');
         }
@@ -688,27 +692,27 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
-    
+
         $user = System::getUser() ;
-        $favs = explode(',',$user->favs) ;
-        if(is_array($favs)==false)  {
-           $favs = array();  
+        $favs = explode(',', $user->favs) ;
+        if(is_array($favs)==false) {
+            $favs = array();
         }
-    
-        $fav =  trim(implode(',',$favs),',');
-        
+
+        $fav =  trim(implode(',', $favs), ',');
+
         if(strlen($fav)==0) {
-           $docs = Document::find($this->getWhere(), $sortfield . " " . $asc, $count, $start);    
-        }  else {
-            
-          $docs = Document::find("document_id in ({$fav}) and "  . $this->getWhere(false), $sortfield . " " . $asc, $count, $start);    
-          foreach(Document::find("document_id not in ({$fav}) and "  . $this->getWhere(), $sortfield . " " . $asc, $count, $start) as $d){
-              $docs[$d->document_id] = $d;   
-          }
-           
-     
+            $docs = Document::find($this->getWhere(), $sortfield . " " . $asc, $count, $start);
+        } else {
+
+            $docs = Document::find("document_id in ({$fav}) and "  . $this->getWhere(false), $sortfield . " " . $asc, $count, $start);
+            foreach(Document::find("document_id not in ({$fav}) and "  . $this->getWhere(), $sortfield . " " . $asc, $count, $start) as $d) {
+                $docs[$d->document_id] = $d;
+            }
+
+
         }
-        
+
 
         return $docs;
     }

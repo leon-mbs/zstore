@@ -23,7 +23,6 @@ use Zippy\Html\Panel;
  */
 class GRList extends \App\Pages\Base
 {
-
     private $_doc = null;
 
     /**
@@ -81,21 +80,21 @@ class GRList extends \App\Pages\Base
         $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
 
         $row->add(new Label('customer', $doc->customer_name));
-        $row->add(new Label('ispay'   ))->setVisible(false) ;
-        $row->add(new Label('istruck' ))->setVisible(false) ;
+        $row->add(new Label('ispay'))->setVisible(false) ;
+        $row->add(new Label('istruck'))->setVisible(false) ;
 
-        if($doc->state >=4){
-           if($doc->payamount > 0 &&  $doc->payamount > $doc->payed)  {
-               $row->ispay->setVisible(true);
-           }
-           if($doc->meta_name=='InvoiceCust') {
-               $n = $doc->getChildren('GoodsReceipt');
-               $row->istruck->setVisible(count($n)==0);
-               
-           }
+        if($doc->state >=4) {
+            if($doc->payamount > 0 &&  $doc->payamount > $doc->payed) {
+                $row->ispay->setVisible(true);
+            }
+            if($doc->meta_name=='InvoiceCust') {
+                $n = $doc->getChildren('GoodsReceipt');
+                $row->istruck->setVisible(count($n)==0);
+
+            }
         }
-        
-        
+
+
         $row->add(new Label('state', Document::getStateName($doc->state)));
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
@@ -139,7 +138,7 @@ class GRList extends \App\Pages\Base
         $this->doclist->Reload(false);
 
         $this->statuspan->setVisible(false);
-        //todo  отослать писмо 
+        //todo  отослать писмо
 
         $this->updateStatusButtons();
     }
@@ -149,7 +148,7 @@ class GRList extends \App\Pages\Base
         $this->statuspan->statusform->bttn->setVisible($this->_doc->meta_name == 'InvoiceCust');
         $this->statuspan->statusform->bret->setVisible($this->_doc->meta_name == 'GoodsReceipt');
 
-        //новый     
+        //новый
         if ($this->_doc->state < Document::STATE_EXECUTED) {
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bret->setVisible(false);
@@ -211,7 +210,6 @@ class GRList extends \App\Pages\Base
  */
 class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {
@@ -222,7 +220,7 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource
         $user = System::getUser();
 
         $conn = \ZDB\DB::getConnect();
- 
+
         $where = "   meta_name  in('GoodsReceipt','InvoiceCust',  'RetCustIssue' )  ";
 
         $status = $this->page->filter->status->getValue();
@@ -248,9 +246,9 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource
 
         $store_id = $this->page->filter->fstore->getValue();
         if ($store_id > 0) {
-           $where .= " and   content like '%<store>{$store_id}</store>%' ";
+            $where .= " and   content like '%<store>{$store_id}</store>%' ";
         }
-        
+
         $st = trim($this->page->filter->searchtext->getText());
         if (strlen($st) > 2) {
             $st = $conn->qstr('%' . $st . '%');

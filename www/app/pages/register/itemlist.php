@@ -21,8 +21,7 @@ use Zippy\Html\Panel;
 */
 class ItemList extends \App\Pages\Base
 {
-
-    public  $_item;
+    public $_item;
     private $_total;
 
     public function __construct() {
@@ -33,35 +32,35 @@ class ItemList extends \App\Pages\Base
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new TextInput('searchkey'));
-        
+
         $catlist = array();
         $catlist[-1] = "Без категорії";
         foreach (Category::getList() as $k => $v) {
             $catlist[$k] = $v;
-        }        
-        
+        }
+
         $this->filter->add(new DropDownChoice('searchcat', $catlist, 0));
-        
-          
+
+
         $prices = [];
         if($this->_tvars["noshowpartion"] == false) {
-            $prices['price'] = "Закупівельна ціна";   
+            $prices['price'] = "Закупівельна ціна";
         }
-        
-        foreach( Item::getPriceTypeList() as $k=>$v ) {
-            $prices[$k] = $v ;  
+
+        foreach(Item::getPriceTypeList() as $k=>$v) {
+            $prices[$k] = $v ;
         }
-        
+
         $keys=array_keys($prices);
-        $p=array_shift($keys); 
-        
+        $p=array_shift($keys);
+
         $this->filter->add(new DropDownChoice('searchprice', $prices, $p));
         $storelist = Store::getList() ;
-        
+
         if(\App\System::getUser()->showotherstores) {
             $storelist = Store::getListAll() ;
-            
-        }         
+
+        }
         $this->filter->add(new DropDownChoice('searchstore', $storelist, 0));
         $this->filter->add(new TextInput('searchbrand'));
         $this->filter->searchbrand->setDataList(Item::getManufacturers());
@@ -74,7 +73,7 @@ class ItemList extends \App\Pages\Base
         $this->itempanel->add(new \Zippy\Html\DataList\Paginator('pag', $this->itempanel->itemlist));
 
         $this->itempanel->add(new ClickLink('csv', $this, 'oncsv'));
-        $this->itempanel->add(new ClickLink('printqty', $this, 'onprint',true));
+        $this->itempanel->add(new ClickLink('printqty', $this, 'onprint', true));
         $this->itempanel->add(new Label('totamount'));
 
         $this->add(new Panel('detailpanel'))->setVisible(false);
@@ -108,15 +107,15 @@ class ItemList extends \App\Pages\Base
         $qty = $item->getQuantity($store);
         $row->add(new Label('iqty', H::fqty($qty)));
         $row->add(new Label('minqty', H::fqty($item->minqty)));
-        
+
         $pt = $this->filter->searchprice->getValue();
         if($pt=='price') {
-           $am = $item->getAmount($store);    
-        }  else {
-           $am = $qty * $item->getPrice($pt, $store) ;
+            $am = $item->getAmount($store);
+        } else {
+            $am = $qty * $item->getPrice($pt, $store) ;
         }
-        
-        
+
+
         $row->add(new Label('iamount', H::fa(abs($am))));
 
         $row->add(new Label('cat_name', $item->cat_name));
@@ -158,22 +157,22 @@ class ItemList extends \App\Pages\Base
 
         $store = $this->filter->searchstore->getValue();
         $pt = $this->filter->searchprice->getValue();
- 
+
         $src = new ItemDataSource($this) ;
-        
-        $items = $src->getItems(-1,-1) ;
+
+        $items = $src->getItems(-1, -1) ;
         $total = 0;
         foreach($items as $item) {
-            $qty = $item->getQuantity($store);            
+            $qty = $item->getQuantity($store);
             if($pt=='price') {
-               $total += $item->getAmount($store);    
-            }  else {
-               $total += $qty * $item->getPrice($pt, $store) ;
+                $total += $item->getAmount($store);
+            } else {
+                $total += $qty * $item->getPrice($pt, $store) ;
             }
-            
+
         }
- 
-   
+
+
         return $total;
     }
 
@@ -218,14 +217,14 @@ class ItemList extends \App\Pages\Base
         }
 
         $row->add(new Label('price', implode(',', $plist)));
-        
-        //документпосдеднего обновления  
-        $entry =  \App\Entity\Entry::getFirst("quantity > 0 and stock_id=".$stock->stock_id,"entry_id desc") ;
-        $doc =  \App\Entity\Doc\Document::load($entry->document_id) ;                                                                                      
-        $row->add(new \Zippy\Html\Link\RedirectLink("blameddoc", "\\App\\Pages\\Register\\DocList", array($doc == null ? 0 : $doc->document_id )))->setValue($doc == null ? '' : $doc->document_number );
-        
+
+        //документпосдеднего обновления
+        $entry =  \App\Entity\Entry::getFirst("quantity > 0 and stock_id=".$stock->stock_id, "entry_id desc") ;
+        $doc =  \App\Entity\Doc\Document::load($entry->document_id) ;
+        $row->add(new \Zippy\Html\Link\RedirectLink("blameddoc", "\\App\\Pages\\Register\\DocList", array($doc == null ? 0 : $doc->document_id )))->setValue($doc == null ? '' : $doc->document_number);
+
         $row->add(new \Zippy\Html\Link\RedirectLink("createmove", "\\App\\Pages\\Doc\\MovePart", array(0, $stock->stock_id)))->setVisible($stock->qty < 0);
-        
+
 
     }
 
@@ -260,8 +259,8 @@ class ItemList extends \App\Pages\Base
         $list = $this->itempanel->itemlist->getDataSource()->getItems(-1, -1, 'itemname');
 
         $common = System::getOptions('common') ;
-        
-        
+
+
         $header = array();
         $data = array();
 
@@ -271,14 +270,24 @@ class ItemList extends \App\Pages\Base
         $header['D1'] = "Од.";
         $header['E1'] = "Категорiя";
         $header['F1'] = "Кiл.";
-        
-        if(strlen($common['price1'])) $header['G1'] = $common['price1'];
-        if(strlen($common['price2'])) $header['H1'] = $common['price2'];
-        if(strlen($common['price3'])) $header['I1'] = $common['price3'];
-        if(strlen($common['price4'])) $header['J1'] = $common['price4'];
-        if(strlen($common['price5'])) $header['K1'] = $common['price5'];
-        
-        
+
+        if(strlen($common['price1'])) {
+            $header['G1'] = $common['price1'];
+        }
+        if(strlen($common['price2'])) {
+            $header['H1'] = $common['price2'];
+        }
+        if(strlen($common['price3'])) {
+            $header['I1'] = $common['price3'];
+        }
+        if(strlen($common['price4'])) {
+            $header['J1'] = $common['price4'];
+        }
+        if(strlen($common['price5'])) {
+            $header['K1'] = $common['price5'];
+        }
+
+
         $i = 1;
         foreach ($list as $item) {
             $i++;
@@ -289,8 +298,8 @@ class ItemList extends \App\Pages\Base
             $data['E' . $i] = $item->cat_name;
             $qty = $item->getQuantity($store);
             $data['F' . $i] = H::fqty($qty);
-            
-             
+
+
             if ($item->price1 > 0) {
                 $data['G' . $i] = $item->getPrice('price1', $store);
             }
@@ -302,14 +311,14 @@ class ItemList extends \App\Pages\Base
             }
             if ($item->price4 > 0) {
                 $data['J' . $i] = $item->getPrice('price4', $store);
-            }               
+            }
             if ($item->price5 > 0) {
                 $data['K' . $i] = $item->getPrice('price5', $store);
             }
-        
-        
+
+
         }
-        
+
 
         H::exportExcel($data, $header, 'itemlist.xlsx');
     }
@@ -318,57 +327,55 @@ class ItemList extends \App\Pages\Base
         $store = $this->filter->searchstore->getValue();
 
         $items = array();
-        $onpage = (new ItemDataSource($this))->getItems(-1,-1,"itemname") ;
-        foreach ( $onpage as $it) {
+        $onpage = (new ItemDataSource($this))->getItems(-1, -1, "itemname") ;
+        foreach ($onpage as $it) {
 
-           $qty = intval($it->getQuantity($store) );
-           if($qty >0){
-               $it->quantity = $qty;  
-               $items[] = $it;    
-           } 
-           
+            $qty = intval($it->getQuantity($store));
+            if($qty >0) {
+                $it->quantity = $qty;
+                $items[] = $it;
+            }
+
 
         }
         if (count($items) == 0) {
             return;
         }
-        if(intval(\App\System::getUser()->prtypelabel ) == 0){
-  
+        if(intval(\App\System::getUser()->prtypelabel) == 0) {
+
             $htmls = H::printItems($items);
-            
-            if( \App\System::getUser()->usemobileprinter == 1) {
+
+            if(\App\System::getUser()->usemobileprinter == 1) {
                 \App\Session::getSession()->printform =  $htmls;
 
-               $this->addAjaxResponse("   $('.seldel').prop('checked',null); window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
-            }
-            else {
-               $this->addAjaxResponse("  $('#tag').html('{$htmls}') ;$('.seldel').prop('checked',null); $('#pform').modal()");
-             
+                $this->addAjaxResponse("   $('.seldel').prop('checked',null); window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
+            } else {
+                $this->addAjaxResponse("  $('#tag').html('{$htmls}') ;$('.seldel').prop('checked',null); $('#pform').modal()");
+
             }
             return;
         }
-        
-     try{
-          
-        $xml = H::printItemsEP($items);
-        $buf = \App\Printer::xml2comm($xml);
-        $b = json_encode($buf) ;                   
-          
-        $this->addAjaxResponse("$('.seldel').prop('checked',null); sendPSlabel('{$b}') ");      
-      }catch(\Exception $e){
-           $message = $e->getMessage()  ;
-           $message = str_replace(";","`",$message)  ;
-           $this->addAjaxResponse(" toastr.error( '{$message}' )         ");  
-                   
+
+        try {
+
+            $xml = H::printItemsEP($items);
+            $buf = \App\Printer::xml2comm($xml);
+            $b = json_encode($buf) ;
+
+            $this->addAjaxResponse("$('.seldel').prop('checked',null); sendPSlabel('{$b}') ");
+        } catch(\Exception $e) {
+            $message = $e->getMessage()  ;
+            $message = str_replace(";", "`", $message)  ;
+            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
+
         }
- 
+
     }
 
 }
 
 class ItemDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {
@@ -381,15 +388,15 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         $form = $this->page->filter;
         $where = "   disabled <> 1 and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id ) <>0 ";
 
-        
+
         $cstr = \App\Acl::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "    store_id in ({$cstr})  and   ";
         }
         if(\App\System::getUser()->showotherstores) {
             $cstr ="";
-            
-        }   
+
+        }
         $cat = $form->searchcat->getValue();
         $store = $form->searchstore->getValue();
 
@@ -397,13 +404,13 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
             if ($cat == -1) {
                 $where = $where . " and cat_id=0";
             } else {
-                
-                
+
+
                 $c = Category::load($cat) ;
                 $ch = $c->getChildren();
                 $ch[]=$cat;
-                                
-                $cats = implode(",",$ch)  ;              
+
+                $cats = implode(",", $ch)  ;
                 $where = $where . " and cat_id in ({$cats}) " ;
             }
         }
@@ -415,7 +422,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         $text = trim($form->searchkey->getText());
         if (strlen($text) > 0) {
 
-           if ($p == false) {
+            if ($p == false) {
                 $text = Item::qstr('%' . $text . '%');
                 $where = $where . " and (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  or description like {$text} )  ";
             } else {
@@ -423,14 +430,14 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
                 $where = $where . " and (itemname = {$text} or item_code = {$text}  or bar_code = {$text} )  ";
             }
 
-            
+
         }
         $brand = $form->searchbrand->getText();
-         
+
         if (strlen($brand) > 0) {
-           $brand = Item::qstr($brand);
-           $where = $where . " and item_id in (select item_id from items where  manufacturer = {$brand}  ) ";
-          
+            $brand = Item::qstr($brand);
+            $where = $where . " and item_id in (select item_id from items where  manufacturer = {$brand}  ) ";
+
         }
 
 
@@ -460,7 +467,6 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
 
 class DetailDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {
