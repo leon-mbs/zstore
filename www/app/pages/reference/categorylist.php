@@ -21,10 +21,9 @@ use Zippy\Html\Panel;
  */
 class CategoryList extends \App\Pages\Base
 {
-
     private $_rn=0;
     private $_category;
-    public  $_catlist = array();
+    public $_catlist = array();
 
     public function __construct() {
         parent::__construct();
@@ -95,11 +94,11 @@ class CategoryList extends \App\Pages\Base
             $this->_catlist[$c->cat_id]->parents = $c->parents;
         }
 
-        usort($this->_catlist, function($a, $b) {
+        usort($this->_catlist, function ($a, $b) {
             return $a->order > $b->order;
         });
         $this->_rn=0;
-        
+
         $this->categorytable->categorylist->Reload();
     }
 
@@ -125,8 +124,8 @@ class CategoryList extends \App\Pages\Base
         $item = $row->getDataItem();
 
         $row->add(new Label('cat_name', $item->cat_name));
-        $row->add(new Label('p_name', isset($this->_catlist[$item->parent_id] ) ? ($this->_catlist[$item->parent_id]->full_name) : ''));
-        $row->add(new Label('qty', $item->qty))->setVisible( ($item->qty ?? 0) > 0);
+        $row->add(new Label('p_name', isset($this->_catlist[$item->parent_id]) ? ($this->_catlist[$item->parent_id]->full_name) : ''));
+        $row->add(new Label('qty', $item->qty))->setVisible(($item->qty ?? 0) > 0);
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
 
@@ -136,11 +135,11 @@ class CategoryList extends \App\Pages\Base
         if ($item->image_id == 0) {
             $row->imagelistitem->setVisible(false);
         }
-        
-        $row->add(new ClickLink("up",$this,"OnMove"))->setVisible($this->_rn>0)   ;
-        $row->add(new ClickLink("down",$this,"OnMove"))->setVisible($this->_rn<count($this->_catlist)-1)   ;      
+
+        $row->add(new ClickLink("up", $this, "OnMove"))->setVisible($this->_rn>0)   ;
+        $row->add(new ClickLink("down", $this, "OnMove"))->setVisible($this->_rn<count($this->_catlist)-1)   ;
         $this->_rn++;
-        
+
     }
 
     public function deleteOnClick($sender) {
@@ -268,9 +267,9 @@ class CategoryList extends \App\Pages\Base
             }
             $conn =   \ZDB\DB::getConnect();
             if($conn->dataProvider=='postgres') {
-              $image->thumb = pg_escape_bytea($image->thumb);
-              $image->content = pg_escape_bytea($image->content);
-                
+                $image->thumb = pg_escape_bytea($image->thumb);
+                $image->content = pg_escape_bytea($image->content);
+
             }
 
             $image->save();
@@ -288,26 +287,26 @@ class CategoryList extends \App\Pages\Base
         $this->categorydetail->setVisible(false);
     }
 
-     public  function OnMove($sender){
+    public function OnMove($sender) {
         $c = $sender->getOwner()->getDataItem();
-        $pos=  array_search($c,$this->_catlist,true) ;
+        $pos=  array_search($c, $this->_catlist, true) ;
 
-        if( strpos($sender->id,'up')===0)  {
-            
-            $c->order--  ;  
+        if(strpos($sender->id, 'up')===0) {
+
+            $c->order--  ;
 
             $p= $this->_catlist[$pos-1] ;
             $p->order++;
-            
+
             $this->_catlist[$pos]  = $p;
             $this->_catlist[$pos-1]  = $c;
-            
 
-            
-        } 
-           
-     
-        if( strpos($sender->id,'down')===0)  {
+
+
+        }
+
+
+        if(strpos($sender->id, 'down')===0) {
 
             $c->order++;
 
@@ -317,20 +316,19 @@ class CategoryList extends \App\Pages\Base
 
             $this->_catlist[$pos]  = $n;
             $this->_catlist[$pos+1]  = $c;
-            
-       
+
+
         }
 
         for($i=0;$i<count($this->_catlist);$i++) {
             $this->_catlist[$i]->order=$i;
             $this->_catlist[$i]->save() ;
         }
-        
-        $this->Reload();
-        
-             
-     }     
-    
-    
-}
 
+        $this->Reload();
+
+
+    }
+
+
+}

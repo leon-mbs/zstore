@@ -23,9 +23,8 @@ use Zippy\Html\Panel;
 //справочник  оборудования
 class EqList extends \App\Pages\Base
 {
-
     private $_item;
-    public  $_uselist = array();
+    public $_uselist = array();
 
     public function __construct() {
         parent::__construct();
@@ -192,7 +191,6 @@ class EqList extends \App\Pages\Base
 
 class EQDS implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {

@@ -25,7 +25,6 @@ use Zippy\Html\Panel;
 
 class ContractList extends \App\Pages\Base
 {
-
     private $_contract;
 
     public function __construct($id = 0) {
@@ -253,7 +252,6 @@ class ContractList extends \App\Pages\Base
 
 class ContractDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {

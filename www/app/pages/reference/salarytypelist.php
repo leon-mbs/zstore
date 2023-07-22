@@ -21,7 +21,6 @@ use App\System;
 //начисления  удержания
 class SalaryTypeList extends \App\Pages\Base
 {
-
     private $_st;
 
     public function __construct() {
@@ -164,7 +163,7 @@ class SalaryTypeList extends \App\Pages\Base
         System::setOptions('salary', $opt);
 
         $this->addAjaxResponse("toastr.success('Збережено')");
-        
+
     }
 
     public function onSaveCalc($sender) {
@@ -175,7 +174,7 @@ class SalaryTypeList extends \App\Pages\Base
 
 
         $this->addAjaxResponse("toastr.success('Збережено')");
-       
+
     }
 
 }
