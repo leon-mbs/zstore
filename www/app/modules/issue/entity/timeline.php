@@ -10,9 +10,8 @@ namespace App\Modules\Issue\Entity;
  */
 class TimeLine extends \ZCL\DB\Entity
 {
-
     protected function init() {
-      $this->id = 0;  
+        $this->id = 0;
         $this->issue_id = 0;
 
         $this->user_id = 0;

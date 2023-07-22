@@ -13,7 +13,6 @@ use ZCL\DB\TreeEntity;
  */
 class Node extends TreeEntity
 {
-
     protected function init() {
         $this->node_id = 0;
         $this->ispublic = 0;

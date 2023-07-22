@@ -23,7 +23,6 @@ use Zippy\WebApplication as App;
 
 class PPOList extends \App\Pages\Base
 {
-
     public $_ppolist = array();
     public $_shlist  = array();
     public $_doclist = array();
@@ -70,7 +69,7 @@ class PPOList extends \App\Pages\Base
             return;
         }
         $firm = Firm::load($cid);
-        $res = PPOHelper::send(json_encode(array('Command' => 'Objects')), 'cmd', $firm );
+        $res = PPOHelper::send(json_encode(array('Command' => 'Objects')), 'cmd', $firm);
         if ($res['success'] == false) {
             $this->setErrorTopPage($res['data']);
             return;
@@ -202,7 +201,7 @@ class PPOList extends \App\Pages\Base
         $this->shpan->setVisible(true);
         $this->docpan->setVisible(false);
         $this->docpan->docshow->setVisible(false);
-         $this->updateShifts();
+        $this->updateShifts();
     }
 
     public function docOnRow($row) {
@@ -232,9 +231,9 @@ class PPOList extends \App\Pages\Base
             return;
         }
 
-        $decrypted  = PPOHelper::decrypt($res['data'] ) ;
-        
-         $decrypted = mb_convert_encoding($decrypted , "utf-8" ,"windows-1251" )  ;
+        $decrypted  = PPOHelper::decrypt($res['data']) ;
+
+        $decrypted = mb_convert_encoding($decrypted, "utf-8", "windows-1251")  ;
         $this->docpan->docshow->setText($decrypted);
         $this->docpan->docshow->setVisible(true);
         $this->goAnkor('docshow');

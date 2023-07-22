@@ -5,13 +5,11 @@ namespace App\Modules\OCStore;
 use App\System;
 use App\Helper as H;
 
-
 /**
  * Вспомагательный  класс
  */
 class Helper
 {
-
     /**
      * Функция для  работы  с  API опенкарта
      *
@@ -51,9 +49,9 @@ class Helper
         $data = json_decode($result, true);
         if ($data === null) {
             if (strlen($result) > 0) {
-                \App\System::setErrorMsg($result,true);
+                \App\System::setErrorMsg($result, true);
             } else {
-                \App\System::setErrorMsg("Немає даних відповіді",true);
+                \App\System::setErrorMsg("Немає даних відповіді", true);
             }
 
 

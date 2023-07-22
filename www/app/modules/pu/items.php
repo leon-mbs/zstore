@@ -30,7 +30,7 @@ class Items extends \App\Pages\Base
             return;
         }
         $modules = System::getOptions("modules");
-  
+
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new DropDownChoice('searchcat', \App\Entity\Category::getList(), 0));
 
@@ -39,80 +39,80 @@ class Items extends \App\Pages\Base
         $this->exportform->add(new DataView('newitemlist', new ArrayDataSource(new Prop($this, '_items')), $this, 'itemOnRow'));
         $this->exportform->newitemlist->setPageSize(H::getPG());
         $this->exportform->add(new \Zippy\Html\DataList\Paginator('pag', $this->exportform->newitemlist));
-      //  $this->exportform->add(new DropDownChoice('ecat', $cats, 0));
+        //  $this->exportform->add(new DropDownChoice('ecat', $cats, 0));
 
         $this->add(new Form('upd'));
         $this->upd->add(new DropDownChoice('updcat', \App\Entity\Category::getList(), 0));
-        
+
         $this->upd->add(new SubmitLink('updateqty'))->onClick($this, 'onUpdateQty');
         $this->upd->add(new SubmitLink('updateprice'))->onClick($this, 'onUpdatePrice');
-        
- 
+
+
         $this->add(new Form('importform'))->onSubmit($this, 'importOnSubmit');
         $this->importform->add(new CheckBox('createcat'));
-   
-        
+
+
     }
 
- 
+
 
     public function filterOnSubmit($sender) {
         $this->_items = array();
         $modules = System::getOptions("modules");
         $products = array();
         try {
-           $last_id=0;
-           while(true){
-               $data = Helper::make_request("GET","/api/v1/products/list?last_id=".$last_id,null);
-               if(count($data['products'])==0) {
-                   break;
-               }
-               foreach ($data['products'] as $product) {
-                  $products[]=$product; 
-                  $last_id = $product['id']  ;
-               }            
-           } 
+            $last_id=0;
+            while(true) {
+                $data = Helper::make_request("GET", "/api/v1/products/list?last_id=".$last_id, null);
+                if(count($data['products'])==0) {
+                    break;
+                }
+                foreach ($data['products'] as $product) {
+                    $products[]=$product;
+                    $last_id = $product['id']  ;
+                }
+            }
 
-          
-          
-          
+
+
+
         } catch(\Exception $ee) {
             System::setErrorMsg($ee->getMessage());
             return;
-        }      
+        }
       $sku = array();
-      foreach ($products as $product) {
+        foreach ($products as $product) {
 
             if (strlen($product['sku']) == 0) {
                 continue;
             }
             $sku[]= $product['sku'];
-      }    
+        }
 
-            $cat = $this->filter->searchcat->getValue();
-            $where = "disabled <> 1   ";
-            if ($cat > 0) {
-                $where .= " and cat_id=" . $cat;
+        $cat = $this->filter->searchcat->getValue();
+        $where = "disabled <> 1   ";
+        if ($cat > 0) {
+            $where .= " and cat_id=" . $cat;
+        }
+        $items = Item::find($where, "itemname");
+        foreach ($items as $item) {
+            if (strlen($item->item_code) == 0) {
+                continue;
             }
-            $items = Item::find($where, "itemname");
-            foreach ($items as $item) {
-                if (strlen($item->item_code) == 0) {
-                    continue;
-                }
-                if (in_array($item->item_code, $sku)) {
-                    continue;
-                } //уже  в  магазине
-                $item->qty = $item->getQuantity();
+            if (in_array($item->item_code, $sku)) {
+                continue;
+            } //уже  в  магазине
+            $item->qty = $item->getQuantity();
 
-                if (strlen($item->qty) == 0) {
-                    $item->qty = 0;
-                }
-                $this->_items[] = $item;
+            if (strlen($item->qty) == 0) {
+                $item->qty = 0;
             }
+            $this->_items[] = $item;
+        }
 
-            $this->exportform->newitemlist->Reload();
-            //$this->exportform->ecat->setValue(0);
-      
+        $this->exportform->newitemlist->Reload();
+        //$this->exportform->ecat->setValue(0);
+
     }
 
     public function itemOnRow($row) {
@@ -149,26 +149,26 @@ class Items extends \App\Pages\Base
         }
         $data = json_encode($elist);
 
-    
+
 
         try {
-          $data = Helper::make_request("GET","/api/v1/products/edit",$data);
+            $data = Helper::make_request("GET", "/api/v1/products/edit", $data);
         } catch(\Exception $ee) {
             System::setErrorMsg($ee->getMessage());
             return;
-        }   
+        }
 
-        $this->setSuccess("Експортовано ".count($elist)." товарів" );
+        $this->setSuccess("Експортовано ".count($elist)." товарів");
 
         //обновляем таблицу
         $this->filterOnSubmit(null);
     }
 
     public function onUpdateQty($sender) {
-        
+
         $cat = $this->upd->updcat->getValue();
         $modules = System::getOptions("modules");
-          
+
         $elist = array();
         $items = Item::find("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : ""));
         foreach ($items as $item) {
@@ -180,67 +180,67 @@ class Items extends \App\Pages\Base
             $elist[$item->item_code] = H::fqty($qty);
         }
 
-       
+
         $products = array();
         try {
-           $last_id=0;
-           while(true){
-               $data = Helper::make_request("GET","/api/v1/products/list?last_id=".$last_id,null);
-               if(count($data['products'])==0) {
-                   break;
-               }
-               foreach ($data['products'] as $product) {
-                  $products[]=$product; 
-                  $last_id = $product['id']  ;
-               }            
-           } 
+            $last_id=0;
+            while(true) {
+                $data = Helper::make_request("GET", "/api/v1/products/list?last_id=".$last_id, null);
+                if(count($data['products'])==0) {
+                    break;
+                }
+                foreach ($data['products'] as $product) {
+                    $products[]=$product;
+                    $last_id = $product['id']  ;
+                }
+            }
 
-          
-          
-          
+
+
+
         } catch(\Exception $ee) {
             System::setErrorMsg($ee->getMessage());
             return;
-        }       
+        }
       $sku = array();
-      foreach ($products as $product) {
+        foreach ($products as $product) {
 
             if (strlen($product['sku']) == 0) {
                 continue;
             }
             $sku[$product['sku']]= $product['id'];
-      }    
-    
-         $list = array();
-         foreach ($elist as $code=>$qty) {
-        
-            if($sku[$code]>0)  {
+        }
+
+        $list = array();
+        foreach ($elist as $code=>$qty) {
+
+            if($sku[$code]>0) {
                 $list[] = array('sku'     => $sku[$code],
-                                 
+
                                  'quantity_in_stock' =>$elist[$code]
-                                 
+
                 );
             }
         }
-  
+
         $data = json_encode($list);
 
-    
+
 
         try {
-          $data = Helper::make_request("POST","/api/v1/products/edit",$data);
+            $data = Helper::make_request("POST", "/api/v1/products/edit", $data);
         } catch(\Exception $ee) {
             System::setErrorMsg($ee->getMessage());
             return;
-        }       
-    
+        }
+
       $this->setSuccess('Оновлено');
     }
 
     public function onUpdatePrice($sender) {
         $modules = System::getOptions("modules");
         $cat = $this->upd->updcat->getValue();
-        
+
         $elist = array();
         $items = Item::find("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : ""));
         foreach ($items as $item) {
@@ -253,90 +253,90 @@ class Items extends \App\Pages\Base
 
         $products = array();
         try {
-           $last_id=0;
-           while(true){
-               $data = Helper::make_request("GET","/api/v1/products/list?last_id=".$last_id,null);
-               if(count($data['products'])==0) {
-                   break;
-               }
-               foreach ($data['products'] as $product) {
-                  $products[]=$product; 
-                  $last_id = $product['id']  ;
-               }            
-           } 
+            $last_id=0;
+            while(true) {
+                $data = Helper::make_request("GET", "/api/v1/products/list?last_id=".$last_id, null);
+                if(count($data['products'])==0) {
+                    break;
+                }
+                foreach ($data['products'] as $product) {
+                    $products[]=$product;
+                    $last_id = $product['id']  ;
+                }
+            }
 
-          
-          
-          
+
+
+
         } catch(\Exception $ee) {
             System::setErrorMsg($ee->getMessage());
             return;
-        }     
+        }
       $sku = array();
-      foreach ($products as $product) {
+        foreach ($products as $product) {
 
             if (strlen($product['sku']) == 0) {
                 continue;
             }
             $sku[$product['sku']]= $product['id'];
-      }    
-    
-         $list = array();
-         foreach ($elist as $code=>$price) {
-        
-            if($sku[$code]>0)  {
+        }
+
+        $list = array();
+        foreach ($elist as $code=>$price) {
+
+            if($sku[$code]>0) {
                 $list[] = array('sku'     => $sku[$code],
-                                 
-                                 
+
+
                                  'price'    =>$price
-                                  
+
                 );
             }
         }
-  
+
         $data = json_encode($list);
 
-    
+
 
         try {
-          $data = Helper::make_request("POST","/api/v1/products/edit",$data);
+            $data = Helper::make_request("POST", "/api/v1/products/edit", $data);
         } catch(\Exception $ee) {
             System::setErrorMsg($ee->getMessage());
             return;
-        }       
-    
+        }
+
       $this->setSuccess('Оновлено');
     }
 
     public function importOnSubmit($sender) {
         $modules = System::getOptions("modules");
         $common = System::getOptions("common");
-           
-        
+
+
         $elist = array();
         $products = array();
         try {
-           $last_id=0;
-           while(true){
-               $data = Helper::make_request("GET","/api/v1/products/list?last_id=".$last_id,null);
-               if(count($data['products'])==0) {
-                   break;
-               }
-               foreach ($data['products'] as $product) {
-                  $products[]=$product; 
-                  $last_id = $product['id']  ;
-               }            
-           } 
+            $last_id=0;
+            while(true) {
+                $data = Helper::make_request("GET", "/api/v1/products/list?last_id=".$last_id, null);
+                if(count($data['products'])==0) {
+                    break;
+                }
+                foreach ($data['products'] as $product) {
+                    $products[]=$product;
+                    $last_id = $product['id']  ;
+                }
+            }
 
-          
-          
-          
+
+
+
         } catch(\Exception $ee) {
             System::setErrorMsg($ee->getMessage());
             return;
-        }     
-      
-     
+        }
+
+
         //  $this->setInfo($json);
         $i = 0;
         foreach ($products as $product) {
@@ -353,8 +353,8 @@ class Items extends \App\Pages\Base
             $item = new Item();
             $item->item_code = $product['sku'];
             $item->itemname = $product['name'];
-              // $item->description = $product['description'];
-   
+            // $item->description = $product['description'];
+
             if ($modules['pupricetype'] == 'price1') {
                 $item->price1 = $product['price'];
             }
@@ -380,42 +380,42 @@ class Items extends \App\Pages\Base
                     $image = new \App\Entity\Image();
                     $image->content = $im;
                     $image->mime = $imagedata['mime'];
-                      $conn =   \ZDB\DB::getConnect();
+                    $conn =   \ZDB\DB::getConnect();
                     if($conn->dataProvider=='postgres') {
-                      $image->thumb = pg_escape_bytea($image->thumb);
-                      $image->content = pg_escape_bytea($image->content);
-                        
+                        $image->thumb = pg_escape_bytea($image->thumb);
+                        $image->content = pg_escape_bytea($image->content);
+
                     }
 
                     $image->save();
                     $item->image_id = $image->image_id;
                 }
             }
-            
-            $cat_name =trim( $product['group']['name']);
+
+            $cat_name =trim($product['group']['name']);
             if($sender->createcat->isChecked() && strlen($cat_name)>0) {
-                
-                 
-                   $cat_name = str_replace('&nbsp;','',$cat_name) ;
-                   if(strpos($cat_name,'&gt;')>0) {
-                       $ar = explode('&gt;',$cat_name) ;
-                       $cat_name = trim($ar[count($ar)-1] );
-                       
-                   }
-                   $cat = \App\Entity\Category::getFirst("cat_name=" . \App\Entity\Category::qstr($cat_name) ) ;
-                   
-                   if($cat == null) {
-                       $cat = new   \App\Entity\Category();
-                       $cat->cat_name = $cat_name; 
-                       $cat->save();
-                       
-                   }    
-                    
-                   $item->cat_id=$cat->cat_id; 
-                 
-            }           
-            
-            
+
+
+                $cat_name = str_replace('&nbsp;', '', $cat_name) ;
+                if(strpos($cat_name, '&gt;')>0) {
+                    $ar = explode('&gt;', $cat_name) ;
+                    $cat_name = trim($ar[count($ar)-1]);
+
+                }
+                $cat = \App\Entity\Category::getFirst("cat_name=" . \App\Entity\Category::qstr($cat_name)) ;
+
+                if($cat == null) {
+                    $cat = new   \App\Entity\Category();
+                    $cat->cat_name = $cat_name;
+                    $cat->save();
+
+                }
+
+                $item->cat_id=$cat->cat_id;
+
+            }
+
+
             $item->save();
             $i++;
         }
