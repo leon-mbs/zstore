@@ -11,54 +11,53 @@ use Symfony\Polyfill\Uuid\Uuid;
  */
 class Util
 {
+    /**
+    * генерация  комманд для  чекового  принтера
+    *
+    * @param mixed $template
+    * @return mixed
+    */
+    public static function generateESCPOS($template) {
 
-  /**
-  * генерация  комманд для  чекового  принтера
-  *    
-  * @param mixed $template
-  * @return mixed
-  */
-  public  static function generateESCPOS($template){
-      
-      
-      return  [];
-  }  
-    
-  /**
-  * генерация QR кода  *   
-  * @param mixed $data
-  * @param mixed $size
-  * @param mixed $margin
-  */
-  public static function generateQR($data,$size,$margin=5){
-       $v = phpversion() ;
-       if(strpos($v,'7.2')===0){
+
+        return  [];
+    }
+
+    /**
+    * генерация QR кода  *
+    * @param mixed $data
+    * @param mixed $size
+    * @param mixed $margin
+    */
+    public static function generateQR($data, $size, $margin=5) {
+        $v = phpversion() ;
+        if(strpos($v, '7.2')===0) {
             $qrCode = new \Endroid\QrCode\QrCode($data);
             $qrCode->setSize($size);
             $qrCode->setMargin($margin);
-           
-          //  $qrCode->setEncoding('UTF-8'); 
-       
-            $dataUri = 'data:image/png;base64,' . base64_encode($qrCode->writeString()) ;            
-               
+
+            //  $qrCode->setEncoding('UTF-8');
+
+            $dataUri = 'data:image/png;base64,' . base64_encode($qrCode->writeString()) ;
+
             return $dataUri;
-           
-       }
+
+        }
         $writer = new \Endroid\QrCode\Writer\PngWriter();
- 
-      
+
+
         $qrCode = new \Endroid\QrCode\QrCode($data);
         $qrCode->setSize($size);
         $qrCode->setMargin($margin);
-       // $qrCode->setWriterByName('png');
+        // $qrCode->setWriterByName('png');
 
-        $result = $writer->write($qrCode );
-     
+        $result = $writer->write($qrCode);
+
         $dataUri = $result->getDataUri();
-       
+
         return $dataUri;
-  }  
-  
+    }
+
     /**
      * генерация  GUID
      *
@@ -108,8 +107,9 @@ class Util
      */
     public static function getYears() {
         $list = array();
-        for ($i = 2020; $i <= 2030; $i++)
+        for ($i = 2020; $i <= 2030; $i++) {
             $list[$i] = $i;
+        }
         return $list;
     }
 
@@ -133,8 +133,8 @@ class Util
         return $list;
     }
 
- 
- 
+
+
 
     public static function money2str_ua($number) {
 
@@ -151,7 +151,7 @@ class Util
         return mb_ucfirst($str);
     }
 
-    //многобайтовая версия   
+    //многобайтовая версия
     public static function mb_split($str, $len = 1) {
 
         $arr = [];
@@ -169,12 +169,12 @@ class Util
     public static function handlePhone($tel) {
         $tel = str_replace(' ', '', $tel);
         $tel = preg_replace("/[^0-9.]/", "", $tel);
-        
+
         $phonel = System::getOption("common", 'phonel');
         if($phonel==12 && strlen($tel)==10) {
             $tel = '38'.$tel ;
         }
-        
+
         return $tel;
     }
 
@@ -193,7 +193,7 @@ class Util
         $dt = new \App\DateTime();
         $dt->subMonth(1);
         for ($i = 1; $i <= $num; $i++) {
-         //   $mon[] = $mlist[$dt->month];
+            //   $mon[] = $mlist[$dt->month];
             $to = $dt->endOfMonth()->getTimestamp();
             $from = $dt->startOfMonth()->getTimestamp();
             $list[] = array('number' => $dt->monthNumber(), 'name' => $mlist[$dt->monthNumber()], 'start' => $from, 'end' => $to);
@@ -204,27 +204,27 @@ class Util
         return $list;
     }
 
-//массив  в  обьекты для  фронта 
-    public static function     tokv(array $a){
+    //массив  в  обьекты для  фронта
+    public static function tokv(array $a) {
         $r = array();
-        foreach($a as $k=>$v){
-           $r[]=array('key'=>$k,'value'=>$v) ;
+        foreach($a as $k=>$v) {
+            $r[]=array('key'=>$k,'value'=>$v) ;
         }
-        return  $r;           
-    }    
+        return  $r;
+    }
     //парсит  строку на  слова
-    public static function  strtoarray($text){
+    public static function strtoarray($text) {
         $r = array();
-        
-        foreach(explode(' ',trim($text)) as $l ){
-           $l = trim($l) ;
-           if(strlen($l) > 0) {
-               $r[] = $l ;    
-           }
-           
+
+        foreach(explode(' ', trim($text)) as $l) {
+            $l = trim($l) ;
+            if(strlen($l) > 0) {
+                $r[] = $l ;
+            }
+
         }
-        return  $r;           
-    }      
+        return  $r;
+    }
 }
 
 
@@ -232,9 +232,9 @@ class Util
 define('M2S_KOPS_DIGITS', 0x01);    // digital copecks
 define('M2S_KOPS_MANDATORY', 0x02);    // mandatory copecks
 define('M2S_KOPS_SHORT', 0x04);    // shorten copecks
-                                                      
+
 function money2str_rugr($money, $options = 0) {
-             
+
     $money = preg_replace('/[\,\-\=]/', '.', $money);
 
     $numbers_m = array('', 'один', 'два', 'три', 'четыре', "пять", 'шесть', 'семь',
@@ -257,30 +257,30 @@ function money2str_rugr($money, $options = 0) {
 
     $ret = '';
 
-// enumerating digit groups from left to right, from trillions to copecks
-// $i == 0 means we deal with copecks, $i == 1 for roubles,
-// $i == 2 for thousands etc.
+    // enumerating digit groups from left to right, from trillions to copecks
+    // $i == 0 means we deal with copecks, $i == 1 for roubles,
+    // $i == 2 for thousands etc.
     for ($i = sizeof($units_ru) - 1; $i >= 0; $i--) {
 
-// each group contais 3 digits, except copecks, containing of 2 digits
+        // each group contais 3 digits, except copecks, containing of 2 digits
         $grp = ($i != 0) ? dec_digits_group($money, $i - 1, 3) :
             dec_digits_group($money, -1, 2);
 
-// process the group if not empty
+        // process the group if not empty
         if ($grp != 0) {
 
-// digital copecks
+            // digital copecks
             if ($i == 0 && ($options & M2S_KOPS_DIGITS)) {
                 $ret .= sprintf('%02d', $grp) . ' ';
                 $dig = $grp;
 
-// the main case
+                // the main case
             } else {
                 for ($j = 2; $j >= 0; $j--) {
                     $dig = dec_digits_group($grp, $j);
                     if ($dig != 0) {
 
-// 10 to 19 is a special case
+                        // 10 to 19 is a special case
                         if ($j == 1 && $dig == 1) {
                             $dig = dec_digits_group($grp, 0, 2);
                             $ret .= $numbers_m[$dig] . ' ';
@@ -333,30 +333,30 @@ function money2str_ru($money, $options = 0) {
 
     $ret = '';
 
-// enumerating digit groups from left to right, from trillions to copecks
-// $i == 0 means we deal with copecks, $i == 1 for roubles,
-// $i == 2 for thousands etc.
+    // enumerating digit groups from left to right, from trillions to copecks
+    // $i == 0 means we deal with copecks, $i == 1 for roubles,
+    // $i == 2 for thousands etc.
     for ($i = sizeof($units_ru) - 1; $i >= 0; $i--) {
 
-// each group contais 3 digits, except copecks, containing of 2 digits
+        // each group contais 3 digits, except copecks, containing of 2 digits
         $grp = ($i != 0) ? dec_digits_group($money, $i - 1, 3) :
             dec_digits_group($money, -1, 2);
 
-// process the group if not empty
+        // process the group if not empty
         if ($grp != 0) {
 
-// digital copecks
+            // digital copecks
             if ($i == 0 && ($options & M2S_KOPS_DIGITS)) {
                 $ret .= sprintf('%02d', $grp) . ' ';
                 $dig = $grp;
 
-// the main case
+                // the main case
             } else {
                 for ($j = 2; $j >= 0; $j--) {
                     $dig = dec_digits_group($grp, $j);
                     if ($dig != 0) {
 
-// 10 to 19 is a special case
+                        // 10 to 19 is a special case
                         if ($j == 1 && $dig == 1) {
                             $dig = dec_digits_group($grp, 0, 2);
                             $ret .= $numbers_m[$dig] . ' ';
@@ -409,30 +409,30 @@ function money2str_us($money, $options = 0) {
 
     $ret = '';
 
-// enumerating digit groups from left to right, from trillions to copecks
-// $i == 0 means we deal with copecks, $i == 1 for roubles,
-// $i == 2 for thousands etc.
+    // enumerating digit groups from left to right, from trillions to copecks
+    // $i == 0 means we deal with copecks, $i == 1 for roubles,
+    // $i == 2 for thousands etc.
     for ($i = sizeof($units_ru) - 1; $i >= 0; $i--) {
 
-// each group contais 3 digits, except copecks, containing of 2 digits
+        // each group contais 3 digits, except copecks, containing of 2 digits
         $grp = ($i != 0) ? dec_digits_group($money, $i - 1, 3) :
             dec_digits_group($money, -1, 2);
 
-// process the group if not empty
+        // process the group if not empty
         if ($grp != 0) {
 
-// digital copecks
+            // digital copecks
             if ($i == 0 && ($options & M2S_KOPS_DIGITS)) {
                 $ret .= sprintf('%02d', $grp) . ' ';
                 $dig = $grp;
 
-// the main case
+                // the main case
             } else {
                 for ($j = 2; $j >= 0; $j--) {
                     $dig = dec_digits_group($grp, $j);
                     if ($dig != 0) {
 
-// 10 to 19 is a special case
+                        // 10 to 19 is a special case
                         if ($j == 1 && $dig == 1) {
                             $dig = dec_digits_group($grp, 0, 2);
                             $ret .= $numbers_m[$dig] . ' ';
@@ -485,30 +485,30 @@ function money2str_eu($money, $options = 0) {
 
     $ret = '';
 
-// enumerating digit groups from left to right, from trillions to copecks
-// $i == 0 means we deal with copecks, $i == 1 for roubles,
-// $i == 2 for thousands etc.
+    // enumerating digit groups from left to right, from trillions to copecks
+    // $i == 0 means we deal with copecks, $i == 1 for roubles,
+    // $i == 2 for thousands etc.
     for ($i = sizeof($units_ru) - 1; $i >= 0; $i--) {
 
-// each group contais 3 digits, except copecks, containing of 2 digits
+        // each group contais 3 digits, except copecks, containing of 2 digits
         $grp = ($i != 0) ? dec_digits_group($money, $i - 1, 3) :
             dec_digits_group($money, -1, 2);
 
-// process the group if not empty
+        // process the group if not empty
         if ($grp != 0) {
 
-// digital copecks
+            // digital copecks
             if ($i == 0 && ($options & M2S_KOPS_DIGITS)) {
                 $ret .= sprintf('%02d', $grp) . ' ';
                 $dig = $grp;
 
-// the main case
+                // the main case
             } else {
                 for ($j = 2; $j >= 0; $j--) {
                     $dig = dec_digits_group($grp, $j);
                     if ($dig != 0) {
 
-// 10 to 19 is a special case
+                        // 10 to 19 is a special case
                         if ($j == 1 && $dig == 1) {
                             $dig = dec_digits_group($grp, 0, 2);
                             $ret .= $numbers_m[$dig] . ' ';
@@ -561,30 +561,30 @@ function money2str_ua($money, $options = 0) {
 
     $ret = '';
 
-// enumerating digit groups from left to right, from trillions to copecks
-// $i == 0 means we deal with copecks, $i == 1 for roubles,
-// $i == 2 for thousands etc.
+    // enumerating digit groups from left to right, from trillions to copecks
+    // $i == 0 means we deal with copecks, $i == 1 for roubles,
+    // $i == 2 for thousands etc.
     for ($i = sizeof($units_ru) - 1; $i >= 0; $i--) {
 
-// each group contais 3 digits, except copecks, containing of 2 digits
+        // each group contais 3 digits, except copecks, containing of 2 digits
         $grp = ($i != 0) ? dec_digits_group($money, $i - 1, 3) :
             dec_digits_group($money, -1, 2);
 
-// process the group if not empty
+        // process the group if not empty
         if ($grp != 0) {
 
-// digital copecks
+            // digital copecks
             if ($i == 0 && ($options & M2S_KOPS_DIGITS)) {
                 $ret .= sprintf('%02d', $grp) . ' ';
                 $dig = $grp;
 
-// the main case
+                // the main case
             } else {
                 for ($j = 2; $j >= 0; $j--) {
                     $dig = dec_digits_group($grp, $j);
                     if ($dig != 0) {
 
-// 10 to 19 is a special case
+                        // 10 to 19 is a special case
                         if ($j == 1 && $dig == 1) {
                             $dig = dec_digits_group($grp, 0, 2);
                             $ret .= $numbers_m[$dig] . ' ';
@@ -615,17 +615,17 @@ function money2str_ua($money, $options = 0) {
 
 // service function to select the group of digits
 function dec_digits_group($number, $power, $digits = 1) {
-                 
-    if (function_exists('gmp_init') && $power >0 ) {
-       return   gmp_intval( gmp_mod(gmp_div((int)$number, gmp_pow(10,(int) $power * $digits )), gmp_pow(10, (int)$digits )));
+
+    if (function_exists('gmp_init') && $power >0) {
+        return   gmp_intval(gmp_mod(gmp_div((int)$number, gmp_pow(10, (int) $power * $digits)), gmp_pow(10, (int)$digits)));
     }
-    return    intval(   ( $number/pow(10, $power * $digits) ) % pow(10,    $digits) ) ;
-    
-   // return (int)bcmod(bcdiv($number, bcpow(10, $power * $digits, 8)), bcpow(10, $digits, 8));
+    return    intval(($number/pow(10, $power * $digits)) % pow(10, $digits)) ;
+
+    // return (int)bcmod(bcdiv($number, bcpow(10, $power * $digits, 8)), bcpow(10, $digits, 8));
 }
 
 // service function to get plural form for the number
-function sk_plural_form($d) {    
+function sk_plural_form($d) {
     $d = $d % 100;
     if ($d > 20) {
         $d = $d % 10;
@@ -638,5 +638,3 @@ function sk_plural_form($d) {
         return 2;
     }
 }
-
-
