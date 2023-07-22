@@ -18,9 +18,8 @@ use Zippy\WebApplication as App;
 
 class NotifyList extends \App\Pages\Base
 {
-
-    public  $user = null;
-    public  $ds;
+    public $user = null;
+    public $ds;
     private $users;
 
     public function __construct() {
@@ -94,12 +93,12 @@ class NotifyList extends \App\Pages\Base
         $this->nlist->Reload();
     }
 
-   public function OnDel($row) {
-         $user = System::getUser();
-    
-         $conn = \Zdb\DB::getConnect() ;
-         
-         $conn->Execute("delete from notifies where   user_id=" . $user->user_id)  ;
-         $this->nlist->Reload();  
-   }
+    public function OnDel($row) {
+        $user = System::getUser();
+
+        $conn = \Zdb\DB::getConnect() ;
+
+        $conn->Execute("delete from notifies where   user_id=" . $user->user_id)  ;
+        $this->nlist->Reload();
+    }
 }

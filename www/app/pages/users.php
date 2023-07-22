@@ -19,7 +19,6 @@ use Zippy\Html\Panel;
 
 class Users extends \App\Pages\Base
 {
-
     public $user = null;
 
     public function __construct() {
@@ -221,7 +220,6 @@ class Users extends \App\Pages\Base
 
 class UserDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {

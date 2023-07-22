@@ -5,7 +5,6 @@ namespace App\Pages;
 //страница  для  загрузки  файла отчета
 class ShowReport extends \Zippy\Html\WebPage
 {
-
     public function __construct($type, $filename="") {
         parent::__construct();
 
@@ -30,23 +29,23 @@ class ShowReport extends \Zippy\Html\WebPage
             header("Content-Transfer-Encoding: binary");
         }
         if ($type == "xls") {
-           
-                $file = tempnam(sys_get_temp_dir(),"".time() );
-             
-                file_put_contents($file,$html);
-                 
-                $reader =  new \PhpOffice\PhpSpreadsheet\Reader\Html()  ;
-                $spreadsheet = $reader->load($file);
-                             
-                         
-                $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
 
-                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                 header("Content-Disposition: attachment;Filename={$filename}.xlsx");
-                $writer->save('php://output');
-                die;      
-          
-            
+            $file = tempnam(sys_get_temp_dir(), "".time());
+
+            file_put_contents($file, $html);
+
+            $reader =  new \PhpOffice\PhpSpreadsheet\Reader\Html()  ;
+            $spreadsheet = $reader->load($file);
+
+
+            $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header("Content-Disposition: attachment;Filename={$filename}.xlsx");
+            $writer->save('php://output');
+            die;
+
+
         }
         if ($type == "html") {
             header("Content-type: text/plain");

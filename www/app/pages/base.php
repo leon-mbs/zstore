@@ -11,13 +11,12 @@ use Zippy\Html\Link\ClickLink;
 
 class Base extends \Zippy\Html\WebPage
 {
-
     public $branch_id = 0;
-     
-    
+
+
     public function __construct($params = null) {
         global $_config;
- 
+
 
         \Zippy\Html\WebPage::__construct();
 
@@ -28,7 +27,7 @@ class Base extends \Zippy\Html\WebPage
         }
 
         $this->_tvars['curversion'] = System::CURR_VERSION ;
-    
+
         $options = System::getOptions('common');
 
         //опции
@@ -44,9 +43,9 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["showsidemenu"] = !(System::getUser()->hidemenu == true);
         $this->_tvars["twodigit"] = round($options['amdigits']) > 0;
 
-        $this->_tvars['qtydigits']  = intval( $common['qtydigits'] ?? 0 );     
-        $this->_tvars['amdigits']  = intval( $common['amdigits'] ?? 0);     
-        
+        $this->_tvars['qtydigits']  = intval($common['qtydigits'] ?? 0);
+        $this->_tvars['amdigits']  = intval($common['amdigits'] ?? 0);
+
 
         $blist = array();
         if ($this->_tvars["usebranch"] == true) {
@@ -68,7 +67,7 @@ class Base extends \Zippy\Html\WebPage
             }
 
         }
-        //форма  филиалов       
+        //форма  филиалов
         $this->add(new \Zippy\Html\Form\Form('nbform'));
         $this->nbform->add(new \Zippy\Html\Form\DropDownChoice('nbbranch', $blist, $this->branch_id))->onChange($this, 'onnbFirm');
 
@@ -92,7 +91,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["isadmin"] = $user->userlogin == 'admin';
         $this->_tvars["isadmins"] = $user->rolename == 'admins';
         $this->_tvars["isemp"] = $user->employee_id>0 ;
-        $this->_tvars["showtimesheet"] = ($user->rolename == 'admins' || $user->employee_id>0 );
+        $this->_tvars["showtimesheet"] = ($user->rolename == 'admins' || $user->employee_id>0);
 
         if ($this->_tvars["usebranch"] == false) {
             $this->branch_id = 0;
@@ -113,17 +112,17 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["promua"] = $modules['promua'] == 1;
         $this->_tvars["paperless"] = $modules['paperless'] == 1;
         $this->_tvars["checkbox"] = $modules['checkbox'] == 1;
-        
 
-      //  $printer = System::getOptions('printer');
 
-        $this->_tvars["psurl"] =  $user->pserver ;  
-        $this->_tvars["printserver"] = $user->prtype == 1;  
-        $this->_tvars["psurllabel"] =  $user->pserverlabel ;  
-        $this->_tvars["printserverlabel"] = $user->prtypelabel == 1;  
+        //  $printer = System::getOptions('printer');
 
-        
-        
+        $this->_tvars["psurl"] =  $user->pserver ;
+        $this->_tvars["printserver"] = $user->prtype == 1;
+        $this->_tvars["psurllabel"] =  $user->pserverlabel ;
+        $this->_tvars["printserverlabel"] = $user->prtypelabel == 1;
+
+
+
         //доступы к  модулям
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["shop"] = false;
@@ -140,7 +139,7 @@ class Base extends \Zippy\Html\WebPage
         if (strpos(System::getUser()->modules, 'woocomerce') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["woocomerce"] = false;
         }
-  
+
         if (strpos(System::getUser()->modules, 'ppo') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["ppo"] = false;
         }
@@ -158,7 +157,7 @@ class Base extends \Zippy\Html\WebPage
         }
 
         $this->_tvars["fiscal"] = $this->_tvars["checkbox"] || $this->_tvars["ppo"];
-        
+
         if ($this->_tvars["shop"] ||
             $this->_tvars["ocstore"] ||
             $this->_tvars["woocomerce"] ||
@@ -192,9 +191,9 @@ class Base extends \Zippy\Html\WebPage
 
         $this->_tvars["darkmode"] = $user->darkmode == 1;
 
-        //для скрытия блока разметки  в  шаблоне страниц                           
+        //для скрытия блока разметки  в  шаблоне страниц
         $this->_tvars["hideblock"] = false;
-        
+
         //активные   пользователий
         if ($options['showactiveusers'] == 1) {
             $this->_tvars["showactiveusers"] = true;
@@ -204,12 +203,12 @@ class Base extends \Zippy\Html\WebPage
             $conn = \ZDB\DB::getConnect();
             $conn->Execute("update users  set  lastactive = now() where  user_id= " . $user->user_id);
 
-   
+
             $w = "     TIME_TO_SEC(timediff(now(),lastactive)) <300  ";
             if($conn->dataProvider=="postgres") {
                 $w = "     EXTRACT(EPOCH FROM now() - lastactive) <300  ";
-            }            
-            
+            }
+
             if ($this->branch_id > 0) {
                 $w .= "  and  employee_id  in (select employee_id from employees where branch_id ={$this->branch_id}) ";
             }
@@ -225,7 +224,7 @@ class Base extends \Zippy\Html\WebPage
 
 
             $this->_tvars["activeuserscnt"] = count($this->_tvars["aulist"]);
-          //  \App\Helper::sendLetter("softman@ukr.net","test3","sub")  ;
+            //  \App\Helper::sendLetter("softman@ukr.net","test3","sub")  ;
         }
         //чат
         if ($options['showchat'] == 1) {
@@ -237,10 +236,10 @@ class Base extends \Zippy\Html\WebPage
 
         }
         $this->generateToasts();
-        
+
         $duration = \App\Session::getSession()->duration() ;
         $this->_tvars['showtips'] = $duration < 300   ;
-     }
+    }
 
     public function LogoutClick($sender) {
         \App\Helper::logout();
@@ -259,38 +258,38 @@ class Base extends \Zippy\Html\WebPage
     //вывод ошибки,  используется   в дочерних страницах
 
     public function setError($msg, $p1 = "", $p2 = "") {
-        $msg = str_replace("'","`",$msg) ;
-     
+        $msg = str_replace("'", "`", $msg) ;
+
 
         System::setErrorMsg($msg);
     }
     //вывод  как  bootstrap alert  (для сообщений что  могут  вызвать  ошибку  javascript)
-    public function setErrorTopPage($msg ) {
-        $msg = str_replace("'","`",$msg) ;
-    
-        System::setErrorMsg($msg,true);
+    public function setErrorTopPage($msg) {
+        $msg = str_replace("'", "`", $msg) ;
+
+        System::setErrorMsg($msg, true);
     }
 
     public function setSuccess($msg, $p1 = "", $p2 = "") {
-        $msg = str_replace("'","`",$msg) ;
+        $msg = str_replace("'", "`", $msg) ;
 
         System::setSuccessMsg($msg);
     }
 
     public function setWarn($msg, $p1 = "", $p2 = "") {
-         $msg = str_replace("'","`",$msg) ;
+        $msg = str_replace("'", "`", $msg) ;
 
         System::setWarnMsg($msg);
     }
 
     public function setInfo($msg, $p1 = "", $p2 = "") {
-        $msg = str_replace("'","`",$msg) ;
+        $msg = str_replace("'", "`", $msg) ;
 
         System::setInfoMsg($msg);
     }
 
     final protected function isError() {
-        return (strlen(System::getErrorMsg()) > 0 || strlen(System::getErrorMsg( )) > 0);
+        return (strlen(System::getErrorMsg()) > 0 || strlen(System::getErrorMsg()) > 0);
     }
 
     public function beforeRender() {
@@ -311,7 +310,7 @@ class Base extends \Zippy\Html\WebPage
 
         $user = System::getUser();
         if (strlen(System::getErrorMsg()) > 0) {
-            
+
             $this->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{'timeOut':'8000'})        ", true);
         }
 
@@ -335,7 +334,7 @@ class Base extends \Zippy\Html\WebPage
 
     //Перезагрузить страницу  с  клиента
     //например для  сброса  адресной строки  после  команды удаления
-    protected final function resetURL() {
+    final protected function resetURL() {
         \App\Application::$app->setReloadPage();
     }
 
@@ -364,84 +363,93 @@ class Base extends \Zippy\Html\WebPage
 
     public function getCustomerInfo($args, $post) {
         $conn= \ZDB\DB::getConnect() ;
-        
+
         $c = \App\Entity\Customer::load($args[0]);
-        if($c==null) return  "N/A";
-        
+        if($c==null) {
+            return  "N/A";
+        }
+
         $report = new \App\Report('cinfo.tpl');
         $header = [];
-     
+
         $header['name'] = $c->customer_name;
         $header['phone'] = $c->phone;
         $header['email'] = strlen($c->email) > 0 ? $c->email : false;
         $header['address'] = strlen($c->address) > 0 ? $c->address : false;
         $header['comment'] = strlen($c->comment) > 0 ? $c->comment : false;
-        
-        $header['bonus'] = intval($c->getBonus() );
-        if($header['bonus']==0)  $header['bonus'] = false;
-        $header['dolg'] = doubleval($c->getDolg() );
-        
-        if($header['dolg']>0)  $header['dolg'] ='+'.$header['dolg'] ;
-        if($header['dolg']==0)  $header['dolg'] = false;
-        $header['disc'] = doubleval($c->getDiscount() );
-        if($header['disc']==0)  $header['disc'] = false;
+
+        $header['bonus'] = intval($c->getBonus());
+        if($header['bonus']==0) {
+            $header['bonus'] = false;
+        }
+        $header['dolg'] = doubleval($c->getDolg());
+
+        if($header['dolg']>0) {
+            $header['dolg'] ='+'.$header['dolg'] ;
+        }
+        if($header['dolg']==0) {
+            $header['dolg'] = false;
+        }
+        $header['disc'] = doubleval($c->getDiscount());
+        if($header['disc']==0) {
+            $header['disc'] = false;
+        }
         $header['last'] = false;
-        $doc = \App\Entity\doc\Document::getFirst(" customer_id={$c->customer_id}","document_id desc") ;
-        if($doc != null){
-           $header['last']= $doc->meta_desc .' '. $doc->document_number;
-           $header['lastdate']=Helper::fd($doc->document_date);
-           $header['lastsum']=Helper::fa($doc->amount);
-           $header['laststatus']   =  \App\Entity\doc\Document::getStateName($doc->state)  ;
-           
-           $goods = [];
-           
-           $sql = "select items.item_id, items.itemname,items.item_code    from 
+        $doc = \App\Entity\doc\Document::getFirst(" customer_id={$c->customer_id}", "document_id desc") ;
+        if($doc != null) {
+            $header['last']= $doc->meta_desc .' '. $doc->document_number;
+            $header['lastdate']=Helper::fd($doc->document_date);
+            $header['lastsum']=Helper::fa($doc->amount);
+            $header['laststatus']   =  \App\Entity\doc\Document::getStateName($doc->state)  ;
+
+            $goods = [];
+
+            $sql = "select items.item_id, items.itemname,items.item_code    from 
              entrylist_view  join items  on items.item_id = entrylist_view.item_id 
              where customer_id={$c->customer_id}  
              order  by  entry_id desc  limit 0,10 "    ;
-                       
-           foreach($conn->Execute($sql) as $i) {
-              $header['goods'][$i['item_id']] = $i;    
-           }
-           
-           $header['goods']  =  array_values($header['goods']) ;
-           
+
+            foreach($conn->Execute($sql) as $i) {
+                $header['goods'][$i['item_id']] = $i;
+            }
+
+            $header['goods']  =  array_values($header['goods']) ;
+
         }
-       
-    
+
+
         $header['smscode'] = false;
-   
+
         $sms = System::getOptions("sms");
-        if(intval($sms) > 0 && strlen($c->phone)>0 )
-        {
-             $header['smscode'] = "".rand(100,990)  ;
-             $header['click'] = "onclick=\"sendSMSCust('{$c->phone}',{$header['smscode']})\"" ;
-                
-        }      
+        if(intval($sms) > 0 && strlen($c->phone)>0) {
+            $header['smscode'] = "".rand(100, 990)  ;
+            $header['click'] = "onclick=\"sendSMSCust('{$c->phone}',{$header['smscode']})\"" ;
+
+        }
         $header['sumall'] = \App\Helper::fa($c->sumAll());
-      
-     
-        $data = $report->generate($header); 
-        $data = str_replace("'","`",$data)  ;
-      //  $data = str_replace("\"","`",$data)  ;
-      
-      
-      
-      
+
+
+        $data = $report->generate($header);
+        $data = str_replace("'", "`", $data)  ;
+        //  $data = str_replace("\"","`",$data)  ;
+
+
+
+
         return $data;
 
     }
 
-    
+
     public function sendSMSCode($args, $post) {
-        
-        
-          $ret = \App\Entity\Subscribe::sendSMS($args[0],$args[1])  ;
-          return $ret ?? "";
-        
+
+
+        $ret = \App\Entity\Subscribe::sendSMS($args[0], $args[1])  ;
+        return $ret ?? "";
+
     }
 
-    
+
     private function generateToasts() {
 
 
@@ -452,13 +460,13 @@ class Base extends \Zippy\Html\WebPage
 
         $user = System::getUser();
         if ($user->defstore == 0) {
-         //   $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі склад за замовчуванням\"");
+            //   $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі склад за замовчуванням\"");
         }
         if ($user->deffirm == 0) {
-         //   $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі компанію за замовчуванням\"");
+            //   $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі компанію за замовчуванням\"");
         }
         if ($user->defmf == 0) {
-        //    $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі касу за замовчуванням\"");
+            //    $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі касу за замовчуванням\"");
         }
         if ($user->userlogin == "admin") {
             if ($user->userpass == "admin" || $user->userpass == '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.') {
@@ -471,253 +479,249 @@ class Base extends \Zippy\Html\WebPage
                 $this->_tvars["toasts"][] = array('title' => "title:\"Наявні непрочитані системні повідомлення\"");
 
             }
-            //проверка  новой версии        
-        
+            //проверка  новой версии
+
 
             $v = @file_get_contents("https://zippy.com.ua/version.json?t=" . time());
             $v = @json_decode($v, true);
             if (strlen($v['version']) > 0) {
-                $c = (int)str_replace(".", "", str_replace("v", "",  \App\System::CURR_VERSION));
+                $c = (int)str_replace(".", "", str_replace("v", "", \App\System::CURR_VERSION));
                 $n = (int)str_replace(".", "", str_replace("v", "", $v['version']));
 
                 if ($n > $c) {
-                   $this->_tvars["toasts"][] = array('title' => "title:  \"Доступна нова версiя {$v['version']}  <a target=\\\"_blank\\\" href=\\\"https://zippy.com.ua/zstore#newver\\\">Перейти...</a>\" ");
-       
+                    $this->_tvars["toasts"][] = array('title' => "title:  \"Доступна нова версiя {$v['version']}  <a target=\\\"_blank\\\" href=\\\"https://zippy.com.ua/zstore#newver\\\">Перейти...</a>\" ");
+
                 }
 
-                
-            }         
-          
-            
-            
-            
-            
+
+            }
+
+
+
+
+
         }
-        
+
         if (count($this->_tvars["toasts"]) == 0) {
-           // $this->_tvars["toasts"][] = array('title' => '');
-           \App\Session::getSession()->toasts = false;
-           return;
+            // $this->_tvars["toasts"][] = array('title' => '');
+            \App\Session::getSession()->toasts = false;
+            return;
         }
         \App\Session::getSession()->toasts = true;
     }
 
-    
-  
+
+
     //callPM
 
-    public function vonTextCust($args,$post=null) {
-    
-       $list =\App\Util::tokv( \App\Entity\Customer::getList($args[0], $args[1]));
-     
-       return json_encode($list, JSON_UNESCAPED_UNICODE);          
-    }  
- 
-    public function vonTextItem($args,$post=null) {
- 
-       $list =\App\Util::tokv( \App\Entity\Item::findArrayAC($args[0], $args[1], $args[2]));
-     
-       return json_encode($list, JSON_UNESCAPED_UNICODE);          
-    }  
- 
-    public function vLoadService($args,$post=null) {
-         
-         $service_id = $args[0];
-         $ser =   \App\Entity\Service::load($service_id) ;
-         $ret = [];
-         if($ser != null) {
-             $ret['service_id']   = $service_id;   
-             $ret['service_name'] = $ser->service_name;   
-             $ret['category'] = $ser->category;   
-             $ret['pureprice'] = $ser->getPurePrice( );   
-             $ret['price'] = $ser->getPrice($args[1] ); 
-             if($ret['pureprice'] > $ret['price']) {
-                $ret['disc']  = number_format((1 - ($ret['price']/($ret['pureprice'])))*100, 1, '.', '') ;    
-             }
-                 
-         }      
-       
-         return json_encode($ret, JSON_UNESCAPED_UNICODE);          
-   
-    }
-    
-    public function vLoadItem($args,$post=null) {
-       $item_id=$args[0];
-       $p = strlen($post)==null ?  array() : json_decode($post,true)  ;
-       
-         
-       $item =   \App\Entity\Item::load($item_id) ;
-       $ret = [];
-       if($item != null) {
-          $ret['item_id'] = $item_id;   
-          $ret['itemname'] = $item->itemname;   
-          
-          $ret['price'] = $item->getPriceEx(array(
-               'pricetype'=>$p['pt'],
-               'store'=>$p['store'] ,  
-               'customer'=>$p['customer']
-        
-          )); 
-          
-          
-            
-          $ret['lastpartion'] = $item->getLastPartion($store_id); //последняя  закупка  
-          $ret['qtystock'] = $item->getQuantity($store_id); // на  складе  
-          $ret['item_code'] = $item->item_code;   
-             
+    public function vonTextCust($args, $post=null) {
 
-        $ret['disc'] = '';
-        $ret['pureprice'] = $item->getPurePrice();
-        if($ret['pureprice'] > $ret['price']) {
-             $ret['disc']  = number_format((1 - ($ret['price']/($ret['pureprice'])))*100, 1, '.', '') ;    
+        $list =\App\Util::tokv(\App\Entity\Customer::getList($args[0], $args[1]));
+
+        return json_encode($list, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function vonTextItem($args, $post=null) {
+
+        $list =\App\Util::tokv(\App\Entity\Item::findArrayAC($args[0], $args[1], $args[2]));
+
+        return json_encode($list, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function vLoadService($args, $post=null) {
+
+        $service_id = $args[0];
+        $ser =   \App\Entity\Service::load($service_id) ;
+        $ret = [];
+        if($ser != null) {
+            $ret['service_id']   = $service_id;
+            $ret['service_name'] = $ser->service_name;
+            $ret['category'] = $ser->category;
+            $ret['pureprice'] = $ser->getPurePrice();
+            $ret['price'] = $ser->getPrice($args[1]);
+            if($ret['pureprice'] > $ret['price']) {
+                $ret['disc']  = number_format((1 - ($ret['price']/($ret['pureprice'])))*100, 1, '.', '') ;
+            }
+
         }
-              
-          
-          
-       }
-                                 
-       
-       return json_encode($ret, JSON_UNESCAPED_UNICODE);          
-    }  
- 
-    
-    public function vSaveNewcust($args,$post=null) {
-        $post=json_decode($post) ; 
-      
+
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+
+    }
+
+    public function vLoadItem($args, $post=null) {
+        $item_id=$args[0];
+        $p = strlen($post)==null ? array() : json_decode($post, true)  ;
+
+
+        $item =   \App\Entity\Item::load($item_id) ;
+        $ret = [];
+        if($item != null) {
+            $ret['item_id'] = $item_id;
+            $ret['itemname'] = $item->itemname;
+
+            $ret['price'] = $item->getPriceEx(array(
+                 'pricetype'=>$p['pt'],
+                 'store'=>$p['store'] ,
+                 'customer'=>$p['customer']
+
+            ));
+
+
+
+            $ret['lastpartion'] = $item->getLastPartion($store_id); //последняя  закупка
+            $ret['qtystock'] = $item->getQuantity($store_id); // на  складе
+            $ret['item_code'] = $item->item_code;
+
+
+            $ret['disc'] = '';
+            $ret['pureprice'] = $item->getPurePrice();
+            if($ret['pureprice'] > $ret['price']) {
+                $ret['disc']  = number_format((1 - ($ret['price']/($ret['pureprice'])))*100, 1, '.', '') ;
+            }
+
+
+
+        }
+
+
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+    }
+
+
+    public function vSaveNewcust($args, $post=null) {
+        $post=json_decode($post) ;
+
         $c = new  \App\Entity\Customer() ;
         $c->customer_name = $post->name;
         $c->phone =  $post->phone;
         $c->email =  $post->email;
-        
+
         $c->save() ;
         $ret = array('customer_id'=>$c->customer_id) ;
-       
-        return json_encode($ret, JSON_UNESCAPED_UNICODE);          
-   }
-    
-    public function vSaveNewitem($args,$post=null) {
-        
-       $post=json_decode($post) ; 
-       
-       $item = new  \App\Entity\Item()  ;
-       $item->itemname = $post->itemname;
-       $item->item_code = $post->item_code;
-       $item->msr = $post->msr;
-       $item->manufacturer = $post->brand;
-       $item->cat_id = $post->cat_id;
-       
-       
-       
+
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function vSaveNewitem($args, $post=null) {
+
+        $post=json_decode($post) ;
+
+        $item = new  \App\Entity\Item()  ;
+        $item->itemname = $post->itemname;
+        $item->item_code = $post->item_code;
+        $item->msr = $post->msr;
+        $item->manufacturer = $post->brand;
+        $item->cat_id = $post->cat_id;
+
+
+
         if (strlen($item->item_code) > 0 && System::getOption("common", "nocheckarticle") != 1) {
             $code = \App\Entity\Item::qstr($this->_item->item_code);
             $cnt = \App\Entity\Item::findCnt("item_id <> {$item->item_id} and item_code={$code} ");
             if ($cnt > 0) {
-                    return json_encode(array('error'=>'Такий артикул вже існує'), JSON_UNESCAPED_UNICODE);     
+                return json_encode(array('error'=>'Такий артикул вже існує'), JSON_UNESCAPED_UNICODE);
             }
-        }       
-       
+        }
+
         if (strlen($item->item_code) == 0 && System::getOption("common", "autoarticle") == 1) {
-             $item->item_code = \App\Entity\Item::getNextArticle();
-        }          
-  
+            $item->item_code = \App\Entity\Item::getNextArticle();
+        }
+
         $itemname = \App\Entity\Item::qstr($item->itemname);
         $code = \App\Entity\Item::qstr($item->item_code);
         $cnt = \App\Entity\Item::findCnt("item_id <> {$item->item_id} and itemname={$itemname} and item_code={$code} ");
         if ($cnt > 0) {
-   
-            return json_encode(array('error'=>'ТМЦ з такою назвою і артикулом вже існує'), JSON_UNESCAPED_UNICODE);     
-              
-        }       
-       
-       $item->save() ;
-       
-       $ret=array('item_id'=>$item->item_id) ;
-       
-       return json_encode($ret, JSON_UNESCAPED_UNICODE);          
-    }  
+
+            return json_encode(array('error'=>'ТМЦ з такою назвою і артикулом вже існує'), JSON_UNESCAPED_UNICODE);
+
+        }
+
+        $item->save() ;
+
+        $ret=array('item_id'=>$item->item_id) ;
+
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+    }
 
     //загрузка  категорий  и брендов
-    public  function vLoadLists($args,$post){
-         $post = json_decode($post) ;
-         $ret = [];
-         if($post->cats ?? null) {
-             $cats =  \App\Entity\Category::getList() ;
-             $ret['cats'] =  \App\Util::tokv($cats) ;
-         }
-         if($post->brands ?? null) {
-             $brands = \App\Entity\Item::getManufacturers(true) ;
-             $ret['brands'] =  \App\Util::tokv($brands) ;
-         }
-         if($post->stores ?? null) {
-             $stores = \App\Entity\Store::getList() ;
-             $ret['stores'] =  \App\Util::tokv($stores) ;
-         }
-         if($post->firms ?? null) {
-             $firms = \App\Entity\Firm::getList() ;
-             $ret['firms'] =  \App\Util::tokv($firms) ;
-         }
-         if($post->mfs ?? null) {
-             $mfs = \App\Entity\MoneyFund::getList() ;
-             $ret['mfs'] =  \App\Util::tokv($mfs) ;
-         }
-          
-         return json_encode($ret, JSON_UNESCAPED_UNICODE);   
-     } 
-  
-     public  function vLoadContracts($args,$post){
-         
-         $ret=[];
-         $ret['contracts'] =   \App\Util::tokv( \App\Entity\Contract::getList($args[0], $args[1]) );
- 
+    public function vLoadLists($args, $post) {
+        $post = json_decode($post) ;
+        $ret = [];
+        if($post->cats ?? null) {
+            $cats =  \App\Entity\Category::getList() ;
+            $ret['cats'] =  \App\Util::tokv($cats) ;
+        }
+        if($post->brands ?? null) {
+            $brands = \App\Entity\Item::getManufacturers(true) ;
+            $ret['brands'] =  \App\Util::tokv($brands) ;
+        }
+        if($post->stores ?? null) {
+            $stores = \App\Entity\Store::getList() ;
+            $ret['stores'] =  \App\Util::tokv($stores) ;
+        }
+        if($post->firms ?? null) {
+            $firms = \App\Entity\Firm::getList() ;
+            $ret['firms'] =  \App\Util::tokv($firms) ;
+        }
+        if($post->mfs ?? null) {
+            $mfs = \App\Entity\MoneyFund::getList() ;
+            $ret['mfs'] =  \App\Util::tokv($mfs) ;
+        }
 
-         return json_encode($ret, JSON_UNESCAPED_UNICODE);   
-  
-     }
-    
-     //для vue
-    public  function vgetPriceByQty($args,$post){
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function vLoadContracts($args, $post) {
+
+        $ret=[];
+        $ret['contracts'] =   \App\Util::tokv(\App\Entity\Contract::getList($args[0], $args[1]));
+
+
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+
+    }
+
+    //для vue
+    public function vgetPriceByQty($args, $post) {
         $post = json_decode($post) ;
 
         $item =  \App\Entity\Item::load($post->item) ;
- 
-        $price = $item->getActionPriceByQuantity($post->qty );
-        
+
+        $price = $item->getActionPriceByQuantity($post->qty);
+
         $ret=[];
         $ret['price'] = $price;
 
-        return json_encode($ret, JSON_UNESCAPED_UNICODE);   
-  
-     }
-     public  function vLoadCust($args,$post){
-         
-         $ret=[];
-         $info=[] ;
-         $c = \App\Entity\Customer::load($args[0]) ;
-         if($c != null) {
-             $info['customer_name'] = $c->customer_name;
-             $info['disctext'] = '';
-             $info['discount']  = $c->getDiscount()  ;
-             $info['bonus']  = $c->getBonus()  ;
-             if (doubleval($info['discount']) > 0) {
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+
+    }
+    public function vLoadCust($args, $post) {
+
+        $ret=[];
+        $info=[] ;
+        $c = \App\Entity\Customer::load($args[0]) ;
+        if($c != null) {
+            $info['customer_name'] = $c->customer_name;
+            $info['disctext'] = '';
+            $info['discount']  = $c->getDiscount()  ;
+            $info['bonus']  = $c->getBonus()  ;
+            if (doubleval($info['discount']) > 0) {
                 $info['disctext'] =  "Постійна знижка {$info['discount']}%";
                 $info['bonus'] =0;
-             } else {
+            } else {
                 if ($info['bonus'] > 0) {
                     $info['disctext'] = "Нараховано бонусів " . $info['bonus'];
                 }
-             }      
-                  
-         }
-         $ret['custinfo'] = $info;
- 
+            }
 
-         return json_encode($ret, JSON_UNESCAPED_UNICODE);   
-  
-     }
+        }
+        $ret['custinfo'] = $info;
 
-    
+
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+
+    }
+
+
 }
-
- 
-
- 

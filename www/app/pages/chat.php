@@ -18,7 +18,6 @@ use Zippy\WebApplication as App;
 
 class Chat extends \App\Pages\Base
 {
-
     public $user = null;
 
     private $users;

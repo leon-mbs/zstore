@@ -19,15 +19,13 @@ use App\Util;
  */
 class Main extends Base
 {
-  
-
     private $_docstatelist;
 
     public function __construct() {
         parent::__construct();
 
         $this->_tvars['curversion'] = System::CURR_VERSION;
-        $this->_tvars['curversionbd'] = System::getOptions('version',false);
+        $this->_tvars['curversionbd'] = System::getOptions('version', false);
 
         $user = System::getUser();
 
@@ -61,12 +59,12 @@ class Main extends Base
         if (strlen($brids) > 0) {
             $br = " and d.branch_id in ({$brids}) ";
         }
-        
-       
+
+
         if (strlen($brids) > 0) {
             $brf = " and branch_id in ({$brids}) ";
-        }        
-        
+        }
+
         $cstr = \App\Acl::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "    store_id in ({$cstr})  and   ";
@@ -93,7 +91,7 @@ class Main extends Base
             $this->add(new Paginator("sdpag", $sdlist));
             $sdlist->Reload();
         }
-        //минимальное количество  
+        //минимальное количество
         if ($this->_tvars['wminqty'] == true) {
             $data = array();
             $sql = "select t.qty,s.storename, t.store_id, i.minqty,i.itemname,i.item_code   from (select store_id, item_id, coalesce(sum( qty),0) as qty   from  store_stock
@@ -144,16 +142,16 @@ class Main extends Base
             $doclist->Reload();
         }
 
-        
-        
-       
+
+
+
         //мои  документы
         if ($this->_tvars['wmdoc'] == true) {
             $data = array();
 
             $sql = "select    d.document_id,d.meta_desc,d.document_number,d.document_date,d.amount from   documents_view d  where 1=1   {$br}  and  d.user_id={$user->user_id}   order  by  document_id desc  ";
 
-            $rc = $conn->SelectLimit($sql,25,0);
+            $rc = $conn->SelectLimit($sql, 25, 0);
 
             foreach ($rc as $row) {
                 $data[] = new \App\DataItem($row);
@@ -194,25 +192,25 @@ class Main extends Base
         ";
 
         $rs = $conn->Execute($sql);
- 
+
 
         $ps = [];
         $ps[]=["name","amount"] ;
-        
+
         foreach ($rs as $row) {
-               
-           $ps[]=[$names[$row['iotype']],abs(round($row['am']))] ;
-            
+
+            $ps[]=[$names[$row['iotype']],abs(round($row['am']))] ;
+
         }
         $this->_tvars['ps'] = json_encode($ps);
-    
-        //сравнение  доходов  и расходов  
+
+        //сравнение  доходов  и расходов
         $mon = array();
         $in = array();
         $out = array();
 
         $pc=[];
-        
+
         $mlist = Util::genPastMonths(12);
 
         foreach ($mlist as $m) {
@@ -237,21 +235,21 @@ class Main extends Base
             ";
             $in = abs(round($conn->GetOne($sql)));
 
-               
+
             $pc[]=[$m['name'],$in,$out]  ;
-            
+
         }
         $this->_tvars['pc'] = json_encode($pc);
 
         //реализация
         $ts = [];
-      //  $ts[] = ['Month','Goods','Service'];
+        //  $ts[] = ['Month','Goods','Service'];
 
         $mlist = Util::genPastMonths(12);
 
         foreach ($mlist as $m) {
 
-            
+
             $sql = "
            select  coalesce(sum(0-(e.outprice*e.quantity))) as summa 
               from entrylist_view  e
@@ -284,11 +282,11 @@ class Main extends Base
                   ";
 
             $ser = abs(round($conn->GetOne($sql)));
-            
+
             $ts[] = [$m['name'],$ser,$tov];
-            
-            
-            
+
+
+
         }
         $this->_tvars['ts'] = json_encode($ts);
 
@@ -303,20 +301,20 @@ class Main extends Base
         $this->_tvars['biitemscnt'] = H::fa($conn->GetOne($sql));
 
 
-        //к оплате         
+        //к оплате
         $sql = "SELECT COALESCE( SUM(   s_active - s_passive    ) ,0) AS d   FROM cust_acc_view where  s_active > s_passive   ";
         $sum = doubleval($conn->GetOne($sql));
         $sql = "SELECT COALESCE( SUM(   b_active - b_passive    ) ,0) AS d   FROM cust_acc_view where  b_active > b_passive   ";
         $sum += doubleval($conn->GetOne($sql));
-        
-        
+
+
         $this->_tvars['bicredit'] = H::fa($sum);
-         //ожидается  оплата
+        //ожидается  оплата
         $sql = "SELECT COALESCE( SUM( s_passive -  s_active      ) ,0) AS d   FROM cust_acc_view where  s_active < s_passive   ";
         $sum = doubleval($conn->GetOne($sql));
         $sql = "SELECT COALESCE( SUM(  b_passive -  b_active      ) ,0) AS d   FROM cust_acc_view where  b_active < b_passive   ";
         $sum += doubleval($conn->GetOne($sql));
-        
+
         $this->_tvars['bidebet'] = H::fa($sum);
 
         $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail not like '%<beznal>1</beznal>%' {$brf})";
@@ -325,7 +323,7 @@ class Main extends Base
         $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail like '%<beznal>1</beznal>%' {$brf})";
         $this->_tvars['bibeznal'] = H::fa($conn->GetOne($sql));
 
-        
+
 
     }
 
@@ -346,7 +344,7 @@ class Main extends Base
     public function mqlistOnRow($row) {
         $item = $row->getDataItem();
 
-        
+
         $row->add(new Label('wmq_storename', $item->storename));
         $row->add(new Label('wmq_itemname', $item->itemname));
         $row->add(new Label('wmq_item_code', $item->item_code));
@@ -420,7 +418,7 @@ class Main extends Base
         $user = System::getUser();
 
         $sql = "select    d.document_id,d.meta_desc,d.document_number,d.document_date,d.amount from   documents_view d  where 1=1   {$br}  and  d.user_id={$user->user_id}   order  by  document_id desc  ";
-        $rc = $conn->SelectLimit($sql,25,0);
+        $rc = $conn->SelectLimit($sql, 25, 0);
 
         $header = array();
         $data = array();

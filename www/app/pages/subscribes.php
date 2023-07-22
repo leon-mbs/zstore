@@ -20,9 +20,8 @@ use App\System;
 
 class Subscribes extends \App\Pages\Base
 {
-
     private $_sub;
-    public  $_subslist = array();
+    public $_subslist = array();
 
     public function __construct() {
         parent::__construct();
@@ -165,7 +164,7 @@ class Subscribes extends \App\Pages\Base
         $this->plist->setVisible(true);
         $this->editform->setVisible(false);
 
-//        $this->Reload()  ;
+        //        $this->Reload()  ;
     }
 
     public function OnDelete($sender) {
