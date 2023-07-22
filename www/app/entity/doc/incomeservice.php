@@ -12,28 +12,27 @@ use App\Helper as H;
  */
 class IncomeService extends Document
 {
-
     public function generateReport() {
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
 
         $i = 1;
         $itemset =    $this->unpackDetails('setdata');
         $hasitems = false;
-  
+
         $detail = array();
         foreach ($this->unpackDetails('detaildata') as $r=>$ser) {
-           
-           
+
+
             $items = array();
-            if( @is_array($itemset[$r]) )  {
+            if(@is_array($itemset[$r])) {
                 $hasitems = true;
                 foreach($itemset[$r] as $it) {
-                   $items[]=array('itemname'=>$it->itemname,'qty'=> H::fqty(  $it->qty),'price'=> H::fa( $it->price) );  
+                    $items[]=array('itemname'=>$it->itemname,'qty'=> H::fqty($it->qty),'price'=> H::fa($it->price) );
                 }
-            }             
-           
-           
-           
+            }
+
+
+
             $detail[] = array("no"           => $i++,
                               "service_name" => $ser->service_name,
                               "desc"         => $ser->desc,
@@ -42,9 +41,9 @@ class IncomeService extends Document
                               "price"        => H::fa($ser->price),
                               "amount"       => H::fa($ser->price * $ser->quantity)
             );
-          
-            
-            
+
+
+
         }
 
         $header = array('date'            => H::fd($this->document_date),
@@ -79,43 +78,43 @@ class IncomeService extends Document
 
         $itemset =    $this->unpackDetails('setdata');
 
-                 
+
         foreach ($this->unpackDetails('detaildata') as $r=>$ser) {
 
             $sc = new Entry($this->document_id, 0 - ($ser->price * $ser->quantity), 0 - $ser->quantity);
             $sc->setService($ser->service_id);
 
-    
+
             $sc->setOutPrice($ser->price);
             $sc->save();
-            
-            if( @is_array($itemset[$r]) )  {
-                 
+
+            if(@is_array($itemset[$r])) {
+
                 foreach($itemset[$r] as $it) {
                     $ss = \App\Entity\ItemSet::getFirst("service_id={$ser->service_id}  and  pitem_id={$it->item_id}")  ;
-                    if($ss instanceof \App\Entity\ItemSet ) {
-                       $ss->cost = $it->price; 
-                       $ss->save(); 
+                    if($ss instanceof \App\Entity\ItemSet) {
+                        $ss->cost = $it->price;
+                        $ss->save();
                     }
                 }
             }
-            
+
         }
-        
-        
-
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0-$this->payed, $this->headerdata['payment']);
-            if ($payed > 0) {
-                $this->payed = $payed;
-            }
-            \App\Entity\IOState::addIOState($this->document_id, 0-$this->payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
 
 
-        
-        
+
+        $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0-$this->payed, $this->headerdata['payment']);
+        if ($payed > 0) {
+            $this->payed = $payed;
+        }
+        \App\Entity\IOState::addIOState($this->document_id, 0-$this->payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+
+
+
+
     }
 
- 
+
 
     public function supportedExport() {
         return array(self::EX_EXCEL, self::EX_PDF );
@@ -125,7 +124,7 @@ class IncomeService extends Document
         return 'ВП-000000';
     }
 
- 
+
     public function getRelationBased() {
         $list = array();
         $list['IncomeService'] = self::getDesc('IncomeService');

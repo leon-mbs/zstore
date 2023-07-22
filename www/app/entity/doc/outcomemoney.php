@@ -11,15 +11,14 @@ use App\Helper as H;
  */
 class OutcomeMoney extends Document
 {
-
     public function Execute() {
- 
-   
-       $payed = Pay::addPayment($this->document_id, $this->document_date, 0 - $this->amount, $this->headerdata['payment'],  $this->notes);
-       if ($payed > 0) {
-           $this->payed = $payed;
-       }
-       \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, $this->headerdata['type']);
+
+
+        $payed = Pay::addPayment($this->document_id, $this->document_date, 0 - $this->amount, $this->headerdata['payment'], $this->notes);
+        if ($payed > 0) {
+            $this->payed = $payed;
+        }
+        \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, $this->headerdata['type']);
 
 
         if ($this->headerdata['detail'] == 3) {  //перечисление  сотруднику
@@ -64,7 +63,7 @@ class OutcomeMoney extends Document
     public function getRelationBased() {
         $list = array();
         $list['GoodsReceipt'] = self::getDesc('GoodsReceipt');
-     
+
         return $list;
-    }    
+    }
 }

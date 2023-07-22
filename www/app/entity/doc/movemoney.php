@@ -11,11 +11,10 @@ use App\Helper as H;
  */
 class MoveMoney extends Document
 {
-
     public function Execute() {
 
-        Pay::addPayment($this->document_id, $this->document_date, 0 - $this->amount, $this->headerdata['paymentfrom'],   $this->notes,true);
-        Pay::addPayment($this->document_id, $this->document_date, $this->amount, $this->headerdata['paymentto'],   $this->notes,true);
+        Pay::addPayment($this->document_id, $this->document_date, 0 - $this->amount, $this->headerdata['paymentfrom'], $this->notes, true);
+        Pay::addPayment($this->document_id, $this->document_date, $this->amount, $this->headerdata['paymentto'], $this->notes, true);
 
         return true;
     }

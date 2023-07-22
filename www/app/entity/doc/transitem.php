@@ -14,7 +14,6 @@ use App\Helper as H;
  */
 class TransItem extends Document
 {
-
     public function Execute() {
 
 

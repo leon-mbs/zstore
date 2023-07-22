@@ -12,7 +12,6 @@ use App\Helper as H;
  */
 class OrderFood extends Document
 {
-
     public function generateReport() {
 
 
@@ -48,7 +47,7 @@ class OrderFood extends Document
             $deliverydata = $deliverydata . ', ' . $this->headerdata["ship_address"];
         }
         $deliverydata = $deliverydata . ', ' . date("Y-m-d H:i", $this->headerdata["deltime"]);
-     //   $delbonus = $this->getBonus(false) ;
+        //   $delbonus = $this->getBonus(false) ;
 
         $header = array('date'         => H::fd($this->document_date),
                         "_detail"      => $detail,
@@ -58,7 +57,7 @@ class OrderFood extends Document
                         "deliverydata" => $deliverydata,
                         "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
 
-                                                              
+
                         "notes"   => strlen($this->notes) > 0 ? $this->notes : false ,
                         "contact"   => $this->headerdata["contact"],
                         "exchange"        => H::fa($this->headerdata["exchange"]),
@@ -66,7 +65,7 @@ class OrderFood extends Document
                         "time"            => H::fdt($this->headerdata["time"]),
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount),
-                        "bonus"           => H::fa($this->headerdata["bonus"] >0) ?   H::fa($this->headerdata["bonus"]) :false,
+                        "bonus"           => H::fa($this->headerdata["bonus"] >0) ? H::fa($this->headerdata["bonus"]) : false,
                         "totaldisc"         => H::fa($this->headerdata["totaldisc"]),
                         "isdisc"          => $this->headerdata["totaldisc"] > 0,
                         "payamount"       => H::fa($this->payamount)
@@ -102,7 +101,7 @@ class OrderFood extends Document
         $delbonus = $this->getBonus(false) ;
         $allbonus = 0 ;
         if($this->customer_id >0) {
-            $c=\App\Entity\Customer::load($this->customer_id);    
+            $c=\App\Entity\Customer::load($this->customer_id);
             $allbonus = $c->getBonus();
         }
 
@@ -113,8 +112,8 @@ class OrderFood extends Document
                         "shopname"        => strlen($common["shopname"]) > 0 ? $common["shopname"] : false,
                         "address"         => $firm["address"],
                         "phone"           => $firm["phone"],
-                        "inn"             => strlen($firm["inn"]) >0 ? $firm["inn"] :false,
-                        "tin"             => strlen($firm["tin"]) >0 ? $firm["tin"] :false,
+                        "inn"             => strlen($firm["inn"]) >0 ? $firm["inn"] : false,
+                        "tin"             => strlen($firm["tin"]) >0 ? $firm["tin"] : false,
                         "checkslogan"     => $common["checkslogan"],
                         "customer_name"   => strlen($this->customer_name) > 0 ? $this->customer_name : false,
                         "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
@@ -135,23 +134,23 @@ class OrderFood extends Document
 
                         "payamount" => H::fa($this->payamount)
         );
-        
-        if($header['inn'] != false) {
-           $header['tin'] = false; 
-        }
-        
-        $frases = explode(PHP_EOL, $header['checkslogan']) ;
-        if(count($frases) >0)  {
-            $i=  rand(0,count($frases) -1)  ;
-            $header['checkslogan']   =   $frases[$i];        
-        }
-  
 
-        if($ps)   {
-          $report = new \App\Report('doc/orderfood_bill_ps.tpl');
+        if($header['inn'] != false) {
+            $header['tin'] = false;
         }
-        else 
-          $report = new \App\Report('doc/orderfood_bill.tpl');
+
+        $frases = explode(PHP_EOL, $header['checkslogan']) ;
+        if(count($frases) >0) {
+            $i=  rand(0, count($frases) -1)  ;
+            $header['checkslogan']   =   $frases[$i];
+        }
+
+
+        if($ps) {
+            $report = new \App\Report('doc/orderfood_bill_ps.tpl');
+        } else {
+            $report = new \App\Report('doc/orderfood_bill.tpl');
+        }
 
         $html = $report->generate($header);
 
@@ -175,9 +174,9 @@ class OrderFood extends Document
 
     public function DoPayment() {
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-           
-             
-           
+
+
+
             $payed = $this->payed;
             if ($this->headerdata['exchange'] > 0 && $this->payed > $this->headerdata['exchange']) {
 
@@ -185,12 +184,12 @@ class OrderFood extends Document
             }
 
 
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $payed, $this->headerdata['payment'] );
+            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $payed, $this->headerdata['payment']);
             if ($payed > 0) {
                 $this->payed = $payed;
             }
-          
-            \App\Entity\IOState::addIOState($this->document_id,   $this->payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+
+            \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
 
 
         }
@@ -201,27 +200,29 @@ class OrderFood extends Document
         $conn = \ZDB\DB::getConnect();
         $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
         $conn->Execute("delete from iostate where document_id=" . $this->document_id);
-      
- 
+
+
         foreach ($this->unpackDetails('detaildata') as $item) {
 
-            $onstore = H::fqty($item->getQuantity($this->headerdata['store']) ) ;
-            $required = $item->quantity - $onstore;     
-            
-            
+            $onstore = H::fqty($item->getQuantity($this->headerdata['store'])) ;
+            $required = $item->quantity - $onstore;
+
+
             //оприходуем  с  производства
-            if ($required >0 && $item->autoincome == 1 && ($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD))  {
+            if ($required >0 && $item->autoincome == 1 && ($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD)) {
 
                 if ($item->autooutcome == 1) {    //комплекты
                     $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
                     foreach ($set as $part) {
 
                         $itemp = \App\Entity\Item::load($part->item_id);
-                        if($itemp == null)  continue;
+                        if($itemp == null) {
+                            continue;
+                        }
                         $itemp->quantity = $required * $part->qty;
                         if ($itemp->checkMinus($itemp->quantity, $this->headerdata['store']) == false) {
-                            throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']) )." ТМЦ {$itemp->itemname}. Списання у мінус заборонено" );
-                            
+                            throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
+
                         }
 
                         //учитываем  отходы
@@ -273,15 +274,15 @@ class OrderFood extends Document
 
 
             if ($item->checkMinus($item->quantity, $this->headerdata['store']) == false) {
-                throw new \Exception("На складі всього ".H::fqty($item->getQuantity($this->headerdata['store']) )." ТМЦ {$item->itemname}. Списання у мінус заборонено" );
+                throw new \Exception("На складі всього ".H::fqty($item->getQuantity($this->headerdata['store']))." ТМЦ {$item->itemname}. Списання у мінус заборонено");
             }
 
             $k = 1;   //учитываем  скидку
-            
-            $dd =   doubleval($this->headerdata['bonus'] ) + doubleval($this->headerdata['totaldisc'] ) ;
-               
+
+            $dd =   doubleval($this->headerdata['bonus']) + doubleval($this->headerdata['totaldisc']) ;
+
             if ($dd > 0 && $this->amount > 0) {
-                $k =   ($this->amount - $dd )/ $this->amount;
+                $k =   ($this->amount - $dd)/ $this->amount;
             }
 
 
@@ -292,24 +293,24 @@ class OrderFood extends Document
                 $sc->setStock($st->stock_id);
                 //   $sc->setExtCode($item->price * $k - $st->partion); //Для АВС
                 $sc->setOutPrice($item->price * $k);
-                 $sc->tag=Entry::TAG_SELL;
-                
+                $sc->tag=Entry::TAG_SELL;
+
                 $sc->save();
             }
         }
     }
 
-    //есть  ли  невыданные  блюда    
-    public  function inProcess(){
-         foreach ($this->unpackDetails('detaildata') as $item) {
-              $fs = intval($item->foodstate);
-              if($fs == 1 || $fs==2) {
-                 return true;  
-              }
-              
-         }
-         
-         return false;
+    //есть  ли  невыданные  блюда
+    public function inProcess() {
+        foreach ($this->unpackDetails('detaildata') as $item) {
+            $fs = intval($item->foodstate);
+            if($fs == 1 || $fs==2) {
+                return true;
+            }
+
+        }
+
+        return false;
     }
 
 }

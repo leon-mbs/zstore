@@ -14,7 +14,6 @@ use App\System;
  */
 class CalcSalary extends Document
 {
-
     public function Execute() {
         $opt = System::getOptions("salary");
 

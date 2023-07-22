@@ -10,7 +10,6 @@ use App\Helper as H;
  */
 class OrderCust extends Document
 {
-
     public function generateReport() {
 
 

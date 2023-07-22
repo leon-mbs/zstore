@@ -13,7 +13,6 @@ use App\System;
  */
 class TTN extends Document
 {
-
     public function generateReport() {
 
 
@@ -51,7 +50,7 @@ class TTN extends Document
 
         $printer = System::getOptions('printer');
 
-      
+
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
@@ -60,7 +59,7 @@ class TTN extends Document
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                         "store_name"      => $this->headerdata["store_name"],
 
-                        "weight"          => $weight > 0 ? "Загальна вага {$weight} кг"  : '',
+                        "weight"          => $weight > 0 ? "Загальна вага {$weight} кг" : '',
                         "ship_address"    => strlen($this->headerdata["ship_address"]) > 0 ? $this->headerdata["ship_address"] : false,
                         "ship_number"     => strlen($this->headerdata["ship_number"]) > 0 ? $this->headerdata["ship_number"] : false,
                         "delivery_name"   => $this->headerdata["delivery_name"],
@@ -165,32 +164,34 @@ class TTN extends Document
         if ($this->parent_id > 0) {
             $parent = Document::load($this->parent_id);
             if ($parent->meta_name == 'GoodsIssue' || $parent->meta_name == 'POSCheck') {
-                return; //проводки выполняются  в  РН 
+                return; //проводки выполняются  в  РН
             }
         }
 
 
         foreach ($this->unpackDetails('detaildata') as $item) {
-            $onstore = H::fqty($item->getQuantity($this->headerdata['store']) ) ;
-            $required = $item->quantity - $onstore;     
- 
+            $onstore = H::fqty($item->getQuantity($this->headerdata['store'])) ;
+            $required = $item->quantity - $onstore;
+
 
             //оприходуем  с  производства
-            if ($required >0 && $item->autoincome == 1 && ( $item->item_type == Item::TYPE_PROD) || $item->item_type == Item::TYPE_HALFPROD) {
+            if ($required >0 && $item->autoincome == 1 && ($item->item_type == Item::TYPE_PROD) || $item->item_type == Item::TYPE_HALFPROD) {
 
                 if ($item->autooutcome == 1) { //комплекты
                     $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
                     foreach ($set as $part) {
 
                         $itemp = \App\Entity\Item::load($part->item_id);
-                        if($itemp == null)  continue;
-                        $itemp->quantity = $required * $part->qty;
-                      
-                        if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
-                            throw new \Exception("На складі всього ".$itemp->getQuantity($this->headerdata['store']) ." ТМЦ {$itemp->itemname}. Списання у мінус заборонено" );
-                            
+                        if($itemp == null) {
+                            continue;
                         }
-                      
+                        $itemp->quantity = $required * $part->qty;
+
+                        if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
+                            throw new \Exception("На складі всього ".$itemp->getQuantity($this->headerdata['store']) ." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
+
+                        }
+
                         $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
 
                         foreach ($listst as $st) {
@@ -219,8 +220,8 @@ class TTN extends Document
             }
 
             if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
-                throw new \Exception("На складі всього ".$item->getQuantity($this->headerdata['store']) ." ТМЦ {$item->itemname}. Списання у мінус заборонено" );
-          }
+                throw new \Exception("На складі всього ".$item->getQuantity($this->headerdata['store']) ." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+            }
 
             //продажа
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
@@ -238,12 +239,12 @@ class TTN extends Document
         return true;
     }
 
-    public function onState($state,$oldstate) {
+    public function onState($state, $oldstate) {
 
         if ($state == Document::STATE_INSHIPMENT) {
             //расходы на  доставку
             if ($this->headerdata['ship_amount'] > 0) {
-                $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->headerdata['ship_amount'], H::getDefMF()   );
+                $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->headerdata['ship_amount'], H::getDefMF());
                 if ($payed > 0) {
                     $this->payed = $payed;
                 }
@@ -267,9 +268,9 @@ class TTN extends Document
                 }
                 if ($state == Document::STATE_READYTOSHIP && $order->state == Document::STATE_INPROCESS) {
                     $order->updateStatus(Document::STATE_READYTOSHIP);
-                }   
+                }
             }
-        }     
+        }
     }
 
     public function getRelationBased() {
@@ -287,7 +288,7 @@ class TTN extends Document
     public function supportedExport() {
         return array(self::EX_EXCEL, self::EX_PDF);
     }
-  
-  
-   
+
+
+
 }
