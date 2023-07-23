@@ -93,6 +93,7 @@ class Subscribes extends \App\Pages\Base
     public function onAdd($sender) {
         $this->plist->setVisible(false);
         $this->editform->setVisible(true);
+        $this->editform->delete->setVisible(false);
         $this->editform->clean();
         $this->_sub = new Subscribe();
         $this->editform->editeventtype->setValue(Subscribe::EVENT_DOCSTATE);
@@ -102,6 +103,7 @@ class Subscribes extends \App\Pages\Base
 
     public function OnEdit($sender) {
         $this->_sub = $sender->getOwner()->getDataItem();
+        $this->editform->delete->setVisible(true);
 
         $this->editform->editeventtype->setValue($this->_sub->sub_type);
         $this->editform->editrecievertype->setValue($this->_sub->reciever_type);

@@ -28,8 +28,8 @@ class Document extends \ZCL\DB\Entity
     public const STATE_FINISHED    = 18; // Закончен
     public const STATE_APPROVED    = 19;      //  Готов к выполнению
     public const STATE_READYTOSHIP = 20; // готов к отправке
-    public const STATE_WP = 21; // ждет  оплату
-    public const STATE_PAYED = 22; // Оплачен
+    public const STATE_WP          = 21; // ждет  оплату
+    public const STATE_PAYED       = 22; // Оплачен
 
     // типы  экспорта
     public const EX_WORD  = 1;    //  Word
@@ -296,7 +296,7 @@ class Document extends \ZCL\DB\Entity
      *
      * @param mixed $classname
      */
-    public static function create($classname, $branch_id = 0) {
+    public static function create($classname, $branch_id = 0):Document {
         $arr = explode("\\", $classname);
         $classname = $arr[count($arr) - 1];
         $conn = \ZDB\DB::getConnect();
