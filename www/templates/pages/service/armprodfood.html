@@ -30,6 +30,11 @@
         <td>{{item.name}}</td> 
         <td>{{item.qty}}</td> 
         <td>{{item.notes}}</td> 
+        <td>
+           <i v-show="item.description != ''"  class="fa fa-cocktail   popinfo" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover"
+                  data-placement="bottom" v-bind:data-content="item.description" ></i>          
+        
+        </td> 
         <td><a    v-on:click="onReady(item.document_id,item.rowid, index) " class="btn btn-success">Готово</a></td> 
     </tr>    
         </table>
@@ -80,7 +85,7 @@
               {
                        
                   this.itemlist= JSON.parse(data)  
-                  
+                  $('.popinfo').popover();            
               
               });
                 

@@ -27,7 +27,7 @@ class IOState extends \ZCL\DB\Entity
     public const TYPE_SALE_OUTCOME     = 53;    //расходы на сбыт
     public const TYPE_SALARY_OUTCOME   = 54;    //выплата зарплат
     public const TYPE_TAX_OUTCOME      = 55;    //уплата  налогов  и сборов
-    public const TYPE_BILL_OUTCOME     = 56;    //расходы на  аренду и комуналку
+    public const TYPE_BILL_RENT        = 56;    //расходы на  аренду
     public const TYPE_OTHER_OUTCOME    = 57;   //прочие расходы
     public const TYPE_DIVIDEND_OUTCOME = 58;   //распределение прибыли
     public const TYPE_INV              = 59;   //Инвестиции
@@ -35,6 +35,7 @@ class IOState extends \ZCL\DB\Entity
     public const TYPE_CANCEL           = 61;    //отмена  платежа  продажи
     public const TYPE_NAKL             = 62;    //накладные  расходы
     public const TYPE_ADS              = 63;    //   расходы на  маркетинг
+    public const TYPE_BILL_OUTCOME     = 64;    //расходы на  комуналку
 
     //потери ТМЦ
     public const TYPE_LOST  = 80;     //потери при инвентаризации
@@ -94,7 +95,8 @@ class IOState extends \ZCL\DB\Entity
             $list[self::TYPE_SALE_OUTCOME] = "Витрати на збут";
             $list[self::TYPE_SALARY_OUTCOME] = "Виплата зарплати";
             $list[self::TYPE_TAX_OUTCOME] =  "Податки та збори";
-            $list[self::TYPE_BILL_OUTCOME] = "Витрати на оренду та комуналку";
+            $list[self::TYPE_BILL_OUTCOME] = "Витрати на комуналку";
+            $list[self::TYPE_BILL_RENT] = "Витрати на оренду";
             $list[self::TYPE_DIVIDEND_OUTCOME] = "Розподіл прибутку";
             $list[self::TYPE_INV] = "Інвестиції";
             $list[self::TYPE_BANK] = "Послуги банку";

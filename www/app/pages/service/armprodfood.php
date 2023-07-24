@@ -148,6 +148,7 @@ class ArmProdFood extends \App\Pages\Base
                    'notes'=>$notes,
                    'document_id'=>$doc->document_id,
                    'name'=>$item->itemname,
+                   'description'=>$item->description ?? '',
                    'qty'=>$item->quantity,
                    'rowid'=>$rowid,
                    'del'=>$doc->headerdata['delivery'] > 0

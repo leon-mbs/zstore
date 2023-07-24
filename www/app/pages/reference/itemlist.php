@@ -25,7 +25,7 @@ use Zippy\Html\Link\SubmitLink;
 class ItemList extends \App\Pages\Base
 {
     private $_item;
-    private $_copy     = false;
+    private $_copy     = 0;
     private $_pitem_id = 0;
     public $_itemset  = array();
     public $_serviceset  = array();
@@ -234,17 +234,24 @@ class ItemList extends \App\Pages\Base
 
     public function copyOnClick($sender) {
         $this->editOnClick($sender);
-        $this->_copy = true;
+        $this->_copy = $this->_item->item_id;
         $this->_item->item_id = 0;
+        ;
+        $this->itemdetail->editname->setText($this->_item->itemname.'_copy');
+        
         $this->itemdetail->editcode->setText('');
         $this->itemdetail->editbarcode->setText('');
         if (System::getOption("common", "autoarticle") == 1) {
             $this->itemdetail->editcode->setText(Item::getNextArticle());
         }
+        
+        
+        
+        
     }
 
     public function editOnClick($sender) {
-        $this->_copy = false;
+        $this->_copy = 0;
         $item = $sender->owner->getDataItem();
         $this->_item = Item::load($item->item_id);
 
@@ -308,7 +315,7 @@ class ItemList extends \App\Pages\Base
     }
 
     public function addOnClick($sender) {
-        $this->_copy = false;
+        $this->_copy = 0;
         $this->itemtable->setVisible(false);
         $this->itemdetail->setVisible(true);
         // Очищаем  форму
@@ -441,7 +448,7 @@ class ItemList extends \App\Pages\Base
             $this->_item->thumb = "";
         }
 
-        if ($this->_item->image_id > 0 && $this->_copy == true) {
+        if ($this->_item->image_id > 0 && $this->_copy >0) {
             $image = \App\Entity\Image::load($this->_item->image_id);
             $image->image_id = 0;
             $image->save();
@@ -497,11 +504,38 @@ class ItemList extends \App\Pages\Base
             $image->save();
             $this->_item->image_id = $image->image_id;
             $this->_item->save();
-
-            $this->filter->searchbrand->setDataList(Item::getManufacturers());
+        
+        
 
         }
 
+        $this->filter->searchbrand->setDataList(Item::getManufacturers());
+
+        if($this->_copy > 0) {  //комплекты
+               $itemset = ItemSet::find("item_id > 0  and pitem_id=" . $this->_copy, "itemname");
+               $serviceset = ItemSet::find("service_id > 0  and pitem_id=" . $this->_copy, "service_name");
+               
+               foreach($itemset as $s){
+                    $set = new ItemSet();
+                    $set->pitem_id = $this->_item->item_id;
+                    $set->item_id = $s->item_id;
+                    $set->qty = $s->qty;
+                    $set->save();
+               }
+               
+              foreach($serviceset as $s){
+                    $set = new ItemSet();
+                    $set->pitem_id = $this->_item->item_id;
+                    $set->service_id = $s->service_id;
+                    $set->cost = $s->cost;
+
+                    $set->save();                        
+               }
+               
+           
+            }
+
+        
         $this->itemtable->listform->itemlist->Reload(false);
 
         $this->itemtable->setVisible(true);
