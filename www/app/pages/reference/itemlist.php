@@ -154,6 +154,9 @@ class ItemList extends \App\Pages\Base
         $this->setpanel->setsform->add(new DropDownChoice('editssname', \App\Entity\Service::findArray("service_name", "disabled<>1", "service_name")));
         $this->setpanel->setsform->add(new TextInput('editscost'));
 
+        $this->setpanel->add(new Form('cardform'))->onSubmit($this, 'OnCardSet');
+        $this->setpanel->cardform->add(new TextArea('editscard'));
+        
         $this->setpanel->add(new Label('stitle'));
         $this->setpanel->add(new Label('stotal'));
         $this->setpanel->add(new ClickLink('backtolist', $this, "onback"));
@@ -559,6 +562,9 @@ class ItemList extends \App\Pages\Base
         $this->setpanel->stitle->setText($item->itemname);
 
         $this->setupdate() ;
+        
+        $this->setpanel->cardform->editscard->setText($item->techcard)  ;
+        
     }
 
     private function setupdate() {
@@ -660,9 +666,16 @@ class ItemList extends \App\Pages\Base
         $this->setupdate() ;
         $sender->clean();
     }
+    public function OnCardSet($sender) {
 
+        $item = Item::load($this->_pitem_id);
+        $item->techcard = $sender->editscard->getText();
+        $item->save() ;
 
+        
+    }
 
+ 
 
     public function printQrOnClick($sender) {
 

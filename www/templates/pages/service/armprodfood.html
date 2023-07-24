@@ -10,9 +10,7 @@
             <div class="col-12 col-md-4 col-xl-3   " >
                 <h3>АРМ кухнi</h3>
                 
-                <div id="newordersalert" style="display:none;"  class="alert alert-success  ml-4"  >
-                    <span id="neworderscnt"></span>
-                </div>   
+          
             </div>
             <div class="col-12 col-md-4 col-xl-3   " >
              <i id="bell"  style="cursor:pointer"  onclick="onBell( )" title="Звукове повiдомлення" class="fa fa-bell-slash text-secondary"></i>  
@@ -31,8 +29,8 @@
         <td>{{item.qty}}</td> 
         <td>{{item.notes}}</td> 
         <td>
-           <i v-show="item.description != ''"  class="fa fa-cocktail   popinfo" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover"
-                  data-placement="bottom" v-bind:data-content="item.description" ></i>          
+           <i v-show="item.techcard != ''"  class="fa fa-cocktail   popinfo" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover"
+                  data-placement="bottom" v-bind:data-content="item.techcard" ></i>          
         
         </td> 
         <td><a    v-on:click="onReady(item.document_id,item.rowid, index) " class="btn btn-success">Готово</a></td> 
@@ -65,7 +63,7 @@
           methods: {
              onReady( document_id,rowid, index) {
                  // onBell()
-                  $('#newordersalert').hide();
+                
                   callPM('onReady',[document_id,rowid],null,(data)=> 
                   {
                       if(false==checkPMAnswer(data) )   {
@@ -119,8 +117,8 @@
                              
                                 
                                 if(answer.cnt > 0){
-                                   $('#newordersalert').show();
-                                   $('#neworderscnt').text('Нових замовлень ' + answer.cnt);
+
+                                   toastr.info( 'Нових замовлень ' + answer.cnt +' ' ,'',{'timeOut':'5000'})
                                    beep()
                                    updateItems() 
                                 }

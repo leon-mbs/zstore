@@ -55,6 +55,7 @@ class Item extends \ZCL\DB\Entity
         $this->useserial = (int)$xml->useserial[0];
         $this->image_id = (int)$xml->image_id[0];
 
+        $this->techcard = (string)$xml->techcard[0];
         $this->weight = (string)$xml->weight[0];
         $this->maxsize = (string)$xml->maxsize[0];
         $this->volume = (string)$xml->volume[0];
@@ -133,6 +134,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<warranty><![CDATA[{$this->warranty}]]></warranty>";
         $this->detail .= "<extdata><![CDATA[{$this->extdata}]]></extdata>";
         $this->detail .= "<country><![CDATA[{$this->country}]]></country>";
+        $this->detail .= "<techcard><![CDATA[{$this->techcard}]]></techcard>";
 
         $this->detail .= "<price1>{$this->price1}</price1>";
         $this->detail .= "<price2>{$this->price2}</price2>";
