@@ -1837,12 +1837,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "f1cf01eae8da299504c00a633d815d03c9af2a44"
+                "reference": "dcd6445165c5d39d1ddad774d0772d3c9b320ae2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/f1cf01eae8da299504c00a633d815d03c9af2a44",
-                "reference": "f1cf01eae8da299504c00a633d815d03c9af2a44",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/dcd6445165c5d39d1ddad774d0772d3c9b320ae2",
+                "reference": "dcd6445165c5d39d1ddad774d0772d3c9b320ae2",
                 "shasum": ""
             },
             "conflict": {
@@ -1921,7 +1921,7 @@
                 "contao-components/mediaelement": ">=2.14.2,<2.21.1",
                 "contao/contao": ">=4,<4.4.56|>=4.5,<4.9.40|>=4.10,<4.11.7|>=4.13,<4.13.21|>=5.1,<5.1.4",
                 "contao/core": ">=2,<3.5.39",
-                "contao/core-bundle": "<4.9.40|>=4.10,<4.11.7|>=4.13,<4.13.21|>=5.1,<5.1.4|= 4.10.0",
+                "contao/core-bundle": "<4.9.42|>=4.10,<4.13.28|>=5,<5.1.10|= 4.10.0",
                 "contao/listing-bundle": ">=4,<4.4.8",
                 "contao/managed-edition": "<=1.5",
                 "cosenary/instagram": "<=2.3",
@@ -2475,7 +2475,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-07-24T22:04:27+00:00"
+            "time": "2023-07-25T18:04:57+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",
