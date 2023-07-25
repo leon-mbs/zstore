@@ -53,7 +53,7 @@ class Menu extends \Zippy\Html\WebPage
 
                 $items[]=array(
                     'itemname'=>$item->itemname ,
-                    'imglink'=>"/loadimage.php?id=".  $item->item_id ,
+                    'imglink'=>"/loadshopimage.php?id=".  $item->item_id ,
                     'desc'=> substr($item->description, 0, 200) ,
                     'price'=>$item->getPrice() ,
                     'vol'=> strlen($item->weight)>0 ? $item->weight." г" : $item->volume." мл"
