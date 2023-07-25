@@ -235,8 +235,11 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["chatcnt"] = $cnt > 0 ? $cnt : false;
 
         }
-        $this->generateToasts();
 
+
+        $this->_tvars['showtoasts']  =  Session::getSession()->toasts ?? true ;
+        Session::getSession()->toasts = false;
+        
         $duration = \App\Session::getSession()->duration() ;
         $this->_tvars['showtips'] = $duration < 300   ;
     }
@@ -450,13 +453,9 @@ class Base extends \Zippy\Html\WebPage
     }
 
 
-    private function generateToasts() {
+    public function gettoasts($args,$post=null) {
 
-
-        $this->_tvars["toasts"] = array();
-        if (\App\Session::getSession()->toasts == true) {
-            return;
-        }//уже показан
+        $list = [];
 
         $user = System::getUser();
         if ($user->defstore == 0) {
@@ -470,44 +469,37 @@ class Base extends \Zippy\Html\WebPage
         }
         if ($user->userlogin == "admin") {
             if ($user->userpass == "admin" || $user->userpass == '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.') {
-                $this->_tvars["toasts"][] = array('title' => "title:\"Змініть у профілі пароль за замовчуванням\"");
+                $list[] = array('title' => "tЗмініть у профілі пароль за замовчуванням");
 
             }
         }
         if ($user->rolename == "admins") {
             if (\App\Entity\Notify::isNotify(\App\Entity\Notify::SYSTEM)) {
-                $this->_tvars["toasts"][] = array('title' => "title:\"Наявні непрочитані системні повідомлення\"");
+                $list[] = array('title' => "Наявні непрочитані системні повідомлення");
 
             }
             //проверка  новой версии
 
-
             $v = @file_get_contents("https://zippy.com.ua/version.json?t=" . time());
             $v = @json_decode($v, true);
+            
             if (strlen($v['version']) > 0) {
-                $c = (int)str_replace(".", "", str_replace("v", "", \App\System::CURR_VERSION));
-                $n = (int)str_replace(".", "", str_replace("v", "", $v['version']));
+                $c = str_replace("v", "", \App\System::CURR_VERSION);
+                $n = str_replace("v", "", $v['version']);
 
-                if ($n > $c) {
-                    $this->_tvars["toasts"][] = array('title' => "title:  \"Доступна нова версiя {$v['version']}  <a target=\\\"_blank\\\" href=\\\"https://zippy.com.ua/zstore#newver\\\">Перейти...</a>\" ");
+                $ca = explode('.',$c) ;
+                $na = explode('.',$n) ;
+                
+                if ($na[0] > $ca[0] || $na[1] > $ca[1] || $na[2] > $ca[2]  ) {
+                    $list[] = array('title' => " Доступна нова версiя {$v['version']}  <a target=\"_blank\" href=\"https://zippy.com.ua/zstore#newver\">Перейти...</a> ");
 
                 }
 
-
             }
 
-
-
-
-
         }
 
-        if (count($this->_tvars["toasts"]) == 0) {
-            // $this->_tvars["toasts"][] = array('title' => '');
-            \App\Session::getSession()->toasts = false;
-            return;
-        }
-        \App\Session::getSession()->toasts = true;
+        return json_encode($list, JSON_UNESCAPED_UNICODE);     
     }
 
 

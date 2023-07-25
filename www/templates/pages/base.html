@@ -1100,16 +1100,24 @@
             </div>            
             
          <script>
-        {{#toasts}}
-      
-$(document).Toasts('create', {
-icon: 'fa fa-exclamation-triangle text-warning',
-        position:'bottomRight',
-{{{title}}}
+        {{#showtoasts}}
+ 
+         callPM('gettoasts',[],null,function(data){
+          
+             for(var t of data) {
+              
+                $(document).Toasts('create', {
+                icon: 'fa fa-exclamation-triangle text-warning',
+                        position:'bottomRight',
+                        title:t.title
 
-})
-      
-        {{/toasts}}
+                })           
+                 
+             }
+             
+         })
+
+        {{/showtoasts}}
        
                     toastr.options = {
                     "closeButton": true,
