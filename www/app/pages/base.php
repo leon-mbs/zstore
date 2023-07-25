@@ -469,7 +469,7 @@ class Base extends \Zippy\Html\WebPage
         }
         if ($user->userlogin == "admin") {
             if ($user->userpass == "admin" || $user->userpass == '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.') {
-                $list[] = array('title' => "tЗмініть у профілі пароль за замовчуванням");
+                $list[] = array('title' => "Змініть у профілі пароль за замовчуванням");
 
             }
         }
