@@ -116,6 +116,13 @@ class Document extends \ZCL\DB\Entity
     protected function beforeSave() {
         $this->lastupdate=time();
 
+        $common = \App\System::getOptions('common') ;
+        $da = $common['actualdate'] ?? 0 ;
+        
+        if($da>$this->document_date) {
+            throw new \Exception( "Не можна зберігати документ старший " .date('Y-m-d',$da) );
+        }        
+       
 
         if (false == $this->checkUniqueNumber()) {
             System::setWarnMsg('Не унікальний номер документа');
@@ -260,7 +267,7 @@ class Document extends \ZCL\DB\Entity
      */
     protected function Cancel() {
         $conn = \ZDB\DB::getConnect();
-        $conn->StartTrans();
+        $conn->BeginTrans();
         try {
             // если  метод не переопределен  в  наследнике удаляем  документ  со  всех  движений
             $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
@@ -1137,6 +1144,14 @@ class Document extends \ZCL\DB\Entity
      * Возвращает  текст ошибки если  нет
      */
     public function canCanceled() {
+        
+        $common = \App\System::getOptions('common') ;
+        $da = $common['actualdate'] ?? 0 ;
+        
+        if($da>$this->document_date) {
+            return  "Не можна відміняти документ старший " .date('Y-m-d',$da);
+        }
+        
         return "";
     }
 
