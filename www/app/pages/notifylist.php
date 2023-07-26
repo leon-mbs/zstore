@@ -42,7 +42,7 @@ class NotifyList extends \App\Pages\Base
 
         \App\Entity\Notify::markRead($user->user_id);
 
-        $this->add(new ClickLink("delall", $this, 'OnDel'));
+        $this->filter->add(new ClickLink("delall", $this, 'OnDel'));
 
     }
 

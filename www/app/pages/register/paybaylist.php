@@ -314,6 +314,15 @@ class PayBayList extends \App\Pages\Base
             return;
         }
 
+        $common = \App\System::getOptions('common') ;
+        $da = $common['actualdate'] ?? 0 ;
+        
+        if($da>$pdate) {
+            $this->setError("Не можна додавати оплату раніше  " .date('Y-m-d',$da) );
+            return;
+        }        
+        
+        
 
         if ($amount > H::fa($this->_doc->payamount - $this->_doc->payed)) {
 

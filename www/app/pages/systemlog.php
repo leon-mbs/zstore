@@ -33,7 +33,7 @@ class SystemLog extends \App\Pages\Base
 
         $this->ds = new EntityDataSource("\\App\\Entity\\Notify", "  user_id=" .   Notify::SYSTEM, " dateshow desc");
 
-        $this->add(new ClickLink("delall", $this, 'OnDel'));
+        $this->filter->add(new ClickLink("delall", $this, 'OnDel'));
 
         $this->add(new DataView("nlist", $this->ds, $this, 'OnRow'));
         $this->nlist->setPageSize(H::getPG());

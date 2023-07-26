@@ -142,6 +142,14 @@ class PayList extends \App\Pages\Base
 
         $pl = Pay::load($id);
 
+        $common = \App\System::getOptions('common') ;
+        $da = $common['actualdate'] ?? 0 ;
+        
+        if($da>$pl->paydate) {
+           $this->setError("Не можна відміняти оплату раніше  " .date('Y-m-d',$da));
+           return;
+        }        
+        
         $doc = Document::load($pl->document_id);
 
         $conn = \ZDB\DB::getConnect();
