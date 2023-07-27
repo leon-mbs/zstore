@@ -159,7 +159,7 @@ class Outcome extends \App\Pages\Base
         $sql = '';
         if ($type == 1 || $type == 6 || strlen($cat) > 0) {    //по товарам
             $sql = "
-          select i.itemname,i.item_code,sum(0-e.quantity) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
+          select i.itemname,i.item_code,count(e.document_id) as docs,sum(0-e.quantity) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
               from entrylist_view  e
 
               join items_view i on e.item_id = i.item_id
@@ -176,7 +176,7 @@ class Outcome extends \App\Pages\Base
         if ($type == 2) {  //по покупателям
             $empty = "Фіз. особа";
             $sql = "
-          select coalesce(c.customer_name,'{$empty}') as itemname,c.customer_id,  sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
+          select coalesce(c.customer_name,'{$empty}') as itemname,c.customer_id, count(d.document_id) as docs, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
           from entrylist_view  e
 
         left  join customers  c on c.customer_id = e.customer_id
@@ -191,7 +191,7 @@ class Outcome extends \App\Pages\Base
         }
         if ($type == 3) {   //по датам
             $sql = "
-          select e.document_date as dt  ,  sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
+          select e.document_date as dt  , count(e.document_id) as docs, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
               from entrylist_view  e
 
               join items i on e.item_id = i.item_id
@@ -207,7 +207,7 @@ class Outcome extends \App\Pages\Base
 
         if ($type == 4 || $type == 7) {    //по сервисам
             $sql = "
-         select s.service_name as itemname, sum(0-e.quantity) as qty, sum(0-e.outprice*e.quantity) as summa    ,0 as navar
+         select s.service_name as itemname,count(d.document_id) as docs, sum(0-e.quantity) as qty, sum(0-e.outprice*e.quantity) as summa    ,0 as navar
               from entrylist_view  e
 
               join services s on e.service_id = s.service_id
@@ -222,7 +222,7 @@ class Outcome extends \App\Pages\Base
 
         if ($type == 5 && strlen($cat) == 0) {    //по категориях
             $sql = "
-            select  i.cat_name as itemname,sum(0-e.quantity) as qty, sum(0- e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
+            select  i.cat_name as itemname,count(e.document_id) as docs,sum(0-e.quantity) as qty, sum(0- e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
               from entrylist_view  e
 
               join items_view i on e.item_id = i.item_id
@@ -253,7 +253,7 @@ class Outcome extends \App\Pages\Base
 
 
                 $sqlc = "
-                  select    coalesce(sum(0-e.quantity*e.partion) ,0) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
+                  select count(d.document_id) as docs,   coalesce(sum(0-e.quantity*e.partion) ,0) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
                   from entrylist_view  e
 
                
@@ -276,7 +276,7 @@ class Outcome extends \App\Pages\Base
 
         if ($type == 9) {    //по компаниям
             $sql = "
-            select  d.firm_name as itemname,sum(0-e.quantity) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
+            select  d.firm_name as itemname,count(d.document_id) as docs,sum(0-e.quantity) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
               from entrylist_view  e
 
              
@@ -292,7 +292,7 @@ class Outcome extends \App\Pages\Base
         }
         if ($type == 10) {    //по складах
             $sql = "
-            select  sr.storename as itemname,sum(0-e.quantity) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
+            select  sr.storename as itemname,count(d.document_id) as docs,sum(0-e.quantity) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
               from entrylist_view  e
 
                 
@@ -315,7 +315,7 @@ class Outcome extends \App\Pages\Base
                 $salesource="0";
             }
             $sql = "
-            select i.itemname,  sum(0-e.quantity) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
+            select i.itemname,count(e.document_id) as docs,  sum(0-e.quantity) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
               from entrylist_view  e
 
                  join items i on e.item_id = i.item_id                                          
@@ -341,7 +341,7 @@ class Outcome extends \App\Pages\Base
             }
 
             $sql = "
-            select  i.itemname,sum(0-e.quantity) as qty, sum(0- e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
+            select  i.itemname,count(e.document_id) as docs,sum(0-e.quantity) as qty, sum(0- e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
               from entrylist_view  e
 
               join items_view i on e.item_id = i.item_id
@@ -383,7 +383,8 @@ class Outcome extends \App\Pages\Base
                 "qty"       => H::fqty($row['qty']),
                 "navar"     => H::fa($row['navar']),
                 "navarsign" => $row['navar'] > 0,
-                "summa"     => H::fa($row['summa'] + $row['navar'])
+                "summa"     => H::fa($row['summa'] + $row['navar']),
+                "docs"     => intval($row['docs'])
             );
 
             $totnavar += $row['navar'];

@@ -97,6 +97,15 @@ class OLAP extends \App\Pages\Base
             $dim['mf_name'] = "Рахунок";
 
         }
+        if($type  == 6) {
+            $dim['itemname'] = "ТМЦ";
+            $dim['cat_name'] = "Категорія";
+            $dim['storename'] = "Склад";
+            $dim['service_name'] = "Послуга";
+
+
+        }
+   
 
         if ($options['usebranch'] == 1) {
             $id = \App\System::getBranch();
@@ -165,7 +174,7 @@ class OLAP extends \App\Pages\Base
         $m = \App\Util::getMonth()  ;
 
         foreach($cols as $d) {
-
+            \App\Helper::log("select distinct {$d} from ({$sql} ) t order  by {$d} ");
             $res = $conn->Execute("select distinct {$d} from ({$sql} ) t order  by {$d} ");
 
             foreach($res as $row) {
@@ -241,6 +250,9 @@ class OLAP extends \App\Pages\Base
         }
         if($type==5) {
             $data = "sum(amount) "  ;
+        }
+        if($type==6) {
+            $data = "count(document_id) "  ;
         }
 
         $where  = "where  1=1" ;
@@ -441,11 +453,39 @@ class OLAP extends \App\Pages\Base
                 LEFT JOIN users_view uv  ON dv.user_id = uv.user_id 
                 LEFT JOIN firms f ON dv.firm_id = f.firm_id 
                 LEFT JOIN branches b ON dv.branch_id = b.branch_id
-                where  {$where}
+                where dv.meta_name in('GoodsIssue', 'POSCheck','OrderFood','ServiceAct') and  {$where}
                 
                 ";
         }
 
+         if($type == 6) {   //документи
+
+
+
+            $sql = "SELECT  
+                ss.service_name,  
+                iv.itemname,
+                ssv.storename,
+                iv.cat_name,            
+                COALESCE(c.customer_name,'Фіз. особа') AS customer_name, 
+                {$concat} as document_date ,
+                COALESCE(b.branch_name,'Н/Д') AS branch_name,
+                COALESCE(f.firm_name,'Н/Д') AS firm_name,
+                COALESCE(uv.username ,'Н/Д') AS username,
+                dv.document_id    
+                FROM entrylist_view ev   
+                JOIN documents dv ON ev.document_id = dv.document_id
+                LEFT JOIN services ss ON ev.service_id = ss.service_id
+                LEFT JOIN items_view iv ON ev.item_id = iv.item_id
+                LEFT JOIN store_stock_view ssv ON ev.stock_id = ssv.stock_id
+                LEFT JOIN customers c ON dv.customer_id = c.customer_id
+                LEFT JOIN users_view uv  ON dv.user_id = uv.user_id 
+                LEFT JOIN firms f ON dv.firm_id = f.firm_id 
+                LEFT JOIN branches b ON dv.branch_id = b.branch_id
+                where  {$where}
+                
+                ";
+        }
 
         return $sql;
     }
@@ -479,6 +519,13 @@ class OLAP extends \App\Pages\Base
         if($type==5) {
             $_cols[] = 'mf_name';
         }
+         if($type ==6 ) {
+            $_cols[] = 'itemname';
+            $_cols[] = 'cat_name';
+            $_cols[] = 'storename';
+            $_cols[] = 'service_name';
+
+        }
 
         if ($options['usebranch'] == 1) {
             $id = \App\System::getBranch();
@@ -486,7 +533,7 @@ class OLAP extends \App\Pages\Base
                 $_cols[] = "branch_name";
             }
         }
-
+ 
         foreach($_cols as $_d) {
             if($_d != $hor &&  $_d != $ver) {
                 $cols[]=$_d;
