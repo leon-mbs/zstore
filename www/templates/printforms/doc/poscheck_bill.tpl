@@ -64,10 +64,7 @@
         <td colspan="3">Термiнал: {{pos_name}}</td>
     </tr>
     <tr>
-        <td colspan="3">Касир:</td>
-    </tr>
-    <tr>
-        <td colspan="3"> {{username}}</td>
+        <td colspan="3">Касир: </td>
     </tr>
     {{#_detail}}
     <tr>

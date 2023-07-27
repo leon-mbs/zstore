@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "488306403fe21ee856dc4eddbabbf7de",
+    "content-hash": "51786c363df6f80707aad9e1a790eb5c",
     "packages": [
         {
             "name": "adodb/adodb-php",
-            "version": "v5.22.6",
+            "version": "v5.22.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ADOdb/ADOdb.git",
-                "reference": "2e916ebc543b95f955af3c91366d799b8c6134aa"
+                "reference": "876bc2287171ea96a571f84c23845e44a759d9a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ADOdb/ADOdb/zipball/2e916ebc543b95f955af3c91366d799b8c6134aa",
-                "reference": "2e916ebc543b95f955af3c91366d799b8c6134aa",
+                "url": "https://api.github.com/repos/ADOdb/ADOdb/zipball/876bc2287171ea96a571f84c23845e44a759d9a0",
+                "reference": "876bc2287171ea96a571f84c23845e44a759d9a0",
                 "shasum": ""
             },
             "require": {
@@ -65,7 +65,7 @@
                 "issues": "https://github.com/ADOdb/ADOdb/issues",
                 "source": "https://github.com/ADOdb/ADOdb"
             },
-            "time": "2023-06-11T11:05:41+00:00"
+            "time": "2022-05-08T10:01:41+00:00"
         },
         {
             "name": "automattic/woocommerce",
@@ -483,53 +483,6 @@
             "time": "2023-02-09T21:01:23+00:00"
         },
         {
-            "name": "jaeger/phpquery-single",
-            "version": "1.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jae-jae/phpQuery-single.git",
-                "reference": "39a650ade692a6b480c22220dce0c198d6a946fb"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jae-jae/phpQuery-single/zipball/39a650ade692a6b480c22220dce0c198d6a946fb",
-                "reference": "39a650ade692a6b480c22220dce0c198d6a946fb",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "phpQuery.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Tobiasz Cudnik",
-                    "email": "tobiasz.cudnik@gmail.com",
-                    "homepage": "https://github.com/TobiaszCudnik",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Jaeger",
-                    "role": "Packager"
-                }
-            ],
-            "description": "phpQuery单文件版本，是Querylist的依赖(http://querylist.cc/)，phpQuery项目主页:http://code.google.com/p/phpquery/",
-            "homepage": "http://code.google.com/p/phpquery/",
-            "support": {
-                "issues": "https://github.com/jae-jae/phpQuery-single/issues",
-                "source": "https://github.com/jae-jae/phpQuery-single/tree/1.1.1"
-            },
-            "time": "2022-03-26T15:01:16+00:00"
-        },
-        {
             "name": "leon-mbs/phpquery",
             "version": "1.0.1",
             "source": {
@@ -617,20 +570,20 @@
         },
         {
             "name": "leon-mbs/zdb",
-            "version": "1.5.9",
+            "version": "1.5.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/zdb.git",
-                "reference": "c042fe476c69c35bccc2231305be53f60d7fe2c0"
+                "reference": "0e3704cca197d32e4a512e99b5c6674ec013a1e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/zdb/zipball/c042fe476c69c35bccc2231305be53f60d7fe2c0",
-                "reference": "c042fe476c69c35bccc2231305be53f60d7fe2c0",
+                "url": "https://api.github.com/repos/leon-mbs/zdb/zipball/0e3704cca197d32e4a512e99b5c6674ec013a1e9",
+                "reference": "0e3704cca197d32e4a512e99b5c6674ec013a1e9",
                 "shasum": ""
             },
             "require": {
-                "adodb/adodb-php": "v5.22.6",
+                "adodb/adodb-php": "v5.22.2",
                 "php": ">=7.4.0"
             },
             "type": "library",
@@ -652,27 +605,27 @@
             ],
             "support": {
                 "issues": "https://github.com/leon-mbs/zdb/issues",
-                "source": "https://github.com/leon-mbs/zdb/tree/1.5.9"
+                "source": "https://github.com/leon-mbs/zdb/tree/1.5.8"
             },
-            "time": "2023-07-26T14:39:11+00:00"
+            "time": "2023-07-21T13:56:23+00:00"
         },
         {
             "name": "leon-mbs/zippy",
-            "version": "2.5.26",
+            "version": "2.5.25",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/zippy.git",
-                "reference": "b2ee7cd50852e0c5149183adff142c5c0a9bc089"
+                "reference": "fcd18bfed60a99eb5e486167b5b7b3dd86d83ae7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/b2ee7cd50852e0c5149183adff142c5c0a9bc089",
-                "reference": "b2ee7cd50852e0c5149183adff142c5c0a9bc089",
+                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/fcd18bfed60a99eb5e486167b5b7b3dd86d83ae7",
+                "reference": "fcd18bfed60a99eb5e486167b5b7b3dd86d83ae7",
                 "shasum": ""
             },
             "require": {
                 "leon-mbs/phpquery": ">=1.0.0",
-                "leon-mbs/zdb": "1.5.9",
+                "leon-mbs/zdb": "1.5.8",
                 "mustache/mustache": "v2.14.2",
                 "php": ">=7.4.0"
             },
@@ -694,9 +647,9 @@
             ],
             "support": {
                 "issues": "https://github.com/leon-mbs/zippy/issues",
-                "source": "https://github.com/leon-mbs/zippy/tree/2.5.26"
+                "source": "https://github.com/leon-mbs/zippy/tree/2.5.25"
             },
-            "time": "2023-07-26T14:41:00+00:00"
+            "time": "2023-07-25T15:30:38+00:00"
         },
         {
             "name": "lis-dev/nova-poshta-api-2",

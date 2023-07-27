@@ -107,7 +107,7 @@ class OrderFood extends Document
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
-                        "username"        => \App\System::getUser()->username,
+                        "username"        => $this->headerdata['cashier'] ,
                         "firm_name"       => $firm["firm_name"],
                         "shopname"        => strlen($common["shopname"]) > 0 ? $common["shopname"] : false,
                         "address"         => $firm["address"],

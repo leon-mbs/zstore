@@ -250,7 +250,7 @@ class PPOHelper
         $header['docnumber'] = $pos->fiscdocnumber;
         $header['posinner'] = $pos->fiscallocnumber;
         $header['posnumber'] = $pos->fiscalnumber;
-        $header['username'] = \App\System::getUser()->username;
+        $header['username'] = self::getCashier();
         $header['guid'] = \App\Util::guid();
 
         $report = new \App\Report('shift.xml');
@@ -287,7 +287,7 @@ class PPOHelper
         $header['docnumber'] = $pos->fiscdocnumber;
         $header['posinner'] = $pos->fiscallocnumber;
         $header['posnumber'] = $pos->fiscalnumber;
-        $header['username'] = \App\System::getUser()->username;
+        $header['username'] = self::getCashier();
         $header['guid'] = \App\Util::guid();
         $header['pays'] = array();
         $header['paysr'] = array();
@@ -428,8 +428,7 @@ class PPOHelper
         $header['docnumber'] = $pos->fiscdocnumber;
         $header['posinner'] = $pos->fiscallocnumber;
         $header['posnumber'] = $pos->fiscalnumber;
-        $user = \App\Entity\User::load($doc->user_id);
-        $header['username'] = $user->username;
+        $header['username'] = self::getCashier($doc);
         $header['guid'] = \App\Util::guid();
 
 
@@ -643,7 +642,7 @@ class PPOHelper
         $header['docnumber'] = $pos->fiscdocnumber;
         $header['posinner'] = $pos->fiscallocnumber;
         $header['posnumber'] = $pos->fiscalnumber;
-        $header['username'] = \App\System::getUser()->username;
+        $header['username'] = self::getCashier($doc);
         $header['guid'] = \App\Util::guid();
 
         $amount0 = 0;
@@ -714,7 +713,7 @@ class PPOHelper
         $header['posinner'] = $pos->fiscallocnumber;
         $header['posnumber'] = $pos->fiscalnumber;
         $user = \App\Entity\User::load($doc->user_id);
-        $header['username'] = $user->username;
+        $header['username'] = self::getCashier($doc);
         $header['guid'] = \App\Util::guid();
         $amount0 = 0;
         $amount1 = 0;
@@ -1018,6 +1017,17 @@ class PPOHelper
 
     }
 
-
+    private static  function getCashier($doc=null){
+        
+        $cname = \App\System::getUser()->username;
+        if($doc instanceof \App\Entity\Doc\Document) {
+            if( strlen($doc->headerdata['cashier']) >0 ) {
+                 $cname = $doc->headerdata['cashier'];
+            }  else {
+                 $cname = $doc->username;                
+            }
+        }
+        return $cname;
+    }
 
 }

@@ -134,7 +134,7 @@ class POSCheck extends Document
         $header = array('date'          => H::fd($this->document_date),
                         "_detail"       => $detail,
                         "style"         => $style,
-                        "username"      => $this->username,
+                        "username"      => $this->headerdata['cashier'] ,
                         "firm_name"     => $firm["firm_name"],
                         "shopname"      => strlen($common["shopname"]) > 0 ? $common["shopname"] : false,
                         "address"       => $firm["address"],

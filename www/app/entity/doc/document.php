@@ -313,13 +313,21 @@ class Document extends \ZCL\DB\Entity
 
         $doc = new $fullclassname();
         $doc->meta_id = $meta['meta_id'];
-        $doc->user_id = \App\System::getUser()->user_id;
+        $user = \App\System::getUser();
+        
+        $doc->user_id = $user->user_id;
 
         $doc->branch_id = $branch_id;
         if ($branch_id == 0) {
             $doc->branch_id = \App\Acl::checkCurrentBranch();
         }
 
+        $doc->headerdata['cashier'] = $user->username;
+        $common = \App\System::getOptions("common");
+        if(strlen($common['cashier'])>0) {
+            $doc->headerdata['cashier'] = $common['cashier'] ;
+        }
+        
         return $doc;
     }
 
