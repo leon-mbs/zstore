@@ -29,19 +29,18 @@ class OLAP extends \App\Pages\Base
         $conn = \ZDB\DB::getConnect();
 
 
-        $dt = new \App\DateTime() ;
-        $to = $dt->startOfMonth()->getTimestamp()  - 1 ;
-        $from = $dt->subMonth(12)->getTimestamp()  ;
+//        $dt = new \App\DateTime() ;
+//        $to = $dt->startOfMonth()->getTimestamp()  - 1 ;
+//        $from = $dt->subMonth(1)->getTimestamp()  ;
 
 
 
         $this->add(new Form('startform'))->onSubmit($this, 'OnNext') ;
-        $this->startform->add(new Date('stfrom', $from));
-        $this->startform->add(new Date('stto', $to));
+        $this->startform->add(new Date('stfrom', time() - (7 * 24 * 3600)));
+        $this->startform->add(new Date('stto', time()));
         $this->startform->add(new DropDownChoice('sttype', array(), 0))->onChange($this, 'OnType');
         $this->startform->add(new DropDownChoice('sthor', array(), 0));
         $this->startform->add(new DropDownChoice('stver', array(), 0));
-
 
 
         $this->add(new Panel('reppan'))->setVisible(false);

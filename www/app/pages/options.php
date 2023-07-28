@@ -151,7 +151,7 @@ class Options extends \App\Pages\Base
 
         $this->business->cashier->setText($common['cashier']);
         $this->business->checkslogan->setText($common['checkslogan']);
-        $this->business->actualdate->setDate($common['actualdate'] ??  strtotime('2020-01-01') );
+        $this->business->actualdate->setDate($common['actualdate'] ??  strtotime('2023-01-01') );
 
 
 
