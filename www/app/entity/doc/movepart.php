@@ -12,7 +12,6 @@ use App\Helper as H;
  */
 class MovePart extends Document
 {
-
     public function Execute() {
 
 

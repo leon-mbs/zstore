@@ -23,10 +23,9 @@ use Zippy\Html\Panel;
 
 class GroupList extends \App\Pages\Base
 {
-
     private $group      = null;
-    public  $_grouplist = array();
-    public  $attrlist   = array();
+    public $_grouplist = array();
+    public $attrlist   = array();
     private $mm;
 
     public function __construct() {
@@ -42,7 +41,7 @@ class GroupList extends \App\Pages\Base
 
         $this->_grouplist = Category::findFullData($clist);
 
-        usort($this->_grouplist, function($a, $b) {
+        usort($this->_grouplist, function ($a, $b) {
             return $a->full_name > $b->full_name;
         });
 
@@ -183,7 +182,7 @@ class GroupList extends \App\Pages\Base
         if ($item->attributetype == 3 || $item->attributetype == 4) {
             $form->attrvaluespanel->setVisible(true);
         }
-         
+
     }
 
     public function OnSaveAttribute($sender) {
@@ -209,20 +208,20 @@ class GroupList extends \App\Pages\Base
         }
         if ($attr->attributetype == 3 || $attr->attributetype == 4) {
             $attr->valueslist = $form->attrvaluespanel->attrvalues->getText();
-            
+
             $r = array();
-            
-            foreach(explode(',',trim($attr->valueslist)) as $l ){
-               $l = trim($l) ;
-               $l = trim($l) ;
-               if(strlen($l) > 0) {
-                   $r[] = $l ;    
-               }
-               
-            }            
-            
-            
-            $attr->valueslist = implode(",",$r);
+
+            foreach(explode(',', trim($attr->valueslist)) as $l) {
+                $l = trim($l) ;
+                $l = trim($l) ;
+                if(strlen($l) > 0) {
+                    $r[] = $l ;
+                }
+
+            }
+
+
+            $attr->valueslist = implode(",", $r);
         }
 
         $attr->Save();

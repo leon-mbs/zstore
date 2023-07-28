@@ -25,8 +25,7 @@ use Zippy\Html\Link\SubmitLink;
  */
 class ProdIssue extends \App\Pages\Base
 {
-
-    public  $_itemlist  = array();
+    public $_itemlist  = array();
     private $_doc;
     private $_basedocid = 0;
 
@@ -88,25 +87,25 @@ class ProdIssue extends \App\Pages\Base
 
                         $this->docform->notes->setText('Підстава ' . $basedoc->document_number);
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
-                        
+
                         foreach($basedoc->unpackDetails('prodlist') as $prod) {
-                             $set =  \App\Entity\ItemSet::find("item_id > 0  and pitem_id=" . $prod->item_id);
-                             foreach($set as $m) {
-                                if( !isset($this->_itemlist[$m->item_id]) ) {
-                                    
+                            $set =  \App\Entity\ItemSet::find("item_id > 0  and pitem_id=" . $prod->item_id);
+                            foreach($set as $m) {
+                                if(!isset($this->_itemlist[$m->item_id])) {
+
                                     $this->_itemlist[$m->item_id] = Item::load($m->item_id);
                                     $this->_itemlist[$m->item_id]->quantity = 0;
-                                }   
+                                }
                                 $this->_itemlist[$m->item_id]->quantity += ($prod->quantity * $m->qty);
 
-                                
-                             }
-                             
-                             $this->_itemlist = array_values($this->_itemlist) ;
+
+                            }
+
+                            $this->_itemlist = array_values($this->_itemlist) ;
                         }
-                        
-                        
-                        
+
+
+
                     }
                     if ($basedoc->meta_name == 'ServiceAct') {
 
@@ -120,7 +119,7 @@ class ProdIssue extends \App\Pages\Base
                     }
                     if ($basedoc->meta_name == 'GoodsReceipt') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
-                       
+
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                     }
                     if ($basedoc->meta_name == 'ProdReceipt') {
@@ -189,10 +188,10 @@ class ProdIssue extends \App\Pages\Base
         }
         $item = $sender->owner->getDataItem();
 
-        $rowid =  array_search($item,$this->_itemlist,true);
- 
+        $rowid =  array_search($item, $this->_itemlist, true);
+
         $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
-  
+
         $this->docform->detail->Reload();
     }
 
@@ -216,7 +215,7 @@ class ProdIssue extends \App\Pages\Base
         $this->editdetail->editserial->setValue($item->snumber);
 
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
-        $this->_rowid =  array_search($item,$this->_itemlist,true);
+        $this->_rowid =  array_search($item, $this->_itemlist, true);
 
     }
 
@@ -260,8 +259,8 @@ class ProdIssue extends \App\Pages\Base
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
         } else {
-           $this->_itemlist[$this->_rowid] = $item;            
-        }        
+            $this->_itemlist[$this->_rowid] = $item;
+        }
 
 
 
@@ -361,7 +360,7 @@ class ProdIssue extends \App\Pages\Base
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $code0 = $code;
-                $code = ltrim($code,'0');
+        $code = ltrim($code, '0');
 
         $this->docform->barcode->setText('');
         if ($code == '') {
@@ -373,7 +372,7 @@ class ProdIssue extends \App\Pages\Base
             $this->setError('Не обрано склад');
             return;
         }
-          $code0 = Item::qstr($code0);
+        $code0 = Item::qstr($code0);
 
         $code_ = Item::qstr($code);
         $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and  (item_code = {$code_} or bar_code = {$code_} or item_code = {$code0} or bar_code = {$code0} )");
@@ -471,7 +470,7 @@ class ProdIssue extends \App\Pages\Base
             $this->editdetail->editserial->setText($serial);
         }
 
-       
+
     }
 
     public function OnAutoItem($sender) {

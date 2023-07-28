@@ -24,7 +24,6 @@ use App\Entity\Pay;
  */
 class OrderList extends \App\Pages\Base
 {
-
     private $_doc = null;
 
     /**
@@ -72,21 +71,21 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
         $this->statuspan->add(new Form('moveform'));
-        $this->statuspan->moveform->add(new DropDownChoice('brmove', \App\Entity\Branch::getList() ,\App\Acl::getCurrentBranch()))->onChange($this,"onBranch",true);
-        $this->statuspan->moveform->add(new DropDownChoice('usmove',array(),0  ));
+        $this->statuspan->moveform->add(new DropDownChoice('brmove', \App\Entity\Branch::getList(), \App\Acl::getCurrentBranch()))->onChange($this, "onBranch", true);
+        $this->statuspan->moveform->add(new DropDownChoice('usmove', array(), 0));
         $this->statuspan->moveform->add(new SubmitButton('bmove'))->onClick($this, 'MoveOnSubmit');
-        
+
         $this->statuspan->add(new Form('resform'))->setVisible(false);
-        
+
         $this->statuspan->resform->add(new SubmitButton('bres'))->onClick($this, 'resOnSubmit');
         $this->statuspan->resform->add(new SubmitButton('bunres'))->onClick($this, 'resOnSubmit');
-        $this->statuspan->resform->add(new DropDownChoice('store',\App\Entity\Store::getList(),H::getDefStore()));
-        
-        
+        $this->statuspan->resform->add(new DropDownChoice('store', \App\Entity\Store::getList(), H::getDefStore()));
+
+
         $this->doclist->Reload();
         $this->add(new ClickLink('csv', $this, 'oncsv'));
 
-        
+
         $this->add(new Form('payform'))->onSubmit($this, 'payOnSubmit');
         $this->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
         $this->payform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', "details like '%<usefisc>1</usefisc>%' "), 0));
@@ -96,9 +95,9 @@ class OrderList extends \App\Pages\Base
         $this->payform->add(new Date('pdate', time()));
         $this->payform->setVisible(false);
 
-        
-        
-    
+
+
+
     }
 
     public function filterOnSubmit($sender) {
@@ -113,26 +112,32 @@ class OrderList extends \App\Pages\Base
         $doc = $row->getDataItem();
 
         $n = $doc->document_number;
-        if(strlen($doc->headerdata['ocorder'] ?? '')>0)  $n = $n . " (OC '{$doc->headerdata['ocorder']}')"  ;
-        if(strlen($doc->headerdata['wcorder'] ?? '')>0)  $n = $n . " (WC '{$doc->headerdata['wcorder']}')"  ;
-        if(strlen($doc->headerdata['puorder'] ?? '')>0)  $n = $n . " (PU '{$doc->headerdata['puorder']}')"  ;
-        
-      
+        if(strlen($doc->headerdata['ocorder'] ?? '')>0) {
+            $n = $n . " (OC '{$doc->headerdata['ocorder']}')"  ;
+        }
+        if(strlen($doc->headerdata['wcorder'] ?? '')>0) {
+            $n = $n . " (WC '{$doc->headerdata['wcorder']}')"  ;
+        }
+        if(strlen($doc->headerdata['puorder'] ?? '')>0) {
+            $n = $n . " (PU '{$doc->headerdata['puorder']}')"  ;
+        }
+
+
         $row->add(new ClickLink('number', $this, 'showOnClick'))->setValue($n);
-        
-        
+
+
         $row->add(new Label('date', H::fd($doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));
         $row->add(new Label('emp', $doc->username));
- 
 
-        $row->add(new  \Zippy\Html\Link\BookmarkableLink('customer' ))->setValue($doc->customer_name);
-        $row->customer->setAttribute('onclick',"customerInfo({$doc->customer_id});" ) ;
+
+        $row->add(new  \Zippy\Html\Link\BookmarkableLink('customer'))->setValue($doc->customer_name);
+        $row->customer->setAttribute('onclick', "customerInfo({$doc->customer_id});") ;
         $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
-       
-     
-        $row->add(new Label('isreserved' ))->setVisible($doc->hasStore());
-        
+
+
+        $row->add(new Label('isreserved'))->setVisible($doc->hasStore());
+
         $stname = Document::getStateName($doc->state);
 
         $row->add(new Label('state', $stname));
@@ -167,56 +172,58 @@ class OrderList extends \App\Pages\Base
     }
 
     public function resOnSubmit($sender) {
-          if ($sender->id == "bres") {
+        if ($sender->id == "bres") {
             $store = $this->statuspan->resform->store->getValue();
-            if($store == 0)  return;
-     
+            if($store == 0) {
+                return;
+            }
+
             $conn = \ZDB\DB::getConnect();
             $conn->BeginTrans();
-        
-            try{
+
+            try {
                 $this->_doc->headerdata['store'] = $store;
                 $this->_doc->headerdata['storename'] = $this->statuspan->resform->store->getValueName();
                 $this->_doc->save() ;
                 $this->_doc->reserve();
 
                 $conn->CommitTrans();
-                       
-            }  catch(\Exception $e){
-                 $this->setError($e->getMessage()) ;
-                 $conn->RollbackTrans();
-                 return;
+
+            } catch(\Exception $e) {
+                $this->setError($e->getMessage()) ;
+                $conn->RollbackTrans();
+                return;
             }
 
-            $this->statuspan->resform->bres->setVisible(false);            
-            $this->statuspan->resform->store->setVisible(false);            
-            $this->statuspan->resform->bunres->setVisible(true);            
+            $this->statuspan->resform->bres->setVisible(false);
+            $this->statuspan->resform->store->setVisible(false);
+            $this->statuspan->resform->bunres->setVisible(true);
 
         }
         if ($sender->id == "bunres") {
 
             $this->_doc->unreserve();
-            $this->statuspan->resform->bunres->setVisible(false);            
+            $this->statuspan->resform->bunres->setVisible(false);
 
         }
         $this->doclist->Reload(false);
-     
+
     }
-  
+
     public function statusOnSubmit($sender) {
         if (\App\Acl::checkChangeStateDoc($this->_doc, true, true) == false) {
             return;
         }
 
         $state = $this->_doc->state;
-         
+
         //проверяем  что есть ТТН
         $list = $this->_doc->getChildren('TTN');
         $ttn = count($list) > 0;
         $list = $this->_doc->getChildren('GoodsIssue');
         $gi = count($list) > 0;
-      //  $list = $this->_doc->getChildren('Invoice');
-     //   $invoice = count($list) > 0;
+        //  $list = $this->_doc->getChildren('Invoice');
+        //   $invoice = count($list) > 0;
         $list = $this->_doc->getChildren('POSCheck');
         $pos = count($list) > 0;
 
@@ -248,7 +255,7 @@ class OrderList extends \App\Pages\Base
             return;
         }
         if ($sender->id == "bcopy") {
-       
+
             App::Redirect("\\App\\Pages\\Doc\\Order", 0, $this->_doc->document_id);
             return;
         }
@@ -276,17 +283,17 @@ class OrderList extends \App\Pages\Base
 
         if ($sender->id == "bclose") {
 
-             
-            
-            if($this->_doc->payamount >0 && $this->_doc->payamount>$this->_doc->payed ) {
+
+
+            if($this->_doc->payamount >0 && $this->_doc->payamount>$this->_doc->payed) {
                 $this->setWarn('"Замовлення закрито без оплати"');
-            }       
-            
+            }
+
             if($ttn== false && $gi == false) {
                 $this->setWarn('Замовлення закрито без доставки');
             }
 
-            
+
             $this->_doc->updateStatus(Document::STATE_CLOSED);
             $this->statuspan->setVisible(false);
         }
@@ -393,30 +400,30 @@ class OrderList extends \App\Pages\Base
         }
 
         if ($state == Document::STATE_WP) {
-            
-          if( $this->_doc->payamount > 0 &&  $this->_doc->payamount >  $this->_doc->payed) { 
-              $this->statuspan->statusform->btopay->setVisible(true);
-              $this->statuspan->statusform->btopay->setLink("App\\PAges\\Register\\PayBayList",array($this->_doc->document_id));
-          }
-          
+
+            if($this->_doc->payamount > 0 &&  $this->_doc->payamount >  $this->_doc->payed) {
+                $this->statuspan->statusform->btopay->setVisible(true);
+                $this->statuspan->statusform->btopay->setLink("App\\PAges\\Register\\PayBayList", array($this->_doc->document_id));
+            }
+
         }
-        
-        if ($state == Document::STATE_INPROCESS   ) {
+
+        if ($state == Document::STATE_INPROCESS) {
             $this->statuspan->resform->setVisible(true);
             $reserved = $this->_doc->hasStore();
             $this->statuspan->resform->bres->setVisible(!$reserved);
             $this->statuspan->resform->store->setVisible(!$reserved);
             $this->statuspan->resform->bunres->setVisible($reserved);
-        } 
-        
+        }
+
         if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
             // $this->statuspan->statusform->bclose->setVisible(false);
         }
 
-        if($this->_doc->hasPayments() == false && ( $state<4 || $state==Document::STATE_INPROCESS  ) )  {
-           $this->statuspan->moveform->setVisible(true);
+        if($this->_doc->hasPayments() == false && ($state<4 || $state==Document::STATE_INPROCESS)) {
+            $this->statuspan->moveform->setVisible(true);
         }
-        
+
 
         $this->_tvars['askclose'] = false;
         if ($inproc == false || $closed == false) {
@@ -427,14 +434,18 @@ class OrderList extends \App\Pages\Base
         //проверяем  что уже есть отправка
         $list = $this->_doc->getChildren('TTN');
 
-        if(count($list)>0)             $this->statuspan->resform->setVisible(false);
-        
+        if(count($list)>0) {
+            $this->statuspan->resform->setVisible(false);
+        }
+
         if (count($list) > 0 && $common['numberttn'] <> 1) {
             $this->statuspan->statusform->bttn->setVisible(false);
         }
         $list = $this->_doc->getChildren('GoodsIssue');
 
-        if(count($list)>0)             $this->statuspan->resform->setVisible(false);
+        if(count($list)>0) {
+            $this->statuspan->resform->setVisible(false);
+        }
 
         if (count($list) > 0 && $common['numberttn'] <> 1) {
             $this->statuspan->statusform->bgi->setVisible(false);
@@ -467,48 +478,48 @@ class OrderList extends \App\Pages\Base
         $this->goAnkor('dankor');
         $this->_tvars['askclose'] = false;
         $conn= \zdb\db::getConnect() ;
-        
+
         $stl = array() ;
         foreach($conn->Execute("select store_id,storename from stores") as $row) {
-           $stl[$row['store_id']]=$row['storename'];    
+            $stl[$row['store_id']]=$row['storename'];
         }
-        
+
         $this->_tvars['citems'] = array();
         foreach($this->_doc->unpackDetails('detaildata') as $it) {
             $ait=array('itemname'=>$it->itemname,'itemcode'=>$it->item_code,'itemqty'=>$it->quantity);
-            
+
             $ait['citemsstore']  =  array();
-            
-            foreach($stl as $k=>$v){
+
+            foreach($stl as $k=>$v) {
                 $qty = $it->getQuantity($k);
                 if(0 < doubleval($qty)) {
-                   $ait['citemsstore'][] = array('itstore'=>$v,'itqty'=>H::fqty($qty));     
+                    $ait['citemsstore'][] = array('itstore'=>$v,'itqty'=>H::fqty($qty));
                 }
             }
             $ait['citemscust']  =  array();
-            foreach(\App\Entity\CustItem::find("item_id={$it->item_id} ") as $ci ){
+            foreach(\App\Entity\CustItem::find("item_id={$it->item_id} ") as $ci) {
                 $cer = array('itcust'=>$ci->customer_name,'itcustcode'=>$ci->cust_code,'itcustcomment'=>$ci->comment);
                 $cer['itcustprice']  = H::fa($ci->price);
                 $cer['itcustupdated']  = H::fd($ci->updatedon);
-                
+
                 $cer['itcustqty']  = doubleval($ci->quantity)> 0 ? H::fqty($ci->quantity) : "";
-                
-                
+
+
                 $ait['citemscust'][]=$cer;
             }
-   
 
 
-            $this->_tvars['citems'][]=$ait;    
-            
-            
+
+            $this->_tvars['citems'][]=$ait;
+
+
         }
-        
-       $this->statuspan->moveform->brmove->setValue($this->_doc->branch_id) ;   
-       $this->onBranch( $this->statuspan->moveform->brmove);  
-       $this->statuspan->moveform->usmove->setValue($this->_doc->user_id);   
+
+        $this->statuspan->moveform->brmove->setValue($this->_doc->branch_id) ;
+        $this->onBranch($this->statuspan->moveform->brmove);
+        $this->statuspan->moveform->usmove->setValue($this->_doc->user_id);
     }
-  
+
     public function editOnClick($sender) {
         $doc = $sender->getOwner()->getDataItem();
         if (false == \App\ACL::checkEditDoc($doc, true)) {
@@ -519,10 +530,10 @@ class OrderList extends \App\Pages\Base
             $this->setError($cc);
 
             return;
-        }   
-            $doc->updateStatus(Document::STATE_CANCELED);
-            $doc->payed = 0;
-            $doc->save();           
+        }
+        $doc->updateStatus(Document::STATE_CANCELED);
+        $doc->payed = 0;
+        $doc->save();
         App::Redirect("\\App\\Pages\\Doc\\Order", $doc->document_id);
     }
 
@@ -545,37 +556,37 @@ class OrderList extends \App\Pages\Base
 
         H::exportExcel($data, $header, 'orderlist.xlsx');
     }
- 
-    public function onBranch($sender){
-       $id = $sender->getValue();   
-       $users = array(0=> "Не обрано" ); 
-       
-       foreach(\App\Entity\User::getByBranch($id) as $id=>$u) {
-          $users[$id] = $u ;  
-       }; 
-       
-       $this->statuspan->moveform->usmove->setOptionList($users);
+
+    public function onBranch($sender) {
+        $id = $sender->getValue();
+        $users = array(0=> "Не обрано" );
+
+        foreach(\App\Entity\User::getByBranch($id) as $id=>$u) {
+            $users[$id] = $u ;
+        }
+
+        $this->statuspan->moveform->usmove->setOptionList($users);
     }
-    
-    public function moveOnSubmit($sender){
-       $br = intval($this->statuspan->moveform->brmove->getValue() );   
-       $us = $this->statuspan->moveform->usmove->getValue();   
-       if($br>0){
-           $this->_doc->branch_id = $br;
-       }
-       if($us>0){
-           $this->_doc->user_id = $us;
-       }
-       
-       if($br>0 || $us>0){
-          $this->_doc->save();           
-          $this->doclist->Reload();
-          $this->statuspan->setVisible(false);
-          
-       }       
-     
+
+    public function moveOnSubmit($sender) {
+        $br = intval($this->statuspan->moveform->brmove->getValue());
+        $us = $this->statuspan->moveform->usmove->getValue();
+        if($br>0) {
+            $this->_doc->branch_id = $br;
+        }
+        if($us>0) {
+            $this->_doc->user_id = $us;
+        }
+
+        if($br>0 || $us>0) {
+            $this->_doc->save();
+            $this->doclist->Reload();
+            $this->statuspan->setVisible(false);
+
+        }
+
     }
-    
+
 }
 
 /**
@@ -583,7 +594,6 @@ class OrderList extends \App\Pages\Base
  */
 class OrderDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {
@@ -600,7 +610,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
         $salesource = $this->page->filter->salesource->getValue();
         if ($salesource > 0) {
             $where .= " and   content like '%<salesource>{$salesource}</salesource>%' ";
-            
+
         }
 
         $status = $this->page->filter->status->getValue();

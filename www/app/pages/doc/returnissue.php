@@ -26,12 +26,11 @@ use Zippy\Html\Link\SubmitLink;
  */
 class ReturnIssue extends \App\Pages\Base
 {
-
-    public  $_itemlist = array();
+    public $_itemlist = array();
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = 0;
-   
+
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
         if ($docid == 0 && $basedocid == 0) {
@@ -96,11 +95,11 @@ class ReturnIssue extends \App\Pages\Base
             $this->docform->payamount->setText(H::fa($this->_doc->payamount));
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
-            
-        
 
-       
-            
+
+
+
+
         } else {
             $this->_doc = Document::create('ReturnIssue');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -126,8 +125,8 @@ class ReturnIssue extends \App\Pages\Base
                         $this->docform->customer->setText($basedoc->customer_name);
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
-               
-                     
+
+
                     }
                     if ($basedoc->meta_name == 'TTN') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
@@ -136,7 +135,7 @@ class ReturnIssue extends \App\Pages\Base
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
-                        
+
                     }
                     if ($basedoc->meta_name == 'POSCheck') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
@@ -149,13 +148,13 @@ class ReturnIssue extends \App\Pages\Base
                         $this->_itemlist = array();
                         foreach ($itemlist as $item) {
                             if($item->item_id >0) {
-                                $this->_itemlist[] = $item;    
+                                $this->_itemlist[] = $item;
                             }
-                            
+
                         }
-                       
-                        
-                        
+
+
+
                     }
                 }
                 $this->calcTotal();
@@ -190,8 +189,8 @@ class ReturnIssue extends \App\Pages\Base
         }
         $item = $sender->owner->getDataItem();
 
-        $rowid =  array_search($item,$this->_itemlist,true);
- 
+        $rowid =  array_search($item, $this->_itemlist, true);
+
         $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
         $this->docform->detail->Reload();
         $this->calcTotal();
@@ -215,7 +214,7 @@ class ReturnIssue extends \App\Pages\Base
 
         $this->editdetail->edittovar->setKey($item->item_id);
         $this->editdetail->edittovar->setText($item->itemname);
-        $this->_rowid =  array_search($item,$this->_itemlist,true);
+        $this->_rowid =  array_search($item, $this->_itemlist, true);
     }
 
     public function saverowOnClick($sender) {
@@ -228,18 +227,18 @@ class ReturnIssue extends \App\Pages\Base
             return;
         }
 
-        
-   
+
+
         $item = Item::load($id);
-   
+
         $item->quantity = $this->editdetail->editquantity->getText();
 
         $item->price = $this->editdetail->editprice->getText();
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
         } else {
-           $this->_itemlist[$this->_rowid] = $item;            
-        }        
+            $this->_itemlist[$this->_rowid] = $item;
+        }
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -307,71 +306,71 @@ class ReturnIssue extends \App\Pages\Base
             if ($this->_basedocid > 0) {
                 $this->_doc->parent_id = $this->_basedocid;
                 $this->_basedocid = 0;
-            }        
-        
-        if ($pos_id > 0 && $sender->id == 'execdoc') {
-            $pos = \App\Entity\Pos::load($pos_id);
-           
-           
-          if($pos->usefisc == 1 && $this->_tvars['checkbox'] == true) {
-            
-            $cb = new  \App\Modules\CB\CheckBox($pos->cbkey,$pos->cbpin) ;
-            $ret = $cb->Check($this->_doc) ;
-            
-            if(is_array($ret)) {
-              $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
-              $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
-              $this->_doc->headerdata["checkbox"] = $ret['checkid'];
-            } else {
-                $this->setError($ret);
-                $conn->RollbackTrans();
-                return;
-                          
             }
-            
-            
-        }            
-           
-             
-           
-            if ($pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
-                $this->_doc->headerdata["fiscalnumberpos"]  =  $pos->fiscalnumber;
- 
-                if ($this->_doc->parent_id > 0) {
-                    $basedoc = Document::load($this->_doc->parent_id);
-                    $this->_doc->headerdata["docnumberback"] = $basedoc->headerdata["fiscalnumber"];
-                }
 
-                if (strlen($this->_doc->headerdata["docnumberback"]) == 0) {
-                    $this->setError("Для фіскалізації створіть повернення на основі фіскального чека");
-                    return;
-                }
+            if ($pos_id > 0 && $sender->id == 'execdoc') {
+                $pos = \App\Entity\Pos::load($pos_id);
 
-                $this->_doc->headerdata["pos"] = $pos->pos_id;
 
-                $ret = \App\Modules\PPO\PPOHelper::checkback($this->_doc);
-                if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
-                    //повторяем для  нового номера
-                    $pos->fiscdocnumber = $ret['doclocnumber'];
-                    $pos->save();
-                    $ret = \App\Modules\PPO\PPOHelper::checkback($this->_doc);
-                }
-                if ($ret['success'] == false) {
-                    $this->setErrorTopPage($ret['data']);
-                    return;
-                } else {
+                if($pos->usefisc == 1 && $this->_tvars['checkbox'] == true) {
 
-                    if ($ret['docnumber'] > 0) {
-                        $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                        $pos->save();
-                        $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+                    $cb = new  \App\Modules\CB\CheckBox($pos->cbkey, $pos->cbpin) ;
+                    $ret = $cb->Check($this->_doc) ;
+
+                    if(is_array($ret)) {
+                        $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                        $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
+                        $this->_doc->headerdata["checkbox"] = $ret['checkid'];
                     } else {
-                        $this->setError("Не повернено фіскальний номер");
+                        $this->setError($ret);
+                        $conn->RollbackTrans();
                         return;
+
+                    }
+
+
+                }
+
+
+
+                if ($pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
+                    $this->_doc->headerdata["fiscalnumberpos"]  =  $pos->fiscalnumber;
+
+                    if ($this->_doc->parent_id > 0) {
+                        $basedoc = Document::load($this->_doc->parent_id);
+                        $this->_doc->headerdata["docnumberback"] = $basedoc->headerdata["fiscalnumber"];
+                    }
+
+                    if (strlen($this->_doc->headerdata["docnumberback"]) == 0) {
+                        $this->setError("Для фіскалізації створіть повернення на основі фіскального чека");
+                        return;
+                    }
+
+                    $this->_doc->headerdata["pos"] = $pos->pos_id;
+
+                    $ret = \App\Modules\PPO\PPOHelper::checkback($this->_doc);
+                    if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
+                        //повторяем для  нового номера
+                        $pos->fiscdocnumber = $ret['doclocnumber'];
+                        $pos->save();
+                        $ret = \App\Modules\PPO\PPOHelper::checkback($this->_doc);
+                    }
+                    if ($ret['success'] == false) {
+                        $this->setErrorTopPage($ret['data']);
+                        return;
+                    } else {
+
+                        if ($ret['docnumber'] > 0) {
+                            $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                            $pos->save();
+                            $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+                        } else {
+                            $this->setError("Не повернено фіскальний номер");
+                            return;
+                        }
                     }
                 }
             }
-        }
 
 
 
@@ -380,11 +379,11 @@ class ReturnIssue extends \App\Pages\Base
                 if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
-            if ($this->_doc->payamount > $this->_doc->payed) {
-                $this->_doc->updateStatus(Document::STATE_WP);
-            }
+                if ($this->_doc->payamount > $this->_doc->payed) {
+                    $this->_doc->updateStatus(Document::STATE_WP);
+                }
 
-            $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                $this->_doc->updateStatus(Document::STATE_EXECUTED);
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
@@ -420,10 +419,10 @@ class ReturnIssue extends \App\Pages\Base
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
-   
+
         $payamount= $total  ;
-      
-        
+
+
         $this->docform->payamount->setText(H::fa($payamount));
         $this->docform->discount->setText(H::fa($discount));
         $this->docform->payed->setText(H::fa($payamount));

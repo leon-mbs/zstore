@@ -9,7 +9,6 @@ namespace App\Entity;
  */
 class Image extends \ZCL\DB\Entity
 {
-
     protected function init() {
 
     }

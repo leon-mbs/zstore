@@ -11,14 +11,13 @@ namespace App\Modules\Shop\Entity;
  */
 class Variation extends \ZCL\DB\Entity
 {
-
     protected function init() {
         $this->var_id = 0;
     }
 
-    public  static  function delItems($var_id){
+    public static function delItems($var_id) {
         $conn = \ZCL\DB\DB::getConnect();
         $conn->Execute("delete  from shop_varitems where  var_id=".$var_id);
-    } 
+    }
 
 }

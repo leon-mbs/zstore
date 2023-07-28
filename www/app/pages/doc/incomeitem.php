@@ -24,8 +24,7 @@ use Zippy\Html\Link\SubmitLink;
  */
 class IncomeItem extends \App\Pages\Base
 {
-
-    public  $_itemlist  = array();
+    public $_itemlist  = array();
     private $_doc;
     private $_rowid     = 0;
     private $_basedocid = 0;
@@ -65,8 +64,8 @@ class IncomeItem extends \App\Pages\Base
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitLink('addnewitem'))->onClick($this, 'addnewitemOnClick');
 
-        
-       //добавление нового товара
+
+        //добавление нового товара
         $this->add(new Form('editnewitem'))->setVisible(false);
         $this->editnewitem->add(new TextInput('editnewitemname'));
         $this->editnewitem->add(new TextInput('editnewitemcode'));
@@ -75,9 +74,9 @@ class IncomeItem extends \App\Pages\Base
         $this->editnewitem->add(new Button('cancelnewitem'))->onClick($this, 'cancelnewitemOnClick');
         $this->editnewitem->add(new DropDownChoice('editnewcat', \App\Entity\Category::getList(), 0));
         $this->editnewitem->add(new SubmitButton('savenewitem'))->onClick($this, 'savenewitemOnClick');
-        
-        
-        
+
+
+
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
@@ -148,11 +147,11 @@ class IncomeItem extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
-        $rowid =  array_search($item,$this->_itemlist,true);
+        $rowid =  array_search($item, $this->_itemlist, true);
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
         $this->calcTotal();
-        
+
         $this->docform->detail->Reload();
     }
 
@@ -163,7 +162,7 @@ class IncomeItem extends \App\Pages\Base
         $this->editdetail->edititem->setKey(0);
         $this->editdetail->edititem->setValue('');
         $this->_rowid = -1;
-        
+
     }
 
     public function editOnClick($sender) {
@@ -179,7 +178,7 @@ class IncomeItem extends \App\Pages\Base
         $this->editdetail->editsnumber->setText($item->snumber);
         $this->editdetail->editsdate->setDate($item->sdate);
 
-        $this->_rowid =  array_search($item,$this->_itemlist,true);
+        $this->_rowid =  array_search($item, $this->_itemlist, true);
     }
 
     public function saverowOnClick($sender) {
@@ -219,8 +218,8 @@ class IncomeItem extends \App\Pages\Base
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
         } else {
-           $this->_itemlist[$this->_rowid] = $item;            
-        }        
+            $this->_itemlist[$this->_rowid] = $item;
+        }
 
 
         $this->editdetail->setVisible(false);
@@ -275,7 +274,7 @@ class IncomeItem extends \App\Pages\Base
         }
 
         $isEdited = $this->_doc->document_id > 0;
- 
+
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
@@ -373,8 +372,8 @@ class IncomeItem extends \App\Pages\Base
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
-         $code0 = $code;
-       $code = ltrim($code,'0');
+        $code0 = $code;
+        $code = ltrim($code, '0');
 
         $code = Item::qstr($code);
         $code0 = Item::qstr($code0);
@@ -415,7 +414,7 @@ class IncomeItem extends \App\Pages\Base
             $this->docform->exmf->setVisible(false);
         }
     }
-     //добавление нового товара
+    //добавление нового товара
     public function addnewitemOnClick($sender) {
         $this->editnewitem->setVisible(true);
         $this->editdetail->setVisible(false);

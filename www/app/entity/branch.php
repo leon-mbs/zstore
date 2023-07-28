@@ -10,7 +10,6 @@ namespace App\Entity;
  */
 class Branch extends \ZCL\DB\Entity
 {
-
     protected function init() {
         $this->branch_id = 0;
         $this->disabled = 0;

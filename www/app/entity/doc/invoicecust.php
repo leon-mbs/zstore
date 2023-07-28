@@ -10,7 +10,6 @@ use App\Helper as H;
  */
 class InvoiceCust extends Document
 {
-
     public function generateReport() {
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
 
@@ -50,10 +49,10 @@ class InvoiceCust extends Document
 
         $header['isdisc'] = $this->headerdata["disc"] > 0;
         $header['isnds'] = $this->headerdata["nds"] > 0;
-        
+
         $header['disc'] = H::fa($this->headerdata["disc"]);
         $header['nds'] = H::fa($this->headerdata["nds"]);
-        
+
         $header['rate'] = $this->headerdata["rate"];
         if ($header['rate'] == 0 || $header['rate'] == 1) {
             $header['isval'] = false;
@@ -72,14 +71,14 @@ class InvoiceCust extends Document
         $payed = $this->payed;
         $rate= doubleval($this->headerdata["rate"]);
         if ($rate != 0 && $rate != 1) {
-            $payed = $payed * $rate; 
+            $payed = $payed * $rate;
         }
 
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment'] );
-            if ($payed > 0) {
-                $this->payed = $payed;
-            }
-            \App\Entity\IOState::addIOState($this->document_id, 0 - $this->payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+        $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment']);
+        if ($payed > 0) {
+            $this->payed = $payed;
+        }
+        \App\Entity\IOState::addIOState($this->document_id, 0 - $this->payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
 
 
 

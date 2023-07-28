@@ -2,15 +2,14 @@
 
 namespace App\Modules\Shop\Pages\Catalog;
 
-use \App\Application as App;
-use \App\Helper;
-use \App\System;
-use \App\Modules\Shop\Entity\Product;
-use \Zippy\Html\Link\ClickLink;
+use App\Application as App;
+use App\Helper;
+use App\System;
+use App\Modules\Shop\Entity\Product;
+use Zippy\Html\Link\ClickLink;
 
 class Base extends \Zippy\Html\WebPage
 {
-
     public function __construct($params = null) {
 
         \Zippy\Html\WebPage::__construct();
@@ -25,34 +24,34 @@ class Base extends \Zippy\Html\WebPage
             $shop = array();
         }
         $customer_id =   System::getCustomer();
-        
-        
-        if (($_COOKIE['remembercust'] ?? NULL) && $customer_id == 0) {
+
+
+        if (($_COOKIE['remembercust'] ?? null) && $customer_id == 0) {
             $arr = explode('_', $_COOKIE['remembercust']);
-          
+
             if ($arr[0] > 0 && $arr[1] === md5($arr[0] . $_config['common']['salt'])) {
                 $customer = \App\Entity\Customer::load($arr[0]);
-                 \App\System::setCustomer($customer->customer_id)  ;
-                 \App\System::getSession()->custname = $customer->customer_name;
-            
+                \App\System::setCustomer($customer->customer_id)  ;
+                \App\System::getSession()->custname = $customer->customer_name;
+
             }
 
-           
-        }        
-        
+
+        }
+
         if ($shop["uselogin"] == 1) {
             if ($customer_id == 0) {
                 App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog\\Userlogin");
                 return;
             }
         }
-   
+
 
         $this->_tvars["islogined"] = $customer_id > 0;
- 
+
         $this->_tvars["custname"] = System::getSession()->custname;
-        
-        
+
+
         $this->_tvars["currencyname"] = $shop["currencyname"] ?? '';
         $this->_tvars["basketcnt"] = false;
         $this->_tvars["comparecnt"] = false;
@@ -71,7 +70,7 @@ class Base extends \Zippy\Html\WebPage
         $this->op = System::getOptions("shop");
 
         $this->add(new ClickLink('logout', $this, 'LogoutClick'));
- 
+
         $this->add(new \Zippy\Html\Link\BookmarkableLink('logo', "/"))->setVisible(strlen($this->op['logo']) > 0);
         $this->logo->setValue($this->op['logo']);
         $this->_tvars["shopname"] = $this->op['shopname'];
@@ -91,22 +90,24 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["usefeedback"] = false;
         }
 
-        if(!is_array($shop["pages"]))  $shop["pages"] =  array();
+        if(!is_array($shop["pages"])) {
+            $shop["pages"] =  array();
+        }
         $this->_tvars['pages'] =array();
-        foreach($shop["pages"] as $p)  {
-           $link = _BASEURL .trim($p->link,"/");
-           
-           $this->_tvars['pages'][]=array('link'=> $link  ,'title'=>$p->title);    
-        }
-        
-        if(strlen($_COOKIE['zippy_shop'] ?? null)==0) {
-           \App\Helper::insertstat(\App\Helper::STAT_HIT_SHOP,0,0) ;
-           setcookie("zippy_shop","visited" , time() + 60 * 60 * 24);
-       
-        }
-        
+        foreach($shop["pages"] as $p) {
+            $link = _BASEURL .trim($p->link, "/");
 
-        
+            $this->_tvars['pages'][]=array('link'=> $link  ,'title'=>$p->title);
+        }
+
+        if(strlen($_COOKIE['zippy_shop'] ?? null)==0) {
+            \App\Helper::insertstat(\App\Helper::STAT_HIT_SHOP, 0, 0) ;
+            setcookie("zippy_shop", "visited", time() + 60 * 60 * 24);
+
+        }
+
+
+
     }
 
     public function onSearch(\Zippy\Html\Form\AutocompleteTextInput $sender) {
@@ -130,22 +131,22 @@ class Base extends \Zippy\Html\WebPage
 
     //вывод ошибки,  используется   в дочерних страницах
     public function setError($msg, $p1 = "", $p2 = "") {
-        
+
         System::setErrorMsg($msg);
     }
 
     public function setSuccess($msg, $p1 = "", $p2 = "") {
-       
+
         System::setSuccessMsg($msg);
     }
 
     public function setWarn($msg, $p1 = "", $p2 = "") {
-      
+
         System::setWarnMsg($msg);
     }
 
     public function setInfo($msg, $p1 = "", $p2 = "") {
-         
+
         System::setInfoMsg($msg);
     }
 
@@ -156,12 +157,12 @@ class Base extends \Zippy\Html\WebPage
     protected function beforeRender() {
         $basket = \App\Modules\Shop\Basket::getBasket();
         $comp = \App\Modules\Shop\CompareList::getCompareList();
-        
+
         $this->shopcart->setVisible($basket->isEmpty() == false);
         $this->showcompare->setVisible($comp->isEmpty() == false);
 
         $this->_tvars["basketcnt"] = $basket->getItemCount();
-        
+
         $this->_tvars["comparecnt"] = $comp->getItemCount();
     }
 
@@ -189,17 +190,17 @@ class Base extends \Zippy\Html\WebPage
 
     //Перезагрузить страницу  с  клиента
     //например для  сброса  адресной строки  после  команды удаления
-    protected final function resetURL() {
+    final protected function resetURL() {
         \App\Application::$app->setReloadPage();
     }
 
     public function LogoutClick($sender) {
         System::setCustomer(0);
         setcookie("remembercust", '', 0);
-        \App\Modules\Shop\Basket::getBasket()->Empty();      
-        App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog\\Main",0);
-       
+        \App\Modules\Shop\Basket::getBasket()->Empty();
+        App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog\\Main", 0);
+
     }
-    
-    
+
+
 }

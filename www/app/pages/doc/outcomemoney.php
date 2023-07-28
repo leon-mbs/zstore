@@ -23,7 +23,6 @@ use App\Entity\Employee;
  */
 class OutcomeMoney extends \App\Pages\Base
 {
-
     private $_doc;
 
     public function __construct($docid = 0, $pcustomer_id = 0, $pamount = 0) {
@@ -33,7 +32,7 @@ class OutcomeMoney extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
 
-        $this->docform->add(new DropDownChoice('detail', array(),  2))->onChange($this, 'OnDetail');
+        $this->docform->add(new DropDownChoice('detail', array(), 2))->onChange($this, 'OnDetail');
         $this->docform->add(new DropDownChoice('mtype', \App\Entity\IOState::getTypeList(2), 0));
 
         $this->docform->add(new DropDownChoice('contract', array(), 0));
@@ -106,7 +105,7 @@ class OutcomeMoney extends \App\Pages\Base
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->customer_id = $this->docform->customer->getKey();
         $this->_doc->payed = $this->_doc->amount;
-        $this->_doc->headerdata['payed'] = $this->_doc->amount;        
+        $this->_doc->headerdata['payed'] = $this->_doc->amount;
         $this->_doc->payment = 0;
         if ($this->checkForm() == false) {
             return;
@@ -165,20 +164,20 @@ class OutcomeMoney extends \App\Pages\Base
         if (($this->_doc->amount > 0) == false) {
             $this->setError("Не введено суму");
         }
-        if ($this->docform->mtype->getValue() == 0 ) {
+        if ($this->docform->mtype->getValue() == 0) {
             $this->setError("Не обрано тип витрат");
         }
 
 
         if ($this->docform->detail->getValue() == 1 || $this->docform->detail->getValue() == 2) {
 
-            if ($this->_doc->customer_id == 0  ) {
+            if ($this->_doc->customer_id == 0) {
                 $this->setError("Не задано контрагента");
             }
         }
         if ($this->docform->detail->getValue() == 3) {
 
-            if ($this->_doc->headerdata['emp'] == 0    ) {
+            if ($this->_doc->headerdata['emp'] == 0) {
                 $this->setError("Не обрано співробітника");
             }
         }

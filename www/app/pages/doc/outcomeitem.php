@@ -25,8 +25,7 @@ use Zippy\Html\Link\SubmitLink;
  */
 class OutcomeItem extends \App\Pages\Base
 {
-
-    public  $_itemlist = array();
+    public $_itemlist = array();
     private $_doc;
     private $_rowid    = 0;
 
@@ -37,7 +36,7 @@ class OutcomeItem extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
         $bid = \App\System::getBranch();
-     
+
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
 
         $tostore = array();
@@ -117,8 +116,8 @@ class OutcomeItem extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
-        $rowid =  array_search($item,$this->_itemlist,true);
- 
+        $rowid =  array_search($item, $this->_itemlist, true);
+
         $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
         $this->docform->detail->Reload();
     }
@@ -150,8 +149,8 @@ class OutcomeItem extends \App\Pages\Base
 
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
 
-        $this->_rowid =  array_search($item,$this->_itemlist,true);
- 
+        $this->_rowid =  array_search($item, $this->_itemlist, true);
+
     }
 
     public function saverowOnClick($sender) {
@@ -186,8 +185,8 @@ class OutcomeItem extends \App\Pages\Base
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
         } else {
-           $this->_itemlist[$this->_rowid] = $item;            
-        }        
+            $this->_itemlist[$this->_rowid] = $item;
+        }
 
 
         $this->editdetail->setVisible(false);
@@ -213,7 +212,7 @@ class OutcomeItem extends \App\Pages\Base
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
- 
+
 
         $this->_doc->notes = $this->docform->notes->getText();
 
@@ -226,12 +225,12 @@ class OutcomeItem extends \App\Pages\Base
 
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
-      
-       if ($this->checkForm() == false) {
+
+        if ($this->checkForm() == false) {
             return;
         }
-      
-      
+
+
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -278,10 +277,10 @@ class OutcomeItem extends \App\Pages\Base
                             $indoc->branch_id = $st->branch_id;
                         }
                         $indoc->document_number =  $indoc->nextNumber($indoc->branch_id);
-                        
+
                         $admin  =\App\Entity\User::getByLogin('admin') ;
                         $indoc->user_id = $admin->user_id;
-                        
+
                         $indoc->notes = "Підстава {$this->_doc->document_number}, склад " . $this->_doc->headerdata['storename'];
                         if ($this->_doc->branch_id > 0) {
                             $br = \App\Entity\Branch::load($this->_doc->branch_id);
@@ -373,7 +372,7 @@ class OutcomeItem extends \App\Pages\Base
         $item = Item::load($item_id);
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
 
-      
+
     }
 
 
@@ -393,8 +392,8 @@ class OutcomeItem extends \App\Pages\Base
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $code0 = $code;
-               $code = ltrim($code,'0');
-      $this->docform->barcode->setText('');
+        $code = ltrim($code, '0');
+        $this->docform->barcode->setText('');
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
             $this->setError('Не обрано склад');
@@ -402,7 +401,7 @@ class OutcomeItem extends \App\Pages\Base
         }
 
         $code = Item::qstr($code);
-         $code0 = Item::qstr($code0);
+        $code0 = Item::qstr($code0);
 
         $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and     (item_code = {$code} or bar_code = {$code} or item_code = {$code0} or bar_code = {$code0} )");
         if ($item == null) {

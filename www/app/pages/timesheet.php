@@ -20,10 +20,9 @@ use Zippy\Html\DataList\ArrayDataSource;
 
 class TimeSheet extends \App\Pages\Base
 {
-
     private $_time_id = 0;
-    public  $_list    = array();
-    public  $_stat    = array();
+    public $_list    = array();
+    public $_stat    = array();
 
     public function __construct() {
         parent::__construct();
@@ -32,86 +31,86 @@ class TimeSheet extends \App\Pages\Base
             App::Redirect("\\App\\Pages\\Userlogin");
         }
 
-  
+
     }
 
- 
 
- 
-//vue
-    
-    public function init($arg,$post=null){
+
+
+    //vue
+
+    public function init($arg, $post=null) {
         $user = \App\System::getUser() ;
         $common = System::getOptions("common");
-  
-        $ret = array();  
+
+        $ret = array();
         $ret['empid']  =  $user->employee_id;
         $ret['isadmin']  =  $user->rolename=="admins";
         $ret['types']  =  \App\Util::tokv(TimeItem::getTypeTime());
-        $ret['emps']  =  \App\Util::tokv(\App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name")  ) ;
-        if($ret['isadmin'] == false)  {
-           $ret['emps']  =  \App\Util::tokv(\App\Entity\Employee::findArray("emp_name", "disabled<>1 and employee_id=".$user->employee_id, "emp_name")  ) ;
-        } 
+        $ret['emps']  =  \App\Util::tokv(\App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name")) ;
+        if($ret['isadmin'] == false) {
+            $ret['emps']  =  \App\Util::tokv(\App\Entity\Employee::findArray("emp_name", "disabled<>1 and employee_id=".$user->employee_id, "emp_name")) ;
+        }
         $dt = new \App\DateTime();
 
-        $ret['from'] = date("Y-m-d", $dt->startOfMonth()->getTimestamp() );
-        $ret["to"] = date("Y-m-d",$dt->endOfMonth()->getTimestamp() );
-        $ret["today"] = date("Y-m-d",time() );
+        $ret['from'] = date("Y-m-d", $dt->startOfMonth()->getTimestamp());
+        $ret["to"] = date("Y-m-d", $dt->endOfMonth()->getTimestamp());
+        $ret["today"] = date("Y-m-d", time());
         $ret["start"] = $common['ts_start'] ;
         $ret["end"] = $common['ts_end'] ;
         $ret["break"] = $common['ts_break'] ;
-        
-         
-        return json_encode($ret, JSON_UNESCAPED_UNICODE);     
-       
-    }    
 
-    public function loaddata($arg,$post){
-       
+
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+
+    }
+
+    public function loaddata($arg, $post) {
+
         $post = json_decode($post) ;
-        
+
         $conn = \ZDB\DB::getConnect();
-         
+
         $emp_id = $post->empid;
         $t_start = $conn->DBDate(strtotime($post->from));
         $t_end = $conn->DBDate(strtotime($post->to));
-            
+
         $ret = array()  ;
-        $ret['stat'] = array();                                                                                           
-       
+        $ret['stat'] = array();
+
         $tn = TimeItem::getTypeTime();
         $sql="select t_type,sum(tm) as tm, count(distinct dd) as dd   from (select t_type, date(t_start) as dd, (UNIX_TIMESTAMP(t_end)-UNIX_TIMESTAMP(t_start)  - t_break*60)   as  tm from timesheet where  emp_id = {$emp_id} and  date(t_start)>=date({$t_start}) and  date( t_start)<= date( {$t_end} ) ) t  group by t_type order by t_type ";
         if($conn->dataProvider=="postgres") {
             $sql="select t_type,sum(tm) as tm, count(distinct dd) as dd   from (select t_type, date(t_start) as dd, (extract(epoch from t_end) - extract(epoch from t_start)  - t_break*60)   as  tm from timesheet where  emp_id = {$emp_id} and  date(t_start)>=date({$t_start}) and  date( t_start)<= date( {$t_end} ) ) t  group by t_type order by t_type ";
         }
-        
+
         $stat = $conn->Execute($sql);
         foreach ($stat as $row) {
-     
+
             $color="";
             if ($row['t_type'] == TimeItem::TIME_WORK) {
-               $color=  'badge badge-primary' ;
+                $color=  'badge badge-primary' ;
             }
             if ($row['t_type'] == TimeItem::TINE_BT) {
 
-               $color=  'badge badge-info'   ;
+                $color=  'badge badge-info'   ;
             }
             if ($row['t_type'] == TimeItem::TINE_HL) {
-               $color=  'badge badge-success'  ;
+                $color=  'badge badge-success'  ;
             }
             if ($row['t_type'] == TimeItem::TINE_ILL) {
-               $color=  'badge badge-warning'  ;
+                $color=  'badge badge-warning'  ;
             }
             if ($row['t_type'] == TimeItem::TINE_OVER) {
-               $color=  'badge badge-danger'  ;
+                $color=  'badge badge-danger'  ;
             }
             if ($row['t_type'] == TimeItem::TINE_WN) {
-               $color=  'badge badge-danger'  ;
+                $color=  'badge badge-danger'  ;
             }
             if ($row['t_type'] == TimeItem::TINE_OTHER) {
-               $color=  'badge badge-light'   ;
-            }            
-                
+                $color=  'badge badge-light'   ;
+            }
+
             $ret['stat'][] = array(
             "color"=> $color,
             "days"=> $row['dd'],
@@ -119,10 +118,10 @@ class TimeSheet extends \App\Pages\Base
             "name"=>$tn[$row['t_type']]
             );
         }
-      
+
         $ret['times'] = array();
         $ret['events'] = array();
-        
+
         $w = "emp_id = {$emp_id} and  date(t_start)>=date({$t_start}) and  date( t_start)<= date( {$t_end} )  ";
 
         if ($this->_tvars["usebranch"] && $this->branch_id > 0) {
@@ -130,43 +129,43 @@ class TimeSheet extends \App\Pages\Base
         }
 
 
-         
-         foreach (TimeItem::find($w, 't_start') as $tm) {
-     
+
+        foreach (TimeItem::find($w, 't_start') as $tm) {
+
             $color="";
             $colorcal="";
             if ($tm->t_type == TimeItem::TIME_WORK) {
-               $color=  'badge badge-primary' ;
-               $colorcal=  "#007bff" ;
+                $color=  'badge badge-primary' ;
+                $colorcal=  "#007bff" ;
             }
             if ($tm->t_type == TimeItem::TINE_BT) {
 
-               $color=  'badge badge-info'   ;
-               $colorcal=  "#17a2b8" ;
+                $color=  'badge badge-info'   ;
+                $colorcal=  "#17a2b8" ;
             }
             if ($tm->t_type == TimeItem::TINE_HL) {
-               $color=  'badge badge-success'  ;
-               $colorcal=  "#28a745" ;
+                $color=  'badge badge-success'  ;
+                $colorcal=  "#28a745" ;
             }
             if ($tm->t_type == TimeItem::TINE_ILL) {
-               $color=  'badge badge-warning'  ;
-               $colorcal=  "#ffc107" ;
+                $color=  'badge badge-warning'  ;
+                $colorcal=  "#ffc107" ;
             }
             if ($tm->t_type == TimeItem::TINE_OVER) {
-               $color=  'badge badge-danger'  ;
-               $colorcal=  "#dc3545" ;
+                $color=  'badge badge-danger'  ;
+                $colorcal=  "#dc3545" ;
             }
             if ($tm->t_type == TimeItem::TINE_WN) {
-               $color=  'badge badge-danger'  ;
-               $colorcal=  "#dc3545" ;
+                $color=  'badge badge-danger'  ;
+                $colorcal=  "#dc3545" ;
             }
             if ($tm->t_type == TimeItem::TINE_OTHER) {
-               $color=  'badge badge-light'   ;
-               $colorcal=  "#bbb" ;
-            }            
+                $color=  'badge badge-light'   ;
+                $colorcal=  "#bbb" ;
+            }
             $diff = $tm->t_end - $tm->t_start - ($tm->t_break * 60);
             $diff = number_format($diff / 3600, 2, '.', '');
-           
+
             $ret['times'][] = array(
              "date"=> date('Y-m-d', $tm->t_start),
              "from"=> date('H:i', $tm->t_start),
@@ -180,47 +179,47 @@ class TimeSheet extends \App\Pages\Base
              "name"=>$tn[$tm->t_type]  ,
              "time_id"=>$tm->time_id
             );
-            
-          $ret['events'][] = array(
-             "start"=> date('c', $tm->t_start),
-             "end"=> date('c', $tm->t_start),
 
-             "backgroundColor"=>$colorcal ,
-             "title"=>$tm->description ,
-             "id"=>$tm->time_id
-            );
-            
-            
+            $ret['events'][] = array(
+               "start"=> date('c', $tm->t_start),
+               "end"=> date('c', $tm->t_start),
+
+               "backgroundColor"=>$colorcal ,
+               "title"=>$tm->description ,
+               "id"=>$tm->time_id
+              );
+
+
         }
-   
-      
-      
-        return json_encode($ret, JSON_UNESCAPED_UNICODE);     
-               
+
+
+
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+
     }
-    public function save($args,$post) {
-        
+    public function save($args, $post) {
+
         $post = json_decode($post) ;
-       
+
         $time = new TimeItem();
         if($args[0] > 0) {
-           $time = TimeItem::load($args[0] ); 
+            $time = TimeItem::load($args[0]);
         }
-        
+
         $time->description = $post->desc;
         $time->emp_id = $post->empid;
         if ($time->emp_id == 0) {
 
-            return json_encode("Не обрано співробітника", JSON_UNESCAPED_UNICODE);     
+            return json_encode("Не обрано співробітника", JSON_UNESCAPED_UNICODE);
         }
         $time->t_type = $post->type;
-     
+
         if ($time->t_type == 0) {
 
-            return "Не обрано тип";     
+            return "Не обрано тип";
         }
-      
-     
+
+
         $time->t_break = $post->break;
         $from = $post->date . ' ' . $post->from;
         $to = $post->date . ' ' . $post->to;
@@ -230,15 +229,15 @@ class TimeSheet extends \App\Pages\Base
 
         $v = $time->isValid();
         if (strlen($v) > 0) {
-           return  $v;     
-     
+            return  $v;
+
         }
 
         if ($this->_tvars["usebranch"]) {
             if ($this->branch_id == 0) {
-                 
-                return "Виберіть філію";     
-   
+
+                return "Виберіть філію";
+
             }
             $time->branch_id = $this->branch_id;
         }
@@ -246,15 +245,15 @@ class TimeSheet extends \App\Pages\Base
 
         $time->save();
 
-        return "";     
-       
+        return "";
+
     }
-  
-     public function del($args) {
+
+    public function del($args) {
 
 
         TimeItem::delete($args[0]);
 
 
-    }   
+    }
 }

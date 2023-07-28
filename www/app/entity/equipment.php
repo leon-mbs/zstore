@@ -10,7 +10,6 @@ namespace App\Entity;
  */
 class Equipment extends \ZCL\DB\Entity
 {
-
     protected function init() {
         $this->eq_id = 0;
     }

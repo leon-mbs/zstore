@@ -7,15 +7,14 @@ use App\Entity\Doc\Document;
 //страница  для  загрузки  файла экcпорта
 class ShowDoc extends \Zippy\Html\WebPage
 {
-
     public function __construct($type, $docid) {
         parent::__construct();
-     
+
         $docid = intval($docid);
-     
-     
+
+
         $common = \App\System::getOptions('common');
- 
+
         $user = \App\System::getUser();
         if ($user->user_id == 0) {
             die;
@@ -55,26 +54,26 @@ class ShowDoc extends \Zippy\Html\WebPage
 
                 echo $html;
             }
-            if ($type == "xls") {  
-               
-               
-                
-                    $file = tempnam(sys_get_temp_dir(),"".time() );
-                 
-                    $handle = fopen($file, "w");
-                    fwrite($handle, $html);
-                    $reader =  new \PhpOffice\PhpSpreadsheet\Reader\Html()  ;
-                    $spreadsheet = $reader->load($file);
-                    fclose($handle);
-                    @unlink($file);              
-                
-                    $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+            if ($type == "xls") {
 
-                    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                    header("Content-Disposition: attachment;Filename={$filename}.xlsx");
-                    $writer->save('php://output');
-                    die;      
-             
+
+
+                $file = tempnam(sys_get_temp_dir(), "".time());
+
+                $handle = fopen($file, "w");
+                fwrite($handle, $html);
+                $reader =  new \PhpOffice\PhpSpreadsheet\Reader\Html()  ;
+                $spreadsheet = $reader->load($file);
+                fclose($handle);
+                @unlink($file);
+
+                $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                header("Content-Disposition: attachment;Filename={$filename}.xlsx");
+                $writer->save('php://output');
+                die;
+
             }
             if ($type == "html") {
                 header("Content-type: text/plain");
@@ -101,7 +100,7 @@ class ShowDoc extends \Zippy\Html\WebPage
 
                 // (Optional) Setup the paper size and orientation
                 $dompdf->setPaper('A4', 'landscape');
-//                $dompdf->set_option('defaultFont', 'DejaVu Sans');
+                //                $dompdf->set_option('defaultFont', 'DejaVu Sans');
                 // Render the HTML as PDF
                 $dompdf->render();
 

@@ -22,7 +22,6 @@ use App\Entity\Employee;
  */
 class MoveMoney extends \App\Pages\Base
 {
-
     private $_doc;
 
     public function __construct($docid = 0) {

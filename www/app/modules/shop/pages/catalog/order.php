@@ -21,7 +21,6 @@ use App\Modules\Shop\Entity\Product;
 //страница формирования заказа  пользователя
 class Order extends Base
 {
-
     public $sum = 0;
     public $orderid = 0;
     public $basketlist;
@@ -35,12 +34,12 @@ class Order extends Base
         $form->add(new \Zippy\Html\DataList\DataView('pitem', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, 'basketlist')), $this, 'OnAddRow'))->Reload();
         $form->add(new Label('summa', new \Zippy\Binding\PropertyBinding($this, 'sum')));
         $this->OnUpdate($this);
-        
-        
+
+
         $form = $this->add(new Form('orderform'));
         $form->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np'] == 1)))->onChange($this, 'OnDelivery');
-        $form->add(new DropDownChoice('payment', array(),0)) ;
-        
+        $form->add(new DropDownChoice('payment', array(), 0)) ;
+
 
         if ($this->_tvars["isfood"]) {
             $form->delivery->setValue(Document::DEL_BOY);
@@ -66,13 +65,13 @@ class Order extends Base
             $form->address->setText($c->address)  ;
             $form->firstname->setText($c->firstname)  ;
             $form->lastname->setText($c->lastname)  ;
-        }        
-        
-    
+        }
+
+
         $this->OnDelivery($form->delivery);
 
-        
- }
+
+    }
 
     public function OnDelivery($sender) {
 
@@ -87,44 +86,44 @@ class Order extends Base
 
         $this->listform->pitem->Reload();
         $this->sum = 0;
-    
-      
-        foreach ( $this->basketlist as $product) {
-              
+
+
+        foreach ($this->basketlist as $product) {
+
             if (!is_numeric($product->quantity)) {
 
                 $this->setWarn('Невірна кількість');
                 break;
             }
-    
-    
-            $this->sum = $this->sum + ($product->price  * $product->quantity);
-            
-            
-        }    
 
-       
+
+            $this->sum = $this->sum + ($product->price  * $product->quantity);
+
+
+        }
+
+
         $basket = Basket::getBasket();
         $basket->list = $this->basketlist   ;
         $basket->sendCookie()  ;
     }
 
-    
+
     public function OnDelete($sender) {
         $item_id = $sender->owner->getDataItem()->item_id;
- 
+
         $basket = Basket::getBasket();
         $basket->deleteProduct($item_id) ;
-        $this->basketlist = $basket->list   ;        
+        $this->basketlist = $basket->list   ;
 
         $this->sum = 0;
         foreach ($this->basketlist as $p) {
             $this->sum = $this->sum + ($p->price  * $p->quantity);
-        }    
-      
+        }
+
         if (count($this->basketlist)==0) {
             App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog\\Main", 0);
-        }  
+        }
     }
     //формирование  заказа
     public function OnSave($sender) {
@@ -132,7 +131,7 @@ class Order extends Base
             return;
         }
         $shop = System::getOptions("shop");
-        
+
         $time = trim($this->orderform->deldate->getDate());
         $time = trim($this->orderform->deltime->getDateTime($time));
         $email = trim($this->orderform->email->getText());
@@ -153,8 +152,8 @@ class Order extends Base
             $this->setError("Введіть адресу");
             return;
         }
-        if($shop["paysystem"]==0 ) {
-             $payment = 2;
+        if($shop["paysystem"]==0) {
+            $payment = 2;
         }
         if ($payment == 0) {
 
@@ -163,9 +162,9 @@ class Order extends Base
         }
 
 
- 
-        if (  strlen($phone) != \App\Helper::PhoneL()) {
-            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр" );
+
+        if (strlen($phone) != \App\Helper::PhoneL()) {
+            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
             return;
         }
 
@@ -177,7 +176,7 @@ class Order extends Base
         $order = null;
         try {
 
-  
+
             $store_id = (int)$shop["defstore"];
             $f = 0;
 
@@ -206,7 +205,7 @@ class Order extends Base
                 $item = \App\Entity\Item::load($product->item_id);
                 $item->price = $product->price;
                 $item->quantity = $product->quantity;
-             
+
                 $amount += ($item->price * $item->quantity);
                 $itlist[$item->item_id] = $item;
             }
@@ -227,17 +226,16 @@ class Order extends Base
             $cid = System::getCustomer() ;
             if($cid > 0) {
                 $order->customer_id = $cid;
-            }
-            else {
+            } else {
                 $cust =  Customer::getByPhone($phone);
                 if ($cust instanceof \App\Entity\Customer) {
                     $order->customer_id = $cust->customer_id;
                 }
-                
+
             }
 
             if ($order->customer_id == 0) {
-                
+
                 $c = new  Customer();
                 $c->firstname = $firstname;
                 $c->lastname= $lastname;
@@ -247,8 +245,8 @@ class Order extends Base
                 $c->address = $address;
                 $c->type =  Customer::TYPE_BAYER;
                 $c->save();
-                $order->customer_id = $c->customer_id; 
-                 
+                $order->customer_id = $c->customer_id;
+
             }
             $order->headerdata['pricetype'] = $shop["defpricetype"];
             $order->headerdata['contact'] = $name . ', ' . $phone;
@@ -260,32 +258,31 @@ class Order extends Base
             $order->payamount = $amount;
             $order->branch_id = $shop["defbranch"];
             $order->firm_id = $shop["firm"];
-            
+
             if($order->user_id==0) {
                 $user = \App\Entity\user::getByLogin('admin') ;
-                $order->user_id = $user->user_id;    
+                $order->user_id = $user->user_id;
             }
-            
+
             $order->save();
-            
-            \App\Helper::insertstat(\App\Helper::STAT_ORDER_SHOP,0,0) ;
-             
-            
-            $this->orderid = intval( preg_replace('/[^0-9]/', '', $order->document_number));
+
+            \App\Helper::insertstat(\App\Helper::STAT_ORDER_SHOP, 0, 0) ;
+
+
+            $this->orderid = intval(preg_replace('/[^0-9]/', '', $order->document_number));
             $order->updateStatus(Document::STATE_NEW);
-                
-            if ($shop['ordertype'] == 1  ) {  //Кассовый чек
+
+            if ($shop['ordertype'] == 1) {  //Кассовый чек
                 $order->updateStatus(Document::STATE_EXECUTED);
-            }  else {
-              
+            } else {
+
                 if($payment == 1) {
-                   $order->updateStatus(Document::STATE_WP);    
+                    $order->updateStatus(Document::STATE_WP);
+                } else {
+                    $order->updateStatus(Document::STATE_INPROCESS);
                 }
-                else {
-                   $order->updateStatus(Document::STATE_INPROCESS);
-                }
-                
-              
+
+
             }
 
 
@@ -298,14 +295,14 @@ class Order extends Base
 
                 $n->save();
             }
-         
 
 
-         //   $this->setSuccess("Створено замовлення " . $order->document_number);
 
-            
+            //   $this->setSuccess("Створено замовлення " . $order->document_number);
+
+
             \App\Entity\Subscribe::sendSMS($phone, "Ваше замовлення номер " . $order->document_id);
-             
+
         } catch(\Exception $ee) {
             $this->setError($ee->getMessage());
             return;
@@ -317,16 +314,16 @@ class Order extends Base
         Basket::getBasket()->list = array();
 
         $number = preg_replace('/[^0-9]/', '', $order->document_number);
-    
-        System::setSuccessMsg( "Створено замовлення номер " . $number) ;
-          
+
+        System::setSuccessMsg("Створено замовлення номер " . $number) ;
+
         if($payment == 1) {
-            
-            App::Redirect("App\\Modules\\Shop\\Pages\\Catalog\\OrderPay",array($order->document_id)) ;
-              
+
+            App::Redirect("App\\Modules\\Shop\\Pages\\Catalog\\OrderPay", array($order->document_id)) ;
+
         }
-        
-        
+
+
     }
 
     public function OnAddRow(\Zippy\Html\DataList\DataRow $datarow) {
@@ -340,7 +337,5 @@ class Order extends Base
     }
 
 
-    
+
 }
-
-

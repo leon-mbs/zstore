@@ -11,15 +11,15 @@ use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
 use Zippy\Html\Form\Date;
 use App\Entity\SalType;
+
 /**
  *  Лицевой счет
  */
 class EmpAcc extends \App\Pages\Base
 {
-
     public function __construct() {
         parent::__construct();
-     
+
 
         $this->add(new Form('filterz'))->onSubmit($this, 'OnSubmitZ');
 
@@ -32,10 +32,10 @@ class EmpAcc extends \App\Pages\Base
 
         $d = new \App\DateTime() ;
         $d = $d->startOfMonth()->subMonth(1) ;
-          
+
         $this->filters->add(new Date('from', $d->getTimestamp()));
         $this->filters->add(new Date('to', time()));
-   }
+    }
 
     public function OnSubmitZ($sender) {
 
@@ -64,7 +64,7 @@ class EmpAcc extends \App\Pages\Base
 
         $conn = \Zdb\DB::getConnect();
 
-         $doclist = \App\Entity\Doc\Document::find("meta_name = 'OutSalary' and state >= 5 ");
+        $doclist = \App\Entity\Doc\Document::find("meta_name = 'OutSalary' and state >= 5 ");
 
         $detail = array();
 
@@ -82,28 +82,28 @@ class EmpAcc extends \App\Pages\Base
             if ($date < $from || $date > $to) {
                 continue;
             }
-        $total = 0;
+            $total = 0;
             foreach ($doc->unpackDetails('detaildata') as $emp) {
 
                 if ($emp->employee_id == $emp_id && $emp->amount > 0) {
                     $d = $doc->headerdata['year'] . $doc->headerdata['month'];
-                    
+
                     if (!is_array($detail[$d])) {
-                         $detail[$d]    = array("d"=>$doc->headerdata['monthname'] . ' ' . $doc->headerdata['year'],'v'=>0)  ;                   
+                        $detail[$d]    = array("d"=>$doc->headerdata['monthname'] . ' ' . $doc->headerdata['year'],'v'=>0)  ;
                     }
-                
+
                     $detail[$d]['v'] = H::fa($detail[$d]['v'] + $emp->amount);
 
-                    
+
                     $total += $emp->amount;
-                }  
+                }
             }
         }
 
-     
+
 
         //типы начислний
-       $doclist = \App\Entity\Doc\Document::find("meta_name = 'CalcSalary' and state >= 5 and document_date >= " . $conn->DBDate($from) . " and document_date <= " . $conn->DBDate($to));
+        $doclist = \App\Entity\Doc\Document::find("meta_name = 'CalcSalary' and state >= 5 and document_date >= " . $conn->DBDate($from) . " and document_date <= " . $conn->DBDate($to));
 
         $stlist = SalType::find("disabled<>1", "salcode");
 
@@ -116,7 +116,7 @@ class EmpAcc extends \App\Pages\Base
 
 
             foreach ($doc->unpackDetails('detaildata') as $emp) {
-                if (    $emp_id != $emp->employee_id) {
+                if ($emp_id != $emp->employee_id) {
                     continue;
                 }
 
@@ -139,24 +139,24 @@ class EmpAcc extends \App\Pages\Base
                               'name' => $st->salname, 'am' => H::fa($stam[$st->salcode])
             );
         }
-        
-        
 
-       $this->_tvars['memsal']  = array_values($detail);
-       $this->_tvars['mempst']  =  $detail2;
-       $this->_tvars['memtotal']  = H::fa( $total);
- 
 
-      
+
+        $this->_tvars['memsal']  = array_values($detail);
+        $this->_tvars['mempst']  =  $detail2;
+        $this->_tvars['memtotal']  = H::fa($total);
+
+
+
     }
- 
+
     public function OnSubmitS($sender) {
 
-      
+
         $emp_id = \App\System::getUser()->employee_id ;
         $from =  $this->filters->from->getDate();
         $to =  $this->filters->to->getDate();
-        
+
         $conn = \Zdb\DB::getConnect();
 
         $sql = "select coalesce(sum(amount),0) from empacc where optype < 100 and  emp_id = {$emp_id} and createdon < " . $conn->DBDate($from);
@@ -170,8 +170,8 @@ class EmpAcc extends \App\Pages\Base
         $detail = array();
 
         foreach ($rc as $row) {
-            $in =   doubleval($row['amount']) > 0 ? $row['amount']  :0;
-            $out =   doubleval($row['amount']) < 0 ? 0-$row['amount']  :0;
+            $in =   doubleval($row['amount']) > 0 ? $row['amount'] : 0;
+            $out =   doubleval($row['amount']) < 0 ? 0-$row['amount'] : 0;
             $detail[] = array(
                 'notes'    => $row['notes'],
                 'dt'    => H::fd(strtotime($row['createdon'])),
@@ -184,10 +184,10 @@ class EmpAcc extends \App\Pages\Base
 
 
             $b = $b + $in - $out;
-        }    
-        
+        }
+
         $this->_tvars['mempacc']  =  $detail;
-           
+
     }
 
 }

@@ -16,7 +16,6 @@ use Zippy\Html\Panel;
 
 class ServiceList extends \App\Pages\Base
 {
-
     private $_service;
 
     public function __construct() {
@@ -136,7 +135,6 @@ class ServiceList extends \App\Pages\Base
 
 class ServiceDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {

@@ -11,12 +11,11 @@ namespace App\Modules\Shop\Entity;
  */
 class Product extends \App\Entity\Item
 {
-
     public $productdata;
 
     protected function init() {
         parent::init() ;
-        
+
         $this->productdata = new ProductData();
 
         $this->productdata->desc = '';
@@ -27,7 +26,7 @@ class Product extends \App\Entity\Item
         $this->productdata->comments = 0; //кол отзывов
         $this->productdata->attributevalues = [];
         $this->productdata->images = [];
-       
+
     }
 
     protected function afterLoad() {
@@ -95,7 +94,7 @@ class Product extends \App\Entity\Item
         return $ret;
     }
 
-    //для сортировки 
+    //для сортировки
     public function getPriceFinal() {
         if ($this->actionprice > 0) {
             return $this->actionprice;
@@ -152,39 +151,38 @@ class Product extends \App\Entity\Item
         return $im;
     }
 
- 
+
     /**
     * возвращает  вариации
-    * 
+    *
     */
     public function getVarList($defpricetype) {
         $conn = \ZCL\DB\DB::getConnect();
-        
+
         $var_id = $conn->GetOne("select coalesce(var_id,0) from shop_varitems where  item_id=".$this->item_id);
         if($var_id>0) {
-           $items=array();
-           
-           foreach (VarItem::find("var_id=".$var_id) as $vi) {
+            $items=array();
+
+            foreach (VarItem::find("var_id=".$var_id) as $vi) {
                 $prod = Product::load($vi->item_id) ;
                 $vi->price = $prod->getPurePrice($defpricetype);
                 $vi->actionprice = $prod->getActionPrice();
                 $vi->hasaction = $prod->hasAction() ;
-                   
+
                 $items[] = $vi;
-           }       
-           
-           $var = Variation::load($var_id) ;
-           $this->vattrname =  $var->attributename;
-               
-           return $items;
+            }
+
+            $var = Variation::load($var_id) ;
+            $this->vattrname =  $var->attributename;
+
+            return $items;
+        } else {
+            return array();
         }
-        else {
-          return array();  
-        } 
     }
 
-    
-    
+
+
 }
 
 /**
@@ -192,7 +190,6 @@ class Product extends \App\Entity\Item
  */
 class ProductData extends \App\DataItem
 {
-
     public $attributevalues = array();
     public $images          = array();
 

@@ -10,7 +10,6 @@ namespace App\Entity;
  */
 class User extends \ZCL\DB\Entity
 {
-
     /**
      * @see Entity
      *
@@ -103,14 +102,14 @@ class User extends \ZCL\DB\Entity
         $this->emailnotify = $options['emailnotify']?? 0;
         $this->hidesidebar = $options['hidesidebar']?? 0;
         $this->usemobileprinter = $options['usemobileprinter']?? 0;
-      
+
         $this->prtype = $options['prtype'] ?? 0;
         $this->pwsym = $options['pwsym']?? 0;
         $this->pserver = $options['pserver']?? '';
         $this->prtypelabel = $options['prtypelabel']?? 0;
         $this->pwsymlabel = $options['pwsymlabel']?? 0;
         $this->pserverlabel = $options['pserverlabel']?? '';
-      
+
         $this->mainpage = $options['mainpage']??'';
         $this->favs = $options['favs']?? '';
         $this->chat_id = $options['chat_id']?? '';
@@ -145,14 +144,14 @@ class User extends \ZCL\DB\Entity
         $options['darkmode'] = $this->darkmode;
         $options['emailnotify'] = $this->emailnotify;
         $options['usemobileprinter'] = $this->usemobileprinter;
-    
+
         $options['pserver'] = $this->pserver;
         $options['prtype'] = $this->prtype;
         $options['pwsym'] = $this->pwsym;
         $options['pserverlabel'] = $this->pserverlabel;
         $options['prtypelabel'] = $this->prtypelabel;
         $options['pwsymlabel'] = $this->pwsymlabel;
-    
+
         $options['mainpage'] = $this->mainpage;
         $options['phone'] = $this->phone;
         $options['viber'] = $this->viber;

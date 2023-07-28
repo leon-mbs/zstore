@@ -20,7 +20,6 @@ use Zippy\Html\Panel;
 
 class EmployeeList extends \App\Pages\Base
 {
-
     private $_employee;
     private $_blist;
 
@@ -59,16 +58,16 @@ class EmployeeList extends \App\Pages\Base
         $this->employeedetail->add(new CheckBox('editinvalid'));
         $this->employeedetail->add(new CheckBox('editcoworker'));
 
-        
+
         $this->add(new Panel("accp"))->setVisible(false);
-        $this->accp->add(new Label("accname"));                  
-        $this->accp->add(new ClickLink("accback"))->onClick($this, 'cancelOnClick');                  
-        
-       $this->accp->add(new Form('filters'))->onSubmit($this, 'OnSubmitS');
+        $this->accp->add(new Label("accname"));
+        $this->accp->add(new ClickLink("accback"))->onClick($this, 'cancelOnClick');
+
+        $this->accp->add(new Form('filters'))->onSubmit($this, 'OnSubmitS');
 
         $d = new \App\DateTime() ;
         $d = $d->startOfMonth()->subMonth(1) ;
-          
+
         $this->accp->filters->add(new Date('from', $d->getTimestamp()));
         $this->accp->filters->add(new Date('to', time()));
 
@@ -105,7 +104,7 @@ class EmployeeList extends \App\Pages\Base
     }
 
 
-   
+
     public function editOnClick($sender) {
         $this->_employee = $sender->owner->getDataItem();
         $this->employeetable->setVisible(false);
@@ -214,14 +213,14 @@ class EmployeeList extends \App\Pages\Base
         $this->employeetable->setVisible(false);
         $this->accp->setVisible(true);
         $this->accp->accname->setText($this->_employee->emp_name)  ;
-    } 
- 
-   public function OnSubmitS($sender) {
-        
+    }
+
+    public function OnSubmitS($sender) {
+
         $emp_id = $this->_employee->employee_id ;
         $from =  $this->accp->filters->from->getDate();
         $to =  $this->accp->filters->to->getDate();
-        
+
         $conn = \Zdb\DB::getConnect();
 
         $sql = "select coalesce(sum(amount),0) from empacc where optype < 100 and  emp_id = {$emp_id} and createdon < " . $conn->DBDate($from);
@@ -235,8 +234,8 @@ class EmployeeList extends \App\Pages\Base
         $detail = array();
 
         foreach ($rc as $row) {
-            $in =   doubleval($row['amount']) > 0 ? $row['amount']  :0;
-            $out =   doubleval($row['amount']) < 0 ? 0-$row['amount']  :0;
+            $in =   doubleval($row['amount']) > 0 ? $row['amount'] : 0;
+            $out =   doubleval($row['amount']) < 0 ? 0-$row['amount'] : 0;
             $detail[] = array(
                 'notes'    => $row['notes'],
                 'dt'    => H::fd(strtotime($row['createdon'])),
@@ -249,10 +248,10 @@ class EmployeeList extends \App\Pages\Base
 
 
             $b = $b + $in - $out;
-        }    
-        
+        }
+
         $this->_tvars['mempacc']  =  $detail;
-       
-    }    
-    
+
+    }
+
 }

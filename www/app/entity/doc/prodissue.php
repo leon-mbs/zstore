@@ -11,7 +11,6 @@ use App\Helper as H;
  */
 class ProdIssue extends Document
 {
-
     public function generateReport() {
 
 

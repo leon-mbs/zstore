@@ -11,7 +11,6 @@ use App\System;
  */
 class Order extends \App\Entity\Doc\Document
 {
-
     public function generateReport() {
 
 
@@ -24,7 +23,7 @@ class Order extends \App\Entity\Doc\Document
                 $detail[$item->item_id]['quantity'] += $item->quantity;
             } else {
 
-        
+
                 $detail[] = array("no"         => $i++,
                                   "tovar_name" => $item->itemname,
                                   "tovar_code" => $item->item_code,
@@ -40,13 +39,13 @@ class Order extends \App\Entity\Doc\Document
         $delbonus = $this->getBonus(false) ;
         $allbonus = 0 ;
         if($this->customer_id >0) {
-            $c=\App\Entity\Customer::load($this->customer_id);    
+            $c=\App\Entity\Customer::load($this->customer_id);
             $allbonus = $c->getBonus();
         }
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
-       
- 
+
+
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
                         "customer_name"   => $this->customer_name,
@@ -58,11 +57,11 @@ class Order extends \App\Entity\Doc\Document
                         "outnumber"       => $this->headerdata["outnumber"],
                         "isoutnumber"     => strlen($this->headerdata["outnumber"]) > 0,
                         "document_number" => $this->document_number,
-                         "iban"      => strlen($firm['iban'] ) > 0 ? $firm['iban'] : false,
+                         "iban"      => strlen($firm['iban']) > 0 ? $firm['iban'] : false,
                          "firm_name" => $firm['firm_name'],
 
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
-                    
+
                         "total"           => H::fa($this->amount),
                         "totaldisc"           => $this->headerdata["totaldisc"] > 0 ? H::fa($this->headerdata["totaldisc"]) : false,
                         "addbonus"        => $addbonus > 0 ? H::fa($addbonus) : false,
@@ -73,9 +72,9 @@ class Order extends \App\Entity\Doc\Document
         );
         $header['outnumber'] = strlen($this->headerdata['outnumber']) > 0 ? $this->headerdata['outnumber'] : false;
 
-     
-        
-        
+
+
+
         $report = new \App\Report('doc/order.tpl');
 
         $html = $report->generate($header);
@@ -91,7 +90,9 @@ class Order extends \App\Entity\Doc\Document
         $list = array();
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
         $list['ProdReceipt'] = self::getDesc('ProdReceipt');
-        if($this->payed==0) $list['Invoice'] = self::getDesc('Invoice');
+        if($this->payed==0) {
+            $list['Invoice'] = self::getDesc('Invoice');
+        }
         $list['POSCheck'] = self::getDesc('POSCheck');
         $list['Task'] = self::getDesc('Task');
         $list['TTN'] = self::getDesc('TTN');
@@ -138,73 +139,75 @@ class Order extends \App\Entity\Doc\Document
                         "style"           => $style,
                         "total"           => H::fa($this->amount)
         );
-        if($ps)   {
-          $report = new \App\Report('doc/order_bill_ps.tpl');
+        if($ps) {
+            $report = new \App\Report('doc/order_bill_ps.tpl');
+        } else {
+            $report = new \App\Report('doc/order_bill.tpl');
         }
-        else 
-          $report = new \App\Report('doc/order_bill.tpl');
-        
+
         $html = $report->generate($header);
 
         return $html;
     }
 
     //резеорвирование товаров
-    public  function reserve(){
-          
-          $this->unreserve();
-        
-          if(intval($this->headerdata['store'])==0)  return;
-        
-          $items = $this->unpackDetails('detaildata')  ;
-        
-          foreach ($items as $item) {
-                if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
-                    throw new \Exception("На складі всього ".H::fqty($item->getQuantity($this->headerdata['store']) )." ТМЦ {$item->itemname}. Списання у мінус заборонено" );
+    public function reserve() {
 
-                }
-              
-          }
-          foreach ($items as $item) {
+        $this->unreserve();
 
-                $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
+        if(intval($this->headerdata['store'])==0) {
+            return;
+        }
 
-                foreach ($listst as $st) {
-                    $sc = new \App\Entity\Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
-                    $sc->setStock($st->stock_id);
-                  //  $sc->setOutPrice($item->price  );
-                    $sc->tag = \App\Entity\Entry::TAG_RESERV;
-                    $sc->save();
-                    
-                }
-           }
-        
+        $items = $this->unpackDetails('detaildata')  ;
+
+        foreach ($items as $item) {
+            if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
+                throw new \Exception("На складі всього ".H::fqty($item->getQuantity($this->headerdata['store']))." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+
+            }
+
+        }
+        foreach ($items as $item) {
+
+            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
+
+            foreach ($listst as $st) {
+                $sc = new \App\Entity\Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
+                $sc->setStock($st->stock_id);
+                //  $sc->setOutPrice($item->price  );
+                $sc->tag = \App\Entity\Entry::TAG_RESERV;
+                $sc->save();
+
+            }
+        }
+
     }
     //отмена  резерва
-    public  function unreserve(){
-           $conn = \ZDB\DB::getConnect();
-           $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
+    public function unreserve() {
+        $conn = \ZDB\DB::getConnect();
+        $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
     }
-    
-    protected function onState($state,$oldstate) {
- 
+
+    protected function onState($state, $oldstate) {
+
 
         if ($state < 5 || $state == self::STATE_REFUSED || $state == self::STATE_FAIL || $state == self::STATE_CLOSED) {
-           
-           $this->unreserve()  ;
-            
+
+            $this->unreserve()  ;
+
         }
         if ($state == self::STATE_INPROCESS) {
-          
 
-           
-                $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment']);
-                if ($payed > 0) {
-                    $this->payed = $payed;
-                }
-                \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
 
-            
+
+            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment']);
+            if ($payed > 0) {
+                $this->payed = $payed;
+            }
+            \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+
+
         }
     }
 

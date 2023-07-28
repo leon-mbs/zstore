@@ -23,7 +23,6 @@ use App\Helper as H;
  */
 class TimeSheet extends \App\Pages\Base
 {
-
     public $_list = array();
 
     public function __construct() {
@@ -46,16 +45,16 @@ class TimeSheet extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('searchproject', $projects, 0));
 
         $users =  User::findArray("username","disabled<>1 and  user_id     in(select  user_id  from issue_projectacc  )","username");
-     
-    
+
+
 
         $this->filter->add(new DropDownChoice('searchemp', $users, 0))->setVisible($user->rolename == 'admins');
 
         $this->add(new DataView('list', new ArrayDataSource($this, '_list'), $this, 'listOnRow'));
         $this->add(new Label('total'))->setVisible(false);;
-        
-        
-        
+
+
+
         $this->filterOnSubmit($this->filter);
         */
     }
@@ -65,14 +64,14 @@ class TimeSheet extends \App\Pages\Base
 
         $searchproject = $this->filter->searchproject->getValue();
         $searchemp = $this->filter->searchemp->getValue();
-      
+
         $user = System::getUser();
-        
-        if($user->rolename != 'admins'){
+
+        if($user->rolename != 'admins') {
             $searchemp = $user->user_id;
         }
-        
-        
+
+
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate(true);
         $where = "";
@@ -118,59 +117,61 @@ class TimeSheet extends \App\Pages\Base
         $row->add(new Label('amount', $item->amount));
     }
 
-    
-    public function init($arg,$post=null){
+
+    public function init($arg, $post=null) {
         $user = \App\System::getUser() ;
-  
-        $ret = array();  
+
+        $ret = array();
         $ret['user_id']  =  $user->user_id;
         $ret['isadmin']  =  $user->rolename=="admins";
-        if($ret['isadmin'] ==true)  $ret['user_id'] =0;
-        
-        $projects = Project::findArray('project_name', 'status <> ' . Project::STATUS_CLOSED, 'project_name');
-        if($ret['isadmin'] != true) {
-            $projects =  Project::findArray("project_name","  project_id in (select project_id from issue_projectacc where  user_id={$ret['user_id']} )     and status <> " . Project::STATUS_CLOSED,"project_name");
-            
+        if($ret['isadmin'] ==true) {
+            $ret['user_id'] =0;
         }
 
-        $users =  User::findArray("username","disabled<>1 and  user_id     in(select  user_id  from issue_projectacc  )","username");
+        $projects = Project::findArray('project_name', 'status <> ' . Project::STATUS_CLOSED, 'project_name');
         if($ret['isadmin'] != true) {
-            $users =  User::findArray("username"," user_id  =".$ret['user_id'] ,"username");
-            
+            $projects =  Project::findArray("project_name", "  project_id in (select project_id from issue_projectacc where  user_id={$ret['user_id']} )     and status <> " . Project::STATUS_CLOSED, "project_name");
+
         }
-    
+
+        $users =  User::findArray("username", "disabled<>1 and  user_id     in(select  user_id  from issue_projectacc  )", "username");
+        if($ret['isadmin'] != true) {
+            $users =  User::findArray("username", " user_id  =".$ret['user_id'], "username");
+
+        }
+
         $ret['projects']  =  \App\Util::tokv($projects);
-        $ret['users']  =  \App\Util::tokv($users ) ;
+        $ret['users']  =  \App\Util::tokv($users) ;
 
         $dt = new \App\DateTime();
 
-        $ret["from"] = date("Y-m-d",strtotime("-1 month", time()));
-        $ret['to'] = date("Y-m-d",  time() );
-        $ret["today"] = date("Y-m-d",time() );
-        
-         
-        return json_encode($ret, JSON_UNESCAPED_UNICODE);     
-       
-    }      
-   public function loaddata($arg,$post){
-       
+        $ret["from"] = date("Y-m-d", strtotime("-1 month", time()));
+        $ret['to'] = date("Y-m-d", time());
+        $ret["today"] = date("Y-m-d", time());
+
+
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+
+    }
+    public function loaddata($arg, $post) {
+
         $post = json_decode($post) ;
-        
+
         $conn = \ZDB\DB::getConnect();
-         
+
         $user_id = $post->user_id;
-      
+
         $user = System::getUser();
         $project_id = $post->project_id;
         $t_start = $conn->DBDate(strtotime($post->from));
         $t_end = $conn->DBDate(strtotime($post->to));
         $where = " and project_id in (select project_id from  issue_projectlist where  status <>12) ";
-            
-         
-        if($user->rolename != 'admins'){
+
+
+        if($user->rolename != 'admins') {
             $user_id = $user->user_id;
             $where = " and project_id in (select project_id from issue_projectacc where  user_id={$user_id} ) and project_id in (select project_id from  issue_projectlist where  status <>12) ";
-              
+
         }
         if ($project_id > 0) {
             $where .= " and project_id = " . $project_id;
@@ -179,7 +180,7 @@ class TimeSheet extends \App\Pages\Base
             $where .= " and user_id = " . $user_id;
         }
 
-      
+
         $conn = DB::getConnect();
         $sql = "select sum(duration) as amount ,username,project_name from  issue_time_view
                 where  date(createdon) >= date({$t_start}) and  date(createdon) <= date({$t_end})    
@@ -189,57 +190,57 @@ class TimeSheet extends \App\Pages\Base
                 order  by  username,project_name ";
 
         $res = $conn->Execute($sql);
-         
-      
+
+
         $ret = array()  ;
         $ret['stat'] = array();
         $ret['times'] = array();
-       
-       
 
-         $total = 0;
-     
-         foreach ($res as $row) {
- 
-            
-          $ret['stat'][] = array(
-             "amount"=> $row['amount'],
-             "username"=> $row['username'],
-             "project_name"=> $row['project_name']
-          );
-          $total = $total + $row['amount'];
-                                            
+
+
+        $total = 0;
+
+        foreach ($res as $row) {
+
+
+            $ret['stat'][] = array(
+               "amount"=> $row['amount'],
+               "username"=> $row['username'],
+               "project_name"=> $row['project_name']
+            );
+            $total = $total + $row['amount'];
+
         }
         $ret['total']  = $total;
         if($user_id > 0) {
-           $times = TimeLine::find("project_id in (select project_id from  issue_projectlist where  status <>12) and user_id={$user_id} and date(createdon) >= date({$t_start}) and  date(createdon) <= date({$t_end})    "    );
-        }  else {
-           $times = TimeLine::find(" project_id in (select project_id from  issue_projectlist where  status <>12)  and  date(createdon) >= date({$t_start}) and  date(createdon) <= date({$t_end})    "    );
+            $times = TimeLine::find("project_id in (select project_id from  issue_projectlist where  status <>12) and user_id={$user_id} and date(createdon) >= date({$t_start}) and  date(createdon) <= date({$t_end})    ");
+        } else {
+            $times = TimeLine::find(" project_id in (select project_id from  issue_projectlist where  status <>12)  and  date(createdon) >= date({$t_start}) and  date(createdon) <= date({$t_end})    ");
         }
-      
-       
-       foreach ($times as $tm) {
- 
-            
-          $ret['times'][] = array(
-             "date"=>  \App\Helper::fd($tm->createdon),
-             "time"=> $tm->duration,
-             "issue"=> '#' . $tm->issue_id . ' ' . $tm->issue_name,
-             "issue_id"=>   $tm->issue_id  ,
-             "project"=> $tm->project_name,
-             "project_id"=> $tm->project_id,
-             "user_id"=> $tm->user_id,
-             "id"=> $tm->id,
-             "user"=> $tm->username,
-             "notes"=> $tm->notes 
 
-          );
-          
-                                            
-        }    
-      
-        return json_encode($ret, JSON_UNESCAPED_UNICODE);     
-               
+
+        foreach ($times as $tm) {
+
+
+            $ret['times'][] = array(
+               "date"=>  \App\Helper::fd($tm->createdon),
+               "time"=> $tm->duration,
+               "issue"=> '#' . $tm->issue_id . ' ' . $tm->issue_name,
+               "issue_id"=>   $tm->issue_id  ,
+               "project"=> $tm->project_name,
+               "project_id"=> $tm->project_id,
+               "user_id"=> $tm->user_id,
+               "id"=> $tm->id,
+               "user"=> $tm->username,
+               "notes"=> $tm->notes
+
+            );
+
+
+        }
+
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+
     }
     public function del($args) {
 
@@ -247,58 +248,58 @@ class TimeSheet extends \App\Pages\Base
         TimeLine::delete($args[0]);
 
 
-    }   
+    }
     public function loadprojects($args) {
 
-        $projects = Project::findArray("project_name","project_id in (select project_id from issue_projectacc where  user_id={$args[0]}) and  project_id in (select project_id from  issue_projectlist where  status <>12) ","project_name");
-        
+        $projects = Project::findArray("project_name", "project_id in (select project_id from issue_projectacc where  user_id={$args[0]}) and  project_id in (select project_id from  issue_projectlist where  status <>12) ", "project_name");
+
 
         $ret =  \App\Util::tokv($projects);
-        return json_encode($ret, JSON_UNESCAPED_UNICODE);     
-  
-    }   
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+
+    }
     public function loadissues($args) {
 
-        $issues = Issue::findArray("issue_name","project_id=".$args[0],"issue_name");
-        
+        $issues = Issue::findArray("issue_name", "project_id=".$args[0], "issue_name");
+
 
         $ret =  \App\Util::tokv($issues);
-        return json_encode($ret, JSON_UNESCAPED_UNICODE);     
-  
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);
 
-    }   
-    
-    public function save($args,$post) {
-        
+
+    }
+
+    public function save($args, $post) {
+
         $post = json_decode($post) ;
-       
+
         $time = new TimeLine();
         if($args[0] > 0) {
-           $time = TimeLine::load($args[0] ); 
+            $time = TimeLine::load($args[0]);
         }
-        
+
         $time->issue_id = $post->issue_id;
         $time->notes = $post->notes;
         $time->createdon = strtotime($post->date);
         $time->user_id = $post->user_id;
         if ($time->user_id == 0) {
 
-            return json_encode("Не обрано співробітника", JSON_UNESCAPED_UNICODE);     
+            return json_encode("Не обрано співробітника", JSON_UNESCAPED_UNICODE);
         }
-   
-     
-        $time->duration =doubleval( $post->time);
-       
+
+
+        $time->duration =doubleval($post->time);
+
         if ($time->duration == 0) {
 
-            return "Не вказано час";     
+            return "Не вказано час";
         }
-  
+
 
         $time->save();
 
-        return "";     
-       
+        return "";
+
     }
-      
+
 }

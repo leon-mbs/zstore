@@ -10,18 +10,17 @@ namespace App\Modules\Issue\Entity;
  */
 class Issue extends \ZCL\DB\Entity
 {
-
-    const STATUS_NEW       = 1;
-    const STATUS_INPROCESS = 2;
-    const STATUS_QA        = 4;
-    const STATUS_REOPENED  = 5;
-    const STATUS_RETURNED  = 6;
-    const STATUS_WA        = 7;
-    const STATUS_SHIFTED   = 8;
-    const STATUS_CLOSED    = 12;
-    const PRIORITY_HIGH    = 1;
-    const PRIORITY_NORMAL  = 2;
-    const PRIORITY_LOW     = 3;
+    public const STATUS_NEW       = 1;
+    public const STATUS_INPROCESS = 2;
+    public const STATUS_QA        = 4;
+    public const STATUS_REOPENED  = 5;
+    public const STATUS_RETURNED  = 6;
+    public const STATUS_WA        = 7;
+    public const STATUS_SHIFTED   = 8;
+    public const STATUS_CLOSED    = 12;
+    public const PRIORITY_HIGH    = 1;
+    public const PRIORITY_NORMAL  = 2;
+    public const PRIORITY_LOW     = 3;
 
     protected function init() {
         $this->issue_id = 0;
@@ -57,7 +56,7 @@ class Issue extends \ZCL\DB\Entity
 
     protected function beforeSave() {
         parent::beforeSave();
-        //упаковываем  данные  
+        //упаковываем  данные
         $this->details = "<details>";
         $this->details .= "<hours>{$this->hours}</hours>";
         $this->details .= "<price>{$this->price}</price>";
@@ -75,7 +74,7 @@ class Issue extends \ZCL\DB\Entity
 
         $this->lastupdate = strtotime($this->lastupdate);
 
-        //распаковываем  данные из  
+        //распаковываем  данные из
         $xml = simplexml_load_string($this->details);
 
         $this->hours = (int)($xml->hours[0]);
@@ -103,11 +102,11 @@ class Issue extends \ZCL\DB\Entity
         return $list;
     }
 
-   public static function getPriorityList() {
+    public static function getPriorityList() {
         $list = array();
 
-  
-        
+
+
         $list[self::PRIORITY_HIGH] = "Високий";
         $list[self::PRIORITY_NORMAL] = "Нормальний";
         $list[self::PRIORITY_LOW] = "Низький";

@@ -8,14 +8,13 @@ namespace App;
  */
 class Filter
 {
-
     private $data = array();
 
-    public final function __set($name, $value) {
+    final public function __set($name, $value) {
         $this->data[$name] = $value;
     }
 
-    public final function __get($name) {
+    final public function __get($name) {
         return $this->data[$name] ?? "";
     }
 

@@ -2,7 +2,7 @@
     <head>
         <meta charset="utf-8">
         <meta lang="ua" >
-        <title>Zippy Склад</title>
+        <title>ZStore</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -174,7 +174,7 @@
                <ul class="navbar-nav">
                 <li class="nav-item">   
                <a href="/index.php" class="brand-link">
-                    <span  > Zippy  Склад</span>
+                    <span  > ZStore</span>
                 </a>     </li>
                </ul>   
                {{/showsidemenu}}   
@@ -289,7 +289,7 @@
                 <!-- Brand Logo -->
                 <a href="/index.php" class="brand-link">
 
-                    <span class="brand-text font-weight-light">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Zippy Склад</span>
+                    <span class="brand-text font-weight-light">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ZStore</span>
                 </a>
 
                 <!-- Sidebar -->
@@ -1100,16 +1100,24 @@
             </div>            
             
          <script>
-        {{#toasts}}
-      
-$(document).Toasts('create', {
-icon: 'fa fa-exclamation-triangle text-warning',
-        position:'bottomRight',
-{{{title}}}
+        {{#showtoasts}}
+ 
+         callPM('gettoasts',[],null,function(data){
+          
+             for(var t of data) {
+              
+                $(document).Toasts('create', {
+                icon: 'fa fa-exclamation-triangle text-warning',
+                        position:'bottomRight',
+                        title:t.title
 
-})
-      
-        {{/toasts}}
+                })           
+                 
+             }
+             
+         })
+
+        {{/showtoasts}}
        
                     toastr.options = {
                     "closeButton": true,

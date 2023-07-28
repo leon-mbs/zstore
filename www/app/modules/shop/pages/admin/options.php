@@ -22,7 +22,7 @@ use Zippy\Html\DataList\DataView;
 class Options extends \App\Pages\Base
 {
     public $_pages = array();
-   
+
     public function __construct() {
         parent::__construct();
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
@@ -35,7 +35,7 @@ class Options extends \App\Pages\Base
         $this->add(new Form('shop'))->onSubmit($this, 'saveShopOnClick');
 
         $this->shop->add(new DropDownChoice('shopordertype', array(), 0));
-        
+
 
         $this->shop->add(new DropDownChoice('shopdefpricetype', \App\Entity\Item::getPriceTypeList()));
         $this->shop->add(new DropDownChoice('shopdefbranch', \App\Entity\Branch::getList()));
@@ -52,21 +52,21 @@ class Options extends \App\Pages\Base
         $this->shop->add(new CheckBox('noshowempty'));
 
         $this->shop->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), "0"));
-        $this->shop->add(new DropDownChoice('firm', \App\Entity\Firm::findArray("firm_name","disabled <>1"), "0"));
-        
-        
+        $this->shop->add(new DropDownChoice('firm', \App\Entity\Firm::findArray("firm_name", "disabled <>1"), "0"));
+
+
         $this->add(new Form('pay'))->onSubmit($this, 'savePayOnClick');
-        $this->pay->add(new DropDownChoice('paysystem',array() ))->onChange($this, 'onPaySystem');
-        $this->pay->add(new DropDownChoice('mf', \App\Entity\MoneyFund::getList(2) ));
-        $this->pay->add(new TextInput('lqpublic'  ));
-        $this->pay->add(new TextInput('lqpriv'  ));
-        $this->pay->add(new TextInput('wpsecret'  ));
-        $this->pay->add(new TextInput('wpmacc'  ));
-        $this->pay->add(new TextInput('wpsite'  ));
-        $this->pay->add(new CheckBox('addqr'));       
-        
-   
- 
+        $this->pay->add(new DropDownChoice('paysystem', array()))->onChange($this, 'onPaySystem');
+        $this->pay->add(new DropDownChoice('mf', \App\Entity\MoneyFund::getList(2)));
+        $this->pay->add(new TextInput('lqpublic'));
+        $this->pay->add(new TextInput('lqpriv'));
+        $this->pay->add(new TextInput('wpsecret'));
+        $this->pay->add(new TextInput('wpmacc'));
+        $this->pay->add(new TextInput('wpsite'));
+        $this->pay->add(new CheckBox('addqr'));
+
+
+
         $shop = System::getOptions("shop");
         if (!is_array($shop)) {
             $shop = array();
@@ -74,7 +74,7 @@ class Options extends \App\Pages\Base
         $this->_pages =    $shop['pages'];
         if (!is_array($this->_pages)) {
             $this->_pages = array();
-        }   
+        }
 
         $this->shop->shopdefbranch->setValue($shop['defbranch']);
         $this->shop->shopordertype->setValue($shop['ordertype']);
@@ -85,7 +85,7 @@ class Options extends \App\Pages\Base
         $this->shop->uselogin->setChecked($shop['uselogin']);
         $this->shop->usefilter->setChecked($shop['usefilter']);
         $this->shop->noshowempty->setChecked($shop['noshowempty']);
-        
+
         $this->shop->usefeedback->setChecked($shop['usefeedback']);
         $this->shop->usemainpage->setChecked($shop['usemainpage']);
         $this->shop->nouseimages->setChecked($shop['nouseimages']);
@@ -93,7 +93,7 @@ class Options extends \App\Pages\Base
         $this->shop->email->setText($shop['email']);
         $this->shop->currencyname->setText($shop['currencyname']);
         $this->shop->phone->setText($shop['phone']);
-        
+
         $this->pay->paysystem->setValue($shop['paysystem']);
         $this->pay->mf->setValue($shop['mf_id']);
         $this->pay->lqpublic->setText($shop['lqpublic']);
@@ -103,9 +103,9 @@ class Options extends \App\Pages\Base
         $this->pay->wpsite->setText($shop['wpsite']);
         $this->pay->addqr->setChecked($shop['addqr']);
         $this->onPaySystem(null);
-        
 
-    
+
+
     }
 
     public function savePayOnClick($sender) {
@@ -114,36 +114,36 @@ class Options extends \App\Pages\Base
             $shop = array();
         }
         $shop['paysystem'] = $sender->paysystem->getValue();
-        $shop['mf_id'] =  intval($sender->mf->getValue() ); 
+        $shop['mf_id'] =  intval($sender->mf->getValue());
         if($shop['mf_id']==0 && $shop['paysystem'] > 0) {
             $this->setError('Не обрано касу');
             return;
         }
-        $shop['lqpriv'] =  $sender->lqpriv->getText() ; 
-        $shop['lqpublic'] = $sender->lqpublic->getText() ; 
-        $shop['wpsecret'] = $sender->wpsecret->getText() ; 
-        $shop['wpmacc'] = $sender->wpmacc->getText() ; 
-        $shop['wpsite'] = $sender->wpsite->getText() ; 
-        $shop['addqr'] = $sender->addqr->isChecked() ? 1 : 0; 
+        $shop['lqpriv'] =  $sender->lqpriv->getText() ;
+        $shop['lqpublic'] = $sender->lqpublic->getText() ;
+        $shop['wpsecret'] = $sender->wpsecret->getText() ;
+        $shop['wpmacc'] = $sender->wpmacc->getText() ;
+        $shop['wpsite'] = $sender->wpsite->getText() ;
+        $shop['addqr'] = $sender->addqr->isChecked() ? 1 : 0;
 
         System::setOptions("shop", $shop);
         $this->setSuccess('Збережено');
-        
-    }
-    
-    public function onPaySystem($sender) {
-   
-         $ps = intval($this->pay->paysystem->getValue()) ;
-         $this->pay->mf->setVisible($ps>0);
-         $this->pay->lqpriv->setVisible($ps==2);
-         $this->pay->lqpublic->setVisible($ps==2);
-         $this->pay->wpsecret->setVisible($ps==1);
-         $this->pay->wpmacc->setVisible($ps==1);
-         $this->pay->wpsite->setVisible($ps==1);
-         $this->pay->addqr->setVisible($ps==1 || $ps==2);
 
-    }    
-    
+    }
+
+    public function onPaySystem($sender) {
+
+        $ps = intval($this->pay->paysystem->getValue()) ;
+        $this->pay->mf->setVisible($ps>0);
+        $this->pay->lqpriv->setVisible($ps==2);
+        $this->pay->lqpublic->setVisible($ps==2);
+        $this->pay->wpsecret->setVisible($ps==1);
+        $this->pay->wpmacc->setVisible($ps==1);
+        $this->pay->wpsite->setVisible($ps==1);
+        $this->pay->addqr->setVisible($ps==1 || $ps==2);
+
+    }
+
     public function saveShopOnClick($sender) {
         $shop = System::getOptions("shop");
         if (!is_array($shop)) {
@@ -162,7 +162,7 @@ class Options extends \App\Pages\Base
         $shop['phone'] = $this->shop->phone->getText();
         $shop['uselogin'] = $this->shop->uselogin->isChecked() ? 1 : 0;
         $shop['usefilter'] = $this->shop->usefilter->isChecked() ? 1 : 0;
-        
+
         $shop['usefeedback'] = $this->shop->usefeedback->isChecked() ? 1 : 0;
         $shop['usemainpage'] = $this->shop->usemainpage->isChecked() ? 1 : 0;
         $shop['nouseimages'] = $this->shop->nouseimages->isChecked() ? 1 : 0;
@@ -191,7 +191,7 @@ class Options extends \App\Pages\Base
         $this->setSuccess('Збережено');
     }
 
- 
-   
- 
+
+
+
 }

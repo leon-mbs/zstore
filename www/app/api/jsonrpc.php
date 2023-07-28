@@ -8,8 +8,7 @@ namespace App\API;
  */
 abstract class JsonRPC
 {
-
-    const VERSION = '2.0';
+    public const VERSION = '2.0';
 
     public function Execute() {
 
@@ -47,7 +46,7 @@ abstract class JsonRPC
 
     protected function checkAcess() {
         $api = \App\System::getOptions('api');
-        $user = null;;
+        $user = null;
 
 
         if (\App\System::getUser()->user_id > 0) {   //вызов с  сайта
@@ -63,8 +62,8 @@ abstract class JsonRPC
             $headers = apache_request_headers();
             foreach ($headers as $header => $value) {
 
-                    
-                if ( strtolower($header) == "authorization") {
+
+                if (strtolower($header) == "authorization") {
                     $jwt = str_replace("Bearer ", "", $value);
                     $jwt = trim($jwt);
                     break;
@@ -73,11 +72,11 @@ abstract class JsonRPC
 
             $key = strlen($api['key']) > 0 ? $api['key'] : "defkey";
 
-         
-         //   $decoded = \Firebase\JWT\JWT::decode($jwt, $key, array('HS256'));
-            $decoded = \Firebase\JWT\JWT::decode($jwt,  new \Firebase\JWT\Key($key, 'HS256'));
-               
-         
+
+            //   $decoded = \Firebase\JWT\JWT::decode($jwt, $key, array('HS256'));
+            $decoded = \Firebase\JWT\JWT::decode($jwt, new \Firebase\JWT\Key($key, 'HS256'));
+
+
             if ($decoded->exp < time()) {
 
                 return self::error(null, -1002, "Прострочений токен");
@@ -244,7 +243,7 @@ abstract class JsonRPC
 
 
         if (method_exists($this, $method) == false) {
-            return self::error($id, -1005, "Метод `{$method}` не знайдено" );
+            return self::error($id, -1005, "Метод `{$method}` не знайдено");
         }
 
         try {

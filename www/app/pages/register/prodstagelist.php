@@ -29,11 +29,10 @@ use Zippy\Html\Link\BookmarkableLink;
  */
 class ProdStageList extends \App\Pages\Base
 {
-
     private $_stage = null;
-    public  $_emps  = array();
-    public  $_dates = array();
-    public  $_docs  = array();
+    public $_emps  = array();
+    public $_dates = array();
+    public $_docs  = array();
 
 
     /**
@@ -113,8 +112,8 @@ class ProdStageList extends \App\Pages\Base
 
         $this->_tvars['gtp'] = false;
         $this->_tvars['gtf'] = false;
- 
-     
+
+
     }
 
     public function filterOnSubmit($sender) {
@@ -369,40 +368,44 @@ class ProdStageList extends \App\Pages\Base
         $items = ProdStage::find($where);
         $p =  "[";
         $f =  "[";
-        
-        
- 
-        
-        foreach($items as $st){
-          $sp= $st->startdateplan; 
-          $ep= $st->enddateplan; 
-          $sf= $st->startdate; 
-          $ef= $st->enddate; 
-          if($sp >0  && $ep >0)  {
-               $p .= " ['{$st->st_id}', '{$st->stagename}',    new Date(". date("Y",$sp) .", ". (date("m",$sp) -1 ).", ". date("d",$sp) ."), new Date(". date("Y",$ep) .", ". (date("m",$ep) -1 ).", ". date("d",$ep) ."), null,  100,  null],";      
-          }
-          if($sf >0  && $ef >0)  {
 
-               $f .= " ['{$st->st_id}', '{$st->stagename}',    new Date(". date("Y",$sf) .", ". (date("m",$sf) -1 ).", ". date("d",$sf) ."), new Date(". date("Y",$ef) .", ". ( date("m",$ef) -1 ).", ". date("d",$ef) ."), null,  100,  null],";  
-          }      
+
+
+
+        foreach($items as $st) {
+            $sp= $st->startdateplan;
+            $ep= $st->enddateplan;
+            $sf= $st->startdate;
+            $ef= $st->enddate;
+            if($sp >0  && $ep >0) {
+                $p .= " ['{$st->st_id}', '{$st->stagename}',    new Date(". date("Y", $sp) .", ". (date("m", $sp) -1).", ". date("d", $sp) ."), new Date(". date("Y", $ep) .", ". (date("m", $ep) -1).", ". date("d", $ep) ."), null,  100,  null],";
+            }
+            if($sf >0  && $ef >0) {
+
+                $f .= " ['{$st->st_id}', '{$st->stagename}',    new Date(". date("Y", $sf) .", ". (date("m", $sf) -1).", ". date("d", $sf) ."), new Date(". date("Y", $ef) .", ". (date("m", $ef) -1).", ". date("d", $ef) ."), null,  100,  null],";
+            }
         }
-        
-        
- 
+
+
+
         $p .=  "]";
         $f .=  "]";
-        
-        
-        if($p=="[]") $p = false;
-        if($f=="[]") $f = false;
+
+
+        if($p=="[]") {
+            $p = false;
+        }
+        if($f=="[]") {
+            $f = false;
+        }
         $this->_tvars['gtp'] = $p;
         $this->_tvars['gtf'] = $f;
-      
-       
+
+
 
     }
 
-   
+
 
     public function toprodOnClick($sender) {
         if ($this->_stage->state == ProdStage::STATE_NEW) {
@@ -520,7 +523,7 @@ class ProdStageList extends \App\Pages\Base
 
         $this->listpan->stlist->Reload();
 
-         $this->_tvars['gtp'] = false;
+        $this->_tvars['gtp'] = false;
         $this->_tvars['gtf'] = false;
 
     }
@@ -533,7 +536,6 @@ class ProdStageList extends \App\Pages\Base
  */
 class ProcStageDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {

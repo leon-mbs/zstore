@@ -10,7 +10,6 @@ use App\Helper as H;
  */
 class ACL
 {
-
     private static $_metas     = array();
     private static $_metasdesc = array();
 
@@ -50,7 +49,7 @@ class ACL
         return false;
     }
 
-    //проверка  на  доступ  к  справочнику 
+    //проверка  на  доступ  к  справочнику
     public static function checkShowRef($ref) {
         if (System::getUser()->rolename == 'admins') {
             return true;
@@ -65,7 +64,7 @@ class ACL
             return true;
         }
 
-        System::setErrorMsg( "Немає права доступу до довідника ". self::$_metasdesc[$ref]);
+        System::setErrorMsg("Немає права доступу до довідника ". self::$_metasdesc[$ref]);
 
         App::RedirectError();
         return false;
@@ -86,7 +85,7 @@ class ACL
             return true;
         }
         if ($showerror == true) {
-            System::setErrorMsg( "Немає права доступу до довідника ". self::$_metasdesc[$ref]);
+            System::setErrorMsg("Немає права доступу до довідника ". self::$_metasdesc[$ref]);
         }
         return false;
     }
@@ -106,12 +105,12 @@ class ACL
             return true;
         }
         if ($showerror == true) {
-            System::setErrorMsg( "Немає права видалення із довідника " . self::$_metasdesc[$ref]);
+            System::setErrorMsg("Немає права видалення із довідника " . self::$_metasdesc[$ref]);
         }
         return false;
     }
 
-    //проверка  на  доступ  к  журналу 
+    //проверка  на  доступ  к  журналу
     public static function checkShowReg($reg, $showerror = true) {
         if (System::getUser()->rolename == 'admins') {
             return true;
@@ -145,7 +144,7 @@ class ACL
         if ($user->onlymy == 1 && $doc->document_id > 0) {
 
             if ($user->user_id != $doc->user_id) {
-                System::setErrorMsg(  "Немає права перегляду документа  " . self::$_metasdesc[$doc->meta_name]);
+                System::setErrorMsg("Немає права перегляду документа  " . self::$_metasdesc[$doc->meta_name]);
                 if ($inreg == false) {
                     App::RedirectError();
                 }
@@ -162,7 +161,7 @@ class ACL
 
 
         if ($showerror == true) {
-            System::setErrorMsg( "Немає права перегляду документа ".  self::$_metasdesc[$doc->meta_name]);
+            System::setErrorMsg("Немає права перегляду документа ".  self::$_metasdesc[$doc->meta_name]);
 
             if ($inreg == false) {
                 App::RedirectError();
@@ -183,7 +182,7 @@ class ACL
         if ($user->onlymy == 1 && $doc->document_id > 0) {
             if ($user->user_id != $doc->user_id) {
 
-                System::setErrorMsg( "Немає права редагування документа " . self::$_metasdesc[$doc->meta_name]);
+                System::setErrorMsg("Немає права редагування документа " . self::$_metasdesc[$doc->meta_name]);
 
                 if ($inreg == false) {
                     App::RedirectError();
@@ -201,7 +200,7 @@ class ACL
 
         if ($showerror == true) {
 
-            System::setErrorMsg( "Немає права редагування документа  ". self::$_metasdesc[$doc->meta_name]);
+            System::setErrorMsg("Немає права редагування документа  ". self::$_metasdesc[$doc->meta_name]);
             if ($inreg == false) {
                 App::RedirectError();
             }
@@ -222,7 +221,7 @@ class ACL
         if ($user->onlymy == 1 && $doc->document_id > 0) {
             if ($user->user_id != $doc->user_id) {
 
-                System::setErrorMsg( "Немає права видалення документа " . self::$_metasdesc[$doc->meta_name]);
+                System::setErrorMsg("Немає права видалення документа " . self::$_metasdesc[$doc->meta_name]);
 
                 if ($inreg == false) {
                     App::RedirectError();
@@ -240,7 +239,7 @@ class ACL
 
         if ($showerror == true) {
 
-            System::setErrorMsg( "Немає права видалення документа " . self::$_metasdesc[$doc->meta_name]);
+            System::setErrorMsg("Немає права видалення документа " . self::$_metasdesc[$doc->meta_name]);
             if ($inreg == false) {
                 App::RedirectError();
             }
@@ -406,7 +405,7 @@ class ACL
         \App\System::setErrorMsg('Для створення документа потрібно вибрати конкретну філію');
         \App\Application::Redirect("\\App\\Pages\\Main");
     }
- 
+
     public static function getCurrentBranch() {
         $options = \App\System::getOptions('common');
         if ($options['usebranch'] != 1) {
@@ -418,7 +417,7 @@ class ACL
         }
         return 0;
     }
- 
+
 
     /**
      * Возвращает  список складов для подстановки  в запрос по текущим  филиалам

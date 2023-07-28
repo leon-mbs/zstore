@@ -22,8 +22,7 @@ use Zippy\Html\Form\TextArea;
  */
 class TransItem extends \App\Pages\Base
 {
-
-    public  $_itemlist = array();
+    public $_itemlist = array();
     private $_doc;
     private $_rowid    = 0;
 

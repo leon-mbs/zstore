@@ -2,7 +2,6 @@
 
 namespace App\Pages;
 
-
 use App\Entity\Event;
 use App\Helper as H;
 use App\System;
@@ -19,7 +18,6 @@ use Zippy\Html\Label;
 
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\RedirectLink;
-
 
 class Jobs extends \App\Pages\Base
 {
@@ -227,8 +225,8 @@ class Jobs extends \App\Pages\Base
         $this->ds->setWhere($where);
         $this->listpan->nlist->Reload();
     }
-    
-    
-     
-    
+
+
+
+
 }

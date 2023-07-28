@@ -30,13 +30,12 @@ use Zippy\Html\Link\SubmitLink;
  */
 class TTN extends \App\Pages\Base
 {
-
-    public  $_itemlist  = array();
+    public $_itemlist  = array();
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = 0;
     private $_orderid   = 0;
-    private $_changedpos  = false;    
+    private $_changedpos  = false;
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -163,7 +162,7 @@ class TTN extends \App\Pages\Base
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'Order') {
-                   
+
 
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
@@ -203,13 +202,13 @@ class TTN extends \App\Pages\Base
                         }
                         $this->docform->total->setText($order->amount);
 
-                        
+
                         if($order->headerdata['store']>0) {
-                             $this->docform->store->setValue($order->headerdata['store']);
-                             $order->unreserve();
+                            $this->docform->store->setValue($order->headerdata['store']);
+                            $order->unreserve();
                         }
-                    
-                        
+
+
                         $this->OnChangeCustomer($this->docform->customer);
 
                         $itemlist = $basedoc->unpackDetails('detaildata');
@@ -239,7 +238,7 @@ class TTN extends \App\Pages\Base
                         $this->docform->total->setText($invoice->amount);
                         $this->docform->firm->setValue($basedoc->firm_id);
                         $this->_doc->headerdata['prepaid']  = $basedoc->payamount ;
-  
+
                         $this->OnChangeCustomer($this->docform->customer);
 
                         $itemlist = $basedoc->unpackDetails('detaildata');
@@ -280,8 +279,8 @@ class TTN extends \App\Pages\Base
                             $k = ($basedoc->amount - $basedoc->headerdata["paydisc"]) / $basedoc->amount;
                         }
                         $this->_doc->headerdata['prepaid']  = $basedoc->payamount ;
-  
-                        
+
+
                         foreach ($basedoc->unpackDetails('detaildata') as $item) {
                             // $item->price = $item->getPrice($basedoc->headerdata['pricetype']);
                             $item->price = $item->price * $k;
@@ -311,8 +310,8 @@ class TTN extends \App\Pages\Base
                         if ($basedoc->headerdata["paydisc"] > 0 && $basedoc->amount > 0) {
                             $k = ($basedoc->amount - $basedoc->headerdata["paydisc"]) / $basedoc->amount;
                         }
-  
-                         
+
+
                         foreach ($basedoc->unpackDetails('detaildata') as $item) {
                             // $item->price = $item->getPrice($basedoc->headerdata['pricetype']);
                             $item->price = $item->price * $k;
@@ -359,7 +358,7 @@ class TTN extends \App\Pages\Base
 
 
         $item = $sender->owner->getDataItem();
-        $rowid =  array_search($item,$this->_itemlist,true);
+        $rowid =  array_search($item, $this->_itemlist, true);
 
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
@@ -367,13 +366,13 @@ class TTN extends \App\Pages\Base
         $this->docform->detail->Reload();
         $this->calcTotal();
         $this->_changedpos = true;
-        
+
     }
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
-         $code0 = $code;
-               $code = ltrim($code,'0');
+        $code0 = $code;
+        $code = ltrim($code, '0');
 
         $this->docform->barcode->setText('');
         if ($code == '') {
@@ -382,7 +381,7 @@ class TTN extends \App\Pages\Base
 
 
         foreach ($this->_itemlist as $ri => $_item) {
-            if ($_item->bar_code == $code || $_item->item_code == $code || $_item->bar_code == $code0 || $_item->item_code == $code0 ) {
+            if ($_item->bar_code == $code || $_item->item_code == $code || $_item->bar_code == $code0 || $_item->item_code == $code0) {
                 $this->_itemlist[$ri]->quantity += 1;
                 $this->docform->detail->Reload();
                 $this->calcTotal();
@@ -475,7 +474,7 @@ class TTN extends \App\Pages\Base
         $this->editdetail->editquantity->setText($item->quantity);
         $this->editdetail->editserial->setText($item->snumber);
 
-        $this->_rowid = array_search($item,$this->_itemlist,true) ;
+        $this->_rowid = array_search($item, $this->_itemlist, true) ;
 
     }
 
@@ -486,9 +485,9 @@ class TTN extends \App\Pages\Base
             $this->setError("Не обрано товар");
             return;
         }
- 
-        $item = Item::load($id);       
-        
+
+        $item = Item::load($id);
+
 
         $store_id = $this->docform->store->getValue();
 
@@ -526,8 +525,8 @@ class TTN extends \App\Pages\Base
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
         } else {
-            $this->_itemlist[$this->_rowid] = $item;    
-        }   
+            $this->_itemlist[$this->_rowid] = $item;
+        }
 
         $this->editdetail->setVisible(false);
         $this->wselitem->setVisible(false);
@@ -544,7 +543,7 @@ class TTN extends \App\Pages\Base
         $this->editdetail->editserial->setText("");
         $this->calcTotal();
         $this->_changedpos = true;
-        
+
     }
 
     public function cancelrowOnClick($sender) {
@@ -646,7 +645,7 @@ class TTN extends \App\Pages\Base
                     }
                 }
 
-                   if ($this->_doc->parent_id > 0) {    
+                if ($this->_doc->parent_id > 0) {
                     $basedoc = Document::load($this->_doc->parent_id);
 
                     if($this->_changedpos) {
@@ -654,9 +653,9 @@ class TTN extends \App\Pages\Base
                             $msg=  "У документа {$this->_doc->document_number}, створеного на підставі {$basedoc->document_number}, користувачем ".\App\System::getUser()->username." был изменен список ТМЦ "  ;
                             \App\Entity\Notify::toSystemLog($msg) ;
                         }
-               
+
                     }
-                 }
+                }
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
                 $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
@@ -668,19 +667,19 @@ class TTN extends \App\Pages\Base
                         $this->_doc->updateStatus(Document::STATE_NEW);
                     }
 
-                    
-                 if ($this->_doc->parent_id > 0) {    
-                    $basedoc = Document::load($this->_doc->parent_id);
 
-                    if($this->_changedpos) {
+                    if ($this->_doc->parent_id > 0) {
+                        $basedoc = Document::load($this->_doc->parent_id);
+
+                        if($this->_changedpos) {
                             $msg=  "У документа {$this->_doc->document_number}, створеного на підставі {$basedoc->document_number}, користувачем ".\App\System::getUser()->username." был изменен список ТМЦ "  ;
 
                             \App\Entity\Notify::toSystemLog($msg) ;
-               
+
+                        }
                     }
-                 }
-                    
-                    
+
+
                     $this->_doc->updateStatus(Document::STATE_EXECUTED);
                     if ($sender->id == 'senddoc') {
                         $this->_doc->updateStatus(Document::STATE_INSHIPMENT);
@@ -796,7 +795,7 @@ class TTN extends \App\Pages\Base
         }
 
 
-      
+
     }
 
     public function OnAutoItem($sender) {

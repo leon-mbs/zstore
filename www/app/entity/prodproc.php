@@ -14,12 +14,11 @@ use App\System;
  */
 class ProdProc extends \ZCL\DB\Entity
 {
-
-    const STATE_NEW       = 0;
-    const STATE_INPROCESS = 1;
-    const STATE_STOPPED   = 2;
-    const STATE_FINISHED  = 3;
-    const STATE_CANCELED  = 4;
+    public const STATE_NEW       = 0;
+    public const STATE_INPROCESS = 1;
+    public const STATE_STOPPED   = 2;
+    public const STATE_FINISHED  = 3;
+    public const STATE_CANCELED  = 4;
 
     public $prodlist = array();
 
@@ -35,10 +34,12 @@ class ProdProc extends \ZCL\DB\Entity
         $proc->detail = $this->detail;
         $proc->card = $this->card;
         $diff = time()- $this->startdateplan;
-        if($diff<0) $diff=0;
+        if($diff<0) {
+            $diff=0;
+        }
         $proc->startdateplan = $this->startdateplan + $diff;
         $proc->enddateplan = $this->enddateplan + $diff;
- 
+
         $proc->procname = $this->procname . "_copy";
         $proc->pp_id = 0;
         $proc->save();
@@ -48,7 +49,7 @@ class ProdProc extends \ZCL\DB\Entity
             $st->pp_id = $proc->pp_id;
             $st->startdateplan = $st->startdateplan + $diff;
             $st->enddateplan = $st->enddateplan + $diff;
-            
+
             $st->save();
         }
 
@@ -86,9 +87,9 @@ class ProdProc extends \ZCL\DB\Entity
         if (!is_array($this->prodlist)) {
             $this->prodlist = array();
         }
-        
-        
-        
+
+
+
         parent::afterLoad();
     }
 

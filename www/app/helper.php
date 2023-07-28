@@ -10,12 +10,11 @@ use ZCL\DB\DB as DB;
  */
 class Helper
 {
+    public const STAT_HIT_SHOP           = 1;     //посещение  онлайн  каталога
+    public const STAT_ORDER_SHOP         = 2;     //заказы  в  онлайн каталоге
+    public const STAT_VIEW_ITEM          = 3;     //перегляд  товару
 
-    const STAT_HIT_SHOP           = 1;     //посещение  онлайн  каталога
-    const STAT_ORDER_SHOP         = 2;     //заказы  в  онлайн каталоге
-    const STAT_VIEW_ITEM          = 3;     //перегляд  товару
-     
-    
+
     private static $meta = array(); //кеширует метаданные
 
     /**
@@ -63,7 +62,7 @@ class Helper
 
         System::clean() ;
         System::getSession()->clean();
-        
+
         setcookie("remember", '', 0);
         System::setUser(new \App\Entity\User());
         $_SESSION['user_id'] = 0;
@@ -101,19 +100,19 @@ class Helper
             }
         }
         switch($meta_type) {
-            case 1 :
+            case 1:
                 $dir = "Pages/Doc";
                 break;
-            case 2 :
+            case 2:
                 $dir = "Pages/Report";
                 break;
-            case 3 :
+            case 3:
                 $dir = "Pages/Register";
                 break;
-            case 4 :
+            case 4:
                 $dir = "Pages/Reference";
                 break;
-            case 5 :
+            case 5:
                 $dir = "Pages/Service";
                 break;
         }
@@ -163,23 +162,23 @@ class Helper
             $icon = '';
 
             switch((int)$item['meta_type']) {
-                case 1 :
+                case 1:
                     $dir = "Pages/Doc";
                     $icon = "<i class=\"nav-icon fa fa-file\"></i>";
                     break;
-                case 2 :
+                case 2:
                     $dir = "Pages/Report";
                     $icon = "<i class=\"nav-icon fa fa-chart-bar\"></i>";
                     break;
-                case 3 :
+                case 3:
                     $dir = "Pages/Register";
                     $icon = "<i class=\"nav-icon fa fa-list\"></i>";
                     break;
-                case 4 :
+                case 4:
                     $dir = "Pages/Reference";
                     $icon = "<i class=\"nav-icon fa fa-book\"></i>";
                     break;
-                case 5 :
+                case 5:
                     $dir = "Pages/Service";
                     $icon = "<i class=\"nav-icon fas fa-project-diagram\"></i>";
                     break;
@@ -201,18 +200,18 @@ class Helper
 
     //метаданные   модулей
     public static function modulesMetaData($role) {
-        
+
         $modules = \App\System::getOptions("modules");
 
         $mdata = array();
-        if( ($modules['note'] ?? 0)== 1) {
+        if(($modules['note'] ?? 0)== 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'note') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10000, 'meta_name' => "/Note/Pages/Main", 'meta_type' => 6, 'description' => "База знань"));
             }
         }
 
 
-        if( ($modules['shop'] ?? 0)== 1) {
+        if(($modules['shop'] ?? 0)== 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'shop') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10002, 'meta_name' => "/Shop/Pages/Admin/ProductList", 'meta_type' => 6, 'description' => "Товари в онлайн каталозі" ));
             }
@@ -221,44 +220,44 @@ class Helper
 
 
 
-        if( ($modules['wc'] ?? 0) == 1) {
+        if(($modules['wc'] ?? 0) == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'wc') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10009, 'meta_name' => "/WC/Orders", 'meta_type' => 6, 'description' => "Замовлення (WC)" ));
             }
         }
-        if( ($modules['wc']?? 0)  == 1) {
+        if(($modules['wc']?? 0)  == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'wc') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10010, 'meta_name' => "/WC/Items", 'meta_type' => 6, 'description' => "Товари (WC)"));
             }
         }
-  
-        if( ($modules['promua'] ?? 0) == 1) {
+
+        if(($modules['promua'] ?? 0) == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'promua') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10015, 'meta_name' => "/PU/Orders", 'meta_type' => 6, 'description' => "Замовлення (PU)"  ));
             }
         }
 
-        if( ($modules['issue'] ?? 0) == 1) {
+        if(($modules['issue'] ?? 0) == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'issue') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10014, 'meta_name' => "/Issue/Pages/IssueList", 'meta_type' => 6, 'description' => "Завдання (Проекти)"));
             }
         }
-        if( ($modules['issue'] ?? 0) == 1) {
+        if(($modules['issue'] ?? 0) == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'issue') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10017, 'meta_name' => "/Issue/Pages/ProjectList", 'meta_type' => 6, 'description' =>   "Проекти"  , ));
             }
         }
-   
-        if( ($modules['ocstore'] ?? 0) == 1) {
+
+        if(($modules['ocstore'] ?? 0) == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'ocstore') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10005, 'meta_name' => "/OCStore/Orders", 'meta_type' => 6, 'description' => "Замовлення (Опенкарт)" ));
             }
         }
-        if( ($modules['ocstore'] ?? 0) == 1) {
+        if(($modules['ocstore'] ?? 0) == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'ocstore') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10018, 'meta_name' => "/OCStore/Items", 'meta_type' => 6, 'description' => "Товари (Опенкарт)"));
             }
-        }       
+        }
         return $mdata;
     }
 
@@ -280,13 +279,13 @@ class Helper
         return $template;
     }
 
-    public static function sendLetter($emailto, $text,    $subject = "") {
+    public static function sendLetter($emailto, $text, $subject = "") {
         global $_config;
 
         $emailfrom = $_config['smtp']['emailfrom'];
         if(strlen($emailfrom)==0) {
             $emailfrom = $_config['smtp']['user'];
-            
+
         }
 
         try {
@@ -305,14 +304,14 @@ class Helper
                 }
             }
 
-             
+
             $mail->setFrom($emailfrom);
             $mail->addAddress($emailto);
             $mail->Subject = $subject;
             $mail->msgHTML($text);
             $mail->CharSet = "UTF-8";
             $mail->IsHTML(true);
-          //  $d = $mail->send() ;
+            //  $d = $mail->send() ;
             if ($mail->send() === false) {
                 System::setErrorMsg($mail->ErrorInfo);
             } else {
@@ -320,7 +319,7 @@ class Helper
             }
         } catch(\Exception $e) {
             System::setErrorMsg($e->getMessage());
-        
+
         }
 
         /*
@@ -360,11 +359,11 @@ class Helper
         $id = $conn->Insert_ID();
 
         $data = file_get_contents($file['tmp_name']);
-        
-        
+
+
         if($conn->dataProvider=='postgres') {
-              $data = pg_escape_bytea($data);
-                
+            $data = pg_escape_bytea($data);
+
         }
         $data = $conn->qstr($data);
         $sql = "insert  into filesdata (file_id,filedata) values ({$id},{$data}) ";
@@ -443,7 +442,7 @@ class Helper
      * @param mixed $id
      */
     public static function getMetaType($id) {
-        if (is_array(self::$meta[$id] ?? null ) == false) {
+        if (is_array(self::$meta[$id] ?? null) == false) {
             $conn = DB::getConnect();
             $sql = "select * from   metadata where meta_id = " . $id;
             self::$meta[$id] = $conn->GetRow($sql);
@@ -507,10 +506,10 @@ class Helper
         return 0;
     }
 
-     /**
-     * Возвращает расчетный счет  по  умолчанию
-     *
-     */
+    /**
+    * Возвращает расчетный счет  по  умолчанию
+    *
+    */
     public static function getDefMF() {
         $user = System::getUser();
         if ($user->defmf > 0) {
@@ -589,7 +588,7 @@ class Helper
             return '';
         }
         $qty = str_replace(',', '.', $qty);
-        $qty = preg_replace("/[^0-9\.\-]/", "",$qty);        
+        $qty = preg_replace("/[^0-9\.\-]/", "", $qty);
         $qty = trim($qty);
         $common = System::getOptions("common");
         if ($common['qtydigits'] > 0) {
@@ -608,16 +607,16 @@ class Helper
     public static function fa1($am) {
         $am = str_replace(',', '.', $am);
 
-        $am = preg_replace("/[^0-9\.\-]/", "",$am);        
-        $am = trim($am);   
+        $am = preg_replace("/[^0-9\.\-]/", "", $am);
+        $am = trim($am);
         if (strlen($am) == 0) {
             return '';
         }
 
-        $am  = doubleval($am)  ;   
+        $am  = doubleval($am)  ;
         return @number_format($am, 1, '.', '');
- 
- 
+
+
 
     }
 
@@ -630,14 +629,14 @@ class Helper
     public static function fa($am) {
         $am = str_replace(',', '.', $am);
 
-        $am = preg_replace("/[^0-9\.\-]/", "",$am);        
-        $am = trim($am);   
+        $am = preg_replace("/[^0-9\.\-]/", "", $am);
+        $am = trim($am);
         if (strlen($am) == 0) {
             return '';
         }
 
-        $am  = doubleval($am)  ;   
-         
+        $am  = doubleval($am)  ;
+
         $common = System::getOptions("common");
         if ($common['amdigits'] == 1) {
             return @number_format($am, 2, '.', '');
@@ -650,7 +649,7 @@ class Helper
             $am = round($am * 10) / 10;
             return @number_format($am, 2, '.', '');
         }
- 
+
         return round($am);
     }
 
@@ -775,17 +774,19 @@ class Helper
      * @deprecated
      */
     public static function l($label, $p1 = "", $p2 = "", $p3 = "") {
-       return $label;
-    
+        return $label;
+
     }
 
- 
+
 
     public static function getValList() {
         $val = \App\System::getOptions("val");
-        if(!is_array($val['vallist'])) $val['vallist'] = array();
+        if(!is_array($val['vallist'])) {
+            $val['vallist'] = array();
+        }
         $list = array();
-        foreach($val['vallist'] as $v){
+        foreach($val['vallist'] as $v) {
             $list[$v->code]= $v->name   ;
         }
 
@@ -811,14 +812,14 @@ class Helper
     }
 
     public static function exportXML($xml, $filename) {
-                header("Content-type: text/xml");
-                header("Content-Disposition: attachment;Filename={$filename}");
-                header("Content-Transfer-Encoding: binary");
+        header("Content-type: text/xml");
+        header("Content-Disposition: attachment;Filename={$filename}");
+        header("Content-Transfer-Encoding: binary");
 
-                echo $xml;
-        die;      
-    } 
-    
+        echo $xml;
+        die;
+    }
+
     public static function exportExcel($data, $header, $filename) {
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
 
@@ -858,7 +859,7 @@ class Helper
                     $style->getFont()->setBold(true);
                 }
                 if ($v['align'] == 'right') {
-                    $style->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);;
+                    $style->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
                 }
             } else {
                 //  $sheet->setCellValue($k, $v );
@@ -903,81 +904,89 @@ class Helper
         $writer->save('php://output');
         die;
     }
-    
- 
+
+
     /**
     * Получение  дангный с  таблицы ключ-значение
-    * 
+    *
     * @param mixed $key
     * @return mixed
     */
-    public  static function getVal($key){
-          if(strlen($key)==0)   return;
-          $conn = \ZDB\DB::getConnect();
-          
-          $ret = $conn->GetOne("select vald from  keyval  where  keyd=" . $conn->qstr($key));
+    public static function getVal($key) {
+        if(strlen($key)==0) {
+            return;
+        }
+        $conn = \ZDB\DB::getConnect();
 
-          if(strlen($ret)==0)   return "";
-          return $ret;
-    }    
-   
+        $ret = $conn->GetOne("select vald from  keyval  where  keyd=" . $conn->qstr($key));
+
+        if(strlen($ret)==0) {
+            return "";
+        }
+        return $ret;
+    }
+
     /**
     * Вставка  данных в  таблицу ключ-значение
-    * 
+    *
     * @param mixed $key
     * @param mixed $data
     * @return mixed
     */
-    public  static function setVal($key,$data=null){
-          if(strlen($key)==0)   return;
-          $conn = \ZDB\DB::getConnect();
-          $conn->Execute("delete  from  keyval  where  keyd=" . $conn->qstr($key));
-          if($data===null){
-             return; 
-          }
-          $conn->Execute("insert into keyval  (  keyd,vald)  values (" . $conn->qstr($key).",".$conn->qstr($data).")" );
-          
-          
-    }    
-    
-    
+    public static function setVal($key, $data=null) {
+        if(strlen($key)==0) {
+            return;
+        }
+        $conn = \ZDB\DB::getConnect();
+        $conn->Execute("delete  from  keyval  where  keyd=" . $conn->qstr($key));
+        if($data===null) {
+            return;
+        }
+        $conn->Execute("insert into keyval  (  keyd,vald)  values (" . $conn->qstr($key).",".$conn->qstr($data).")");
+
+
+    }
+
+
     /**
     * Вставка  данных  в  таблицу  статистики
-    * 
+    *
     * @param mixed $cat
     * @param mixed $key
     * @param mixed $data
     * @return mixed
     */
-    public  static function insertstat(int $cat,int $key,int $data ){
-          if(  $cat==0  )   return;
-          
-          $conn = \ZDB\DB::getConnect();
-          $dt= $conn->DBTimeStamp(time());
-          $conn->Execute("insert into stats  ( category, keyd,vald,dt)  values ({$cat},{$key},{$data},{$dt})" );
-          
-          
-    }    
-   
-   
-   
-   
-   
-   
-   /**
-    * Печать  этикеток
-    * 
-    * @param array $items
-    */
-    public  static  function printItems(array $items,$pqty=0){
-        $printer = \App\System::getOptions('printer');
- 
+    public static function insertstat(int $cat, int $key, int $data) {
+        if($cat==0) {
+            return;
+        }
 
-    
+        $conn = \ZDB\DB::getConnect();
+        $dt= $conn->DBTimeStamp(time());
+        $conn->Execute("insert into stats  ( category, keyd,vald,dt)  values ({$cat},{$key},{$data},{$dt})");
+
+
+    }
+
+
+
+
+
+
+    /**
+     * Печать  этикеток
+     *
+     * @param array $items
+     */
+    public static function printItems(array $items, $pqty=0) {
+        $printer = \App\System::getOptions('printer');
+
+
+
         $htmls = "";
 
         foreach ($items as $item) {
-            if( intval($item->item_id)==0){
+            if(intval($item->item_id)==0) {
                 continue;
             }
             $report = new \App\Report('item_tag.tpl');
@@ -989,31 +998,31 @@ class Helper
                 $header['name'] = $item->itemname;
             }
 
-            $header['name'] = str_replace("'","`", $header['name'])  ;
+            $header['name'] = str_replace("'", "`", $header['name'])  ;
 
-            
+
             $header['isprice']   = $printer['pprice'] == 1;
             $header['isarticle']    = $printer['pcode'] == 1;
             $header['isbarcode'] = false;
             $header['isqrcode']  = false;
-            
-            
+
+
             $header['article'] = $item->item_code;
             $header['garterm'] = $item->warranty;
             $header['country'] = $item->country;
             $header['brand']   = $item->manufacturer;
 
-            
-            if (  strlen($item->url) > 0 && $printer['pqrcode'] == 1) {
+
+            if (strlen($item->url) > 0 && $printer['pqrcode'] == 1) {
                 $writer = new \Endroid\QrCode\Writer\PngWriter();
-      
+
                 $qrCode = new \Endroid\QrCode\QrCode($item->url);
-                 
+
                 $qrCode->setSize(500);
                 $qrCode->setMargin(5);
-              
-                $result = $writer->write($qrCode );
-     
+
+                $result = $writer->write($qrCode);
+
                 $dataUri = $result->getDataUri();
                 $header['qrcodeattr'] = "src=\"{$dataUri}\"  ";
                 $header['qrcode'] = $item->url;
@@ -1021,9 +1030,9 @@ class Helper
 
             }
 
-       
+
             if ($printer['pbarcode'] == 1) {
-    
+
                 $barcode = $item->bar_code;
                 if (strlen($barcode) == 0) {
                     $barcode = $item->item_code;
@@ -1038,51 +1047,59 @@ class Helper
 
                 }
             }
-           
+
             $header['price'] = self::fa($item->getPrice($printer['pricetype']));
             if(intval($item->price) > 0) {
                 $header['price'] = self::fa($item->price);  //по  документу
-            } ;
- 
-               
-            $qty =  intval($item->getQuantity());    
-            
-            
-            $printqty =  intval($item->printqty);
-            if($printqty==0) $printqty = 4;
+            }
 
-            if($printqty==1)  $qty = 1;
-            if($printqty==2)  $qty = 2;
+
+            $qty =  intval($item->getQuantity());
+
+
+            $printqty =  intval($item->printqty);
+            if($printqty==0) {
+                $printqty = 4;
+            }
+
+            if($printqty==1) {
+                $qty = 1;
+            }
+            if($printqty==2) {
+                $qty = 2;
+            }
             if($printqty==3)  ;
-            if($printqty==4)  {
-                if($qty > 10) $qty = 10;    
+            if($printqty==4) {
+                if($qty > 10) {
+                    $qty = 10;
+                }
             }
             if(intval($item->quantity) > 0) {
                 $qty = intval($item->quantity);  //по  документу
-            } ;
-            if($pqty >0)  {
+            }
+            if($pqty >0) {
                 $qty = $pqty;
             }
-            for($i=0;$i< intval( $qty) ;$i++){
-               $htmls = $htmls . $report->generate($header);
+            for($i=0;$i< intval($qty) ;$i++) {
+                $htmls = $htmls . $report->generate($header);
             }
 
         }
         $htmls = str_replace("\'", "", $htmls);
-               
-        return $htmls;               
+
+        return $htmls;
     }
-   
-   
-   
-   /**
-    * Печать  этикеток на  ESC/POS
-    * 
-    * @param array $items
-    */
-    public  static  function printItemsEP(array $items,$pqty=0){
+
+
+
+    /**
+     * Печать  этикеток на  ESC/POS
+     *
+     * @param array $items
+     */
+    public static function printItemsEP(array $items, $pqty=0) {
         $printer = \App\System::getOptions('printer');
-    
+
         $htmls = "";
 
         foreach ($items as $item) {
@@ -1093,33 +1110,33 @@ class Helper
             } else {
                 $header['name'] = $item->itemname;
             }
-            $header['name'] = str_replace("'","`", $header['name'])  ;
+            $header['name'] = str_replace("'", "`", $header['name'])  ;
 
-            
+
             $header['isprice']   = $printer['pprice'] == 1;
             $header['isarticle'] = $printer['pcode'] == 1;
             $header['isbarcode'] = false;
             $header['isqrcode']  = false;
-             
-            
+
+
             $header['article'] = $item->item_code;
             $header['garterm'] = $item->warranty;
             $header['country'] = $item->country;
             $header['brand']   = $item->manufacturer;
-       
+
             $header['price'] = self::fa($item->getPrice($printer['pricetype']));
             if(intval($item->price) > 0) {
                 $header['price'] = self::fa($item->price);  //по  документу
-            } ;
-          
-      
-            if (  strlen($item->url) > 0 && $printer['pqrcode'] == 1) {
-                  $header['qrcode'] = $item->url;
-                  $header['isqrcode']  = true;
-            
+            }
+
+
+            if (strlen($item->url) > 0 && $printer['pqrcode'] == 1) {
+                $header['qrcode'] = $item->url;
+                $header['isqrcode']  = true;
+
             }
             if ($printer['pbarcode'] == 1) {
-    
+
                 $barcode = $item->bar_code;
                 if (strlen($barcode) == 0) {
                     $barcode = $item->item_code;
@@ -1129,35 +1146,43 @@ class Helper
                     $header['isbarcode'] = true;
                 }
             }
-             
-            $qty =  intval($item->getQuantity());    
-            
-            $printqty =  intval($item->printqty);
-            if($printqty==0) $printqty = 4;
 
-            if($printqty==1)  $qty = 1;
-            if($printqty==2)  $qty = 2;
+            $qty =  intval($item->getQuantity());
+
+            $printqty =  intval($item->printqty);
+            if($printqty==0) {
+                $printqty = 4;
+            }
+
+            if($printqty==1) {
+                $qty = 1;
+            }
+            if($printqty==2) {
+                $qty = 2;
+            }
             if($printqty==3)  ;
-            if($printqty==4)  {
-                if($qty > 10) $qty = 10;    
+            if($printqty==4) {
+                if($qty > 10) {
+                    $qty = 10;
+                }
             }
             if(intval($item->quantity) > 0) {
                 $qty = intval($item->quantity);  //по  документу
-            } ;
-            if($pqty >0)  {
+            }
+            if($pqty >0) {
                 $qty = $pqty;
             }
-       
-            for($i=0;$i< intval( $qty) ;$i++){
-               $htmls = $htmls . $report->generate($header);
+
+            for($i=0;$i< intval($qty) ;$i++) {
+                $htmls = $htmls . $report->generate($header);
             }
-            
-            for($i=0;$i<$qty;$i++){
-               $htmls = $htmls .   $report->generate($header) ;
+
+            for($i=0;$i<$qty;$i++) {
+                $htmls = $htmls .   $report->generate($header) ;
             }
         }
-      
-        return $htmls;               
+
+        return $htmls;
     }
-    
+
 }

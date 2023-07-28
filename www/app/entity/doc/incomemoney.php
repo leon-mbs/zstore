@@ -11,21 +11,20 @@ use App\Helper as H;
  */
 class IncomeMoney extends Document
 {
-
     public function Execute() {
 
- 
 
-        
-      
-            $payed = Pay::addPayment($this->document_id, $this->document_date, $this->amount, $this->headerdata['payment'],   $this->notes);
-            if ($payed > 0) {
-                $this->payed = $payed;
-            }
-            
-           
-            \App\Entity\IOState::addIOState($this->document_id, $this->amount, $this->headerdata['type']);
-        
+
+
+
+        $payed = Pay::addPayment($this->document_id, $this->document_date, $this->amount, $this->headerdata['payment'], $this->notes);
+        if ($payed > 0) {
+            $this->payed = $payed;
+        }
+
+
+        \App\Entity\IOState::addIOState($this->document_id, $this->amount, $this->headerdata['type']);
+
 
         if ($this->headerdata['detail'] == 3) {  //Приход от сотрудника
             $ua = new \App\Entity\EmpAcc();
@@ -65,13 +64,13 @@ class IncomeMoney extends Document
     protected function getNumberTemplate() {
         return 'ПКО-000000';
     }
-    
+
 
     public function getRelationBased() {
         $list = array();
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
-     
+
         return $list;
-    }     
+    }
 
 }

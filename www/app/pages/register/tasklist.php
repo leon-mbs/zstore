@@ -21,13 +21,12 @@ use Zippy\Html\Panel;
 
 class TaskList extends \App\Pages\Base
 {
-
     private $_task;
     private $_taskds;
-    public  $_users    = array();
-    public  $_items    = array();
-    public  $_store_id = 0;
-    public  $_discount = 0;
+    public $_users    = array();
+    public $_items    = array();
+    public $_store_id = 0;
+    public $_discount = 0;
     private $_taskscnt = array();
 
     public function __construct() {
@@ -83,7 +82,7 @@ class TaskList extends \App\Pages\Base
     public function onTab($sender) {
 
         $this->_tvars['tabcbadge'] = $sender->id == 'tabc' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
-        $this->_tvars['tabsbadge'] = $sender->id == 'tabs' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";;
+        $this->_tvars['tabsbadge'] = $sender->id == 'tabs' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
 
         $this->caltab->setVisible($sender->id == 'tabc');
         $this->tasktab->setVisible($sender->id == 'tabs');

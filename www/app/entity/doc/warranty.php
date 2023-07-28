@@ -10,7 +10,6 @@ use App\Helper as H;
  */
 class Warranty extends Document
 {
-
     public function generateReport() {
 
         $detail = array();
@@ -27,7 +26,7 @@ class Warranty extends Document
             );
             $total += $item->quantity * $item->price;
         }
-     
+
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,

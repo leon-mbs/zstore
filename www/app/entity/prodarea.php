@@ -10,7 +10,6 @@ namespace App\Entity;
  */
 class ProdArea extends \ZCL\DB\Entity
 {
-
     protected function init() {
         $this->pa_id = 0;
     }

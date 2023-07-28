@@ -12,7 +12,6 @@ use App\Helper as H;
  */
 class IncomeItem extends Document
 {
-
     public function Execute() {
 
 
@@ -37,15 +36,15 @@ class IncomeItem extends Document
 
         }
 
-             $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['examount'], $this->headerdata['exmf'],  $this->notes);
-            if ($payed > 0) {
-                $this->payed = $payed;
-            }
-            \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+        $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['examount'], $this->headerdata['exmf'], $this->notes);
+        if ($payed > 0) {
+            $this->payed = $payed;
+        }
+        \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
 
 
-        
-        
+
+
         if ($this->headerdata['emp'] > 0) {
             //авансовый    отчет
             $ua = new \App\Entity\EmpAcc();

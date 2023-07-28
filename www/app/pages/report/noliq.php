@@ -15,7 +15,6 @@ use Zippy\Html\Panel;
  */
 class NoLiq extends \App\Pages\Base
 {
-
     public function __construct() {
         parent::__construct();
 
@@ -28,7 +27,7 @@ class NoLiq extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('mqty', array("1" => "1", "3" => "3", "6" => "6", "12" => "12"), 1));
 
         $this->add(new Panel('detail'))->setVisible(false);
- 
+
         $this->detail->add(new Label('preview'));
     }
 
@@ -39,7 +38,7 @@ class NoLiq extends \App\Pages\Base
         $this->detail->preview->setText($html, true);
         \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
 
- 
+
         $this->detail->setVisible(true);
     }
 
@@ -71,13 +70,13 @@ class NoLiq extends \App\Pages\Base
         $detail = array();
         $res = $conn->Execute($sql);
         foreach ($res as $item) {
-            
+
             $sql = "  select coalesce(sum(qty),0) as totqty  from  store_stock  where item_id = {$item['item_id']} ";
-    
-            
+
+
             $item['qty'] = H::fqty($conn->GetOne($sql));
-            if($item['qty']  >0 ){
-                $detail[] = $item;                
+            if($item['qty']  >0) {
+                $detail[] = $item;
             }
 
         }

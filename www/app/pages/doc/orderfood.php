@@ -28,7 +28,6 @@ use Zippy\Html\Link\SubmitLink;
  */
 class OrderFood extends \App\Pages\Base
 {
-
     public $_itemlist = array();
 
     private $_doc;
@@ -51,7 +50,7 @@ class OrderFood extends \App\Pages\Base
         $this->docform->add(new TextInput('editpaybonus'));
         $this->docform->add(new SubmitButton('bpaybonus'))->onClick($this, 'onPayBonus');
         $this->docform->add(new Label('paybonus', 0));
-      
+
         $this->docform->add(new Label('totaldisc'));
         $this->docform->add(new TextInput('edittotaldisc'));
         $this->docform->add(new SubmitButton('btotaldisc'))->onClick($this, 'onTotalDisc');
@@ -108,16 +107,16 @@ class OrderFood extends \App\Pages\Base
         $this->editcust->add(new TextInput('editphone'));
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
-  
+
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
- 
-  
+
+
         if ($docid > 0) {    //загружаем   содержимое  документа настраницу
             $this->_doc = Document::load($docid)->cast();
             if($this->_doc->headerdata['arm']==1) {
-                 $this->setWarn('Замовлення створено в АРМ кафе')  ;
-                 App::Redirect("\\App\\Pages\\Service\\ARMFood");
-                 return;
+                $this->setWarn('Замовлення створено в АРМ кафе')  ;
+                App::Redirect("\\App\\Pages\\Service\\ARMFood");
+                return;
             }
             $this->docform->document_number->setText($this->_doc->document_number);
 
@@ -157,8 +156,8 @@ class OrderFood extends \App\Pages\Base
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
             $this->OnChangeCustomer($this->docform->customer);
-            
-            
+
+
         } else {
             $this->_doc = Document::create('OrderFood');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -170,13 +169,13 @@ class OrderFood extends \App\Pages\Base
 
 
                 }
-            } else{
+            } else {
                 $this->setWarn('Замовлення слід створювати через  АРМ касира для кафе')  ;
             }
         }
 
         $this->docform->detail->Reload();
-   
+
 
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
@@ -194,7 +193,7 @@ class OrderFood extends \App\Pages\Base
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));
-        $row->add(new Label('disc', H::fa1( $item->disc) )) ;
+        $row->add(new Label('disc', H::fa1($item->disc))) ;
 
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -208,8 +207,8 @@ class OrderFood extends \App\Pages\Base
         }
 
         $item = $sender->owner->getDataItem();
-        $rowid =  array_search($item,$this->_itemlist,true);
- 
+        $rowid =  array_search($item, $this->_itemlist, true);
+
         $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
         $this->docform->detail->Reload();
         $this->calcTotal();
@@ -229,7 +228,7 @@ class OrderFood extends \App\Pages\Base
     }
 
 
- 
+
 
     public function saverowOnClick($sender) {
 
@@ -244,12 +243,12 @@ class OrderFood extends \App\Pages\Base
         $item->quantity = $this->editdetail->editquantity->getText();
 
 
-         
+
         $item->price = $this->editdetail->editprice->getText();
         $item->pureprice = $this->editdetail->editpureprice->getText();
         $item->disc = $this->editdetail->editdisc->getText();
-        
-         
+
+
 
         if ($item->quantity > $qstock) {
             $this->setWarn('Введено більше товару, чим є в наявності');
@@ -258,8 +257,8 @@ class OrderFood extends \App\Pages\Base
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
         } else {
-           $this->_itemlist[$this->_rowid] = $item;            
-        }        
+            $this->_itemlist[$this->_rowid] = $item;
+        }
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
@@ -306,7 +305,7 @@ class OrderFood extends \App\Pages\Base
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         }
         $this->_doc->payamount = $this->docform->payamount->getText();
-        
+
 
         $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['exchange'] = $this->docform->exchange->getText();
@@ -314,7 +313,7 @@ class OrderFood extends \App\Pages\Base
         $this->_doc->headerdata['totaldisc'] = $this->docform->totaldisc->getText();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         if ($this->_doc->headerdata['payment'] == 0) {
-          
+
             $this->_doc->payed = 0;
             $this->_doc->payamount = 0;
         }
@@ -336,27 +335,27 @@ class OrderFood extends \App\Pages\Base
         $this->_doc->amount = $this->docform->total->getText();
         $this->_doc->headerdata['pos'] = $this->docform->pos->getValue();
 
-        
-        
-        if ($sender->id == 'execdoc') {
-             // проверка на минус  в  количестве
-                $allowminus = System::getOption("common", "allowminus");
-                if ($allowminus != 1) {
 
-                    foreach ($this->_itemlist as $item) {
-                        $qty = $item->getQuantity($this->_doc->headerdata['store']);
-                        if ($qty < $item->quantity) {
-                            $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
-                            return;
-                        }
+
+        if ($sender->id == 'execdoc') {
+            // проверка на минус  в  количестве
+            $allowminus = System::getOption("common", "allowminus");
+            if ($allowminus != 1) {
+
+                foreach ($this->_itemlist as $item) {
+                    $qty = $item->getQuantity($this->_doc->headerdata['store']);
+                    if ($qty < $item->quantity) {
+                        $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+                        return;
                     }
-                }        
-        
+                }
+            }
+
         }
- 
+
         $pos = \App\Entity\Pos::load($this->_doc->headerdata['pos']);
 
-      
+
 
         $isEdited = $this->_doc->document_id > 0;
         if ($isEdited == false) {
@@ -376,7 +375,7 @@ class OrderFood extends \App\Pages\Base
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
 
-   
+
                 $this->_doc->DoPayment();
                 $this->_doc->DoStore();
 
@@ -402,7 +401,7 @@ class OrderFood extends \App\Pages\Base
 
                 }
             }
- 
+
 
             $conn->CommitTrans();
             if ($isEdited) {
@@ -459,16 +458,16 @@ class OrderFood extends \App\Pages\Base
     private function calcTotal() {
 
         $total = 0;
-  
+
         foreach ($this->_itemlist as $item) {
             $item->amount = $item->price * $item->quantity;
-          
+
             $total = $total + $item->amount;
         }
 
         $this->docform->total->setText(H::fa($total));
 
-    
+
     }
 
     private function calcPay() {
@@ -541,11 +540,13 @@ class OrderFood extends \App\Pages\Base
         $qty = $item->getQuantity($store_id);
         $disc=0;
         if($price >0 && $pureprice >0) {
-           $disc = number_format((1 - ($price/$pureprice) )*100, 1, '.', '') ;    
+            $disc = number_format((1 - ($price/$pureprice))*100, 1, '.', '') ;
         }
-        if($disc < 0) $disc=0;        
+        if($disc < 0) {
+            $disc=0;
+        }
         $customer_id = $this->docform->customer->getKey()  ;
-        
+
         if($disc ==0 && $customer_id >0) {
             $c = Customer::load($customer_id) ;
             $d = $c->getDiscount();
@@ -560,7 +561,7 @@ class OrderFood extends \App\Pages\Base
         $this->editdetail->editdisc->setText($disc);
 
 
-        
+
     }
 
     public function OnAutoItem($sender) {
@@ -583,32 +584,32 @@ class OrderFood extends \App\Pages\Base
             $d = $customer->getDiscount();
             if ($d > 0) {
                 $this->docform->custinfo->setText("Знижка " . $d . '%');
-                 
+
             } else {
                 $b = $customer->getBonus();
                 if ($b > 0) {
                     $this->docform->custinfo->setText("Бонусiв " . $b);
-                  
+
                 }
             }
-            
+
             if($d > 0) {
-                
-                  foreach($this->_itemlist as $it) {
-                      if($it->disc == 0  ) {
 
-                          $it->disc = $d;
-                          $it->price = H::fa($it->pureprice - ($it->pureprice*$d/100 )) ;
-                      }  
-                      
-                  } 
+                foreach($this->_itemlist as $it) {
+                    if($it->disc == 0) {
 
-                  $this->docform->detail->Reload();
-                  $this->calcTotal();            
-                  $this->calcPay();            
-            }         
-            
-            
+                        $it->disc = $d;
+                        $it->price = H::fa($it->pureprice - ($it->pureprice*$d/100)) ;
+                    }
+
+                }
+
+                $this->docform->detail->Reload();
+                $this->calcTotal();
+                $this->calcPay();
+            }
+
+
         }
         if ($this->_prevcust != $customer_id) {//сменился контрагент
             $this->_prevcust = $customer_id;

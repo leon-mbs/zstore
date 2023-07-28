@@ -11,12 +11,11 @@ namespace App\Entity;
  */
 class Item extends \ZCL\DB\Entity
 {
-
-    const TYPE_TOVAR    = 1;   //товар
-    const TYPE_MAT      = 2;   //материалы  и комплектующие
-    const TYPE_MBP      = 3;   //малоценка
-    const TYPE_PROD     = 4;   //готовая продукция
-    const TYPE_HALFPROD = 5;   //полуфабрикаты
+    public const TYPE_TOVAR    = 1;   //товар
+    public const TYPE_MAT      = 2;   //материалы  и комплектующие
+    public const TYPE_MBP      = 3;   //малоценка
+    public const TYPE_PROD     = 4;   //готовая продукция
+    public const TYPE_HALFPROD = 5;   //полуфабрикаты
 
     private $brprice = array(); //цены по  филиалам
 
@@ -56,6 +55,7 @@ class Item extends \ZCL\DB\Entity
         $this->useserial = (int)$xml->useserial[0];
         $this->image_id = (int)$xml->image_id[0];
 
+        $this->techcard = (string)$xml->techcard[0];
         $this->weight = (string)$xml->weight[0];
         $this->maxsize = (string)$xml->maxsize[0];
         $this->volume = (string)$xml->volume[0];
@@ -71,7 +71,7 @@ class Item extends \ZCL\DB\Entity
         $reclist = (string)$xml->reclist[0];
 
         if(strlen($reclist) >0) {
-            $this->reclist = @unserialize( @base64_decode( $reclist ))   ;
+            $this->reclist = @unserialize(@base64_decode($reclist))   ;
         }
 
 
@@ -134,6 +134,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<warranty><![CDATA[{$this->warranty}]]></warranty>";
         $this->detail .= "<extdata><![CDATA[{$this->extdata}]]></extdata>";
         $this->detail .= "<country><![CDATA[{$this->country}]]></country>";
+        $this->detail .= "<techcard><![CDATA[{$this->techcard}]]></techcard>";
 
         $this->detail .= "<price1>{$this->price1}</price1>";
         $this->detail .= "<price2>{$this->price2}</price2>";
@@ -181,7 +182,7 @@ class Item extends \ZCL\DB\Entity
         if(count($this->reclist) > 0) {
             $this->detail .= "<reclist>";
             $ss =    serialize($this->reclist) ;
-            $this->detail .= base64_encode( serialize($this->reclist));
+            $this->detail .= base64_encode(serialize($this->reclist));
             $this->detail .= "</reclist>";
         }
 
@@ -202,8 +203,8 @@ class Item extends \ZCL\DB\Entity
 
     protected function afterDelete() {
 
-        foreach(\App\Entity\ItemSet::find("item_id = {$this->item_id} or  pitem_id={$this->item_id} ") as $is){
-             \App\Entity\ItemSet::delete($is->set_id) ;
+        foreach(\App\Entity\ItemSet::find("item_id = {$this->item_id} or  pitem_id={$this->item_id} ") as $is) {
+            \App\Entity\ItemSet::delete($is->set_id) ;
         }
 
         if ($this->image_id > 0) {
@@ -212,7 +213,7 @@ class Item extends \ZCL\DB\Entity
     }
 
     //Вычисляет  отпускную цену без скидок
-    //$_price - цифра (заданая цена) или  наименование  цены из настроек 
+    //$_price - цифра (заданая цена) или  наименование  цены из настроек
     //$store - склад
     //$partion - партия
     public function getPurePrice($_price_ = 'price1', $store = 0, $partion = 0) {
@@ -245,17 +246,17 @@ class Item extends \ZCL\DB\Entity
         }
 
 
-        //если процент    
+        //если процент
         if (strpos($_price, '%') > 0) {
 
             $ret = doubleval(str_replace('%', '', $_price));
-            if (is_numeric($ret) ) {
+            if (is_numeric($ret)) {
                 if ($partion == 0) {
-                    //ищем последнюю закупочную  цену 
+                    //ищем последнюю закупочную  цену
                     $partion = $this->getLastPartion($store);
                 }
                 $price = $partion + (int)$partion / 100 * $ret;
-      
+
             }
         } else {
             if ($_price > 0) {
@@ -267,7 +268,7 @@ class Item extends \ZCL\DB\Entity
             $cat = \App\Entity\Category::load($this->cat_id);
             if ($cat != null) {
                 if ($partion == 0) {
-                    //ищем последнюю закупочную  цену 
+                    //ищем последнюю закупочную  цену
                     $partion = $this->getLastPartion($store);
                 }
                 if ($_price_ == 'price1' && $cat->price1 > 0) {
@@ -286,7 +287,7 @@ class Item extends \ZCL\DB\Entity
                     $price = $partion + (int)$partion / 100 * $cat->price5;
                 }
 
- 
+
             }
         }
 
@@ -295,39 +296,39 @@ class Item extends \ZCL\DB\Entity
         if ($common['defprice'] > 0 && $price == 0) {
 
             if ($partion == 0) {
-                //ищем последнюю закупочную  цену 
+                //ищем последнюю закупочную  цену
                 $partion = $this->getLastPartion($store);
             }
 
             $price = $partion + (doubleval($partion) / 100) * $common['defprice'];
-        
+
         }
 
-         
+
         //если  не  задана  наценка и цена  то  берем  закупочную
-        if ( intval($common['defprice']) == 0 && $price == 0) {
+        if (intval($common['defprice']) == 0 && $price == 0) {
 
             if ($partion == 0) {
-                //ищем последнюю закупочную  цену 
+                //ищем последнюю закупочную  цену
                 $partion = $this->getLastPartion($store);
             }
             $price =  $partion;
-            
+
 
         }
 
         //курсовая разница
-        if($common['useval']==1)   {
+        if($common['useval']==1) {
             $opv = \App\System::getOptions("val");
             if (strlen($this->val) > 1 && $opv['valprice'] == 1) {
-                
+
                 foreach($opv['vallist'] as $v) {
-                   if($v->code==$this->val){
-                     $k = $v->rate / $this->rate;
-                     $price = $price * $k;      
-                   } 
+                    if($v->code==$this->val) {
+                        $k = $v->rate / $this->rate;
+                        $price = $price * $k;
+                    }
                 }
-                
+
             }
         }
         return $price;
@@ -335,59 +336,61 @@ class Item extends \ZCL\DB\Entity
 
     public function hasAction($date=0) {
         $date = intval($date) ;
-        if($date==0)$date=time();
-        if( doubleval($this->actionqty1) > 0) {
+        if($date==0) {
+            $date=time();
+        }
+        if(doubleval($this->actionqty1) > 0) {
             return true;
         }
-       
+
         if (doubleval($this->actionprice) > 0 || doubleval($this->actiondisc > 0)) {
 
-            if ( intval($this->fromdate) < $date && intval($this->todate) > $date) {
+            if (intval($this->fromdate) < $date && intval($this->todate) > $date) {
                 return true;
             }
 
         }
- 
+
         return false;
     }
 
-    
-    
+
+
     /**
     * цена  со  скидкой по  количксиву
     * возвращает null если  нет  акции
     * @param mixed $qty
     */
     public function getActionPriceByQuantity($qty) {
-         //по  количеству
-        if ( $this->actionprice2 >0 && doubleval($this->actionqty2) <= $qty && $qty>1) {
+        //по  количеству
+        if ($this->actionprice2 >0 && doubleval($this->actionqty2) <= $qty && $qty>1) {
             return $this->actionprice2;
         }
-        if ($this->actionprice1 >0 &&  doubleval($this->actionqty1) <= $qty && $qty>1 ) {
+        if ($this->actionprice1 >0 &&  doubleval($this->actionqty1) <= $qty && $qty>1) {
             return $this->actionprice1;
-        } 
-        
-        
+        }
+
+
         return null;
-    }    
-    
+    }
+
     //цена  со  скидкой
     public function getActionPrice($qty=0) {
-         //по  количеству
-        if ( $this->actionprice2 >0 && doubleval($this->actionqty2) <= $qty && $qty>1) {
+        //по  количеству
+        if ($this->actionprice2 >0 && doubleval($this->actionqty2) <= $qty && $qty>1) {
             return $this->actionprice2;
         }
-        if ($this->actionprice1 >0 &&  doubleval($this->actionqty1) <= $qty && $qty>1 ) {
+        if ($this->actionprice1 >0 &&  doubleval($this->actionqty1) <= $qty && $qty>1) {
             return $this->actionprice1;
-        }        
-        
+        }
+
         //акционная цена
         if (doubleval($this->actionprice) > 0) {
-            if ( intval($this->fromdate) < time() && intval($this->todate) > time()) {
+            if (intval($this->fromdate) < time() && intval($this->todate) > time()) {
                 return $this->actionprice;
             }
         }
-        
+
         // скидка
         $price = $this->getPurePrice() ;
         if (doubleval($this->actiondisc) > 0 && intval($this->fromdate) < time() && intval($this->todate) > time()) {   //по  категории
@@ -399,8 +402,10 @@ class Item extends \ZCL\DB\Entity
     }
 
     //цена  со  скидками (если  есть)
-    public function getPrice($_price_ = 'price1', $store = 0, $partion = 0,$qty=0) {
-        if(strlen($_price_)==0) $_price_ = 'price1';
+    public function getPrice($_price_ = 'price1', $store = 0, $partion = 0, $qty=0) {
+        if(strlen($_price_)==0) {
+            $_price_ = 'price1';
+        }
         $price = $this->getPurePrice($_price_, $store, $partion);
         if ($this->hasAction() && $_price_ == 'price1') {
             $price = $this->getActionPrice($qty) ?? $price;
@@ -408,12 +413,12 @@ class Item extends \ZCL\DB\Entity
 
         return \App\Helper::fa($price);
     }
-    
+
 
     /**
     * цена  со  скидками (если  есть)
-    * 
-    * @param mixed $p  массив 
+    *
+    * @param mixed $p  массив
     *                  pricetype
     *                  store
     *                  partion
@@ -422,26 +427,28 @@ class Item extends \ZCL\DB\Entity
     *                  date
     */
     public function getPriceEx($p=array()) {
-        
-          
-        if(strlen($p['pricetype'])==0) $p['pricetype'] = 'price1';
-        $p['store']   = intval( $p['store'] ?? null);
-        $p['partion']   = intval( $p['partion']?? null );
-        $p['quantity']   = intval( $p['quantity']?? null );
-        $p['customer']   = intval( $p['customer'] ?? null);
-        $p['date']   = intval( $p['date'] ?? null);
-       
-       
-       
-        $pureprice = $this->getPurePrice($p['pricetype'] , $p['store'], $p['partion'] );
+
+
+        if(strlen($p['pricetype'])==0) {
+            $p['pricetype'] = 'price1';
+        }
+        $p['store']   = intval($p['store'] ?? null);
+        $p['partion']   = intval($p['partion']?? null);
+        $p['quantity']   = intval($p['quantity']?? null);
+        $p['customer']   = intval($p['customer'] ?? null);
+        $p['date']   = intval($p['date'] ?? null);
+
+
+
+        $pureprice = $this->getPurePrice($p['pricetype'], $p['store'], $p['partion']);
         $price = $pureprice;
-        
+
         $pq=$this->getActionPriceByQuantity($p['quantity']);
-        if($pq != null){
+        if($pq != null) {
             return \App\Helper::fa($price);
         }
         if ($this->hasAction() && $p['pricetype']  == 'price1') {
-            $price = $this->getActionPrice($p['quantity'] ) ?? $price;
+            $price = $this->getActionPrice($p['quantity']) ?? $price;
 
         }
         //если  нет скидок  проверяем  по  контрагенту
@@ -450,10 +457,10 @@ class Item extends \ZCL\DB\Entity
             $d = $c->getDiscount();
             if($d >0) {
                 $price = \App\Helper::fa($pureprice - ($pureprice*$d/100)) ;
-            }                 
+            }
         }
-        
-        
+
+
         return \App\Helper::fa($price);
     }
 
@@ -516,7 +523,7 @@ class Item extends \ZCL\DB\Entity
      * @param mixed $store_id
      * @param mixed $snumber партия проиводителя
      */
-    public function getQuantity($store_id = 0, $snumber = "",$date=0) {
+    public function getQuantity($store_id = 0, $snumber = "", $date=0) {
         $cstr = \App\Acl::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "    store_id in ({$cstr})  and   ";
@@ -531,14 +538,14 @@ class Item extends \ZCL\DB\Entity
             $where .= " and  snumber = " . $conn->qstr($snumber);
         }
 
-        if($date > 0){
-            
-            $sql = "  select  coalesce(sum(quantity),0)  as totqty  from  entrylist_view where document_date <= ". $conn->DBDate($date) ." and  stock_id in (select  stock_id from  store_stock_view where {$where} )" ;    
-     
-        }   else{
-            $sql = "  select coalesce(sum(qty),0) as totqty  from  store_stock_view where ". $where;    
+        if($date > 0) {
+
+            $sql = "  select  coalesce(sum(quantity),0)  as totqty  from  entrylist_view where document_date <= ". $conn->DBDate($date) ." and  stock_id in (select  stock_id from  store_stock_view where {$where} )" ;
+
+        } else {
+            $sql = "  select coalesce(sum(qty),0) as totqty  from  store_stock_view where ". $where;
         }
-          
+
         $cnt = $conn->GetOne($sql);
         return $cnt;
     }
@@ -619,11 +626,11 @@ class Item extends \ZCL\DB\Entity
         if ($store_id > 0) {
             $sql .= " and store_id = " . $store_id;
         }
-        
-      $limit =" limit 0,1";
-            if($conn->dataProvider=="postgres") {
-                $limit =" limit 1";
-            }          
+
+        $limit =" limit 0,1";
+        if($conn->dataProvider=="postgres") {
+            $limit =" limit 1";
+        }
         $sql .= " order  by  sdate  desc ". $limit;
 
 
@@ -684,16 +691,16 @@ class Item extends \ZCL\DB\Entity
         if($id>0) {
             $last = Item::load($id);
 
-            if(strpos($last->item_code,"ID") == 0) {
-               $a =  str_replace( "ID","", $last->item_code);
-               $a = intval($a) ;            
-               if($a >0) {
-                    $id = $a;       
-               }
-               
+            if(strpos($last->item_code, "ID") == 0) {
+                $a =  str_replace("ID", "", $last->item_code);
+                $a = intval($a) ;
+                if($a >0) {
+                    $id = $a;
+                }
+
             }
         }
-        
+
         return "ID" . sprintf("%04d", ++$id);
     }
 
@@ -732,7 +739,7 @@ class Item extends \ZCL\DB\Entity
 
         return $list;
     }
- 
+
 
     /**
      * себестоимость  для  готовой продукции
@@ -747,7 +754,7 @@ class Item extends \ZCL\DB\Entity
 
         if (count($ilist) > 0) {
             foreach ($ilist as $iset) {
-                
+
                 if($iset->item_id > 0) {
                     $it = \App\Entity\Item::load($iset->item_id);
                     $pr = $it->getLastPartion(0);
@@ -755,8 +762,8 @@ class Item extends \ZCL\DB\Entity
                 }
                 if($iset->service_id >0) {
                     $price += ($iset->cost);
-        
-                }                    
+
+                }
             }
         }
         if ($price == 0) {  //ищем  последнюю  партию
@@ -766,10 +773,8 @@ class Item extends \ZCL\DB\Entity
         return $price;
     }
 
-    
-    public   function getID() {
+
+    public function getID() {
         return $this->item_id;
     }
 }
- 
- 

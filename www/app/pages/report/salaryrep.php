@@ -10,12 +10,12 @@ use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
 use App\Entity\SalType;
+
 /**
  *  Отчет по  зарплате
  */
 class SalaryRep extends \App\Pages\Base
 {
-
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReport('SalaryRep')) {
@@ -32,7 +32,7 @@ class SalaryRep extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('emp', Employee::findArray('emp_name', 'disabled<>1', 'emp_name')));
 
         $this->add(new Panel('detail'))->setVisible(false);
- 
+
         $this->detail->add(new Label('preview'));
     }
 
@@ -42,7 +42,7 @@ class SalaryRep extends \App\Pages\Base
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
 
-  
+
         $this->detail->setVisible(true);
 
         $this->detail->preview->setText($html, true);
@@ -58,7 +58,7 @@ class SalaryRep extends \App\Pages\Base
         $yto = $this->filter->yto->getValue();
         $mto = $this->filter->mto->getValue();
         $mtoname = $this->filter->mto->getValueName();
-       $conn = \Zdb\DB::getConnect();
+        $conn = \Zdb\DB::getConnect();
 
         $doclist = \App\Entity\Doc\Document::find("meta_name = 'OutSalary' and state >= 5 ");
 
@@ -108,7 +108,7 @@ class SalaryRep extends \App\Pages\Base
         }
 
         //типы начислний
-       $doclist = \App\Entity\Doc\Document::find("meta_name = 'CalcSalary' and state >= 5 and document_date >= " . $conn->DBDate($from) . " and document_date <= " . $conn->DBDate($to));
+        $doclist = \App\Entity\Doc\Document::find("meta_name = 'CalcSalary' and state >= 5 and document_date >= " . $conn->DBDate($from) . " and document_date <= " . $conn->DBDate($to));
 
         $stlist = SalType::find("disabled<>1", "salcode");
 
@@ -144,8 +144,8 @@ class SalaryRep extends \App\Pages\Base
                               'name' => $st->salname, 'am' => H::fa($stam[$st->salcode])
             );
         }
-        
-        
+
+
 
         $header = array(
             "_detail"  => array_values($detail),

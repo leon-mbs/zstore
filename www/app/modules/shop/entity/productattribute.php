@@ -10,7 +10,6 @@ namespace App\Modules\Shop\Entity;
  */
 class ProductAttribute extends \ZCL\DB\Entity
 {
-
     public $searchvalue;
 
     protected function init() {

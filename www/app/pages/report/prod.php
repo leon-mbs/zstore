@@ -15,7 +15,6 @@ use Zippy\Html\Panel;
  */
 class Prod extends \App\Pages\Base
 {
-
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReport('Prod')) {
@@ -28,7 +27,7 @@ class Prod extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
 
         $this->add(new Panel('detail'))->setVisible(false);
- 
+
         $this->detail->add(new Label('preview'));
     }
 
@@ -39,7 +38,7 @@ class Prod extends \App\Pages\Base
         $this->detail->preview->setText($html, true);
         \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
 
-    
+
         $this->detail->setVisible(true);
     }
 
@@ -60,7 +59,7 @@ class Prod extends \App\Pages\Base
         if ($parea > 0) {
             $wparea = " and content like '%<parea>{$parea}</parea>%' ";
         }
-         //списано
+        //списано
         $sql = "
           select i.itemname,i.item_code,0-sum(e.quantity) as qty, 0-sum((partion )*quantity) as summa
               from entrylist_view  e
@@ -114,41 +113,47 @@ class Prod extends \App\Pages\Base
             );
             $sum2 += $row['summa'];
         }
-        
+
         //готово  к производству
-        
-        $items = \App\Entity\Item::find("disabled<> 1 and item_id in(select pitem_id from item_set)","itemname") ;
-        
-        
-        
-        foreach($items as $it){
+
+        $items = \App\Entity\Item::find("disabled<> 1 and item_id in(select pitem_id from item_set)", "itemname") ;
+
+
+
+        foreach($items as $it) {
 
             $max = 1000000;
             $parts = \App\Entity\ItemSet::find("pitem_id=".$it->item_id) ;
-            
-            foreach($parts as $part){         
-                 $pi = \App\Entity\item::load($part->item_id);
-                 if($pi==null) continue;
-                 $pqty = $pi->getQuantity(); 
-                 if($pqty==0) {
-                     $max=0;
-                     break;
-                 }
-                 $t = $pqty/$part->qty;
-                 if($t<$max) $max = $t;
-                   
+
+            foreach($parts as $part) {
+                $pi = \App\Entity\item::load($part->item_id);
+                if($pi==null) {
+                    continue;
+                }
+                $pqty = $pi->getQuantity();
+                if($pqty==0) {
+                    $max=0;
+                    break;
+                }
+                $t = $pqty/$part->qty;
+                if($t<$max) {
+                    $max = $t;
+                }
+
             }
-            if( $max<=0 || $max == 1000000)  continue;
-                        
+            if($max<=0 || $max == 1000000) {
+                continue;
+            }
+
             $detail3[] = array(
                 "code"  => $it->item_code,
                 "name"  => $it->itemname,
                 "qty"   => H::fqty($max),
-               
+
             );
-            
+
         }
-        
+
         $header = array('datefrom' => \App\Helper::fd($from),
                         "_detail"  => $detail,
                         "_detail2" => $detail2,

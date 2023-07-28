@@ -24,11 +24,10 @@ use Zippy\Html\Panel;
 
 class Options extends \App\Pages\Base
 {
-
     private $metadatads;
-    public  $pricelist        = array();
-    public  $_vallist       = array();
-    public  $_salesourceslist = array();
+    public $pricelist        = array();
+    public $_vallist       = array();
+    public $_salesourceslist = array();
 
     public function __construct() {
         parent::__construct();
@@ -42,10 +41,10 @@ class Options extends \App\Pages\Base
         $this->common->add(new DropDownChoice('qtydigits'));
         $this->common->add(new DropDownChoice('amdigits'));
         $this->common->add(new DropDownChoice('dateformat'));
-        
-  
+
+
         $this->common->add(new DropDownChoice('phonel', array('10' => '10', '12' => '12'), '10'));
-   
+
 
         $this->common->add(new TextInput('shopname'));
 
@@ -56,29 +55,29 @@ class Options extends \App\Pages\Base
         $this->common->add(new CheckBox('showchat'));
 
 
-        
-        
+
+
         $this->common->add(new CheckBox('capcha'));
 
         $this->common->add(new TextInput('ts_break'));
         $this->common->add(new TextInput('ts_start'));
         $this->common->add(new TextInput('ts_end'));
 
-        
+
         $common = System::getOptions("common");
         if (!is_array($common)) {
             $common = array();
-        }  
+        }
 
         $this->common->qtydigits->setValue($common['qtydigits']);
         $this->common->amdigits->setValue($common['amdigits']);
         $this->common->dateformat->setValue($common['dateformat']);
-        
+
         $this->common->phonel->setValue($common['phonel']);
 
         $this->common->shopname->setText($common['shopname']);
 
-        
+
         $this->common->showactiveusers->setChecked($common['showactiveusers']);
         $this->common->showchat->setChecked($common['showchat']);
         $this->common->usescanner->setChecked($common['usescanner']);
@@ -86,12 +85,12 @@ class Options extends \App\Pages\Base
 
         $this->common->usebranch->setChecked($common['usebranch']);
         $this->common->capcha->setChecked($common['capcha']);
- 
+
         $this->common->ts_break->setText($common['ts_break'] == null ? '60' : $common['ts_break']);
         $this->common->ts_start->setText($common['ts_start'] == null ? '09:00' : $common['ts_start']);
         $this->common->ts_end->setText($common['ts_end'] == null ? '18:00' : $common['ts_end']);
 
-        
+
         $this->add(new Form('business'))->onSubmit($this, 'saveBusinessOnClick');
         $pt = array(
             "1" => "По останній закупівельній ціні",
@@ -123,10 +122,12 @@ class Options extends \App\Pages\Base
         $this->business->add(new CheckBox('usecattree'));
         $this->business->add(new CheckBox('nocheckarticle'));
 
+        $this->business->add(new TextInput('cashier'));
         $this->business->add(new TextArea('checkslogan'));
+        $this->business->add(new \Zippy\Html\Form\Date('actualdate'));
 
-    
-       
+
+
         $this->business->partiontype->setValue($common['partiontype']);
         $this->business->paytypein->setValue($common['paytypein']);
         $this->business->paytypeout->setValue($common['paytypeout']);
@@ -143,20 +144,22 @@ class Options extends \App\Pages\Base
         $this->business->printoutqrcode->setChecked($common['printoutqrcode']);
         $this->business->autoarticle->setChecked($common['autoarticle']);
         $this->business->usesnumber->setChecked($common['usesnumber']);
-        $this->business->useimages->setChecked($common['useimages']);    
+        $this->business->useimages->setChecked($common['useimages']);
         $this->business->numberttn->setChecked($common['numberttn']);
         $this->business->usecattree->setChecked($common['usecattree']);
         $this->business->nocheckarticle->setChecked($common['nocheckarticle']);
 
+        $this->business->cashier->setText($common['cashier']);
         $this->business->checkslogan->setText($common['checkslogan']);
-      
-         
-        
+        $this->business->actualdate->setDate($common['actualdate'] ??  strtotime('2023-01-01') );
+
+
+
         //валюты
-  
+
         $this->add(new Form('valform'));
-        $this->valform->add(new SubmitLink('valadd' , $this,'onValAdd'));
-        $this->valform->add(new SubmitButton('saveval'  ))->onClick($this, 'saveValOnClick');
+        $this->valform->add(new SubmitLink('valadd', $this, 'onValAdd'));
+        $this->valform->add(new SubmitButton('saveval'))->onClick($this, 'saveValOnClick');
 
         $this->valform->add(new CheckBox('valprice'));
 
@@ -164,19 +167,21 @@ class Options extends \App\Pages\Base
         if (!is_array($val)) {
             $val = array();
         }
-        if(!is_array($val['vallist'])) $val['vallist'] = array();
-        
+        if(!is_array($val['vallist'])) {
+            $val['vallist'] = array();
+        }
+
         $this->_vallist = $val['vallist'] ;
         $this->valform->add(new \Zippy\Html\DataList\DataView('vallist', new \Zippy\Html\DataList\ArrayDataSource($this, '_vallist'), $this, "onValRow"));
         $this->valform->vallist->Reload();
-      
+
         $this->valform->valprice->setChecked($val['valprice']);
 
         //печать
         $this->add(new Form('printer'));
 
 
- 
+
         $this->printer->add(new TextInput('pmaxname'));
         $this->printer->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList()));
         $this->printer->add(new DropDownChoice('barcodetype', array('EAN13' => 'EAN13', 'C128' => 'Code128', 'C39' => 'Code39'), 'Code128'));
@@ -193,7 +198,7 @@ class Options extends \App\Pages\Base
             $printer = array();
         }
 
-   
+
         $this->printer->pmaxname->setText($printer['pmaxname']);
         $this->printer->pricetype->setValue($printer['pricetype']);
         $this->printer->barcodetype->setValue($printer['barcodetype']);
@@ -205,7 +210,7 @@ class Options extends \App\Pages\Base
         $this->printer->pqrcode->setChecked($printer['pqrcode']);
 
 
-        
+
         //API
         $this->add(new Form('api'))->onSubmit($this, 'saveApiOnClick');
 
@@ -280,14 +285,14 @@ class Options extends \App\Pages\Base
         $this->food->add(new File('foodlogo'));
 
 
-       //телеграм бот
-        
-        $this->add(new Form('tbform'))->onSubmit($this,"onBot");
+        //телеграм бот
+
+        $this->add(new Form('tbform'))->onSubmit($this, "onBot");
         $this->tbform->add(new TextInput('tbtoken', $common['tbtoken']));
-       
+
 
         //источники  продаж
-        
+
         $this->add(new Form('salesourcesform'));
         $this->salesourcesform->add(new SubmitButton('salesourcesave'))->onClick($this, 'OnSaveSaleSource');
         $this->salesourcesform->add(new SubmitLink('addnewsalesource'))->onClick($this, 'OnAddSaleSource');
@@ -303,7 +308,7 @@ class Options extends \App\Pages\Base
 
         //модули
         $modules = System::getOptions("modules");
-         
+
         $this->add(new Form('modules'))->onSubmit($this, 'onModules');
         $this->modules->add(new CheckBox('modocstore', $modules['ocstore']));
         $this->modules->add(new CheckBox('modshop', $modules['shop']));
@@ -315,12 +320,12 @@ class Options extends \App\Pages\Base
         $this->modules->add(new CheckBox('modpromua', $modules['promua']));
         $this->modules->add(new CheckBox('modpaperless', $modules['paperless']));
         $this->modules->add(new CheckBox('modcheckbox', $modules['checkbox']));
-       
-        
-        
+
+
+
     }
 
-    
+
     public function saveCommonOnClick($sender) {
         $common = System::getOptions("common");
         if (!is_array($common)) {
@@ -330,7 +335,7 @@ class Options extends \App\Pages\Base
         $common['qtydigits'] = $this->common->qtydigits->getValue();
         $common['amdigits'] = $this->common->amdigits->getValue();
         $common['dateformat'] = $this->common->dateformat->getValue();
-        
+
         $common['phonel'] = $this->common->phonel->getValue();
 
         $common['shopname'] = $this->common->shopname->getText();
@@ -352,10 +357,10 @@ class Options extends \App\Pages\Base
         $this->setSuccess('Збережено');
 
         App::Redirect("\\App\\Pages\\Options");
-        
+
     }
 
-     public function saveBusinessOnClick($sender) {
+    public function saveBusinessOnClick($sender) {
         $common = System::getOptions("common");
         if (!is_array($common)) {
             $common = array();
@@ -363,19 +368,21 @@ class Options extends \App\Pages\Base
         $common['partiontype'] = $this->business->partiontype->getValue();
         $common['paytypein'] = $this->business->paytypein->getValue();
         $common['paytypeout'] = $this->business->paytypeout->getValue();
- 
-        $common['price1'] = trim($this->business->price1->getText() );
-        $common['price2'] = trim($this->business->price2->getText() );
-        $common['price3'] = trim($this->business->price3->getText() );
-        $common['price4'] = trim($this->business->price4->getText() );
-        $common['price5'] = trim($this->business->price5->getText() );
+
+        $common['price1'] = trim($this->business->price1->getText());
+        $common['price2'] = trim($this->business->price2->getText());
+        $common['price3'] = trim($this->business->price3->getText());
+        $common['price4'] = trim($this->business->price4->getText());
+        $common['price5'] = trim($this->business->price5->getText());
         $common['defprice'] = $this->business->defprice->getText();
 
         $common['noallowfiz'] = $this->business->noallowfiz->isChecked() ? 1 : 0;
         $common['allowminus'] = $this->business->allowminus->isChecked() ? 1 : 0;
         $common['allowminusmf'] = $this->business->allowminusmf->isChecked() ? 1 : 0;
         $common['useval'] = $this->business->useval->isChecked() ? 1 : 0;
-        $common['checkslogan'] = trim($this->business->checkslogan->getText() );
+        $common['cashier'] = trim($this->business->cashier->getText());
+        $common['checkslogan'] = trim($this->business->checkslogan->getText());
+        $common['actualdate'] = $this->business->actualdate->getDate();
         $common['printoutqrcode'] = $this->business->printoutqrcode->isChecked() ? 1 : 0;
         $common['autoarticle'] = $this->business->autoarticle->isChecked() ? 1 : 0;
         $common['usesnumber'] = $this->business->usesnumber->isChecked() ? 1 : 0;
@@ -384,52 +391,52 @@ class Options extends \App\Pages\Base
 
         $common['numberttn'] = $this->business->numberttn->isChecked() ? 1 : 0;
         $common['usecattree'] = $this->business->usecattree->isChecked() ? 1 : 0;
-       
-        
+
+
         System::setOptions("common", $common);
         $this->_tvars["useval"] = $common['useval'] == 1;
-    
+
         $this->setSuccess('Збережено');
 
         App::Redirect("\\App\\Pages\\Options");
-        
-        
+
+
     }
 
     public function onBot($sender) {
-        
-        
+
+
         $common = System::getOptions("common");
         if (!is_array($common)) {
             $common = array();
         }
 
         $common['tbtoken'] = $sender->tbtoken->getText()  ;
-        
+
         $url= _BASEURL. 'chatbot.php' ;
-       
+
         $bot = new \App\ChatBot($common['tbtoken']) ;
-        $res = $bot->doGet('setWebhook',array('url'=>$url)) ;
-        if($res['error_code'] == 404)  {
+        $res = $bot->doGet('setWebhook', array('url'=>$url)) ;
+        if($res['error_code'] == 404) {
             $this->setError("Невірний токен") ;
             return;
         }
-        if($res['ok'] != true)  {
+        if($res['ok'] != true) {
             $this->setError($res['error_code']. ' ' .$res['description']) ;
             return;
         }
-        
+
         H::log("set hook ".$url);
-        
+
         System::setOptions("common", $common);
         $this->setSuccess('Збережено');
-   
+
     }
- 
-    
+
+
     public function savePrinterOnClick($sender) {
         $printer = array();
- 
+
 
         $printer['pmaxname'] = $this->printer->pmaxname->getText();
         $printer['pricetype'] = $this->printer->pricetype->getValue();
@@ -449,7 +456,7 @@ class Options extends \App\Pages\Base
         $this->api->aexp->setVisible($type == 1);
         $this->api->akey->setVisible($type == 1);
 
-      //  $this->goAnkor('atype');
+        //  $this->goAnkor('atype');
     }
 
     public function saveApiOnClick($sender) {
@@ -507,15 +514,15 @@ class Options extends \App\Pages\Base
         if (strlen($res) == 0) {
             $this->setSuccess('success');
             $res = \App\Entity\Subscribe::sendViber($this->sms->smstestphone->getText(), $this->sms->smstesttext->getText());
-            
+
         } else {
             $this->setError($res);
         }
-        
+
     }
 
 
-    
+
     public function onFood($sender) {
         $food = array();
         $food['worktype'] = $sender->foodworktype->getValue();
@@ -550,7 +557,7 @@ class Options extends \App\Pages\Base
 
             $food['logo'] = "/upload/" . $name;
         }
-         
+
 
         System::setOptions("food", $food);
         $this->setSuccess('Збережено');
@@ -583,7 +590,7 @@ class Options extends \App\Pages\Base
     }
 
     public function OnSaveSaleSource($sender) {
-        
+
         $common = System::getOptions('common');
         $common['salesources']  = $this->_salesourceslist;
         System::setOptions("common", $common);
@@ -591,23 +598,23 @@ class Options extends \App\Pages\Base
 
         $this->setSuccess('Збережено');
     }
-    
-    
+
+
     public function onValRow($row) {
         $val = $row->getDataitem();
-        $row->add(new TextInput('valcode', new Bind($val, 'code') ));
+        $row->add(new TextInput('valcode', new Bind($val, 'code')));
         $row->add(new TextInput('valname', new Bind($val, 'name')));
         $row->add(new TextInput('valrate', new Bind($val, 'rate')));
-        $row->add(new ClickLink('valdel' , $this,'onValDel'));
- 
-    }    
-  
+        $row->add(new ClickLink('valdel', $this, 'onValDel'));
+
+    }
+
     public function onValDel($sender) {
         $val = $sender->getOwner()->getDataItem() ;
         $this->_vallist = array_diff_key($this->_vallist, array($val->id => $this->_vallist[$val->id]));
-    
+
         $this->valform->vallist->Reload();
-    
+
     }
     public function onValAdd($sender) {
         $val=new  \App\DataItem() ;
@@ -615,45 +622,45 @@ class Options extends \App\Pages\Base
         $val->name='';
         $val->rate='';
         $val->id=time();
-        
-        
+
+
         $this->_vallist[$val->id] = $val;
         $this->valform->vallist->Reload();
-    
+
     }
-    
+
     public function saveValOnClick($sender) {
         $val = array();
- 
+
         $val['vallist'] = $this->_vallist;
         $val['valprice'] = $this->valform->valprice->isChecked() ? 1 : 0;
 
         System::setOptions("val", $val);
         $this->setSuccess('Збережено');
     }
-    
+
     public function onModules($sender) {
-         $modules = System::getOptions("modules");
-         $modules['ocstore'] = $sender->modocstore->isChecked() ? 1:0;
-         $modules['shop'] = $sender->modshop->isChecked() ? 1:0;
-         $modules['woocomerce'] = $sender->modwoocomerce->isChecked() ? 1:0;
-         $modules['ppo'] = $sender->modppo->isChecked() ? 1:0;
-         $modules['np'] = $sender->modnp->isChecked() ? 1:0;
-         $modules['promua'] = $sender->modpromua->isChecked() ? 1:0;
-         $modules['paperless'] = $sender->modpaperless->isChecked() ? 1:0;
-         $modules['checkbox'] = $sender->modcheckbox->isChecked() ? 1:0;
-         $modules['issue'] = $sender->modissue->isChecked() ? 1:0;
-         $modules['note'] = $sender->modnote->isChecked() ? 1:0;
-         
-         if($modules['checkbox']==1 && $modules['ppo'] ==1 ){
-               $this->setError('CheckBox та  вбудований ППРО не  можуть працювати  одночасно') ;
-               return;
-         }
-         
-         System::setOptions("modules", $modules);
-         $this->setSuccess('Збережено');      
-         App::Redirect("\\App\\Pages\\Options");
-         
-    }    
-    
+        $modules = System::getOptions("modules");
+        $modules['ocstore'] = $sender->modocstore->isChecked() ? 1 : 0;
+        $modules['shop'] = $sender->modshop->isChecked() ? 1 : 0;
+        $modules['woocomerce'] = $sender->modwoocomerce->isChecked() ? 1 : 0;
+        $modules['ppo'] = $sender->modppo->isChecked() ? 1 : 0;
+        $modules['np'] = $sender->modnp->isChecked() ? 1 : 0;
+        $modules['promua'] = $sender->modpromua->isChecked() ? 1 : 0;
+        $modules['paperless'] = $sender->modpaperless->isChecked() ? 1 : 0;
+        $modules['checkbox'] = $sender->modcheckbox->isChecked() ? 1 : 0;
+        $modules['issue'] = $sender->modissue->isChecked() ? 1 : 0;
+        $modules['note'] = $sender->modnote->isChecked() ? 1 : 0;
+
+        if($modules['checkbox']==1 && $modules['ppo'] ==1) {
+            $this->setError('CheckBox та  вбудований ППРО не  можуть працювати  одночасно') ;
+            return;
+        }
+
+        System::setOptions("modules", $modules);
+        $this->setSuccess('Збережено');
+        App::Redirect("\\App\\Pages\\Options");
+
+    }
+
 }

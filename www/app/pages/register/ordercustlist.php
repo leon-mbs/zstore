@@ -22,7 +22,6 @@ use Zippy\Html\Panel;
  */
 class OrderCustList extends \App\Pages\Base
 {
-
     private $_doc = null;
 
     /**
@@ -167,7 +166,7 @@ class OrderCustList extends \App\Pages\Base
 
         $this->statuspan->statusform->binp->setVisible(false);
 
-        //новый     
+        //новый
         if ($state < Document::STATE_EXECUTED) {
             $this->statuspan->statusform->bclose->setVisible(false);
 
@@ -276,7 +275,6 @@ class OrderCustList extends \App\Pages\Base
  */
 class OrderCustDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {

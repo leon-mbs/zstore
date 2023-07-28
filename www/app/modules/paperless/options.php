@@ -13,7 +13,6 @@ use Zippy\WebApplication as App;
 
 class Options extends \App\Pages\Base
 {
-
     public function __construct() {
         parent::__construct();
 
@@ -32,8 +31,8 @@ class Options extends \App\Pages\Base
 
         $form->onSubmit($this, 'saveapiOnClick');
 
-        $this->add(new ClickLink("check",$this,"onCheck")) ;
-         
+        $this->add(new ClickLink("check", $this, "onCheck")) ;
+
     }
 
     public function saveapiOnClick($sender) {
@@ -45,30 +44,30 @@ class Options extends \App\Pages\Base
 
         System::setOptions("modules", $modules);
         $this->setSuccess('Збережено');
-         
+
     }
 
     public function onCheck($sender) {
-        list($code,$result) =        Helper::connect();
+        list($code, $result) =        Helper::connect();
         if($code=='ok') {
-             System::getSession()->pltoken = $result;
-             $this->setSuccess("Успішне з`єднання") ;
+            System::getSession()->pltoken = $result;
+            $this->setSuccess("Успішне з`єднання") ;
         }
         if($code=='error') {
-           $this->setError($result) ;
-           
-           return;
+            $this->setError($result) ;
+
+            return;
         }
 
-      //  $docdata = file_get_contents("c:/Users/leonm/Downloads/Підписаний_api.pdf") ;
-        
-        
-      //  list($code,$result) =    Helper::send(System::getSession()->pltoken,$docdata,"Підписаний_api.pdf","softman@ukr.net") ;
-     //   if($code =='ok'){
-            
-     //   }
-        
+        //  $docdata = file_get_contents("c:/Users/leonm/Downloads/Підписаний_api.pdf") ;
+
+
+        //  list($code,$result) =    Helper::send(System::getSession()->pltoken,$docdata,"Підписаний_api.pdf","softman@ukr.net") ;
+        //   if($code =='ok'){
+
+        //   }
+
     }
-  
-  
+
+
 }

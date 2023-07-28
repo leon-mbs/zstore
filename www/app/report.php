@@ -7,7 +7,6 @@ namespace App;
  */
 class Report
 {
-
     private $_template;
 
     /**
@@ -27,18 +26,18 @@ class Report
      * @param mixed $summary Список  полей  по  которым  вычисляются  итоговые  данные табличной части
      */
     public function generate(array $header) {
-      
+
         $dir = 'templates';
-    
+
         $fp = _ROOT . $dir . '/printforms/' . $this->_template ;
-        $fp_c = str_replace(".tpl","_custom.tpl",$fp) ;    //кастомный  шаблон
+        $fp_c = str_replace(".tpl", "_custom.tpl", $fp) ;    //кастомный  шаблон
         if(file_exists($fp_c)) {
             $template = @file_get_contents($fp_c);
-        }   else {
+        } else {
             $template = @file_get_contents($fp);
         }
-        
-        
+
+
         if (strlen($template) == 0) {
             return "Файл  печатной формы " . $this->_template . " не найден";
         }

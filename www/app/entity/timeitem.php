@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use \App\Helper as H;
+use App\Helper as H;
 
 /**
  * Класс-сущность  запись  о  рабочем  времени
@@ -13,15 +13,14 @@ use \App\Helper as H;
  */
 class TimeItem extends \ZCL\DB\Entity
 {
-
-    const TIME_WORK = 1;   //Рабочий день
-    const TINE_OVER = 2;   //переработка
-    const TINE_WN   = 3;   //работа в  выходные  и ночь
+    public const TIME_WORK = 1;   //Рабочий день
+    public const TINE_OVER = 2;   //переработка
+    public const TINE_WN   = 3;   //работа в  выходные  и ночь
     // const TINE_FREE   = 4;   //отгул
-    const TINE_HL    = 5;   //отпуск
-    const TINE_ILL   = 6;   //больничный
-    const TINE_BT    = 7;   //командировка
-    const TINE_OTHER = 10;   //другое
+    public const TINE_HL    = 5;   //отпуск
+    public const TINE_ILL   = 6;   //больничный
+    public const TINE_BT    = 7;   //командировка
+    public const TINE_OTHER = 10;   //другое
 
     protected function init() {
         $this->time_id = 0;

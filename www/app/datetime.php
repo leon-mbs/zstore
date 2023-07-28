@@ -1,14 +1,12 @@
 <?php
 
-
 namespace App;
 
 /**
  * вспомагательный  клас  для  работы  с датами
  */
-class  DateTime
+class DateTime
 {
-
     private $time;
 
     public function __construct($time = 0) {
