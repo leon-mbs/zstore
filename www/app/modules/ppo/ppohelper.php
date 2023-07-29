@@ -1017,14 +1017,14 @@ class PPOHelper
 
     }
 
-    private static  function getCashier($doc=null){
-        
+    private static function getCashier($doc=null) {
+
         $cname = \App\System::getUser()->username;
         if($doc instanceof \App\Entity\Doc\Document) {
-            if( strlen($doc->headerdata['cashier']) >0 ) {
-                 $cname = $doc->headerdata['cashier'];
-            }  else {
-                 $cname = $doc->username;                
+            if(strlen($doc->headerdata['cashier']) >0) {
+                $cname = $doc->headerdata['cashier'];
+            } else {
+                $cname = $doc->username;
             }
         }
         return $cname;

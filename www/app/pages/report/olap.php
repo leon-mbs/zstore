@@ -29,9 +29,9 @@ class OLAP extends \App\Pages\Base
         $conn = \ZDB\DB::getConnect();
 
 
-//        $dt = new \App\DateTime() ;
-//        $to = $dt->startOfMonth()->getTimestamp()  - 1 ;
-//        $from = $dt->subMonth(1)->getTimestamp()  ;
+        //        $dt = new \App\DateTime() ;
+        //        $to = $dt->startOfMonth()->getTimestamp()  - 1 ;
+        //        $from = $dt->subMonth(1)->getTimestamp()  ;
 
 
 
@@ -104,7 +104,7 @@ class OLAP extends \App\Pages\Base
 
 
         }
-   
+
 
         if ($options['usebranch'] == 1) {
             $id = \App\System::getBranch();
@@ -457,7 +457,7 @@ class OLAP extends \App\Pages\Base
                 ";
         }
 
-         if($type == 6) {   //документи
+        if($type == 6) {   //документи
 
 
 
@@ -518,7 +518,7 @@ class OLAP extends \App\Pages\Base
         if($type==5) {
             $_cols[] = 'mf_name';
         }
-         if($type ==6 ) {
+        if($type ==6) {
             $_cols[] = 'itemname';
             $_cols[] = 'cat_name';
             $_cols[] = 'storename';
@@ -532,7 +532,7 @@ class OLAP extends \App\Pages\Base
                 $_cols[] = "branch_name";
             }
         }
- 
+
         foreach($_cols as $_d) {
             if($_d != $hor &&  $_d != $ver) {
                 $cols[]=$_d;

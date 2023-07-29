@@ -1185,4 +1185,14 @@ class Helper
         return $htmls;
     }
 
+    
+    public  static function getSalt(){
+         $salt= self::getVal('salt');
+         if(strlen($salt)==0)  {
+            $salt = ''. rand(1000,999999) ;
+            self::setVal('salt',$salt);             
+         }
+         return $salt;
+    }
+    
 }
