@@ -2,20 +2,21 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="8">
-            Рух по складу
+            Рух по складу  {{store}}
         </td>
     </tr>
     <tr>
 
         <td align="center" colspan="8">
-            Період з {{datefrom}} по {{dateto}}&nbsp;&nbsp;&nbsp;&nbsp; 
+            Період з {{datefrom}} по {{dateto}}
         </td>
     </tr>
+ 
 
     <tr style="font-weight: bolder;">
 
         <th style="border: solid black 1px">Дата</th>
-        <th style="border: solid black 1px">Склад</th>
+
         <th style="border: solid black 1px">Код</th>
         <th style="border: solid black 1px">Найменування</th>
 
@@ -29,7 +30,7 @@
     <tr>
 
         <td>{{date}}</td>
-        <td>{{store}}</td>
+
         <td>{{code}}</td>
         <td>{{name}}</td>
 
@@ -44,7 +45,7 @@
     <tr>
 
         <td></td>
-        <td></td>
+     
         <td></td>
         <td align="right"><b><div>Всього</div></b></td>
 
@@ -60,7 +61,7 @@
     <tr>
 
         <td></td>
-        <td></td>
+    
         <td></td>
         <td align="right"><b>На суму</b></td>
 

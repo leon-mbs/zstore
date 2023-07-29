@@ -285,7 +285,7 @@ class Document extends \ZCL\DB\Entity
             $conn->Execute("delete from empacc where document_id=" . $this->document_id);
 
 
-            $conn->CompleteTrans();
+            $conn->CommitTrans();
         } catch(\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
