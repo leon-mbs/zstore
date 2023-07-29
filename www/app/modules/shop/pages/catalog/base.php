@@ -29,7 +29,7 @@ class Base extends \Zippy\Html\WebPage
         if (($_COOKIE['remembercust'] ?? null) && $customer_id == 0) {
             $arr = explode('_', $_COOKIE['remembercust']);
 
-            if ($arr[0] > 0 && $arr[1] === md5($arr[0] . $_config['common']['salt'])) {
+            if ($arr[0] > 0 && $arr[1] === md5($arr[0] . Helper::getSalt())) {
                 $customer = \App\Entity\Customer::load($arr[0]);
                 \App\System::setCustomer($customer->customer_id)  ;
                 \App\System::getSession()->custname = $customer->customer_name;

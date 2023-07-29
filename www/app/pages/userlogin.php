@@ -81,7 +81,7 @@ class UserLogin extends \Zippy\Html\WebPage
                 $_SESSION['userlogin'] = $user->userlogin; //для  использования  вне  Application
                 //App::$app->getResponse()->toBack();
                 if ($this->loginform->remember->isChecked()) {
-                    setcookie("remember", $user->user_id . '_' . md5($user->user_id . $_config['common']['salt']), time() + 60 * 60 * 24 * 30);
+                    setcookie("remember", $user->user_id . '_' . md5($user->user_id . Helper::getSalt()), time() + 60 * 60 * 24 * 30);
                 } else {
                     setcookie("remember", '', 0);
                 }

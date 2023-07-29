@@ -118,11 +118,11 @@ class Document extends \ZCL\DB\Entity
 
         $common = \App\System::getOptions('common') ;
         $da = $common['actualdate'] ?? 0 ;
-        
+
         if($da>$this->document_date) {
-            throw new \Exception( "Не можна зберігати документ старший " .date('Y-m-d',$da) );
-        }        
-       
+            throw new \Exception("Не можна зберігати документ старший " .date('Y-m-d', $da));
+        }
+
 
         if (false == $this->checkUniqueNumber()) {
             System::setWarnMsg('Не унікальний номер документа');
@@ -285,7 +285,7 @@ class Document extends \ZCL\DB\Entity
             $conn->Execute("delete from empacc where document_id=" . $this->document_id);
 
 
-            $conn->CompleteTrans();
+            $conn->CommitTrans();
         } catch(\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
@@ -303,7 +303,7 @@ class Document extends \ZCL\DB\Entity
      *
      * @param mixed $classname
      */
-    public static function create($classname, $branch_id = 0):Document {
+    public static function create($classname, $branch_id = 0): Document {
         $arr = explode("\\", $classname);
         $classname = $arr[count($arr) - 1];
         $conn = \ZDB\DB::getConnect();
@@ -314,7 +314,7 @@ class Document extends \ZCL\DB\Entity
         $doc = new $fullclassname();
         $doc->meta_id = $meta['meta_id'];
         $user = \App\System::getUser();
-        
+
         $doc->user_id = $user->user_id;
 
         $doc->branch_id = $branch_id;
@@ -327,7 +327,7 @@ class Document extends \ZCL\DB\Entity
         if(strlen($common['cashier'])>0) {
             $doc->headerdata['cashier'] = $common['cashier'] ;
         }
-        
+
         return $doc;
     }
 
@@ -1152,14 +1152,14 @@ class Document extends \ZCL\DB\Entity
      * Возвращает  текст ошибки если  нет
      */
     public function canCanceled() {
-        
+
         $common = \App\System::getOptions('common') ;
         $da = $common['actualdate'] ?? 0 ;
-        
+
         if($da>$this->document_date) {
-            return  "Не можна відміняти документ старший " .date('Y-m-d',$da);
+            return  "Не можна відміняти документ старший " .date('Y-m-d', $da);
         }
-        
+
         return "";
     }
 

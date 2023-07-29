@@ -306,10 +306,10 @@ class PaySelList extends \App\Pages\Base
         }
         $common = \App\System::getOptions('common') ;
         $da = $common['actualdate'] ?? 0 ;
-        
+
         if($da>$pdate) {
-            return  "Не можна додавати оплату раніше  " .date('Y-m-d',$da);
-        }  
+            return  "Не можна додавати оплату раніше  " .date('Y-m-d', $da);
+        }
 
         if ($amount > H::fa($this->_doc->payamount - $this->_doc->payed)) {
 

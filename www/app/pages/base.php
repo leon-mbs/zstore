@@ -239,9 +239,10 @@ class Base extends \Zippy\Html\WebPage
 
         $this->_tvars['showtoasts']  =  Session::getSession()->toasts ?? true ;
         Session::getSession()->toasts = false;
-        
+
         $duration = \App\Session::getSession()->duration() ;
         $this->_tvars['showtips'] = $duration < 300   ;
+        
     }
 
     public function LogoutClick($sender) {
@@ -453,7 +454,7 @@ class Base extends \Zippy\Html\WebPage
     }
 
 
-    public function gettoasts($args,$post=null) {
+    public function gettoasts($args, $post=null) {
 
         $list = [];
 
@@ -482,15 +483,15 @@ class Base extends \Zippy\Html\WebPage
 
             $v = @file_get_contents("https://zippy.com.ua/version.json?t=" . time());
             $v = @json_decode($v, true);
-            
+
             if (strlen($v['version']) > 0) {
                 $c = str_replace("v", "", \App\System::CURR_VERSION);
                 $n = str_replace("v", "", $v['version']);
 
-                $ca = explode('.',$c) ;
-                $na = explode('.',$n) ;
-                
-                if ($na[0] > $ca[0] || $na[1] > $ca[1] || $na[2] > $ca[2]  ) {
+                $ca = explode('.', $c) ;
+                $na = explode('.', $n) ;
+
+                if ($na[0] > $ca[0] || $na[1] > $ca[1] || $na[2] > $ca[2]) {
                     $list[] = array('title' => " Доступна нова версiя {$v['version']}  <a target=\"_blank\" href=\"https://zippy.com.ua/zstore#newver\">Перейти...</a> ");
 
                 }
@@ -499,7 +500,7 @@ class Base extends \Zippy\Html\WebPage
 
         }
 
-        return json_encode($list, JSON_UNESCAPED_UNICODE);     
+        return json_encode($list, JSON_UNESCAPED_UNICODE);
     }
 
 

@@ -156,7 +156,7 @@ class ItemList extends \App\Pages\Base
 
         $this->setpanel->add(new Form('cardform'))->onSubmit($this, 'OnCardSet');
         $this->setpanel->cardform->add(new TextArea('editscard'));
-        
+
         $this->setpanel->add(new Label('stitle'));
         $this->setpanel->add(new Label('stotal'));
         $this->setpanel->add(new ClickLink('backtolist', $this, "onback"));
@@ -241,16 +241,16 @@ class ItemList extends \App\Pages\Base
         $this->_item->item_id = 0;
         ;
         $this->itemdetail->editname->setText($this->_item->itemname.'_copy');
-        
+
         $this->itemdetail->editcode->setText('');
         $this->itemdetail->editbarcode->setText('');
         if (System::getOption("common", "autoarticle") == 1) {
             $this->itemdetail->editcode->setText(Item::getNextArticle());
         }
-        
-        
-        
-        
+
+
+
+
     }
 
     public function editOnClick($sender) {
@@ -507,38 +507,38 @@ class ItemList extends \App\Pages\Base
             $image->save();
             $this->_item->image_id = $image->image_id;
             $this->_item->save();
-        
-        
+
+
 
         }
 
         $this->filter->searchbrand->setDataList(Item::getManufacturers());
 
         if($this->_copy > 0) {  //комплекты
-               $itemset = ItemSet::find("item_id > 0  and pitem_id=" . $this->_copy, "itemname");
-               $serviceset = ItemSet::find("service_id > 0  and pitem_id=" . $this->_copy, "service_name");
-               
-               foreach($itemset as $s){
-                    $set = new ItemSet();
-                    $set->pitem_id = $this->_item->item_id;
-                    $set->item_id = $s->item_id;
-                    $set->qty = $s->qty;
-                    $set->save();
-               }
-               
-              foreach($serviceset as $s){
-                    $set = new ItemSet();
-                    $set->pitem_id = $this->_item->item_id;
-                    $set->service_id = $s->service_id;
-                    $set->cost = $s->cost;
+            $itemset = ItemSet::find("item_id > 0  and pitem_id=" . $this->_copy, "itemname");
+            $serviceset = ItemSet::find("service_id > 0  and pitem_id=" . $this->_copy, "service_name");
 
-                    $set->save();                        
-               }
-               
-           
+            foreach($itemset as $s) {
+                $set = new ItemSet();
+                $set->pitem_id = $this->_item->item_id;
+                $set->item_id = $s->item_id;
+                $set->qty = $s->qty;
+                $set->save();
             }
 
-        
+            foreach($serviceset as $s) {
+                $set = new ItemSet();
+                $set->pitem_id = $this->_item->item_id;
+                $set->service_id = $s->service_id;
+                $set->cost = $s->cost;
+
+                $set->save();
+            }
+
+
+        }
+
+
         $this->itemtable->listform->itemlist->Reload(false);
 
         $this->itemtable->setVisible(true);
@@ -562,9 +562,9 @@ class ItemList extends \App\Pages\Base
         $this->setpanel->stitle->setText($item->itemname);
 
         $this->setupdate() ;
-        
+
         $this->setpanel->cardform->editscard->setText($item->techcard)  ;
-        
+
     }
 
     private function setupdate() {
@@ -672,10 +672,10 @@ class ItemList extends \App\Pages\Base
         $item->techcard = $sender->editscard->getText();
         $item->save() ;
 
-        
+
     }
 
- 
+
 
     public function printQrOnClick($sender) {
 

@@ -149,8 +149,8 @@ class ItemActivity extends \App\Pages\Base
           st.item_id,
           st.itemname,
           st.item_code,
-          st.storename,
-           st.snumber,  
+         
+    
           date(sc.document_date) AS dt,
           SUM(CASE WHEN quantity > 0 THEN quantity ELSE 0 END) AS obin,
           SUM(CASE WHEN quantity < 0 THEN 0 - quantity ELSE 0 END) AS obout,
@@ -168,12 +168,12 @@ class ItemActivity extends \App\Pages\Base
               AND DATE(sc.document_date) <= " . $conn->DBDate($to) . "
               GROUP BY st.store_id,st.item_id,
           st.itemname,
-          st.item_code,  st.storename,
-          st.snumber,
+          st.item_code,   
+
                        DATE(sc.document_date) ) t
               ORDER BY t.dt  
         ";
-
+        H::log($sql)  ;
         $rs = $conn->Execute($sql);
         $ba = 0;
         $bain = 0;
@@ -185,17 +185,17 @@ class ItemActivity extends \App\Pages\Base
 
         foreach ($rs as $row) {
 
-            if (strlen($row['snumber']) > 0) {
-                $row['itemname'] = $row['itemname'] . " (с/н " . $row['snumber'] . ")";
-            }
+            $row['begin_quantity'] = doubleval($row['begin_quantity'])  ;
+            $row['obin'] = doubleval($row['obin'])  ;
+            $row['obout'] = doubleval($row['obout'])  ;
+      
             $r = array(
                 "code"  => $row['item_code'],
                 "name"  => $row['itemname'],
-                "store" => $row['storename'],
-
+             
                 "date"      => \App\Helper::fd(strtotime($row['dt'])),
                 "documents" => '',
-                "in"        => H::fqty(strlen($row['begin_quantity']) > 0 ? $row['begin_quantity'] : 0),
+                "in"        => H::fqty($row['begin_quantity']),
                 "obin"      => H::fqty($row['obin']),
                 "obout"     => H::fqty($row['obout']),
                 "out"       => H::fqty($row['begin_quantity'] + $row['obin'] - $row['obout'])
@@ -218,6 +218,7 @@ class ItemActivity extends \App\Pages\Base
                         'dateto'        => \App\Helper::fd($to),
                         "store"         => Store::load($storeid)->storename
         );
+
         $header['ba'] = H::fa($ba);
         $header['bain'] = H::fa($bain);
         $header['baout'] = H::fa($baout);
