@@ -400,7 +400,8 @@ class ARMFood extends \App\Pages\Base
     }
 
     public function updateorderlist($sender) {
-        $where = " state not in(9,17,3) ";
+        $conn = \ZDB\DB::getConnect();
+        $where = " state not in(9,17,3) and date(document_date) >= " . $conn->DBDate(strtotime('-1 week') )    ;
         if ($sender instanceof Form) {
             $text = trim($sender->searchnumber->getText());
             $cust = $sender->searchcust->getKey();
