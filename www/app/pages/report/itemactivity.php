@@ -200,8 +200,7 @@ class ItemActivity extends \App\Pages\Base
                 "obout"     => H::fqty($row['obout']),
                 "out"       => H::fqty($row['begin_quantity'] + $row['obin'] - $row['obout'])
             );
-
-
+  
             $detail[] = $r;
             $ba = $ba + $row['begin_amount'];
             $bain = $bain + $row['obinamount'];
@@ -209,6 +208,11 @@ class ItemActivity extends \App\Pages\Base
             $bq = $bq + $row['begin_quantity'];
             $bqin = $bqin + $row['obin'];
             $bqout = $bqout + $row['obout'];
+            
+        
+            
+            
+            
         }
 
 

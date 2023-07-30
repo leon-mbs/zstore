@@ -52,7 +52,7 @@
 
     </tr>
     {{/_detail}}
-    <tr><td colspan="3"></td><td align="right" ><b>{{totsumma}}</b></td>
+    <tr><td colspan="4"></td><td align="right" ><b>{{totsumma}}</b></td>
       {{^noshowpartion}}
 
     <td align="right" ><b><b>{{totnavar}}</b></b></td> 
@@ -100,7 +100,7 @@
     <td></td>  
 </tr>
 {{/_detail}}
-<tr><td colspan="3"></td><td align="right" ><b>{{totsumma}}</b></td>
+<tr><td colspan="4"></td><td align="right" ><b>{{totsumma}}</b></td>
     {{^noshowpartion}}
 
 <td align="right" ><b><b>{{totnavar}}</b></b></td> 
@@ -141,7 +141,7 @@
 
 </tr>
 {{/_detail}}
-<tr><td  ></td><td align="right" ><b>{{totsumma}}</b></td> <td   > </td><td   > </td><td   > </td> </tr>
+<tr><td colspan="3" align="right" ><b>{{totsumma}}</b></td> <td   > </td><td   > </td><td   > </td> </tr>
 
 </table>
 {{/_type3}}
@@ -175,7 +175,7 @@
     <td></td>
 </tr>
 {{/_detail}}
-<tr><td  ></td><td  ></td><td align="right" ><b>{{totsumma}}</b></td> <td   > </td><td   > </td>  </tr>
+<tr><td colspan="3"  ></td><td align="right" ><b>{{totsumma}}</b></td> <td   > </td><td   > </td>  </tr>
 
 </table>
 {{/_type4}}
@@ -217,7 +217,7 @@
     <td></td>
 </tr>
 {{/_detail}}
-<tr><td colspan="3" ></td> <td align="right" ><b>{{totsumma}}</b></td> 
+<tr><td colspan="4" ></td> <td align="right" ><b>{{totsumma}}</b></td> 
     {{^noshowpartion}}
 
 <td align="right"   > <b>{{totnavar}}</b></td>
@@ -264,7 +264,7 @@
     <td></td>
 </tr>
 {{/_detail}}
-<tr><td colspan="3" ></td> <td align="right" ><b>{{totsumma}}</b></td>
+<tr><td colspan="4" ></td> <td align="right" ><b>{{totsumma}}</b></td>
     {{^noshowpartion}}
 
  <td align="right"   > <b>{{totnavar}}</b></td>
@@ -311,7 +311,7 @@
     <td></td>
 </tr>
 {{/_detail}}
-<tr><td colspan="3" ></td> <td align="right" ><b>{{totsumma}}</b></td
+<tr><td colspan="4" ></td> <td align="right" ><b>{{totsumma}}</b></td
      {{^noshowpartion}}
 
  <td align="right"   > <b>{{totnavar}}</b></td>
@@ -358,7 +358,7 @@
      
 </tr>
 {{/_detail}}
-<tr><td colspan="3" ></td> <td align="right" ><b>{{totsumma}}</b></td> 
+<tr><td colspan="4" ></td> <td align="right" ><b>{{totsumma}}</b></td> 
     {{^noshowpartion}}
 
     <td align="right"   > <b>{{totnavar}}</b></td>
@@ -405,7 +405,7 @@
     
 </tr>
 {{/_detail}}
-<tr><td colspan="3" ></td> <td align="right" ><b>{{totsumma}}</b></td> 
+<tr><td colspan="4" ></td> <td align="right" ><b>{{totsumma}}</b></td> 
     {{^noshowpartion}}
 <td align="right"   > <b>{{totnavar}}</b></td>
     {{/noshowpartion}}
