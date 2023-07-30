@@ -587,7 +587,7 @@ class Helper
         if (strlen($qty) == 0) {
             return '';
         }
-        if( is_numeric($qty) && $qty<0.0005) {
+        if( is_numeric($qty) &&  abs($qty)<0.0005) {
             $qty  =0;
         }
         $qty = str_replace(',', '.', $qty);
@@ -611,7 +611,7 @@ class Helper
         if (strlen($am) == 0) {
             return '';
         }  
-        if( is_numeric($am) && $am<0.005) {
+        if( is_numeric($am) && abs($am)<0.005) {
             $am  =0;
         }
   
@@ -638,7 +638,7 @@ class Helper
         if (strlen($am) == 0) {
             return '';
         }  
-        if( is_numeric($am) && $am<0.005) {
+        if( is_numeric($am) && abs($am)<0.005) {
             $am  =0;
         }
         $am = str_replace(',', '.', $am);
