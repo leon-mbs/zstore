@@ -508,8 +508,7 @@ class ItemList extends \App\Pages\Base
             $this->_item->image_id = $image->image_id;
             $this->_item->save();
 
-
-
+ 
         }
 
         $this->filter->searchbrand->setDataList(Item::getManufacturers());
@@ -538,6 +537,10 @@ class ItemList extends \App\Pages\Base
 
         }
 
+        if($this->_item->disabled == 1) {
+             $conn = \ZDB\DB::getConnect();
+             $conn->Execute("delete from  item_set where item_id=".$this->_item->item_id ) ;
+        }
 
         $this->itemtable->listform->itemlist->Reload(false);
 
@@ -638,7 +641,6 @@ class ItemList extends \App\Pages\Base
         $this->setupdate() ;
     }
 
-
     public function itemsetslistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
         $row->add(new Label('ssname', $item->service_name));
@@ -666,6 +668,7 @@ class ItemList extends \App\Pages\Base
         $this->setupdate() ;
         $sender->clean();
     }
+  
     public function OnCardSet($sender) {
 
         $item = Item::load($this->_pitem_id);
@@ -674,8 +677,6 @@ class ItemList extends \App\Pages\Base
 
 
     }
-
-
 
     public function printQrOnClick($sender) {
 
@@ -924,6 +925,9 @@ class ItemList extends \App\Pages\Base
 
 
             }
+            
+            
+            $conn->Execute("delete from  item_set where item_id=".$it->item_id ) ;
         }
 
 
