@@ -454,10 +454,13 @@ class Main extends Base
         foreach ($stock as $st) {
             $i++;
             $data['A' . $i] = $st->storename;
-            $data['B' . $i] = $st->itemname;
-            $data['C' . $i] = $st->snumber;
-            $data['D' . $i] = H::fd($st->sdate);
-            $data['E' . $i] = array('value' => H::fqty($st->qty), 'format' => 'number');
+            $data['B' . $i] = $st->cat_name;
+            $data['C' . $i] = $st->itemname;
+            $data['D' . $i] = $st->item_code;
+            $data['E' . $i] = $st->bar_code;
+            $data['F' . $i] = $st->snumber;
+            $data['G' . $i] = H::fd($st->sdate);
+            $data['H' . $i] = array('value' => H::fqty($st->qty), 'format' => 'number');
         }
         H::exportExcel($data, $header, 'termitem.xlsx');
     }
@@ -473,9 +476,9 @@ class Main extends Base
         }
         $conn = $conn = \ZDB\DB::getConnect();
 
-        $sql = "select t.qty,s.storename, t.store_id, i.minqty,i.itemname,i.item_code   from (select store_id, item_id, coalesce(sum( qty),0) as qty   from  store_stock
+        $sql = "select t.qty,s.storename, t.store_id, i.minqty,i.itemname,i.item_code,i.bar_code,i.cat_name   from (select store_id, item_id, coalesce(sum( qty),0) as qty   from  store_stock
             where  {$cstr} 1=1 group by store_id, item_id    ) t
-            join items  i  on t.item_id = i.item_id
+            join items_view  i  on t.item_id = i.item_id
               join stores  s  on t.store_id = s.store_id
            
             where i.disabled  <> 1 and  t.qty < i.minqty and i.minqty>0 order  by  s.storename ";
@@ -488,11 +491,13 @@ class Main extends Base
         foreach ($rc as $row) {
             $i++;
             $data['A' . $i] = $row['storename'];
-            $data['B' . $i] = $row['itemname'];
-            $data['C' . $i] = $row['item_code'];
-            $data['D' . $i] = H::fd($row['sdate']);
-            $data['E' . $i] = array('value' => H::fqty($row['qty']), 'format' => 'number');
-            $data['F' . $i] = array('value' => H::fqty($row['minqty']), 'format' => 'number');
+            $data['B' . $i] = $row['cat_name'];
+            $data['C' . $i] = $row['itemname'];
+            $data['D' . $i] = $row['item_code'];
+            $data['E' . $i] = $row['bar_code'];
+            $data['F' . $i] = H::fd($row['sdate']);
+            $data['G' . $i] = array('value' => H::fqty($row['qty']), 'format' => 'number');
+            $data['H' . $i] = array('value' => H::fqty($row['minqty']), 'format' => 'number');
         }
         H::exportExcel($data, $header, 'minqty.xlsx');
     }

@@ -181,7 +181,7 @@ class DocList extends \App\Pages\Base
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
 
-        //   $doc = $doc->cast();
+        $doc = $doc->cast();
 
         $row->add(new Label('name', $doc->meta_desc));
         $row->add(new Label('number', $doc->document_number));
