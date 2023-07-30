@@ -587,9 +587,12 @@ class Helper
         if (strlen($qty) == 0) {
             return '';
         }
+        if( is_numeric($qty) && $qty<0.0005) {
+            $qty  =0;
+        }
         $qty = str_replace(',', '.', $qty);
         $qty = preg_replace("/[^0-9\.\-]/", "", $qty);
-        $qty = trim($qty);
+     
         $common = System::getOptions("common");
         if ($common['qtydigits'] > 0) {
             return @number_format($qty, $common['qtydigits'], '.', '');
@@ -605,14 +608,19 @@ class Helper
      * @return mixed
      */
     public static function fa1($am) {
+        if (strlen($am) == 0) {
+            return '';
+        }  
+        if( is_numeric($am) && $am<0.005) {
+            $am  =0;
+        }
+  
         $am = str_replace(',', '.', $am);
 
         $am = preg_replace("/[^0-9\.\-]/", "", $am);
         $am = trim($am);
-        if (strlen($am) == 0) {
-            return '';
-        }
 
+ 
         $am  = doubleval($am)  ;
         return @number_format($am, 1, '.', '');
 
@@ -627,13 +635,17 @@ class Helper
      * @return mixed
      */
     public static function fa($am) {
-        $am = str_replace(',', '.', $am);
-
-        $am = preg_replace("/[^0-9\.\-]/", "", $am);
-        $am = trim($am);
         if (strlen($am) == 0) {
             return '';
+        }  
+        if( is_numeric($am) && $am<0.005) {
+            $am  =0;
         }
+        $am = str_replace(',', '.', $am);
+        $am = preg_replace("/[^0-9\.\-]/", "", $am);
+        $am = trim($am);
+     
+
 
         $am  = doubleval($am)  ;
 
