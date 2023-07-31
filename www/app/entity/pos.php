@@ -63,5 +63,23 @@ class Pos extends \ZCL\DB\Entity
     public static function getConstraint() {
         return \App\ACL::getBranchConstraint();
     }
+    protected function beforeDelete() {
+        
+        $cnt= \App\Entity\Doc\Document::findCnt("content like '%<pos>{$this->pos_id}</pos>%'") ;
 
+        
+        if($cnt >0) {
+           return "Термiнал вже використаний в чеках";            
+        }
+
+        $st = \App\Modules\PPO\PPOHelper::rroState(        $this->fiscalnumber,\App\Entity\Firm::load($this->firm_id)) ;
+        if($st['ShiftState'] ==1) {
+           return "Змiна вiдкрита";            
+        }
+
+        return "";
+    }
+    
+
+    
 }

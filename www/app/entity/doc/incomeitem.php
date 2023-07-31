@@ -69,10 +69,11 @@ class IncomeItem extends Document
         $i = 1;
         $detail = array();
         foreach ($this->unpackDetails('detaildata') as $item) {
-            $name = $item->itemname;
+
 
             $detail[] = array("no"        => $i++,
-                              "item_name" => $name,
+                              "item_name" => $item->itemname,
+                              "item_code" => $item->item_code,
                               "snumber"   => $item->snumber,
                               "msr"       => $item->msr,
                               "quantity"  => H::fqty($item->quantity),
