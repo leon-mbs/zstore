@@ -338,7 +338,6 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->brd->setVisible(false);
         } else {
 
-            $this->statuspan->statusform->bcopy->setVisible(true);
             $this->statuspan->statusform->bclose->setVisible(true);
             $this->statuspan->statusform->bref->setVisible(true);
             $this->statuspan->statusform->binp->setVisible(false);
@@ -395,7 +394,6 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->binp->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
-            $this->statuspan->statusform->setVisible(false);
             $this->statuspan->statusform->brd->setVisible(false);
         }
 
@@ -415,7 +413,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->resform->store->setVisible(!$reserved);
             $this->statuspan->resform->bunres->setVisible($reserved);
         }
-
+   
         if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
             // $this->statuspan->statusform->bclose->setVisible(false);
         }
