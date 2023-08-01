@@ -385,6 +385,9 @@ class Inventory extends \App\Pages\Base
                 $qf= doubleval($d) ;
                 $this->_itemlist[$i]->qfact = $qf + 1;
 
+                // Издаем звук если всё ок
+                App::$app->getResponse()->addJavaScript("new Audio('/assets/good.mp3').play()", true);  
+
 
                 $this->docform->detail->Reload();
                 return;
@@ -413,7 +416,12 @@ class Inventory extends \App\Pages\Base
         $item = Item::getFirst($w);
         if ($item == null) {
             $this->setError("ТМЦ з кодом `{$code}` не знайдено");
+            // Издаем звук если ШК не найден
+            App::$app->getResponse()->addJavaScript("new Audio('/assets/error.mp3').play()", true);
             return;
+        } else {
+            // Издаем звук если всё ок
+            App::$app->getResponse()->addJavaScript("new Audio('/assets/good.mp3').play()", true); 
         }
 
         if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
