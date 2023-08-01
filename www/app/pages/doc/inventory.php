@@ -378,16 +378,19 @@ class Inventory extends \App\Pages\Base
         $this->docform->barcode->setText('');
         $code0 = $code;
         $code = ltrim($code, '0');
-
+          
         foreach($this->_itemlist as $i=> $it) {
             if($it->item_code==$code || $it->bar_code==$code) {
-                $this->_itemlist[$i]->qfact += 1;
+                $d= $this->_itemlist[$i]->qfact;
+                $qf= doubleval($d) ;
+                $this->_itemlist[$i]->qfact = $qf + 1;
+
 
                 $this->docform->detail->Reload();
                 return;
             }
         }
-
+     
 
 
         $store = $this->docform->store->getValue();
@@ -431,7 +434,10 @@ class Inventory extends \App\Pages\Base
             $this->_itemlist[$item->item_id] = $item;
         }
 
-        $this->_itemlist[$item->item_id]->qfact += 1;
+        $d= $this->_itemlist[$item->item_id]->qfact;
+        $qf= doubleval($d) ;
+        $this->_itemlist[$item->item_id]->qfact = $qf + 1;
+
 
         $this->docform->detail->Reload();
     }

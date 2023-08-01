@@ -179,8 +179,11 @@
             </div>
         </div>
 
-        <script>
-            
+       <script>
+            function check_delete() {
+                return confirm("Видалити компанiю?")
+            }
+               
             function check_send(){
                 $('#progress').text('Завантаження...');
                 $('#send').attr('disabled','disabled');

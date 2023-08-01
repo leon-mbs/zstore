@@ -74,7 +74,7 @@ class Pos extends \ZCL\DB\Entity
 
         $st = \App\Modules\PPO\PPOHelper::rroState(        $this->fiscalnumber,\App\Entity\Firm::load($this->firm_id)) ;
         if($st['ShiftState'] ==1) {
-           return "Змiна вiдкрита";            
+           return "Вiдкрита змiна";            
         }
 
         return "";
