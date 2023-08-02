@@ -1206,5 +1206,54 @@ class Helper
          }
          return $salt;
     }
+
+    /**
+    * шифрование по паролю
+    * 
+    * @param mixed $data
+    * @param mixed $password
+    */
+    public static function  encrypt($data,$password){
+
+        // Storingthe cipher method
+        $ciphering = "AES-128-CTR";
+
+        // Using OpenSSl Encryption method
+        $iv_length = openssl_cipher_iv_length($ciphering);
+        $options = 0;
+
+        // Non-NULL Initialization Vector for encryption
+        $iv = substr( md5($password),$iv_length);
+
+         
+
+        // Using openssl_encrypt() function to encrypt the data
+        $encryption = openssl_encrypt($data, $ciphering, $password, $options, $iv);
+   
+        return   $encryption;
+
+    } 
+   
+    /**
+    * дешифрование
+    * 
+    * @param mixed $data
+    * @param mixed $password
+    */
+    public static function  decrypt($data,$password){
+          // Storingthe cipher method
+        $ciphering = "AES-128-CTR";
+
+        // Using OpenSSl Encryption method
+        $iv_length = openssl_cipher_iv_length($ciphering);
+        $options = 0;
+
+        // Non-NULL Initialization Vector for encryption
+        $iv = substr( md5($password),$iv_length);
+
+        $decryption = openssl_decrypt($data, $ciphering, $password, $options, $iv);
+
+        return $decryption;
+    }
     
 }
