@@ -17,9 +17,8 @@ use Zippy\Html\Panel;
 
 class MenuList extends \App\Pages\Base
 {
-
     private $metadatads;
-    public  $pricelist = array();
+    public $pricelist = array();
 
     public function __construct() {
         parent::__construct();

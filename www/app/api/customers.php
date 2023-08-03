@@ -2,12 +2,11 @@
 
 namespace App\API;
 
-use \App\Entity\Customer;
-use \App\Helper as H;
+use App\Entity\Customer;
+use App\Helper as H;
 
-class customers extends  JsonRPC
+class customers extends JsonRPC
 {
-
     //список  контрагентов
     public function list() {
         $list = array();

@@ -10,7 +10,6 @@ namespace App\Entity;
  */
 class Firm extends \ZCL\DB\Entity
 {
-
     protected function init() {
         $this->firm_id = 0;
     }
@@ -27,7 +26,7 @@ class Firm extends \ZCL\DB\Entity
         $this->logo = (string)($xml->logo[0]);
         $this->stamp = (string)($xml->stamp[0]);
         $this->sign = (string)($xml->sign[0]);
-         $this->tin = (string)($xml->tin[0]);
+        $this->tin = (string)($xml->tin[0]);
         $this->ppoowner = (string)($xml->ppoowner[0]);
         $this->ppokey = (string)($xml->ppokey[0]);
         $this->ppocert = (string)($xml->ppocert[0]);
@@ -78,7 +77,7 @@ class Firm extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $sql = " select count(*) from contracts where firm_id = {$this->firm_id} ";
         $cntc = $conn->GetOne($sql);
-        $sql = " select count(*) from documents where content like '%<firm_id>{$this->firm_id}</firm_id>%'   ";
+        $sql = " select count(*) from documents where firm_id = {$this->firm_id}  ";
         $cntd = $conn->GetOne($sql);
         return ($cntc > 0 || $cntd > 0) ? 'Не можна видаляти компанію, яка використовується' : "";
     }

@@ -9,7 +9,6 @@ use ZCL\DB\DB as DB;
  */
 class Helper
 {
-
     public static function addFile($file, $itemid) {
         $conn = DB::getConnect();
         $filename = $file['name'];

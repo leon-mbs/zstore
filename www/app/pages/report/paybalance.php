@@ -9,14 +9,13 @@ use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
-use \App\Entity\Pay;
+use App\Entity\Pay;
 
 /**
- * Платежный  баланс
+ * Финансовые  ркзультаты
  */
 class PayBalance extends \App\Pages\Base
 {
-
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReport('PayBalance')) {
@@ -33,12 +32,12 @@ class PayBalance extends \App\Pages\Base
 
         $this->filter->add(new Date('from', $from));
         $this->filter->add(new Date('to', $to));
-        $this->filter->add(new CheckBox('showdet' ));
+        $this->filter->add(new CheckBox('showdet'));
 
         $this->add(new Panel('detail'))->setVisible(false);
-  
+
         $this->detail->add(new Label('preview'));
-        
+
     }
 
     public function OnSubmit($sender) {
@@ -48,11 +47,11 @@ class PayBalance extends \App\Pages\Base
         $this->detail->preview->setText($html, true);
         \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
 
- 
+
 
         $this->detail->setVisible(true);
 
- 
+
     }
 
     private function generateReport() {
@@ -62,8 +61,8 @@ class PayBalance extends \App\Pages\Base
         $to = $this->filter->to->getDate();
         $det = $this->filter->showdet->isChecked();
 
-        
-       
+
+
         $detail = array();
         $detail2 = array();
 
@@ -101,12 +100,12 @@ class PayBalance extends \App\Pages\Base
         $tin = 0;
         foreach ($rs as $row) {
             $detailitem = array();
-            
+
             $detailitem["in"]   = H::fa($row['am']);
             $detailitem["type"] = $pl[$row['iotype'] ] ;
             $detailitem["docdet"] = false ;
-            if($det){
-               
+            if($det) {
+
                 $sqldet = " 
                  SELECT  meta_desc,coalesce(sum(i.amount),0) as detam  
                      FROM iostate i join documents_view d on i.document_id=d.document_id
@@ -116,16 +115,16 @@ class PayBalance extends \App\Pages\Base
                       AND  d.document_date  <= " . $conn->DBDate($to) . "
                       GROUP BY  meta_desc order  by  meta_desc  
                                  
-                "; 
-               $rsdet = $conn->Execute($sqldet);
-               $detailitem["docdet"] =array();
-               foreach ($rsdet as $rowdet) {
-                      $detailitem["docdet"][]= array('docdesc'=>  $rowdet['meta_desc'] ,'indet'=>H::fa($rowdet['detam']) );
-                  
-               }    
-                
-                                
-            }    
+                ";
+                $rsdet = $conn->Execute($sqldet);
+                $detailitem["docdet"] =array();
+                foreach ($rsdet as $rowdet) {
+                    $detailitem["docdet"][]= array('docdesc'=>  $rowdet['meta_desc'] ,'indet'=>H::fa($rowdet['detam']) );
+
+                }
+
+
+            }
             $detail[]= $detailitem;
             $tin += $row['am'];
         }
@@ -141,16 +140,16 @@ class PayBalance extends \App\Pages\Base
         ";
 
         $rs = $conn->Execute($sql);
-         $tout = 0;
+        $tout = 0;
         foreach ($rs as $row) {
-               $detailitem = array();
-            
-                $detailitem["out"]   = H::fa(0-$row['am']);
-                $detailitem["type"] = $pl[$row['iotype'] ] ;
-                $detailitem["docdet"] = false ;
-               if($det){
-                   
-                    $sqldet = " 
+            $detailitem = array();
+
+            $detailitem["out"]   = H::fa(0-$row['am']);
+            $detailitem["type"] = $pl[$row['iotype'] ] ;
+            $detailitem["docdet"] = false ;
+            if($det) {
+
+                $sqldet = " 
                      SELECT  meta_desc,coalesce(sum(i.amount),0) as detam  
                          FROM iostate i join documents_view d on i.document_id=d.document_id
                          WHERE    
@@ -159,19 +158,19 @@ class PayBalance extends \App\Pages\Base
                           AND  d.document_date  <= " . $conn->DBDate($to) . "
                           GROUP BY  meta_desc order  by  meta_desc  
                                      
-                    "; 
-                   $rsdet = $conn->Execute($sqldet);
-                   $detailitem["docdet"] =array();
-                   foreach ($rsdet as $rowdet) {
-                      $detailitem["docdet"][]= array('docdesc'=>  $rowdet['meta_desc'] ,'indet'=>H::fa(0-$rowdet['detam']) );
-                      
-                   }    
-                    
-                                    
-                }    
-    
-                $detail2[]= $detailitem;
-                $tout +=  (0-$row['am']);
+                    ";
+                $rsdet = $conn->Execute($sqldet);
+                $detailitem["docdet"] =array();
+                foreach ($rsdet as $rowdet) {
+                    $detailitem["docdet"][]= array('docdesc'=>  $rowdet['meta_desc'] ,'indet'=>H::fa(0-$rowdet['detam']) );
+
+                }
+
+
+            }
+
+            $detail2[]= $detailitem;
+            $tout +=  (0-$row['am']);
         }
 
         $total = $tin - $tout;
@@ -229,7 +228,7 @@ class PayBalance extends \App\Pages\Base
                          
         ";
 
-        $amount = $conn->GetOne($sql); //ТМЦ  на складах       
+        $amount = $conn->GetOne($sql); //ТМЦ  на складах
 
         if ($amount > 0) {
             $inv += $amount;
@@ -252,4 +251,3 @@ class PayBalance extends \App\Pages\Base
     }
 
 }
- 

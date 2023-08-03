@@ -10,16 +10,15 @@ use Zippy\Html\Form\TextInput as TextInput;
 
 class UserLogin extends \Zippy\Html\WebPage
 {
-    
     private $cntlogin = 0;
 
     public function __construct() {
         parent::__construct();
-        
+
         System::clean() ;
         System::getSession()->clean();
 
-        
+
         $common = System::getOptions('common');
         \App\Session::getSession()->clipboard = null;
 
@@ -34,9 +33,9 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->add($form);
         $this->setError('');
 
-         
+
         $this->_tvars['curversion'] = \App\System::CURR_VERSION ;
-  
+
 
         $this->_tvars['appname'] = $common['shopname'];
         $this->_tvars['capcha'] = $common['capcha'] == 1;
@@ -82,8 +81,8 @@ class UserLogin extends \Zippy\Html\WebPage
                 $_SESSION['userlogin'] = $user->userlogin; //для  использования  вне  Application
                 //App::$app->getResponse()->toBack();
                 if ($this->loginform->remember->isChecked()) {
-                    setcookie("remember", $user->user_id . '_' . md5($user->user_id . $_config['common']['salt']), time() + 60 * 60 * 24 * 30);
-                }   else {
+                    setcookie("remember", $user->user_id . '_' . md5($user->user_id . Helper::getSalt()), time() + 60 * 60 * 24 * 30);
+                } else {
                     setcookie("remember", '', 0);
                 }
                 if ($_COOKIE['branch_id'] > 0) {
@@ -93,7 +92,7 @@ class UserLogin extends \Zippy\Html\WebPage
 
                 if ($modules['shop'] == 1) {
                     App::Redirect('\App\Pages\Main');
-                } else {    
+                } else {
                     App::RedirectHome();
                 }
                 return;
@@ -118,7 +117,7 @@ class UserLogin extends \Zippy\Html\WebPage
 
     public function setError($msg) {
 
-  
+
         $this->_tvars['alerterror'] = $msg;
     }
 
@@ -130,19 +129,19 @@ class UserLogin extends \Zippy\Html\WebPage
             $t = htmlspecialchars($t) ;
             $msg .= '<br>' . $t. ', ';
             $msg .= $_SERVER['HTTP_HOST'] . ' ' . $_SERVER['SERVER_ADDR'];
-    
+
             \App\Entity\Notify::toSystemLog($msg) ;
             \App\Entity\Notify::toAdmin($msg) ;
-   
-            
+
+
             $this->setError('Багато невдалих авторизацій. Адміністратору системи відправлено повідомлення');
             $this->loginform->setVisible(false);
             if (strlen($admin->email) > 0) {
-                Helper::sendLetter(   $admin->email, $msg, "Zippy Store alert");
+                Helper::sendLetter($admin->email, $msg, "Zippy Store alert");
             }
         }
 
-        //  $this->_tvars['alerterror'] = ''; 
+        //  $this->_tvars['alerterror'] = '';
     }
 
 }

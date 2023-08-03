@@ -12,7 +12,6 @@ use Zippy\WebApplication as App;
 
 class Options extends \App\Pages\Base
 {
-
     public function __construct() {
         parent::__construct();
 
@@ -125,24 +124,24 @@ class Options extends \App\Pages\Base
         @unlink(_ROOT . "upload/arealist.dat");
         @unlink(_ROOT . "upload/citylist.dat");
         @unlink(_ROOT . "upload/pointlist.dat");
-        
+
         @mkdir(_ROOT . "upload") ;
-        
+
         $api = new Helper();
 
         $areas = array();
         $tmplist = $api->getAreas();
-        if($tmplist['success']==FALSE) {
+        if($tmplist['success']==false) {
             if(count($tmplist['errors'])>0) {
                 $this->setError(array_pop($tmplist['errors'])) ;
                 return;
             }
             if(count($tmplist['warnings'])>0) {
                 $this->setWarn(array_pop($tmplist['warnings'])) ;
-                
+
             }
-            
-        } 
+
+        }
         foreach ($tmplist['data'] as $a) {
             $areas[$a['Ref']] = $a['Description'];
         }

@@ -21,23 +21,22 @@ use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
 use Zippy\Html\Panel;
 use Zippy\Html\Link\SortLink;
-use \Zippy\Html\DataList\DataRow;
+use Zippy\Html\DataList\DataRow;
 
 /**
  * Страница контрагентов
  */
 class CustomerList extends \App\Pages\Base
 {
-
     private $_customer        = null;
-    public  $_fileslist       = array();
-    public  $_msglist         = array();
-    public  $_eventlist       = array();
-    public  $_contrtlist      = array();
-    public  $_leadstatuseslist = array();
-    public  $_leadsourceslist = array();
-    public  $_bonuses = array(); // бонусы  по  контраоентам
-    public  $_bonuslist = array(); //история бонусов  контрагента
+    public $_fileslist       = array();
+    public $_msglist         = array();
+    public $_eventlist       = array();
+    public $_contrtlist      = array();
+    public $_leadstatuseslist = array();
+    public $_leadsourceslist = array();
+    public $_bonuses = array(); // бонусы  по  контраоентам
+    public $_bonuslist = array(); //история бонусов  контрагента
 
     public function __construct($id = 0) {
         parent::__construct();
@@ -46,7 +45,7 @@ class CustomerList extends \App\Pages\Base
         }
         $this->_bonuses = Customer::getBonusAll()  ;
         $shop = System::getOptions("shop");
- 
+        $this->_customer = new Customer();
         $this->add(new Form('leadf'));
         $this->leadf->add(new CheckBox('chleads'))->onChange($this, 'OnLeadMode');
 
@@ -185,10 +184,10 @@ class CustomerList extends \App\Pages\Base
     public function customerlistOnRow($row) {
         $item = $row->getDataItem();
 
-          
-        $row->add(new ClickLink('customername',$this, 'editOnClick'))->setValue($item->customer_name);
-       
-       
+
+        $row->add(new ClickLink('customername', $this, 'editOnClick'))->setValue($item->customer_name);
+
+
         $row->add(new Label('customerphone', $item->phone));
         $row->add(new Label('customeremail', $item->email));
         $row->add(new Label('leadstatus', $item->leadstatus));
@@ -207,27 +206,28 @@ class CustomerList extends \App\Pages\Base
         $row->add(new CheckBox('seldel', new \Zippy\Binding\PropertyBinding($item, 'seldel')));
 
         $row->setAttribute('style', $item->status == 1 ? 'color: #aaa' : null);
+
         if ($item->customer_id == $this->_customer->customer_id) {
             $row->setAttribute('class', 'table-success');
         }
-        
-      
-            $title="";
-            if(intval( $this->_bonuses[$item->customer_id]  ) > 0) {
-                $title= "Бонуси " . $this->_bonuses[$item->customer_id];                
-            }
-            $d = $item->getDiscount();
-            if(doubleval($d) > 0) {
-                  $title=  "Накопичувальна знижка " . Helper::fa($d) ."%";                
-            }
-            $d = $item->discount;   //постоянная  скидка
-            if(doubleval($d) > 0) {
-                  $title =  "Постійна знижка " . Helper::fa($d). "%";                
-            }
-            $row->add(new Label('hasaction'))->setVisible(strlen($title)>0);
-            
-            $row->hasaction->setAttribute('title',$title)  ;          
-                 
+
+
+        $title="";
+        if(intval($this->_bonuses[$item->customer_id] ??null) > 0) {
+            $title= "Бонуси " . $this->_bonuses[$item->customer_id];
+        }
+        $d = $item->getDiscount();
+        if(doubleval($d) > 0) {
+            $title=  "Накопичувальна знижка " . Helper::fa($d) ."%";
+        }
+        $d = $item->discount;   //постоянная  скидка
+        if(doubleval($d) > 0) {
+            $title =  "Постійна знижка " . Helper::fa($d). "%";
+        }
+        $row->add(new Label('hasaction'))->setVisible(strlen($title)>0);
+
+        $row->hasaction->setAttribute('title', $title)  ;
+
     }
 
     public function onSort($sender) {
@@ -311,7 +311,7 @@ class CustomerList extends \App\Pages\Base
 
         $this->_customer->customer_name = $this->customerdetail->editcustomername->getText();
         $this->_customer->customer_name = trim($this->_customer->customer_name);
-         
+
         if ($this->_customer->customer_name == '') {
             $this->setError("Не введено назву");
             return;
@@ -382,12 +382,12 @@ class CustomerList extends \App\Pages\Base
             $this->_customer->createdon = time();
             $this->_customer->user_id = System::getUser()->user_id;
         }
-        
-        
+
+
         $pass = $this->customerdetail->editpassword->getText();
         $confirm = $this->customerdetail->editconfirm->getText();
 
-        if ( strlen($pass)>0 ) {
+        if (strlen($pass)>0) {
             if ($confirm == '') {
                 $this->setError('Підтвердіть пароль');
                 return;
@@ -398,12 +398,12 @@ class CustomerList extends \App\Pages\Base
                     return;
                 }
             }
-            
+
             $this->_customer->passw = $pass;
-            
-        }        
-        
-        
+
+        }
+
+
         $this->_customer->save();
         $this->customerdetail->setVisible(false);
         $this->customertable->setVisible(true);
@@ -592,7 +592,7 @@ class CustomerList extends \App\Pages\Base
     }
     private function updateBonus() {
         $this->_bonuslist = $this->_customer->getBonuses();
-        $this->contentview->dw_bonus->Reload();        
+        $this->contentview->dw_bonus->Reload();
     }
 
     //вывод строки  коментария
@@ -623,10 +623,10 @@ class CustomerList extends \App\Pages\Base
         $row->add(new ClickLink('contract'))->onClick($this, 'contractOnClick');
         $row->contract->setValue($contr->contract_number);
     }
-  
+
     public function bonusListOnRow(DataRow $row) {
         $b = $row->getDataItem();
-        $row->add(new Label('b_date', Helper::fd($b->paydate) ));
+        $row->add(new Label('b_date', Helper::fd($b->paydate)));
         $row->add(new Label('b_doc', $b->document_number));
         $row->add(new Label('b_bonus', $b->bonus));
 
@@ -787,18 +787,18 @@ class CustomerList extends \App\Pages\Base
 
         $gr1=[];
         $gr1[]=["name","amount"] ;
-        
+
         foreach ($rs as $row) {
-            
-            $gr1[]=[$row['leadstatus'], intval( $row['cnt'])];
-            
+
+            $gr1[]=[$row['leadstatus'], intval($row['cnt'])];
+
         }
-       
-    
+
+
         $this->_tvars['gr1'] = json_encode($gr1);
-            
-        
-        
+
+
+
         $sql = " 
          SELECT   leadsource,coalesce(count(*),0) as cnt   FROM customers 
              WHERE   
@@ -809,19 +809,19 @@ class CustomerList extends \App\Pages\Base
         ";
         $gr2=[];
         $gr2[]=["name","amount"] ;
-    
+
         $rs = $conn->Execute($sql);
- 
+
 
         foreach ($rs as $row) {
-      
-         $gr2[]=[$row['leadsource'], intval( $row['cnt'])];
-               
-            
+
+            $gr2[]=[$row['leadsource'], intval($row['cnt'])];
+
+
         }
-      
+
         $this->_tvars['gr2'] = json_encode($gr2);
-     
+
         $sql = " 
          SELECT   leadsource,coalesce(count(*),0) as cnt   FROM customers 
              WHERE   
@@ -832,16 +832,16 @@ class CustomerList extends \App\Pages\Base
         ";
 
         $rs = $conn->Execute($sql);
- 
+
         $gr3=[];
         $gr3[]=["name","amount"] ;
-     
+
         foreach ($rs as $row) {
-            $gr3[]=[$row['leadsource'], intval( $row['cnt'])];
-            
+            $gr3[]=[$row['leadsource'], intval($row['cnt'])];
+
         }
         $this->_tvars['gr3'] = json_encode($gr3);
-        
+
     }
 
     public function closeStat($sender) {
@@ -892,7 +892,6 @@ class CustomerList extends \App\Pages\Base
 
 class CustomerDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {
@@ -935,7 +934,7 @@ class CustomerDataSource implements \Zippy\Interfaces\DataSource
             if ($type == 10) {
                 $where .= " and status = 1    ";
             }
-            
+
         } else {
             $searchleadsource = $this->page->filter->searchleadsource->getValue();
             $searchleadstatus = $this->page->filter->searchleadstatus->getValue();

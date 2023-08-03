@@ -10,7 +10,6 @@ namespace App\Modules\Note\Entity;
  */
 class TopicNode extends \ZCL\DB\Entity
 {
-
     protected function init() {
         $this->tn_id = 0;
     }
@@ -88,7 +87,7 @@ class TopicNode extends \ZCL\DB\Entity
         return $list;
     }
 
-    // поиск избранных 
+    // поиск избранных
     public static function searchFav() {
 
         $sql = "  select * from note_topicnodeview   where topic_id in (select  topic_id from note_fav where user_id = " . \App\System::getUser()->user_id . ") ";

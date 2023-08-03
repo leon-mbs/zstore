@@ -21,7 +21,6 @@ use Zippy\Html\Link\ClickLink;
  */
 class StockList extends \App\Pages\Base
 {
-
     private $_doc    = null;
     private $_ptlist = null;
 
@@ -111,7 +110,6 @@ class StockList extends \App\Pages\Base
  */
 class StockListDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {
@@ -153,13 +151,13 @@ class StockListDataSource implements \Zippy\Interfaces\DataSource
         $sql .= " join store_stock s on s.stock_id = e.stock_id ";
         $sql .= " where " . $this->getWhere() . " order  by  entry_id     ";
         if ($count > 0) {
-           
+
             $limit =" limit {$start},{$count}";
             if($conn->dataProvider=="postgres") {
                 $limit =" limit {$count} offset {$start}";
             }
-                  
-           
+
+
             $sql .= $limit;
         }
 

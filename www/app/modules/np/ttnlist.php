@@ -19,8 +19,7 @@ use Zippy\Html\DataList\ArrayDataSource;
 
 class TTNList extends \App\Pages\Base
 {
-
-    public  $_doclist = array();
+    public $_doclist = array();
     private $_apikey  = '';
 
     public function __construct() {
@@ -37,8 +36,8 @@ class TTNList extends \App\Pages\Base
         $this->_apikey = $modules['npapikey'];
         $this->add(new ClickLink('refresh', $this, 'onRefresh'));
         $this->add(new Form('searchform'))->onSubmit($this, 'onFilter');
-        $this->searchform->add(new TextInput('searchnumber' ));
-        $this->searchform->add(new DropDownChoice('searchcust' ));
+        $this->searchform->add(new TextInput('searchnumber'));
+        $this->searchform->add(new DropDownChoice('searchcust'));
 
         $this->add(new DataView('doclist', new ArrayDataSource($this, '_doclist'), $this, 'doclistOnRow'));
 
@@ -79,7 +78,7 @@ class TTNList extends \App\Pages\Base
             if (strlen($decl) == 0) {
                 continue;
             }
-          
+
 
             $st = $statuses[$decl]['Status'];
             $code = $statuses[$decl]['StatusCode'];
@@ -104,34 +103,38 @@ class TTNList extends \App\Pages\Base
 
             $this->_doclist[$ttn->document_id] = $ttn;
         }
-            if (count($errors) > 0) {
-                $this->setError(Implode('<br>', $errors));
-            } 
-            $this->setSuccess("Оновлено {$cnt} ТТН" );
+        if (count($errors) > 0) {
+            $this->setError(Implode('<br>', $errors));
+        }
+        $this->setSuccess("Оновлено {$cnt} ТТН");
 
         $this->doclist->Reload();
-        
+
         $this->searchform->searchnumber->setText('');
         $c = array();
-        
+
         foreach($this->_doclist as $d) {
-           $c[$d->customer_id] =  $d->customer_name;
+            $c[$d->customer_id] =  $d->customer_name;
         }
-        
+
         $this->searchform->searchcust->setOptionList($c);
-            
-        
+
+
     }
-    
+
     public function onFilter($sender) {
         $list = array();
         $cust =   $this->searchform->searchcust->getValue();
         $n =   $this->searchform->searchnumber->getText();
         foreach($this->_doclist as $d) {
-           if($cust >0 && $d->customer_id <> $cust) continue;
-           if( strlen($n) >0 && $d->headerdata['ship_number'] <> $n) continue;
-            
-           $list[$d->document_id] = $d;
+            if($cust >0 && $d->customer_id <> $cust) {
+                continue;
+            }
+            if(strlen($n) >0 && $d->headerdata['ship_number'] <> $n) {
+                continue;
+            }
+
+            $list[$d->document_id] = $d;
         }
         $this->_doclist = $list;
         $this->doclist->Reload();

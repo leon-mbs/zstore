@@ -10,7 +10,6 @@ namespace App\Entity;
  */
 class Employee extends \ZCL\DB\Entity
 {
-
     protected function init() {
         $this->employee_id = 0;
         $this->balance = 0;

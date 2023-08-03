@@ -12,7 +12,6 @@ use App\Helper as H;
  */
 class ServiceAct extends Document
 {
-
     public function generateReport() {
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
 
@@ -57,18 +56,18 @@ class ServiceAct extends Document
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false,
                         "total"           => H::fa($this->amount)
         );
-        
+
         if(strlen($firm['phone']) > 0) {
-             $header['firm_name']  =   $header['firm_name'] .', '. $firm['phone'] ;
-        }       
+            $header['firm_name']  =   $header['firm_name'] .', '. $firm['phone'] ;
+        }
         if($this->customer_id > 0) {
-             $c = \App\Entity\Customer::load($this->customer_id) ; 
-             if(strlen($c->phone)>0) {
-                 $header['customer_name']  =   $header['customer_name'] .', '. $c->phone ;    
-             }
-             
-        }       
-        
+            $c = \App\Entity\Customer::load($this->customer_id) ;
+            if(strlen($c->phone)>0) {
+                $header['customer_name']  =   $header['customer_name'] .', '. $c->phone ;
+            }
+
+        }
+
         if ($this->headerdata["contract_id"] > 0) {
             $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);
             $header['contract'] = $contract->contract_number;
@@ -76,7 +75,7 @@ class ServiceAct extends Document
         }
 
         $header['isfinished'] =  $this->checkStates(array(self::STATE_FINISHED)) > 0;
-   
+
         $report = new \App\Report('doc/serviceact.tpl');
 
         $html = $report->generate($header);
@@ -84,89 +83,89 @@ class ServiceAct extends Document
         return $html;
     }
 
- 
-     protected function onState($state,$oldstate) {
+
+    protected function onState($state, $oldstate) {
         $conn = \ZDB\DB::getConnect();
 
-    
+
         if ($state == self::STATE_INPROCESS) {
-          
 
-             if($this->payed >0) {
-                 $this->DoPayment() ;    
-             }
-             
-             
-             $this->DoStore() ;
 
-              
-            
+            if($this->payed >0) {
+                $this->DoPayment() ;
+            }
+
+
+            $this->DoStore() ;
+
+
+
         }
-        
-        
-         if ($state == self::STATE_FINISHED) {
-             
-           $this->DoStore() ;             
-             
-           $dd =      doubleval($this->headerdata['totaldisc'] )   ;
-           $k = 1;   //учитываем  скидку
-           if ($dd > 0 && $this->amount > 0) {
-               $k = ($this->amount - $dd) / $this->amount;
-           }
-           
-           foreach ($this->unpackDetails('detaildata') as $ser) {
+
+
+        if ($state == self::STATE_FINISHED) {
+
+            $this->DoStore() ;
+
+            $dd =      doubleval($this->headerdata['totaldisc'])   ;
+            $k = 1;   //учитываем  скидку
+            if ($dd > 0 && $this->amount > 0) {
+                $k = ($this->amount - $dd) / $this->amount;
+            }
+
+            foreach ($this->unpackDetails('detaildata') as $ser) {
 
                 $sc = new Entry($this->document_id, 0 - ($ser->price * $ser->quantity), 0 - $ser->quantity);
                 $sc->setService($ser->service_id);
 
                 $sc->setOutPrice($ser->price * $k);
-            
-         
+
+
                 $sc->save();
             }
-                  
-         }        
-        
+
+        }
+
     }
-  
+
     public function DoPayment() {
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment']);
-            if ($payed > 0) {
-                $this->payed = $payed;
-            }
-            \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
-            
+        $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment']);
+        if ($payed > 0) {
+            $this->payed = $payed;
+        }
+        \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+
     }
-    
+
     public function DoStore() {
-     
-           $conn = \ZDB\DB::getConnect();
-           $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
-  
-           $dd =      doubleval($this->headerdata['totaldisc'] )   ;
-           $k = 1;   //учитываем  скидку
-           if ($dd > 0 && $this->amount > 0) {
-               $k = ($this->amount - $dd) / $this->amount;
-           }
-  
- 
- 
-           foreach ($this->unpackDetails('detail2data') as $item) {
 
-                $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
+        $conn = \ZDB\DB::getConnect();
+        $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
 
-                foreach ($listst as $st) {
-                    $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
-                    $sc->setStock($st->stock_id);
+        $dd =      doubleval($this->headerdata['totaldisc'])   ;
+        $k = 1;   //учитываем  скидку
+        if ($dd > 0 && $this->amount > 0) {
+            $k = ($this->amount - $dd) / $this->amount;
+        }
 
-                    $sc->setOutPrice($item->price * $k );
-                    $sc->tag = Entry::TAG_SELL;
-                    $sc->save();
-                   
-                }
-            } 
+
+
+        foreach ($this->unpackDetails('detail2data') as $item) {
+
+            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
+
+            foreach ($listst as $st) {
+                $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
+                $sc->setStock($st->stock_id);
+
+                $sc->setOutPrice($item->price * $k);
+                $sc->tag = Entry::TAG_SELL;
+                $sc->save();
+
+            }
+        }
     }
-    
+
     public function supportedExport() {
         return array(self::EX_EXCEL, self::EX_PDF, self::EX_POS);
     }
@@ -230,11 +229,11 @@ class ServiceAct extends Document
         $header['isitems'] = count($detail2) > 0;
 
         $header['ilist'] = $detail2;
-        
-       
+
+
         $header['istotal'] = $header['total'] > 0   ;
 
-        
+
         $pays = \App\Entity\Pay::getPayments($this->document_id);
         if (count($pays) > 0) {
             $header['plist'] = array();
@@ -245,11 +244,11 @@ class ServiceAct extends Document
         $header['ispay'] = count($pays) > 0;
 
 
-        if($ps)   {
-          $report = new \App\Report('doc/serviceact_bill_ps.tpl');
+        if($ps) {
+            $report = new \App\Report('doc/serviceact_bill_ps.tpl');
+        } else {
+            $report = new \App\Report('doc/serviceact_bill.tpl');
         }
-        else 
-          $report = new \App\Report('doc/serviceact_bill.tpl');
 
         $html = $report->generate($header);
 

@@ -8,15 +8,14 @@ namespace App;
  */
 class Filter
 {
-
     private $data = array();
 
-    public final function __set($name, $value) {
+    final public function __set($name, $value) {
         $this->data[$name] = $value;
     }
 
-    public final function __get($name) {
-        return @$this->data[$name];
+    final public function __get($name) {
+        return $this->data[$name] ?? "";
     }
 
     /**
@@ -26,7 +25,7 @@ class Filter
      * @return Filter
      */
     public static function getFilter($name) {
-        $filter = \App\System::getSession()->filter[$name];
+        $filter = \App\System::getSession()->filter[$name] ?? null;
 
         if (!isset($filter)) {
             $filter = new Filter();

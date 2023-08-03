@@ -12,7 +12,6 @@ use Zippy\WebApplication as App;
 
 class Options extends \App\Pages\Base
 {
-
     public function __construct() {
         parent::__construct();
 
@@ -29,7 +28,7 @@ class Options extends \App\Pages\Base
         $form->add(new TextInput('site', $modules['wcsite']));
         $form->add(new TextInput('keyc', $modules['wckeyc']));
         $form->add(new TextInput('keys', $modules['wckeys']));
-        
+
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['wcpricetype']));
         $form->add(new DropDownChoice('api', array('v3' => 'v3', 'v2' => 'v2', 'v1' => 'v1'), $modules['wcapi']));
         $form->add(new CheckBox('ssl', $modules['wcssl']));
@@ -48,10 +47,10 @@ class Options extends \App\Pages\Base
         $api = $this->cform->api->getValue();
         $ssl = $this->cform->ssl->isChecked() ? 1 : 0;
         $setpayamount = $this->cform->setpayamount->isChecked() ? 1 : 0;
-        
+
         $pricetype = $this->cform->defpricetype->getValue();
         $salesource = $this->cform->salesource->getValue();
-     
+
         if (strlen($pricetype) < 2) {
             $this->setError('Не вказано тип ціни');
             return;

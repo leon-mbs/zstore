@@ -10,9 +10,7 @@
             <div class="col-12 col-md-4 col-xl-3   " >
                 <h3>АРМ кухнi</h3>
                 
-                <div id="newordersalert" style="display:none;"  class="alert alert-success  ml-4"  >
-                    <span id="neworderscnt"></span>
-                </div>   
+          
             </div>
             <div class="col-12 col-md-4 col-xl-3   " >
              <i id="bell"  style="cursor:pointer"  onclick="onBell( )" title="Звукове повiдомлення" class="fa fa-bell-slash text-secondary"></i>  
@@ -22,76 +20,86 @@
             <div class="w-100"></div>
     {{={| |}=}}             
   <div  id="vapp" class="col-12 col-md-10 col-lg-8" >
-        <a onclick="updateItems()" href="javascript:void(0)"   class="btn btn-info">Оновити</a>
-        
+        <input id="forbar"  class="ml-2" type="checkbox" v-model="forbar"  > <label for="forbar">Бар</label> <a onclick="updateItems()" href="javascript:void(0)"   class="btn btn-info  ml-2">Оновити</a>
+         
         <table class="table table-striped">
     <tr v-for="item, index in itemlist">
         <td>{{item.ordern}}</td>
         <td>{{item.name}}</td> 
         <td>{{item.qty}}</td> 
         <td>{{item.notes}}</td> 
-        <td><a    v-on:click="onReady(item.document_id,item.item_id, index) " class="btn btn-success">Готово</a></td> 
+        <td>
+           <i v-show="item.techcard != ''"  class="fa fa-cocktail   popinfo" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover"
+                  data-placement="bottom" v-bind:data-content="item.techcard" ></i>          
+        
+        </td> 
+        <td><a    v-on:click="onReady(item.document_id,item.rowid, index) " class="btn btn-success">Готово</a></td> 
     </tr>    
         </table>
-        <paginator></paginator>
+        
    
   </div>
              </div>
             {|={{ }}=|}
-            <script>
-            
-                function onBell(){
-                    $("#bell").attr('class','fa fa-bell  text-success')
-                    // beep()
-                }
-               
-            
-                window.setInterval(onNewOrder, 5000);
-
-            
+        <script>
+        
+            function onBell(){
+                $("#bell").attr('class','fa fa-bell  text-success')
+                // beep()
+            }
+        
+            window.setInterval(onNewOrder, 5000);
      
     
-     var vapp = new Vue({
-            el: '#vapp',
-       
-      data() {return  {
-          itemlist:[]
-      }    }  ,
-     components: {
-          'paginator': httpVueLoader('/assets/js/vue/paginator.vue')
-   
-        }, 
-        methods: {
-             onReady( document_id,item_id, index) {
+          var vapp = new Vue({
+                el: '#vapp',
+           
+          data() {
+              return  {
+                 forbar:false ,
+                 itemlist:[]
+               }   
+          }  ,
+          methods: {
+             onReady( document_id,rowid, index) {
                  // onBell()
-                  $('#newordersalert').hide();
-                  callPageMethod('onReady',[document_id,item_id],null,(data)=> 
+                
+                  callPM('onReady',[document_id,rowid],null,(data)=> 
                   {
+                      if(false==checkPMAnswer(data) )   {
+                           return
+                      }
+                      
                       this.updateItems() ;
                   });     
              
            } ,
            
-        updateItems(){
+          updateItems(){
             
       
             
-          callPageMethod('getItems',null,null,(data)=> 
-          {
-                   
-              this.itemlist= JSON.parse(data)  
+              callPageMethod('getItems',[this.forbar],null,(data)=> 
+              {
+                       
+                  this.itemlist= JSON.parse(data)  
+                  $('.popinfo').popover();            
               
-          
-          });
-            
-      }           
-        }      
+              });
+                
+          }           
+        },
+        
+        mounted: function  (){ 
+
+          this.updateItems() ;  
+        }     
       
     })   
 
     function updateItems() {
       vapp.updateItems() ;
-  }
+    }
   
   
              function onNewOrder() {
@@ -109,8 +117,8 @@
                              
                                 
                                 if(answer.cnt > 0){
-                                   $('#newordersalert').show();
-                                   $('#neworderscnt').text('Нових замовлень ' + answer.cnt);
+
+                                   toastr.info( 'Нових замовлень ' + answer.cnt +' ' ,'',{'timeOut':'5000'})
                                    beep()
                                    updateItems() 
                                 }
@@ -130,11 +138,4 @@
 
     </body>
 </html>
- const app = Vue.createApp({
-  methods: {
-    initialize() { /* ... */ }
-  }
-});
-
-const vm = app.mount("#app");
-vm.initialize();
+ 

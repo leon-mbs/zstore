@@ -17,7 +17,6 @@ use Zippy\WebApplication as App;
 
 class Import extends \App\Pages\Base
 {
-
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowSer('Import')) {
@@ -28,7 +27,7 @@ class Import extends \App\Pages\Base
         $form = $this->add(new Form("iform"));
 
         $form->add(new DropDownChoice("itype", array(), 0))->onChange($this, "onType");
-        
+
         $form->add(new DropDownChoice("icompare", array(), 0));
 
         $form->add(new DropDownChoice("item_type", Item::getTypes(), Item::TYPE_TOVAR));
@@ -49,27 +48,27 @@ class Import extends \App\Pages\Base
 
         $pt = \App\Entity\Item::getPriceTypeList();
 
-        $form->add(new Label('pricename1', $pt['price1']));
-        $form->add(new Label('pricename2', $pt['price2']));
-        $form->add(new Label('pricename3', $pt['price3']));
-        $form->add(new Label('pricename4', $pt['price4']));
-        $form->add(new Label('pricename5', $pt['price5']));
+        $form->add(new Label('pricename1', $pt['price1'] ??''));
+        $form->add(new Label('pricename2', $pt['price2'] ??''));
+        $form->add(new Label('pricename3', $pt['price3'] ??''));
+        $form->add(new Label('pricename4', $pt['price4'] ??''));
+        $form->add(new Label('pricename5', $pt['price5'] ??''));
 
         $form->add(new DropDownChoice("colprice1", $cols))->setVisible(strlen($pt['price1'])>0);
         $form->add(new DropDownChoice("colprice2", $cols))->setVisible(strlen($pt['price2'])>0);
         $form->add(new DropDownChoice("colprice3", $cols))->setVisible(strlen($pt['price3'])>0);
         $form->add(new DropDownChoice("colprice4", $cols))->setVisible(strlen($pt['price4'])>0);
         $form->add(new DropDownChoice("colprice5", $cols))->setVisible(strlen($pt['price5'])>0);
-       
-        
-        
+
+
+
         $form->add(new DropDownChoice("colinprice", $cols));
         $form->add(new DropDownChoice("colmsr", $cols));
         $form->add(new DropDownChoice("colbrand", $cols));
         $form->add(new DropDownChoice("coldesc", $cols));
         $form->add(new CheckBox("passfirst"));
         $form->add(new CheckBox("preview"));
-        
+
         $form->add(new CheckBox("noshowprice"));
         $form->add(new CheckBox("noshowshop"));
 
@@ -114,13 +113,31 @@ class Import extends \App\Pages\Base
 
         $form->onSubmit($this, "onCImport");
 
+
+        //заказ
+        $form = $this->add(new Form("zform"));
+
+
+        $form->add(new AutocompleteTextInput("zcust"))->onText($this, 'OnAutoCustomer');
+        $form->add(new \Zippy\Html\Form\File("zfilename"));
+
+        $form->add(new DropDownChoice("zcolname", $cols));
+        $form->add(new DropDownChoice("zcolcode", $cols));
+        $form->add(new DropDownChoice("zcolqty", $cols));
+        $form->add(new DropDownChoice("zcolprice", $cols));
+        $form->add(new CheckBox("zpassfirst"));
+        $form->add(new CheckBox("zpreview"));
+
+        $form->onSubmit($this, "oZImport");
+
+        
         
         $form = $this->add(new Form("oform"));
         $form->add(new \Zippy\Html\Form\File("ofilename"));
         $form->onSubmit($this, "onOImport");
-        
-        
-        
+
+
+
         $this->_tvars['preview'] = false;
         $this->_tvars['preview2'] = false;
         $this->_tvars['preview3'] = false;
@@ -136,9 +153,9 @@ class Import extends \App\Pages\Base
         $this->iform->colqty->setVisible($t == 1);
         $this->iform->store->setVisible($t == 1);
         $this->iform->colinprice->setVisible($t == 1);
- 
 
-   
+
+
     }
 
     public function onImport($sender) {
@@ -171,8 +188,8 @@ class Import extends \App\Pages\Base
         $colimage = $this->iform->colimage->getValue();
         $colshortname = $this->iform->colshortname->getValue();
         $colwar = $this->iform->colwar->getValue();
-     
-      
+
+
         if ($t == 1 && $colqty === '0') {
             $this->setError('Не вказано колонку з кількістю');
             return;
@@ -205,11 +222,11 @@ class Import extends \App\Pages\Base
         unset($oSpreadsheet);
 
         $catlist=array();
-        
-        foreach(Category::findArray('cat_name','') as $cid =>$cname) {
-             $catlist[$cname]= $cid;
+
+        foreach(Category::findArray('cat_name', '') as $cid =>$cname) {
+            $catlist[$cname]= $cid;
         }
-        
+
         if ($preview) {
 
             $this->_tvars['preview'] = true;
@@ -261,12 +278,12 @@ class Import extends \App\Pages\Base
             $qty = str_replace(',', '.', trim($row[$colqty]));
 
             $cat_id = 0;
-            
+
             if (strlen($catname) > 0) {
-                
+
                 if ($catlist[$catname] >0) {
                     $cat_id = $catlist[$catname] ;
-                }  else {
+                } else {
                     $cat = new Category();
                     $cat->cat_name = $catname;
                     $cat->save();
@@ -275,30 +292,30 @@ class Import extends \App\Pages\Base
                 }
             }
             $item = null;
- 
-            //поиск существующих
-            if($cmp==0 && strlen($itemcode) > 0){
-               $item = Item::getFirst('item_code=' . Item::qstr($itemcode)); 
-            }
-            if($cmp==1 && strlen($itemname) > 0){
-               $item = Item::getFirst('itemname=' . Item::qstr($itemname)); 
-            }
-            if($cmp==2 && strlen($itemname) > 0 && strlen($brand) > 0){
-               $item = Item::getFirst('itemname=' . Item::qstr($itemname). ' and manufacturer='. Item::qstr($brand) ); 
-            }
-  
-            if($cmp==3 && strlen($itemcode) > 0 && strlen($brand) > 0){
-               $item = Item::getFirst('item_code=' . Item::qstr($itemcode). ' and manufacturer='. Item::qstr($brand) ); 
-            }
-  
 
-            if ($item == null ) {
+            //поиск существующих
+            if($cmp==0 && strlen($itemcode) > 0) {
+                $item = Item::getFirst('item_code=' . Item::qstr($itemcode));
+            }
+            if($cmp==1 && strlen($itemname) > 0) {
+                $item = Item::getFirst('itemname=' . Item::qstr($itemname));
+            }
+            if($cmp==2 && strlen($itemname) > 0 && strlen($brand) > 0) {
+                $item = Item::getFirst('itemname=' . Item::qstr($itemname). ' and manufacturer='. Item::qstr($brand));
+            }
+
+            if($cmp==3 && strlen($itemcode) > 0 && strlen($brand) > 0) {
+                $item = Item::getFirst('item_code=' . Item::qstr($itemcode). ' and manufacturer='. Item::qstr($brand));
+            }
+
+
+            if ($item == null) {
                 if(strlen($itemname) == 0) {
                     continue;
                 }
                 $item = new Item();
             }
-            
+
             if (strlen($itemname) > 0) {
                 $item->itemname = trim($itemname);
             }
@@ -348,14 +365,14 @@ class Import extends \App\Pages\Base
             if ($qty > 0) {
                 $item->quantity = $qty;
             }
-           
+
             if ($cat_id > 0) {
                 $item->cat_id = $cat_id;
             }
             if ($item_type > 0) {
                 $item->item_type = $item_type;
             }
- 
+
             $item->amount = $item->quantity * $item->price;
 
             $item->noprice = $this->iform->noshowprice->isChecked() ? 1 : 0;
@@ -364,22 +381,24 @@ class Import extends \App\Pages\Base
             $item->save();
             $cnt++;
             if ($item->quantity > 0) {
-                $newitems[] = $item; //для склада   
+                $newitems[] = $item; //для склада
             }
-            
-          
-           // $image="http://local.zstore/assets/images/logo.png";
-            
+
+
+            // $image="http://local.zstore/assets/images/logo.png";
+
             if (strlen($image) > 0) {
                 $file = file_get_contents($image) ;
-                if(strlen($file)==0)  continue;
-                $tmp = tempnam(sys_get_temp_dir(),"import") ;
-                file_put_contents($tmp,$file) ;
-                
+                if(strlen($file)==0) {
+                    continue;
+                }
+                $tmp = tempnam(sys_get_temp_dir(), "import") ;
+                file_put_contents($tmp, $file) ;
+
                 $imagedata = getimagesize($tmp);
                 if ($imagedata== false) {
                     continue;
-                    
+
                 }
                 $image = new \App\Entity\Image();
                 $image->content = file_get_contents($tmp);
@@ -399,25 +418,25 @@ class Import extends \App\Pages\Base
                     $thumb->resize(256, 256);
                     $image->thumb = $thumb->getImageAsString();
                     $thumb->resize(64, 64);
-                    
+
                     $item->thumb = "data:{$image->mime};base64," . base64_encode($thumb->getImageAsString());
                 }
                 $conn =   \ZDB\DB::getConnect();
                 if($conn->dataProvider=='postgres') {
-                  $image->thumb = pg_escape_bytea($image->thumb);
-                  $image->content = pg_escape_bytea($image->content);
-                    
+                    $image->thumb = pg_escape_bytea($image->thumb);
+                    $image->content = pg_escape_bytea($image->content);
+
                 }
 
                 $image->save();
                 $item->image_id = $image->image_id;
                 $item->save();
-           
-                    
-                
+
+
+
             }
-              
-            
+
+
         }
         if (count($newitems) > 0) {
             $doc = \App\Entity\Doc\Document::create('IncomeItem');
@@ -554,7 +573,7 @@ class Import extends \App\Pages\Base
             }
         }
 
-        $this->setSuccess("Імпортовано {$cnt} контрагентів "  );
+        $this->setSuccess("Імпортовано {$cnt} контрагентів ");
     }
 
     public function onNImport($sender) {
@@ -643,13 +662,13 @@ class Import extends \App\Pages\Base
             $itemcode = trim($row[$colcode]);
             if (strlen($itemname) > 0) {
 
-                if (strlen($itemcode) > 0) {
-                    $item = Item::getFirst('item_code=' . Item::qstr($itemcode));
-                }
                 if (strlen($itemname) > 0) {
                     $item = Item::getFirst('itemname=' . Item::qstr($itemname));
                 }
-   
+                if (strlen($itemcode) > 0) {
+                    $item = Item::getFirst('item_code=' . Item::qstr($itemcode));
+                }
+
 
                 $price = str_replace(',', '.', trim($row[$colprice]));
                 $qty = str_replace(',', '.', trim($row[$colqty]));
@@ -696,7 +715,7 @@ class Import extends \App\Pages\Base
             $doc->amount = H::fa($amount);
             $doc->payamount = 0;
             $doc->payed = 0;
-            $doc->notes = 'Импорт с Excel';
+            $doc->notes = 'Імпорт з Excel';
             $doc->headerdata['store'] = $store;
             $doc->customer_id = $c;
             $doc->headerdata['customer_name'] = $this->nform->ncust->getText();
@@ -706,54 +725,191 @@ class Import extends \App\Pages\Base
             App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", $doc->document_id);
         }
     }
-
+ 
+ 
+   public function oZImport($sender) {
     
-  public function onOImport($sender) {
+        $c = $this->яform->zcust->getKey();
+        //$checkname = $this->nform->ncheckname->isChecked();
+
+        $preview = $this->zform->zpreview->isChecked();
+        $passfirst = $this->zform->zpassfirst->isChecked();
+        $this->_tvars['preview4'] = false;
+
+        $colname = $this->zform->zcolname->getValue();
+        $colcode = $this->zform->zcolcode->getValue();
+        $colbarcode = $this->zform->zcolbarcode->getValue();
+        $colqty = $this->zform->zcolqty->getValue();
+        $colprice = $this->zform->zcolprice->getValue();
+
+        if ($colname === '0') {
+            $this->setError('Не вказано колонку з назвою');
+            return;
+        }
+        if ($colqty === '0') {
+            $this->setError('Не вказано колонку з кількістю');
+            return;
+        }
+
+        if ($c == 0) {
+            $this->setError('Не обрано покупця');
+            return;
+        }
+
+        $file = $this->zform->zfilename->getFile();
+        if (strlen($file['tmp_name']) == 0) {
+
+            $this->setError('Не вибраний файл');
+            return;
+        }
+
+        $data = array();
+        $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']); // Вариант и для xls и xlsX
+
+
+        $oCells = $oSpreadsheet->getActiveSheet()->getCellCollection();
+
+        for ($iRow = ($passfirst ? 2 : 1); $iRow <= $oCells->getHighestRow(); $iRow++) {
+
+            $row = array();
+            for ($iCol = 'A'; $iCol <= $oCells->getHighestColumn(); $iCol++) {
+                $oCell = $oCells->get($iCol . $iRow);
+                if ($oCell) {
+                    $row[$iCol] = $oCell->getValue();
+                }
+            }
+            $data[$iRow] = $row;
+        }
+
+        unset($oSpreadsheet);
+
+        if ($preview) {
+
+            $this->_tvars['preview4'] = true;
+            $this->_tvars['list'] = array();
+            foreach ($data as $row) {
+
+                $this->_tvars['list'][] = array(
+                    'colname'    => $row[$colname],
+                    'colcode'    => $row[$colcode],
+                 
+                    'colqty'     => $row[$colqty],
+                    'colprice'   => $row[$colprice]
+                );
+            }
+            return;
+        }
+
+        $cnt = 0;
+        $items = array();
+        foreach ($data as $row) {
+
+
+            $item = null;
+            $itemname = trim($row[$colname]);
+            $itemcode = trim($row[$colcode]);
+
+            if (strlen($itemname) > 0) {
+
+                if (strlen($itemname) > 0) {
+                    $item = Item::getFirst('itemname=' . Item::qstr($itemname));
+                }
+                if (strlen($itemcode) > 0) {
+                    $code = Item::qstr($itemcode) ;
+                    $item = Item::getFirst("item_code={$code} or bar_code={$code}");
+                }
+
+
+                $price = str_replace(',', '.', trim($row[$colprice]));
+                $qty = str_replace(',', '.', trim($row[$colqty]));
+
+                if ($item == null) {
+                    $this->setError("Не знайдоно товар {$itemname} {$itemcode}");
+                    return;
+                }
+                if ($qty > 0) {
+                    $item->price = $price;
+                    $item->quantity = $qty;
+
+                    $items[] = $item;
+                }
+            }
+        }
+        if (count($items) > 0) {
+            $doc = \App\Entity\Doc\Document::create('Order');
+            $doc->document_number = $doc->nextNumber();
+            if (strlen($doc->document_number) == 0) {
+                $doc->document_number = "З00001";
+            }
+            $doc->document_date = time();
+
+            $amount = 0;
+            $itlist = array();
+            foreach ($items as $item) {
+                $itlist[$item->item_id] = $item;
+                $amount = $amount + ($item->quantity * $item->price);
+            }
+            $doc->packDetails('detaildata', $itlist);
+            $doc->amount = H::fa($amount);
+            $doc->payamount = 0;
+            $doc->payed = 0;
+            $doc->notes = 'Імпорт з Excel';
+            $doc->customer_id = $c;
+            $doc->headerdata['customer_name'] = $this->zform->zcust->getText();
+
+            $doc->save();
+            $doc->updateStatus(\App\Entity\Doc\Document::STATE_NEW);
+            App::Redirect("\\App\\Pages\\Doc\\Order", $doc->document_id);
+        }
+    }
+
+
+    public function onOImport($sender) {
 
         $file = $this->oform->ofilename->getFile();
         if (strlen($file['tmp_name']) == 0) {
             $this->setError('Не вибраний файл');
             return;
         }
-       
+
         $conn= \ZDB\DB::getConnect() ;
-   
-         $xml = @simplexml_load_file($file['tmp_name']) ;
+
+        $xml = @simplexml_load_file($file['tmp_name']) ;
         if($xml==false) {
 
-           $logger->error("Невірний  контент" );
+            $logger->error("Невірний  контент");
 
-           return;
+            return;
         }
-            
+
         $list=[];
-            
+
         foreach ($xml->children() as $row) {
-            
-            
+
+
             $name= (string)$row->optname[0] ;
             $value= (string)$row->optvalue[0] ;
             $list[$name]=$value;
 
         }
-      
-      
+
+
         $conn->BeginTrans();
-      
-         
-        try {       
-      
-           foreach($list as $n=>$v) {
-               $n = $conn->qstr($n);
-               $v = $conn->qstr($v);
-               
-               $conn->Execute("delete from options where  optname={$n}")  ;
-               $conn->Execute("insert into options (optname,optvalue) values({$n},{$v}) ")  ;
-               
-           }
-            
-           $conn->CommitTrans();
-              
+
+
+        try {
+
+            foreach($list as $n=>$v) {
+                $n = $conn->qstr($n);
+                $v = $conn->qstr($v);
+
+                $conn->Execute("delete from options where  optname={$n}")  ;
+                $conn->Execute("insert into options (optname,optvalue) values({$n},{$v}) ")  ;
+
+            }
+
+            $conn->CommitTrans();
+
         } catch(\Throwable $ee) {
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());
@@ -761,9 +917,9 @@ class Import extends \App\Pages\Base
             return;
         }
 
-        
-        $this->setSuccess("Імпортовано  "  );
+
+        $this->setSuccess("Імпортовано  ");
     }
-    
-    
+
+
 }

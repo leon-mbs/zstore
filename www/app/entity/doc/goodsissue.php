@@ -4,7 +4,7 @@ namespace App\Entity\Doc;
 
 use App\Entity\Entry;
 use App\Entity\Item;
- 
+
 use App\Helper as H;
 use App\System;
 
@@ -14,7 +14,6 @@ use App\System;
  */
 class GoodsIssue extends Document
 {
-
     public function generateReport() {
 
 
@@ -54,7 +53,7 @@ class GoodsIssue extends Document
 
         $printer = System::getOptions('printer');
 
-      
+
 
         $header = array('date'      => H::fd($this->document_date),
                         "_detail"   => $detail,
@@ -75,8 +74,8 @@ class GoodsIssue extends Document
                         "bankacc"         => $mf->bankacc ?? "",
                         "isbank"          => (strlen($mf->bankacc) > 0 && strlen($mf->bank) > 0),
                         "notes"           => nl2br($this->notes),
-                       
-                        "iban"      => strlen($firm['iban'] ) > 0 ? $firm['iban'] : false,
+
+                        "iban"      => strlen($firm['iban']) > 0 ? $firm['iban'] : false,
                         "payed"      => $this->payed > 0 ? H::fa($this->payed) : false,
                         "payamount"  => $this->payamount > 0 ? H::fa($this->payamount) : false
 
@@ -103,7 +102,7 @@ class GoodsIssue extends Document
             if (strlen($cust->edrpou) > 0) {
                 $header["edrpou"] = $cust->edrpou;
             }
-           
+
 
         }
         if (strlen($firm['tin']) > 0) {
@@ -125,7 +124,7 @@ class GoodsIssue extends Document
             $header['createdon'] = H::fd($contract->createdon);
         }
 
-     
+
 
         $report = new \App\Report('doc/goodsissue.tpl');
 
@@ -135,34 +134,39 @@ class GoodsIssue extends Document
     }
 
     public function Execute() {
-        
-        
-  
-        
+
+
+
+
         $parts = array();
-        $dd =   doubleval($this->headerdata['bonus'] ) +  doubleval($this->headerdata['totaldisc'] )   ;
+        $dd =   doubleval($this->headerdata['bonus']) +  doubleval($this->headerdata['totaldisc'])   ;
         $k = 1;   //учитываем  скидку
         if ($dd > 0 && $this->amount > 0) {
             $k = ($this->amount - $dd) / $this->amount;
         }
-               
+
         $amount = 0;
         foreach ($this->unpackDetails('detaildata') as $item) {
 
+            $onstore = H::fqty($item->getQuantity($this->headerdata['store'])) ;
+            $required = $item->quantity - $onstore;
+
 
             //оприходуем  с  производства
-            if ($item->autoincome == 1 && ($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD) ) {
+            if ($required >0 && $item->autoincome == 1 && ($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD)) {
 
                 if ($item->autooutcome == 1) {    //комплекты
                     $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
                     foreach ($set as $part) {
 
                         $itemp = \App\Entity\Item::load($part->item_id);
-                        if($itemp == null)  continue;
-                        $itemp->quantity = $item->quantity * $part->qty;
+                        if($itemp == null) {
+                            continue;
+                        }
+                        $itemp->quantity = $required * $part->qty;
 
                         if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
-                            throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']) )." ТМЦ {$itemp->itemname}. Списання у мінус заборонено" );
+                            throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
                         }
 
                         $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
@@ -185,7 +189,7 @@ class GoodsIssue extends Document
                 }
                 $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
 
-                $sc = new Entry($this->document_id, $item->quantity * $price, $item->quantity);
+                $sc = new Entry($this->document_id, $required * $price, $required);
                 $sc->setStock($stock->stock_id);
                 $sc->tag=Entry::TAG_FROMPROD;
 
@@ -193,8 +197,8 @@ class GoodsIssue extends Document
             }
 
             if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
-                throw new \Exception("На складі всього ".H::fqty($item->getQuantity($this->headerdata['store']) )." ТМЦ {$item->itemname}. Списання у мінус заборонено" );
-                
+                throw new \Exception("На складі всього ".H::fqty($item->getQuantity($this->headerdata['store']))." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+
             }
 
             //продажа
@@ -212,15 +216,15 @@ class GoodsIssue extends Document
         }
 
 
- 
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['payed'], $this->headerdata['payment']);
-            if ($payed > 0) {
-                $this->payed = $payed;
-            }
-            \App\Entity\IOState::addIOState($this->document_id, $this->headerdata['payed'], \App\Entity\IOState::TYPE_BASE_INCOME);
- 
 
-   
+        $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['payed'], $this->headerdata['payment']);
+        if ($payed > 0) {
+            $this->payed = $payed;
+        }
+        \App\Entity\IOState::addIOState($this->document_id, $this->headerdata['payed'], \App\Entity\IOState::TYPE_BASE_INCOME);
+
+
+
 
         return true;
     }
@@ -232,7 +236,7 @@ class GoodsIssue extends Document
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
         $list['TTN'] = self::getDesc('TTN');
         $list['Invoice'] = self::getDesc('Invoice');
- 
+
         return $list;
     }
 
@@ -277,20 +281,20 @@ class GoodsIssue extends Document
                         "isbank"          => (strlen($mf->bankacc) > 0 && strlen($mf->bank) > 0),
                         "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
                         "document_number" => $this->document_number,
-                         
+
                         "total"           => H::fa($this->amount)
         );
         if (strlen($this->headerdata["customer_name"]) == 0) {
             $header["customer_name"] = false;
         }
 
-   
-        if($ps)   {
-          $report = new \App\Report('doc/goodsissue_bill_ps.tpl');
+
+        if($ps) {
+            $report = new \App\Report('doc/goodsissue_bill_ps.tpl');
+        } else {
+            $report = new \App\Report('doc/goodsissue_bill.tpl');
         }
-        else 
-          $report = new \App\Report('doc/goodsissue_bill.tpl');
- 
+
         $html = $report->generate($header);
 
         return $html;
@@ -300,32 +304,23 @@ class GoodsIssue extends Document
         return array(self::EX_EXCEL, self::EX_POS, self::EX_PDF);
     }
 
-    protected function onState($state,$oldstate) {
+    protected function onState($state, $oldstate) {
         if($state == Document::STATE_EXECUTED) {
-           if($this->hasStore() && $this->payed > 0 && $this->payamount == $this->payed ) { //провеен  и оплачен
-             //  $this->updateStatus(Document::STATE_CLOSED) ;
-               return;
-           }          
-               if($this->parent_id > 0)   {;
-                   $parent = Document::load($this->parent_id);              
-                   if($parent->meta_name == 'Order' || $parent->meta_name == 'Invoice') {   
-                     if($parent->state== Document::STATE_PAYED) {   //оплачено
-                         //$this->updateStatus(Document::STATE_CLOSED) ;                                  
-                     }         
-                   }         
-               }
-              
-            
-        } 
-        if($state == Document::STATE_CLOSED) {
-           if($this->parent_id > 0)   {;
-               $parent = Document::load($this->parent_id);              
-               if($parent->meta_name == 'Order' || $parent->meta_name == 'Invoice') {
-                   $parent->updateStatus(Document::STATE_CLOSED) ;                                  
-               }         
-           }
-       }        
-              
-    }    
-    
+
+            if($this->parent_id > 0) {
+                $order = Document::load($this->parent_id);
+                if($order->meta_name == 'Order') {
+
+                    if($order->payamount == 0 || ($order->payamount > 0 && $order->payamount == $order->payed)) {
+                        $this->updateStatus(Document::STATE_DELIVERED) ;
+                    }
+                }
+            }
+
+
+        }
+
+
+    }
+
 }

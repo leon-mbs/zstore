@@ -12,7 +12,6 @@ use App\Helper as H;
  */
 class OutSalary extends Document
 {
-
     public function Execute() {
 
         foreach ($this->unpackDetails('detaildata') as $emp) {
@@ -26,7 +25,7 @@ class OutSalary extends Document
                 $eacc->save();
             }
         }
-        $payed = Pay::addPayment($this->document_id, $this->document_date, 0 - $this->amount, $this->headerdata['payment'],  $this->notes);
+        $payed = Pay::addPayment($this->document_id, $this->document_date, 0 - $this->amount, $this->headerdata['payment'], $this->notes);
         if ($payed > 0) {
             $this->payed = $payed;
         }

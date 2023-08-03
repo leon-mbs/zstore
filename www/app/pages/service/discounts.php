@@ -52,7 +52,7 @@ class Discounts extends \App\Pages\Base
 
         $common = System::getOptions("common");
         $this->_tvars['price1name'] = $common['price1'];
-        
+
         $disc = System::getOptions("discount");
         if (!is_array($disc)) {
             $disc = array();
@@ -69,7 +69,7 @@ class Discounts extends \App\Pages\Base
         $form->add(new  TextInput("summa3", $disc["summa3"]));
         $form->add(new  TextInput("bonus4", $disc["bonus4"]));
         $form->add(new  TextInput("summa4", $disc["summa4"]));
-     
+
         $form = $this->ctab->add(new  Form("discform"));
         $form->onSubmit($this, "onDisc");
 
@@ -97,7 +97,7 @@ class Discounts extends \App\Pages\Base
 
         //категории
         $this->itab->add(new Form('gfilter'))->onSubmit($this, 'OnGAdd');
-        $this->itab->gfilter->add(new DropDownChoice('gsearchkey', Category::getList(false,false), 0));
+        $this->itab->gfilter->add(new DropDownChoice('gsearchkey', Category::getList(false, false), 0));
         $this->itab->gfilter->add(new Date('gsearchfrom'))->setDate(time());
         $this->itab->gfilter->add(new Date('gsearchto'))->setDate(strtotime("+7day", time()));
         $this->itab->gfilter->add(new TextInput('gsearchdisc'));
@@ -120,34 +120,34 @@ class Discounts extends \App\Pages\Base
 
         $this->itab->add(new Form('ifilter'));
         $this->itab->ifilter->add(new AutocompleteTextInput('isearchkey'))->onText($this, 'OnAutoItem');
-        $this->itab->ifilter->isearchkey->onChange($this,"OnIsearchKey",true);
-      
+        $this->itab->ifilter->isearchkey->onChange($this, "OnIsearchKey", true);
+
         $this->itab->ifilter->add(new Date('isearchfrom'))->setDate(time());
         $this->itab->ifilter->add(new Date('isearchto'))->setDate(strtotime("+7day", time()));
         $this->itab->ifilter->add(new TextInput('isearchdisc'));
         $this->itab->ifilter->add(new SubmitButton('ifiltersbm'))->onClick($this, 'OnIAdd');
 
-        
+
         $this->itab->add(new Form('itform'));
-        
+
         $this->itab->itform->add(new DataView('ilist', new DiscItemDataSource($this), $this, 'itemlistOnRow'));
         $this->itab->itform->ilist->setPageSize(H::getPG());
         $this->itab->itform->add(new \Zippy\Html\DataList\Paginator('ipag', $this->itab->itform->ilist));
         $this->itab->itform->add(new SubmitLink('deleteall'))->onClick($this, 'OnDelAll');
- 
+
         $this->itab->itform->ilist->Reload();
 
         $this->itab->add(new Form('iofilter')) ;
         $this->itab->iofilter->add(new AutocompleteTextInput('isearchokey'))->onText($this, 'OnAutoItem');
-        $this->itab->iofilter->isearchokey->onChange($this,"OnIsearchoKey",true);
+        $this->itab->iofilter->isearchokey->onChange($this, "OnIsearchoKey", true);
         $this->itab->iofilter->add(new TextInput('isearchoqty1'));
-        $this->itab->iofilter->add(new TextInput('isearchoprice1'));    
+        $this->itab->iofilter->add(new TextInput('isearchoprice1'));
         $this->itab->iofilter->add(new TextInput('isearchoqty2'));
         $this->itab->iofilter->add(new TextInput('isearchoprice2'));
-        
+
         $this->itab->iofilter->add(new SubmitButton('iofiltersbm'))->onClick($this, 'OnIOAdd');
-        
-        
+
+
         $this->itab->add(new DataView('iolist', new DiscItemODataSource($this), $this, 'oitemlistOnRow'));
         $this->itab->iolist->setPageSize(H::getPG());
         $this->itab->add(new \Zippy\Html\DataList\Paginator('iopag', $this->itab->iolist));
@@ -174,7 +174,7 @@ class Discounts extends \App\Pages\Base
         $this->setSuccess('Збережено');
     }
 
-    
+
     public function onDisc($sender) {
         $disc = System::getOptions("discount");
         if (!is_array($disc)) {
@@ -197,10 +197,10 @@ class Discounts extends \App\Pages\Base
     public function onTab($sender) {
 
         $this->_tvars['tabcbadge'] = $sender->id == 'tabc' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
-        $this->_tvars['tabobadge'] = $sender->id == 'tabo' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";;
-        $this->_tvars['tabibadge'] = $sender->id == 'tabi' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";;
+        $this->_tvars['tabobadge'] = $sender->id == 'tabo' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
+        $this->_tvars['tabibadge'] = $sender->id == 'tabi' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
 
-        $this->_tvars['tabsbadge'] = $sender->id == 'tabs' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";;
+        $this->_tvars['tabsbadge'] = $sender->id == 'tabs' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
 
         $this->ctab->setVisible($sender->id == 'tabc');
         $this->otab->setVisible($sender->id == 'tabo');
@@ -277,7 +277,7 @@ class Discounts extends \App\Pages\Base
         if ($d > 0) {
             $s->actionprice = $d;
             $s->fromdate = $sender->ssearchfrom->getDate();
-            $s->todate = $sender->ssearchto->getDate(true);;
+            $s->todate = $sender->ssearchto->getDate(true);
             if ($s->fromdate > $s->todate) {
                 $this->setError("Невірний інтервал");
                 return;
@@ -321,24 +321,24 @@ class Discounts extends \App\Pages\Base
 
 
     //товары
-    
+
     public function OnAutoItem($sender) {
         $text = trim($sender->getText());
         return Item::findArrayAC($text);
-    } 
-     public function OnIsearchKey($sender) {
+    }
+    public function OnIsearchKey($sender) {
         $key = $sender->getKey();
         $it = Item::load($key) ;
         $pureprice= $it->getPurePrice();
-        $this->itab->ifilter->isearchdisc->setText($pureprice) ;       
+        $this->itab->ifilter->isearchdisc->setText($pureprice) ;
 
-    }      
+    }
     public function OnIAdd($sender) {
         $k =  $this->itab->ifilter->isearchkey->getKey();
         $i = Item::load($k);
         if ($i == null) {
             $this->setError("Не вказано товар");
-             
+
             return;
         }
         $d = doubleval($this->itab->ifilter->isearchdisc->getText());
@@ -348,7 +348,7 @@ class Discounts extends \App\Pages\Base
             $i->actionqty1 = 0;
             $i->actionprice1 = 0;
             $i->fromdate = $this->itab->ifilter->isearchfrom->getDate();
-            $i->todate = $this->itab->ifilter->isearchto->getDate(true);;
+            $i->todate = $this->itab->ifilter->isearchto->getDate(true);
             if ($i->fromdate > $i->todate) {
                 $this->setError("Невірний інтервал");
                 return;
@@ -357,17 +357,17 @@ class Discounts extends \App\Pages\Base
             $this->itab->itform->ilist->Reload();
         }
 
-         $this->itab->ifilter->isearchdisc->setText("");
-         $this->itab->ifilter->isearchkey->setText("");
-         $this->itab->ifilter->isearchkey->setKey(0);
+        $this->itab->ifilter->isearchdisc->setText("");
+        $this->itab->ifilter->isearchkey->setText("");
+        $this->itab->ifilter->isearchkey->setKey(0);
     }
-   
+
     public function OnIsearchoKey($sender) {
         $key = $sender->getKey();
         $it = Item::load($key) ;
         $pureprice= $it->getPurePrice();
-        $this->itab->iofilter->isearchoprice1->setText($pureprice) ;       
-        $this->itab->iofilter->isearchoprice2->setText($pureprice) ;       
+        $this->itab->iofilter->isearchoprice1->setText($pureprice) ;
+        $this->itab->iofilter->isearchoprice2->setText($pureprice) ;
     }
     public function OnIOAdd($sender) {
         $k = $this->itab->iofilter->isearchokey->getKey();
@@ -401,25 +401,25 @@ class Discounts extends \App\Pages\Base
         $this->itab->iofilter->isearchoqty2->setText("");
         $this->itab->iofilter->isearchokey->setText("");
         $this->itab->iofilter->isearchokey->setKey(0);
-        
+
         $this->itab->iolist->Reload();
         $this->goAnkor('iofilter')  ;
-      
-        
+
+
     }
 
     public function oitemlistOnRow($row) {
         $i = $row->getDataItem();
         $row->add(new  ClickLink('odel'))->onClick($this, 'odeleteOnClick');
-        $row->add(new  Label("ioname", $i->itemname) );
-        $row->add(new  Label("iocode", $i->item_code) );
-        $row->add(new  Label("ioqty1", H::fqty($i->actionqty1)) );
+        $row->add(new  Label("ioname", $i->itemname));
+        $row->add(new  Label("iocode", $i->item_code));
+        $row->add(new  Label("ioqty1", H::fqty($i->actionqty1)));
         $row->add(new  Label("ioprice1", H::fa($i->actionprice1)));
-        $row->add(new  Label("ioqty2", H::fqty($i->actionqty2)) );
+        $row->add(new  Label("ioqty2", H::fqty($i->actionqty2)));
         $row->add(new  Label("ioprice2", H::fa($i->actionprice2)));
-    
+
     }
- 
+
     public function odeleteOnClick($sender) {
         $s = $sender->owner->getDataItem();
         $s->actionqty1 = 0;
@@ -427,13 +427,13 @@ class Discounts extends \App\Pages\Base
         $this->itab->iolist->Reload();
         $this->goAnkor('iofilter')  ;
 
-    }  
-     
+    }
+
     public function itemlistOnRow($row) {
         $i = $row->getDataItem();
         $row->add(new  Label("icat_name", $i->cat_name));
         $row->add(new  Label("iname", $i->itemname));
-        $row->add(new  Label("icode", $i->item_code) );
+        $row->add(new  Label("icode", $i->item_code));
         $row->add(new  Label("iprice"))->setText($i->actionprice);
         $row->iprice->setVisible($i->actionprice > 0);
         if ($i->fromdate < time() && $i->todate > time()) {
@@ -460,11 +460,11 @@ class Discounts extends \App\Pages\Base
         $row->add(new  Label("ifrom"))->setText(H::fd($i->fromdate));
         $row->add(new  Label("ito"))->setText(H::fd($i->todate));
         $row->add(new CheckBox('seldel', new \Zippy\Binding\PropertyBinding($i, 'seldel')));
-       
+
     }
 
     public function OnDelAll($sender) {
-     
+
 
         $ids = array();
         foreach ($this->itab->itform->ilist->getDataRows() as $row) {
@@ -475,10 +475,10 @@ class Discounts extends \App\Pages\Base
                 $item->save();
             }
         }
-     
-     
 
-       
+
+
+
         $this->itab->itform->ilist->Reload();
 
     }
@@ -489,21 +489,21 @@ class Discounts extends \App\Pages\Base
         $g = \App\Entity\Category::load($sender->gsearchkey->getValue());
         if ($g == null) {
             $this->setError("Не вказано категорію");
-            
+
             return;
         }
         $d = doubleval($sender->gsearchdisc->getText());
         if ($d > 0) {
             $g->discount = $d;
             $g->fromdate = $sender->gsearchfrom->getDate();
-            $g->todate = $sender->gsearchto->getDate(true);;
+            $g->todate = $sender->gsearchto->getDate(true);
             if ($g->fromdate > $g->todate) {
                 $this->setError("Невірний інтервал");
                 return;
             }
 
             $items = Item::find("disabled <> 1 and cat_id=" . $g->cat_id);
-            foreach ($items as $item) {   
+            foreach ($items as $item) {
                 $item->actionprice = 0;
                 $item->actiondisc = $d;
                 $item->fromdate = $g->fromdate;
@@ -526,7 +526,6 @@ class Discounts extends \App\Pages\Base
 
 class DiscCustomerDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {
@@ -563,7 +562,6 @@ class DiscCustomerDataSource implements \Zippy\Interfaces\DataSource
 
 class DiscSerDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {
@@ -597,7 +595,6 @@ class DiscSerDataSource implements \Zippy\Interfaces\DataSource
 
 class DiscItemDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {
@@ -630,7 +627,6 @@ class DiscItemDataSource implements \Zippy\Interfaces\DataSource
 
 class DiscItemODataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {
@@ -659,4 +655,3 @@ class DiscItemODataSource implements \Zippy\Interfaces\DataSource
     }
 
 }
-

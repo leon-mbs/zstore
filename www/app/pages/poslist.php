@@ -12,7 +12,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
@@ -20,7 +20,6 @@ use Zippy\Html\Panel;
 //POS терминалы
 class PosList extends \App\Pages\Base
 {
-
     private $_pos;
     private $_blist;
 
@@ -62,7 +61,7 @@ class PosList extends \App\Pages\Base
         $item = $row->getDataItem();
 
         $row->add(new Label('pos_name', $item->pos_name));
-        $row->add(new Label('branch_name', $this->_blist[$item->branch_id]));
+        $row->add(new Label('branch_name', $this->_blist[$item->branch_id]??''));
         $row->add(new Label('comment', $item->comment));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -148,10 +147,10 @@ class PosList extends \App\Pages\Base
         }
         $fn = intval($this->_pos->fiscdocnumber);
 
-        if( ($fn >0) == false) {
-           $this->_pos->fiscdocnumber = 1;
+        if(($fn >0) == false) {
+            $this->_pos->fiscdocnumber = 1;
         }
-        
+
         $this->_pos->comment = $this->posdetail->editcomment->getText();
 
         $this->_pos->save();

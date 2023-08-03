@@ -20,7 +20,6 @@ use Zippy\Html\Panel;
  */
 class MFList extends \App\Pages\Base
 {
-
     private $_mf;
     private $_balance;
     private $_blist;
@@ -57,14 +56,14 @@ class MFList extends \App\Pages\Base
         $item = $row->getDataItem();
 
         $row->add(new Label('mf_name', $item->mf_name));
-        $row->add(new Label('branch', $this->_blist[$item->branch_id]));
+        $row->add(new Label('branch', $this->_blist[$item->branch_id] ?? ''));
 
         $row->add(new Label('description', $item->description));
         $row->add(new Label('amount', \App\Helper::fa($this->_balance[$item->mf_id])));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
-        
+
     }
 
     public function deleteOnClick($sender) {
@@ -126,7 +125,7 @@ class MFList extends \App\Pages\Base
         $this->_mf->btranin = $this->mfdetail->editbtranin->getText();
         $this->_mf->bank = $this->mfdetail->editbank->getText();
         $this->_mf->bankacc = $this->mfdetail->editbankacc->getText();
-        $this->_mf->disabled = $this->mfdetail->editdisabled->isChecked() ? 1: 0;
+        $this->_mf->disabled = $this->mfdetail->editdisabled->isChecked() ? 1 : 0;
 
         $this->_mf->description = $this->mfdetail->editmf_description->getText();
         if ($this->_mf->mf_name == '') {
@@ -135,7 +134,7 @@ class MFList extends \App\Pages\Base
         }
         $this->_mf->beznal = $this->mfdetail->editbeznal->isChecked() ? 1 : 0;
         $this->_mf->branch_id = $this->mfdetail->editbranch->getValue();
- 
+
 
         $this->_mf->save();
         $this->mfdetail->setVisible(false);

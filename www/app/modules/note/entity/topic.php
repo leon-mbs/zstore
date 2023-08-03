@@ -9,7 +9,6 @@ namespace App\Modules\Note\Entity;
  */
 class Topic extends \ZCL\DB\Entity
 {
-
     protected function init() {
         $this->topic_id = 0;
         $this->acctype = 0;

@@ -7,12 +7,11 @@ use App\Entity\Stock;
 use App\Helper as H;
 
 /**
- * Класс-сущность  Инвентаризация    склада    
+ * Класс-сущность  Инвентаризация    склада
  *
  */
 class Inventory extends Document
 {
-
     public function Execute() {
 
         $conn = \ZDB\DB::getConnect();
@@ -82,7 +81,7 @@ class Inventory extends Document
         $detaillost = array();
         $detailover = array();
         $detail = array();
-        
+
         $sumplus = 0;
         $summinus = 0;
         foreach ($this->unpackDetails('detaildata') as $item) {
@@ -101,7 +100,7 @@ class Inventory extends Document
                 );
             }
             if (round($item->qfact) < round($q)) {
-                $summinus += round(($q - $item->qfact) * $item->getLastPartion($this->headerdata['store']) );
+                $summinus += round(($q - $item->qfact) * $item->getLastPartion($this->headerdata['store']));
                 $detaillost[] = array("no"        => $i++,
                                       "item_name" => $name,
                                       "qfact"     => $item->qfact,
@@ -110,8 +109,8 @@ class Inventory extends Document
                 );
             }
             if (round($item->qfact) > round($q)) {
-                $sumplus += round(($item->qfact - $q) * $item->getLastPartion($this->headerdata['store']) );
-  
+                $sumplus += round(($item->qfact - $q) * $item->getLastPartion($this->headerdata['store']));
+
                 $detailover[] = array("no"        => $i++,
                                       "item_name" => $name,
                                       "qfact"     => $item->qfact,

@@ -3,7 +3,7 @@
 
     <tr>
 
-        <td align="center" colspan="5">
+        <td align="center" colspan="6">
             Період з {{datefrom}} по {{dateto}} <br> <br>
         </td>
     </tr>
@@ -14,6 +14,7 @@
         </td>
     </tr>
     <tr style="font-weight: bolder;">
+        <th align="center" style="border: solid black 1px">Док.</th>
         <th style="border: solid black 1px">Найменування</th>
         <th style="border: solid black 1px">Код</th>
 
@@ -29,6 +30,7 @@
     <tr>
 
 
+        <td align="right">{{docs}}</td>
         <td>{{name}}</td>
         <td>{{code}}</td>
 
@@ -50,7 +52,7 @@
 
     </tr>
     {{/_detail}}
-    <tr><td colspan="3"></td><td align="right" ><b>{{totsumma}}</b></td>
+    <tr><td colspan="4"></td><td align="right" ><b>{{totsumma}}</b></td>
       {{^noshowpartion}}
 
     <td align="right" ><b><b>{{totnavar}}</b></b></td> 
@@ -68,6 +70,7 @@
     </td>
 </tr>
 <tr style="font-weight: bolder;">
+    <th align="center"  style="border: solid black 1px">Док.</th>
     <th colspan="3" style="border: solid black 1px">Найменування</th>
 
 
@@ -78,10 +81,11 @@
     <th align="right" style="border: solid black 1px">Прибуток</th>
     {{/noshowpartion}}
 
-    <th></th>
+    <th></th>    
 </tr>
 {{#_detail}}
 <tr>
+        <td>{{docs}}</td>
 
 
     <td colspan="3">{{name}}</td>
@@ -93,10 +97,10 @@
     <td align="right">{{navar}}</td>
     {{/noshowpartion}}
     
-    <td></td>
+    <td></td>  
 </tr>
 {{/_detail}}
-<tr><td colspan="3"></td><td align="right" ><b>{{totsumma}}</b></td>
+<tr><td colspan="4"></td><td align="right" ><b>{{totsumma}}</b></td>
     {{^noshowpartion}}
 
 <td align="right" ><b><b>{{totnavar}}</b></b></td> 
@@ -113,7 +117,8 @@
     </td>
 </tr>
 <tr style="font-weight: bolder;">
-    <th style="border: solid black 1px;width:120px;">Дата</th>
+     <th align="center"  style="border: solid black 1px">Док.</th>
+   <th style="border: solid black 1px;width:120px;">Дата</th>
 
     <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
     <th></th>
@@ -123,6 +128,7 @@
 </tr>
 {{#_detail}}
 <tr>
+         <td align="right">{{docs}}</td>
 
 
     <td>{{dt}}</td>
@@ -135,7 +141,7 @@
 
 </tr>
 {{/_detail}}
-<tr><td  ></td><td align="right" ><b>{{totsumma}}</b></td> <td   > </td><td   > </td><td   > </td> </tr>
+<tr><td colspan="3" align="right" ><b>{{totsumma}}</b></td> <td   > </td><td   > </td><td   > </td> </tr>
 
 </table>
 {{/_type3}}
@@ -146,7 +152,8 @@
     </td>
 </tr>
 <tr style="font-weight: bolder;">
-    <th style="border: solid black 1px">Найменування</th>
+     <th align="center"  style="border: solid black 1px">Док.</th>
+   <th style="border: solid black 1px">Найменування</th>
 
 
     <th align="right" style="border: solid black 1px;width:60px;">Кіл.</th>
@@ -156,6 +163,7 @@
 </tr>
 {{#_detail}}
 <tr>
+        <td align="right">{{docs}}</td>
 
 
     <td>{{name}}</td>
@@ -167,7 +175,7 @@
     <td></td>
 </tr>
 {{/_detail}}
-<tr><td  ></td><td  ></td><td align="right" ><b>{{totsumma}}</b></td> <td   > </td><td   > </td>  </tr>
+<tr><td colspan="3"  ></td><td align="right" ><b>{{totsumma}}</b></td> <td   > </td><td   > </td>  </tr>
 
 </table>
 {{/_type4}}
@@ -179,7 +187,8 @@
     </td>
 </tr>
 <tr style="font-weight: bolder;">
-    <th colspan="3" style="border: solid black 1px">Найменування</th>
+     <th align="center"  style="border: solid black 1px">Док.</th>
+   <th colspan="3" style="border: solid black 1px">Найменування</th>
 
 
     <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
@@ -193,6 +202,7 @@
 </tr>
 {{#_detail}}
 <tr>
+        <td align="right">{{docs}}</td>
 
 
     <td colspan="3">{{name}}</td>
@@ -207,7 +217,7 @@
     <td></td>
 </tr>
 {{/_detail}}
-<tr><td colspan="3" ></td> <td align="right" ><b>{{totsumma}}</b></td> 
+<tr><td colspan="4" ></td> <td align="right" ><b>{{totsumma}}</b></td> 
     {{^noshowpartion}}
 
 <td align="right"   > <b>{{totnavar}}</b></td>
@@ -225,7 +235,8 @@
     </td>
 </tr>
 <tr style="font-weight: bolder;">
-    <th colspan="3" style="border: solid black 1px">Найменування</th>
+      <th align="center"  style="border: solid black 1px">Док.</th>
+  <th colspan="3" style="border: solid black 1px">Найменування</th>
 
 
     <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
@@ -239,6 +250,7 @@
 {{#_detail}}
 <tr>
 
+       <td align="right">{{docs}}</td>
 
     <td colspan="3">{{name}}</td>
 
@@ -252,7 +264,7 @@
     <td></td>
 </tr>
 {{/_detail}}
-<tr><td colspan="3" ></td> <td align="right" ><b>{{totsumma}}</b></td>
+<tr><td colspan="4" ></td> <td align="right" ><b>{{totsumma}}</b></td>
     {{^noshowpartion}}
 
  <td align="right"   > <b>{{totnavar}}</b></td>
@@ -270,7 +282,8 @@
     </td>
 </tr>
 <tr style="font-weight: bolder;">
-    <th colspan="3" style="border: solid black 1px">Найменування</th>
+     <th align="center"  style="border: solid black 1px">Док.</th>
+   <th colspan="3" style="border: solid black 1px">Найменування</th>
 
 
     <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
@@ -284,6 +297,7 @@
 {{#_detail}}
 <tr>
 
+         <td align="right">{{docs}}</td>
 
     <td colspan="3">{{name}}</td>
 
@@ -297,7 +311,7 @@
     <td></td>
 </tr>
 {{/_detail}}
-<tr><td colspan="3" ></td> <td align="right" ><b>{{totsumma}}</b></td
+<tr><td colspan="4" ></td> <td align="right" ><b>{{totsumma}}</b></td
      {{^noshowpartion}}
 
  <td align="right"   > <b>{{totnavar}}</b></td>
@@ -314,6 +328,7 @@
     </td>
 </tr>
 <tr style="font-weight: bolder;">
+    <th align="center"  style="border: solid black 1px">Док.</th>
     <th colspan="2" style="border: solid black 1px">Найменування</th>
 
          <th align="right" style="border: solid black 1px">Кіл.</th>
@@ -328,6 +343,7 @@
 </tr>
 {{#_detail}}
 <tr>
+        <td align="right">{{docs}}</td>
 
 
     <td colspan="2">{{name}}</td>
@@ -342,7 +358,7 @@
      
 </tr>
 {{/_detail}}
-<tr><td colspan="3" ></td> <td align="right" ><b>{{totsumma}}</b></td> 
+<tr><td colspan="4" ></td> <td align="right" ><b>{{totsumma}}</b></td> 
     {{^noshowpartion}}
 
     <td align="right"   > <b>{{totnavar}}</b></td>
@@ -359,7 +375,8 @@
     </td>
 </tr>
 <tr style="font-weight: bolder;">
-    <th colspan="2" style="border: solid black 1px">Найменування</th>
+     <th align="center"  style="border: solid black 1px">Док.</th>
+   <th colspan="2" style="border: solid black 1px">Найменування</th>
 
           <th align="right" style="border: solid black 1px">Кіл.</th>
 
@@ -373,6 +390,7 @@
 </tr>
 {{#_detail}}
 <tr>
+        <td align="right">{{docs}}</td>
 
 
     <td colspan="2">{{name}}</td>
@@ -387,7 +405,7 @@
     
 </tr>
 {{/_detail}}
-<tr><td colspan="3" ></td> <td align="right" ><b>{{totsumma}}</b></td> 
+<tr><td colspan="4" ></td> <td align="right" ><b>{{totsumma}}</b></td> 
     {{^noshowpartion}}
 <td align="right"   > <b>{{totnavar}}</b></td>
     {{/noshowpartion}}

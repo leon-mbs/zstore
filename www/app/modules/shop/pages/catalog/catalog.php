@@ -18,7 +18,6 @@ use Zippy\Html\Panel;
 
 class Catalog extends Base
 {
-
     public $cat_id    = 0;
     public $_isfilter = false; //отфильтрованы  ли  данные
     public $_list     = array();
@@ -134,66 +133,70 @@ class Catalog extends Base
 
         //не  в вариациях
 
-        
+
         $wherenovar = $where ." and  item_id  not in(select item_id from shop_varitems)     ";
-         
+
         foreach (Product::find($wherenovar, 'itemname', -1, -1, $fields) as $prod) {
+            if($options['noshowempty'] == 1  && $prod->qty <= 0) {
+                continue;
+            }
+
             $prod->price = $prod->getPrice($options['defpricetype']);
-            
+
             $this->_list[] = $prod;
         }
 
         $sql   = "select min(item_id) from shop_varitems where item_id in (select item_id from items where {$where} ) group by var_id" ;
-        
+
         $ids= $conn->GetCol($sql);
-        
+
         if(count($ids)>0) {
-           foreach (Product::find("item_id in(". implode(',',$ids)  ."  )", 'itemname', -1, -1, $fields) as $prod) {
+            foreach (Product::find("item_id in(". implode(',', $ids)  ."  )", 'itemname', -1, -1, $fields) as $prod) {
                 $prod->price = $prod->getPrice($options['defpricetype']);
-             
+
                 $this->_list[] = $prod;
             }
-     
+
         }
-        
-        
-           
+
+
+
         $sort = $this->sortform->sortorder->getValue();
 
         if ($sort == 0) {
             //  $order = "price asc";
-            usort($this->_list, function($a, $b) {
+            usort($this->_list, function ($a, $b) {
                 return $a->getPriceFinal() > $b->getPriceFinal();
             });
         }
         if ($sort == 1) {
             // $order = "price desc";
-            usort($this->_list, function($a, $b) {
+            usort($this->_list, function ($a, $b) {
                 return $a->getPriceFinal() < $b->getPriceFinal();
             });
         }
         if ($sort == 2) {
             //  $order = "rating desc";
-            usort($this->_list, function($a, $b) {
+            usort($this->_list, function ($a, $b) {
                 return $a->getRating() < $b->getRating();
             });
         }
         if ($sort == 3) {
             //  $order = "comments desc";
-            usort($this->_list, function($a, $b) {
+            usort($this->_list, function ($a, $b) {
                 return $a->comments < $b->comments;
             });
         }
 
         if ($sort == 4) {
             // $order = "sold desc";
-            usort($this->_list, function($a, $b) {
+            usort($this->_list, function ($a, $b) {
                 return $a->sold < $b->sold;
             });
         }
         if ($sort == -1) {
             // $order = "productname";
-            usort($this->_list, function($a, $b) {
+            usort($this->_list, function ($a, $b) {
                 return $a->itemname > $b->itemname;
             });
         }
@@ -211,7 +214,7 @@ class Catalog extends Base
         $price = $item->getPurePrice($options['defpricetype']);
         $price = \App\Helper::fa($price);
         $row->add(new Label("sprice", $price . ' ' . $options['currencyname']));
-        $row->add(new Label("sactionprice",\App\Helper::fa( $item->getActionPrice() ). ' ' . $options['currencyname']))->setVisible(false);
+        $row->add(new Label("sactionprice", \App\Helper::fa($item->getActionPrice()). ' ' . $options['currencyname']))->setVisible(false);
         $row->add(new Label('saction'))->setVisible(false);
 
         if ($item->hasAction()) {
@@ -221,22 +224,22 @@ class Catalog extends Base
         }
 
         $row->add(new TextInput('srated'))->setText($item->getRating());
-        $row->add(new Label('scomments'))->setText( "Відгуків (".$item->comments.")"  );
+        $row->add(new Label('scomments'))->setText("Відгуків (".$item->comments.")");
         $row->add(new ClickLink('sbuy', $this, 'OnBuy'));
         if ($item->getQuantity() > 0 || $this->_tvars["isfood"]==true) {
 
-           // $row->sbuy->setValue('Купити');
+            // $row->sbuy->setValue('Купити');
         } else {
-          //  $row->sbuy->setValue('Замовити');
+            //  $row->sbuy->setValue('Замовити');
         }
 
 
         $op = \App\System::getOptions("shop");
 
         if ($item->getQuantity($op['defstore']) > 0) {
-          //  $row->sbuy->setValue('Купити');
+            //  $row->sbuy->setValue('Купити');
         } else {
-          //  $row->sbuy->setValue('Замовити');
+            //  $row->sbuy->setValue('Замовити');
         }
     }
 
@@ -287,7 +290,7 @@ class Catalog extends Base
         $this->UpdateList();
     }
 
-//строка  атрибута
+    //строка  атрибута
     public function attrlistOnRow($row) {
         $attr = $row->getDataItem();
 
@@ -300,7 +303,6 @@ class Catalog extends Base
 //выводит  элементы  формы  ввода   в  зависимости  от  типа  атрибута
 class FilterAttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\Interfaces\SubmitDataRequest
 {
-
     public $productattribute = null;
     public $value            = array();
 
@@ -415,11 +417,11 @@ class FilterAttributeComponent extends \Zippy\Html\CustomComponent implements \Z
     //Вынимаем данные формы  после  сабмита
     public function getRequestData() {
         $this->value = array();
-        
+
         if(is_array(@$_POST[$this->id])) {
-           $this->value = array_values($_POST[$this->id]);    
+            $this->value = array_values($_POST[$this->id]);
         }
-        
+
         if (!is_array($this->value)) {
             $this->value = array();
         }
@@ -433,7 +435,6 @@ class FilterAttributeComponent extends \Zippy\Html\CustomComponent implements \Z
 
 class ManufacturerList extends \Zippy\Html\Form\CheckBoxList
 {
-
     public function RenderItem($name, $checked, $caption = "", $attr = "", $delimiter = "") {
         return " 
    

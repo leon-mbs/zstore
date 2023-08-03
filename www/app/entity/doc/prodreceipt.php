@@ -11,7 +11,6 @@ use App\Helper as H;
  */
 class ProdReceipt extends Document
 {
-
     public function generateReport() {
 
 
@@ -63,7 +62,9 @@ class ProdReceipt extends Document
                 foreach ($set as $part) {
 
                     $itemp = \App\Entity\Item::load($part->item_id);
-                    if($itemp==null) continue;
+                    if($itemp==null) {
+                        continue;
+                    }
                     $itemp->quantity = $item->quantity * $part->qty;
                     $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
 

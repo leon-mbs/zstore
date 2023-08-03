@@ -28,9 +28,8 @@ use Zippy\Html\Link\SubmitLink;
  */
 class POSCheck extends \App\Pages\Base
 {
-
-    public  $_itemlist  = array();
-    public  $_serlist   = array();
+    public $_itemlist  = array();
+    public $_serlist   = array();
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = 0;
@@ -122,14 +121,14 @@ class POSCheck extends \App\Pages\Base
         $this->editcust->add(new TextInput('editphone'));
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
- 
+
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             if($this->_doc->headerdata['arm']==1) {
-                 $this->setWarn('Чек створено в АРМ касира')  ;
-                 App::Redirect("\\App\\Pages\\Service\\ARMPos");
+                $this->setWarn('Чек створено в АРМ касира')  ;
+                App::Redirect("\\App\\Pages\\Service\\ARMPos");
 
-                 return;
+                return;
             }
             $this->docform->document_number->setText($this->_doc->document_number);
 
@@ -192,12 +191,12 @@ class POSCheck extends \App\Pages\Base
                         $this->docform->order->setText($basedoc->document_number);
                         $this->docform->totaldisc->setText($basedoc->headerdata['totaldisc']);
                         $this->docform->edittotaldisc->setText($basedoc->headerdata['totaldisc']);
-        
+
                         $notfound = array();
                         $order = $basedoc->cast();
 
-            
-                        
+
+
                         //проверяем  что уже есть продажа
                         $list = $order->getChildren('POSCheck');
 
@@ -205,23 +204,23 @@ class POSCheck extends \App\Pages\Base
 
                             $this->setWarn('У замовлення вже є продажі');
                         }
-                        
+
 
                         $this->docform->total->setText($order->amount);
-                              
-                        
+
+
                         $payed = $order->getPayAmount();
-                        if($payed >0 || $order->state== Document::STATE_WP ) {
+                        if($payed >0 || $order->state== Document::STATE_WP) {
                             $this->docform->prepaid->setText($order->payamount);
                             $this->docform->editprepaid->setText($order->payamount);
                         }
-                        
-                        
+
+
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
-                        
-                        $this->calcPay(); 
-                        
-                        
+
+                        $this->calcPay();
+
+
                     }
 
                     if ($basedoc->meta_name == 'Invoice') {
@@ -236,14 +235,14 @@ class POSCheck extends \App\Pages\Base
                         $invoice = $basedoc->cast();
 
                         $this->docform->total->setText($invoice->amount);
-                          
+
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
                         $this->docform->payment->setValue(0); // предоплата
                         $this->docform->prepaid->setText($invoice->amount);
                         $this->docform->editprepaid->setText($invoice->amount);
-                        $this->calcPay(); 
+                        $this->calcPay();
                     }
                     if ($basedoc->meta_name == 'Task') {
                         $this->docform->customer->setKey($basedoc->customer_id);
@@ -253,7 +252,7 @@ class POSCheck extends \App\Pages\Base
                         $this->_serlist = $basedoc->unpackDetails('detaildata');
                     }
                 }
-            } else{
+            } else {
                 $this->setWarn('Чек слід створювати через  АРМ касира')  ;
             }
         }
@@ -302,7 +301,7 @@ class POSCheck extends \App\Pages\Base
         }
 
         $item = $sender->owner->getDataItem();
-        $rowid =  array_search($item,$this->_itemlist,true);
+        $rowid =  array_search($item, $this->_itemlist, true);
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
         $this->docform->detail->Reload();
@@ -316,7 +315,7 @@ class POSCheck extends \App\Pages\Base
         }
 
         $ser = $sender->owner->getDataItem();
-        $rowid =  array_search($ser,$this->_serlist,true);
+        $rowid =  array_search($ser, $this->_serlist, true);
 
         $this->_serlist = array_diff_key($this->_serlist, array($rowid => $this->_serlist[$rowid]));
         $this->docform->detailser->Reload();
@@ -355,9 +354,9 @@ class POSCheck extends \App\Pages\Base
         $this->editdetail->editprice->setText($item->price);
         $this->editdetail->editquantity->setText($item->quantity);
         $this->editdetail->editserial->setText($item->serial);
- 
 
-        $this->_rowid =  array_search($item,$this->_itemlist,true);
+
+        $this->_rowid =  array_search($item, $this->_itemlist, true);
 
     }
 
@@ -372,9 +371,9 @@ class POSCheck extends \App\Pages\Base
         $this->editserdetail->editserprice->setText($ser->price);
         $this->editserdetail->editserquantity->setText($ser->quantity);
 
- 
 
-        $this->_rowid =  array_search($ser,$this->_serlist,true);
+
+        $this->_rowid =  array_search($ser, $this->_serlist, true);
 
     }
 
@@ -414,8 +413,8 @@ class POSCheck extends \App\Pages\Base
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
         } else {
-           $this->_itemlist[$this->_rowid] = $item;            
-        } 
+            $this->_itemlist[$this->_rowid] = $item;
+        }
 
         $this->_rowid = -1;
 
@@ -443,20 +442,20 @@ class POSCheck extends \App\Pages\Base
             $this->setError("Не обрано послугу або роботу");
             return;
         }
-        
-        
-        
+
+
+
         $ser = Service::load($id);
-         
+
         $ser->quantity = $this->editserdetail->editserquantity->getText();
         $ser->price = $this->editserdetail->editserprice->getText();
 
- 
+
         if($this->_rowid == -1) {
             $this->_serlist[] = $ser;
         } else {
-           $this->_serlist[$this->_rowid] = $ser;            
-        }        
+            $this->_serlist[$this->_rowid] = $ser;
+        }
 
 
         $this->editserdetail->setVisible(false);
@@ -503,9 +502,9 @@ class POSCheck extends \App\Pages\Base
             $customer = Customer::load($this->_doc->customer_id);
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         }
-     
 
-        
+
+
         $this->_doc->payamount = $this->docform->payamount->getText();
 
         $this->_doc->payed = $this->docform->payed->getText();
@@ -533,25 +532,25 @@ class POSCheck extends \App\Pages\Base
         $this->_doc->packDetails('services', $this->_serlist);
         $this->_doc->amount = $this->docform->total->getText();
 
-        
-        
-        
-        if ($sender->id == 'execdoc') {
-                // проверка на минус  в  количестве
-                $allowminus = System::getOption("common", "allowminus");
-                if ($allowminus != 1) {
 
-                    foreach ($this->_itemlist as $item) {
-                        $qty = $item->getQuantity($this->_doc->headerdata['store']);
-                        if ($qty < $item->quantity) {
-                            $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
-                            return;
-                        }
+
+
+        if ($sender->id == 'execdoc') {
+            // проверка на минус  в  количестве
+            $allowminus = System::getOption("common", "allowminus");
+            if ($allowminus != 1) {
+
+                foreach ($this->_itemlist as $item) {
+                    $qty = $item->getQuantity($this->_doc->headerdata['store']);
+                    if ($qty < $item->quantity) {
+                        $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+                        return;
                     }
-                }       
-        
-        }        
-  
+                }
+            }
+
+        }
+
 
         $isEdited = $this->_doc->document_id > 0;
         if ($isEdited == false) {
@@ -625,10 +624,10 @@ class POSCheck extends \App\Pages\Base
 
     public function onPrepaid($sender) {
         $this->docform->prepaid->setText($this->docform->editprepaid->getText());
-        $this->calcPay(); 
+        $this->calcPay();
         $this->goAnkor("tankor");
     }
-  public function onPayamount($sender) {
+    public function onPayamount($sender) {
         $this->docform->payamount->setText($this->docform->editpayamount->getText());
         $this->docform->editpayed->setText($this->docform->editpayamount->getText());
         $this->docform->payed->setText($this->docform->editpayamount->getText());
@@ -703,9 +702,9 @@ class POSCheck extends \App\Pages\Base
         $total = $this->docform->total->getText();
         $disc = $this->docform->totaldisc->getText();
         $disc = doubleval($disc) ;
-        
+
         $payamount= $total - $disc - $prepaid;
-        
+
         $this->docform->editpayamount->setText(H::fa($payamount));
         $this->docform->payamount->setText(H::fa($payamount));
         $this->docform->editpayed->setText(H::fa($payamount));
@@ -717,8 +716,8 @@ class POSCheck extends \App\Pages\Base
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
-         $code0 = $code;
-               $code = ltrim($code,'0');
+        $code0 = $code;
+        $code = ltrim($code, '0');
 
         if ($code == '') {
             return;
@@ -829,7 +828,7 @@ class POSCheck extends \App\Pages\Base
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
             $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
         }
-        
+
         //изза  фискализации
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payamount > 0) {
             $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
@@ -843,7 +842,7 @@ class POSCheck extends \App\Pages\Base
         App::RedirectBack();
     }
 
-  
+
 
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
@@ -863,7 +862,7 @@ class POSCheck extends \App\Pages\Base
         }
 
 
-       
+
     }
 
     public function OnAutoItem($sender) {
@@ -884,7 +883,7 @@ class POSCheck extends \App\Pages\Base
         $ser = Service::load($id);
         $this->editserdetail->editserprice->setText($ser->getPrice());
 
-      
+
     }
 
     public function OnAutoCustomer($sender) {

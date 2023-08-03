@@ -23,9 +23,8 @@ use Zippy\Html\Panel;
  */
 class DeliveryList extends \App\Pages\Base
 {
-
     private $_doc     = null;
-    public  $_doclist = array();
+    public $_doclist = array();
 
     public function __construct() {
         parent::__construct();
@@ -36,7 +35,7 @@ class DeliveryList extends \App\Pages\Base
         $this->add(new DataView('orderlist', new ArrayDataSource($this, '_doclist'), $this, 'onDocRow'));
 
         $this->add(new Form('searchform'))->onSubmit($this, 'updateorderlist');
-        $this->searchform->add(new TextInput('searchnumber', $filter->searchnumber));
+        $this->searchform->add(new TextInput('searchnumber'));
 
         //панель статуса,  просмотр
         $this->add(new Panel('statuspan'))->setVisible(false);
@@ -70,7 +69,7 @@ class DeliveryList extends \App\Pages\Base
         $row->add(new Label('docnotes', $doc->notes));
         $row->add(new Label('wp'))->setVisible($doc->payamount > $doc->payed);
 
-        if ($doc->document_id == @$this->_doc->document_id) {
+        if ($doc->document_id == ($this->_doc->document_id  ?? 0)) {
             $row->setAttribute('class', 'table-success');
         }
 

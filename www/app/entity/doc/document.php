@@ -11,39 +11,38 @@ use App\System;
  */
 class Document extends \ZCL\DB\Entity
 {
-
     // состояния  документа
-    const STATE_NEW         = 1;     //Новый
-    const STATE_EDITED      = 2;  //Отредактирован
-    const STATE_CANCELED    = 3;      //Отменен
-    const STATE_EXECUTED    = 5;      // Проведен
-    const STATE_DELETED     = 6;       //  Удален
-    const STATE_INPROCESS   = 7; // в  работе
-    const STATE_WA          = 8; // ждет подтверждения
-    const STATE_CLOSED      = 9; // Закрыт (выполнен и оплачен)
-    const STATE_INSHIPMENT  = 11; // В доставке
-    const STATE_DELIVERED   = 14; // доставлен
-    const STATE_REFUSED     = 15; // отклонен
-    const STATE_SHIFTED     = 16; // отложен
-    const STATE_FAIL        = 17; // Аннулирован
-    const STATE_FINISHED    = 18; // Закончен
-    const STATE_APPROVED    = 19;      //  Готов к выполнению
-    const STATE_READYTOSHIP = 20; // готов к отправке   
-    const STATE_WP = 21; // ждет  оплату   
-    const STATE_PAYED = 22; // Оплачен
-    
+    public const STATE_NEW         = 1;     //Новый
+    public const STATE_EDITED      = 2;  //Отредактирован
+    public const STATE_CANCELED    = 3;      //Отменен
+    public const STATE_EXECUTED    = 5;      // Проведен
+    public const STATE_DELETED     = 6;       //  Удален
+    public const STATE_INPROCESS   = 7; // в  работе
+    public const STATE_WA          = 8; // ждет подтверждения
+    public const STATE_CLOSED      = 9; // Закрыт (выполнен и оплачен)
+    public const STATE_INSHIPMENT  = 11; // В доставке
+    public const STATE_DELIVERED   = 14; // доставлен
+    public const STATE_REFUSED     = 15; // отклонен
+    public const STATE_SHIFTED     = 16; // отложен
+    public const STATE_FAIL        = 17; // Аннулирован
+    public const STATE_FINISHED    = 18; // Закончен
+    public const STATE_APPROVED    = 19;      //  Готов к выполнению
+    public const STATE_READYTOSHIP = 20; // готов к отправке
+    public const STATE_WP          = 21; // ждет  оплату
+    public const STATE_PAYED       = 22; // Оплачен
+
     // типы  экспорта
-    const EX_WORD  = 1;    //  Word
-    const EX_EXCEL = 2;    //  Excel
-    const EX_PDF   = 3;    //  PDF
-    const EX_POS   = 4;    //  POS терминал
-    const EX_MAIL  = 5;    //  Отправка  email
+    public const EX_WORD  = 1;    //  Word
+    public const EX_EXCEL = 2;    //  Excel
+    public const EX_PDF   = 3;    //  PDF
+    public const EX_POS   = 4;    //  POS терминал
+    public const EX_MAIL  = 5;    //  Отправка  email
 
     //доставка
-    const DEL_SELF    = 1;    //  самовывоз
-    const DEL_BOY     = 2;    //  курьер
-    const DEL_SERVICE = 3;    //  служба доставки
-    const DEL_NP      = 4;    //  новая почта
+    public const DEL_SELF    = 1;    //  самовывоз
+    public const DEL_BOY     = 2;    //  курьер
+    public const DEL_SERVICE = 3;    //  служба доставки
+    public const DEL_NP      = 4;    //  новая почта
 
     /**
      * Ассоциативный массив   с атрибутами заголовка  документа
@@ -57,7 +56,7 @@ class Document extends \ZCL\DB\Entity
      *
      * @var mixed
      */
-    public         $detaildata = array();
+    public $detaildata = array();
     private static $_metalist  = array();
 
     /**
@@ -92,11 +91,11 @@ class Document extends \ZCL\DB\Entity
         $this->headerdata = array();
         $this->detaildata = array();
         $this->headerdata['contract_id'] = 0;
-        
-        $hash = md5(rand(1,1000000), false);
-        $hash = base64_encode(substr($hash,0,24));
+
+        $hash = md5(rand(1, 1000000), false);
+        $hash = base64_encode(substr($hash, 0, 24));
         $this->headerdata['hash'] = strtolower($hash)  ;
-               
+
     }
 
     /**
@@ -110,12 +109,19 @@ class Document extends \ZCL\DB\Entity
     protected function afterLoad() {
         $this->document_date = strtotime($this->document_date);
         $this->lastupdate = strtotime($this->lastupdate);
-        
+
         $this->unpackData();
     }
 
     protected function beforeSave() {
         $this->lastupdate=time();
+
+        $common = \App\System::getOptions('common') ;
+        $da = $common['actualdate'] ?? 0 ;
+
+        if($da>$this->document_date) {
+            throw new \Exception("Не можна зберігати документ старший " .date('Y-m-d', $da));
+        }
 
 
         if (false == $this->checkUniqueNumber()) {
@@ -127,16 +133,16 @@ class Document extends \ZCL\DB\Entity
             $this->headerdata['parent_number'] = $p->document_number;
         }
         $this->packData();
-        
-        
-        
-        $prev = Document::getFirst(" document_id <> {$this->document_id} and user_id = {$this->user_id} and  meta_id={$this->meta_id}","document_id  desc");
+
+
+
+        $prev = Document::getFirst(" document_id <> {$this->document_id} and user_id = {$this->user_id} and  meta_id={$this->meta_id}", "document_id  desc");
         $diff = time() - $prev->lastupdate ;
         if($diff <= 10 && $prev != false && $this->amount==$prev->amount) {
-          // throw new \Exception("Дублювання документа");  
+            // throw new \Exception("Дублювання документа");
         }
-        
-        
+
+
     }
 
     /**
@@ -150,12 +156,12 @@ class Document extends \ZCL\DB\Entity
 
         foreach ($this->headerdata as $key => $value) {
 
-           $value= str_replace('<![CDATA[','',$value) ;
-           $value= str_replace(']]>','',$value) ;
- 
+            $value= str_replace('<![CDATA[', '', $value) ;
+            $value= str_replace(']]>', '', $value) ;
+
             if (strpos($value, '[CDATA[') !== false) {
-              //  \App\System::setWarnMsg('CDATA в  поле  обьекта');
-             //   \App\Helper::log(' CDATA в  поле  обьекта');
+                //  \App\System::setWarnMsg('CDATA в  поле  обьекта');
+                //   \App\Helper::log(' CDATA в  поле  обьекта');
                 continue;
             }
 
@@ -170,7 +176,7 @@ class Document extends \ZCL\DB\Entity
 
         $this->content .= "</doc>";
     }
-  
+
     /**
      * распаковка из  XML
      *
@@ -185,12 +191,12 @@ class Document extends \ZCL\DB\Entity
         $xml = @simplexml_load_string($this->content) ;
         if($xml==false) {
 
-           $logger->error("Документ " . $this->document_id . " Невірний  контент" );
-         //  $logger->error( $this->content );
-           return;
+            $logger->error("Документ " . $this->document_id . " Невірний  контент");
+            //  $logger->error( $this->content );
+            return;
         }
-            
-            
+
+
         foreach ($xml->header->children() as $child) {
             $ch = (string)$child;
             /*   if(is_numeric($ch)) {
@@ -201,7 +207,7 @@ class Document extends \ZCL\DB\Entity
             $this->headerdata[(string)$child->getName()] = $ch;
         }
 
-        
+
 
 
     }
@@ -221,11 +227,11 @@ class Document extends \ZCL\DB\Entity
     public function generatePosReport($ps=false) {
         return "";
     }
-   
-   /**
-   * Генерация  команд для сервера  печати
-   * 
-   */
+
+    /**
+    * Генерация  команд для сервера  печати
+    *
+    */
     public function generatePS() {
         return "";
     }
@@ -261,7 +267,7 @@ class Document extends \ZCL\DB\Entity
      */
     protected function Cancel() {
         $conn = \ZDB\DB::getConnect();
-        $conn->StartTrans();
+        $conn->BeginTrans();
         try {
             // если  метод не переопределен  в  наследнике удаляем  документ  со  всех  движений
             $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
@@ -269,7 +275,7 @@ class Document extends \ZCL\DB\Entity
             //удаляем освободившиеся стоки
             $conn->Execute("delete from store_stock where stock_id not in (select  stock_id  from entrylist) ");
 
-            //отменяем оплаты   
+            //отменяем оплаты
             $conn->Execute("delete from paylist where document_id = " . $this->document_id);
             //лицевые счета  контрагентов
 
@@ -279,7 +285,7 @@ class Document extends \ZCL\DB\Entity
             $conn->Execute("delete from empacc where document_id=" . $this->document_id);
 
 
-            $conn->CompleteTrans();
+            $conn->CommitTrans();
         } catch(\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
@@ -297,7 +303,7 @@ class Document extends \ZCL\DB\Entity
      *
      * @param mixed $classname
      */
-    public static function create($classname, $branch_id = 0) {
+    public static function create($classname, $branch_id = 0): Document {
         $arr = explode("\\", $classname);
         $classname = $arr[count($arr) - 1];
         $conn = \ZDB\DB::getConnect();
@@ -307,11 +313,19 @@ class Document extends \ZCL\DB\Entity
 
         $doc = new $fullclassname();
         $doc->meta_id = $meta['meta_id'];
-        $doc->user_id = \App\System::getUser()->user_id;
+        $user = \App\System::getUser();
+
+        $doc->user_id = $user->user_id;
 
         $doc->branch_id = $branch_id;
         if ($branch_id == 0) {
             $doc->branch_id = \App\Acl::checkCurrentBranch();
+        }
+
+        $doc->headerdata['cashier'] = $user->username;
+        $common = \App\System::getOptions("common");
+        if(strlen($common['cashier'])>0) {
+            $doc->headerdata['cashier'] = $common['cashier'] ;
         }
 
         return $doc;
@@ -320,7 +334,7 @@ class Document extends \ZCL\DB\Entity
     /**
      * Приведение  типа и клонирование  документа
      */
-    public function cast() {
+    public function cast(): Document {
 
         if (strlen($this->meta_name) == 0) {
             $metarow = Helper::getMetaType($this->meta_id);
@@ -336,16 +350,16 @@ class Document extends \ZCL\DB\Entity
      * Обновляет состояние  документа
      *
      * @param mixed $state
-     * @param mixed $onlystate   только  смена  статуса  без  проводок    
+     * @param mixed $onlystate   только  смена  статуса  без  проводок
      */
-    public function updateStatus($state,$onlystate = false) {
+    public function updateStatus($state, $onlystate = false) {
 
 
         if ($this->document_id == 0) {
             return false;
         }
-     
-        //если нет права  выполнять    
+
+        //если нет права  выполнять
         if ($state >= self::STATE_EXECUTED && \App\Acl::checkExeDoc($this, false, false) == false) {
 
             $this->headerdata['_state_before_approve_'] = $state;  //целевой статус
@@ -356,13 +370,13 @@ class Document extends \ZCL\DB\Entity
             $state = self::STATE_WA;   //переводим на   ожидание  утверждения
         } else {
             if ($state == self::STATE_CANCELED) {
-              if($onlystate == false) {
-                $this->Cancel();  
-              } 
+                if($onlystate == false) {
+                    $this->Cancel();
+                }
             } else {
                 if ($state == self::STATE_EXECUTED) {
                     if($onlystate == false) {
-                       $this->Execute();                        
+                        $this->Execute();
                     }
 
                 }
@@ -373,21 +387,21 @@ class Document extends \ZCL\DB\Entity
         $oldstate = $this->state;
         $this->state = $state;
         $this->insertLog($state);
-    
-  
+
+
         $this->priority = $this->getPriorytyByState($this->state) ;
-    
+
         $this->save();
 
-        if ($oldstate != $state   ) {
-             $doc = $this->cast();
-             if($onlystate == false) {
-                 $doc->onState($state,$oldstate);
-             }
+        if ($oldstate != $state) {
+            $doc = $this->cast();
+            if($onlystate == false) {
+                $doc->onState($state, $oldstate);
+            }
 
             \App\Entity\Subscribe::onDocumentState($doc->document_id, $state);
-        }        
-        
+        }
+
         return true;
     }
 
@@ -398,30 +412,66 @@ class Document extends \ZCL\DB\Entity
      * @param mixed $state новый  статус
      * @param mixed $oldstate старый статус
      */
-    protected function onState($state,$oldstate) {
+    protected function onState($state, $oldstate) {
 
     }
-  
+
     public function getPriorytyByState($state) {
-        if($state == self::STATE_NEW)          return 100;
-        if($state == self::STATE_CLOSED)       return 1;
-        if($state == self::STATE_EXECUTED)     return 10;
-        if($state == self::STATE_FINISHED)     return 20;
-        if($state == self::STATE_DELIVERED)    return 30;
-        if($state == self::STATE_INPROCESS)    return 50;
-        if($state == self::STATE_SHIFTED)      return 40;
-        if($state == self::STATE_INSHIPMENT)   return 50;
-        if($state == self::STATE_WA)           return 90;
-        if($state == self::STATE_APPROVED)     return 80;
-        if($state == self::STATE_CANCELED)     return 70;
-        if($state == self::STATE_EDITED)       return 80;
-        if($state == self::STATE_REFUSED)      return 3;
-        if($state == self::STATE_DELETED)      return 2;
-        if($state == self::STATE_FAIL)         return 3;
-        if($state == self::STATE_READYTOSHIP)  return 50;
-        if($state == self::STATE_WP)           return 75;
-        if($state == self::STATE_PAYED)        return 5;
- 
+        if($state == self::STATE_NEW) {
+            return 100;
+        }
+        if($state == self::STATE_CLOSED) {
+            return 1;
+        }
+        if($state == self::STATE_EXECUTED) {
+            return 10;
+        }
+        if($state == self::STATE_FINISHED) {
+            return 20;
+        }
+        if($state == self::STATE_DELIVERED) {
+            return 30;
+        }
+        if($state == self::STATE_INPROCESS) {
+            return 50;
+        }
+        if($state == self::STATE_SHIFTED) {
+            return 40;
+        }
+        if($state == self::STATE_INSHIPMENT) {
+            return 50;
+        }
+        if($state == self::STATE_WA) {
+            return 90;
+        }
+        if($state == self::STATE_APPROVED) {
+            return 80;
+        }
+        if($state == self::STATE_CANCELED) {
+            return 70;
+        }
+        if($state == self::STATE_EDITED) {
+            return 80;
+        }
+        if($state == self::STATE_REFUSED) {
+            return 3;
+        }
+        if($state == self::STATE_DELETED) {
+            return 2;
+        }
+        if($state == self::STATE_FAIL) {
+            return 3;
+        }
+        if($state == self::STATE_READYTOSHIP) {
+            return 50;
+        }
+        if($state == self::STATE_WP) {
+            return 75;
+        }
+        if($state == self::STATE_PAYED) {
+            return 5;
+        }
+
         return 0;
     }
 
@@ -499,10 +549,10 @@ class Document extends \ZCL\DB\Entity
 
         return $list;
     }
-    
+
     /**
     * список  для  произвольного перевода  статуса
-    * 
+    *
     */
     public static function getStateListMan() {
         $list = array();
@@ -531,8 +581,8 @@ class Document extends \ZCL\DB\Entity
         if ($this->branch_id > 0) {
             $branch = " and branch_id=" . $this->branch_id;
         }
-      //  $doc = Document::getFirst("meta_id={$this->meta_id}  and  document_number = '{$this->document_number}' {$branch}");
-        $doc = Document::getFirst( " document_number = '{$this->document_number}' {$branch}");
+        //  $doc = Document::getFirst("meta_id={$this->meta_id}  and  document_number = '{$this->document_number}' {$branch}");
+        $doc = Document::getFirst(" document_number = '{$this->document_number}' {$branch}");
         if ($doc instanceof Document) {
             if ($this->document_id != $doc->document_id) {
                 return false;
@@ -543,7 +593,7 @@ class Document extends \ZCL\DB\Entity
 
     public function nextNumber($branch_id = 0) {
         $doc = $this->cast();
- 
+
         $conn = \ZDB\DB::getConnect();
         $branch = "";
         if ($this->branch_id > 0) {
@@ -552,32 +602,32 @@ class Document extends \ZCL\DB\Entity
         if ($branch_id > 0) {
             $branch = " and branch_id=" . $branch_id;
         }
-         $limit =" limit 0,1";
-            if($conn->dataProvider=="postgres") {
-                $limit =" limit 1";
-            }  
+        $limit =" limit 0,1";
+        if($conn->dataProvider=="postgres") {
+            $limit =" limit 1";
+        }
         $sql = "select document_number from  documents  where   meta_id='{$this->meta_id}'   {$branch}  order  by document_id desc ".$limit;
         $prevnumber = $conn->GetOne($sql);
         if (strlen($prevnumber) == 0) {
             $prevnumber = $doc->getNumberTemplate();
         } else {
- //           $prevnumber = $d->document_number;             
+            //           $prevnumber = $d->document_number;
         }
         $letter = preg_replace('/[0-9]/', '', $prevnumber);
         $letter = $conn->qstr($letter.'%');
 
         $sql = "select document_number from  documents  where   document_number like {$letter}     {$branch}  order  by document_id desc ".$limit;
         $prevnumber = $conn->GetOne($sql);
-           
+
         if (strlen($prevnumber) == 0) {
             $prevnumber =  $doc->getNumberTemplate();
         } else {
-//            $prevnumber = $d->document_number;             
+            //            $prevnumber = $d->document_number;
         }
 
-        
-        
-        
+
+
+
         if (strlen($prevnumber) == 0) {
             return '';
         }
@@ -588,7 +638,7 @@ class Document extends \ZCL\DB\Entity
 
         $letter = preg_replace('/[0-9]/', '', $prevnumber);
         $next = $letter . sprintf("%05d", ++$number);
- 
+
 
 
         return $next;
@@ -673,15 +723,15 @@ class Document extends \ZCL\DB\Entity
     public function insertLog($state) {
         $conn = \ZDB\DB::getConnect();
         $host = $_SERVER["REMOTE_ADDR"];
-        if($host==null){
-          $host = "";  
-        } 
+        if($host==null) {
+            $host = "";
+        }
         $host = $conn->qstr($host);
         $user = \App\System::getUser();
-        if($user == null){
+        if($user == null) {
             $user = \App\Entity\User::getByLogin('admin') ;
         }
-        
+
         $sql = "insert into docstatelog (document_id,user_id,createdon,docstate,hostname) values({$this->document_id},{$user->user_id},now(),{$state},{$host})";
         $conn->Execute($sql);
     }
@@ -759,12 +809,12 @@ class Document extends \ZCL\DB\Entity
         return $conn->GetOne("select coalesce(sum(amount),0) from paylist_view where   document_id = {$this->document_id}  ");
     }
 
-   
-   /* public function hasEntry() {
-        $conn = \ZDB\DB::getConnect();
 
-        return $conn->GetOne("select coalesce(sum(amount),0) from paylist_view where   document_id = {$this->document_id}  ");
-    } */
+    /* public function hasEntry() {
+         $conn = \ZDB\DB::getConnect();
+
+         return $conn->GetOne("select coalesce(sum(amount),0) from paylist_view where   document_id = {$this->document_id}  ");
+     } */
 
     /**
      * список  дочерних
@@ -798,7 +848,7 @@ class Document extends \ZCL\DB\Entity
      *
      */
     public function unpackDetails($dataname) {
-        $list = @unserialize(@base64_decode($this->headerdata[$dataname]));
+        $list = @unserialize(@base64_decode($this->headerdata[$dataname] ??''));
         if (is_array($list)) {
             return $list;
         } else {
@@ -987,20 +1037,24 @@ class Document extends \ZCL\DB\Entity
      *
      */
     protected function getQRCodeImage($text=false) {
-        
+
         $print = System::getOption('common', 'printoutqrcode');
         if ($print == 0) {
             return '';
         }
-        $url =$this->getFiscUrl( );
-       // $firm = \App\Entity\Firm::load($this->firm_id);
-        if($text){
-           if(strlen($url)==0)  return false;
-           return $url;
+        $url =$this->getFiscUrl();
+        // $firm = \App\Entity\Firm::load($this->firm_id);
+        if($text) {
+            if(strlen($url)==0) {
+                return false;
+            }
+            return $url;
         }
-        if(strlen($url)==0)  return '';
-   
-        $dataUri = \App\Util::generateQR($url,200,5)  ;
+        if(strlen($url)==0) {
+            return '';
+        }
+
+        $dataUri = \App\Util::generateQR($url, 200, 5)  ;
         $img = "<img style=\"width:80%\"  src=\"{$dataUri}\"  />";
 
         return $img;
@@ -1008,119 +1062,137 @@ class Document extends \ZCL\DB\Entity
 
     /**
     * put your comment there...
-    * 
+    *
     * @param mixed $text
     * @return mixed
     */
     public function getQRPay() {
-        
-        if(in_array($this->meta_name,['GoodsIssue','Invoice','Order','POSCheck'])  ==  false) return false;       
 
-        if($this->firm_id >0){
-           $f =  \App\Entity\Firm::load( $this->firm_id) ;            
-        }  else {
-           $f =  \App\Entity\Firm::load(    \App\Helper::getDefFirm()   );
+        if(in_array($this->meta_name, ['GoodsIssue','Invoice','Order','POSCheck'])  ==  false) {
+            return false;
         }
 
-        if($f == null)  return false;
-        if(strlen($f->tin)==0 || strlen($f->iban) == 0 )  return false;
-        
-  
+        if($this->firm_id >0) {
+            $f =  \App\Entity\Firm::load($this->firm_id) ;
+        } else {
+            $f =  \App\Entity\Firm::load(\App\Helper::getDefFirm());
+        }
+
+        if($f == null) {
+            return false;
+        }
+        if(strlen($f->tin)==0 || strlen($f->iban) == 0) {
+            return false;
+        }
+
+
         $number = $this->document_number;
         if(strlen($this->headerdata['outnumber']) > 0) {
-           $number  =    $this->headerdata['outnumber']  ;
+            $number  =    $this->headerdata['outnumber']  ;
         }
-        
+
         $payment=$this->payamount;
         if($this->headerdata['payedcard'] > 0) {
-           $payment =  $this->headerdata['payedcard'];
+            $payment =  $this->headerdata['payedcard'];
         }
-        
+
         $url = "BCD\n002\n1\nUCT\n\n";
-        $url = $url . ( strlen($f->payname) > 0 ? $f->payname : $f->firm_name ) ."\n";
-        $url = $url .  $f->iban."\n";        
+        $url = $url . (strlen($f->payname) > 0 ? $f->payname : $f->firm_name) ."\n";
+        $url = $url .  $f->iban."\n";
         $url = $url .  "UAH". \App\Helper::fa($payment)."\n";
         $url = $url .  $f->tin."\n\n\n";
         $url = $url .  $this->meta_desc ." ".$number." від ".  \App\Helper::fd($this->document_date) ."\n\n";
 
         $url = base64_encode($url);
-        $url = str_replace("+","-",$url) ;
-        $url = str_replace("/","_",$url) ;
-        $url = str_replace("=","",$url) ;
-        
+        $url = str_replace("+", "-", $url) ;
+        $url = str_replace("/", "_", $url) ;
+        $url = str_replace("=", "", $url) ;
+
         $url = "https://bank.gov.ua/qr/".$url;
 
-        $dataUri = \App\Util::generateQR($url,240,10)  ;
+        $dataUri = \App\Util::generateQR($url, 240, 10)  ;
         $img = "<img style=\"width:260px\"  src=\"{$dataUri}\"  />";
 
         return array('qr'=>$img,
           'url'=>$url,
 //          "urlshort"=>"<a href=\"{$url}\">Відкрити посилання</a>",
-          'link'=>"<a href=\"{$url}\">{$url}</a>" 
+          'link'=>"<a href=\"{$url}\">{$url}</a>"
         );
     }
 
-    
-  
-    
-    
+
+
+
+
     /**
     *    возвращает ссылку  на чек в  налоговой
     *    https://cabinet.tax.gov.ua/cashregs/check?fn=4000191957&id=165093488&date=20220105&time=132430&sum=840
     */
-      public function getFiscUrl( ) {
-        if(strlen($this->headerdata["tax_url"])>0) return $this->headerdata["tax_url"];
-       
-        if(strlen($this->headerdata["fiscalnumber"])==0) return "";
-        
+    public function getFiscUrl() {
+        if(strlen($this->headerdata["tax_url"])>0) {
+            return $this->headerdata["tax_url"];
+        }
+
+        if(strlen($this->headerdata["fiscalnumber"])==0) {
+            return "";
+        }
+
         $pos = \App\Entity\Pos::load($this->headerdata['pos']);
-        
+
         $url = "https://cabinet.tax.gov.ua/cashregs/check?" ;
         $url .=  "fn=". $pos->fiscalnumber ;
         $url .=  "&id=". $this->headerdata["fiscalnumber"] ;
         $url .=   $this->headerdata["fiscdts"] ;
-    
+
         return $url;
-      }
-    
+    }
+
     /**
      * проверка  может  ли  быть  отменен
      * Возвращает  текст ошибки если  нет
      */
     public function canCanceled() {
+
+        $common = \App\System::getOptions('common') ;
+        $da = $common['actualdate'] ?? 0 ;
+
+        if($da>$this->document_date) {
+            return  "Не можна відміняти документ старший " .date('Y-m-d', $da);
+        }
+
         return "";
     }
 
-    public   function getID() {
+    public function getID() {
         return $this->document_id;
-    }  
-    
-    
-    public  function getAmountReg(){
+    }
+
+
+    public function getAmountReg() {
         $am=$this->amount;
         if($this->payamount <> 0) {
-           $am=$this->payamount;    
+            $am=$this->payamount;
         }
-        
+
         return  $am;
     }
 
     /**
     * бонусы,  начисленные по  документу
-    * 
+    *
     * @param mixed $add  начисленые  иначе  списаные
     */
     public function getBonus($add=true) {
         $conn = \ZDB\DB::getConnect();
-        if($add){
-           $sql = "select coalesce(sum(bonus),0) as bonus from paylist where bonus > 0 and document_id =" . $this->document_id;   
+        if($add) {
+            $sql = "select coalesce(sum(bonus),0) as bonus from paylist where bonus > 0 and document_id =" . $this->document_id;
         } else {
-           $sql = "select coalesce(sum(0-bonus),0) as bonus from paylist where bonus < 0 and document_id =" . $this->document_id;     
+            $sql = "select coalesce(sum(0-bonus),0) as bonus from paylist where bonus < 0 and document_id =" . $this->document_id;
         }
 
         return $conn->GetOne($sql);
-      
+
     }
- 
- 
+
+
 }

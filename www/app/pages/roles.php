@@ -2,26 +2,25 @@
 
 namespace App\Pages;
 
-use \Zippy\Html\DataList\DataView;
-use \App\Entity\User;
-use \App\Entity\UserRole;
-use \App\System;
-use \App\Helper as H;
-use \App\Application as App;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Panel;
-use \Zippy\Binding\PropertyBinding as Bind;
+use Zippy\Html\DataList\DataView;
+use App\Entity\User;
+use App\Entity\UserRole;
+use App\System;
+use App\Helper as H;
+use App\Application as App;
+use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Panel;
+use Zippy\Binding\PropertyBinding as Bind;
 
 class Roles extends \App\Pages\Base
 {
-
     public $role = null;
 
     public function __construct() {
@@ -472,7 +471,6 @@ class Roles extends \App\Pages\Base
 
 class RoleDataSource implements \Zippy\Interfaces\DataSource
 {
-
     //private $model, $db;
 
     public function getItemCount() {

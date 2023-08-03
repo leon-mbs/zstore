@@ -2,12 +2,11 @@
 
 namespace App\API;
 
-use \App\Entity\Item;
-use \App\Helper as H;
+use App\Entity\Item;
+use App\Helper as H;
 
-class items extends  JsonRPC
+class items extends JsonRPC
 {
-
     // список категорий  ТМЦ
     public function catlist() {
 

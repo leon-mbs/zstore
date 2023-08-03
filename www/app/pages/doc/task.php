@@ -28,15 +28,14 @@ use App\Helper as H;
  */
 class Task extends \App\Pages\Base
 {
-
     private $_doc;
-    public  $_prodlist    = array();
-    public  $_servicelist = array();
-    public  $_eqlist      = array();
-    public  $_emplist     = array();
+    public $_prodlist    = array();
+    public $_servicelist = array();
+    public $_eqlist      = array();
+    public $_emplist     = array();
     private $_basedocid   = 0;
 
- 
+
 
     public function __construct($docid = 0, $basedocid = 0, $date = null) {
         parent::__construct();
@@ -53,11 +52,11 @@ class Task extends \App\Pages\Base
 
         $this->docform->add(new DropDownChoice('parea', Prodarea::findArray("pa_name", ""), 0));
 
-     //   $this->docform->add(new SubmitLink('addservice'))->onClick($this, 'addserviceOnClick');
-       // $this->docform->add(new SubmitLink('addprod'))->onClick($this, 'addprodOnClick');
+        //   $this->docform->add(new SubmitLink('addservice'))->onClick($this, 'addserviceOnClick');
+        // $this->docform->add(new SubmitLink('addprod'))->onClick($this, 'addprodOnClick');
 
-       // $this->docform->add(new SubmitLink('addeq'))->onClick($this, 'addeqOnClick');
-      //  $this->docform->add(new SubmitLink('addemp'))->onClick($this, 'addempOnClick');
+        // $this->docform->add(new SubmitLink('addeq'))->onClick($this, 'addeqOnClick');
+        //  $this->docform->add(new SubmitLink('addemp'))->onClick($this, 'addempOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
@@ -88,7 +87,7 @@ class Task extends \App\Pages\Base
         $this->editdetail4->add(new DropDownChoice('editeq', Equipment::getQuipment()));
         $this->editdetail4->add(new SubmitButton('saverow4'))->onClick($this, 'saverow4OnClick');
 
-        if ($docid > 0) {    
+        if ($docid > 0) {
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->notes->setText($this->_doc->notes);
@@ -141,7 +140,7 @@ class Task extends \App\Pages\Base
         }
     }
 
-   
+
     public function detailOnRow($row) {
         $service = $row->getDataItem();
 
@@ -155,13 +154,13 @@ class Task extends \App\Pages\Base
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
 
-    
+
     public function deleteOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
         $service = $sender->owner->getDataItem();
-        $rowid =  array_search($service,$this->_servicelist,true);
+        $rowid =  array_search($service, $this->_servicelist, true);
 
         $this->_servicelist = array_diff_key($this->_servicelist, array($rowid => $this->_servicelist[$rowid]));
         $this->detail->Reload();
@@ -184,7 +183,7 @@ class Task extends \App\Pages\Base
         }
 
         $this->_servicelist[] = $service;
- 
+
         $this->detail->Reload();
 
         $this->editdetail->clean();
@@ -192,7 +191,7 @@ class Task extends \App\Pages\Base
     }
 
     //prod
-    
+
     public function detailprodOnRow($row) {
         $item = $row->getDataItem();
 
@@ -206,14 +205,14 @@ class Task extends \App\Pages\Base
         $row->add(new ClickLink('deleteprod'))->onClick($this, 'deleteprodOnClick');
     }
 
-    
+
     public function deleteprodOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
         $item = $sender->owner->getDataItem();
-        $rowid =  array_search($item,$this->_prodlist,true);
- 
+        $rowid =  array_search($item, $this->_prodlist, true);
+
         $this->_prodlist = array_diff_key($this->_prodlist, array($rowid => $this->_prodlist[$rowid]));
 
         $this->detailprod->Reload();
@@ -230,11 +229,11 @@ class Task extends \App\Pages\Base
         $item->quantity = $this->editdetailprod->editqtyprod->getText();
         $item->desc = $this->editdetailprod->editdescprod->getText();
 
- 
-        
+
+
         $this->_prodlist[ ] = $item;
 
-     
+
 
         $this->detailprod->Reload();
 
@@ -245,7 +244,7 @@ class Task extends \App\Pages\Base
     }
 
     //employee
- 
+
     public function saverow3OnClick($sender) {
         $id = $this->editdetail3->editemp->getValue();
         if ($id == 0) {
@@ -273,9 +272,9 @@ class Task extends \App\Pages\Base
         $this->_emplist = array_diff_key($this->_emplist, array($emp->employee_id => $this->_emplist[$emp->employee_id]));
         $this->detail3->Reload();
     }
-    
+
     //equipment
-   
+
     public function saverow4OnClick($sender) {
         $id = $this->editdetail4->editeq->getValue();
         if ($id == 0) {
@@ -315,7 +314,7 @@ class Task extends \App\Pages\Base
 
         $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
         $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
-        $this->_doc->headerdata['start'] = $this->docform->document_time->getDateTime($this->_doc->document_date);;
+        $this->_doc->headerdata['start'] = $this->docform->document_time->getDateTime($this->_doc->document_date);
         $this->_doc->headerdata['taskhours'] = $this->docform->taskhours->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->customer_id = $this->docform->customer->getKey();

@@ -15,7 +15,6 @@ use Zippy\Html\Panel;
  */
 class ABC extends \App\Pages\Base
 {
-
     private $typelist = array();
     private $br       = '';
 
@@ -39,7 +38,7 @@ class ABC extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('type', $this->typelist, 1));
 
         $this->add(new Panel('detail'))->setVisible(false);
- 
+
         $this->detail->add(new Label('preview'));
 
         $brids = \App\ACL::getBranchIDsConstraint();
@@ -53,7 +52,7 @@ class ABC extends \App\Pages\Base
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
         \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
-      
+
 
         $this->detail->setVisible(true);
     }

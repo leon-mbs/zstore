@@ -156,3 +156,13 @@ input[type=time] {
 a {
     cursor:pointer;
 }
+
+@media print {
+            @page {
+              margin: 0!important;
+            }
+            body {
+              margin-top: 0mm !important;
+            }
+
+

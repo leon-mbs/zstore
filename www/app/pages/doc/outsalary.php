@@ -20,16 +20,15 @@ use Zippy\Html\Form\TextInput;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\SubmitLink;
-use \Zippy\Binding\PropertyBinding as Bind;
+use Zippy\Binding\PropertyBinding as Bind;
 
 /**
  * Страница   выплата  зарплаты
  */
 class OutSalary extends \App\Pages\Base
 {
-
     private $_doc;
-    public  $_list = array();
+    public $_list = array();
 
     public function __construct($docid = 0) {
         parent::__construct();
@@ -205,10 +204,10 @@ class OutSalary extends \App\Pages\Base
 
                 $rows = EmpAcc::getBalance();
                 foreach ($rows as $row) {
-                   if($this->_list[$row['emp_id']] instanceof  Employee) {
-                      $this->_list[$row['emp_id']]->amount = H::fa($row['am']);    
-                   }
-                   
+                    if($this->_list[$row['emp_id']] instanceof  Employee) {
+                        $this->_list[$row['emp_id']]->amount = H::fa($row['am']);
+                    }
+
                 }
 
             }
@@ -244,7 +243,7 @@ class OutSalary extends \App\Pages\Base
     public function delOnClick($sender) {
         $_list = array();
         foreach ($this->_list as $id => $e) {
-            if ($e->_ch == TRUE) {
+            if ($e->_ch == true) {
                 continue;
             }
             $_list[$id] = $e;

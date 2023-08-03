@@ -21,13 +21,12 @@ use Zippy\Html\Panel;
 
 class TaskList extends \App\Pages\Base
 {
-
     private $_task;
     private $_taskds;
-    public  $_users    = array();
-    public  $_items    = array();
-    public  $_store_id = 0;
-    public  $_discount = 0;
+    public $_users    = array();
+    public $_items    = array();
+    public $_store_id = 0;
+    public $_discount = 0;
     private $_taskscnt = array();
 
     public function __construct() {
@@ -83,7 +82,7 @@ class TaskList extends \App\Pages\Base
     public function onTab($sender) {
 
         $this->_tvars['tabcbadge'] = $sender->id == 'tabc' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
-        $this->_tvars['tabsbadge'] = $sender->id == 'tabs' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";;
+        $this->_tvars['tabsbadge'] = $sender->id == 'tabs' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
 
         $this->caltab->setVisible($sender->id == 'tabc');
         $this->tasktab->setVisible($sender->id == 'tabs');
@@ -97,7 +96,7 @@ class TaskList extends \App\Pages\Base
         $row->add(new Label('tasknumber', $task->document_number));
         $row->add(new Label('taskdesc', $task->notes));
 
-        $row->add(new Label('taskdocument_date', H::fdt($task->headerdata['start'])));
+        $row->add(new Label('taskdocument_date', H::fdt($task->headerdata['start']??null)));
         $row->add(new Label('taskhours', $task->headerdata['taskhours']));
         $stname = Document::getStateName($task->state);
         $row->add(new Label('taskstatus', $stname));
@@ -133,7 +132,7 @@ class TaskList extends \App\Pages\Base
         if ($task->state == Document::STATE_CLOSED || $task->state == Document::STATE_EXECUTED) {
             $row->taskedit->setVisible(false);
         }
-        if ($task->document_id == @$this->_task->document_id) {
+        if ($task->document_id == ($this->_task->document_id?? 0) ) {
             $row->setAttribute('class', 'table-success');
         }
     }
@@ -283,13 +282,13 @@ class TaskList extends \App\Pages\Base
             if ($item->state == Document::STATE_CLOSED) {
                 $col = "#dddddd";
             }
-            if (strlen($item->headerdata['taskhours']) == 0) {
+            if (strlen($item->headerdata['taskhours'] ?? '') == 0) {
                 $item->headerdata['taskhours'] = 0;
             }
-            $d = ($item->headerdata['taskhours']);
-            $end_date = $item->headerdata['start'] + round(3600 * $d);
+            $d = ($item->headerdata['taskhours']??0);
+            $end_date = $item->headerdata['start'] ??0 + round(3600 * $d);
 
-            $tasks[] = new \ZCL\Calendar\CEvent($item->document_id, $item->document_number, $item->headerdata['start'], $end_date, $col);
+            $tasks[] = new \ZCL\Calendar\CEvent($item->document_id, $item->document_number, $item->headerdata['start']??0, $end_date, $col);
         }
 
 

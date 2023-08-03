@@ -15,7 +15,6 @@ use Zippy\Html\Panel;
 //Производственные  участки
 class ProdAreaList extends \App\Pages\Base
 {
-
     private $_pa;
 
     public function __construct() {

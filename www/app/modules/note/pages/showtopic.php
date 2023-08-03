@@ -13,13 +13,12 @@ use Zippy\Html\Link\ClickLink;
  */
 class ShowTopic extends \App\Pages\Base
 {
-
     public $_topic;
 
     public function __construct($topic_id) {
 
         parent::__construct();
-         $topic_id = intval($topic_id);
+        $topic_id = intval($topic_id);
 
         $this->_topic = \App\Modules\Note\Entity\Topic::load($topic_id);
         if ($this->_topic == null) {
@@ -43,5 +42,5 @@ class ShowTopic extends \App\Pages\Base
         $this->add(new Label("detail", $this->_topic->detail, true));
     }
 
-     
+
 }

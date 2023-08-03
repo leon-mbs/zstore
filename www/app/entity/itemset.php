@@ -11,7 +11,6 @@ namespace App\Entity;
  */
 class ItemSet extends \ZCL\DB\Entity
 {
-
     protected function init() {
         $this->set_id = 0;
     }

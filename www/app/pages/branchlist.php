@@ -20,7 +20,6 @@ use Zippy\Html\Panel;
 //Филиалы
 class BranchList extends \App\Pages\Base
 {
-
     private $_branch;
 
     public function __construct() {

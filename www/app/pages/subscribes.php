@@ -20,9 +20,8 @@ use App\System;
 
 class Subscribes extends \App\Pages\Base
 {
-
     private $_sub;
-    public  $_subslist = array();
+    public $_subslist = array();
 
     public function __construct() {
         parent::__construct();
@@ -47,7 +46,7 @@ class Subscribes extends \App\Pages\Base
         $this->editform->add(new DropDownChoice('editdoctype', H::getDocTypes(), 0));
         $this->editform->add(new DropDownChoice('editstate', \App\Entity\Doc\Document::getStateList(), 0));
         $this->editform->add(new DropDownChoice('editrecievertype', Subscribe::getRecieverList(), Subscribe::RSV_CUSTOMER))->onChange($this, 'update');
-        $this->editform->add(new DropDownChoice('editmsgtype', Subscribe::getMsgTypeList(), 0))->onChange($this, 'update');;
+        $this->editform->add(new DropDownChoice('editmsgtype', Subscribe::getMsgTypeList(), 0))->onChange($this, 'update');
         $this->editform->add(new DropDownChoice('edituser', \App\Entity\User::findArray('username', 'disabled<>1', 'username'), 0));
 
         $this->editform->add(new SubmitButton('save'))->onClick($this, 'OnSave');
@@ -94,6 +93,7 @@ class Subscribes extends \App\Pages\Base
     public function onAdd($sender) {
         $this->plist->setVisible(false);
         $this->editform->setVisible(true);
+        $this->editform->delete->setVisible(false);
         $this->editform->clean();
         $this->_sub = new Subscribe();
         $this->editform->editeventtype->setValue(Subscribe::EVENT_DOCSTATE);
@@ -103,6 +103,7 @@ class Subscribes extends \App\Pages\Base
 
     public function OnEdit($sender) {
         $this->_sub = $sender->getOwner()->getDataItem();
+        $this->editform->delete->setVisible(true);
 
         $this->editform->editeventtype->setValue($this->_sub->sub_type);
         $this->editform->editrecievertype->setValue($this->_sub->reciever_type);
@@ -165,7 +166,7 @@ class Subscribes extends \App\Pages\Base
         $this->plist->setVisible(true);
         $this->editform->setVisible(false);
 
-//        $this->Reload()  ;
+        //        $this->Reload()  ;
     }
 
     public function OnDelete($sender) {

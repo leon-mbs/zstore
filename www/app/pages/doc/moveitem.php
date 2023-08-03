@@ -25,12 +25,11 @@ use Zippy\Html\Link\SubmitLink;
  */
 class MoveItem extends \App\Pages\Base
 {
-
-    public  $_itemlist = array();
+    public $_itemlist = array();
     private $_doc;
     private $_rowid    = 0;
 
-    public function __construct($docid = 0,$basedocid=0) {
+    public function __construct($docid = 0, $basedocid=0) {
         parent::__construct();
 
         $this->add(new Form('docform'));
@@ -81,21 +80,21 @@ class MoveItem extends \App\Pages\Base
                     if ($basedoc->meta_name == 'ProdReceipt') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
 
-                    
+
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                     }
                     if ($basedoc->meta_name == 'GoodsReceipt') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
 
-                    
+
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                     }
                 }
-                 
+
             }
-        
-        
-        
+
+
+
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
@@ -124,10 +123,10 @@ class MoveItem extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
-        $rowid =  array_search($item,$this->_itemlist,true);
- 
+        $rowid =  array_search($item, $this->_itemlist, true);
+
         $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
-   
+
         $this->docform->detail->Reload();
     }
 
@@ -143,7 +142,7 @@ class MoveItem extends \App\Pages\Base
         $this->editdetail->qtystock->setText('');
         $this->editdetail->editsnumber->setText('');
         $this->_rowid = -1;
-         
+
     }
 
     public function editOnClick($sender) {
@@ -159,8 +158,8 @@ class MoveItem extends \App\Pages\Base
 
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
 
-        $this->_rowid =  array_search($item,$this->_itemlist,true);
-    
+        $this->_rowid =  array_search($item, $this->_itemlist, true);
+
     }
 
     public function saverowOnClick($sender) {
@@ -174,7 +173,7 @@ class MoveItem extends \App\Pages\Base
         }
 
         $item = Item::load($id);
-       
+
         $item->snumber = trim($this->editdetail->editsnumber->getText());
         $item->quantity = $this->editdetail->editquantity->getText();
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
@@ -194,8 +193,8 @@ class MoveItem extends \App\Pages\Base
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
         } else {
-           $this->_itemlist[$this->_rowid] = $item;            
-        }        
+            $this->_itemlist[$this->_rowid] = $item;
+        }
 
 
         $this->editdetail->setVisible(false);
@@ -234,11 +233,11 @@ class MoveItem extends \App\Pages\Base
 
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
-        
+
         if ($this->checkForm() == false) {
             return;
-        }        
-        
+        }
+
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -329,7 +328,7 @@ class MoveItem extends \App\Pages\Base
         $item = Item::load($item_id);
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
 
-      
+
     }
 
     public function OnChangeStore($sender) {
@@ -355,8 +354,8 @@ class MoveItem extends \App\Pages\Base
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
-         $code0 = $code;
-         $code = ltrim($code,'0');
+        $code0 = $code;
+        $code = ltrim($code, '0');
 
         $this->docform->barcode->setText('');
         $store_id = $this->docform->store->getValue();

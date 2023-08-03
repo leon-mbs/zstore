@@ -26,7 +26,6 @@ use Zippy\Html\Panel;
  */
 class GIList extends \App\Pages\Base
 {
-
     private $_doc = null;
 
     /**
@@ -133,26 +132,26 @@ class GIList extends \App\Pages\Base
 
 
         $row->add(new ClickLink('number', $this, 'showOnClick'))->setValue($doc->document_number);
-   
+
         $row->add(new Label('date', H::fd($doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));
         $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
-        $row->add(new Label('order', $doc->headerdata['order']));
+        $row->add(new Label('order', $doc->headerdata['order'] ?? ''));
         $row->add(new Label('customer', $doc->customer_name));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
         $row->add(new Label('firm', $doc->firm_name));
-        $row->add(new Label('ispay'   ))->setVisible(false) ;
-        $row->add(new Label('istruck' ))->setVisible(false) ;
-        if($doc->state >=4){
-           if($doc->payamount > 0 &&  $doc->payamount > $doc->payed)  {
-               $row->ispay->setVisible(true);
-           }
-           if($doc->meta_name=='Invoice') {
-               $n = $doc->getChildren('GoodsIssue')+$doc->getChildren('TTN');
-               $row->istruck->setVisible(count($n)==0);
-               
-           }
+        $row->add(new Label('ispay'))->setVisible(false) ;
+        $row->add(new Label('istruck'))->setVisible(false) ;
+        if($doc->state >=4) {
+            if($doc->payamount > 0 &&  $doc->payamount > $doc->payed) {
+                $row->ispay->setVisible(true);
+            }
+            if($doc->meta_name=='Invoice') {
+                $n = $doc->getChildren('GoodsIssue')+$doc->getChildren('TTN');
+                $row->istruck->setVisible(count($n)==0);
+
+            }
         }
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -161,7 +160,7 @@ class GIList extends \App\Pages\Base
         } else {
             $row->edit->setVisible(false);
         }
-        if ($doc->document_id == @$this->_doc->document_id) {
+        if ($doc->document_id == ($this->_doc->document_id ?? 0)) {
             $row->setAttribute('class', 'table-success');
         }
     }
@@ -192,7 +191,7 @@ class GIList extends \App\Pages\Base
 
         if ($sender->id == "bdevivered") {
             $this->_doc->updateStatus(Document::STATE_DELIVERED);
-  
+
 
             // $this->_doc->updateStatus(Document::STATE_CLOSED);
         }
@@ -241,7 +240,7 @@ class GIList extends \App\Pages\Base
         $this->statuspan->statusform->ship_number->setVisible(false);
         $this->statuspan->statusform->bdecl->setVisible(false);
 
-      
+
         $state = $this->_doc->state;
 
         //готов  к  отправке
@@ -424,19 +423,19 @@ class GIList extends \App\Pages\Base
         }
         $this->nppan->npform->seltel->setText($modules['nptel']);
         $this->nppan->npform->npdesc->setText($this->_doc->notes);
-      
-        $list = $this->_doc->unpackDetails('detaildata');
-      
-        if(strlen($this->_doc->notes)==0) {
-             $desc = "";
-             foreach ($list as $it) {
-                 $desc .= $it->itemname.","   ;     
-             }
 
-             $this->nppan->npform->npdesc->setText(trim($desc,","));
-             
+        $list = $this->_doc->unpackDetails('detaildata');
+
+        if(strlen($this->_doc->notes)==0) {
+            $desc = "";
+            foreach ($list as $it) {
+                $desc .= $it->itemname.","   ;
+            }
+
+            $this->nppan->npform->npdesc->setText(trim($desc, ","));
+
         }
-        
+
         $w = 0;
         $p = 0;
         foreach ($list as $it) {
@@ -585,14 +584,14 @@ class GIList extends \App\Pages\Base
 
 
             $result = $api->model('Counterparty')->getCounterparties("Sender");
-            if ($result['success'] == FALSE) {
+            if ($result['success'] == false) {
                 $errors = implode(',', $result['errors']);
                 $this->setError($errors);
                 return;
             }
 
             $resultc = $api->model('Counterparty')->getCounterpartyContactPersons($result['data'][0]['Ref']);
-            if ($resultc['success'] == FALSE) {
+            if ($resultc['success'] == false) {
                 $errors = implode(',', $result['errors']);
                 $this->setError($errors);
                 return;
@@ -618,7 +617,7 @@ class GIList extends \App\Pages\Base
 
             $result = $api->model('Counterparty')->save($recipient);
 
-            if ($result['success'] == FALSE) {
+            if ($result['success'] == false) {
                 $errors = implode(',', $result['errors']);
                 $this->setError($errors);
                 return;
@@ -641,14 +640,14 @@ class GIList extends \App\Pages\Base
             $this->setError($e->getMessage());
             return;
         }
-        if ($result['success'] == TRUE) {
+        if ($result['success'] == true) {
 
             $this->_doc->headerdata['delivery_date'] = strtotime($result['data'][0]['EstimatedDeliveryDate']);
             $this->_doc->headerdata['ship_amount'] = $result['data'][0]['CostOnSite'];
             $this->_doc->headerdata['ship_number'] = $result['data'][0]['IntDocNumber'];
             $this->_doc->headerdata['ship_numberref'] = $result['data'][0]['Ref'];
             $this->_doc->save();
-            $this->setSuccess( "Створено декларацію номер " . $this->_doc->headerdata['ship_number']  );
+            $this->setSuccess("Створено декларацію номер " . $this->_doc->headerdata['ship_number']);
 
 
             $order = Document::load($this->_doc->parent_id);
@@ -675,7 +674,6 @@ class GIList extends \App\Pages\Base
  */
 class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {
@@ -686,7 +684,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
         $user = System::getUser();
 
         $conn = \ZDB\DB::getConnect();
-   
+
         $where = "   meta_name  in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' ,'Warranty','TTN' ) ";
 
         $salesource = $this->page->listpan->filter->salesource->getValue();
@@ -715,7 +713,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
 
         $store_id = $this->page->listpan->filter->fstore->getValue();
         if ($store_id > 0) {
-           $where .= " and   content like '%<store>{$store_id}</store>%' ";
+            $where .= " and   content like '%<store>{$store_id}</store>%' ";
         }
 
         $st = trim($this->page->listpan->filter->searchtext->getText());

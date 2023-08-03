@@ -15,7 +15,6 @@ use Zippy\Html\Panel;
  */
 class Returnselled extends \App\Pages\Base
 {
-
     public function __construct() {
         parent::__construct();
 
@@ -23,21 +22,21 @@ class Returnselled extends \App\Pages\Base
             return;
         }
 
-           $this->add(new Panel('detail'))->setVisible(false);
- 
+        $this->add(new Panel('detail'))->setVisible(false);
+
         $this->detail->add(new Label('preview'));
-        
-        
+
+
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
         \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
 
- 
-        $this->detail->setVisible(true);        
-        
+
+        $this->detail->setVisible(true);
+
     }
 
- 
+
 
     private function generateReport() {
         $conn = \ZDB\DB::getConnect();
@@ -51,9 +50,9 @@ class Returnselled extends \App\Pages\Base
 
         $conn = $conn = \ZDB\DB::getConnect();
         $this->data = array();
-      
-       
-            $sql = "
+
+
+        $sql = "
             select itemname,item_code,sellqty,rqty,rqty/(0-sellqty) as pr from (
             select * from (
           select i.itemname,i.item_code,
@@ -69,22 +68,22 @@ class Returnselled extends \App\Pages\Base
                group by  i.itemname,i.item_code
                )  t where  t.rqty >0  ) t2   where  rqty/(0-sellqty) >= 0.01 order  by rqty/(0-sellqty) desc 
         ";
-     
+
 
         $detail = array();
         $res = $conn->Execute($sql);
         foreach ($res as $item) {
-            
-            $item['sellqty'] = H::fqty( 0-$item['sellqty'] );
-            $item['rqty'] = H::fqty(  $item['rqty'] );
+
+            $item['sellqty'] = H::fqty(0-$item['sellqty']);
+            $item['rqty'] = H::fqty($item['rqty']);
             $item['pr'] = number_format($item['pr'] *100, 1, '.', '') ;
             $detail[] = $item;
         }
 
 
         $header = array(
-            "_detail" => $detail 
-             
+            "_detail" => $detail
+
         );
         $report = new \App\Report('report/returnselled.tpl');
 

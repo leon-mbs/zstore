@@ -5,14 +5,13 @@ namespace App\Entity\Doc;
 use App\Entity\Entry;
 use App\Entity\Item;
 use App\Helper as H;
- 
+
 /**
  * Класс-сущность  документ приходная  накладая
  *
  */
 class GoodsReceipt extends Document
 {
-
     public function generateReport() {
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
 
@@ -57,7 +56,7 @@ class GoodsReceipt extends Document
             $header['contract'] = $contract->contract_number;
             $header['createdon'] = H::fd($contract->createdon);
         }
-     
+
         $header['notes'] = nl2br($this->notes)  ;
         $header['storename'] = $this->headerdata["storename"]  ;
         $header['isprep'] = $this->headerdata["prepaid"] > 0;
@@ -91,35 +90,35 @@ class GoodsReceipt extends Document
             // return;
         }
         $rate= doubleval($this->headerdata["rate"]);
-  
+
         if ($rate == 0 || $rate == 1) {
             $rate =1;
-        }    
-      
-        $total = $this->amount; 
+        }
+
+        $total = $this->amount;
         if ($this->headerdata["disc"] > 0) {
             $total = $total - $this->headerdata["disc"];
         }
         if ($this->headerdata["nds"] > 0) {
             $total = $total + $this->headerdata["nds"];
         }
-        
-        
-        
-     //   if($this->headerdata['delivery'] > 0   ) {
-     //       $total = $total + $this->headerdata["delivery"];  // распределяем накладные  затраты  на  себестоимость
-    //    }
-     
+
+
+
+        if($this->headerdata['delivery'] > 0  &&    $this->headerdata['spreaddelivery'] ==1) {
+            $total = $total + $this->headerdata["delivery"];  // распределяем накладные  затраты  на  себестоимость
+        }
+
         $total = $total * $rate;
-        
-        
-        $k = $total / $this->amount;   
-        
-             
+
+
+        $k = $total / $this->amount;
+
+
         //аналитика
         foreach ($this->unpackDetails('detaildata') as $item) {
 
-            
+
             if ($total > 0) {
 
                 $item->price = H::fa($item->price * $k); //пересчитываем  учетную цену
@@ -148,20 +147,20 @@ class GoodsReceipt extends Document
 
         $payed = $this->headerdata['payed'];
 
-        $payed = $payed * $rate; 
-        $this->payamount = $this->headerdata['payamount'] * $rate; 
-         
-                
-        $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment']);
-       
+        $payed = $payed * $rate;
+        $this->payamount = $this->headerdata['payamount'] * $rate;
 
-        if($this->headerdata['delivery'] > 0   ) {
-           \App\Entity\IOState::addIOState($this->document_id, 0 - $payed + $this->headerdata["delivery"], \App\Entity\IOState::TYPE_BASE_OUTCOME);
-           \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata["delivery"], \App\Entity\IOState::TYPE_NAKL);
+
+        $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment']);
+
+
+        if($this->headerdata['delivery'] > 0) {
+            \App\Entity\IOState::addIOState($this->document_id, 0 - $payed + $this->headerdata["delivery"], \App\Entity\IOState::TYPE_BASE_OUTCOME);
+            \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata["delivery"], \App\Entity\IOState::TYPE_NAKL);
         } else {
-           \App\Entity\IOState::addIOState($this->document_id, 0 - $payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+            \App\Entity\IOState::addIOState($this->document_id, 0 - $payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
         }
- 
+
 
         return true;
     }

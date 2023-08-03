@@ -10,7 +10,6 @@ namespace App\Modules\Shop\Entity;
  */
 class ProductComment extends \ZCL\DB\Entity
 {
-
     protected function init() {
         $this->comment_id = 0;
     }

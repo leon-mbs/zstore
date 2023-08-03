@@ -10,39 +10,38 @@ use App\Helper as H;
  */
 class Helper
 {
-
     public static function connect() {
 
         $modules = System::getOptions("modules");
-  
+
         try {
-          $ret =   self::make_request("GET","/api/v1/order_status_options/list",null);
+            $ret =   self::make_request("GET", "/api/v1/order_status_options/list", null);
         } catch(\Exception $ee) {
             System::setErrorMsg($ee->getMessage());
             return;
         }
 
         if(!is_array($ret)) {
-           //System::setSuccessMsg("Успішне з`єднання");    
-           return;
+            //System::setSuccessMsg("Успішне з`єднання");
+            return;
         }
-        
+
         $list = array();
         foreach($ret['order_status_options'] as $st) {
-           $list[$st['name']]=$st['title'] ;           
+            $list[$st['name']]=$st['title'] ;
         }
 
         return $list;
-        
+
     }
-    
+
     public static function make_request($method, $url, $body) {
-      
+
         $modules = System::getOptions("modules");
 
-       
-      
-        $headers = array (
+
+
+        $headers = array(
             'Authorization: Bearer ' . $modules['puapitoken'],
             'Content-Type: application/json'
         );
@@ -64,15 +63,15 @@ class Helper
 
         $result = curl_exec($ch);
         if (curl_errno($ch) > 0) {
-            throw new  \Exception(curl_error($request));     
+            throw new  \Exception(curl_error($request));
         }
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         if($httpcode >=300) {
-            throw new  \Exception("http code ".$httpcode);     
+            throw new  \Exception("http code ".$httpcode);
         }
         curl_close($ch);
-         
+
         return json_decode($result, true);
-    }    
-    
+    }
+
 }

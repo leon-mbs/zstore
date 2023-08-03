@@ -9,7 +9,6 @@ namespace App\Modules\PPO;
  */
 class ZRecord extends \ZCL\DB\Entity
 {
-
     protected function init() {
         $this->id = 0;
     }

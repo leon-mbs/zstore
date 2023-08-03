@@ -7,8 +7,7 @@ namespace App\API;
  */
 class help
 {
-
-    function __construct() {
+    public function __construct() {
 
         global $_config;
 

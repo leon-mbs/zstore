@@ -18,8 +18,7 @@ use App\Helper as H;
 
 class StoreList extends \App\Pages\Base
 {
-
-    public  $_store = null;
+    public $_store = null;
     private $_blist;
 
     public function __construct() {
@@ -64,8 +63,8 @@ class StoreList extends \App\Pages\Base
         $row->add(new ClickLink('storeedit'))->onClick($this, 'storeeditOnClick');
         $row->add(new ClickLink('storedelete'))->onClick($this, 'storedeleteOnClick');
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
-        
-        
+
+
     }
 
     public function storeeditOnClick($sender) {
@@ -76,7 +75,7 @@ class StoreList extends \App\Pages\Base
         $this->storeform->storeeditdesc->setText($this->_store->description);
         $this->storeform->editbranch->setValue($this->_store->branch_id);
         $this->storeform->editdisabled->setChecked($this->_store->disabled);
-     }
+    }
 
     public function storedeleteOnClick($sender) {
         if (false == \App\ACL::checkDelRef('StoreList')) {
@@ -120,7 +119,7 @@ class StoreList extends \App\Pages\Base
 
             return;
         }
-        $this->_store->disabled = $this->storeform->editdisabled->isChecked() ? 1: 0;
+        $this->_store->disabled = $this->storeform->editdisabled->isChecked() ? 1 : 0;
 
         $this->_store->save();
         $this->storeform->setVisible(false);

@@ -7,15 +7,14 @@ namespace App\Modules\NP;
  */
 class Helper extends \LisDev\Delivery\NovaPoshtaApi2
 {
-
     private $api;
 
     public function __construct() {
 
-      
+
         $modules = \App\System::getOptions("modules");
 
-        parent::__construct($modules['npapikey'] );
+        parent::__construct($modules['npapikey']);
     }
 
     public function getAreaList() {

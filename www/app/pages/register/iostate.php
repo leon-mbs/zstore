@@ -23,7 +23,6 @@ use Zippy\Html\Link\BookmarkableLink;
  */
 class IOState extends \App\Pages\Base
 {
-
     private $_doc    = null;
     private $_ptlist = null;
 
@@ -70,12 +69,12 @@ class IOState extends \App\Pages\Base
 
         $row->add(new Label('number', $doc->document_number));
 
-        $row->add(new Label('date', H::fd($doc->paydate)));
-        $row->add(new Label('notes', $doc->notes));
+        $row->add(new Label('date', H::fd($doc->document_date)));
+
 
         $row->add(new Label('username', $doc->username));
 
-        $row->add(new Label('paytype', $this->_ptlist[$doc->paytype]));
+        $row->add(new Label('iotype', $this->_ptlist[$doc->iotype] ??''));
 
         $row->add(new ClickLink('show', $this, 'showOnClick'));
 
@@ -126,30 +125,7 @@ class IOState extends \App\Pages\Base
 
         H::exportExcel($data, $header, 'paylist.xlsx');
     }
-    /*
-    public function printOnClick($sender) {
-        $pay = $sender->getOwner()->getDataItem();
-        $doc = \App\Entity\Doc\Document::load($pay->document_id);
 
-        $header = array();
-        $header['document_number'] = $doc->document_number;
-        $header['firm_name'] = $doc->firm_name;
-        $header['customer_name'] = $doc->customer_name;
-        $list = Pay::find("document_id=" . $pay->document_id, "pl_id");
-        $all = 0;
-        $header['plist'] = array();
-        foreach ($list as $p) {
-            $header['plist'][] = array('ppay' => H::fa(abs($p->amount)), 'pdate' => H::fd($p->paydate));
-            $all += abs($p->amount);
-        }
-        $header['pall'] = H::fa($all);
-
-        $report = new \App\Report('pays_bill.tpl');
-
-        $html = $report->generate($header);
-        $this->updateAjax(array(), "  $('#paysprint').html('{$html}') ; $('#pform').modal()");
-    }
-    */
 }
 
 /**
@@ -157,7 +133,6 @@ class IOState extends \App\Pages\Base
  */
 class IOStateListDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {
@@ -176,12 +151,12 @@ class IOStateListDataSource implements \Zippy\Interfaces\DataSource
         $type = $this->page->filter->ftype->getValue();
 
         if ($type > 0) {
-            $where .= " and paytype=" . $type;
+            $where .= " and iotype=" . $type;
         }
 
 
         if ($author > 0) {
-            $where .= " and p.user_id=" . $author;
+            $where .= " and d.user_id=" . $author;
         }
 
         $c = \App\ACL::getBranchConstraint();
@@ -202,25 +177,25 @@ class IOStateListDataSource implements \Zippy\Interfaces\DataSource
 
     public function getItemCount() {
         $conn = \ZDB\DB::getConnect();
-        $sql = "select coalesce(count(*),0) from documents_view  d join paylist_view p on d.document_id = p.document_id where " . $this->getWhere();
+        $sql = "select coalesce(count(*),0) from documents_view  d join iostate_view i on d.document_id = i.document_id where " . $this->getWhere();
         return $conn->GetOne($sql);
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
         $conn = \ZDB\DB::getConnect();
-        $sql = "select  p.*,d.customer_name,d.meta_id  from documents_view  d join paylist_view p on d.document_id = p.document_id where " . $this->getWhere() . " order  by  pl_id desc   ";
+        $sql = "select  i.*,d.username,d.meta_id,d.document_number,d.document_date  from documents_view  d join iostate_view i on d.document_id = i.document_id where " . $this->getWhere() . " order  by  id desc   ";
         if ($count > 0) {
             $limit =" limit {$start},{$count}";
             if($conn->dataProvider=="postgres") {
                 $limit =" limit {$count} offset {$start}";
             }
-                  
-           
+
+
             $sql .= $limit;
         }
 
-        $docs = \App\Entity\Pay::findBySql($sql);
+        $docs = \App\Entity\IOState::findBySql($sql);
 
         return $docs;
     }

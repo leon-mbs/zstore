@@ -27,8 +27,7 @@ use Zippy\Html\Link\SubmitLink;
  */
 class Invoice extends \App\Pages\Base
 {
-
-    public  $_itemlist  = array();
+    public $_itemlist  = array();
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = 0;
@@ -47,7 +46,7 @@ class Invoice extends \App\Pages\Base
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
         $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), H::getDefFirm()))->onChange($this, 'OnCustomerFirm');
-        $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);;
+        $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);
 
         $this->docform->add(new TextArea('notes'));
 
@@ -76,7 +75,7 @@ class Invoice extends \App\Pages\Base
         $this->docform->add(new Label('totaldisc', 0));
         $this->docform->add(new TextInput('edittotaldisc'));
         $this->docform->add(new SubmitButton('btotaldisc'))->onClick($this, 'onTotaldisc');
-       
+
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
@@ -121,7 +120,7 @@ class Invoice extends \App\Pages\Base
             if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
                 $this->_doc->payed = $this->_doc->headerdata['payed'];
             }
-         
+
 
             $this->docform->payamount->setText($this->_doc->payamount);
 
@@ -175,10 +174,10 @@ class Invoice extends \App\Pages\Base
                         $this->OnChangeCustomer($this->docform->customer);
                         $this->docform->totaldisc->setText($basedoc->headerdata['totaldisc']);
                         $this->docform->edittotaldisc->setText($basedoc->headerdata['totaldisc']);
-                     
+
 
                         $this->docform->pricetype->setValue('price1');
-                       
+
 
                         $this->docform->notes->setText("Рахунок для ". $basedoc->document_number);
                         $order = $basedoc->cast();
@@ -188,9 +187,9 @@ class Invoice extends \App\Pages\Base
                         $this->calcPay();
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
-                        $this->_itemlist = array_merge($this->_itemlist,$basedoc->unpackDetails('detail2data') );
-                        
-                        
+                        $this->_itemlist = array_merge($this->_itemlist, $basedoc->unpackDetails('detail2data'));
+
+
                     }
                     if ($basedoc->meta_name == 'GoodsIssue') {
 
@@ -219,7 +218,7 @@ class Invoice extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
-       
+
     }
 
     public function detailOnRow($row) {
@@ -244,10 +243,10 @@ class Invoice extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
-        $rowid =  array_search($item,$this->_itemlist,true);
- 
+        $rowid =  array_search($item, $this->_itemlist, true);
+
         $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
-        
+
         $this->docform->detail->Reload();
         $this->calcTotal();
         $this->calcPay();
@@ -292,8 +291,8 @@ class Invoice extends \App\Pages\Base
         }
 
 
-        $this->_rowid =  array_search($item,$this->_itemlist,true);
- 
+        $this->_rowid =  array_search($item, $this->_itemlist, true);
+
     }
 
     public function saverowOnClick($sender) {
@@ -307,7 +306,7 @@ class Invoice extends \App\Pages\Base
         }
 
         $item = Item::load($id);
-   
+
         $item->quantity = $this->editdetail->editquantity->getText();
 
         $item->price = $this->editdetail->editprice->getText();
@@ -315,14 +314,14 @@ class Invoice extends \App\Pages\Base
         $item->disc = '';
         $item->pureprice = $item->getPurePrice();
         if($item->pureprice > $item->price) {
-             $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;    
+            $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;
         }
-        
+
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
         } else {
-           $this->_itemlist[$this->_rowid] = $item;            
-        }        
+            $this->_itemlist[$this->_rowid] = $item;
+        }
 
 
         $this->editdetail->setVisible(false);
@@ -349,12 +348,12 @@ class Invoice extends \App\Pages\Base
             return;
         }
 
-       
-     
+
+
         $item = Service::load($id);
-      
- 
- 
+
+
+
         $item->quantity = $this->editserdetail->editserquantity->getText();
 
         $price = $this->editserdetail->editserprice->getText();
@@ -362,19 +361,19 @@ class Invoice extends \App\Pages\Base
         $item->disc = '';
         $item->pureprice = $item->getPurePrice();
         if($item->pureprice > $price) {
-             $item->disc = number_format((1 - ($price/($item->pureprice)))*100, 1, '.', '') ;    
+            $item->disc = number_format((1 - ($price/($item->pureprice)))*100, 1, '.', '') ;
         }
-        
-        $item->price = $price; 
-        
+
+        $item->price = $price;
+
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
         } else {
-            $this->_itemlist[$this->_rowid] = $item;            
-        }        
+            $this->_itemlist[$this->_rowid] = $item;
+        }
 
         $this->editserdetail->setVisible(false);
- 
+
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
         $this->calcTotal();
@@ -385,7 +384,7 @@ class Invoice extends \App\Pages\Base
 
         $this->editserdetail->editserquantity->setText("1");
 
- 
+
     }
 
     public function cancelrowOnClick($sender) {
@@ -422,7 +421,7 @@ class Invoice extends \App\Pages\Base
 
 
         $this->_doc->payamount = $this->docform->payamount->getText();
-     
+
 
         $this->_doc->headerdata['totaldisc'] = $this->docform->totaldisc->getText();
         $this->_doc->headerdata['email'] = $this->docform->email->getText();
@@ -454,8 +453,8 @@ class Invoice extends \App\Pages\Base
                 if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
-                $this->_doc->updateStatus(Document::STATE_EXECUTED);                    
-                $this->_doc->updateStatus(Document::STATE_WP);                    
+                $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                $this->_doc->updateStatus(Document::STATE_WP);
 
             }
 
@@ -502,14 +501,14 @@ class Invoice extends \App\Pages\Base
 
         foreach ($this->_itemlist as $item) {
             $item->amount = $item->price * $item->quantity;
-   
+
             $total = $total + $item->amount;
         }
 
         $this->docform->total->setText(H::fa($total));
-        
 
-        
+
+
 
 
     }
@@ -523,9 +522,9 @@ class Invoice extends \App\Pages\Base
         }
 
 
-        $this->docform->payamount->setText(H::fa($total  ));
+        $this->docform->payamount->setText(H::fa($total));
 
-        
+
     }
 
     /**
@@ -551,7 +550,7 @@ class Invoice extends \App\Pages\Base
         if (($this->docform->store->getValue() > 0) == false) {
             $this->setError("Не обрано склад");
         }
-       
+
         $c = $this->docform->customer->getKey();
         if ($c == 0) {
             $this->setError("Не задано контрагента");
@@ -567,24 +566,24 @@ class Invoice extends \App\Pages\Base
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $item = Item::load($id);
-  
+
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
         $price = $item->getLastPartion();
-        $this->editdetail->pricestock->setText( H::fa($price));
+        $this->editdetail->pricestock->setText(H::fa($price));
 
         $store_id = $this->docform->store->getValue();
-     
+
         $customer_id = $this->docform->customer->getKey()  ;
         $pt=     $this->docform->pricetype->getValue() ;
         $price = $item->getPriceEx(array(
          'pricetype'=>$pt,
-         'store'=>$store_id,  
+         'store'=>$store_id,
          'customer'=>$customer_id
          ));
-          
-        
+
+
         $this->editdetail->editprice->setText(H::fa($price));
-          
+
     }
 
     public function OnAutoCustomer($sender) {
@@ -594,13 +593,13 @@ class Invoice extends \App\Pages\Base
     public function OnChangeServive($sender) {
         $id = $sender->getValue();
         $customer_id = $this->docform->customer->getKey()  ;
- 
+
         $item = Service::load($id);
         $price = $item->getPrice($customer_id);
 
         $this->editserdetail->editserprice->setText($price);
 
-       
+
     }
 
     public function OnChangeCustomer($sender) {
@@ -628,10 +627,10 @@ class Invoice extends \App\Pages\Base
 
         }
 
-      
 
-    //    $this->calcTotal();
-   //     $this->calcPay();
+
+        //    $this->calcTotal();
+        //     $this->calcPay();
         $this->OnCustomerFirm(null);
     }
 
@@ -714,28 +713,28 @@ class Invoice extends \App\Pages\Base
         }
     }
 
-    public function getPriceByQty($args,$post=null)  {
+    public function getPriceByQty($args, $post=null) {
         $item = Item::load($args[0]) ;
-        $args[1] = str_replace(',','.',$args[1]) ;
-        $price = $item->getActionPriceByQuantity($args[1] );
-  
-        
+        $args[1] = str_replace(',', '.', $args[1]) ;
+        $price = $item->getActionPriceByQuantity($args[1]);
+
+
         return $price;
-        
-    }  
-      
+
+    }
+
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
         $code0 = $code;
-        $code = ltrim($code,'0');
-        
+        $code = ltrim($code, '0');
+
         if ($code == '') {
             return;
         }
 
         foreach ($this->_itemlist as $ri => $_item) {
-            if ($_item->bar_code == $code || $_item->item_code == $code  || $_item->bar_code == $code0 || $_item->item_code == $code0 ) {
+            if ($_item->bar_code == $code || $_item->item_code == $code  || $_item->bar_code == $code0 || $_item->item_code == $code0) {
                 $this->_itemlist[$ri]->quantity += 1;
                 $this->docform->detail->Reload();
                 $this->calcTotal();
@@ -766,13 +765,13 @@ class Invoice extends \App\Pages\Base
 
             $this->setWarn("Товару {$item->itemname} немає на складі");
         }
-         
-      
+
+
         $customer_id = $this->docform->customer->getKey()  ;
         $pt=     $this->docform->pricetype->getValue() ;
-        $item->price = $item->getPriceEx(array('pricetype'=>$pt,
-         
-        
+        $item->price = $item->getPriceEx(array('pricetype'=>$pt));
+
+
         $item->quantity = 1;
 
         if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
@@ -813,5 +812,5 @@ class Invoice extends \App\Pages\Base
 
         $this->_rowid = 0;
     }
-   
+
 }

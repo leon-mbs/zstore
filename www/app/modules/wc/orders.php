@@ -14,11 +14,10 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
-use \App\Application as App;
+use App\Application as App;
 
 class Orders extends \App\Pages\Base
 {
-
     public $_neworders = array();
     public $_eorders   = array();
 
@@ -93,14 +92,14 @@ class Orders extends \App\Pages\Base
             if ($c == 0) {
                 break;
             }
-                    $conn = \ZDB\DB::getConnect();
- 
+            $conn = \ZDB\DB::getConnect();
+
             foreach ($data as $wcorder) {
 
-                   $cnt  = $conn->getOne("select count(*) from documents_view where meta_name='Order' and content like '%<wcorder>{$wcorder->id}</wcorder>%' ")  ;
+                $cnt  = $conn->getOne("select count(*) from documents_view where meta_name='Order' and content like '%<wcorder>{$wcorder->id}</wcorder>%' ")  ;
 
-               // $isorder = Document::findCnt("meta_name='Order' and content like '%<wcorder>{$wcorder->id}</wcorder>%'");
-                if (  intval($cnt) > 0) { //уже импортирован
+                // $isorder = Document::findCnt("meta_name='Order' and content like '%<wcorder>{$wcorder->id}</wcorder>%'");
+                if (intval($cnt) > 0) { //уже импортирован
                     continue;
                 }
 
@@ -109,13 +108,13 @@ class Orders extends \App\Pages\Base
                 if (strlen($neworder->document_number) == 0) {
                     $neworder->document_number = 'WC00001';
                 }
-                
+
 
                 //товары
                 $j=0;
                 $itlist = array();
                 foreach ($wcorder->line_items as $product) {
-                    //ищем по артикулу 
+                    //ищем по артикулу
                     if (strlen($product->sku) == 0) {
                         continue;
                     }
@@ -134,9 +133,9 @@ class Orders extends \App\Pages\Base
 
                     $itlist[$j] = $tovar;
                 }
-            if(count($itlist)==0)  {
-                return;
-            }                
+                if(count($itlist)==0) {
+                    return;
+                }
                 $neworder->packDetails('detaildata', $itlist);
                 $neworder->headerdata['pricetype'] = 'price1';
 
@@ -147,8 +146,8 @@ class Orders extends \App\Pages\Base
                 $neworder->headerdata['wcclient'] = trim($wcorder->shipping->last_name . ' ' . $wcorder->shipping->first_name);
                 $neworder->amount = H::fa($wcorder->total);
                 $neworder->payamount = $neworder->amount;
-                
-               
+
+
                 $neworder->document_date = time();
                 $neworder->notes = "WC номер:{$wcorder->id};";
                 $neworder->notes .= " Клієнт: " . trim($wcorder->shipping->last_name . ' ' . $wcorder->shipping->first_name).";";
@@ -185,14 +184,14 @@ class Orders extends \App\Pages\Base
             $shoporder->save();
             $shoporder->updateStatus(Document::STATE_NEW);
             $shoporder->updateStatus(Document::STATE_INPROCESS);
-            if($modules['wcsetpayamount']==1){
+            if($modules['wcsetpayamount']==1) {
                 $shoporder->updateStatus(Document::STATE_WP);
-            }              
-            
+            }
+
         }
 
-        $this->setInfo("Імпортовано ".count($this->_neworders)." замовлень" );
-        
+        $this->setInfo("Імпортовано ".count($this->_neworders)." замовлень");
+
 
         $this->_neworders = array();
         $this->neworderslist->Reload();
@@ -251,7 +250,7 @@ class Orders extends \App\Pages\Base
             $order->save();
         }
 
-        $this->setSuccess("Оновлено ".count($elist)." замовлень" );
+        $this->setSuccess("Оновлено ".count($elist)." замовлень");
 
 
         $this->_eorders = Document::find("meta_name='Order' and content like '%<wcorderback>0</wcorderback>%' and state <> " . Document::STATE_NEW);

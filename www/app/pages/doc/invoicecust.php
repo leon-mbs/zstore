@@ -25,8 +25,7 @@ use Zippy\Html\Link\SubmitLink;
  */
 class InvoiceCust extends \App\Pages\Base
 {
-
-    public  $_itemlist  = array();
+    public $_itemlist  = array();
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = 0;
@@ -42,10 +41,10 @@ class InvoiceCust extends \App\Pages\Base
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnCustomerFirm');
         $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), H::getDefFirm()))->onChange($this, 'OnCustomerFirm');
-        $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);;
+        $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);
 
         $this->docform->add(new TextInput('notes'));
-        $this->docform->add(new TextInput('rate','1'))->setVisible(false);
+        $this->docform->add(new TextInput('rate', '1'))->setVisible(false);
         $this->docform->add(new DropDownChoice('val', H::getValList(), '0'))->onChange($this, 'OnVal');
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
@@ -61,8 +60,8 @@ class InvoiceCust extends \App\Pages\Base
 
         $this->docform->add(new TextInput('editnds', "0"));
         $this->docform->add(new SubmitButton('bnds'))->onClick($this, 'onNds');
-        
-        
+
+
         $this->docform->add(new TextInput('editdisc', "0"));
         $this->docform->add(new SubmitButton('bdisc'))->onClick($this, 'onDisc');
 
@@ -182,7 +181,7 @@ class InvoiceCust extends \App\Pages\Base
         $this->editdetail->edititem->setKey($item->item_id);
         $this->editdetail->edititem->setText($item->itemname);
 
-        $this->_rowid =  array_search($item,$this->_itemlist,true);
+        $this->_rowid =  array_search($item, $this->_itemlist, true);
 
     }
 
@@ -193,8 +192,8 @@ class InvoiceCust extends \App\Pages\Base
         $item = $sender->owner->getDataItem();
 
 
-        $rowid =  array_search($item,$this->_itemlist,true);
- 
+        $rowid =  array_search($item, $this->_itemlist, true);
+
         $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
 
         $this->docform->detail->Reload();
@@ -232,8 +231,8 @@ class InvoiceCust extends \App\Pages\Base
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
         } else {
-           $this->_itemlist[$this->_rowid] = $item;            
-        }        
+            $this->_itemlist[$this->_rowid] = $item;
+        }
 
 
         $this->editdetail->setVisible(false);
@@ -268,7 +267,7 @@ class InvoiceCust extends \App\Pages\Base
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->payamount = $this->docform->payamount->getText();
 
-       $this->_doc->payed = $this->docform->payed->getText();
+        $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
 
         $this->_doc->headerdata['val'] = $this->docform->val->getValue();
@@ -326,9 +325,9 @@ class InvoiceCust extends \App\Pages\Base
                 }
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
-             if ($this->_doc->payamount > $this->_doc->payed) {
-                $this->_doc->updateStatus(Document::STATE_WP);
-            }
+                if ($this->_doc->payamount > $this->_doc->payed) {
+                    $this->_doc->updateStatus(Document::STATE_WP);
+                }
 
                 //обновляем  курс
                 if (strlen($this->_doc->headerdata['val']) > 1) {
@@ -396,12 +395,12 @@ class InvoiceCust extends \App\Pages\Base
 
     private function CalcPay() {
         $total = $this->docform->total->getText();
-        
+
 
         $nds = $this->docform->nds->getText();
         $disc = $this->docform->disc->getText();
         $total = $total + $nds - $disc;
- 
+
 
         $this->docform->editpayamount->setText(H::fa($total));
         $this->docform->payamount->setText(H::fa($total));
@@ -421,21 +420,23 @@ class InvoiceCust extends \App\Pages\Base
         $this->goAnkor("tankor");
     }
 
- 
+
 
     public function OnVal($sender) {
         $val = $sender->getValue();
-        $this->docform->rate->setVisible(false);        
+        $this->docform->rate->setVisible(false);
         $rate = 1;
         if (strlen($val) > 1) {
             $optval = \App\System::getOptions("val");
-            foreach($optval['vallist'] as $v){
-                 if($v->code == $val) $rate=$v->rate;   
+            foreach($optval['vallist'] as $v) {
+                if($v->code == $val) {
+                    $rate=$v->rate;
+                }
             }
-            $this->docform->rate->setVisible(true);            
-        } 
+            $this->docform->rate->setVisible(true);
+        }
         $this->docform->rate->setText($rate);
-        
+
     }
 
     /**
@@ -466,16 +467,16 @@ class InvoiceCust extends \App\Pages\Base
         }
         $val = $this->docform->val->getValue();
         if (strlen($val) > 1) {
-            if($this->_doc->payamount  > $this->_doc->payed )  {
+            if($this->_doc->payamount  > $this->_doc->payed) {
                 $this->setError("Кредит із валютою не дозволено");
-             
-                
+
+
                 return;
             }
-            
-            
+
+
         }
-       
+
 
         return !$this->isError();
     }
@@ -488,7 +489,7 @@ class InvoiceCust extends \App\Pages\Base
 
         $text = Item::qstr('%' . $sender->getText() . '%');
         return  Item::findArray('itemname', "(itemname like {$text} or item_code like {$text} or bar_code like {$text})  and disabled <> 1");
-        
+
     }
 
     public function OnAutoCustomer($sender) {
@@ -516,7 +517,7 @@ class InvoiceCust extends \App\Pages\Base
         $item->itemname = $itemname;
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
         $item->msr = $this->editnewitem->editnewitemmsr->getText();
- 
+
         if (strlen($item->item_code) > 0 && System::getOption("common", "nocheckarticle") != 1) {
 
             $code = Item::qstr($item->item_code);
@@ -526,12 +527,12 @@ class InvoiceCust extends \App\Pages\Base
                 return;
             }
 
-        }   
+        }
         if (strlen($item->item_code) == 0 &&  System::getOption("common", "autoarticle") == 1) {
 
             $item->item_code = Item::getNextArticle();
         }
-        
+
 
 
         $item->cat_id = $this->editnewitem->editnewcat->getValue();

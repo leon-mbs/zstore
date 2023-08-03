@@ -7,7 +7,6 @@ use App\System;
 //класс  списка сравнения
 class CompareList  // implements \Zippy\Interfaces\DataSource
 {
-
     public $list = array();
 
     public static function getCompareList() {
@@ -53,5 +52,5 @@ class CompareList  // implements \Zippy\Interfaces\DataSource
         return count($this->list)  ;
     }
 
-   
+
 }

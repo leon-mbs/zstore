@@ -1,4 +1,5 @@
 <?php
+
 require_once 'init.php';
 
 $_REQUEST['id'] = intval($_REQUEST['id']);
@@ -37,4 +38,3 @@ if ($size > 0) {
     echo $file['filedata'];
 }
 die;
-        

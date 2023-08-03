@@ -16,7 +16,6 @@ use Zippy\Html\Panel;
  */
 class EmpTask extends \App\Pages\Base
 {
-
     public function __construct() {
         parent::__construct();
 
@@ -29,7 +28,7 @@ class EmpTask extends \App\Pages\Base
         $this->filter->add(new Date('to', time()));
 
         $this->add(new Panel('detail'))->setVisible(false);
- 
+
         $this->detail->add(new Label('preview'));
     }
 
@@ -40,7 +39,7 @@ class EmpTask extends \App\Pages\Base
         $this->detail->preview->setText($html, true);
         \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
 
- 
+
         $this->detail->setVisible(true);
     }
 
@@ -79,8 +78,8 @@ class EmpTask extends \App\Pages\Base
             foreach ($doc->unpackDetails('detaildata') as $service) {
                 $ser = \App\Entity\Service::load($service->service_id);
 
-                $total += (doubleval($ser->cost) * doubleval($service->quantity) ) ;
-                $hours += (doubleval($ser->hours) * doubleval($service->quantity) );
+                $total += (doubleval($ser->cost) * doubleval($service->quantity)) ;
+                $hours += (doubleval($ser->hours) * doubleval($service->quantity));
             }
             if ($doc->headerdata['hours'] > 0) {
                 $hours = $doc->headerdata['hours'];
@@ -94,7 +93,7 @@ class EmpTask extends \App\Pages\Base
                 $elist[$emp->employee_id]->hours += $hours;
                 $elist[$emp->employee_id]->cnt += 1;
             }
-        };
+        }
 
         foreach ($elist as $emp_id => $emp) {
             if ($emp->cnt > 0) {
@@ -107,8 +106,8 @@ class EmpTask extends \App\Pages\Base
             }
         }
 
-        
-       $elist = Employee::find("", "emp_name");
+
+        $elist = Employee::find("", "emp_name");
         foreach ($elist as $emp_id => $emp) {
             $emp->cnt = 0;
             $emp->hours = 0;
@@ -123,27 +122,27 @@ class EmpTask extends \App\Pages\Base
         and state= " . ProdStage::STATE_FINISHED;
 
         $stages = ProdStage::find($where);
-       
+
         foreach ($stages as $stage) {
-            
+
             if (count($stage->emplist) == 0) {
                 continue;
             }
-            if($stage->salary >0){
-           
+            if($stage->salary >0) {
+
                 foreach ($stage->emplist as $emp) {
 
 
                     $elist[$emp->employee_id]->amount += round($stage->salary * $emp->ktu);
                     $elist[$emp->employee_id]->hours += $stage->hours;
                     $elist[$emp->employee_id]->cnt += 1;
-                }         
-                
+                }
+
             }
-            
-            
+
+
         }
-        
+
         foreach ($elist as $emp_id => $emp) {
             if ($emp->cnt > 0) {
                 $detail2[] = array(
@@ -153,9 +152,9 @@ class EmpTask extends \App\Pages\Base
                     "amount" => round($emp->amount)
                 );
             }
-        }        
-        
-        
+        }
+
+
         $header = array('datefrom' => \App\Helper::fd($from),
                         "_detail"  => $detail,
                         "_detail2"  => $detail2,

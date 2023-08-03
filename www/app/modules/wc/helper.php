@@ -10,7 +10,6 @@ use App\Helper as H;
  */
 class Helper
 {
-
     public static function getClient() {
 
         $modules = \App\System::getOptions("modules");

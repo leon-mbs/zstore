@@ -21,15 +21,16 @@ use Zippy\Html\Link\BookmarkableLink;
 //детализация  по товару, отзывы
 class ProductView extends Base
 {
+    public $msg;
+    public $attrlist;
+    public $clist;
+    protected $item_id;
 
-    public $msg, $attrlist, $clist;
-    protected               $item_id;
-
-    public function __construct(  $item_id = 0) {
+    public function __construct($item_id = 0) {
         parent::__construct();
-        
+
         $item_id = intval($item_id);
-        
+
         $this->item_id = $item_id;
         $product = Product::load($item_id);
         if ($product == null) {
@@ -57,7 +58,7 @@ class ProductView extends Base
         $price = \App\Helper::fa($price);
 
         $this->add(new Label('price', $price . ' ' . $options['currencyname']));
-        $this->add(new Label('actionprice',\App\Helper::fa( $product->getActionPrice() ). ' ' . $options['currencyname']))->setVisible(false);
+        $this->add(new Label('actionprice', \App\Helper::fa($product->getActionPrice()). ' ' . $options['currencyname']))->setVisible(false);
         if ($product->hasAction()) {
             $this->price->setAttribute('style', 'font-size:smaller;text-decoration:line-through');
             $this->actionprice->setVisible(true);
@@ -66,7 +67,7 @@ class ProductView extends Base
 
         $this->add(new Label('description', $product->getDescription(), true));
         $this->add(new TextInput('rated'))->setText($product->getRating());
-        $this->add(new Label('comments',"Відгуків (".intval($product->comments).") " ));
+        $this->add(new Label('comments', "Відгуків (".intval($product->comments).") "));
 
         $list = Helper::getAttributeValuesByProduct($product, false);
         $this->add(new \Zippy\Html\DataList\DataView('attributelist', new \Zippy\Html\DataList\ArrayDataSource($list), $this, 'OnAddAttributeRow'))->Reload();
@@ -93,7 +94,7 @@ class ProductView extends Base
             $this->buy->setVisible(false);
         } else {
 
-            if ($product->getQuantity() > 0 || $this->_tvars["isfood"]==true ) {
+            if ($product->getQuantity() > 0 || $this->_tvars["isfood"]==true) {
                 $this->onstore->setText('В наявності');
                 $this->buy->setValue('Купити');
             } else {
@@ -109,15 +110,15 @@ class ProductView extends Base
         }
         $this->add(new DataView('imagelist', new ArrayDataSource($imglist), $this, 'imglistOnRow'))->Reload();
         $this->_tvars['islistimage'] = count($imglist) > 1;
-                                         
+
         //вариации
         $vars = $product->getVarList($options['defpricetype']);
-        
+
         $this->add(new Panel('varpan'))->setVisible(count($vars)>0);
         $this->varpan->add(new DataView('varlist', new ArrayDataSource($vars), $this, 'varlistOnRow'))->Reload();
-        $this->varpan->add(new Label("vattrname",$product->vattrname))  ;
-   
-   
+        $this->varpan->add(new Label("vattrname", $product->vattrname))  ;
+
+
 
         $this->add(new Panel('recpan'))->setVisible(count($product->reclist ?? [])>0);
         $reclist=[];
@@ -125,23 +126,23 @@ class ProductView extends Base
             $reclist[] = Product::load($r->item_id);
         }
         $this->recpan->add(new DataView('reclist', new ArrayDataSource($reclist), $this, 'reclistOnRow'))->Reload();
-        
-     
-   
+
+
+
         $recently = \App\Session::getSession()->recently;
         if (!is_array($recently)) {
             $recently = array();
         }
         $recently[$product->item_id] = $product->item_id;
         \App\Session::getSession()->recently = $recently;
-        
-        
+
+
         if(strlen($_COOKIE['viewitem_'.$product->item_id])==0) {
-           \App\Helper::insertstat(\App\Helper::STAT_VIEW_ITEM,$product->item_id,0) ;
-           setcookie('viewitem_'.$product->item_id,"viewed" , time() + 60 * 60 * 24);
-       
+            \App\Helper::insertstat(\App\Helper::STAT_VIEW_ITEM, $product->item_id, 0) ;
+            setcookie('viewitem_'.$product->item_id, "viewed", time() + 60 * 60 * 24);
+
         }
-          
+
     }
 
     public function OnBack($sender) {
@@ -182,7 +183,7 @@ class ProductView extends Base
         $product = Product::load($this->item_id);
         $product->quantity = 1;
         \App\Modules\Shop\Basket::getBasket()->addProduct($product);
-           
+
         $this->setSuccess("Товар доданий до кошика");
         $this->resetURL();
         //  App::RedirectURI('/pcat/' . $product->cat_id);
@@ -200,12 +201,12 @@ class ProductView extends Base
         // App::RedirectURI('/pcat/'.$product->group_id)  ;
     }
 
-    //добавать комментарий 
+    //добавать комментарий
     public function OnComment($sender) {
 
         $entercode = $this->formcomment->capchacode->getText();
         $capchacode = $this->formcomment->capcha->getCode();
-        $this->formcomment->capchacode->setText('');        
+        $this->formcomment->capchacode->setText('');
         if (strlen($entercode) == 0 || $entercode != $capchacode) {
             $this->setError("Невірний код капчі");
 
@@ -283,33 +284,33 @@ class ProductView extends Base
 
         $row->add(new \Zippy\Html\Link\BookmarkableLink('product_thumb'))->setValue("/loadshopimage.php?id={$image->image_id}&t=t");
         $row->product_thumb->setAttribute('href', "/loadshopimage.php?id={$image->image_id}");
-   }
-   
+    }
+
     public function varlistOnRow($row) {
         $vi = $row->getDataItem();
         $options = \App\System::getOptions('shop');
-        $row->add(new \Zippy\Html\Link\BookmarkableLink('vattrvalue',"/sp/".$vi->item_id))->setValue($vi->attributevalue);
-        $row->add(new Label("vprice",\App\Helper::fa($vi->price) ));
-        $row->add(new Label("vactionprice",\App\Helper::fa($vi->actionprice) ))->setVisible(false);
-        $row->add(new Label("vcurr",$options['currencyname'])) ;
+        $row->add(new \Zippy\Html\Link\BookmarkableLink('vattrvalue', "/sp/".$vi->item_id))->setValue($vi->attributevalue);
+        $row->add(new Label("vprice", \App\Helper::fa($vi->price)));
+        $row->add(new Label("vactionprice", \App\Helper::fa($vi->actionprice)))->setVisible(false);
+        $row->add(new Label("vcurr", $options['currencyname'])) ;
         if ($vi->hasaction) {
             $row->vprice->setAttribute('style', 'font-size:smaller;text-decoration:line-through');
             $row->vactionprice->setAttribute('style', 'color:red; ');
             $row->vactionprice->setVisible(true);
-            
-        }       
-        
-        
-        if($vi->item_id == $this->item_id)  {
-           $row->vattrvalue->setAttribute('style','font-weight:bolder');    
+
         }
-        
+
+
+        if($vi->item_id == $this->item_id) {
+            $row->vattrvalue->setAttribute('style', 'font-weight:bolder');
+        }
+
     }
-   
+
     public function reclistOnRow($row) {
         $item = $row->getDataItem();
         $row->add(new BookmarkableLink("rcimage", $item->getSEF()))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
         $row->add(new BookmarkableLink("rcname", $item->getSEF()))->setValue($item->itemname);
-        
+
     }
 }

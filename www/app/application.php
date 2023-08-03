@@ -8,12 +8,11 @@ namespace App;
  */
 class Application extends \Zippy\WebApplication
 {
-
     /**
      * Возвращает  шаблон  страницы
      */
     public function getTemplate($name) {
-        
+
 
         $path = '';
         $name = ltrim($name, '\\');
@@ -24,15 +23,21 @@ class Application extends \Zippy\WebApplication
 
         if (strpos($className, 'App/') === 0) {
             $path = $templatepath . (str_replace("App/", "", $className)) . ".html";
+            $cpath = $templatepath . (str_replace("App/", "", $className)) . "_custom.html";
         }
 
         $path = _ROOT . strtolower($path);
+        $cpath = _ROOT . strtolower($cpath);
 
-        if (file_exists($path) == false) {
+        if(file_exists($cpath)) {
+            $template = @file_get_contents($cpath);
+        } elseif(file_exists($path)) {
+            $template = @file_get_contents($path);
+        } else {
             throw new \Exception('Invalid template path: ' . $path);
         }
-        $template = @file_get_contents($path);
- 
+
+
 
         return $template;
     }
@@ -54,7 +59,7 @@ class Application extends \Zippy\WebApplication
         if ($api[0] == 'api' && count($api) > 1) {
 
             $class = $api[1];
-             
+
             try {
 
                 $file = _ROOT . "app/api/" . strtolower($class) . ".php";
@@ -65,17 +70,17 @@ class Application extends \Zippy\WebApplication
                 require_once($file);
 
                 $class = "\\App\\API\\" . $class;
-               // $method = $api[2];
+                // $method = $api[2];
 
-                $page = new $class;
-           
+                $page = new $class();
+
                 if ($page instanceof \App\API\JsonRPC) {
                     $page->Execute();
                 } else {
-                   http_response_code (403); 
+                    http_response_code(403);
                 }
                 die;
-                
+
             } catch(\Throwable $e) {
                 global $logger;
                 $logger->error($e->getMessage());
@@ -90,6 +95,7 @@ class Application extends \Zippy\WebApplication
             "store"          => "\\App\\Pages\\Main",
             "admin"          => "\\App\\Pages\\Main",
             "shop"           => "\\App\\Modules\\Shop\\Pages\\Catalog\\Main",
+            "menu"           => "\\App\\Modules\\Shop\\Pages\\Catalog\\Menu",
             "sp"             => "\\App\\Modules\\Shop\\Pages\\Catalog\\ProductView",
             "showreport"     => "\\App\\Pages\\ShowReport",
             "showdoc"        => "\\App\\Pages\\ShowDoc",
@@ -123,11 +129,11 @@ class Application extends \Zippy\WebApplication
 
         //кастомные страницы  в онлайн каталогк
         $shoppages =      \App\Modules\Shop\Helper::getPages() ;
-        
-        if ( in_array($uri,$shoppages)  ) {
-            self::$app->LoadPage("\\App\\Modules\\Shop\\Pages\\Catalog\\CustomPage",$uri);
+
+        if (in_array($uri, $shoppages)) {
+            self::$app->LoadPage("\\App\\Modules\\Shop\\Pages\\Catalog\\CustomPage", $uri);
             return;
-        }      
+        }
         //товары в онлайн каталоге
         $prod = \App\Modules\Shop\Entity\Product::loadSEF($uri);
         if ($prod instanceof \App\Entity\Item) {

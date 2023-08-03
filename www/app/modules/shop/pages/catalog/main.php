@@ -2,7 +2,6 @@
 
 namespace App\Modules\Shop\Pages\Catalog;
 
-
 use App\Modules\Shop\Entity\Product;
 use App\Modules\Shop\Helper;
 use ZCL\DB\EntityDataSource;
@@ -11,13 +10,14 @@ use Zippy\Html\Label;
 use Zippy\Html\Link\BookmarkableLink;
 use Zippy\Html\Panel;
 use Zippy\Html\DataList\ArrayDataSource;
+use App\Entity\Category;
 
 class Main extends Base
 {
-
     private $cat_id = 0;
     public $_newlist = array();
- 
+    public $_catlist = array();
+
     public function __construct($id = 0) {
         parent::__construct();
         $id = intval($id);
@@ -28,7 +28,16 @@ class Main extends Base
 
         $this->add(new Panel("subcatlistp"));
 
-        $this->subcatlistp->add(new DataView("subcatlist", new EntityDataSource("\\App\\Entity\\Category", " detail  not  like '%<noshop>1</noshop>%' and  coalesce(parent_id,0)=" . $id), $this, 'OnCatRow'));
+
+
+        $this->_catlist  = Category::find(" detail  not  like '%<noshop>1</noshop>%' and  coalesce(parent_id,0)=" . $id);
+
+        usort($this->_catlist, function ($a, $b) {
+            return $a->order > $b->order;
+        });
+
+
+        $this->subcatlistp->add(new DataView("subcatlist", new ArrayDataSource($this, '_catlist'), $this, 'OnCatRow'));
 
         $this->subcatlistp->subcatlist->Reload();
 
@@ -40,33 +49,33 @@ class Main extends Base
             $cat = " cat_id in (" . implode(',', $ch) . ") and ";
         }
 
- 
 
-        $ar = @unserialize(\App\Helper::getVal('shop_newlist') ) ;
+
+        $ar = @unserialize(\App\Helper::getVal('shop_newlist')) ;
         if(is_array($ar) && COUNT($ar) >0) {
-    
-    
-  
+
+
+
             $ids = array() ;
-            foreach($ar as $a){
-               $ids[] = $a->item_id; 
-            }   
-    
+            foreach($ar as $a) {
+                $ids[] = $a->item_id;
+            }
+
             $sql=   " item_id in (" . implode(',', $ids) . ") and  {$cat} disabled <> 1 and detail  not  like '%<noshop>1</noshop>%' " ;
-        
-            $newlist = Product::find($sql,'',6);
-      
-            foreach($ar as $a){  //выстраиваем  в порядке  добавления
-               if($newlist[$a->item_id] instanceof Product) {
-                  $this->_newlist[]=$newlist[$a->item_id] ;       
-               } 
-               
+
+            $newlist = Product::find($sql, '', 6);
+
+            foreach($ar as $a) {  //выстраиваем  в порядке  добавления
+                if($newlist[$a->item_id] instanceof Product) {
+                    $this->_newlist[]=$newlist[$a->item_id] ;
+                }
+
             }
             unset($newlist);
-        }      
+        }
         $this->newlistp->add(new DataView('newlist', new ArrayDataSource($this, "_newlist"), $this, 'OnNewRow'))->Reload();
         $this->newlistp->setVisible(count($this->_newlist)>0) ;
-//        $this->newlistp->add(new DataView("newlist", new EntityDataSource("\\App\\Modules\\Shop\\Entity\\Product", "  {$cat} disabled <> 1 and detail  not  like '%<noshop>1</noshop>%' ", "item_id desc", 6), $this, 'OnNewRow'))->Reload();
+        //        $this->newlistp->add(new DataView("newlist", new EntityDataSource("\\App\\Modules\\Shop\\Entity\\Product", "  {$cat} disabled <> 1 and detail  not  like '%<noshop>1</noshop>%' ", "item_id desc", 6), $this, 'OnNewRow'))->Reload();
     }
 
     public function OnCatRow($datarow) {
@@ -83,4 +92,3 @@ class Main extends Base
     }
 
 }
- 

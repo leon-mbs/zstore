@@ -1,0 +1,115 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta lang="ua" >
+
+        <title>Меню</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+        <link rel="stylesheet" href="/assets/fontawesome/css/all.css">
+        <link rel="stylesheet" href="/assets/css/bootstrap.css">
+        <link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/zippy-bundle.css">
+        <link rel="stylesheet" href="/assets/css/toastr.min.css">
+        <link rel="stylesheet" href="/assets/css/bootstrap-rating.css">
+        <link rel="stylesheet" href="/assets/css/shop.css">
+
+        <script src="/assets/fontawesome/js/all.js" ></script>
+        <script src="/vendor/leon-mbs/zippy/assets/js/jquery.js" type="text/javascript"></script>
+        <script src="/assets/js/bootstrap.bundle.js" type="text/javascript"></script>
+        <script src="/vendor/leon-mbs/zippy/assets/js/zippy-bundle-ua.js" type="text/javascript"></script>
+        <script src="/assets/js/toastr.min.js" type="text/javascript"></script>
+        <script src="/assets/js/bootstrap-rating.js" type="text/javascript"></script>
+        <script src="/assets/js/app.js" type="text/javascript"></script>
+  
+    </head>
+    <body>
+    <style>
+    
+      .textcat {
+          font-size:20px;
+      }
+      .textprice {
+          font-size:18px;
+          color:red;
+      }
+      .img {
+         width:128px;
+      }
+    
+    </style>
+    
+      <div class="container-fluid ">
+        <div class="row ">
+            <div class="mt-2  col-12 col-sm-6 col-md-3  col-xl-2   ">
+ 
+                 <table  class="ctable">
+                    <tr>
+                      <td style="width:50%" >
+
+                      <a href="/menu"> <img style="width:80%" src="{{logo}}"> </a> 
+
+                      </td>
+                      <td  align="right"  ><i class="fa fa-phone"></i>  {{phone}}</td>
+                    </tr>
+                    <tr><td colspan="2" align="center"><h2 style="font-family:Georgia">{{name}}</h2></td></tr>
+                  
+                  
+                    
+                   {{#cats}}
+                      <tr><td colspan="2" align="center">
+                          {{^hasitems}}
+                          <a href="{{link}}" class="badge badge-light badge-pill p-2 textcat" >
+                                {{cat_name}}
+                          </a>
+                          {{/hasitems}}
+                          {{#hasitems}}
+                              <label  class="badge badge-light badge-pill p-2 textcat"> {{cat_name}}</label>                          
+                          {{/hasitems}}
+                          
+                          
+                          {{#cat_desc}}
+                          <br>   {{cat_desc}} 
+                          {{/cat_desc}}
+                      </td></tr>
+                                                  
+                      {{#items}}                                                                 
+                          <tr>
+                            <td colspan="2" ><br><br>{{itemname}}</td>
+                          </tr>
+                          <tr>
+                            <td class="textprice" >  {{price}} грн</td>
+                            <td class="textprice"  align="right" >  {{vol}} </td>
+                          </tr>
+                         <tr>
+                            <td  ><img class="img" src="{{imglink}}" > </td>
+                            <td  valign="top"    > <small> {{desc}} </small> </td>
+                          </tr>
+                      
+                      
+                      {{/items}}                                                                                         
+                     
+                    {{/cats}}
+                    
+                    <tr><td colspan="2" align="center"><br><b>Розклад роботи</b></td></tr>
+                    <tr><td colspan="2" align="center">
+                       <table class="ctable">
+                          <tr><td>Пн - Пт</td><td> {{timepn}}</td></tr>
+                          <tr><td>Сб</td><td> {{timesa}}</td></tr>
+                          <tr><td>Вс</td><td> {{timesu}}</td></tr>
+                       </table>  
+                    </td></tr>
+
+                    
+                    </tr>
+               </table>
+                
+            </div>
+             
+        </div>
+     </div>
+         
+        
+    </body>
+</html>        

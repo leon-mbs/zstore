@@ -60,9 +60,9 @@
                     <div class="form-check">
                         <input zippy="reserved" type="checkbox" class="form-check-input">
                         <label class="form-check-label" for="reserved">Врахувати зарезервовані </label>
-
+                         <br><small>Якщо зарезервований товар  залишається  на  складі невідміченим фізично як резерв </small>
                     </div>
-                </div>
+                </div>                                 
             </div>
             <div class="row">
                 <div class="col-12 col-md-8 col-xl-6">
@@ -82,6 +82,9 @@
 
                     <table class="table table-sm">
                         <tr>
+                            <th> <i onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
+                                style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"
+                                    class="fa fa-check-double "></i></th>
                             <th>Назва</th>
                             <th>Артикул</th>
 
@@ -94,9 +97,11 @@
                             <th width="40" class="text-center">Кіл.</th>
 
 
-                            <th width="50"></th>
+
                         </tr>
                         <tr zippy="detail">
+                            <td><input tabindex="-1"  zippy="seldel" class="seldel" type="checkbox"></td>
+                     
                             <td zippy="item"></td>
                             <td zippy="item_code"></td>
 
@@ -112,10 +117,17 @@
                             </td>
 
 
-                            <td><a tabindex="-1" zippy="delete"><i class="fa fa-trash"></i></a></td>
 
 
                         </tr>
+                         
+                        <tr><td >
+                            <a class="text-danger" zippy="delall" title="Видалити"><i class="fa fa-trash"></i></a>
+                          </td> 
+                         <td colspan="3"></td>   
+                         
+                            </tr>                 
+                       
                     </table>
 
 

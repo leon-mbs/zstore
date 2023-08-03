@@ -1,7 +1,6 @@
 <?php
+
 namespace App\Entity;
-
-
 
 use App\Helper as H;
 use App\System;
@@ -14,19 +13,18 @@ use App\System;
  */
 class Subscribe extends \ZCL\DB\Entity
 {
-
     //типы  событий
-    const EVENT_DOCSTATE = 1;
+    public const EVENT_DOCSTATE = 1;
     //типы сообщений
-    const MSG_NOTIFY = 1;
-    const MSG_EMAIL  = 2;
-    const MSG_SMS    = 3;
-    const MSG_VIBER  = 4;
-    const MSG_BOT  = 5;
+    public const MSG_NOTIFY = 1;
+    public const MSG_EMAIL  = 2;
+    public const MSG_SMS    = 3;
+    public const MSG_VIBER  = 4;
+    public const MSG_BOT  = 5;
     //типы  получателей
-    const RSV_CUSTOMER  = 1;
-    const RSV_DOCAUTHOR = 2;
-    const RSV_USER      = 3;
+    public const RSV_CUSTOMER  = 1;
+    public const RSV_DOCAUTHOR = 2;
+    public const RSV_USER      = 3;
 
     protected function init() {
         $this->sub_id = 0;
@@ -81,19 +79,19 @@ class Subscribe extends \ZCL\DB\Entity
     }
 
     public static function getMsgTypeList() {
-        
+
         $sms = \App\System::getOptions('sms')  ;
-        
+
         $list = array();
         $list[self::MSG_NOTIFY] = "Системне повідомлення";
         $list[self::MSG_EMAIL] = "E-mail";
         $list[self::MSG_SMS] = "SMS";
 
-       
+
         if($sms['smstype']==2) {
-            $list[self::MSG_VIBER] =  "Viber";            
+            $list[self::MSG_VIBER] =  "Viber";
         }
-        if(strlen(\App\System::getOption("common",'tbtoken'))>0) {
+        if(strlen(\App\System::getOption("common", 'tbtoken'))>0) {
             $list[self::MSG_BOT] = "Телеграм бот";
 
         }
@@ -126,7 +124,7 @@ class Subscribe extends \ZCL\DB\Entity
 
             $cnt = $doc->checkStates(array($state));
             if ($cnt > 1) {
-               // continue;
+                // continue;
             }
 
             $ret = '';
@@ -157,7 +155,7 @@ class Subscribe extends \ZCL\DB\Entity
                 $u = \App\Entity\User::load($sub->user_id);
                 if ($u != null) {
                     $phone = $u->phone;
-                    $viber = $u->viber;   
+                    $viber = $u->viber;
                     $email = $u->email;
                     $chat_id = $u->chat_id;
                     $notify = $sub->user_id;
@@ -168,15 +166,17 @@ class Subscribe extends \ZCL\DB\Entity
                 $ret =   self::sendSMS($phone, $text);
             }
             if (strlen($email) > 0 && $sub->msg_type == self::MSG_EMAIL) {
-              $ret =   self::sendEmail($email, $text, $sub->msgsubject,$sub->attach==1 ? $doc :null);
+                $ret =   self::sendEmail($email, $text, $sub->msgsubject, $sub->attach==1 ? $doc : null);
             }
-            
-            if(strlen($viber)==0) $viber = $phone;
+
+            if(strlen($viber)==0) {
+                $viber = $phone;
+            }
             if(strlen($viber)>0 && $sub->msg_type == self::MSG_VIBER) {
-                $ret =   self::sendViber($viber,$text) ;
+                $ret =   self::sendViber($viber, $text) ;
             }
             if(strlen($chat_id)>0 && $sub->msg_type == self::MSG_BOT) {
-                $ret =   self::sendBot($chat_id,$text,$sub->attach==1 ? $doc :null) ;
+                $ret =   self::sendBot($chat_id, $text, $sub->attach==1 ? $doc : null) ;
             }
             if ($notify > 0 && $sub->msg_type == self::MSG_NOTIFY) {
                 self::sendNotify($notify, $text);
@@ -184,17 +184,17 @@ class Subscribe extends \ZCL\DB\Entity
             if ($notify == 0 && $sub->msg_type == self::MSG_NOTIFY) {
                 self::sendNotify(\App\Entity\Notify::SYSTEM, $text);
             }
-            
+
             if(strlen($ret)>0) {
-                \App\Helper::logerror($ret); 
+                \App\Helper::logerror($ret);
                 $n = new \App\Entity\Notify();
                 $n->user_id = \App\Entity\Notify::SYSTEM;
                 $n->sender_id = \App\Entity\Notify::SUBSCRIBE;
                 $n->message = $ret;
 
-                $n->save();                          
-            }            
-            
+                $n->save();
+            }
+
         }
     }
 
@@ -231,15 +231,15 @@ class Subscribe extends \ZCL\DB\Entity
             $header['device'] .= " (" . $doc->headerdata['devsn'] . ")";
         }
 
-   
+
         if ($doc->headerdata['payment'] > 0) {
             $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
             $header['mf'] = $mf->mf_name;
-            if(strlen($mf->bank)>0)   {
-                $header['mf'] = $mf->bank;    
-                $header['mfacc'] = $mf->bankacc;    
+            if(strlen($mf->bank)>0) {
+                $header['mf'] = $mf->bank;
+                $header['mfacc'] = $mf->bankacc;
             }
-            
+
             if ($mf->beznal == 1) {
                 $header['nal'] = "Безготівка";
             } else {
@@ -254,40 +254,40 @@ class Subscribe extends \ZCL\DB\Entity
             }
         }
         if($doc->meta_name == 'POSCheck') {
-            
-             if( doubleval($doc->headerdata['payedcard'] ) ==0 &&  $doc->headerdata['mfnal']  >0 && $doc->headerdata['payed'] > 0) {
-                    $header['nal'] = "Готівка";
-                    $mf = \App\Entity\MoneyFund::load($doc->headerdata['mfnal']);
-                    $header['mf'] = $mf->mf_name;
-           
-             } 
-             if( doubleval($doc->headerdata['payed'] ) ==0 && $doc->headerdata['mfbeznal']  >0 && $doc->headerdata['payedcard'] > 0) {
-                    $header['nal'] = "Безготівка";
-                    $mfb = \App\Entity\MoneyFund::load($doc->headerdata['mfbeznal']);
-                    $header['mf'] = $mfb->mf_name;
-                    if(strlen($mfb->bank)>0)   {
-                        $header['mf'] = $mf->bank;    
-                        $header['mfacc'] = $mf->bankacc;    
-                    }
-     
-             }            
-             if($doc->headerdata['mfnal']  >0 && $doc->headerdata['payed'] > 0 && $doc->headerdata['mfbeznal']  >0 && $doc->headerdata['payedcard'] > 0 ) {
-                    $mf = \App\Entity\MoneyFund::load($doc->headerdata['mfnal']);
-                    $mfb = \App\Entity\MoneyFund::load($doc->headerdata['mfbeznal']);
-                    $header['mf'] = $mf->mf_name." + ".$mfb->mf_name;
-                    if(strlen($mfb->bank)>0)   {
-                        $header['mf'] =  $mf->mf_name." + ".$mfb->bank;    
-                        $header['mfacc'] = $mfb->bankacc;    
-                    }
-                     
-                 
-                    $header['nal'] = "Комбінована";                 
-             }           
-            
+
+            if(doubleval($doc->headerdata['payedcard']) ==0 &&  $doc->headerdata['mfnal']  >0 && $doc->headerdata['payed'] > 0) {
+                $header['nal'] = "Готівка";
+                $mf = \App\Entity\MoneyFund::load($doc->headerdata['mfnal']);
+                $header['mf'] = $mf->mf_name;
+
+            }
+            if(doubleval($doc->headerdata['payed']) ==0 && $doc->headerdata['mfbeznal']  >0 && $doc->headerdata['payedcard'] > 0) {
+                $header['nal'] = "Безготівка";
+                $mfb = \App\Entity\MoneyFund::load($doc->headerdata['mfbeznal']);
+                $header['mf'] = $mfb->mf_name;
+                if(strlen($mfb->bank)>0) {
+                    $header['mf'] = $mf->bank;
+                    $header['mfacc'] = $mf->bankacc;
+                }
+
+            }
+            if($doc->headerdata['mfnal']  >0 && $doc->headerdata['payed'] > 0 && $doc->headerdata['mfbeznal']  >0 && $doc->headerdata['payedcard'] > 0) {
+                $mf = \App\Entity\MoneyFund::load($doc->headerdata['mfnal']);
+                $mfb = \App\Entity\MoneyFund::load($doc->headerdata['mfbeznal']);
+                $header['mf'] = $mf->mf_name." + ".$mfb->mf_name;
+                if(strlen($mfb->bank)>0) {
+                    $header['mf'] =  $mf->mf_name." + ".$mfb->bank;
+                    $header['mfacc'] = $mfb->bankacc;
+                }
+
+
+                $header['nal'] = "Комбінована";
+            }
+
         }
-        
+
         $payed= doubleval($doc->headerdata['payed']) + doubleval($doc->headerdata['payedcard']) ;
-        
+
         if ($payed == 0 && $doc->payamount > 0) {
             $header['mf'] = "Постоплата (кредит)";
         }
@@ -310,25 +310,25 @@ class Subscribe extends \ZCL\DB\Entity
             $cust = \App\Entity\Customer::load($doc->customer_id) ;
             $dolg = $cust->getDolg();
             if($dolg >0) {
-               $header['credit'] = \App\Helper::fa($dolg);    
+                $header['credit'] = \App\Helper::fa($dolg);
             }
-            
+
         }
         $header['taxurl'] = $doc->getFiscUrl();
         if(strlen($doc->headerdata['hash'])>0) {
 
-           $header['docurl'] = _BASEURL . 'doclink/' . $doc->headerdata['hash'];
-            
+            $header['docurl'] = _BASEURL . 'doclink/' . $doc->headerdata['hash'];
+
         }
         $header['docview'] = _BASEURL . 'doclist/' . $doc->document_id;
 
         $qr=$doc->getQRPay() ;
-        if(is_array($qr))  {
-           $header['payurl']   = $qr['url']  ;
-        }   
-        
-        
-        
+        if(is_array($qr)) {
+            $header['payurl']   = $qr['url']  ;
+        }
+
+
+
         $table = array();
         foreach ($doc->unpackDetails('detaildata') as $item) {
             $table[] = array('item_name'    => $item->itemname,
@@ -354,19 +354,19 @@ class Subscribe extends \ZCL\DB\Entity
         }
     }
 
-    public static function sendEmail($email, $text, $subject,$doc=null) {
+    public static function sendEmail($email, $text, $subject, $doc=null) {
         global $_config;
 
         $emailfrom = $_config['smtp']['emailfrom'];
         if(strlen($emailfrom)==0) {
             $emailfrom = $_config['smtp']['user'];
-            
+
         }
 
         try {
 
-            if($doc != null){
-                $filename = strtolower($doc->meta_name ) . ".pdf";
+            if($doc != null) {
+                $filename = strtolower($doc->meta_name) . ".pdf";
                 $html = $doc->cast()->generateReport();
                 $dompdf = new \Dompdf\Dompdf(array('isRemoteEnabled' => true, 'defaultFont' => 'DejaVu Sans'));
                 $dompdf->loadHtml($html);
@@ -377,11 +377,11 @@ class Subscribe extends \ZCL\DB\Entity
 
                 $f = tempnam(sys_get_temp_dir(), "eml");
                 file_put_contents($f, $data);
-                   
+
             }
-            
-            
-            
+
+
+
             $mail = new \PHPMailer\PHPMailer\PHPMailer();
 
             if ($_config['smtp']['usesmtp'] == true) {
@@ -396,7 +396,7 @@ class Subscribe extends \ZCL\DB\Entity
                 }
             }
 
-             
+
             $mail->setFrom($emailfrom);
             $mail->addAddress($email);
             $mail->Subject = $subject;
@@ -404,13 +404,13 @@ class Subscribe extends \ZCL\DB\Entity
             $mail->CharSet = "UTF-8";
             $mail->IsHTML(true);
             if(strlen($filename)>0) {
-               $mail->AddAttachment($f, $filename, 'base64', 'application/pdf');
+                $mail->AddAttachment($f, $filename, 'base64', 'application/pdf');
             }
-           
-          
+
+
             if ($mail->send() === false) {
                 H::logerror($mail->ErrorInfo) ;
-                  return "See log";
+                return "See log";
             } else {
                 //  System::setSuccessMsg('E-mail відправлено');
             }
@@ -418,58 +418,58 @@ class Subscribe extends \ZCL\DB\Entity
 
             H::logerror($e->getMessage()) ;
             return "See log";
-            
+
         }
     }
 
     public static function sendViber($phone, $text) {
-    
+
         $sms = System::getOptions("sms");
 
-    
+
         if ($sms['smstype'] == 2) {  // sms club
-       
-                   
-                $url = 'https://im.smsclub.mobi/vibers/send';
 
-                $data = json_encode([
-                    'phones' => array($phone),
-                    'message' => $text,
-                    'sender' => $sms['smsclubvan']
-                ]);
 
-                $ch = curl_init();
+            $url = 'https://im.smsclub.mobi/vibers/send';
 
-                curl_setopt_array($ch, [
-                    CURLOPT_URL => $url,
-                    CURLOPT_POSTFIELDS => $data,
-                    CURLOPT_POST => true,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_SSL_VERIFYPEER => FALSE,
-                    CURLOPT_USERPWD => $sms['smsclublogin'] . ':' . $sms['smsclubpass'],
-                    CURLOPT_HTTPHEADER => [
-                        'Content-Type: application/json'
-                    ]
-                ]);
-               
-              
-                $response = curl_exec($ch);
-                
-                $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                
-                
-                $encoded = json_decode($result,true);
-                curl_close($ch);              
-              
-              
-                if ($httpcode >200)   {
-                   return "code ".$httpcode . ' ' .$response;
-                }                
-                              
-                return  ""  ;             
-              
-              
-                    
+            $data = json_encode([
+                'phones' => array($phone),
+                'message' => $text,
+                'sender' => $sms['smsclubvan']
+            ]);
+
+            $ch = curl_init();
+
+            curl_setopt_array($ch, [
+                CURLOPT_URL => $url,
+                CURLOPT_POSTFIELDS => $data,
+                CURLOPT_POST => true,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_USERPWD => $sms['smsclublogin'] . ':' . $sms['smsclubpass'],
+                CURLOPT_HTTPHEADER => [
+                    'Content-Type: application/json'
+                ]
+            ]);
+
+
+            $response = curl_exec($ch);
+
+            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+
+            $encoded = json_decode($result, true);
+            curl_close($ch);
+
+
+            if ($httpcode > 200) {
+                return "code ".$httpcode . ' ' .$response;
+            }
+
+            return  ""  ;
+
+
+
         }
     }
 
@@ -482,27 +482,27 @@ class Subscribe extends \ZCL\DB\Entity
         $n->save();
     }
 
-    public static function sendBot($chat_id, $text,$doc=null) {
-        $bot = new \App\ChatBot( \App\System::getOption("common",'tbtoken')) ;
+    public static function sendBot($chat_id, $text, $doc=null) {
+        $bot = new \App\ChatBot(\App\System::getOption("common", 'tbtoken')) ;
         $bot->sendMessage($chat_id, $text)  ;
         if($doc!= null) {
-                $filename = strtolower($doc->meta_name ) . ".pdf";
-                $html = $doc->cast()->generateReport();
-                $dompdf = new \Dompdf\Dompdf(array('isRemoteEnabled' => true, 'defaultFont' => 'DejaVu Sans'));
-                $dompdf->loadHtml($html);
+            $filename = strtolower($doc->meta_name) . ".pdf";
+            $html = $doc->cast()->generateReport();
+            $dompdf = new \Dompdf\Dompdf(array('isRemoteEnabled' => true, 'defaultFont' => 'DejaVu Sans'));
+            $dompdf->loadHtml($html);
 
-                $dompdf->render();
+            $dompdf->render();
 
-                $data = $dompdf->output();
+            $data = $dompdf->output();
 
-                $f = tempnam(sys_get_temp_dir(), "bot");
-                file_put_contents($f, $data);
-                $bot->sendDocument($chat_id,$f,$filename) ;
+            $f = tempnam(sys_get_temp_dir(), "bot");
+            file_put_contents($f, $data);
+            $bot->sendDocument($chat_id, $f, $filename) ;
         }
     }
 
-    public static function sendSMS($phone, $text ) {
-     
+    public static function sendSMS($phone, $text) {
+
         try {
             $sms = System::getOptions("sms");
 
@@ -517,7 +517,7 @@ class Subscribe extends \ZCL\DB\Entity
                 $curl = curl_init($url);
                 curl_setopt($curl, CURLOPT_POST, true);
                 curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
                 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
                 $output = curl_exec($curl);
@@ -534,7 +534,7 @@ class Subscribe extends \ZCL\DB\Entity
                     return '';
                 }
             }
-  
+
             if ($sms['smstype'] == 2) {  // sms club
 
 
@@ -553,7 +553,7 @@ class Subscribe extends \ZCL\DB\Entity
                     CURLOPT_POSTFIELDS => $data,
                     CURLOPT_POST => true,
                     CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_SSL_VERIFYPEER => FALSE,
+                    CURLOPT_SSL_VERIFYPEER => false,
                     CURLOPT_HTTPHEADER => [
                         'Authorization: Bearer ' . $sms['smsclubtoken'],
                         'Content-Type: application/json'
@@ -566,17 +566,17 @@ class Subscribe extends \ZCL\DB\Entity
                 $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
 
-                $encoded = json_decode($response,true);
-                curl_close($ch);              
+                $encoded = json_decode($response, true);
+                curl_close($ch);
 
-                if ($httpcode >200)    {
-                   H::log("code ".$httpcode) ;
-                   H::log($response) ;
-                   return "Error. See logs";
-                }                
+                if ($httpcode >200) {
+                    H::log("code ".$httpcode) ;
+                    H::log($response) ;
+                    return "Error. See logs";
+                }
 
-                return  ""  ;             
-            }            
+                return  ""  ;
+            }
 
             if ($sms['smstype'] == 3) {  //sms  fly
 
@@ -599,7 +599,7 @@ class Subscribe extends \ZCL\DB\Entity
 
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_USERPWD, $sms['flysmslogin'] . ':' . $sms['flysmspass']);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                 curl_setopt($ch, CURLOPT_POST, 1);
                 curl_setopt($ch, CURLOPT_URL, 'http://sms-fly.com/api/api.php');
                 curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml", "Accept: text/xml"));
@@ -618,8 +618,8 @@ class Subscribe extends \ZCL\DB\Entity
 
                 return $response;
             }
-            
-          
+
+
         } catch(\Exception $e) {
 
             return $e->getMessage();

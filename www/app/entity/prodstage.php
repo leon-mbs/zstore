@@ -13,11 +13,10 @@ use App\Helper;
  */
 class ProdStage extends \ZCL\DB\Entity
 {
-
-    const STATE_NEW       = 0;
-    const STATE_INPROCESS = 1;
-    const STATE_FINISHED  = 2;
-    const STATE_STOPPED  = 3;
+    public const STATE_NEW       = 0;
+    public const STATE_INPROCESS = 1;
+    public const STATE_FINISHED  = 2;
+    public const STATE_STOPPED  = 3;
 
     protected function init() {
         $this->st_id = 0;
@@ -37,7 +36,7 @@ class ProdStage extends \ZCL\DB\Entity
         $this->detail .= "<emplist>{$emplist}</emplist>";
         $this->detail .= "<startdateplan>{$this->startdateplan}</startdateplan>";
         $this->detail .= "<enddateplan>{$this->enddateplan}</enddateplan>";
- 
+
         $this->detail .= "</detail>";
 
         return true;
@@ -60,7 +59,7 @@ class ProdStage extends \ZCL\DB\Entity
         $this->card = (string)($xml->card[0]);
         $this->startdateplan = (string)($xml->startdateplan[0]);
         $this->enddateplan = (string)($xml->enddateplan[0]);
- 
+
         $this->emplist = @unserialize(@base64_decode((string)($xml->emplist[0])));
         if (!is_array($this->emplist)) {
             $this->emplist = array();
@@ -80,7 +79,7 @@ class ProdStage extends \ZCL\DB\Entity
                 return "Виконаний";
             case ProdStage::STATE_STOPPED:
                 return "Припинено";
-         
+
 
             default:
                 return "Невідомий статус";

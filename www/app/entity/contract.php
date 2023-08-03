@@ -11,7 +11,6 @@ namespace App\Entity;
  */
 class Contract extends \ZCL\DB\Entity
 {
-
     protected function init() {
         $this->contract_id = 0;
         $this->createdon = time();
@@ -26,7 +25,7 @@ class Contract extends \ZCL\DB\Entity
         $this->shortdesc = (string)($xml->shortdesc[0]);
         $this->desc = (string)($xml->desc[0]);
         $this->emp_name = (string)($xml->emp_name[0]);
-//        $this->pay = (int)($xml->pay[0]);
+        //        $this->pay = (int)($xml->pay[0]);
         $this->file_id = (int)($xml->file_id[0]);
         $this->emp_id = (int)($xml->emp_id[0]);
         $this->ctype = (int)($xml->ctype[0]);
@@ -47,11 +46,11 @@ class Contract extends \ZCL\DB\Entity
     protected function beforeSave() {
         parent::beforeSave();
         $this->details = "<details>";
-        //упаковываем  данные  
+        //упаковываем  данные
         $this->details .= "<shortdesc><![CDATA[{$this->shortdesc}]]></shortdesc>";
         $this->details .= "<desc><![CDATA[{$this->desc}]]></desc>";
         $this->details .= "<emp_name><![CDATA[{$this->emp_name}]]></emp_name>";
-    //    $this->details .= "<pay>{$this->pay}</pay>";
+        //    $this->details .= "<pay>{$this->pay}</pay>";
         $this->details .= "<file_id>{$this->file_id}</file_id>";
         $this->details .= "<emp_id>{$this->emp_id}</emp_id>";
         $this->details .= "<ctype>{$this->ctype}</ctype>";
@@ -88,7 +87,7 @@ class Contract extends \ZCL\DB\Entity
         $c = \App\ACL::getBranchConstraint();
         if (strlen($c) > 0) {
             $br = " {$c} and ";
-        }    
+        }
 
         $ar = array();
 
@@ -114,9 +113,9 @@ class Contract extends \ZCL\DB\Entity
         if (strlen($c) > 0) {
             $brd = " {$c} and ";
             $brmf = "  mf_id in( select mf_id from mfund  where {$c} )  and ";
-        }    
+        }
 
-        $ar = array();   
+        $ar = array();
 
         $where = " {$brmf} document_id in (select document_id from  documents where {$brd} customer_id={$this->customer_id} and  content like '%<contract_id>{$this->contract_id}</contract_id>%'  )";
 
@@ -129,6 +128,6 @@ class Contract extends \ZCL\DB\Entity
         return $ar;
     }
 
- 
+
 
 }

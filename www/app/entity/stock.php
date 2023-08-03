@@ -11,7 +11,6 @@ namespace App\Entity;
  */
 class Stock extends \ZCL\DB\Entity
 {
-
     protected function init() {
         $this->stock_id = 0;
     }
@@ -98,7 +97,7 @@ class Stock extends \ZCL\DB\Entity
             $stock->snumber = $snumber;
             $stock->sdate = $sdate;
 
-            
+
             $stock->save();
         }
         if ($partiontype == '1' && $price > 0) {    //учет  по  последней цене
@@ -170,7 +169,7 @@ class Stock extends \ZCL\DB\Entity
                     $limit =" limit 0,1";
                     if($conn->dataProvider=="postgres") {
                         $limit =" limit 1";
-                    }         
+                    }
                     $lastpartion = $conn->GetOne("select coalesce(partion,0) from  store_stock  where  qty > 0 and  item_id={$item->item_id} order  by  stock_id desc ".$limit);
                     if ($lastpartion == 0) {
                         $lastpartion = $price;

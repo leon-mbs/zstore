@@ -10,7 +10,6 @@ namespace App\Entity;
  */
 class SalType extends \ZCL\DB\Entity
 {
-
     protected function init() {
 
         $this->salcode = 0;
@@ -23,7 +22,7 @@ class SalType extends \ZCL\DB\Entity
 
         foreach (self::find("disabled<>1", "salcode") as $v) {
             $list[$v->salcode] = $v->salcode . ', ' . $v->salname;
-        };
+        }
 
         return $list;
     }

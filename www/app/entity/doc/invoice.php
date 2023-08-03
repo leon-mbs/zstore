@@ -10,7 +10,6 @@ use App\Helper as H;
  */
 class Invoice extends \App\Entity\Doc\Document
 {
-
     public function generateReport() {
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
@@ -55,7 +54,7 @@ class Invoice extends \App\Entity\Doc\Document
                         "bank"            => $mf->bank ?? "",
                         "bankacc"         => $mf->bankacc ?? "",
                         "isbank"          => (strlen($mf->bankacc) > 0 && strlen($mf->bank) > 0),
-                        "iban"      => strlen($firm['iban'] ) > 0 ? $firm['iban'] : false,
+                        "iban"      => strlen($firm['iban']) > 0 ? $firm['iban'] : false,
                         "email"           => $this->headerdata["email"],
                         "notes"           => nl2br($this->notes),
                         "document_number" => $this->document_number,
@@ -64,7 +63,7 @@ class Invoice extends \App\Entity\Doc\Document
                         "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
                         "totaldisc"           => $this->headerdata["totaldisc"] > 0 ? H::fa($this->headerdata["totaldisc"]) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
-                        
+
         );
         if (strlen($this->headerdata["customer_print"]) > 0) {
             $header['customer_name'] = $this->headerdata["customer_print"];
@@ -119,7 +118,7 @@ class Invoice extends \App\Entity\Doc\Document
             }
         }
 
- 
+
         return true;
     }
 
@@ -130,7 +129,7 @@ class Invoice extends \App\Entity\Doc\Document
     public function getRelationBased() {
         $list = array();
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
-      //  $list['Invoice'] = self::getDesc('Invoice');
+        //  $list['Invoice'] = self::getDesc('Invoice');
         $list['TTN'] = self::getDesc('TTN');
         $list['ServiceAct'] = self::getDesc('ServiceAct');
         $list['POSCheck'] = self::getDesc('POSCheck');

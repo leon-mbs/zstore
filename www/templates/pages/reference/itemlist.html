@@ -139,7 +139,7 @@
                         <tr><td colspan="9">
                                 <a class="text-danger" zippy="deleteall" title="Видалити (деактивувати)"><i class="fa fa-trash"></i></a>&nbsp;&nbsp;
                                 <a  zippy="printall" title="Друк етикеток"><i class="fa fa-print"></i></a>&nbsp;&nbsp;  &nbsp;&nbsp;
-                                в категорiю  <select   zippy="allcat"><option value="0">Не вказано</select>
+                                перемiстити в <select   zippy="allcat"><option value="0">Не вказано</select>
                             </td> </tr>                 
                     </table>
                     <div zippy="pag"></div>   
@@ -312,7 +312,7 @@
                             </div>
                  
                             <div class="form-group row">
-                                <label class="col-5 col-form-label" for="editweight">Вага, кг</label>
+                                <label class="col-5 col-form-label" for="editweight">Вага </label>
                                 <div class="col-7">
                                     <input class="form-control qtyprice" zippy="editweight" pattern="[0-9,\.]+"/>
                                 </div>
@@ -324,7 +324,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-5 col-form-label" for="editvolume">Об'єм, л</label>
+                                <label class="col-5 col-form-label" for="editvolume">Об'єм </label>
                                 <div class="col-7">
                                     <input class="form-control qtyprice" zippy="editvolume" pattern="[0-9,\.]+"/>
                                 </div>
@@ -468,7 +468,18 @@
                         <td><a zippy="ssdel"><i class="fa fa-trash"></i></a></td>
                     </tr>
                 </table>
-                <b>Усього собiвартiсть: </b> <b zippy="stotal"></b>
+                <span>Усього собiвартiсть: </span> <b zippy="stotal"></b>
+                 <br>
+                 <br>
+                 <h5>Технологiчна карта</h5>
+                  <small>Наприклад рецепт для  кухнi</small>
+                 <form zippy="cardform" >
+                    <textarea style="height:200px" class="form-control" zippy="editscard"></textarea> 
+                           
+                
+                    <input class="btn btn-outline-success  " type="submit" value="Зберегти">
+                 </form>
+                
             </div>
         </div>
 

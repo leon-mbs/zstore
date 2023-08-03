@@ -18,7 +18,6 @@ use Zippy\WebApplication as App;
 
 class Chat extends \App\Pages\Base
 {
-
     public $user = null;
 
     private $users;
@@ -39,7 +38,7 @@ class Chat extends \App\Pages\Base
         $this->msgform->add(new DropDownChoice('msgpersonal', \App\Entity\User::findArray("username", "disabled<>1 and user_id<>" . $this->user->user_id, "username"), 0));
         $this->msgform->add(new \Zippy\Html\Form\File('msgfile'));
         $this->msgform->add(new TextInput('msglink'));
-        $this->msgform->add(new \Zippy\Html\Form\AutocompleteTextInput('msgdoc'))->onText($this, 'OnAutoDoc');;
+        $this->msgform->add(new \Zippy\Html\Form\AutocompleteTextInput('msgdoc'))->onText($this, 'OnAutoDoc');
 
 
         $this->add(new Form('searchform'))->onSubmit($this, 'OnSearch');
@@ -171,7 +170,7 @@ class Chat extends \App\Pages\Base
                 $this->getOwnerPage()->setError("Файл більше 10 МБ!");
                 return;
             }
-            $id = H::addFile($file, 0, '', \App\Entity\Message::TYPE_NOTIFY);
+            $id = H::addFile($file, 0, '', \App\Entity\Message::TYPE_CHAT);
 
             $url = _BASEURL . 'loadfile.php?id=' . $id;
 
