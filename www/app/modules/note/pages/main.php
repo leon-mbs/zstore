@@ -71,9 +71,9 @@ class Main extends \App\Pages\Base
     }
     public function onAddFile($args, $post=null) {
 
-        $file =  @$_FILES['editfile']  ;
+        $file =  $_FILES['editfile']  ;
 
-        if(strlen($file['tmp_name'])==0) {
+        if(strlen($file['tmp_name'] ?? '')==0) {
             return;
         }
 

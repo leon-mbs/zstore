@@ -13,12 +13,12 @@ class Message extends \ZCL\DB\Entity
 {
     public const TYPE_DOC      = 1;
     public const TYPE_CUST     = 2;
-    public const TYPE_EQ       = 3;
+    public const TYPE_CHAT     = 3;
     public const TYPE_NOTE     = 4;
     public const TYPE_ISSUE    = 5;
     public const TYPE_PROJECT  = 6;
     public const TYPE_CONTRACT = 7;
-    public const TYPE_NOTIFY   = 8;
+    public const TYPE_CUSTCHT   = 8;
 
 
     protected function init() {

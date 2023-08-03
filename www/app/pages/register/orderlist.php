@@ -25,6 +25,7 @@ use App\Entity\Pay;
 class OrderList extends \App\Pages\Base
 {
     private $_doc = null;
+    private $_issms = false; //подключен  смс  сервис
 
     /**
      *
@@ -95,7 +96,7 @@ class OrderList extends \App\Pages\Base
         $this->payform->add(new Date('pdate', time()));
         $this->payform->setVisible(false);
 
-
+        $this->_issms = (System::getOption('sms','smstype')??0) >0 ;
 
 
     }
@@ -166,9 +167,12 @@ class OrderList extends \App\Pages\Base
         } else {
             $row->edit->setVisible(false);
         }
-        if ($doc->document_id == @$this->_doc->document_id) {
+        if ($doc->document_id == ($this->_doc->document_id ?? 0)) {
             $row->setAttribute('class', 'table-success');
         }
+        
+        
+        
     }
 
     public function resOnSubmit($sender) {

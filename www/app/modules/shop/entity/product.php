@@ -84,7 +84,7 @@ class Product extends \App\Entity\Item
         }
 
         foreach ($attrlist as $attr) {
-            $attr->value = @$attrvalues[$attr->attribute_id];
+            $attr->value = $attrvalues[$attr->attribute_id]  ?? '';
             if (strlen($attr->value) == 0) {
                 // $attr->nodata = 1;
             }

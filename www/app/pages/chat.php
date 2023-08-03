@@ -170,7 +170,7 @@ class Chat extends \App\Pages\Base
                 $this->getOwnerPage()->setError("Файл більше 10 МБ!");
                 return;
             }
-            $id = H::addFile($file, 0, '', \App\Entity\Message::TYPE_NOTIFY);
+            $id = H::addFile($file, 0, '', \App\Entity\Message::TYPE_CHAT);
 
             $url = _BASEURL . 'loadfile.php?id=' . $id;
 

@@ -1111,6 +1111,21 @@ class ARMFood extends \App\Pages\Base
 
                     $this->_doc->updateStatus(Document::STATE_CLOSED);
                 }
+                if ($this->_worktype == 2) {
+                    $b=true;
+                    foreach ($this->_doc->unpackDetails('detaildata') as $rowid=>$item) {
+                       $fs = intval($item->foodstate);
+                       if($fs <3)  {
+                         $b = false;
+                         break;  
+                       }
+                    }                             
+                    
+                   if($b) {
+                      $this->_doc->updateStatus(Document::STATE_CLOSED);   
+                   }
+                    
+                }
             }
 
 
