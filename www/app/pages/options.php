@@ -31,7 +31,7 @@ class Options extends \App\Pages\Base
 
     public function __construct() {
         parent::__construct();
-        if (System::getUser()->userrole != 'admins') {
+        if (System::getUser()->rolename != 'admins') {
             System::setErrorMsg('До сторінки має доступ тільки адміністратори');
             App::RedirectError();
             return false;

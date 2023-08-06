@@ -129,19 +129,7 @@
                 </div>
             </div>
         </div>
-       <div zippy="editpanel" class="row">
-            <div class="col-12 col-xl-10">
-                <form zippy="editform"  >
-                          
-                 <div class="form-group">
-                    <button zippy="editforcancel" type="submit" class="  btn btn-info  mr-2 ">Скасувати</button>                 
-                 </div>
 
-
-               </form>
-      
-            </div>
-        </div>
 
 
         <div class="row" zippy="statuspan">
@@ -198,9 +186,9 @@
                     <form zippy="statusform" class="form-inline row">
                        <div class="col-12 mb-2">      
                         <button zippy="binp" class="btn btn-success  mr-2"> На обробку</button>
-                        {{#hideblock}}
+                        
                         <button zippy="bscan" class="btn btn-primary  mr-2"> Зiбрати</button>
-                        {{/hideblock}}
+                   
                         <button zippy="brd" class="btn btn-success  mr-2"> Готовий до вiдправки</button>
                         <button zippy="bclose" type="submit" class="  btn btn-success  mr-2 ">  Виконано                </button>
                         <a zippy="btopay" class="  btn btn-success  mr-4 ">Сплатити</a>
@@ -258,6 +246,47 @@
 
             </div>
         </div>
+        
+        
+       <div zippy="editpanel" class="row">
+            <div class="col-12 col-md-8 col-xl-6">
+                 <h5>Замовлення <span zippy="editdn"></span></h5>
+                 <form zippy="editform"  >
+                     {{#usescanner}}
+                    <div class="navbar nav justify-content-start">
+                        Штрих код &nbsp;<input autofocus="on" style="width:150px;" autocomplete="off"  type="text" zippy="editbarcode"  onkeydown="onBarCode()">
+                        &nbsp;   &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
+                
+                    
+                      
+                    </div>
+                    {{/usescanner}}        
+                   <table class="table table-sm">
+                   <tr  zippy="edititemlist">
+                      <td style="width:20px"><input type="checkbox"><td>
+                      <td>ddsdfsd  sf<td>
+                      <td>id444<td>
+                      <td>id444<td>
+                      <td class="text-right">34<td>
+                   </tr> 
+                 </table>         
+                 <div class="form-group">
+                    <button zippy="editcancel" type="submit" class="  btn btn-secondary  mr-2 ">Скасувати</button>                 
+                    <button zippy="editsave" type="submit" class="  btn btn-info  mr-2 ">Зберегти</button>                 
+                    <button zippy="editready" type="submit" class="  btn btn-success  mr-4 ">Зiбрано</button>                 
+                    {{#hideblock}}
+                    <a zippy="editchat"  >Вiдправити запитання</a>                 
+                    {{/hideblock}}
+ 
+                 </div>
+
+
+               </form>
+      
+            </div>
+        </div>        
+        
+        
          {{={| |}=}}   
           <div class="row">
             <div class="col-12" id="vapp">
@@ -423,6 +452,7 @@
 
 
 
+    
     </body>
 </html>
 

@@ -104,8 +104,11 @@ class OrderList extends \App\Pages\Base
         $this->payform->setVisible(false);
 
         $this->add(new Panel("editpanel"))->setVisible(false);
+        $this->editpanel->add(new Label("editdn"));
         $this->editpanel->add(new Form("editform"));
-        $this->editpanel->editform->add(new SubmitButton('editforcancel'))->onClick($this, 'editOnSubmit');
+        $this->editpanel->editform->add(new SubmitButton('editcancel'))->onClick($this, 'editOnSubmit');
+        $this->editpanel->editform->add(new SubmitButton('editsave'))->onClick($this, 'editOnSubmit');
+        $this->editpanel->editform->add(new SubmitButton('editready'))->onClick($this, 'editOnSubmit');
 
 
     }
@@ -280,6 +283,8 @@ class OrderList extends \App\Pages\Base
                 $this->listpanel->setVisible(false);
                 $this->statuspan->setVisible(false);
                 $this->payform->setVisible(false);
+
+                $this->editpanel->editdn->setText($this->_doc->document_number);
 
                 return;
             }
@@ -656,7 +661,14 @@ class OrderList extends \App\Pages\Base
 
     public function editOnSubmit($sender) {
 
-
+        if ($sender->id == "editready") {
+            $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
+            $this->listpanel->doclist->Reload(false);
+            
+        }
+   
+        
+      
         $this->editpanel->setVisible(false);
         $this->listpanel->setVisible(true);
 
@@ -788,7 +800,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
 
         $status = $filter->status->getValue();
         if ($status == 0) {
-            $where .= " and  state not in (9,17) ";
+            $where .= " and  state not in (9,17,15) ";
         }
         if ($status == 1) {
             $where .= " and  state =1 ";
@@ -819,7 +831,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
         $docs = Document::find($this->getWhere(), "document_id desc", $count, $start);
-        //        $docs = Document::find($this->getWhere(), "priority desc,document_id desc", $count, $start);
+        //         $docs = Document::find($this->getWhere(), "priority desc,document_id desc", $count, $start);
 
         return $docs;
     }
