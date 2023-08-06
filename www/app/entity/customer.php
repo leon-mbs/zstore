@@ -62,6 +62,9 @@ class Customer extends \ZCL\DB\Entity
 
     protected function afterLoad() {
         //распаковываем  данные из detail
+        if(strlen($this->detail)==0) {
+            return;
+        }
         $xml = simplexml_load_string($this->detail);
 
         $this->discount = doubleval($xml->discount[0]);
@@ -333,4 +336,22 @@ class Customer extends \ZCL\DB\Entity
     public function getID() {
         return $this->customer_id;
     }
+
+    /**
+    * сообшения  с  чата
+    * 
+    */
+    public function chatMessages() {
+        $conn = \ZDB\DB::getConnect() ;
+
+
+
+        $sql= "select sum(amount) from paylist where document_id in (select document_id from documents_view where customer_id = {$this->customer_id} 
+               and meta_name in ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct','ReturnIssue')   ) " ;
+        return  doubleval($conn->GetOne($sql));
+        
+    }
+
+
+    
 }

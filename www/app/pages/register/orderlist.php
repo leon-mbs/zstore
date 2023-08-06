@@ -37,6 +37,7 @@ class OrderList extends \App\Pages\Base
         if (false == \App\ACL::checkShowReg('OrderList')) {
             return;
         }
+      //  $this->_issms = (System::getOption('sms','smstype')??0) >0 ;
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
 
@@ -57,6 +58,7 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bclose'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('binp'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('brd'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bscan'));
 
         $this->statuspan->statusform->add(new SubmitButton('bpos'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bgi'))->onClick($this, 'statusOnSubmit');
@@ -96,7 +98,6 @@ class OrderList extends \App\Pages\Base
         $this->payform->add(new Date('pdate', time()));
         $this->payform->setVisible(false);
 
-        $this->_issms = (System::getOption('sms','smstype')??0) >0 ;
 
 
     }
@@ -142,11 +143,11 @@ class OrderList extends \App\Pages\Base
         $stname = Document::getStateName($doc->state);
 
         $row->add(new Label('state', $stname));
+        $row->state->setText('<span class="badge badge-secondary">' . $stname . '</span>', true);
         if ($doc->state == Document::STATE_NEW) {
             $row->state->setText('<span class="badge badge-info">' . $stname . '</span>', true);
         }
-        if ($doc->state == Document::STATE_READYTOSHIP || $doc->state == Document::STATE_INSHIPMENT || $doc->state == Document::STATE_DELIVERED
-        ) {
+        if ($doc->state == Document::STATE_READYTOSHIP || $doc->state == Document::STATE_INSHIPMENT || $doc->state == Document::STATE_DELIVERED        ) {
             $row->state->setText('<span class="badge badge-success">' . $stname . '</span>', true);
         }
         if ($doc->state == Document::STATE_INPROCESS) {
@@ -171,10 +172,45 @@ class OrderList extends \App\Pages\Base
             $row->setAttribute('class', 'table-success');
         }
         
+        $ch = $this->checkChat($doc);
+        if($ch) {
+            $row->add(new Label('cchat'))->setVisible(true);
+            $row->cchat->setAttribute('onclick',"opencchat({$doc->document_id})");
+            $row->cchat->setAttribute('class',"fa fa-comments");
+            
+            $m = \App\Entity\Message::getFirst("item_id={$doc->document_id} and item_type=" .\App\Entity\Message::TYPE_CUSTCHAT ,"message_id desc");
+            if($m != null)  {
+                if($m->user_id >0) { //отправлен  вопрос
+                   $row->cchat->setAttribute('class',"fa fa-comments text-warn");
+                }
+                if($m->user_id ==0) { //получен  ответ
+                   $row->cchat->setAttribute('class',"fa fa-comments text-success");
+                }
+            }
         
+        }
         
     }
 
+    private function  checkChat($doc){
+        $ret = 0 ;
+        if($this->_issms && ($doc->state < Document::STATE_EXECUTED || $doc->state == Document::STATE_INPROCESS)  ){
+            
+           $phone= $doc->headerdata['phone'] ??'';
+           if($phone=='') {
+              $c =  \App\Entity\Customer::load($doc->customer_id ) ;
+              $phone = $c->phone;       
+           }
+            
+           if(strlen($phone)>0) {
+               $ret = 1;       
+ 
+ 
+           }
+        }
+        return $ret;
+    }
+    
     public function resOnSubmit($sender) {
         if ($sender->id == "bres") {
             $store = $this->statuspan->resform->store->getValue();
@@ -221,87 +257,92 @@ class OrderList extends \App\Pages\Base
 
         $state = $this->_doc->state;
 
-        //проверяем  что есть ТТН
-        $list = $this->_doc->getChildren('TTN');
-        $ttn = count($list) > 0;
-        $list = $this->_doc->getChildren('GoodsIssue');
-        $gi = count($list) > 0;
-        //  $list = $this->_doc->getChildren('Invoice');
-        //   $invoice = count($list) > 0;
-        $list = $this->_doc->getChildren('POSCheck');
-        $pos = count($list) > 0;
+        try {
+        
+            //проверяем  что есть ТТН
+            $list = $this->_doc->getChildren('TTN');
+            $ttn = count($list) > 0;
+            $list = $this->_doc->getChildren('GoodsIssue');
+            $gi = count($list) > 0;
+            //  $list = $this->_doc->getChildren('Invoice');
+            //   $invoice = count($list) > 0;
+            $list = $this->_doc->getChildren('POSCheck');
+            $pos = count($list) > 0;
 
-        if ($sender->id == "binp") {
-            $this->_doc->updateStatus(Document::STATE_INPROCESS);
-        }
-        if ($sender->id == "brd") {
-            $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
-        }
-        if ($sender->id == "bref") {
-            $this->_doc->updateStatus(Document::STATE_FAIL);
-
-            $this->setWarn('Замовлення анульовано');
-        }
-        if ($sender->id == "btask") {
-            $task = count($this->_doc->getChildren('Task')) > 0;
-
-            if ($task) {
-
-                $this->setWarn('Вже існує документ Наряд');
+            if ($sender->id == "binp") {
+                $this->_doc->updateStatus(Document::STATE_INPROCESS);
             }
-            App::Redirect("\\App\\Pages\\Doc\\Task", 0, $this->_doc->document_id);
-        }
-        if ($sender->id == "bttn") {
-            if ($ttn) {
-                $this->setWarn('У замовлення вже є відправки');
+            if ($sender->id == "brd") {
+                $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
             }
-            App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
-            return;
-        }
-        if ($sender->id == "bcopy") {
+            if ($sender->id == "bref") {
+                $this->_doc->updateStatus(Document::STATE_FAIL);
 
-            App::Redirect("\\App\\Pages\\Doc\\Order", 0, $this->_doc->document_id);
-            return;
-        }
-        if ($sender->id == "bpos") {
-            if ($pos) {
-                $this->setWarn('Вже існує документ Чек');
+                $this->setWarn('Замовлення анульовано');
             }
-            App::Redirect("\\App\\Pages\\Doc\\POSCheck", 0, $this->_doc->document_id);
-            return;
-        }
+            if ($sender->id == "btask") {
+                $task = count($this->_doc->getChildren('Task')) > 0;
 
-        if ($sender->id == "bgi") {
-            if ($invoice) {
-                $this->setWarn('Вже існує документ Видаткова накладна');
+                if ($task) {
+
+                    $this->setWarn('Вже існує документ Наряд');
+                }
+                App::Redirect("\\App\\Pages\\Doc\\Task", 0, $this->_doc->document_id);
             }
-            App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
-            return;
-        }
-        if ($sender->id == "bco") {
+            if ($sender->id == "bttn") {
+                if ($ttn) {
+                    $this->setWarn('У замовлення вже є відправки');
+                }
+                App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
+                return;
+            }
+            if ($sender->id == "bcopy") {
 
-            App::Redirect("\\App\\Pages\\Doc\\OrderCust", 0, $this->_doc->document_id);
-            return;
-        }
-
-
-        if ($sender->id == "bclose") {
-
-
-
-            if($this->_doc->payamount >0 && $this->_doc->payamount>$this->_doc->payed) {
-                $this->setWarn('"Замовлення закрито без оплати"');
+                App::Redirect("\\App\\Pages\\Doc\\Order", 0, $this->_doc->document_id);
+                return;
+            }
+            if ($sender->id == "bpos") {
+                if ($pos) {
+                    $this->setWarn('Вже існує документ Чек');
+                }
+                App::Redirect("\\App\\Pages\\Doc\\POSCheck", 0, $this->_doc->document_id);
+                return;
             }
 
-            if($ttn== false && $gi == false) {
-                $this->setWarn('Замовлення закрито без доставки');
+            if ($sender->id == "bgi") {
+                if ($invoice) {
+                    $this->setWarn('Вже існує документ Видаткова накладна');
+                }
+                App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
+                return;
+            }
+            if ($sender->id == "bco") {
+
+                App::Redirect("\\App\\Pages\\Doc\\OrderCust", 0, $this->_doc->document_id);
+                return;
             }
 
 
-            $this->_doc->updateStatus(Document::STATE_CLOSED);
-            $this->statuspan->setVisible(false);
-        }
+            if ($sender->id == "bclose") {
 
+
+
+                if($this->_doc->payamount >0 && $this->_doc->payamount>$this->_doc->payed) {
+                    $this->setWarn('"Замовлення закрито без оплати"');
+                }
+
+                if($ttn== false && $gi == false) {
+                    $this->setWarn('Замовлення закрито без доставки');
+                }
+
+
+                $this->_doc->updateStatus(Document::STATE_CLOSED);
+                $this->statuspan->setVisible(false);
+            }
+        } catch(\Exception $e) {
+            $this->setError($e->getMessage());
+            
+        }
         $this->doclist->Reload(false);
         $this->updateStatusButtons();
     }
@@ -322,11 +363,15 @@ class OrderList extends \App\Pages\Base
 
         $this->statuspan->statusform->btopay->setVisible(false);
         $this->statuspan->statusform->brd->setVisible(false);
+        $this->statuspan->statusform->bscan->setVisible(false);
         $this->statuspan->moveform->setVisible(false);
 
         $this->statuspan->resform->setVisible(false);
 
 
+        $this->statuspan->statusform->bscan->setAttribute('onclick',"openscan({$this->_doc->document_id})");
+ 
+        
         //новый
         if ($state < Document::STATE_EXECUTED) {
             $this->statuspan->statusform->btask->setVisible(false);
@@ -340,6 +385,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bco->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(true);
             $this->statuspan->statusform->brd->setVisible(false);
+            $this->statuspan->statusform->bscan->setVisible(false);
         } else {
 
             $this->statuspan->statusform->bclose->setVisible(true);
@@ -356,11 +402,12 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bpos->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(false);
-            $this->statuspan->statusform->brd->setVisible(false);
+            $this->statuspan->statusform->bscan->setVisible(false);
         }
 
         if ($state == Document::STATE_INPROCESS) {
             $this->statuspan->statusform->brd->setVisible(true);
+            $this->statuspan->statusform->bscan->setVisible(true);
 
             $this->statuspan->statusform->bttn->setVisible(true);
             $this->statuspan->statusform->bpos->setVisible(true);
@@ -399,6 +446,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->brd->setVisible(false);
+            $this->statuspan->statusform->bscan->setVisible(false);
         }
 
         if ($state == Document::STATE_WP) {
@@ -589,6 +637,105 @@ class OrderList extends \App\Pages\Base
 
     }
 
+    
+    //vue
+
+   /**
+   * список  ТМЦ в  заказе
+   * 
+   * @param mixed $args
+   */
+    public function getCChatItems($args){
+       $doc = Document::load($args[0]) ;
+       $ret=[];
+       $ret['itemlist'] =[];
+       foreach ($doc->unpackDetails('detaildata') as $item) {
+          $ret['itemlist'][] = array(
+            'itemname'=>$item->itemname,
+            'item_code'=>$item->item_code,
+            'quantity'=>H::fqty( $item->quantity),
+            'price'=> H::fa($item->price )
+          ) ;
+
+       }     
+       return json_encode($ret, JSON_UNESCAPED_UNICODE);
+    
+    } 
+    
+    /**
+    * список  сообщений по  заказу
+    * 
+    * @param mixed $args
+    */
+    public function getCChatMessages($args){
+     //  $doc = Document::load($args[0]) ;
+       $ret=[];
+       $list = \App\Entity\Message::find("item_id={$args[0]} and item_type=" .\App\Entity\Message::TYPE_CUSTCHAT ,"message_id asc");
+       
+       $ret['msglist'] = [];
+       
+       foreach($list as $msg){
+            $m=[];
+            $m['isseller']  = $msg->user_id >0;
+            $m['message']  = $msg->message;
+            $m['msgdate'] = date('Y-m-d H:i', $msg->created);
+ 
+
+            $ret['msglist'][] = $m;    
+       }
+       
+       
+       return json_encode($ret, JSON_UNESCAPED_UNICODE);
+    
+    }  
+    /**
+    * отправка сообшения заказчику
+    * 
+    * @param mixed $args
+    */
+    public function sendMessage($args,$post){
+       $doc = Document::load($args[0]) ;
+       $message = json_decode($post)   ;
+
+        $issms = ( \App\System::getOption('sms','smstype')??0) >0 ;
+        if($issms == 0){
+            return json_encode(array('error'=>"Не знайдений сервіс смс"), JSON_UNESCAPED_UNICODE);
+        }
+
+        $phone= $doc->headerdata['phone'] ??'';
+        if($phone=='') {
+           $c =  \App\Entity\Customer::load($doc->customer_id ) ;
+           $phone = $c->phone ?? '';       
+        }    
+        if($phone == ''){
+            return json_encode(array('error'=>"Не найдений телефон"), JSON_UNESCAPED_UNICODE);
+        }
+         
+        $link = _BASEURL . 'cchat/' . $args[0]. '/'. $doc->headerdata['hash'];      
+      //  H::log($link);
+        $fn = ( \App\System::getOption('common','shopname')??'')  ;
+
+        $text = "Маємо запитання  по  вашому  замовленню. Відповісти за адресою ".$link;
+         
+     //   $r = \App\Entity\Subscribe::sendSMS($phone,$text) ;
+    //    if($r!=""){
+    //       return json_encode(array('error'=>$r), JSON_UNESCAPED_UNICODE);
+    
+    //    }   
+      
+        $msg = new \App\Entity\Message() ;
+        $msg->message=$message;        
+        $msg->user_id= \app\System::getUser()->user_id;
+        $msg->item_id=$doc->document_id;
+        $msg->item_type=\App\Entity\Message::TYPE_CUSTCHAT;
+        $msg->save() ;
+        
+  
+        return json_encode("", JSON_UNESCAPED_UNICODE);
+    
+    }  
+    
+      
 }
 
 /**
@@ -647,7 +794,8 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
-        $docs = Document::find($this->getWhere(), "priority desc,document_id desc", $count, $start);
+        $docs = Document::find($this->getWhere(), "document_id desc", $count, $start);
+//        $docs = Document::find($this->getWhere(), "priority desc,document_id desc", $count, $start);
 
         return $docs;
     }
@@ -657,3 +805,5 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
     }
 
 }
+
+ 
