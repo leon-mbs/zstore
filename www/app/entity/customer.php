@@ -339,7 +339,7 @@ class Customer extends \ZCL\DB\Entity
 
     /**
     * сообшения  с  чата
-    * 
+    *
     */
     public function chatMessages() {
         $conn = \ZDB\DB::getConnect() ;
@@ -349,9 +349,9 @@ class Customer extends \ZCL\DB\Entity
         $sql= "select sum(amount) from paylist where document_id in (select document_id from documents_view where customer_id = {$this->customer_id} 
                and meta_name in ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct','ReturnIssue')   ) " ;
         return  doubleval($conn->GetOne($sql));
-        
+
     }
 
 
-    
+
 }

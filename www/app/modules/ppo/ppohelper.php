@@ -976,12 +976,12 @@ class PPOHelper
         if($res['success'] != true) {
             return  false;
         }
-        $data = json_decode($res['data'],true);
+        $data = json_decode($res['data'], true);
         $ts = strtotime($data['Timestamp']) ;
         if($ts===false) {
-            return  false;  
+            return  false;
         }
-  
+
         return true;
     }
 
@@ -996,7 +996,7 @@ class PPOHelper
         if($res['success'] != true) {
             return  false;
         }
-        $res = json_decode($res['data'],true);
+        $res = json_decode($res['data'], true);
         return  $res;
 
     }

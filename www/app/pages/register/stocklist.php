@@ -63,9 +63,9 @@ class StockList extends \App\Pages\Base
 
         $row->add(new Label('date', H::fd($doc->document_date)));
 
-//        $row->add(new Label('partion', H::fa($doc->partion)));
+        //        $row->add(new Label('partion', H::fa($doc->partion)));
         $row->add(new Label('qty', H::fqty($doc->quantity)));
-  
+
         $row->add(new Label('dnumber', $doc->document_number));
         $row->add(new Label('snumber', $doc->snumber));
         $row->add(new Label('customer_name', $doc->customer_name));

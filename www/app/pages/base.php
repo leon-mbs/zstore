@@ -242,7 +242,7 @@ class Base extends \Zippy\Html\WebPage
 
         $duration = \App\Session::getSession()->duration() ;
         $this->_tvars['showtips'] = $duration < 300   ;
-        
+
     }
 
     public function LogoutClick($sender) {

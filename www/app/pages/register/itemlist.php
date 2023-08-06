@@ -260,7 +260,7 @@ class ItemList extends \App\Pages\Base
 
         $common = System::getOptions('common') ;
         $pt = $this->filter->searchprice->getValue();
- 
+
 
         $header = array();
         $data = array();
@@ -288,7 +288,7 @@ class ItemList extends \App\Pages\Base
             $header['K1'] = $common['price5'];
         }
 
-       $header['L1'] = "На суму";
+        $header['L1'] = "На суму";
 
         $i = 1;
         foreach ($list as $item) {
@@ -324,7 +324,7 @@ class ItemList extends \App\Pages\Base
                 $am = $qty * $item->getPrice($pt, $store) ;
             }
             $data['L' . $i] = H::fa(abs($am));
- 
+
         }
 
 

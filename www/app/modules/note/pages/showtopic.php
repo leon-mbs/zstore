@@ -22,13 +22,13 @@ class ShowTopic extends \App\Pages\Base
 
         $this->_topic = \App\Modules\Note\Entity\Topic::load($topic_id);
         if ($this->_topic == null) {
-             http_response_code(404) ;
-             die;
+            http_response_code(404) ;
+            die;
         }
 
         if ($this->_topic->acctype == 0) {   //приватный
-             http_response_code(404) ;
-             die;
+            http_response_code(404) ;
+            die;
         }
         if ($this->_topic->isout == 0) {
             $user_id = System::getUser()->user_id;

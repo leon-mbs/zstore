@@ -188,11 +188,11 @@ class ItemActivity extends \App\Pages\Base
             $row['begin_quantity'] = doubleval($row['begin_quantity'])  ;
             $row['obin'] = doubleval($row['obin'])  ;
             $row['obout'] = doubleval($row['obout'])  ;
-      
+
             $r = array(
                 "code"  => $row['item_code'],
                 "name"  => $row['itemname'],
-             
+
                 "date"      => \App\Helper::fd(strtotime($row['dt'])),
                 "documents" => '',
                 "in"        => H::fqty($row['begin_quantity']),
@@ -200,7 +200,7 @@ class ItemActivity extends \App\Pages\Base
                 "obout"     => H::fqty($row['obout']),
                 "out"       => H::fqty($row['begin_quantity'] + $row['obin'] - $row['obout'])
             );
-  
+
             $detail[] = $r;
             $ba = $ba + $row['begin_amount'];
             $bain = $bain + $row['obinamount'];
@@ -208,11 +208,11 @@ class ItemActivity extends \App\Pages\Base
             $bq = $bq + $row['begin_quantity'];
             $bqin = $bqin + $row['obin'];
             $bqout = $bqout + $row['obout'];
-            
-        
-            
-            
-            
+
+
+
+
+
         }
 
 
