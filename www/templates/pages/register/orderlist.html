@@ -5,10 +5,11 @@
     </head>
   <body>
         <div class="row">
-            <div class="col-12 col-xl-11">
+            <div class="col-12 ">
 
                 <h3>Журнал замовлень </h3>
-
+            </div>
+             <div zippy="listpanel" class="col-12 col-xl-11">
 
                 <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
@@ -56,6 +57,7 @@
                         <th></th>
                         <th></th>
                         <th></th>
+                        <th></th>
 
 
                     </tr>
@@ -69,13 +71,16 @@
 
                         <td class="text-nowrap" zippy="state"></td>
                         <td   zippy="emp"></td>
-                        <td zippy="onotes"></td>
+                        <td ><small zippy="onotes"></small></td>
                         <td>
                             <i  zippy="isreserved" title="Зарезервованi товари" class="fa fa-archive"></i>
                         </td>
+                         <td>
+                           <i style="cursor:pointer" zippy="cchat" title="Чат с  замовником" ></i>  
+                        </td>
 
                         <td class="text-nowrap">
-                            <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
+                            &nbsp; &nbsp;<a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
                              &nbsp; &nbsp; &nbsp; &nbsp; <a zippy="edit" title="Редагування"><i class="fa fa-edit"></i></a>
 
                         </td>
@@ -87,7 +92,7 @@
 
                 <div zippy="pag">
                 </div>
-                <a id="dankor"></a>
+             
             </div>
 
         </div>
@@ -122,6 +127,19 @@
                     </form>
 
                 </div>
+            </div>
+        </div>
+       <div zippy="editpanel" class="row">
+            <div class="col-12 col-xl-10">
+                <form zippy="editform"  >
+                          
+                 <div class="form-group">
+                    <button zippy="editforcancel" type="submit" class="  btn btn-info  mr-2 ">Скасувати</button>                 
+                 </div>
+
+
+               </form>
+      
             </div>
         </div>
 
@@ -177,50 +195,32 @@
             </div>
              <div class="col-12 col-xl-10">      
                 <div class="navbar nav">
-                    <form zippy="statusform" class="form-inline ">
-
+                    <form zippy="statusform" class="form-inline row">
+                       <div class="col-12 mb-2">      
                         <button zippy="binp" class="btn btn-success  mr-2"> На обробку</button>
+                        {{#hideblock}}
+                        <button zippy="bscan" class="btn btn-primary  mr-2"> Зiбрати</button>
+                        {{/hideblock}}
                         <button zippy="brd" class="btn btn-success  mr-2"> Готовий до вiдправки</button>
-                        <button zippy="bclose" type="submit" class="  btn btn-success  mr-2 ">                     Виконано                </button>
-                        <a zippy="btopay" class="  btn btn-success  mr-2 ">Сплатити</a>
-
-                        <button zippy="bttn" class="btn btn-info  mr-4"> Створити ТТН</button>
+                        <button zippy="bclose" type="submit" class="  btn btn-success  mr-2 ">  Виконано                </button>
+                        <a zippy="btopay" class="  btn btn-success  mr-4 ">Сплатити</a>
+                        <button zippy="bref" class="btn btn-danger  mr-2"><i class="fas fa-thumbs-down"></i> Анулювати                </button>
+                       </div>
+                       <div class="col-12"> 
+                        <span>Створити </span> 
+                        <button zippy="bttn" class="btn btn-info  mr-2">  ТТН</button>
                         <button zippy="bpos" class="btn btn-info  mr-2"> Чек                </button>
-                        <button zippy="bgi" class="btn btn-info  mr-2">  Видаткова накладна                </button>
-                        <button zippy="bco" class="btn btn-info  mr-2">  Закупівля               </button>
-                        <button zippy="btask" type="submit" class=" btn btn-info mr-2 ">Створити наряд</button>
-                        <button zippy="bref" class="btn btn-danger  mr-4"><i class="fas fa-thumbs-down"></i> Анульовано                </button>
-                        <button zippy="bcopy" class="btn btn-info  mr-4"><i class="fa fa-copy"></i> Копія</button>
-                          
-                         
-                         
-                            
+                        <button zippy="bgi" class="btn btn-info  mr-2">  Видаткову накладну                </button>
+                        <button zippy="bco" class="btn btn-info  mr-2">  Заявку постачальнику               </button>
+                        <button zippy="btask" type="submit" class=" btn btn-info mr-2 ">  Наряд</button>
+                        <button zippy="bcopy" class="btn btn-info  mr-4"><i class="fa fa-copy"></i> Копію</button>
+                       </div>     
                             
                     </form> 
-                       {{#isadmins}}
+                    
                       <table>  <tr><td>  
-                     <form zippy="moveform" class="form-inline mt-1">
-                        <label class="mr-2">Перевести на: </label>
-                          {{#usebranch}}
-
-                                <label for="brmove">фiлiя </label>
-                                <select zippy="brmove" class="form-control mr-2 ">
-                                    <option value="0">Не вказано</option>
-                                </select>
-                          
-                               {{/usebranch}}
-                          
-                                <label for="usmove">користувач </label>
-                                <select class="form-control mr-2" zippy="usmove" class="form-control mr-2 ">
-
-                                </select>
-                                <button zippy="bmove" type="submit" class="btn btn-info  mr-4 ">OK                 </button>
-                   
-                     </form>
-                       {{/isadmins}} 
-                       
-                     </td><td>  
-                       
+              
+                     
                      <form zippy="resform" class="form-inline mt-1">
                         <label data-label="bres";>Резервувати товари </label>
                         <select class="form-control mr-2"  zippy="store"></select>
@@ -229,7 +229,27 @@
                         <button zippy="bunres" class="btn btn-info "> Зняти з резерву                </button>
 
 
-                    </form>
+                    </form>       
+                     </td><td>  
+                    <form zippy="moveform" class="form-inline mt-1">
+                        <label class="mr-2">Перевести на: </label>
+                       {{#usebranch}}
+
+                        <label for="brmove">фiлiя </label>
+                        <select zippy="brmove" class="form-control mr-2 ">
+                            <option value="0">Не вказано</option>
+                        </select>
+                  
+                       {{/usebranch}}
+                  
+                        <label for="usmove">користувач </label>
+                        <select class="form-control mr-2" zippy="usmove" class="form-control mr-2 ">
+
+                        </select>
+                        <button zippy="bmove" type="submit" class="btn btn-info  mr-4 ">OK                 </button>
+                   
+                     </form>                
+                
                    </td></tr></table>
                 </div>
 
@@ -238,19 +258,182 @@
 
             </div>
         </div>
-       
+         {{={| |}=}}   
+          <div class="row">
+            <div class="col-12" id="vapp">
+            
+               <div id="modalcchat" class="modal fade  " tabindex="-1" role="dialog" >
+                    <div class="modal-dialog modal-dialog-centered   ">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Чат  з замовником</h5>
+                                 <small>Вiдправка уточнень по  смс  </small>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                             <details  >
+                                <summary>Перелiк товарiв</summary>
+                                <table class="ctable" style="font-size:smaller">
+                                    <tr v-for="item in cchatitemlist">
+                                        <td>{{item.itemname}} <td>
+                                        <td>{{item.item_code}} <td>
+                                        <td align="right">{{item.quantity}} <td>
+                                        <td align="right">{{item.price}} <td>
+                                        <td  >  <td>
+                                    </tr>
+                                </table>
+                                </details> 
+                                <div class=" direct-chat direct-chat-primary mb-4">
+                                  <div class="row">
+                                  <div v-for="msg in msglist" class="col-12">
+                                      <div v-show="msg.isseller ==false" class="row">
+                                         <div class="col-6"><b>Замовник</b></div>
+                                         <div class="col-4 text-right"><small>{{msg.msgdate}}</small></div>
+                                         <div class="col-2"> </div>
+                                       </div>
+                                       <div v-show="msg.isseller ==false" class="row">
+                                         <div class="col-10  bg-light   rounded ">{{msg.message}}</div>
+                                         <div class="col-2"> </div>
+                                       </div>                  
+                                    
+                                 
+                                    <div v-show="msg.isseller ==true" class="row">
+                                        <div class="col-2"> </div>
+                                        <div class="col-4 text-left"><small>{{msg.msgdate}}</small></div>
+                                        
+                                        <div class="col-6 text-right"><b>Продавець</b></div>
+                                    </div>
+                                    
+                                    <div v-show="msg.isseller ==true" class="row">
+                                        <div class="col-2"> </div>
+                                        <div class="col-10   rounded">{{msg.message}}</div>
+                                        
+                                      </div>                            
+                                       
+                                       
+                                    </div>                            
+                                 </div>                            
+                                <form>
+                                  <div class="form-group">
+                                         <label for="msgtext">Повiдомлення</label> 
+                                        <textarea  v-model="message"      class="form-control"></textarea>
+                                         
+                                           
+                                      </div>
+                                  <div class="input-group">
+                                    
+                                      <button v-show="showntnsend" v-on:click.prevent="send()"   class="btn btn-primary">Вiдправити</button>
+                                    
+                                  </div>
+                                </form>
+                           
+                            
+                            </div>
 
-     
-        {{#askclose}}
-
+                        </div>
+                    </div>
+                </div>
+            
+         </div> 
+       </div>
+  {|={{ }}=|}  
         <script>
+          {{#askclose}}
+
             function check_bclose() {
-                return confirm("Замовлення не сплачено або не виконано. Закрити?")
+                return confirm("Замовлення не оплачено або не виконано. Закрити?")
 
             }
+          {{/askclose}} 
+        
+     
+    
+          var vapp = new Vue({
+              el: '#vapp',
+           
+              data() {
+                  return  {
+                     doc_id:0 ,
+                     message:'' ,
+                     showntnsend:true ,
+                     cchatitemlist:[] ,
+                     msglist:[] 
+                     
+                   }   
+              }  ,
+              methods:   {
+               
+                 send:function( ){
+                     if(this.message=='') return;
+                     this.showntnsend = false;
+                     callPM('sendMessage',[this.doc_id ],this.message,(data)=> 
+                      {
+                         this.showntnsend = true;
+                         if(checkPMAnswer(data) ){
+                              this.message = ""
+                              callPM('getCChatMessages',[this.doc_id],null,(data)=> 
+                              {
+                                  this.msglist = data.msglist        
+                              })         
+                         }     
+                       
+                      })                 
+                 },
+                 CChatInit:function(doc_id ){
+
+                      this.doc_id  = doc_id;
+                      
+                      callPM('getCChatMessages',[this.doc_id],null,(data)=> 
+                      {
+                               
+                          this.msglist = data.msglist  
+
+       
+                      })                       
+                      
+                       callPM('getCChatItems',[this.doc_id],null,(data)=> 
+                       {
+                          this.cchatitemlist = data.itemlist  
+                       })                   
+                    
+                 }    
+                 
+                 
+                            
+             }     
+       
+        })             
+          
+     
+                   
+          function opencchat(doc_id ) {
+             $('#modalcchat').modal('show')
+           
+             
+             vapp.CChatInit(doc_id   )  
+               
+               
+            }
+       
+     
+         
         </script>
 
-        {{/askclose}}
+
 
     </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+

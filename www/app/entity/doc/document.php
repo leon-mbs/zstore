@@ -120,7 +120,7 @@ class Document extends \ZCL\DB\Entity
         $da = $common['actualdate'] ?? 0 ;
 
         if($da>$this->document_date) {
-            throw new \Exception("Не можна зберігати документ старший " .date('Y-m-d', $da));
+            throw new \Exception("Не можна змінювати документ старший " .date('Y-m-d', $da));
         }
 
 

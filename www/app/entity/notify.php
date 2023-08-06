@@ -17,6 +17,7 @@ class Notify extends \ZCL\DB\Entity
     public const CHAT        = -6;  //сообщение  в  чат
     public const SUBSCRIBE   = -7;  //рассылка
 
+
     protected function init() {
 
         $this->sender_id = 0;
@@ -25,6 +26,7 @@ class Notify extends \ZCL\DB\Entity
         $this->user_id = 0;
         $this->message = '';
         $this->dateshow = time();
+        $this->created = time();
     }
 
     protected function afterLoad() {

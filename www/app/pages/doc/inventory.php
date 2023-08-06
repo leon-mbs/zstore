@@ -378,7 +378,7 @@ class Inventory extends \App\Pages\Base
         $this->docform->barcode->setText('');
         $code0 = $code;
         $code = ltrim($code, '0');
-          
+
         foreach($this->_itemlist as $i=> $it) {
             if($it->item_code==$code || $it->bar_code==$code) {
                 $d= $this->_itemlist[$i]->qfact;
@@ -386,14 +386,14 @@ class Inventory extends \App\Pages\Base
                 $this->_itemlist[$i]->qfact = $qf + 1;
 
                 // Издаем звук если всё ок
-                App::$app->getResponse()->addJavaScript("new Audio('/assets/good.mp3').play()", true);  
+                App::$app->getResponse()->addJavaScript("new Audio('/assets/good.mp3').play()", true);
 
 
                 $this->docform->detail->Reload();
                 return;
             }
         }
-     
+
 
 
         $store = $this->docform->store->getValue();
@@ -421,7 +421,7 @@ class Inventory extends \App\Pages\Base
             return;
         } else {
             // Издаем звук если всё ок
-            App::$app->getResponse()->addJavaScript("new Audio('/assets/good.mp3').play()", true); 
+            App::$app->getResponse()->addJavaScript("new Audio('/assets/good.mp3').play()", true);
         }
 
         if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {

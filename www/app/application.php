@@ -50,10 +50,10 @@ class Application extends \Zippy\WebApplication
     public function Route($uri) {
 
         if (preg_match('/^[-#a-zA-Z0-9\/_]+$/', $uri) == 0) {
-               http_response_code(404) ;
-               die;
+            http_response_code(404) ;
+            die;
 
-           
+
         }
 
         $api = explode('/', $uri);
@@ -66,8 +66,8 @@ class Application extends \Zippy\WebApplication
 
                 $file = _ROOT . "app/api/" . strtolower($class) . ".php";
                 if (!file_exists($file)) {
-                       http_response_code(404) ;
-                       die;
+                    http_response_code(404) ;
+                    die;
                 }
                 require_once($file);
 
@@ -98,6 +98,7 @@ class Application extends \Zippy\WebApplication
             "admin"          => "\\App\\Pages\\Main",
             "shop"           => "\\App\\Modules\\Shop\\Pages\\Catalog\\Main",
             "menu"           => "\\App\\Modules\\Shop\\Pages\\Catalog\\Menu",
+            "cchat"           => "\\App\\Modules\\Shop\\Pages\\Catalog\\CChat",
             "sp"             => "\\App\\Modules\\Shop\\Pages\\Catalog\\ProductView",
             "showreport"     => "\\App\\Pages\\ShowReport",
             "showdoc"        => "\\App\\Pages\\ShowDoc",

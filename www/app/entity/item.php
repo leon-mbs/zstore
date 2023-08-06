@@ -491,7 +491,7 @@ class Item extends \ZCL\DB\Entity
 
         $common = \App\System::getOptions("common");
         $list = [];
-        
+
         if (strlen($common['price1']) > 0) {
             $list['price1'] = $common['price1'];
         }

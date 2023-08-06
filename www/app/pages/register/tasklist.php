@@ -132,7 +132,7 @@ class TaskList extends \App\Pages\Base
         if ($task->state == Document::STATE_CLOSED || $task->state == Document::STATE_EXECUTED) {
             $row->taskedit->setVisible(false);
         }
-        if ($task->document_id == ($this->_task->document_id?? 0) ) {
+        if ($task->document_id == ($this->_task->document_id?? 0)) {
             $row->setAttribute('class', 'table-success');
         }
     }
