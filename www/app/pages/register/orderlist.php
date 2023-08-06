@@ -26,6 +26,7 @@ class OrderList extends \App\Pages\Base
 {
     private $_doc = null;
     private $_issms = false; //подключен  смс  сервис
+    public $_itemlist =[];
 
     /**
      *
@@ -37,19 +38,23 @@ class OrderList extends \App\Pages\Base
         if (false == \App\ACL::checkShowReg('OrderList')) {
             return;
         }
-      //  $this->_issms = (System::getOption('sms','smstype')??0) >0 ;
+        //  $this->_issms = (System::getOption('sms','smstype')??0) >0 ;
 
-        $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
+        $this->add(new Panel("listpanel"));
 
-        $this->filter->add(new TextInput('searchnumber'));
-        $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => 'Вiдкритi', 1 => 'Новi',2 => 'До сплати', 3 => 'Всi'), 0));
-        $this->filter->add(new DropDownChoice('salesource', H::getSaleSources(), 0));
+        $this->listpanel->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
 
-        $doclist = $this->add(new DataView('doclist', new OrderDataSource($this), $this, 'doclistOnRow'));
+        $this->listpanel->filter->add(new TextInput('searchnumber'));
+        $this->listpanel->filter->add(new TextInput('searchtext'));
+        $this->listpanel->filter->add(new DropDownChoice('status', array(0 => 'Вiдкритi', 1 => 'Новi',2 => 'До сплати', 3 => 'Всi'), 0));
+        $this->listpanel->filter->add(new DropDownChoice('salesource', H::getSaleSources(), 0));
 
-        $this->add(new Paginator('pag', $doclist));
+        $doclist = $this->listpanel->add(new DataView('doclist', new OrderDataSource($this), $this, 'doclistOnRow'));
+
+        $this->listpanel->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
+        $this->listpanel->add(new ClickLink('csv', $this, 'oncsv'));
+
 
         $this->add(new Panel("statuspan"))->setVisible(false);
 
@@ -58,7 +63,8 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bclose'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('binp'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('brd'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bscan'));
+        $this->statuspan->statusform->add(new SubmitButton('bscan'))->onClick($this, 'statusOnSubmit');
+
 
         $this->statuspan->statusform->add(new SubmitButton('bpos'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bgi'))->onClick($this, 'statusOnSubmit');
@@ -85,8 +91,7 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->resform->add(new DropDownChoice('store', \App\Entity\Store::getList(), H::getDefStore()));
 
 
-        $this->doclist->Reload();
-        $this->add(new ClickLink('csv', $this, 'oncsv'));
+        $this->listpanel->doclist->Reload();
 
 
         $this->add(new Form('payform'))->onSubmit($this, 'payOnSubmit');
@@ -98,6 +103,9 @@ class OrderList extends \App\Pages\Base
         $this->payform->add(new Date('pdate', time()));
         $this->payform->setVisible(false);
 
+        $this->add(new Panel("editpanel"))->setVisible(false);
+        $this->editpanel->add(new Form("editform"));
+        $this->editpanel->editform->add(new SubmitButton('editforcancel'))->onClick($this, 'editOnSubmit');
 
 
     }
@@ -107,7 +115,8 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->setVisible(false);
         $this->payform->setVisible(false);
 
-        $this->doclist->Reload();
+        $this->listpanel->doclist->Reload();
+
     }
 
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
@@ -147,7 +156,7 @@ class OrderList extends \App\Pages\Base
         if ($doc->state == Document::STATE_NEW) {
             $row->state->setText('<span class="badge badge-info">' . $stname . '</span>', true);
         }
-        if ($doc->state == Document::STATE_READYTOSHIP || $doc->state == Document::STATE_INSHIPMENT || $doc->state == Document::STATE_DELIVERED        ) {
+        if ($doc->state == Document::STATE_READYTOSHIP || $doc->state == Document::STATE_INSHIPMENT || $doc->state == Document::STATE_DELIVERED) {
             $row->state->setText('<span class="badge badge-success">' . $stname . '</span>', true);
         }
         if ($doc->state == Document::STATE_INPROCESS) {
@@ -171,46 +180,42 @@ class OrderList extends \App\Pages\Base
         if ($doc->document_id == ($this->_doc->document_id ?? 0)) {
             $row->setAttribute('class', 'table-success');
         }
-        
+
         $ch = $this->checkChat($doc);
         if($ch) {
             $row->add(new Label('cchat'))->setVisible(true);
-            $row->cchat->setAttribute('onclick',"opencchat({$doc->document_id})");
-            $row->cchat->setAttribute('class',"fa fa-comments");
-            
-            $m = \App\Entity\Message::getFirst("item_id={$doc->document_id} and item_type=" .\App\Entity\Message::TYPE_CUSTCHAT ,"message_id desc");
-            if($m != null)  {
+            $row->cchat->setAttribute('onclick', "opencchat({$doc->document_id})");
+            $row->cchat->setAttribute('class', "fa fa-comments");
+
+            $m = \App\Entity\Message::getFirst("item_id={$doc->document_id} and item_type=" .\App\Entity\Message::TYPE_CUSTCHAT, "message_id desc");
+            if($m != null) {
                 if($m->user_id >0) { //отправлен  вопрос
-                   $row->cchat->setAttribute('class',"fa fa-comments text-warn");
+                    $row->cchat->setAttribute('class', "fa fa-comments text-warn");
                 }
                 if($m->user_id ==0) { //получен  ответ
-                   $row->cchat->setAttribute('class',"fa fa-comments text-success");
+                    $row->cchat->setAttribute('class', "fa fa-comments text-success");
                 }
             }
-        
         }
-        
     }
 
-    private function  checkChat($doc){
-        $ret = 0 ;
-        if($this->_issms && ($doc->state < Document::STATE_EXECUTED || $doc->state == Document::STATE_INPROCESS)  ){
-            
-           $phone= $doc->headerdata['phone'] ??'';
-           if($phone=='') {
-              $c =  \App\Entity\Customer::load($doc->customer_id ) ;
-              $phone = $c->phone;       
-           }
-            
-           if(strlen($phone)>0) {
-               $ret = 1;       
- 
- 
-           }
+    private function checkChat($doc) {
+        $ret = false ;
+        if($this->_issms && ($doc->state < Document::STATE_EXECUTED || $doc->state == Document::STATE_INPROCESS)) {
+
+            $phone= $doc->headerdata['phone'] ??'';
+            if($phone=='') {
+                $c =  \App\Entity\Customer::load($doc->customer_id) ;
+                $phone = $c->phone;
+            }
+
+            if(strlen($phone)>0) {
+                $ret = true;
+            }
         }
         return $ret;
     }
-    
+
     public function resOnSubmit($sender) {
         if ($sender->id == "bres") {
             $store = $this->statuspan->resform->store->getValue();
@@ -246,9 +251,10 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->resform->bunres->setVisible(false);
 
         }
-        $this->doclist->Reload(false);
+        $this->listpanel->doclist->Reload(false);
 
     }
+
 
     public function statusOnSubmit($sender) {
         if (\App\Acl::checkChangeStateDoc($this->_doc, true, true) == false) {
@@ -258,7 +264,7 @@ class OrderList extends \App\Pages\Base
         $state = $this->_doc->state;
 
         try {
-        
+
             //проверяем  что есть ТТН
             $list = $this->_doc->getChildren('TTN');
             $ttn = count($list) > 0;
@@ -269,12 +275,22 @@ class OrderList extends \App\Pages\Base
             $list = $this->_doc->getChildren('POSCheck');
             $pos = count($list) > 0;
 
+            if ($sender->id == "bscan") {
+                $this->editpanel->setVisible(true);
+                $this->listpanel->setVisible(false);
+                $this->statuspan->setVisible(false);
+                $this->payform->setVisible(false);
+
+                return;
+            }
+
             if ($sender->id == "binp") {
                 $this->_doc->updateStatus(Document::STATE_INPROCESS);
             }
             if ($sender->id == "brd") {
                 $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
             }
+
             if ($sender->id == "bref") {
                 $this->_doc->updateStatus(Document::STATE_FAIL);
 
@@ -341,9 +357,9 @@ class OrderList extends \App\Pages\Base
             }
         } catch(\Exception $e) {
             $this->setError($e->getMessage());
-            
+
         }
-        $this->doclist->Reload(false);
+        $this->listpanel->doclist->Reload(false);
         $this->updateStatusButtons();
     }
 
@@ -369,9 +385,9 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->resform->setVisible(false);
 
 
-        $this->statuspan->statusform->bscan->setAttribute('onclick',"openscan({$this->_doc->document_id})");
- 
-        
+        $this->statuspan->statusform->bscan->setAttribute('onclick', "openscan({$this->_doc->document_id})");
+
+
         //новый
         if ($state < Document::STATE_EXECUTED) {
             $this->statuspan->statusform->btask->setVisible(false);
@@ -465,7 +481,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->resform->store->setVisible(!$reserved);
             $this->statuspan->resform->bunres->setVisible($reserved);
         }
-   
+
         if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
             // $this->statuspan->statusform->bclose->setVisible(false);
         }
@@ -523,7 +539,7 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
 
-        $this->doclist->Reload(false);
+        $this->listpanel->doclist->Reload(false);
         $this->updateStatusButtons();
         $this->goAnkor('dankor');
         $this->_tvars['askclose'] = false;
@@ -588,7 +604,7 @@ class OrderList extends \App\Pages\Base
     }
 
     public function oncsv($sender) {
-        $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
+        $list = $this->listpanel->doclist->getDataSource()->getItems(-1, -1, 'document_id');
 
         $header = array();
         $data = array();
@@ -630,112 +646,119 @@ class OrderList extends \App\Pages\Base
 
         if($br>0 || $us>0) {
             $this->_doc->save();
-            $this->doclist->Reload();
+            $this->listpanel->doclist->Reload();
+
             $this->statuspan->setVisible(false);
 
         }
 
     }
 
-    
+    public function editOnSubmit($sender) {
+
+
+        $this->editpanel->setVisible(false);
+        $this->listpanel->setVisible(true);
+
+    }
     //vue
 
-   /**
-   * список  ТМЦ в  заказе
-   * 
-   * @param mixed $args
-   */
-    public function getCChatItems($args){
-       $doc = Document::load($args[0]) ;
-       $ret=[];
-       $ret['itemlist'] =[];
-       foreach ($doc->unpackDetails('detaildata') as $item) {
-          $ret['itemlist'][] = array(
-            'itemname'=>$item->itemname,
-            'item_code'=>$item->item_code,
-            'quantity'=>H::fqty( $item->quantity),
-            'price'=> H::fa($item->price )
-          ) ;
-
-       }     
-       return json_encode($ret, JSON_UNESCAPED_UNICODE);
-    
-    } 
-    
     /**
-    * список  сообщений по  заказу
-    * 
+    * список  ТМЦ в  заказе
+    *
     * @param mixed $args
     */
-    public function getCChatMessages($args){
-     //  $doc = Document::load($args[0]) ;
-       $ret=[];
-       $list = \App\Entity\Message::find("item_id={$args[0]} and item_type=" .\App\Entity\Message::TYPE_CUSTCHAT ,"message_id asc");
-       
-       $ret['msglist'] = [];
-       
-       foreach($list as $msg){
+    public function getCChatItems($args) {
+        $doc = Document::load($args[0]) ;
+        $ret=[];
+        $ret['itemlist'] =[];
+        foreach ($doc->unpackDetails('detaildata') as $item) {
+            $ret['itemlist'][] = array(
+              'itemname'=>$item->itemname,
+              'item_code'=>$item->item_code,
+              'quantity'=>H::fqty($item->quantity),
+              'price'=> H::fa($item->price)
+            ) ;
+
+        }
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+
+    }
+
+    /**
+    * список  сообщений по  заказу
+    *
+    * @param mixed $args
+    */
+    public function getCChatMessages($args) {
+        //  $doc = Document::load($args[0]) ;
+        $ret=[];
+        $list = \App\Entity\Message::find("item_id={$args[0]} and item_type=" .\App\Entity\Message::TYPE_CUSTCHAT, "message_id asc");
+
+        $ret['msglist'] = [];
+
+        foreach($list as $msg) {
             $m=[];
             $m['isseller']  = $msg->user_id >0;
             $m['message']  = $msg->message;
             $m['msgdate'] = date('Y-m-d H:i', $msg->created);
- 
 
-            $ret['msglist'][] = $m;    
-       }
-       
-       
-       return json_encode($ret, JSON_UNESCAPED_UNICODE);
-    
-    }  
+
+            $ret['msglist'][] = $m;
+        }
+
+
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+
+    }
     /**
     * отправка сообшения заказчику
-    * 
+    *
     * @param mixed $args
     */
-    public function sendMessage($args,$post){
-       $doc = Document::load($args[0]) ;
-       $message = json_decode($post)   ;
+    public function sendMessage($args, $post) {
+        $doc = Document::load($args[0]) ;
+        $message = json_decode($post)   ;
 
-        $issms = ( \App\System::getOption('sms','smstype')??0) >0 ;
-        if($issms == 0){
+        $issms = (\App\System::getOption('sms', 'smstype')??0) >0 ;
+        if($issms == 0) {
             return json_encode(array('error'=>"Не знайдений сервіс смс"), JSON_UNESCAPED_UNICODE);
         }
 
         $phone= $doc->headerdata['phone'] ??'';
         if($phone=='') {
-           $c =  \App\Entity\Customer::load($doc->customer_id ) ;
-           $phone = $c->phone ?? '';       
-        }    
-        if($phone == ''){
+            $c =  \App\Entity\Customer::load($doc->customer_id) ;
+            $phone = $c->phone ?? '';
+        }
+        if($phone == '') {
             return json_encode(array('error'=>"Не найдений телефон"), JSON_UNESCAPED_UNICODE);
         }
-         
-        $link = _BASEURL . 'cchat/' . $args[0]. '/'. $doc->headerdata['hash'];      
-      //  H::log($link);
-        $fn = ( \App\System::getOption('common','shopname')??'')  ;
+
+        $link = _BASEURL . 'cchat/' . $args[0]. '/'. $doc->headerdata['hash'];
+        //  H::log($link);
+        $fn = (\App\System::getOption('common', 'shopname')??'')  ;
 
         $text = "Маємо запитання  по  вашому  замовленню. Відповісти за адресою ".$link;
-         
-     //   $r = \App\Entity\Subscribe::sendSMS($phone,$text) ;
-    //    if($r!=""){
-    //       return json_encode(array('error'=>$r), JSON_UNESCAPED_UNICODE);
-    
-    //    }   
-      
+
+        //   $r = \App\Entity\Subscribe::sendSMS($phone,$text) ;
+        //    if($r!=""){
+        //       return json_encode(array('error'=>$r), JSON_UNESCAPED_UNICODE);
+
+        //    }
+
         $msg = new \App\Entity\Message() ;
-        $msg->message=$message;        
+        $msg->message=$message;
         $msg->user_id= \app\System::getUser()->user_id;
         $msg->item_id=$doc->document_id;
         $msg->item_type=\App\Entity\Message::TYPE_CUSTCHAT;
         $msg->save() ;
-        
-  
+
+
         return json_encode("", JSON_UNESCAPED_UNICODE);
-    
-    }  
-    
-      
+
+    }
+
+
 }
 
 /**
@@ -753,16 +776,17 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
         $user = System::getUser();
 
         $conn = \ZDB\DB::getConnect();
+        $filter=$this->page->listpanel->filter;
 
         $where = "     meta_name  = 'Order'  ";
 
-        $salesource = $this->page->filter->salesource->getValue();
+        $salesource =$filter->salesource->getValue();
         if ($salesource > 0) {
             $where .= " and   content like '%<salesource>{$salesource}</salesource>%' ";
 
         }
 
-        $status = $this->page->filter->status->getValue();
+        $status = $filter->status->getValue();
         if ($status == 0) {
             $where .= " and  state not in (9,17) ";
         }
@@ -774,13 +798,13 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
         }
 
 
-        $st = trim($this->page->filter->searchtext->getText());
+        $st = trim($filter->searchtext->getText());
         if (strlen($st) > 2) {
             $st = $conn->qstr('%' . $st . '%');
 
             $where .= " and  meta_name  = 'Order'  and  content like {$st} ";
         }
-        $sn = trim($this->page->filter->searchnumber->getText());
+        $sn = trim($filter->searchnumber->getText());
         if (strlen($sn) > 1) { // игнорируем другие поля
             $sn = $conn->qstr('%' . $sn . '%');
             $where = "  meta_name  = 'Order' and  document_number like  {$sn} ";
@@ -795,7 +819,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
         $docs = Document::find($this->getWhere(), "document_id desc", $count, $start);
-//        $docs = Document::find($this->getWhere(), "priority desc,document_id desc", $count, $start);
+        //        $docs = Document::find($this->getWhere(), "priority desc,document_id desc", $count, $start);
 
         return $docs;
     }
@@ -805,5 +829,3 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
     }
 
 }
-
- 
