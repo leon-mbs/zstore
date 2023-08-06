@@ -130,8 +130,8 @@ class Import extends \App\Pages\Base
 
         $form->onSubmit($this, "oZImport");
 
-        
-        
+
+
         $form = $this->add(new Form("oform"));
         $form->add(new \Zippy\Html\Form\File("ofilename"));
         $form->onSubmit($this, "onOImport");
@@ -725,10 +725,10 @@ class Import extends \App\Pages\Base
             App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", $doc->document_id);
         }
     }
- 
- 
-   public function oZImport($sender) {
-    
+
+
+    public function oZImport($sender) {
+
         $c = $this->яform->zcust->getKey();
         //$checkname = $this->nform->ncheckname->isChecked();
 
@@ -792,7 +792,7 @@ class Import extends \App\Pages\Base
                 $this->_tvars['list'][] = array(
                     'colname'    => $row[$colname],
                     'colcode'    => $row[$colcode],
-                 
+
                     'colqty'     => $row[$colqty],
                     'colprice'   => $row[$colprice]
                 );

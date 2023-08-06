@@ -1446,10 +1446,10 @@ class ARMPos extends \App\Pages\Base
 
     public function updatechecklist($sender) {
         $conn = \ZDB\DB::getConnect();
-            
-        $where = "meta_name='PosCheck' and date(document_date) >= " . $conn->DBDate(strtotime('-1 week') )    ;
 
-          
+        $where = "meta_name='PosCheck' and date(document_date) >= " . $conn->DBDate(strtotime('-1 week'))    ;
+
+
         if ($sender instanceof Form) {
             $text = trim($sender->searchnumber->getText());
             $cust = $sender->searchcust->getKey();
