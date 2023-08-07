@@ -6,11 +6,11 @@ use App\Entity\User;
 
 /**
  * Класс  содержащи  методы  работы   с  наиболее  важными
- * системмными  данными
+ * системными  данными
  */
 class System
 {
-    public const CURR_VERSION= "6.7.7";
+    public const CURR_VERSION= "6.7.8";
 
     private static $_options = array();   //  для кеширования
     private static $_cache   = array();   //  для кеширования
