@@ -16,6 +16,7 @@ use Zippy\Html\Form\TextInput;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\SubmitLink;
 use Zippy\Html\Panel;
 use App\Entity\Pay;
 
@@ -109,8 +110,11 @@ class OrderList extends \App\Pages\Base
         $this->editpanel->editform->add(new SubmitButton('editcancel'))->onClick($this, 'editOnSubmit');
         $this->editpanel->editform->add(new SubmitButton('editsave'))->onClick($this, 'editOnSubmit');
         $this->editpanel->editform->add(new SubmitButton('editready'))->onClick($this, 'editOnSubmit');
-
-
+        $this->editpanel->editform->add(new DataView('edititemlist', new \Zippy\Html\DataList\ArrayDataSource($this,'_itemlist') , $this, 'editlistOnRow'));
+        $this->editpanel->editform->add(new TextInput('editbarcode'));
+        $this->editpanel->editform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
+          
+            
     }
 
     public function filterOnSubmit($sender) {
@@ -279,13 +283,7 @@ class OrderList extends \App\Pages\Base
             $pos = count($list) > 0;
 
             if ($sender->id == "bscan") {
-                $this->editpanel->setVisible(true);
-                $this->listpanel->setVisible(false);
-                $this->statuspan->setVisible(false);
-                $this->payform->setVisible(false);
-
-                $this->editpanel->editdn->setText($this->_doc->document_number);
-
+                $this->openedit();
                 return;
             }
 
@@ -659,16 +657,77 @@ class OrderList extends \App\Pages\Base
 
     }
 
+    public function openedit() {
+        $this->editpanel->setVisible(true);
+        $this->listpanel->setVisible(false);
+        $this->statuspan->setVisible(false);
+        $this->payform->setVisible(false);
+
+        $this->_doc = Document::load($this->_doc->document_id);
+        
+        $this->editpanel->editdn->setText($this->_doc->document_number);
+        $this->_itemlist = [];
+        foreach($this->_doc->unpackDetails('detaildata')  as $it){
+           
+           $it->checked = $it->checked ?? false; 
+           $it->checkedqty =   0; 
+           $this->_itemlist[] = $it;
+             
+        };
+        
+        $this->editpanel->editform->edititemlist->Reload();
+       
+    }
+   
+    public function editlistOnRow($row) {
+        $item = $row->getDataItem();
+        $row->add(new  Label('editlistname',$item->itemname) );
+        $row->add(new  Label('editlistcode',$item->item_code) );
+        $row->add(new  Label('editlistbarcode',$item->bar_code) );
+        $row->add(new  Label('editlistqty',$item->quantity) );
+        $row->add(new CheckBox('checkscan', new \Zippy\Binding\PropertyBinding($item, 'checked')));
+       
+    }
+ 
+    public function addcodeOnClick($sender) {
+        $code = trim( $this->editpanel->editform->editbarcode->getText());
+
+        $code0 = ltrim($code, '0');
+
+        $this->editpanel->editform->editbarcode->setText('');
+        if ($code == '') {
+            return;
+        }
+
+        foreach ($this->_itemlist as $ri => $_item) {
+            if ($_item->bar_code == $code || $_item->item_code == $code || $_item->bar_code == $code0 || $_item->item_code == $code0) {
+                $this->_itemlist[$ri]->checkedqty += 1;
+                if( $this->_itemlist[$ri]->checkedqty >=  $this->_itemlist[$ri]->quantity) {
+                     $this->_itemlist[$ri]->checked = true;
+                }
+
+                $this->editpanel->editform->edititemlist->Reload();
+                $this->addJavaScript("new Audio('/assets/good.mp3').play()", true);
+  
+                return;
+            }
+        }
+        $this->addJavaScript("new Audio('/assets/error.mp3').play()", true);
+
+
+    }
+ 
+   
     public function editOnSubmit($sender) {
 
+        $this->_doc->packDetails('detaildata',$this->_itemlist)  ;
+        $this->_doc->save();
         if ($sender->id == "editready") {
             $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
             $this->listpanel->doclist->Reload(false);
             
         }
-   
-        
-      
+       
         $this->editpanel->setVisible(false);
         $this->listpanel->setVisible(true);
 

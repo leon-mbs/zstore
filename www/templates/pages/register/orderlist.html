@@ -185,13 +185,13 @@
                 <div class="navbar nav">
                     <form zippy="statusform" class="form-inline row">
                        <div class="col-12 mb-2">      
-                        <button zippy="binp" class="btn btn-success  mr-2"> На обробку</button>
+                        <button zippy="binp" class="btn btn-success  mr-2"><i class="fa fa-cog"></i> На обробку</button>
                         
-                        <button zippy="bscan" class="btn btn-primary  mr-2"> Зiбрати</button>
+                        <button zippy="bscan" class="btn btn-primary  mr-2"><i class="fa fa-gifts"></i> Зiбрати</button>
                    
-                        <button zippy="brd" class="btn btn-success  mr-2"> Готовий до вiдправки</button>
-                        <button zippy="bclose" type="submit" class="  btn btn-success  mr-2 ">  Виконано                </button>
-                        <a zippy="btopay" class="  btn btn-success  mr-4 ">Сплатити</a>
+                        <button zippy="brd" class="btn btn-success  mr-2"><i class="fa fa-truck"></i> Готовий до вiдправки</button>
+                        <button zippy="bclose" type="submit" class="  btn btn-success  mr-2 "><i class="fa fa-stamp"></i>  Виконано                </button>
+                        <a zippy="btopay" class="  btn btn-success  mr-4 "><i class="fa fa-credit-card"></i>Сплатити</a>
                         <button zippy="bref" class="btn btn-danger  mr-2"><i class="fas fa-thumbs-down"></i> Анулювати                </button>
                        </div>
                        <div class="col-12"> 
@@ -263,11 +263,11 @@
                     {{/usescanner}}        
                    <table class="table table-sm">
                    <tr  zippy="edititemlist">
-                      <td style="width:20px"><input type="checkbox"><td>
-                      <td>ddsdfsd  sf<td>
-                      <td>id444<td>
-                      <td>id444<td>
-                      <td class="text-right">34<td>
+                      <td style="width:20px"><input zippy="checkscan" class="seldel mt-1" type="checkbox"><td>
+                      <td zippy="editlistname"><td>
+                      <td zippy="editlistcode"><td>
+                      <td zippy="editlistbarcode"><td>
+                      <td class="text-right" zippy="editlistqty"><td>
                    </tr> 
                  </table>         
                  <div class="form-group">
@@ -369,6 +369,16 @@
        </div>
   {|={{ }}=|}  
         <script>
+        
+     function onBarCode(ele) {
+
+            if (event.key === 'Enter' || event.keyCode == 13) {
+                // alert($('#barcode').val());
+                $('#addcode').click()
+            }
+        }        
+        
+        
           {{#askclose}}
 
             function check_bclose() {
