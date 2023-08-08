@@ -171,8 +171,9 @@ class Options extends \App\Pages\Base
 
 
         $d = serialize($wlist);
-
+        unset($wlist) ;
         file_put_contents(_ROOT . "upload/pointlist.dat", $d);
+
 
         $this->updateData();
 

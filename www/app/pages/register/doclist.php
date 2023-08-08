@@ -200,7 +200,7 @@ class DocList extends \App\Pages\Base
         $start = $date->startOfDay()->getTimestamp();
         $row->add(new Label('isplanned'))->setVisible($doc->document_date >= $start);
 
-        $row->add(new Label('hasnotes'))->setVisible(strlen($doc->notes) > 0 && $doc->notes == strip_tags($doc->notes));
+        $row->add(new Label('hasnotes'))->setVisible(strlen(trim($doc->notes) )> 0 && $doc->notes == strip_tags($doc->notes));
         $row->hasnotes->setAttribute('title', $doc->notes);
 
         $row->add(new ClickLink('parentdoc', $this, 'basedOnClick'))->setVisible($doc->parent_id > 0);

@@ -1078,7 +1078,7 @@ class ARMPos extends \App\Pages\Base
             }
         }
         $this->_doc->document_date = $this->docpanel->form3->document_date->getDate();
-        $this->_doc->notes = $this->docpanel->form3->notes->getText();
+        $this->_doc->notes = trim($this->docpanel->form3->notes->getText());
 
         $this->_doc->customer_id = $this->docpanel->form2->customer->getKey();
         $this->_doc->payamount = $this->docpanel->form3->payamount->getText();
@@ -1091,7 +1091,7 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['exch2b'] = $this->docpanel->form3->exch2b->getText() ;
         $this->_doc->headerdata['prepaid'] = $this->docpanel->form2->prepaid->getText() ;
         $this->_doc->headerdata['trans'] = trim($this->docpanel->form3->trans->getText());
-        $this->_doc->notes = $this->_doc->notes . ' ' . $this->_doc->headerdata['trans']  ;
+        $this->_doc->notes = trim( $this->_doc->notes . ' ' . $this->_doc->headerdata['trans'] ) ;
         //        $this->_doc->headerdata['totaldisc'] = $this->docpanel->form2->totaldisc->getText();
 
         $this->_doc->headerdata['mfnal'] = $this->form1->mfnal->getValue();
@@ -1230,7 +1230,7 @@ class ARMPos extends \App\Pages\Base
 
             $this->_doc->updateStatus(Document::STATE_EXECUTED);
 
-            if ($this->_doc->payamount > $this->_doc->payed) {
+            if (H::fa($this->_doc->payamount) > H::fa($this->_doc->payed)) {
                 $this->_doc->updateStatus(Document::STATE_WP);
             }
 
