@@ -720,6 +720,15 @@ class OrderList extends \App\Pages\Base
    
     public function editOnSubmit($sender) {
 
+        foreach ($this->_itemlist as   $_item) {
+            if($_item->checked != true) {
+                $this->setError('Не зібрані всі позиції') ;
+         
+                return;
+            }
+        }
+   
+        
         $this->_doc->packDetails('detaildata',$this->_itemlist)  ;
         $this->_doc->save();
         if ($sender->id == "editready") {
