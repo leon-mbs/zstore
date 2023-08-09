@@ -226,13 +226,14 @@ class Catalog extends Base
         $row->add(new TextInput('srated'))->setText($item->getRating());
         $row->add(new Label('scomments'))->setText("Відгуків (".$item->comments.")");
         $row->add(new ClickLink('sbuy', $this, 'OnBuy'));
-        if ($item->getQuantity() > 0 || $this->_tvars["isfood"]==true) {
+
+/*        if ($item->getQuantity() > 0 || $this->_tvars["isfood"]==true) {
 
             // $row->sbuy->setValue('Купити');
         } else {
             //  $row->sbuy->setValue('Замовити');
         }
-
+  
 
         $op = \App\System::getOptions("shop");
 
@@ -240,7 +241,8 @@ class Catalog extends Base
             //  $row->sbuy->setValue('Купити');
         } else {
             //  $row->sbuy->setValue('Замовити');
-        }
+        } 
+        */
     }
 
     public function oncartdel($sender) {
