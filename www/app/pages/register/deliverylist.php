@@ -69,7 +69,7 @@ class DeliveryList extends \App\Pages\Base
         $row->add(new Label('docnotes', $doc->notes));
         $row->add(new Label('wp'))->setVisible($doc->payamount > $doc->payed);
 
-        if ($doc->document_id == @$this->_doc->document_id) {
+        if ($doc->document_id == ($this->_doc->document_id  ?? 0)) {
             $row->setAttribute('class', 'table-success');
         }
 

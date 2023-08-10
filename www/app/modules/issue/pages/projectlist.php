@@ -242,9 +242,9 @@ class ProjectList extends \App\Pages\Base
     public function addFile($args, $post) {
 
 
-        $file =  @$_FILES['pfile']  ;
+        $file =  $_FILES['pfile']  ;
 
-        if(strlen($file['tmp_name'])==0) {
+        if(strlen($file['tmp_name'] ?? '')==0) {
             return;
         }
 

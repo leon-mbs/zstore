@@ -401,7 +401,7 @@ class ARMFood extends \App\Pages\Base
 
     public function updateorderlist($sender) {
         $conn = \ZDB\DB::getConnect();
-        $where = " state not in(9,17,3) and date(document_date) >= " . $conn->DBDate(strtotime('-1 week') )    ;
+        $where = " state not in(9,17,3) and date(document_date) >= " . $conn->DBDate(strtotime('-1 week'))    ;
         if ($sender instanceof Form) {
             $text = trim($sender->searchnumber->getText());
             $cust = $sender->searchcust->getKey();
@@ -1110,6 +1110,21 @@ class ARMFood extends \App\Pages\Base
                     }
 
                     $this->_doc->updateStatus(Document::STATE_CLOSED);
+                }
+                if ($this->_worktype == 2) {
+                    $b=true;
+                    foreach ($this->_doc->unpackDetails('detaildata') as $rowid=>$item) {
+                        $fs = intval($item->foodstate);
+                        if($fs <3) {
+                            $b = false;
+                            break;
+                        }
+                    }
+
+                    if($b) {
+                        $this->_doc->updateStatus(Document::STATE_CLOSED);
+                    }
+
                 }
             }
 

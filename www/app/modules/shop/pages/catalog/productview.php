@@ -34,7 +34,8 @@ class ProductView extends Base
         $this->item_id = $item_id;
         $product = Product::load($item_id);
         if ($product == null) {
-            App::Redirect404();
+            http_response_code(404) ;
+            die;
         }
 
         $options = \App\System::getOptions('shop');

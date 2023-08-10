@@ -1,6 +1,6 @@
 <html>
       <head>
-        <title> Імпорт номенклатури  </title>
+        <title> Імпорт    </title>
 
     </head>
 
@@ -268,7 +268,7 @@
 
                         <div class="form-group  ">
                             <label for="ncust">Контрагент</label>
-                            <input zippy="ncust" class="form-control  "/>
+                            <input  placeholder="Почніть вводити..." zippy="ncust" class="form-control  "/>
 
                         </div>
                         <div class="form-group  ">
@@ -500,7 +500,111 @@
                 {{/preview2}}
             </div>
             
-            
+           <div class="col-12 col-lg-6  card">
+                <h3>Імпорт замовлення
+                    <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
+                       data-toggle="popover"
+                       data-placement="bottom" data-html="true" data-content="Імпорт накладної з Excel файлу.
+                       Для розташування даних необхідно вказати номери відповідних колонок (перевіряється на унікальність артикул і найменування).
+                       У результатi створюється документ Замовлення.
+                       "></i>
+                </h3>
+
+                 
+                <form zippy="zform" class="row" enctype="multipart/form-data">
+                    <div class="col-6">
+
+                        <div class="form-group  ">
+                            <label for="zcust">Контрагент</label>
+                            <input placeholder="Почніть вводити..." zippy="zcust" class="form-control  "/>
+
+                        </div>
+
+                        <div class="form-group  ">
+                            <label for="zfilename">Файл імпорту</label>
+                            <input type="file" zippy="zfilename" class="form-control  "/>
+                        </div>
+                        <div class="  form-check">
+                            <input zippy="zpassfirst" type="checkbox" class="form-check-input">
+                            <label class="form-check-label" for="zpassfirst">Пропустити першу строку</label>
+                        </div>
+                     
+                        <div class="  form-check">
+                            <input zippy="zpreview" type="checkbox" class="form-check-input">
+                            <label class="form-check-label" for="zpreview">Попередній перегляд</label>
+                        </div>
+
+                        <div class="form-group  ">
+                            <input class="btn btn-info" type="submit" value="Завантажити"/>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group  ">
+                            <label><b>Номери колонок Excel файлу</b> </label>
+
+                        </div>
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="zcolname">Найменування</label>
+                              <div class="col-4">
+                             <select style="width:100px;" zippy="zcolname" class="form-control  ">
+                            </select>  </div>
+                        </div>
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="zcolcode">Код, артикул, штрих-код</label>
+                              <div class="col-4">
+                             <select style="width:100px;" zippy="zcolcode" class="form-control  ">
+                            </select>   </div>
+                        </div>
+
+                 
+
+
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" data-label="zcolqty" for="zcolqty">Кількість</label>
+                             <div class="col-4">
+                              <select style="width:100px;" zippy="zcolqty" class="form-control  ">
+                            </select>  </div>
+                        </div>
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="zcolprice">Вхiдна ціна</label>
+                             <div class="col-4">
+                              <select style="width:100px;" zippy="zcolprice" class="form-control  ">
+                            </select>  </div>
+                        </div>
+
+
+                    </div>
+
+
+                </form>
+                {{#preview4}}
+                <div class="row">
+                    <div class="col-12 col-lg-10 ">
+                        <table class="table table-sm">
+                            <tr>
+                                <th>Найменування</th>
+                                <th>Код</th>
+                               
+                                <th class="text-right">Кіл.</th>
+                                <th class="text-right">Цiна</th>
+
+                            </tr>
+                            {{#list}}
+                            <tr>
+                                <td>{{colname}}</td>
+                                <td>{{colcode}}</td>
+                              
+                                <td class="text-right">{{colqty}}</td>
+                                <td class="text-right">{{colprice}}</td>
+
+                            </tr>
+                            {{/list}}
+                        </table>
+                    </div>
+                </div>
+                {{/preview4}}
+            </div>
+           
          <div class="col-12 col-lg-6  card">
                
                

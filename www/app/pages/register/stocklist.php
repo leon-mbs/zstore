@@ -63,14 +63,8 @@ class StockList extends \App\Pages\Base
 
         $row->add(new Label('date', H::fd($doc->document_date)));
 
-        $row->add(new Label('partion', H::fa($doc->partion)));
+        //        $row->add(new Label('partion', H::fa($doc->partion)));
         $row->add(new Label('qty', H::fqty($doc->quantity)));
-        $price = $doc->quantity >= 0 ? H::fa($doc->outprice) : '';
-        if ($doc->meta_name == 'ReturnIssue') {
-            $price = H::fa((0 - $doc->outprice));
-        }
-
-        $row->add(new Label('price', $price));
 
         $row->add(new Label('dnumber', $doc->document_number));
         $row->add(new Label('snumber', $doc->snumber));

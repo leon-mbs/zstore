@@ -317,9 +317,9 @@ class DocView extends \Zippy\Html\PageFragment
     public function addfile($arg, $post) {
 
 
-        $file =  @$_FILES['addfile']  ;
+        $file =  $_FILES['addfile']  ;
 
-        if(strlen($file['tmp_name'])==0) {
+        if(strlen($file['tmp_name'] ??'')==0) {
             return;
         }
 

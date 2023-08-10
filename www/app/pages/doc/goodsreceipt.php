@@ -353,7 +353,7 @@ class GoodsReceipt extends \App\Pages\Base
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
 
-        $code = ltrim($code, '0');
+        $code0 = ltrim($code, '0');
 
         $this->docform->barcode->setText('');
         if ($code == '') {

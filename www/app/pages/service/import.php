@@ -114,6 +114,24 @@ class Import extends \App\Pages\Base
         $form->onSubmit($this, "onCImport");
 
 
+        //заказ
+        $form = $this->add(new Form("zform"));
+
+
+        $form->add(new AutocompleteTextInput("zcust"))->onText($this, 'OnAutoCustomer');
+        $form->add(new \Zippy\Html\Form\File("zfilename"));
+
+        $form->add(new DropDownChoice("zcolname", $cols));
+        $form->add(new DropDownChoice("zcolcode", $cols));
+        $form->add(new DropDownChoice("zcolqty", $cols));
+        $form->add(new DropDownChoice("zcolprice", $cols));
+        $form->add(new CheckBox("zpassfirst"));
+        $form->add(new CheckBox("zpreview"));
+
+        $form->onSubmit($this, "oZImport");
+
+
+
         $form = $this->add(new Form("oform"));
         $form->add(new \Zippy\Html\Form\File("ofilename"));
         $form->onSubmit($this, "onOImport");
@@ -644,11 +662,11 @@ class Import extends \App\Pages\Base
             $itemcode = trim($row[$colcode]);
             if (strlen($itemname) > 0) {
 
-                if (strlen($itemcode) > 0) {
-                    $item = Item::getFirst('item_code=' . Item::qstr($itemcode));
-                }
                 if (strlen($itemname) > 0) {
                     $item = Item::getFirst('itemname=' . Item::qstr($itemname));
+                }
+                if (strlen($itemcode) > 0) {
+                    $item = Item::getFirst('item_code=' . Item::qstr($itemcode));
                 }
 
 
@@ -697,7 +715,7 @@ class Import extends \App\Pages\Base
             $doc->amount = H::fa($amount);
             $doc->payamount = 0;
             $doc->payed = 0;
-            $doc->notes = 'Импорт с Excel';
+            $doc->notes = 'Імпорт з Excel';
             $doc->headerdata['store'] = $store;
             $doc->customer_id = $c;
             $doc->headerdata['customer_name'] = $this->nform->ncust->getText();
@@ -705,6 +723,143 @@ class Import extends \App\Pages\Base
             $doc->save();
             $doc->updateStatus(\App\Entity\Doc\Document::STATE_NEW);
             App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", $doc->document_id);
+        }
+    }
+
+
+    public function oZImport($sender) {
+
+        $c = $this->яform->zcust->getKey();
+        //$checkname = $this->nform->ncheckname->isChecked();
+
+        $preview = $this->zform->zpreview->isChecked();
+        $passfirst = $this->zform->zpassfirst->isChecked();
+        $this->_tvars['preview4'] = false;
+
+        $colname = $this->zform->zcolname->getValue();
+        $colcode = $this->zform->zcolcode->getValue();
+        $colbarcode = $this->zform->zcolbarcode->getValue();
+        $colqty = $this->zform->zcolqty->getValue();
+        $colprice = $this->zform->zcolprice->getValue();
+
+        if ($colname === '0') {
+            $this->setError('Не вказано колонку з назвою');
+            return;
+        }
+        if ($colqty === '0') {
+            $this->setError('Не вказано колонку з кількістю');
+            return;
+        }
+
+        if ($c == 0) {
+            $this->setError('Не обрано покупця');
+            return;
+        }
+
+        $file = $this->zform->zfilename->getFile();
+        if (strlen($file['tmp_name']) == 0) {
+
+            $this->setError('Не вибраний файл');
+            return;
+        }
+
+        $data = array();
+        $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']); // Вариант и для xls и xlsX
+
+
+        $oCells = $oSpreadsheet->getActiveSheet()->getCellCollection();
+
+        for ($iRow = ($passfirst ? 2 : 1); $iRow <= $oCells->getHighestRow(); $iRow++) {
+
+            $row = array();
+            for ($iCol = 'A'; $iCol <= $oCells->getHighestColumn(); $iCol++) {
+                $oCell = $oCells->get($iCol . $iRow);
+                if ($oCell) {
+                    $row[$iCol] = $oCell->getValue();
+                }
+            }
+            $data[$iRow] = $row;
+        }
+
+        unset($oSpreadsheet);
+
+        if ($preview) {
+
+            $this->_tvars['preview4'] = true;
+            $this->_tvars['list'] = array();
+            foreach ($data as $row) {
+
+                $this->_tvars['list'][] = array(
+                    'colname'    => $row[$colname],
+                    'colcode'    => $row[$colcode],
+
+                    'colqty'     => $row[$colqty],
+                    'colprice'   => $row[$colprice]
+                );
+            }
+            return;
+        }
+
+        $cnt = 0;
+        $items = array();
+        foreach ($data as $row) {
+
+
+            $item = null;
+            $itemname = trim($row[$colname]);
+            $itemcode = trim($row[$colcode]);
+
+            if (strlen($itemname) > 0) {
+
+                if (strlen($itemname) > 0) {
+                    $item = Item::getFirst('itemname=' . Item::qstr($itemname));
+                }
+                if (strlen($itemcode) > 0) {
+                    $code = Item::qstr($itemcode) ;
+                    $item = Item::getFirst("item_code={$code} or bar_code={$code}");
+                }
+
+
+                $price = str_replace(',', '.', trim($row[$colprice]));
+                $qty = str_replace(',', '.', trim($row[$colqty]));
+
+                if ($item == null) {
+                    $this->setError("Не знайдоно товар {$itemname} {$itemcode}");
+                    return;
+                }
+                if ($qty > 0) {
+                    $item->price = $price;
+                    $item->quantity = $qty;
+
+                    $items[] = $item;
+                }
+            }
+        }
+        if (count($items) > 0) {
+            $doc = \App\Entity\Doc\Document::create('Order');
+            $doc->document_number = $doc->nextNumber();
+            if (strlen($doc->document_number) == 0) {
+                $doc->document_number = "З00001";
+            }
+            $doc->document_date = time();
+
+            $amount = 0;
+            $itlist = array();
+            foreach ($items as $item) {
+                $itlist[$item->item_id] = $item;
+                $amount = $amount + ($item->quantity * $item->price);
+            }
+            $doc->packDetails('detaildata', $itlist);
+            $doc->amount = H::fa($amount);
+            $doc->payamount = 0;
+            $doc->payed = 0;
+            $doc->notes = 'Імпорт з Excel';
+            $doc->customer_id = $c;
+            $doc->headerdata['customer_name'] = $this->zform->zcust->getText();
+
+            $doc->save();
+            $doc->updateStatus(\App\Entity\Doc\Document::STATE_NEW);
+            App::Redirect("\\App\\Pages\\Doc\\Order", $doc->document_id);
         }
     }
 

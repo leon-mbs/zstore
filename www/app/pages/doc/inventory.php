@@ -381,7 +381,13 @@ class Inventory extends \App\Pages\Base
 
         foreach($this->_itemlist as $i=> $it) {
             if($it->item_code==$code || $it->bar_code==$code) {
-                $this->_itemlist[$i]->qfact += 1;
+                $d= $this->_itemlist[$i]->qfact;
+                $qf= doubleval($d) ;
+                $this->_itemlist[$i]->qfact = $qf + 1;
+
+                // Издаем звук если всё ок
+                App::$app->getResponse()->addJavaScript("new Audio('/assets/good.mp3').play()", true);
+
 
                 $this->docform->detail->Reload();
                 return;
@@ -410,7 +416,12 @@ class Inventory extends \App\Pages\Base
         $item = Item::getFirst($w);
         if ($item == null) {
             $this->setError("ТМЦ з кодом `{$code}` не знайдено");
+            // Издаем звук если ШК не найден
+            App::$app->getResponse()->addJavaScript("new Audio('/assets/error.mp3').play()", true);
             return;
+        } else {
+            // Издаем звук если всё ок
+            App::$app->getResponse()->addJavaScript("new Audio('/assets/good.mp3').play()", true);
         }
 
         if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
@@ -431,7 +442,10 @@ class Inventory extends \App\Pages\Base
             $this->_itemlist[$item->item_id] = $item;
         }
 
-        $this->_itemlist[$item->item_id]->qfact += 1;
+        $d= $this->_itemlist[$item->item_id]->qfact;
+        $qf= doubleval($d) ;
+        $this->_itemlist[$item->item_id]->qfact = $qf + 1;
+
 
         $this->docform->detail->Reload();
     }

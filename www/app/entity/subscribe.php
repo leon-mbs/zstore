@@ -462,7 +462,7 @@ class Subscribe extends \ZCL\DB\Entity
             curl_close($ch);
 
 
-            if ($httpcode >200) {
+            if ($httpcode > 200) {
                 return "code ".$httpcode . ' ' .$response;
             }
 

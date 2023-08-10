@@ -587,12 +587,12 @@ class Helper
         if (strlen($qty) == 0) {
             return '';
         }
-        if( is_numeric($qty) &&  abs($qty)<0.0005) {
+        if(is_numeric($qty) &&  abs($qty)<0.0005) {
             $qty  =0;
         }
         $qty = str_replace(',', '.', $qty);
         $qty = preg_replace("/[^0-9\.\-]/", "", $qty);
-     
+
         $common = System::getOptions("common");
         if ($common['qtydigits'] > 0) {
             return @number_format($qty, $common['qtydigits'], '.', '');
@@ -610,17 +610,17 @@ class Helper
     public static function fa1($am) {
         if (strlen($am) == 0) {
             return '';
-        }  
-        if( is_numeric($am) && abs($am)<0.005) {
+        }
+        if(is_numeric($am) && abs($am)<0.005) {
             $am  =0;
         }
-  
+
         $am = str_replace(',', '.', $am);
 
         $am = preg_replace("/[^0-9\.\-]/", "", $am);
         $am = trim($am);
 
- 
+
         $am  = doubleval($am)  ;
         return @number_format($am, 1, '.', '');
 
@@ -637,14 +637,14 @@ class Helper
     public static function fa($am) {
         if (strlen($am) == 0) {
             return '';
-        }  
-        if( is_numeric($am) && abs($am)<0.005) {
+        }
+        if(is_numeric($am) && abs($am)<0.005) {
             $am  =0;
         }
         $am = str_replace(',', '.', $am);
         $am = preg_replace("/[^0-9\.\-]/", "", $am);
         $am = trim($am);
-     
+
 
 
         $am  = doubleval($am)  ;
@@ -1197,14 +1197,63 @@ class Helper
         return $htmls;
     }
 
-    
-    public  static function getSalt(){
-         $salt= self::getVal('salt');
-         if(strlen($salt)==0)  {
-            $salt = ''. rand(1000,999999) ;
-            self::setVal('salt',$salt);             
-         }
-         return $salt;
+
+    public static function getSalt() {
+        $salt= self::getVal('salt');
+        if(strlen($salt)==0) {
+            $salt = ''. rand(1000, 999999) ;
+            self::setVal('salt', $salt);
+        }
+        return $salt;
     }
-    
+
+    /**
+    * шифрование по паролю
+    *
+    * @param mixed $data
+    * @param mixed $password
+    */
+    public static function encrypt($data, $password) {
+
+        // Storingthe cipher method
+        $ciphering = "AES-128-CTR";
+
+        // Using OpenSSl Encryption method
+        $iv_length = openssl_cipher_iv_length($ciphering);
+        $options = 0;
+
+        // Non-NULL Initialization Vector for encryption
+        $iv = substr(md5($password), $iv_length);
+
+
+
+        // Using openssl_encrypt() function to encrypt the data
+        $encryption = openssl_encrypt($data, $ciphering, $password, $options, $iv);
+
+        return   $encryption;
+
+    }
+
+    /**
+    * дешифрование
+    *
+    * @param mixed $data
+    * @param mixed $password
+    */
+    public static function decrypt($data, $password) {
+        // Storingthe cipher method
+        $ciphering = "AES-128-CTR";
+
+        // Using OpenSSl Encryption method
+        $iv_length = openssl_cipher_iv_length($ciphering);
+        $options = 0;
+
+        // Non-NULL Initialization Vector for encryption
+        $iv = substr(md5($password), $iv_length);
+
+        $decryption = openssl_decrypt($data, $ciphering, $password, $options, $iv);
+
+        return $decryption;
+    }
+
 }

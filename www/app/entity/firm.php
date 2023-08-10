@@ -77,7 +77,7 @@ class Firm extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $sql = " select count(*) from contracts where firm_id = {$this->firm_id} ";
         $cntc = $conn->GetOne($sql);
-        $sql = " select count(*) from documents where content like '%<firm_id>{$this->firm_id}</firm_id>%'   ";
+        $sql = " select count(*) from documents where firm_id = {$this->firm_id}  ";
         $cntd = $conn->GetOne($sql);
         return ($cntc > 0 || $cntd > 0) ? 'Не можна видаляти компанію, яка використовується' : "";
     }
