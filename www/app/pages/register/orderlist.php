@@ -346,7 +346,7 @@ class OrderList extends \App\Pages\Base
 
 
 
-                if($this->_doc->payamount >0 && $this->_doc->payamount>$this->_doc->payed) {
+                if($this->_doc->payamount >0 && $this->_doc->payamount>$this->_doc->payed && $gi == false) {
                     $this->setWarn('"Замовлення закрито без оплати"');
                 }
 
@@ -720,8 +720,10 @@ class OrderList extends \App\Pages\Base
    
     public function editOnSubmit($sender) {
 
+        
+        
         foreach ($this->_itemlist as   $_item) {
-            if($_item->checked != true) {
+            if($sender->id == "editready" && $_item->checked != true) {
                 $this->setError('Не зібрані всі позиції') ;
          
                 return;
