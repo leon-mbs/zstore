@@ -23,17 +23,31 @@
         <input id="forbar"  class="ml-2" type="checkbox" v-model="forbar"  > <label for="forbar">Бар</label> <a onclick="updateItems()" href="javascript:void(0)"   class="btn btn-info  ml-2">Оновити</a>
          
         <table class="table table-striped">
+        <tr>
+           <th>Замовлення</th>
+           <th>Блюдо</th>
+           <th>Кiл.</th>
+           <th>Стiл</th>
+           <th></th>
+           <th>Рецепт</th>
+           <th></th>
+           <th></th>
+           <th></th>
+        </tr>
     <tr v-for="item, index in itemlist">
         <td>{{item.ordern}}</td>
         <td>{{item.name}}</td> 
         <td>{{item.qty}}</td> 
+        <td>{{item.table}}</td> 
         <td>{{item.notes}}</td> 
         <td>
-           <i v-show="item.techcard != ''"  class="fa fa-cocktail   popinfo" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover"
+           <i v-show="item.techcard != ''"  class="fa fa-book  popinfo" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover"
                   data-placement="bottom" v-bind:data-content="item.techcard" ></i>          
         
         </td> 
-        <td><a    v-on:click="onReady(item.document_id,item.rowid, index) " class="btn btn-success">Готово</a></td> 
+        <td><a  v-show="item.foodstate == 1"  v-on:click="onInprocess(item.document_id,item.rowid, index) " class="btn btn-info">На виготовлення</a></td> 
+        <td><a v-show="item.foodstate == 1 || item.foodstate == 2"   v-on:click="onReady(item.document_id,item.rowid, index) " class="btn btn-success ml-2">Готово</a></td> 
+        <td><a  v-show="item.foodstate == 3"   v-on:click="onSend(item.document_id,item.rowid, index) " class="btn btn-success ml-2">Видано</a></td> 
     </tr>    
         </table>
         
@@ -65,6 +79,32 @@
                  // onBell()
                 
                   callPM('onReady',[document_id,rowid],null,(data)=> 
+                  {
+                      if(false==checkPMAnswer(data) )   {
+                           return
+                      }
+                      
+                      this.updateItems() ;
+                  });     
+             
+           } ,
+            onInprocess( document_id,rowid, index) {
+                 // onBell()
+                
+                  callPM('onInprocess',[document_id,rowid],null,(data)=> 
+                  {
+                      if(false==checkPMAnswer(data) )   {
+                           return
+                      }
+                      
+                      this.updateItems() ;
+                  });     
+             
+           } ,
+           onSend( document_id,rowid, index) {
+                 // onBell()
+                
+                  callPM('onSend',[document_id,rowid],null,(data)=> 
                   {
                       if(false==checkPMAnswer(data) )   {
                            return

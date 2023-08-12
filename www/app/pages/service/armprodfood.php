@@ -46,7 +46,7 @@ class ArmProdFood extends \App\Pages\Base
 
             $items = $doc->unpackDetails('detaildata');
             if(isset($items[$args[1]])) {
-                $items[$args[1]]->foodstate = 2;  //готово
+                $items[$args[1]]->foodstate = 3;  //готово
             }
 
             $doc->packDetails('detaildata', $items);
@@ -55,7 +55,7 @@ class ArmProdFood extends \App\Pages\Base
 
             $isinproces = false;
             foreach ($items as $it) {
-                if ($it->foodstate == 1) {
+                if ($it->foodstate < 3) {
                     $isinproces = true;
                 }
             }
@@ -109,6 +109,84 @@ class ArmProdFood extends \App\Pages\Base
 
 
     }
+   public function onInprocess($args, $post) {
+
+
+        $doc = Document::load($args[0]);
+        $doc = $doc->cast();
+
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
+        try {
+
+
+            $items = $doc->unpackDetails('detaildata');
+            if(isset($items[$args[1]])) {
+                $items[$args[1]]->foodstate = 2;  //в  работу
+            }
+
+            $doc->packDetails('detaildata', $items);
+            $doc->save();
+
+
+            $conn->CommitTrans();
+
+        } catch(\Throwable $ee) {
+            global $logger;
+            $conn->RollbackTrans();
+
+            $logger->error(" Арм  кухни " . $ee->getMessage());
+
+            return json_encode(['error'=>$ee->getMessage() ], JSON_UNESCAPED_UNICODE);
+
+
+        }
+
+        return json_encode([], JSON_UNESCAPED_UNICODE);
+
+
+    }
+  
+
+  public function onSend($args, $post) {
+
+
+        $doc = Document::load($args[0]);
+        $doc = $doc->cast();
+
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
+        try {
+
+
+            $items = $doc->unpackDetails('detaildata');
+            if(isset($items[$args[1]])) {
+                $items[$args[1]]->foodstate = 4;  //выдан
+            }
+
+            $doc->packDetails('detaildata', $items);
+            $doc->save();
+
+
+            $conn->CommitTrans();
+
+        } catch(\Throwable $ee) {
+            global $logger;
+            $conn->RollbackTrans();
+
+            $logger->error(" Арм  кухни " . $ee->getMessage());
+
+            return json_encode(['error'=>$ee->getMessage() ], JSON_UNESCAPED_UNICODE);
+
+
+        }
+
+        return json_encode([], JSON_UNESCAPED_UNICODE);
+
+
+    }
+
+     
 
     public function getItems($args, $post) {
 
@@ -120,12 +198,12 @@ class ArmProdFood extends \App\Pages\Base
         } else {
             $where .= " and (content like '%<forbar>0</forbar>%' or content not  like '%<forbar>%' ) ";
         }
-        $docs = Document::find($where, "  document_id");
+        $docs = Document::find($where, "  document_id asc");
 
         foreach ($docs as $doc) {
             $items = $doc->unpackDetails('detaildata');
             foreach ($items as $rowid=>$item) {
-                if ($item->foodstate !== 1) {
+                if ($item->foodstate == 0 || $item->foodstate == 4 ) {
                     continue;
                 }
 
@@ -147,7 +225,9 @@ class ArmProdFood extends \App\Pages\Base
                    'ordern'=>$doc->document_number,
                    'notes'=>$notes,
                    'document_id'=>$doc->document_id,
+                   'table'=>$doc->headerdata['table'],
                    'name'=>$item->itemname,
+                   'foodstate'=>$item->foodstate,
                    'techcard'=>$item->techcard ?? '',
                    'qty'=>$item->quantity,
                    'rowid'=>$rowid,

@@ -5,50 +5,53 @@
       
 
         <div class="row ">
-            <div class="col-12    col-md-6   col-xl-4   ">
+            <div class="col-12    col-md-7   col-xl-5   ">
                 <h4>Налаштування</h4>
                 <small><i class="fa fa-exclamation-triangle"></i>
                 Прямий перехiд до каталогу [адресасайту]/shop, 
                 прямий перехiд до складу [адресасайту]/store
                 </small>
                 <form zippy="shop" enctype="multipart/form-data">
-                    <div class="form-group   ">
-                        <label  for="shopname">Назва магазину</label>
-                     
+                    <div class="form-group  row ">
+                        <label  class="col-6 col-form-label"  for="shopname">Назва магазину</label>
+                           <div class="col-6">
                             <input required="required" class="form-control " zippy="shopname"/>
-                         
+                           </div>
                     </div>
-                    <div class="form-group   ">
-                        <label   for="logo">Логотип</label>
-                      
+                    <div class="form-group  row ">
+                        <label  class="col-6 col-form-label"   for="logo">Логотип</label>
+                         <div class="col-6">
                             <input  accept="image/png,image/jpeg" type="file" class="form-control " zippy="logo"/>
-                     
+                          </div>
                     </div>
 
 
 
 
-                    <div class="form-group    ">
-                        <label   for="shopdefpricetype">Тип цiни </label>
-                      
+                    <div class="form-group  row  ">
+                        <label  class="col-6 col-form-label"   for="shopdefpricetype">Тип цiни </label>
+                           <div class="col-6">
                             <select class="form-control" zippy="shopdefpricetype">
                             </select>
-                         
+                          </div> 
                     </div>
-                 <div class="form-group  ">
-                        <label for="salesource">Джерело продаж</label>
+                 <div class="form-group  row">
+                        <label  class="col-6 col-form-label"  for="salesource">Джерело продаж</label>
+                         <div class="col-6">
                         <select class="form-control" zippy="salesource">
                             <option value="0">Не обрано</option>
                         </select>
+                          </div>
                     </div>                    
                      
-                    <div class="form-group   ">
-                        <label   for="shopordertype">Формувати  по  замовленню 
-                            
-                        </label>
+                    <div class="form-group  row ">
+                     <div class="col-6">
+                        <label     for="shopordertype">Формувати  по  замовленню             </label>
                              <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title=" В касовому  чеку немає  доставки. В кафе не показуються  фiльтри та  вiдгуки. В доставцi тiльки адреса, зазначена в  налаштуваннях кафе "></i>
-                          
+                                   title=" В касовому  чеку немає  доставки. В кафе не показуються  фiльтри та  вiдгуки. В доставцi 
+                                   тiльки адреса, зазначена в  налаштуваннях кафе "></i>
+                               </div>     
+                             <div class="col-6">
                             <select class="form-control " zippy="shopordertype">
 
                                 <option value='0'>Звичайне замовлення</option>
@@ -56,50 +59,56 @@
                                 <option value='2'>Замовлення кафе</option> 
 
                             </select>
-                            
+                            </div>  
                        
                     </div>
-                    <div class="form-group   ">
-                        <label   for="firm">Продавець </label>
-                            
+                    <div class="form-group  row ">
+                        <label  class="col-6 col-form-label"   for="firm">Продавець </label>
+                          <div class="col-6">    
                             <select class="form-control" zippy="firm">
                                 <option value="0">Не обрано</option>
                             </select>
-                            
+                            </div>  
                       
                     </div>         {{#usebranch}}
-                    <div class="form-group   ">
-                        <label   for="shopdefbranch">Фiлiя </label>
+                    <div class="form-group  row ">
+                        <label  class="col-6 col-form-label"   for="shopdefbranch">Фiлiя </label>
                               <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                                    title=" Фiлiя, з  якою створюються  документи "></i>
-                       
+                           <div class="col-6">
                             <select class="form-control" zippy="shopdefbranch">
                                 <option value="0">Не обрано</option>
                             </select>
-                            
+                            </div>  
                       
                     </div>
                     {{/usebranch}}
               
 
-                    <div class="form-group   ">
-                        <label   for="email">E-mail для зворотнього зв'язку</label>
-                  
+                    <div class="form-group  row ">
+                        <label class="col-6 col-form-label"   for="email">E-mail для   зв'язку</label>
+                               <div class="col-6">
                             <input class="form-control " zippy="email"/>
-                       
+                            </div>
                     </div>
     
-                  <div class="form-group   ">
-                        <label   for="phone">Телефон  для  замовлень</label>
-                        
+                  <div class="form-group  row ">
+                        <label class="col-6 col-form-label"  for="phone">Телефон  для  замовлень</label>
+                              <div class="col-6">
                             <input class="form-control " zippy="phone"/>
-                        
+                          </div>
                   </div>
-                  <div class="form-group   ">
-                        <label   for="currencyname">Грошова одиниця</label>
-          
-                            <input class="form-control " zippy="currencyname"/>
-                      
+                  <div class="form-group row ">
+                        <label  class="col-6 col-form-label"  for="currencyname">Грошова одиниця</label>
+                          <div class="col-6">
+                            <input style="width:100px" class="form-control " zippy="currencyname"/>
+                            </div>
+                    </div>
+                 <div class="form-group row ">
+                        <label  class="col-6 col-form-label"  for="pagesize">Товарiв на  строiнцi </label>
+                          <div class="col-6">
+                            <input  style="width:100px" type="number" class="form-control " zippy="pagesize"/>
+                            </div>
                     </div>
                    
                    
@@ -157,7 +166,7 @@
                                           
             </div>
            
-            <div class="col-12 col-md-6 col-xl-4    ">
+            <div class="col-12 col-md-4 col-xl-3    ">
       <h4>Онлайн оплата</h4>
                 <form zippy="pay" >
                    <div class="form-group   ">

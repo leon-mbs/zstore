@@ -43,6 +43,7 @@ class Options extends \App\Pages\Base
         $this->shop->add(new TextInput('shopname'));
         $this->shop->add(new TextInput('currencyname'));
         $this->shop->add(new TextInput('phone'));
+        $this->shop->add(new TextInput('pagesize'));
         $this->shop->add(new File('logo'));
         $this->shop->add(new CheckBox('uselogin'));
         $this->shop->add(new CheckBox('usefilter'));
@@ -93,6 +94,7 @@ class Options extends \App\Pages\Base
         $this->shop->email->setText($shop['email']);
         $this->shop->currencyname->setText($shop['currencyname']);
         $this->shop->phone->setText($shop['phone']);
+        $this->shop->pagesize->setText($shop['pagesize'] ?? 25);
 
         $this->pay->paysystem->setValue($shop['paysystem']);
         $this->pay->mf->setValue($shop['mf_id']);
@@ -160,6 +162,7 @@ class Options extends \App\Pages\Base
         $shop['shopname'] = $this->shop->shopname->getText();
         $shop['currencyname'] = $this->shop->currencyname->getText();
         $shop['phone'] = $this->shop->phone->getText();
+        $shop['pagesize'] = $this->shop->pagesize->getText();
         $shop['uselogin'] = $this->shop->uselogin->isChecked() ? 1 : 0;
         $shop['usefilter'] = $this->shop->usefilter->isChecked() ? 1 : 0;
 
