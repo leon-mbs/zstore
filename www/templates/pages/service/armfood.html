@@ -22,19 +22,14 @@
         {{={| |}=}}                 
         <div id="vapp" class="row"  >
             <div v-show="itemlist.length > 0" class="col-12 col-md-8 col-xl-6 mb-2"> 
-              <div class="nav navbar justify-content-start">
                  <h5 class="mr-2">Готових позицiй <span  class="badge badge-success badge-pill" > {{itemlist.length}}</span>                </h5>
                   
-                 <i title="Закрити"  v-show="openpos" class="fa fa-folder-open" style="cursor:pointer"    v-on:click="openpos=!openpos"></i> 
-                 <i title="Вiдкрити" v-show="!openpos" class="fa fa-folder-closed" style="cursor:pointer" v-on:click="openpos=!openpos"></i> 
-             </div>
-            
-             <table v-show="openpos" class="table table-striped">
+             <table   class="table table-sm">
                 <tr v-for="item, index in itemlist">
                     <td>{{item.ordern}}</td>
                     <td>{{item.name}}</td> 
                     <td>{{item.table}}</td> 
-                    <td><a    v-on:click="onReady(item.document_id,item.rowid, index) " class="btn btn-success">Видано</a></td> 
+
                 </tr>    
             </table>
            
@@ -386,7 +381,7 @@
             </div>                               
                         
                     </form>  
-                </div>
+                </div>      
                 <div class="w-100"></div>  
                 <div class="col-12   ">   
                     <form zippy="payform" class="row">
@@ -683,23 +678,12 @@
            
               data() {
                   return  {
-                     itemlist:[] ,
-                     openpos:false
+                     itemlist:[]  
+                     
                    }   
               }  ,
               methods: {
-                 onReady( document_id,rowid, index) {
-
-                      callPM('onReady',[document_id,rowid],null,(data)=> 
-                      {
-                          if(false==checkPMAnswer(data) )   {
-                               return
-                          }
-                          
-                          this.updateReadyItems() ;
-                      });     
-                 
-               } ,
+          
                
                updateReadyItems(){
                     
