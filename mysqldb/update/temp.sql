@@ -53,4 +53,5 @@ FROM ((`eventlist` `e`
     ON ((`uv`.`user_id` = `e`.`user_id`)));    
     
     
- 
+delete  from  options where  optname='version' ;
+insert  into options (optname,optvalue) values('version','6.8.0'); 

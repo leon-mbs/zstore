@@ -8,6 +8,7 @@ use App\Modules\Shop\Helper;
 use ZCL\DB\EntityDataSource;
 use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\DataList\DataView;
+use Zippy\Html\DataList\Paginator;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
@@ -25,6 +26,7 @@ class Catalog extends Base
     public function __construct($id = 0) {
         parent::__construct();
         $id = intval($id);
+        $options = \App\System::getOptions('shop');
 
         $this->cat_id = $id;
 
@@ -51,9 +53,13 @@ class Catalog extends Base
         $this->add(new Form('sortform'));
         $this->sortform->add(new DropDownChoice('sortorder', 5))->onChange($this, 'onSort');
 
-        $this->add(new DataView('catlist', new ArrayDataSource($this, '_list'), $this, 'plistOnRow'));
-        //  $this->add(new \Zippy\Html\DataList\Paginator('pag', $this->catlist));
-        //  $this->catlist->setPageSize(15);
+        $this->add(new DataView('productlist', new ArrayDataSource($this, '_list'), $this, 'plistOnRow'));
+        $this->add(new \Zippy\Html\DataList\Paginator('pag', $this->productlist));
+        $this->productlist->setPageSize(25);
+        if($options['pagesize'] >0) {
+            $this->productlist->setPageSize($options['pagesize']);
+        }
+        
         $this->UpdateList();
 
         //недавно  просмотренные
@@ -70,6 +76,8 @@ class Catalog extends Base
         }
         $this->add(new Panel("recentlyp"))->setVisible(count($ra) > 0);
         $this->recentlyp->add(new DataView('rlist', new EntityDataSource("\\App\\Modules\\Shop\\Entity\\Product", "  item_id in (" . implode(",", $ra) . ")"), $this, 'rOnRow'));
+      
+    
         if (count($ra) > 0) {
             $this->recentlyp->rlist->Reload();
         }
@@ -201,7 +209,7 @@ class Catalog extends Base
             });
         }
 
-        $this->catlist->Reload();
+        $this->productlist->Reload();
     }
 
     //строка товара

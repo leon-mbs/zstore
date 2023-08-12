@@ -332,7 +332,7 @@ class GoodsIssue extends \App\Pages\Base
                 }
             } else {
                 if(intval($common['paytypeout']) == 1) {
-                    $this->setWarn('Накладну слід створювати на  підставі   рахунку-фактуры') ;
+                    $this->setWarn('Накладну слід створювати на  підставі   рахунку-фактури або замовлення') ;
                 }
             }
         }
@@ -621,7 +621,7 @@ class GoodsIssue extends \App\Pages\Base
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
-
+    
 
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
@@ -700,13 +700,10 @@ class GoodsIssue extends \App\Pages\Base
                         \App\Entity\Notify::toSystemLog($msg) ;
                     }
 
-
-                    if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
-
-                    } else {
-                        if ($order->state == Document::STATE_INPROCESS) {
-                            $order->updateStatus(Document::STATE_CLOSED);
-                        }
+                    if( $this->_doc->payamount >0 && $order->meta_name =='Order') {
+                        if ($order->state == Document::STATE_READYTOSHIP) {
+                        $order->updateStatus(Document::STATE_CLOSED);
+                        }                                               
                     }
                 }
             } else {

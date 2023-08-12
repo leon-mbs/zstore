@@ -428,9 +428,9 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->brd->setVisible(true);
             $this->statuspan->statusform->bscan->setVisible(true);
 
-            $this->statuspan->statusform->bttn->setVisible(true);
-            $this->statuspan->statusform->bpos->setVisible(true);
-            $this->statuspan->statusform->bgi->setVisible(true);
+            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->bpos->setVisible(false);
+            $this->statuspan->statusform->bgi->setVisible(false);
         }
         if ($state == Document::STATE_INSHIPMENT) {
 
