@@ -1,6 +1,6 @@
 
- ALTER TABLE `customers` ADD INDEX (`phone`);
- ALTER TABLE `documents` ADD INDEX (`state`);
+ALTER TABLE `customers` ADD INDEX (`phone`);
+ALTER TABLE `documents` ADD INDEX (`state`);
 
 ALTER TABLE `notifies` ADD `created` DATETIME NULL;     
 ALTER TABLE `messages` ADD `checked` tinyint(1) NULL;     
@@ -52,6 +52,11 @@ FROM ((`eventlist` `e`
   LEFT JOIN `users_view` `uv`
     ON ((`uv`.`user_id` = `e`.`user_id`)));    
     
+
+INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Кафе', 'OutFood', 'Продажі', 0);
+INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Календар платежів', 'PayTable', 'Каса та платежі', 0);
+                  
+update notifies   set  created=dateshow ;
     
 delete  from  options where  optname='version' ;
 insert  into options (optname,optvalue) values('version','6.8.0'); 
