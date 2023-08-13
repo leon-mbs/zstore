@@ -131,7 +131,7 @@ class Jobs extends \App\Pages\Base
     }
 
     public function onSave($sender) {
-        $event = new \App\Entity\Event();
+        $event = new Event();
         $event->title = $this->addeventform->addeventtitle->getText();
         $event->description = $this->addeventform->addeventdesc->getText();
         $event->eventdate = $this->addeventform->addeventdate->getDate();
@@ -145,6 +145,7 @@ class Jobs extends \App\Pages\Base
         if (strlen($event->title) == 0) {
             return;
         }
+        $event->event_type=Event::TYPE_JOB ;
         $event->save();
 
         $nt = $this->addeventform->addeventnotify->getValue();
@@ -219,7 +220,7 @@ class Jobs extends \App\Pages\Base
         $text = trim($sender->searchtext->getText());
         if (strlen($text) > 0) {
             $text = Event::qstr('%' . $text . '%');
-            $where = " ( description like {$text} or title like {$text} or customer_name like {$text}) and user_id=" . System::getUser()->user_id;
+            $where = " ( description like {$text} or title like {$text} )  and user_id=" . System::getUser()->user_id;   //todo  type
         }
 
         $this->ds->setWhere($where);

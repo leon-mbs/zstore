@@ -561,6 +561,8 @@ class CustomerList extends \App\Pages\Base
         if (strlen($event->title) == 0) {
             return;
         }
+        $event->event_type=\App\Entity\Event::TYPE_CUSTOMER;
+        
         $event->save();
 
         $nt = $this->contentview->addeventform->addeventnotify->getValue();
@@ -582,7 +584,7 @@ class CustomerList extends \App\Pages\Base
 
     //список   событий
     private function updateEvents() {
-        $this->_eventlist = \App\Entity\Event::find('  customer_id=' . $this->_customer->customer_id);
+        $this->_eventlist = \App\Entity\Event::find('  customer_id=' . $this->_customer->customer_id);   //todo  type
         $this->contentview->dw_eventlist->Reload();
     }
 

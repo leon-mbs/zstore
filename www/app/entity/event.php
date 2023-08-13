@@ -10,6 +10,10 @@ namespace App\Entity;
  */
 class Event extends \ZCL\DB\Entity
 {
+    public const TYPE_CUSTOMER = 1;
+    public const TYPE_JOB = 2;
+    public const TYPE_PAYMENT = 3;
+    
     protected function init() {
         $this->event_id = 0;
 
@@ -26,7 +30,7 @@ class Event extends \ZCL\DB\Entity
 
     public static function isNotClosedTask($user_id) {
         $conn = \ZCL\DB\DB::getConnect();
-        $cnt = Event::findCnt("isdone<>1  and user_id={$user_id} ");
+        $cnt = Event::findCnt("isdone<>1  and user_id={$user_id} ");  //todo  type
         return $cnt;
 
     }
