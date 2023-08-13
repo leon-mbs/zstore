@@ -729,7 +729,7 @@ class Import extends \App\Pages\Base
 
     public function oZImport($sender) {
 
-        $c = $this->яform->zcust->getKey();
+        $c = $this->zform->zcust->getKey();
         //$checkname = $this->nform->ncheckname->isChecked();
 
         $preview = $this->zform->zpreview->isChecked();
@@ -738,7 +738,7 @@ class Import extends \App\Pages\Base
 
         $colname = $this->zform->zcolname->getValue();
         $colcode = $this->zform->zcolcode->getValue();
-        $colbarcode = $this->zform->zcolbarcode->getValue();
+
         $colqty = $this->zform->zcolqty->getValue();
         $colprice = $this->zform->zcolprice->getValue();
 
