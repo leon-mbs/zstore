@@ -26,12 +26,11 @@ class Notify extends \ZCL\DB\Entity
         $this->user_id = 0;
         $this->message = '';
         $this->dateshow = time();
-        $this->created = time();
+        
     }
 
     protected function afterLoad() {
         $this->dateshow = strtotime($this->dateshow);
-        $this->created = strtotime($this->created);
     }
 
     protected function beforeSave() {

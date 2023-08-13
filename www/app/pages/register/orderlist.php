@@ -39,7 +39,7 @@ class OrderList extends \App\Pages\Base
         if (false == \App\ACL::checkShowReg('OrderList')) {
             return;
         }
-        //  $this->_issms = (System::getOption('sms','smstype')??0) >0 ;
+        $this->_issms = (System::getOption('sms','smstype')??0) >0 ;
 
         $this->add(new Panel("listpanel"));
 
@@ -770,10 +770,10 @@ class OrderList extends \App\Pages\Base
     /**
     * список  сообщений по  заказу
     *
-    * @param mixed $args
+    * @param mixed $args[0]  -document_id
     */
     public function getCChatMessages($args) {
-        //  $doc = Document::load($args[0]) ;
+
         $ret=[];
         $list = \App\Entity\Message::find("item_id={$args[0]} and item_type=" .\App\Entity\Message::TYPE_CUSTCHAT, "message_id asc");
 
