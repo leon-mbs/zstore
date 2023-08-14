@@ -220,7 +220,7 @@ class Jobs extends \App\Pages\Base
         $text = trim($sender->searchtext->getText());
         if (strlen($text) > 0) {
             $text = Event::qstr('%' . $text . '%');
-            $where = " ( description like {$text} or title like {$text} )  and user_id=" . System::getUser()->user_id;   //todo  type
+            $where = " ( description like {$text} or title like {$text} )  and  event_type in(0,2) and  user_id=" . System::getUser()->user_id;  
         }
 
         $this->ds->setWhere($where);

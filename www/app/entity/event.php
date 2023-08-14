@@ -16,23 +16,43 @@ class Event extends \ZCL\DB\Entity
     
     protected function init() {
         $this->event_id = 0;
+        $this->event_type = 0;
 
 
         $this->user_id = 0;
         $this->customer_id = 0;
         $this->eventdate = time();
+        $this->isdone = 0;
     }
 
-    protected function afterLoad() {
-        $this->eventdate = strtotime($this->eventdate);
-    }
 
 
     public static function isNotClosedTask($user_id) {
         $conn = \ZCL\DB\DB::getConnect();
-        $cnt = Event::findCnt("isdone<>1  and user_id={$user_id} ");  //todo  type
+        $cnt = Event::findCnt("isdone<>1 and event_type in(0,2) and user_id={$user_id} ");  
         return $cnt;
 
     }
+    protected function beforeSave() {
+        parent::beforeSave();
+        $this->details = "<details>";
+        $this->details .= "<amount>{$this->amount}</amount>";
+        $this->details .= "<paytype>{$this->paytype}</paytype>";
+        $this->details .= "</details>";
 
+        return true;
+    }
+    
+    protected function afterLoad() {
+        $this->eventdate = strtotime($this->eventdate);
+        $this->createdon = strtotime($this->createdon);
+
+        $xml = @simplexml_load_string($this->details);
+
+ 
+        $this->amount = (double)($xml->amount[0]);
+        $this->paytype = (int)($xml->paytype[0]);
+
+        parent::afterLoad();
+    }     
 }

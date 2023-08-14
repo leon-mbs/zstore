@@ -584,7 +584,7 @@ class CustomerList extends \App\Pages\Base
 
     //список   событий
     private function updateEvents() {
-        $this->_eventlist = \App\Entity\Event::find('  customer_id=' . $this->_customer->customer_id);   //todo  type
+        $this->_eventlist = \App\Entity\Event::find('  event_type in(0,1) and  customer_id=' . $this->_customer->customer_id);   
         $this->contentview->dw_eventlist->Reload();
     }
 

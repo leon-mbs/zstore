@@ -3,7 +3,7 @@ ALTER TABLE `customers` ADD INDEX (`phone`);
 ALTER TABLE `documents` ADD INDEX (`state`);
 
 ALTER TABLE `messages` ADD `checked` tinyint(1) NULL;     
-ALTER TABLE `eventlist` ADD `event_type` tinyint(4) NULL;     
+ALTER TABLE `eventlist` ADD `event_type` tinyint(4) NULL default 0;     
 ALTER TABLE `eventlist` ADD `details` text NULL;     
 
 ALTER TABLE `eventlist` CHANGE `user_id` `user_id` int NULL ;
