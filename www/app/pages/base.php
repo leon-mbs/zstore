@@ -73,12 +73,24 @@ class Base extends \Zippy\Html\WebPage
 
         $this->add(new ClickLink('logout', $this, 'LogoutClick'));
         $this->add(new Label('username', $user->username));
+       
+       
         //меню
-        $this->_tvars["docmenu"] = Helper::generateMenu(1);
-        $this->_tvars["repmenu"] = Helper::generateMenu(2);
-        $this->_tvars["regmenu"] = Helper::generateMenu(3);
-        $this->_tvars["refmenu"] = Helper::generateMenu(4);
-        $this->_tvars["sermenu"] = Helper::generateMenu(5);
+        $menu = Session::getSession()->menu ?? [];
+        if(count($menu)==0) {
+            $menu["docmenu"] = Helper::generateMenu(1);
+            $menu["repmenu"] = Helper::generateMenu(2);
+            $menu["regmenu"] = Helper::generateMenu(3);
+            $menu["refmenu"] = Helper::generateMenu(4);
+            $menu["sermenu"] = Helper::generateMenu(5);
+            Session::getSession()->menu = $menu;
+        }
+        
+        $this->_tvars["docmenu"] = $menu["docmenu"];
+        $this->_tvars["repmenu"] = $menu["repmenu"];
+        $this->_tvars["regmenu"] = $menu["regmenu"];
+        $this->_tvars["refmenu"] = $menu["refmenu"];
+        $this->_tvars["sermenu"] = $menu["sermenu"];
 
         $this->_tvars["showdocmenu"] = count($this->_tvars["docmenu"]['groups']) > 0 || count($this->_tvars["docmenu"]['items']) > 0;
         $this->_tvars["showrepmenu"] = count($this->_tvars["repmenu"]['groups']) > 0 || count($this->_tvars["repmenu"]['items']) > 0;
@@ -243,6 +255,7 @@ class Base extends \Zippy\Html\WebPage
         $duration = \App\Session::getSession()->duration() ;
         $this->_tvars['showtips'] = $duration < 300   ;
 
+        \App\CronTask::do();
     }
 
     public function LogoutClick($sender) {

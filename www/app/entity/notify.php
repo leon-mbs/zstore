@@ -17,7 +17,7 @@ class Notify extends \ZCL\DB\Entity
     public const CHAT        = -6;  //сообщение  в  чат
     public const SUBSCRIBE   = -7;  //рассылка
 
-    //todo   замена dateshow на  created  
+
     protected function init() {
 
         $this->sender_id = 0;

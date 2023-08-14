@@ -80,6 +80,7 @@ class System
         $rs = $conn->GetOne("select optvalue from options where optname='{$group}' ");
         if (strlen($rs) > 0) {
             if(!$isserialise) {
+                self::$_options[$group] = $rs;                
                 return $rs;
             }  //неупакопано
 

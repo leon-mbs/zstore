@@ -138,7 +138,7 @@ class GRList extends \App\Pages\Base
         $this->doclist->Reload(false);
 
         $this->statuspan->setVisible(false);
-        //todo  отослать писмо
+
 
         $this->updateStatusButtons();
     }
