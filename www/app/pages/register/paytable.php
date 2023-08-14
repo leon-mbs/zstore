@@ -83,7 +83,7 @@ class PayTable extends \App\Pages\Base
        $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and mf_id  in (select mf_id  from mfund where 1=1  {$brf})";
 
        $am = H::fa($conn->GetOne($sql));
-       $am = 1000;
+      
        $this->_list = [];
        foreach( Event::find("event_type=3  and (isdone <> 1 or eventdate >= CURRENT_DATE() ) ","eventdate asc") as $event){
         
