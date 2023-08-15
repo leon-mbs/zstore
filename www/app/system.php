@@ -121,7 +121,20 @@ class System
         $conn->Execute(" delete from options where  optname='{$group}' ");
         $conn->Execute(" insert into options (optname,optvalue) values ('{$group}'," . $conn->qstr($options) . " ) ");
     }
+    /**
+    * установить отьедный параметр
+    * 
+    * @param mixed $group
+    * @param mixed $option
+    * @param mixed $value
+    */
+    public static function setOption($group, $option,$value) {
 
+        $options = self::getOptions($group);
+        $options[$option]  = $value;
+
+        self::setOptions($group,$options) ;
+    }
     public static function setCache($key, $data) {
         self::$_cache[$key] = $data;
     }

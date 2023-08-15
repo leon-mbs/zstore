@@ -8,23 +8,35 @@
  
         <div class="row">
             <div class="col-12 col-md-8 col-xl-6"  >
-                <h4>Планувальник</h4>
-                <p>
-                   Адреса {{{url}}}
-                </p>
-                <p>
-                    Останнiй запуск {{lasttime}} &nbsp;&nbsp; <a href="javascript:void(0);" onclick="fetch('/crontab.php')" >Перезапустити</a>
-                </p>
+                <h3>Планувальник               </h3>
+                
+                <small>   Адреса {{{url}}}   <a href="https://zippy.com.ua/zstoreusage#cron">Детальніше...</a>  </small>
+                
+                <table class="ctable mb-2">
+                      <tr>
+                      <td>Активовано</td> 
+                      <td>
+                          <a  zippy="ton" ><i class="fa fa-toggle-on text-success"></i></a>
+                          <a  zippy="toff"><i class="fa fa-toggle-off"></i></a> 
+                       </td> 
+                      <td>  </td> 
+                    </tr>
+                    <tr>
+                      <td>Останнiй запуск</td> 
+                      <td> {{lasttime}} </td> 
+                      <td>  <a href="javascript:void(0);" onclick="fetch('/crontab.php')" >Перезапустити</a> </td> 
+                    </tr>
+                </table>
                  <h5>Черга завдань</h5>
-                <table class="table table-sm    ">
+                 <a zippy="update" >Оновити</a>
+                <table class="table table-sm mt-2  ">
                     <tr  zippy="nlist">
 
-                        <td><i class="fa fa-clock"> </i> <span zippy="ndate" > </span>
+                        <td>  <span zippy="ndate" > </span>
 
-                            <p zippy="msg" >
-                            <p>
+                            
                         </td>
-                        <td><span  zippy="newn" class="badge badge-info">Нове</span></td>
+                        <td> </td>
 
 
                     </tr>

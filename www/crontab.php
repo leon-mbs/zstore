@@ -2,4 +2,4 @@
   
 require_once 'init.php';
 
-\App\CronTask::do();
+\App\Entity\CronTask::do();
