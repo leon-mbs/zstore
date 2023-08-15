@@ -52,7 +52,7 @@ FROM ((`eventlist` `e`
     ON ((`uv`.`user_id` = `e`.`user_id`)));    
     
 
-CREATE TABLE queue (
+CREATE TABLE crontask (
   id int(11) NOT NULL AUTO_INCREMENT,
   created datetime NOT NULL,
   details text NOT NULL,
