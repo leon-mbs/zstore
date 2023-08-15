@@ -162,6 +162,13 @@ class Subscribe extends \ZCL\DB\Entity
                 }
             }
             $text = $sub->getText($doc);
+            if ($notify > 0 && $sub->msg_type == self::MSG_NOTIFY) {
+                self::sendNotify($notify, $text);
+            }
+            if ($notify == 0 && $sub->msg_type == self::MSG_NOTIFY) {
+                self::sendNotify(\App\Entity\Notify::SYSTEM, $text);
+            }
+
             if (strlen($phone) > 0 && $sub->msg_type == self::MSG_SMS) {
                 $ret =   self::sendSMS($phone, $text);
             }
@@ -177,12 +184,6 @@ class Subscribe extends \ZCL\DB\Entity
             }
             if(strlen($chat_id)>0 && $sub->msg_type == self::MSG_BOT) {
                 $ret =   self::sendBot($chat_id, $text, $sub->attach==1 ? $doc : null) ;
-            }
-            if ($notify > 0 && $sub->msg_type == self::MSG_NOTIFY) {
-                self::sendNotify($notify, $text);
-            }
-            if ($notify == 0 && $sub->msg_type == self::MSG_NOTIFY) {
-                self::sendNotify(\App\Entity\Notify::SYSTEM, $text);
             }
 
             if(strlen($ret)>0) {

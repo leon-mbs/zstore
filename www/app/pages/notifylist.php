@@ -69,6 +69,10 @@ class NotifyList extends \App\Pages\Base
             $row->sender->setText("Розсилка");
             $row->sendericon->setAttribute('class', 'fa fa-envelope');
         }
+        if ($notify->sender_id == Notify::CRONTAB) {
+            $row->sender->setText("Планувальник");
+            $row->sendericon->setAttribute('class', 'fa fa-clock');
+        }
 
 
         $row->add(new Label("msg"))->setText($notify->message, true);

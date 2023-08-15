@@ -16,6 +16,7 @@ class Notify extends \ZCL\DB\Entity
     public const EVENT       = -5;  //напоминание о событии
     public const CHAT        = -6;  //сообщение  в  чат
     public const SUBSCRIBE   = -7;  //рассылка
+    public const CRONTAB     = -8;  //планувальник
 
 
     protected function init() {

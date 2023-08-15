@@ -5,25 +5,51 @@ class CronTask
 {
     public  static  function do():void{
         global $logger;
-        $logger->info('Start cron');
+
+        \App\Helper::setVal('lastcron',time()) ;       
+
         try{
+            
+            //задачи каждый  при  каждом  вызове
+            
+            $queue = \App\Entity\Queue::find("","id asc",100) ;
+            foreach($queue as $q) {
+                
+            }
+            
+            
             //задачи  раз  в  час
             $last =  intval(\App\Helper::getVal('lastcronh') );
-            if( (time() - $last) < 4000){
-                return;
+            if( (time() - $last) > 3600){
+                \App\Helper::setVal('lastcronh',time()) ;       
+                
             } ;
-            \App\Helper::setVal('lastcronh',time()) ;       
+
 
             //задачи  раз  в  сутки           
             $last =  intval(\App\Helper::getVal('lastcrond') );
-            if( ( time() - $last) < (3600 * 24)){
-                return;
+            if(  date('Y-m-d') != date('Y-m-d',$last) ){
+               \App\Helper::setVal('lastcrond',time()) ;       
+               
+               
+               
             } ;
-            \App\Helper::setVal('lastcrond',time()) ;       
+
             
         } catch(\Exception $ee) {
-            $msg = $e->getMessage();
-            $logger->error($e);
+            $msg = $ee->getMessage();
+            $logger->error($msg);
+            
+            foreach(\App\Entity\User::find("rolename='admins' ") as $u) {
+                $n = new \App\Entity\Notify() ;
+                $n->user_id = $u->user_id;
+                $n->message = $msg;
+                $n->sender_id = \App\Entity\Notify::CRONTAB   ;
+                      
+                
+                $n->save()  ;
+                
+            }
            
         }
         

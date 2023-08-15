@@ -52,6 +52,15 @@ FROM ((`eventlist` `e`
     ON ((`uv`.`user_id` = `e`.`user_id`)));    
     
 
+CREATE TABLE queue (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  created datetime NOT NULL,
+  details text NOT NULL,
+  PRIMARY KEY (id)
+)  DEFAULT CHARSET=utf8; 
+ ;    
+    
+    
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Кафе', 'OutFood', 'Продажі', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Платіжний календар', 'PayTable', 'Каса та платежі', 0);
                   
