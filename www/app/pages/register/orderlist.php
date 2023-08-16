@@ -830,11 +830,10 @@ class OrderList extends \App\Pages\Base
 
         $text = "Маємо запитання  по  вашому  замовленню. Відповісти за адресою ".$link;
 
-           $r = \App\Entity\Subscribe::sendSMS($phone,$text) ;
-            if($r!=""){
-               return json_encode(array('error'=>$r), JSON_UNESCAPED_UNICODE);
-
-            }
+        $r = \App\Entity\Subscribe::sendSMS($phone,$text) ;
+        if($r!=""){
+            return json_encode(array('error'=>$r), JSON_UNESCAPED_UNICODE);
+        }
 
         $msg = new \App\Entity\Message() ;
         $msg->message=$message;
