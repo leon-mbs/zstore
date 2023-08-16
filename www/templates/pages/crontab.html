@@ -24,7 +24,7 @@
                     <tr>
                       <td>Останнiй запуск</td> 
                       <td> {{lasttime}} </td> 
-                      <td>  <a href="javascript:void(0);" onclick="fetch('/crontab.php')" >Перезапустити</a> </td> 
+                      <td>  <a href="javascript:void(0);" onclick="startcron()" >Перезапустити</a> </td> 
                     </tr>
                 </table>
                  <h5>Черга завдань</h5>
@@ -54,6 +54,15 @@
 
    function check_delall() {
        return confirm("Очистити?")
+   }  
+   
+   function startcron() {
+       if(confirm("Впевненi що в даний момент  не  виконується  iнший  екземпляр скрипта?")) {
+          fetch('/crontab.php')           
+          
+       }
+       
+
    }
 
 </script>    

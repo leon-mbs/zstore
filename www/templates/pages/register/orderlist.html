@@ -324,26 +324,37 @@
                                          <div class="col-2"> </div>
                                        </div>
                                        <div v-show="msg.isseller ==false" class="row">
-                                         <div class="col-10  bg-light   rounded ">{{msg.message}}</div>
+                                         <div class="col-10  bg-light     ">{{msg.message}}</div>
                                          <div class="col-2"> </div>
                                        </div>                  
                                     
                                  
-                                    <div v-show="msg.isseller ==true" class="row">
-                                        <div class="col-2"> </div>
-                                        <div class="col-4 text-left"><small>{{msg.msgdate}}</small></div>
+                                        <div v-show="msg.isseller ==true" class="row">
+                                            <div class="col-2"> </div>
+                                            <div class="col-4 text-left"><small>{{msg.msgdate}}</small></div>
+                                            
+                                            <div class="col-6 text-right"><b>Продавець</b></div>
+                                        </div>
                                         
-                                        <div class="col-6 text-right"><b>Продавець</b></div>
-                                    </div>
+                                        <div v-show="msg.isseller ==true" class="row">
+                                            <div class="col-2"> </div>
+                                            <div class="col-10    ">{{msg.message}}</div>
+                                            
+                                       </div>                            
+                                       
+                                          <div  v-show="msg.isseller ==true" class="row">
+                                            <div class="col-12 text-right">  
+                                              <small>   
+                                             <i v-show="msg.checked==true"   class="fa fa-check-double "></i>
+                                             <i v-show="msg.checked==false"   class="fa fa-check "></i>
+                                               </small>
+                                            </div>
+                                            
+                                          </div>                                        
+                                    </div>    
+                                  
                                     
-                                    <div v-show="msg.isseller ==true" class="row">
-                                        <div class="col-2"> </div>
-                                        <div class="col-10   rounded">{{msg.message}}</div>
-                                        
-                                      </div>                            
-                                       
-                                       
-                                    </div>                            
+                                                            
                                  </div>                            
                                 <form>
                                   <div class="form-group">

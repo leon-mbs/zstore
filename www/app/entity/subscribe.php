@@ -173,7 +173,14 @@ class Subscribe extends \ZCL\DB\Entity
                 $ret =   self::sendSMS($phone, $text);
             }
             if (strlen($email) > 0 && $sub->msg_type == self::MSG_EMAIL) {
-                $ret =   self::sendEmail($email, $text, $sub->msgsubject, $sub->attach==1 ? $doc : null);
+                
+                if(\App\System::getOption('common','cron') ?? false ==true)  {
+                        
+                }
+                else {
+                    $ret =   self::sendEmail($email, $text, $sub->msgsubject, $sub->attach==1 ? $doc : null);                    
+                }
+
             }
 
             if(strlen($viber)==0) {
