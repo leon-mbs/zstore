@@ -254,15 +254,7 @@ class Base extends \Zippy\Html\WebPage
 
         $duration = \App\Session::getSession()->duration() ;
         $this->_tvars['showtips'] = $duration < 300   ;
-
-       
-       $last =  intval(\App\Helper::getVal('lastcronh') );
-       if( (time() - $last) > 4000){
-            \App\Application::addJavaScript("fetch('/crontab.php')") ;
-       } ;
-           
-        
-
+   
     }
 
     public function LogoutClick($sender) {

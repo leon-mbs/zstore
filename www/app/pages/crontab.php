@@ -2,7 +2,7 @@
 
 namespace App\Pages;
 
-use App\Entity\Notify;
+use App\Entity\CronTask;
 use App\Helper as H;
 use App\System;
 use ZCL\DB\EntityDataSource;
@@ -35,6 +35,13 @@ class CronTab extends \App\Pages\Base
         $this->add(new ClickLink('ton',$this,'OnToogle'));
         $this->add(new ClickLink('toff',$this,'OnToogle'));
 
+        $this->ds = new EntityDataSource("\\App\\Entity\\CronTask", "", " id asc");
+        
+        
+        $this->add(new DataView("nlist", $this->ds, $this, 'OnRow'));
+        $this->nlist->setPageSize(H::getPG());
+        $this->add(new \Zippy\Html\DataList\Pager("pag", $this->nlist));
+          
         $this->OnUpdate(null);    
     }
  
@@ -43,10 +50,14 @@ class CronTab extends \App\Pages\Base
         $cron = System::getOption('common','cron') ?? false;
         $this->ton->setVisible($cron==true) ;
         $this->toff->setVisible($cron == false) ;
+        
+        $this->nlist->Reload() ;
+        
+        
     } 
     
     public  function OnToogle($sender){
-         if($sender->id=='toff'){
+         if($sender->id == 'toff'){
             System::setOption('common','cron',true) ;
          } else {
             System::setOption('common','cron',false) ;
@@ -54,6 +65,13 @@ class CronTab extends \App\Pages\Base
          $this->OnUpdate(null);
     }
     
+    public function OnRow($row) {
+        $task = $row->getDataItem();
+        $names = CronTask::getTypes() ;
+        $row->add(new Label("ndate"))->setText( \App\Helper::fdt( $task->created ));
+        $row->add(new Label("ntype"))->setText( $names[$task->tasktype]  );
 
+   
+    }
     
 }

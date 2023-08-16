@@ -19,24 +19,11 @@ class CronTask  extends \ZCL\DB\Entity
 
     }
 
-    protected function beforeSave() {
-        parent::beforeSave();
-        $this->details = "<details>";
-        $this->details .= "<type>{$this->type}</type>";
-        $this->details .= "<data><![CDATA[". serialize($this->data ?? [])  ."]]></data>";
-        $this->details .= "</details>";
-
-        return true;
-    }
-    
+ 
     protected function afterLoad() {
 
         $this->created = strtotime($this->created);
-
-        $xml = @simplexml_load_string($this->details);
-  
-        $this->data = unserialize(  (string)($xml->data[0]) );
-        $this->type = (int)($xml->type[0]);
+ 
 
         parent::afterLoad();
     }     
@@ -52,9 +39,22 @@ class CronTask  extends \ZCL\DB\Entity
             
             $queue = CronTask::find("","id asc",100) ;
             foreach($queue as $task) {
-                
+               $done = false;
+               if($task->tasktype=='subsemail')  {
+                   $msg =unserialize( $task->taskdata);
+                   
+                   $ret = \App\Entity\Subscribe::sendEmail($msg['email'], $msg['text'],$msg['subject'] , $msg['document_id'] > 0 ? \App\Entity\Doc\Document::load($msg['document_id'])   : null );                    
+                   if(strlen($ret)==0) {
+                       $done = true;
+                   }
+                   
+               }
+               
+               if($done) {
+                  CronTask::delete($task->id) ;    
+               }
+               
             }
-            
             
             //задачи  раз  в  час
             $last =  intval(\App\Helper::getVal('lastcronh') );
@@ -90,8 +90,14 @@ class CronTask  extends \ZCL\DB\Entity
             }
            
         }
-        
-        
-        
+          
     }
+    
+    public  static function getTypes(){
+        $ret=[];
+        $ret['subsemail']  = 'Email по  подписке  ';
+        
+        return $ret;
+    }
+    
 }
