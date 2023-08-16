@@ -164,7 +164,7 @@ class ChatBot
 
     public function sendMessage($chat_id, $msg) {
 
-        $this->doGet('sendMessage', array('chat_id'=>$chat_id,'text'=>$msg)) ;
+        $this->doGet('sendMessage',array('chat_id'=>$chat_id,'text'=>$msg, 'parse_mode'=>'HTML')) ; 
     }
     public function sendDocument($chat_id, $filepath, $filename, $mime='application/pdf', $caption='') {
 
