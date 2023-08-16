@@ -55,7 +55,8 @@ FROM ((`eventlist` `e`
 CREATE TABLE crontask (
   id int(11) NOT NULL AUTO_INCREMENT,
   created datetime NOT NULL,
-  details text NOT NULL,
+  tasktype varchar(64) DEFAULT NULL,
+  taskdata text DEFAULT NULL,
   PRIMARY KEY (id)
 )  DEFAULT CHARSET=utf8; 
  ;    
