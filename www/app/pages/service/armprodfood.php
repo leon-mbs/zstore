@@ -109,7 +109,7 @@ class ArmProdFood extends \App\Pages\Base
 
 
     }
-   public function onInprocess($args, $post) {
+    public function onInprocess($args, $post) {
 
 
         $doc = Document::load($args[0]);
@@ -146,9 +146,9 @@ class ArmProdFood extends \App\Pages\Base
 
 
     }
-  
 
-  public function onSend($args, $post) {
+
+    public function onSend($args, $post) {
 
 
         $doc = Document::load($args[0]);
@@ -186,7 +186,7 @@ class ArmProdFood extends \App\Pages\Base
 
     }
 
-     
+
 
     public function getItems($args, $post) {
 
@@ -203,7 +203,7 @@ class ArmProdFood extends \App\Pages\Base
         foreach ($docs as $doc) {
             $items = $doc->unpackDetails('detaildata');
             foreach ($items as $rowid=>$item) {
-                if ($item->foodstate == 0 || $item->foodstate == 4 ) {
+                if ($item->foodstate == 0 || $item->foodstate == 4) {
                     continue;
                 }
 

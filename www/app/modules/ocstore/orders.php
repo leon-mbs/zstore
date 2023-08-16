@@ -14,11 +14,10 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
-use \App\Application as App;
+use App\Application as App;
 
 class Orders extends \App\Pages\Base
 {
-
     public $_neworders = array();
     public $_eorders   = array();
 
@@ -43,7 +42,7 @@ class Orders extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('status', $statuses, 0));
         $this->add(new Form('filter2'))->onSubmit($this, 'onOutcome');
         $this->filter2->add(new DropDownChoice('store', \App\Entity\Store::getList(), 0));
-        $this->filter2->add(new DropDownChoice('kassa', \App\Entity\MoneyFund::getList(),\App\Helper::getDefMF()));
+        $this->filter2->add(new DropDownChoice('kassa', \App\Entity\MoneyFund::getList(), \App\Helper::getDefMF()));
         $this->filter2->setVisible($modules['ocoutcome'] == 1);
 
         $this->add(new DataView('neworderslist', new ArrayDataSource(new Prop($this, '_neworders')), $this, 'noOnRow'));
@@ -60,7 +59,7 @@ class Orders extends \App\Pages\Base
     }
 
     public function filterOnSubmit($sender) {
-        
+
         if(strlen(System::getSession()->octoken)==0) {
             Helper::connect();
         }
@@ -70,7 +69,7 @@ class Orders extends \App\Pages\Base
 
         $this->_neworders = array();
         $fields = array(
-            'status_id' => $status,    
+            'status_id' => $status,
         );
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/orders&' . System::getSession()->octoken;
         if($modules['ocv4']==1) {
@@ -88,15 +87,15 @@ class Orders extends \App\Pages\Base
         }
         if ($data['error'] == "") {
             $conn = \ZDB\DB::getConnect();
- 
+
 
             foreach ($data['orders'] as $ocorder) {
 
 
-              $cnt  = $conn->getOne("select count(*) from documents_view where (meta_name='Order' or meta_name='TTN') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'")  ;
+                $cnt  = $conn->getOne("select count(*) from documents_view where (meta_name='Order' or meta_name='TTN') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'")  ;
 
-             //   $isorder = Document::findCnt(" (meta_name='Order' or meta_name='TTN') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'");
-                if ( intval($cnt) > 0) { //уже импортирован
+                //   $isorder = Document::findCnt(" (meta_name='Order' or meta_name='TTN') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'");
+                if (intval($cnt) > 0) { //уже импортирован
                     continue;
                 }
                 foreach ($ocorder['_products_'] as $product) {
@@ -107,14 +106,14 @@ class Orders extends \App\Pages\Base
                 }
 
                 $order = new \App\DataItem($ocorder);
-                      
+
                 $this->_neworders[$ocorder['order_id']] = $order;
             }
 
             $this->neworderslist->Reload();
         } else {
-            $data['error']  = str_replace("'","`",$data['error']) ;
-            
+            $data['error']  = str_replace("'", "`", $data['error']) ;
+
             $this->setErrorTopPage($data['error']);
         }
     }
@@ -147,7 +146,7 @@ class Orders extends \App\Pages\Base
             $j=0;           //товары
             $tlist = array();
             foreach ($shoporder->_products_ as $product) {
-                //ищем по артикулу 
+                //ищем по артикулу
                 if (strlen($product['sku']) == 0) {
                     continue;
                 }
@@ -174,7 +173,7 @@ class Orders extends \App\Pages\Base
                 $total  = $total +  ($tovar->quantity * $tovar->price) ;
                 $tlist[$j] = $tovar;
             }
-            if(count($tlist)==0)  {
+            if(count($tlist)==0) {
                 return;
             }
             $neworder->packDetails('detaildata', $tlist);
@@ -182,7 +181,7 @@ class Orders extends \App\Pages\Base
             $neworder->payamount = \App\Helper::fa($shoporder->total);
             $neworder->headerdata['totaldisc']  = $neworder->amount - $neworder->payamount;
 
-              
+
             $neworder->headerdata['outnumber'] = $shoporder->order_id;
             $neworder->headerdata['ocorder'] = $shoporder->order_id;
             $neworder->headerdata['ocorderback'] = 0;
@@ -208,7 +207,7 @@ class Orders extends \App\Pages\Base
                     $cust->save();
                 }
                 $neworder->customer_id = $cust->customer_id;
-            }  
+            }
 
 
             if (strlen($shoporder->email) > 0) {
@@ -222,16 +221,16 @@ class Orders extends \App\Pages\Base
             $neworder->notes .= " Коментар:" . $shoporder->comment . ";";
             $neworder->save();
             $neworder->updateStatus(Document::STATE_NEW);
-            if($modules['ocsetpayamount']==1){
-                $neworder->updateStatus(\App\Entity\Doc\Document::STATE_WP);                    
-            }   else {
-                $neworder->updateStatus(\App\Entity\Doc\Document::STATE_INPROCESS);                    
-            }             
+            if($modules['ocsetpayamount']==1) {
+                $neworder->updateStatus(\App\Entity\Doc\Document::STATE_WP);
+            } else {
+                $neworder->updateStatus(\App\Entity\Doc\Document::STATE_INPROCESS);
+            }
 
 
             $i++;
         }
-        $this->setInfo("Імпортовано {$i} замовлень" );
+        $this->setInfo("Імпортовано {$i} замовлень");
 
         $this->_neworders = array();
         $this->neworderslist->Reload();
@@ -271,7 +270,7 @@ class Orders extends \App\Pages\Base
                     $tovar->quantity = $product['quantity'];
 
                     $qty = $tovar->getQuantity($store);
-                    if ($qty < $tovar->quantity) {               
+                    if ($qty < $tovar->quantity) {
                         $this->setError("На складі всього ".\App\Helper::fqty($qty)." ТМЦ {$tovar->itemname}. Списання у мінус заборонено");
                         return;
                     }
@@ -300,7 +299,7 @@ class Orders extends \App\Pages\Base
                 $totalpr = 0;
                 $tlist = array();
                 foreach ($shoporder->_products_ as $product) {
-                    //ищем по артикулу 
+                    //ищем по артикулу
                     if (strlen($product['sku']) == 0) {
                         continue;
                     }
@@ -356,18 +355,18 @@ class Orders extends \App\Pages\Base
 
                 $i++;
             }
-            
-          $conn->CommitTrans();
-            
-            
+
+            $conn->CommitTrans();
+
+
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
-        
-           
+
+
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " OCStore "  );
+            $logger->error($ee->getMessage() . " OCStore ");
             return;
         }
 
@@ -428,7 +427,7 @@ class Orders extends \App\Pages\Base
         );
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/updateorder&' . System::getSession()->octoken;
         if($modules['ocv4']==1) {
-           $url = $modules['ocsite'] . '/index.php?route=api/zstore.updateorder&' . System::getSession()->octoken;
+            $url = $modules['ocsite'] . '/index.php?route=api/zstore.updateorder&' . System::getSession()->octoken;
         }
 
         $json = Helper::do_curl_request($url, $fields);
@@ -438,13 +437,13 @@ class Orders extends \App\Pages\Base
         $data = json_decode($json, true);
 
         if ($data['error'] != "") {
-            $data['error']  = str_replace("'","`",$data['error']) ;
-            
+            $data['error']  = str_replace("'", "`", $data['error']) ;
+
             $this->setErrorTopPage($data['error']);
             return;
         }
 
-        $this->setSuccess("Оновлено ".count($elist)." замовлень" );
+        $this->setSuccess("Оновлено ".count($elist)." замовлень");
 
         foreach ($this->_eorders as $order) {
             if ($order->ch == false) {

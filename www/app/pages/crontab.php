@@ -29,49 +29,49 @@ class CronTab extends \App\Pages\Base
         }
 
         $this->_tvars['url']  = _BASEURL.'crontab.php';
-        $this->_tvars['lasttime']  = date('Y-m-d H:i', H::getVal('lastcron') );
-        
-        $this->add(new ClickLink('update',$this,'OnUpdate'));
-        $this->add(new ClickLink('ton',$this,'OnToogle'));
-        $this->add(new ClickLink('toff',$this,'OnToogle'));
+        $this->_tvars['lasttime']  = date('Y-m-d H:i', H::getVal('lastcron'));
+
+        $this->add(new ClickLink('update', $this, 'OnUpdate'));
+        $this->add(new ClickLink('ton', $this, 'OnToogle'));
+        $this->add(new ClickLink('toff', $this, 'OnToogle'));
 
         $this->ds = new EntityDataSource("\\App\\Entity\\CronTask", "", " id asc");
-        
-        
+
+
         $this->add(new DataView("nlist", $this->ds, $this, 'OnRow'));
         $this->nlist->setPageSize(H::getPG());
         $this->add(new \Zippy\Html\DataList\Pager("pag", $this->nlist));
-          
-        $this->OnUpdate(null);    
-    }
- 
 
-    public  function OnUpdate($sender){
-        $cron = System::getOption('common','cron') ?? false;
+        $this->OnUpdate(null);
+    }
+
+
+    public function OnUpdate($sender) {
+        $cron = System::getOption('common', 'cron') ?? false;
         $this->ton->setVisible($cron==true) ;
         $this->toff->setVisible($cron == false) ;
-        
+
         $this->nlist->Reload() ;
-        
-        
-    } 
-    
-    public  function OnToogle($sender){
-         if($sender->id == 'toff'){
-            System::setOption('common','cron',true) ;
-         } else {
-            System::setOption('common','cron',false) ;
-         }
-         $this->OnUpdate(null);
+
+
     }
-    
+
+    public function OnToogle($sender) {
+        if($sender->id == 'toff') {
+            System::setOption('common', 'cron', true) ;
+        } else {
+            System::setOption('common', 'cron', false) ;
+        }
+        $this->OnUpdate(null);
+    }
+
     public function OnRow($row) {
         $task = $row->getDataItem();
         $names = CronTask::getTypes() ;
-        $row->add(new Label("ndate"))->setText( \App\Helper::fdt( $task->created ));
-        $row->add(new Label("ntype"))->setText( $names[$task->tasktype]  );
+        $row->add(new Label("ndate"))->setText(\App\Helper::fdt($task->created));
+        $row->add(new Label("ntype"))->setText($names[$task->tasktype]);
 
-   
+
     }
-    
+
 }

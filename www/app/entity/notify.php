@@ -27,7 +27,7 @@ class Notify extends \ZCL\DB\Entity
         $this->user_id = 0;
         $this->message = '';
         $this->dateshow = time();
-        
+
     }
 
     protected function afterLoad() {

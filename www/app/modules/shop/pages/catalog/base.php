@@ -78,7 +78,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["isfood"] = $this->op['ordertype'] == 2;
         $this->_tvars["logo"] = false;
         if(strlen($this->op['logo'])>0) {
-            $this->_tvars["logo"] = $this->op['logo'];    
+            $this->_tvars["logo"] = $this->op['logo'];
         }
 
         $this->_tvars["np"] = $modules['np'] == 1 && $this->op['ordertype'] != 2;

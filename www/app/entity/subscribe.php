@@ -173,21 +173,20 @@ class Subscribe extends \ZCL\DB\Entity
                 $ret =   self::sendSMS($phone, $text);
             }
             if (strlen($email) > 0 && $sub->msg_type == self::MSG_EMAIL) {
-                
-                if(\App\System::getOption('common','cron') ?? false ==true)  {
-                      $task = new  \App\Entity\CronTask();
-                      $task->tasktype='subsemail';
-                      $task->taskdata= serialize(array(
-                         'email'=>$email ,
-                         'subject'=>$sub->msgsubject ,
-                         'text'=>$text ,
-                         'document_id'=> $sub->attach==1 ? $doc->document_id : 0
-                      ));
-                      
-                      $task->save();  
-                }
-                else {
-                    $ret =   self::sendEmail($email, $text, $sub->msgsubject, $sub->attach==1 ? $doc : null);                    
+
+                if(\App\System::getOption('common', 'cron') ?? false ==true) {
+                    $task = new  \App\Entity\CronTask();
+                    $task->tasktype='subsemail';
+                    $task->taskdata= serialize(array(
+                       'email'=>$email ,
+                       'subject'=>$sub->msgsubject ,
+                       'text'=>$text ,
+                       'document_id'=> $sub->attach==1 ? $doc->document_id : 0
+                    ));
+
+                    $task->save();
+                } else {
+                    $ret =   self::sendEmail($email, $text, $sub->msgsubject, $sub->attach==1 ? $doc : null);
                 }
 
             }
@@ -227,7 +226,9 @@ class Subscribe extends \ZCL\DB\Entity
 
         $header = array();
 
+
         $header['document_number'] = $doc->document_number;
+        $header['doc_dn'] = intval(preg_replace('/[^0-9]/', '', $doc->document_number));
         $header['document_date'] = \App\Helper::fd($doc->document_date);
         $header['document_type'] = $doc->meta_desc;
         $header['amount'] = \App\Helper::fa($doc->amount);

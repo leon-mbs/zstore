@@ -13,7 +13,6 @@ use Zippy\WebApplication as App;
 
 class Options extends \App\Pages\Base
 {
-
     public function __construct() {
         parent::__construct();
 
@@ -35,7 +34,7 @@ class Options extends \App\Pages\Base
         $form->add(new CheckBox('setpayamount', $modules['ocsetpayamount']));
         $form->add(new CheckBox('v4', $modules['ocv4']));
         $form->add(new TextArea('key', $modules['ockey']));
-        
+
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['ocpricetype']));
         $form->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), $modules['ocsalesource']));
 
@@ -47,7 +46,7 @@ class Options extends \App\Pages\Base
         $site = $this->cform->site->getText();
         $apiname = $this->cform->apiname->getText();
         $key = $this->cform->key->getText();
-        
+
         $pricetype = $this->cform->defpricetype->getValue();
         $salesource = $this->cform->salesource->getValue();
         $outcome = $this->cform->outcome->isChecked() ? 1 : 0;
@@ -55,7 +54,7 @@ class Options extends \App\Pages\Base
         $v4 = $this->cform->v4->isChecked() ? 1 : 0;
         $insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
         $setpayamount = $this->cform->setpayamount->isChecked() ? 1 : 0;
-        
+
         if (strlen($pricetype) < 2) {
 
             $this->setError('Не вказано тип ціни');

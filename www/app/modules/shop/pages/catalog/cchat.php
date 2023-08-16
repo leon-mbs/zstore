@@ -18,7 +18,7 @@ class CChat extends \Zippy\Html\WebPage
             die;
         }
         $this->_uri = $_SERVER['REQUEST_URI'] ;
-        
+
         $this->_doc = \App\Entity\Doc\Document::load($doc_id) ;
         if($this->_doc==null) {
             http_response_code(404) ;
@@ -66,14 +66,14 @@ class CChat extends \Zippy\Html\WebPage
             $m['message']  = $msg->message;
             $m['checked']  = $msg->checked==1;
             $m['msgdate'] = date('Y-m-d H:i', $msg->created);
- 
+
             $this->_tvars['msglist'][] = $m;
-            
-            if($m['isseller'] ) {
-               $msg->checked = 1;    
-               $msg->save();    
+
+            if($m['isseller']) {
+                $msg->checked = 1;
+                $msg->save();
             }
-            
+
         }
-     }
+    }
 }

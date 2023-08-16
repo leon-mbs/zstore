@@ -148,7 +148,7 @@ class MenuList extends \App\Pages\Base
         $item->disabled = 1;
         $item->save();
 
-        $this->listpan->metarow->Reload();    
+        $this->listpan->metarow->Reload();
         \App\Session::getSession()->menu = [];
     }
 
@@ -157,7 +157,7 @@ class MenuList extends \App\Pages\Base
         $item->disabled = 0;
         $item->save();
 
-        $this->listpan->metarow->Reload(); 
+        $this->listpan->metarow->Reload();
         \App\Session::getSession()->menu = [];
     }
 
@@ -165,7 +165,7 @@ class MenuList extends \App\Pages\Base
         $item = $sender->getOwner()->getDataItem();
         \App\Entity\MetaData::delete($item->meta_id);
 
-        $this->listpan->metarow->Reload();  
+        $this->listpan->metarow->Reload();
         \App\Session::getSession()->menu = [];
     }
 
@@ -193,8 +193,8 @@ class MenuList extends \App\Pages\Base
         //обнуляем  поля   формы
         $this->editpan->editform->edit_description->setText('');
         $this->editpan->editform->edit_meta_name->setText('');
-        $this->editpan->editform->edit_menugroup->setText('');   
-        
+        $this->editpan->editform->edit_menugroup->setText('');
+
         \App\Session::getSession()->menu = [];
     }
 

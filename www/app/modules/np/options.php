@@ -163,7 +163,7 @@ class Options extends \App\Pages\Base
         file_put_contents(_ROOT . "upload/citylist.dat", $d);
 
         gc_collect_cycles() ;
-        
+
         $wlist = array();
         $tmplist = $api->getWarehouses('');
 
@@ -172,7 +172,7 @@ class Options extends \App\Pages\Base
         }
         unset($tmplist) ;
         gc_collect_cycles() ;
- 
+
         $d = serialize($wlist);
         unset($wlist) ;
         file_put_contents(_ROOT . "upload/pointlist.dat", $d);

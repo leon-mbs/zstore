@@ -80,7 +80,7 @@ class System
         $rs = $conn->GetOne("select optvalue from options where optname='{$group}' ");
         if (strlen($rs) > 0) {
             if(!$isserialise) {
-                self::$_options[$group] = $rs;                
+                self::$_options[$group] = $rs;
                 return $rs;
             }  //неупакопано
 
@@ -123,17 +123,17 @@ class System
     }
     /**
     * установить отьедный параметр
-    * 
+    *
     * @param mixed $group
     * @param mixed $option
     * @param mixed $value
     */
-    public static function setOption($group, $option,$value) {
+    public static function setOption($group, $option, $value) {
 
         $options = self::getOptions($group);
         $options[$option]  = $value;
 
-        self::setOptions($group,$options) ;
+        self::setOptions($group, $options) ;
     }
     public static function setCache($key, $data) {
         self::$_cache[$key] = $data;

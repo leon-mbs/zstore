@@ -39,7 +39,7 @@ class OrderList extends \App\Pages\Base
         if (false == \App\ACL::checkShowReg('OrderList')) {
             return;
         }
-        $this->_issms = (System::getOption('sms','smstype')??0) >0 ;
+        $this->_issms = (System::getOption('sms', 'smstype')??0) >0 ;
 
         $this->add(new Panel("listpanel"));
 
@@ -110,11 +110,11 @@ class OrderList extends \App\Pages\Base
         $this->editpanel->editform->add(new SubmitButton('editcancel'))->onClick($this, 'editOnSubmit');
         $this->editpanel->editform->add(new SubmitButton('editsave'))->onClick($this, 'editOnSubmit');
         $this->editpanel->editform->add(new SubmitButton('editready'))->onClick($this, 'editOnSubmit');
-        $this->editpanel->editform->add(new DataView('edititemlist', new \Zippy\Html\DataList\ArrayDataSource($this,'_itemlist') , $this, 'editlistOnRow'));
+        $this->editpanel->editform->add(new DataView('edititemlist', new \Zippy\Html\DataList\ArrayDataSource($this, '_itemlist'), $this, 'editlistOnRow'));
         $this->editpanel->editform->add(new TextInput('editbarcode'));
         $this->editpanel->editform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
-          
-            
+
+
     }
 
     public function filterOnSubmit($sender) {
@@ -664,33 +664,33 @@ class OrderList extends \App\Pages\Base
         $this->payform->setVisible(false);
 
         $this->_doc = Document::load($this->_doc->document_id);
-        
+
         $this->editpanel->editdn->setText($this->_doc->document_number);
         $this->_itemlist = [];
-        foreach($this->_doc->unpackDetails('detaildata')  as $it){
-           
-           $it->checked = $it->checked ?? false; 
-           $it->checkedqty =   0; 
-           $this->_itemlist[] = $it;
-             
+        foreach($this->_doc->unpackDetails('detaildata')  as $it) {
+
+            $it->checked = $it->checked ?? false;
+            $it->checkedqty =   0;
+            $this->_itemlist[] = $it;
+
         };
-        
+
         $this->editpanel->editform->edititemlist->Reload();
-       
+
     }
-   
+
     public function editlistOnRow($row) {
         $item = $row->getDataItem();
-        $row->add(new  Label('editlistname',$item->itemname) );
-        $row->add(new  Label('editlistcode',$item->item_code) );
-        $row->add(new  Label('editlistbarcode',$item->bar_code) );
-        $row->add(new  Label('editlistqty',$item->quantity) );
+        $row->add(new  Label('editlistname', $item->itemname));
+        $row->add(new  Label('editlistcode', $item->item_code));
+        $row->add(new  Label('editlistbarcode', $item->bar_code));
+        $row->add(new  Label('editlistqty', $item->quantity));
         $row->add(new CheckBox('checkscan', new \Zippy\Binding\PropertyBinding($item, 'checked')));
-       
+
     }
- 
+
     public function addcodeOnClick($sender) {
-        $code = trim( $this->editpanel->editform->editbarcode->getText());
+        $code = trim($this->editpanel->editform->editbarcode->getText());
 
         $code0 = ltrim($code, '0');
 
@@ -702,13 +702,13 @@ class OrderList extends \App\Pages\Base
         foreach ($this->_itemlist as $ri => $_item) {
             if ($_item->bar_code == $code || $_item->item_code == $code || $_item->bar_code == $code0 || $_item->item_code == $code0) {
                 $this->_itemlist[$ri]->checkedqty += 1;
-                if( $this->_itemlist[$ri]->checkedqty >=  $this->_itemlist[$ri]->quantity) {
-                     $this->_itemlist[$ri]->checked = true;
+                if($this->_itemlist[$ri]->checkedqty >=  $this->_itemlist[$ri]->quantity) {
+                    $this->_itemlist[$ri]->checked = true;
                 }
 
                 $this->editpanel->editform->edititemlist->Reload();
                 $this->addJavaScript("new Audio('/assets/good.mp3').play()", true);
-  
+
                 return;
             }
         }
@@ -716,29 +716,29 @@ class OrderList extends \App\Pages\Base
 
 
     }
- 
-   
+
+
     public function editOnSubmit($sender) {
 
-        
-        
+
+
         foreach ($this->_itemlist as   $_item) {
             if($sender->id == "editready" && $_item->checked != true) {
                 $this->setError('Не зібрані всі позиції') ;
-         
+
                 return;
             }
         }
-   
-        
-        $this->_doc->packDetails('detaildata',$this->_itemlist)  ;
+
+
+        $this->_doc->packDetails('detaildata', $this->_itemlist)  ;
         $this->_doc->save();
         if ($sender->id == "editready") {
             $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
             $this->listpanel->doclist->Reload(false);
-            
+
         }
-       
+
         $this->editpanel->setVisible(false);
         $this->listpanel->setVisible(true);
 
@@ -788,13 +788,13 @@ class OrderList extends \App\Pages\Base
 
 
             $ret['msglist'][] = $m;
-            
-            if(!$m['isseller'] ) {
-               $msg->checked = 1;    
-               $msg->save();    
-            }            
-            
-            
+
+            if(!$m['isseller']) {
+                $msg->checked = 1;
+                $msg->save();
+            }
+
+
         }
 
 
@@ -830,8 +830,8 @@ class OrderList extends \App\Pages\Base
 
         $text = "Маємо запитання  по  вашому  замовленню. Відповісти за адресою ".$link;
 
-        $r = \App\Entity\Subscribe::sendSMS($phone,$text) ;
-        if($r!=""){
+        $r = \App\Entity\Subscribe::sendSMS($phone, $text) ;
+        if($r!="") {
             return json_encode(array('error'=>$r), JSON_UNESCAPED_UNICODE);
         }
 

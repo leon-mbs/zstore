@@ -218,7 +218,7 @@ class GoodsIssue extends \App\Pages\Base
                             $order->unreserve();
                         }
 
-   
+
                         // $this->calcTotal();
                         $this->docform->total->setText($basedoc->amount);
 
@@ -620,7 +620,7 @@ class GoodsIssue extends \App\Pages\Base
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
-    
+
 
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
@@ -699,10 +699,10 @@ class GoodsIssue extends \App\Pages\Base
                         \App\Entity\Notify::toSystemLog($msg) ;
                     }
 
-                    if( $this->_doc->payamount >0 && $order->meta_name =='Order') {
+                    if($this->_doc->payamount >0 && $order->meta_name =='Order') {
                         if ($order->state == Document::STATE_READYTOSHIP) {
-                           $order->updateStatus(Document::STATE_CLOSED);
-                        }                                               
+                            $order->updateStatus(Document::STATE_CLOSED);
+                        }
                     }
                 }
             } else {

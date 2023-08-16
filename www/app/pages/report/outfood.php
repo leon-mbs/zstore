@@ -50,12 +50,12 @@ class OutFood extends \App\Pages\Base
 
         $detail = array();
         $detail2 = array();
-     
-     
+
+
         $conn = \ZDB\DB::getConnect();
 
         if($rtype ==0) {
-           
+
             $sql = "
               SELECT  DATE(document_date) AS dt,COUNT(*) AS qty  FROM documents_view dv  
                 WHERE  dv.meta_name='OrderFood' AND  state = 9
@@ -68,7 +68,7 @@ class OutFood extends \App\Pages\Base
 
             $rs = $conn->Execute($sql);
 
-            
+
             $days =[];
             $days[1]= 'Пн';
             $days[2]= 'Вт';
@@ -77,53 +77,53 @@ class OutFood extends \App\Pages\Base
             $days[5]= 'Пт';
             $days[6]= 'Сб';
             $days[0]= 'Нд';
-            
+
             foreach ($rs as $row) {
-               $t = strtotime(  $row['dt'] ) ;
-               $w = date('w',$t);
+                $t = strtotime($row['dt']) ;
+                $w = date('w', $t);
                 $detail[] = array(
-                    "dt"  =>  H::fd(  $t),
+                    "dt"  =>  H::fd($t),
                     "day"  => $days[$w],
-         
-                    "qty" => H::fqty($row['qty'])
+
+                    "qty" => intval($row['qty'])
                 );
 
             }
-     
+
         }
- 
+
         if($rtype == 1) {
-          
-          
-          
-           
-          $sql = " dv.meta_name='OrderFood' AND  state = 9      
+
+
+
+
+            $sql = " dv.meta_name='OrderFood' AND  state = 9      
                AND DATE(dv.document_date) >= " . $conn->DBDate($from) . "
                 AND DATE(dv.document_date) <= " . $conn->DBDate($to).' ' ;
 
-          $sql="select i.itemname, sum(0-e.quantity) as qty,sum((e.outprice )*(0-e.quantity)) as am from entrylist_view e 
+            $sql="select i.itemname, sum(0-e.quantity) as qty,sum((e.outprice )*(0-e.quantity)) as am from entrylist_view e 
           join  items i on e.item_id = i.item_id 
           where   (e.tag = 0 or e.tag = -1  or e.tag = -4)
           and document_id in( select document_id from documents_view dv where  dv.meta_name='OrderFood' AND  state = 9      
                AND DATE(dv.document_date) >= " . $conn->DBDate($from) . "
                 AND DATE(dv.document_date) <= " . $conn->DBDate($to).' ) 
                group  by  i.itemname
-               order  by  i.itemname ';   
+               order  by  i.itemname ';
 
-           
-           $rs = $conn->Execute($sql);
-    
+
+            $rs = $conn->Execute($sql);
+
             foreach ($rs as $row) {
-      
+
                 $detail2[] = array(
                     "name"  => $row['itemname'],
                     "qty"  => H::fa($row['qty']),
-         
+
                     "sum" => H::fqty($row['am'])
                 );
 
             }
-     
+
         }
 
         $header = array('datefrom' => \App\Helper::fd($from),
@@ -133,7 +133,7 @@ class OutFood extends \App\Pages\Base
                         "isd2" => $rtype==1,
                         'dateto'   => \App\Helper::fd($to)
                       );
-  
+
         $report = new \App\Report('report/outfood.tpl');
 
         $html = $report->generate($header);

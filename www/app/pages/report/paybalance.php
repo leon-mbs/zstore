@@ -213,7 +213,7 @@ class PayBalance extends \App\Pages\Base
         $header['tvc'] = H::fa($OPOUT);   //переменные затраты
         $header['OP'] = H::fa($tout - $OPOUT);  //операционные расходы
         $header['PR'] = H::fa($header['tu'] - $header['OP']);  // прибыль
-             
+
         $inv = 0;
 
         foreach (\App\Entity\Equipment::find('disabled<>1') as $oc) {

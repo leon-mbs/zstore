@@ -73,8 +73,8 @@ class Base extends \Zippy\Html\WebPage
 
         $this->add(new ClickLink('logout', $this, 'LogoutClick'));
         $this->add(new Label('username', $user->username));
-       
-       
+
+
         //меню
         $menu = Session::getSession()->menu ?? [];
         if(count($menu)==0) {
@@ -85,7 +85,7 @@ class Base extends \Zippy\Html\WebPage
             $menu["sermenu"] = Helper::generateMenu(5);
             Session::getSession()->menu = $menu;
         }
-        
+
         $this->_tvars["docmenu"] = $menu["docmenu"];
         $this->_tvars["repmenu"] = $menu["repmenu"];
         $this->_tvars["regmenu"] = $menu["regmenu"];
@@ -254,7 +254,7 @@ class Base extends \Zippy\Html\WebPage
 
         $duration = \App\Session::getSession()->duration() ;
         $this->_tvars['showtips'] = $duration < 300   ;
-   
+
     }
 
     public function LogoutClick($sender) {

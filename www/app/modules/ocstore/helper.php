@@ -5,13 +5,11 @@ namespace App\Modules\OCStore;
 use App\System;
 use App\Helper as H;
 
-
 /**
  * Вспомагательный  класс
  */
 class Helper
 {
-
     /**
      * Функция для  работы  с  API опенкарта
      *
@@ -51,9 +49,9 @@ class Helper
         $data = json_decode($result, true);
         if ($data === null) {
             if (strlen($result) > 0) {
-                \App\System::setErrorMsg($result,true);
+                \App\System::setErrorMsg($result, true);
             } else {
-                \App\System::setErrorMsg("Немає даних відповіді",true);
+                \App\System::setErrorMsg("Немає даних відповіді", true);
             }
 
 
@@ -78,7 +76,7 @@ class Helper
 
         $url = $site . '/index.php?route=api/login';
         if($modules['ocv4']==1) {
-           $url = $site . '/index.php?route=api/account/login';
+            $url = $site . '/index.php?route=api/account/login';
         }
         $fields = array(
             'username' => $apiname,
@@ -126,7 +124,7 @@ class Helper
             //загружаем список статусов
             $url = $site . '/index.php?route=api/zstore/statuses&' . System::getSession()->octoken;
             if($modules['ocv4']==1) {
-               $url = $site . '/index.php?route=api/zstore.statuses&' . System::getSession()->octoken;
+                $url = $site . '/index.php?route=api/zstore.statuses&' . System::getSession()->octoken;
             }
             $json = Helper::do_curl_request($url, array());
             $data = json_decode($json, true);
@@ -140,7 +138,7 @@ class Helper
             //загружаем список категорий
             $url = $site . '/index.php?route=api/zstore/cats&' . System::getSession()->octoken;
             if($modules['ocv4']==1) {
-               $url = $site . '/index.php?route=api/zstore.cats&' . System::getSession()->octoken;
+                $url = $site . '/index.php?route=api/zstore.cats&' . System::getSession()->octoken;
             }
             $json = Helper::do_curl_request($url, array());
             $data = json_decode($json, true);

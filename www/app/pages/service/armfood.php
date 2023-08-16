@@ -155,16 +155,16 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->listsform->add(new TextInput('editqtyi'));
         $this->docpanel->listsform->add(new TextInput('editqtyq'));
         $this->docpanel->listsform->add(new SubmitButton('beditqty'))->onClick($this, 'editqtyOnClick');
-   
+
         $this->docpanel->add(new Form('payform'))->setVisible(false);
- 
+
         $this->docpanel->payform->add(new TextInput('pfforpay'));
         $this->docpanel->payform->add(new TextInput('pfpayed'));
         $this->docpanel->payform->add(new TextInput('pfrest'));
         $this->docpanel->payform->add(new TextInput('pftrans'));
 
         $this->docpanel->payform->add(new TextInput('pfexch2b'));
-  
+
         $this->docpanel->payform->add(new CheckBox('passfisc'));
 
         $bind = new  \Zippy\Binding\PropertyBinding($this, '_pt');
@@ -1370,7 +1370,7 @@ class ARMFood extends \App\Pages\Base
         return json_encode($itemlist, JSON_UNESCAPED_UNICODE);
     }
 
- 
+
     //фискализация
     public function OnOpenShift() {
 
