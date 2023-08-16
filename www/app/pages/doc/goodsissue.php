@@ -218,10 +218,7 @@ class GoodsIssue extends \App\Pages\Base
                             $order->unreserve();
                         }
 
-
-
-
-
+   
                         // $this->calcTotal();
                         $this->docform->total->setText($basedoc->amount);
 
@@ -232,7 +229,9 @@ class GoodsIssue extends \App\Pages\Base
                         //  $this->docform->editpayed->setText($this->docform->editpayamount->getText());
                         //   $this->docform->payed->setText($this->docform->payamount->getText());
 
-
+                        if($order->state == Document::STATE_INPROCESS) {
+                            $order->updateStatus(Document::STATE_READYTOSHIP);
+                        }
 
 
                     }
@@ -702,7 +701,7 @@ class GoodsIssue extends \App\Pages\Base
 
                     if( $this->_doc->payamount >0 && $order->meta_name =='Order') {
                         if ($order->state == Document::STATE_READYTOSHIP) {
-                        $order->updateStatus(Document::STATE_CLOSED);
+                           $order->updateStatus(Document::STATE_CLOSED);
                         }                                               
                     }
                 }
