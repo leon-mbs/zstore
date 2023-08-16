@@ -117,7 +117,7 @@ class Base extends \Zippy\Html\WebPage
 
         $text = Product::qstr('%' . $sender->getText() . '%');
         $code = Product::qstr($sender->getText());
-        $list = Product::findArray('itemname', " disabled <>1 and  detail not  like '%<noshop>1</noshop>%' and  cat_id in(select cat_id from  item_cat where detail not  like '%<noshop>1</noshop>%' ) and    (    itemname like {$text} or item_code like {$code} or bar_code like {$code}  ) ");
+        $list = Product::findArray('itemname', " disabled <>1 and  detail not  like '%<noshop>1</noshop>%' and  cat_id in(select cat_id from  item_cat where detail not  like '%<noshop>1</noshop>%' ) and    (    itemname like {$text} or description like {$text} or item_code like {$code} or bar_code like {$code}  ) ");
         foreach ($list as $k => $v) {
             $r[$k] = $v;
         }

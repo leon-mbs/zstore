@@ -223,6 +223,12 @@ class TTN extends \App\Pages\Base
                             $this->_itemlist[$i] = $it;
                         }
                         $this->calcTotal();
+                        
+                        if($order->state == Document::STATE_INPROCESS || $order->state == Document::STATE_READYTOSHIP) {
+                            $order->updateStatus(Document::STATE_INSHIPMENT);
+                        }
+                        
+                        
                     }
                     if ($basedoc->meta_name == 'Invoice') {
 
