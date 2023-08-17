@@ -36,17 +36,16 @@ class CronTask extends \ZCL\DB\Entity
     public static function do(): void {
         global $logger;
 
-        $cron =H::getKeyVal('cron') ?? false;
-        if(!$cron) {
+        if(!System::useCron()) {
            return;
         }  
         
         $last = \App\Helper::getKeyVal('lastcron')  ?? 0;
         if( (time()-last ) < self::MIN_INTERVAL  ) { //не  чаще  раза в пять минут
-       //     return;
+             return;
         }
         $stop = \App\Helper::getKeyVal('stopcron')  ?? false;
-        if($stop== false) { //уже  запущены
+        if($stop== false) { //уже  запущен 
             return;
         }
         \App\Helper::setKeyVal('lastcron', time()) ;
@@ -102,43 +101,54 @@ class CronTask extends \ZCL\DB\Entity
     }
 
     private  static function doQueue() {
+        global $logger;
+        $ok=true;
         $ret=""; 
         $conn=\Zdb\DB::getConnect() ;
         
         $queue = CronTask::find(" starton >= NOW() ", "id asc", 100) ;
         foreach($queue as $task) {
-            $done = false;
-            if($task->tasktype=='subsemail') {
-                $msg =unserialize($task->taskdata);
+            try{
+                $done = false;   
+                if($task->tasktype=='subsemail') {
+                    $msg =unserialize($task->taskdata);
 
-                $ret = \App\Entity\Subscribe::sendEmail($msg['email'], $msg['text'], $msg['subject'], $msg['document_id'] > 0 ? \App\Entity\Doc\Document::load($msg['document_id']) : null);
-                if(strlen($ret)==0) {
-                    $done = true;
+                    $ret = \App\Entity\Subscribe::sendEmail($msg['email'], $msg['text'], $msg['subject'], $msg['document_id'] > 0 ? \App\Entity\Doc\Document::load($msg['document_id']) : null);
+                    if(strlen($ret)==0) {
+                        $done = true;
+                    }
+
                 }
 
-            }
-
-           if($task->tasktype=='eventcust') {
-                $data =unserialize($task->taskdata);
-                $text = $date['text']  ;
-                $user = \App\Entity\User::load($data['user_id']);
-                
-                if(strlen($u->chat_id) >0){
-                  $ret= \App\Entity\Subscribe::sendBot($u->chat_id,$text) ;
-                } else
-                if(strlen($u->email) >0  && System::useEmail()){
-                  $ret= \App\Entity\Subscribe::sendEmail($u->email,$text,"XStore  notify") ;
+               if($task->tasktype=='eventcust') {
+                    $data =unserialize($task->taskdata);
+                    $text = $date['text']  ;
+                    $user = \App\Entity\User::load($data['user_id']);
+                    
+                    if(strlen($u->chat_id) >0){
+                      $ret= \App\Entity\Subscribe::sendBot($u->chat_id,$text) ;
+                    } else
+                    if(strlen($u->email) >0  && System::useEmail()){
+                      $ret= \App\Entity\Subscribe::sendEmail($u->email,$text,"XStore  notify") ;
+                    }
+                    if(strlen($ret)==0) {
+                        $done = true;
+                    }                
+                    
                 }
-                if(strlen($ret)==0) {
-                    $done = true;
-                }                
-                
-            }
 
-            if($done) {
-                CronTask::delete($task->id) ;
+                if($done) {
+                    CronTask::delete($task->id) ;
+                }
+            } catch(\Exception $e){
+               $msg = $ee->getMessage();
+               $logger->error($msg);
+               $ok = false;
             }
-
+        }
+        
+        if(!$ok) {
+            throw new \Exception("Cron  error. see log") ;
         }
     }
     public static function getTypes() {

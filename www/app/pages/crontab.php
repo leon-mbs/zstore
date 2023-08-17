@@ -57,6 +57,8 @@ class CronTab extends \App\Pages\Base
     public function OnToogle($sender) {
         if($sender->id == 'toff') {
              H::setKeyVal( 'cron', true) ;
+             H::setKeyVal('stopcron',true) ; //на случай  если  повис       
+              
         } else {
              H::setKeyVal( 'cron', false) ;
         }
