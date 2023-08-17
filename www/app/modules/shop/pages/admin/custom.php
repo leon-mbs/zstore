@@ -67,7 +67,7 @@ class Custom extends \App\Pages\Base
 
         $this->pagespan->plist->Reload() ;
 
-        $ar = @unserialize(\App\Helper::getVal('shop_newlist')) ;
+        $ar = @unserialize(\App\Helper::getKeyVal('shop_newlist')) ;
         if(is_array($ar)) {
             $this->_newlist = $ar;
         }
@@ -203,7 +203,7 @@ class Custom extends \App\Pages\Base
             $sender->newitem->setKey(0);
             $sender->newitem->setText('');
 
-            \App\Helper::setVal('shop_newlist', serialize($tmp))  ;
+            \App\Helper::setKeyVal('shop_newlist', serialize($tmp))  ;
         }
     }
 
@@ -231,7 +231,7 @@ class Custom extends \App\Pages\Base
         $this->_newlist= $tmp;
         $this->newlist->Reload() ;
 
-        \App\Helper::setVal('shop_newlist', serialize($tmp))  ;
+        \App\Helper::setKeyVal('shop_newlist', serialize($tmp))  ;
 
 
     }

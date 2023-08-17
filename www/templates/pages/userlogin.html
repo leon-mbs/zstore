@@ -98,7 +98,15 @@
             </div>
         </div>
 
-
+    <script>
+     {{#cron}}
+ 
+       setTimeout(() => fetch('/crontab.php')  , 30*60*1000);         
+     
+     {{/cron}} 
+    
+    </script>
+    
     </body>
 
 </html>

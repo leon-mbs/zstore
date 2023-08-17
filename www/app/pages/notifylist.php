@@ -42,8 +42,7 @@ class NotifyList extends \App\Pages\Base
 
         \App\Entity\Notify::markRead($user->user_id);
 
-        $this->filter->add(new ClickLink("delall", $this, 'OnDel'));
-
+        
     }
 
     public function OnRow($row) {
@@ -97,12 +96,5 @@ class NotifyList extends \App\Pages\Base
         $this->nlist->Reload();
     }
 
-    public function OnDel($row) {
-        $user = System::getUser();
-
-        $conn = \Zdb\DB::getConnect() ;
-
-        $conn->Execute("delete from notifies where   user_id=" . $user->user_id)  ;
-        $this->nlist->Reload();
-    }
+ 
 }

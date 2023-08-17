@@ -1051,6 +1051,7 @@ CREATE TABLE `crontask` (
   `created` datetime NOT NULL,
   tasktype varchar(64) DEFAULT NULL,
   taskdata text DEFAULT NULL,
+  starton datetime DEFAULT NULL,
 
   PRIMARY KEY (`id`)
 )  DEFAULT CHARSET=utf8;

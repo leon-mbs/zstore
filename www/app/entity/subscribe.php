@@ -174,7 +174,7 @@ class Subscribe extends \ZCL\DB\Entity
             }
             if (strlen($email) > 0 && $sub->msg_type == self::MSG_EMAIL) {
 
-                if(\App\System::getOption('common', 'cron') ?? false ==true) {
+                if( H::getKeyVal('cron') ?? false ==true) {
                     $task = new  \App\Entity\CronTask();
                     $task->tasktype='subsemail';
                     $task->taskdata= serialize(array(

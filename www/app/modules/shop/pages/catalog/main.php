@@ -51,7 +51,7 @@ class Main extends Base
 
 
 
-        $ar = @unserialize(\App\Helper::getVal('shop_newlist')) ;
+        $ar = @unserialize(\App\Helper::getKeyVal('shop_newlist')) ;
         if(is_array($ar) && COUNT($ar) >0) {
 
 

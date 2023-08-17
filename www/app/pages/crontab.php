@@ -29,15 +29,14 @@ class CronTab extends \App\Pages\Base
         }
 
         $this->_tvars['url']  = _BASEURL.'crontab.php';
-        $this->_tvars['lasttime']  = date('Y-m-d H:i', H::getVal('lastcron'));
+        $this->_tvars['lasttime']  = date('Y-m-d H:i', H::getKeyVal('lastcron'));
 
         $this->add(new ClickLink('update', $this, 'OnUpdate'));
         $this->add(new ClickLink('ton', $this, 'OnToogle'));
         $this->add(new ClickLink('toff', $this, 'OnToogle'));
 
         $this->ds = new EntityDataSource("\\App\\Entity\\CronTask", "", " id asc");
-
-
+ 
         $this->add(new DataView("nlist", $this->ds, $this, 'OnRow'));
         $this->nlist->setPageSize(H::getPG());
         $this->add(new \Zippy\Html\DataList\Pager("pag", $this->nlist));
@@ -47,20 +46,19 @@ class CronTab extends \App\Pages\Base
 
 
     public function OnUpdate($sender) {
-        $cron = System::getOption('common', 'cron') ?? false;
+        $cron =H::getKeyVal('cron') ?? false;
         $this->ton->setVisible($cron==true) ;
         $this->toff->setVisible($cron == false) ;
 
         $this->nlist->Reload() ;
 
-
     }
 
     public function OnToogle($sender) {
         if($sender->id == 'toff') {
-            System::setOption('common', 'cron', true) ;
+             H::setKeyVal( 'cron', true) ;
         } else {
-            System::setOption('common', 'cron', false) ;
+             H::setKeyVal( 'cron', false) ;
         }
         $this->OnUpdate(null);
     }

@@ -791,7 +791,10 @@ class Helper
     }
 
 
-
+    /**
+    * список валют
+    * 
+    */
     public static function getValList() {
         $val = \App\System::getOptions("val");
         if(!is_array($val['vallist'])) {
@@ -805,6 +808,12 @@ class Helper
         return $list;
     }
 
+    /**
+    * название  валюты
+    * 
+    * @param mixed $vn
+    * @return mixed
+    */
     public static function getValName($vn) {
         if ($vn == 'Гривня') {
             return 'UAH';
@@ -919,12 +928,12 @@ class Helper
 
 
     /**
-    * Получение  дангный с  таблицы ключ-значение
+    * Получение  данных с  таблицы ключ-значение
     *
     * @param mixed $key
     * @return mixed
     */
-    public static function getVal($key) {
+    public static function getKeyVal($key) {
         if(strlen($key)==0) {
             return;
         }
@@ -937,7 +946,8 @@ class Helper
         }
         return $ret;
     }
-
+    
+ 
     /**
     * Вставка  данных в  таблицу ключ-значение
     *
@@ -945,7 +955,7 @@ class Helper
     * @param mixed $data
     * @return mixed
     */
-    public static function setVal($key, $data=null) {
+    public static function setKeyVal($key, $data=null) {
         if(strlen($key)==0) {
             return;
         }
@@ -1199,10 +1209,10 @@ class Helper
 
 
     public static function getSalt() {
-        $salt= self::getVal('salt');
+        $salt= self::getKeyVal('salt');
         if(strlen($salt)==0) {
             $salt = ''. rand(1000, 999999) ;
-            self::setVal('salt', $salt);
+            self::setKeyVal('salt', $salt);
         }
         return $salt;
     }

@@ -39,6 +39,10 @@ class UserLogin extends \Zippy\Html\WebPage
 
         $this->_tvars['appname'] = $common['shopname'];
         $this->_tvars['capcha'] = $common['capcha'] == 1;
+        
+        $this->_tvars['cron']  = Helper::getKeyVal('cron') ?? false;
+        
+        
     }
 
     public function onsubmit($sender) {

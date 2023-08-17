@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Helper as H;
+
 /**
  * Класc-сущность   задача  в  очереди  планироващика
  *
@@ -11,10 +13,12 @@ namespace App\Entity;
 
 class CronTask extends \ZCL\DB\Entity
 {
+    public const MIN_INTERVAL=300;
     protected function init() {
 
         $this->id = 0;
         $this->created = time();
+        $this->starton = time();
 
     }
 
@@ -22,6 +26,7 @@ class CronTask extends \ZCL\DB\Entity
     protected function afterLoad() {
 
         $this->created = strtotime($this->created);
+        $this->starton = strtotime($this->starton);
 
 
         parent::afterLoad();
@@ -30,44 +35,47 @@ class CronTask extends \ZCL\DB\Entity
     public static function do(): void {
         global $logger;
 
-        \App\Helper::setVal('lastcron', time()) ;
-
+        $cron =H::getKeyVal('cron') ?? false;
+        if(!$cron) {
+           return;
+        }  
+        
+        $last = \App\Helper::getKeyVal('lastcron')  ?? 0;
+        if( (time()-last ) < self::MIN_INTERVAL  ) { //не  чаще  раза в пять минут
+       //     return;
+        }
+        $stop = \App\Helper::getKeyVal('stopcron')  ?? false;
+        if($stop== false) { //уже  запущены
+            return;
+        }
+        \App\Helper::setKeyVal('lastcron', time()) ;
+        \App\Helper::setKeyVal('stopcron',false) ;        
+        
         try {
-
+            $conn = \ZDB\DB::getConnect()  ;
+                
+            
             //задачи каждый  при  каждом  вызове
 
-            $queue = CronTask::find("", "id asc", 100) ;
-            foreach($queue as $task) {
-                $done = false;
-                if($task->tasktype=='subsemail') {
-                    $msg =unserialize($task->taskdata);
-
-                    $ret = \App\Entity\Subscribe::sendEmail($msg['email'], $msg['text'], $msg['subject'], $msg['document_id'] > 0 ? \App\Entity\Doc\Document::load($msg['document_id']) : null);
-                    if(strlen($ret)==0) {
-                        $done = true;
-                    }
-
-                }
-
-                if($done) {
-                    CronTask::delete($task->id) ;
-                }
-
-            }
+            self::doQueue();
 
             //задачи  раз  в  час
-            $last =  intval(\App\Helper::getVal('lastcronh'));
+            $last =  intval(\App\Helper::getKeyVal('lastcronh'));
             if((time() - $last) > 3600) {
-                \App\Helper::setVal('lastcronh', time()) ;
+                \App\Helper::setKeyVal('lastcronh', time()) ;
 
             } ;
 
 
             //задачи  раз  в  сутки
-            $last =  intval(\App\Helper::getVal('lastcrond'));
+            $last =  intval(\App\Helper::getKeyVal('lastcrond'));
             if(date('Y-m-d') != date('Y-m-d', $last)) {
-                \App\Helper::setVal('lastcrond', time()) ;
+                \App\Helper::setKeyVal('lastcrond', time()) ;
 
+                
+                //очищаем  уведомления
+                $dt = $conn->DBDate( strtotime('-1 month',time())  ) ;
+                $conn->Execute("delete  from notifies  where  dateshow < ". $dt) ;
 
 
             } ;
@@ -89,9 +97,30 @@ class CronTask extends \ZCL\DB\Entity
             }
 
         }
+        \App\Helper::setKeyVal('stopcron',true) ;
 
     }
 
+    private  static function doQueue() {
+        $queue = CronTask::find("", "id asc", 100) ;
+        foreach($queue as $task) {
+            $done = false;
+            if($task->tasktype=='subsemail') {
+                $msg =unserialize($task->taskdata);
+
+                $ret = \App\Entity\Subscribe::sendEmail($msg['email'], $msg['text'], $msg['subject'], $msg['document_id'] > 0 ? \App\Entity\Doc\Document::load($msg['document_id']) : null);
+                if(strlen($ret)==0) {
+                    $done = true;
+                }
+
+            }
+
+            if($done) {
+                CronTask::delete($task->id) ;
+            }
+
+        }
+    }
     public static function getTypes() {
         $ret=[];
         $ret['subsemail']  = 'Email по  подписке  ';

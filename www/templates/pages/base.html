@@ -1363,6 +1363,16 @@
      
  })
  
+ {{#cron}}
+ 
+    fetch('/crontab.php')  
+    setTimeout(() => fetch('/crontab.php')  , 30*60*1000);         
+ 
+ {{/cron}} 
+ 
+ 
+ 
+ 
         </script>
         {{#usemobilescanner}}
         <script src="/assets/js/quagga.min.js" type="text/javascript"></script>

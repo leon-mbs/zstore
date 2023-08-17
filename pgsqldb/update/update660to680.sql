@@ -61,6 +61,7 @@ CREATE TABLE crontask (
   created TIMESTAMP NOT NULL,
   tasktype CHARACTER VARYING(64) NOT NULL,
   taskdata text DEFAULT NULL,
+  starton TIMESTAMP DEFAULT NULL,
 
 CONSTRAINT PK_crontask PRIMARY KEY (id)
 )   
