@@ -84,9 +84,13 @@ class Subscribe extends \ZCL\DB\Entity
 
         $list = array();
         $list[self::MSG_NOTIFY] = "Системне повідомлення";
-        $list[self::MSG_EMAIL] = "E-mail";
-        $list[self::MSG_SMS] = "SMS";
-
+        if( \App\System::useEmail() ){
+           $list[self::MSG_EMAIL] = "E-mail";    
+        }
+        
+        if($sms['smstype'] > 0) {
+            $list[self::MSG_SMS] = "SMS";
+        }
 
         if($sms['smstype']==2) {
             $list[self::MSG_VIBER] =  "Viber";
@@ -174,7 +178,7 @@ class Subscribe extends \ZCL\DB\Entity
             }
             if (strlen($email) > 0 && $sub->msg_type == self::MSG_EMAIL) {
 
-                if( H::getKeyVal('cron') ?? false ==true) {
+                if( System::useCron()) {
                     $task = new  \App\Entity\CronTask();
                     $task->tasktype='subsemail';
                     $task->taskdata= serialize(array(
@@ -375,6 +379,10 @@ class Subscribe extends \ZCL\DB\Entity
     public static function sendEmail($email, $text, $subject, $doc=null) {
         global $_config;
 
+        if(System::useEmail()==false) {
+            return "No email";
+        }
+        
         $emailfrom = $_config['smtp']['emailfrom'];
         if(strlen($emailfrom)==0) {
             $emailfrom = $_config['smtp']['user'];

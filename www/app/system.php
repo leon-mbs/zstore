@@ -190,4 +190,16 @@ class System
         self::$_cache = [] ;
 
     }
+    
+    
+    public  static  function useCron(){
+       return  \App\Helper::getKeyVal('cron') ?? false;   
+    }
+    public  static  function useEmail(){
+       $o=  self::getOption('common','noemail') ?? false;
+       return !$o;
+       
+    }
+    
+     
 }

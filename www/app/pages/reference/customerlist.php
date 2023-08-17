@@ -566,16 +566,34 @@ class CustomerList extends \App\Pages\Base
         $event->save();
 
         $nt = $this->contentview->addeventform->addeventnotify->getValue();
+
         if ($nt > 0) {
 
             $n = new \App\Entity\Notify();
-            $n->user_id = System::getUser()->user_id;
-            $n->dateshow = $event->eventdate - ($nt * 3600);
+            $n->user_id = $event->user_id;
+            $n->dateshow = $event->eventdate - ($nt * 3600)  ;
             $n->message = "<b>" . $event->title . "</b>" . "<br>" . $event->description;
             $n->message .= "<br><br><b> Контрагент: </b> {$this->_customer->customer_name} &nbsp;&nbsp; {$this->_customer->phone} ";
             $n->sender_id = \App\Entity\Notify::EVENT;
             $n->save();
+             
+            if( \App\System::useCron() ) {
+               $task = new  \App\Entity\CronTask();
+                $task->tasktype='eventcust';
+                $task->taskdata= serialize(array(
+                   'user_id'=>$event->user_id ,
+                   'starton'=>$n->dateshow ,
+            
+                   'text'=>$n->message ,
+                   'document_id'=> $sub->attach==1 ? $doc->document_id : 0
+                ));
+                $task['text'] = $event->title . " " . "\n" . $event->description;
+                $task['text'] .= "\n Контрагент:  {$this->_customer->customer_name}   {$this->_customer->phone} ";
+ 
+                $task->save();                   
+            }          
         }
+
         $this->contentview->addeventform->clean();
         $this->updateEvents();
         $this->goAnkor('contentviewlink');

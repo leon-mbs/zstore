@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Helper as H;
+use App\System;
 
 /**
  * Класc-сущность   задача  в  очереди  планироващика
@@ -53,8 +54,7 @@ class CronTask extends \ZCL\DB\Entity
         
         try {
             $conn = \ZDB\DB::getConnect()  ;
-                
-            
+             
             //задачи каждый  при  каждом  вызове
 
             self::doQueue();
@@ -102,7 +102,10 @@ class CronTask extends \ZCL\DB\Entity
     }
 
     private  static function doQueue() {
-        $queue = CronTask::find("", "id asc", 100) ;
+        $ret=""; 
+        $conn=\Zdb\DB::getConnect() ;
+        
+        $queue = CronTask::find(" starton >= NOW() ", "id asc", 100) ;
         foreach($queue as $task) {
             $done = false;
             if($task->tasktype=='subsemail') {
@@ -115,6 +118,23 @@ class CronTask extends \ZCL\DB\Entity
 
             }
 
+           if($task->tasktype=='eventcust') {
+                $data =unserialize($task->taskdata);
+                $text = $date['text']  ;
+                $user = \App\Entity\User::load($data['user_id']);
+                
+                if(strlen($u->chat_id) >0){
+                  $ret= \App\Entity\Subscribe::sendBot($u->chat_id,$text) ;
+                } else
+                if(strlen($u->email) >0  && System::useEmail()){
+                  $ret= \App\Entity\Subscribe::sendEmail($u->email,$text,"XStore  notify") ;
+                }
+                if(strlen($ret)==0) {
+                    $done = true;
+                }                
+                
+            }
+
             if($done) {
                 CronTask::delete($task->id) ;
             }
@@ -123,7 +143,8 @@ class CronTask extends \ZCL\DB\Entity
     }
     public static function getTypes() {
         $ret=[];
-        $ret['subsemail']  = 'Email по  подписке  ';
+        $ret['subsemail']  = 'Email по  підписці  ';
+        $ret['eventcust']  = 'Подія з контрагентом ';
 
         return $ret;
     }

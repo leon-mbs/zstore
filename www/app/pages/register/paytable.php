@@ -85,7 +85,7 @@ class PayTable extends \App\Pages\Base
         $am = H::fa($conn->GetOne($sql));
 
         $this->_list = [];
-        foreach(Event::find("event_type=3  and (isdone <> 1 or eventdate >= CURRENT_DATE() ) ", "eventdate asc") as $event) {
+        foreach(Event::find("event_type=3  and (isdone <> 1 or eventdate >= NOW() ) ", "eventdate asc") as $event) {
 
             if($event->eventdate < time()) {
                 $event->past=true;

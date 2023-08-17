@@ -282,6 +282,11 @@ class Helper
     public static function sendLetter($emailto, $text, $subject = "") {
         global $_config;
 
+        
+        if(\App\System::useEmail() == false) {
+            return;
+        }
+        
         $emailfrom = $_config['smtp']['emailfrom'];
         if(strlen($emailfrom)==0) {
             $emailfrom = $_config['smtp']['user'];
@@ -665,6 +670,34 @@ class Helper
         return round($am);
     }
 
+   /**
+     * форматирование  сумм    с копейками для закупок
+     *
+     * @param mixed $am
+     * @return mixed
+     */
+    public static function fain($am) {
+      
+        $common = System::getOptions("common");
+        if ($common['buy2'] != 1) { //отдельная  настройка
+            return self::fa($am);
+        }     
+        if (strlen($am) == 0) {
+            return '';
+        }
+        if(is_numeric($am) && abs($am)<0.005) {
+            $am  = 0;
+        }
+        $am = str_replace(',', '.', $am);
+        $am = preg_replace("/[^0-9\.\-]/", "", $am);
+        $am = trim($am);
+
+        $am  = doubleval($am)  ;
+
+        return @number_format($am, 2, '.', '');
+
+    }
+
     /**
      * форматирование дат
      *
@@ -777,19 +810,7 @@ class Helper
         return 10;
     }
 
-    /**
-     * Возвращает языковую метку
-     *
-     * @param mixed $label
-     * @param mixed $p1
-     * @param mixed $p2
-     * @deprecated
-     */
-    public static function l($label, $p1 = "", $p2 = "", $p3 = "") {
-        return $label;
-
-    }
-
+ 
 
     /**
     * список валют
