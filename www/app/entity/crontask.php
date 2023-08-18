@@ -14,7 +14,7 @@ use App\System;
 
 class CronTask extends \ZCL\DB\Entity
 {
-    public const MIN_INTERVAL=300;
+    public const MIN_INTERVAL=300 ;
     protected function init() {
 
         $this->id = 0;
@@ -50,7 +50,7 @@ class CronTask extends \ZCL\DB\Entity
         }
         \App\Helper::setKeyVal('lastcron', time()) ;
         \App\Helper::setKeyVal('stopcron',false) ;        
-        
+         
         try {
             $conn = \ZDB\DB::getConnect()  ;
              
@@ -62,23 +62,19 @@ class CronTask extends \ZCL\DB\Entity
             $last =  intval(\App\Helper::getKeyVal('lastcronh'));
             if((time() - $last) > 3600) {
                 \App\Helper::setKeyVal('lastcronh', time()) ;
-
+               
             } ;
-
 
             //задачи  раз  в  сутки
             $last =  intval(\App\Helper::getKeyVal('lastcrond'));
             if(date('Y-m-d') != date('Y-m-d', $last)) {
                 \App\Helper::setKeyVal('lastcrond', time()) ;
 
-                
                 //очищаем  уведомления
                 $dt = $conn->DBDate( strtotime('-1 month',time())  ) ;
                 $conn->Execute("delete  from notifies  where  dateshow < ". $dt) ;
 
-
             } ;
-
 
         } catch(\Exception $ee) {
             $msg = $ee->getMessage();
@@ -97,7 +93,8 @@ class CronTask extends \ZCL\DB\Entity
 
         }
         \App\Helper::setKeyVal('stopcron',true) ;
-
+     
+ 
     }
 
     private  static function doQueue() {
@@ -106,7 +103,7 @@ class CronTask extends \ZCL\DB\Entity
         $ret=""; 
         $conn=\Zdb\DB::getConnect() ;
         
-        $queue = CronTask::find(" starton >= NOW() ", "id asc", 100) ;
+        $queue = CronTask::find(" starton <= NOW() ", "id asc", 100) ;
         foreach($queue as $task) {
             try{
                 $done = false;   
@@ -160,3 +157,4 @@ class CronTask extends \ZCL\DB\Entity
     }
 
 }
+ 

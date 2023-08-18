@@ -821,7 +821,7 @@ class OrderList extends \App\Pages\Base
             $phone = $c->phone ?? '';
         }
         if($phone == '') {
-            return json_encode(array('error'=>"Не найдений телефон"), JSON_UNESCAPED_UNICODE);
+            return json_encode(array('error'=>"Не знайдений телефон"), JSON_UNESCAPED_UNICODE);
         }
 
         $link = _BASEURL . 'cchat/' . $args[0]. '/'. $doc->headerdata['hash'];
