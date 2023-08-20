@@ -27,6 +27,7 @@ class PayTable extends \App\Pages\Base
     public $_list =[];
     public $_tp =0;
     public $_event  ;
+    public $_am =0 ;
 
     public function __construct() {
         parent::__construct();
@@ -67,13 +68,7 @@ class PayTable extends \App\Pages\Base
         $this->editeventform->add(new TextArea('editeventdesc'));
 
         $this->editeventform->add(new ClickLink('canceledit', $this, 'onCancel'));
-
-
-        $this->update();
-
-    }
-
-    public function update() {
+        
         $brids = \App\ACL::getBranchIDsConstraint();
         $brf="";
         if (strlen($brids) > 0) {
@@ -82,7 +77,17 @@ class PayTable extends \App\Pages\Base
         $conn =   \ZDB\DB::getConnect();
         $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and mf_id  in (select mf_id  from mfund where 1=1  {$brf})";
 
-        $am = H::fa($conn->GetOne($sql));
+        $this->_am = H::fa($conn->GetOne($sql));
+        
+        $this->_tvars['allcost']   = $this->_am;
+
+        $this->update();
+
+    }
+
+    public function update() {
+
+        $am =  $this->_am;
 
         $this->_list = [];
         foreach(Event::find("event_type=3  and (isdone <> 1 or eventdate >= NOW() ) ", "eventdate asc") as $event) {
@@ -159,6 +164,9 @@ class PayTable extends \App\Pages\Base
         if ($event->amount==0) {
             return;
         }
+        if ($event->amount<0) {
+            return;
+        }
         $event->event_type = Event::TYPE_PAYMENT ;
         $event->save();
 
@@ -185,6 +193,9 @@ class PayTable extends \App\Pages\Base
         $this->_event->amount = H::fa($this->editeventform->editeventamount->getText());
 
         if ($this->_event->amount==0) {
+            return;
+        }
+        if ($this->_event->amount < 0) {
             return;
         }
 
