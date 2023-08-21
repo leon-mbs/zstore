@@ -241,7 +241,7 @@ class GoodsReceipt extends \App\Pages\Base
                             $this->docform->disc->setText($invoice->headerdata['disc']);
                             $this->docform->editdisc->setText($invoice->headerdata['disc']);
 
-                           // $this->OnChangeCustomer($this->docform->customer);
+                            // $this->OnChangeCustomer($this->docform->customer);
                         }
 
 

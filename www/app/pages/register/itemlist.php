@@ -28,7 +28,7 @@ class ItemList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('ItemList')) {
-             \App\Application::RedirectHome() ;
+            \App\Application::RedirectHome() ;
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');

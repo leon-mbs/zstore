@@ -576,22 +576,22 @@ class CustomerList extends \App\Pages\Base
             $n->message .= "<br><br><b> Контрагент: </b> {$this->_customer->customer_name} &nbsp;&nbsp; {$this->_customer->phone} ";
             $n->sender_id = \App\Entity\Notify::EVENT;
             $n->save();
-             
-            if( \App\System::useCron() ) {
-               $task = new  \App\Entity\CronTask();
+
+            if(\App\System::useCron()) {
+                $task = new  \App\Entity\CronTask();
                 $task->tasktype='eventcust';
                 $task->taskdata= serialize(array(
                    'user_id'=>$event->user_id ,
                    'starton'=>$n->dateshow ,
-            
-                   'text'=>$n->message 
+
+                   'text'=>$n->message
 
                 ));
                 $task['text'] = $event->title . " " . "\n" . $event->description;
                 $task['text'] .= "\n Контрагент:  {$this->_customer->customer_name}   {$this->_customer->phone} ";
- 
-                $task->save();                   
-            }          
+
+                $task->save();
+            }
         }
 
         $this->contentview->addeventform->clean();

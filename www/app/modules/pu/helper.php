@@ -59,7 +59,7 @@ class Helper
         }
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    //    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $ssl);
+        //    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $ssl);
 
         $result = curl_exec($ch);
         if (curl_errno($ch) > 0) {

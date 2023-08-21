@@ -877,7 +877,7 @@ class Import extends \App\Pages\Base
         $xml = @simplexml_load_file($file['tmp_name']) ;
         if($xml==false) {
 
-           $this->setError("Невірний  контент");
+            $this->setError("Невірний  контент");
 
             return;
         }

@@ -157,10 +157,10 @@ class Pay extends \ZCL\DB\Entity
         $c = \App\Entity\Customer::load($customer_id);
         $doc = \App\Entity\Doc\Document::load($document_id);
         if($doc->headerdata['pricetype'] != 'price1') {
-            return; 
+            return;
         }
-        
-        
+
+
         $pastbonus = intval($doc->getBonus());
         if($pastbonus != 0) {
             return; //уже  начисленые

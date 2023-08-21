@@ -37,23 +37,23 @@ class CronTask extends \ZCL\DB\Entity
         global $logger;
 
         if(!System::useCron()) {
-           return;
-        }  
-        
+            return;
+        }
+
         $last = \App\Helper::getKeyVal('lastcron')  ?? 0;
-        if( (time()-$last ) < self::MIN_INTERVAL  ) { //не  чаще  раза в пять минут
-             return;
+        if((time()-$last) < self::MIN_INTERVAL) { //не  чаще  раза в пять минут
+            return;
         }
         $stop = \App\Helper::getKeyVal('stopcron')  ?? false;
-        if($stop== false) { //уже  запущен 
+        if($stop== false) { //уже  запущен
             return;
         }
         \App\Helper::setKeyVal('lastcron', time()) ;
-        \App\Helper::setKeyVal('stopcron',false) ;        
-         
+        \App\Helper::setKeyVal('stopcron', false) ;
+
         try {
             $conn = \ZDB\DB::getConnect()  ;
-             
+
             //задачи каждый  при  каждом  вызове
 
             self::doQueue();
@@ -62,7 +62,7 @@ class CronTask extends \ZCL\DB\Entity
             $last =  intval(\App\Helper::getKeyVal('lastcronh'));
             if((time() - $last) > 3600) {
                 \App\Helper::setKeyVal('lastcronh', time()) ;
-               
+
             }
 
             //задачи  раз  в  сутки
@@ -71,7 +71,7 @@ class CronTask extends \ZCL\DB\Entity
                 \App\Helper::setKeyVal('lastcrond', time()) ;
 
                 //очищаем  уведомления
-                $dt = $conn->DBDate( strtotime('-1 month',time())  ) ;
+                $dt = $conn->DBDate(strtotime('-1 month', time())) ;
                 $conn->Execute("delete  from notifies  where  dateshow < ". $dt) ;
 
             }
@@ -92,21 +92,21 @@ class CronTask extends \ZCL\DB\Entity
             }
 
         }
-        \App\Helper::setKeyVal('stopcron',true) ;
-     
- 
+        \App\Helper::setKeyVal('stopcron', true) ;
+
+
     }
 
-    private  static function doQueue() {
+    private static function doQueue() {
         global $logger;
         $ok=true;
-        $ret=""; 
+        $ret="";
         $conn=\Zdb\DB::getConnect() ;
-        
+
         $queue = CronTask::find(" starton <= NOW() ", "id asc", 25) ;
         foreach($queue as $task) {
-            try{
-                $done = false;   
+            try {
+                $done = false;
                 if($task->tasktype=='subsemail') {
                     $msg =unserialize($task->taskdata);
 
@@ -117,33 +117,32 @@ class CronTask extends \ZCL\DB\Entity
 
                 }
 
-               if($task->tasktype=='eventcust') {
+                if($task->tasktype=='eventcust') {
                     $data =unserialize($task->taskdata);
                     $text = $data['text']  ;
                     $user = \App\Entity\User::load($data['user_id']);
-                    
-                    if(strlen($user->chat_id) >0){
-                      $ret= \App\Entity\Subscribe::sendBot($user->chat_id,$text) ;
-                    } else
-                    if(strlen($user->email) >0  && System::useEmail()){
-                      $ret= \App\Entity\Subscribe::sendEmail($user->email,$text,"XStore  notify") ;
+
+                    if(strlen($user->chat_id) >0) {
+                        $ret= \App\Entity\Subscribe::sendBot($user->chat_id, $text) ;
+                    } elseif(strlen($user->email) >0  && System::useEmail()) {
+                        $ret= \App\Entity\Subscribe::sendEmail($user->email, $text, "XStore  notify") ;
                     }
                     if(strlen($ret)==0) {
                         $done = true;
-                    }                
-                    
+                    }
+
                 }
 
                 if($done) {
                     CronTask::delete($task->id) ;
                 }
-            } catch(\Exception $e){
-               $msg = $e->getMessage();
-               $logger->error($msg);
-               $ok = false;
+            } catch(\Exception $e) {
+                $msg = $e->getMessage();
+                $logger->error($msg);
+                $ok = false;
             }
         }
-        
+
         if(!$ok) {
             throw new \Exception("Cron  error. see log") ;
         }
@@ -157,4 +156,3 @@ class CronTask extends \ZCL\DB\Entity
     }
 
 }
- 

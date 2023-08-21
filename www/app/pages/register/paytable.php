@@ -68,7 +68,7 @@ class PayTable extends \App\Pages\Base
         $this->editeventform->add(new TextArea('editeventdesc'));
 
         $this->editeventform->add(new ClickLink('canceledit', $this, 'onCancel'));
-        
+
         $brids = \App\ACL::getBranchIDsConstraint();
         $brf="";
         if (strlen($brids) > 0) {
@@ -78,7 +78,7 @@ class PayTable extends \App\Pages\Base
         $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and mf_id  in (select mf_id  from mfund where 1=1  {$brf})";
 
         $this->_am = H::fa($conn->GetOne($sql));
-        
+
         $this->_tvars['allcost']   = $this->_am;
 
         $this->update();

@@ -255,15 +255,15 @@ class Base extends \Zippy\Html\WebPage
         $duration = \App\Session::getSession()->duration() ;
         $this->_tvars['showtips'] = $duration < 300   ;
 
-        
+
         $this->_tvars['cron']  = false;
 
         $last = \App\Helper::getKeyVal('lastcron')  ?? 0;
-        if(  \App\System::useCron()  &&  (time() - $last ) > \App\Entity\CronTask::MIN_INTERVAL ) {  
-           $this->_tvars['cron']  = true;
+        if(\App\System::useCron()  &&  (time() - $last) > \App\Entity\CronTask::MIN_INTERVAL) {
+            $this->_tvars['cron']  = true;
         }
 
-        
+
     }
 
     public function LogoutClick($sender) {

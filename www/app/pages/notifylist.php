@@ -42,7 +42,7 @@ class NotifyList extends \App\Pages\Base
 
         \App\Entity\Notify::markRead($user->user_id);
 
-        
+
     }
 
     public function OnRow($row) {
@@ -96,5 +96,5 @@ class NotifyList extends \App\Pages\Base
         $this->nlist->Reload();
     }
 
- 
+
 }

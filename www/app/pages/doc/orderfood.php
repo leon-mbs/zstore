@@ -248,7 +248,7 @@ class OrderFood extends \App\Pages\Base
         $item->pureprice = $this->editdetail->editpureprice->getText();
         $item->disc = $this->editdetail->editdisc->getText();
 
- 
+
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
         } else {

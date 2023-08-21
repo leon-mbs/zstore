@@ -30,7 +30,7 @@ class Util
     * @param mixed $margin
     */
     public static function generateQR($data, $size, $margin=5) {
- 
+
         $writer = new \Endroid\QrCode\Writer\PngWriter();
 
 

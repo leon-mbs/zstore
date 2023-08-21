@@ -86,7 +86,7 @@ class Income extends \App\Pages\Base
 
         $cust = "";
         $sql = "";
-      
+
         $br = "";
         $brids = \App\ACL::getBranchIDsConstraint();
         if (strlen($brids) > 0) {

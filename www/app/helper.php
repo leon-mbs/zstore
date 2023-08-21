@@ -283,11 +283,11 @@ class Helper
     public static function sendLetter($emailto, $text, $subject = "") {
         global $_config;
 
-        
+
         if(\App\System::useEmail() == false) {
             return;
         }
-        
+
         $emailfrom = $_config['smtp']['emailfrom'];
         if(strlen($emailfrom)==0) {
             $emailfrom = $_config['smtp']['user'];
@@ -671,18 +671,18 @@ class Helper
         return round($am);
     }
 
-   /**
-     * форматирование  сумм    с копейками для закупок
-     *
-     * @param mixed $am
-     * @return mixed
-     */
+    /**
+      * форматирование  сумм    с копейками для закупок
+      *
+      * @param mixed $am
+      * @return mixed
+      */
     public static function fain($am) {
-      
+
         $common = System::getOptions("common");
         if ($common['buy2'] != 1) { //отдельная  настройка
             return self::fa($am);
-        }     
+        }
         if (strlen($am) == 0) {
             return '';
         }
@@ -811,11 +811,11 @@ class Helper
         return 10;
     }
 
- 
+
 
     /**
     * список валют
-    * 
+    *
     */
     public static function getValList() {
         $val = \App\System::getOptions("val");
@@ -832,7 +832,7 @@ class Helper
 
     /**
     * название  валюты
-    * 
+    *
     * @param mixed $vn
     * @return mixed
     */
@@ -968,8 +968,8 @@ class Helper
         }
         return $ret;
     }
-    
- 
+
+
     /**
     * Вставка  данных в  таблицу ключ-значение
     *
@@ -1011,7 +1011,7 @@ class Helper
 
 
     }
- 
+
 
     /**
      * Печать  этикеток

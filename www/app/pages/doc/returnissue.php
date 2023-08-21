@@ -424,7 +424,7 @@ class ReturnIssue extends \App\Pages\Base
 
 
         $this->docform->payamount->setText(H::fa($payamount));
-      //  $this->docform->discount->setText(H::fa($discount));
+        //  $this->docform->discount->setText(H::fa($discount));
         $this->docform->payed->setText(H::fa($payamount));
         $this->docform->editpayed->setText(H::fa($payamount));
     }

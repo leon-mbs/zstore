@@ -33,7 +33,7 @@ class SystemLog extends \App\Pages\Base
 
         $this->ds = new EntityDataSource("\\App\\Entity\\Notify", "  user_id=" .   Notify::SYSTEM, " dateshow desc");
 
-       
+
         $this->add(new DataView("nlist", $this->ds, $this, 'OnRow'));
         $this->nlist->setPageSize(H::getPG());
         $this->add(new \Zippy\Html\DataList\Pager("pag", $this->nlist));
@@ -64,7 +64,7 @@ class SystemLog extends \App\Pages\Base
         $this->nlist->Reload();
     }
 
- 
+
 
     public function OnRow($row) {
         $notify = $row->getDataItem();

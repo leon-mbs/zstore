@@ -55,7 +55,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new CheckBox('showactiveusers'));
         $this->common->add(new CheckBox('showchat'));
         $this->common->add(new CheckBox('noemail'));
- 
+
 
         $this->common->add(new CheckBox('capcha'));
 

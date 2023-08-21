@@ -84,10 +84,10 @@ class Subscribe extends \ZCL\DB\Entity
 
         $list = array();
         $list[self::MSG_NOTIFY] = "Системне повідомлення";
-        if( \App\System::useEmail() ){
-           $list[self::MSG_EMAIL] = "E-mail";    
+        if(\App\System::useEmail()) {
+            $list[self::MSG_EMAIL] = "E-mail";
         }
-        
+
         if($sms['smstype'] > 0) {
             $list[self::MSG_SMS] = "SMS";
         }
@@ -180,7 +180,7 @@ class Subscribe extends \ZCL\DB\Entity
             }
             if (strlen($email) > 0 && $sub->msg_type == self::MSG_EMAIL) {
 
-                if( System::useCron()) {
+                if(System::useCron()) {
                     $task = new  \App\Entity\CronTask();
                     $task->tasktype='subsemail';
                     $task->taskdata= serialize(array(
@@ -384,7 +384,7 @@ class Subscribe extends \ZCL\DB\Entity
         if(System::useEmail()==false) {
             return "No email";
         }
-        
+
         $emailfrom = $_config['smtp']['emailfrom'];
         if(strlen($emailfrom)==0) {
             $emailfrom = $_config['smtp']['user'];

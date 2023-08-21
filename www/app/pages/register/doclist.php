@@ -38,7 +38,7 @@ class DocList extends \App\Pages\Base
     public function __construct($docid = 0) {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('DocList')) {
-           App::RedirectHome() ;
+            App::RedirectHome() ;
         }
         $docid = intval($docid);
         $user = System::getUser() ;

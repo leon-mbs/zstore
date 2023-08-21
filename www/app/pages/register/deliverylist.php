@@ -29,7 +29,7 @@ class DeliveryList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('DeliveryList')) {
-           App::RedirectHome() ;
+            App::RedirectHome() ;
         }
 
         $this->add(new DataView('orderlist', new ArrayDataSource($this, '_doclist'), $this, 'onDocRow'));

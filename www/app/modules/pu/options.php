@@ -55,7 +55,7 @@ class Options extends \App\Pages\Base
             return;
         }
 
-     //   $site = trim($site, '/');
+        //   $site = trim($site, '/');
 
         $modules = System::getOptions("modules");
 

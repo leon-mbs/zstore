@@ -36,7 +36,7 @@ class CronTab extends \App\Pages\Base
         $this->add(new ClickLink('toff', $this, 'OnToogle'));
 
         $this->ds = new EntityDataSource("\\App\\Entity\\CronTask", "", " id asc");
- 
+
         $this->add(new DataView("nlist", $this->ds, $this, 'OnRow'));
         $this->nlist->setPageSize(H::getPG());
         $this->add(new \Zippy\Html\DataList\Pager("pag", $this->nlist));
@@ -56,11 +56,11 @@ class CronTab extends \App\Pages\Base
 
     public function OnToogle($sender) {
         if($sender->id == 'toff') {
-             H::setKeyVal( 'cron', true) ;
-             H::setKeyVal('stopcron',true) ; //на случай  если  повис       
-              
+            H::setKeyVal('cron', true) ;
+            H::setKeyVal('stopcron', true) ; //на случай  если  повис
+
         } else {
-             H::setKeyVal( 'cron', false) ;
+            H::setKeyVal('cron', false) ;
         }
         $this->OnUpdate(null);
     }

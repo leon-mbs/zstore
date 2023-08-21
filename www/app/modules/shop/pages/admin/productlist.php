@@ -232,7 +232,7 @@ class ProductList extends \App\Pages\Base
             $image->mime = $imagedata['mime'];
 
             $thumb = new \App\Thumb($file['tmp_name']);
-            
+
             if ($imagedata[0] != $imagedata[1]) {
                 if ($imagedata[0] > $imagedata[1]) {
                     $thumb->cropFromCenter($imagedata[1], $imagedata[1]);

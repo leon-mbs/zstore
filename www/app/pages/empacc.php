@@ -82,7 +82,7 @@ class EmpAcc extends \App\Pages\Base
             if ($date < $from || $date > $to) {
                 continue;
             }
-            
+
             foreach ($doc->unpackDetails('detaildata') as $emp) {
 
                 if ($emp->employee_id == $emp_id && $emp->amount > 0) {
