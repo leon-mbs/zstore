@@ -408,7 +408,7 @@ class CheckBox
         //    $good["sum"] =1000000;
         $good["is_return"] = false;
 
-        $sum +=  round($g['price'] * $item->quantity);
+        $sum +=  round($g['price'] * $good["quantity"]);
 
         $check["goods"][] = $good;
 

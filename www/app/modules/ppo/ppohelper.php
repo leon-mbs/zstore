@@ -275,7 +275,7 @@ class PPOHelper
         $firm = \App\Helper::getFirmData($pos->firm_id);
 
         $header = array();
-        $header['doctype'] = $open == true ? 100 : 101;
+    //    $header['doctype'] = $open == true ? 100 : 101;
         $header['firmname'] = $firm['firm_name'];
         $header['inn'] = strlen($firm['inn']) > 0 ? $firm['inn'] : false;
         $header['tin'] = $firm['tin'];
@@ -415,8 +415,8 @@ class PPOHelper
         $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
 
         $header = array();
-        $header['doctype'] = $doctype;
-        $header['docsubtype'] = $docsubtype;
+      //  $header['doctype'] = $doctype;
+   //     $header['docsubtype'] = $docsubtype;
         $header['firmname'] = $firm['firm_name'];
         $header['inn'] = strlen($firm['inn']) > 0 ? $firm['inn'] : false;
         $header['tin'] = $firm['tin'];
@@ -698,8 +698,8 @@ class PPOHelper
         $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
 
         $header = array();
-        $header['doctype'] = $doctype;
-        $header['docsubtype'] = $docsubtype;
+      //  $header['doctype'] = $doctype;
+    //    $header['docsubtype'] = $docsubtype;
         $header['firmname'] = $firm['firm_name'];
         $header['inn'] = strlen($firm['inn']) > 0 ? $firm['inn'] : false;
         $header['tin'] = $firm['tin'];

@@ -34,7 +34,7 @@ class PayBayList extends \App\Pages\Base
     public function __construct($docid=0) {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('PayBayList')) {
-            return;
+           \App\Application::RedirectHome() ;
         }
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new DropDownChoice('holdlist', \App\Entity\Customer::getHoldList(), 0));

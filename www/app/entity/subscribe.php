@@ -133,6 +133,8 @@ class Subscribe extends \ZCL\DB\Entity
 
             $ret = '';
             $phone = '';
+            $viber = '';
+            $chat_id = '';
             //  $viber='';
             $email = '';
             $notify = 0;
@@ -288,8 +290,8 @@ class Subscribe extends \ZCL\DB\Entity
                 $mfb = \App\Entity\MoneyFund::load($doc->headerdata['mfbeznal']);
                 $header['mf'] = $mfb->mf_name;
                 if(strlen($mfb->bank)>0) {
-                    $header['mf'] = $mf->bank;
-                    $header['mfacc'] = $mf->bankacc;
+                    $header['mf'] = $mfb->bank;
+                    $header['mfacc'] = $mfb->bankacc;
                 }
 
             }
@@ -388,7 +390,8 @@ class Subscribe extends \ZCL\DB\Entity
             $emailfrom = $_config['smtp']['user'];
 
         }
-
+        $filename = '';
+        $f = '';
         try {
 
             if($doc != null) {
@@ -484,7 +487,7 @@ class Subscribe extends \ZCL\DB\Entity
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
 
-            $encoded = json_decode($result, true);
+            $encoded = json_decode($response, true);
             curl_close($ch);
 
 

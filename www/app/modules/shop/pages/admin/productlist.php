@@ -231,8 +231,9 @@ class ProductList extends \App\Pages\Base
             $image->content = file_get_contents($file['tmp_name']);
             $image->mime = $imagedata['mime'];
 
+            $thumb = new \App\Thumb($file['tmp_name']);
+            
             if ($imagedata[0] != $imagedata[1]) {
-                $thumb = new \App\Thumb($file['tmp_name']);
                 if ($imagedata[0] > $imagedata[1]) {
                     $thumb->cropFromCenter($imagedata[1], $imagedata[1]);
                 }
@@ -351,6 +352,7 @@ class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\I
     public function getContent($attributes) {
         $ret = "<td>{$this->productattribute->attributename}</td><td>";
         $nodata = "Немає даних";
+        $sel = '';
         //'Есть/Нет'
         if ($this->productattribute->attributetype == 1) {
             $yes = "Є";

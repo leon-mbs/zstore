@@ -37,7 +37,7 @@ class OrderList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('OrderList')) {
-            return;
+            \App\Application::RedirectHome() ;
         }
         $this->_issms = (System::getOption('sms', 'smstype')??0) >0 ;
 
@@ -329,9 +329,7 @@ class OrderList extends \App\Pages\Base
             }
 
             if ($sender->id == "bgi") {
-                if ($invoice) {
-                    $this->setWarn('Вже існує документ Видаткова накладна');
-                }
+
                 App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
                 return;
             }
@@ -673,7 +671,7 @@ class OrderList extends \App\Pages\Base
             $it->checkedqty =   0;
             $this->_itemlist[] = $it;
 
-        };
+        }
 
         $this->editpanel->editform->edititemlist->Reload();
 

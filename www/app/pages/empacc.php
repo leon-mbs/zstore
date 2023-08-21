@@ -70,7 +70,7 @@ class EmpAcc extends \App\Pages\Base
 
         $from = strtotime($yfrom . '-' . $mfrom . '-01');
         $to = strtotime($yto . '-' . $mto . '-01 23:59:59');
-
+        $total = 0;
         foreach ($doclist as $doc) {
 
             $date = strtotime($doc->headerdata['year'] . '-' . $doc->headerdata['month'] . '-01');
@@ -82,7 +82,7 @@ class EmpAcc extends \App\Pages\Base
             if ($date < $from || $date > $to) {
                 continue;
             }
-            $total = 0;
+            
             foreach ($doc->unpackDetails('detaildata') as $emp) {
 
                 if ($emp->employee_id == $emp_id && $emp->amount > 0) {

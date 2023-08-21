@@ -19,7 +19,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Panel;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
-use Zippy\WebApplication as App;
+use App\Application as App;
 
 class PPOList extends \App\Pages\Base
 {

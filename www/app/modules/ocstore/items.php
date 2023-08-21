@@ -14,7 +14,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
-use Zippy\WebApplication as App;
+use App\Application as App;
 
 class Items extends \App\Pages\Base
 {

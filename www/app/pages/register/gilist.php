@@ -36,7 +36,7 @@ class GIList extends \App\Pages\Base
     public function __construct($doc = 0) {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('GIList')) {
-            return;
+           App::RedirectHome() ;
         }
 
         $this->add(new Panel("listpan"));

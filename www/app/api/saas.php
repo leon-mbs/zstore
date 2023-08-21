@@ -21,7 +21,7 @@ class saas extends JsonRPC
         if($u != "saas"){
               return self::error(null, -1000, "Invalid saas");
         }
-        if($p != ($_config['common']['saas'] ?? "") != $p ){
+        if($p != ($_config['common']['saas'] ?? "") ){
               return self::error(null, -1000, "Invalid saas");
         }
  

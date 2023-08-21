@@ -750,7 +750,7 @@ class ARMPos extends \App\Pages\Base
 
         $ser->price = H::fa($this->docpanel->editserdetail->editserprice->getText());
         $ser->disc = '';
-        if($ser->pureprice > $price) {
+        if($ser->pureprice > $ser->price) {
             $ser->disc = number_format((1 - ($ser->price/($ser->pureprice)))*100, 1, '.', '') ;
         }
 

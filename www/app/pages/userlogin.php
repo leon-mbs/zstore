@@ -140,9 +140,7 @@ class UserLogin extends \Zippy\Html\WebPage
 
             $this->setError('Багато невдалих авторизацій. Адміністратору системи відправлено повідомлення');
             $this->loginform->setVisible(false);
-            if (strlen($admin->email) > 0) {
-                Helper::sendLetter($admin->email, $msg, "Zippy Store alert");
-            }
+           
         }
 
         //  $this->_tvars['alerterror'] = '';

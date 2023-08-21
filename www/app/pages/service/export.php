@@ -158,7 +158,7 @@ class Export extends \App\Pages\Base
         }
 
         $root="<root>";
-
+        $qty=0;
         $i = 1;
         foreach ($list as $item) {
             $i++;
@@ -263,7 +263,7 @@ class Export extends \App\Pages\Base
 
             $i++;
             $data['A' . $i] = array('value' => "Всього: ", 'bold' => true, 'align' => 'right');
-            $data['B' . $i] = array('value' => H::fa(doubleval($item->amount)), 'format' => 'number', 'bold' => true, 'align' => 'right');
+            $data['B' . $i] = array('value' => H::fa(doubleval($doc->amount)), 'format' => 'number', 'bold' => true, 'align' => 'right');
             $i++;
 
             $root.="</doc>";

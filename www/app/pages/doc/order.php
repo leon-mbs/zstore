@@ -543,6 +543,7 @@ class Order extends \App\Pages\Base
     public function OnChangeCustomer($sender) {
         $disc = 0;
         $bonus = 0;
+        $disctext = '';
 
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {

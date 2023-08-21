@@ -584,8 +584,8 @@ class CustomerList extends \App\Pages\Base
                    'user_id'=>$event->user_id ,
                    'starton'=>$n->dateshow ,
             
-                   'text'=>$n->message ,
-                   'document_id'=> $sub->attach==1 ? $doc->document_id : 0
+                   'text'=>$n->message 
+
                 ));
                 $task['text'] = $event->title . " " . "\n" . $event->description;
                 $task['text'] .= "\n Контрагент:  {$this->_customer->customer_name}   {$this->_customer->phone} ";

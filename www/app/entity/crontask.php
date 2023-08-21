@@ -41,7 +41,7 @@ class CronTask extends \ZCL\DB\Entity
         }  
         
         $last = \App\Helper::getKeyVal('lastcron')  ?? 0;
-        if( (time()-last ) < self::MIN_INTERVAL  ) { //не  чаще  раза в пять минут
+        if( (time()-$last ) < self::MIN_INTERVAL  ) { //не  чаще  раза в пять минут
              return;
         }
         $stop = \App\Helper::getKeyVal('stopcron')  ?? false;
@@ -63,7 +63,7 @@ class CronTask extends \ZCL\DB\Entity
             if((time() - $last) > 3600) {
                 \App\Helper::setKeyVal('lastcronh', time()) ;
                
-            } ;
+            }
 
             //задачи  раз  в  сутки
             $last =  intval(\App\Helper::getKeyVal('lastcrond'));
@@ -74,7 +74,7 @@ class CronTask extends \ZCL\DB\Entity
                 $dt = $conn->DBDate( strtotime('-1 month',time())  ) ;
                 $conn->Execute("delete  from notifies  where  dateshow < ". $dt) ;
 
-            } ;
+            }
 
         } catch(\Exception $ee) {
             $msg = $ee->getMessage();
@@ -103,7 +103,7 @@ class CronTask extends \ZCL\DB\Entity
         $ret=""; 
         $conn=\Zdb\DB::getConnect() ;
         
-        $queue = CronTask::find(" starton <= NOW() ", "id asc", 100) ;
+        $queue = CronTask::find(" starton <= NOW() ", "id asc", 25) ;
         foreach($queue as $task) {
             try{
                 $done = false;   
@@ -119,14 +119,14 @@ class CronTask extends \ZCL\DB\Entity
 
                if($task->tasktype=='eventcust') {
                     $data =unserialize($task->taskdata);
-                    $text = $date['text']  ;
+                    $text = $data['text']  ;
                     $user = \App\Entity\User::load($data['user_id']);
                     
-                    if(strlen($u->chat_id) >0){
-                      $ret= \App\Entity\Subscribe::sendBot($u->chat_id,$text) ;
+                    if(strlen($user->chat_id) >0){
+                      $ret= \App\Entity\Subscribe::sendBot($user->chat_id,$text) ;
                     } else
-                    if(strlen($u->email) >0  && System::useEmail()){
-                      $ret= \App\Entity\Subscribe::sendEmail($u->email,$text,"XStore  notify") ;
+                    if(strlen($user->email) >0  && System::useEmail()){
+                      $ret= \App\Entity\Subscribe::sendEmail($user->email,$text,"XStore  notify") ;
                     }
                     if(strlen($ret)==0) {
                         $done = true;
@@ -138,7 +138,7 @@ class CronTask extends \ZCL\DB\Entity
                     CronTask::delete($task->id) ;
                 }
             } catch(\Exception $e){
-               $msg = $ee->getMessage();
+               $msg = $e->getMessage();
                $logger->error($msg);
                $ok = false;
             }

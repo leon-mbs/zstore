@@ -38,7 +38,7 @@ class DocList extends \App\Pages\Base
     public function __construct($docid = 0) {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('DocList')) {
-            return;
+           App::RedirectHome() ;
         }
         $docid = intval($docid);
         $user = System::getUser() ;
@@ -118,7 +118,7 @@ class DocList extends \App\Pages\Base
             $this->_doc = Document::load($docid);
             if($this->_doc == null) {
                 $this->setError('Документ вже видалений') ;
-                return;
+                App::RedirectHome() ;
             }
             $this->_doc = $this->_doc->cast() ;
             $this->show($this->_doc);

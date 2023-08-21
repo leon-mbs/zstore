@@ -180,7 +180,7 @@ class POSCheck extends Document
         $header['form3']  = false;
 
 
-        if($this->headerdata['payment']?? 0  >0) {
+        if(($this->headerdata['payment']?? 0)  >0) {
             $mf = \App\Entity\MoneyFund::load($this->headerdata['payment']);
             $header['form1']  = $mf->beznal!=1;
             $header['form2']  = $mf->beznal==1;
@@ -296,7 +296,7 @@ class POSCheck extends Document
             $sc = new Entry($this->document_id, 0 - ($ser->price * $k * $ser->quantity), 0);
             $sc->setService($ser->service_id);
             // $sc->setExtCode(0 - ($ser->price * $k)); //Для АВС
-            $sc->setOutPrice(0 - $item->price * $k);
+            $sc->setOutPrice(0 - $ser->price * $k);
 
             $sc->save();
         }

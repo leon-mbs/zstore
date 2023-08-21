@@ -115,7 +115,7 @@ class items extends JsonRPC
     }
 
     //  количества на  складе
-    public function getqty() {
+    public function getqty($args) {
         $list = array();
         $conn = \ZDB\DB::getConnect();
 

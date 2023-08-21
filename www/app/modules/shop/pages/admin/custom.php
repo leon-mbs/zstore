@@ -215,7 +215,7 @@ class Custom extends \App\Pages\Base
         if(strlen($i->thumb)>0) {
             $row->imagelistitem->setValue($i->thumb);
         }
-        $row->imagelistitem->setAttribute('href', "/loadimage.php?id={$item->image_id}");
+        $row->imagelistitem->setAttribute('href', "/loadimage.php?id={$i->image_id}");
 
     }
 

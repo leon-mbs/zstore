@@ -32,7 +32,7 @@ class PayTable extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('PayTable')) {
-            return;
+            \App\Application::RedirectHome() ;
         }
 
 

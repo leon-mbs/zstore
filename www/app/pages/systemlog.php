@@ -14,7 +14,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
-use Zippy\WebApplication as App;
+use App\Application as App;
 
 class SystemLog extends \App\Pages\Base
 {

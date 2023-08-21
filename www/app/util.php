@@ -30,19 +30,7 @@ class Util
     * @param mixed $margin
     */
     public static function generateQR($data, $size, $margin=5) {
-        $v = phpversion() ;
-        if(strpos($v, '7.2')===0) {
-            $qrCode = new \Endroid\QrCode\QrCode($data);
-            $qrCode->setSize($size);
-            $qrCode->setMargin($margin);
-
-            //  $qrCode->setEncoding('UTF-8');
-
-            $dataUri = 'data:image/png;base64,' . base64_encode($qrCode->writeString()) ;
-
-            return $dataUri;
-
-        }
+ 
         $writer = new \Endroid\QrCode\Writer\PngWriter();
 
 
@@ -261,7 +249,7 @@ function money2str_rugr($money, $options = 0) {
     // $i == 0 means we deal with copecks, $i == 1 for roubles,
     // $i == 2 for thousands etc.
     for ($i = sizeof($units_ru) - 1; $i >= 0; $i--) {
-
+        $dig =0;
         // each group contais 3 digits, except copecks, containing of 2 digits
         $grp = ($i != 0) ? dec_digits_group($money, $i - 1, 3) :
             dec_digits_group($money, -1, 2);
@@ -331,6 +319,7 @@ function money2str_ru($money, $options = 0) {
         array('миллион', 'миллиона', 'миллионов')
     );
 
+    $dig = '';
     $ret = '';
 
     // enumerating digit groups from left to right, from trillions to copecks
@@ -413,7 +402,7 @@ function money2str_us($money, $options = 0) {
     // $i == 0 means we deal with copecks, $i == 1 for roubles,
     // $i == 2 for thousands etc.
     for ($i = sizeof($units_ru) - 1; $i >= 0; $i--) {
-
+        $dig='';
         // each group contais 3 digits, except copecks, containing of 2 digits
         $grp = ($i != 0) ? dec_digits_group($money, $i - 1, 3) :
             dec_digits_group($money, -1, 2);
@@ -462,7 +451,7 @@ function money2str_us($money, $options = 0) {
 }
 
 function money2str_eu($money, $options = 0) {
-
+    $dig='';
     $money = preg_replace('/[\,\-\=]/', '.', $money);
 
     $numbers_m = array('', 'один', 'два', 'три', 'четыре', "пять", 'шесть', 'семь',
@@ -538,7 +527,7 @@ function money2str_eu($money, $options = 0) {
 }
 
 function money2str_ua($money, $options = 0) {
-
+    $dig ='';
     $money = preg_replace('/[\,\-\=]/', '.', $money);
 
     $numbers_m = array('', 'одна', 'двi', 'три', 'чотири', "п'ять", 'шiсть', 'сiм',

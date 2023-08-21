@@ -8,7 +8,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\TextInput;
-use Zippy\WebApplication as App;
+use App\Application as App;
 
 class Options extends \App\Pages\Base
 {
