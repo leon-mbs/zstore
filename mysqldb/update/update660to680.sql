@@ -59,9 +59,19 @@ CREATE TABLE crontask (
   taskdata text DEFAULT NULL,
   starton datetime DEFAULT NULL,
   PRIMARY KEY (id)
-)  DEFAULT CHARSET=utf8; 
- ;    
+) 
+ ENGINE = InnoDB DEFAULT CHARSET=utf8;    
     
+CREATE TABLE  taglist (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  tag_type smallint(6) NOT NULL,
+  item_id int(11) NOT NULL,
+  tag_name varchar(255) NOT NULL,
+  PRIMARY KEY (id)
+)
+ENGINE = InnoDB DEFAULT CHARSET=utf8;
+
+
     
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Кафе', 'OutFood', 'Продажі', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Платіжний календар', 'PayTable', 'Каса та платежі', 0);
