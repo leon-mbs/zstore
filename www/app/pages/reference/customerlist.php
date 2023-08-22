@@ -37,6 +37,7 @@ class CustomerList extends \App\Pages\Base
     public $_leadsourceslist = array();
     public $_bonuses = array(); // бонусы  по  контраоентам
     public $_bonuslist = array(); //история бонусов  контрагента
+    public $_tag = '' ; 
 
     public function __construct($id = 0) {
         parent::__construct();
@@ -46,24 +47,30 @@ class CustomerList extends \App\Pages\Base
         $this->_bonuses = Customer::getBonusAll()  ;
         $shop = System::getOptions("shop");
         $this->_customer = new Customer();
-        $this->add(new Form('leadf'));
-        $this->leadf->add(new CheckBox('chleads'))->onChange($this, 'OnLeadMode');
 
-        $this->add(new Form('filter'))->onSubmit($this, 'OnSearch');
-        $this->filter->add(new TextInput('searchkey'));
-        $this->filter->add(new DropDownChoice('searchtype', array(), 0));
-        $this->filter->add(new DropDownChoice('searchholding', Customer::getHoldList(), 0));
-
-        $this->filter->add(new DropDownChoice('searchleadsource', Customer::getLeadSources(), "0"));
-        $this->filter->add(new DropDownChoice('searchleadstatus', Customer::getLeadStatuses(), "0"));
 
         $this->add(new Panel('customertable'))->setVisible(true);
+        $this->customertable->add(new Form('leadf'));
+        $this->customertable->leadf->add(new CheckBox('chleads'))->onChange($this, 'OnLeadMode');
+
+        $this->customertable->add(new Form('filter'))->onSubmit($this, 'OnSearch');
+        $this->customertable->filter->add(new TextInput('searchkey'));
+        $this->customertable->filter->add(new DropDownChoice('searchtype', array(), 0));
+        $this->customertable->filter->add(new DropDownChoice('searchholding', Customer::getHoldList(), 0));
+
+        $this->customertable->filter->add(new DropDownChoice('searchleadsource', Customer::getLeadSources(), "0"));
+        $this->customertable->filter->add(new DropDownChoice('searchleadstatus', Customer::getLeadStatuses(), "0"));
+     
+        $this->customertable->filter->add(new ClickLink('erase', $this, "onErase"));     
+
+      
+     
         $this->customertable->add(new Form('listform'));
         $this->customertable->listform->add(new DataView('customerlist', new CustomerDataSource($this), $this, 'customerlistOnRow'));
         $this->customertable->listform->customerlist->setPageSize(Helper::getPG());
         $this->customertable->listform->add(new \Zippy\Html\DataList\Paginator('pag', $this->customertable->listform->customerlist));
 
-        $this->customertable->listform->customerlist->Reload();
+        $this->Reload();
         $this->customertable->listform->add(new SortLink("sortdoc", "docs", $this, "onSort"));
         $this->customertable->listform->add(new SortLink("sortname", "customer_name", $this, "onSort"));
         $this->customertable->listform->add(new SortLink("sortleadstatus", "leadstatus", $this, "onSort"));
@@ -100,6 +107,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->add(new TextArea('editcomment'));
         $this->customerdetail->add(new DropDownChoice('editleadsource', Customer::getLeadSources(), "0"));
         $this->customerdetail->add(new DropDownChoice('editleadstatus', Customer::getLeadStatuses(), "0"));
+        $this->customerdetail->add(new \ZCL\BT\Tags("edittags"));
 
         $this->customerdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->customerdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
@@ -134,6 +142,11 @@ class CustomerList extends \App\Pages\Base
         $this->contentview->addeventform->add(new DropDownChoice('addeventnotify', array(), 0));
         $this->contentview->add(new DataView('dw_eventlist', new ArrayDataSource(new Bind($this, '_eventlist')), $this, 'eventListOnRow'));
 
+        
+        $this->contentview->add(new \Zippy\Html\Link\LinkList("taglist"))->onClick($this, 'OnTagList');        
+        
+        
+        
         $this->contentview->dw_eventlist->setPageSize(10);
         $this->contentview->add(new \Zippy\Html\DataList\Paginator('eventpag', $this->contentview->dw_eventlist));
 
@@ -168,16 +181,28 @@ class CustomerList extends \App\Pages\Base
         $this->_tvars['leadmode'] = false;
     }
 
+    public function Reload() {
+          $this->customertable->listform->customerlist->Reload();
+    }
+    
+    public function onErase() {
+        $this->customertable->filter->clean();
+        $this->_tag ='';
+        $this->Reload() ;
+    }
+    
     public function OnLeadMode($sender) {
 
         $this->_tvars['leadmode'] = $sender->isChecked();
-        $this->filter->clean();
-        $this->customertable->listform->customerlist->Reload();
+        $this->customertable->filter->clean();
+        $this->Reload();
+
     }
 
     public function OnSearch($sender) {
 
-        $this->customertable->listform->customerlist->Reload();
+        $this->Reload();
+
         $this->contentview->setVisible(false);
     }
 
@@ -240,7 +265,8 @@ class CustomerList extends \App\Pages\Base
 
         $sender->fileld = $sortfield;
         $sender->dir = $sortdir;
-        $this->customertable->listform->customerlist->Reload();
+        $this->Reload();
+
     }
 
     public function editOnClick($sender) {
@@ -275,22 +301,27 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->editdisabled->setChecked($this->_customer->status == 1);
         $this->customerdetail->editjurid->setChecked($this->_customer->jurid);
         $this->customerdetail->editisholding->setChecked($this->_customer->isholding);
+        
+        $this->customerdetail->edittags->setTags(\App\Entity\Tag::getTags(1,$this->_customer->customer_id));
+        $this->customerdetail->edittags->setSuggestions(\App\Entity\Tag::getSuggestions(1));
+        
     }
 
     public function deleteOnClick($sender) {
         if (false == \App\ACL::checkDelRef('CustomerList')) {
             return;
         }
+        $id  =$sender->owner->getDataItem()->customer_id;
 
-
-        $del = Customer::delete($sender->owner->getDataItem()->customer_id);
+        $del = Customer::delete($id);
         if (strlen($del) > 0) {
             $this->setError($del);
             return;
         }
 
+        \App\Entity\Tag::updateTags([],1,$id) ;
+        $this->Reload();
 
-        $this->customertable->listform->customerlist->Reload();
     }
 
     public function addOnClick($sender) {
@@ -298,7 +329,9 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->setVisible(true);
         // Очищаем  форму
         $this->customerdetail->clean();
-
+        $this->customerdetail->edittags->setTags(array());
+        $this->customerdetail->edittags->setSuggestions(\App\Entity\Tag::getSuggestions(1) );
+ 
         $this->contentview->setVisible(false);
 
         $this->_customer = new Customer();
@@ -405,9 +438,17 @@ class CustomerList extends \App\Pages\Base
 
 
         $this->_customer->save();
+        
+         
+        $tags = $this->customerdetail->edittags->getTags() ;
+        
+        \App\Entity\Tag::updateTags($tags,1,$this->_customer->customer_id) ;
+
+        
         $this->customerdetail->setVisible(false);
         $this->customertable->setVisible(true);
-        $this->customertable->listform->customerlist->Reload();
+        $this->Reload();
+
     }
 
     public function cancelOnClick($sender) {
@@ -421,7 +462,8 @@ class CustomerList extends \App\Pages\Base
     public function editContentOnClick($sender) {
         $this->_customer = $sender->getOwner()->getDataItem();
 
-        $this->customertable->listform->customerlist->Reload();
+        $this->Reload();
+
 
         $this->viewContent();
     }
@@ -457,9 +499,25 @@ class CustomerList extends \App\Pages\Base
         $this->updateEvents();
         $this->updateContrs();
         $this->updateBonus();
+        
+        $this->_tag='';
+       
+        $this->contentview->taglist->Clear();
+        $tags = \App\Entity\Tag::getTags(1,$this->_customer->customer_id) ;
+        foreach ($tags as $tag) {
+           $this->contentview->taglist->addClickLink($tag, '#'.$tag);
+        }          
         // $this->goAnkor('contentviewlink');
     }
+    public function OnTagList($sender) {
+        $this->_tag  = $sender->getSelectedValue();
 
+        $this->contentview->setVisible(false);
+        $this->customertable->setVisible(true);
+       
+        $this->Reload() ;
+         
+    }
     //контент
     public function OnFileSubmit($sender) {
 
@@ -661,15 +719,17 @@ class CustomerList extends \App\Pages\Base
     public function OnSelStatus($sender) {
         $this->_customer->leadstatus = $sender->getValue();
         $this->_customer->save();
-        $this->customertable->listform->customerlist->Reload();
+        $this->Reload();
+
     }
 
     public function onConvert($sender) {
-        $this->leadf->chleads->setChecked(false);
+        $this->customertable->leadf->chleads->setChecked(false);
         $this->_tvars['leadmode'] = false;
 
-        $this->filter->clean();
-        $this->customertable->listform->customerlist->Reload();
+        $this->customertable->filter->clean();
+        $this->Reload();
+
         $this->_customer->status = 0;
         $this->_customer->fromlead = 1;
 
@@ -698,7 +758,7 @@ class CustomerList extends \App\Pages\Base
         $options['leadsources'] = $this->_leadsourceslist;
         System::setOptions('common', $options);
 
-        $this->filter->searchleadsource->setOptionList(Customer::getLeadSources());
+        $this->customertable->filter->searchleadsource->setOptionList(Customer::getLeadSources());
         $this->customerdetail->editleadsource->setOptionList(Customer::getLeadSources());
 
     }
@@ -752,7 +812,7 @@ class CustomerList extends \App\Pages\Base
         $options['leadstatuses'] = $this->_leadstatuseslist;
         System::setOptions('common', $options);
 
-        $this->filter->searchleadstatus->setOptionList(Customer::getLeadStatuses());
+        $this->customertable->filter->searchleadstatus->setOptionList(Customer::getLeadStatuses());
         $this->contentview->conlstform->conleadstatus->setOptionList(Customer::getLeadStatuses());
         $this->customerdetail->editleadstatus->setOptionList(Customer::getLeadStatuses());
 
@@ -904,7 +964,8 @@ class CustomerList extends \App\Pages\Base
 
         $this->setSuccess("Видалено {$d}, деактивовано {$u} ");
 
-        $this->customertable->listform->customerlist->Reload();
+        $this->Reload();
+
 
     }
 
@@ -923,11 +984,11 @@ class CustomerDataSource implements \Zippy\Interfaces\DataSource
 
         $conn = \ZDB\DB::getConnect();
 
-        $type = $this->page->filter->searchtype->getValue();
-        $holding = $this->page->filter->searchholding->getValue();
-        $search = trim($this->page->filter->searchkey->getText());
-
-        $isleads = $this->page->leadf->chleads->isChecked();
+        $type = $this->page->customertable->filter->searchtype->getValue();
+        $holding = $this->page->customertable->filter->searchholding->getValue();
+        $search = trim($this->page->customertable->filter->searchkey->getText());
+       
+        $isleads = $this->page->customertable->leadf->chleads->isChecked();
         if ($isleads == false) {
             $where = "1=1 ";
 
@@ -954,10 +1015,15 @@ class CustomerDataSource implements \Zippy\Interfaces\DataSource
             if ($type == 10) {
                 $where .= " and status = 1    ";
             }
-
+          if(strlen($this->page->_tag)>0) {
+                
+               $tag   = Customer::qstr($this->page->_tag) ;
+               $where = "status = 0 and customer_id in (select item_id from taglist where  tag_type=1 and tag_name={$tag} )"; 
+            }
+            
         } else {
-            $searchleadsource = $this->page->filter->searchleadsource->getValue();
-            $searchleadstatus = $this->page->filter->searchleadstatus->getValue();
+            $searchleadsource = $this->page->customertable->filter->searchleadsource->getValue();
+            $searchleadstatus = $this->page->customertable->filter->searchleadstatus->getValue();
 
             $where = "status = 2 ";
             if (strlen($search) > 0) {
@@ -972,8 +1038,18 @@ class CustomerDataSource implements \Zippy\Interfaces\DataSource
                 $searchleadstatus = Customer::qstr($searchleadstatus);
                 $where .= " and (leadstatus =  {$searchleadstatus}    )";
             }
+            
+            if(strlen($this->page->_tag)>0) {
+                
+               $tag   = Customer::qstr($this->page->_tag) ;
+               $where = "status = 2 and customer_id in (select item_id from taglist where  tag_type=1 and tag_name={$tag} )"; 
+            }
+            
+            
         }
-
+ 
+   
+        
         return $where;
     }
 
