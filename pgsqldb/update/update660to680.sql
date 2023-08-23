@@ -74,7 +74,7 @@ CREATE TABLE  taglist (
   item_id INTEGER NOT NULL,
   tag_name CHARACTER VARYING(255),
 CONSTRAINT PK_taglist PRIMARY KEY (id)
-) 
+)  ;
     
 INSERT INTO "metadata" (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Кафе', 'OutFood', 'Продажі', 0);
 INSERT INTO "metadata" (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Платіжний календар', 'PayTable', 'Каса та платежі', 0);
