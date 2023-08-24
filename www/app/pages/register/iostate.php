@@ -17,6 +17,7 @@ use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\BookmarkableLink;
+use App\Application as App;
 
 /**
  * журнал доходы  и расходы
@@ -33,7 +34,7 @@ class IOState extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('IOState')) {
-            return;
+            App::RedirectHome() ;
         }
 
         $this->_ptlist = \App\Entity\IOState::getTypeList();

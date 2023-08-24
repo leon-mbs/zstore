@@ -147,7 +147,7 @@ class ItemSel extends \Zippy\Html\PageFragment
             $where = $where . " and  manufacturer like {$man}      ";
         }
 
-        H::log($where)   ;
+        //$where)   ;
         $list = Item::find($where);
 
         $this->_list = array();

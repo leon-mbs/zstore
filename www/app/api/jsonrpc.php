@@ -19,7 +19,7 @@ abstract class JsonRPC
         //  $request = '{"jsonrpc": "2.0", "method": "createorder", "params":{"number":"ID0001","phone":"0971111111","ship_address":"Харьков","items":[{"item_code":"cbs500-1","quantity":2,"price":234},{"item_code":"ID0018","quantity":2,"price":234}] },   "id": 1}';
 
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-            echo json_encode(self::error($id, -1015, "Method  must  be POST"), JSON_UNESCAPED_UNICODE);
+            echo json_encode(self::error(0, -1015, "Method  must  be POST"), JSON_UNESCAPED_UNICODE);
             return;
         }
         try {
@@ -38,7 +38,7 @@ abstract class JsonRPC
             }
 
         } catch(\Exception $e) {
-            echo json_encode(self::error($id, -1016, $e->getMessage()), JSON_UNESCAPED_UNICODE);
+            echo json_encode(self::error(0, -1016, $e->getMessage()), JSON_UNESCAPED_UNICODE);
             return;
 
         }

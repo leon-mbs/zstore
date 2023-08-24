@@ -35,7 +35,7 @@ class TaskList extends \App\Pages\Base
         parent::__construct();
 
         if (false == \App\ACL::checkShowReg('TaskList')) {
-            return;
+            \App\Application::RedirectHome() ;
         }
 
         $this->_taskds = new EDS('\App\Entity\Doc\Document', "", "priority desc,document_date desc");
@@ -304,10 +304,14 @@ class TaskList extends \App\Pages\Base
     }
 
     public function OnCal($sender, $action) {
+        $task = null;
+
         if ($action['action'] == 'click') {
 
             $task = Document::load($action['id']);
-
+            if ($task->state == Document::STATE_CLOSED) {
+                return;
+            }
             $class = "\\App\\Pages\\Doc\\Task";
 
             Application::Redirect($class, $task->document_id);
@@ -320,9 +324,7 @@ class TaskList extends \App\Pages\Base
             Application::Redirect("\\App\\Pages\\Doc\\Task", 0, 0, $start);
             return;
         }
-        if ($task->state == Document::STATE_CLOSED) {
-            return;
-        }
+
         if ($action['action'] == 'move') {
             $task = Task::load($action['id']);
 

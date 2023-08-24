@@ -34,7 +34,7 @@ class OutcomeItem extends Document
                 if ($this->headerdata['mtype'] > 0) {
                     $io = new \App\Entity\IOState();
                     $io->document_id = $this->document_id;
-                    $io->amount = 0 - $qty * $stock->partion;
+                    $io->amount = 0 - $st->quantity * $st->partion;
                     $io->iotype = $this->headerdata['mtype'];
 
                     $io->save();

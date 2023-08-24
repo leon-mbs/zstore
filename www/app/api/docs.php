@@ -67,8 +67,8 @@ class docs extends JsonRPC
         }
 
         $doc->document_number = $doc->nextNumber();
-        if (strlen($neworder->document_number) == 0) {
-            $neworder->document_number = 'API00001';
+        if (strlen($doc->document_number) == 0) {
+            $doc->document_number = 'API00001';
         }
         $doc->document_date = time();
 

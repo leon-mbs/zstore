@@ -144,40 +144,43 @@ class Export extends \App\Pages\Base
         $data = array();
 
         $header['A1'] = "Найменуванння";
-        $header['B1'] = "Од.";
-        $header['C1'] = "Категорія";
-        $header['D1'] = "Бренд";
-        $header['E1'] = "Артикул";
-        $header['F1'] = "Штрих код";
-        $header['G1'] = "Ціна";
+        $header['B1'] = "Кор. назва";
+        $header['C1'] = "Од.";
+        $header['D1'] = "Категорія";
+        $header['E1'] = "Бренд";
+        $header['F1'] = "Артикул";
+        $header['G1'] = "Штрих код";
+        $header['H1'] = "Ціна";
 
         if ($t == 1) {
-            $header['H1'] = "Комірка";
-            $header['I1'] = "Кіл.";
+            $header['I1'] = "Комірка";
+            $header['J1'] = "Кіл.";
         }
 
         $root="<root>";
-
+        $qty=0;
         $i = 1;
         foreach ($list as $item) {
             $i++;
             $data['A' . $i] = $item->itemname;
-            $data['B' . $i] = $item->msr;
-            $data['C' . $i] = $item->cat_name;
-            $data['D' . $i] = $item->manufacturer;
-            $data['E' . $i] = $item->item_code;
-            $data['F' . $i] = $item->bar_code;
-            $price = H::fa($item->getPrice($pt));
-            $data['G' . $i] = array('value' => H::fa(doubleval($price)), 'format' => 'number', 'align' => 'right');
+            $data['B' . $i] = $item->shortname;
+            $data['C' . $i] = $item->msr;
+            $data['D' . $i] = $item->cat_name;
+            $data['E' . $i] = $item->manufacturer;
+            $data['F' . $i] = $item->item_code;
+            $data['G' . $i] = $item->bar_code;
+            $price=  H::fa($item->getPrice($pt));
+            $data['H' . $i] = array('value' => H::fa(doubleval($price)), 'format' => 'number', 'align' => 'right');
 
             if ($t == 1) {
-                $data['H' . $i] = $item->cell;
+                $data['I' . $i] = $item->cell;
                 $qty = H::fqty($item->getQuantity($store));
-                $data['I' . $i] = array('value' => H::fqty(doubleval($qty)), 'format' => 'number', 'align' => 'right');
+                $data['J' . $i] = array('value' => H::fqty(doubleval($qty)), 'format' => 'number', 'align' => 'right');
             }
 
             $root.="<item>";
             $root.="<name><![CDATA[" . $item->itemname . "]]></name>";
+            $root.="<shortname><![CDATA[" . $item->shortname . "]]></shortname>";
             $root.="<msr>" . $item->msr . "</msr>";
             $root.="<cat_name>" . $item->cat_name . "</cat_name>";
             $root.="<item_code>" . $item->item_code . "</item_code>";
@@ -260,7 +263,7 @@ class Export extends \App\Pages\Base
 
             $i++;
             $data['A' . $i] = array('value' => "Всього: ", 'bold' => true, 'align' => 'right');
-            $data['B' . $i] = array('value' => H::fa(doubleval($item->amount)), 'format' => 'number', 'bold' => true, 'align' => 'right');
+            $data['B' . $i] = array('value' => H::fa(doubleval($doc->amount)), 'format' => 'number', 'bold' => true, 'align' => 'right');
             $i++;
 
             $root.="</doc>";

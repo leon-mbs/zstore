@@ -84,9 +84,13 @@ class Subscribe extends \ZCL\DB\Entity
 
         $list = array();
         $list[self::MSG_NOTIFY] = "Системне повідомлення";
-        $list[self::MSG_EMAIL] = "E-mail";
-        $list[self::MSG_SMS] = "SMS";
+        if(\App\System::useEmail()) {
+            $list[self::MSG_EMAIL] = "E-mail";
+        }
 
+        if($sms['smstype'] > 0) {
+            $list[self::MSG_SMS] = "SMS";
+        }
 
         if($sms['smstype']==2) {
             $list[self::MSG_VIBER] =  "Viber";
@@ -129,6 +133,8 @@ class Subscribe extends \ZCL\DB\Entity
 
             $ret = '';
             $phone = '';
+            $viber = '';
+            $chat_id = '';
             //  $viber='';
             $email = '';
             $notify = 0;
@@ -162,11 +168,33 @@ class Subscribe extends \ZCL\DB\Entity
                 }
             }
             $text = $sub->getText($doc);
+            if ($notify > 0 && $sub->msg_type == self::MSG_NOTIFY) {
+                self::sendNotify($notify, $text);
+            }
+            if ($notify == 0 && $sub->msg_type == self::MSG_NOTIFY) {
+                self::sendNotify(\App\Entity\Notify::SYSTEM, $text);
+            }
+
             if (strlen($phone) > 0 && $sub->msg_type == self::MSG_SMS) {
                 $ret =   self::sendSMS($phone, $text);
             }
             if (strlen($email) > 0 && $sub->msg_type == self::MSG_EMAIL) {
-                $ret =   self::sendEmail($email, $text, $sub->msgsubject, $sub->attach==1 ? $doc : null);
+
+                if(System::useCron()) {
+                    $task = new  \App\Entity\CronTask();
+                    $task->tasktype='subsemail';
+                    $task->taskdata= serialize(array(
+                       'email'=>$email ,
+                       'subject'=>$sub->msgsubject ,
+                       'text'=>$text ,
+                       'document_id'=> $sub->attach==1 ? $doc->document_id : 0
+                    ));
+
+                    $task->save();
+                } else {
+                    $ret =   self::sendEmail($email, $text, $sub->msgsubject, $sub->attach==1 ? $doc : null);
+                }
+
             }
 
             if(strlen($viber)==0) {
@@ -177,12 +205,6 @@ class Subscribe extends \ZCL\DB\Entity
             }
             if(strlen($chat_id)>0 && $sub->msg_type == self::MSG_BOT) {
                 $ret =   self::sendBot($chat_id, $text, $sub->attach==1 ? $doc : null) ;
-            }
-            if ($notify > 0 && $sub->msg_type == self::MSG_NOTIFY) {
-                self::sendNotify($notify, $text);
-            }
-            if ($notify == 0 && $sub->msg_type == self::MSG_NOTIFY) {
-                self::sendNotify(\App\Entity\Notify::SYSTEM, $text);
             }
 
             if(strlen($ret)>0) {
@@ -210,7 +232,9 @@ class Subscribe extends \ZCL\DB\Entity
 
         $header = array();
 
+
         $header['document_number'] = $doc->document_number;
+        $header['doc_dn'] = intval(preg_replace('/[^0-9]/', '', $doc->document_number));
         $header['document_date'] = \App\Helper::fd($doc->document_date);
         $header['document_type'] = $doc->meta_desc;
         $header['amount'] = \App\Helper::fa($doc->amount);
@@ -266,8 +290,8 @@ class Subscribe extends \ZCL\DB\Entity
                 $mfb = \App\Entity\MoneyFund::load($doc->headerdata['mfbeznal']);
                 $header['mf'] = $mfb->mf_name;
                 if(strlen($mfb->bank)>0) {
-                    $header['mf'] = $mf->bank;
-                    $header['mfacc'] = $mf->bankacc;
+                    $header['mf'] = $mfb->bank;
+                    $header['mfacc'] = $mfb->bankacc;
                 }
 
             }
@@ -357,12 +381,17 @@ class Subscribe extends \ZCL\DB\Entity
     public static function sendEmail($email, $text, $subject, $doc=null) {
         global $_config;
 
+        if(System::useEmail()==false) {
+            return "No email";
+        }
+
         $emailfrom = $_config['smtp']['emailfrom'];
         if(strlen($emailfrom)==0) {
             $emailfrom = $_config['smtp']['user'];
 
         }
-
+        $filename = '';
+        $f = '';
         try {
 
             if($doc != null) {
@@ -458,7 +487,7 @@ class Subscribe extends \ZCL\DB\Entity
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
 
-            $encoded = json_decode($result, true);
+            $encoded = json_decode($response, true);
             curl_close($ch);
 
 

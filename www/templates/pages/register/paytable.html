@@ -1,0 +1,126 @@
+<html>
+  <head>
+        <title>  Платіжний календар  </title>
+
+    </head>
+
+    <body>
+        <h3>Платіжний календар </h3>
+        <div class="row">
+
+
+            <div class="col-12  col-md-10  col-xl-8" zippy="listpan">
+ 
+                <a zippy="addnew" class="btn btn-success mb-1">Додати</a>
+                <br><span class="badge badge-danger">Просрочено</span> &nbsp;
+                 <span class="badge badge-warning">Недостатньо  коштів</span>&nbsp;
+                 <small >Коштів на  всіх рахунках <b> {{allcost}} </b></small>
+                <table class="table table-sm    ">
+                     <tr>
+                       <th>Дата</th>
+                       <th>Прибуток</th>
+                       <th>Видаток</th>
+                       <th>Призначення</th>
+                       <th>Контрагент</th>
+                       <th></th>
+                       <th></th>
+                       <th></th>
+                     
+                     </tr>
+                    <tr zippy="nlist">
+
+                        <td zippy="date" class="text-nowrap">    </td>
+                             
+
+                        <td  class="text-right" ><span zippy="amountin"></span></td>
+                        <td  class="text-right" ><span zippy="amountout"></span></td>
+                        <td zippy="title"  ></td>
+                        <td zippy="customer"  ></td>
+                        <td><i zippy="hasnotes" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i></td>
+ 
+                        <td><a title="Редагувати" zippy="edit"><i class="fa fa-edit"></i></a></td>
+                        <td><a title="Видалити" zippy="delete"><i class="fa fa-trash text-danger"></i></a></td>
+
+                    </tr>
+                </table>
+                           
+
+            </div>
+       </div>   
+           <div class="row">
+              <div class="col-12 col-md-4  col-xl-3">
+ 
+                <form zippy="addeventform"   >
+                   <div class="form-group   ">
+                        <label  >Тип</label>
+                        <br>
+                        <div class="form-check form-check-inline">
+                            <input zippy="addeventin" class="form-check-input" type="radio"   >
+                            <label class="form-check-label" for="addeventin"> Прибуток</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input zippy="addeventout" class="form-check-input" type="radio"    >
+                            <label class="form-check-label" for="addeventout"> Видаток</label>
+                        </div>
+                   </div>      
+                    <div class="form-group  ">
+                        <label for="addeventdate">Дата платежу</label>
+                        <input style="width:150px"  class="form-control "   zippy="addeventdate" required="required">
+                    </div>
+
+                    <div class="form-group  ">
+                        <label for="addeventamount">Сума платежу</label>
+                        <input style="width:150px"  class="form-control qtyprice"   zippy="addeventamount" required="required">
+                    </div>
+                    <div class="form-group">
+                        <label for="addeventtitle">Призначення </label>
+                        <input required="required" class="form-control" zippy="addeventtitle">
+                    </div>
+                    <div class="form-group">
+                        <label for="addeventcust">Контрагент </label>
+                        <input   class="form-control" zippy="addeventcust">
+                    </div>
+                    <div class="form-group">
+                        <label for="addeventdesc">Коментар</label>
+                        <textarea class="form-control" zippy="addeventdesc" style=" height:120px;"></textarea>
+                    </div>
+                    <div class="form-group">  
+                       <a zippy="cancel" class="btn btn-outline-success  mr-4">Скасувати</a>
+                       <input class="btn btn-success  " type="submit" value="Зберегти">
+                     </div>
+                   
+                </form>
+   
+                <form zippy="editeventform" >
+              
+                    <div class="form-group">
+                        <label for="editeventdate">Дата платежу</label>
+                        <input style="width:150px" required="required" class="form-control" zippy="editeventdate">
+                    </div>
+                    <div class="form-group">
+                        <label for="editeventamount">Сума платежу</label>
+                        <input style="width:150px" required="required" class="form-control" zippy="editeventamount">
+                    </div>
+                    <div class="form-group">
+                        <label for="editeventdesc">Коментар</label>
+                        <textarea class="form-control" zippy="editeventdesc" style=" height:120px;"></textarea>
+                    </div>
+                    <a zippy="canceledit" class="btn btn-outline-success  mr-2">Скасувати</a> &nbsp;
+                    <input class="btn btn-success mr-4 " type="submit" value="Зберегти">
+                     
+                </form>
+
+              </div>
+          </div>
+           
+             
+   <script>
+       function check_delete() {
+                return confirm("Видалити оплату?")
+       }
+   
+   </script> 
+  
+
+    </body>
+</html>

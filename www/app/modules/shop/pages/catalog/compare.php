@@ -43,7 +43,7 @@ class Compare extends Base
         $this->plist->Reload() ;
 
         $options = \App\System::getOptions('shop');
-
+        $attrvalues=[];
         $nodata = "Н/Д";
         $yes = "Є";
         $no = "Немає";

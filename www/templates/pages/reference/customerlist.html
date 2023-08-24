@@ -46,8 +46,10 @@
                             </select>    
                             {{/leadmode}} 
                             <input class="btn btn-outline-success   " type="submit" value="ОК"  >
+                             <a zippy="erase" title="Скинути фільтр"><i class="fa fa-eraser"></i></a>
 
                         </form>
+                      
                         {{#leadmode}}  
 
                         <a class="btn btn-outline-success mr-2"   zippy="leadsourcesedit"  ><i class="fa fa-cog"> Джерело лідів</i> </a>
@@ -215,7 +217,11 @@
                     <label class="form-check-label" for="editdisabled">Більше не використовується</label>
                 </div>        
                 {{/leadmode}} 
-
+               <div class="form-group">
+                   <label for="edittags">Теги</label>
+                   <div zippy="edittags"> </div>
+                   <small>Вводяться по  Enter</small>
+              </div> 
             </div>
 
             <div class="col-12 col-md-4 ">
@@ -285,7 +291,7 @@
                     <tr><td ><span data-label="conphone">Телефон</span></td><td><span zippy="conphone"></span></td></tr>
                     <tr><td ><span data-label="conemail">E-Mail</span></td><td><span zippy="conemail"></span></td></tr>
                 </table>
-
+          <div><small zippy="taglist"></small></div>
                 {{#leadmode}} 
 
                 <form zippy="conlstform" class="form-inline ">
@@ -657,6 +663,8 @@
             return confirm("Видалити?")
 
             }
+
+
         </script>
 
 

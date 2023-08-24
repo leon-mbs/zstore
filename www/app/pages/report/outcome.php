@@ -365,30 +365,28 @@ class Outcome extends \App\Pages\Base
 
         if (strlen($sql) > 0) {
             $rs = $conn->Execute($sql);
-        }
+            foreach ($rs as $row) {
+
+                // $summa = $row['summa'];
+                //  if ($row['navar'] != 0) {
+                //      $row['summa'] += $row['navar'];
+                //  }
 
 
-        foreach ($rs as $row) {
+                $detail[] = array(
+                    "code"      => $row['item_code'],
+                    "name"      => $row['itemname'],
+                    "dt"        => \App\Helper::fd(strtotime($row['dt'] ?? null)),
+                    "qty"       => H::fqty($row['qty']),
+                    "navar"     => H::fa($row['navar']),
+                    "navarsign" => $row['navar'] > 0,
+                    "summa"     => H::fa($row['summa'] + $row['navar']),
+                    "docs"     => intval($row['docs'])
+                );
 
-            // $summa = $row['summa'];
-            //  if ($row['navar'] != 0) {
-            //      $row['summa'] += $row['navar'];
-            //  }
-
-
-            $detail[] = array(
-                "code"      => $row['item_code'],
-                "name"      => $row['itemname'],
-                "dt"        => \App\Helper::fd(strtotime($row['dt'] ?? null)),
-                "qty"       => H::fqty($row['qty']),
-                "navar"     => H::fa($row['navar']),
-                "navarsign" => $row['navar'] > 0,
-                "summa"     => H::fa($row['summa'] + $row['navar']),
-                "docs"     => intval($row['docs'])
-            );
-
-            $totnavar += $row['navar'];
-            $totsum += ($row['summa'] + $row['navar']);
+                $totnavar += $row['navar'];
+                $totsum += ($row['summa'] + $row['navar']);
+            }
         }
 
         $header = array('datefrom' => \App\Helper::fd($from),

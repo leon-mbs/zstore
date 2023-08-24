@@ -9,7 +9,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
-use Zippy\WebApplication as App;
+use App\Application as App;
 
 class Options extends \App\Pages\Base
 {
@@ -32,6 +32,7 @@ class Options extends \App\Pages\Base
         $form->add(new CheckBox('outcome', $modules['ocoutcome']));
         $form->add(new CheckBox('insertcust', $modules['ocinsertcust']));
         $form->add(new CheckBox('setpayamount', $modules['ocsetpayamount']));
+        $form->add(new CheckBox('v4', $modules['ocv4']));
         $form->add(new TextArea('key', $modules['ockey']));
 
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['ocpricetype']));
@@ -50,6 +51,7 @@ class Options extends \App\Pages\Base
         $salesource = $this->cform->salesource->getValue();
         $outcome = $this->cform->outcome->isChecked() ? 1 : 0;
         $ssl = $this->cform->ssl->isChecked() ? 1 : 0;
+        $v4 = $this->cform->v4->isChecked() ? 1 : 0;
         $insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
         $setpayamount = $this->cform->setpayamount->isChecked() ? 1 : 0;
 
@@ -70,6 +72,7 @@ class Options extends \App\Pages\Base
         $modules['ocpricetype'] = $pricetype;
         $modules['ocsalesource'] = $salesource;
         $modules['ocssl'] = $ssl;
+        $modules['ocv4'] = $v4;
         $modules['ocinsertcust'] = $insertcust;
         $modules['ocoutcome'] = $outcome;
         $modules['ocsetpayamount'] = $setpayamount;

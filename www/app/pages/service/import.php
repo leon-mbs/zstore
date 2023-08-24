@@ -13,7 +13,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
-use Zippy\WebApplication as App;
+use App\Application as App;
 
 class Import extends \App\Pages\Base
 {
@@ -877,7 +877,7 @@ class Import extends \App\Pages\Base
         $xml = @simplexml_load_file($file['tmp_name']) ;
         if($xml==false) {
 
-            $logger->error("Невірний  контент");
+            $this->setError("Невірний  контент");
 
             return;
         }

@@ -173,7 +173,7 @@ class ItemActivity extends \App\Pages\Base
                        DATE(sc.document_date) ) t
               ORDER BY t.dt  
         ";
-        H::log($sql)  ;
+        //  H::log($sql)  ;
         $rs = $conn->Execute($sql);
         $ba = 0;
         $bain = 0;

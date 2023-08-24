@@ -33,7 +33,7 @@ class GRList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('GRList')) {
-            return;
+            App::RedirectHome() ;
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
@@ -138,7 +138,7 @@ class GRList extends \App\Pages\Base
         $this->doclist->Reload(false);
 
         $this->statuspan->setVisible(false);
-        //todo  отослать писмо
+
 
         $this->updateStatusButtons();
     }

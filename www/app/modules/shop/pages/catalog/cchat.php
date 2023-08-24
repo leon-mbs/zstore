@@ -8,6 +8,7 @@ use App\Entity\Item;
 class CChat extends \Zippy\Html\WebPage
 {
     private $_doc;
+    private $_uri;
 
     public function __construct($doc_id=0, $hash="") {
         parent::__construct();
@@ -16,6 +17,7 @@ class CChat extends \Zippy\Html\WebPage
             http_response_code(404) ;
             die;
         }
+        $this->_uri = $_SERVER['REQUEST_URI'] ;
 
         $this->_doc = \App\Entity\Doc\Document::load($doc_id) ;
         if($this->_doc==null) {
@@ -47,7 +49,7 @@ class CChat extends \Zippy\Html\WebPage
 
         $this->updatelist() ;
         $this->msgform->msgtext->setText('') ;
-
+        \App\Application::$app->RedirectURI($this->_uri) ;
     }
 
     private function updatelist() {
@@ -58,19 +60,20 @@ class CChat extends \Zippy\Html\WebPage
 
         $list = \App\Entity\Message::find("item_id={$this->_doc->document_id} and item_type=" .\App\Entity\Message::TYPE_CUSTCHAT, "message_id asc");
 
-
-
         foreach($list as $msg) {
             $m=[];
             $m['isseller']  = $msg->user_id >0;
             $m['message']  = $msg->message;
+            $m['checked']  = $msg->checked==1;
             $m['msgdate'] = date('Y-m-d H:i', $msg->created);
 
-
             $this->_tvars['msglist'][] = $m;
+
+            if($m['isseller']) {
+                $msg->checked = 1;
+                $msg->save();
+            }
+
         }
-
-
     }
-
 }

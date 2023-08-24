@@ -15,6 +15,7 @@ class Application extends \Zippy\WebApplication
 
 
         $path = '';
+        $cpath = '';
         $name = ltrim($name, '\\');
 
         $templatepath = 'templates/';

@@ -750,7 +750,7 @@ class ARMPos extends \App\Pages\Base
 
         $ser->price = H::fa($this->docpanel->editserdetail->editserprice->getText());
         $ser->disc = '';
-        if($ser->pureprice > $price) {
+        if($ser->pureprice > $ser->price) {
             $ser->disc = number_format((1 - ($ser->price/($ser->pureprice)))*100, 1, '.', '') ;
         }
 
@@ -1091,7 +1091,7 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['exch2b'] = $this->docpanel->form3->exch2b->getText() ;
         $this->_doc->headerdata['prepaid'] = $this->docpanel->form2->prepaid->getText() ;
         $this->_doc->headerdata['trans'] = trim($this->docpanel->form3->trans->getText());
-        $this->_doc->notes = trim( $this->_doc->notes . ' ' . $this->_doc->headerdata['trans'] ) ;
+        $this->_doc->notes = trim($this->_doc->notes . ' ' . $this->_doc->headerdata['trans']) ;
         //        $this->_doc->headerdata['totaldisc'] = $this->docpanel->form2->totaldisc->getText();
 
         $this->_doc->headerdata['mfnal'] = $this->form1->mfnal->getValue();

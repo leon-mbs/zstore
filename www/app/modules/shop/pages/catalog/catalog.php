@@ -59,7 +59,7 @@ class Catalog extends Base
         if($options['pagesize'] >0) {
             $this->productlist->setPageSize($options['pagesize']);
         }
-        
+
         $this->UpdateList();
 
         //недавно  просмотренные
@@ -76,8 +76,8 @@ class Catalog extends Base
         }
         $this->add(new Panel("recentlyp"))->setVisible(count($ra) > 0);
         $this->recentlyp->add(new DataView('rlist', new EntityDataSource("\\App\\Modules\\Shop\\Entity\\Product", "  item_id in (" . implode(",", $ra) . ")"), $this, 'rOnRow'));
-      
-    
+
+
         if (count($ra) > 0) {
             $this->recentlyp->rlist->Reload();
         }
@@ -235,22 +235,22 @@ class Catalog extends Base
         $row->add(new Label('scomments'))->setText("Відгуків (".$item->comments.")");
         $row->add(new ClickLink('sbuy', $this, 'OnBuy'));
 
-/*        if ($item->getQuantity() > 0 || $this->_tvars["isfood"]==true) {
+        /*        if ($item->getQuantity() > 0 || $this->_tvars["isfood"]==true) {
 
-            // $row->sbuy->setValue('Купити');
-        } else {
-            //  $row->sbuy->setValue('Замовити');
-        }
-  
+                    // $row->sbuy->setValue('Купити');
+                } else {
+                    //  $row->sbuy->setValue('Замовити');
+                }
 
-        $op = \App\System::getOptions("shop");
 
-        if ($item->getQuantity($op['defstore']) > 0) {
-            //  $row->sbuy->setValue('Купити');
-        } else {
-            //  $row->sbuy->setValue('Замовити');
-        } 
-        */
+                $op = \App\System::getOptions("shop");
+
+                if ($item->getQuantity($op['defstore']) > 0) {
+                    //  $row->sbuy->setValue('Купити');
+                } else {
+                    //  $row->sbuy->setValue('Замовити');
+                }
+                */
     }
 
     public function oncartdel($sender) {

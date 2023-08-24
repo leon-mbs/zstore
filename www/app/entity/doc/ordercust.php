@@ -22,10 +22,10 @@ class OrderCust extends Document
                               "itemcode" => $item->item_code,
                               "custcode" => $item->custcode,
                               "quantity" => H::fqty($item->quantity),
-                              "price"    => H::fa($item->price),
+                              "price"    => H::fain($item->price),
                               "msr"      => $item->msr,
                               "desc"     => $item->desc,
-                              "amount"   => H::fa($item->quantity * $item->price)
+                              "amount"   => H::fain($item->quantity * $item->price)
             );
         }
 
@@ -34,7 +34,7 @@ class OrderCust extends Document
                         "customer_name"   => $this->customer_name,
                         "notes"           => nl2br($this->notes),
                        "document_number" => $this->document_number,
-                        "total"           => H::fa($this->amount)
+                        "total"           => H::fain($this->amount)
         );
 
         $report = new \App\Report('doc/ordercust.tpl');

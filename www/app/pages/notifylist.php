@@ -14,7 +14,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
-use Zippy\WebApplication as App;
+use App\Application as App;
 
 class NotifyList extends \App\Pages\Base
 {
@@ -42,7 +42,6 @@ class NotifyList extends \App\Pages\Base
 
         \App\Entity\Notify::markRead($user->user_id);
 
-        $this->filter->add(new ClickLink("delall", $this, 'OnDel'));
 
     }
 
@@ -69,6 +68,10 @@ class NotifyList extends \App\Pages\Base
             $row->sender->setText("Розсилка");
             $row->sendericon->setAttribute('class', 'fa fa-envelope');
         }
+        if ($notify->sender_id == Notify::CRONTAB) {
+            $row->sender->setText("Планувальник");
+            $row->sendericon->setAttribute('class', 'fa fa-clock');
+        }
 
 
         $row->add(new Label("msg"))->setText($notify->message, true);
@@ -93,12 +96,5 @@ class NotifyList extends \App\Pages\Base
         $this->nlist->Reload();
     }
 
-    public function OnDel($row) {
-        $user = System::getUser();
 
-        $conn = \Zdb\DB::getConnect() ;
-
-        $conn->Execute("delete from notifies where   user_id=" . $user->user_id)  ;
-        $this->nlist->Reload();
-    }
 }

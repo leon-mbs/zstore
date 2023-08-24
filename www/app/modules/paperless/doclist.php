@@ -10,7 +10,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\TextInput;
-use Zippy\WebApplication as App;
+use App\Application as App;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\BookmarkableLink;
@@ -97,6 +97,7 @@ class DocList extends \App\Pages\Base
     }
 
     public function send($arg, $post=null) {
+        $name ='';
         try {
 
             $doc = Document::load($arg[0]);

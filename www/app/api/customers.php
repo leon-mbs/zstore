@@ -32,6 +32,7 @@ class customers extends JsonRPC
     }
 
     public function save($args) {
+        $cust = null;
         if ($args['customer_id'] > 0) {
             $cust = Customer::load($args['customer_id'] > 0);
         }

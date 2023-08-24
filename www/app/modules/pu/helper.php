@@ -59,11 +59,11 @@ class Helper
         }
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $ssl);
+        //    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $ssl);
 
         $result = curl_exec($ch);
         if (curl_errno($ch) > 0) {
-            throw new  \Exception(curl_error($request));
+            throw new  \Exception(curl_error($ch));
         }
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         if($httpcode >=300) {

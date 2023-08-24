@@ -63,6 +63,7 @@ class ServiceAct extends \App\Pages\Base
                 }
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
+                    $list =[];
                     if ($basedoc->meta_name == 'Task') {
                         $i=0;
                         foreach($basedoc->unpackDetails('detaildata') as $v) {
@@ -245,7 +246,7 @@ class ServiceAct extends \App\Pages\Base
         }
 
         $this->_doc->packDetails('detaildata', $servicelist);
-
+        $isEdited = $this->_doc->document_id >0;
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();

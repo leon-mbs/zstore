@@ -28,6 +28,7 @@ class ProdIssue extends \App\Pages\Base
     public $_itemlist  = array();
     private $_doc;
     private $_basedocid = 0;
+    private $_rowid = -1;
 
 
     public function __construct($docid = 0, $basedocid = 0, $st_id = 0) {

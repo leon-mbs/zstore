@@ -227,7 +227,8 @@ class FirmList extends \App\Pages\Base
     }
     public function onSend($sender) {
         $signtype =  $this->keyform->signtype->getValue()  ;
-
+        $keydata= '';
+        $certdata= '';
         $serhost = $this->keyform->serhost->getText() ;
         $serport = $this->keyform->serport->getText() ;
         $usessl  = $this->keyform->usessl->isChecked() ;
