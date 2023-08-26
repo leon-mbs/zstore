@@ -63,7 +63,8 @@ class CustomerList extends \App\Pages\Base
      
         $this->customertable->filter->add(new ClickLink('erase', $this, "onErase"));     
 
-      
+        $this->customertable->add(new \Zippy\Html\Link\LinkList("taglist"))->onClick($this, 'OnTagList');        
+     
      
         $this->customertable->add(new Form('listform'));
         $this->customertable->listform->add(new DataView('customerlist', new CustomerDataSource($this), $this, 'customerlistOnRow'));
@@ -143,7 +144,6 @@ class CustomerList extends \App\Pages\Base
         $this->contentview->add(new DataView('dw_eventlist', new ArrayDataSource(new Bind($this, '_eventlist')), $this, 'eventListOnRow'));
 
         
-        $this->contentview->add(new \Zippy\Html\Link\LinkList("taglist"))->onClick($this, 'OnTagList');        
         
         
         
@@ -183,6 +183,15 @@ class CustomerList extends \App\Pages\Base
 
     public function Reload() {
           $this->customertable->listform->customerlist->Reload();
+          
+       
+          $this->customertable->taglist->Clear();
+          $tags = \App\Entity\Tag::getTags(1 ) ;
+          foreach ($tags as $tag) {
+             $this->customertable->taglist->addClickLink($tag, '#'.$tag);
+          }           
+          
+          
     }
     
     public function onErase() {
@@ -501,12 +510,7 @@ class CustomerList extends \App\Pages\Base
         $this->updateBonus();
         
         $this->_tag='';
-       
-        $this->contentview->taglist->Clear();
-        $tags = \App\Entity\Tag::getTags(1,$this->_customer->customer_id) ;
-        foreach ($tags as $tag) {
-           $this->contentview->taglist->addClickLink($tag, '#'.$tag);
-        }          
+         
         // $this->goAnkor('contentviewlink');
     }
     public function OnTagList($sender) {
