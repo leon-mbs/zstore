@@ -137,6 +137,7 @@ class SalaryTypeList extends \App\Pages\Base
         $sl = SalType::getList();
         $codebaseincom = $this->optform->optbaseincom->getValue();
         $codeadvance = $this->optform->optadvance->getValue();
+        $coderesult = $this->optform->optresult->getValue();
 
         $this->optform->optbaseincom->setOptionList($sl);
         $this->optform->optresult->setOptionList($sl);

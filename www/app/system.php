@@ -6,11 +6,11 @@ use App\Entity\User;
 
 /**
  * Класс  содержащи  методы  работы   с  наиболее  важными
- * системмными  данными
+ * системными  данными
  */
 class System
 {
-    public const CURR_VERSION= "6.7.7";
+    public const CURR_VERSION= "6.8.0";
 
     private static $_options = array();   //  для кеширования
     private static $_cache   = array();   //  для кеширования
@@ -80,6 +80,7 @@ class System
         $rs = $conn->GetOne("select optvalue from options where optname='{$group}' ");
         if (strlen($rs) > 0) {
             if(!$isserialise) {
+                self::$_options[$group] = $rs;
                 return $rs;
             }  //неупакопано
 
@@ -120,7 +121,20 @@ class System
         $conn->Execute(" delete from options where  optname='{$group}' ");
         $conn->Execute(" insert into options (optname,optvalue) values ('{$group}'," . $conn->qstr($options) . " ) ");
     }
+    /**
+    * установить отьедный параметр
+    *
+    * @param mixed $group
+    * @param mixed $option
+    * @param mixed $value
+    */
+    public static function setOption($group, $option, $value) {
 
+        $options = self::getOptions($group);
+        $options[$option]  = $value;
+
+        self::setOptions($group, $options) ;
+    }
     public static function setCache($key, $data) {
         self::$_cache[$key] = $data;
     }
@@ -176,4 +190,16 @@ class System
         self::$_cache = [] ;
 
     }
+
+
+    public static function useCron() {
+        return  \App\Helper::getKeyVal('cron') ?? false;
+    }
+    public static function useEmail() {
+        $o=  self::getOption('common', 'noemail') ?? false;
+        return !$o;
+
+    }
+
+
 }

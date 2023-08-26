@@ -189,7 +189,7 @@ class IncomeService extends \App\Pages\Base
 
         $this->editdetail->editservice->setValue($service->service_id);
 
-        $this->_rowid =  array_search($item, $this->_servicelist, true);
+        $this->_rowid =  array_search($service, $this->_servicelist, true);
 
     }
 

@@ -74,7 +74,7 @@ class Helper
     }
 
     public static function generateMenu($meta_type) {
-
+        $dir ='';
         $conn = \ZDB\DB::getConnect();
         $rows = $conn->Execute("select *  from metadata where meta_type= {$meta_type} and disabled <> 1 order  by  description ");
         $menu = array();
@@ -160,6 +160,7 @@ class Helper
                 continue;
             }
             $icon = '';
+            $dir = '';
 
             switch((int)$item['meta_type']) {
                 case 1:
@@ -281,6 +282,11 @@ class Helper
 
     public static function sendLetter($emailto, $text, $subject = "") {
         global $_config;
+
+
+        if(\App\System::useEmail() == false) {
+            return;
+        }
 
         $emailfrom = $_config['smtp']['emailfrom'];
         if(strlen($emailfrom)==0) {
@@ -666,6 +672,34 @@ class Helper
     }
 
     /**
+      * форматирование  сумм    с копейками для закупок
+      *
+      * @param mixed $am
+      * @return mixed
+      */
+    public static function fain($am) {
+
+        $common = System::getOptions("common");
+        if ($common['buy2'] != 1) { //отдельная  настройка
+            return self::fa($am);
+        }
+        if (strlen($am) == 0) {
+            return '';
+        }
+        if(is_numeric($am) && abs($am)<0.005) {
+            $am  = 0;
+        }
+        $am = str_replace(',', '.', $am);
+        $am = preg_replace("/[^0-9\.\-]/", "", $am);
+        $am = trim($am);
+
+        $am  = doubleval($am)  ;
+
+        return @number_format($am, 2, '.', '');
+
+    }
+
+    /**
      * форматирование дат
      *
           * @return mixed
@@ -777,21 +811,12 @@ class Helper
         return 10;
     }
 
+
+
     /**
-     * Возвращает языковую метку
-     *
-     * @param mixed $label
-     * @param mixed $p1
-     * @param mixed $p2
-     * @deprecated
-     */
-    public static function l($label, $p1 = "", $p2 = "", $p3 = "") {
-        return $label;
-
-    }
-
-
-
+    * список валют
+    *
+    */
     public static function getValList() {
         $val = \App\System::getOptions("val");
         if(!is_array($val['vallist'])) {
@@ -805,6 +830,12 @@ class Helper
         return $list;
     }
 
+    /**
+    * название  валюты
+    *
+    * @param mixed $vn
+    * @return mixed
+    */
     public static function getValName($vn) {
         if ($vn == 'Гривня') {
             return 'UAH';
@@ -919,12 +950,12 @@ class Helper
 
 
     /**
-    * Получение  дангный с  таблицы ключ-значение
+    * Получение  данных с  таблицы ключ-значение
     *
     * @param mixed $key
     * @return mixed
     */
-    public static function getVal($key) {
+    public static function getKeyVal($key) {
         if(strlen($key)==0) {
             return;
         }
@@ -938,6 +969,7 @@ class Helper
         return $ret;
     }
 
+
     /**
     * Вставка  данных в  таблицу ключ-значение
     *
@@ -945,7 +977,7 @@ class Helper
     * @param mixed $data
     * @return mixed
     */
-    public static function setVal($key, $data=null) {
+    public static function setKeyVal($key, $data=null) {
         if(strlen($key)==0) {
             return;
         }
@@ -979,10 +1011,6 @@ class Helper
 
 
     }
-
-
-
-
 
 
     /**
@@ -1199,10 +1227,10 @@ class Helper
 
 
     public static function getSalt() {
-        $salt= self::getVal('salt');
+        $salt= self::getKeyVal('salt');
         if(strlen($salt)==0) {
             $salt = ''. rand(1000, 999999) ;
-            self::setVal('salt', $salt);
+            self::setKeyVal('salt', $salt);
         }
         return $salt;
     }

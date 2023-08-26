@@ -98,6 +98,12 @@ INSERT INTO "metadata" (  "meta_type", "description", "meta_name", "menugroup", 
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 2, 'Акт звірки', 'CompareAct', 'Контрагенти', 0);
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 2, 'Зарезервовані товари', 'Reserved', 'Склад', 0);
 INSERT INTO "metadata" (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'OLAP аналіз', 'OLAP', 'Аналітика', 0);
+INSERT INTO "metadata" (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Кафе', 'OutFood', 'Продажі', 0);
+INSERT INTO "metadata" (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Платіжний календар', 'PayTable', 'Каса та платежі', 0);
+INSERT INTO "metadata" (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Кафе', 'OutFood', 'Продажі', 0);
+INSERT INTO "metadata" (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Платіжний календар', 'PayTable', 'Каса та платежі', 0);
+ 
+    
   
 
 

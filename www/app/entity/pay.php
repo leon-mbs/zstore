@@ -99,7 +99,7 @@ class Pay extends \ZCL\DB\Entity
                     }
                     $payb->paytype = Pay::PAY_BANK;
                     $payb->paydate = $paydate;
-                    $payb->notes = 'Банковський процент за транзакцію';
+                    $payb->notes = 'Банківський процент за транзакцію';
                     $payb->user_id = \App\System::getUser()->user_id;
                     $payb->save();
 
@@ -156,6 +156,11 @@ class Pay extends \ZCL\DB\Entity
         }
         $c = \App\Entity\Customer::load($customer_id);
         $doc = \App\Entity\Doc\Document::load($document_id);
+        if($doc->headerdata['pricetype'] != 'price1') {
+            return;
+        }
+
+
         $pastbonus = intval($doc->getBonus());
         if($pastbonus != 0) {
             return; //уже  начисленые

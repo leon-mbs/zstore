@@ -38,7 +38,7 @@ class SerList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('SerList')) {
-            return;
+            \App\Application::RedirectHome() ;
         }
 
         $this->add(new Panel('listpan'));
@@ -139,6 +139,7 @@ class SerList extends \App\Pages\Base
         $state = $this->_doc->state;
 
         $invoice = count($this->_doc->getChildren('Invoice')) > 0;
+        $gi = count($this->_doc->getChildren('GoodsIssue')) > 0;
         $task = count($this->_doc->getChildren('Task')) > 0;
 
         if ($sender->id == "btask") {
@@ -155,7 +156,7 @@ class SerList extends \App\Pages\Base
             App::Redirect("\\App\\Pages\\Doc\\Invoice", 0, $this->_doc->document_id);
         }
         if ($sender->id == "bref") {
-            if ($ttn || $task) {
+            if ($gi || $task) {
 
                 $this->setWarn('Були створені документи Наряд та/або Видаткова накладна');
             }

@@ -71,13 +71,15 @@ class Base extends \Zippy\Html\WebPage
 
         $this->add(new ClickLink('logout', $this, 'LogoutClick'));
 
-        $this->add(new \Zippy\Html\Link\BookmarkableLink('logo', "/"))->setVisible(strlen($this->op['logo']) > 0);
-        $this->logo->setValue($this->op['logo']);
         $this->_tvars["shopname"] = $this->op['shopname'];
         $this->_tvars["usefilter"] = $this->op['usefilter'] == 1;
         $this->_tvars["usefeedback"] = $this->op['usefeedback'] == 1;
         $this->_tvars["nouseimages"] =  $this->op['nouseimages'] ==1;
         $this->_tvars["isfood"] = $this->op['ordertype'] == 2;
+        $this->_tvars["logo"] = false;
+        if(strlen($this->op['logo'])>0) {
+            $this->_tvars["logo"] = $this->op['logo'];
+        }
 
         $this->_tvars["np"] = $modules['np'] == 1 && $this->op['ordertype'] != 2;
 
@@ -115,7 +117,7 @@ class Base extends \Zippy\Html\WebPage
 
         $text = Product::qstr('%' . $sender->getText() . '%');
         $code = Product::qstr($sender->getText());
-        $list = Product::findArray('itemname', " disabled <>1 and  detail not  like '%<noshop>1</noshop>%' and  cat_id in(select cat_id from  item_cat where detail not  like '%<noshop>1</noshop>%' ) and    (    itemname like {$text} or item_code like {$code} or bar_code like {$code}  ) ");
+        $list = Product::findArray('itemname', " disabled <>1 and  detail not  like '%<noshop>1</noshop>%' and  cat_id in(select cat_id from  item_cat where detail not  like '%<noshop>1</noshop>%' ) and    (    itemname like {$text} or description like {$text} or item_code like {$code} or bar_code like {$code}  ) ");
         foreach ($list as $k => $v) {
             $r[$k] = $v;
         }

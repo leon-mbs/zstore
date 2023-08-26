@@ -13,7 +13,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
-use Zippy\WebApplication as App;
+use App\Application as App;
 
 class Import extends \App\Pages\Base
 {
@@ -729,7 +729,7 @@ class Import extends \App\Pages\Base
 
     public function oZImport($sender) {
 
-        $c = $this->яform->zcust->getKey();
+        $c = $this->zform->zcust->getKey();
         //$checkname = $this->nform->ncheckname->isChecked();
 
         $preview = $this->zform->zpreview->isChecked();
@@ -738,7 +738,7 @@ class Import extends \App\Pages\Base
 
         $colname = $this->zform->zcolname->getValue();
         $colcode = $this->zform->zcolcode->getValue();
-        $colbarcode = $this->zform->zcolbarcode->getValue();
+
         $colqty = $this->zform->zcolqty->getValue();
         $colprice = $this->zform->zcolprice->getValue();
 
@@ -877,7 +877,7 @@ class Import extends \App\Pages\Base
         $xml = @simplexml_load_file($file['tmp_name']) ;
         if($xml==false) {
 
-            $logger->error("Невірний  контент");
+            $this->setError("Невірний  контент");
 
             return;
         }

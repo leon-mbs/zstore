@@ -2,7 +2,7 @@
     <head>
         <meta charset="utf-8">
         <meta lang="ua" >
-        <title>ZStore</title>
+        <title>Zippy-склад</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -174,7 +174,7 @@
                <ul class="navbar-nav">
                 <li class="nav-item">   
                <a href="/index.php" class="brand-link">
-                    <span  > ZStore</span>
+                    <span  > Zippy-склад</span>
                 </a>     </li>
                </ul>   
                {{/showsidemenu}}   
@@ -289,7 +289,7 @@
                 <!-- Brand Logo -->
                 <a href="/index.php" class="brand-link">
 
-                    <span class="brand-text font-weight-light">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ZStore</span>
+                    <span class="brand-text font-weight-light">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Zippy-склад</span>
                 </a>
 
                 <!-- Sidebar -->
@@ -951,6 +951,13 @@
                                             <p>&nbsp;&nbsp;Пiдписки</p>
                                         </a>
                                     </li>                            
+
+                                    <li class="nav-item">
+                                        <a href="/index.php?p=App/Pages/CronTab" class="nav-link ">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>&nbsp;&nbsp;Планувальник</p>
+                                        </a>
+                                    </li>                            
                                     <li class="nav-item">
                                         <a href="/index.php?p=App/Pages/SystemLog" class="nav-link">
                                             <i class="fa    nav-icon"></i>
@@ -1355,6 +1362,16 @@
    
      
  })
+ 
+ {{#cron}}
+ 
+    fetch('/crontab.php')  
+    setTimeout(() => fetch('/crontab.php')  , 30*60*1000);         
+ 
+ {{/cron}} 
+ 
+ 
+ 
  
         </script>
         {{#usemobilescanner}}

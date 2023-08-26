@@ -39,6 +39,10 @@ class UserLogin extends \Zippy\Html\WebPage
 
         $this->_tvars['appname'] = $common['shopname'];
         $this->_tvars['capcha'] = $common['capcha'] == 1;
+
+        $this->_tvars['cron']  =  \App\System::useCron() ;
+
+
     }
 
     public function onsubmit($sender) {
@@ -136,9 +140,7 @@ class UserLogin extends \Zippy\Html\WebPage
 
             $this->setError('Багато невдалих авторизацій. Адміністратору системи відправлено повідомлення');
             $this->loginform->setVisible(false);
-            if (strlen($admin->email) > 0) {
-                Helper::sendLetter($admin->email, $msg, "Zippy Store alert");
-            }
+
         }
 
         //  $this->_tvars['alerterror'] = '';

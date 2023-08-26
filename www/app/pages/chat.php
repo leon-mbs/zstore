@@ -14,7 +14,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Label;
-use Zippy\WebApplication as App;
+use App\Application as App;
 
 class Chat extends \App\Pages\Base
 {
@@ -167,7 +167,7 @@ class Chat extends \App\Pages\Base
         $file = $sender->msgfile->getFile();
         if (strlen($file["tmp_name"]) > 0) {
             if ($file['size'] > 10000000) {
-                $this->getOwnerPage()->setError("Файл більше 10 МБ!");
+                $this->setError("Файл більше 10 МБ!");
                 return;
             }
             $id = H::addFile($file, 0, '', \App\Entity\Message::TYPE_CHAT);

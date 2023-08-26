@@ -165,7 +165,13 @@ class Order extends \App\Pages\Base
             $this->OnCinfo($this->_doc->customer_id);
 
 
-            $this->_tovarlist = $this->_doc->unpackDetails('detaildata');
+            $this->_tovarlist = [];
+            foreach($this->_doc->unpackDetails('detaildata') as $it) {
+                $it->checked = false;
+                $this->_tovarlist[]=$it;
+            }
+
+
         } else {
             $this->_doc = Document::create('Order');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -537,6 +543,7 @@ class Order extends \App\Pages\Base
     public function OnChangeCustomer($sender) {
         $disc = 0;
         $bonus = 0;
+        $disctext = '';
 
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {

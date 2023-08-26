@@ -20,7 +20,7 @@ class Inventory extends Document
             if ($item->quantity == $item->qfact) {
                 continue;
             }
-
+            $qty=1;
             //оприходуем
             if ($item->quantity < $item->qfact && $this->headerdata['autoincome'] == 1) {
                 $qty = $item->qfact - $item->quantity;
@@ -60,7 +60,7 @@ class Inventory extends Document
                     //записываем  в потери
                     $io = new \App\Entity\IOState();
                     $io->document_id = $this->document_id;
-                    $io->amount = 0 - $qty * $stock->partion;
+                    $io->amount = 0 - $qty * $st->partion;
                     $io->iotype = \App\Entity\IOState::TYPE_LOST;
 
                     $io->save();

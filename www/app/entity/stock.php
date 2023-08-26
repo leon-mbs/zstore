@@ -172,7 +172,7 @@ class Stock extends \ZCL\DB\Entity
                     }
                     $lastpartion = $conn->GetOne("select coalesce(partion,0) from  store_stock  where  qty > 0 and  item_id={$item->item_id} order  by  stock_id desc ".$limit);
                     if ($lastpartion == 0) {
-                        $lastpartion = $price;
+                        $lastpartion = $item->price;
                     }
 
                     $last = new Stock();

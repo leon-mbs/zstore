@@ -43,8 +43,10 @@
                     
                 <div class="row mt-2 mb-4">
                             <div class="col-12 col-sm-4 d-flex align-items-center">
-                                <a class="container-fluid-img" zippy="logo" href="/"> <img/> </a>
-                                <a  class="container-fluid-img logo-text ml-2 text-dark" href="/" style="font-family: 'Georgia';"> {{shopname}} </a>
+                                {{#logo}}
+                                <a class="container-fluid-img"  href="/"> <img src="{{logo}}"/> </a>
+                                {{/logo}}
+                                <a  class="container-fluid-img logo-text ml-2 text-dark" href="/" style="font-family: Georgia;"> {{shopname}} </a>
                             </div>
                             <div class="col-12 col-sm-8 d-flex align-items-center justify-content-end">
                                 <nav class="main-header navbar navbar-expand ">
@@ -125,7 +127,7 @@
                            {{/pages}}  
                         </div> 
                         <div  class="col-12 text-center mt-2 mb-2">
-                            <span style="color:#fff"> <a href="http://zippy.com.ua/zstore" target="_blank">ZStore</a> @ 2019</span>
+                            <span style="color:#fff"> <a href="http://zippy.com.ua/zstore" target="_blank">Zippy-склад</a> @ 2019</span>
                              &nbsp;&nbsp;&nbsp;
                             <span style="color:#fff"> <a href="/index.php?p=App/Pages/Main" target="_blank">Админ панель</a> </span>
                         </div>

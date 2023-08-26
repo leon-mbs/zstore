@@ -249,11 +249,6 @@ class OrderFood extends \App\Pages\Base
         $item->disc = $this->editdetail->editdisc->getText();
 
 
-
-        if ($item->quantity > $qstock) {
-            $this->setWarn('Введено більше товару, чим є в наявності');
-        }
-
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
         } else {

@@ -42,7 +42,7 @@ class ProdStageList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('ProdStageList')) {
-            return;
+            \App\Application::RedirectHome() ;
         }
 
         $this->add(new Panel("listpan"));

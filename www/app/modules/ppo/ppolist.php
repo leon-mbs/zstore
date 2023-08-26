@@ -19,7 +19,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Panel;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
-use Zippy\WebApplication as App;
+use App\Application as App;
 
 class PPOList extends \App\Pages\Base
 {
@@ -119,6 +119,8 @@ class PPOList extends \App\Pages\Base
 
     public function updateShifts() {
         $this->_shlist = array();
+        $this->shpan->shlist->Reload();     
+   
         $dt = new \App\DateTime();
 
         $from = $dt->addMonth(-1)->startOfMonth()->getISO();
@@ -126,7 +128,8 @@ class PPOList extends \App\Pages\Base
         $dt = new \App\DateTime();
 
         $to = $dt->getISO();
-
+        $to = $dt->addMonth(-1)->endOfMonth()->getISO();
+  
         $cid = $this->opan->filter->searchcomp->getValue();
         $firm = Firm::load($cid);
 
@@ -147,6 +150,33 @@ class PPOList extends \App\Pages\Base
             $this->_shlist[] = $it;
         }
 
+        $dt = new \App\DateTime();
+
+        $from = $dt->startOfMonth()->getISO();
+
+        $dt = new \App\DateTime();
+
+        $to = $dt->getISO();
+
+        
+        $res = PPOHelper::send(json_encode(array('Command' => 'Shifts', 'NumFiscal' => $this->ppo->tr->NumFiscal, 'From' => $from, 'To' => $to)), 'cmd', $firm);
+        if ($res['success'] == false) {
+            $this->setErrorTopPage($res['data']);
+            return;
+        }
+        $res = json_decode($res['data']);
+        foreach ($res->Shifts as $sh) {
+            $it = new DataItem(array('openname'  => $sh->OpenName,
+                                     'closename' => $sh->CloseName,
+                                     'opened'    => $sh->Opened,
+                                     'closed'    => $sh->Closed,
+                                     'ShiftId'   => $sh->ShiftId
+            ));
+
+            $this->_shlist[] = $it;
+        }
+        
+        
         $this->shpan->shlist->Reload();
     }
 

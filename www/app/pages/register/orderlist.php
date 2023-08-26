@@ -16,6 +16,7 @@ use Zippy\Html\Form\TextInput;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\SubmitLink;
 use Zippy\Html\Panel;
 use App\Entity\Pay;
 
@@ -36,9 +37,9 @@ class OrderList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('OrderList')) {
-            return;
+            \App\Application::RedirectHome() ;
         }
-        //  $this->_issms = (System::getOption('sms','smstype')??0) >0 ;
+        $this->_issms = (System::getOption('sms', 'smstype')??0) >0 ;
 
         $this->add(new Panel("listpanel"));
 
@@ -104,8 +105,14 @@ class OrderList extends \App\Pages\Base
         $this->payform->setVisible(false);
 
         $this->add(new Panel("editpanel"))->setVisible(false);
+        $this->editpanel->add(new Label("editdn"));
         $this->editpanel->add(new Form("editform"));
-        $this->editpanel->editform->add(new SubmitButton('editforcancel'))->onClick($this, 'editOnSubmit');
+        $this->editpanel->editform->add(new SubmitButton('editcancel'))->onClick($this, 'editOnSubmit');
+        $this->editpanel->editform->add(new SubmitButton('editsave'))->onClick($this, 'editOnSubmit');
+        $this->editpanel->editform->add(new SubmitButton('editready'))->onClick($this, 'editOnSubmit');
+        $this->editpanel->editform->add(new DataView('edititemlist', new \Zippy\Html\DataList\ArrayDataSource($this, '_itemlist'), $this, 'editlistOnRow'));
+        $this->editpanel->editform->add(new TextInput('editbarcode'));
+        $this->editpanel->editform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
 
     }
@@ -276,11 +283,7 @@ class OrderList extends \App\Pages\Base
             $pos = count($list) > 0;
 
             if ($sender->id == "bscan") {
-                $this->editpanel->setVisible(true);
-                $this->listpanel->setVisible(false);
-                $this->statuspan->setVisible(false);
-                $this->payform->setVisible(false);
-
+                $this->openedit();
                 return;
             }
 
@@ -326,9 +329,7 @@ class OrderList extends \App\Pages\Base
             }
 
             if ($sender->id == "bgi") {
-                if ($invoice) {
-                    $this->setWarn('Вже існує документ Видаткова накладна');
-                }
+
                 App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
                 return;
             }
@@ -343,7 +344,7 @@ class OrderList extends \App\Pages\Base
 
 
 
-                if($this->_doc->payamount >0 && $this->_doc->payamount>$this->_doc->payed) {
+                if($this->_doc->payamount >0 && $this->_doc->payamount>$this->_doc->payed && $gi == false) {
                     $this->setWarn('"Замовлення закрито без оплати"');
                 }
 
@@ -654,8 +655,87 @@ class OrderList extends \App\Pages\Base
 
     }
 
+    public function openedit() {
+        $this->editpanel->setVisible(true);
+        $this->listpanel->setVisible(false);
+        $this->statuspan->setVisible(false);
+        $this->payform->setVisible(false);
+
+        $this->_doc = Document::load($this->_doc->document_id);
+
+        $this->editpanel->editdn->setText($this->_doc->document_number);
+        $this->_itemlist = [];
+        foreach($this->_doc->unpackDetails('detaildata')  as $it) {
+
+            $it->checked = $it->checked ?? false;
+            $it->checkedqty =   0;
+            $this->_itemlist[] = $it;
+
+        }
+
+        $this->editpanel->editform->edititemlist->Reload();
+
+    }
+
+    public function editlistOnRow($row) {
+        $item = $row->getDataItem();
+        $row->add(new  Label('editlistname', $item->itemname));
+        $row->add(new  Label('editlistcode', $item->item_code));
+        $row->add(new  Label('editlistbarcode', $item->bar_code));
+        $row->add(new  Label('editlistqty', $item->quantity));
+        $row->add(new CheckBox('checkscan', new \Zippy\Binding\PropertyBinding($item, 'checked')));
+
+    }
+
+    public function addcodeOnClick($sender) {
+        $code = trim($this->editpanel->editform->editbarcode->getText());
+
+        $code0 = ltrim($code, '0');
+
+        $this->editpanel->editform->editbarcode->setText('');
+        if ($code == '') {
+            return;
+        }
+
+        foreach ($this->_itemlist as $ri => $_item) {
+            if ($_item->bar_code == $code || $_item->item_code == $code || $_item->bar_code == $code0 || $_item->item_code == $code0) {
+                $this->_itemlist[$ri]->checkedqty += 1;
+                if($this->_itemlist[$ri]->checkedqty >=  $this->_itemlist[$ri]->quantity) {
+                    $this->_itemlist[$ri]->checked = true;
+                }
+
+                $this->editpanel->editform->edititemlist->Reload();
+                $this->addJavaScript("new Audio('/assets/good.mp3').play()", true);
+
+                return;
+            }
+        }
+        $this->addJavaScript("new Audio('/assets/error.mp3').play()", true);
+
+
+    }
+
+
     public function editOnSubmit($sender) {
 
+
+
+        foreach ($this->_itemlist as   $_item) {
+            if($sender->id == "editready" && $_item->checked != true) {
+                $this->setError('Не зібрані всі позиції') ;
+
+                return;
+            }
+        }
+
+
+        $this->_doc->packDetails('detaildata', $this->_itemlist)  ;
+        $this->_doc->save();
+        if ($sender->id == "editready") {
+            $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
+            $this->listpanel->doclist->Reload(false);
+
+        }
 
         $this->editpanel->setVisible(false);
         $this->listpanel->setVisible(true);
@@ -688,10 +768,10 @@ class OrderList extends \App\Pages\Base
     /**
     * список  сообщений по  заказу
     *
-    * @param mixed $args
+    * @param mixed $args[0]  -document_id
     */
     public function getCChatMessages($args) {
-        //  $doc = Document::load($args[0]) ;
+
         $ret=[];
         $list = \App\Entity\Message::find("item_id={$args[0]} and item_type=" .\App\Entity\Message::TYPE_CUSTCHAT, "message_id asc");
 
@@ -701,10 +781,18 @@ class OrderList extends \App\Pages\Base
             $m=[];
             $m['isseller']  = $msg->user_id >0;
             $m['message']  = $msg->message;
+            $m['checked']  = $msg->checked==1;
             $m['msgdate'] = date('Y-m-d H:i', $msg->created);
 
 
             $ret['msglist'][] = $m;
+
+            if(!$m['isseller']) {
+                $msg->checked = 1;
+                $msg->save();
+            }
+
+
         }
 
 
@@ -731,7 +819,7 @@ class OrderList extends \App\Pages\Base
             $phone = $c->phone ?? '';
         }
         if($phone == '') {
-            return json_encode(array('error'=>"Не найдений телефон"), JSON_UNESCAPED_UNICODE);
+            return json_encode(array('error'=>"Не знайдений телефон"), JSON_UNESCAPED_UNICODE);
         }
 
         $link = _BASEURL . 'cchat/' . $args[0]. '/'. $doc->headerdata['hash'];
@@ -740,11 +828,10 @@ class OrderList extends \App\Pages\Base
 
         $text = "Маємо запитання  по  вашому  замовленню. Відповісти за адресою ".$link;
 
-        //   $r = \App\Entity\Subscribe::sendSMS($phone,$text) ;
-        //    if($r!=""){
-        //       return json_encode(array('error'=>$r), JSON_UNESCAPED_UNICODE);
-
-        //    }
+        $r = \App\Entity\Subscribe::sendSMS($phone, $text) ;
+        if($r!="") {
+            return json_encode(array('error'=>$r), JSON_UNESCAPED_UNICODE);
+        }
 
         $msg = new \App\Entity\Message() ;
         $msg->message=$message;
@@ -788,7 +875,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
 
         $status = $filter->status->getValue();
         if ($status == 0) {
-            $where .= " and  state not in (9,17) ";
+            $where .= " and  state not in (9,17,15) ";
         }
         if ($status == 1) {
             $where .= " and  state =1 ";
@@ -819,7 +906,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
         $docs = Document::find($this->getWhere(), "document_id desc", $count, $start);
-        //        $docs = Document::find($this->getWhere(), "priority desc,document_id desc", $count, $start);
+        //         $docs = Document::find($this->getWhere(), "priority desc,document_id desc", $count, $start);
 
         return $docs;
     }

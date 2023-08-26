@@ -353,7 +353,7 @@ class OLAP extends \App\Pages\Base
                     AND dv.document_date <= " . $conn->DBDate($this->startform->stto->getDate()) ;
 
 
-
+        $sql ='';
 
         if ($options['usebranch'] == 1) {
 

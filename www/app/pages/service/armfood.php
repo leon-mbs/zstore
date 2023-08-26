@@ -156,10 +156,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->listsform->add(new TextInput('editqtyq'));
         $this->docpanel->listsform->add(new SubmitButton('beditqty'))->onClick($this, 'editqtyOnClick');
 
-
-
         $this->docpanel->add(new Form('payform'))->setVisible(false);
-
 
         $this->docpanel->payform->add(new TextInput('pfforpay'));
         $this->docpanel->payform->add(new TextInput('pfpayed'));
@@ -167,7 +164,6 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->payform->add(new TextInput('pftrans'));
 
         $this->docpanel->payform->add(new TextInput('pfexch2b'));
-
 
         $this->docpanel->payform->add(new CheckBox('passfisc'));
 
@@ -401,7 +397,7 @@ class ARMFood extends \App\Pages\Base
 
     public function updateorderlist($sender) {
         $conn = \ZDB\DB::getConnect();
-        $where = " state not in(9,17,3) and date(document_date) >= " . $conn->DBDate(strtotime('-1 week'))    ;
+        $where = " state not in(9 ) and date(document_date) >= " . $conn->DBDate(strtotime('-1 week'))    ;
         if ($sender instanceof Form) {
             $text = trim($sender->searchnumber->getText());
             $cust = $sender->searchcust->getKey();
@@ -647,12 +643,15 @@ class ARMFood extends \App\Pages\Base
 
         $state="Новий";
         if ($item->foodstate == 1) {
-            $state="Готуєтся";
+            $state="В черзi";
         }
         if ($item->foodstate == 2) {
-            $state="Готово";
+            $state="Готуєтся";
         }
         if ($item->foodstate == 3) {
+            $state="Готово";
+        }
+        if ($item->foodstate == 4) {
             $state="Видано";
         }
         $row->add(new Label('state', $state));
@@ -1115,7 +1114,7 @@ class ARMFood extends \App\Pages\Base
                     $b=true;
                     foreach ($this->_doc->unpackDetails('detaildata') as $rowid=>$item) {
                         $fs = intval($item->foodstate);
-                        if($fs <3) {
+                        if($fs < 4) {
                             $b = false;
                             break;
                         }
@@ -1354,7 +1353,7 @@ class ARMFood extends \App\Pages\Base
         foreach($docs as $doc) {
             foreach ($doc->unpackDetails('detaildata') as $rowid=>$item) {
                 $fs = intval($item->foodstate);
-                if($fs==2) {
+                if($fs==3) {
                     $itemlist[] = array(
                        'name'=>$item->itemname,
                        'table'=>$doc->headerdata['table'] ?? '',
@@ -1371,51 +1370,6 @@ class ARMFood extends \App\Pages\Base
         return json_encode($itemlist, JSON_UNESCAPED_UNICODE);
     }
 
-    //выдан
-    public function onReady($args, $post) {
-
-
-        $doc = Document::load($args[0]);
-        $doc = $doc->cast();
-
-        $conn = \ZDB\DB::getConnect();
-        $conn->BeginTrans();
-        try {
-
-
-            $items = $doc->unpackDetails('detaildata');
-            if(isset($items[$args[1]])) {
-                $items[$args[1]]->foodstate = 3;  //выдан
-            }
-
-            $doc->packDetails('detaildata', $items);
-            $doc->save();
-
-            if ($this->_worktype ==1) {
-                $inprod = $doc->inProcess()  ;
-                if($inprod==false) {    //если  все  выданы
-                    $doc->updateStatus(Document::STATE_CLOSED);
-                }
-            }
-
-
-            $conn->CommitTrans();
-
-        } catch(\Throwable $ee) {
-            global $logger;
-            $conn->RollbackTrans();
-
-            $logger->error(" Арм  кассира " . $ee->getMessage());
-
-            return json_encode(['error'=>$ee->getMessage() ], JSON_UNESCAPED_UNICODE);
-
-
-        }
-
-        return json_encode([], JSON_UNESCAPED_UNICODE);
-
-
-    }
 
     //фискализация
     public function OnOpenShift() {

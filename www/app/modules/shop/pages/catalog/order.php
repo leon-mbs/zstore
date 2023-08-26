@@ -217,7 +217,7 @@ class Order extends Base
                 'deltime'       => $time,
                 'phone'         => $phone,
                 'ship_address'  => $address,
-                'ship_name'     => $name,
+                'ship_name'     => trim($firstname.' '.$lastname),
                 'shoporder'     => 1,
                 'total'         => $amount
             );
@@ -249,7 +249,7 @@ class Order extends Base
 
             }
             $order->headerdata['pricetype'] = $shop["defpricetype"];
-            $order->headerdata['contact'] = $name . ', ' . $phone;
+            $order->headerdata['contact'] = trim($firstname.' '.$lastname) . ', ' . $phone;
             $order->headerdata['salesource'] = $shop['salesource'];
             $order->headerdata['shoporder'] = 1;
 

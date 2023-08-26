@@ -33,8 +33,8 @@ class ProductAttribute extends \ZCL\DB\Entity
                 return false;
             }
         }
-        if ($item->attributetype == 1) {
-            if ($attr->attributevalue == -1) {
+        if ($this->attributetype == 1) {
+            if ($this->attributevalue == -1) {
                 return false;
             }
         }

@@ -8,7 +8,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\TextInput;
-use Zippy\WebApplication as App;
+use App\Application as App;
 
 class Options extends \App\Pages\Base
 {
@@ -162,17 +162,21 @@ class Options extends \App\Pages\Base
 
         file_put_contents(_ROOT . "upload/citylist.dat", $d);
 
+        gc_collect_cycles() ;
+
         $wlist = array();
         $tmplist = $api->getWarehouses('');
 
         foreach ($tmplist['data'] as $a) {
             $wlist[] = array('Ref' => $a['Ref'], 'City' => $a['CityRef'], 'Description' => $a['Description']);
         }
-
+        unset($tmplist) ;
+        gc_collect_cycles() ;
 
         $d = serialize($wlist);
-
+        unset($wlist) ;
         file_put_contents(_ROOT . "upload/pointlist.dat", $d);
+
 
         $this->updateData();
 

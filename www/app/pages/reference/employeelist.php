@@ -28,14 +28,21 @@ class EmployeeList extends \App\Pages\Base
         if (false == \App\ACL::checkShowRef('EmployeeList')) {
             return;
         }
+
         $this->_blist = \App\Entity\Branch::getList(\App\System::getUser()->user_id);
 
+
         $this->add(new Panel('employeetable'))->setVisible(true);
-        $this->employeetable->add(new DataView('employeelist', new EDS('\App\Entity\Employee', '', 'disabled, emp_name'), $this, 'employeelistOnRow'))->Reload();
+        $this->employeetable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
+
+        $this->employeetable->add(new Form('filter'))->onSubmit($this, 'OnFilter');
+        $this->employeetable->filter->add(new TextInput('searchtext'));
+
+
+        $this->employeetable->add(new DataView('employeelist', new EmpDataSource($this), $this, 'employeelistOnRow'))->Reload();
         $this->employeetable->employeelist->setPageSize(H::getPG());
         $this->employeetable->add(new \Zippy\Html\DataList\Paginator('pag', $this->employeetable->employeelist));
 
-        $this->employeetable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->add(new Form('employeedetail'))->setVisible(false);
 
         $this->employeedetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
@@ -252,6 +259,51 @@ class EmployeeList extends \App\Pages\Base
 
         $this->_tvars['mempacc']  =  $detail;
 
+    }
+    public function OnFilter($sender) {
+
+        $this->employeetable->employeelist->Reload();
+
+    }
+
+
+
+
+}
+
+
+class EmpDataSource implements \Zippy\Interfaces\DataSource
+{
+    private $page;
+
+    public function __construct($page) {
+
+        $this->page = $page;
+    }
+
+    private function getWhere() {
+        $where ="";
+
+        $text = trim($this->page->employeetable->filter->searchtext->getText()) ;
+        $texts = Employee::qstr('%'.$text.'%') ;
+        $textp = Employee::qstr('%<phone>' . $text.'</phone>%') ;
+        if(strlen($text)>0) {
+            $where = " emp_name like {$texts} or  detail like {$textp} ";
+        }
+
+        return $where;
+    }
+
+    public function getItemCount() {
+        return Employee::findCnt($this->getWhere());
+    }
+
+    public function getItems($start, $count, $orderbyfield = null, $desc = true) {
+        return Employee::find($this->getWhere(), "disabled, emp_name", $count, $start);
+    }
+
+    public function getItem($id) {
+        return Employee::load($id);
     }
 
 }

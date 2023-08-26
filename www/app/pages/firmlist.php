@@ -227,7 +227,8 @@ class FirmList extends \App\Pages\Base
     }
     public function onSend($sender) {
         $signtype =  $this->keyform->signtype->getValue()  ;
-
+        $keydata= '';
+        $certdata= '';
         $serhost = $this->keyform->serhost->getText() ;
         $serport = $this->keyform->serport->getText() ;
         $usessl  = $this->keyform->usessl->isChecked() ;
@@ -239,7 +240,7 @@ class FirmList extends \App\Pages\Base
         $isjks = strpos($keyfile['name'], '.jks') >0;
         if($signtype==0 || $signtype==1) {
             $keydata =  @file_get_contents($keyfile['tmp_name']);
-            $certdata =  @file_get_contents($certfile['tmp_name']);
+            $certdata =  !empty($certfile['tmp_name']) ? @file_get_contents($certfile['tmp_name']) : '';
 
             if(strlen($password)==0  || strlen($keydata)==0) {
                 $this->addAjaxResponse("   $('#progress').text('Не вказано необхідні дані');   $('#send').attr('disabled',null);            ");

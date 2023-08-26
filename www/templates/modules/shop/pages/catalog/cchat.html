@@ -44,7 +44,7 @@
                             <div class="col-2"> </div>
                           </div>
                            <div class="row">
-                            <div class="col-10  bg-light   rounded ">{{message}}</div>
+                            <div class="col-10  bg-light     ">{{message}}</div>
                             <div class="col-2"> </div>
                          </div>                  
                         {{/isseller}}
@@ -59,9 +59,20 @@
                         </div>
                            <div class="row">
                             <div class="col-2"> </div>
-                            <div class="col-10   rounded">{{message}}</div>
+                            <div class="col-10    ">{{message}}</div>
+                          </div>
+                           <div class="row">
+                            <div class="col-12 text-right">   <small>
+                              {{#checked}}
+                             <i   class="fa fa-check-double "></i>
+                              {{/checked}}
+                               {{^checked}}
+                             <i   class="fa fa-check "></i>    </small>
+                              {{/checked}}
+                            </div>
                             
-                           </div>  
+                          </div>
+                             
                         {{/isseller}}
                        
                       {{/msglist}}                           

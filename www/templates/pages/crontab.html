@@ -1,0 +1,70 @@
+<html>
+ <head>
+        <title>  Планувальник  </title>
+
+    </head>
+
+    <body>
+ 
+        <div class="row">
+            <div class="col-12 col-md-8 col-xl-6"  >
+                <h3>Планувальник               </h3>
+                
+                <small>   Адреса {{{url}}}   <a href="https://zippy.com.ua/zstoreusage#cron">Детальніше...</a>  </small>
+                
+                <table class="ctable mb-2">
+                      <tr>
+                      <td>Активовано</td> 
+                      <td>
+                          <a  zippy="ton" ><i class="fa fa-toggle-on text-success"></i></a>
+                          <a  zippy="toff"><i class="fa fa-toggle-off"></i></a> 
+                       </td> 
+                      <td>  </td> 
+                    </tr>
+                    <tr>
+                      <td>Останнiй запуск</td> 
+                      <td> {{lasttime}} </td> 
+                      <td>  <a href="javascript:void(0);" onclick="startcron()" >Перезапустити</a> </td> 
+                    </tr>
+                </table>
+                 <h5>Черга завдань</h5>
+                 <a zippy="update" >Оновити</a>
+                <table class="table table-sm mt-2  ">
+                    <tr  zippy="nlist">
+
+                        <td>  <span zippy="ndate" > </span>
+                        <td>  <span zippy="ntype" > </span>
+
+                            
+                        </td>
+                        <td> </td>
+
+
+                    </tr>
+                </table>
+                <div zippy="pag"></div>              
+
+      
+            </div>
+
+
+
+        </div>
+ 
+<script>
+
+   function check_delall() {
+       return confirm("Очистити?")
+   }  
+   
+   function startcron() {
+
+      fetch('/crontab.php')           
+
+   }
+
+</script>    
+          
+    </body>
+
+</html>

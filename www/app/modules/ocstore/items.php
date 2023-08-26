@@ -14,7 +14,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
-use Zippy\WebApplication as App;
+use App\Application as App;
 
 class Items extends \App\Pages\Base
 {
@@ -74,7 +74,9 @@ class Items extends \App\Pages\Base
         $this->_items = array();
         $modules = System::getOptions("modules");
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/articles&' . System::getSession()->octoken;
-
+        if($modules['ocv4']==1) {
+            $url = $modules['ocsite'] . '/index.php?route=api/zstore.articles&' . System::getSession()->octoken;
+        }
         $json = Helper::do_curl_request($url);
         if ($json === false) {
             return;
@@ -158,6 +160,10 @@ class Items extends \App\Pages\Base
         );
 
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/addproducts&' . System::getSession()->octoken;
+        if($modules['ocv4']==1) {
+            $url = $modules['ocsite'] . '/index.php?route=api/zstore.addproducts&' . System::getSession()->octoken;
+        }
+
         $json = Helper::do_curl_request($url, $fields);
         if ($json === false) {
             return;
@@ -197,6 +203,9 @@ class Items extends \App\Pages\Base
             'data' => $data
         );
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/updatequantity&' . System::getSession()->octoken;
+        if($modules['ocv4']==1) {
+            $url = $modules['ocsite'] . '/index.php?route=api/zstore.updatequantity&' . System::getSession()->octoken;
+        }
         $json = Helper::do_curl_request($url, $fields);
         if ($json === false) {
             return;
@@ -231,6 +240,10 @@ class Items extends \App\Pages\Base
             'data' => $data
         );
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/updateprice&' . System::getSession()->octoken;
+        if($modules['ocv4']==1) {
+            $url = $modules['ocsite'] . '/index.php?route=api/zstore.updateprice&' . System::getSession()->octoken;
+        }
+
         $json = Helper::do_curl_request($url, $fields);
         if ($json === false) {
             return;
@@ -262,6 +275,10 @@ class Items extends \App\Pages\Base
         $elist = array();
 
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/getproducts&' . System::getSession()->octoken;
+        if($modules['ocv4']==1) {
+            $url = $modules['ocsite'] . '/index.php?route=api/zstore.getproducts&' . System::getSession()->octoken;
+        }
+
         $json = Helper::do_curl_request($url);
         if ($json === false) {
             return;

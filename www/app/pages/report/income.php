@@ -84,6 +84,9 @@ class Income extends \App\Pages\Base
         $cust_id = $this->filter->cust->getKey();
         $cat_id = $this->filter->cat->getValue();
 
+        $cust = "";
+        $sql = "";
+
         $br = "";
         $brids = \App\ACL::getBranchIDsConstraint();
         if (strlen($brids) > 0) {
@@ -165,7 +168,7 @@ class Income extends \App\Pages\Base
              join documents_view d on d.document_id = e.document_id
                where e.service_id >0  and e.quantity <>0      {$cust}  
               and d.meta_name in (  'IncomeService'  )
-               {$br} {$u} AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
+               {$br}  AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                    group by s.service_name
                order  by s.service_name      ";
@@ -180,7 +183,7 @@ class Income extends \App\Pages\Base
              join documents_view d on d.document_id = e.document_id
                where  e.partion  is  not null and  e.item_id >0  and (e.tag = 0 or e.tag = -2 or e.tag = -8  ) 
                and d.meta_name in ('GoodsReceipt','RetCustIssue' )
-                {$br} {$u}
+                {$br} 
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                 group by    i.cat_name
@@ -199,7 +202,7 @@ class Income extends \App\Pages\Base
                 "name"  => $row['itemname'],
                 "dt"    => H::fd(strtotime($row['dt'])),
                 "qty"   => H::fqty($row['qty']),
-                "summa" => H::fa($row['summa'])
+                "summa" => H::fain($row['summa'])
             );
             $total += $row['summa'];
         }
@@ -210,7 +213,7 @@ class Income extends \App\Pages\Base
                         'dateto'   => H::fd($to)
         );
 
-        $header['total'] = H::fa($total);
+        $header['total'] = H::fain($total);
 
         if ($type == 1 || $type==5 || strlen($cat) > 0) {
             $header['_type1'] = true;

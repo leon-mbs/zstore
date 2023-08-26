@@ -372,6 +372,7 @@ class Roles extends \App\Pages\Base
     }
 
     public function metarowOnRow($row) {
+        $title ='';
         $item = $row->getDataItem();
         switch($item->meta_type) {
             case 1:
@@ -433,6 +434,7 @@ class Roles extends \App\Pages\Base
     }
 
     public function menurowOnRow($row) {
+        $title = "";
         $item = $row->getDataItem();
         switch($item->meta_type) {
             case 1:

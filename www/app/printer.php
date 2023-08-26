@@ -485,7 +485,7 @@ class Printer
     * @param mixed $height
     */
     public function barcodeHeight(int $height = 100) {
-        if($width < 1 || $width > 255) {
+        if($height < 1 || $height > 255) {
             return;
         }
         $this->addBytes([self::GS , ord('h') ,   $height ]);

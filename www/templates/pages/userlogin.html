@@ -94,11 +94,19 @@
         <div class="row justify-content-center">
             <div class="w-100"></div>
             <div class="col-12 " style="margin-top:200px;">
-                ZStore v{{curversion}} © <a href="http://zippy.com.ua/">zippy.com.ua</a>
+                Zippy-склад v{{curversion}} © <a href="http://zippy.com.ua/">zippy.com.ua</a>
             </div>
         </div>
 
-
+    <script>
+     {{#cron}}
+ 
+       setTimeout(() => fetch('/crontab.php')  , 30*60*1000);         
+     
+     {{/cron}} 
+    
+    </script>
+    
     </body>
 
 </html>

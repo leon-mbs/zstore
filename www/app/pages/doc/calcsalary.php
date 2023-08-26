@@ -29,6 +29,7 @@ class CalcSalary extends \App\Pages\Base
         $this->_list = Employee::find('disabled<>1', 'emp_name');
         $this->_stlist = SalType::find("disabled<>1", "salcode");
 
+        $opt = System::getOptions("salary");
 
 
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
@@ -68,7 +69,6 @@ class CalcSalary extends \App\Pages\Base
 
         }
 
-        $opt = System::getOptions("salary");
 
 
         $calcvar ='';
@@ -238,7 +238,7 @@ class CalcSalary extends \App\Pages\Base
 
                       join services s on e.service_id = s.service_id
                      join documents_view d on d.document_id = e.document_id
-                       where e.service_id >0  and e.quantity <>0      {$cust}  
+                       where e.service_id >0  and e.quantity <>0       
                       and d.meta_name in (  'ServiceAct' ,'POSCheck' )
                        {$br}  AND DATE(e.document_date) >={$from} 
                       AND DATE(e.document_date) <= " . $to ;

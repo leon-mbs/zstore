@@ -15,6 +15,7 @@ use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
+use App\Application as App;
 
 /**
 * Товари на складі
@@ -27,7 +28,7 @@ class ItemList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('ItemList')) {
-            return;
+            \App\Application::RedirectHome() ;
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
