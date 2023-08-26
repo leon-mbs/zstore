@@ -58,16 +58,19 @@
                     </div>
                     {{#leadmode}}  
                     <div class="mb-4 ml-2">
-
-
-
+  
                         <a zippy="showstat"><i class="fa fa-chart-area"></i> Статистика</a>
-
-
-
 
                     </div>
                     {{/leadmode}}  
+                    
+                    
+                     <details class="mb-2 ml-2">
+                        <summary >Теги</summary>
+                        <span zippy="taglist"></span>
+                     </details>
+                    
+                    
                     <a zippy="addnew" class="btn btn-primary">Додати нового</a>
 
                     <form zippy="listform">
@@ -291,7 +294,7 @@
                     <tr><td ><span data-label="conphone">Телефон</span></td><td><span zippy="conphone"></span></td></tr>
                     <tr><td ><span data-label="conemail">E-Mail</span></td><td><span zippy="conemail"></span></td></tr>
                 </table>
-          <div><small zippy="taglist"></small></div>
+         
                 {{#leadmode}} 
 
                 <form zippy="conlstform" class="form-inline ">

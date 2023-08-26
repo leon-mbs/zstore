@@ -33,10 +33,15 @@ class Tag extends \ZCL\DB\Entity
         
     }
     
-    public  static function getTags(int  $type,int $item_id)   {
+    public  static function getTags(int  $type,int $item_id=0)   {
        $conn = \Zdb\db::getConnect()  ;
        
-       $ret = $conn->GetCol("select distinct tag_name from taglist where tag_type={$type} and  item_id={$item_id}  order  by tag_name ");
+       if($item_id >0){
+          $ret = $conn->GetCol("select distinct tag_name from taglist where tag_type={$type} and  item_id={$item_id}  order  by tag_name ");
+       } else {
+          $ret = $conn->GetCol("select distinct tag_name from taglist where tag_type={$type}  order  by tag_name ");
+           
+       }
         
         
        return $ret; 
