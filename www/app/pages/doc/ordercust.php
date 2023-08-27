@@ -170,9 +170,9 @@ class OrderCust extends \App\Pages\Base
                'custcode'=>$item->custcode ,
                'item_code'=>$item->item_code ,
                'desc'=>$item->desc ,
-               'price'=>H::fain($item->price) ,
+               'price'=>H::fa($item->price) ,
                'quantity'=>H::fqty($item->quantity) ,
-               'amount'=>H::fain($item->quantity * $item->price) ,
+               'amount'=>H::fa($item->quantity * $item->price) ,
                'msr'=>$item->msr
             );
         }

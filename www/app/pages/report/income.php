@@ -202,7 +202,7 @@ class Income extends \App\Pages\Base
                 "name"  => $row['itemname'],
                 "dt"    => H::fd(strtotime($row['dt'])),
                 "qty"   => H::fqty($row['qty']),
-                "summa" => H::fain($row['summa'])
+                "summa" => H::fa($row['summa'])
             );
             $total += $row['summa'];
         }
@@ -213,7 +213,7 @@ class Income extends \App\Pages\Base
                         'dateto'   => H::fd($to)
         );
 
-        $header['total'] = H::fain($total);
+        $header['total'] = H::fa($total);
 
         if ($type == 1 || $type==5 || strlen($cat) > 0) {
             $header['_type1'] = true;
