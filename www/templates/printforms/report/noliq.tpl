@@ -18,6 +18,9 @@
 
         <th style="border: solid black 1px"> Найменування</th>
 
+        <th style="border: solid black 1px">Код</th>
+        <th style="border: solid black 1px">Штри-код</th>
+        <th style="border: solid black 1px">Бренд</th>
         <th style="border: solid black 1px">Од.</th>
         <th align="right" style="border: solid black 1px">На складi</th>
 
@@ -28,6 +31,9 @@
 
 
         <td>{{itemname}}</td>
+        <td>{{item_code}}</td>
+        <td>{{bar_code}}</td>
+        <td>{{brand}}</td>
 
         <td>{{msr}}</td>
         <td align="right">{{qty}}</td>
