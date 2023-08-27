@@ -29,7 +29,7 @@ class CronTab extends \App\Pages\Base
         }
 
         $this->_tvars['url']  = _BASEURL.'crontab.php';
-        $this->_tvars['lasttime']  = date('Y-m-d H:i', H::getKeyVal('lastcron'));
+        $this->_tvars['lasttime']  = date('Y-m-d H:i',  H::getKeyValInt('lastcron') );
 
         $this->add(new ClickLink('update', $this, 'OnUpdate'));
         $this->add(new ClickLink('ton', $this, 'OnToogle'));
