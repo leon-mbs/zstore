@@ -160,10 +160,10 @@ class InvoiceCust extends \App\Pages\Base
         $row->add(new Label('item', $item->itemname));
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('quantity', H::fqty($item->quantity)));
-        $row->add(new Label('price', H::fain($item->price)));
+        $row->add(new Label('price', H::fa($item->price)));
         $row->add(new Label('msr', $item->msr));
 
-        $row->add(new Label('amount', H::fain($item->quantity * $item->price)));
+        $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -371,11 +371,11 @@ class InvoiceCust extends \App\Pages\Base
     }
 
     public function onPayAmount($sender) {
-        $this->docform->payamount->setText(H::fain($this->docform->editpayamount->getText()));
+        $this->docform->payamount->setText(H::fa($this->docform->editpayamount->getText()));
     }
 
     public function onPayed($sender) {
-        $this->docform->payed->setText(H::fain($this->docform->editpayed->getText()));
+        $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
     }
 
     /**
@@ -390,7 +390,7 @@ class InvoiceCust extends \App\Pages\Base
             $item->amount = $item->price * $item->quantity;
             $total = $total + $item->amount;
         }
-        $this->docform->total->setText(H::fain($total));
+        $this->docform->total->setText(H::fa($total));
     }
 
     private function CalcPay() {
@@ -402,20 +402,20 @@ class InvoiceCust extends \App\Pages\Base
         $total = $total + $nds - $disc;
 
 
-        $this->docform->editpayamount->setText(H::fain($total));
-        $this->docform->payamount->setText(H::fain($total));
-        $this->docform->editpayed->setText(H::fain($total));
-        $this->docform->payed->setText(H::fain($total));
+        $this->docform->editpayamount->setText(H::fa($total));
+        $this->docform->payamount->setText(H::fa($total));
+        $this->docform->editpayed->setText(H::fa($total));
+        $this->docform->payed->setText(H::fa($total));
     }
 
     public function onDisc($sender) {
-        $this->docform->disc->setText(H::fain($this->docform->editdisc->getText()));
+        $this->docform->disc->setText(H::fa($this->docform->editdisc->getText()));
         $this->CalcPay();
         $this->goAnkor("tankor");
     }
 
     public function onNds($sender) {
-        $this->docform->nds->setText(H::fain($this->docform->editnds->getText()));
+        $this->docform->nds->setText(H::fa($this->docform->editnds->getText()));
         $this->CalcPay();
         $this->goAnkor("tankor");
     }

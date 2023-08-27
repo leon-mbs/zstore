@@ -672,12 +672,12 @@ class Helper
     }
 
     /**
-      * форматирование  сумм    с копейками для закупок
+      * форматирование  сумм  без  копеек  при  продаже
       *
       * @param mixed $am
       * @return mixed
       */
-    public static function fain($am) {
+    public static function fasell($am) {
 
         $common = System::getOptions("common");
         if ($common['sell2'] != 1) { //отдельная  настройка
