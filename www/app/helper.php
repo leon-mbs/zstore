@@ -680,11 +680,17 @@ class Helper
     public static function fasell($am) {
 
         $common = System::getOptions("common");
-        if ($common['sell2'] != 1) { //отдельная  настройка
-          //  return self::fa($am);
+        $ret = self::fa($am);
+
+        if ($common['sell2'] ==1 &&  $common['amdigits'] >0 ) { 
+           $ret = "". round( doubleval($ret) ) ;
+           $ret = $ret.'.00' ;
+        }
+        if ( $common['amdigits'] ==0 ) { 
+           $ret = $ret.'.00' ;
         }
        
-        return self::fa($am) ;
+        return $ret;
 
     }
 
