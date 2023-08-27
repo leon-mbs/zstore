@@ -33,8 +33,8 @@ class POSCheck extends Document
                               "tovar_code" => $item->item_code,
                               "quantity"   => H::fqty($item->quantity),
                               "msr"        => $item->msr,
-                              "price"      => H::fa($item->price),
-                              "amount"     => H::fa($item->quantity * $item->price)
+                              "price"      => H::fasell($item->price),
+                              "amount"     => H::fasell($item->quantity * $item->price)
             );
         }
         foreach ($this->unpackDetails('services') as $ser) {
@@ -43,8 +43,8 @@ class POSCheck extends Document
                               "tovar_code" => '',
                               "quantity"   => H::fqty($ser->quantity),
                               "msr"        => '',
-                              "price"      => H::fa($ser->price),
-                              "amount"     => H::fa($ser->quantity * $ser->price)
+                              "price"      => H::fasell($ser->price),
+                              "amount"     => H::fasell($ser->quantity * $ser->price)
             );
         }
 
@@ -66,17 +66,17 @@ class POSCheck extends Document
                         "tin"           => strlen($firm["tin"]) >0 ? $firm["tin"] : false,
                         "customer_name"   => strlen($this->customer_name) > 0 ? $this->customer_name : false,
                         "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"] ?? null) > 0 ? $this->headerdata["fiscalnumber"] : false,
-                        "exchange"        => H::fa($this->headerdata["exchange"]),
+                        "exchange"        => H::fasell($this->headerdata["exchange"]),
                         "pos_name"        => $this->headerdata["pos_name"],
                         "time"            => H::fdt($this->headerdata["time"]),
                         "document_number" => $this->document_number,
-                        "total"           => H::fa($this->amount),
-                        "payed"           => H::fa($pp),
+                        "total"           => H::fasell($this->amount),
+                        "payed"           => H::fasell($pp),
                         "totaldisc"       => $this->headerdata["totaldisc"] > 0 ? H::fa($this->headerdata["totaldisc"]) : false,
                         "prepaid"         => $this->headerdata['prepaid'] > 0 ? H::fa($this->headerdata['prepaid']) : false   ,
 
                         "docqrcode"       => $this->getQRCodeImage(),
-                        "payamount"       => H::fa($this->payamount)
+                        "payamount"       => H::fasell($this->payamount)
         );
         if($this->headerdata['payment'] ?? null  >0) {
             $mf = \App\Entity\MoneyFund::load($this->headerdata['payment']);
@@ -100,8 +100,8 @@ class POSCheck extends Document
             $detail[] = array(
                 "tovar_name" => $name,
                 "quantity"   => H::fqty($item->quantity),
-                "price"   => H::fa($item->price),
-                "amount"     => H::fa($item->quantity * $item->price)
+                "price"   => H::fasell($item->price),
+                "amount"     => H::fasell($item->quantity * $item->price)
             );
         }
         $i = 1;
@@ -109,8 +109,8 @@ class POSCheck extends Document
             $detail[] = array("no"         => $i++,
                               "tovar_name" => $ser->service_name,
                               "quantity"   => H::fqty($ser->quantity),
-                              "price"   => H::fa($ser->price),
-                              "amount"     => H::fa($ser->quantity * $ser->price)
+                              "price"   => H::fasell($ser->price),
+                              "amount"     => H::fasell($ser->quantity * $ser->price)
             );
         }
         $common = System::getOptions('common');
@@ -152,17 +152,17 @@ class POSCheck extends Document
                         "pos_name"        => $this->headerdata["pos_name"],
                         "time"            => H::fdt($this->headerdata["time"]),
                         "document_number" => $this->document_number,
-                        "total"           => H::fa($this->amount),
-                        "totaldisc"           => $this->headerdata["totaldisc"] > 0 ? H::fa($this->headerdata["totaldisc"]) : false,
-                        "exchange"        => $this->headerdata["exchange"] > 0 ? H::fa($this->headerdata["exchange"]) : false,
+                        "total"           => H::fasell($this->amount),
+                        "totaldisc"           => $this->headerdata["totaldisc"] > 0 ? H::fasell($this->headerdata["totaldisc"]) : false,
+                        "exchange"        => $this->headerdata["exchange"] > 0 ? H::fasell($this->headerdata["exchange"]) : false,
                         "addbonus"           => $addbonus > 0 ? H::fa($addbonus) : false,
                         "delbonus"           => $delbonus > 0 ? H::fa($delbonus) : false,
                         "allbonus"           => $allbonus > 0 ? H::fa($allbonus) : false,
                         "trans"           => $this->headerdata["trans"] > 0 ? $this->headerdata["trans"] : false,
                         "docqrcodeurl"     =>  $this->getQRCodeImage(true),
                         "docqrcode"       => $this->getQRCodeImage(),
-                        "payed"           => $pp > 0 ? H::fa($pp) : false,
-                        "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
+                        "payed"           => $pp > 0 ? H::fasell($pp) : false,
+                        "payamount"       => $this->payamount > 0 ? H::fasell($this->payamount) : false
         );
 
         if($header['inn'] != false) {

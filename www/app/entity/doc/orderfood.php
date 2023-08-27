@@ -32,8 +32,8 @@ class OrderFood extends Document
                               "tovar_code" => $item->item_code,
                               "quantity"   => H::fqty($item->quantity),
                               "msr"        => $item->msr,
-                              "price"      => H::fa($item->price),
-                              "amount"     => H::fa($item->quantity * $item->price)
+                              "price"      => H::fasell($item->price),
+                              "amount"     => H::fasell($item->quantity * $item->price)
             );
         }
 
@@ -60,15 +60,15 @@ class OrderFood extends Document
 
                         "notes"   => strlen($this->notes) > 0 ? $this->notes : false ,
                         "contact"   => $this->headerdata["contact"],
-                        "exchange"        => H::fa($this->headerdata["exchange"]),
+                        "exchange"        => H::fasell($this->headerdata["exchange"]),
                         "pos_name"        => $this->headerdata["pos_name"],
                         "time"            => H::fdt($this->headerdata["time"]),
                         "document_number" => $this->document_number,
-                        "total"           => H::fa($this->amount),
+                        "total"           => H::fasell($this->amount),
                         "bonus"           => H::fa($this->headerdata["bonus"] >0) ? H::fa($this->headerdata["bonus"]) : false,
-                        "totaldisc"         => H::fa($this->headerdata["totaldisc"]),
+                        "totaldisc"         => H::fasell($this->headerdata["totaldisc"]),
                         "isdisc"          => $this->headerdata["totaldisc"] > 0,
-                        "payamount"       => H::fa($this->payamount)
+                        "payamount"       => H::fasell($this->payamount)
         );
 
         $report = new \App\Report('doc/orderfood.tpl');
@@ -89,7 +89,7 @@ class OrderFood extends Document
             $detail[] = array(
                 "tovar_name" => $name,
                 "quantity"   => H::fqty($item->quantity),
-                "amount"     => H::fa($item->quantity * $item->price)
+                "amount"     => H::fasell($item->quantity * $item->price)
             );
         }
         $i = 1;
@@ -118,13 +118,13 @@ class OrderFood extends Document
                         "customer_name"   => strlen($this->customer_name) > 0 ? $this->customer_name : false,
                         "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
                         "fiscalnumberpos"  => strlen($this->headerdata["fiscalnumberpos"]) > 0 ? $this->headerdata["fiscalnumberpos"] : false,
-                        "exchange"        => H::fa($this->headerdata["exchange"]),
+                        "exchange"        => H::fasell($this->headerdata["exchange"]),
                         "pos_name"        => $this->headerdata["pos_name"],
                         "time"            => H::fdt($this->headerdata["time"]),
                         "document_number" => $this->document_number,
-                        "total"           => H::fa($this->amount),
-                        "payed"           => H::fa($this->headerdata['payed']),
-                        "totaldisc"         => H::fa($this->headerdata["totaldisc"]),
+                        "total"           => H::fasell($this->amount),
+                        "payed"           => H::fasell($this->headerdata['payed']),
+                        "totaldisc"         => H::fasell($this->headerdata["totaldisc"]),
                         "isdisc"          => $this->headerdata["totaldisc"] > 0,
                          "addbonus"           => $addbonus > 0 ? H::fa($addbonus) : false,
                         "delbonus"           => $delbonus > 0 ? H::fa($delbonus) : false,
@@ -132,7 +132,7 @@ class OrderFood extends Document
                        "docqrcode"       => $this->getQRCodeImage(),
                        "docqrcodeurl"     =>  $this->getQRCodeImage(true),
 
-                        "payamount" => H::fa($this->payamount)
+                        "payamount" => H::fasell($this->payamount)
         );
 
         if($header['inn'] != false) {
