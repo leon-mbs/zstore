@@ -40,7 +40,7 @@ class CronTask extends \ZCL\DB\Entity
             return;
         }
 
-        $last = \App\Helper::getKeyVal('lastcron')  ?? 0;
+        $last = intval( \App\Helper::getKeyVal('lastcron') );
         if((time()-$last) < self::MIN_INTERVAL) { //не  чаще  раза в пять минут
             return;
         }

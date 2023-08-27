@@ -123,13 +123,14 @@ class PPOList extends \App\Pages\Base
    
         $dt = new \App\DateTime();
 
-        $from = $dt->addMonth(-1)->startOfMonth()->getISO();
 
         $dt = new \App\DateTime();
 
         $to = $dt->getISO();
-        $to = $dt->addMonth(-1)->endOfMonth()->getISO();
-  
+        $to = $dt->subMonth(1)->endOfMonth()->getISO();
+ 
+        $from = $dt->subDay(10)->getISO();
+ 
         $cid = $this->opan->filter->searchcomp->getValue();
         $firm = Firm::load($cid);
 
