@@ -258,7 +258,7 @@ class Base extends \Zippy\Html\WebPage
 
         $this->_tvars['cron']  = false;
 
-        $last = \App\Helper::getKeyVal('lastcron')  ?? 0;
+        $last = \App\Helper::getKeyValInt('lastcron')  ;
         if(\App\System::useCron()  &&  (time() - $last) > \App\Entity\CronTask::MIN_INTERVAL) {
             $this->_tvars['cron']  = true;
         }

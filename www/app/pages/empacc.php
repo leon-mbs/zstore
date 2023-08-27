@@ -40,7 +40,7 @@ class EmpAcc extends \App\Pages\Base
     public function OnSubmitZ($sender) {
 
         $dt = new \App\DateTime();
-        $from = $dt->addMonth(-1)->startOfMonth()->getTimestamp();
+        $from = $dt->subMonth(1)->startOfMonth()->getTimestamp();
         $from = date(\DateTime::ISO8601, $from);
 
 

@@ -680,22 +680,11 @@ class Helper
     public static function fain($am) {
 
         $common = System::getOptions("common");
-        if ($common['buy2'] != 1) { //отдельная  настройка
-            return self::fa($am);
+        if ($common['sell2'] != 1) { //отдельная  настройка
+          //  return self::fa($am);
         }
-        if (strlen($am) == 0) {
-            return '';
-        }
-        if(is_numeric($am) && abs($am)<0.005) {
-            $am  = 0;
-        }
-        $am = str_replace(',', '.', $am);
-        $am = preg_replace("/[^0-9\.\-]/", "", $am);
-        $am = trim($am);
-
-        $am  = doubleval($am)  ;
-
-        return @number_format($am, 2, '.', '');
+       
+        return self::fa($am) ;
 
     }
 
@@ -967,6 +956,20 @@ class Helper
             return "";
         }
         return $ret;
+    }
+
+    public static function getKeyValInt($key) :int{
+       
+        return intval(self::getKeyVal($key));
+    }
+    public static function getKeyValBool($key) : bool  {
+       
+        $ret = self::getKeyVal($key);
+        if($ret==true || $ret=="true" || $ret=="TRUE" || $ret == 1 || $ret == "1" ) {
+            return  true;
+        }
+        
+        return  false;
     }
 
 

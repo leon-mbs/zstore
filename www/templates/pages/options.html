@@ -45,12 +45,14 @@
 
                                 </select>
                             </div>
+                            {{#hideblock}}
                             <div class="form-check">
-                                <input zippy="buy2" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="buy2">Копiйки при закупiвлi </label>
+                                <input zippy="sell2" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="sell2">Продажа без копiйок </label>
                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Якщи продажi без копiйок а закупка  приходить з копiйками "></i>
+                                   title="Формувати продажу без копiйок якщо заданi копiйки для закупки "></i>
                             </div>                            
+                            {{/hideblock}}
                             <div class="form-group  ">
                                 <label for="dateformat">Формат дати</label>
 
