@@ -436,7 +436,7 @@ class Options extends \App\Pages\Base
         $this->setSuccess('Збережено');
 
     }
-
+   
 
     public function savePrinterOnClick($sender) {
         $printer = array();
