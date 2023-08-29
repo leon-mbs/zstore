@@ -12,6 +12,7 @@ class Position extends \ZCL\DB\Entity
 {
     protected function init() {
         $this->position_id = 0;
+
     }
 
 }

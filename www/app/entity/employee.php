@@ -6,6 +6,7 @@ namespace App\Entity;
  * Клас-сущность  сотрудник
  *
  * @table=employees
+ * @view=employees_view
  * @keyfield=employee_id
  */
 class Employee extends \ZCL\DB\Entity

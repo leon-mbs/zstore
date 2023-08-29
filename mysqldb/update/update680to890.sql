@@ -2,13 +2,14 @@ ALTER TABLE `users` ADD `lastlogin` DATETIME NULL  ;
 ALTER TABLE `employees` ADD `department_id` INT NULL  ;
 ALTER TABLE `employees` ADD `position_id` INT NULL  ;
 ALTER TABLE `parealist` ADD  details text   NULL ;
+ALTER TABLE `parealist` ADD  details text   NULL ;
 
 
 
-CREATE TABLE departments (
+CREATE TABLE departments (          
   department_id int(11) NOT NULL AUTO_INCREMENT,
   department_name varchar(255) NOT NULL,
-  details text NOT NULL,
+  details text DEFAULT  NULL,
   PRIMARY KEY (department_id)
 )
 ENGINE = INNODB;
@@ -16,7 +17,7 @@ ENGINE = INNODB;
 CREATE TABLE positions (
   position_id int(11) NOT NULL AUTO_INCREMENT,
   position_name varchar(255) NOT NULL,
-  details text NOT NULL,
+  details text DEFAULT  NULL,
   PRIMARY KEY (position_id)
 )
 ENGINE = INNODB;
@@ -32,7 +33,9 @@ SELECT
   `e`.`emp_name` AS `emp_name`,
   `e`.`branch_id` AS `branch_id`,
   `e`.`department_id` AS `department_id`,
-  `e`.`position_id` AS `position_id`
+  `e`.`position_id` AS `position_id`,
+  `d`.`department_name` AS `department_name`,
+  `p`.`position_name` AS `position_name`
 FROM ((`employees` `e`
   LEFT JOIN `departments` `d`
     ON ((`e`.`department_id` = `d`.`department_id`)))
@@ -46,7 +49,8 @@ INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `d
 UPDATE  metadata set  menugroup ='Кадри' where meta_type=4 and  meta_name = 'EmployeeList';
 
 
-
+delete  from  options where  optname='version' ;
+insert  into options (optname,optvalue) values('version','6.9.0'); 
 
 
 

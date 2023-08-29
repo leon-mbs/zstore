@@ -50,6 +50,8 @@ class EmployeeList extends \App\Pages\Base
         $this->employeedetail->add(new DropDownChoice('editlogin'));
         $this->employeedetail->add(new TextInput('editemp_name'));
         $this->employeedetail->add(new DropDownChoice('editbranch', $this->_blist, 0));
+        $this->employeedetail->add(new DropDownChoice('editposition', \App\Entity\Position::findArray("position_name","","position_name") , 0));
+        $this->employeedetail->add(new DropDownChoice('editdepartment', \App\Entity\Department::findArray("department_name","","department_name") , 0));
 
         $this->employeedetail->add(new Date('edithiredate'));
         $this->employeedetail->add(new TextInput('editphone'));
@@ -95,6 +97,8 @@ class EmployeeList extends \App\Pages\Base
         $row->add(new Label('emp_name', $item->emp_name));
         $row->add(new Label('login', $item->login));
         $row->add(new Label('branch', $this->_blist[$item->branch_id] ??''));
+        $row->add(new Label('department_name', $item->department_name));
+        $row->add(new Label('position_name', $item->position_name));
         //  $row->add(new Label('balance', $item->balance));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -131,6 +135,8 @@ class EmployeeList extends \App\Pages\Base
         $this->employeedetail->editemail->setText($this->_employee->email);
         $this->employeedetail->editphone->setText($this->_employee->phone);
         $this->employeedetail->editbranch->setValue($this->_employee->branch_id);
+        $this->employeedetail->editdepartment->setValue($this->_employee->department_id);
+        $this->employeedetail->editposition->setValue($this->_employee->position_id);
         $this->employeedetail->editdisabled->setChecked($this->_employee->disabled);
 
         $this->employeedetail->edithiredate->setDate($this->_employee->hiredate);
@@ -158,6 +164,8 @@ class EmployeeList extends \App\Pages\Base
 
         $b = \App\System::getBranch();
         $this->employeedetail->editbranch->setValue($b > 0 ? $b : 0);
+        $this->employeedetail->editdepartment->setValue( 0 );
+        $this->employeedetail->editposition->setValue( 0 );
 
         $this->_employee = new Employee();
     }
@@ -182,6 +190,8 @@ class EmployeeList extends \App\Pages\Base
         $this->_employee->comment = $this->employeedetail->editcomment->getText();
 
         $this->_employee->branch_id = $this->employeedetail->editbranch->getValue();
+        $this->_employee->position_id = $this->employeedetail->editposition->getValue();
+        $this->_employee->department_id = $this->employeedetail->editdepartment->getValue();
 
         $this->_employee->hiredate = $this->employeedetail->edithiredate->getDate();
         $this->_employee->ztype = $this->employeedetail->editztype->getValue();
