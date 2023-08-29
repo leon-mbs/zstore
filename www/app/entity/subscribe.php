@@ -45,6 +45,7 @@ class Subscribe extends \ZCL\DB\Entity
         $this->state = (int)($xml->state[0]);
         $this->doctype = (int)($xml->doctype[0]);
         $this->attach = (int)($xml->attach[0]);
+        $this->html = (int)($xml->html[0]);
 
         parent::afterLoad();
     }
@@ -60,6 +61,7 @@ class Subscribe extends \ZCL\DB\Entity
         $this->detail .= "<user_id>{$this->user_id}</user_id>";
         $this->detail .= "<state>{$this->state}</state>";
         $this->detail .= "<attach>{$this->attach}</attach>";
+        $this->detail .= "<html>{$this->html}</html>";
         $this->detail .= "<doctype>{$this->doctype}</doctype>";
         $this->detail .= "<doctypename>{$this->doctypename}</doctypename>";
         $this->detail .= "<statename>{$this->statename}</statename>";
@@ -204,7 +206,7 @@ class Subscribe extends \ZCL\DB\Entity
                 $ret =   self::sendViber($viber, $text) ;
             }
             if(strlen($chat_id)>0 && $sub->msg_type == self::MSG_BOT) {
-                $ret =   self::sendBot($chat_id, $text, $sub->attach==1 ? $doc : null) ;
+                $ret =   self::sendBot($chat_id, $text, $sub->attach==1 ? $doc : null,$sub->html==1) ;
             }
 
             if(strlen($ret)>0) {
@@ -511,9 +513,9 @@ class Subscribe extends \ZCL\DB\Entity
         $n->save();
     }
 
-    public static function sendBot($chat_id, $text, $doc=null) {
+    public static function sendBot($chat_id, $text, $doc=null, $ishtml=false) {
         $bot = new \App\ChatBot(\App\System::getOption("common", 'tbtoken')) ;
-        $bot->sendMessage($chat_id, $text)  ;
+        $bot->sendMessage($chat_id, $text,$ishtml)  ;
         if($doc!= null) {
             $filename = strtolower($doc->meta_name) . ".pdf";
             $html = $doc->cast()->generateReport();

@@ -65,7 +65,10 @@ class DocView extends \Zippy\Html\PageFragment
         $common = \App\System::getOptions('common') ;
 
         $doc = Document::load($docid);
-
+        if($doc== null){
+           return json_encode([], JSON_UNESCAPED_UNICODE);
+        
+        }
         $doc = $doc->cast();
 
 

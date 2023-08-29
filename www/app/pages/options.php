@@ -420,6 +420,8 @@ class Options extends \App\Pages\Base
         $url= _BASEURL. 'chatbot.php' ;
 
         $bot = new \App\ChatBot($common['tbtoken']) ;
+//        $res = $bot->doGet('getWebhookInfo') ;
+        $res = $bot->doGet('deleteWebhook') ;
         $res = $bot->doGet('setWebhook', array('url'=>$url)) ;
         if($res['error_code'] == 404) {
             $this->setError("Невірний токен") ;
@@ -436,7 +438,7 @@ class Options extends \App\Pages\Base
         $this->setSuccess('Збережено');
 
     }
-
+   
 
     public function savePrinterOnClick($sender) {
         $printer = array();

@@ -36,8 +36,14 @@ class ChatBot
         $resultQuery = curl_exec($ch);
         curl_close($ch);
 
-        return json_decode($resultQuery, true);
+        $res =  json_decode($resultQuery, true);
 
+        if($res['ok'] != true) {
+           \App\Helper::log($url);
+           \App\Helper::log($resultQuery);
+      
+        }        
+        return $res;
     }
 
     public function getUpdates() {
@@ -162,9 +168,13 @@ class ChatBot
 
     }
 
-    public function sendMessage($chat_id, $msg) {
-
-        $this->doGet('sendMessage', array('chat_id'=>$chat_id,'text'=>$msg, 'parse_mode'=>'HTML')) ;
+    public function sendMessage($chat_id, $msg,$html=true) {
+        $p=array('chat_id'=>$chat_id,'text'=>$msg)  ;
+        if($html) {
+            $p['parse_mode']  =  'HTML';   
+        }
+        
+        $this->doGet('sendMessage',$p ) ;
     }
     public function sendDocument($chat_id, $filepath, $filename, $mime='application/pdf', $caption='') {
 
