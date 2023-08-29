@@ -39,6 +39,7 @@ class Subscribes extends \App\Pages\Base
         $this->add(new Form('editform'))->setVisible(false);
         $this->editform->add(new CheckBox('editdisabled'));
         $this->editform->add(new CheckBox('editattach'));
+        $this->editform->add(new CheckBox('edithtml'));
         $this->editform->add(new TextArea('editmsgtext'));
         $this->editform->add(new TextInput('editmsgsubject'));
 
@@ -65,7 +66,8 @@ class Subscribes extends \App\Pages\Base
         $this->editform->edituser->setVisible($rt == Subscribe::RSV_USER);
         $mt = $this->editform->editmsgtype->getValue();
         $this->editform->editmsgsubject->setVisible($mt == Subscribe::MSG_EMAIL);
-        $this->editform->editattach->setVisible($mt == Subscribe::MSG_EMAIL || $mt == Subscribe::MSG_BOT);
+        $this->editform->editattach->setVisible( $mt == Subscribe::MSG_BOT);
+        $this->editform->edithtml->setVisible($mt == Subscribe::MSG_EMAIL || $mt == Subscribe::MSG_BOT);
     }
 
     public function sublistOnRow($row) {
@@ -116,6 +118,7 @@ class Subscribes extends \App\Pages\Base
         $this->editform->editmsgsubject->setText($this->_sub->msgsubject);
         $this->editform->editdisabled->setCheCked($this->_sub->disabled);
         $this->editform->editattach->setCheCked($this->_sub->attach);
+        $this->editform->edithtml->setCheCked($this->_sub->html);
 
         $this->update($this->editform->editeventtype);
         $this->plist->setVisible(false);
@@ -141,7 +144,7 @@ class Subscribes extends \App\Pages\Base
         $this->_sub->msgtext = trim($this->editform->editmsgtext->getText());
         $this->_sub->msgsubject = trim($this->editform->editmsgsubject->getText());
         $this->_sub->disabled = $this->editform->editdisabled->isCheCked() ? 1 : 0;
-        $this->_sub->attach = $this->editform->editattach->isCheCked() ? 1 : 0;
+        $this->_sub->html = $this->editform->edithtml->isCheCked() ? 1 : 0;
 
         if ($this->_sub->msg_type == 0) {
             $this->setError("Не вказано тип повідомлення");

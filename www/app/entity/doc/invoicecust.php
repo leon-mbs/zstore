@@ -22,9 +22,9 @@ class InvoiceCust extends Document
                               "itemcode" => $item->item_code,
                               "custcode" => $item->custcode,
                               "quantity" => H::fqty($item->quantity),
-                              "price"    => H::fain($item->price),
+                              "price"    => H::fa($item->price),
                               "msr"      => $item->msr,
-                              "amount"   => H::fain($item->quantity * $item->price)
+                              "amount"   => H::fa($item->quantity * $item->price)
             );
         }
 
@@ -37,9 +37,9 @@ class InvoiceCust extends Document
                          "isval"           => strlen($this->headerdata['val']) > 1,
                        "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "notes"           => nl2br($this->notes),
-                       "total"           => H::fain($this->amount),
-                        "payed"           => $this->payed > 0 ? H::fain($this->payed) : false,
-                        "payamount"       => $this->payamount > 0 ? H::fain($this->payamount) : false
+                       "total"           => H::fa($this->amount),
+                        "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
+                        "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
         );
         if ($this->headerdata["contract_id"] > 0) {
             $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);
@@ -50,8 +50,8 @@ class InvoiceCust extends Document
         $header['isdisc'] = $this->headerdata["disc"] > 0;
         $header['isnds'] = $this->headerdata["nds"] > 0;
 
-        $header['disc'] = H::fain($this->headerdata["disc"]);
-        $header['nds'] = H::fain($this->headerdata["nds"]);
+        $header['disc'] = H::fa($this->headerdata["disc"]);
+        $header['nds'] = H::fa($this->headerdata["nds"]);
 
         $header['rate'] = $this->headerdata["rate"];
         if ($header['rate'] == 0 || $header['rate'] == 1) {

@@ -156,15 +156,15 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
-            $this->docform->nds->setText(H::fain($this->_doc->headerdata['nds']));
-            $this->docform->editnds->setText(H::fain($this->_doc->headerdata['nds']));
+            $this->docform->nds->setText(H::fa($this->_doc->headerdata['nds']));
+            $this->docform->editnds->setText(H::fa($this->_doc->headerdata['nds']));
             $this->docform->val->setValue($this->_doc->headerdata['val']);
             $this->docform->rate->setText($this->_doc->headerdata['rate']);
             $this->docform->outnumber->setText($this->_doc->headerdata['outnumber']);
-            $this->docform->disc->setText(H::fain($this->_doc->headerdata['disc']));
-            $this->docform->editdisc->setText(H::fain($this->_doc->headerdata['disc']));
-            $this->docform->delivery->setText(H::fain($this->_doc->headerdata['delivery']));
-            $this->docform->editdelivery->setText(H::fain($this->_doc->headerdata['delivery']));
+            $this->docform->disc->setText(H::fa($this->_doc->headerdata['disc']));
+            $this->docform->editdisc->setText(H::fa($this->_doc->headerdata['disc']));
+            $this->docform->delivery->setText(H::fa($this->_doc->headerdata['delivery']));
+            $this->docform->editdelivery->setText(H::fa($this->_doc->headerdata['delivery']));
 
             if ($this->_doc->headerdata['payed'] > 0) {
                 $this->_doc->payed = $this->_doc->headerdata['payed'];
@@ -172,10 +172,10 @@ class GoodsReceipt extends \App\Pages\Base
             if ($this->_doc->headerdata['payamount'] > 0) {
                 $this->_doc->payamount = $this->_doc->headerdata['payamount'];
             }
-            $this->docform->editpayed->setText(H::fain($this->_doc->payed));
-            $this->docform->payed->setText(H::fain($this->_doc->payed));
-            $this->docform->payamount->setText(H::fain($this->_doc->payamount));
-            $this->docform->editpayamount->setText(H::fain($this->_doc->payamount));
+            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
+            $this->docform->payed->setText(H::fa($this->_doc->payed));
+            $this->docform->payamount->setText(H::fa($this->_doc->payamount));
+            $this->docform->editpayamount->setText(H::fa($this->_doc->payamount));
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
@@ -284,7 +284,7 @@ class GoodsReceipt extends \App\Pages\Base
             }
         }
 
-        $this->_tvars["prepaid"] = (doubleval($this->_doc->headerdata['prepaid']??0)>0) ? H::fain($this->_doc->headerdata['prepaid']) : false;
+        $this->_tvars["prepaid"] = (doubleval($this->_doc->headerdata['prepaid']??0)>0) ? H::fa($this->_doc->headerdata['prepaid']) : false;
         $common = System::getOptions("common");
 
 
@@ -309,12 +309,12 @@ class GoodsReceipt extends \App\Pages\Base
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('bar_code', $item->bar_code));
         $row->add(new Label('quantity', H::fqty($item->quantity)));
-        $row->add(new Label('price', H::fain($item->price)));
+        $row->add(new Label('price', H::fa($item->price)));
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('snumber', $item->snumber));
         $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd($item->sdate) : ''));
 
-        $row->add(new Label('amount', H::fain($item->quantity * $item->price)));
+        $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -722,18 +722,18 @@ class GoodsReceipt extends \App\Pages\Base
     }
 
     public function onPayed($sender) {
-        $this->docform->payed->setText(H::fain($this->docform->editpayed->getText()));
+        $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
 
     }
 
 
     public function onDisc($sender) {
-        $this->docform->disc->setText(H::fain($this->docform->editdisc->getText()));
+        $this->docform->disc->setText(H::fa($this->docform->editdisc->getText()));
         $this->CalcPay();
 
     }
     public function onDelivery($sender) {
-        $this->docform->delivery->setText(H::fain($this->docform->editdelivery->getText()));
+        $this->docform->delivery->setText(H::fa($this->docform->editdelivery->getText()));
         $this->CalcPay();
 
     }
@@ -762,7 +762,7 @@ class GoodsReceipt extends \App\Pages\Base
             $item->amount = $item->price * $item->quantity;
             $total = $total + $item->amount;
         }
-        $this->docform->total->setText(H::fain($total));
+        $this->docform->total->setText(H::fa($total));
     }
 
     private function CalcPay() {
@@ -776,8 +776,8 @@ class GoodsReceipt extends \App\Pages\Base
         $total = $total + $nds - $disc  ;
         $total +=  $delivery;
 
-        $this->docform->editpayamount->setText(H::fain($total));
-        $this->docform->payamount->setText(H::fain($total));
+        $this->docform->editpayamount->setText(H::fa($total));
+        $this->docform->payamount->setText(H::fa($total));
         if(doubleval($this->_doc->headerdata['prepaid'])>0) {
             $total = $total - $this->_doc->headerdata['prepaid'];
         }
@@ -787,8 +787,8 @@ class GoodsReceipt extends \App\Pages\Base
         if(intval($common['paytypein']) == 2) {
             $total = 0;
         }
-        $this->docform->editpayed->setText(H::fain($total));
-        $this->docform->payed->setText(H::fain($total));
+        $this->docform->editpayed->setText(H::fa($total));
+        $this->docform->payed->setText(H::fa($total));
     }
 
     /**
@@ -1011,10 +1011,10 @@ class GoodsReceipt extends \App\Pages\Base
             $price = $item->getLastPartion($this->docform->store->getValue(), null, false);
 
         }
-        $this->editsnitem->editsnprice->setText(H::fain($price));
+        $this->editsnitem->editsnprice->setText(H::fa($price));
 
-        $this->editdetail->editprice->setText(H::fain($price));
-        $this->editdetail->editsellprice->setText(H::fain($item->price1));
+        $this->editdetail->editprice->setText(H::fa($price));
+        $this->editdetail->editsellprice->setText(H::fa($item->price1));
     }
 
     public function OnCustomerFirm($sender) {
@@ -1036,9 +1036,9 @@ class GoodsReceipt extends \App\Pages\Base
         $id = $sender->getKey();
         $item = Item::load($id);
         $price = $item->getLastPartion($this->docform->store->getValue(), null, false);
-        $this->editdetail->editprice->setText(H::fain($price));
+        $this->editdetail->editprice->setText(H::fa($price));
         $this->editdetail->editsellprice->setText($item->price1);
-        $this->editsnitem->editsnprice->setText(H::fain($price));
+        $this->editsnitem->editsnprice->setText(H::fa($price));
 
     }
 

@@ -513,7 +513,7 @@ class Base extends \Zippy\Html\WebPage
                 $na = explode('.', $n) ;
 
                 if ($na[0] > $ca[0] || $na[1] > $ca[1] || $na[2] > $ca[2]) {
-                    $list[] = array('title' => " Доступна нова версiя {$v['version']}  <a target=\"_blank\" href=\"https://zippy.com.ua/zstore#newver\">Перейти...</a> ");
+                    $list[] = array('title' => " Доступна нова версiя {$v['version']}  <a target=\"_blank\" href=\"https://zippy.com.ua/upsate\">Перейти...</a> ");
 
                 }
 

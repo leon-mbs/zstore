@@ -39,7 +39,7 @@ class EmployeeList extends \App\Pages\Base
         $this->employeetable->filter->add(new TextInput('searchtext'));
 
 
-        $this->employeetable->add(new DataView('employeelist', new EmpDataSource($this), $this, 'employeelistOnRow'))->Reload();
+        $this->employeetable->add(new DataView('employeelist', new EmpDataSource($this), $this, 'employeelistOnRow'));
         $this->employeetable->employeelist->setPageSize(H::getPG());
         $this->employeetable->add(new \Zippy\Html\DataList\Paginator('pag', $this->employeetable->employeelist));
 
@@ -77,7 +77,8 @@ class EmployeeList extends \App\Pages\Base
 
         $this->accp->filters->add(new Date('from', $d->getTimestamp()));
         $this->accp->filters->add(new Date('to', time()));
-
+        $this->employeetable->employeelist->Reload();
+ 
     }
 
 
