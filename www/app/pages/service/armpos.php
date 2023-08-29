@@ -325,20 +325,16 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->setVisible(true);
 
         $this->docpanel->form2->setVisible(true);
-
-
+ 
         $this->checklistpan->setVisible(false);
         $this->checklistpan->searchform->clean();
-
-
+ 
         $this->_itemlist = array();
         $this->_serlist = array();
         $this->docpanel->form2->detail->Reload();
         $this->docpanel->form2->detailser->Reload();
         $this->calcTotal();
-
-
-
+ 
         $this->docpanel->form3->document_date->setDate(time());
         $this->_doc = \App\Entity\Doc\Document::create('POSCheck');
         $this->_doc->headerdata['arm'] = 1;
