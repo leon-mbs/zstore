@@ -35,7 +35,7 @@ class DepartmentList extends \App\Pages\Base
     public function palistOnRow($row) {
         $item = $row->getDataItem();
         $conn = \ZDB\DB::getConnect() ;
-        $item->cnt=  intval( $conn->Execute('select count(*) from employees where  department_id = '. $item->department_id) ); ;
+        $item->cnt=  intval( $conn->GetOne('select count(*) from employees where disabled <> 1 and department_id = '. $item->department_id) ); ;
         $row->add(new Label('department_name', $item->department_name));
         $row->add(new Label("cnt", $item->cnt));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');

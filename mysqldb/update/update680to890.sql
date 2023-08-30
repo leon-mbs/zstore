@@ -47,6 +47,7 @@ INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `d
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 4, 'Відділи', 'DepartmentList', 'Кадри', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 4, 'Посади', 'PositionList', 'Кадри', 0);
 UPDATE  metadata set  menugroup ='Кадри' where meta_type=4 and  meta_name = 'EmployeeList';
+UPDATE  metadata set  menugroup ='Кадри' where meta_type=4 and  meta_name = 'SalaryTypeList';
 
 
 delete  from  options where  optname='version' ;
@@ -55,4 +56,3 @@ insert  into options (optname,optvalue) values('version','6.9.0');
 
 
 
- 

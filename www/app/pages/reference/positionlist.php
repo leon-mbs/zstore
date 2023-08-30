@@ -36,7 +36,8 @@ class PositionList extends \App\Pages\Base
         $item = $row->getDataItem();
       
         $conn = \ZDB\DB::getConnect() ;
-        $item->cnt=  intval( $conn->Execute('select count(*) from employees where  position_id = '. $item->position_id) ); ;
+
+        $item->cnt=  intval( $conn->GetOne('select count(*) from employees where disabled <> 1 and  position_id = '. $item->position_id) ); ;
 
         $row->add(new Label('position_name', $item->position_name));
         $row->add(new Label("cnt", $item->cnt));
@@ -50,7 +51,7 @@ class PositionList extends \App\Pages\Base
             $row->cnt->setVisible(false);
         }
     }
-
+  
     public function deleteOnClick($sender) {
         if (false == \App\ACL::checkDelRef('PositionList')) {
             return;
