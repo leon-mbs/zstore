@@ -25,6 +25,7 @@ class OutFood extends \App\Pages\Base
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
         $this->filter->add(new DropDownChoice('rtype'));
+        $this->filter->add(new DropDownChoice('btype'));
 
         $this->add(new Panel('detail'))->setVisible(false);
 
@@ -47,12 +48,21 @@ class OutFood extends \App\Pages\Base
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
         $rtype = $this->filter->rtype->getValue();
+        $btype = $this->filter->btype->getValue();
 
         $detail = array();
         $detail2 = array();
 
-
         $conn = \ZDB\DB::getConnect();
+
+        $forbar="";
+        if($btype == 1) {
+           $forbar = " and content like " .$conn->qstr('%<forbar>0</forbar>%' );    
+        }        
+        if($btype == 2) {
+           $forbar = " and content like " .$conn->qstr('%<forbar>1</forbar>%' );    
+        }        
+
 
         if($rtype ==0) {
 
@@ -61,7 +71,7 @@ class OutFood extends \App\Pages\Base
                 WHERE  dv.meta_name='OrderFood' AND  state = 9
                 AND DATE(dv.document_date) >= " . $conn->DBDate($from) . "
                 AND DATE(dv.document_date) <= " . $conn->DBDate($to) . "
-     
+                {$forbar}
                 GROUP BY dt
                 ORDER BY dt 
                         ";
@@ -93,10 +103,8 @@ class OutFood extends \App\Pages\Base
         }
 
         if($rtype == 1) {
-
-
-
-
+  
+            
             $sql = " dv.meta_name='OrderFood' AND  state = 9      
                AND DATE(dv.document_date) >= " . $conn->DBDate($from) . "
                 AND DATE(dv.document_date) <= " . $conn->DBDate($to).' ' ;
@@ -105,6 +113,7 @@ class OutFood extends \App\Pages\Base
           join  items i on e.item_id = i.item_id 
           where   (e.tag = 0 or e.tag = -1  or e.tag = -4)
           and document_id in( select document_id from documents_view dv where  dv.meta_name='OrderFood' AND  state = 9      
+              {$forbar}
                AND DATE(dv.document_date) >= " . $conn->DBDate($from) . "
                 AND DATE(dv.document_date) <= " . $conn->DBDate($to).' ) 
                group  by  i.itemname
