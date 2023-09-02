@@ -68,6 +68,8 @@ class Employee extends \ZCL\DB\Entity
         $this->coworker = (int)($xml->coworker[0]);
         $this->invalid = (int)($xml->invalid[0]);
 
+        $this->detail = null;
+        
         parent::afterLoad();
     }
 
