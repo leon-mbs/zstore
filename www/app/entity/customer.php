@@ -91,7 +91,7 @@ class Customer extends \ZCL\DB\Entity
 
         $this->createdon = strtotime($this->createdon);
         
-        $this->detail = null;
+      
         
         parent::afterLoad();
     }

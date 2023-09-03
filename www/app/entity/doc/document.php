@@ -208,7 +208,7 @@ class Document extends \ZCL\DB\Entity
         }
 
 
-        $this->content =  null;
+  
 
     }
 

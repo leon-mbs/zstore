@@ -30,12 +30,12 @@ class ShowReport extends \Zippy\Html\WebPage
         }
         if ($type == "xls") {
 
-            $file = tempnam(sys_get_temp_dir(), "".time());
+        //    $file = tempnam(sys_get_temp_dir(), "".time());
 
-            file_put_contents($file, $html);
+        //    file_put_contents($file, $html);
 
             $reader =  new \PhpOffice\PhpSpreadsheet\Reader\Html()  ;
-            $spreadsheet = $reader->load($file);
+            $spreadsheet = $reader->loadFromString($html);
 
 
             $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
