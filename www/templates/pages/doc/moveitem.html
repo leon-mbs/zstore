@@ -7,6 +7,9 @@
 
         <form zippy="docform" enctype="multipart/form-data">
             <h3> Перемiщення ТМЦ</h3>
+            {{#usebranch}}
+            <small>Переміщення між філіями  виконуєтся документом Списання ТМЦ</small>
+            {{/usebranch}}
             <div class="row">
                 <div class="col-12 col-md-3">
                     <div class="form-group">

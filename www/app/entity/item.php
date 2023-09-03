@@ -103,7 +103,8 @@ class Item extends \ZCL\DB\Entity
         $this->fromdate = intval($xml->fromdate[0]);
         $this->printqty = intval($xml->printqty[0]);
 
-
+       
+        
         parent::afterLoad();
     }
 

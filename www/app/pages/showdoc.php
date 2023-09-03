@@ -56,16 +56,13 @@ class ShowDoc extends \Zippy\Html\WebPage
             }
             if ($type == "xls") {
 
+           //    $file = tempnam(sys_get_temp_dir(), "".time());
 
+        //    file_put_contents($file, $html);
 
-                $file = tempnam(sys_get_temp_dir(), "".time());
-
-                $handle = fopen($file, "w");
-                fwrite($handle, $html);
                 $reader =  new \PhpOffice\PhpSpreadsheet\Reader\Html()  ;
-                $spreadsheet = $reader->load($file);
-                fclose($handle);
-                @unlink($file);
+                $spreadsheet = $reader->loadFromString($html);
+
 
                 $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
 
