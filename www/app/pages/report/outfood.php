@@ -126,9 +126,9 @@ class OutFood extends \App\Pages\Base
 
                 $detail2[] = array(
                     "name"  => $row['itemname'],
-                    "qty"  => H::fa($row['qty']),
+                    "qty"  => H::fqty($row['qty']),
 
-                    "sum" => H::fqty($row['am'])
+                    "sum" => H::fa($row['am'])
                 );
 
             }
