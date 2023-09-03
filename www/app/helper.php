@@ -654,9 +654,7 @@ class Helper
 
 
         $am  = doubleval($am)  ;
-        if ($common['sell2'] ==1   ) { 
-           return round($am);
-        }
+
         $common = System::getOptions("common");
         if ($common['amdigits'] == 1) {
             $am =  @number_format($am, 2, '.', '');

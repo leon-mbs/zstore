@@ -411,7 +411,13 @@ class Item extends \ZCL\DB\Entity
         if ($this->hasAction() && $_price_ == 'price1') {
             $price = $this->getActionPrice($qty) ?? $price;
         }
-
+        
+        $common = \App\System::getOptions("common");
+         
+        if ($common['sell2'] ==1   ) { 
+            $price = doubleval($price) ;
+            $price =  round($price);
+        }
         return \App\Helper::fa($price);
     }
 
