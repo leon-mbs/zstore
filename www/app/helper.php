@@ -629,9 +629,7 @@ class Helper
 
         $am  = doubleval($am)  ;
         return @number_format($am, 1, '.', '');
-
-
-
+  
     }
 
     /**
@@ -645,27 +643,25 @@ class Helper
             return '';
         }
         if(is_numeric($am) && abs($am)<0.005) {
-            $am  =0;
+            $am = 0;
         }
         $am = str_replace(',', '.', $am);
         $am = preg_replace("/[^0-9\.\-]/", "", $am);
         $am = trim($am);
-
-
-
+ 
         $am  = doubleval($am)  ;
 
         $common = System::getOptions("common");
         if ($common['amdigits'] == 1) {
-            $am =  @number_format($am, 2, '.', '');
+            return  @number_format($am, 2, '.', '');
         }
         if ($common['amdigits'] == 5) {
             $am = round($am * 20) / 20;
-            $am = @number_format($am, 2, '.', '');
+            return @number_format($am, 2, '.', '');
         }
         if ($common['amdigits'] == 10) {
             $am = round($am * 10) / 10;
-            $am =  @number_format($am, 2, '.', '');
+            return  @number_format($am, 2, '.', '');
         }
   
         return round($am);

@@ -416,7 +416,7 @@ class Item extends \ZCL\DB\Entity
          
         if ($common['sell2'] ==1   ) { 
             $price = doubleval($price) ;
-            $price =  round($price);
+            return  round($price);
         }
         return \App\Helper::fa($price);
     }
