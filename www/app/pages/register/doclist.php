@@ -248,6 +248,13 @@ class DocList extends \App\Pages\Base
         if ($doc->document_id == ($this->_doc->document_id ?? null)) {
             $row->setAttribute('class', 'table-success');
         }
+        
+        $row->add(new ClickLink('qr'))->onClick($this, 'QrOnClick', true);
+        $row->qr->setVisible( (strlen($doc->headerdata['hash']) > 0 ) || strlen(  $doc->getFiscUrl()) > 0   ) ;
+        if( !in_array($doc->meta_name,['POSCheck']) ){
+           $row->qr->setVisible(false);    
+        }  
+        
 
     }
 
@@ -635,7 +642,28 @@ class DocList extends \App\Pages\Base
 
         }
     }
+  public function QrOnClick($sender) {
+              
+            $doc=$sender->owner->getDataItem();
+            $url =_BASEURL . 'doclink/' . $doc->headerdata['hash'] ;
+            $furl = $doc->getFiscUrl() ;
+            
+            if(strlen($furl)>0) {
+               $url =  $furl;
+            }
+            if(strlen($url)==0) {
+                return;
+            }
+            
+            $dataUri = \App\Util::generateQR($url, 150, 5)  ;
+            $html = "<img src=\"{$dataUri}\"  />";
+            $this->addAjaxResponse("  $('#urllink').attr('href','{$url}') ;  $('#imagelink').html('{$html}') ; $('#modalqr').modal()");
+            return;
+ 
 
+
+    }
+    
 }
 
 /**

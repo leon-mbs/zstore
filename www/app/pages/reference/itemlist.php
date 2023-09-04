@@ -691,33 +691,7 @@ class ItemList extends \App\Pages\Base
             $this->addAjaxResponse("  $('#tag').html('{$html}') ; $('#pform').modal()");
             return;
         }
-        /*
-        $connector = new \Mike42\Escpos\PrintConnectors\DummyPrintConnector();
-        $printer = new \Mike42\Escpos\Printer($connector);
-
-        $printer->setJustification( \Mike42\Escpos\Printer::JUSTIFY_CENTER)  ;
-        $printer->qrCode($item->url)  ;
-
-
-
-      //  $printer->text("тест\n");
-
-
-
-      //   $connector->write("\x1b\x45\x01");
-
-
-       // $printer->barcode("{sB0123456",\Mike42\Escpos\Printer::BARCODE_CODE128) ;
-
-
-        $cc = $connector->getData()  ;
-        $connector->finalize() ;
-
-        $buf = [];
-        foreach(str_split($cc) as $c) {
-            $buf[] = ord($c) ;
-        }
-        */
+       
         try {
 
             $pr = new \App\Printer() ;
