@@ -9,7 +9,7 @@ use App\Filter;
 use App\Helper as H;
 use App\System;
 use Zippy\Html\DataList\DataView;
-use Zippy\Html\DataList\Paginator;
+use Zippy\Html\DataList\Pager;
 use Zippy\Html\Form\AutocompleteTextInput;
 use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
@@ -92,7 +92,7 @@ class DocList extends \App\Pages\Base
 
         $doclist = $this->add(new DataView('doclist', new DocDataSource(), $this, 'doclistOnRow'));
 
-        $this->add(new Paginator('pag', $doclist));
+        $this->add(new Pager('pag', $doclist));
         $doclist->setPageSize(H::getPG());
         $this->doclist->setCurrentPage($filter->page);
         $this->doclist->setSorting('priority desc,document_id desc', '');

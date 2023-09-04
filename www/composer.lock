@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8062836014fbf4a431730c8ab302b4af",
+    "content-hash": "6ed6ca1633cd960508ace8d8aa0b9617",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -176,16 +176,16 @@
         },
         {
             "name": "dasprid/enum",
-            "version": "1.0.4",
+            "version": "1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DASPRiD/Enum.git",
-                "reference": "8e6b6ea76eabbf19ea2bf5b67b98e1860474012f"
+                "reference": "6faf451159fb8ba4126b925ed2d78acfce0dc016"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DASPRiD/Enum/zipball/8e6b6ea76eabbf19ea2bf5b67b98e1860474012f",
-                "reference": "8e6b6ea76eabbf19ea2bf5b67b98e1860474012f",
+                "url": "https://api.github.com/repos/DASPRiD/Enum/zipball/6faf451159fb8ba4126b925ed2d78acfce0dc016",
+                "reference": "6faf451159fb8ba4126b925ed2d78acfce0dc016",
                 "shasum": ""
             },
             "require": {
@@ -220,9 +220,9 @@
             ],
             "support": {
                 "issues": "https://github.com/DASPRiD/Enum/issues",
-                "source": "https://github.com/DASPRiD/Enum/tree/1.0.4"
+                "source": "https://github.com/DASPRiD/Enum/tree/1.0.5"
             },
-            "time": "2023-03-01T18:44:03+00:00"
+            "time": "2023-08-25T16:18:39+00:00"
         },
         {
             "name": "dompdf/dompdf",
@@ -570,16 +570,16 @@
         },
         {
             "name": "leon-mbs/zdb",
-            "version": "1.5.10",
+            "version": "1.5.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/zdb.git",
-                "reference": "389d7cf74718546a2411894293fb3839ee870aed"
+                "reference": "6d0b72cd4bfbabc48cd4c1d8fc2e836d0d587cd5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/zdb/zipball/389d7cf74718546a2411894293fb3839ee870aed",
-                "reference": "389d7cf74718546a2411894293fb3839ee870aed",
+                "url": "https://api.github.com/repos/leon-mbs/zdb/zipball/6d0b72cd4bfbabc48cd4c1d8fc2e836d0d587cd5",
+                "reference": "6d0b72cd4bfbabc48cd4c1d8fc2e836d0d587cd5",
                 "shasum": ""
             },
             "require": {
@@ -605,27 +605,27 @@
             ],
             "support": {
                 "issues": "https://github.com/leon-mbs/zdb/issues",
-                "source": "https://github.com/leon-mbs/zdb/tree/1.5.10"
+                "source": "https://github.com/leon-mbs/zdb/tree/1.5.11"
             },
-            "time": "2023-08-22T15:54:53+00:00"
+            "time": "2023-09-03T14:04:38+00:00"
         },
         {
             "name": "leon-mbs/zippy",
-            "version": "2.5.27",
+            "version": "2.5.28",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/zippy.git",
-                "reference": "5fd1a04d9761fd3c9b45e400b49e5599954735c4"
+                "reference": "03964962186bb9870656a7bad3083e49e02f25e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/5fd1a04d9761fd3c9b45e400b49e5599954735c4",
-                "reference": "5fd1a04d9761fd3c9b45e400b49e5599954735c4",
+                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/03964962186bb9870656a7bad3083e49e02f25e5",
+                "reference": "03964962186bb9870656a7bad3083e49e02f25e5",
                 "shasum": ""
             },
             "require": {
                 "leon-mbs/phpquery": ">=1.0.0",
-                "leon-mbs/zdb": "1.5.10",
+                "leon-mbs/zdb": "1.5.11",
                 "mustache/mustache": "v2.14.2",
                 "php": ">=7.4.0"
             },
@@ -647,9 +647,9 @@
             ],
             "support": {
                 "issues": "https://github.com/leon-mbs/zippy/issues",
-                "source": "https://github.com/leon-mbs/zippy/tree/2.5.27"
+                "source": "https://github.com/leon-mbs/zippy/tree/2.5.28"
             },
-            "time": "2023-08-22T15:58:55+00:00"
+            "time": "2023-09-03T14:09:11+00:00"
         },
         {
             "name": "lis-dev/nova-poshta-api-2",
@@ -1301,16 +1301,16 @@
         },
         {
             "name": "phpmailer/phpmailer",
-            "version": "v6.8.0",
+            "version": "v6.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPMailer/PHPMailer.git",
-                "reference": "df16b615e371d81fb79e506277faea67a1be18f1"
+                "reference": "e88da8d679acc3824ff231fdc553565b802ac016"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/df16b615e371d81fb79e506277faea67a1be18f1",
-                "reference": "df16b615e371d81fb79e506277faea67a1be18f1",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/e88da8d679acc3824ff231fdc553565b802ac016",
+                "reference": "e88da8d679acc3824ff231fdc553565b802ac016",
                 "shasum": ""
             },
             "require": {
@@ -1320,13 +1320,13 @@
                 "php": ">=5.5.0"
             },
             "require-dev": {
-                "dealerdirect/phpcodesniffer-composer-installer": "^0.7.2",
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
                 "doctrine/annotations": "^1.2.6 || ^1.13.3",
                 "php-parallel-lint/php-console-highlighter": "^1.0.0",
                 "php-parallel-lint/php-parallel-lint": "^1.3.2",
                 "phpcompatibility/php-compatibility": "^9.3.5",
                 "roave/security-advisories": "dev-latest",
-                "squizlabs/php_codesniffer": "^3.7.1",
+                "squizlabs/php_codesniffer": "^3.7.2",
                 "yoast/phpunit-polyfills": "^1.0.4"
             },
             "suggest": {
@@ -1369,7 +1369,7 @@
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
             "support": {
                 "issues": "https://github.com/PHPMailer/PHPMailer/issues",
-                "source": "https://github.com/PHPMailer/PHPMailer/tree/v6.8.0"
+                "source": "https://github.com/PHPMailer/PHPMailer/tree/v6.8.1"
             },
             "funding": [
                 {
@@ -1377,7 +1377,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-03-06T14:43:22+00:00"
+            "time": "2023-08-29T08:26:30+00:00"
         },
         {
             "name": "phpoffice/phpspreadsheet",
@@ -1837,12 +1837,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "74f56458b588523f43400b85abb01b1312d2abbd"
+                "reference": "9971379442eb64596a59f6c3b89ec66fac58c611"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/74f56458b588523f43400b85abb01b1312d2abbd",
-                "reference": "74f56458b588523f43400b85abb01b1312d2abbd",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/9971379442eb64596a59f6c3b89ec66fac58c611",
+                "reference": "9971379442eb64596a59f6c3b89ec66fac58c611",
                 "shasum": ""
             },
             "conflict": {
@@ -1862,6 +1862,7 @@
                 "anchorcms/anchor-cms": "<=0.12.7",
                 "andreapollastri/cipi": "<=3.1.15",
                 "andrewhaine/silverstripe-form-capture": ">=0.2,<=0.2.3|>=1,<1.0.2|>=2,<2.2.5",
+                "apache-solr-for-typo3/solr": "<2.8.3",
                 "apereo/phpcas": "<1.6",
                 "api-platform/core": ">=2.2,<2.2.10|>=2.3,<2.3.6|>=2.6,<2.7.10|>=3,<3.0.12|>=3.1,<3.1.3",
                 "appwrite/server-ce": "<=1.2.1",
@@ -1911,6 +1912,7 @@
                 "centreon/centreon": "<22.10.0.0-beta1",
                 "cesnet/simplesamlphp-module-proxystatistics": "<3.1",
                 "chriskacerguis/codeigniter-restserver": "<=2.7.1",
+                "civicrm/civicrm-core": ">=4.2,<4.2.9|>=4.3,<4.3.3",
                 "cockpit-hq/cockpit": "<=2.6.3",
                 "codeception/codeception": "<3.1.3|>=4,<4.1.22",
                 "codeigniter/framework": "<3.1.9",
@@ -2008,6 +2010,7 @@
                 "friendsofsymfony/rest-bundle": ">=1.2,<1.2.2",
                 "friendsofsymfony/user-bundle": ">=1.2,<1.3.5",
                 "friendsoftypo3/mediace": ">=7.6.2,<7.6.5",
+                "friendsoftypo3/openid": ">=4.5,<4.5.31|>=4.7,<4.7.16|>=6,<6.0.11|>=6.1,<6.1.6",
                 "froala/wysiwyg-editor": "<3.2.7",
                 "froxlor/froxlor": "<2.1",
                 "fuel/core": "<1.8.1",
@@ -2062,6 +2065,7 @@
                 "ivankristianto/phpwhois": "<=4.3",
                 "jackalope/jackalope-doctrine-dbal": "<1.7.4",
                 "james-heinrich/getid3": "<1.9.21",
+                "james-heinrich/phpthumb": "<1.7.12",
                 "jasig/phpcas": "<1.3.3",
                 "jcbrand/converse.js": "<3.3.3",
                 "joomla/archive": "<1.1.12|>=2,<2.0.1",
@@ -2129,6 +2133,7 @@
                 "mobiledetect/mobiledetectlib": "<2.8.32",
                 "modx/revolution": "<=2.8.3.0-patch",
                 "mojo42/jirafeau": "<4.4",
+                "mongodb/mongodb": ">=1,<1.9.2",
                 "monolog/monolog": ">=1.8,<1.12",
                 "moodle/moodle": "<4.2.0.0-RC2-dev|==4.2",
                 "movim/moxl": ">=0.8,<=0.10",
@@ -2287,7 +2292,7 @@
                 "socalnick/scn-social-auth": "<1.15.2",
                 "socialiteproviders/steam": "<1.1",
                 "spatie/browsershot": "<3.57.4",
-                "spipu/html2pdf": "<5.2.4",
+                "spipu/html2pdf": "<5.2.8",
                 "spoon/library": "<1.4.1",
                 "spoonity/tcpdf": "<6.2.22",
                 "squizlabs/php_codesniffer": ">=1,<2.8.1|>=3,<3.0.1",
@@ -2378,6 +2383,7 @@
                 "typo3/swiftmailer": ">=4.1,<4.1.99|>=5.4,<5.4.5",
                 "typo3fluid/fluid": ">=2,<2.0.8|>=2.1,<2.1.7|>=2.2,<2.2.4|>=2.3,<2.3.7|>=2.4,<2.4.4|>=2.5,<2.5.11|>=2.6,<2.6.10",
                 "ua-parser/uap-php": "<3.8",
+                "uasoft-indonesia/badaso": "<=2.9.7",
                 "unisharp/laravel-filemanager": "<=2.5.1",
                 "userfrosting/userfrosting": ">=0.3.1,<4.6.3",
                 "usmanhalalit/pixie": "<1.0.3|>=2,<2.0.2",
@@ -2386,6 +2392,7 @@
                 "verot/class.upload.php": "<=1.0.3|>=2,<=2.0.4",
                 "vova07/yii2-fileapi-widget": "<0.1.9",
                 "vrana/adminer": "<4.8.1",
+                "waldhacker/hcaptcha": "<2.1.2",
                 "wallabag/tcpdf": "<6.2.22",
                 "wallabag/wallabag": "<=2.6.2",
                 "wanglelecc/laracms": "<=1.0.3",
@@ -2487,7 +2494,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-08-21T21:04:11+00:00"
+            "time": "2023-08-31T19:04:14+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",
