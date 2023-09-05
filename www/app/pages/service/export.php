@@ -81,7 +81,7 @@ class Export extends \App\Pages\Base
 
             $sql .= " and detail like '%<type>{$t}</type>%'    ";
         }
-        $list = Customer::find($sql, "customer_name asc");
+        
 
         $header = array();
         $data = array();
@@ -94,7 +94,7 @@ class Export extends \App\Pages\Base
         $header['F1'] = "ЕДРПОУ";
         $root="<root>";
         $i = 1;
-        foreach ($list as $item) {
+        foreach (Customer::find($sql, "customer_name asc") as $item) {
             $i++;
             $data['A' . $i] = $item->customer_name;
             $data['B' . $i] = $item->phone;

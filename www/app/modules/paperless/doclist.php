@@ -35,11 +35,11 @@ class DocList extends \App\Pages\Base
         $user = \App\System::getUser() ;
 
 
-        $cust= \App\Entity\Customer::find("status = 0 and customer_id IN  ( select customer_id FROM documents_view WHERE  meta_name  IN ('Invoice','GoodsIssue','ServiceAct')  and content   not like '%<paperless>%')");
+
 
         $ret = [];
         $ret['clist']  =  [];
-        foreach($cust as $c) {
+        foreach(        \App\Entity\Customer::findYield("status = 0 and customer_id IN  ( select customer_id FROM documents_view WHERE  meta_name  IN ('Invoice','GoodsIssue','ServiceAct')  and content   not like '%<paperless>%')") as $c) {
             $ret['clist'][] = array('key'=>$c->customer_id,'value'=>$c->customer_name);
         }
         $ret['firmid']  =  0;
