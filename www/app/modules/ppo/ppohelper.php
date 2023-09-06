@@ -1032,4 +1032,29 @@ class PPOHelper
         return $cname;
     }
 
+    /**
+    * автоматическое  закрытие  смены
+    * 
+    * @param mixed $posid
+    */
+    public static function autoshift($posid ) {
+     
+        $pos = \App\Entity\Pos::load($posid);
+        $firm = \App\Entity\Firm::load($pos->firm_id);
+     
+      
+        $res = PPOHelper::send(json_encode(array('Command' => 'TransactionsRegistrarState','NumFiscal'=>$pos->fiscalnumber)), 'cmd', $firm);
+        if($res['success'] != true) {
+            return  false;
+        }
+
+        $res = json_decode($res['data'], true);
+      
+        if($res['ShiftState'] == 1) {
+           // self::shift($posid,false) ;            
+        }
+
+       
+   }    
+    
 }

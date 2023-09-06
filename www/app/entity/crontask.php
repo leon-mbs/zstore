@@ -15,6 +15,11 @@ use App\System;
 class CronTask extends \ZCL\DB\Entity
 {
     public const MIN_INTERVAL=300 ;
+    public const TYPE_SUBSEMAIL='subsemail' ;
+    public const TYPE_EVENTCUST='eventcust' ;
+    public const TYPE_AUTOSHIFT='autoshift' ;
+    
+    
     protected function init() {
 
         $this->id = 0;
@@ -107,7 +112,7 @@ class CronTask extends \ZCL\DB\Entity
         foreach($queue as $task) {
             try {
                 $done = false;
-                if($task->tasktype=='subsemail') {
+                if($task->tasktype==self::TYPE_SUBSEMAIL) {
                     $msg =unserialize($task->taskdata);
 
                     $ret = \App\Entity\Subscribe::sendEmail($msg['email'], $msg['text'], $msg['subject'], $msg['document_id'] > 0 ? \App\Entity\Doc\Document::load($msg['document_id']) : null);
@@ -117,7 +122,7 @@ class CronTask extends \ZCL\DB\Entity
 
                 }
 
-                if($task->tasktype=='eventcust') {
+                if($task->tasktype==self::TYPE_EVENTCUST) {
                     $data =unserialize($task->taskdata);
                     $text = $data['text']  ;
                     $user = \App\Entity\User::load($data['user_id']);
@@ -132,6 +137,12 @@ class CronTask extends \ZCL\DB\Entity
                     }
 
                 }
+                if($task->tasktype==self::TYPE_AUTOSHIFT) {
+                    $msg = unserialize($task->taskdata);
+
+                    $done = true;
+                }
+
 
                 if($done) {
                     CronTask::delete($task->id) ;
@@ -149,9 +160,11 @@ class CronTask extends \ZCL\DB\Entity
     }
     public static function getTypes() {
         $ret=[];
-        $ret['subsemail']  = 'Email по  підписці  ';
-        $ret['eventcust']  = 'Подія з контрагентом ';
-
+        $ret[self::TYPE_SUBSEMAIL]  = 'Email по  підписці  ';
+        $ret[self::TYPE_EVENTCUST]  = 'Подія з контрагентом ';
+        $ret[self::TYPE_AUTOSHIFT]  = 'Автозакриття зміни ';
+            
+            
         return $ret;
     }
 
