@@ -185,12 +185,12 @@ CREATE TABLE `entrylist` (
   CONSTRAINT `entrylist_ibfk_2` FOREIGN KEY (`stock_id`) REFERENCES `store_stock` (`stock_id`)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
-CREATE TRIGGER `entrylist_after_ins_tr`
-AFTER INSERT
-ON `entrylist`
 
-FOR EACH ROW
-
+DELIMITER ;;
+CREATE TRIGGER entrylist_after_ins_tr
+    AFTER INSERT
+    ON entrylist
+    FOR EACH ROW
 BEGIN
 
   IF NEW.stock_id > 0 THEN
@@ -204,14 +204,14 @@ BEGIN
 
   END IF;
 
-END;
+END;;
+DELIMITER ;
+DELIMITER ;;
 
-CREATE TRIGGER `entrylist_after_del_tr`
-AFTER DELETE
-ON `entrylist`
-
-FOR EACH ROW
-
+CREATE TRIGGER  entrylist_after_del_tr
+    AFTER DELETE
+    ON  entrylist
+    FOR EACH ROW
 BEGIN
 
 
@@ -226,8 +226,8 @@ BEGIN
 
   END IF;
 
-END;
-
+END;;
+DELIMITER ;
 CREATE TABLE `equipments` (
   `eq_id` int(11) NOT NULL AUTO_INCREMENT,
   `eq_name` varchar(255) DEFAULT NULL,

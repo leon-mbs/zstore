@@ -30,7 +30,7 @@ class Outcome extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-        $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username', "user_id in (select user_id from documents_view  where  meta_name  in('GoodsIssue','ServiceAct','Task','Order','POSCheck','TTN','OrderFood')  {$br}  )", 'username'), 0));
+        $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username', "disabled <> 1 and user_id in (select user_id from documents_view  where  meta_name  in('GoodsIssue','ServiceAct','Task','Order','POSCheck','TTN','OrderFood')  {$br}  )", 'username'), 0));
         $this->filter->add(new DropDownChoice('cat', \App\Entity\Category::getList(false, false), 0))->setVisible(false);
         $this->filter->add(new DropDownChoice('salesource', H::getSaleSources(), 0))->setVisible(false);
 
