@@ -460,8 +460,8 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
         $l = Item::find($this->getWhere(), "itemname asc", $count, $start);
-        $f = Item::find($this->getWhere(true), "itemname asc", $count, $start);
-        foreach ($f as $k => $v) {
+        
+        foreach (Item::findYield($this->getWhere(true), "itemname asc", $count, $start) as $k => $v) {
             $l[$k] = $v;
         }
         return $l;

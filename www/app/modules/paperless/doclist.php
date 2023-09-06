@@ -66,11 +66,11 @@ class DocList extends \App\Pages\Base
         if($arg[0] > 0) {
             $sql .= " and customer_id={$arg[0]} ";
         }
-        $docs=Document::find($sql, "document_id desc");
+        
 
         $ret = [];
         $ret['docs']  =  [];
-        foreach($docs as $d) {
+        foreach(Document::findYield($sql, "document_id desc") as $d) {
             $ret['docs'][] = array('id'=>$d->document_id,
                                    'number'=>$d->document_number,
                                    'cname'=>$d->customer_name,
@@ -80,7 +80,7 @@ class DocList extends \App\Pages\Base
                                    );
         }
 
-        unset($docs) ;
+        
 
         return json_encode($ret, JSON_UNESCAPED_UNICODE);
 
@@ -89,7 +89,7 @@ class DocList extends \App\Pages\Base
 
     public function mark($arg, $post=null) {
         $ids = $post;
-        foreach(Document::find("document_id  in ({$ids})") as $doc) {
+        foreach(Document::findYield("document_id  in ({$ids})") as $doc) {
             $doc->headerdata['paperless'] = 0;
             $doc->save();
         }

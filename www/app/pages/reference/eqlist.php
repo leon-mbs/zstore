@@ -98,9 +98,9 @@ class EqList extends \App\Pages\Base
         $this->usetable->usename->setText($item->eq_name);
         $this->_uselist = array();
 
-        $list = \App\Entity\Doc\Document::find("meta_name='task' and state not in(2,3,1,9) ", "document_date desc");
+        
 
-        foreach ($list as $task) {
+        foreach (\App\Entity\Doc\Document::findYield("meta_name='task' and state not in(2,3,1,9) ", "document_date desc") as $task) {
             foreach ($task->unpackDetails('eqlist') as $eq) {
                 if ($eq->eq_id > 0) {
 

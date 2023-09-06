@@ -64,9 +64,8 @@ class EmpTask extends \App\Pages\Base
                 
         and state= " . Document::STATE_CLOSED;
 
-        $docs = Document::find($where);
 
-        foreach ($docs as $doc) {
+        foreach (Document::findYield($where) as $doc) {
 
 
             $emplist = $doc->unpackDetails('emplist');

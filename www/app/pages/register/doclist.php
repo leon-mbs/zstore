@@ -734,7 +734,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         } else {
 
             $docs = Document::find("document_id in ({$fav}) and "  . $this->getWhere(false), $sortfield . " " . $asc, $count, $start);
-            foreach(Document::find("document_id not in ({$fav}) and "  . $this->getWhere(), $sortfield . " " . $asc, $count, $start) as $d) {
+            foreach(Document::findYield("document_id not in ({$fav}) and "  . $this->getWhere(), $sortfield . " " . $asc, $count, $start) as $d) {
                 $docs[$d->document_id] = $d;
             }
 

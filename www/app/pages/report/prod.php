@@ -116,11 +116,8 @@ class Prod extends \App\Pages\Base
 
         //готово  к производству
 
-        $items = \App\Entity\Item::find("disabled<> 1 and item_id in(select pitem_id from item_set)", "itemname") ;
 
-
-
-        foreach($items as $it) {
+        foreach(\App\Entity\Item::findYield("disabled<> 1 and item_id in(select pitem_id from item_set)", "itemname")  as $it) {
 
             $max = 1000000;
             $parts = \App\Entity\ItemSet::find("pitem_id=".$it->item_id) ;

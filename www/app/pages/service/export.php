@@ -138,7 +138,7 @@ class Export extends \App\Pages\Base
         if ($tp > 0) {
             $sql .= " and item_type=" . $tp;
         }
-        $list = Item::find($sql, "itemname asc");
+        
 
         $header = array();
         $data = array();
@@ -160,7 +160,7 @@ class Export extends \App\Pages\Base
         $root="<root>";
         $qty=0;
         $i = 1;
-        foreach ($list as $item) {
+        foreach (Item::findYield($sql, "itemname asc") as $item) {
             $i++;
             $data['A' . $i] = $item->itemname;
             $data['B' . $i] = $item->shortname;

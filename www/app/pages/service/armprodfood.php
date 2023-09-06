@@ -198,9 +198,9 @@ class ArmProdFood extends \App\Pages\Base
         } else {
             $where .= " and (content like '%<forbar>0</forbar>%' or content not  like '%<forbar>%' ) ";
         }
-        $docs = Document::find($where, "  document_id asc");
+        
 
-        foreach ($docs as $doc) {
+        foreach (Document::findYield($where, "  document_id asc") as $doc) {
             $items = $doc->unpackDetails('detaildata');
             foreach ($items as $rowid=>$item) {
                 if ($item->foodstate == 0 || $item->foodstate == 4) {

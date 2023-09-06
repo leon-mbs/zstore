@@ -1349,8 +1349,8 @@ class ARMFood extends \App\Pages\Base
 
     public function getProdItems($args, $post=null) {
         $itemlist = [];
-        $docs = Document::find(" meta_name='OrderFood' and  state=". Document::STATE_INPROCESS, 'document_id desc');
-        foreach($docs as $doc) {
+        
+        foreach(Document::findYield(" meta_name='OrderFood' and  state=". Document::STATE_INPROCESS, 'document_id desc') as $doc) {
             foreach ($doc->unpackDetails('detaildata') as $rowid=>$item) {
                 $fs = intval($item->foodstate);
                 if($fs==3) {

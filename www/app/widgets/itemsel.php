@@ -148,10 +148,10 @@ class ItemSel extends \Zippy\Html\PageFragment
         }
 
         //$where)   ;
-        $list = Item::find($where);
+        
 
         $this->_list = array();
-        foreach ($list as $item) {
+        foreach (Item::findYield($where) as $item) {
 
             if (strlen($this->_pricetype) > 0) {
                 $item->price = $item->getPrice($this->_pricetype, $this->_store);

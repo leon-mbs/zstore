@@ -1679,10 +1679,10 @@ class ARMPos extends \App\Pages\Base
             $criteria .= "  and  (itemname like {$like} or item_code like {$like}   or   bar_code like {$like} )";
         }
 
-        $itemlist = Item::find($criteria);
+        
 
         $list = array();
-        foreach ($itemlist as $key => $value) {
+        foreach (Item::findYield($criteria)as $key => $value) {
 
             if(intval($value->useserial) != 0) {
                 continue;

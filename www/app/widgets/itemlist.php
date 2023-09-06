@@ -70,7 +70,7 @@ class ItemList extends \Zippy\Html\PageFragment
         $all =  Item::findCnt($where) ;
         $items = [];
 
-        foreach(Item::find($where, 'itemname asc', $post->pagesize, $post->currpage * $post->pagesize)  as $it) {
+        foreach(Item::findYield($where, 'itemname asc', $post->pagesize, $post->currpage * $post->pagesize)  as $it) {
             $items[]= array(
              'item_id'=>$it->item_id,
              'itemname'=>$it->itemname,

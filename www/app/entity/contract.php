@@ -93,8 +93,8 @@ class Contract extends \ZCL\DB\Entity
 
         $where = "  customer_id={$this->customer_id}  and {$br}     content like '%<contract_id>{$this->contract_id}</contract_id>%'  ";
 
-        $res = \App\Entity\Doc\Document::find($where, 'document_id asc');
-        foreach ($res as $k => $v) {
+        
+        foreach (\App\Entity\Doc\Document::findYield($where, 'document_id asc') as $k => $v) {
             $ar[$k] = $v;
         }
 
