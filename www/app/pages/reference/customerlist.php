@@ -69,7 +69,7 @@ class CustomerList extends \App\Pages\Base
         $this->customertable->add(new Form('listform'));
         $this->customertable->listform->add(new DataView('customerlist', new CustomerDataSource($this), $this, 'customerlistOnRow'));
         $this->customertable->listform->customerlist->setPageSize(Helper::getPG());
-        $this->customertable->listform->add(new \Zippy\Html\DataList\Paginator('pag', $this->customertable->listform->customerlist));
+        $this->customertable->listform->add(new \Zippy\Html\DataList\Pager('pag', $this->customertable->listform->customerlist));
 
         $this->Reload();
         $this->customertable->listform->add(new SortLink("sortdoc", "docs", $this, "onSort"));
