@@ -709,7 +709,7 @@ class Item extends \ZCL\DB\Entity
             }
         }
 
-        return "ID" . sprintf("%04d", ++$id);
+        return "ID" . sprintf("%05d", ++$id);
     }
 
     /**
