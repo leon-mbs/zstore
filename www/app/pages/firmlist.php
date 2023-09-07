@@ -185,6 +185,7 @@ class FirmList extends \App\Pages\Base
         $this->_firm->ppoowner =  ''  ;
         $this->_firm->ppocert = ''  ;
         $this->_firm->ppokey =  ''  ;
+        $this->_firm->ppokeyid =  ''  ;
         $this->_firm->save();
         $this->firmtable->setVisible(true);
         $this->firmdetail->setVisible(false);
