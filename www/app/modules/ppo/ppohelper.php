@@ -1063,11 +1063,27 @@ class PPOHelper
     public static function autoshift($posid ) {
      
         $pos = \App\Entity\Pos::load($posid);
-        if(self::checkSession != true) {
+        if(self::checkSession($pos) != true) {
             return;
         }
+
+        $stat = self::getStat($posid);
+        $rstat = self::getStat($posid, true);
+
+        $ret = self::zform($posid, $stat, $rstat);
+        if ($ret['success']==true) {
+            $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+            $pos->save();            
+            $ret =  self::shift($posid,false) ;
+
+        }
+        if($ret['success'] == false) {
+          H::logerror($ret['data'])    ;
+        }
+ 
+
        
-        self::shift($posid,false) ;
+
    }    
     
 }

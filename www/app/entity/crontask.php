@@ -160,7 +160,7 @@ class CronTask extends \ZCL\DB\Entity
 
 
                 if($done) {
-                    CronTask::delete($task->id) ;
+                   CronTask::delete($task->id) ;
                 }
             } catch(\Exception $e) {
                 $msg = $e->getMessage();
