@@ -25,6 +25,7 @@ class CronTask extends \ZCL\DB\Entity
         $this->id = 0;
         $this->created = time();
         $this->starton = time();
+        $this->tasktype = "";
 
     }
 
@@ -140,6 +141,15 @@ class CronTask extends \ZCL\DB\Entity
                 if($task->tasktype==self::TYPE_AUTOSHIFT) {
                     $msg = unserialize($task->taskdata);
 
+                      
+                    if($msg['type']=='ppro') {
+                       \App\Modules\PPO\PPOHelper::autoshift($msg['pos_id'])  ;
+                    }
+                    if($msg['type']=='cb') {
+                       \App\Modules\CB\CheckBox::autoshift($msg['pos_id']) ;
+                    }
+                
+                    
                     $done = true;
                 }
 
@@ -150,8 +160,9 @@ class CronTask extends \ZCL\DB\Entity
             } catch(\Exception $e) {
                 $msg = $e->getMessage();
                 $logger->error($msg);
-                $ok = false;
-            }
+                $ok = false;   
+            }    
+
         }
 
         if(!$ok) {

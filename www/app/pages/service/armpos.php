@@ -1262,8 +1262,8 @@ class ARMPos extends \App\Pages\Base
 
     }
 
-    public function OnOpenShift() {
-
+    public function OnOpenShift($sender) {
+ 
         if($this->_tvars['checkbox'] == true) {
 
 
@@ -1275,7 +1275,20 @@ class ARMPos extends \App\Pages\Base
             } else {
                 $this->setError($ret);
             }
-
+            if($this->pos->autoshift >0){
+                $task = new  \App\Entity\CronTask()  ;
+                $task->tasktype = \App\Entity\CronTask::TYPE_AUTOSHIFT;
+                $t =   strtotime(  date('Y-m-d ') .  $this->pos->autoshift.':00' );  
+                 
+                $task->starton=$t;
+                $task->taskdata= serialize(array(
+                       'pos_id'=>$this->pos->pos_id, 
+                       'type'=>'cb' 
+       
+                    ));         
+                $task->save();
+                    
+            }  
 
 
             return;
@@ -1300,11 +1313,28 @@ class ARMPos extends \App\Pages\Base
                 //   $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
             }
             \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id);
+            
+            
+            if($this->pos->autoshift >0){
+                $task = new  \App\Entity\CronTask()  ;
+                $task->tasktype = \App\Entity\CronTask::TYPE_AUTOSHIFT;
+                $t =   strtotime(  date('Y-m-d ') .  $this->pos->autoshift.':00' );  
+                  
+                $task->starton=$t;
+                $task->taskdata= serialize(array(
+                       'pos_id'=>$this->pos->pos_id, 
+                       'type'=>'ppro' 
+       
+                    ));         
+                $task->save();
+                    
+            }              
+            
         }
 
 
         $this->pos->save();
-        return true;
+       
     }
 
     public function OnCloseShift($sender) {

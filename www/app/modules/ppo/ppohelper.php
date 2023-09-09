@@ -967,7 +967,7 @@ class PPOHelper
     }
 
     /**
-    * состояние фискального сервер
+    * состояние фискального сервера
     *
     * @param mixed $firm
     */
@@ -1032,14 +1032,13 @@ class PPOHelper
         return $cname;
     }
 
-    /**
-    * автоматическое  закрытие  смены
-    * 
-    * @param mixed $posid
+  /**
+    * состояние сессии
+    *
+    * @param mixed $firm
     */
-    public static function autoshift($posid ) {
-     
-        $pos = \App\Entity\Pos::load($posid);
+    public static function checkSession($pos) {
+       
         $firm = \App\Entity\Firm::load($pos->firm_id);
      
       
@@ -1050,11 +1049,25 @@ class PPOHelper
 
         $res = json_decode($res['data'], true);
       
-        if($res['ShiftState'] == 1) {
-           // self::shift($posid,false) ;            
+        return  $res['ShiftState'] == 1  ;
+        
+    }
+    
+    
+    
+    /**
+    * автоматическое  закрытие  смены
+    * 
+    * @param mixed $posid
+    */
+    public static function autoshift($posid ) {
+     
+        $pos = \App\Entity\Pos::load($posid);
+        if(self::checkSession != true) {
+            return;
         }
-
        
+        self::shift($posid,false) ;
    }    
     
 }

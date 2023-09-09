@@ -603,4 +603,32 @@ class CheckBox
 
     }
 
+    
+    
+  /**
+    * автоматическое  закрытие  смены
+    * 
+    * @param mixed $posid
+    */
+    public static function autoshift($posid ) {
+     
+        
+        
+        $pos = \App\Entity\Pos::load($posid);
+        $firm = \App\Entity\Firm::load($pos->firm_id);
+     
+       
+        $cb = new CheckBox($pos->cbkey, $pos->cbpin) ;
+        
+        if($cb->CheckShift() != true) {
+            return;
+        }
+        
+        $cb->CloseShift()  ;
+        
+       
+
+       
+   }    
+        
 }

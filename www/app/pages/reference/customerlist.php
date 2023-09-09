@@ -642,16 +642,14 @@ class CustomerList extends \App\Pages\Base
             if(\App\System::useCron()) {
                 $task = new  \App\Entity\CronTask();
                 $task->tasktype=\App\Entity\CronTask::TYPE_EVENTCUST;
-                $task->taskdata= serialize(array(
+                $task->starton=$n->dateshow;
+                $task->starton= serialize(array(
                    'user_id'=>$event->user_id ,
-                   'starton'=>$n->dateshow ,
-
+               
                    'text'=>$n->message
 
                 ));
-                $task['text'] = $event->title . " " . "\n" . $event->description;
-                $task['text'] .= "\n Контрагент:  {$this->_customer->customer_name}   {$this->_customer->phone} ";
-
+               
                 $task->save();
             }
         }
