@@ -103,13 +103,18 @@ class CronTask extends \ZCL\DB\Entity
 
     }
 
-    private static function doQueue() {
+    public static function doQueue($task_id=0) {
         global $logger;
         $ok=true;
         $ret="";
         $conn=\Zdb\DB::getConnect() ;
 
-        $queue = CronTask::find(" starton <= NOW() ", "id asc", 25) ;
+        $where =" starton <= NOW() "  ;
+        if($task_id >0 ) {
+            $where = " id = ". $task_id    ;        
+        }
+        
+        $queue = CronTask::find( $where , "id asc", 25) ;
         foreach($queue as $task) {
             try {
                 $done = false;

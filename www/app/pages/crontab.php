@@ -70,8 +70,24 @@ class CronTab extends \App\Pages\Base
         $names = CronTask::getTypes() ;
         $row->add(new Label("ndate"))->setText(\App\Helper::fdt($task->starton));
         $row->add(new Label("ntype"))->setText($names[$task->tasktype]);
+        $row->add(new ClickLink("nexec", $this, 'OnExec'));
+        $row->add(new ClickLink("ndel", $this, 'OnDel'));
 
 
     }
 
+    public function OnExec($sender) {
+        $t = $sender->getOwner()->getDataItem();
+        CronTask::doQueue($t->id)  ;
+        
+        $this->nlist->Reload() ;       
+    }    
+    public function OnDel($sender) {
+        $t = $sender->getOwner()->getDataItem();
+        
+        CronTask::delete($t->id) ; 
+        
+        $this->nlist->Reload() ;       
+    }    
+    
 }
