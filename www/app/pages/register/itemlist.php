@@ -436,7 +436,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
                 $where = $where . " and (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  or description like {$text} )  ";
             } else {
                 $text = Item::qstr($text);
-                $where = $where . " and (itemname = {$text} or item_code = {$text}  or bar_code = {$text} )  ";
+                $where = $where . " and (itemname = {$text} or item_code = {$text}  or bar_code = {$text} or item_id in (select item_id from store_stock where snumber like {$text} ) )  ";
             }
 
 
@@ -460,8 +460,8 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
         $l = Item::find($this->getWhere(), "itemname asc", $count, $start);
-        $f = Item::find($this->getWhere(true), "itemname asc", $count, $start);
-        foreach ($f as $k => $v) {
+        
+        foreach (Item::findYield($this->getWhere(true), "itemname asc", $count, $start) as $k => $v) {
             $l[$k] = $v;
         }
         return $l;

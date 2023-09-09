@@ -22,7 +22,8 @@ try {
             \App\Session::getSession()->clean();
 
             \App\System::setUser($user);
-
+            $user->lastactive = time();
+            $user->save() ;
         }
     }
 

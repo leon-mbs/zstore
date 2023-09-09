@@ -967,7 +967,7 @@ class PPOHelper
     }
 
     /**
-    * состояние фискального сервер
+    * состояние фискального сервера
     *
     * @param mixed $firm
     */
@@ -1032,4 +1032,58 @@ class PPOHelper
         return $cname;
     }
 
+  /**
+    * состояние сессии
+    *
+    * @param mixed $firm
+    */
+    public static function checkSession($pos) {
+       
+        $firm = \App\Entity\Firm::load($pos->firm_id);
+     
+      
+        $res = PPOHelper::send(json_encode(array('Command' => 'TransactionsRegistrarState','NumFiscal'=>$pos->fiscalnumber)), 'cmd', $firm);
+        if($res['success'] != true) {
+            return  false;
+        }
+
+        $res = json_decode($res['data'], true);
+      
+        return  $res['ShiftState'] == 1  ;
+        
+    }
+    
+    
+    
+    /**
+    * автоматическое  закрытие  смены
+    * 
+    * @param mixed $posid
+    */
+    public static function autoshift($posid ) {
+     
+        $pos = \App\Entity\Pos::load($posid);
+        if(self::checkSession($pos) != true) {
+            return;
+        }
+
+        $stat = self::getStat($posid);
+        $rstat = self::getStat($posid, true);
+
+        $ret = self::zform($posid, $stat, $rstat);
+        if ($ret['success']==true) {
+            $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+            $pos->save();            
+            $ret =  self::shift($posid,false) ;
+
+        }
+        if($ret['success'] == false) {
+          H::logerror($ret['data'])    ;
+        }
+ 
+
+       
+
+   }    
+    
 }

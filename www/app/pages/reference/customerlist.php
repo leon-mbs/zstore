@@ -69,7 +69,7 @@ class CustomerList extends \App\Pages\Base
         $this->customertable->add(new Form('listform'));
         $this->customertable->listform->add(new DataView('customerlist', new CustomerDataSource($this), $this, 'customerlistOnRow'));
         $this->customertable->listform->customerlist->setPageSize(Helper::getPG());
-        $this->customertable->listform->add(new \Zippy\Html\DataList\Paginator('pag', $this->customertable->listform->customerlist));
+        $this->customertable->listform->add(new \Zippy\Html\DataList\Pager('pag', $this->customertable->listform->customerlist));
 
         $this->Reload();
         $this->customertable->listform->add(new SortLink("sortdoc", "docs", $this, "onSort"));
@@ -641,17 +641,15 @@ class CustomerList extends \App\Pages\Base
 
             if(\App\System::useCron()) {
                 $task = new  \App\Entity\CronTask();
-                $task->tasktype='eventcust';
-                $task->taskdata= serialize(array(
+                $task->tasktype=\App\Entity\CronTask::TYPE_EVENTCUST;
+                $task->starton=$n->dateshow;
+                $task->starton= serialize(array(
                    'user_id'=>$event->user_id ,
-                   'starton'=>$n->dateshow ,
-
+               
                    'text'=>$n->message
 
                 ));
-                $task['text'] = $event->title . " " . "\n" . $event->description;
-                $task['text'] .= "\n Контрагент:  {$this->_customer->customer_name}   {$this->_customer->phone} ";
-
+               
                 $task->save();
             }
         }

@@ -78,7 +78,7 @@ class UserLogin extends \Zippy\Html\WebPage
 
             if ($user instanceof User) {
                 \App\Session::getSession()->clean();
-                $user->lastlogin = time();
+                $user->lastactive = time();
                 $user->save();
                 System::setUser($user);
                 $_SESSION['user_id'] = $user->user_id; //для  использования  вне  Application

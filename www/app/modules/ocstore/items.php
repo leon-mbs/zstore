@@ -95,8 +95,8 @@ class Items extends \App\Pages\Base
             if ($cat > 0) {
                 $where .= " and cat_id=" . $cat;
             }
-            $items = Item::find($where, "itemname");
-            foreach ($items as $item) {
+            
+            foreach (Item::findYield($where, "itemname") as $item) {
                 if (strlen($item->item_code) == 0) {
                     continue;
                 }
@@ -187,8 +187,8 @@ class Items extends \App\Pages\Base
         $cat = $this->upd->updcat->getValue();
 
         $elist = array();
-        $items = Item::find("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : ""));
-        foreach ($items as $item) {
+        
+        foreach (Item::findYield("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : "")) as $item) {
             if (strlen($item->item_code) == 0) {
                 continue;
             }
@@ -226,8 +226,8 @@ class Items extends \App\Pages\Base
         $cat = $this->upd->updcat->getValue();
 
         $elist = array();
-        $items = Item::find("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : ""));
-        foreach ($items as $item) {
+        
+        foreach (Item::findYield("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : "")) as $item) {
             if (strlen($item->item_code) == 0) {
                 continue;
             }

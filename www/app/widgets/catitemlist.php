@@ -77,9 +77,9 @@ class CatItemList extends \Zippy\Html\PageFragment
             }
 
         } else {
-            $prodlist = Item::find('disabled<>1  and  item_type in (1,4 )  and cat_id=' . $args[0]);
+            
 
-            foreach($prodlist as $prod) {
+            foreach(Item::findYield('disabled<>1  and  item_type in (1,4 )  and cat_id=' . $args[0]) as $prod) {
                 $ret['items'][] = array(
                   'item_id'=>$prod->item_id,
                   'itemname'=>$prod->itemname,
@@ -114,7 +114,7 @@ class CatItemList extends \Zippy\Html\PageFragment
         $all =  Item::findCnt($where) ;
         $items = [];
 
-        foreach(Item::find($where, 'itemname asc', $post->pagesize, $post->currpage * $post->pagesize)  as $it) {
+        foreach(Item::findYield($where, 'itemname asc', $post->pagesize, $post->currpage * $post->pagesize)  as $it) {
             $items[]= array(
              'item_id'=>$it->item_id,
              'itemname'=>$it->itemname,

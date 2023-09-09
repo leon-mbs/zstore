@@ -184,7 +184,7 @@ class Subscribe extends \ZCL\DB\Entity
 
                 if(System::useCron()) {
                     $task = new  \App\Entity\CronTask();
-                    $task->tasktype='subsemail';
+                    $task->tasktype=\App\Entity\CronTask::TYPE_SUBSEMAIL;
                     $task->taskdata= serialize(array(
                        'email'=>$email ,
                        'subject'=>$sub->msgsubject ,

@@ -64,10 +64,9 @@ class Price extends \App\Pages\Base
         $onstore = $this->filter->onstore->isChecked();
 
         $detail = array();
+        
 
-        $items = Item::find("disabled <>1 and detail not  like '%<noprice>1</noprice>%'", "cat_name,itemname");
-
-        foreach ($items as $item) {
+        foreach (Item::findYield("disabled <>1 and detail not  like '%<noprice>1</noprice>%'", "cat_name,itemname") as $item) {
 
             $qty = $item->getQuantity();
 

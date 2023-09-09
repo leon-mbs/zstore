@@ -6,7 +6,6 @@ namespace App\Entity;
  * Клас-сущность  сотрудник
  *
  * @table=employees
- * @view=employees_view
  * @keyfield=employee_id
  */
 class Employee extends \ZCL\DB\Entity
@@ -39,6 +38,8 @@ class Employee extends \ZCL\DB\Entity
         $this->detail .= "<invalid>{$this->invalid}</invalid>";
         $this->detail .= "<coworker>{$this->coworker}</coworker>";
         $this->detail .= "<comment><![CDATA[{$this->comment}]]></comment>";
+        $this->detail .= "<department><![CDATA[{$this->department}]]></department>";
+        $this->detail .= "<position><![CDATA[{$this->position}]]></position>";
 
         $this->detail .= "</detail>";
 
@@ -53,6 +54,8 @@ class Employee extends \ZCL\DB\Entity
         $this->email = (string)($xml->email[0]);
         $this->phone = (string)($xml->phone[0]);
         $this->comment = (string)($xml->comment[0]);
+        $this->department = (string)($xml->department[0]);
+        $this->position = (string)($xml->position[0]);
         $this->hiredate = (int)($xml->hiredate[0]);
         $this->ztype = (int)($xml->ztype[0]);
         if ($this->ztype == 0) {
@@ -65,9 +68,31 @@ class Employee extends \ZCL\DB\Entity
         $this->coworker = (int)($xml->coworker[0]);
         $this->invalid = (int)($xml->invalid[0]);
 
+     
+        
         parent::afterLoad();
     }
 
+    public function beforeDelete() {
+
+      /*  $conn = \ZDB\DB::getConnect();
+
+        $sql = "  select count(*)  from  documents where   customer_id = {$this->customer_id}  ";
+        $cnt = $conn->GetOne($sql);
+        if ($cnt > 0) {
+            return  "Контрагент використовується в документах";
+        }
+        */
+        return "";
+    }    
+  
+    protected function afterDelete() {
+
+        $conn = \ZDB\DB::getConnect();
+        $conn->Execute("delete from messages where item_type=" . \App\Entity\Message::TYPE_EMP . " and item_id=" . $this->employee_id);
+
+    }    
+    
     //найти  по  логину
     public static function getByLogin($login) {
         if (strlen($login) == 0) {
@@ -99,5 +124,34 @@ class Employee extends \ZCL\DB\Entity
             return "({$br}  or branch_id=0)";
         }
     }
+  
+    /**
+    * список отделов и должностей
+    * 
+    */
+    public static function getDP() {
+        $p=[];
+        $d=[];
+        
+        foreach(Employee::findYield("disabled<> 1") as $e ){
+            if(strlen($e->department)>0) {
+                if(!in_array($e->department,$d)) {
+                    $d[]=$e->department;
+                }
+            }
+            if(strlen($e->position)>0) {
+                if(!in_array($e->position,$p)) {
+                    $p[]=$e->position;
+                }
+            }
+                         
+        }
+        natsort($p) ;
+        natsort($d) ;
+        
+        return array('p'=>$p,'d'=>$d);
+        
+    }
+    
 
 }

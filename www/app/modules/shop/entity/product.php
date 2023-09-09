@@ -163,7 +163,7 @@ class Product extends \App\Entity\Item
         if($var_id>0) {
             $items=array();
 
-            foreach (VarItem::find("var_id=".$var_id) as $vi) {
+            foreach (VarItem::findYield("var_id=".$var_id) as $vi) {
                 $prod = Product::load($vi->item_id) ;
                 $vi->price = $prod->getPurePrice($defpricetype);
                 $vi->actionprice = $prod->getActionPrice();

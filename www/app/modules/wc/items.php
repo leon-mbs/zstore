@@ -85,8 +85,8 @@ class Items extends \App\Pages\Base
         if ($cat_id > 0) {
             $w .= " and cat_id=" . $cat_id;
         }
-        $items = Item::find($w, "itemname");
-        foreach ($items as $item) {
+        
+        foreach (Item::findYield($w, "itemname") as $item) {
             if (strlen($item->item_code) == 0) {
                 continue;
             }
@@ -211,8 +211,8 @@ class Items extends \App\Pages\Base
             $qty =  count($skuvarlist);
 
             $elist = array();
-            $items = Item::find("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : ""));
-            foreach ($items as $item) {
+            
+            foreach (Item::findYield("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : "")) as $item) {
                 if (strlen($item->item_code) == 0) {
                     continue;
                 }
@@ -298,8 +298,8 @@ class Items extends \App\Pages\Base
             unset($data);
 
             $elist = array();
-            $items = Item::find("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : ""));
-            foreach ($items as $item) {
+            
+            foreach (Item::findYield("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : "")) as $item) {
                 if (strlen($item->item_code) == 0) {
                     continue;
                 }

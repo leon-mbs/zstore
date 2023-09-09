@@ -1076,8 +1076,8 @@ class GoodsReceipt extends \App\Pages\Base
         $conn = \ZDB\DB::getConnect()  ;
         $dt = $conn->DBDate(strtotime("-1 month", time()));
 
-        $docs=  Document::find("customer_id={$cid} and  meta_name='GoodsReceipt' and  document_date >= {$dt} ", "document_id desc") ;
-        foreach($docs as $doc) {
+        
+        foreach(Document::findYield("customer_id={$cid} and  meta_name='GoodsReceipt' and  document_date >= {$dt} ", "document_id desc")  as $doc) {
 
             if($p > 0 && $p != $doc->headerdata['payment']) {
                 continue;

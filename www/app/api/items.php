@@ -70,7 +70,7 @@ class items extends JsonRPC
             $w .= " and bar_code=" . Item::qstr($args['bar_code']);
         }
 
-        foreach (Item::find($w, 'itemname') as $item) {
+        foreach (Item::findYield($w, 'itemname') as $item) {
             $plist = array();
 
             $it = array(

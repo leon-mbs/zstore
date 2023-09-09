@@ -59,7 +59,7 @@ class ItemList extends \App\Pages\Base
 
         $this->itemtable->listform->add(new DataView('itemlist', new ItemDataSource($this), $this, 'itemlistOnRow'));
         $this->itemtable->listform->itemlist->setPageSize(H::getPG());
-        $this->itemtable->listform->add(new \Zippy\Html\DataList\Paginator('pag', $this->itemtable->listform->itemlist));
+        $this->itemtable->listform->add(new \Zippy\Html\DataList\Pager('pag', $this->itemtable->listform->itemlist));
         $this->itemtable->listform->itemlist->setSelectedClass('table-success');
         $this->itemtable->listform->add(new SubmitLink('deleteall'))->onClick($this, 'OnDelAll');
         $this->itemtable->listform->add(new SubmitLink('printall'))->onClick($this, 'OnPrintAll', true);
@@ -691,33 +691,7 @@ class ItemList extends \App\Pages\Base
             $this->addAjaxResponse("  $('#tag').html('{$html}') ; $('#pform').modal()");
             return;
         }
-        /*
-        $connector = new \Mike42\Escpos\PrintConnectors\DummyPrintConnector();
-        $printer = new \Mike42\Escpos\Printer($connector);
-
-        $printer->setJustification( \Mike42\Escpos\Printer::JUSTIFY_CENTER)  ;
-        $printer->qrCode($item->url)  ;
-
-
-
-      //  $printer->text("тест\n");
-
-
-
-      //   $connector->write("\x1b\x45\x01");
-
-
-       // $printer->barcode("{sB0123456",\Mike42\Escpos\Printer::BARCODE_CODE128) ;
-
-
-        $cc = $connector->getData()  ;
-        $connector->finalize() ;
-
-        $buf = [];
-        foreach(str_split($cc) as $c) {
-            $buf[] = ord($c) ;
-        }
-        */
+       
         try {
 
             $pr = new \App\Printer() ;
@@ -1033,8 +1007,8 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         }
 
         $l = Item::find($this->getWhere(true), $sortfield, $count, $start);
-        $f = Item::find($this->getWhere(), $sortfield, $count, $start);
-        foreach ($f as $k => $v) {
+        
+        foreach (Item::findYield($this->getWhere(), $sortfield, $count, $start) as $k => $v) {
             $l[$k] = $v;
         }
         return $l;

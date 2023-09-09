@@ -96,7 +96,7 @@ class CategoryList extends \App\Pages\Base
 
         usort($this->_catlist, function ($a, $b) {
             return $a->order > $b->order;
-        });
+        });      
         $this->_rn=0;
 
         $this->categorytable->categorylist->Reload();
@@ -124,7 +124,14 @@ class CategoryList extends \App\Pages\Base
         $item = $row->getDataItem();
 
         $row->add(new Label('cat_name', $item->cat_name));
-        $row->add(new Label('p_name', isset($this->_catlist[$item->parent_id]) ? ($this->_catlist[$item->parent_id]->full_name) : ''));
+        
+        $parent ="";
+        if($item->parent_id >0) {
+            $pcat = $this->getById($item->parent_id) ;                    
+            $parent = $pcat->full_name;
+        }
+
+        $row->add(new Label('p_name', $parent));
         $row->add(new Label('qty', $item->qty))->setVisible(($item->qty ?? 0) > 0);
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -146,13 +153,14 @@ class CategoryList extends \App\Pages\Base
         if (false == \App\ACL::checkDelRef('CategoryList')) {
             return;
         }
-
+        
         $cat_id = $sender->owner->getDataItem()->cat_id;
-        if ($this->_catlist[$cat_id]->qty > 0) {
+        $cat = $this->getById($cat_id) ;
+        if ($cat->qty > 0) {
             $this->setError('Не можна видалити категорію з ТМЦ');
             return;
         }
-        if ($this->_catlist[$cat_id]->hasChild()) {
+        if ($cat->hasChild()) {
             $this->setError('Категорія має дочірні категорії');
             return;
         }
@@ -330,5 +338,14 @@ class CategoryList extends \App\Pages\Base
 
     }
 
+    //изза сортировки
+    private   function getById($id){
+        foreach( $this->_catlist as $c){
+            if($c->cat_id == $id) {
+                return $c;
+            }
+        }
+        return null;        
+    }
 
 }

@@ -144,7 +144,7 @@ class Catalog extends Base
 
         $wherenovar = $where ." and  item_id  not in(select item_id from shop_varitems)     ";
 
-        foreach (Product::find($wherenovar, 'itemname', -1, -1, $fields) as $prod) {
+        foreach (Product::findYield($wherenovar, 'itemname', -1, -1, $fields) as $prod) {
             if($options['noshowempty'] == 1  && $prod->qty <= 0) {
                 continue;
             }
@@ -159,7 +159,7 @@ class Catalog extends Base
         $ids= $conn->GetCol($sql);
 
         if(count($ids)>0) {
-            foreach (Product::find("item_id in(". implode(',', $ids)  ."  )", 'itemname', -1, -1, $fields) as $prod) {
+            foreach (Product::findYield("item_id in(". implode(',', $ids)  ."  )", 'itemname', -1, -1, $fields) as $prod) {
                 $prod->price = $prod->getPrice($options['defpricetype']);
 
                 $this->_list[] = $prod;

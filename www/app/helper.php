@@ -629,9 +629,7 @@ class Helper
 
         $am  = doubleval($am)  ;
         return @number_format($am, 1, '.', '');
-
-
-
+  
     }
 
     /**
@@ -645,19 +643,17 @@ class Helper
             return '';
         }
         if(is_numeric($am) && abs($am)<0.005) {
-            $am  =0;
+            $am = 0;
         }
         $am = str_replace(',', '.', $am);
         $am = preg_replace("/[^0-9\.\-]/", "", $am);
         $am = trim($am);
-
-
-
+ 
         $am  = doubleval($am)  ;
 
         $common = System::getOptions("common");
         if ($common['amdigits'] == 1) {
-            return @number_format($am, 2, '.', '');
+            return  @number_format($am, 2, '.', '');
         }
         if ($common['amdigits'] == 5) {
             $am = round($am * 20) / 20;
@@ -665,31 +661,25 @@ class Helper
         }
         if ($common['amdigits'] == 10) {
             $am = round($am * 10) / 10;
-            return @number_format($am, 2, '.', '');
+            return  @number_format($am, 2, '.', '');
         }
-
+  
         return round($am);
     }
 
     /**
-      * форматирование  сумм  без  копеек  при  продаже
+      * форматирование  сумм  c нулями  при  продаже
       *
       * @param mixed $am
       * @return mixed
       */
     public static function fasell($am) {
 
-        $common = System::getOptions("common");
         $ret = self::fa($am);
 
-        if ($common['sell2'] ==1 &&  $common['amdigits'] >0 ) { 
-           $ret = "". round( doubleval($ret) ) ;
-           $ret = $ret.'.00' ;
-        }
-        if ( $common['amdigits'] ==0 ) { 
-           $ret = $ret.'.00' ;
-        }
-       
+        $ret =  doubleval($ret)  ;
+        $ret =  number_format($ret, 2, '.', '');
+         
         return $ret;
 
     }

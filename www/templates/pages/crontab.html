@@ -37,7 +37,11 @@
 
                             
                         </td>
-                        <td> </td>
+                        
+                        <td>
+                        <a title="Запустити" zippy="nexec"><i class="fa fa-cog"></i></a>   &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a title="Видалити" zippy="ndel"><i class="fa fa-trash"></i></a> 
+                            </td>
 
 
                     </tr>
@@ -62,7 +66,12 @@
       fetch('/crontab.php')           
 
    }
-
+      function check_nexec(ele){
+            
+            $("#modalwait").modal("show") ;
+            return true;
+       
+        }
 </script>    
           
     </body>

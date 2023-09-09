@@ -8,7 +8,7 @@
         <div class="row">
 
 
-            <div zippy="employeetable" class="col-12 col-md-10 col-xl-8">
+            <div zippy="employeetable" class="col-12 col-md-10 col-lg-8">
                 <h3>Довідник співробітників </h3>
                  <div class="navbar nav">
 
@@ -22,13 +22,11 @@
 
                     </form>
                 </div>               <a zippy="addnew" class="btn btn-outline-primary btn-sm">Додати</a>
-                <table class="table table-hover   table-sm"  >
+                <table class="table table-hover   table-sm" class="col-10">
                     <tr>
                         <th>П І Б</th>
 
                         <th>Логін</th>
-                        <th>Відділ</th>
-                        <th>Позиція</th>
 
                         {{#usebranch}}
                         <th>Філія</th>
@@ -37,17 +35,17 @@
 
                         <th></th>
                         <th></th>
+                        <th></th>
                     </tr>
                     <tr zippy="employeelist">
                         <td zippy="emp_name"></td>
 
                         <td zippy="login"></td>
-                        <td zippy="department_name"></td>
-                        <td zippy="position_name"></td>
                         {{#usebranch}}
                         <td zippy="branch"></td>
                         {{/usebranch}}
 
+                        <td><a zippy="contentlist" title="Коментарі"><i class="fa fa-comment"></i></a></td>
                         <td><a zippy="acc" title="Рух по особовому рахунку"><i class="fa fa-money-bill-alt"></i></a></td>
                         <td ><a zippy="edit" title="Редагування"><i class="fa fa-edit"></i></a> 
                        &nbsp; &nbsp; <a  zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a></td>
@@ -61,7 +59,7 @@
     
                 <form zippy="employeedetail">
                     <div class="row">
-                       <div class="col-12 col-md-4 col-xl-3">
+                       <div class="col-12 col-md-6 col-xl-3">
                       
                             <div class="form-group">
                                 <label for="editemp_name">Прізвище ім'я</label>
@@ -87,20 +85,6 @@
                                 <label for="editphone">Телефон</label>
                                 <input pattern="[0-9]+" class="form-control" zippy="editphone"/>
                             </div>
-                           <div class="form-group">
-                                <label for="editcomment">Коментар</label>
-                                <textarea class="form-control" zippy="editcomment"></textarea>
-                            </div>                  
-
-                            <div class="form-check">
-                                <input zippy="editdisabled" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="editdisabled">Звільнився</label>
-                            </div>           
-                 
-                        </div>
-                      
-                        <div class="col-12 col-md-4 col-xl-3">
-
                             {{#usebranch}}
                             <div class="form-group">
                                 <label for="editbranch">Філія</label>
@@ -110,24 +94,33 @@
                             </div>
                             {{/usebranch}}
                             <div class="form-group">
-                                <label for="editdepartment">Відділ</label>
-                                <select class="form-control" zippy="editdepartment">
-                                    <option value="0">Не вказано</option>
-                                </select>
+                                <label for="editcomment">Коментар</label>
+                                <textarea class="form-control" zippy="editcomment"></textarea>
                             </div>
+                            <div class="form-check">
+                                <input zippy="editdisabled" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="editdisabled">Звільнився</label>
+                            </div>
+                          
+                        </div>
+                      
+                         <div class="col-12 col-md-4 col-xl-3">
                             <div class="form-group">
-                                <label for="editposition">Позиція</label>
-                                <select class="form-control" zippy="editposition">
-                                    <option value="0">Не вказано</option>
-                                </select>
-                            </div>                      
-                                <div class="form-group">
-                                   <label for="editztype">Тип зарплати</label>
-                                   <select     zippy="editztype" class="form-control">
-        
-                                   </select>
-        
-                               </div>
+                               <label  for="editdepartment">Відділ</label>
+                               <input   class="form-control" zippy="editdepartment"/>
+                           </div>
+                            <div class="form-group">
+                               <label  for="editposition">Позиція (посада)</label>
+                               <input   class="form-control" zippy="editposition"/>
+                           </div>
+                      
+                            <div class="form-group">
+                               <label for="editztype">Тип зарплати</label>
+                               <select     zippy="editztype" class="form-control">
+    
+                               </select>
+    
+                           </div>
                             <div class="form-group">
                                <label data-label="editzhour" for="editzhour">Оплата за годину</label>
                                <input pattern="[0-9]+"    class="form-control" zippy="editzhour"/>
@@ -150,31 +143,28 @@
                                 <br><input zippy="editcoworker" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="editcoworker">Сумiсник</label>
                            </div>
-                   
+
    
-                        </div>   
-                        
-             
-                     </div>                    
-                     
-                     <div class="row">
-                       <div class="col-12 col-md-6 col-xl-4">
-                            <div class="form-group">
+                        </div> 
+    </div>                          
+                    <div class="row">
+                       <div class="col-12   ">
+                   <div class="form-group">
                                 <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-secondary mr-2">
                                 <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">
                                 
-                            </div>      
-                      </div>
-                     </div>      
-                    
+                            </div>       
+                        
+                 
+                    </div>
+                  </div>
                 </form>
                 
             <div zippy="accp" class="row">
-              <div  class="col-12 col-lg-8 col-xl-6">
+            <div zippy="accp" class="col-12 col-lg-8 col-xl-6">
              <a zippy="accback"><i class="fa fa-arrow-alt-circle-left"></i> До переліку</a>
             
               <h4 zippy="accname"></h4>
-              <h5 >Особовий  рахунок</h5>
               
                 <div class="navbar nav">
                     <form zippy="filters" class="form-inline">
@@ -191,7 +181,7 @@
                  </div>
 
 
-                 <table class="table table-sm">
+                   <table class="table table-sm">
                    <tr>
                      <th>Дата</th>
                      <th class="text-right">Поч.</th>
@@ -219,7 +209,33 @@
      
               
                 </div>
-            </div>
+       </div>
+       
+         <div zippy="contentview" class="row">      
+            <div class="col-6  col-md-6 col-xl-4 card">
+                   <h5> Коментарі </h5>
+                        <table class="table table-sm">
+                            <tr zippy="dw_msglist">
+                                <td>
+                                    <span><b zippy="msguser"></b> <span zippy="msgdate" class="text-muted float-right"></span></span>
+
+                                    <p zippy="msgdata"></p>
+                                </td>
+                                <td valign="top" style="width: 30px;"><a zippy="delmsg"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                        </table>
+                        <hr>
+                        <form zippy="addmsgform">
+                            <div class="form-group">
+                                <label for="addmsg">Коментар</label>
+                                <textarea required="required" class="form-control" zippy="addmsg"
+                                          style=" height:120px;"></textarea>
+                            </div>
+                            <input class="btn btn-outline-success  " type="submit" value="Додати">
+                        </form>
+            </div>       
+       
+         </div> 
        
               <script>               
          function check_delete() {

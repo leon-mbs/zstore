@@ -11,7 +11,7 @@ class customers extends JsonRPC
     public function list() {
         $list = array();
 
-        foreach (Customer::find('', 'customer_name') as $cust) {
+        foreach (Customer::findYield('', 'customer_name') as $cust) {
 
             $c = array(
                 'customer_id'   => $cust->customer_id,

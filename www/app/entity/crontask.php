@@ -15,11 +15,17 @@ use App\System;
 class CronTask extends \ZCL\DB\Entity
 {
     public const MIN_INTERVAL=300 ;
+    public const TYPE_SUBSEMAIL='subsemail' ;
+    public const TYPE_EVENTCUST='eventcust' ;
+    public const TYPE_AUTOSHIFT='autoshift' ;
+    
+    
     protected function init() {
 
         $this->id = 0;
         $this->created = time();
         $this->starton = time();
+        $this->tasktype = "";
 
     }
 
@@ -97,17 +103,22 @@ class CronTask extends \ZCL\DB\Entity
 
     }
 
-    private static function doQueue() {
+    public static function doQueue($task_id=0) {
         global $logger;
         $ok=true;
         $ret="";
         $conn=\Zdb\DB::getConnect() ;
 
-        $queue = CronTask::find(" starton <= NOW() ", "id asc", 25) ;
+        $where =" starton <= NOW() "  ;
+        if($task_id >0 ) {
+            $where = " id = ". $task_id    ;        
+        }
+        
+        $queue = CronTask::find( $where , "id asc", 25) ;
         foreach($queue as $task) {
             try {
                 $done = false;
-                if($task->tasktype=='subsemail') {
+                if($task->tasktype==self::TYPE_SUBSEMAIL) {
                     $msg =unserialize($task->taskdata);
 
                     $ret = \App\Entity\Subscribe::sendEmail($msg['email'], $msg['text'], $msg['subject'], $msg['document_id'] > 0 ? \App\Entity\Doc\Document::load($msg['document_id']) : null);
@@ -117,7 +128,7 @@ class CronTask extends \ZCL\DB\Entity
 
                 }
 
-                if($task->tasktype=='eventcust') {
+                if($task->tasktype==self::TYPE_EVENTCUST) {
                     $data =unserialize($task->taskdata);
                     $text = $data['text']  ;
                     $user = \App\Entity\User::load($data['user_id']);
@@ -132,15 +143,31 @@ class CronTask extends \ZCL\DB\Entity
                     }
 
                 }
+                if($task->tasktype==self::TYPE_AUTOSHIFT) {
+                    $msg = unserialize($task->taskdata);
+
+                      
+                    if($msg['type']=='ppro') {
+                       \App\Modules\PPO\PPOHelper::autoshift($msg['pos_id'])  ;
+                    }
+                    if($msg['type']=='cb') {
+                       \App\Modules\CB\CheckBox::autoshift($msg['pos_id']) ;
+                    }
+                
+                    
+                    $done = true;
+                }
+
 
                 if($done) {
-                    CronTask::delete($task->id) ;
+                   CronTask::delete($task->id) ;
                 }
             } catch(\Exception $e) {
                 $msg = $e->getMessage();
                 $logger->error($msg);
-                $ok = false;
-            }
+                $ok = false;   
+            }    
+
         }
 
         if(!$ok) {
@@ -149,9 +176,11 @@ class CronTask extends \ZCL\DB\Entity
     }
     public static function getTypes() {
         $ret=[];
-        $ret['subsemail']  = 'Email по  підписці  ';
-        $ret['eventcust']  = 'Подія з контрагентом ';
-
+        $ret[self::TYPE_SUBSEMAIL]  = 'Email по  підписці  ';
+        $ret[self::TYPE_EVENTCUST]  = 'Подія з контрагентом ';
+        $ret[self::TYPE_AUTOSHIFT]  = 'Автозакриття зміни ';
+            
+            
         return $ret;
     }
 

@@ -33,6 +33,7 @@ class Pos extends \ZCL\DB\Entity
         $this->details .= "<firm_id>{$this->firm_id}</firm_id>";
         $this->details .= "<cbkey>{$this->cbkey}</cbkey>";
         $this->details .= "<cbpin>{$this->cbpin}</cbpin>";
+        $this->details .= "<autoshift>{$this->autoshift}</autoshift>";
         $this->details .= "</details>";
 
         return true;
@@ -51,6 +52,7 @@ class Pos extends \ZCL\DB\Entity
         $this->fiscallocnumber = (int)($xml->fiscallocnumber[0]);
         $this->fiscdocnumber = (int)($xml->fiscdocnumber[0]);
         $this->firm_id = (int)($xml->firm_id[0]);
+        $this->autoshift = (int)($xml->autoshift[0]);
 
         $this->testing = (int)($xml->testing[0]);
         $this->usefisc = (int)($xml->usefisc[0]);

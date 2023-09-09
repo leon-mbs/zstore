@@ -103,7 +103,8 @@ class Item extends \ZCL\DB\Entity
         $this->fromdate = intval($xml->fromdate[0]);
         $this->printqty = intval($xml->printqty[0]);
 
-
+       
+        
         parent::afterLoad();
     }
 
@@ -410,7 +411,13 @@ class Item extends \ZCL\DB\Entity
         if ($this->hasAction() && $_price_ == 'price1') {
             $price = $this->getActionPrice($qty) ?? $price;
         }
-
+        
+        $common = \App\System::getOptions("common");
+         
+        if ($common['sell2'] ==1   ) { 
+            $price = doubleval($price) ;
+            return  round($price);
+        }
         return \App\Helper::fa($price);
     }
 
@@ -427,7 +434,7 @@ class Item extends \ZCL\DB\Entity
     *                  date
     */
     public function getPriceEx($p=array()) {
-
+        $common = \App\System::getOptions("common");
 
         if(strlen($p['pricetype'])==0) {
             $p['pricetype'] = 'price1';
@@ -438,13 +445,16 @@ class Item extends \ZCL\DB\Entity
         $p['customer']   = intval($p['customer'] ?? null);
         $p['date']   = intval($p['date'] ?? null);
 
-
-
         $pureprice = $this->getPurePrice($p['pricetype'], $p['store'], $p['partion']);
         $price = $pureprice;
 
         $pq=$this->getActionPriceByQuantity($p['quantity']);
         if($pq != null) {
+            if ($common['sell2'] ==1   ) { 
+                $price = doubleval($price) ;
+                return  round($price);
+            }            
+            
             return \App\Helper::fa($price);
         }
         if ($this->hasAction() && $p['pricetype']  == 'price1') {
@@ -459,7 +469,10 @@ class Item extends \ZCL\DB\Entity
                 $price = \App\Helper::fa($pureprice - ($pureprice*$d/100)) ;
             }
         }
-
+        if ($common['sell2'] ==1   ) { 
+            $price = doubleval($price) ;
+            return  round($price);
+        }
 
         return \App\Helper::fa($price);
     }
@@ -696,7 +709,7 @@ class Item extends \ZCL\DB\Entity
             }
         }
 
-        return "ID" . sprintf("%04d", ++$id);
+        return "ID" . sprintf("%05d", ++$id);
     }
 
     /**

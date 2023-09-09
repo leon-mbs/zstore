@@ -135,13 +135,13 @@ class Document extends \ZCL\DB\Entity
         $this->packData();
 
 
-
+        /*
         $prev = Document::getFirst(" document_id <> {$this->document_id} and user_id = {$this->user_id} and  meta_id={$this->meta_id}", "document_id  desc");
         $diff = time() - $prev->lastupdate ;
         if($diff <= 10 && $prev != false && $this->amount==$prev->amount) {
             // throw new \Exception("Дублювання документа");
         }
-
+        */
 
     }
 
@@ -208,7 +208,7 @@ class Document extends \ZCL\DB\Entity
         }
 
 
-
+  
 
     }
 
@@ -873,6 +873,10 @@ class Document extends \ZCL\DB\Entity
             }
             if (strlen($it->service_name) > 0) {
                 $s[] = $it->service_name;
+            }
+
+            if (strlen($it->snumber) > 0) {
+                $s[] = $it->snumber;
             }
 
         }

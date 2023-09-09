@@ -130,7 +130,7 @@ class TimeSheet extends \App\Pages\Base
 
 
 
-        foreach (TimeItem::find($w, 't_start') as $tm) {
+        foreach (TimeItem::findYield($w, 't_start') as $tm) {
 
             $color="";
             $colorcal="";
