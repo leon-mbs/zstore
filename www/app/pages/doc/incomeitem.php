@@ -54,7 +54,8 @@ class IncomeItem extends \App\Pages\Base
         $this->add(new Form('editdetail'))->setVisible(false);
 
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutocompleteItem');
-
+        $this->editdetail->edititem->onChange($this, 'OnChangeItem', true);
+ 
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
         $this->editdetail->add(new TextInput('editsnumber'));
@@ -368,7 +369,13 @@ class IncomeItem extends \App\Pages\Base
         $text = trim($sender->getText());
         return Item::findArrayAC($text);
     }
+     public function OnChangeItem($sender) {
+        $id = $sender->getKey();
+        $item = Item::load($id);
+        $price = $item->getLastPartion($this->docform->store->getValue(), null, false);
+        $this->editdetail->editprice->setText(H::fa($price));
 
+    }
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
