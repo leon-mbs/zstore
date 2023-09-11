@@ -15,40 +15,84 @@
                 </h3>
 
 
-                <div class="navbar nav  ">
-                    <form zippy="filter" class="form-inline ">
-                        <label for="searchnumber">№ </label>
-                        <input placeholder="Пошук..." class="form-control mr-2" type="text" zippy="searchnumber"
+      <div class="navbar nav  ">
+                    <form zippy="filter" class="row   g-3 align-items-center">
+                      <div class="col-auto">
+                       <div class="  row"> 
+                        <label class="col-auto mt-2" for="searchnumber">№ </label>
+                        <div class="col-auto">
+                           <input placeholder="Пошук..." class="form-control  " type="text" zippy="searchnumber"
                                autocomplete="off"    onkeydown="onSearch()" style="width:175px" title="Якщо пошук по номеру, iншi елементи фiльтру iгноруються">
-
-                        <label for="from">З </label>
-                        <input type="text" class="form-control mr-sm-1  " zippy="from" style="width:110px">
-
-
-                        <label for="to"> по </label>
-                        <input type="text" class="form-control mr-sm-1 " style="width:110px" zippy="to">
-
-                        <label for="status"> Статус </label>
-                        <select class="form-control mr-2" zippy="status">
-                            <option value="0">Не вказано</option>
-                        </select>
-
-                        <label for="doctype"> Тип </label>
-                        <select class="form-control mr-sm-1  " zippy="doctype">
+                         </div>
+                       </div>
+                      </div>
+                       <div class="col-auto">  
+                          <div class=" row"> 
+                             <label class="col-auto mt-2" for="from">З </label>
+                             <div class="col-auto">
+                                <input type="text" class="form-control    " zippy="from" style="width:110px">
+                             </div>
+                         </div>
+                      </div>
+                       <div class="col-auto"> 
+                           <div class=" row"> 
+                               <label class="col-auto mt-2" for="to"> по </label>
+                               <div class="col-auto">
+                                  <input type="text" class="form-control   " style="width:110px" zippy="to">
+                              </div>
+                         </div>
+                        </div>
+                        <div class="col-auto">   
+                          <div class=" row"> 
+                        <label class="col-auto mt-2" for="status"> Статус </label>
+                             <div class="col-auto">
+                                <select class="form-control  " zippy="status">
+                                    <option value="0">Не вказано</option>
+                                </select>
+                            </div>
+                           </div>
+                           </div>
+                        <div class="col-auto"> 
+                            <div class=" row"> 
+ 
+                        <label class="col-auto mt-2" for="doctype"> Тип </label>
+                                   <div class="col-auto">
+                    <select class="form-control    " zippy="doctype">
                             <option value="0">Не встановлено</option>
                         </select>
-                        <label for="searchcust"> Контрагент </label>
-                        <input placeholder="Почніть вводити..." class="form-control mr-1" type="text" zippy="searchcust">
+                           </div>
+                           </div>
+                           </div>
+                           <div class="col-auto"> 
+                                              <div class=" row"> 
+    <label class="col-auto mt-2" for="searchcust"> Контрагент </label>
+                                             <div class="col-auto">
+          <input placeholder="Почніть вводити..." class="form-control mr-1" type="text" zippy="searchcust">
 
-                        <label for="author"> Відповідальний </label>
-                        <select class="form-control    " zippy="author">
+                           </div>
+                           </div>
+                           </div>
+                           <div class="col-auto"> 
+                               <div class=" row"> 
+                   <label class="col-auto mt-2"for="author"> Відповідальний </label>
+                                                <div class="col-auto">
+       <select class="form-control    " zippy="author">
                             <option value="0">Не обрано</option>
                         </select>
+                           </div>
+                           </div>
+                           </div>
+                           <div class="col-auto"> 
                         <input class="form-control ml-2  mr-2" type="text" zippy="searchtext" placeholder="Пошук по контенту"   >
 
+                           </div>
+                           <div class="col-auto"> 
 
                         <input type="submit" class="  ml-2  mr-2  btn btn-outline-success  " value="ОК">
                         <a zippy="erase" title="Скинути фільтр"><i class="fa fa-eraser"></i></a>
+                            </div>
+                       </div>
+                           
 
 
                     </form>
@@ -244,3 +288,12 @@
         </script>
     </body>
 </html>
+
+
+
+
+
+
+
+
+
