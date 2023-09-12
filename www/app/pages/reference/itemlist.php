@@ -192,8 +192,6 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('price4', $item->price4));
         $row->add(new Label('price5', $item->price5));
 
-        $row->add(new Label('hasnotes'))->setVisible(strlen($item->description) > 0);
-        $row->hasnotes->setAttribute('title', htmlspecialchars_decode($item->description));
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
 
         $row->add(new Label('cell', $item->cell));
@@ -209,6 +207,10 @@ class ItemList extends \App\Pages\Base
             }
             $row->hasaction->setAttribute('title', $title)  ;
         }
+        $row->add(new ClickLink('shownotes'))->onClick($this, 'shownotesOnClick',true);
+        $row->shownotes->setVisible(strlen($item->description) > 0);
+        
+        
         $row->add(new ClickLink('copy'))->onClick($this, 'copyOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
@@ -923,7 +925,17 @@ class ItemList extends \App\Pages\Base
 
     }
 
-
+    public function  shownotesOnClick($sender){
+        $item = $sender->getOwner()->getDataItem();
+        $desc = str_replace("'","`",$item->description);
+        $desc = str_replace("\"","`",$desc);
+      //  $desc = nl2br ($desc);        
+        $desc = str_replace ("\n","",$desc);
+        $desc = str_replace ("\r","",$desc);
+        
+        $this->updateAjax([],"$('#idesc').modal('show'); $('#idesccontent').html('{$desc}'); ")  ;
+        
+    }
 }
 
 class ItemDataSource implements \Zippy\Interfaces\DataSource

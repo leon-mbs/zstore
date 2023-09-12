@@ -13,8 +13,8 @@
                 <h3>Довідник номенклатури
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-toggle="popover"
-                       data-html="true" data-placement="bottom" data-content="Довiдник ТМЦ, з можливістю створення нових одиниць їх редагування, видалення та пошуком.
-                       <br><br>У списку відображаються активні товари. Для відображення товарів з статусом<b> 'Більше не використовується' </b>потрібно встановити прапорець<b> 'Все' </b>біля кнопки<b> 'ОК' </b>"></i>
+                        data-placement="bottom" data-content="Довiдник ТМЦ, з можливістю створення нових одиниць їх редагування, видалення та пошуком.
+                       У списку відображаються активні товари. Для відображення товарів з статусом 'Більше не використовується' потрібно встановити прапорець 'Все' біля кнопки 'ОК' "></i>
                 </h3>
 
                 <div class="navbar nav">
@@ -147,8 +147,7 @@
                             {{#usesnumber}}
                             <td><i zippy="inseria" class="fa fa-check"></i></td>
                             {{/usesnumber}}
-                            <td><i zippy="hasnotes" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"
-                                   data-html="true"></i></td>
+                            <td><a zippy="shownotes"><i zippy="hasnotes" class="far fa-sticky-note"</i></a> </td>
 
                             <td><a zippy="set" title="Комплекти"><i class="fa fa-cogs"></i></a> &nbsp;</td>
                             <td  >
@@ -157,8 +156,7 @@
                             <td aling="center">
 
                                 <a zippy="copy" title="Копіювати"><i class="fa fa-copy"></i></a> &nbsp;&nbsp;&nbsp;
-
-
+                            
                                 <a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> &nbsp;
 
                             </td>
@@ -420,7 +418,7 @@
                             <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editdescription">Опис</label>
                                 <div class="col-7">
-                                    <textarea class="form-control" zippy="editdescription"></textarea>
+                                    <textarea style="height:100px" class="form-control" zippy="editdescription"></textarea>
                                 </div>
                             </div>       
                         </div>
@@ -536,7 +534,24 @@
             </div>
         </div>
 
+        <div id="idesc" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog  ">
+                <div  class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Опис</h5>
+                   
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div id="idesccontent" class="modal-body">
+                        
 
+                    </div>       
+                </div>
+            </div>
+        </div>
         <script>
             $(document).ready(function () {
 
@@ -560,6 +575,10 @@
                 return confirm("Видалити ТМЦ?")
             }
 
+            
+         
+            
+            
         </script>
 
     </body>
