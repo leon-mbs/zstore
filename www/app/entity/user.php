@@ -21,7 +21,7 @@ class User extends \ZCL\DB\Entity
         $this->defmf = 0;
         $this->defsalesource = 0;
         $this->deffirm = 0;
-        $this->hidesidebar = 0;
+
         $this->usemobileprinter = 0;
         $this->pagesize = 25;
         $this->createdon = time();
@@ -100,7 +100,7 @@ class User extends \ZCL\DB\Entity
 
         $this->darkmode = $options['darkmode']?? 0;
         $this->emailnotify = $options['emailnotify']?? 0;
-        $this->hidesidebar = $options['hidesidebar']?? 0;
+
         $this->usemobileprinter = $options['usemobileprinter']?? 0;
 
         $this->prtype = $options['prtype'] ?? 0;
@@ -140,7 +140,7 @@ class User extends \ZCL\DB\Entity
         $options['defmf'] = $this->defmf;
         $options['defsalesource'] = $this->defsalesource;
         $options['pagesize'] = $this->pagesize;
-        $options['hidesidebar'] = $this->hidesidebar;
+
         $options['darkmode'] = $this->darkmode;
         $options['emailnotify'] = $this->emailnotify;
         $options['usemobileprinter'] = $this->usemobileprinter;

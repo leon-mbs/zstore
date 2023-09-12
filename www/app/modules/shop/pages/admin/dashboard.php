@@ -87,10 +87,10 @@ class Dashboard extends \App\Pages\Base
         $sql = " content  LIKE '%<shoporder>1</shoporder>%' "  ;
         $sql .= " and date(document_date) <= " . $conn->DBDAte(time());
         $sql .= " and date(document_date) > " . $conn->DBDAte(strtotime("- 30 day", time()));
-        $docs = \App\Entity\Doc\Document::find($sql) ;
+        
         $items = array();
         $cats = array();
-        foreach($docs as $doc) {
+        foreach(\App\Entity\Doc\Document::findYield($sql)  as $doc) {
             foreach($doc->unpackDetails('detaildata') as $it) {
                 if(!isset($items[$it->itemname])) {
                     $items[$it->itemname] = 0;

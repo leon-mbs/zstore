@@ -133,7 +133,7 @@ class Employee extends \ZCL\DB\Entity
         $p=[];
         $d=[];
         
-        foreach(Employee::find("disabled<> 1") as $e ){
+        foreach(Employee::findYield("disabled<> 1") as $e ){
             if(strlen($e->department)>0) {
                 if(!in_array($e->department,$d)) {
                     $d[]=$e->department;

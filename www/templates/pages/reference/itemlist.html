@@ -13,24 +13,40 @@
                 <h3>Довідник номенклатури
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-toggle="popover"
-                       data-html="true" data-placement="bottom" data-content="Довiдник ТМЦ, з можливістю створення нових одиниць їх редагування, видалення та пошуком.
-                       <br><br>У списку відображаються активні товари. Для відображення товарів з статусом<b> 'Більше не використовується' </b>потрібно встановити прапорець<b> 'Все' </b>біля кнопки<b> 'ОК' </b>"></i>
+                        data-placement="bottom" data-content="Довiдник ТМЦ, з можливістю створення нових одиниць їх редагування, видалення та пошуком.
+                       У списку відображаються активні товари. Для відображення товарів з статусом 'Більше не використовується' потрібно встановити прапорець 'Все' біля кнопки 'ОК' "></i>
                 </h3>
 
                 <div class="navbar nav">
 
-                    <form zippy="filter" class="form-inline">
-
-
+                    <form zippy="filter" class="row   g-2 align-items-center">
+                      <div class="col-auto">
                         <input autocomplete="off" placeholder="Пошук..." class="form-control mr-2" type="text" zippy="searchkey" onkeydown="onSearch()">
-                        <label for="searchcat">категорія</label>
-
-                        <select class="form-control mr-2" zippy="searchcat">
-                            <option value="0">Не вказано</option>
-                        </select>
-                        <label for="searchbrand">Бренд </label>
-                        <input autocomplete="off"   class="form-control mr-2" zippy="searchbrand"/>
-                        <label for="searchtype">Тип</label>
+                      </div>
+                       <div class="col-auto">  
+                          <div class=" row no-gutters"> 
+                           <label class="col-auto mt-2"  for="searchcat">категорія</label>
+                              <div class="col-auto">
+  
+                                <select class="form-control mr-2" zippy="searchcat">
+                                    <option value="0">Не вказано</option>
+                                </select>
+                             </div>
+                       </div>
+                      </div>
+               
+                      <div class="col-auto">  
+                          <div class=" row no-gutters"> 
+                             <label class="col-auto mt-2"  for="searchbrand">Бренд </label>
+                           <div class="col-auto">
+                              <input autocomplete="off"   class="form-control mr-2" zippy="searchbrand"/>
+                           </div>
+                       </div>
+                      </div>
+                       <div class="col-auto">  
+                          <div class=" row no-gutters"> 
+                              <label class="col-auto mt-2"  for="searchtype">Тип</label>
+                          <div class="col-auto">
                             <select zippy="searchtype" class="form-control mr-sm-2">
                                 <option value="0">Всі активні</option>
                                 <option value="1">Товари</option>
@@ -39,20 +55,31 @@
                                 <option value="4">Готова продукція</option>
                                 <option value="5">Напівфабрикати</option>
                                 <option value="10">Деактивовані</option>
-                </select>
+                            </select>
+                          </div>
+                       </div>
+                      </div>
 
               
-                        <label for="searchsort">Сортування</label>
+                      <div class="col-auto">  
+                          <div class=" row no-gutters"> 
+                            <label class="col-auto mt-2"  for="searchsort">Сортування</label>
 
-                        <select class="form-control mr-2" zippy="searchsort">
-                            <option value="0">Найменування</option>
-                            <option value="1">Артикул</option>
-                            <option value="2">Тип</option>
-                            <option value="3">Спочатку новi</option>
-                        </select>
-   
-                        <input class="btn btn-outline-success  " type="submit" value="ОК">
-
+                         <div class="col-auto">
+                            <select class="form-control mr-2" zippy="searchsort">
+                                <option value="0">Найменування</option>
+                                <option value="1">Артикул</option>
+                                <option value="2">Тип</option>
+                                <option value="3">Спочатку новi</option>
+                            </select>
+                          </div>
+                       </div>
+                      </div>
+                       
+                          <div class="col-auto">  
+         
+                               <input class="btn btn-outline-success  " type="submit" value="ОК">
+                           </div>
                     </form>
                 </div>
                 <a zippy="addnew" class="btn btn-primary mr-4  ">Додати</a>
@@ -120,8 +147,7 @@
                             {{#usesnumber}}
                             <td><i zippy="inseria" class="fa fa-check"></i></td>
                             {{/usesnumber}}
-                            <td><i zippy="hasnotes" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"
-                                   data-html="true"></i></td>
+                            <td><a zippy="shownotes"><i zippy="hasnotes" class="far fa-sticky-note"</i></a> </td>
 
                             <td><a zippy="set" title="Комплекти"><i class="fa fa-cogs"></i></a> &nbsp;</td>
                             <td  >
@@ -130,8 +156,7 @@
                             <td aling="center">
 
                                 <a zippy="copy" title="Копіювати"><i class="fa fa-copy"></i></a> &nbsp;&nbsp;&nbsp;
-
-
+                            
                                 <a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> &nbsp;
 
                             </td>
@@ -142,7 +167,7 @@
                                 перемiстити в <select   zippy="allcat"><option value="0">Не вказано</select>
                             </td> </tr>                 
                     </table>
-                    <div zippy="pag"></div>   
+                    <div style="width:50%" zippy="pag"></div>   
                 </form>
             </div>
 
@@ -393,7 +418,7 @@
                             <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editdescription">Опис</label>
                                 <div class="col-7">
-                                    <textarea class="form-control" zippy="editdescription"></textarea>
+                                    <textarea style="height:100px" class="form-control" zippy="editdescription"></textarea>
                                 </div>
                             </div>       
                         </div>
@@ -509,7 +534,24 @@
             </div>
         </div>
 
+        <div id="idesc" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog  ">
+                <div  class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Опис</h5>
+                   
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div id="idesccontent" class="modal-body">
+                        
 
+                    </div>       
+                </div>
+            </div>
+        </div>
         <script>
             $(document).ready(function () {
 
@@ -533,6 +575,10 @@
                 return confirm("Видалити ТМЦ?")
             }
 
+            
+         
+            
+            
         </script>
 
     </body>

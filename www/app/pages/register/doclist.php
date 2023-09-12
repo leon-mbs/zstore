@@ -9,7 +9,7 @@ use App\Filter;
 use App\Helper as H;
 use App\System;
 use Zippy\Html\DataList\DataView;
-use Zippy\Html\DataList\Paginator;
+use Zippy\Html\DataList\Pager;
 use Zippy\Html\Form\AutocompleteTextInput;
 use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
@@ -92,7 +92,7 @@ class DocList extends \App\Pages\Base
 
         $doclist = $this->add(new DataView('doclist', new DocDataSource(), $this, 'doclistOnRow'));
 
-        $this->add(new Paginator('pag', $doclist));
+        $this->add(new Pager('pag', $doclist));
         $doclist->setPageSize(H::getPG());
         $this->doclist->setCurrentPage($filter->page);
         $this->doclist->setSorting('priority desc,document_id desc', '');
@@ -248,6 +248,13 @@ class DocList extends \App\Pages\Base
         if ($doc->document_id == ($this->_doc->document_id ?? null)) {
             $row->setAttribute('class', 'table-success');
         }
+        
+        $row->add(new ClickLink('qr'))->onClick($this, 'QrOnClick', true);
+        $row->qr->setVisible( (strlen($doc->headerdata['hash']) > 0 ) || strlen(  $doc->getFiscUrl()) > 0   ) ;
+        if( !in_array($doc->meta_name,['POSCheck']) ){
+           $row->qr->setVisible(false);    
+        }  
+        
 
     }
 
@@ -635,7 +642,28 @@ class DocList extends \App\Pages\Base
 
         }
     }
+  public function QrOnClick($sender) {
+              
+            $doc=$sender->owner->getDataItem();
+            $url =_BASEURL . 'doclink/' . $doc->headerdata['hash'] ;
+            $furl = $doc->getFiscUrl() ;
+            
+            if(strlen($furl)>0) {
+               $url =  $furl;
+            }
+            if(strlen($url)==0) {
+                return;
+            }
+            
+            $dataUri = \App\Util::generateQR($url, 150, 5)  ;
+            $html = "<img src=\"{$dataUri}\"  />";
+            $this->addAjaxResponse("  $('#urllink').attr('href','{$url}') ;  $('#imagelink').html('{$html}') ; $('#modalqr').modal()");
+            return;
+ 
 
+
+    }
+    
 }
 
 /**
@@ -706,7 +734,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         } else {
 
             $docs = Document::find("document_id in ({$fav}) and "  . $this->getWhere(false), $sortfield . " " . $asc, $count, $start);
-            foreach(Document::find("document_id not in ({$fav}) and "  . $this->getWhere(), $sortfield . " " . $asc, $count, $start) as $d) {
+            foreach(Document::findYield("document_id not in ({$fav}) and "  . $this->getWhere(), $sortfield . " " . $asc, $count, $start) as $d) {
                 $docs[$d->document_id] = $d;
             }
 

@@ -59,7 +59,7 @@ class ItemList extends \App\Pages\Base
 
         $this->itemtable->listform->add(new DataView('itemlist', new ItemDataSource($this), $this, 'itemlistOnRow'));
         $this->itemtable->listform->itemlist->setPageSize(H::getPG());
-        $this->itemtable->listform->add(new \Zippy\Html\DataList\Paginator('pag', $this->itemtable->listform->itemlist));
+        $this->itemtable->listform->add(new \Zippy\Html\DataList\Pager('pag', $this->itemtable->listform->itemlist));
         $this->itemtable->listform->itemlist->setSelectedClass('table-success');
         $this->itemtable->listform->add(new SubmitLink('deleteall'))->onClick($this, 'OnDelAll');
         $this->itemtable->listform->add(new SubmitLink('printall'))->onClick($this, 'OnPrintAll', true);
@@ -192,8 +192,6 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('price4', $item->price4));
         $row->add(new Label('price5', $item->price5));
 
-        $row->add(new Label('hasnotes'))->setVisible(strlen($item->description) > 0);
-        $row->hasnotes->setAttribute('title', htmlspecialchars_decode($item->description));
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
 
         $row->add(new Label('cell', $item->cell));
@@ -209,6 +207,10 @@ class ItemList extends \App\Pages\Base
             }
             $row->hasaction->setAttribute('title', $title)  ;
         }
+        $row->add(new ClickLink('shownotes'))->onClick($this, 'shownotesOnClick',true);
+        $row->shownotes->setVisible(strlen($item->description) > 0);
+        
+        
         $row->add(new ClickLink('copy'))->onClick($this, 'copyOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
@@ -691,33 +693,7 @@ class ItemList extends \App\Pages\Base
             $this->addAjaxResponse("  $('#tag').html('{$html}') ; $('#pform').modal()");
             return;
         }
-        /*
-        $connector = new \Mike42\Escpos\PrintConnectors\DummyPrintConnector();
-        $printer = new \Mike42\Escpos\Printer($connector);
-
-        $printer->setJustification( \Mike42\Escpos\Printer::JUSTIFY_CENTER)  ;
-        $printer->qrCode($item->url)  ;
-
-
-
-      //  $printer->text("тест\n");
-
-
-
-      //   $connector->write("\x1b\x45\x01");
-
-
-       // $printer->barcode("{sB0123456",\Mike42\Escpos\Printer::BARCODE_CODE128) ;
-
-
-        $cc = $connector->getData()  ;
-        $connector->finalize() ;
-
-        $buf = [];
-        foreach(str_split($cc) as $c) {
-            $buf[] = ord($c) ;
-        }
-        */
+       
         try {
 
             $pr = new \App\Printer() ;
@@ -949,7 +925,17 @@ class ItemList extends \App\Pages\Base
 
     }
 
-
+    public function  shownotesOnClick($sender){
+        $item = $sender->getOwner()->getDataItem();
+        $desc = str_replace("'","`",$item->description);
+        $desc = str_replace("\"","`",$desc);
+      //  $desc = nl2br ($desc);        
+        $desc = str_replace ("\n","",$desc);
+        $desc = str_replace ("\r","",$desc);
+        
+        $this->updateAjax([],"$('#idesc').modal('show'); $('#idesccontent').html('{$desc}'); ")  ;
+        
+    }
 }
 
 class ItemDataSource implements \Zippy\Interfaces\DataSource
@@ -1033,8 +1019,8 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         }
 
         $l = Item::find($this->getWhere(true), $sortfield, $count, $start);
-        $f = Item::find($this->getWhere(), $sortfield, $count, $start);
-        foreach ($f as $k => $v) {
+        
+        foreach (Item::findYield($this->getWhere(), $sortfield, $count, $start) as $k => $v) {
             $l[$k] = $v;
         }
         return $l;

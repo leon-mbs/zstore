@@ -171,8 +171,8 @@ class Custom extends \App\Pages\Base
         @unlink($sm);
         $xml = "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">";
 
-        $prods = Product::find(" disabled <> 1 and detail  not  like '%<noshop>1</noshop>%' ");
-        foreach ($prods as $p) {
+        
+        foreach (Product::findYield(" disabled <> 1 and detail  not  like '%<noshop>1</noshop>%' ") as $p) {
             if (strlen($p->sef) > 0) {
                 $xml = $xml . " <url><loc>" . _BASEURL . "{$p->sef}</loc></url>";
             } else {

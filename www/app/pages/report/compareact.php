@@ -85,12 +85,11 @@ class CompareAct extends \App\Pages\Base
 
 
         if($type==1) {
-
-            $list = \App\Entity\Doc\Document::find($where, "  document_id asc", -1, -1, "*, COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Invoice',  'PosCheck', 'Order', 'ServiceAct')) THEN payamount WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payed ELSE 0 END)), 0) AS b_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN payed WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payamount ELSE 0 END)), 0) AS b_active");
+            
 
             $bal=0;
 
-            foreach ($list as $id=>$d) {
+            foreach (\App\Entity\Doc\Document::findYield($where, "  document_id asc", -1, -1, "*, COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Invoice',  'PosCheck', 'Order', 'ServiceAct')) THEN payamount WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payed ELSE 0 END)), 0) AS b_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN payed WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payamount ELSE 0 END)), 0) AS b_active") as $id=>$d) {
                 if($d->b_active != $d->b_passive) {
 
                     $r  = array();
@@ -117,12 +116,11 @@ class CompareAct extends \App\Pages\Base
         }
 
         if($type==2) {
-
-            $list = \App\Entity\Doc\Document::find($where, "document_id asc ", -1, -1, "*,  COALESCE( ((CASE WHEN (meta_name IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService')) THEN payed WHEN ((meta_name = 'OutcomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payamount ELSE 0 END)), 0) AS s_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsReceipt','IncomeService') ) THEN payamount WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payed ELSE 0 END)), 0) AS s_active ");
+            
 
             $bal=0;
 
-            foreach ($list as $id=>$d) {
+            foreach (\App\Entity\Doc\Document::findYield($where, "document_id asc ", -1, -1, "*,  COALESCE( ((CASE WHEN (meta_name IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService')) THEN payed WHEN ((meta_name = 'OutcomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payamount ELSE 0 END)), 0) AS s_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsReceipt','IncomeService') ) THEN payamount WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payed ELSE 0 END)), 0) AS s_active ") as $id=>$d) {
                 if($d->s_active != $d->s_passive) {
 
                     $r  = array();

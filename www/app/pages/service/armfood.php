@@ -1349,8 +1349,8 @@ class ARMFood extends \App\Pages\Base
 
     public function getProdItems($args, $post=null) {
         $itemlist = [];
-        $docs = Document::find(" meta_name='OrderFood' and  state=". Document::STATE_INPROCESS, 'document_id desc');
-        foreach($docs as $doc) {
+        
+        foreach(Document::findYield(" meta_name='OrderFood' and  state=". Document::STATE_INPROCESS, 'document_id desc') as $doc) {
             foreach ($doc->unpackDetails('detaildata') as $rowid=>$item) {
                 $fs = intval($item->foodstate);
                 if($fs==3) {
@@ -1372,9 +1372,8 @@ class ARMFood extends \App\Pages\Base
 
 
     //фискализация
-    public function OnOpenShift() {
-
-
+    public function OnOpenShift($sender) {
+ 
         if($this->_tvars['checkbox'] == true) {
 
 
@@ -1387,9 +1386,22 @@ class ARMFood extends \App\Pages\Base
                 $this->setError($ret);
             }
 
+          if($this->_pos->autoshift >0){
+                $task = new  \App\Entity\CronTask()  ;
+                $task->tasktype = \App\Entity\CronTask::TYPE_AUTOSHIFT;
+                $t =   strtotime(  date('Y-m-d ') .  $this->_pos->autoshift.':00' );  
+                  
+                $task->starton=$t;
+                $task->taskdata= serialize(array(
+                       'pos_id'=>$this->_pos->pos_id, 
+                       'type'=>'cb' 
+       
+                    ));         
+                $task->save();
+                    
+            } 
 
-
-            return;
+            return  ;
         }
 
 
@@ -1411,11 +1423,27 @@ class ARMFood extends \App\Pages\Base
                 //   $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
             }
             \App\Modules\PPO\PPOHelper::clearStat($this->_pos->pos_id);
+            
+            
+            if($this->_pos->autoshift >0){
+                $task = new  \App\Entity\CronTask()  ;
+                $task->tasktype = \App\Entity\CronTask::TYPE_AUTOSHIFT;
+                $t =   strtotime(  date('Y-m-d ') .  $this->_pos->autoshift.':00' );  
+                 
+                $task->starton=$t;
+                $task->taskdata= serialize(array(
+                       'pos_id'=>$this->_pos->pos_id, 
+                       'type'=>'ppro' 
+       
+                    ));         
+                $task->save();
+                    
+            }            
         }
 
 
         $this->_pos->save();
-        return true;
+        return  ;
     }
 
     public function OnCloseShift($sender) {

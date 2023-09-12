@@ -133,7 +133,7 @@ class RecList extends \App\Pages\Base
         $where = "disabled <> 1 and detail  not  like '%<noshop>1</noshop>%' and cat_id=" . $this->group->cat_id ;
 
         $list = [];
-        foreach(Item::find($where, "itemname") as $it) {
+        foreach(Item::findYield($where, "itemname") as $it) {
             $name = $it->itemname;
             if(strlen($it->item_code)>0) {
                 $name = $name . " ,". $it->item_code;
@@ -158,7 +158,7 @@ class RecList extends \App\Pages\Base
         $where = "disabled <> 1 and detail  not  like '%<noshop>1</noshop>%' and cat_id=" . $this->group->cat_id ;
 
         $list = [];
-        foreach(Item::find($where, "itemname") as $it) {
+        foreach(Item::findYield($where, "itemname") as $it) {
             $name = $it->itemname;
             if(strlen($it->item_code) > 0) {
                 $name = $name . " ,". $it->item_code;
@@ -258,10 +258,10 @@ class RecList extends \App\Pages\Base
         } else {
             return [];
         }
-        $itemlist = Item::find($criteria);
+        
 
         $list = array();
-        foreach ($itemlist as $key => $value) {
+        foreach (Item::findYield($criteria) as $key => $value) {
 
             $list[$key] = $value->itemname;
             if (strlen($value->item_code) > 0) {

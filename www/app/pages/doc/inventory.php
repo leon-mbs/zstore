@@ -364,8 +364,8 @@ class Inventory extends \App\Pages\Base
 
             $w = $w . " and cat_id in ({$cats}) ";
         }
-        $items = Item::find($w, 'itemname');
-        foreach ($items as $item) {
+        
+        foreach (Item::findYield($w, 'itemname') as $item) {
             $item->qfact = 0;
             $item->quantity = 0;
             $this->_itemlist[$item->item_id] = $item;

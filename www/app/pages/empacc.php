@@ -64,14 +64,14 @@ class EmpAcc extends \App\Pages\Base
 
         $conn = \Zdb\DB::getConnect();
 
-        $doclist = \App\Entity\Doc\Document::find("meta_name = 'OutSalary' and state >= 5 ");
+        
 
         $detail = array();
 
         $from = strtotime($yfrom . '-' . $mfrom . '-01');
         $to = strtotime($yto . '-' . $mto . '-01 23:59:59');
         $total = 0;
-        foreach ($doclist as $doc) {
+        foreach (\App\Entity\Doc\Document::findYield("meta_name = 'OutSalary' and state >= 5 ") as $doc) {
 
             $date = strtotime($doc->headerdata['year'] . '-' . $doc->headerdata['month'] . '-01');
 
@@ -103,7 +103,7 @@ class EmpAcc extends \App\Pages\Base
 
 
         //типы начислний
-        $doclist = \App\Entity\Doc\Document::find("meta_name = 'CalcSalary' and state >= 5 and document_date >= " . $conn->DBDate($from) . " and document_date <= " . $conn->DBDate($to));
+        
 
         $stlist = SalType::find("disabled<>1", "salcode");
 
@@ -112,7 +112,7 @@ class EmpAcc extends \App\Pages\Base
             $stam[$st->salcode] = 0;
         }
 
-        foreach ($doclist as $doc) {
+        foreach (\App\Entity\Doc\Document::findYield("meta_name = 'CalcSalary' and state >= 5 and document_date >= " . $conn->DBDate($from) . " and document_date <= " . $conn->DBDate($to)) as $doc) {
 
 
             foreach ($doc->unpackDetails('detaildata') as $emp) {

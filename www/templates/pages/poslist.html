@@ -84,7 +84,7 @@
                                 <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary  ">
                             </div>
                         </div>
-                            <div class="col-6 col-md-4 col-xl-3">
+                         <div class="col-6 col-md-4 col-xl-3">
                             
                             {{#fiscal}}
                             <div class="form-group">
@@ -128,9 +128,23 @@
                                 <input class="form-control" zippy="editcbpin"/>
                             </div>
                            
-                            {{/checkbox}}
-                            
+                            {{/checkbox}}          
+                            {{#fiscal}}
+                           <div class="form-group">
+                                <label for="editautoshift">Автоматично закривати зміну в</label>
+                                <select zippy="editautoshift" class="form-control  ">
+                                    <option value="0">Не закривати</option>
+                                    <option value="19">19:00</option>
+                                    <option value="20">20:00</option>
+                                    <option value="21">21:00</option>
+                                    <option value="22">22:00</option>
+                                    <option value="23">23:00</option>
+                                </select>
                             </div>
+                            <small>Повинен бути активований  <a target="_blank" href="https://zippy.com.ua/zstoreusage#cron" >планувальник</a> </small>
+                            {{/fiscal}}                            
+                   
+                         </div>
                     </div>
 
                 </form>
