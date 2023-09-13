@@ -43,7 +43,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         $common = System::getOptions("common");
 
-        $this->_tvars["colspan"] = $common['usesnumber'] == 1 ? 9 : 7;
+        $this->_tvars["colspan"] = $common['usesnumber'] == 1 ? 10 : 8;
 
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
