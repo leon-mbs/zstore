@@ -106,6 +106,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editdetail->add(new Date('editsdate'));
         $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
         $this->editdetail->add(new ClickLink('openlast', $this, 'onOpenLast'));
+        $this->editdetail->add(new TextInput('editcustcode'));
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
@@ -308,6 +309,7 @@ class GoodsReceipt extends \App\Pages\Base
         $row->add(new Label('item', $item->itemname));
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('bar_code', $item->bar_code));
+        $row->add(new Label('custcode', $item->custcode));
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));
         $row->add(new Label('msr', $item->msr));
@@ -423,6 +425,7 @@ class GoodsReceipt extends \App\Pages\Base
             $this->editdetail->editsellprice->setText($olditem->price1);
         }
 
+        $this->editdetail->editcustcode->setText($item->custcode);
 
         $this->editdetail->editsellprice->setText($item->price1);
         $this->editdetail->editsnumber->setText($item->snumber);
@@ -523,6 +526,7 @@ class GoodsReceipt extends \App\Pages\Base
             return;
         }
 
+        $item->custcode = $this->editdetail->editcustcode->getText();
 
         $item->sdate = $this->editdetail->editsdate->getDate();
         if ($item->sdate == false) {
@@ -537,7 +541,7 @@ class GoodsReceipt extends \App\Pages\Base
             $this->_itemlist[$this->_rowid] = $item;
             $this->cancelrowOnClick(null);
         }
-
+  
 
 
         $this->_rownumber  = 1;

@@ -136,6 +136,7 @@
                             <th>Найменування</th>
                             <th>Артикул</th>
                             <th>Штрих код</th>
+                            <th>Код пост.</th>
                             <th>Од.</th>
                             {{#usesnumber}}
                             <th>Серія</th>
@@ -153,6 +154,7 @@
                             <td zippy="item"></td>
                             <td zippy="code"></td>
                             <td zippy="bar_code"></td>
+                            <td zippy="custcode"></td>
                             <td zippy="msr"></td>
                             {{#usesnumber}}
                             <td zippy="snumber"></td>
@@ -390,6 +392,14 @@
 
                     </div>
                     {{/usesnumber}}
+                      <div class="form-group">
+
+                        <label for="editcustcode">Код постачальника </label>
+                        <input class="form-control " zippy="editcustcode"/>
+                        <small>Наприклад, код з прайсу продавця</small>
+
+
+                    </div>
 
                     <div class="form-group">
                         <label for="editquantity">Кількість</label>
