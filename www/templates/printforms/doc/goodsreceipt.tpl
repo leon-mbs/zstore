@@ -72,6 +72,7 @@
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Найменування</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Артикул</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Штрих код</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Код пост.</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"></th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Од.</th>
 
@@ -85,6 +86,7 @@
         <td>{{itemname}}</td>
         <td>{{itemcode}}</td>
         <td>{{barcode}}</td>
+        <td>{{custcode}}</td>
         <td align="right">{{snumber}}</td>
         <td>{{msr}}</td>
 
