@@ -43,8 +43,13 @@ class GoodsReceipt extends \App\Pages\Base
 
         $common = System::getOptions("common");
 
-        $this->_tvars["colspan"] = $common['usesnumber'] == 1 ? 10 : 8;
-
+        $this->_tvars["colspan"] = 8; 
+        if($common['usesnumber'] >0) {
+            $this->_tvars["colspan"] = 9;
+        }
+        if($common['usesnumber'] ==2) {
+            $this->_tvars["colspan"] = 10;
+        }
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date'))->setDate(time());
@@ -120,8 +125,8 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editnewitem->add(new TextInput('editnewitemname'));
         $this->editnewitem->add(new TextInput('editnewitemcode'));
         $this->editnewitem->add(new TextInput('editnewitembarcode'));
-        $this->editnewitem->add(new TextInput('editnewitemsnumber'));
-        $this->editnewitem->add(new Date('editnewitemsdate'));
+        $this->editnewitem->add(new CheckBox('editnewitemsnumber'));
+
         $this->editnewitem->add(new TextInput('editnewmanufacturer'));
         $this->editnewitem->add(new TextInput('editnewmsr'));
         $this->editnewitem->add(new DropDownChoice('editnewcat', \App\Entity\Category::getList(), 0));
@@ -491,6 +496,7 @@ class GoodsReceipt extends \App\Pages\Base
 
     }
     public function saverowOnClick($sender) {
+         $common = System::getOptions("common");
 
 
         $id = $this->editdetail->edititem->getKey();
@@ -519,19 +525,38 @@ class GoodsReceipt extends \App\Pages\Base
 
             $this->setWarn("Не вказана ціна");
         }
-        $item->snumber = trim($this->editdetail->editsnumber->getText());
 
-        if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("Потрібна партія виробника");
-            return;
+        $item->snumber = trim($this->editdetail->editsnumber->getText());
+        $item->sdate = $this->editdetail->editsdate->getDate();
+
+        if($common['usesnumber'] > 0) {
+            if (strlen($item->snumber) == 0 && $item->useserial == 1  ) {
+                if($common['usesnumber'] != 3){
+                   $this->setError("Потрібна партія виробника");
+                }
+                if($common['usesnumber'] == 3){
+                   $this->setError("Потрібен серійний номер");    
+                }  
+                
+                return;
+            }
         }
+        if($common['usesnumber'] == 2) {
+            if ($item->sdate == false) {
+                $item->sdate = '';
+            }
+            if (strlen($item->sdate) == 0 && $item->useserial == 1  ) {
+                $this->setError("Потрібна дата придатності");
+                return;
+            }
+           
+        }
+        
+        
 
         $item->custcode = $this->editdetail->editcustcode->getText();
 
-        $item->sdate = $this->editdetail->editsdate->getDate();
-        if ($item->sdate == false) {
-            $item->sdate = '';
-        }
+
 
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
@@ -923,18 +948,8 @@ class GoodsReceipt extends \App\Pages\Base
 
 
         $item->manufacturer = $this->editnewitem->editnewmanufacturer->getText();
-        $item->snumber = $this->editnewitem->editnewitemsnumber->getText();
-        if (strlen($item->snumber) > 0) {
-            $item->useserial = 1;
-        }
-
-        $item->sdate = $this->editnewitem->editnewitemsdate->getDate();
-        if ($item->sdate == false) {
-            $item->sdate = '';
-        }
-        $this->editdetail->editsnumber->setText($item->snumber);
-        $this->editdetail->editsdate->setText($item->sdate);
-
+        $item->useserial = $this->editnewitem->editnewitemsnumber->isChecked() ? 1:0;
+     
 
         $item->cat_id = $this->editnewitem->editnewcat->getValue();
         $item->save();
@@ -1108,3 +1123,11 @@ class GoodsReceipt extends \App\Pages\Base
     }
 
 }
+
+
+
+
+
+
+
+    

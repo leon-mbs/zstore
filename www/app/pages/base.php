@@ -46,7 +46,9 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars['amdigits']  = intval($common['amdigits'] ?? 0);
 
         
-        $this->_tvars["usesnumber"] = $options['usesnumber'] == 1;
+        $this->_tvars["usesnumber"] = $options['usesnumber']  > 0;
+        $this->_tvars["usesnumberdate"] = $options['usesnumber']  == 2;
+        $this->_tvars["usesnumberitem"] = $options['usesnumber']  == 3;
         
 
         $blist = array();

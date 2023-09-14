@@ -322,7 +322,17 @@
                                 <small>Переважна  послідовність  оплати  при  продажі</small>
 
                             </div>
-                               <div class="form-group">
+                         
+                           <div class="form-group  ">
+                                <label for="usesnumber">Облік ТМЦ за серіями  </label>
+                                <select class="form-control" zippy="usesnumber"> 
+                                    <option value="0">Не використовується</option>
+                                </select>
+                                <small>Має бути  встановлено прапорець в  довіднику  ТМЦ </small>
+
+                            </div>
+                            
+                            <div class="form-group">
                                 <label for="actualdate">Дата закриття перiоду</label>
                                 <input   class="form-control"   zippy="actualdate">
                                 <small>Дата, раніше якої заборонено виконувати проводки</small>
@@ -344,8 +354,7 @@
                             </div>
                             <div class="form-check">
                                 <input zippy="noallowfiz" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="noallowfiz">Не дозволяти накладнi без
-                                    контрагента </label>
+                                <label class="form-check-label" for="noallowfiz">Не дозволяти накладнi без контрагента </label>
                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                                    title=" Покупець обовязково має бути зазначений та занесений у довiдник "></i>
                             </div>
@@ -374,13 +383,7 @@
                             </div>
 
 
-                            <div class="form-check">
-                                <input zippy="usesnumber" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="usesnumber">Облік ТМЦ за серіями
-                                    (партіями) виробника</label>
-                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Окремий облік по кожній партії виробника з урахуванням терміну придатності або по серiйному номеру виробу. Чи використовує конкретний товар облік по партіях вказується в картці товару."></i>
-                            </div>
+
 
                             <div class="form-check">
                                 <input zippy="useimages" type="checkbox" class="form-check-input">

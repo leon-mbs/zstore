@@ -44,7 +44,13 @@ class GoodsIssue extends \App\Pages\Base
 
         $common = System::getOptions("common");
 
-        $this->_tvars["colspan"] = $common['usesnumber'] == 1 ? 9 : 7;
+        $this->_tvars["colspan"] = 7; 
+        if($common['usesnumber'] >0) {
+            $this->_tvars["colspan"] = 8;
+        }
+        if($common['usesnumber'] ==2) {
+            $this->_tvars["colspan"] = 9;
+        }
 
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
@@ -553,7 +559,7 @@ class GoodsIssue extends \App\Pages\Base
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
 
-            $this->setError("Потрібна партія виробника");
+            $this->setError("Потрібен серійний номер");
             return;
         }
 
