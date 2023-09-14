@@ -14,30 +14,53 @@
             <div class="col-12    " zippy="itempanel">
                 <h3>Товари на складі </h3>
                 <div class="navbar nav  ">
-                    <form zippy="filter" class="form-inline">
-
+                    <form zippy="filter" class="row   g-2 align-items-center">
+                        <div class="col-auto">
+       
                         <input autocomplete="off" placeholder="Пошук..." class="form-control mr-sm-2" type="text"                                onkeydown="onSearch()" zippy="searchkey">
+                       </div>
+                       <div class="col-auto"> 
+                           <div class=" row no-gutters"> 
 
-                        <label for="searchcat">категорія</label>
+                        <label class="col-auto mt-2" for="searchcat">категорія</label>
+                                 <div class="col-auto">
 
                         <select class="form-control mr-sm-2" zippy="searchcat">
                             <option value="0">Не задано</option>
                         </select>
-                        <label for="searchstore">Склад</label>
+                        </div>
+                        </div>
+                       <div class="col-auto"> 
+                           <div class=" row no-gutters"> 
+                      <label class="col-auto mt-2" for="searchstore">Склад</label>
+                               <div class="col-auto">
                         <select class="form-control mr-sm-2" zippy="searchstore">
                             <option value="0">По всім</option>
                         </select>
-                       <label for="searchprice">Сума по  </label>
+                         </div>
+                        </div>
+                       <div class="col-auto"> 
+                           <div class=" row no-gutters"> 
+                      <label class="col-auto mt-2" for="searchprice">Сума по  </label>
 
-                        <select class="form-control mr-sm-2" zippy="searchprice">
+                                 <div class="col-auto">
+                      <select class="form-control mr-sm-2" zippy="searchprice">
                             
                         </select>
-                        <label for="searchbrand">Бренд </label>
-                        <input autocomplete="off"   class="form-control mr-2" zippy="searchbrand"/>
-
-                        <input class="btn btn-outline-success  " type="submit" value="ОК">
-
-                    </form>
+                          </div>
+                        </div>
+                       <div class="col-auto"> 
+                           <div class=" row no-gutters"> 
+                      <label class="col-auto mt-2" for="searchbrand">Бренд </label>
+                         <div class="col-auto">
+                      <input autocomplete="off"   class="form-control mr-2" zippy="searchbrand"/>
+                     </div>
+                           <div class="col-auto">
+                      <input class="btn btn-outline-success  " type="submit" value="ОК">
+                      </div>
+                    
+                   </div>
+                   </form>
                 </div>
                 <a zippy="csv">Експорт у Excel</a>
                 <a zippy="printqty" class=" ml-4  " title="Друкувати вiдфiльтрованi по кiлькостi наявних"> <i class="fa fa-print"></i> </a>
