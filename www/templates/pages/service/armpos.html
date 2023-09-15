@@ -1,4 +1,5 @@
 <html>
+<html>
     <head>
         <title> АРМ касира  </title>
 
@@ -177,8 +178,10 @@
                                 <th>Од.</th>
                                 {{#usesnumber}}
                                 <th>Серія</th>
-                                <th>Дата</th>
                                 {{/usesnumber}}
+                               {{#usesnumberdate}}           
+                                <th>Дата</th>
+                                {{/usesnumberdate}}
 
 
                                 <th  style="width:40px" class="text-right">Кіл.</th>
@@ -196,8 +199,10 @@
                                 <td zippy="msr"></td>
                                 {{#usesnumber}}
                                 <td zippy="snumber"></td>
+                                {{/usesnumber}}                                
+                               {{#usesnumberdate}}                                           
                                 <td zippy="sdate"></td>
-                                {{/usesnumber}}
+                               {{#/sesnumberdate}}           
 
                                 <td zippy="quantity" class="text-right  "> </td>
                                 <td zippy="disc" class="text-right"></td>
@@ -218,8 +223,10 @@
                                 <td></td>
                                 {{#usesnumber}}
                                 <td></td>
-                                <td></td>
                                 {{/usesnumber}}
+                                {{#usesnumberdate}}
+                                <td></td>
+                                {{/usesnumberdate}}
 
 
                                 <td zippy="serquantity" class="text-right"></td>
@@ -232,12 +239,8 @@
 
                             <tr style="font-weight: bolder;" >
 
-                                {{^usesnumber}}
-                                <td colspan="6" class="text-right">Всього:</td>
-                                {{/usesnumber}}
-                                {{#usesnumber}}
-                                <td colspan="8" class="text-right">Всього:</td>
-                                {{/usesnumber}}
+
+                                <td colspan="{{colspan}}" class="text-right">Всього:</td>
 
                                 <td zippy="total" class="text-right"></td>
                                 <td></td>
@@ -247,12 +250,8 @@
                             {{^simplemode}} 
                            <tr style="font-weight: bolder;" >
 
-                                {{^usesnumber}}
-                                <td colspan="6" class="text-right">Знижка:</td>
-                                {{/usesnumber}}
-                                {{#usesnumber}}
-                                <td colspan="8" class="text-right">Знижка:</td>
-                                {{/usesnumber}}
+
+                                <td colspan="{{colspan}}" class="text-right">Знижка:</td>
 
                                 <td class="text-right" ><input style="width:75px" autocomplete="off" class="form-control" type="text" zippy="totaldisc"></td>
                                 <td></td>
@@ -260,12 +259,8 @@
                             </tr>
                            <tr style="font-weight: bolder;" >
 
-                                {{^usesnumber}}
-                                <td colspan="6" class="text-right">Списати  бонуси:</td>
-                                {{/usesnumber}}
-                                {{#usesnumber}}
-                                <td colspan="8" class="text-right">Списати  бонуси:</td>
-                                {{/usesnumber}}
+
+                                <td colspan="{{colspan}}" class="text-right">Списати  бонуси:</td>
 
                                 <td class="text-right" ><input style="width:75px" autocomplete="off" class="form-control" type="text" zippy="bonus"></td>
                                 <td></td>
@@ -273,12 +268,8 @@
                             </tr>
                        <tr style="font-weight: bolder;" >
 
-                                {{^usesnumber}}
-                                <td colspan="6" class="text-right">Передплата:</td>
-                                {{/usesnumber}}
-                                {{#usesnumber}}
-                                <td colspan="8" class="text-right">Передплата:</td>
-                                {{/usesnumber}}
+
+                                <td colspan="{{colspan}}" class="text-right">Передплата:</td>
 
                                 <td class="text-right" ><input style="width:75px" autocomplete="off" class="form-control" type="text" zippy="prepaid"></td>
                                 <td></td>

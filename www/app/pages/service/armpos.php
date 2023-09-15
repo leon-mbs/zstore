@@ -211,7 +211,15 @@ class ARMPos extends \App\Pages\Base
         $this->add(new Label('qrimg')) ;
 
         $this->_tvars['simplemode']  = false;
+        $common = System::getOptions("common");
 
+        $this->_tvars["colspan"] = 6; 
+        if($common['usesnumber'] >0) {
+            $this->_tvars["colspan"] = 7;
+        }
+        if($common['usesnumber'] ==2) {
+            $this->_tvars["colspan"] = 8;
+        }
     }
 
     public function onModeOn($sender) {
