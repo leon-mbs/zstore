@@ -241,7 +241,7 @@ class ItemList extends \App\Pages\Base
         $this->detailpanel->setVisible(true);
         $this->detailpanel->itemdetname->setText($this->_item->itemname);
         $this->detailpanel->stocklist->Reload();
-
+       /*
         $rows = $this->detailpanel->stocklist->getDataRows();
         $st = array();
         foreach ($rows as $row) {
@@ -252,7 +252,7 @@ class ItemList extends \App\Pages\Base
             }
             $name = $name . ', ' . H::fa($stock->partion);
             $st[$stock->stock_id] = $name;
-        }
+        }  */
     }
 
     public function oncsv($sender) {
