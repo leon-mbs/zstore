@@ -496,7 +496,7 @@ class GoodsReceipt extends \App\Pages\Base
 
     }
     public function saverowOnClick($sender) {
-         $common = System::getOptions("common");
+        $common = System::getOptions("common");
 
 
         $id = $this->editdetail->edititem->getKey();
@@ -551,7 +551,17 @@ class GoodsReceipt extends \App\Pages\Base
             }
            
         }
-        
+         if($common['usesnumber'] == 3  ) {           
+
+            foreach(  $this->_itemlist as $i){
+                if( $this->_rowid == -1 && $item->snumber==$i->snumber )  {
+                    $this->setError('Вже є ТМЦ  з таким серійним номером');
+                    return;
+                    
+                }
+            }
+            
+        }       
         
 
         $item->custcode = $this->editdetail->editcustcode->getText();

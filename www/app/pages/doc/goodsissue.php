@@ -533,6 +533,7 @@ class GoodsIssue extends \App\Pages\Base
     }
 
     public function saverowOnClick($sender) {
+        $common = System::getOptions("common");
 
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
@@ -557,26 +558,44 @@ class GoodsIssue extends \App\Pages\Base
             $this->setWarn('Введено більше товару, чим мається в наявності');
         }
 
-        if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
+        
+        if($common['usesnumber'] > 0) {
+            
+            if (strlen($item->snumber) == 0 && $item->useserial == 1  ) {
 
-            $this->setError("Потрібен серійний номер");
-            return;
-        }
-
-        if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
+                $this->setError("Потрібен серійний номер");
+                return;
+            }
             $slist = $item->getSerials($store_id);
-
+            
             if (in_array($item->snumber, $slist) == false) {
 
-                $this->setError('Невірний номер серії');
+                $this->setError('Невірний серійний номер  ');
                 return;
-            } else {
+            }  
+            
+            if($common['usesnumber'] == 2  ) {           
                 $st = Stock::getFirst("store_id={$store_id} and item_id={$item->item_id} and snumber=" . Stock::qstr($item->snumber));
                 if ($st instanceof Stock) {
-                    $item->sdate = $st->sdate;
-                }
+                     $item->sdate = $st->sdate;
+                }           
             }
+            if($common['usesnumber'] == 3  ) {           
+
+                foreach(  $this->_itemlist as $i){
+                    if($this->_rowid == -1 &&  $item->snumber==$i->snumber )  {
+                        $this->setError('Вже є ТМЦ  з таким серійним номером');
+                        return;
+                        
+                    }
+                }
+                
+            }
+            
+            
+            
         }
+ 
 
 
         if($this->_rowid == -1) {
