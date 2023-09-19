@@ -393,6 +393,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->editdetail->setVisible(true);
         $this->editdetail->editquantity->setText("1");
         $this->editdetail->editprice->setText("0");
+        $this->editdetail->editserial->setText("");
         $this->editdetail->qtystock->setText("");
         $this->editdetail->pricestock->setText("");
         $this->docform->setVisible(false);
@@ -559,13 +560,15 @@ class GoodsIssue extends \App\Pages\Base
         }
 
         
-        if($common['usesnumber'] > 0) {
+        if($common['usesnumber'] > 0 && $item->useserial == 1 ) {
             
-            if (strlen($item->snumber) == 0 && $item->useserial == 1  ) {
+            if (strlen($item->snumber) == 0  ) {
 
                 $this->setError("Потрібен серійний номер");
                 return;
             }
+            
+
             $slist = $item->getSerials($store_id);
             
             if (in_array($item->snumber, $slist) == false) {
@@ -573,6 +576,7 @@ class GoodsIssue extends \App\Pages\Base
                 $this->setError('Невірний серійний номер  ');
                 return;
             }  
+
             
             if($common['usesnumber'] == 2  ) {           
                 $st = Stock::getFirst("store_id={$store_id} and item_id={$item->item_id} and snumber=" . Stock::qstr($item->snumber));
@@ -591,9 +595,6 @@ class GoodsIssue extends \App\Pages\Base
                 }
                 
             }
-            
-            
-            
         }
  
 
@@ -605,7 +606,7 @@ class GoodsIssue extends \App\Pages\Base
             //очищаем  форму
             $this->editdetail->edittovar->setKey(0);
             $this->editdetail->edittovar->setText('');
-
+            $this->editdetail->editserial->setText("");
             $this->editdetail->editquantity->setText("1");
 
             $this->editdetail->editprice->setText("");

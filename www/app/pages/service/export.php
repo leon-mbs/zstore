@@ -290,7 +290,7 @@ class Export extends \App\Pages\Base
 
             $root.="<item>";
             $root.="<optname>" . $row['optname'] . "</optname>";
-            $root.="<optvalue>" . $row['optvalue'] . "</optvalue>";
+            $root.="<optvalue><![CDATA[" . $row['optvalue'] . "]]></optvalue>";
             $root.="</item>";
 
         }

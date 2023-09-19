@@ -534,8 +534,8 @@ class GoodsReceipt extends \App\Pages\Base
                 if($common['usesnumber'] != 3){
                    $this->setError("Потрібна партія виробника");
                 }
-                if($common['usesnumber'] == 3){
-                   $this->setError("Потрібен серійний номер");    
+                if($common['usesnumber'] == 3 && $item->quantity <> 1){
+                   $this->setError("Cерійний номер має бути для одного виробу");    
                 }  
                 
                 return;

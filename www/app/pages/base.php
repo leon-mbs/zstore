@@ -590,6 +590,8 @@ class Base extends \Zippy\Html\WebPage
             $ret['lastpartion'] = $item->getLastPartion(); //последняя  закупка
             $ret['qtystock'] = $item->getQuantity(); // на  складе
             $ret['item_code'] = $item->item_code;
+            $ret['useserial'] = $item->useserial;
+            $ret['snumber'] = '';
 
 
             $ret['disc'] = '';
@@ -597,8 +599,11 @@ class Base extends \Zippy\Html\WebPage
             if($ret['pureprice'] > $ret['price']) {
                 $ret['disc']  = number_format((1 - ($ret['price']/($ret['pureprice'])))*100, 1, '.', '') ;
             }
-
-
+            if($ret['useserial']==1) {
+               $ret['serials'] = $item->getSerials($p['store']); 
+            }
+                      
+  
 
         }
 
@@ -614,6 +619,7 @@ class Base extends \Zippy\Html\WebPage
         $c->customer_name = $post->name;
         $c->phone =  $post->phone;
         $c->email =  $post->email;
+        $c->type = $post->type ?? 0; 
 
         $c->save() ;
         $ret = array('customer_id'=>$c->customer_id) ;
