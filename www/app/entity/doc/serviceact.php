@@ -30,7 +30,7 @@ class ServiceAct extends Document
         foreach ($this->unpackDetails('detail2data') as $ser) {
             $detail[] = array("no"           => $i++,
                               "service_name" => $ser->itemname,
-                              "desc"         => $ser->item_code,
+                              "desc"         => $ser->item_code . ( strlen($ser->snumber) >0 ? ' с/н: '. $ser->snumber :'') ,
                               "qty"          => H::fqty($ser->quantity),
                               "price"        => H::fa($ser->price),
                               "amount"       => H::fa($ser->price * $ser->quantity)
@@ -261,6 +261,7 @@ class ServiceAct extends Document
         $list['ProdIssue'] = self::getDesc('ProdIssue');
         $list['Invoice'] = self::getDesc('Invoice');
         $list['ServiceAct'] = self::getDesc('ServiceAct');
+        $list['Warranty'] = self::getDesc('Warranty');
 
         return $list;
     }

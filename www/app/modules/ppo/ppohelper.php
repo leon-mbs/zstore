@@ -513,6 +513,7 @@ class PPOHelper
                 //сдача
                 if ($doc->headerdata["exchange"] > 0) {
                     $pay['rest'] = number_format($doc->headerdata["exchange"], 2, '.', '');
+                    $pay['rest'] = number_format($payed- $doc->headerdata["exchange"], 2, '.', '');
                 }
                 // в долг
                 if ($payed < $doc->payamount) {
@@ -537,6 +538,7 @@ class PPOHelper
                 //сдача
                 if ($doc->headerdata["exchange"] > 0) {
                     $pay['rest'] = number_format($doc->headerdata["exchange"], 2, '.', '');
+                    $pay['paysum'] = number_format($doc->headerdata['payed'] - $doc->headerdata["exchange"], 2, '.', '');
                 }
 
                 $header['pays'][] = $pay;

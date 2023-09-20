@@ -85,7 +85,7 @@ CREATE TABLE `documents` (
   `amount` decimal(11, 2) DEFAULT NULL,
   `meta_id` int(11) NOT NULL,
   `state` tinyint(4) NOT NULL,
-  `notes` varchar(255) NOT NULL,
+  `notes` varchar(1024)  NULL,
   `customer_id` int(11) DEFAULT '0',
   `payamount` decimal(11, 2) DEFAULT '0.00',
   `payed` decimal(11, 2) DEFAULT '0.00',

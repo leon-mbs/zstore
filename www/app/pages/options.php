@@ -106,6 +106,15 @@ class Options extends \App\Pages\Base
         );
         $this->business->add(new DropDownChoice('paytypein', $pt, "1"));
         $this->business->add(new DropDownChoice('paytypeout', $pt, "1"));
+        $st = array(
+            "1" => "За серіями (партіями) виробника",
+            "2" => "За серіями та датою придатності",
+            "3" => "За серійними номерами  виробів"
+        );
+        
+        $this->business->add(new DropDownChoice('usesnumber',$st));
+        
+        
         $this->business->add(new TextInput('price1'));
         $this->business->add(new TextInput('price2'));
         $this->business->add(new TextInput('price3'));
@@ -118,7 +127,7 @@ class Options extends \App\Pages\Base
         $this->business->add(new CheckBox('useval'));
         $this->business->add(new CheckBox('printoutqrcode'));
         $this->business->add(new CheckBox('autoarticle'));
-        $this->business->add(new CheckBox('usesnumber'));
+
         $this->business->add(new CheckBox('useimages'));
         $this->business->add(new CheckBox('numberttn'));
         $this->business->add(new CheckBox('usecattree'));
@@ -128,8 +137,7 @@ class Options extends \App\Pages\Base
         $this->business->add(new TextArea('checkslogan'));
         $this->business->add(new \Zippy\Html\Form\Date('actualdate'));
 
-
-
+ 
         $this->business->partiontype->setValue($common['partiontype']);
         $this->business->paytypein->setValue($common['paytypein']);
         $this->business->paytypeout->setValue($common['paytypeout']);
@@ -145,7 +153,7 @@ class Options extends \App\Pages\Base
         $this->business->useval->setChecked($common['useval']);
         $this->business->printoutqrcode->setChecked($common['printoutqrcode']);
         $this->business->autoarticle->setChecked($common['autoarticle']);
-        $this->business->usesnumber->setChecked($common['usesnumber']);
+        $this->business->usesnumber->setValue($common['usesnumber']??0);
         $this->business->useimages->setChecked($common['useimages']);
         $this->business->numberttn->setChecked($common['numberttn']);
         $this->business->usecattree->setChecked($common['usecattree']);
@@ -389,7 +397,7 @@ class Options extends \App\Pages\Base
         $common['actualdate'] = $this->business->actualdate->getDate();
         $common['printoutqrcode'] = $this->business->printoutqrcode->isChecked() ? 1 : 0;
         $common['autoarticle'] = $this->business->autoarticle->isChecked() ? 1 : 0;
-        $common['usesnumber'] = $this->business->usesnumber->isChecked() ? 1 : 0;
+        $common['usesnumber'] = $this->business->usesnumber->GetValue() ;
         $common['useimages'] = $this->business->useimages->isChecked() ? 1 : 0;
         $common['nocheckarticle'] = $this->business->nocheckarticle->isChecked() ? 1 : 0;
 

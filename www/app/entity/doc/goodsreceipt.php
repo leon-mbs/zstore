@@ -21,12 +21,12 @@ class GoodsReceipt extends Document
         foreach ($this->unpackDetails('detaildata') as $item) {
             $name = $item->itemname;
             if (strlen($item->snumber) > 0) {
-                $name .= ' (' . $item->snumber . ',' . H::fd($item->sdate) . ')';
+                $name .= ' (' . $item->snumber . ' ' . H::fd($item->sdate) . ')';
             }
 
             $detail[] = array("no"       => $i++,
                               "itemname" => $name,
-                              "snumber"  => $item->snumber,
+
                               "itemcode" => $item->item_code,
                               "barcode"  => $item->bar_code,
                               "custcode" => $item->custcode,

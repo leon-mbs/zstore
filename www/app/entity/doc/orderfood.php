@@ -84,7 +84,7 @@ class OrderFood extends Document
 
         foreach ($this->unpackDetails('detaildata') as $item) {
 
-            $name = $item->itemname;
+            $name = strlen($item->shortname) > 0 ? $item->shortname : $item->itemname;
 
             $detail[] = array(
                 "tovar_name" => $name,

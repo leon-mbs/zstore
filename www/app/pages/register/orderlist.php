@@ -889,7 +889,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
         if (strlen($st) > 2) {
             $st = $conn->qstr('%' . $st . '%');
 
-            $where .= " and  meta_name  = 'Order'  and  content like {$st} ";
+            $where = "  meta_name  = 'Order'  and  content like {$st} ";
         }
         $sn = trim($filter->searchnumber->getText());
         if (strlen($sn) > 1) { // игнорируем другие поля

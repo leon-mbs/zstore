@@ -140,8 +140,10 @@
                             <th>Од.</th>
                             {{#usesnumber}}
                             <th>Серія</th>
-                            <th>Дата</th>
                             {{/usesnumber}}
+                            {{#usesnumberdate}}
+                            <th>Дата</th>
+                            {{/usesnumberdate}}
                             <th class="text-right">Кіл.</th>
                             <th class="text-right">Ціна</th>
 
@@ -158,8 +160,10 @@
                             <td zippy="msr"></td>
                             {{#usesnumber}}
                             <td zippy="snumber"></td>
-                            <td zippy="sdate"></td>
                             {{/usesnumber}}
+                            {{#usesnumberdate}}
+                            <td zippy="sdate"></td>
+                            {{/usesnumberdate}}
                             <td class="text-right" zippy="quantity"></td>
 
                             <td zippy="price" class="text-right"></td>
@@ -382,16 +386,25 @@
                     </div>
                     {{#usesnumber}}
                     <div class="form-group">
+                         {{^usesnumberitem}}
                         <label for="editsnumber">Серія (партія) виробника </label>
+                         {{/usesnumberitem}}
+                         {{#usesnumberitem}}
+                        <label for="editsnumber">Серійний номер </label>
+                         {{/usesnumberitem}}
+                        
                         <input class="form-control " zippy="editsnumber"/>
 
                     </div>
+                    {{/usesnumber}}
+                    {{#usesnumberdate}}
+                    
                     <div class="form-group">
                         <label for="editsdate">Придатний до </label>
                         <input class="form-control " zippy="editsdate"/>
 
                     </div>
-                    {{/usesnumber}}
+                    {{/usesnumberdate}}
                       <div class="form-group">
 
                         <label for="editcustcode">Код постачальника </label>
@@ -479,17 +492,13 @@
 
                     </div>
                     {{#usesnumber}}
-                    <div class="form-group">
-                        <label for="editnewitemsnumber">Серія виробника </label>
-                        <input class="form-control " zippy="editnewitemsnumber"/>
-
-                    </div>
-                    <div class="form-group">
-                        <label for="editnewitemsdate">Придатний до </label>
-                        <input class="form-control " zippy="editnewitemsdate"/>
-
-                    </div>
+ 
+                     <div class="form-check">
+                        <input zippy="editnewitemsnumber" type="checkbox" class="form-check-input">
+                        <label class="form--label" for="editnewitemsnumber">Використавувати облік по  серіях  </label>
+                    </div>                    
                     {{/usesnumber}}
+     
                     <div class="form-group">
                         <label for="editnewmanufacturer">Бренд, виробник </label>
                         <input   class="form-control " zippy="editnewmanufacturer"/>
