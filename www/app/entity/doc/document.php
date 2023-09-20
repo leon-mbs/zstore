@@ -859,7 +859,7 @@ class Document extends \ZCL\DB\Entity
     public function packDetails($dataname, $list) {
         $data = base64_encode(serialize($list));
         $this->headerdata[$dataname] = $data;
-        //для поиска
+        //для поиска по  контексту
         $s = array();
         foreach ($list as $it) {
             if (strlen($it->itemname) > 0) {

@@ -94,7 +94,7 @@ class Main extends Base
         //минимальное количество
         if ($this->_tvars['wminqty'] == true) {
             $data = array();
-            $sql = "select t.qty,s.storename, t.store_id, i.minqty,i.itemname,i.item_code   from (select store_id, item_id, coalesce(sum( qty),0) as qty   from  store_stock
+            $sql = "select t.qty,s.storename, t.store_id, i.minqty,i.itemname,i.item_code,i.item_id   from (select store_id, item_id, coalesce(sum( qty),0) as qty   from  store_stock
             where  {$cstr} 1=1 group by store_id, item_id    ) t
             join items  i  on t.item_id = i.item_id
               join stores  s  on t.store_id = s.store_id
@@ -348,6 +348,11 @@ class Main extends Base
         $row->add(new Label('wmq_storename', $item->storename));
         $row->add(new Label('wmq_itemname', $item->itemname));
         $row->add(new Label('wmq_item_code', $item->item_code));
+        
+        
+        $d = \App\Entity\Doc\Document::getFirst("meta_name='GoodsReceipt' and document_id in (select document_id from entrylist_view where  item_id = {$item->item_id})  ","document_id desc") ;
+        
+        $row->add(new Label('wmq_cust', $d->customer_name));
         $row->add(new Label('wmq_qty', H::fqty($item->qty)));
         $row->add(new Label('wmq_minqty', H::fqty($item->minqty)));
     }
@@ -476,7 +481,7 @@ class Main extends Base
         }
         $conn = $conn = \ZDB\DB::getConnect();
 
-        $sql = "select t.qty,s.storename, t.store_id, i.minqty,i.itemname,i.item_code,i.bar_code,i.cat_name   from (select store_id, item_id, coalesce(sum( qty),0) as qty   from  store_stock
+        $sql = "select t.qty,s.storename, t.store_id, i.minqty,i.itemname,i.item_code,i.bar_code,i.cat_name,i.item_id   from (select store_id, item_id, coalesce(sum( qty),0) as qty   from  store_stock
             where  {$cstr} 1=1 group by store_id, item_id    ) t
             join items_view  i  on t.item_id = i.item_id
               join stores  s  on t.store_id = s.store_id
@@ -490,14 +495,19 @@ class Main extends Base
         $i = 0;
         foreach ($rc as $row) {
             $i++;
+            
+       $d = \App\Entity\Doc\Document::getFirst("meta_name='GoodsReceipt' and document_id in (select document_id from entrylist_view where  item_id = {$row['item_id']})  ","document_id desc") ;
+            
+            
             $data['A' . $i] = $row['storename'];
             $data['B' . $i] = $row['cat_name'];
             $data['C' . $i] = $row['itemname'];
             $data['D' . $i] = $row['item_code'];
             $data['E' . $i] = $row['bar_code'];
             $data['F' . $i] = H::fd($row['sdate']);
-            $data['G' . $i] = array('value' => H::fqty($row['qty']), 'format' => 'number');
-            $data['H' . $i] = array('value' => H::fqty($row['minqty']), 'format' => 'number');
+            $data['G' . $i] = $d->customer_name;
+            $data['H' . $i] = array('value' => H::fqty($row['qty']), 'format' => 'number');
+            $data['I' . $i] = array('value' => H::fqty($row['minqty']), 'format' => 'number');
         }
         H::exportExcel($data, $header, 'minqty.xlsx');
     }
