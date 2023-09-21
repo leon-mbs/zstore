@@ -627,8 +627,14 @@ class DocList extends \App\Pages\Base
     public function printlabels($sender) {
 
         $one = $this->statusform->print1->isChecked();
-
-        $items = $this->_doc->unpackDetails('detaildata')  ;
+        $items=[];
+        foreach($this->_doc->unpackDetails('detaildata') as $it) {
+            if($this->_doc->meta_name=='GoodsReceipt') {
+                $it->price=0;  //печатаем  продажную цену
+            }
+            
+            $items[]=$it;
+        }
 
         $htmls = H::printItems($items, $one ? 1 : 0);
 
