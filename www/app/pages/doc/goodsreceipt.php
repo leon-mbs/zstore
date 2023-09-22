@@ -394,8 +394,11 @@ class GoodsReceipt extends \App\Pages\Base
         } else {
             $this->editdetail->edititem->setKey($item->item_id);
             $this->editdetail->edititem->setText($item->itemname);
-            $this->editdetail->editprice->setText('');
-            $this->editdetail->editsellprice->setText('');
+            
+            $price = $item->getLastPartion($this->docform->store->getValue(), null, false);
+            
+            $this->editdetail->editprice->setText(H::fa($price));
+            $this->editdetail->editsellprice->setText(H::fa($item->price1));
         }
     }
 
