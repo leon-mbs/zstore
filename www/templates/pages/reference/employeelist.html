@@ -8,7 +8,7 @@
         <div class="row">
 
 
-            <div zippy="employeetable" class="col-12 col-md-10 col-lg-8">
+            <div zippy="employeetable" class="col-12 col-md-10 col-xl-8">
                 <h3>Довідник співробітників </h3>
                  <div class="navbar nav">
 
@@ -22,7 +22,7 @@
 
                     </form>
                 </div>               <a zippy="addnew" class="btn btn-outline-primary btn-sm">Додати</a>
-                <table class="table table-hover   table-sm" class="col-10">
+                <table class="table table-hover   table-sm" class="col-12 ">
                     <tr>
                         <th>П І Б</th>
 
@@ -36,6 +36,8 @@
                         <th></th>
                         <th></th>
                         <th></th>
+                        <th></th>
+                        <th></th>
                     </tr>
                     <tr zippy="employeelist">
                         <td zippy="emp_name"></td>
@@ -44,7 +46,8 @@
                         {{#usebranch}}
                         <td zippy="branch"></td>
                         {{/usebranch}}
-
+                        <td zippy="position"></td>
+                        <td zippy="department"></td>
                         <td><a zippy="contentlist" title="Коментарі"><i class="fa fa-comment"></i></a></td>
                         <td><a zippy="acc" title="Рух по особовому рахунку"><i class="fa fa-money-bill-alt"></i></a></td>
                         <td ><a zippy="edit" title="Редагування"><i class="fa fa-edit"></i></a> 

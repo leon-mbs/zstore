@@ -132,6 +132,10 @@ class Users extends \App\Pages\Base
             }
         }
         $this->user->role_id = $this->editpan->editform->editrole->getValue();
+        if($this->user->role_id==0) {
+            $this->setError('Не вказана роль');
+            return;
+        }
         $this->user->onlymy = $this->editpan->editform->editonlymy->isChecked() ? 1 : 0;
         $this->user->hidemenu = $this->editpan->editform->edithidemenu->isChecked() ? 1 : 0;
         $this->user->disabled = $this->editpan->editform->editdisabled->isChecked() ? 1 : 0;
