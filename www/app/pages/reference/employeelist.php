@@ -108,6 +108,8 @@ class EmployeeList extends \App\Pages\Base
     public function employeelistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
 
+        $row->add(new Label('position', $item->position));
+        $row->add(new Label('department', $item->department));
         $row->add(new Label('emp_name', $item->emp_name));
         $row->add(new Label('login', $item->login));
         $row->add(new Label('branch', $this->_blist[$item->branch_id] ??''));

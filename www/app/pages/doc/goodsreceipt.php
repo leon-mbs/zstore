@@ -107,6 +107,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
         $this->editdetail->add(new TextInput('editsellprice'));
+        $this->editdetail->add(new TextInput('editsellprice2'))->setVisible(strlen($common['price2'])>0);
         $this->editdetail->add(new TextInput('editsnumber'));
         $this->editdetail->add(new Date('editsdate'));
         $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
@@ -394,8 +395,12 @@ class GoodsReceipt extends \App\Pages\Base
         } else {
             $this->editdetail->edititem->setKey($item->item_id);
             $this->editdetail->edititem->setText($item->itemname);
-            $this->editdetail->editprice->setText('');
-            $this->editdetail->editsellprice->setText('');
+            
+            $price = $item->getLastPartion($this->docform->store->getValue(), null, false);
+            
+            $this->editdetail->editprice->setText(H::fa($price));
+            $this->editdetail->editsellprice->setText(H::fa($item->price1));
+            $this->editdetail->editsellprice2->setText(H::fa($item->price2));
         }
     }
 
@@ -414,6 +419,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editdetail->editsnumber->setText("");
         $this->editdetail->editsdate->setText("");
         $this->editdetail->editsellprice->setText("");
+        $this->editdetail->editsellprice2->setText("");
 
     }
 
@@ -428,11 +434,13 @@ class GoodsReceipt extends \App\Pages\Base
         $olditem = Item::load($item->item_id);
         if ($olditem != null) {
             $this->editdetail->editsellprice->setText($olditem->price1);
+            $this->editdetail->editsellprice2->setText($olditem->price2);
         }
 
         $this->editdetail->editcustcode->setText($item->custcode);
 
         $this->editdetail->editsellprice->setText($item->price1);
+        $this->editdetail->editsellprice2->setText($item->price2);
         $this->editdetail->editsnumber->setText($item->snumber);
         $this->editdetail->editsdate->setDate($item->sdate);
 
@@ -512,10 +520,18 @@ class GoodsReceipt extends \App\Pages\Base
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
         $sellprice = $this->editdetail->editsellprice->getText();
+        $sellprice2 = $this->editdetail->editsellprice2->getText();
         if (strlen($sellprice) > 0) {
             $olditem = Item::load($item->item_id);
             if ($olditem != null) {
                 $olditem->price1 = $sellprice;
+                $olditem->save();
+            }
+        }
+        if (strlen($sellprice2) > 0) {
+            $olditem = Item::load($item->item_id);
+            if ($olditem != null) {
+                $olditem->price2 = $sellprice2;
                 $olditem->save();
             }
         }
@@ -1044,6 +1060,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->editdetail->editprice->setText(H::fa($price));
         $this->editdetail->editsellprice->setText(H::fa($item->price1));
+        $this->editdetail->editsellprice2->setText(H::fa($item->price2));
     }
 
     public function OnCustomerFirm($sender) {
@@ -1067,6 +1084,7 @@ class GoodsReceipt extends \App\Pages\Base
         $price = $item->getLastPartion($this->docform->store->getValue(), null, false);
         $this->editdetail->editprice->setText(H::fa($price));
         $this->editdetail->editsellprice->setText($item->price1);
+        $this->editdetail->editsellprice2->setText($item->price2);
         $this->editsnitem->editsnprice->setText(H::fa($price));
 
     }

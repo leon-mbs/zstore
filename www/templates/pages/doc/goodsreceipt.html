@@ -125,10 +125,13 @@
                                                        title="Сканувати  мобiльним пристроєм"
                                                        style="cursor:pointer;font-size:28px" class="fa fa-mobile-alt"></i>
                       {{/usemobilescanner}}  
-                      &nbsp;
-                      <a zippy="opensn"  >Ввод за  серійними номерами</a>
+
                     </div>
                     {{/usescanner}}
+                    {{#usesnumberitem}}
+                       &nbsp;  <a zippy="opensn"  >Ввод за  серійними номерами</a>
+                    {{/usesnumberitem}}
+                     
                     &nbsp;<a class="btn btn-info btn-sm" zippy="addrow">Додати позицію</a>
                     <table class="table  table-sm" >
                         <tr>
@@ -405,29 +408,42 @@
 
                     </div>
                     {{/usesnumberdate}}
-                      <div class="form-group">
+                      <div class="form-group  row">
 
-                        <label for="editcustcode">Код постачальника </label>
-                        <input class="form-control " zippy="editcustcode"/>
+                        <label class="col-6 col-form-label" for="editcustcode">Код постачальника </label>
+                         <div class="col-6">
+                             <input class="form-control " zippy="editcustcode"/>
+                         </div>
                         <small>Наприклад, код з прайсу продавця</small>
-
-
                     </div>
 
-                    <div class="form-group">
-                        <label for="editquantity">Кількість</label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity" required="required"                               pattern="[0-9,\.\s]+"                               style="width: 100px;"/>
+                    <div class="form-group row">
+                        <label class="col-6 col-form-label" for="editquantity">Кількість</label>
+                         <div class="col-6">
+                            <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity" required="required"                               pattern="[0-9,\.\s]+"                               style="width: 100px;"/>
+                         </div>
                     </div>
 
 
-                    <div class="form-group">
-                        <label for="editprice">Ціна </label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice" required="required"                               pattern="[0-9,\.\s]+"                               style="width: 100px;">
+                    <div class="form-group row">
+                        <label class="col-6 col-form-label" for="editprice">Ціна </label>
+                         <div class="col-6">
+                            <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice" required="required"                               pattern="[0-9,\.\s]+"                               style="width: 100px;">
+                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="editsellprice">Вiдпускна цiна (нацiнка) </label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editsellprice"  pattern="[0-9,\.\%]+"   style="width: 100px;">
-                         <small>Якщо задано,  коригує вiдпускну цiну</small>
+                    <div class="form-group row">
+                        <label class="col-6 col-form-label" for="editsellprice">Вiдпускна цiна  </label>
+                         <div class="col-6">
+                            <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editsellprice"  pattern="[0-9,\.\%]+"   style="width: 100px;">
+                         </div>
+                         <small>Якщо задано,  коригує   (роздрiбну) цiну (нацiнку)</small>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-6 col-form-label" data-label="editsellprice2" for="editsellprice">Вiдпускна цiна </label>
+                         <div class="col-6">
+                           <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editsellprice2"  pattern="[0-9,\.\%]+"   style="width: 100px;">
+                        </div>
+                         <small  data-label="editsellprice2">Якщо задано,  коригує (оптову) цiну (нацiнку)</small>
                     </div>
 
                     <div class="form-group">
