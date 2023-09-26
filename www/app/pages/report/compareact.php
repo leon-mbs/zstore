@@ -98,7 +98,7 @@ class CompareAct extends \App\Pages\Base
                     $bal +=  $diff;         
                 }
             }            
-            $detail[] = array('bal'=>H::fa($bal)); 
+                $detail[] = array('bal'=>H::fa($bal)); 
            
             foreach (\App\Entity\Doc\Document::findYield($where, "  document_id asc", -1, -1, "*, COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Invoice',  'PosCheck', 'Order', 'ServiceAct')) THEN payamount WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payed ELSE 0 END)), 0) AS b_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN payed WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payamount ELSE 0 END)), 0) AS b_active") as $id=>$d) {
                 if($d->b_active != $d->b_passive) {
