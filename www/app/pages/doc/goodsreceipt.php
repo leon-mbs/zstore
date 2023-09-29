@@ -475,7 +475,7 @@ class GoodsReceipt extends \App\Pages\Base
         }
         if (count($list) == 0) {
 
-            $this->setError("Не вказана ціна");
+            $this->setError("Не вказані серійні номери");
             return;
         }
         $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;

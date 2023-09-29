@@ -98,7 +98,8 @@ class CompareAct extends \App\Pages\Base
                     $bal +=  $diff;         
                 }
             }            
-                $detail[] = array('bal'=>H::fa($bal)); 
+
+            $detail[] = array('document_date'=>H::fd($this->filter->from->getDate()),'bal'=>H::fa($bal)); 
            
             foreach (\App\Entity\Doc\Document::findYield($where, "  document_id asc", -1, -1, "*, COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Invoice',  'PosCheck', 'Order', 'ServiceAct')) THEN payamount WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payed ELSE 0 END)), 0) AS b_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN payed WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payamount ELSE 0 END)), 0) AS b_active") as $id=>$d) {
                 if($d->b_active != $d->b_passive) {
@@ -138,7 +139,7 @@ class CompareAct extends \App\Pages\Base
                 }
             } 
             
-            $detail[] = array('bal'=>H::fa($bal)); 
+            $detail[] = array('document_date'=>H::fd($this->filter->from->getDate()),'bal'=>H::fa($bal)); 
                     
             foreach (\App\Entity\Doc\Document::findYield($where, "document_id asc ", -1, -1, "*,  COALESCE( ((CASE WHEN (meta_name IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService')) THEN payed WHEN ((meta_name = 'OutcomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payamount ELSE 0 END)), 0) AS s_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsReceipt','IncomeService') ) THEN payamount WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payed ELSE 0 END)), 0) AS s_active ") as $id=>$d) {
                 if($d->s_active != $d->s_passive) {
