@@ -487,12 +487,25 @@ class DetailDataSource implements \Zippy\Interfaces\DataSource
 
         $form = $this->page->filter;
         $where = "item_id = {$this->page->_item->item_id} and   qty <> 0   ";
+        
+        
+        $cstr = \App\Acl::getStoreBranchConstraint();
+        if (strlen($cstr) > 0) {
+            $cstr = "  and  store_id in ({$cstr})      ";
+        }
+        if(\App\System::getUser()->showotherstores) {
+            $cstr ="";
+
+        }          
+        $where = $where . $cstr ;
         $store = $form->searchstore->getValue();
         if ($store > 0) {
             $where = $where . " and   store_id={$store}  ";
         }
 
 
+      
+        
         return $where;
     }
 

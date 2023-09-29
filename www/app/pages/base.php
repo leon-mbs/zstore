@@ -200,9 +200,9 @@ class Base extends \Zippy\Html\WebPage
         }   */
  
         //скрыть  боковое  меню
-        $this->_tvars["sidebar"] =   'hold-transition sidebar-mini sidebar-collapse';
+        $this->_tvars["hidesidebar"] = $user->hidesidebar == 1 ? 'hold-transition   sidebar-collapse' : 'hold-transition sidebar-mini sidebar-collapse';
         if ($user->darkmode == 1) {
-            $this->_tvars["sidebar"] =  ' hold-transition sidebar-mini sidebar-collapse dark-mode';
+            $this->_tvars["hidesidebar"] = $this->_tvars["hidesidebar"] . ' ' . 'dark-mode';
         }
 
         $this->_tvars["darkmode"] = $user->darkmode == 1;

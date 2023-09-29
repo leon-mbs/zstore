@@ -1,13 +1,13 @@
-<table class="ctable" border="0" class="ctable" cellpadding="2" cellspacing="0">
+<table class="ctable" border="0" class="ctable"  >
 
 
     <tr style="font-size:larger; font-weight: bolder;">
-        <td align="center" colspan="4">
+        <td align="center" colspan="5">
             Акт звiрки вiд {{date}}<br>
         </td>
     </tr>
    <tr style=" font-weight: bolder;">
-        <td  colspan="4">
+        <td  colspan="5">
             Контрагент {{cust}}<br><br>
         </td>
     </tr>

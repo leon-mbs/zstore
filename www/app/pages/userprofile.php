@@ -41,7 +41,7 @@ class UserProfile extends \App\Pages\Base
         $form->add(new CheckBox('emailnotify', $this->user->emailnotify));
         $form->add(new CheckBox('botnotify', $this->user->botnotify))->setVisible(strlen($this->user->chat_id)>0);
         $form->add(new CheckBox('usemobileprinter', $this->user->usemobileprinter));
-
+        $form->add(new CheckBox('hidesidebar', $this->user->hidesidebar));
         $form->add(new DropDownChoice('deffirm', \App\Entity\Firm::getList(), $this->user->deffirm));
         $form->add(new DropDownChoice('defstore', \App\Entity\Store::getList(), $this->user->defstore));
         $form->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList(), $this->user->defmf));
@@ -140,6 +140,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->darkmode = $sender->darkmode->isChecked() ? 1 : 0;
         $this->user->botnotify = $sender->botnotify->isChecked() ? 1 : 0;
         $this->user->emailnotify = $sender->emailnotify->isChecked() ? 1 : 0;
+        $this->user->hidesidebar = $sender->hidesidebar->isChecked() ? 1 : 0;
 
         $this->user->deffirm = $sender->deffirm->getValue();
         $this->user->defstore = $sender->defstore->getValue();
