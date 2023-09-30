@@ -1059,8 +1059,8 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editsnitem->editsnprice->setText(H::fa($price));
 
         $this->editdetail->editprice->setText(H::fa($price));
-        $this->editdetail->editsellprice->setText(H::fa($item->price1));
-        $this->editdetail->editsellprice2->setText(H::fa($item->price2));
+        $this->editdetail->editsellprice->setText($item->price1);
+        $this->editdetail->editsellprice2->setText($item->price2);
     }
 
     public function OnCustomerFirm($sender) {

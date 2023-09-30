@@ -53,7 +53,7 @@ class DocList extends \App\Pages\Base
             //     $d = new \App\DateTime() ;
             //            $d = $d->startOfMonth()->subMonth(1) ;
             //            $filter->from = $d->getTimestamp();
-            $filter->from = time() - (7 * 24 * 3600);
+            $filter->from = time() - (31 * 24 * 3600);
             $filter->page = 1;
             $filter->doctype = 0;
             $filter->customer = 0;
@@ -682,7 +682,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
 
         $conn = \ZDB\DB::getConnect();
         $filter = Filter::getFilter("doclist");
-        if($usedate) {
+        if($usedate == true && $filter->status == 0 ) {
             $where = " date(document_date) >= " . $conn->DBDate($filter->from) . " and  date(document_date) <= " . $conn->DBDate($filter->to);
         } else {
             $where = " 1=1 ";
