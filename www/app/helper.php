@@ -1017,10 +1017,9 @@ class Helper
      *
      * @param array $items
      */
-    public static function printItems(array $items, $pqty=0) {
+    public static function printItems(array $items, $pqty=0,array $tags=[]) {
         $printer = \App\System::getOptions('printer');
-
-
+  
 
         $htmls = "";
 
@@ -1039,7 +1038,8 @@ class Helper
 
             $header['name'] = str_replace("'", "`", $header['name'])  ;
 
-
+            $header['docnumber']  =  $tags['docnumber'] ?? "";
+            
             $header['isprice']   = $printer['pprice'] == 1;
             $header['isarticle']    = $printer['pcode'] == 1;
             $header['isbarcode'] = false;

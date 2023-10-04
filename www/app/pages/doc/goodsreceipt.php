@@ -503,6 +503,7 @@ class GoodsReceipt extends \App\Pages\Base
 
 
     }
+  
     public function saverowOnClick($sender) {
         $common = System::getOptions("common");
 

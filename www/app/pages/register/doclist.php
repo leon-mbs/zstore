@@ -636,7 +636,7 @@ class DocList extends \App\Pages\Base
             $items[]=$it;
         }
 
-        $htmls = H::printItems($items, $one ? 1 : 0);
+        $htmls = H::printItems($items, $one ? 1 : 0,array('docnumber'=>$this->_doc->document_number));
 
         if(\App\System::getUser()->usemobileprinter == 1) {
             \App\Session::getSession()->printform =  $htmls;
