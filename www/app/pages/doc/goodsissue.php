@@ -590,7 +590,7 @@ class GoodsIssue extends \App\Pages\Base
             if($common['usesnumber'] == 3  ) {           
 
                 foreach(  $this->_itemlist as $i){
-                    if($this->_rowid == -1 &&  $item->snumber==$i->snumber )  {
+                    if($this->_rowid == -1 && strlen($item->snumber) > 0 &&  $item->snumber==$i->snumber )  {
                         $this->setError('Вже є ТМЦ  з таким серійним номером');
                         return;
                         
