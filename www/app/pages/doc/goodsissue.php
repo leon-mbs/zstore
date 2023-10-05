@@ -111,6 +111,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
 
         $this->editdetail->add(new Label('qtystock'));
+        $this->editdetail->add(new Label('qtystockex'));
         $this->editdetail->add(new Label('pricestock'));
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
@@ -395,6 +396,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->editdetail->editprice->setText("0");
         $this->editdetail->editserial->setText("");
         $this->editdetail->qtystock->setText("");
+        $this->editdetail->qtystockex->setText("");
         $this->editdetail->pricestock->setText("");
         $this->docform->setVisible(false);
         $this->_rowid = -1;
@@ -547,6 +549,7 @@ class GoodsIssue extends \App\Pages\Base
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->snumber = trim($this->editdetail->editserial->getText());
         $qstock = $this->editdetail->qtystock->getText();
+
 
         $item->price = $this->editdetail->editprice->getText();
         $item->disc = '';
@@ -892,8 +895,11 @@ class GoodsIssue extends \App\Pages\Base
            'customer'=>$customer_id
          ));
         $qty = $item->getQuantity($store_id);
+        $qtyex = $item->getQuantity() - $qty;
 
         $this->editdetail->qtystock->setText(H::fqty($qty));
+        $this->editdetail->qtystockex->setText(H::fqty($qtyex));
+        
         $this->editdetail->editprice->setText($price);
         if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
             $serial = $item->getNearestSerie($store_id);
