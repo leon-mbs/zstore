@@ -237,6 +237,8 @@ class PPOHelper
 
         $firm = \App\Helper::getFirmData($pos->firm_id);
 
+
+        
         $header = array();
         $header['doctype'] = $open == true ? 100 : 101;
         $header['firmname'] = $firm['firm_name'];
@@ -259,6 +261,12 @@ class PPOHelper
 
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
         $firm = \App\Entity\Firm::load($pos->firm_id);
+        
+        if($firm== null){
+            return array('success' => false, 'data' => 'Не вказана  компаiя в POS термiналi');
+        }
+        
+        
         return self::send($xml, 'doc', $firm);
     }
 

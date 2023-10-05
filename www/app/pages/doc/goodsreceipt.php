@@ -503,6 +503,7 @@ class GoodsReceipt extends \App\Pages\Base
 
 
     }
+  
     public function saverowOnClick($sender) {
         $common = System::getOptions("common");
 
@@ -567,10 +568,11 @@ class GoodsReceipt extends \App\Pages\Base
             }
            
         }
-         if($common['usesnumber'] == 3  ) {           
+     
+        if($common['usesnumber'] == 3  ) {           
 
             foreach(  $this->_itemlist as $i){
-                if( $this->_rowid == -1 && $item->snumber==$i->snumber )  {
+                if( $this->_rowid == -1 && strlen($item->snumber) > 0 && $item->snumber==$i->snumber )  {
                     $this->setError('Вже є ТМЦ  з таким серійним номером');
                     return;
                     
@@ -1059,8 +1061,8 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editsnitem->editsnprice->setText(H::fa($price));
 
         $this->editdetail->editprice->setText(H::fa($price));
-        $this->editdetail->editsellprice->setText(H::fa($item->price1));
-        $this->editdetail->editsellprice2->setText(H::fa($item->price2));
+        $this->editdetail->editsellprice->setText($item->price1);
+        $this->editdetail->editsellprice2->setText($item->price2);
     }
 
     public function OnCustomerFirm($sender) {
