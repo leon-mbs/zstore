@@ -83,7 +83,7 @@ class Catalog extends Base
         }
 
         $this->_tvars['fcolor'] = "class=\"btn btn-success\"";
-        $this->_tvars['showvol'] = $options['showvol']==1;
+
     }
 
     private function UpdateList() {
@@ -223,15 +223,9 @@ class Catalog extends Base
         $price = $item->getPurePrice($options['defpricetype']);
         $price = \App\Helper::fa($price);
         $row->add(new Label("sprice", $price . ' ' . $options['currencyname']));
-        $vol="";
-        if(strlen($item->volume)>0) {
-            $vol  = $item->volume . $item->msr;   
-        }
-        if(strlen($item->weight)>0) {
-            $vol  = $item->weight . $item->msr;   
-        }
+    
         
-        $row->add(new Label("svol",$vol ));
+        $row->add(new Label("scustomsize", $item->customsize  ));
         $row->add(new Label("sactionprice", \App\Helper::fa($item->getActionPrice()). ' ' . $options['currencyname']))->setVisible(false);
         $row->add(new Label('saction'))->setVisible(false);
 
