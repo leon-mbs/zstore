@@ -40,7 +40,7 @@ class ProductView extends Base
 
         $options = \App\System::getOptions('shop');
         $this->_tvars['usefeedback'] = $options['usefeedback'] == 1;
-
+    
         $this->add(new Label("breadcrumb", Helper::getBreadScrumbs($product->cat_id), true));
         $this->add(new ClickLink('backtolist', $this, 'OnBack'));
 
@@ -52,6 +52,10 @@ class ProductView extends Base
 
         $this->add(new Label('productname', $product->itemname));
         $this->add(new Label('productcode', $product->item_code));
+   
+ 
+        
+        $this->add(new Label('customsize',  $product->customsize));
         $this->add(new Label('onstore'));
         $this->add(new Label('action'))->setVisible(false);
         $this->add(new \Zippy\Html\Label('manufacturername', $product->manufacturer))->SetVisible(strlen($product->manufacturer) > 0);
