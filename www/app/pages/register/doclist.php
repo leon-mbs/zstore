@@ -546,47 +546,74 @@ class DocList extends \App\Pages\Base
             return;
         }
         $this->_doc = $this->_doc->cast();
-        if ($sender->id == "bap") {
-            $newstate = $this->_doc->headerdata['_state_before_approve_'] > 0 ? $this->_doc->headerdata['_state_before_approve_'] : Document::STATE_APPROVED;
-            $this->_doc->updateStatus($newstate);
 
-            $user = System::getUser();
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
 
-            $n = new \App\Entity\Notify();
-            $n->user_id = $this->_doc->user_id;
-            $n->sender_id = $user->user_id;
-            $n->dateshow = time();
-            $n->message = "Документ {$this->_doc->document_number} затверджено" ;
+        try{
+        
+            if ($sender->id == "bap") {
+                $this->_doc->updateStatus(Document::STATE_APPROVED);    
+         
+                $states= explode(',',  trim($this->_doc->headerdata['_state_before_approve_'],',' ) );                
+                foreach( $states as $newstate){
+                    $this->_doc->updateStatus($newstate);    
+                } 
+                
+                $user = System::getUser();
 
-            $n->save();
-        }
-        if ($sender->id == "bref") {
-            $this->_doc->updateStatus(Document::STATE_REFUSED);
+                $n = new \App\Entity\Notify();
+                $n->user_id = $this->_doc->user_id;
+                $n->sender_id = $user->user_id;
+                $n->dateshow = time();
+                $n->message = "Документ {$this->_doc->document_number} затверджено" ;
 
-            $text = trim($this->statusform->refcomment->getText());
+                $n->save();
+            }
+            if ($sender->id == "bref") {
+                $this->_doc->updateStatus(Document::STATE_REFUSED);
 
-            $user = System::getUser();
+                $text = trim($this->statusform->refcomment->getText());
 
-            $n = new \App\Entity\Notify();
-            $n->user_id = $this->_doc->user_id;
-            $n->sender_id = $user->user_id;
-            $n->dateshow = time();
-            $n->message = "Документ {$this->_doc->document_number} відхилено" ;
-            $n->message .= "<br> " . $text;
-            $n->save();
+                $user = System::getUser();
 
-            $this->statusform->refcomment->setText('');
-        }
+                $n = new \App\Entity\Notify();
+                $n->user_id = $this->_doc->user_id;
+                $n->sender_id = $user->user_id;
+                $n->dateshow = time();
+                $n->message = "Документ {$this->_doc->document_number} відхилено" ;
+                $n->message .= "<br> " . $text;
+                $n->save();
 
-
-        if ($sender->id == "bstatus") {
-            $newst =   $this->statusform->mstates->getValue() ;
-            if($newst >0  && $newst != $this->_doc->state) {
-                $this->_doc->updateStatus($newst, true);
+                $this->statusform->refcomment->setText('');
             }
 
 
+            if ($sender->id == "bstatus") {
+                $newst =   $this->statusform->mstates->getValue() ;
+                if($newst >0  && $newst != $this->_doc->state) {
+                    $this->_doc->updateStatus($newst, true);
+                }
+
+
+            }
+            
+            $this->_doc->headerdata['_state_before_approve_'] ='';
+            
+        }  catch(\Exception $e){
+            global $logger;
+            $conn->RollbackTrans();
+      
+            $this->setError($ee->getMessage());
+
+            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            return;
+         
+          
         }
+        
+        $conn->CommitTrans();
+        
         if ($sender->id == "buser") {
             $user_id = intval($this->statusform->musers->getValue());
             if($user_id==0) {

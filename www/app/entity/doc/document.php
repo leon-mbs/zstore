@@ -26,7 +26,7 @@ class Document extends \ZCL\DB\Entity
     public const STATE_SHIFTED     = 16; // отложен
     public const STATE_FAIL        = 17; // Аннулирован
     public const STATE_FINISHED    = 18; // Закончен
-    public const STATE_APPROVED    = 19;      //  Готов к выполнению
+    public const STATE_APPROVED    = 19;      //  Утвержден
     public const STATE_READYTOSHIP = 20; // готов к отправке
     public const STATE_WP          = 21; // ждет  оплату
     public const STATE_PAYED       = 22; // Оплачен
@@ -95,7 +95,7 @@ class Document extends \ZCL\DB\Entity
         $hash = md5(rand(1, 1000000), false);
         $hash = base64_encode(substr($hash, 0, 24));
         $this->headerdata['hash'] = strtolower($hash)  ;
-
+        $this->headerdata['_state_before_approve_'] = '';
     }
 
     /**
@@ -362,17 +362,19 @@ class Document extends \ZCL\DB\Entity
         //если нет права  выполнять
         if ($state >= self::STATE_EXECUTED && \App\Acl::checkExeDoc($this, false, false) == false) {
 
-            $this->headerdata['_state_before_approve_'] = $state;  //целевой статус
-            if ($state == self::STATE_WA) {   //если на утверждение   то  ждем  утверждения
-                $this->headerdata['_state_before_approve_'] = self::STATE_APPROVED;
-            }
+            $this->headerdata['_state_before_approve_'] .= ( ','. $state);  //целевой статус
+  
 
             $state = self::STATE_WA;   //переводим на   ожидание  утверждения
+            \App\System::setInfoMsg('Очікує затвердження') ;
+          
+            
         } else {
             if ($state == self::STATE_CANCELED) {
                 if($onlystate == false) {
                     $this->Cancel();
                 }
+                $this->headerdata['_state_before_approve_'] = '';                
             } else {
                 if ($state == self::STATE_EXECUTED) {
                     if($onlystate == false) {
@@ -386,7 +388,9 @@ class Document extends \ZCL\DB\Entity
 
         $oldstate = $this->state;
         $this->state = $state;
-        $this->insertLog($state);
+        if($state != $oldstate ) {
+            $this->insertLog($state);
+        }
 
 
         $this->priority = $this->getPriorytyByState($this->state) ;
@@ -495,7 +499,7 @@ class Document extends \ZCL\DB\Entity
             case Document::STATE_CLOSED:
                 return "Закритий";
             case Document::STATE_APPROVED:
-                return "Готовий до виконання";
+                return "Затверджений";
             case Document::STATE_DELETED:
                 return "Видалений";
 
