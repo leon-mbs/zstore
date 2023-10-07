@@ -10,7 +10,7 @@ use App\Entity\User;
  */
 class System
 {
-    public const CURR_VERSION= "6.8.3";
+    public const CURR_VERSION= "6.8.4";
 
     private static $_options = array();   //  для кеширования
     private static $_cache   = array();   //  для кеширования
