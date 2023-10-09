@@ -31,9 +31,11 @@ class Product extends \App\Entity\Item
 
     protected function afterLoad() {
         parent::afterLoad();
-
-        $this->productdata = @unserialize(@base64_decode($this->extdata));
-        if ($this->productdata == null) {
+        if(strlen($this->extdata) >0)
+        {    
+            $this->productdata = @unserialize(@base64_decode($this->extdata));
+        }
+        else{
             $this->productdata = new ProductData();
         }
     }

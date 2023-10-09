@@ -241,7 +241,7 @@ class ItemList extends \App\Pages\Base
         $this->editOnClick($sender);
         $this->_copy = $this->_item->item_id;
         $this->_item->item_id = 0;
-
+        $this->_item->extdata = "";
         $this->itemdetail->editname->setText($this->_item->itemname.'_copy');
 
         $this->itemdetail->editcode->setText('');

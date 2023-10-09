@@ -54,6 +54,7 @@ class Main extends \App\Pages\Base
                  "topic_id" =>$t->topic_id,
                  "node_id" =>$t->node_id,
                  "title" =>$t->title,
+                 "hash" =>md5($t->topic_id . \App\Helper::getSalt()),
                  "nodes" =>$t->nodes()
             );
         }
@@ -346,7 +347,13 @@ class Main extends \App\Pages\Base
         $arr = array()  ;
         foreach(Topic::findByNode($args[0]) as $t) {
             $t->fav = in_array($t->topic_id, $favorites)  ;
-            $arr[]=array("title"=>$t->title,"fav"=>$t->fav,"topic_id"=>$t->topic_id);
+            $arr[]=array(
+             "title"=>$t->title,
+             "fav"=>$t->fav,
+             "topic_id"=>$t->topic_id,
+             "hash" =>md5($t->topic_id . \App\Helper::getSalt()),
+             
+             );
         }
 
         return json_encode($arr, JSON_UNESCAPED_UNICODE);

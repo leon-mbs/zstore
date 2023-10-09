@@ -180,6 +180,12 @@ class ProductView extends Base
         if ($item->hasData() == false) {
             $value = $nodata;
         }
+        
+        if($item->attributetype == 5 && strpos($value,'http') === 0 ) {
+            $link ="<a href=\"{$value}\" target=\"_blank\" >{$value}</a>";
+            $datarow->add(new Label("attrvalue", $link,true));            
+            return;
+        }
         $datarow->add(new Label("attrvalue", $value));
     }
 

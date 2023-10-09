@@ -92,9 +92,6 @@ class Document extends \ZCL\DB\Entity
         $this->detaildata = array();
         $this->headerdata['contract_id'] = 0;
 
-        $hash = md5(rand(1, 1000000), false);
-        $hash = base64_encode(substr($hash, 0, 24));
-        $this->headerdata['hash'] = strtolower($hash)  ;
         $this->headerdata['_state_before_approve_'] = '';
     }
 
@@ -327,6 +324,9 @@ class Document extends \ZCL\DB\Entity
         if(strlen($common['cashier'])>0) {
             $doc->headerdata['cashier'] = $common['cashier'] ;
         }
+        $hash = md5(rand(1, 1000000), false);
+        $hash = base64_encode(substr($hash, 0, 24));
+        $doc->headerdata['hash'] = strtolower($hash)  ;
 
         return $doc;
     }
