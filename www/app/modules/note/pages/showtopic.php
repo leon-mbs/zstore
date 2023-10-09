@@ -15,7 +15,7 @@ class ShowTopic extends \App\Pages\Base
 {
     public $_topic;
 
-    public function __construct($topic_id) {
+    public function __construct($topic_id,$hash="") {
 
         parent::__construct();
         $topic_id = intval($topic_id);
@@ -30,6 +30,14 @@ class ShowTopic extends \App\Pages\Base
             http_response_code(404) ;
             die;
         }
+        
+        $h=md5($topic_id . \App\Helper::getSalt())  ;
+        if($h !== $hash) {
+            http_response_code(404) ;
+            die;
+        }
+        
+        /*
         if ($this->_topic->isout == 0) {
             $user_id = System::getUser()->user_id;
             if ($user_id == 0) { //незалогиненый
@@ -37,7 +45,7 @@ class ShowTopic extends \App\Pages\Base
                 die;
             }
         }
-
+        */
         $this->add(new Label("title", $this->_topic->title, true));
         $this->add(new Label("detail", $this->_topic->detail, true));
     }

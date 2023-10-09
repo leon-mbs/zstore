@@ -104,11 +104,11 @@
 <align>center</align>
 <newline ></newline>
 <text>  {{checkslogan}}</text>    
-{{#docqrcodeurl}}
+{{#isdocqrcode}}
 <font >a</font>
 <newline ></newline>
 <qrcode  > {{docqrcodeurl}}</qrcode>
-{{/docqrcodeurl}}
+{{/isdocqrcode}}
 <newline ></newline>
  
    
