@@ -140,7 +140,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new DropDownChoice('editprintqty', array(), 1));
 
 
-        $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
+        $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'Save');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
         $this->add(new Panel('setpanel'))->setVisible(false);
@@ -350,7 +350,7 @@ class ItemList extends \App\Pages\Base
         $this->itemtable->listform->itemlist->Reload();
     }
 
-    public function OnSubmit($sender) {
+    public function Save($sender) {
         if (false == \App\ACL::checkEditRef('ItemList')) {
             return;
         }
@@ -465,18 +465,20 @@ class ItemList extends \App\Pages\Base
 
         $file = $this->itemdetail->editaddfile->getFile();
         if (strlen($file["tmp_name"]) > 0) {
-            $imagedata = getimagesize($file["tmp_name"]);
+            
+            if (filesize($file["tmp_name"])  > pow(2,20)) {
 
+                    $this->setError('Розмір файлу більше 1M');
+                    return;
+            }
+           
+            $imagedata = getimagesize($file["tmp_name"]);
+ 
             if (preg_match('/(png|jpeg)$/', $imagedata['mime']) == 0) {
                 $this->setError('Невірний формат зображення');
                 return;
             }
 
-            if ($imagedata[0] * $imagedata[1] > 10000000) {
-
-                //   $this->setError('Занадто великий розмір зображення');
-                //    return;
-            }
 
             $image = new \App\Entity\Image();
             $image->content = file_get_contents($file['tmp_name']);

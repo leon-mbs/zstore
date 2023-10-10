@@ -6,7 +6,14 @@
             <br><br> Повернення № {{document_number}} від {{date}} <br><br><br>
         </td>
     </tr>
+    {{#fiscalnumber}}    
     <tr>
+        <td></td>
+        <td>Фіскальний номер</td>
+        <td colspan="5">{{fiscalnumber}}<</td>
+    </tr>
+    {{/fiscalnumber}}    
+   <tr>
         <td></td>
         <td>Покупець</td>
         <td colspan="5">{{customer_name}}</td>
