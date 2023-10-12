@@ -217,7 +217,8 @@ class CategoryList extends \App\Pages\Base
             return;
         }
 
-        $this->_category->parent_id = $this->categorydetail->editparent->getValue();
+        $pid=$this->categorydetail->editparent->getValue() ;
+        $this->_category->parent_id = $pid >0 ? $pid  :null;
         $this->_category->cat_name = $this->categorydetail->editcat_name->getText();
         $this->_category->cat_desc = $this->categorydetail->editcat_desc->getText();
         $this->_category->noshop = $this->categorydetail->editnoshop->isChecked() ? 1 : 0;
