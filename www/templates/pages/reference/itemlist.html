@@ -41,7 +41,7 @@
                            <div class="col-auto">
                               <input autocomplete="off"   class="form-control mr-2" zippy="searchbrand"/>
                            </div>
-                       </div>
+                         </div>
                       </div>
                        <div class="col-auto">  
                           <div class=" row no-gutters"> 
@@ -83,7 +83,9 @@
                     </form>
                 </div>
                 <a zippy="addnew" class="btn btn-primary mr-4  ">Додати</a>
-               
+                 {{#showtips}}
+                    <small> <i class="fa fa-info-circle"> Експорт в  ексель в Сервісні сторінки-> Експорт</small>
+                 {{/showtips}}               
                 <form zippy="listform">
                     <table class="table table-hover  table-sm  ">
                         <tr>
@@ -389,7 +391,7 @@
                                         <label class="form-check-label" data-label="editdelimage" for="editdelimage">Видалити
                                             зображення</label>
                                     </div>
-                                    <small>Зображення повинно бути квадратним, інакше буде обрізано</small>
+                                    <small>Зображення повинно бути квадратним (інакше буде обрізано) та з розміром  файлу  не більше 1M </small>
 
                                 </div>
                             </div>

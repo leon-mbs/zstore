@@ -217,7 +217,8 @@ class CategoryList extends \App\Pages\Base
             return;
         }
 
-        $this->_category->parent_id = $this->categorydetail->editparent->getValue();
+        $pid=$this->categorydetail->editparent->getValue() ;
+        $this->_category->parent_id = $pid >0 ? $pid  :null;
         $this->_category->cat_name = $this->categorydetail->editcat_name->getText();
         $this->_category->cat_desc = $this->categorydetail->editcat_desc->getText();
         $this->_category->noshop = $this->categorydetail->editnoshop->isChecked() ? 1 : 0;
@@ -245,6 +246,13 @@ class CategoryList extends \App\Pages\Base
 
         $file = $this->categorydetail->editaddfile->getFile();
         if (strlen($file["tmp_name"]) > 0) {
+            
+            if (filesize($file["tmp_name"])  > pow(2,20)) {
+
+                    $this->setError('Розмір файлу більше 1M');
+                    return;
+            }            
+            
             $imagedata = getimagesize($file["tmp_name"]);
 
             if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {

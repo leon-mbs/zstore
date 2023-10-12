@@ -3,7 +3,10 @@
 namespace App\Pages\Report;
 
 use App\Entity\Item;
+use App\Entity\Category;
 use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
@@ -29,7 +32,17 @@ class Price extends \App\Pages\Base
         $this->filter->add(new CheckBox('price4'))->setVisible(strlen($option['price4']) > 0);
         $this->filter->add(new CheckBox('price5'))->setVisible(strlen($option['price5']) > 0);
         $this->filter->add(new CheckBox('onstore'));
+        $this->filter->add(new CheckBox('showqty'));
 
+        $catlist = array();
+        foreach (Category::getList() as $k => $v) {
+            $catlist[$k] = $v;
+        }
+        $this->filter->add(new DropDownChoice('searchcat', $catlist, 0));
+        $this->filter->add(new TextInput('searchbrand'));
+        $this->filter->searchbrand->setDataList(Item::getManufacturers());
+        
+        
         $this->_tvars['price1name'] = $option['price1'];
         $this->_tvars['price2name'] = $option['price2'];
         $this->_tvars['price3name'] = $option['price3'];
@@ -62,11 +75,22 @@ class Price extends \App\Pages\Base
         $isp4 = $this->filter->price4->isChecked();
         $isp5 = $this->filter->price5->isChecked();
         $onstore = $this->filter->onstore->isChecked();
+        $showqty = $this->filter->showqty->isChecked();
+        $cat = $this->filter->searchcat->getValue();
+        $brand = $this->filter->searchbrand->getText();
 
         $detail = array();
         
-
-        foreach (Item::findYield("disabled <>1 and detail not  like '%<noprice>1</noprice>%'", "cat_name,itemname") as $item) {
+        
+        $sql ="disabled <>1 and detail not  like '%<noprice>1</noprice>%'";
+        if($cat > 0){
+            $sql = $sql . " and cat_id=". $cat;
+        }
+        if(strlen($brand) > 0){
+            $sql = $sql . " and manufacturer=". Item::qstr($brand) ;
+        }
+        
+        foreach (Item::findYield($sql, "cat_name,itemname") as $item) {
 
             $qty = $item->getQuantity();
 
@@ -91,11 +115,16 @@ class Price extends \App\Pages\Base
 
         $header = array(
             "_detail"    => $detail,
-            "price1name" => $isp1 ? $option['price1'] : "",
-            "price2name" => $isp2 ? $option['price2'] : "",
-            "price3name" => $isp3 ? $option['price3'] : "",
-            "price4name" => $isp4 ? $option['price4'] : "",
-            "price5name" => $isp5 ? $option['price5'] : "",
+            "price1name" => $isp1 ? $option['price1'] : false,
+            "price2name" => $isp2 ? $option['price2'] : false,
+            "price3name" => $isp3 ? $option['price3'] : false,
+            "price4name" => $isp4 ? $option['price4'] : false,
+            "price5name" => $isp5 ? $option['price5'] : false,
+            "iscat" => $cat ==0 ,
+            "isbrand" => strlen($brand)==0 ,
+            "catname" => $this->filter->searchcat->getValueName(),
+            "brandname" => $brand,
+            "showqty" => $showqty == 1,
             'date'       => \App\Helper::fd(time())
         );
         $report = new \App\Report('report/price.tpl');
