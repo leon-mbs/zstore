@@ -129,7 +129,7 @@ class Items extends \App\Pages\Base
 
     public function exportOnSubmit($sender) {
         $modules = System::getOptions("modules");
-        $cat = $this->exportform->ecat->getValue();
+//        $cat = $this->exportform->ecat->getValue();
 
         $elist = array();
         foreach ($this->_items as $item) {

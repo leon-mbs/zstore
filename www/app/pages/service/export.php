@@ -193,26 +193,14 @@ class Export extends \App\Pages\Base
             $data['E' . $i] = $item->manufacturer;
             $data['F' . $i] = $item->item_code;
             $data['G' . $i] = $item->bar_code;
-            $price=  H::fa($item->getPrice($pt));
             $data['H' . $i] = $item->minqty;
             
-            $price1=H::fa($item->getPrice('price1', $store)) ;            
-            $price2=H::fa($item->getPrice('price2', $store)) ;           
-            $price3=H::fa($item->getPrice('price3', $store));           
-            $price4=H::fa($item->getPrice('price4', $store)) ;           
-            $price5=H::fa($item->getPrice('price5', $store)) ;           
-            if($price1==0) $price1 ='';
-            if($price2==0) $price2 ='';
-            if($price3==0) $price3 ='';
-            if($price4==0) $price4 ='';
-            if($price5==0) $price5 ='';
             
-            
-            $data['I' . $i] = array('value' => H::fa(doubleval($price1)), 'format' => 'number', 'align' => 'right');
-            $data['J' . $i] = array('value' => H::fa(doubleval($price2)), 'format' => 'number', 'align' => 'right');
-            $data['K' . $i] = array('value' => H::fa(doubleval($price3)), 'format' => 'number', 'align' => 'right');
-            $data['L' . $i] = array('value' => H::fa(doubleval($price4)), 'format' => 'number', 'align' => 'right');
-            $data['M' . $i] = array('value' => H::fa(doubleval($price5)), 'format' => 'number', 'align' => 'right');
+            $data['I' . $i] = array('value' => $item->price1,  'align' => 'right');
+            $data['J' . $i] = array('value' => $item->price2,  'align' => 'right');
+            $data['K' . $i] = array('value' => $item->price3,  'align' => 'right');
+            $data['L' . $i] = array('value' => $item->price4,  'align' => 'right');
+            $data['M' . $i] = array('value' => $item->price5,  'align' => 'right');
             
             
             if ($t == 1) {
@@ -230,13 +218,13 @@ class Export extends \App\Pages\Base
             $root.="<cat_name>" . $item->cat_name . "</cat_name>";
             $root.="<item_code>" . $item->item_code . "</item_code>";
             $root.="<bar_code>" . $item->bar_code . "</bar_code>";
-            $root.="<minqty>" . $item->minqty . "</minqty>";
             $root.="<brand><![CDATA[" . $item->manufacturer . "]]></brand>";
-            $root.="<price1 >" . $price1. "</price1>";
-            $root.="<price2>" .  $price2. "</price2>";
-            $root.="<price3>" .  $price3. "</price3>";
-            $root.="<price4>" .  $price4. "</price4>";
-            $root.="<price5>" .  $price5. "</price5>";
+            $root.="<minqty>" . $item->minqty . "</minqty>";
+            $root.="<price1 >" . $item->price1. "</price1>";
+            $root.="<price2>" .  $item->price2. "</price2>";
+            $root.="<price3>" .  $item->price3. "</price3>";
+            $root.="<price4>" .  $item->price4. "</price4>";
+            $root.="<price5>" .  $item->price5. "</price5>";
 
             if ($t == 1) {
                 $root.="<quantity>" .$qty. "</quantity>";
