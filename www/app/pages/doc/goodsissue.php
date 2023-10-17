@@ -792,7 +792,7 @@ class GoodsIssue extends \App\Pages\Base
         $total = 0;
 
         foreach ($this->_itemlist as $item) {
-            $item->amount = $item->price * $item->quantity;
+            $item->amount = H::fa($item->price * $item->quantity);
 
 
             $total = $total + $item->amount;
