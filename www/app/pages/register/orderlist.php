@@ -710,6 +710,7 @@ class OrderList extends \App\Pages\Base
                 return;
             }
         }
+        $this->setWarn('Товар не знайдено') ;
         $this->addJavaScript("new Audio('/assets/error.mp3').play()", true);
 
 

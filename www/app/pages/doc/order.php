@@ -475,7 +475,7 @@ class Order extends \App\Pages\Base
 
 
         foreach ($this->_tovarlist as $item) {
-            $item->amount = $item->price * $item->quantity;
+            $item->amount = H::fa($item->price * $item->quantity);
 
             $total = $total + $item->amount;
         }

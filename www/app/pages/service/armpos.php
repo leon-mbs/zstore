@@ -827,7 +827,7 @@ class ARMPos extends \App\Pages\Base
         $disc = 0;
 
         foreach ($this->_itemlist as $item) {
-            $item->amount = $item->price * $item->quantity;
+            $item->amount = H::fa($item->price * $item->quantity);
             if($item->disc >0) {
                 //  $disc += ($item->quantity * ($item->pureprice - $item->price) );
             }
@@ -835,7 +835,7 @@ class ARMPos extends \App\Pages\Base
             $total = $total + $item->amount;
         }
         foreach ($this->_serlist as $item) {
-            $item->amount = $item->price * $item->quantity;
+            $item->amount = H::fa($item->price * $item->quantity);
             if($item->disc >0) {
                 // $disc += ($item->quantity * ($item->pureprice - $item->price) );
             }

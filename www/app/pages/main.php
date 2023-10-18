@@ -27,6 +27,14 @@ class Main extends Base
         $this->_tvars['curversion'] = System::CURR_VERSION;
         $this->_tvars['curversionbd'] = System::getOptions('version', false);
 
+        $v= \App\Helper::checkVer()  ;
+            
+            if(strlen($v) >0){
+               $this->_tvars['newversion']  = " Доступна нова версiя <b>{$v}</b>  <a target=\"_blank\" href=\"https://zippy.com.ua/upsate\">Перейти...</a> ";                
+            } else{
+               $this->_tvars['newversion']  = '';
+            }
+        
         $user = System::getUser();
 
         $this->_docstatelist = \App\Entity\Doc\Document::getStateList();
