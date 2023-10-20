@@ -217,6 +217,11 @@ class ARMPos extends \App\Pages\Base
         if($common['usesnumber'] ==2) {
             $this->_tvars["colspan"] = 8;
         }
+         
+        if(H::getKeyVal('issimple_'.System::getUser()->user_id)=="tosimple"){
+           $this->onModeOn($this->docpanel->navbar->tosimple); 
+        }
+        
     }
 
     public function onModeOn($sender) {
@@ -228,7 +233,7 @@ class ARMPos extends \App\Pages\Base
             $this->_tvars["usesnumber"] = $options['usesnumber'] == 1;
 
         }
-
+        H::setKeyVal('issimple_'.System::getUser()->user_id,$sender->id);
     }
 
     public function onCheckList($sender) {
