@@ -250,6 +250,9 @@ class ItemList extends \App\Pages\Base
             $this->itemdetail->editcode->setText(Item::getNextArticle());
         }
 
+        if (System::getOption("common", "autobarcode") == 1) {
+            $this->itemdetail->editbarcode->setText($this->ean13_check_digit(str_replace('ID', '', Item::getNextArticle())));
+        }
 
 
 
@@ -317,6 +320,10 @@ class ItemList extends \App\Pages\Base
         if (strlen($this->_item->item_code)==0  && System::getOption("common", "autoarticle") == 1) {
             $this->itemdetail->editcode->setText(Item::getNextArticle());
         }
+
+        if (strlen($this->_item->bar_code)==0  && System::getOption("common", "autobarcode") == 1) {
+            $this->itemdetail->editbarcode->setText($this->ean13_check_digit(str_replace('ID', '', Item::getNextArticle())));
+        }
     }
 
     public function addOnClick($sender) {
@@ -337,10 +344,26 @@ class ItemList extends \App\Pages\Base
         if (System::getOption("common", "autoarticle") == 1) {
             $this->itemdetail->editcode->setText(Item::getNextArticle());
         }
+        if (System::getOption("common", "autobarcode") == 1) {
+            $this->itemdetail->editbarcode->setText($this->ean13_check_digit(str_replace('ID', '', Item::getNextArticle())));
+        }
         $this->itemdetail->editmanufacturer->setDataList(Item::getManufacturers());
 
     }
 
+    public function ean13_check_digit($id){
+        $basecode = '100000000000';
+
+        $digits = substr($basecode, 0, -12 + strlen($id))  . (string)$id;
+        $even_sum = $digits[1] + $digits[3] + $digits[5] + $digits[7]+ $digits[9] + $digits[11];
+        $even_sum_three = $even_sum * 3;
+        $odd_sum = $digits[0] + $digits[2] + $digits[4] + $digits[6] + $digits[8] + $digits[10];
+        $total_sum = $even_sum_three + $odd_sum;
+        $next_ten = (ceil($total_sum/10))*10;
+        $check_digit = $next_ten - $total_sum;
+        return $digits . $check_digit;
+    } 
+    
     public function cancelOnClick($sender) {
         $this->itemtable->setVisible(true);
         $this->itemdetail->setVisible(false);
@@ -415,8 +438,10 @@ class ItemList extends \App\Pages\Base
         if (strlen($this->_item->item_code) == 0 && System::getOption("common", "autoarticle") == 1) {
             $this->_item->item_code = Item::getNextArticle();
             $this->itemdetail->editcode->setText($this->_item->item_code);
+        }
 
-
+        if (strlen($this->_item->bar_code) == 0 && System::getOption("common", "autobarcode") == 1) {
+            $this->itemdetail->editbarcode->setText($this->ean13_check_digit(str_replace('ID', '', Item::getNextArticle())));
         }
 
         //проверка  уникальности штрих кода
