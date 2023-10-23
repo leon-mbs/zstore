@@ -51,11 +51,11 @@ class Pay extends \ZCL\DB\Entity
         self::addBonus($document_id, $amount);
 
         if (0 == (float)$amount || 0 == (int)$document_id || 0 == $mf_id) {
-            return;
+            return 0;
         }
 
         if ($mf_id == 0) {
-            return;
+            return 0;
         }
 
         $mf = \App\Entity\MoneyFund::load($mf_id);

@@ -86,12 +86,12 @@ class CompareAct extends \App\Pages\Base
         $detail = array();
 
 
-        if($type==1) {
+        if($type==1) {     //покупатели
             
 
             $bal=0;
 
-            foreach (\App\Entity\Doc\Document::findYield($where_start, "  document_id asc", -1, -1, "*, COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Invoice',  'PosCheck', 'Order', 'ServiceAct')) THEN payamount WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payed ELSE 0 END)), 0) AS b_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN payed WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payamount ELSE 0 END)), 0) AS b_active") as $id=>$d) {
+            foreach (\App\Entity\Doc\Document::findYield($where_start, "  document_id asc", -1, -1, "*, COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Invoice',  'PosCheck', 'Order', 'ServiceAct')) THEN payamount WHEN ((meta_name = 'OutcomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payed ELSE 0 END)), 0) AS b_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN payed WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payamount ELSE 0 END)), 0) AS b_active") as $id=>$d) {
                 if($d->b_active != $d->b_passive) {
                     $diff = $d->b_passive - $d->b_active;
 
@@ -101,7 +101,7 @@ class CompareAct extends \App\Pages\Base
 
             $detail[] = array('document_date'=>H::fd($this->filter->from->getDate()),'bal'=>H::fa($bal)); 
            
-            foreach (\App\Entity\Doc\Document::findYield($where, "  document_id asc", -1, -1, "*, COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Invoice',  'PosCheck', 'Order', 'ServiceAct')) THEN payamount WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payed ELSE 0 END)), 0) AS b_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN payed WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payamount ELSE 0 END)), 0) AS b_active") as $id=>$d) {
+            foreach (\App\Entity\Doc\Document::findYield($where, "  document_id asc", -1, -1, "*, COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Invoice',  'PosCheck', 'Order', 'ServiceAct')) THEN payamount WHEN ((meta_name = 'OutcomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payed ELSE 0 END)), 0) AS b_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN payed WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payamount ELSE 0 END)), 0) AS b_active") as $id=>$d) {
                 if($d->b_active != $d->b_passive) {
 
                     $r  = array();
@@ -127,7 +127,7 @@ class CompareAct extends \App\Pages\Base
 
         }
 
-        if($type==2) {
+        if($type==2) {  //поставщики
             
 
             $bal=0;
