@@ -41,7 +41,7 @@ class Order extends \App\Pages\Base
 
         $this->docform->add(new Date('document_date'))->setDate(time());
 
-        $this->docform->add(new CheckBox('production'));
+
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
@@ -135,7 +135,7 @@ class Order extends \App\Pages\Base
 
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
             $this->OnDelivery($this->docform->delivery);
-            $this->docform->production->setChecked($this->_doc->headerdata['production']);
+
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->salesource->setValue($this->_doc->headerdata['salesource']);
             $this->docform->total->setText($this->_doc->amount);
@@ -199,7 +199,7 @@ class Order extends \App\Pages\Base
                         $this->docform->payamount->setText($basedoc->payamount);
                         $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
                         $this->OnDelivery($this->docform->delivery);
-                        $this->docform->production->setChecked($basedoc->headerdata['production']);
+
                         $this->_tovarlist = $basedoc->unpackDetails('detaildata');
 
 
@@ -369,7 +369,7 @@ class Order extends \App\Pages\Base
         $this->_doc->headerdata['phone'] = $this->docform->phone->getText();
         $this->_doc->headerdata['email'] = $this->docform->email->getText();
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
-        $this->_doc->headerdata['production'] = $this->docform->production->isChecked() ? 1 : 0;
+
 
         $this->_doc->packDetails('detaildata', $this->_tovarlist);
 
