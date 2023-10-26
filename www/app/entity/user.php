@@ -183,7 +183,12 @@ class User extends \ZCL\DB\Entity
      */
     public static function getByLogin($login) {
         $conn = \ZDB\DB::getConnect();
-        return User::getFirst('userlogin = ' . $conn->qstr($login));
+        $user = User::getFirst('userlogin = ' . $conn->qstr($login));
+        if($user == null){
+            throw new  \Exception("Користувача {$login} не знайдено");
+        }            
+
+        return $user;
     }
 
     public static function getByEmail($email) {

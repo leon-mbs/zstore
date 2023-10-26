@@ -1127,10 +1127,7 @@ class Document extends \ZCL\DB\Entity
           'link'=>"<a href=\"{$url}\">{$url}</a>"
         );
     }
-
-
-
-
+ 
 
     /**
     *    возвращает ссылку  на чек в  налоговой
