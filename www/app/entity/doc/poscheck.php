@@ -68,7 +68,7 @@ class POSCheck extends Document
                         "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"] ?? null) > 0 ? $this->headerdata["fiscalnumber"] : false,
                         "exchange"        => H::fasell($this->headerdata["exchange"]),
                         "pos_name"        => $this->headerdata["pos_name"],
-                        "time"            => H::fdt($this->headerdata["time"]),
+                        "time"            => H::fdt($this->headerdata["time"],true),
                         "document_number" => $this->document_number,
                         "total"           => H::fasell($this->amount),
                         "payed"           => H::fasell($pp),
@@ -150,7 +150,7 @@ class POSCheck extends Document
 
 
                         "pos_name"        => $this->headerdata["pos_name"],
-                        "time"            => H::fdt($this->headerdata["time"]),
+                        "time"            => H::fdt($this->headerdata["time"],true),
                         "document_number" => $this->document_number,
                         "total"           => H::fasell($this->amount),
                         "totaldisc"           => $this->headerdata["totaldisc"] > 0 ? H::fasell($this->headerdata["totaldisc"]) : false,

@@ -708,14 +708,14 @@ class Helper
      * @param mixed $date
      * @return mixed
      */
-    public static function fdt($date) {
+    public static function fdt($date,$seconds=false) {
         if ($date > 0) {
             $dateformat = System::getOption("common", 'dateformat');
             if (strlen($dateformat) == 0) {
                 $dateformat = 'd.m.Y';
             }
 
-            return date($dateformat . ' H:i', $date);
+            return  $seconds ? date($dateformat . ' H:i:s', $date)  : date($dateformat . ' H:i', $date) ;
         }
 
         return '';

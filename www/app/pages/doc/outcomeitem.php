@@ -304,6 +304,7 @@ class OutcomeItem extends \App\Pages\Base
 
                         if ($indoc->branch_id == 0) {
                             $indoc->user_id = \App\System::getUser()->user_id;
+                            $indoc->save();                            
                             $indoc->updateStatus(Document::STATE_EXECUTED);
                         }
                         if ($indoc->document_id > 0) {

@@ -1038,7 +1038,12 @@ class PPOHelper
             } else {
                 $cname = $doc->username;
             }
+            return $cname;            
         }
+        $common = \App\System::getOptions("common");
+        if(strlen($common['cashier'])>0) {
+            $cname = $common['cashier'] ;
+        }       
         return $cname;
     }
 
