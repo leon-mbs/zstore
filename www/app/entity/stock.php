@@ -16,7 +16,7 @@ class Stock extends \ZCL\DB\Entity
     }
 
     protected function afterLoad() {
-        if (strlen($this->sdate) > 0) {
+        if (strlen($this->sdate ?? '') > 0) {
             $this->sdate = strtotime($this->sdate);
         }
     }

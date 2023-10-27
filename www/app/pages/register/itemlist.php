@@ -183,7 +183,7 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('snumber', $stock->snumber));
         $row->add(new Label('sdate', ''));
 
-        if (strlen($stock->snumber) > 0 && strlen($stock->sdate) > 0) {
+        if (strlen($stock->snumber ?? '') > 0 && strlen($stock->sdate ?? '') > 0) {
             $row->sdate->setText(H::fd($stock->sdate));
         }
         $row->add(new Label('partion', H::fa($stock->partion)));

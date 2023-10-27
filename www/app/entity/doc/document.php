@@ -866,20 +866,20 @@ class Document extends \ZCL\DB\Entity
         //для поиска по  контексту
         $s = array();
         foreach ($list as $it) {
-            if (strlen($it->itemname) > 0) {
+            if (strlen($it->itemname ?? '') > 0) {
                 $s[] = $it->itemname;
             }
-            if (strlen($it->item_code) > 0) {
+            if (strlen($it->item_code ?? '') > 0) {
                 $s[] = $it->item_code;
             }
-            if (strlen($it->bar_code) > 0) {
+            if (strlen($it->bar_code ?? '') > 0) {
                 $s[] = $it->bar_code;
             }
-            if (strlen($it->service_name) > 0) {
+            if (strlen($it->service_name ?? '') > 0) {
                 $s[] = $it->service_name;
             }
 
-            if (strlen($it->snumber) > 0) {
+            if (strlen($it->snumber ?? '') > 0) {
                 $s[] = $it->snumber;
             }
 
