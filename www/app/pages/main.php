@@ -39,12 +39,12 @@ class Main extends Base
 
         $this->_docstatelist = \App\Entity\Doc\Document::getStateList();
 
-        $this->_tvars['wminqty'] = strpos(System::getUser()->widgets, 'wminqty') !== false;
-        $this->_tvars['wsdate'] = strpos(System::getUser()->widgets, 'wsdate') !== false;
-        $this->_tvars['wrdoc'] = strpos(System::getUser()->widgets, 'wrdoc') !== false;
-        $this->_tvars['wmdoc'] = strpos(System::getUser()->widgets, 'wmdoc') !== false;
-        $this->_tvars['winfo'] = strpos(System::getUser()->widgets, 'winfo') !== false;
-        $this->_tvars['wgraph'] = strpos(System::getUser()->widgets, 'wgraph') !== false;
+        $this->_tvars['wminqty'] = strpos(System::getUser()->widgets ?? '', 'wminqty') !== false;
+        $this->_tvars['wsdate'] = strpos(System::getUser()->widgets ?? '', 'wsdate') !== false;
+        $this->_tvars['wrdoc'] = strpos(System::getUser()->widgets ?? '', 'wrdoc') !== false;
+        $this->_tvars['wmdoc'] = strpos(System::getUser()->widgets ?? '', 'wmdoc') !== false;
+        $this->_tvars['winfo'] = strpos(System::getUser()->widgets ?? '', 'winfo') !== false;
+        $this->_tvars['wgraph'] = strpos(System::getUser()->widgets ?? '', 'wgraph') !== false;
         if ($user->rolename == 'admins') {
             $this->_tvars['wminqty'] = true;
 

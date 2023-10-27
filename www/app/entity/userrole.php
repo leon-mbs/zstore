@@ -26,7 +26,7 @@ class UserRole extends Entity
      *
      */
     protected function afterLoad() {
-        $this->createdon = strtotime($this->createdon);
+     
 
         $acl = @unserialize($this->acl);
         if (!is_array($acl)) {

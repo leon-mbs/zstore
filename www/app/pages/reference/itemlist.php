@@ -208,7 +208,7 @@ class ItemList extends \App\Pages\Base
             $row->hasaction->setAttribute('title', $title)  ;
         }
         $row->add(new ClickLink('shownotes'))->onClick($this, 'shownotesOnClick',true);
-        $row->shownotes->setVisible(strlen($item->description) > 0);
+        $row->shownotes->setVisible(strlen($item->description ?? '') > 0);
         
         
         $row->add(new ClickLink('copy'))->onClick($this, 'copyOnClick');
@@ -954,7 +954,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         $where = "1=1";
         $text = trim($form->searchkey->getText());
         $brand = trim($form->searchbrand->getText());
-        $type = trim($form->searchtype->getValue());
+        $type = trim(''.$form->searchtype->getValue());
         $cat = $form->searchcat->getValue();
 
 

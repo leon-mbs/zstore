@@ -207,7 +207,7 @@ class Users extends \App\Pages\Base
 
     public function branchOnRow($row) {
         $item = $row->getDataItem();
-        $arr = @explode(',', $this->user->aclbranch);
+        $arr = @explode(',', $this->user->aclbranch ?? '');
         if (is_array($arr)) {
             $item->editbr = in_array($item->branch_id, $arr);
         }

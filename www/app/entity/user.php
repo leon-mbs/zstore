@@ -50,8 +50,8 @@ class User extends \ZCL\DB\Entity
      *
      */
     protected function afterLoad() {
-        $this->createdon = strtotime($this->createdon);
-        $this->lastactive = strtotime($this->lastactive);
+        $this->createdon = strtotime($this->createdon ?? '');
+        $this->lastactive = strtotime($this->lastactive ?? '');
 
         //доступы  уровня  роли
         $acl = @unserialize($this->roleacl);
@@ -184,10 +184,7 @@ class User extends \ZCL\DB\Entity
     public static function getByLogin($login) {
         $conn = \ZDB\DB::getConnect();
         $user = User::getFirst('userlogin = ' . $conn->qstr($login));
-        if($user == null){
-            throw new  \Exception("Користувача {$login} не знайдено");
-        }            
-
+  
         return $user;
     }
 

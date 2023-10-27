@@ -56,7 +56,7 @@ class Pos extends \ZCL\DB\Entity
 
         $this->testing = (int)($xml->testing[0]);
         $this->usefisc = (int)($xml->usefisc[0]);
-        if (strlen($this->fiscdocnumber) == 0) {
+        if (strlen(''.$this->fiscdocnumber ) == 0) {
             $this->fiscdocnumber = 1;
         }
         parent::afterLoad();

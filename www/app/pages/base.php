@@ -140,35 +140,35 @@ class Base extends \Zippy\Html\WebPage
 
 
         //доступы к  модулям
-        if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules ?? '', 'shop') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["shop"] = false;
         }
-        if (strpos(System::getUser()->modules, 'note') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules ?? '', 'note') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["note"] = false;
         }
-        if (strpos(System::getUser()->modules, 'issue') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules ?? '', 'issue') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["issue"] = false;
         }
-        if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules ?? '', 'ocstore') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["ocstore"] = false;
         }
-        if (strpos(System::getUser()->modules, 'woocomerce') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules ?? '', 'woocomerce') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["woocomerce"] = false;
         }
 
-        if (strpos(System::getUser()->modules, 'ppo') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules ?? '', 'ppo') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["ppo"] = false;
         }
-        if (strpos(System::getUser()->modules, 'np') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules ?? '', 'np') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["np"] = false;
         }
-        if (strpos(System::getUser()->modules, 'promua') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules ?? '', 'promua') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["promua"] = false;
         }
-        if (strpos(System::getUser()->modules, 'paperless') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules ?? '', 'paperless') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["paperless"] = false;
         }
-        if (strpos(System::getUser()->modules, 'checkbox') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules ?? '', 'checkbox') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["checkbox"] = false;
         }
 
@@ -326,7 +326,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars['notcnt'] = \App\Entity\Notify::isNotify($user->user_id);
         $this->_tvars['taskcnt'] = \App\Entity\Event::isNotClosedTask($user->user_id);
         $this->_tvars['alerterror'] = "";
-        if (strlen(System::getErrorMsgTopPage()) > 0) {
+        if (strlen(System::getErrorMsgTopPage() ?? '') > 0) {
             $this->_tvars['alerterror'] = System::getErrorMsgTopPage();
 
             $this->goAnkor('topankor');
@@ -338,18 +338,18 @@ class Base extends \Zippy\Html\WebPage
     protected function afterRender() {
 
         $user = System::getUser();
-        if (strlen(System::getErrorMsg()) > 0) {
+        if (strlen(System::getErrorMsg() ?? '') > 0) {
 
             $this->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{'timeOut':'8000'})        ", true);
         }
 
-        if (strlen(System::getWarnMsg()) > 0) {
+        if (strlen(System::getWarnMsg() ?? '') > 0) {
             $this->addJavaScript("toastr.warning('" . System::getWarnMsg() . "','',{'timeOut':'4000'})        ", true);
         }
-        if (strlen(System::getSuccesMsg()) > 0) {
+        if (strlen(System::getSuccesMsg() ?? '') > 0) {
             $this->addJavaScript("toastr.success('" . System::getSuccesMsg() . "','',{'timeOut':'2000'})        ", true);
         }
-        if (strlen(System::getInfoMsg()) > 0) {
+        if (strlen(System::getInfoMsg() ?? '') > 0) {
             $this->addJavaScript("toastr.info('" . System::getInfoMsg() . "','',{'timeOut':'3000'})        ", true);
         }
 

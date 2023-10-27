@@ -725,7 +725,7 @@ class Item extends \ZCL\DB\Entity
         $res = $conn->Execute($sql);
         $list = array();
         foreach ($res as $v) {
-            if (strlen($v['manufacturer']) > 0) {
+            if (strlen($v['manufacturer'] ?? '') > 0) {
                 if ($nametoindex) {
                     $list[$v['manufacturer']] = $v['manufacturer'];
                 } else {
