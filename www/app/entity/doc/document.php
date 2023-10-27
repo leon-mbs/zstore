@@ -105,7 +105,7 @@ class Document extends \ZCL\DB\Entity
 
     protected function afterLoad() {
         $this->document_date = strtotime($this->document_date);
-        $this->lastupdate = strtotime($this->lastupdate);
+        $this->lastupdate = strtotime($this->lastupdate ?? '');
 
         $this->unpackData();
     }
@@ -181,7 +181,7 @@ class Document extends \ZCL\DB\Entity
     private function unpackData() {
         global $logger;
         $this->headerdata = array();
-        if (strlen($this->content) == 0) {
+        if (strlen($this->content ?? '') == 0) {
             return;
         }
 
@@ -324,7 +324,7 @@ class Document extends \ZCL\DB\Entity
         if(strlen($common['cashier'])>0) {
             $doc->headerdata['cashier'] = $common['cashier'] ;
         }
-        $hash = md5(rand(1, 1000000), false);
+        $hash = md5(''.rand(1, 1000000), false);
         $hash = base64_encode(substr($hash, 0, 24));
         $doc->headerdata['hash'] = strtolower($hash)  ;
 
@@ -336,7 +336,7 @@ class Document extends \ZCL\DB\Entity
      */
     public function cast(): Document {
 
-        if (strlen($this->meta_name) == 0) {
+        if (strlen($this->meta_name ?? '') == 0) {
             $metarow = Helper::getMetaType($this->meta_id);
             $this->meta_name = $metarow['meta_name'];
         }

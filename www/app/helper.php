@@ -82,7 +82,7 @@ class Helper
         $user = System::getUser();
         $arraymenu = array("groups" => array(), "items" => array());
 
-        $aclview = explode(',', $user->aclview);
+        $aclview = explode(',', $user->aclview ?? '');
         foreach ($rows as $meta_object) {
             $meta_id = $meta_object['meta_id'];
 
@@ -152,7 +152,7 @@ class Helper
         $rows = $conn->Execute("select *  from  metadata  where disabled <> 1 and  meta_id in ({$smartmenu})   ");
 
         $textmenu = "";
-        $aclview = explode(',', $user->aclview);
+        $aclview = explode(',', $user->aclview ?? '');
 
         foreach ($rows as $item) {
 
@@ -639,7 +639,7 @@ class Helper
      * @return mixed
      */
     public static function fa($am) {
-        if (strlen($am) == 0) {
+        if (strlen(''.$am ) == 0) {
             return '';
         }
         if(is_numeric($am) && abs($am)<0.005) {

@@ -113,13 +113,13 @@ class Application extends \Zippy\WebApplication
         );
 
         if (strlen($pages[$arr[0]]) > 0) {
-            if (strlen($arr[2]) > 0) {
+            if (strlen($arr[2] ?? '') > 0) {
                 self::$app->LoadPage($pages[$arr[0]], $arr[1], $arr[2]);
             } else {
-                if (strlen($arr[1]) > 0) {
+                if (strlen($arr[1]?? '') > 0) {
                     self::$app->LoadPage($pages[$arr[0]], $arr[1]);
                 } else {
-                    if (strlen($arr[0]) > 0) {
+                    if (strlen($arr[0]?? '') > 0) {
                         self::$app->LoadPage($pages[$arr[0]]);
                     }
                 }
