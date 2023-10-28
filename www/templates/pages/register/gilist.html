@@ -12,36 +12,66 @@
 
 
                         <div class="navbar nav">
-                            <form zippy="filter" class="form-inline ">
+                            <form zippy="filter" class="row   g-2 align-items-center">
+                              <div class="col-auto">  
+                                  <div class=" row no-gutters"> 
 
+                                   <label class="col-auto mt-2"   for="searchnumber"> № </label>
+                                 <div class="col-auto">
 
-                                <label for="searchnumber"> № </label>
-
-                                <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
+                                     <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
+                                 </div>
+                                </div>
+                               </div>
+                               <div class="col-auto">  
+                                  <div class=" row no-gutters"> 
+                                <label class="col-auto mt-2"   for="salesource">Статус</label>
+                               <div class="col-auto">
 
                                 <select class="form-control mr-2" zippy="status">
                                 </select>
+                                 </div>
+                                </div>
+                               </div>
+                               <div class="col-auto">  
+                                  <div class=" row no-gutters"> 
 
-                                <label for="searchcomp">Продавець</label>
-                                <select zippy="searchcomp" class="form-control mr-sm-2">
+                                <label class="col-auto mt-2"   for="searchcomp">Продавець</label>
+                                  <div class="col-auto">
+                                  <select zippy="searchcomp" class="form-control mr-sm-2">
                                     <option value="0">Не обрано</option>
                                 </select>
-                                        
-                               <label for="fstore"> склад </label>
-                                <select class="form-control mr-2" zippy="fstore">
+                                 </div>
+                                </div>
+                               </div>
+                                <div class="col-auto">  
+                                  <div class=" row no-gutters"> 
+                                      
+                                    <label class="col-auto mt-2"   for="fstore"> склад </label>
+                                 <div class="col-auto">
+                                 <select class="form-control mr-2" zippy="fstore">
                                     <option value="0">Не обрано</option>
                                 </select>
-                                
-                                <label for="salesource">Джерело продаж</label>
-                                <select class="form-control mr-2" zippy="salesource">
+                                 </div>
+                                </div>
+                               </div>
+                               <div class="col-auto">  
+                                  <div class=" row no-gutters"> 
+                               
+                                <label class="col-auto mt-2"   for="salesource">Джерело продаж</label>
+                                  <div class="col-auto">
+                                  <select class="form-control mr-2" zippy="salesource">
                                     <option value="0">Не обрано</option>
-                                </select>
-
-                                <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Пошук по контенту"
-                                       ]>
-
-                                <input type="submit" class="  btn btn-outline-success  " value="ОК">
-
+                                 </select>
+                                 </div>
+                                </div>
+                               </div>
+                                <div class="col-auto"> 
+                                   <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Пошук по контенту">
+                                  </div>
+                                <div class="col-auto">
+                                  <input type="submit" class="  btn btn-outline-success  " value="ОК">
+                               </div>
                             </form>
                         </div>
                         <a href="/index.php?p=App/Pages/Doc/GoodsIssue" class="btn btn-info mt-2 mb-3">Створити ВН</a>&nbsp;

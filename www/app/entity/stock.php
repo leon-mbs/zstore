@@ -16,7 +16,7 @@ class Stock extends \ZCL\DB\Entity
     }
 
     protected function afterLoad() {
-        if (strlen($this->sdate) > 0) {
+        if (strlen($this->sdate ?? '') > 0) {
             $this->sdate = strtotime($this->sdate);
         }
     }
@@ -132,7 +132,7 @@ class Stock extends \ZCL\DB\Entity
     public static function pickup($store_id, $item) {
         $res = array();
         $where = "store_id = {$store_id} and item_id = {$item->item_id} and qty > 0   ";
-        if (strlen($item->snumber) > 0) {
+        if (strlen($item->snumber) > 0 && $item->useserial == 1 ) {
             $where .= " and snumber=" . Stock::qstr($item->snumber);
         }
 

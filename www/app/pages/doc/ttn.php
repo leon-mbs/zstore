@@ -177,9 +177,7 @@ class TTN extends \App\Pages\Base
                         $this->docform->ship_address->setText($basedoc->headerdata['ship_address']);
                         $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
 
-                        if ($basedoc->headerdata['production'] == 1) {
-                            $this->docform->nostore->setChecked(true);
-                        }
+ 
                         $notfound = array();
                         $order = $basedoc->cast();
 
@@ -285,7 +283,8 @@ class TTN extends \App\Pages\Base
                             $k = ($basedoc->amount - $basedoc->headerdata["paydisc"]) / $basedoc->amount;
                         }
                         $this->_doc->headerdata['prepaid']  = $basedoc->payamount ;
-
+                        $this->docform->nostore->setChecked(true);
+  
 
                         foreach ($basedoc->unpackDetails('detaildata') as $item) {
                             // $item->price = $item->getPrice($basedoc->headerdata['pricetype']);
@@ -308,6 +307,7 @@ class TTN extends \App\Pages\Base
                         $this->docform->salesource->setValue($basedoc->headerdata['salesource']);
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
+                        $this->docform->nostore->setChecked(true);
 
                         $this->docform->firm->setValue($basedoc->firm_id);
 

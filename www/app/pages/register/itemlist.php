@@ -183,7 +183,7 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('snumber', $stock->snumber));
         $row->add(new Label('sdate', ''));
 
-        if (strlen($stock->snumber) > 0 && strlen($stock->sdate) > 0) {
+        if (strlen($stock->snumber ?? '') > 0 && strlen($stock->sdate ?? '') > 0) {
             $row->sdate->setText(H::fd($stock->sdate));
         }
         $row->add(new Label('partion', H::fa($stock->partion)));
@@ -241,7 +241,7 @@ class ItemList extends \App\Pages\Base
         $this->detailpanel->setVisible(true);
         $this->detailpanel->itemdetname->setText($this->_item->itemname);
         $this->detailpanel->stocklist->Reload();
-
+       /*
         $rows = $this->detailpanel->stocklist->getDataRows();
         $st = array();
         foreach ($rows as $row) {
@@ -252,7 +252,7 @@ class ItemList extends \App\Pages\Base
             }
             $name = $name . ', ' . H::fa($stock->partion);
             $st[$stock->stock_id] = $name;
-        }
+        }  */
     }
 
     public function oncsv($sender) {
@@ -487,12 +487,25 @@ class DetailDataSource implements \Zippy\Interfaces\DataSource
 
         $form = $this->page->filter;
         $where = "item_id = {$this->page->_item->item_id} and   qty <> 0   ";
+        
+        
+        $cstr = \App\Acl::getStoreBranchConstraint();
+        if (strlen($cstr) > 0) {
+            $cstr = "  and  store_id in ({$cstr})      ";
+        }
+        if(\App\System::getUser()->showotherstores) {
+            $cstr ="";
+
+        }          
+        $where = $where . $cstr ;
         $store = $form->searchstore->getValue();
         if ($store > 0) {
             $where = $where . " and   store_id={$store}  ";
         }
 
 
+      
+        
         return $where;
     }
 

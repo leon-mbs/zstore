@@ -177,18 +177,15 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
 
         $this->docpanel->editdetail->add(new Label('qtystock'));
+        $this->docpanel->editdetail->add(new Label('qtystockex'));
         $this->docpanel->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
         $this->docpanel->editdetail->add(new ClickLink('opencatpan', $this, 'onOpenCatPan'));
-
-
-
+ 
         $this->docpanel->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->docpanel->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
 
         $this->docpanel->add(new \App\Widgets\ItemSel('wselitem', $this, 'onSelectItem'))->setVisible(false);
-
-
-
+ 
 
         $this->docpanel->add(new Form('editserdetail'))->setVisible(false);
         $this->docpanel->editserdetail->add(new TextInput('editserquantity'))->setText("1");
@@ -211,7 +208,20 @@ class ARMPos extends \App\Pages\Base
         $this->add(new Label('qrimg')) ;
 
         $this->_tvars['simplemode']  = false;
+        $common = System::getOptions("common");
 
+        $this->_tvars["colspan"] = 6; 
+        if($common['usesnumber'] >0) {
+            $this->_tvars["colspan"] = 7;
+        }
+        if($common['usesnumber'] ==2) {
+            $this->_tvars["colspan"] = 8;
+        }
+         
+        if(H::getKeyVal('issimple_'.System::getUser()->user_id)=="tosimple"){
+           $this->onModeOn($this->docpanel->navbar->tosimple); 
+        }
+        
     }
 
     public function onModeOn($sender) {
@@ -223,7 +233,7 @@ class ARMPos extends \App\Pages\Base
             $this->_tvars["usesnumber"] = $options['usesnumber'] == 1;
 
         }
-
+        H::setKeyVal('issimple_'.System::getUser()->user_id,$sender->id);
     }
 
     public function onCheckList($sender) {
@@ -577,8 +587,10 @@ class ARMPos extends \App\Pages\Base
 
         $store = $this->form1->store->getValue();
         $qty = $tovar->getQuantity($store);
+        $qtyex = $tovar->getQuantity() - $qty;
 
         $this->docpanel->editdetail->qtystock->setText(H::fqty($qty));
+        $this->docpanel->editdetail->qtystockex->setText(H::fqty($qtyex));
 
         $this->docpanel->form2->setVisible(false);
 
@@ -626,6 +638,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->editdetail->editquantity->setText("1");
         $this->docpanel->editdetail->editprice->setText("0");
         $this->docpanel->editdetail->qtystock->setText("");
+        $this->docpanel->editdetail->qtystockex->setText("");
         $this->docpanel->form2->setVisible(false);
         $this->_rowid = -1;
         $this->docpanel->navbar->setVisible(false);
@@ -718,7 +731,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->editdetail->editquantity->setText("1");
 
         $this->docpanel->editdetail->editprice->setText("");
-        $this->docpanel->editdetail->qtystock->setText("");
+        $this->docpanel->editdetail->qtystockex->setText("");
 
         if($this->_editrow) {
             $this->docpanel->editdetail->setVisible(false);
@@ -787,7 +800,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->editdetail->editquantity->setText("1");
 
         $this->docpanel->editdetail->editprice->setText("");
-        $this->docpanel->editdetail->qtystock->setText("");
+        $this->docpanel->editdetail->qtystockex->setText("");
         $this->docpanel->navbar->setVisible(true);
 
     }
@@ -819,7 +832,7 @@ class ARMPos extends \App\Pages\Base
         $disc = 0;
 
         foreach ($this->_itemlist as $item) {
-            $item->amount = $item->price * $item->quantity;
+            $item->amount = H::fa($item->price * $item->quantity);
             if($item->disc >0) {
                 //  $disc += ($item->quantity * ($item->pureprice - $item->price) );
             }
@@ -827,7 +840,7 @@ class ARMPos extends \App\Pages\Base
             $total = $total + $item->amount;
         }
         foreach ($this->_serlist as $item) {
-            $item->amount = $item->price * $item->quantity;
+            $item->amount = H::fa($item->price * $item->quantity);
             if($item->disc >0) {
                 // $disc += ($item->quantity * ($item->pureprice - $item->price) );
             }
@@ -857,8 +870,11 @@ class ARMPos extends \App\Pages\Base
          ));
 
         $qty = $item->getQuantity($store);
+        $qtyex = $item->getQuantity() - $qty;
 
         $this->docpanel->editdetail->qtystock->setText(H::fqty($qty));
+        $this->docpanel->editdetail->qtystockex->setText( H::fqty($qtyex));
+        
         $this->docpanel->editdetail->editprice->setText($price);
         if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
 

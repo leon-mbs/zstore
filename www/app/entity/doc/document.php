@@ -26,7 +26,7 @@ class Document extends \ZCL\DB\Entity
     public const STATE_SHIFTED     = 16; // отложен
     public const STATE_FAIL        = 17; // Аннулирован
     public const STATE_FINISHED    = 18; // Закончен
-    public const STATE_APPROVED    = 19;      //  Готов к выполнению
+    public const STATE_APPROVED    = 19;      //  Утвержден
     public const STATE_READYTOSHIP = 20; // готов к отправке
     public const STATE_WP          = 21; // ждет  оплату
     public const STATE_PAYED       = 22; // Оплачен
@@ -92,10 +92,7 @@ class Document extends \ZCL\DB\Entity
         $this->detaildata = array();
         $this->headerdata['contract_id'] = 0;
 
-        $hash = md5(rand(1, 1000000), false);
-        $hash = base64_encode(substr($hash, 0, 24));
-        $this->headerdata['hash'] = strtolower($hash)  ;
-
+        $this->headerdata['_state_before_approve_'] = '';
     }
 
     /**
@@ -108,7 +105,7 @@ class Document extends \ZCL\DB\Entity
 
     protected function afterLoad() {
         $this->document_date = strtotime($this->document_date);
-        $this->lastupdate = strtotime($this->lastupdate);
+        $this->lastupdate = strtotime($this->lastupdate ?? '');
 
         $this->unpackData();
     }
@@ -184,7 +181,7 @@ class Document extends \ZCL\DB\Entity
     private function unpackData() {
         global $logger;
         $this->headerdata = array();
-        if (strlen($this->content) == 0) {
+        if (strlen($this->content ?? '') == 0) {
             return;
         }
 
@@ -327,6 +324,9 @@ class Document extends \ZCL\DB\Entity
         if(strlen($common['cashier'])>0) {
             $doc->headerdata['cashier'] = $common['cashier'] ;
         }
+        $hash = md5(''.rand(1, 1000000), false);
+        $hash = base64_encode(substr($hash, 0, 24));
+        $doc->headerdata['hash'] = strtolower($hash)  ;
 
         return $doc;
     }
@@ -336,7 +336,7 @@ class Document extends \ZCL\DB\Entity
      */
     public function cast(): Document {
 
-        if (strlen($this->meta_name) == 0) {
+        if (strlen($this->meta_name ?? '') == 0) {
             $metarow = Helper::getMetaType($this->meta_id);
             $this->meta_name = $metarow['meta_name'];
         }
@@ -362,17 +362,19 @@ class Document extends \ZCL\DB\Entity
         //если нет права  выполнять
         if ($state >= self::STATE_EXECUTED && \App\Acl::checkExeDoc($this, false, false) == false) {
 
-            $this->headerdata['_state_before_approve_'] = $state;  //целевой статус
-            if ($state == self::STATE_WA) {   //если на утверждение   то  ждем  утверждения
-                $this->headerdata['_state_before_approve_'] = self::STATE_APPROVED;
-            }
+            $this->headerdata['_state_before_approve_'] .= ( ','. $state);  //целевой статус
+  
 
             $state = self::STATE_WA;   //переводим на   ожидание  утверждения
+            \App\System::setInfoMsg('Очікує затвердження') ;
+          
+            
         } else {
             if ($state == self::STATE_CANCELED) {
                 if($onlystate == false) {
                     $this->Cancel();
                 }
+                $this->headerdata['_state_before_approve_'] = '';                
             } else {
                 if ($state == self::STATE_EXECUTED) {
                     if($onlystate == false) {
@@ -386,7 +388,9 @@ class Document extends \ZCL\DB\Entity
 
         $oldstate = $this->state;
         $this->state = $state;
-        $this->insertLog($state);
+        if($state != $oldstate ) {
+            $this->insertLog($state);
+        }
 
 
         $this->priority = $this->getPriorytyByState($this->state) ;
@@ -495,7 +499,7 @@ class Document extends \ZCL\DB\Entity
             case Document::STATE_CLOSED:
                 return "Закритий";
             case Document::STATE_APPROVED:
-                return "Готовий до виконання";
+                return "Затверджений";
             case Document::STATE_DELETED:
                 return "Видалений";
 
@@ -859,23 +863,23 @@ class Document extends \ZCL\DB\Entity
     public function packDetails($dataname, $list) {
         $data = base64_encode(serialize($list));
         $this->headerdata[$dataname] = $data;
-        //для поиска
+        //для поиска по  контексту
         $s = array();
         foreach ($list as $it) {
-            if (strlen($it->itemname) > 0) {
+            if (strlen($it->itemname ?? '') > 0) {
                 $s[] = $it->itemname;
             }
-            if (strlen($it->item_code) > 0) {
+            if (strlen($it->item_code ?? '') > 0) {
                 $s[] = $it->item_code;
             }
-            if (strlen($it->bar_code) > 0) {
+            if (strlen($it->bar_code ?? '') > 0) {
                 $s[] = $it->bar_code;
             }
-            if (strlen($it->service_name) > 0) {
+            if (strlen($it->service_name ?? '') > 0) {
                 $s[] = $it->service_name;
             }
 
-            if (strlen($it->snumber) > 0) {
+            if (strlen($it->snumber ?? '') > 0) {
                 $s[] = $it->snumber;
             }
 
@@ -1123,10 +1127,7 @@ class Document extends \ZCL\DB\Entity
           'link'=>"<a href=\"{$url}\">{$url}</a>"
         );
     }
-
-
-
-
+ 
 
     /**
     *    возвращает ссылку  на чек в  налоговой

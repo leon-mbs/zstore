@@ -58,6 +58,7 @@ class SerList extends \App\Pages\Base
         $this->statuspan->add(new Form('statusform'));
 
         $this->statuspan->statusform->add(new SubmitButton('binvoice'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bwarranty'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bfin'))->onClick($this, 'statusOnSubmit');
 
         $this->statuspan->statusform->add(new SubmitButton('binproc'))->onClick($this, 'statusOnSubmit');
@@ -85,6 +86,7 @@ class SerList extends \App\Pages\Base
         $this->editpan->iform->iitem->onChange($this, 'OnChangeItem', true);
         $this->editpan->iform->add(new TextInput('iqty'));
         $this->editpan->iform->add(new TextInput('iprice'));
+        $this->editpan->iform->add(new TextInput('isn'));
         $this->editpan->iform->add(new SubmitButton('isubmit'))->onClick($this, 'saveItem');
 
 
@@ -155,6 +157,10 @@ class SerList extends \App\Pages\Base
             }
             App::Redirect("\\App\\Pages\\Doc\\Invoice", 0, $this->_doc->document_id);
         }
+        if ($sender->id == "bwarranty") {
+ 
+            App::Redirect("\\App\\Pages\\Doc\\Warranty", 0, $this->_doc->document_id);
+        }
         if ($sender->id == "bref") {
             if ($gi || $task) {
 
@@ -195,6 +201,7 @@ class SerList extends \App\Pages\Base
         //новый
         if ($state < Document::STATE_EXECUTED) {
             $this->statuspan->statusform->binproc->setVisible(true);
+            $this->statuspan->statusform->bwarranty->setVisible(true);
 
             $this->statuspan->statusform->binvoice->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
@@ -208,6 +215,7 @@ class SerList extends \App\Pages\Base
 
             $this->statuspan->statusform->binproc->setVisible(false);
 
+            $this->statuspan->statusform->bwarranty->setVisible(true);
             $this->statuspan->statusform->binvoice->setVisible(true);
             $this->statuspan->statusform->bref->setVisible(true);
             $this->statuspan->statusform->btask->setVisible(true);
@@ -219,6 +227,7 @@ class SerList extends \App\Pages\Base
 
             $this->statuspan->statusform->binproc->setVisible(false);
 
+            $this->statuspan->statusform->bwarranty->setVisible(true);
             $this->statuspan->statusform->binvoice->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
@@ -229,6 +238,7 @@ class SerList extends \App\Pages\Base
 
             $this->statuspan->statusform->binproc->setVisible(false);
 
+            $this->statuspan->statusform->bwarranty->setVisible(false);
             $this->statuspan->statusform->binvoice->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
@@ -248,6 +258,7 @@ class SerList extends \App\Pages\Base
         if ($state == Document::STATE_CLOSED) {
             $this->statuspan->statusform->binproc->setVisible(false);
 
+            $this->statuspan->statusform->bwarranty->setVisible(false);
             $this->statuspan->statusform->binvoice->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
@@ -321,7 +332,7 @@ class SerList extends \App\Pages\Base
     public function ilistOnRow($row) {
         $item = $row->getDataItem();
         $row->add(new Label('iname', $item->itemname));
-        $row->add(new Label('icode', $item->item_code));
+        $row->add(new Label('icode', $item->item_code . ( strlen($item->snumber) >0 ? ' с/н: '. $item->snumber :'')  ));
         $row->add(new Label('iquantity', H::fqty($item->quantity)));
         $row->add(new Label('iprice', H::fa($item->price)));
         $row->add(new Label('iamount', H::fa($item->price * $item->quantity)));
@@ -439,24 +450,51 @@ class SerList extends \App\Pages\Base
     public function saveItem($sender) {
         $id = intval($this->editpan->iform->iitem->getKey());
 
+        $snumber  = $this->editpan->iform->isn->getText();
         $qty  = floatval($this->editpan->iform->iqty->getText());
         $price  = floatval($this->editpan->iform->iprice->getText());
         if($id ==0 || $qty==0 || $price==0) {
             $this->setError('Невiрнi данi')  ;
             return;
         }
+ 
+        $common = System::getOptions("common");
+        
         $item = Item::load($id) ;
         $item->quantity = $qty;
+        $item->snumber = $snumber;
 
         $item->pureprice = $item->getPurePrice();
         $item->price = $price;
         if($item->pureprice > $item->price) {
             $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;
         }
+         
+        if($common['usesnumber'] > 0 && $item->useserial == 1 ) {
+            
+            if (strlen($item->snumber) == 0  ) {
 
+                $this->setError("Потрібен серійний номер");
+                return;
+            }
+            
+            $store_id = $this->_doc->headerdata['store'];
+
+            $slist = $item->getSerials($store_id);
+            
+            if (in_array($snumber, $slist) == false) {
+
+                $this->setError('Невірний серійний номер  ');
+                return;
+            }  
+      
+        }        
+         
+        
         $this->_itemlist[]=$item;
         $this->editpan->iform->iitem->setKey(0) ;
         $this->editpan->iform->iitem->setText('') ;
+        $this->editpan->iform->isn->setText('') ;
 
         $this->editpan->iform->iqty->setText('1') ;
         $this->editpan->iform->iprice->setText('') ;

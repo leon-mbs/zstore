@@ -140,7 +140,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new DropDownChoice('editprintqty', array(), 1));
 
 
-        $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
+        $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'Save');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
         $this->add(new Panel('setpanel'))->setVisible(false);
@@ -192,8 +192,6 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('price4', $item->price4));
         $row->add(new Label('price5', $item->price5));
 
-        $row->add(new Label('hasnotes'))->setVisible(strlen($item->description) > 0);
-        $row->hasnotes->setAttribute('title', htmlspecialchars_decode($item->description));
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
 
         $row->add(new Label('cell', $item->cell));
@@ -209,6 +207,10 @@ class ItemList extends \App\Pages\Base
             }
             $row->hasaction->setAttribute('title', $title)  ;
         }
+        $row->add(new ClickLink('shownotes'))->onClick($this, 'shownotesOnClick',true);
+        $row->shownotes->setVisible(strlen($item->description ?? '') > 0);
+        
+        
         $row->add(new ClickLink('copy'))->onClick($this, 'copyOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
@@ -239,7 +241,7 @@ class ItemList extends \App\Pages\Base
         $this->editOnClick($sender);
         $this->_copy = $this->_item->item_id;
         $this->_item->item_id = 0;
-
+        $this->_item->extdata = "";
         $this->itemdetail->editname->setText($this->_item->itemname.'_copy');
 
         $this->itemdetail->editcode->setText('');
@@ -348,7 +350,7 @@ class ItemList extends \App\Pages\Base
         $this->itemtable->listform->itemlist->Reload();
     }
 
-    public function OnSubmit($sender) {
+    public function Save($sender) {
         if (false == \App\ACL::checkEditRef('ItemList')) {
             return;
         }
@@ -463,18 +465,20 @@ class ItemList extends \App\Pages\Base
 
         $file = $this->itemdetail->editaddfile->getFile();
         if (strlen($file["tmp_name"]) > 0) {
-            $imagedata = getimagesize($file["tmp_name"]);
+            
+            if (filesize($file["tmp_name"])  > pow(2,20)) {
 
+                    $this->setError('Розмір файлу більше 1M');
+                    return;
+            }
+           
+            $imagedata = getimagesize($file["tmp_name"]);
+ 
             if (preg_match('/(png|jpeg)$/', $imagedata['mime']) == 0) {
                 $this->setError('Невірний формат зображення');
                 return;
             }
 
-            if ($imagedata[0] * $imagedata[1] > 10000000) {
-
-                //   $this->setError('Занадто великий розмір зображення');
-                //    return;
-            }
 
             $image = new \App\Entity\Image();
             $image->content = file_get_contents($file['tmp_name']);
@@ -923,7 +927,17 @@ class ItemList extends \App\Pages\Base
 
     }
 
-
+    public function  shownotesOnClick($sender){
+        $item = $sender->getOwner()->getDataItem();
+        $desc = str_replace("'","`",$item->description);
+        $desc = str_replace("\"","`",$desc);
+      //  $desc = nl2br ($desc);        
+        $desc = str_replace ("\n","",$desc);
+        $desc = str_replace ("\r","",$desc);
+        
+        $this->updateAjax([],"$('#idesc').modal('show'); $('#idesccontent').html('{$desc}'); ")  ;
+        
+    }
 }
 
 class ItemDataSource implements \Zippy\Interfaces\DataSource
@@ -940,7 +954,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         $where = "1=1";
         $text = trim($form->searchkey->getText());
         $brand = trim($form->searchbrand->getText());
-        $type = trim($form->searchtype->getValue());
+        $type = trim(''.$form->searchtype->getValue());
         $cat = $form->searchcat->getValue();
 
 

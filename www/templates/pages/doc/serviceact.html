@@ -7,9 +7,9 @@
      {{={| |}=}}   
        <h3> Замовлення (послуги) 
        <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover"
-                   data-html="true" data-placement="bottom" data-content="Документ введення робіт або послуг, які потрібні замовнику.
+                     data-placement="bottom" data-content="Документ введення робіт або послуг, які потрібні замовнику.
                    На підставі замовленя може бути створений 'Наряд' на виконання робіт. Робота з документами типу 'Акт' проводиться в журналі 'Послуги'. 
-                   <br><br>Є можливість друку квитанцій на вузькому (чековому) принтері."></i>
+                   Є можливість друку квитанцій на вузькому (чековому) принтері."></i>
        </h3>
        <div class="row" id="vapp">
             <div v-show="showdoc"  class="col-12">
@@ -114,6 +114,7 @@
                                 <th>Назва</th>
                                 <th> </th>
                                 <th> </th>
+                                <th> </th>
                                 <th class="text-right">Кiл.</th>
 
                                 <th class="text-right"><i class="fa fa-gift"></i>,%</th>
@@ -126,6 +127,7 @@
                             <tr  v-for="(service, index)  in services" >
                                 <td >{{service.service_name}}</td>
                                 <td >{{service.category}}</td>
+                                <td ></td>
                                 <td >{{service.desc}}</td>
                                 <td  class="text-right"> {{service.quantity}}</td>
 
@@ -141,6 +143,7 @@
                              <tr v-for="(item, index)   in items">
                                 <td   >{{item.itemname}}</td>
                                 <td   >{{item.item_code}}</td>
+                                <td   >{{item.snumber}}</td>
                                 <td   > </td>
 
                                 <td  class="text-right">{{item.quantity}}</td>
@@ -156,22 +159,22 @@
                             </tr>                 
                         
                             <tr style="font-weight: bolder;">
-                                <td colspan="6" class="text-right">На суму:</td>
+                                <td colspan="7" class="text-right">На суму:</td>
                                 <td   class="text-right">{{total}}</td>
                                 <td></td>
                             </tr>                    
                            <tr style="font-weight: bolder;">
-                                <td colspan="6" class="text-right">Знижка:</td>
+                                <td colspan="7" class="text-right">Знижка:</td>
                                 <td  class="text-right"><input pattern="[0-9,\.]+" class="form-control" v-model="totaldisc" style="width:100px;" > </td>
                                 <td> </td>
                             </tr>
                            <tr v-show="this.customerinfo.bonus >0"  style="font-weight: bolder;">
-                                <td colspan="6" class="text-right"><span data-label="bonus">Бонуси:</span></td>
+                                <td colspan="7" class="text-right"><span data-label="bonus">Бонуси:</span></td>
                                 <td   class="text-right"><input pattern="[0-9,\.]+" class="form-control" v-model="bonus" style="width:100px;" ></td>
                                 <td> </td>
                             </tr>                                 
                             <tr style="font-weight: bolder;">
-                                <td colspan="6" class="text-right">До сплати:</td>
+                                <td colspan="7" class="text-right">До сплати:</td>
                                 <td   class="text-right"> {{payamount}}</td>
                                 <td> </td>
                             </tr>    
@@ -260,10 +263,15 @@
                                Наявність: <span  >{{qtystock}}</span>
                  
                             </div>
-                          
+                             
+                            <div v-show="usesnumber==3" class="form-group">
+                                <label for="edititemsnumber">Серiйний номер </label>
+                                <input  class="form-control " v-model="edititemsnumber" >
+                            </div>
+                        
                             <div class="form-group">
                                 <label for="edititemqty">Кiлькiсть </label>
-                                <input v-on:keyup="onchangeqty" class="form-control " v-model="edititemquantity">
+                                <input v-on:keyup="onchangeqty" class="form-control " v-model="edititemquantity" style="width: 100px;">
                             </div>
 
                             <div class="form-group">
@@ -408,6 +416,7 @@
              editservicequantity:0,
              editserviceprice:0,
              editservicedesc:'',
+             edititemsnumber:'',
              editedindex:-1,
              qtystock:0,
       
@@ -416,6 +425,8 @@
              bonus:0,
              payment:0,
              payed:0,
+             usesnumber:0,
+        
            
              
              loadedservice:{},
@@ -487,6 +498,7 @@
                     this.item=0
                     this.edititemquantity=1
                     this.edititemprice=0 
+                    this.edititemsnumber='' 
                     this.editedindex = -1
       
                     this.$refs.edititem.query = "";  
@@ -500,6 +512,7 @@
     
                     this.item=item.item_id
                     this.edititemquantity=item.quantity
+                    this.edititemsnumber=item.snumber
                     this.edititemprice=item.price 
                     this.$refs.edititem.query = item.itemname;  
                     this.hititem(item.item_id)
@@ -521,10 +534,23 @@
                          
                         this.items[this.editedindex].item_id  =  this.item  
                     }
+                    if(this.usesnumber == 3 && this.loadeditem.useserial ==1  )  {  //новый
 
+                       if( this.edititemsnumber =='') {
+                          toastr.error('Не заданий серiйний номер')
+                          return;
+                       }
+                       if( this.loadeditem.serials.includes(this.edititemsnumber)==false) {
+                          toastr.error('Невiрний серiйний номер')
+                          return;
+                       }
+                         
+                        
+                    }
                      
                     this.items[this.editedindex].itemname = this.loadeditem.itemname 
                     this.items[this.editedindex].item_code = this.loadeditem.item_code 
+                    this.items[this.editedindex].snumber = this.edititemsnumber 
                     this.items[this.editedindex].disc = this.loadeditem.disc > 0 ? 0- this.loadeditem.disc :"" 
                     this.items[this.editedindex].pureprice = this.loadeditem.pureprice 
                     this.items[this.editedindex].price = fa(this.edititemprice) 
@@ -673,6 +699,7 @@
                    data.name = this.ncustname
                    data.email = this.nemail
                    data.phone = this.nphone
+                   data.type = 1 //покупатель
                    
                    callPM('vSaveNewcust',[ ],  data,(data)=> 
                    {
@@ -730,7 +757,7 @@
                   }
                   callPM('vLoadItem',[id ], data,(data)=> 
                   {
-
+                       
                        
                        if(false==checkPMAnswer(data) )   {
                            return
@@ -834,6 +861,7 @@
                        this.hitcust(this.customer_id)
                        this.servicelist = data.servicelist;  
                        this.contract = data.doc.contract_id;  
+                       this.usesnumber = data.options.usesnumber;  
                      
                         
                   });

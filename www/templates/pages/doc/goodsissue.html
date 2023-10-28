@@ -110,8 +110,11 @@
                             <th>Од.</th>
                             {{#usesnumber}}
                             <th>Серія</th>
-                            <th>Дата</th>
+
                             {{/usesnumber}}
+                           {{#usesnumberdate}}
+                            <th>Дата</th>
+                            {{/usesnumberdate}}
 
 
                             <th class="text-right">Кіл.</th>
@@ -128,8 +131,12 @@
                             <td zippy="msr"></td>
                             {{#usesnumber}}
                             <td zippy="snumber"></td>
-                            <td zippy="sdate"></td>
+
                             {{/usesnumber}}
+
+                           {{#usesnumberdate}}
+                            <td zippy="sdate"></td>
+                            {{/usesnumberdate}}
 
 
                             <td zippy="quantity" class="text-right"></td>
@@ -149,8 +156,11 @@
                             <td></td>
                             {{#usesnumber}}
                             <td></td>
-                            <td></td>
+
                             {{/usesnumber}}
+                            {{#usesnumberdate}}
+                            <td></td>
+                            {{/usesnumberdate}}
 
 
                             <td class="text-right"></td>
@@ -169,9 +179,13 @@
                             <td></td>
                             <td></td>
                             {{#usesnumber}}
-                            <td></td>
+
                             <td></td>
                             {{/usesnumber}}
+                            {{#usesnumberdate}}
+
+                            <td></td>
+                            {{/usesnumberdate}}
 
 
                             <td class="text-right"></td>
@@ -189,7 +203,7 @@
  
                         <tr style="font-weight: bolder;">
 
-                            <td colspan={{colspan}} class="text-right"><span data-label="payamount">До сплати:</span></td>
+                            <td colspan="{{colspan}}" class="text-right"><span data-label="payamount">До сплати:</span></td>
 
 
                             <td zippy="payamount" class="text-right"></td>
@@ -197,14 +211,14 @@
                         </tr>
                         {{#prepaid}}
                        <tr style="font-weight: bolder;">
-                            <td data-label="prepaid" colspan={{colspan}} class="text-right">Передплата:</td>
+                            <td data-label="prepaid" colspan="{{colspan}}" class="text-right">Передплата:</td>
                             <td zippy="prepaid" class="text-right">  {{prepaid}}</td>
                             <td>  </td>
                         </tr>
                         {{/prepaid}}                        
                         <tr style="font-weight: bolder;">
 
-                            <td colspan={{colspan}} class="text-right"><span data-label="payed">Внесено оплату:</span></td>
+                            <td colspan="{{colspan}}" class="text-right"><span data-label="payed">Внесено оплату:</span></td>
 
 
                             <td zippy="payed" class="text-right"></td>
@@ -285,7 +299,9 @@
                         <label for="edittovar">Назва</label>
                         <input  placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
                         <a zippy="openitemsel">Відкрити довідник</a>
-                        <br>Наявність: <span zippy="qtystock"></span>
+                       <br>  На складі: <span zippy="qtystock"></span>
+                             &nbsp;На інших складах: <span zippy="qtystockex"></span>
+
                          {{^noshowpartion}}
                         <br>Облікова  ціна: <span zippy="pricestock"></span>
                          {{/noshowpartion}}

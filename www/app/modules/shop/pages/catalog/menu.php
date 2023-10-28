@@ -50,13 +50,14 @@ class Menu extends \Zippy\Html\WebPage
 
             $items = [];
             foreach(Item::findYield($iw) as $item) {
-
+                $vol="";
+            
                 $items[]=array(
                     'itemname'=>$item->itemname ,
                     'imglink'=>"/loadshopimage.php?id=".  $item->image_id ,
                     'desc'=> substr($item->description, 0, 200) ,
                     'price'=>$item->getPrice() ,
-                    'vol'=> strlen($item->weight)>0 ? $item->weight." г" : $item->volume." мл"
+                    'customsize'=> $item->customsize 
                 );
 
             }

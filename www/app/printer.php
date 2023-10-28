@@ -2,6 +2,8 @@
 
 namespace App;
 
+use \App\Util;
+
 /**
 * класс для  формирования  ESC/POS команд
 */
@@ -260,7 +262,7 @@ class Printer
     private function encode($text) {
         // $text = \Normalizer::normalize($text);
         if ($text === false) {
-            throw new \Exception("Input must be UTF-8");
+        //  throw new \Exception("Input must be UTF-8");
         }
         //украинское i на  ангглийсккое  хз  почему
         $text = str_replace("і", "i", $text);
@@ -332,12 +334,17 @@ class Printer
         if(strlen($text)==0) {
             return;
         }
-        $text = $this->encode($text)  ;
-
-        $a = str_split($text, $this->wc) ;
+        
+        $a=[];
+        if(mb_strlen($text) >$this->wc )  {
+           $a =  Util::splitstr($text, $this->wc) ;
+        } else {
+           $a[]=$text;  
+        }
+        
         $i=0;
         foreach($a as $ap) {
-
+            $ap = $this->encode($ap)  ;
             $t = str_split($ap) ;
 
             foreach($t as $b) {
@@ -585,6 +592,7 @@ class Printer
 
         return $buf;
     }
+  
     private function handletag($name, $val, $tag) {
 
 

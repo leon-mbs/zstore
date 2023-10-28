@@ -237,6 +237,8 @@ class PPOHelper
 
         $firm = \App\Helper::getFirmData($pos->firm_id);
 
+
+        
         $header = array();
         $header['doctype'] = $open == true ? 100 : 101;
         $header['firmname'] = $firm['firm_name'];
@@ -259,6 +261,12 @@ class PPOHelper
 
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
         $firm = \App\Entity\Firm::load($pos->firm_id);
+        
+        if($firm== null){
+            return array('success' => false, 'data' => 'Не вказана  компаiя в POS термiналi');
+        }
+        
+        
         return self::send($xml, 'doc', $firm);
     }
 
@@ -513,6 +521,7 @@ class PPOHelper
                 //сдача
                 if ($doc->headerdata["exchange"] > 0) {
                     $pay['rest'] = number_format($doc->headerdata["exchange"], 2, '.', '');
+                    $pay['rest'] = number_format($payed- $doc->headerdata["exchange"], 2, '.', '');
                 }
                 // в долг
                 if ($payed < $doc->payamount) {
@@ -537,6 +546,7 @@ class PPOHelper
                 //сдача
                 if ($doc->headerdata["exchange"] > 0) {
                     $pay['rest'] = number_format($doc->headerdata["exchange"], 2, '.', '');
+                    $pay['paysum'] = number_format($doc->headerdata['payed'] - $doc->headerdata["exchange"], 2, '.', '');
                 }
 
                 $header['pays'][] = $pay;
@@ -1028,7 +1038,12 @@ class PPOHelper
             } else {
                 $cname = $doc->username;
             }
+            return $cname;            
         }
+        $common = \App\System::getOptions("common");
+        if(strlen($common['cashier'])>0) {
+            $cname = $common['cashier'] ;
+        }       
         return $cname;
     }
 

@@ -73,11 +73,18 @@ class Warranty extends \App\Pages\Base
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
                     $this->docform->customer->setText($basedoc->headerdata['customer_name']);
-                    $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
                     if ($basedoc->meta_name == 'GoodsIssue') {
                         $this->_doc->customer_id= $basedoc->customer_id;
                         $this->_doc->firm_id= $basedoc->firm_id;
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+
+                        
+                    }
+                    if ($basedoc->meta_name == 'ServiceAct') {
+                        $this->_doc->customer_id= $basedoc->customer_id;
+                        $this->_doc->firm_id= $basedoc->firm_id;
+                        $this->_itemlist = $basedoc->unpackDetails('detail2data');
                     }
 
                     if (count($basedoc->getChildren('Warranty')) > 0) {
@@ -295,3 +302,6 @@ class Warranty extends \App\Pages\Base
     }
 
 }
+
+ 
+ 

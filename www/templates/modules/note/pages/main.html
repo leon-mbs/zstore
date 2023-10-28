@@ -34,7 +34,7 @@
     </div>        
      <div class="col-md-8 col-12" v-show="selectedNode != null">
          <div class="row">
-           <div class="col-md-4 col-12">
+           <div class="col-md-5 col-12">
                 <div class=" mb-1" style="height:30px;">
                             <a v-on:click.prevent="onNewTopic()" class="btn btn-primary btn-sm  mr-2"   ><i  class="fa fa-plus-circle"></i> Новий топік</a>
                             <a v-on:click.prevent="onEditTopic()" v-show="selectedTopic != null" title="Редагувати"  class=" mr-2"><i class="fa fa-edit"></i></a>
@@ -57,7 +57,7 @@
                </tr>
                </table>
           </div>        
-           <div class="col-md-8 col-12" v-show="selectedTopic != null">
+           <div class="col-md-7 col-12" v-show="selectedTopic != null">
                 <div   class="row">
                     <div class="col-12">
                       <div v-html="topicData"></div>     
@@ -270,7 +270,7 @@
         computed:{
             extlink: function(){
                 if(this.selectedTopic == null) return "";
-                return "/topic/"+ this.selectedTopic.topic_id
+                return "/topic/"+ this.selectedTopic.topic_id + "/"+this.selectedTopic.hash
             }
         },              
         methods: {             

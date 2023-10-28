@@ -53,7 +53,7 @@ class DocList extends \App\Pages\Base
             //     $d = new \App\DateTime() ;
             //            $d = $d->startOfMonth()->subMonth(1) ;
             //            $filter->from = $d->getTimestamp();
-            $filter->from = time() - (7 * 24 * 3600);
+            $filter->from = time() - (31 * 24 * 3600);
             $filter->page = 1;
             $filter->doctype = 0;
             $filter->customer = 0;
@@ -546,47 +546,74 @@ class DocList extends \App\Pages\Base
             return;
         }
         $this->_doc = $this->_doc->cast();
-        if ($sender->id == "bap") {
-            $newstate = $this->_doc->headerdata['_state_before_approve_'] > 0 ? $this->_doc->headerdata['_state_before_approve_'] : Document::STATE_APPROVED;
-            $this->_doc->updateStatus($newstate);
 
-            $user = System::getUser();
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
 
-            $n = new \App\Entity\Notify();
-            $n->user_id = $this->_doc->user_id;
-            $n->sender_id = $user->user_id;
-            $n->dateshow = time();
-            $n->message = "Документ {$this->_doc->document_number} затверджено" ;
+        try{
+        
+            if ($sender->id == "bap") {
+                $this->_doc->updateStatus(Document::STATE_APPROVED);    
+         
+                $states= explode(',',  trim($this->_doc->headerdata['_state_before_approve_'],',' ) );                
+                foreach( $states as $newstate){
+                    $this->_doc->updateStatus($newstate);    
+                } 
+                
+                $user = System::getUser();
 
-            $n->save();
-        }
-        if ($sender->id == "bref") {
-            $this->_doc->updateStatus(Document::STATE_REFUSED);
+                $n = new \App\Entity\Notify();
+                $n->user_id = $this->_doc->user_id;
+                $n->sender_id = $user->user_id;
+                $n->dateshow = time();
+                $n->message = "Документ {$this->_doc->document_number} затверджено" ;
 
-            $text = trim($this->statusform->refcomment->getText());
+                $n->save();
+            }
+            if ($sender->id == "bref") {
+                $this->_doc->updateStatus(Document::STATE_REFUSED);
 
-            $user = System::getUser();
+                $text = trim($this->statusform->refcomment->getText());
 
-            $n = new \App\Entity\Notify();
-            $n->user_id = $this->_doc->user_id;
-            $n->sender_id = $user->user_id;
-            $n->dateshow = time();
-            $n->message = "Документ {$this->_doc->document_number} відхилено" ;
-            $n->message .= "<br> " . $text;
-            $n->save();
+                $user = System::getUser();
 
-            $this->statusform->refcomment->setText('');
-        }
+                $n = new \App\Entity\Notify();
+                $n->user_id = $this->_doc->user_id;
+                $n->sender_id = $user->user_id;
+                $n->dateshow = time();
+                $n->message = "Документ {$this->_doc->document_number} відхилено" ;
+                $n->message .= "<br> " . $text;
+                $n->save();
 
-
-        if ($sender->id == "bstatus") {
-            $newst =   $this->statusform->mstates->getValue() ;
-            if($newst >0  && $newst != $this->_doc->state) {
-                $this->_doc->updateStatus($newst, true);
+                $this->statusform->refcomment->setText('');
             }
 
 
+            if ($sender->id == "bstatus") {
+                $newst =   $this->statusform->mstates->getValue() ;
+                if($newst >0  && $newst != $this->_doc->state) {
+                    $this->_doc->updateStatus($newst, true);
+                }
+
+
+            }
+            
+            $this->_doc->headerdata['_state_before_approve_'] ='';
+            
+        }  catch(\Exception $e){
+            global $logger;
+            $conn->RollbackTrans();
+      
+            $this->setError($ee->getMessage());
+
+            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            return;
+         
+          
         }
+        
+        $conn->CommitTrans();
+        
         if ($sender->id == "buser") {
             $user_id = intval($this->statusform->musers->getValue());
             if($user_id==0) {
@@ -627,10 +654,16 @@ class DocList extends \App\Pages\Base
     public function printlabels($sender) {
 
         $one = $this->statusform->print1->isChecked();
+        $items=[];
+        foreach($this->_doc->unpackDetails('detaildata') as $it) {
+            if($this->_doc->meta_name=='GoodsReceipt') {
+                $it->price=0;  //печатаем  продажную цену
+            }
+            
+            $items[]=$it;
+        }
 
-        $items = $this->_doc->unpackDetails('detaildata')  ;
-
-        $htmls = H::printItems($items, $one ? 1 : 0);
+        $htmls = H::printItems($items, $one ? 1 : 0,array('docnumber'=>$this->_doc->document_number));
 
         if(\App\System::getUser()->usemobileprinter == 1) {
             \App\Session::getSession()->printform =  $htmls;
@@ -676,7 +709,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
 
         $conn = \ZDB\DB::getConnect();
         $filter = Filter::getFilter("doclist");
-        if($usedate) {
+        if($usedate == true && $filter->status == 0 ) {
             $where = " date(document_date) >= " . $conn->DBDate($filter->from) . " and  date(document_date) <= " . $conn->DBDate($filter->to);
         } else {
             $where = " 1=1 ";

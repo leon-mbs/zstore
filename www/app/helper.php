@@ -82,7 +82,7 @@ class Helper
         $user = System::getUser();
         $arraymenu = array("groups" => array(), "items" => array());
 
-        $aclview = explode(',', $user->aclview);
+        $aclview = explode(',', $user->aclview ?? '');
         foreach ($rows as $meta_object) {
             $meta_id = $meta_object['meta_id'];
 
@@ -152,7 +152,7 @@ class Helper
         $rows = $conn->Execute("select *  from  metadata  where disabled <> 1 and  meta_id in ({$smartmenu})   ");
 
         $textmenu = "";
-        $aclview = explode(',', $user->aclview);
+        $aclview = explode(',', $user->aclview ?? '');
 
         foreach ($rows as $item) {
 
@@ -590,7 +590,7 @@ class Helper
      * @return mixed
      */
     public static function fqty($qty) {
-        if (strlen($qty) == 0) {
+        if (strlen(''.$qty) == 0) {
             return '';
         }
         if(is_numeric($qty) &&  abs($qty)<0.0005) {
@@ -639,7 +639,7 @@ class Helper
      * @return mixed
      */
     public static function fa($am) {
-        if (strlen($am) == 0) {
+        if (strlen(''.$am ) == 0) {
             return '';
         }
         if(is_numeric($am) && abs($am)<0.005) {
@@ -708,14 +708,14 @@ class Helper
      * @param mixed $date
      * @return mixed
      */
-    public static function fdt($date) {
+    public static function fdt($date,$seconds=false) {
         if ($date > 0) {
             $dateformat = System::getOption("common", 'dateformat');
             if (strlen($dateformat) == 0) {
                 $dateformat = 'd.m.Y';
             }
 
-            return date($dateformat . ' H:i', $date);
+            return  $seconds ? date($dateformat . ' H:i:s', $date)  : date($dateformat . ' H:i', $date) ;
         }
 
         return '';
@@ -1017,10 +1017,9 @@ class Helper
      *
      * @param array $items
      */
-    public static function printItems(array $items, $pqty=0) {
+    public static function printItems(array $items, $pqty=0,array $tags=[]) {
         $printer = \App\System::getOptions('printer');
-
-
+  
 
         $htmls = "";
 
@@ -1039,7 +1038,8 @@ class Helper
 
             $header['name'] = str_replace("'", "`", $header['name'])  ;
 
-
+            $header['docnumber']  =  $tags['docnumber'] ?? "";
+            
             $header['isprice']   = $printer['pprice'] == 1;
             $header['isarticle']    = $printer['pcode'] == 1;
             $header['isbarcode'] = false;
@@ -1136,7 +1136,7 @@ class Helper
      *
      * @param array $items
      */
-    public static function printItemsEP(array $items, $pqty=0) {
+    public static function printItemsEP(array $items, $pqty=0,array $tags=[]) {
         $printer = \App\System::getOptions('printer');
 
         $htmls = "";
@@ -1151,6 +1151,7 @@ class Helper
             }
             $header['name'] = str_replace("'", "`", $header['name'])  ;
 
+            $header['docnumber']  =  $tags['docnumber'] ?? "";
 
             $header['isprice']   = $printer['pprice'] == 1;
             $header['isarticle'] = $printer['pcode'] == 1;
@@ -1283,4 +1284,29 @@ class Helper
         return $decryption;
     }
 
+    
+    /**
+    * проверка  новой версии
+    * 
+    */
+    public static function checkVer(){
+            $v = @file_get_contents("https://zippy.com.ua/version.json?t=" . time());
+            $v = @json_decode($v, true);
+
+            if (strlen($v['version']) > 0) {
+                $c = str_replace("v", "", \App\System::CURR_VERSION);
+                $n = str_replace("v", "", $v['version']);
+
+                $ca = explode('.', $c) ;
+                $na = explode('.', $n) ;
+
+                if ($na[0] > $ca[0] || $na[1] > $ca[1] || $na[2] > $ca[2]) {
+                  return $v['version'];
+                }
+
+            }       
+            
+            return '';
+    }
+    
 }

@@ -45,7 +45,7 @@
                     <div class="form-check">
                         <input zippy="nostore" type="checkbox" class="form-check-input">
                         <label class="form-check-label" for="nostore">Не проводити по складу</label>
-                        <br><small>Вказується, якщо, наприклад, товар виробляється пiд замовлкння і по складу не проводиться</small>
+                        <br><small>Якшо наприклад проведено видатковою накладною</small>
                     </div>
 
                     <div class="form-group  ">
@@ -155,8 +155,11 @@
                             <th>Од.</th>
                             {{#usesnumber}}
                             <th>Серія</th>
-                            <th>Дата</th>
+
                             {{/usesnumber}}
+                            {{#usesnumberdate}}
+                            <th>Дата</th>
+                            {{/usesnumberdate}}
 
 
                             <th class="text-right">Кіл.</th>
@@ -172,8 +175,11 @@
                             <td zippy="msr"></td>
                             {{#usesnumber}}
                             <td zippy="snumber"></td>
-                            <td zippy="sdate"></td>
                             {{/usesnumber}}
+
+                           {{#usesnumberdate}}
+                            <td zippy="sdate"></td>
+                            {{/usesnumberdate}}
 
 
                             <td zippy="quantity" class="text-right"></td>
@@ -191,9 +197,13 @@
                             <td></td>
                             <td></td>
                             {{#usesnumber}}
-                            <td></td>
+
                             <td></td>
                             {{/usesnumber}}
+                            {{#usesnumberdate}}
+
+                            <td></td>
+                            {{/usesnumberdate}}
 
 
                             <td class="text-right"></td>
@@ -238,7 +248,7 @@
                     </div>
                     {{#usesnumber}}
                     <div class="form-group">
-                        <label for="editserial">Серія виробника </label>
+                        <label for="editserial">Серія (серійний  номер)  </label>
                         <input class="form-control " zippy="editserial"/>
 
                     </div>

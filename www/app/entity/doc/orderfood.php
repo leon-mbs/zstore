@@ -62,7 +62,7 @@ class OrderFood extends Document
                         "contact"   => $this->headerdata["contact"],
                         "exchange"        => H::fasell($this->headerdata["exchange"]),
                         "pos_name"        => $this->headerdata["pos_name"],
-                        "time"            => H::fdt($this->headerdata["time"]),
+                        "time"            => H::fdt($this->headerdata["time"],true),
                         "document_number" => $this->document_number,
                         "total"           => H::fasell($this->amount),
                         "bonus"           => H::fa($this->headerdata["bonus"] >0) ? H::fa($this->headerdata["bonus"]) : false,
@@ -84,7 +84,7 @@ class OrderFood extends Document
 
         foreach ($this->unpackDetails('detaildata') as $item) {
 
-            $name = $item->itemname;
+            $name = strlen($item->shortname) > 0 ? $item->shortname : $item->itemname;
 
             $detail[] = array(
                 "tovar_name" => $name,
@@ -120,7 +120,7 @@ class OrderFood extends Document
                         "fiscalnumberpos"  => strlen($this->headerdata["fiscalnumberpos"]) > 0 ? $this->headerdata["fiscalnumberpos"] : false,
                         "exchange"        => H::fasell($this->headerdata["exchange"]),
                         "pos_name"        => $this->headerdata["pos_name"],
-                        "time"            => H::fdt($this->headerdata["time"]),
+                        "time"            => H::fdt($this->headerdata["time"],true),
                         "document_number" => $this->document_number,
                         "total"           => H::fasell($this->amount),
                         "payed"           => H::fasell($this->headerdata['payed']),

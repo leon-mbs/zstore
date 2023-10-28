@@ -40,7 +40,7 @@ class ProductView extends Base
 
         $options = \App\System::getOptions('shop');
         $this->_tvars['usefeedback'] = $options['usefeedback'] == 1;
-
+    
         $this->add(new Label("breadcrumb", Helper::getBreadScrumbs($product->cat_id), true));
         $this->add(new ClickLink('backtolist', $this, 'OnBack'));
 
@@ -52,6 +52,10 @@ class ProductView extends Base
 
         $this->add(new Label('productname', $product->itemname));
         $this->add(new Label('productcode', $product->item_code));
+   
+ 
+        
+        $this->add(new Label('customsize',  $product->customsize));
         $this->add(new Label('onstore'));
         $this->add(new Label('action'))->setVisible(false);
         $this->add(new \Zippy\Html\Label('manufacturername', $product->manufacturer))->SetVisible(strlen($product->manufacturer) > 0);
@@ -175,6 +179,12 @@ class ProductView extends Base
         $value = $value . $meashure;
         if ($item->hasData() == false) {
             $value = $nodata;
+        }
+        
+        if($item->attributetype == 5 && strpos($value,'http') === 0 ) {
+            $link ="<a href=\"{$value}\" target=\"_blank\" >{$value}</a>";
+            $datarow->add(new Label("attrvalue", $link,true));            
+            return;
         }
         $datarow->add(new Label("attrvalue", $value));
     }

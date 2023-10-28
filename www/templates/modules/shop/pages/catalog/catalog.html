@@ -48,7 +48,7 @@
                 <div class="row">
 
 
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" zippy="productlist">
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" zippy="productlist">
                         <div class="card card-custom-card">
 
                             <div class="ribbon-wrap" zippy="saction">
@@ -73,6 +73,9 @@
 
                                     <div   class="mt-1" style="font-size:larger;">
                                         <b zippy="sprice"></b>&nbsp; <b class="text-danger" zippy="sactionprice"></b> 
+                                     
+                                      &nbsp;&nbsp; <span style="font-size:smaller;" zippy="scustomsize"> </span> 
+                               
                                       &nbsp; &nbsp; <a zippy="sbuy" ><i class="fa fa-shopping-cart"></i></a>
                                     </div> 
                                     
@@ -87,13 +90,13 @@
                 <div zippy="recentlyp">
                     <h4 class="mb-3 mt-2">Нещодавно переглянутi</h4>
                     <div class="row">
-                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" zippy="rlist">
+                        <div class="col-12 col-sm-4 col-md-3 col-lg-2 col-xl-1 mb-4" zippy="rlist">
                             <div class="card h-100">
                              {{^nouseimages}}
                                 <a zippy="rimage"><img class="card-img-top"></a>
                                  {{/nouseimages}}
                                 <div class="card-body p-2">
-                                    <a class="card-title card-link text-dark  clip" zippy="rname"></a>
+                                    <a style="font-size:smaller" class="card-title card-link text-dark  clip" zippy="rname"></a>
                                 </div>
                             </div>
                         </div>

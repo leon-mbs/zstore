@@ -482,15 +482,12 @@ class Invoice extends \App\Pages\Base
             return;
         }
     }
-
-
+ 
     public function onTotaldisc($sender) {
         $this->docform->totaldisc->setText(H::fa($this->docform->edittotaldisc->getText()));
         $this->calcPay() ;
     }
-
-
-
+  
     /**
      * Расчет  итого
      *
@@ -500,17 +497,13 @@ class Invoice extends \App\Pages\Base
         $total = 0;
 
         foreach ($this->_itemlist as $item) {
-            $item->amount = $item->price * $item->quantity;
+            $item->amount = H::fa($item->price * $item->quantity);
 
             $total = $total + $item->amount;
         }
 
         $this->docform->total->setText(H::fa($total));
-
-
-
-
-
+ 
     }
 
     private function calcPay() {

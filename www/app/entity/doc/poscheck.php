@@ -68,7 +68,7 @@ class POSCheck extends Document
                         "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"] ?? null) > 0 ? $this->headerdata["fiscalnumber"] : false,
                         "exchange"        => H::fasell($this->headerdata["exchange"]),
                         "pos_name"        => $this->headerdata["pos_name"],
-                        "time"            => H::fdt($this->headerdata["time"]),
+                        "time"            => H::fdt($this->headerdata["time"],true),
                         "document_number" => $this->document_number,
                         "total"           => H::fasell($this->amount),
                         "payed"           => H::fasell($pp),
@@ -95,7 +95,7 @@ class POSCheck extends Document
 
         foreach ($this->unpackDetails('detaildata') as $item) {
 
-            $name = $item->itemname;
+            $name = strlen($item->shortname) > 0 ? $item->shortname : $item->itemname;
 
             $detail[] = array(
                 "tovar_name" => $name,
@@ -150,7 +150,7 @@ class POSCheck extends Document
 
 
                         "pos_name"        => $this->headerdata["pos_name"],
-                        "time"            => H::fdt($this->headerdata["time"]),
+                        "time"            => H::fdt($this->headerdata["time"],true),
                         "document_number" => $this->document_number,
                         "total"           => H::fasell($this->amount),
                         "totaldisc"           => $this->headerdata["totaldisc"] > 0 ? H::fasell($this->headerdata["totaldisc"]) : false,
@@ -159,6 +159,7 @@ class POSCheck extends Document
                         "delbonus"           => $delbonus > 0 ? H::fa($delbonus) : false,
                         "allbonus"           => $allbonus > 0 ? H::fa($allbonus) : false,
                         "trans"           => $this->headerdata["trans"] > 0 ? $this->headerdata["trans"] : false,
+                        "isdocqrcode"     =>  $common['printoutqrcode']==1,
                         "docqrcodeurl"     =>  $this->getQRCodeImage(true),
                         "docqrcode"       => $this->getQRCodeImage(),
                         "payed"           => $pp > 0 ? H::fasell($pp) : false,

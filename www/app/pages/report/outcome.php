@@ -376,7 +376,7 @@ class Outcome extends \App\Pages\Base
                 $detail[] = array(
                     "code"      => $row['item_code'],
                     "name"      => $row['itemname'],
-                    "dt"        => \App\Helper::fd(strtotime($row['dt'] ?? null)),
+                    "dt"        => \App\Helper::fd(strtotime($row['dt'] ?? '')),
                     "qty"       => H::fqty($row['qty']),
                     "navar"     => H::fa($row['navar']),
                     "navarsign" => $row['navar'] > 0,

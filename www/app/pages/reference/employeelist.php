@@ -108,6 +108,8 @@ class EmployeeList extends \App\Pages\Base
     public function employeelistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
 
+        $row->add(new Label('position', $item->position));
+        $row->add(new Label('department', $item->department));
         $row->add(new Label('emp_name', $item->emp_name));
         $row->add(new Label('login', $item->login));
         $row->add(new Label('branch', $this->_blist[$item->branch_id] ??''));
@@ -230,10 +232,11 @@ class EmployeeList extends \App\Pages\Base
         $this->_employee->disabled = $this->employeedetail->editdisabled->isChecked() ? 1 : 0;
         if ($this->_employee->disabled == 1) {
             $u = \App\Entity\User::getByLogin($this->_employee->login);
-            $u->userpass = '';
-            $u->save();
-            $this->_employee->login = '';
-
+            if($u != null) {
+              $u->userpass = '';
+              $u->save();
+              $this->_employee->login = '';
+            }
         }
 
         $this->_employee->save();

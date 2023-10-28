@@ -31,7 +31,6 @@ class Base extends \Zippy\Html\WebPage
         $options = System::getOptions('common');
 
         //опции
-        $this->_tvars["usesnumber"] = $options['usesnumber'] == 1;
         $this->_tvars["usescanner"] = $options['usescanner'] == 1 || $options['usemobilescanner'] == 1;
         $this->_tvars["usemobilescanner"] = $options['usemobilescanner'] == 1;
         $this->_tvars["useimages"] = $options['useimages'] == 1;
@@ -46,6 +45,11 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars['qtydigits']  = intval($common['qtydigits'] ?? 0);
         $this->_tvars['amdigits']  = intval($common['amdigits'] ?? 0);
 
+        
+        $this->_tvars["usesnumber"] = $options['usesnumber']  > 0;
+        $this->_tvars["usesnumberdate"] = $options['usesnumber']  == 2;
+        $this->_tvars["usesnumberitem"] = $options['usesnumber']  == 3;
+        
 
         $blist = array();
         if ($this->_tvars["usebranch"] == true) {
@@ -136,35 +140,35 @@ class Base extends \Zippy\Html\WebPage
 
 
         //доступы к  модулям
-        if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules ?? '', 'shop') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["shop"] = false;
         }
-        if (strpos(System::getUser()->modules, 'note') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules ?? '', 'note') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["note"] = false;
         }
-        if (strpos(System::getUser()->modules, 'issue') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules ?? '', 'issue') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["issue"] = false;
         }
-        if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules ?? '', 'ocstore') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["ocstore"] = false;
         }
-        if (strpos(System::getUser()->modules, 'woocomerce') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules ?? '', 'woocomerce') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["woocomerce"] = false;
         }
 
-        if (strpos(System::getUser()->modules, 'ppo') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules ?? '', 'ppo') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["ppo"] = false;
         }
-        if (strpos(System::getUser()->modules, 'np') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules ?? '', 'np') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["np"] = false;
         }
-        if (strpos(System::getUser()->modules, 'promua') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules ?? '', 'promua') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["promua"] = false;
         }
-        if (strpos(System::getUser()->modules, 'paperless') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules ?? '', 'paperless') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["paperless"] = false;
         }
-        if (strpos(System::getUser()->modules, 'checkbox') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules ?? '', 'checkbox') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["checkbox"] = false;
         }
 
@@ -194,7 +198,7 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["showsermenu"] = true;
             $this->_tvars["showmodmenu"] = true;
         }   */
-
+ 
         //скрыть  боковое  меню
         $this->_tvars["hidesidebar"] = $user->hidesidebar == 1 ? 'hold-transition   sidebar-collapse' : 'hold-transition sidebar-mini sidebar-collapse';
         if ($user->darkmode == 1) {
@@ -322,7 +326,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars['notcnt'] = \App\Entity\Notify::isNotify($user->user_id);
         $this->_tvars['taskcnt'] = \App\Entity\Event::isNotClosedTask($user->user_id);
         $this->_tvars['alerterror'] = "";
-        if (strlen(System::getErrorMsgTopPage()) > 0) {
+        if (strlen(System::getErrorMsgTopPage() ?? '') > 0) {
             $this->_tvars['alerterror'] = System::getErrorMsgTopPage();
 
             $this->goAnkor('topankor');
@@ -334,18 +338,18 @@ class Base extends \Zippy\Html\WebPage
     protected function afterRender() {
 
         $user = System::getUser();
-        if (strlen(System::getErrorMsg()) > 0) {
+        if (strlen(System::getErrorMsg() ?? '') > 0) {
 
             $this->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{'timeOut':'8000'})        ", true);
         }
 
-        if (strlen(System::getWarnMsg()) > 0) {
+        if (strlen(System::getWarnMsg() ?? '') > 0) {
             $this->addJavaScript("toastr.warning('" . System::getWarnMsg() . "','',{'timeOut':'4000'})        ", true);
         }
-        if (strlen(System::getSuccesMsg()) > 0) {
+        if (strlen(System::getSuccesMsg() ?? '') > 0) {
             $this->addJavaScript("toastr.success('" . System::getSuccesMsg() . "','',{'timeOut':'2000'})        ", true);
         }
-        if (strlen(System::getInfoMsg()) > 0) {
+        if (strlen(System::getInfoMsg() ?? '') > 0) {
             $this->addJavaScript("toastr.info('" . System::getInfoMsg() . "','',{'timeOut':'3000'})        ", true);
         }
 
@@ -502,23 +506,12 @@ class Base extends \Zippy\Html\WebPage
             }
             //проверка  новой версии
 
-            $v = @file_get_contents("https://zippy.com.ua/version.json?t=" . time());
-            $v = @json_decode($v, true);
-
-            if (strlen($v['version']) > 0) {
-                $c = str_replace("v", "", \App\System::CURR_VERSION);
-                $n = str_replace("v", "", $v['version']);
-
-                $ca = explode('.', $c) ;
-                $na = explode('.', $n) ;
-
-                if ($na[0] > $ca[0] || $na[1] > $ca[1] || $na[2] > $ca[2]) {
-                    $list[] = array('title' => " Доступна нова версiя {$v['version']}  <a target=\"_blank\" href=\"https://zippy.com.ua/upsate\">Перейти...</a> ");
-
-                }
-
+            $v= \App\Helper::checkVer()  ;
+            
+            if(strlen($v) >0){
+               $list[] = array('title' => " Доступна нова версiя {$v}  <a target=\"_blank\" href=\"https://zippy.com.ua/upsate\">Перейти...</a> ");                
             }
-
+            
         }
 
         return json_encode($list, JSON_UNESCAPED_UNICODE);
@@ -586,6 +579,8 @@ class Base extends \Zippy\Html\WebPage
             $ret['lastpartion'] = $item->getLastPartion(); //последняя  закупка
             $ret['qtystock'] = $item->getQuantity(); // на  складе
             $ret['item_code'] = $item->item_code;
+            $ret['useserial'] = $item->useserial;
+            $ret['snumber'] = '';
 
 
             $ret['disc'] = '';
@@ -593,8 +588,11 @@ class Base extends \Zippy\Html\WebPage
             if($ret['pureprice'] > $ret['price']) {
                 $ret['disc']  = number_format((1 - ($ret['price']/($ret['pureprice'])))*100, 1, '.', '') ;
             }
-
-
+            if($ret['useserial']==1) {
+               $ret['serials'] = $item->getSerials($p['store']); 
+            }
+                      
+  
 
         }
 
@@ -610,6 +608,7 @@ class Base extends \Zippy\Html\WebPage
         $c->customer_name = $post->name;
         $c->phone =  $post->phone;
         $c->email =  $post->email;
+        $c->type = $post->type ?? 0; 
 
         $c->save() ;
         $ret = array('customer_id'=>$c->customer_id) ;

@@ -157,11 +157,12 @@
         <td colspan="3"><br>{{checkslogan}}</td>
 
     </tr>
-                
+{{#isdocqrcode}}                
        <tr>                    
                         <td colspan="3"> 
                             {{{docqrcode}}}
                         </td>
 
                     </tr>    
+{{/isdocqrcode}}                    
 </table>

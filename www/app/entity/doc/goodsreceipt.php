@@ -21,14 +21,15 @@ class GoodsReceipt extends Document
         foreach ($this->unpackDetails('detaildata') as $item) {
             $name = $item->itemname;
             if (strlen($item->snumber) > 0) {
-                $name .= ' (' . $item->snumber . ',' . H::fd($item->sdate) . ')';
+                $name .= ' (' . $item->snumber . ' ' . H::fd($item->sdate) . ')';
             }
 
             $detail[] = array("no"       => $i++,
                               "itemname" => $name,
-                              "snumber"  => $item->snumber,
+
                               "itemcode" => $item->item_code,
-                              "barcode" => $item->bar_code,
+                              "barcode"  => $item->bar_code,
+                              "custcode" => $item->custcode,
                               "quantity" => H::fqty($item->quantity),
                               "price"    => H::fa($item->price),
                               "msr"      => $item->msr,
@@ -151,8 +152,10 @@ class GoodsReceipt extends Document
         $this->payamount = $this->headerdata['payamount'] * $rate;
 
 
-        $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment']);
-
+        $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment']);
+        if ($payed > 0) {
+            $this->payed = $payed;
+        }
 
         if($this->headerdata['delivery'] > 0) {
             \App\Entity\IOState::addIOState($this->document_id, 0 - $payed + $this->headerdata["delivery"], \App\Entity\IOState::TYPE_BASE_OUTCOME);

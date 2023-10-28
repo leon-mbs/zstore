@@ -36,12 +36,12 @@ class UserProfile extends \App\Pages\Base
         $form->add(new TextInput('email', $this->user->email));
         $form->add(new TextInput('phone', $this->user->phone));
         $form->add(new TextInput('viber', $this->user->viber));
-        $form->add(new CheckBox('hidesidebar', $this->user->hidesidebar));
+
         $form->add(new CheckBox('darkmode', $this->user->darkmode));
         $form->add(new CheckBox('emailnotify', $this->user->emailnotify));
         $form->add(new CheckBox('botnotify', $this->user->botnotify))->setVisible(strlen($this->user->chat_id)>0);
         $form->add(new CheckBox('usemobileprinter', $this->user->usemobileprinter));
-
+        $form->add(new CheckBox('hidesidebar', $this->user->hidesidebar));
         $form->add(new DropDownChoice('deffirm', \App\Entity\Firm::getList(), $this->user->deffirm));
         $form->add(new DropDownChoice('defstore', \App\Entity\Store::getList(), $this->user->defstore));
         $form->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList(), $this->user->defmf));
@@ -136,10 +136,11 @@ class UserProfile extends \App\Pages\Base
         $this->user->email = $sender->email->getText();
         $this->user->phone = $sender->phone->getText();
         $this->user->viber = $sender->viber->getText();
-        $this->user->hidesidebar = $sender->hidesidebar->isChecked() ? 1 : 0;
+
         $this->user->darkmode = $sender->darkmode->isChecked() ? 1 : 0;
         $this->user->botnotify = $sender->botnotify->isChecked() ? 1 : 0;
         $this->user->emailnotify = $sender->emailnotify->isChecked() ? 1 : 0;
+        $this->user->hidesidebar = $sender->hidesidebar->isChecked() ? 1 : 0;
 
         $this->user->deffirm = $sender->deffirm->getValue();
         $this->user->defstore = $sender->defstore->getValue();

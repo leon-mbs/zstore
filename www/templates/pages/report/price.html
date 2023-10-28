@@ -5,10 +5,15 @@
     </head>
     <body>
         <div class="row">
-            <div class="col-12  col-xl-10">
+            <div class="col-12   ">
                 <h3>Прайс</h3>
                 <div class="navbar nav">
                     <form zippy="filter" class="form-inline">
+                        <div class="form-check   mr-2">
+                            <input class="form-check-input" type="checkbox" zippy="showqty">
+                            <label class="form-check-label" for="showqty"> Кіл.
+                            </label>
+                        </div>
                         <label class="    mr-2"><b>Ціни</b></label>
                         <div class="form-check   mr-2">
                             <input class="form-check-input" type="checkbox" zippy="price1">
@@ -45,6 +50,14 @@
                             <input class="form-check-input" type="checkbox" zippy="onstore">
                             <label class="form-check-label mr-2" for="onstore">Тільки в наявності</label>
                         </div>
+                           <label    for="searchcat">категорія</label>
+  
+                                <select class="form-control mr-2" zippy="searchcat">
+                                    <option value="0">Не вказано</option>
+                                </select>
+                             <label    for="searchbrand">Бренд </label>
+                              <input autocomplete="off"   class="form-control mr-2" zippy="searchbrand"/>
+                        
                         <input class="btn btn-outline-primary  " type="submit" value="ОК">
 
 

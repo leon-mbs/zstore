@@ -43,8 +43,13 @@ class GoodsReceipt extends \App\Pages\Base
 
         $common = System::getOptions("common");
 
-        $this->_tvars["colspan"] = $common['usesnumber'] == 1 ? 9 : 7;
-
+        $this->_tvars["colspan"] = 8; 
+        if($common['usesnumber'] >0) {
+            $this->_tvars["colspan"] = 9;
+        }
+        if($common['usesnumber'] ==2) {
+            $this->_tvars["colspan"] = 10;
+        }
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date'))->setDate(time());
@@ -102,10 +107,12 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
         $this->editdetail->add(new TextInput('editsellprice'));
+        $this->editdetail->add(new TextInput('editsellprice2'))->setVisible(strlen($common['price2'])>0);
         $this->editdetail->add(new TextInput('editsnumber'));
         $this->editdetail->add(new Date('editsdate'));
         $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
         $this->editdetail->add(new ClickLink('openlast', $this, 'onOpenLast'));
+        $this->editdetail->add(new TextInput('editcustcode'));
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
@@ -119,8 +126,8 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editnewitem->add(new TextInput('editnewitemname'));
         $this->editnewitem->add(new TextInput('editnewitemcode'));
         $this->editnewitem->add(new TextInput('editnewitembarcode'));
-        $this->editnewitem->add(new TextInput('editnewitemsnumber'));
-        $this->editnewitem->add(new Date('editnewitemsdate'));
+        $this->editnewitem->add(new CheckBox('editnewitemsnumber'));
+
         $this->editnewitem->add(new TextInput('editnewmanufacturer'));
         $this->editnewitem->add(new TextInput('editnewmsr'));
         $this->editnewitem->add(new DropDownChoice('editnewcat', \App\Entity\Category::getList(), 0));
@@ -308,6 +315,7 @@ class GoodsReceipt extends \App\Pages\Base
         $row->add(new Label('item', $item->itemname));
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('bar_code', $item->bar_code));
+        $row->add(new Label('custcode', $item->custcode));
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));
         $row->add(new Label('msr', $item->msr));
@@ -387,8 +395,12 @@ class GoodsReceipt extends \App\Pages\Base
         } else {
             $this->editdetail->edititem->setKey($item->item_id);
             $this->editdetail->edititem->setText($item->itemname);
-            $this->editdetail->editprice->setText('');
-            $this->editdetail->editsellprice->setText('');
+            
+            $price = $item->getLastPartion($this->docform->store->getValue(), null, false);
+            
+            $this->editdetail->editprice->setText(H::fa($price));
+            $this->editdetail->editsellprice->setText(H::fa($item->price1));
+            $this->editdetail->editsellprice2->setText(H::fa($item->price2));
         }
     }
 
@@ -407,6 +419,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editdetail->editsnumber->setText("");
         $this->editdetail->editsdate->setText("");
         $this->editdetail->editsellprice->setText("");
+        $this->editdetail->editsellprice2->setText("");
 
     }
 
@@ -421,10 +434,13 @@ class GoodsReceipt extends \App\Pages\Base
         $olditem = Item::load($item->item_id);
         if ($olditem != null) {
             $this->editdetail->editsellprice->setText($olditem->price1);
+            $this->editdetail->editsellprice2->setText($olditem->price2);
         }
 
+        $this->editdetail->editcustcode->setText($item->custcode);
 
         $this->editdetail->editsellprice->setText($item->price1);
+        $this->editdetail->editsellprice2->setText($item->price2);
         $this->editdetail->editsnumber->setText($item->snumber);
         $this->editdetail->editsdate->setDate($item->sdate);
 
@@ -459,7 +475,7 @@ class GoodsReceipt extends \App\Pages\Base
         }
         if (count($list) == 0) {
 
-            $this->setError("Не вказана ціна");
+            $this->setError("Не вказані серійні номери");
             return;
         }
         $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
@@ -487,7 +503,9 @@ class GoodsReceipt extends \App\Pages\Base
 
 
     }
+  
     public function saverowOnClick($sender) {
+        $common = System::getOptions("common");
 
 
         $id = $this->editdetail->edititem->getKey();
@@ -503,10 +521,18 @@ class GoodsReceipt extends \App\Pages\Base
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
         $sellprice = $this->editdetail->editsellprice->getText();
+        $sellprice2 = $this->editdetail->editsellprice2->getText();
         if (strlen($sellprice) > 0) {
             $olditem = Item::load($item->item_id);
             if ($olditem != null) {
                 $olditem->price1 = $sellprice;
+                $olditem->save();
+            }
+        }
+        if (strlen($sellprice2) > 0) {
+            $olditem = Item::load($item->item_id);
+            if ($olditem != null) {
+                $olditem->price2 = $sellprice2;
                 $olditem->save();
             }
         }
@@ -516,18 +542,49 @@ class GoodsReceipt extends \App\Pages\Base
 
             $this->setWarn("Не вказана ціна");
         }
+
         $item->snumber = trim($this->editdetail->editsnumber->getText());
-
-        if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("Потрібна партія виробника");
-            return;
-        }
-
-
         $item->sdate = $this->editdetail->editsdate->getDate();
-        if ($item->sdate == false) {
-            $item->sdate = '';
+
+        if($common['usesnumber'] > 0) {
+            if (strlen($item->snumber) == 0 && $item->useserial == 1  ) {
+                if($common['usesnumber'] != 3){
+                   $this->setError("Потрібна партія виробника");
+                }
+                if($common['usesnumber'] == 3 && $item->quantity <> 1){
+                   $this->setError("Cерійний номер має бути для одного виробу");    
+                }  
+                
+                return;
+            }
         }
+        if($common['usesnumber'] == 2) {
+            if ($item->sdate == false) {
+                $item->sdate = '';
+            }
+            if (strlen($item->sdate) == 0 && $item->useserial == 1  ) {
+                $this->setError("Потрібна дата придатності");
+                return;
+            }
+           
+        }
+     
+        if($common['usesnumber'] == 3  ) {           
+
+            foreach(  $this->_itemlist as $i){
+                if( $this->_rowid == -1 && strlen($item->snumber) > 0 && $item->snumber==$i->snumber )  {
+                    $this->setError('Вже є ТМЦ  з таким серійним номером');
+                    return;
+                    
+                }
+            }
+            
+        }       
+        
+
+        $item->custcode = $this->editdetail->editcustcode->getText();
+
+
 
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
@@ -537,7 +594,7 @@ class GoodsReceipt extends \App\Pages\Base
             $this->_itemlist[$this->_rowid] = $item;
             $this->cancelrowOnClick(null);
         }
-
+  
 
 
         $this->_rownumber  = 1;
@@ -919,18 +976,8 @@ class GoodsReceipt extends \App\Pages\Base
 
 
         $item->manufacturer = $this->editnewitem->editnewmanufacturer->getText();
-        $item->snumber = $this->editnewitem->editnewitemsnumber->getText();
-        if (strlen($item->snumber) > 0) {
-            $item->useserial = 1;
-        }
-
-        $item->sdate = $this->editnewitem->editnewitemsdate->getDate();
-        if ($item->sdate == false) {
-            $item->sdate = '';
-        }
-        $this->editdetail->editsnumber->setText($item->snumber);
-        $this->editdetail->editsdate->setText($item->sdate);
-
+        $item->useserial = $this->editnewitem->editnewitemsnumber->isChecked() ? 1:0;
+     
 
         $item->cat_id = $this->editnewitem->editnewcat->getValue();
         $item->save();
@@ -1014,7 +1061,8 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editsnitem->editsnprice->setText(H::fa($price));
 
         $this->editdetail->editprice->setText(H::fa($price));
-        $this->editdetail->editsellprice->setText(H::fa($item->price1));
+        $this->editdetail->editsellprice->setText($item->price1);
+        $this->editdetail->editsellprice2->setText($item->price2);
     }
 
     public function OnCustomerFirm($sender) {
@@ -1038,6 +1086,7 @@ class GoodsReceipt extends \App\Pages\Base
         $price = $item->getLastPartion($this->docform->store->getValue(), null, false);
         $this->editdetail->editprice->setText(H::fa($price));
         $this->editdetail->editsellprice->setText($item->price1);
+        $this->editdetail->editsellprice2->setText($item->price2);
         $this->editsnitem->editsnprice->setText(H::fa($price));
 
     }
@@ -1104,3 +1153,11 @@ class GoodsReceipt extends \App\Pages\Base
     }
 
 }
+
+
+
+
+
+
+
+    

@@ -214,6 +214,13 @@ class ProductList extends \App\Pages\Base
 
         $file = $sender->photo->getFile();
         if (strlen($file["tmp_name"]) > 0) {
+        
+            if (filesize($file["tmp_name"])  > pow(2,20)) {
+
+                    $this->setError('Розмір файлу більше 1M');
+                    return;
+            }            
+         
             $imagedata = getimagesize($file["tmp_name"]);
 
             if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {

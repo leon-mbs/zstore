@@ -44,7 +44,13 @@ class GoodsIssue extends \App\Pages\Base
 
         $common = System::getOptions("common");
 
-        $this->_tvars["colspan"] = $common['usesnumber'] == 1 ? 9 : 7;
+        $this->_tvars["colspan"] = 7; 
+        if($common['usesnumber'] >0) {
+            $this->_tvars["colspan"] = 8;
+        }
+        if($common['usesnumber'] ==2) {
+            $this->_tvars["colspan"] = 9;
+        }
 
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
@@ -105,6 +111,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
 
         $this->editdetail->add(new Label('qtystock'));
+        $this->editdetail->add(new Label('qtystockex'));
         $this->editdetail->add(new Label('pricestock'));
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
@@ -387,7 +394,9 @@ class GoodsIssue extends \App\Pages\Base
         $this->editdetail->setVisible(true);
         $this->editdetail->editquantity->setText("1");
         $this->editdetail->editprice->setText("0");
+        $this->editdetail->editserial->setText("");
         $this->editdetail->qtystock->setText("");
+        $this->editdetail->qtystockex->setText("");
         $this->editdetail->pricestock->setText("");
         $this->docform->setVisible(false);
         $this->_rowid = -1;
@@ -527,6 +536,7 @@ class GoodsIssue extends \App\Pages\Base
     }
 
     public function saverowOnClick($sender) {
+        $common = System::getOptions("common");
 
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
@@ -540,6 +550,7 @@ class GoodsIssue extends \App\Pages\Base
         $item->snumber = trim($this->editdetail->editserial->getText());
         $qstock = $this->editdetail->qtystock->getText();
 
+
         $item->price = $this->editdetail->editprice->getText();
         $item->disc = '';
         $item->pureprice = $item->getPurePrice();
@@ -551,26 +562,44 @@ class GoodsIssue extends \App\Pages\Base
             $this->setWarn('Введено більше товару, чим мається в наявності');
         }
 
-        if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
+        
+        if($common['usesnumber'] > 0 && $item->useserial == 1 ) {
+            
+            if (strlen($item->snumber) == 0  ) {
 
-            $this->setError("Потрібна партія виробника");
-            return;
-        }
+                $this->setError("Потрібен серійний номер");
+                return;
+            }
+            
 
-        if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
             $slist = $item->getSerials($store_id);
-
+            
             if (in_array($item->snumber, $slist) == false) {
 
-                $this->setError('Невірний номер серії');
+                $this->setError('Невірний серійний номер  ');
                 return;
-            } else {
+            }  
+
+            
+            if($common['usesnumber'] == 2  ) {           
                 $st = Stock::getFirst("store_id={$store_id} and item_id={$item->item_id} and snumber=" . Stock::qstr($item->snumber));
                 if ($st instanceof Stock) {
-                    $item->sdate = $st->sdate;
+                     $item->sdate = $st->sdate;
+                }           
+            }
+            if($common['usesnumber'] == 3  ) {           
+
+                foreach(  $this->_itemlist as $i){
+                    if($this->_rowid == -1 && strlen($item->snumber) > 0 &&  $item->snumber==$i->snumber )  {
+                        $this->setError('Вже є ТМЦ  з таким серійним номером');
+                        return;
+                        
+                    }
                 }
+                
             }
         }
+ 
 
 
         if($this->_rowid == -1) {
@@ -580,7 +609,7 @@ class GoodsIssue extends \App\Pages\Base
             //очищаем  форму
             $this->editdetail->edittovar->setKey(0);
             $this->editdetail->edittovar->setText('');
-
+            $this->editdetail->editserial->setText("");
             $this->editdetail->editquantity->setText("1");
 
             $this->editdetail->editprice->setText("");
@@ -763,7 +792,7 @@ class GoodsIssue extends \App\Pages\Base
         $total = 0;
 
         foreach ($this->_itemlist as $item) {
-            $item->amount = $item->price * $item->quantity;
+            $item->amount = H::fa($item->price * $item->quantity);
 
 
             $total = $total + $item->amount;
@@ -866,8 +895,11 @@ class GoodsIssue extends \App\Pages\Base
            'customer'=>$customer_id
          ));
         $qty = $item->getQuantity($store_id);
+        $qtyex = $item->getQuantity() - $qty;
 
         $this->editdetail->qtystock->setText(H::fqty($qty));
+        $this->editdetail->qtystockex->setText(H::fqty($qtyex));
+        
         $this->editdetail->editprice->setText($price);
         if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
             $serial = $item->getNearestSerie($store_id);

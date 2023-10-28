@@ -92,6 +92,7 @@
                         <a zippy="btopay" class="  btn btn-success  mr-2 ">Оплатити</a>
 
                         <button zippy="binvoice" type="submit" class="  btn btn-info mr-2 "  >Рахунок-фактура  </button>
+                        <button zippy="bwarranty" type="submit" class="  btn btn-info mr-2 "  >Гарантійний талон  </button>
                         
                         <button zippy="btask" type="submit" class=" btn btn-info mr-2 ">Створити наряд</button>
                         <button zippy="bref" type="submit" class="  btn btn-danger mr-2 ">Замовлення анульовано</button>
@@ -155,6 +156,10 @@
                           <form zippy="iform" class="form-inline" >
                                ТМЦ  
                                <input zippy="iitem"  class="form-control">
+                              {{#usesnumberitem}}
+                                &nbsp;с/н  
+                               <input zippy="isn"  class="form-control">
+                               {{/usesnumberitem}}
                                &nbsp;Кiл.
                                <input required="required" style="width:100px"  type="text"  class="form-control priceqty" zippy="iqty"  >
                                &nbsp;Цiна

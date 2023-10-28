@@ -27,16 +27,24 @@ class Main extends Base
         $this->_tvars['curversion'] = System::CURR_VERSION;
         $this->_tvars['curversionbd'] = System::getOptions('version', false);
 
+        $v= \App\Helper::checkVer()  ;
+            
+            if(strlen($v) >0){
+               $this->_tvars['newversion']  = " Доступна нова версiя <b>{$v}</b>  <a target=\"_blank\" href=\"https://zippy.com.ua/upsate\">Перейти...</a> ";                
+            } else{
+               $this->_tvars['newversion']  = '';
+            }
+        
         $user = System::getUser();
 
         $this->_docstatelist = \App\Entity\Doc\Document::getStateList();
 
-        $this->_tvars['wminqty'] = strpos(System::getUser()->widgets, 'wminqty') !== false;
-        $this->_tvars['wsdate'] = strpos(System::getUser()->widgets, 'wsdate') !== false;
-        $this->_tvars['wrdoc'] = strpos(System::getUser()->widgets, 'wrdoc') !== false;
-        $this->_tvars['wmdoc'] = strpos(System::getUser()->widgets, 'wmdoc') !== false;
-        $this->_tvars['winfo'] = strpos(System::getUser()->widgets, 'winfo') !== false;
-        $this->_tvars['wgraph'] = strpos(System::getUser()->widgets, 'wgraph') !== false;
+        $this->_tvars['wminqty'] = strpos(System::getUser()->widgets ?? '', 'wminqty') !== false;
+        $this->_tvars['wsdate'] = strpos(System::getUser()->widgets ?? '', 'wsdate') !== false;
+        $this->_tvars['wrdoc'] = strpos(System::getUser()->widgets ?? '', 'wrdoc') !== false;
+        $this->_tvars['wmdoc'] = strpos(System::getUser()->widgets ?? '', 'wmdoc') !== false;
+        $this->_tvars['winfo'] = strpos(System::getUser()->widgets ?? '', 'winfo') !== false;
+        $this->_tvars['wgraph'] = strpos(System::getUser()->widgets ?? '', 'wgraph') !== false;
         if ($user->rolename == 'admins') {
             $this->_tvars['wminqty'] = true;
 
@@ -94,12 +102,11 @@ class Main extends Base
         //минимальное количество
         if ($this->_tvars['wminqty'] == true) {
             $data = array();
-            $sql = "select t.qty,s.storename, t.store_id, i.minqty,i.itemname,i.item_code   from (select store_id, item_id, coalesce(sum( qty),0) as qty   from  store_stock
-            where  {$cstr} 1=1 group by store_id, item_id    ) t
+            $sql = "select t.qty, i.minqty,i.itemname,i.item_code,i.item_id   from 
+            (select  item_id, coalesce(sum( qty),0) as qty   from  store_stock  where    {$cstr}  1=1        group by  item_id    ) t
             join items  i  on t.item_id = i.item_id
-              join stores  s  on t.store_id = s.store_id
            
-            where i.disabled  <> 1 and  t.qty < i.minqty and i.minqty>0 order  by  s.storename ";
+            where i.disabled  <> 1 and  t.qty < i.minqty and i.minqty>0 order  by  i.itemname ";
             $rs = $conn->Execute($sql);
 
             foreach ($rs as $row) {
@@ -344,10 +351,13 @@ class Main extends Base
     public function mqlistOnRow($row) {
         $item = $row->getDataItem();
 
-
-        $row->add(new Label('wmq_storename', $item->storename));
         $row->add(new Label('wmq_itemname', $item->itemname));
         $row->add(new Label('wmq_item_code', $item->item_code));
+        
+        
+        $d = \App\Entity\Doc\Document::getFirst("meta_name='GoodsReceipt' and document_id in (select document_id from entrylist_view where  item_id = {$item->item_id})  ","document_id desc") ;
+        
+        $row->add(new Label('wmq_cust', $d->customer_name ?? ''));
         $row->add(new Label('wmq_qty', H::fqty($item->qty)));
         $row->add(new Label('wmq_minqty', H::fqty($item->minqty)));
     }
@@ -466,22 +476,22 @@ class Main extends Base
     }
 
     public function onMQcsv($sender) {
+        $br ="";
         $brids = \App\ACL::getBranchIDsConstraint();
         if (strlen($brids) > 0) {
-            $br = " and d.branch_id in ({$brids}) ";
+            $br = " and branch_id in ({$brids}) ";
         }
         $cstr = \App\Acl::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
-            $cstr = "   store_id in ({$cstr})  and  ";
+            $cstr = " where store_id in ({$cstr})     ";
         }
         $conn = $conn = \ZDB\DB::getConnect();
 
-        $sql = "select t.qty,s.storename, t.store_id, i.minqty,i.itemname,i.item_code,i.bar_code,i.cat_name   from (select store_id, item_id, coalesce(sum( qty),0) as qty   from  store_stock
-            where  {$cstr} 1=1 group by store_id, item_id    ) t
+       $sql = "select t.qty, i.minqty,i.itemname,i.item_code,i.item_id,i.bar_code,i.cat_name   from 
+            (select  item_id, coalesce(sum( qty),0) as qty   from  store_stock    {$cstr}       group by  item_id    ) t
             join items_view  i  on t.item_id = i.item_id
-              join stores  s  on t.store_id = s.store_id
            
-            where i.disabled  <> 1 and  t.qty < i.minqty and i.minqty>0 order  by  s.storename ";
+            where i.disabled  <> 1 and  t.qty < i.minqty and i.minqty>0 order  by  i.itemname ";
 
         $rc = $conn->Execute($sql);
         $header = array();
@@ -490,14 +500,17 @@ class Main extends Base
         $i = 0;
         foreach ($rc as $row) {
             $i++;
-            $data['A' . $i] = $row['storename'];
-            $data['B' . $i] = $row['cat_name'];
-            $data['C' . $i] = $row['itemname'];
-            $data['D' . $i] = $row['item_code'];
-            $data['E' . $i] = $row['bar_code'];
-            $data['F' . $i] = H::fd($row['sdate']);
-            $data['G' . $i] = array('value' => H::fqty($row['qty']), 'format' => 'number');
-            $data['H' . $i] = array('value' => H::fqty($row['minqty']), 'format' => 'number');
+            
+        $d = \App\Entity\Doc\Document::getFirst("  meta_name='GoodsReceipt'  {$br}  and document_id in (select document_id from entrylist_view where  item_id = {$row['item_id']}) ","document_id desc") ;
+            
+
+            $data['A' . $i] = $row['cat_name'];
+            $data['B' . $i] = $row['itemname'];
+            $data['C' . $i] = $row['item_code'];
+            $data['D' . $i] = $row['bar_code'];
+            $data['E' . $i] = $d->customer_name ?? '';
+            $data['F' . $i] = array('value' => H::fqty($row['qty']), 'format' => 'number');
+            $data['G' . $i] = array('value' => H::fqty($row['minqty']), 'format' => 'number');
         }
         H::exportExcel($data, $header, 'minqty.xlsx');
     }

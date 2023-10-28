@@ -102,7 +102,7 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars['pages'][]=array('link'=> $link  ,'title'=>$p->title);
         }
 
-        if(strlen($_COOKIE['zippy_shop'] ?? null)==0) {
+        if(strlen($_COOKIE['zippy_shop'] ?? '')==0) {
             \App\Helper::insertstat(\App\Helper::STAT_HIT_SHOP, 0, 0) ;
             setcookie("zippy_shop", "visited", time() + 60 * 60 * 24);
 

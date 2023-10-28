@@ -311,7 +311,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->editjurid->setChecked($this->_customer->jurid);
         $this->customerdetail->editisholding->setChecked($this->_customer->isholding);
         
-        $this->customerdetail->edittags->setTags(\App\Entity\Tag::getTags(1,$this->_customer->customer_id));
+        $this->customerdetail->edittags->setTags(\App\Entity\Tag::getTags(1,(int)$this->_customer->customer_id));
         $this->customerdetail->edittags->setSuggestions(\App\Entity\Tag::getSuggestions(1));
         
     }
@@ -451,7 +451,7 @@ class CustomerList extends \App\Pages\Base
          
         $tags = $this->customerdetail->edittags->getTags() ;
         
-        \App\Entity\Tag::updateTags($tags,1,$this->_customer->customer_id) ;
+        \App\Entity\Tag::updateTags($tags,1,(int)$this->_customer->customer_id) ;
 
         
         $this->customerdetail->setVisible(false);

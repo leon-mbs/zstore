@@ -22,6 +22,7 @@ class User extends \ZCL\DB\Entity
         $this->defsalesource = 0;
         $this->deffirm = 0;
         $this->hidesidebar = 0;
+
         $this->usemobileprinter = 0;
         $this->pagesize = 25;
         $this->createdon = time();
@@ -49,8 +50,8 @@ class User extends \ZCL\DB\Entity
      *
      */
     protected function afterLoad() {
-        $this->createdon = strtotime($this->createdon);
-        $this->lastactive = strtotime($this->lastactive);
+        $this->createdon = strtotime($this->createdon ?? '');
+        $this->lastactive = strtotime($this->lastactive ?? '');
 
         //доступы  уровня  роли
         $acl = @unserialize($this->roleacl);
@@ -100,7 +101,7 @@ class User extends \ZCL\DB\Entity
 
         $this->darkmode = $options['darkmode']?? 0;
         $this->emailnotify = $options['emailnotify']?? 0;
-        $this->hidesidebar = $options['hidesidebar']?? 0;
+        $this->hidesidebar = (int)$options['hidesidebar'];
         $this->usemobileprinter = $options['usemobileprinter']?? 0;
 
         $this->prtype = $options['prtype'] ?? 0;
@@ -182,7 +183,9 @@ class User extends \ZCL\DB\Entity
      */
     public static function getByLogin($login) {
         $conn = \ZDB\DB::getConnect();
-        return User::getFirst('userlogin = ' . $conn->qstr($login));
+        $user = User::getFirst('userlogin = ' . $conn->qstr($login));
+  
+        return $user;
     }
 
     public static function getByEmail($email) {

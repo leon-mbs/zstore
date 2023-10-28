@@ -28,6 +28,39 @@ class docs extends JsonRPC
 
         return $list;
     }
+    public function list() {
+
+        $list = [];
+        $num1 = Document::qstr("%<apinumber>{$num}</apinumber>%");
+        $num2 = Document::qstr("%<apinumber><![CDATA[{$num}]]></apinumber>%");
+        foreach(Document::find("  content   like  {$num1} or content   like  {$num2}  ")  as $d) {
+      //  foreach(Document::find(" ")  as $d) {
+            $doc=[];
+            $doc['document_id'] = $d->document_id;
+            $doc['document_number'] = $d->document_number;
+            $doc['document_date'] = H::fd($d->document_date);
+            $doc['customer_id'] = $d->customer_id;
+            $doc['customer_name'] = $d->customer_name;
+            $doc['amount'] = H::fa( $d->amount);
+            $doc['state'] =  $d->state;
+            $doc['store'] =  $d->headerdata['store'];
+            $doc['items'] = [];
+            foreach($d->unpackDetails('detaildata') as $i){
+               $item=[];
+               $item['item_id']= $i->item_id;
+               $item['itemname']= $i->itemname;
+               $item['item_code']= $i->item_code;
+               $item['quantity']= H::fqty($i->quantity);
+               $item['price']= H::fa($i->price);
+               
+               $doc['items'][]=$item;                     
+            }
+           
+           
+            $list[]=$doc;
+        }
+        return $list;
+    }
 
 
     //записать заказ

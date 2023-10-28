@@ -4,6 +4,7 @@ namespace App\Pages\Service;
 
 use App\Entity\Customer;
 use App\Entity\Item;
+use App\Entity\Category;
 use App\Entity\Doc\Document;
 use App\Entity\Store;
 use App\Helper as H;
@@ -31,7 +32,14 @@ class Export extends \App\Pages\Base
         $form = $this->add(new Form("iform"));
 
         $form->add(new DropDownChoice("itype", array(), 0))->onChange($this, "onType");
-        $form->add(new DropDownChoice("price", Item::getPriceTypeList()));
+        $catlist = array();
+        foreach (Category::getList() as $k => $v) {
+            $catlist[$k] = $v;
+        }        
+        $form->add(new DropDownChoice("cat", $catlist));
+        $form->add(new TextInput("brand", ""));
+        $form->brand->setDataList(Item::getManufacturers());
+         
         $form->add(new DropDownChoice("store", Store::getList(), H::getDefStore()));
         $form->add(new DropDownChoice("item_type", Item::getTypes(), H::getDefStore()));
         $form->add(new CheckBox("itemxml"));
@@ -129,14 +137,23 @@ class Export extends \App\Pages\Base
     }
 
     public function onExport($sender) {
+        $option = \App\System::getOptions('common');
+ 
         $t = $this->iform->itype->getValue();
         $tp = $this->iform->item_type->getValue();
         $store = $this->iform->store->getValue();
-        $pt = $this->iform->price->getValue();
+        $cat = $this->iform->cat->getValue();
+        $brand = $this->iform->brand->getText();
 
         $sql = "disabled <> 1 ";
         if ($tp > 0) {
             $sql .= " and item_type=" . $tp;
+        }
+        if ($cat > 0) {
+            $sql .= " and cat_id=" . $cat;
+        }
+        if ( strlen($brand) > 0) {
+            $sql .= " and manufacturer=" .  Item::qstr($$brand);
         }
         
 
@@ -150,11 +167,18 @@ class Export extends \App\Pages\Base
         $header['E1'] = "Бренд";
         $header['F1'] = "Артикул";
         $header['G1'] = "Штрих код";
-        $header['H1'] = "Ціна";
+        $header['H1'] = "Мін. кіл.";
+        $header['I1'] = $option['price1'];
+        $header['J1'] = $option['price2'];
+        $header['K1'] = $option['price3'];
+        $header['L1'] = $option['price4'];
+        $header['M1'] = $option['price5'];
 
+        
         if ($t == 1) {
-            $header['I1'] = "Комірка";
-            $header['J1'] = "Кіл.";
+            $header['N1'] = "Комірка";
+            $header['O1'] = "Кіл.";
+            $header['P1'] = "На суму";
         }
 
         $root="<root>";
@@ -169,13 +193,22 @@ class Export extends \App\Pages\Base
             $data['E' . $i] = $item->manufacturer;
             $data['F' . $i] = $item->item_code;
             $data['G' . $i] = $item->bar_code;
-            $price=  H::fa($item->getPrice($pt));
-            $data['H' . $i] = array('value' => H::fa(doubleval($price)), 'format' => 'number', 'align' => 'right');
-
+            $data['H' . $i] = $item->minqty;
+            
+            
+            $data['I' . $i] = array('value' => $item->price1,  'align' => 'right');
+            $data['J' . $i] = array('value' => $item->price2,  'align' => 'right');
+            $data['K' . $i] = array('value' => $item->price3,  'align' => 'right');
+            $data['L' . $i] = array('value' => $item->price4,  'align' => 'right');
+            $data['M' . $i] = array('value' => $item->price5,  'align' => 'right');
+            
+            
             if ($t == 1) {
-                $data['I' . $i] = $item->cell;
+                $data['N' . $i] = $item->cell;
                 $qty = H::fqty($item->getQuantity($store));
-                $data['J' . $i] = array('value' => H::fqty(doubleval($qty)), 'format' => 'number', 'align' => 'right');
+                $data['O' . $i] = array('value' => H::fqty(doubleval($qty)), 'format' => 'number', 'align' => 'right');
+                $sum=$item->getAmount($store);
+                $data['P' . $i] = array('value' => H::fa(doubleval($sum)), 'format' => 'number', 'align' => 'right');
             }
 
             $root.="<item>";
@@ -186,10 +219,17 @@ class Export extends \App\Pages\Base
             $root.="<item_code>" . $item->item_code . "</item_code>";
             $root.="<bar_code>" . $item->bar_code . "</bar_code>";
             $root.="<brand><![CDATA[" . $item->manufacturer . "]]></brand>";
+            $root.="<minqty>" . $item->minqty . "</minqty>";
+            $root.="<price1 >" . $item->price1. "</price1>";
+            $root.="<price2>" .  $item->price2. "</price2>";
+            $root.="<price3>" .  $item->price3. "</price3>";
+            $root.="<price4>" .  $item->price4. "</price4>";
+            $root.="<price5>" .  $item->price5. "</price5>";
+
             if ($t == 1) {
                 $root.="<quantity>" .$qty. "</quantity>";
+                $root.="<amount>" .$sum. "</amount>";
             }
-            $root.="<price>" .  $price  . "</price>";
             $root.="</item>";
 
         }
@@ -290,7 +330,7 @@ class Export extends \App\Pages\Base
 
             $root.="<item>";
             $root.="<optname>" . $row['optname'] . "</optname>";
-            $root.="<optvalue>" . $row['optvalue'] . "</optvalue>";
+            $root.="<optvalue><![CDATA[" . $row['optvalue'] . "]]></optvalue>";
             $root.="</item>";
 
         }

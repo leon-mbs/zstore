@@ -112,9 +112,14 @@ class ServiceAct extends \App\Pages\Base
 
             return json_encode(['error'=>'Нема прав на  доступ до документу' ], JSON_UNESCAPED_UNICODE);
         }
+        $common = System::getOptions("common");
 
 
         $ret =[];
+        
+        $ret['options'] = [];        
+        $ret['options']['usesnumber']   =  $common['usesnumber'] ;
+        
         $ret['doc'] = [];
         $ret['doc']['document_date']   =  date('Y-m-d', $this->_doc->document_date) ;
         $ret['doc']['document_number']   =   $this->_doc->document_number ;
@@ -162,6 +167,7 @@ class ServiceAct extends \App\Pages\Base
                'item_code'=>$item->item_code ,
                'price'=>H::fa($item->price) ,
                'disc'=>$item->disc ,
+               'snumber'=>$item->snumber ,
                'pureprice'=>$item->pureprice ,
 
                'quantity'=>H::fqty($item->quantity) ,
@@ -223,6 +229,7 @@ class ServiceAct extends \App\Pages\Base
             $item->disc = $it->disc;
             $item->price = $it->price;
             $item->pureprice = $it->pureprice;
+            $item->snumber = $it->snumber;
             $item->rowid = $i;
 
             $itemlist[$i]=$item;
