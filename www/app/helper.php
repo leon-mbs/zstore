@@ -590,7 +590,7 @@ class Helper
      * @return mixed
      */
     public static function fqty($qty) {
-        if (strlen($qty) == 0) {
+        if (strlen(''.$qty) == 0) {
             return '';
         }
         if(is_numeric($qty) &&  abs($qty)<0.0005) {

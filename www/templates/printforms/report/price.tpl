@@ -3,7 +3,7 @@
 
     <tr>
 
-        <td style="font-size:larger" align="center" colspan="11">
+        <td style="font-size:larger" align="center" colspan="8">
           <b>  Прайс від {{date}}</b><br><br>
         </td>
     </tr>
@@ -16,7 +16,7 @@
  {{/iscat}}  
  {{^isbrand}}      
     <tr>
-        <td  colspan="11">
+        <td  colspan="8">
         <b>  Бренд:</b> {{brandname}}  <br>
         </td>
     </tr>

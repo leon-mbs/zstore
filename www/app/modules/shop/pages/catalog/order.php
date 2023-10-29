@@ -172,6 +172,8 @@ class Order extends Base
             $this->setError("Невірний час доставки");
             return;
         }
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
 
         $order = null;
         try {
@@ -301,10 +303,13 @@ class Order extends Base
             //   $this->setSuccess("Створено замовлення " . $order->document_number);
 
 
-            \App\Entity\Subscribe::sendSMS($phone, "Ваше замовлення номер " . $order->document_id);
+         //   \App\Entity\Subscribe::sendSMS($phone, "Ваше замовлення номер " . $order->document_id);
+            $conn->CommitTrans();
 
         } catch(\Exception $ee) {
             $this->setError($ee->getMessage());
+            $conn->RollbackTrans();
+             
             return;
         }
 
@@ -320,8 +325,9 @@ class Order extends Base
         if($payment == 1) {
 
             App::Redirect("App\\Modules\\Shop\\Pages\\Catalog\\OrderPay", array($order->document_id)) ;
-
+            return;
         }
+        App::Redirect("App\\Modules\\Shop\\Pages\\Catalog\\Main") ;
 
 
     }
