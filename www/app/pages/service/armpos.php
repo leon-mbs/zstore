@@ -505,17 +505,16 @@ class ARMPos extends \App\Pages\Base
 
 
         $code_ = Item::qstr($code);
-        $code0 = Item::qstr($code0);
-        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store}) and  (item_code = {$code_} or bar_code = {$code_} or item_code = {$code0} or bar_code = {$code0}  )");
-
+        $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_})");
+      
         if ($item == null) {
-            $this->setError("Товар з кодом `{$code}` не знайдено");
+            $this->setWarn("Товар з кодом `{$code}` не знайдено");
             return;
         }
 
         $qty = $item->getQuantity($store);
         if ($qty <= 0) {
-            $this->setError("Товару {$item->itemname} немає на складі");
+            $this->setWarn("Товару {$item->itemname} немає на складі");
         }
 
         foreach ($this->_itemlist as $ri => $_item) {
