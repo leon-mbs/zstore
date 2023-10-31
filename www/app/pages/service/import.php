@@ -263,6 +263,7 @@ class Import extends \App\Pages\Base
             $price3 = str_replace(',', '.', trim($row[$colprice3]));
             $price4 = str_replace(',', '.', trim($row[$colprice4]));
             $price5 = str_replace(',', '.', trim($row[$colprice5]));
+            
             $itemcode = trim($row[$colcode]);
             $brand = trim($row[$colbrand]);
             $itemname = trim($row[$colname]);
@@ -316,48 +317,20 @@ class Import extends \App\Pages\Base
                 $item = new Item();
             }
 
-            if (strlen($itemname) > 0) {
-                $item->itemname = trim($itemname);
-            }
-            if (strlen($itemcode) > 0) {
-                $item->item_code = trim($itemcode);
-            }
-            if (strlen($itembarcode) > 0) {
-                $item->bar_code = trim($itembarcode);
-            }
-            if (strlen($msr) > 0) {
-                $item->msr = trim($msr);
-            }
-            if (strlen($cell) > 0) {
-                $item->cell = trim($cell);
-            }
-            if (strlen($brand) > 0) {
-                $item->manufacturer = $brand;
-            }
-            if (strlen($desc) > 0) {
-                $item->description = trim($desc);
-            }
-            if (strlen($shortname) > 0) {
-                $item->shortname = trim($shortname);
-            }
-            if (strlen($warranty) > 0) {
-                $item->warranty = trim($warranty);
-            }
-            if ($price1 > 0) {
-                $item->price1 = $price1;
-            }
-            if ($price2 > 0) {
-                $item->price2 = $price2;
-            }
-            if ($price3 > 0) {
-                $item->price3 = $price3;
-            }
-            if ($price4 > 0) {
-                $item->price4 = $price4;
-            }
-            if ($price5 > 0) {
-                $item->price5 = $price5;
-            }
+            $item->itemname = $itemname;
+            $item->item_code = $itemcode;
+            $item->bar_code = $itembarcode;
+            $item->msr = $msr;
+            $item->cell = $cell;
+            $item->manufacturer = $brand;
+            $item->description =$desc;
+            $item->shortname = $shortname;
+            $item->warranty = $warranty;
+            $item->price1 = $price1;
+            $item->price2 = $price2;
+            $item->price3 = $price3;
+            $item->price4 = $price4;
+            $item->price5 = $price5;
 
             if ($inprice > 0) {
                 $item->price = $inprice;
