@@ -432,7 +432,7 @@ class GoodsIssue extends \App\Pages\Base
         }
 
         $code_ = Item::qstr($code);
-        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and   (item_code = {$code_} or bar_code = {$code_})");
+        $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_})");
 
         if ($item == null) {
 

@@ -73,8 +73,17 @@
           
           callPageMethod(method,params,postdata,(data)=> 
           {
-               var data = JSON.parse(data)
-               callback(data)
+//               console.log(data) 
+               
+               try{
+                  var data = JSON.parse(data)
+                  callback(data)                  
+               }
+               catch(error) {
+                   console.log(error)           
+                   console.log(data)           
+               }           
+               
             
           } , (error)=> 
           {

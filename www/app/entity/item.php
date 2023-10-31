@@ -256,7 +256,7 @@ class Item extends \ZCL\DB\Entity
                     //ищем последнюю закупочную  цену
                     $partion = $this->getLastPartion($store);
                 }
-                $price = $partion + (int)$partion / 100 * $ret;
+                $price = $partion + doubleval($partion) / 100 * $ret;
 
             }
         } else {
@@ -273,19 +273,19 @@ class Item extends \ZCL\DB\Entity
                     $partion = $this->getLastPartion($store);
                 }
                 if ($_price_ == 'price1' && $cat->price1 > 0) {
-                    $price = $partion + (int)$partion / 100 * $cat->price1;
+                    $price = $partion + doubleval($partion)  / 100 * $cat->price1;
                 }
                 if ($_price_ == 'price2' && $cat->price2 > 0) {
-                    $price = $partion + (int)$partion / 100 * $cat->price2;
+                    $price = $partion + doubleval($partion)  / 100 * $cat->price2;
                 }
                 if ($_price_ == 'price3' && $cat->price3 > 0) {
-                    $price = $partion + (int)$partion / 100 * $cat->price3;
+                    $price = $partion + doubleval($partion)  / 100 * $cat->price3;
                 }
                 if ($_price_ == 'price4' && $cat->price4 > 0) {
-                    $price = $partion + (int)$partion / 100 * $cat->price4;
+                    $price = $partion + doubleval($partion)  / 100 * $cat->price4;
                 }
                 if ($_price_ == 'price5' && $cat->price5 > 0) {
-                    $price = $partion + (int)$partion / 100 * $cat->price5;
+                    $price = $partion + doubleval($partion)  / 100 * $cat->price5;
                 }
 
 
