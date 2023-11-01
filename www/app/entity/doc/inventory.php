@@ -87,16 +87,12 @@ class Inventory extends Document
         foreach ($this->unpackDetails('detaildata') as $item) {
             $name = $item->itemname;
             $q = H::fqty($item->quantity);
-            if ($user->rolename != 'admins') {
-                $q = '-';
-            }
-
             if (round($item->qfact) == round($q)) {
                 $detail[] = array("no"        => $i++,
                                   "item_name" => $name,
                                   "qfact"     => $item->qfact,
                                   "snumber"   => $item->snumber,
-                                  "quantity"  => $q
+                                  "quantity"  => $user->rolename != 'admins' ? '-' :$q
                 );
             }
             if (round($item->qfact) < round($q)) {
@@ -105,7 +101,7 @@ class Inventory extends Document
                                       "item_name" => $name,
                                       "qfact"     => $item->qfact,
                                       "snumber"   => $item->snumber,
-                                      "quantity"  => $q
+                                      "quantity"  => $user->rolename != 'admins' ? '-' :$q
                 );
             }
             if (round($item->qfact) > round($q)) {
@@ -115,7 +111,7 @@ class Inventory extends Document
                                       "item_name" => $name,
                                       "qfact"     => $item->qfact,
                                       "snumber"   => $item->snumber,
-                                      "quantity"  => $q
+                                      "quantity"  => $user->rolename != 'admins' ? '-' :$q
                 );
             }
         }
