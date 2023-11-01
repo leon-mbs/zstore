@@ -388,9 +388,9 @@ class Import extends \App\Pages\Base
 
 
                     $image->content = $thumb->getImageAsString();
-                    $thumb->resize(256, 256);
+                    $thumb->resize(512, 512);
                     $image->thumb = $thumb->getImageAsString();
-                    $thumb->resize(64, 64);
+                    $thumb->resize(128, 128);
 
                     $item->thumb = "data:{$image->mime};base64," . base64_encode($thumb->getImageAsString());
                 }
