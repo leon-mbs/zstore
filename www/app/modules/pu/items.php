@@ -147,12 +147,12 @@ class Items extends \App\Pages\Base
             $this->setError('Не обрано товар');
             return;
         }
-        $data = json_encode($elist);
+       // $data = json_encode($elist, JSON_UNESCAPED_UNICODE);
 
 
 
         try {
-            $data = Helper::make_request("GET", "/api/v1/products/edit", $data);
+            $data = Helper::make_request("POST", "/api/v1/products/inport_tile", $data);
         } catch(\Exception $ee) {
             System::setErrorMsg($ee->getMessage());
             return;
@@ -223,7 +223,7 @@ class Items extends \App\Pages\Base
             }
         }
 
-        $data = json_encode($list);
+        $data = json_encode($list, JSON_UNESCAPED_UNICODE);
 
 
 
@@ -294,7 +294,7 @@ class Items extends \App\Pages\Base
             }
         }
 
-        $data = json_encode($list);
+        $data = json_encode($list, JSON_UNESCAPED_UNICODE);
 
 
 
