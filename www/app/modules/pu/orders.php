@@ -173,20 +173,26 @@ class Orders extends \App\Pages\Base
                 $shoporder->document_number = 'PU00001';
             }
 
-            if (strlen($shoporder->headerdata['cemail'])> 0 && $modules['puinsertcust'] == 1) {
-                $cust = Customer::getByEmail($shoporder->headerdata['cemail']);
+            if ( $modules['puinsertcust'] == 1) {
+                $phone = \App\Util::handlePhone($shoporder->headerdata['cphone'] )  ;
+                $cust = Customer::getByEmail($cust);
                 if ($cust == null) {
+                    $cust = Customer::getByEmail($shoporder->headerdata['cemail']);
+                }   
+                if ($cust == null &&strlen($shoporder->headerdata['cname']) >0 && ( strlen($phone) >0 || strlen($shoporder->headerdata['cemail'])>0 ) ) {
                     $cust = new Customer();
                     $cust->customer_name = $shoporder->headerdata['cname'];
-                    $cust->phone = \App\Util::handlePhone($shoporder->headerdata['cphone']);
+                    $cust->phone = $phone;
 
                     $cust->type = Customer::TYPE_BAYER;
 
                     $cust->email = $shoporder->headerdata['cemail'];
                     $cust->comment = "Клiєнт Prom UA";
                     $cust->save();
+                }        
+                if($cust != null) {         
+                    $shoporder->customer_id = $cust->customer_id;
                 }
-                $shoporder->customer_id = $cust->customer_id;
             }
 
 

@@ -51,8 +51,6 @@ class Order extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), 0));
         $this->docform->add(new DropDownChoice('salesource', H::getSaleSources(), H::getDefSaleSource()));
 
-
-
         $this->docform->add(new TextInput('editbonus'));
         $this->docform->add(new SubmitButton('bbonus'))->onClick($this, 'onBonus');
         $this->docform->add(new Label('bonus', 0));
@@ -60,8 +58,6 @@ class Order extends \App\Pages\Base
         $this->docform->add(new TextInput('edittotaldisc'));
         $this->docform->add(new SubmitButton('btotaldisc'))->onClick($this, 'onTotaldisc');
         $this->docform->add(new Label('totaldisc', 0));
-
-
 
         $this->docform->add(new TextInput('payed', 0));
         $this->docform->add(new Label('payamount', 0));
