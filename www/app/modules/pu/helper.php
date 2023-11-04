@@ -35,10 +35,10 @@ class Helper
 
     }
 
-    public static function make_request($method, $url, $body) {
+    public static function make_request($method, $url, $body='') {
 
         $modules = System::getOptions("modules");
-
+        $usessl = $modules['pussl'];
 
 
         $headers = array(
@@ -54,13 +54,13 @@ class Helper
             curl_setopt($ch, CURLOPT_POST, true);
         }
 
-        if (!empty($body)) {
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
+        if (strlen($body)>0) {
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
         }
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        //    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $ssl);
-
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $usessl == 1);
+      //  \App\Helper::log(json_encode($body, JSON_UNESCAPED_UNICODE)) ;
         $result = curl_exec($ch);
         if (curl_errno($ch) > 0) {
             throw new  \Exception(curl_error($ch));
@@ -71,6 +71,11 @@ class Helper
         }
         curl_close($ch);
 
+        $ret = json_decode($result, true)  ;
+        if (strlen($ret['error']) > 0) {
+            throw new  \Exception($ret['error']);
+        }
+                
         return json_decode($result, true);
     }
 

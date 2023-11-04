@@ -1089,7 +1089,8 @@ class Document extends \ZCL\DB\Entity
         if($f == null) {
             return false;
         }
-        if(strlen($f->tin)==0 || strlen($f->iban) == 0) {
+        $kod=strlen($f->tin) >0 ? $f->tin : $f->inn;
+        if(strlen($kod)==0 || strlen($f->iban) == 0) {
             return false;
         }
 
@@ -1108,7 +1109,7 @@ class Document extends \ZCL\DB\Entity
         $url = $url . (strlen($f->payname) > 0 ? $f->payname : $f->firm_name) ."\n";
         $url = $url .  $f->iban."\n";
         $url = $url .  "UAH". \App\Helper::fa($payment)."\n";
-        $url = $url .  $f->tin."\n\n\n";
+        $url = $url .  $kod."\n\n\n";
         $url = $url .  $this->meta_desc ." ".$number." від ".  \App\Helper::fd($this->document_date) ."\n\n";
 
         $url = base64_encode($url);

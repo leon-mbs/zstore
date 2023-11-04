@@ -250,7 +250,7 @@ class ProductList extends \App\Pages\Base
                 $image->content = $thumb->getImageAsString();
             }
 
-            $thumb->resize(256, 256);
+            $thumb->resize(512, 512);
             $image->thumb = $thumb->getImageAsString();
             $conn =   \ZDB\DB::getConnect();
             if($conn->dataProvider=='postgres') {

@@ -34,6 +34,7 @@ class Options extends \App\Pages\Base
 
         $form->add(new CheckBox('setpayamount', $modules['pusetpayamount']));
         $form->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), $modules['pusalesource']));
+        $form->add(new CheckBox('ssl', $modules['pussl']));
 
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $form->add(new CheckBox('insertcust', $modules['puinsertcust']));
@@ -66,6 +67,7 @@ class Options extends \App\Pages\Base
         $modules['pusalesource'] = $salesource;
         $modules['pusetpayamount'] = $setpayamount;
         $modules['puinsertcust'] = $insertcust;
+        $modules['pussl'] = $this->cform->ssl->isChecked() ? 1 : 0;;
 
         System::setOptions("modules", $modules);
         $this->setSuccess('Збережено');

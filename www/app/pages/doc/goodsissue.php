@@ -72,10 +72,11 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
-
+        
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
-
+        
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
+        $this->docform->addcust->setVisible(       \App\ACL::checkEditRef('CustomerList',false));
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');

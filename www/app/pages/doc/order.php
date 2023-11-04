@@ -51,8 +51,6 @@ class Order extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), 0));
         $this->docform->add(new DropDownChoice('salesource', H::getSaleSources(), H::getDefSaleSource()));
 
-
-
         $this->docform->add(new TextInput('editbonus'));
         $this->docform->add(new SubmitButton('bbonus'))->onClick($this, 'onBonus');
         $this->docform->add(new Label('bonus', 0));
@@ -60,8 +58,6 @@ class Order extends \App\Pages\Base
         $this->docform->add(new TextInput('edittotaldisc'));
         $this->docform->add(new SubmitButton('btotaldisc'))->onClick($this, 'onTotaldisc');
         $this->docform->add(new Label('totaldisc', 0));
-
-
 
         $this->docform->add(new TextInput('payed', 0));
         $this->docform->add(new Label('payamount', 0));
@@ -75,6 +71,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new TextArea('address'))->setVisible(false);
 
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
+        $this->docform->addcust->setVisible(       \App\ACL::checkEditRef('CustomerList',false));
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
@@ -100,6 +97,7 @@ class Order extends \App\Pages\Base
         $this->editdetail->add(new Label('qtystock'));
         $this->editdetail->add(new Label('pricestock'));
         $this->editdetail->add(new SubmitLink('addnewitem'))->onClick($this, 'addnewitemOnClick');
+        $this->editdetail->addnewitem->setVisible(       \App\ACL::checkEditRef('ItemList',false));
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
