@@ -175,7 +175,7 @@ class Orders extends \App\Pages\Base
 
             if ( $modules['puinsertcust'] == 1) {
                 $phone = \App\Util::handlePhone($shoporder->headerdata['cphone'] )  ;
-                $cust = Customer::getByEmail($cust);
+                $cust = Customer::getByPhone($phone);
                 if ($cust == null) {
                     $cust = Customer::getByEmail($shoporder->headerdata['cemail']);
                 }   

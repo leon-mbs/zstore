@@ -120,6 +120,8 @@ class Order extends Base
         foreach ($this->basketlist as $p) {
             $this->sum = $this->sum + ($p->price  * $p->quantity);
         }
+        
+		$this->listform->pitem->Reload();
 
         if (count($this->basketlist)==0) {
             App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog\\Main", 0);

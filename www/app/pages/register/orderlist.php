@@ -699,8 +699,14 @@ class OrderList extends \App\Pages\Base
 
         foreach ($this->_itemlist as $ri => $_item) {
             if ($_item->bar_code == $code || $_item->item_code == $code || $_item->bar_code == $code0 || $_item->item_code == $code0) {
+                if($this->_itemlist[$ri]->checkedqty ==  $this->_itemlist[$ri]->quantity) {
+                    $this->setWarn('Лишній товар') ;
+                    $this->addJavaScript("new Audio('/assets/error.mp3').play()", true);
+                               
+                    return;
+                }
                 $this->_itemlist[$ri]->checkedqty += 1;
-                if($this->_itemlist[$ri]->checkedqty >=  $this->_itemlist[$ri]->quantity) {
+                if($this->_itemlist[$ri]->checkedqty ==  $this->_itemlist[$ri]->quantity) {
                     $this->_itemlist[$ri]->checked = true;
                 }
 
@@ -716,7 +722,7 @@ class OrderList extends \App\Pages\Base
 
     }
 
-
+   
     public function editOnSubmit($sender) {
 
 

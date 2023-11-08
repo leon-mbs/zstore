@@ -9,7 +9,9 @@
 
         <UID>{{guid}}</UID>
 
+          {{#tin}}
         <TIN>{{tin}}</TIN>
+         {{/tin}}
 
         {{#inn}}
         <IPN>{{inn}}</IPN>
