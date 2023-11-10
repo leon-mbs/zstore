@@ -299,6 +299,7 @@ class Options extends \App\Pages\Base
 
         $this->add(new Form('tbform'))->onSubmit($this, "onBot");
         $this->tbform->add(new TextInput('tbtoken', $common['tbtoken']));
+        $this->tbform->add(new TextInput('tbname', $common['tbname']));
 
 
         //источники  продаж
@@ -424,6 +425,7 @@ class Options extends \App\Pages\Base
         }
 
         $common['tbtoken'] = $sender->tbtoken->getText()  ;
+        $common['tbname'] = $sender->tbname->getText()  ;
 
         $url= _BASEURL. 'chatbot.php' ;
 
