@@ -378,7 +378,7 @@ class Subscribe extends \ZCL\DB\Entity
 
             return $text;
         } catch(\Exception $e) {
-            return "Ошибка  разметки";
+            return "Помилка розмітки";
         }
     }
 
