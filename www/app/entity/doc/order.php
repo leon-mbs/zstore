@@ -45,6 +45,7 @@ class Order extends \App\Entity\Doc\Document
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
 
+        $da=  trim($this->headerdata["ship_address"].' ' .$this->headerdata["npaddress"]  );
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
@@ -52,7 +53,7 @@ class Order extends \App\Entity\Doc\Document
                         "phone"           => $this->headerdata["phone"],
                         "email"           => $this->headerdata["email"],
                         "delivery"        => $this->headerdata["delivery_name"],
-                        "ship_address"    => strlen($this->headerdata["ship_address"]) > 0 ? $this->headerdata["ship_address"] : false,
+                        "ship_address"    => strlen($da) > 0 ? $da: false,
                         "notes"           => nl2br($this->notes),
                         "outnumber"       => $this->headerdata["outnumber"],
                         "isoutnumber"     => strlen($this->headerdata["outnumber"]) > 0,

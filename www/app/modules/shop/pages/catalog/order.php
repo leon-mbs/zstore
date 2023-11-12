@@ -67,7 +67,14 @@ class Order extends Base
             $form->lastname->setText($c->lastname)  ;
         }
 
-
+        $api = new \App\Modules\NP\Helper();
+      
+     
+        $areas = $api->getAreaListCache();
+        $form->add(new DropDownChoice('bayarea',$areas,0))->onChange($this, 'onBayArea');
+        $form->add(new DropDownChoice('baycity'))->onChange($this, 'onBayCity');
+        $form->add(new DropDownChoice('baypoint'));
+   
         $this->OnDelivery($form->delivery);
 
 
@@ -75,11 +82,18 @@ class Order extends Base
 
     public function OnDelivery($sender) {
 
-        if ($sender->getValue() == 2 || $sender->getValue() == 3) {
+        $dt = $sender->getValue();
+        
+        if ($dt == Document::DEL_BOY || $dt == Document::DEL_SERVICE) {
             $this->orderform->address->setVisible(true);
         } else {
             $this->orderform->address->setVisible(false);
         }
+        
+        $this->orderform->bayarea->setVisible($dt  == Document::DEL_NP ) ;
+        $this->orderform->baycity->setVisible($dt  == Document::DEL_NP ) ;
+        $this->orderform->baypoint->setVisible($dt == Document::DEL_NP ) ;
+        
     }
 
     public function OnUpdate($sender) {
@@ -268,6 +282,22 @@ class Order extends Base
                 $order->user_id = $user->user_id;
             }
 
+            $order->headerdata['bayarea'] = $this->orderform->bayarea->getValue();
+            $order->headerdata['baycity'] = $this->orderform->baycity->getValue();
+            $order->headerdata['baypoint'] = $this->orderform->baypoint->getValue();
+            $order->headerdata['npaddress'] ='';
+            if(strlen($order->headerdata['bayarea'])>1) {
+               $order->headerdata['npaddress']  .= (' '. $this->orderform->bayarea->getValueName() );   
+            }
+            if(strlen($order->headerdata['baycity'])>1) {
+               $order->headerdata['npaddress']  .= (' '. $this->orderform->baycity->getValueName() );   
+            }
+            if(strlen($order->headerdata['baypoint'])>1) {
+               $order->headerdata['npaddress']  .= (' '. $this->orderform->baypoint->getValueName() );   
+            }
+              
+            
+            
             $order->save();
 
             \App\Helper::insertstat(\App\Helper::STAT_ORDER_SHOP, 0, 0) ;
@@ -345,5 +375,20 @@ class Order extends Base
     }
 
 
+    public function onBayArea($sender) {
+
+        $api = new \App\Modules\NP\Helper();
+        $list = $api->getCityListCache($sender->getValue());
+
+        $this->orderform->baycity->setOptionList($list);
+    }
+
+    public function onBayCity($sender) {
+
+        $api = new \App\Modules\NP\Helper();
+        $list = $api->getPointListCache($sender->getValue());
+
+        $this->orderform->baypoint->setOptionList($list);
+    }
 
 }

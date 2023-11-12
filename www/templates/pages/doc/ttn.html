@@ -112,6 +112,9 @@
                     <div class="form-group">
                         <label data-label="ship_number" for="ship_number">Номер декларації</label>
                         <input class="form-control" type="text" zippy="ship_number">
+                        {{#np}}
+                          <small>Відправку НП можна  створити через журнал продаж</small>
+                        {{/np}}
                     </div>
                     <div class="form-group">
                         <label data-label="ship_amount" for="ship_amount">Сума витрат за доставку</label>
@@ -120,11 +123,11 @@
 
 
                     <div class="form-group">
-                        <label data-label="sent_date" for="sent_date"> Дата відправки</label>
+                        <label data-label="sent_date" for="sent_date">Орієнтовна дата відправки</label>
                         <input style="width:120px;" class="form-control" type="text" zippy="sent_date" required="required">
                     </div>
                     <div class="form-group">
-                        <label data-label="delivery_date" for="delivery_date"> Дата доставки</label>
+                        <label data-label="delivery_date" for="delivery_date">Орієнтовна дата доставки</label>
                         <input style="width:120px;" class="form-control" type="text" zippy="delivery_date" required="required">
                     </div>
 

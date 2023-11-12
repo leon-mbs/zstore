@@ -421,6 +421,14 @@ class GIList extends \App\Pages\Base
             $this->onSelCity($this->nppan->npform->selcity);
             $this->nppan->npform->selpoint->setValue($modules['nppointref']);
         }
+        
+        $this->nppan->npform->bayarea->setValue($this->_doc->headerdata['bayarea'] ?? 0);
+        $this->onBayArea($this->nppan->npform->bayarea) ;
+        $this->nppan->npform->baycity->setValue($this->_doc->headerdata['baycity'] ?? 0);
+        $this->onBayCity($this->nppan->npform->baycity) ;
+        $this->nppan->npform->baypoint->setValue($this->_doc->headerdata['baypoint'] ?? 0);
+        
+        
         $this->nppan->npform->seltel->setText($modules['nptel']);
         $this->nppan->npform->npdesc->setText($this->_doc->notes);
 

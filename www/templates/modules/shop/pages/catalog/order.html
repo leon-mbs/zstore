@@ -92,29 +92,54 @@
                
                     <div class="form-group  row">
                     
-                       <label class="col-5 col-form-label" for="delivery">Доставка</label>
+                       <label class="col-3 col-form-label" for="delivery">Доставка</label>
                       
-                       <div class="col-7">
+                       <div class="col-9">
                        <select class="form-control" zippy="delivery">
                             <option value="0">Обрати</option>
                         </select>
                       </div>
                     </div>
-
+                      {{#np}}
+                        <div class="form-group row">
+                            <label class="col-3 col-form-label" for="bayarea">Область </label>
+                            <div class="col-9">
+                            <select zippy="bayarea" class="form-control     ">
+                                <option value="0">Не обрано</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-3 col-form-label" for="baycity">Мiсто </label>
+                            <div class="col-9">
+                            <select zippy="baycity" class="form-control select2 ">
+                                <option value="0">Не обрано</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-3 col-form-label" data-label="baypoint" for="baypoint">Вiддiлення </label>
+                            <div class="col-9">
+                            <select zippy="baypoint" class="form-control select2 ">
+                                <option value="0">Не обрано</option>
+                            </select>
+                          </div>                    
+                        </div>                    
+                       {{/np}}
 
                     <div class="form-group  row">
              
-                        <label class="col-4 col-form-label" data-label="address" for="address"  >Адреса</label>
+                        <label class="col-3 col-form-label" data-label="address" for="address"  >Адреса</label>
                       
-                        <div class="col-7">
+                        <div class="col-9">
                           <textarea style="height:100px" zippy="address" class="form-control"></textarea>
                         </div>
                     </div>
                       <div class="form-group  row">
                       
-                      <label class="col-4 col-form-label" for="deltime" >Час доставки</label>
+                      <label class="col-3 col-form-label" for="deltime" >Час доставки</label>
                        
-                       <div class="col-7">
+                       <div class="col-9">
                            <div class="input-group">
                          <input   class="form-control"   zippy="deldate" required="required">
                            <span class="input-group-text">:</span>
@@ -125,9 +150,9 @@
 
                     <div class="form-group  row">
                     
-                          <label class="col-4 col-form-label" for="notes" >Коментар </label>
+                          <label class="col-3 col-form-label" for="notes" >Коментар </label>
                        
-                          <div class="col-7">
+                          <div class="col-9">
                               <textarea zippy="notes" class="form-control"></textarea>
                         </div>
                     </div>
