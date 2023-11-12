@@ -49,10 +49,10 @@ class Order extends Base
         $form->add(new \Zippy\Html\Form\Time('deltime', time() + 3600))->setVisible($this->_tvars["isfood"]);
 
 
-        $form->add(new TextInput('email'));
-        $form->add(new TextInput('phone'));
-        $form->add(new TextInput('firstname'));
-        $form->add(new TextInput('lastname'));
+        $form->add(new TextInput('email',$_COOKIE['shop_email']));
+        $form->add(new TextInput('phone',$_COOKIE['shop_phone']));
+        $form->add(new TextInput('firstname',$_COOKIE['shop_fn']));
+        $form->add(new TextInput('lastname',$_COOKIE['shop_ln']));
         $form->add(new TextArea('address'))->setVisible(false);
         $form->add(new TextArea('notes'));
         $form->onSubmit($this, 'OnSave');
@@ -196,7 +196,7 @@ class Order extends Base
 
 
             $store_id = (int)$shop["defstore"];
-            $f = 0;
+            $f = $shop["defbranch"] ??0;
 
             $store = \App\Entity\Store::load($store_id);
             if ($store != null) {
@@ -215,7 +215,7 @@ class Order extends Base
 
             }
 
-            $order->document_number = $order->nextNumber();
+            $order->document_number = $order->nextNumber($shop["defbranch"] ?? 0);
 
             $amount = 0;
             $itlist = array();
@@ -274,7 +274,7 @@ class Order extends Base
             $order->notes = trim($this->orderform->notes->getText());
             $order->amount = $amount;
             $order->payamount = $amount;
-            $order->branch_id = $shop["defbranch"];
+         //   $order->branch_id = $shop["defbranch"] ?? 0;
             $order->firm_id = $shop["firm"];
 
             if($order->user_id==0) {
@@ -354,6 +354,13 @@ class Order extends Base
 
         System::setSuccessMsg("Створено замовлення номер " . $number) ;
 
+        
+        setcookie("shop_fn",$firstname) ;
+        setcookie("shop_ln",$lastname) ;
+        setcookie("shop_phone",$phone) ;
+        setcookie("shop_email",$email) ;
+        
+        
         if($payment == 1) {
 
             App::Redirect("App\\Modules\\Shop\\Pages\\Catalog\\OrderPay", array($order->document_id)) ;
