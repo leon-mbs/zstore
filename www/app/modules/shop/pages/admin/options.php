@@ -173,6 +173,11 @@ class Options extends \App\Pages\Base
         $shop['nouseimages'] = $this->shop->nouseimages->isChecked() ? 1 : 0;
         $shop['noshowempty'] = $this->shop->noshowempty->isChecked() ? 1 : 0;
 
+        if(intval($shop['defbranch'])==0 &&  $this->_tvars["usebranch"]==true) {
+            $this->setError('Не вказана філія');
+            return;
+        }
+        
 
         $file = $sender->logo->getFile();
         if (strlen($file["tmp_name"]) > 0) {
