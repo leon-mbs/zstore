@@ -72,7 +72,7 @@
 
 
                 </div>
-                <div class="col-12 col-md-3">
+                <div class="col-12 col-md-4">
                     <div class="form-group  ">
                         <label for="delivery">Доставка</label>
 
@@ -81,6 +81,26 @@
                         </select>
 
                     </div>
+                     {{#np}}
+                        <div class="form-group">
+                            <label for="bayarea">Область  </label>
+                            <select zippy="bayarea" class="form-control     ">
+                                <option value="0">Не обрано</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="baycity">Мiсто  </label>
+                            <select zippy="baycity" class="form-control select2 ">
+                                <option value="0">Не обрано</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label data-label="baypoint" for="baypoint">Вiддiлення  </label>
+                            <select zippy="baypoint" class="form-control select2 ">
+                                <option value="0">Не обрано</option>
+                            </select>
+                        </div>                    
+                       {{/np}}
                     <div class="form-group  ">
                         <label data-label="address" for="address">Адреса</label>
 
@@ -297,8 +317,9 @@
                     </div>
 
                     <div class="form-group">
-                        <input type="submit" zippy="submitrow" value="Зберегти" class="btn btn-outline-primary ">
-                        &nbsp; <input type="button" zippy="cancelrow" value="До переліку" class="btn btn-outline-secondary ">
+                      
+                         <input type="button" zippy="cancelrow" value="До переліку" class="btn btn-outline-secondary ">
+                       &nbsp;&nbsp;<input type="submit" zippy="submitrow" value="Зберегти" class="btn btn-outline-primary ">
                     </div>
                 </form>
 

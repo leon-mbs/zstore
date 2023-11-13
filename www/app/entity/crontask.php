@@ -105,7 +105,7 @@ class CronTask extends \ZCL\DB\Entity
 
     public static function doQueue($task_id=0) {
         global $logger;
-        $ok=true;
+     
         $ret="";
         $conn=\Zdb\DB::getConnect() ;
 
@@ -114,7 +114,7 @@ class CronTask extends \ZCL\DB\Entity
             $where = " id = ". $task_id    ;        
         }
         
-        $queue = CronTask::find( $where , "id asc", 25) ;
+        $queue = CronTask::findYield($where , "id asc" ) ;
         foreach($queue as $task) {
             try {
                 $done = false;
@@ -161,18 +161,17 @@ class CronTask extends \ZCL\DB\Entity
 
                 if($done) {
                    CronTask::delete($task->id) ;
-                }
+                }   
             } catch(\Exception $e) {
                 $msg = $e->getMessage();
                 $logger->error($msg);
-                $ok = false;   
+                $task->starton +=  (12 *3600) ;
+                $task->save() ;//откладываем
+                
             }    
 
         }
-
-        if(!$ok) {
-            throw new \Exception("Cron  error. see log") ;
-        }
+         
     }
     public static function getTypes() {
         $ret=[];
