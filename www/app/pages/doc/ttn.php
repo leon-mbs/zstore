@@ -48,8 +48,8 @@ class TTN extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
 
         $this->docform->add(new Date('document_date'))->setDate(time());
-        $this->docform->add(new Date('sent_date'));
-        $this->docform->add(new Date('delivery_date'));
+        $this->docform->add(new Date('sent_date',time()));
+        $this->docform->add(new Date('delivery_date',time()+24*3600));
         $this->docform->add(new CheckBox('nostore'));
 
         $this->docform->add(new TextInput('barcode'));
