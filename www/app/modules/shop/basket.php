@@ -41,7 +41,7 @@ class Basket implements \Zippy\Interfaces\DataSource
         $p->quantity  = $product->quantity;
         $p->itemname  = $product->itemname;
         $p->item_id   = $product->item_id;
-
+        $p->image_id   = $product->image_id;
 
         if (isset($this->list[$p->item_id])) {
             $this->list[$p->item_id]->quantity++;

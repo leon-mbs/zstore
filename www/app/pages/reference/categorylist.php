@@ -278,7 +278,7 @@ class CategoryList extends \App\Pages\Base
                 if ($imagedata[0] < $imagedata[1]) {
                     $thumb->cropFromCenter($imagedata[0], $imagedata[0]);
                 }
-                $thumb->resize(256, 256);
+                $thumb->resize(512, 512);
                 $image->content = $thumb->getImageAsString();
             }
             $conn =   \ZDB\DB::getConnect();

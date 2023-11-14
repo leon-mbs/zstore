@@ -132,11 +132,11 @@ class Options extends \App\Pages\Base
         $areas = array();
         $tmplist = $api->getAreas();
         if($tmplist['success']==false) {
-            if(count($tmplist['errors'])>0) {
+            if(count($tmplist['errors'] ??[])>0) {
                 $this->setError(array_pop($tmplist['errors'])) ;
                 return;
             }
-            if(count($tmplist['warnings'])>0) {
+            if(count($tmplist['warnings']??[])>0) {
                 $this->setWarn(array_pop($tmplist['warnings'])) ;
 
             }
@@ -149,7 +149,8 @@ class Options extends \App\Pages\Base
         $d = serialize($areas);
 
         file_put_contents(_ROOT . "upload/arealist.dat", $d);
-
+        unset($d);
+    
         $cities = array();
 
         $tmplist = $api->getCities(0);
@@ -161,7 +162,9 @@ class Options extends \App\Pages\Base
         $d = serialize($cities);
 
         file_put_contents(_ROOT . "upload/citylist.dat", $d);
-
+        unset($tmplist);
+        unset($cities);
+        unset($d);
         gc_collect_cycles() ;
 
         $wlist = array();
@@ -174,9 +177,9 @@ class Options extends \App\Pages\Base
         gc_collect_cycles() ;
 
         $d = serialize($wlist);
-        unset($wlist) ;
         file_put_contents(_ROOT . "upload/pointlist.dat", $d);
-
+        unset($wlist) ;
+        unset($d);
 
         $this->updateData();
 

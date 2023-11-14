@@ -73,8 +73,17 @@
           
           callPageMethod(method,params,postdata,(data)=> 
           {
-               var data = JSON.parse(data)
-               callback(data)
+//               console.log(data) 
+               
+               try{
+                  var data = JSON.parse(data)
+                  callback(data)                  
+               }
+               catch(error) {
+                   console.log(error)           
+                   console.log(data)           
+               }           
+               
             
           } , (error)=> 
           {
@@ -248,7 +257,7 @@
                     </li>
                     <li class="nav-item dropdown  ">
                         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <span
-                                zippy="username"></span> </a>
+                                zippy="loginname"></span> </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a class="dropdown-item  " href="/index.php?p=App/Pages/Jobs"><i

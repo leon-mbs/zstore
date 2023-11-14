@@ -51,8 +51,6 @@ class Order extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), 0));
         $this->docform->add(new DropDownChoice('salesource', H::getSaleSources(), H::getDefSaleSource()));
 
-
-
         $this->docform->add(new TextInput('editbonus'));
         $this->docform->add(new SubmitButton('bbonus'))->onClick($this, 'onBonus');
         $this->docform->add(new Label('bonus', 0));
@@ -60,8 +58,6 @@ class Order extends \App\Pages\Base
         $this->docform->add(new TextInput('edittotaldisc'));
         $this->docform->add(new SubmitButton('btotaldisc'))->onClick($this, 'onTotaldisc');
         $this->docform->add(new Label('totaldisc', 0));
-
-
 
         $this->docform->add(new TextInput('payed', 0));
         $this->docform->add(new Label('payamount', 0));
@@ -75,6 +71,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new TextArea('address'))->setVisible(false);
 
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
+        $this->docform->addcust->setVisible(       \App\ACL::checkEditRef('CustomerList',false));
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
@@ -85,6 +82,15 @@ class Order extends \App\Pages\Base
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total'));
+
+        $api = new \App\Modules\NP\Helper();
+      
+     
+        $areas = $api->getAreaListCache();
+        $this->docform->add(new DropDownChoice('bayarea',$areas,0))->onChange($this, 'onBayArea');
+        $this->docform->add(new DropDownChoice('baycity'))->onChange($this, 'onBayCity');
+        $this->docform->add(new DropDownChoice('baypoint'));
+        $this->OnDelivery($this->docform->delivery);
 
 
         $this->add(new Form('editdetail'))->setVisible(false);
@@ -100,6 +106,7 @@ class Order extends \App\Pages\Base
         $this->editdetail->add(new Label('qtystock'));
         $this->editdetail->add(new Label('pricestock'));
         $this->editdetail->add(new SubmitLink('addnewitem'))->onClick($this, 'addnewitemOnClick');
+        $this->editdetail->addnewitem->setVisible(       \App\ACL::checkEditRef('ItemList',false));
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
@@ -136,6 +143,13 @@ class Order extends \App\Pages\Base
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
             $this->OnDelivery($this->docform->delivery);
 
+            $this->docform->bayarea->setValue($this->_doc->headerdata['bayarea'] ?? 0);
+            $this->onBayArea($this->docform->bayarea) ;
+            $this->docform->baycity->setValue($this->_doc->headerdata['baycity'] ?? 0);
+            $this->onBayCity($this->docform->baycity) ;
+            $this->docform->baypoint->setValue($this->_doc->headerdata['baypoint'] ?? 0);
+            
+            
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->salesource->setValue($this->_doc->headerdata['salesource']);
             $this->docform->total->setText($this->_doc->amount);
@@ -366,6 +380,22 @@ class Order extends \App\Pages\Base
         $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
         $this->_doc->headerdata['delivery_name'] = $this->docform->delivery->getValueName();
         $this->_doc->headerdata['ship_address'] = $this->docform->address->getText();
+        $this->_doc->headerdata['bayarea'] = $this->docform->bayarea->getValue();
+        $this->_doc->headerdata['baycity'] = $this->docform->baycity->getValue();
+        $this->_doc->headerdata['baypoint'] = $this->docform->baypoint->getValue();
+        $this->_doc->headerdata['npaddress'] ='';
+        if(strlen($this->_doc->headerdata['bayarea'])>1) {
+           $this->_doc->headerdata['npaddress']  .= (' '. $this->docform->bayarea->getValueName() );   
+        }
+        if(strlen($this->_doc->headerdata['baycity'])>1) {
+           $this->_doc->headerdata['npaddress']  .= (' '. $this->docform->baycity->getValueName() );   
+        }
+        if(strlen($this->_doc->headerdata['baypoint'])>1) {
+           $this->_doc->headerdata['npaddress']  .= (' '. $this->docform->baypoint->getValueName() );   
+        }
+        
+        
+        
         $this->_doc->headerdata['phone'] = $this->docform->phone->getText();
         $this->_doc->headerdata['email'] = $this->docform->email->getText();
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
@@ -662,6 +692,11 @@ class Order extends \App\Pages\Base
         } else {
             $this->docform->address->setVisible(false);
         }
+        
+
+        $this->docform->bayarea->setVisible($dt  == Document::DEL_NP ) ;
+        $this->docform->baycity->setVisible($dt  == Document::DEL_NP ) ;
+        $this->docform->baypoint->setVisible($dt == Document::DEL_NP ) ;
     }
 
     public function OnChangePriceType($sender) {
@@ -674,7 +709,6 @@ class Order extends \App\Pages\Base
         $this->docform->detail->Reload();
         $this->calcTotal();
     }
-
 
 
     public function onBonus() {
@@ -726,6 +760,7 @@ class Order extends \App\Pages\Base
         $this->wselitem->setPriceType($this->docform->pricetype->getValue());
         $this->wselitem->Reload();
     }
+
     public function onOpenCatPan($sender) {
         $this->wselitem->setVisible(true);
         $this->wselitem->setPriceType($this->docform->pricetype->getValue());
@@ -792,6 +827,20 @@ class Order extends \App\Pages\Base
 
     }
 
+    public function onBayArea($sender) {
 
+        $api = new \App\Modules\NP\Helper();
+        $list = $api->getCityListCache($sender->getValue());
+
+        $this->docform->baycity->setOptionList($list);
+    }
+
+    public function onBayCity($sender) {
+
+        $api = new \App\Modules\NP\Helper();
+        $list = $api->getPointListCache($sender->getValue());
+
+        $this->docform->baypoint->setOptionList($list);
+    }
 
 }

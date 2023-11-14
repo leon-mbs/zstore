@@ -76,7 +76,7 @@ class Base extends \Zippy\Html\WebPage
         $this->nbform->add(new \Zippy\Html\Form\DropDownChoice('nbbranch', $blist, $this->branch_id))->onChange($this, 'onnbFirm');
 
         $this->add(new ClickLink('logout', $this, 'LogoutClick'));
-        $this->add(new Label('username', $user->username));
+        $this->add(new Label('loginname', $user->username));
 
 
         //меню

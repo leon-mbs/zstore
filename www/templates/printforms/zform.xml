@@ -5,9 +5,10 @@
 
         <UID>{{guid}}</UID>
 
+          {{#tin}}
         <TIN>{{tin}}</TIN>
-
-        {{#inn}}
+         {{/tin}}
+       {{#inn}}
         <IPN>{{inn}}</IPN>
         {{/inn}}
 

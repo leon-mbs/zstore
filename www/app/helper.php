@@ -795,8 +795,7 @@ class Helper
         }
         return 10;
     }
-
-
+ 
 
     /**
     * список валют
@@ -850,7 +849,7 @@ class Helper
 
     public static function exportExcel($data, $header, $filename) {
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-
+      
         $sheet = $spreadsheet->getActiveSheet();
 
         foreach ($header as $k => $v) {
@@ -933,6 +932,23 @@ class Helper
         die;
     }
 
+    
+    public  static  function exportExcelFromCSV($csvfile){
+
+        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+        
+        $spreadsheet= $reader->loadSpreadsheetFromFile($csvfile) ;
+        
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        $writer->save('php://output');
+        die;
+
+        
+    }
+    
 
     /**
     * Получение  данных с  таблицы ключ-значение

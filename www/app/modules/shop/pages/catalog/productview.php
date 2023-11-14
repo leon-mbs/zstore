@@ -82,7 +82,7 @@ class ProductView extends Base
 
         $form = $this->add(new \Zippy\Html\Form\Form('formcomment'));
         $form->onSubmit($this, 'OnComment');
-        $form->add(new TextInput('nick'));
+        $form->add(new TextInput('starnick'));
         $form->add(new TextInput('rating'));
         $form->add(new TextArea('comment'));
         $form->add(new TextInput('capchacode'));
@@ -226,13 +226,13 @@ class ProductView extends Base
 
         $comment = new \App\Modules\Shop\Entity\ProductComment();
         $comment->item_id = $this->item_id;
-        $comment->author = $this->formcomment->nick->getText();
-        $comment->comment = $this->formcomment->comment->getText();
+        $comment->author = $this->formcomment->starnick->getText();
+        $comment->comment = $this->formcomment->starcomment->getText();
         $comment->rating = $this->formcomment->rating->getText();
         $comment->created = time();
         $comment->save();
-        $this->formcomment->nick->setText('');
-        $this->formcomment->comment->setText('');
+        $this->formcomment->starnick->setText('');
+        $this->formcomment->starcomment->setText('');
         $this->formcomment->rating->setText('0');
         $this->clist = ProductComment::findByProduct($this->item_id);
         $this->commentlist->Reload();

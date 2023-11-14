@@ -145,14 +145,16 @@ class ItemList extends \App\Pages\Base
 
         $this->add(new Panel('setpanel'))->setVisible(false);
         $this->setpanel->add(new DataView('setlist', new ArrayDataSource($this, '_itemset'), $this, 'itemsetlistOnRow'));
-        $this->setpanel->add(new Form('setform'))->onSubmit($this, 'OnAddSet');
+        $this->setpanel->add(new Form('setform')) ;
         $this->setpanel->setform->add(new AutocompleteTextInput('editsname'))->onText($this, 'OnAutoSet');
         $this->setpanel->setform->add(new TextInput('editsqty', 1));
+        $this->setpanel->setform->add(new SubmitButton('setformbtn'))->onClick($this, 'OnAddSet');
 
         $this->setpanel->add(new DataView('ssetlist', new ArrayDataSource($this, '_serviceset'), $this, 'itemsetslistOnRow'));
-        $this->setpanel->add(new Form('setsform'))->onSubmit($this, 'OnAddSSet');
-        $this->setpanel->setsform->add(new DropDownChoice('editssname', \App\Entity\Service::findArray("service_name", "disabled<>1", "service_name")));
+        $this->setpanel->add(new Form('setsform')) ;
+        $this->setpanel->setsform->add(new DropDownChoice('editssname', \App\Entity\Service::findArray("service_name", "disabled<>1", "service_name")))->onChange($this,'onService',true);
         $this->setpanel->setsform->add(new TextInput('editscost'));
+        $this->setpanel->setsform->add(new SubmitButton('setsformbtn'))->onClick($this, 'OnAddSSet');
 
         $this->setpanel->add(new Form('cardform'))->onSubmit($this, 'OnCardSet');
         $this->setpanel->cardform->add(new TextArea('editscard'));
@@ -495,9 +497,9 @@ class ItemList extends \App\Pages\Base
 
 
                 $image->content = $thumb->getImageAsString();
-                $thumb->resize(256, 256);
+                $thumb->resize(512, 512);
                 $image->thumb = $thumb->getImageAsString();
-                $thumb->resize(64, 64);
+                $thumb->resize(128, 128);
 
                 $this->_item->thumb = "data:{$image->mime};base64," . base64_encode($thumb->getImageAsString());
             }
@@ -619,13 +621,14 @@ class ItemList extends \App\Pages\Base
     }
 
     public function OnAddSet($sender) {
-        $id = $sender->editsname->getKey();
+        $form=  $this->setpanel->setform;
+        $id = $form->editsname->getKey();
         if ($id == 0) {
             $this->setError("Не обрано товар");
             return;
         }
 
-        $qty = $sender->editsqty->getText();
+        $qty = $form->editsqty->getText();
 
         $set = new ItemSet();
         $set->pitem_id = $this->_pitem_id;
@@ -634,7 +637,7 @@ class ItemList extends \App\Pages\Base
 
         $set->save();
         $this->setupdate() ;
-        $sender->clean();
+        $form->clean();
     }
 
     public function ondelset($sender) {
@@ -653,13 +656,14 @@ class ItemList extends \App\Pages\Base
     }
 
     public function OnAddSSet($sender) {
-        $id = $sender->editssname->getValue();
+        $form= $this->setpanel->setsform;
+        $id = $form->editssname->getValue();
         if ($id == 0) {
             $this->setError("Не обрано послугу або роботу");
             return;
         }
 
-        $cost = $sender->editscost->getText();
+        $cost = $form->editscost->getText();
 
         $set = new ItemSet();
         $set->pitem_id = $this->_pitem_id;
@@ -670,7 +674,7 @@ class ItemList extends \App\Pages\Base
 
 
         $this->setupdate() ;
-        $sender->clean();
+        $form->clean();
     }
 
     public function OnCardSet($sender) {
@@ -938,6 +942,18 @@ class ItemList extends \App\Pages\Base
         $this->updateAjax([],"$('#idesc').modal('show'); $('#idesccontent').html('{$desc}'); ")  ;
         
     }
+    
+    public function onService($sender) {
+       $price=''; 
+       $ser =  \App\Entity\Service::load($sender->getValue());
+       if($ser != null) {
+           $price = $ser->price;
+       }
+       $this->setpanel->setsform->editscost->setText($price);
+        
+    }
+    
+    
 }
 
 class ItemDataSource implements \Zippy\Interfaces\DataSource

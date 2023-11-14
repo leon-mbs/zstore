@@ -243,7 +243,7 @@ class PPOHelper
         $header['doctype'] = $open == true ? 100 : 101;
         $header['firmname'] = $firm['firm_name'];
         $header['inn'] = strlen($firm['inn']) > 0 ? $firm['inn'] : false;
-        $header['tin'] = $firm['tin'];
+        $header['tin'] = strlen($firm['tin']) > 0 ? $firm['tin'] : false; 
         $header['address'] = $pos->address;
         $header['testing'] = $pos->testing==1;
         $header['pointname'] = $pos->pointname;

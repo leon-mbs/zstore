@@ -231,6 +231,7 @@ class Subscribe extends \ZCL\DB\Entity
         //в  разметке  одинарные
         $this->msgtext = str_replace('{', '{{', $this->msgtext);
         $this->msgtext = str_replace('}', '}}', $this->msgtext);
+        $common = \App\System::getOptions("common");
 
         $header = array();
 
@@ -251,8 +252,9 @@ class Subscribe extends \ZCL\DB\Entity
         $header['payed'] = '';
         $header['credit'] = '';
         $header['payurl'] = '';
-        $header['device'] = $doc->headerdata['device'];
-        $header['ttnnp'] = $doc->headerdata['ship_number'];
+        $header['botname'] = $common['tbname'] ??'';
+        $header['device'] = $doc->headerdata['device'] ??'';
+        $header['ttnnp'] = $doc->headerdata['ship_number'] ??'';
         if (strlen($doc->headerdata['device']) > 0 && strlen($doc->headerdata['devsn']) > 0) {
             $header['device'] .= " (" . $doc->headerdata['devsn'] . ")";
         }
@@ -376,7 +378,7 @@ class Subscribe extends \ZCL\DB\Entity
 
             return $text;
         } catch(\Exception $e) {
-            return "Ошибка  разметки";
+            return "Помилка розмітки";
         }
     }
 

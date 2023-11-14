@@ -48,8 +48,8 @@ class TTN extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
 
         $this->docform->add(new Date('document_date'))->setDate(time());
-        $this->docform->add(new Date('sent_date'));
-        $this->docform->add(new Date('delivery_date'));
+        $this->docform->add(new Date('sent_date',time()));
+        $this->docform->add(new Date('delivery_date',time()+24*3600));
         $this->docform->add(new CheckBox('nostore'));
 
         $this->docform->add(new TextInput('barcode'));
@@ -59,6 +59,7 @@ class TTN extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('salesource', H::getSaleSources(), H::getDefSaleSource()));
 
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
+        $this->docform->addcust->setVisible(       \App\ACL::checkEditRef('CustomerList',false));
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
@@ -177,6 +178,9 @@ class TTN extends \App\Pages\Base
                         $this->docform->ship_address->setText($basedoc->headerdata['ship_address']);
                         $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
 
+                        $this->_doc->headerdata['bayarea'] = $basedoc->headerdata['bayarea'];
+                        $this->_doc->headerdata['baycity'] = $basedoc->headerdata['baycity'];
+                        $this->_doc->headerdata['baypoint'] = $basedoc->headerdata['baypoint'];
  
                         $notfound = array();
                         $order = $basedoc->cast();
