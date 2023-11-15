@@ -37,16 +37,18 @@ class Discounts extends \App\Pages\Base
         if (false == \App\ACL::checkShowSer('Discounts')) {
             return;
         }
+        //кнопки
         $this->add(new ClickLink('tabo', $this, 'onTab'));
         $this->add(new ClickLink('tabc', $this, 'onTab'));
         $this->add(new ClickLink('tabi', $this, 'onTab'));
-
         $this->add(new ClickLink('tabs', $this, 'onTab'));
+        $this->add(new ClickLink('tabp', $this, 'onTab'));
+        //панели
         $this->add(new Panel('otab'));
         $this->add(new Panel('ctab'));
         $this->add(new Panel('itab'));
-
         $this->add(new Panel('stab'));
+        $this->add(new Panel('ptab'));
 
         $this->onTab($this->tabo);
 
@@ -201,12 +203,14 @@ class Discounts extends \App\Pages\Base
         $this->_tvars['tabibadge'] = $sender->id == 'tabi' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
 
         $this->_tvars['tabsbadge'] = $sender->id == 'tabs' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
+        $this->_tvars['tabpbadge'] = $sender->id == 'tabp' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
 
         $this->ctab->setVisible($sender->id == 'tabc');
         $this->otab->setVisible($sender->id == 'tabo');
         $this->itab->setVisible($sender->id == 'tabi');
 
         $this->stab->setVisible($sender->id == 'tabs');
+        $this->ptab->setVisible($sender->id == 'tabp');
 
     }
 

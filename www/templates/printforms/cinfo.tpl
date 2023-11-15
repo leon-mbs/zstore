@@ -3,7 +3,7 @@
    <tr><td>Тел.</td><td>{{phone}}</td></tr>
    {{#smscode}} 
    <tr><td colspan="2">   СМС код &nbsp;&nbsp;<b>{{smscode}}   </b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a {{{click}}} href="javascript:void(0);return false;">Відправити</a>   
-   <br><small> Відправка  коду на  телефон. Наприклад при списанні  бонусів   </small>
+   <br><small> Відправка коду на телефон для перевірки номеру   </small>
    </td></tr>
   {{/smscode}}
    
