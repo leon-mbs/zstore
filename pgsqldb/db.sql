@@ -1670,8 +1670,8 @@ INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 3, 'Журнал доставок', 'DeliveryList', 'Кафе', 0);
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 5, 'АРМ кухнi (бару)', 'ArmProdFood', 'Кафе', 0);
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 3, 'Прибутки та  видатки', 'IOState', '', 0);
-INSERT INTO "metadata" (  "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES(  2, 'Замовленi товари', 'ItemOrder', 'Продажі', 0);
-INSERT INTO "metadata" (  "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 5, 'Знижки та  акції', 'Discounts', '', 0);
+INSERT INTO "metadata" (  "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 2, 'Замовленi товари', 'ItemOrder', 'Продажі', 0);
+INSERT INTO "metadata" (  "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 5, 'Програма лояльності', 'Discounts', '', 0);
 INSERT INTO "metadata" ("meta_type", "description", "meta_name", "menugroup", "disabled") VALUES(  1, 'Нарахування зарплати', 'CalcSalary', 'Зарплата', 0);
 INSERT INTO "metadata" ("meta_type", "description", "meta_name", "menugroup", "disabled") VALUES(  4, 'Нарахування та утримання', 'SalaryTypeList', '', 0);
 
