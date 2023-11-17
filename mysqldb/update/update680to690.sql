@@ -7,7 +7,7 @@ ALTER TABLE `ppo_zformstat` ADD  amount4 decimal(10, 2) NOT NULL   ;
  --  createdon
 DROP VIEW customers_view  ;
 
-CREATE
+CREATE VIEW customers_view  
 AS
 SELECT
   `customers`.`customer_id` AS `customer_id`,
