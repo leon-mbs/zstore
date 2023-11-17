@@ -7,6 +7,7 @@ use App\Entity\Customer;
 use App\Entity\Category;
 use App\Entity\Item;
 use App\Entity\Service;
+use App\Entity\PromoCode;
 use App\Helper as H;
 use App\System;
 use Zippy\Html\DataList\DataView;
@@ -154,7 +155,19 @@ class Discounts extends \App\Pages\Base
         $this->itab->iolist->setPageSize(H::getPG());
         $this->itab->add(new \Zippy\Html\DataList\Paginator('iopag', $this->itab->iolist));
         $this->itab->iolist->Reload();
+      
+        
+        $this->ptab->add(new Form('pfilter'))->onSubmit($this,"onFilterPromo");
+        $this->ptab->pfilter->add(new TextInput('psearchkey'));
 
+
+        $this->ptab->add(new DataView('plist', new PromoDataSource($this), $this, 'promolistOnRow'));
+        $this->ptab->plist->setPageSize(H::getPG());
+        $this->ptab->add(new \Zippy\Html\DataList\Pager('ppag', $this->ptab->plist));
+        $this->ptab->plist->Reload();
+        
+        
+      
     }
 
 
@@ -523,7 +536,17 @@ class Discounts extends \App\Pages\Base
     }
 
 
+    
+    public function onFilterPromo($rsender) {
+       $this->ptab->plist->Reload();
+    }
 
+    public function promolistOnRow($row) {
+        $p = $row->getDataItem();
+ 
+        $row->add(new  Label("pcode", $p->code));
+ 
+    }
 
 
 }
@@ -652,6 +675,42 @@ class DiscItemODataSource implements \Zippy\Interfaces\DataSource
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
         return Item::find($this->getWhere(), "itemname ", $count, $start);
+    }
+
+    public function getItem($id) {
+
+    }
+
+}
+
+class PromoDataSource implements \Zippy\Interfaces\DataSource
+{
+    private $page;
+
+    public function __construct($page) {
+        $this->page = $page;
+    }
+
+    private function getWhere() {
+
+        $conn = \ZDB\DB::getConnect();
+
+        $where = "1=1 ";
+
+        $text = trim($this->page->ptab->pfilter->psearchkey->getText());
+        if(strlen($text)>0) {
+            $where = $where . " and code = ".$conn->qstr($text);
+        }
+        
+        return $where;
+    }
+
+    public function getItemCount() {
+        return PromoCode::findCnt($this->getWhere());
+    }
+
+    public function getItems($start, $count, $sortfield = null, $asc = null) {
+        return PromoCode::find($this->getWhere(), " state, id desc ", $count, $start);
     }
 
     public function getItem($id) {

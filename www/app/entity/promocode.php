@@ -8,7 +8,7 @@ namespace App\Entity;
  * @table=promocodes
  * @keyfield=id
  */
-class Equipment extends \ZCL\DB\Entity
+class PromoCode extends \ZCL\DB\Entity
 {
     protected function init() {
         $this->id = 0;

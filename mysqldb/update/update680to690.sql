@@ -55,3 +55,6 @@ ADD UNIQUE INDEX code (code)   ;
 
 
 update  metadata set  description ='Програма лояльності' where  meta_name='Discounts';
+
+delete  from  options where  optname='version' ;
+insert  into options (optname,optvalue) values('version','6.9.0'); 
