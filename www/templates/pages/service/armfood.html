@@ -610,16 +610,14 @@
         <script>
             $(document).ready(function () {
                 $('#pfpayed').focus();
+        
 
-   
-       
-
-                $("#pfpayed").change(function () {
+                $("#pfpayed").on('input',function () {
                     var payed = $("#pfpayed").val();
                     var payamount = $("#pfforpay").val();
                     var exchange = parseFloat(payed) - parseFloat(payamount);
                     if (exchange > 0) {
-                        $("#pfrest").val(exchange.toFixed(2));
+                        $("#pfrest").val(fa(exchange));
                     } else {
                         $("#pfrest").val(0);
                     }
@@ -668,6 +666,10 @@
           } 
                 
           function check_btocheck(ele) {
+               if(false == checkFormInput('payform') ){
+                   return false;
+               }  
+              
              $("#modalwait").modal("show") ;
              return true;
           }            

@@ -280,25 +280,42 @@
                         </table> 
                        </div>
                   <div class="w-100" ></div>   
-                 <div class="col-12   col-lg-3 col-xl-2  ">   
-                     <input type="submit" value="Зберегти" zippy="tosave" class="btn  btn-info">
+                 <div class="col-12   col-lg-4 col-xl-3  ">   
+                     <input type="submit" value="Зберегти" zippy="tosave" class="btn  btn-info mr-1">
+                     <input type="submit" value="Відкласти" zippy="topass" class="btn  btn-info">
+                     <button  zippy="tocancel" class="btn  btn-secondary">Скасувати</button>
                 </div>
                    
                                        
-                 <div class="col-12   col-lg-6 col-xl-4 offset-lg-2 offset-xl-2">                       
+                 <div class="col-12   col-lg-8 col-xl-6 offset-lg-1">                       
                       <div class="form row">
                      
-                         <div class="col-auto pt-2">
-                          Тип оплати  
-                          </div>
-                          <div class="col-auto">
-                          <select class="form-control"   zippy="paytype"></select>
+                         <div class="col-auto pt-1">
+                          
+                     {{^onlynal}} 
+                      Тип оплати:                            
+                     <div class="form-check form-check-inline">
+                        <input zippy="pt1"  class="form-check-input" type="radio"   >
+                        <label class="form-check-label" for="pt1"> Готiвка</label>
+                    </div>                  
+                     <div class="form-check form-check-inline">
+                        <input zippy="pt2"   class="form-check-input" type="radio"   >
+                        <label class="form-check-label" for="pt2"> Картка</label>
+                    </div>                  
+                     <div class="form-check form-check-inline">
+                        <input  zippy="pt3"   class="form-check-input" type="radio"   >
+                        <label class="form-check-label" for="pt3"> Комбінована</label>
+                    </div>                  
+ 
+                     {{/onlynal}} 
+                
+                          
                         </div>
                         <div class="col-auto">
                          <input type="submit" value="Оплатити" zippy="topay" class="btn  btn-info">
                         </div>              
-                        
-                             
+                   
+                      
                          </div>
                      </div>
                     
@@ -325,17 +342,17 @@
                         <div class="form-group row">
                             <label class="col-4" for="payed" data-label="payed">Готівка</label>
                            <div class="col-2">
-                            <input autocomplete="off" class="form-control qtyprice" type="text" zippy="payed">
+                            <input  pattern="[0-9,\.]+" autocomplete="off" class="form-control qtyprice" type="text" zippy="payed">
                           </div>
                         </div>
-
+                        {{^onlynal}}  
                       <div class="form-group row">
                             <label class="col-4" for="payedcard" data-label="payedcard">Банкіська картка</label>
                            <div class="col-2">
-                            <input autocomplete="off" class="form-control qtyprice" type="text" zippy="payedcard">
+                            <input  pattern="[0-9,\.]+" autocomplete="off" class="form-control qtyprice" type="text" zippy="payedcard">
                           </div>
                         </div>
-
+                           {{/onlynal}}  
                         <div class="form-group  row">
                             <label class="col-4" for="exchange" data-label="exchange">Решта</label>
                           <div class="col-2">
@@ -711,32 +728,36 @@
                 
                 if(paytype==1) {
                    $('#payed').focus();    
+                   $('#payedcard').attr('disabled','disabled');    
                 }
                 if(paytype==2) {
                    $('#payedcard').focus();    
+                   $('#payed').attr('disabled','disabled');    
                 }
             
           
                 
-                $("#payed").change(function () {
+                $("#payed").on('input',function () {
                     var payed = $("#payed").val();  
-                    var payedcard = $("#payedcard").val();  
+                    var payedcard = $("#payedcard").val() ??0;  
                     var payamount = $("#payamount").val();
+
                     var exchange = parseFloat(payed) + parseFloat(payedcard)  - parseFloat(payamount);
                     if (exchange > 0) {
-                        $("#exchange").val(exchange.toFixed(2));
+                        $("#exchange").val( fa(exchange) );
                     } else {
                         $("#exchange").val(0);
                     }
 
                 }); 
-               $("#payedcard").change(function () {
-                    var payed = $("#payed").val();  
+               $("#payedcard").on('input',function () {
+                    var payed = $("#payed").val()??0;  
                     var payedcard = $("#payedcard").val();  
                     var payamount = $("#payamount").val();
+
                     var exchange = parseFloat(payed) + parseFloat(payedcard)  - parseFloat(payamount);
                     if (exchange > 0) {
-                        $("#exchange").val(exchange.toFixed(2));
+                        $("#exchange").val(fa(exchange));
                     } else {
                         $("#exchange").val(0);
                     }
@@ -774,6 +795,9 @@
                 }
             }
             function check_save(ele) {
+               if(false == checkFormInput('form3') ){
+                   return false;
+               }  
                 $("#modalwait").modal("show") ;
                 return true;
             }
@@ -789,6 +813,9 @@
             function check_checkfisc(ele) {
                 $("#modalwait").modal("show") ;
                 return true;
+            }
+            function check_tocancel(ele) {
+                return confirm("Скасувати чек?")
             }
 
         </script>
