@@ -5,6 +5,7 @@ namespace App\Modules\PPO;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\DataList\DataView;
@@ -25,7 +26,7 @@ class ZForm extends \App\Pages\Base
 
         $this->filter->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', ''), 0));
 
-        $this->add(new Form('stat'))->onSubmit($this, 'OnClose');
+        $this->add(new Form('stat'));
         $this->stat->add(new TextInput('nal'));
         $this->stat->add(new TextInput('bnal'));
         $this->stat->add(new TextInput('credit'));
@@ -35,6 +36,9 @@ class ZForm extends \App\Pages\Base
         $this->stat->add(new TextInput('cnt'));
         $this->stat->add(new TextInput('retcnt'));
         $this->stat->add(new CheckBox('onlyshift'));
+        $this->stat->add(new SubmitButton("zclose"))->onClick($this, 'OnClose');
+
+
         $this->stat->setVisible(false);
         $this->add(new  ClickLink("sync", $this, "onSync")) ;
         $this->add(new  ClickLink("zt", $this, "onZT")) ;

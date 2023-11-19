@@ -621,12 +621,14 @@ class CheckBox
         $cb = new CheckBox($pos->cbkey, $pos->cbpin) ;
         
         if($cb->CheckShift() != true) {
-            return;
+            return true;
         }
         
-        $cb->CloseShift()  ;
+        if(true !== $cb->CloseShift()  ){
+           return false;    
+        }
         
-       
+        return true;     
 
        
    }    
