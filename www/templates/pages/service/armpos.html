@@ -283,6 +283,7 @@
                  <div class="col-12   col-lg-4 col-xl-3  ">   
                      <input type="submit" value="Зберегти" zippy="tosave" class="btn  btn-info mr-1">
                      <input type="submit" value="Відкласти" zippy="topass" class="btn  btn-info">
+                     <button  zippy="frompass" class="btn  btn-primary">Відновити</button>
                      <button  zippy="tocancel" class="btn  btn-secondary">Скасувати</button>
                 </div>
                    
@@ -293,7 +294,7 @@
                          <div class="col-auto pt-1">
                           
                      {{^onlynal}} 
-                      Тип оплати:                            
+                      Оплата:                            
                      <div class="form-check form-check-inline">
                         <input zippy="pt1"  class="form-check-input" type="radio"   >
                         <label class="form-check-label" for="pt1"> Готiвка</label>
@@ -422,7 +423,7 @@
                             <input type="button" value="< назад" zippy="cancel2" class="btn  btn-outline-info">
                             &nbsp;&nbsp;<input type="submit" value="Провести чек  " zippy="save" class="btn  btn-info">
                             {{#fiscal}}
-                            &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Пропустити фiскалiзацiю  
+                            &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Відкласти фiскалiзацiю  
                            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                                    title="На випадок збою інтернету фіскалізацію можна пропустити.
                                     Чек може бути фіскалізований зі списку чеків "></i>
@@ -608,9 +609,9 @@
 
                         <td zippy="rownotes"></td>
                         <td  ><a zippy="checkedit" title="Редагувати"><i class="fa fa-edit"></i></a></td>
-                        <td  ><a zippy="checkreturn" title="Повернення"><i class="fa fa-arrow-left-long"></i></a></td>
+                        <td  ><a zippy="checkreturn" >Повернення</a></td>
                          {{#fiscal}}
-                        <td  ><a zippy="checkfisc" title="Фiскалiзувати"><i class="fa fa-stamp"></i></a></td>
+                        <td  ><a zippy="checkfisc" >Фiскалiзувати</a></td>
                          {{/fiscal}}
                     </tr>
 

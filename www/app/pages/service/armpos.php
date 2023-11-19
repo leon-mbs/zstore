@@ -110,7 +110,9 @@ class ARMPos extends \App\Pages\Base
         //  ввод товаров
 
         $this->docpanel->form2->add(new SubmitButton('tosave'))->onClick($this, 'tosaveOnClick');
-        $this->docpanel->form2->add(new SubmitButton('topass'))->onClick($this, 'topassOnClick');
+        $this->docpanel->form2->add(new SubmitButton('topass'))->onClick($this, 'tosaveOnClick');
+        $this->docpanel->form2->add(new Button('frompass'))->onClick($this, 'fromPass');
+        
         $this->docpanel->form2->add(new Button('tocancel'))->onClick($this, 'newdoc');
         $this->docpanel->form2->add(new SubmitButton('topay'))->onClick($this, 'topayOnClick');
         $this->docpanel->form2->add(new TextInput('barcode'));
@@ -1059,12 +1061,12 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->amount = $this->docpanel->form2->total->getText();
 
         $this->_doc->save()  ;
-        if(strlen($this->_doc->document_number)>0) {
-            $this->_doc->updateStatus(Document::STATE_EDITED);
-        } else {
-            $this->_doc->updateStatus(Document::STATE_NEW);
+        $this->_doc->updateStatus(Document::STATE_EDITED);
+       
+        //отложеный
+        if($sender->id=="topass") {
+           \App\Session::getSession()->armpass=$this->_doc->document_number; 
         }
-
 
         $this->newdoc(null)  ;
     }
@@ -1439,13 +1441,13 @@ class ARMPos extends \App\Pages\Base
         $row->add(new Label('rownotes', $doc->notes));
         $row->add(new Label('rowauthor', $doc->username));
         $row->add(new ClickLink('checkedit'))->onClick($this, "onEdit");
-        $row->add(new ClickLink('checkfisc', $this, "onFisc"))->setVisible(($doc->headerdata['passfisc'] ?? "") ==1) ;
+        $row->add(new ClickLink('checkfisc', $this, "onFisc"))->setVisible(($doc->headerdata['passfisc'] ?? "") == 1) ;
         $row->checkedit->setVisible($doc->state < 4);
 
         $row->add(new \Zippy\Html\Link\RedirectLink('checkreturn', "\\App\\Pages\\Doc\\ReturnIssue", array(0,$doc->document_id)));
         $row->checkreturn->setVisible($doc->state > 4);
         if ($doc->document_id == $this->_doc->document_id) {
-            $row->setAttribute('class', 'table-success');
+           // $row->setAttribute('class', 'table-success');
         }
 
 
@@ -1567,15 +1569,31 @@ class ARMPos extends \App\Pages\Base
 
         }
 
-
-
-        $this->checklistpan->checklist->Reload(false);
-
+        $this->updatechecklist(null);
     }
 
     public function onEdit($sender) {
-        $doc =  $sender->getOwner()->getDataItem();
-        $this->_doc = Document::load($doc->document_id)->cast();
+        $item =  $sender->getOwner()->getDataItem();
+        $doc = Document::load($item->document_id);
+        $this->loadDoc($doc);
+    }
+
+    public function fromPass($sender) {
+        $pn= \App\Session::getSession()->armpass ??'';        
+        $doc = Document::getFirst('state<5 and document_number='.Document::qstr($pn))  ;
+        if($doc != null) {
+           $this->loadDoc($doc);    
+        }
+        \App\Session::getSession()->armpass = '';
+        
+    }
+    
+    public function loadDoc($doc) {
+        $pn= \App\Session::getSession()->armpass ??'';        
+        if($pn===$doc->document_number) {
+            \App\Session::getSession()->armpass = '';
+        }
+        $this->_doc = $doc->cast();
 
         $this->docpanel->setVisible(true);
         $this->docpanel->form2->setVisible(true);
@@ -1814,5 +1832,12 @@ class ARMPos extends \App\Pages\Base
 
     }
 
-
+    public function beforeRender() {
+        
+        $pn= \App\Session::getSession()->armpass ??'';        
+        $this->docpanel->form2->topass->setVisible(strlen($pn)==0);
+        $this->docpanel->form2->frompass->setVisible(strlen($pn)>0);
+        
+        parent::beforeRender()  ;
+    }
 }

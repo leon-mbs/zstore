@@ -322,6 +322,7 @@ class Base extends \Zippy\Html\WebPage
     }
 
     public function beforeRender() {
+        parent::beforeRender()  ;
         $user = System::getUser();
         $this->_tvars['notcnt'] = \App\Entity\Notify::isNotify($user->user_id);
         $this->_tvars['taskcnt'] = \App\Entity\Event::isNotClosedTask($user->user_id);
@@ -359,6 +360,9 @@ class Base extends \Zippy\Html\WebPage
         $this->setSuccess('');
         $this->setInfo('');
         $this->setWarn('');
+        
+        
+        parent::afterRender()  ;
     }
 
     //Перезагрузить страницу  с  клиента
