@@ -148,12 +148,21 @@ class CronTask extends \ZCL\DB\Entity
 
                       
                     if($msg['type']=='ppro') {
-                       \App\Modules\PPO\PPOHelper::autoshift($msg['pos_id'])  ;
+                       $b=  \App\Modules\PPO\PPOHelper::autoshift($msg['pos_id'])  ;
                     }
                     if($msg['type']=='cb') {
-                       \App\Modules\CB\CheckBox::autoshift($msg['pos_id']) ;
+                       $b=  \App\Modules\CB\CheckBox::autoshift($msg['pos_id']) ;
                     }
-                
+                    if(!$b) {
+                        $admin = \App\Entity\User::getByLogin('admin');
+
+                        $n = new  Notify();
+                        $n->user_id =  $admin->user_id;
+                        $n->sender_id =  Notify::SYSTEM;
+
+                        $n->message = "Помилка  автоматичного закриття змiни";
+                        $n->save();          
+                    }
                     
                     $done = true;
                 }

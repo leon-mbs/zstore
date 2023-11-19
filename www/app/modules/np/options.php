@@ -132,11 +132,11 @@ class Options extends \App\Pages\Base
         $areas = array();
         $tmplist = $api->getAreas();
         if($tmplist['success']==false) {
-            if(count($tmplist['errors'])>0) {
+            if(count($tmplist['errors'] ??[])>0) {
                 $this->setError(array_pop($tmplist['errors'])) ;
                 return;
             }
-            if(count($tmplist['warnings'])>0) {
+            if(count($tmplist['warnings']??[])>0) {
                 $this->setWarn(array_pop($tmplist['warnings'])) ;
 
             }

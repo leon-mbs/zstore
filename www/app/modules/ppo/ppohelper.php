@@ -855,7 +855,11 @@ class PPOHelper
 
         //"2022-05-01T00:00:00+03:00"
 
-        $from = date('c', strtotime('-1 month'));
+        $dt = new  \App\DateTime() ;
+        
+        $start = $dt->startOfMonth()  ;
+        $from = date('c', $start->getTimestamp());
+
         $to = date('c');
 
         $res = PPOHelper::send(json_encode(array('Command' => 'Shifts', 'NumFiscal' => $pos->fiscalnumber, 'From' => $from, 'To' => $to)), 'cmd', $company);
@@ -1079,7 +1083,7 @@ class PPOHelper
      
         $pos = \App\Entity\Pos::load($posid);
         if(self::checkSession($pos) != true) {
-            return;
+            return true;
         }
 
         $stat = self::getStat($posid);
@@ -1094,9 +1098,10 @@ class PPOHelper
         }
         if($ret['success'] == false) {
           H::logerror($ret['data'])    ;
+           return false;
         }
  
-
+        return true;
        
 
    }    

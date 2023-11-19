@@ -21,6 +21,7 @@ use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\RadioButton;
 use Zippy\Html\Label;
 use Zippy\Html\Panel;
 use Zippy\Html\Link\ClickLink;
@@ -33,6 +34,7 @@ class ARMPos extends \App\Pages\Base
 {
     public $_itemlist   = array();
     public $_serlist    = array();
+    public $_paytype    = 0;
     private $pos;
     private $_doc        = null;
     private $_rowid      = 0;
@@ -108,6 +110,10 @@ class ARMPos extends \App\Pages\Base
         //  ввод товаров
 
         $this->docpanel->form2->add(new SubmitButton('tosave'))->onClick($this, 'tosaveOnClick');
+        $this->docpanel->form2->add(new SubmitButton('topass'))->onClick($this, 'tosaveOnClick');
+        $this->docpanel->form2->add(new Button('frompass'))->onClick($this, 'fromPass');
+        
+        $this->docpanel->form2->add(new Button('tocancel'))->onClick($this, 'newdoc');
         $this->docpanel->form2->add(new SubmitButton('topay'))->onClick($this, 'topayOnClick');
         $this->docpanel->form2->add(new TextInput('barcode'));
         $this->docpanel->form2->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -121,8 +127,12 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->add(new DataView('detailser', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_serlist')), $this, 'serOnRow'));
         $this->docpanel->form2->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docpanel->form2->customer->onChange($this, 'OnChangeCustomer');
-
-        $this->docpanel->form2->add(new DropDownChoice('paytype', array()));
+        $bind = new  \Zippy\Binding\PropertyBinding($this, '_paytype');
+ 
+        $this->docpanel->form2->add(new RadioButton('pt1',$bind,1));
+        $this->docpanel->form2->add(new RadioButton('pt2',$bind,2));
+        $this->docpanel->form2->add(new RadioButton('pt3',$bind,3));
+        
         $this->docpanel->form2->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
         $this->docpanel->form2->add(new Label('custinfo'))->setVisible(false);
         $this->docpanel->form2->add(new \Zippy\Html\Link\BookmarkableLink('cinfo'))->setVisible(false);
@@ -255,6 +265,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->setVisible(true);
         $this->docpanel->form3->setVisible(false);
         $this->_editrow =  false;
+        $this->_paytype=0;
     }
 
     public function cancel3docOnClick($sender) {
@@ -311,21 +322,10 @@ class ARMPos extends \App\Pages\Base
         $this->form1->setVisible(false);
         $this->docpanel->form2->setVisible(true);
 
-        if($filter->mfbeznal==0) {
-
-            $this->docpanel->form2->paytype->setOptionList(array( "1"=>"Готівка" ));
-            $this->docpanel->form2->paytype->setValue(1);
-        } else {
-            $this->docpanel->form2->paytype->setOptionList(array(
-              "0"=>"Не  обрано",
-              "1"=>"Готівка",
-              "2"=>"Картка",
-              "3"=>"Комбінована"
-            ));
-            $this->docpanel->form2->paytype->setValue(0);
-
-
-        }
+        
+        $this->_tvars['onlynal']  = $filter->mfbeznal==0;
+        
+ 
 
 
         $this->newdoc(null);
@@ -371,10 +371,8 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->addcust->setVisible(true) ;
         $this->docpanel->form2->cinfo->setVisible(false) ;
 
-        $l=  $this->docpanel->form2->paytype->getOptionList();
-        if(count($l) >1) {
-            $this->docpanel->form2->paytype->setValue(0);
-        }
+        $this->_paytype=0;
+
 
     }
 
@@ -391,9 +389,11 @@ class ARMPos extends \App\Pages\Base
 
         $payamount = $total - $bonus - $totaldisc - $prepaid;
 
-        $paytype=$this->docpanel->form2->paytype->getValue();
+        if($this->_tvars['onlynal']==true) {
+            $this->_paytype=1;
+        }
 
-        if($paytype==0 && $payamount > 0) {
+        if($this->_paytype==0 && $payamount > 0) {
             $this->setError('Не вказаний тип оплати');
             return;
 
@@ -403,7 +403,7 @@ class ARMPos extends \App\Pages\Base
         }
 
 
-        $this->docpanel->form3->paytypeh->setValue($paytype);
+        $this->docpanel->form3->paytypeh->setText($this->_paytype);
 
         $this->form1->setVisible(false);
         $this->docpanel->form2->setVisible(false);
@@ -424,18 +424,18 @@ class ARMPos extends \App\Pages\Base
             $this->docpanel->form3->payed->setAttribute('disabled', null);
             $this->docpanel->form3->payedcard->setAttribute('disabled', null);
 
-            if($paytype == 1) {
+            if($this->_paytype == 1) {
                 $this->docpanel->form3->payed->setText($payamount);
                 $this->docpanel->form3->payedcard->setAttribute('disabled', 'disabled');
                 $this->docpanel->form3->payedcard->setText(0);
             }
-            if($paytype == 2) {
+            if($this->_paytype == 2) {
                 $this->docpanel->form3->payedcard->setText($payamount);
                 $this->docpanel->form3->payed->setAttribute('disabled', 'disabled');
                 $this->docpanel->form3->payed->setText(0);
 
             }
-            if($paytype == 3) {
+            if($this->_paytype == 3) {
                 $half= H::fa($payamount/2);
                 $this->docpanel->form3->payed->setText($half);
                 $this->docpanel->form3->payedcard->setText($payamount - $half);
@@ -1061,12 +1061,12 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->amount = $this->docpanel->form2->total->getText();
 
         $this->_doc->save()  ;
-        if(strlen($this->_doc->document_number)>0) {
-            $this->_doc->updateStatus(Document::STATE_EDITED);
-        } else {
-            $this->_doc->updateStatus(Document::STATE_NEW);
+        $this->_doc->updateStatus(Document::STATE_EDITED);
+       
+        //отложеный
+        if($sender->id=="topass") {
+           \App\Session::getSession()->armpass=$this->_doc->document_number; 
         }
-
 
         $this->newdoc(null)  ;
     }
@@ -1441,13 +1441,13 @@ class ARMPos extends \App\Pages\Base
         $row->add(new Label('rownotes', $doc->notes));
         $row->add(new Label('rowauthor', $doc->username));
         $row->add(new ClickLink('checkedit'))->onClick($this, "onEdit");
-        $row->add(new ClickLink('checkfisc', $this, "onFisc"))->setVisible(($doc->headerdata['passfisc'] ?? "") ==1) ;
+        $row->add(new ClickLink('checkfisc', $this, "onFisc"))->setVisible(($doc->headerdata['passfisc'] ?? "") == 1) ;
         $row->checkedit->setVisible($doc->state < 4);
 
         $row->add(new \Zippy\Html\Link\RedirectLink('checkreturn', "\\App\\Pages\\Doc\\ReturnIssue", array(0,$doc->document_id)));
         $row->checkreturn->setVisible($doc->state > 4);
         if ($doc->document_id == $this->_doc->document_id) {
-            $row->setAttribute('class', 'table-success');
+           // $row->setAttribute('class', 'table-success');
         }
 
 
@@ -1569,15 +1569,31 @@ class ARMPos extends \App\Pages\Base
 
         }
 
-
-
-        $this->checklistpan->checklist->Reload(false);
-
+        $this->updatechecklist(null);
     }
 
     public function onEdit($sender) {
-        $doc =  $sender->getOwner()->getDataItem();
-        $this->_doc = Document::load($doc->document_id)->cast();
+        $item =  $sender->getOwner()->getDataItem();
+        $doc = Document::load($item->document_id);
+        $this->loadDoc($doc);
+    }
+
+    public function fromPass($sender) {
+        $pn= \App\Session::getSession()->armpass ??'';        
+        $doc = Document::getFirst('state<5 and document_number='.Document::qstr($pn))  ;
+        if($doc != null) {
+           $this->loadDoc($doc);    
+        }
+        \App\Session::getSession()->armpass = '';
+        
+    }
+    
+    public function loadDoc($doc) {
+        $pn= \App\Session::getSession()->armpass ??'';        
+        if($pn===$doc->document_number) {
+            \App\Session::getSession()->armpass = '';
+        }
+        $this->_doc = $doc->cast();
 
         $this->docpanel->setVisible(true);
         $this->docpanel->form2->setVisible(true);
@@ -1816,5 +1832,12 @@ class ARMPos extends \App\Pages\Base
 
     }
 
-
+    public function beforeRender() {
+        
+        $pn= \App\Session::getSession()->armpass ??'';        
+        $this->docpanel->form2->topass->setVisible(strlen($pn)==0);
+        $this->docpanel->form2->frompass->setVisible(strlen($pn)>0);
+        
+        parent::beforeRender()  ;
+    }
 }
