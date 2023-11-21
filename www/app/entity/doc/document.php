@@ -1135,11 +1135,11 @@ class Document extends \ZCL\DB\Entity
     *    https://cabinet.tax.gov.ua/cashregs/check?fn=4000191957&id=165093488&date=20220105&time=132430&sum=840
     */
     public function getFiscUrl() {
-        if(strlen($this->headerdata["tax_url"])>0) {
+        if(strlen($this->headerdata["tax_url"]??'')>0) {
             return $this->headerdata["tax_url"];
         }
 
-        if(strlen($this->headerdata["fiscalnumber"])==0) {
+        if(strlen($this->headerdata["fiscalnumber"]??'')==0) {
             return "";
         }
 
