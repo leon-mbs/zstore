@@ -250,7 +250,7 @@ class DocList extends \App\Pages\Base
         }
         
         $row->add(new ClickLink('qr'))->onClick($this, 'QrOnClick', true);
-        $row->qr->setVisible( (strlen($doc->headerdata['hash']) > 0 ) || strlen(  $doc->getFiscUrl()) > 0   ) ;
+        $row->qr->setVisible( (strlen($doc->headerdata['hash']??'') > 0 ) || strlen(  $doc->getFiscUrl()) > 0   ) ;
         if( !in_array($doc->meta_name,['POSCheck']) ){
            $row->qr->setVisible(false);    
         }  
