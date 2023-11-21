@@ -518,7 +518,7 @@ CREATE TABLE `ppo_zformstat` (
   `amount1` decimal(10, 2) NOT NULL,
   `amount2` decimal(10, 2) NOT NULL,
   `amount3` decimal(10, 2) NOT NULL,
-  `amount4` decimal(10, 2) NOT NULL,
+
   `document_number` varchar(255) DEFAULT NULL,
   `fiscnumber` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`zf_id`)

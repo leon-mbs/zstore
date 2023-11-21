@@ -1,7 +1,7 @@
 
 
 ALTER TABLE "equipments" ADD branch_id INTEGER NULL ;
-ALTER TABLE "ppo_zformstat" ADD amount4 decimal(10, 2) NOT NULL   ;
+
 
 
  --  createdon
