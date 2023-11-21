@@ -28,7 +28,7 @@
         "symfony/polyfill-uuid": "1.27.0",
 
         "leon-mbs/zippy": "2.6.1",
-        "leon-mbs/ppolib": "1.3.13",   
+        "leon-mbs/ppolib": "1.3.14",   
 
         "ext-gmp": "*",
         "ext-openssl": "*",

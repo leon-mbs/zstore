@@ -139,8 +139,9 @@ class ARMPos extends \App\Pages\Base
 
 
         $this->docpanel->form2->add(new AutocompleteTextInput('addtovarsm'))->onText($this, 'OnAutoItemSm');
-        $this->docpanel->form2->addtovarsm->onChange($this, 'OnChangeItemSm', true);
+        $this->docpanel->form2->addtovarsm->onChange($this, 'OnChangeItemSm',true);
         $this->docpanel->form2->add(new TextInput('qtysm'));
+        $this->docpanel->form2->add(new Label('storeqtysm'));
         $this->docpanel->form2->add(new SubmitLink('additemsm'))->onClick($this, 'addItemSmOnClick');
         $this->docpanel->form2->add(new TextInput('bonus'));
         $this->docpanel->form2->add(new TextInput('totaldisc'));
@@ -238,6 +239,9 @@ class ARMPos extends \App\Pages\Base
         $this->_tvars['simplemode']  = $sender->id == 'tosimple';
         if($this->_tvars['simplemode'] == true) {
             $this->_tvars['usesnumber']  = false;
+            $this->docpanel->form2->qtysm->setText("");
+            $this->docpanel->form2->storeqtysm->setText("");
+            
         } else {
             $options = System::getOptions('common');
             $this->_tvars["usesnumber"] = $options['usesnumber'] == 1;
@@ -1717,7 +1721,7 @@ class ARMPos extends \App\Pages\Base
          ));
 
         $qty = $item->getQuantity($store);
-
+        $this->docpanel->form2->storeqtysm->setText("На складі: ".H::fqty($qty) );
 
 
     }
@@ -1819,6 +1823,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->addtovarsm->setText('');
 
         $this->docpanel->form2->qtysm->setText("");
+        $this->docpanel->form2->storeqtysm->setText("");
 
         $this->_rowid = -1;
 

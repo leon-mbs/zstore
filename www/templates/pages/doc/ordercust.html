@@ -343,13 +343,16 @@
               this.ncat =0  
               this.nbrand =''  
          
-   
-              callPageMethod('vLoadLists',[ ], null,(data)=> 
+              var data= {
+                  cats:true,
+                  brands:true 
+              }
+ 
+              callPM('vLoadLists',[ ], data,(data)=> 
               {
-                   var data = JSON.parse(data)
-         
+                
                    this.cats = data.cats
-                   this.brands = data.cats
+                   this.brands = data.brands
                 
               });           
            
