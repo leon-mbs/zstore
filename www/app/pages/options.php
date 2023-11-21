@@ -298,8 +298,8 @@ class Options extends \App\Pages\Base
         //телеграм бот
 
         $this->add(new Form('tbform'))->onSubmit($this, "onBot");
-        $this->tbform->add(new TextInput('tbtoken', $common['tbtoken']));
-        $this->tbform->add(new TextInput('tbname', $common['tbname']));
+        $this->tbform->add(new TextInput('tbtoken', $common['tbtoken'] ?? ''));
+        $this->tbform->add(new TextInput('tbname', $common['tbname'] ?? ''));
 
 
         //источники  продаж
