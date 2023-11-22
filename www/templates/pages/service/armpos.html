@@ -748,7 +748,7 @@
 
                     var exchange = parseFloat(payed) + parseFloat(payedcard)  - parseFloat(payamount);
                     if (exchange > 0) {
-                        $("#exchange").val( fa(exchange) );
+                        $("#exchange").val( exchange.toFixed(2 );
                     } else {
                         $("#exchange").val(0);
                     }

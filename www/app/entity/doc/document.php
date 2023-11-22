@@ -1149,10 +1149,11 @@ class Document extends \ZCL\DB\Entity
         $url .=  "fn=". $pos->fiscalnumber ;
         $url .=  "&id=". $this->headerdata["fiscalnumber"] ;
         $url .=   $this->headerdata["fiscdts"] ;
+        $url .=  "&sm=". number_format($this->payamount, 2, '.', '') ;
 
         return $url;
     }
-
+  
     /**
      * проверка  может  ли  быть  отменен
      * Возвращает  текст ошибки если  нет
