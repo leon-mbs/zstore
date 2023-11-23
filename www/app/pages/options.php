@@ -294,6 +294,11 @@ class Options extends \App\Pages\Base
         $this->food->add(new Textinput('timesu', $food['timesu']));
         $this->food->add(new File('foodlogo'));
 
+        $menu= \App\Entity\Category::findArray('cat_name', "detail  not  like '%<nofastfood>1</nofastfood>%' and parent_id=0")  ;
+       
+        $this->food->add(new DropDownChoice('foodbasemenu',$menu,$food['foodbasemenu']));
+        $this->food->add(new DropDownChoice('foodmenu2',$menu,$food['foodmenu2']));
+
 
         //телеграм бот
 
@@ -540,7 +545,11 @@ class Options extends \App\Pages\Base
 
 
     public function onFood($sender) {
-        $food = array();
+        $food = System::getOptions("food");
+        if (!is_array($food)) {
+            $food = array();
+        }
+
         $food['worktype'] = $sender->foodworktype->getValue();
         $food['pricetype'] = $sender->foodpricetype->getValue();
         $food['delivery'] = $sender->fooddelivery->isChecked() ? 1 : 0;
@@ -548,11 +557,15 @@ class Options extends \App\Pages\Base
 
         $food['pack'] = $sender->foodpack->isChecked() ? 1 : 0;
         $food['menu'] = $sender->foodmenu->isChecked() ? 1 : 0;
-        $food['name'] = $sender->goodname->getText('name') ;
-        $food['phone'] = $sender->goodphone->getText('phone') ;
-        $food['timepn'] = $sender->timepn->getText('timepn') ;
-        $food['timesa'] = $sender->timesa->getText('timesa') ;
-        $food['timesu'] = $sender->timesu->getText('timesu') ;
+        $food['name'] = $sender->goodname->getText() ;
+        $food['phone'] = $sender->goodphone->getText() ;
+        $food['timepn'] = $sender->timepn->getText() ;
+        $food['timesa'] = $sender->timesa->getText() ;
+        $food['timesu'] = $sender->timesu->getText() ;
+        $food['foodbasemenu'] = $sender->foodbasemenu->getValue() ;
+        $food['foodbasemenuname'] = $sender->foodbasemenu->getValueName() ;
+        $food['foodmenu2'] = $sender->foodmenu2->getValue() ;
+        $food['foodmenuname'] = $sender->foodmenu2->getValueName() ;
 
         $file = $sender->foodlogo->getFile();
         if (strlen($file["tmp_name"]) > 0) {

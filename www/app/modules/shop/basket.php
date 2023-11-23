@@ -16,7 +16,7 @@ class Basket implements \Zippy\Interfaces\DataSource
         if($basket==null) {
             $basket = new Basket();
 
-            $cl = json_decode($_COOKIE['shop_cart'], true);
+            $cl = json_decode($_COOKIE['shop_cart'] ??"", true);
             if(is_array($cl)) {
                 foreach($cl as $p) {
                     $item=Product::load($p['item_id']) ;
