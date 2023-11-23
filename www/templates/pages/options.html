@@ -66,17 +66,12 @@
 
                                 </select>
                             </div>
+
                             <div class="form-group  ">
                                 <label for="phonel">Довжина номера телефону</label>
-
                                 <select style="width:75px" class="form-control" zippy="phonel">
-
-
                                 </select>
                             </div>
-
- 
-
 
                             <div class="form-check">
                                 <input zippy="usescanner" type="checkbox" class="form-check-input">
@@ -165,7 +160,7 @@
                     </div>
                 </div>
                 
-  <div class="card">
+                 <div class="card">
                     <div class="card-body">
                         <h4>Підключення модулів</h4>
                            <form zippy="modules">
@@ -632,7 +627,21 @@
                          
                         </div>
 
+                             <div class="form-group">
+                                <label for="foodbasemenu">Основне меню</label>
+                                <select class="form-control"  zippy="foodbasemenu">
+                                     <option value="0">Не вказано</option>
+                                </select>
+                                <span>Якщо не вказано береться верхнiй рiвень</span>
+                            </div> 
 
+                             <div class="form-group">
+                                <label for="foodmenu2">Додаткове меню</label>
+                                <select class="form-control"  zippy="foodmenu2">
+                                     <option value="0">Не вказано</option>
+                                </select>
+                                <span>Наприклад меню бару. Не виводится якщо не вказано</span>
+                            </div> 
 
                             <div class="form-group">
                                 <button class="btn btn-success" type="submit">Зберегти</button>
@@ -642,7 +651,7 @@
                 </div>   
    
             
-   <div class="card">
+                <div class="card">
                     <div class="card-body">
                         <h4>Налаштування SMS сервiсу    </h4>
                         <form zippy="sms">    
@@ -738,7 +747,7 @@
 
 
                 
-     <div class="card">
+                  <div class="card">
                     <div class="card-body">
                         <h4>Телеграм бот</h4>
                         <form zippy="tbform">

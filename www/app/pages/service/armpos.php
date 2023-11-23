@@ -1772,7 +1772,12 @@ class ARMPos extends \App\Pages\Base
 
         $id = $this->docpanel->form2->addtovarsm->getKey();
         if ($id == 0) {
-            $this->setError("Не вибраний товар");
+            $this->setError("Не вибрано товар");
+            return;
+        }
+        $n = trim($this->docpanel->form2->addtovarsm->getText());
+        if (strlen(n) == 0) {
+            $this->setError("Не вибрано товар");
             return;
         }
 
