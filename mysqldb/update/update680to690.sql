@@ -1,6 +1,9 @@
 
 
 ALTER TABLE `equipments` ADD `branch_id` INT NULL ;
+ALTER TABLE `ppo_zformstat` ADD `amount4` decimal(10, 2)   NULL default 0 ;
+ALTER TABLE `ppo_zformstat` ADD `amount5` decimal(10, 2)   NULL default 0 ;
+ALTER TABLE `ppo_zformstat` ADD `tag` int(11)   NULL default 0 ;
 
 
 

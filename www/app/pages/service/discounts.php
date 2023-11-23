@@ -155,18 +155,24 @@ class Discounts extends \App\Pages\Base
         $this->itab->iolist->setPageSize(H::getPG());
         $this->itab->add(new \Zippy\Html\DataList\Paginator('iopag', $this->itab->iolist));
         $this->itab->iolist->Reload();
+
       
+        $this->ptab->add(new Panel('listpan')) ;
         
-        $this->ptab->add(new Form('pfilter'))->onSubmit($this,"onFilterPromo");
-        $this->ptab->pfilter->add(new TextInput('psearchkey'));
+        $this->ptab->listpan->add(new Form('pfilter'))->onSubmit($this,"onFilterPromo");
+        $this->ptab->listpan->pfilter->add(new TextInput('psearchkey'));
 
+        $this->ptab->listpan->add(new ClickLink('pcodeadd'))->onClick($this,"onAddPromo");
 
-        $this->ptab->add(new DataView('plist', new PromoDataSource($this), $this, 'promolistOnRow'));
-        $this->ptab->plist->setPageSize(H::getPG());
-        $this->ptab->add(new \Zippy\Html\DataList\Pager('ppag', $this->ptab->plist));
-        $this->ptab->plist->Reload();
+        $this->ptab->listpan->add(new DataView('plist', new PromoDataSource($this), $this, 'promolistOnRow'));
+        $this->ptab->listpan->plist->setPageSize(H::getPG());
+        $this->ptab->listpan->add(new \Zippy\Html\DataList\Pager('ppag', $this->ptab->listpan->plist));
+        $this->ptab->listpan->plist->Reload();
         
-        
+        $this->ptab->add(new Panel('formpan'))->setVisible(false) ;
+        $this->ptab->formpan->add(new Form('pform'))->onSubmit($this,"savePCode") ;
+        $this->ptab->formpan->pform->add(new ClickLink('cancelpadd'))->onClick($this,"cancelPCode") ;
+       
       
     }
 
@@ -538,13 +544,35 @@ class Discounts extends \App\Pages\Base
 
     
     public function onFilterPromo($rsender) {
-       $this->ptab->plist->Reload();
+       $this->ptab->listpan->plist->Reload();
     }
 
     public function promolistOnRow($row) {
         $p = $row->getDataItem();
  
         $row->add(new  Label("pcode", $p->code));
+ 
+    }
+    
+    //промо
+    public function onAddPromo($sender) {
+ 
+        $this->ptab->formpan->setVisible(true);
+        $this->ptab->listpan->setVisible(false);
+ 
+    }
+    public function cancelPCode($sender) {
+        $this->ptab->formpan->setVisible(false);
+        $this->ptab->listpan->setVisible(true);
+ 
+    }
+    public function savePCode($sender) {
+        
+
+        
+        $this->ptab->listpan->plist->Reload();
+        $this->ptab->formpan->setVisible(false);
+        $this->ptab->listpan->setVisible(true);
  
     }
 
@@ -697,7 +725,7 @@ class PromoDataSource implements \Zippy\Interfaces\DataSource
 
         $where = "1=1 ";
 
-        $text = trim($this->page->ptab->pfilter->psearchkey->getText());
+        $text = trim($this->page->ptab->listpan->pfilter->psearchkey->getText());
         if(strlen($text)>0) {
             $where = $where . " and code = ".$conn->qstr($text);
         }
