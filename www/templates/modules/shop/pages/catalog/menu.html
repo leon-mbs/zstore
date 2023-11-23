@@ -33,6 +33,7 @@
       .textprice {
           font-size:18px;
           color:red;
+          font-weight: bolder;
       }
       .img {
          width:128px;
@@ -42,44 +43,53 @@
     
       <div class="container-fluid ">
         <div class="row ">
-            <div class="mt-2  col-12 col-sm-6 col-md-3  col-xl-2   ">
- 
-                 <table  class="ctable">
-                    <tr>
-                      <td style="width:50%" >
-
-                      <a href="/menu"> <img style="width:80%" src="{{logo}}"> </a> 
-
-                      </td>
-                      <td  align="right"  ><i class="fa fa-phone"></i>  {{phone}}</td>
-                    </tr>
-                    <tr><td colspan="2" align="center"><h2 style="font-family:Georgia">{{name}}</h2></td></tr>
+            <div class="mt-2  col-12 col-sm-6 col-md-4  col-xl-3  ">
+                 <div class="row ">
+                     <div class="col-12 col-sm-6">
+                         <a href="/menu"> <img style="width:80%" src="{{logo}}"> </a> 
+                    </div>
+                     <div class="col-12 col-sm-6  text-right">
+                         <i class="fa fa-phone"></i>  {{phone}}
+                    </div>
+                     <div class="col-12 text-center mb-4">
+                         <h2  style="font-family:Georgia"><a href="/menu" style="text-decoration:none" >{{name}} </a></h2>    
+                    </div>
                   
-                  
-                    
+                    {{^list}}
+                    <div class="col-12  text-center">
+                         <h4  > <a class="btn btn-outline-secondary" href="/menu/1"> {{bmname}} </a> </h4>    
+                    </div>
+                      {{#secondm}}
+                    <div class="col-12  text-center">
+                         <h4  > <a class="btn btn-outline-secondary" href="/menu/2"> {{smname}} </a> </h4>    
+                    </div>
+                      {{/secondm}}                    
+                    {{/list}}  
+                </div>
+             
+                 {{#list}}
+                <div class="col-12  ">
+                 <ul class="nav nav-tabs">
                    {{#cats}}
-                      <tr><td colspan="2" align="center">
-                          {{^hasitems}}
-                          <a href="{{link}}" class="badge badge-light badge-pill p-2 textcat" >
-                                {{cat_name}}
-                          </a>
-                          {{/hasitems}}
-                          {{#hasitems}}
-                              <label  class="badge badge-light badge-pill p-2 textcat"> {{cat_name}}</label>                          
-                          {{/hasitems}}
-                          
-                          
-                          {{#cat_desc}}
-                          <br>   {{cat_desc}} 
-                          {{/cat_desc}}
-                      </td></tr>
-                                                  
+                  <li class="nav-item">
+                    <a class="nav-link  " data-toggle="tab" href="#{{cat_id}}">{{cat_name}} </a>
+
+                     
+                  </li>
+                   {{/cats}}
+                </ul>         
+                 <div class="tab-content"  >
+                 {{#cats}}     
+                   <div class="tab-pane  show   " id="{{cat_id}}"> 
+                     <h3> {{cat_name}} </h4>
+                     <table class="table table-sm">
+                                        
                       {{#items}}                                                                 
                           <tr>
-                            <td colspan="2" ><br><br>{{itemname}}</td>
+                            <td colspan="2" ><br><br><b> {{itemname}}</b></td>
                           </tr>
                           <tr>
-                            <td class="textprice" >  {{price}} грн</td>
+                            <td class="textprice" >   {{price}}  грн</td>
                             <td class="textprice"  align="right" >  {{customsize}} </td>
                           </tr>
                          <tr>
@@ -88,28 +98,51 @@
                           </tr>
                       
                       
-                      {{/items}}                                                                                         
+                      {{/items}}  
+                    </table>                       
                      
-                    {{/cats}}
+                     
+                     
+                                  
+                  </div>
+                    {{/cats}} 
+                </div>
+              </div>
+                 {{/list}}    
+                
+             
+                
+                
+                <div class="row ">                
+                    <div class="col-12  text-center mt-4">
+                         <b  >Розклад роботи </b>    
+                    </div>
+                    <div class="col-12 justify-content-center mb-2">
+                       <table class="table table-sm">
+                          <tr><td align="right">Пн - Пт</td><td> {{timepn}}</td></tr>
+                          <tr><td align="right">Сб</td><td> {{timesa}}</td></tr>
+                          <tr><td align="right">Вс</td><td> {{timesu}}</td></tr>
+                       </table>   
+                    </div>
                     
-                    <tr><td colspan="2" align="center"><br><b>Розклад роботи</b></td></tr>
-                    <tr><td colspan="2" align="center">
-                       <table class="ctable">
-                          <tr><td>Пн - Пт</td><td> {{timepn}}</td></tr>
-                          <tr><td>Сб</td><td> {{timesa}}</td></tr>
-                          <tr><td>Вс</td><td> {{timesu}}</td></tr>
-                       </table>  
-                    </td></tr>
-
-                    
-                    </tr>
-               </table>
+                </div>
+ 
+              
                 
             </div>
              
         </div>
      </div>
-         
+      <script>   
+          $(document).ready(function () {
+       
+              $('a.nav-link').first().addClass('active') 
+              $('div.tab-pane').first().addClass('active') 
+
+              
+          });   
+ 
+      </script>
         
     </body>
 </html>        
