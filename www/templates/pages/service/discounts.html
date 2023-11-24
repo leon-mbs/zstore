@@ -369,8 +369,17 @@
 
                                 <a class="btn btn-success " zippy="pcodeadd">Додати</a>
                                 <table class="table table-sm">                      
-                                    <tr><th>Код</th><th>Стан</th><th>Контрагент</th><th> Срок дії</th><th> </th></tr>
-                                    <tr zippy="plist"><td zippy="pcode"></td><td> </td><td> </td><td>  </td><td> </td></tr>
+                                    <tr><th>Код</th><th>Тип</th><th>Знижка,%</th><th>Реф.,%</th><th>Контрагент</th><th> Срок дії</th><th>Використаний </th><th> </th></tr>
+                                    <tr zippy="plist">
+                                    <td zippy="pcode"></td>
+                                    <td zippy="ptype"> </td>
+                                    <td zippy="pdisc" class="text-right"> </td>
+                                    <td zippy="pref"  class="text-right"> </td>
+                                    <td zippy="pcust"> </td>
+                                    <td zippy="pdateto">  </td>
+                                    <td zippy="pused"> </td>
+                                    <td><a zippy="pdel"><i class="fa fa-trash"></i></a> </td>
+                                    </tr>
                                     
                                     
                                 </table>
@@ -384,17 +393,17 @@
                                 <div zippy="formpan">
                                      <h4>Новий  промо код</h4>
                                      <small><b>Одноразовий</b> - для однократного використання 
-                                                <br>  <b>Багаторазовий</b> - для використання (однократного)  багатьма  покупцями 
-                                                <br><b>Персональний</b> - для конкретного контрагента
-                                                <br><b>Реферальний</b> - з нарахуваням бонусів вказанму контрагенту за нового  покупця  
-                                                 </small>                                     
+                                         <br>  <b>Багаторазовий</b> - для використання (однократного)  багатьма  покупцями 
+                                         <br><b>Персональний</b> - для конкретного контрагента
+                                         <br><b>Реферальний</b> - з нарахуванням бонусів вказанму контрагенту за нового  покупця  
+                                      </small>                                     
                                     <form zippy="pform" >
                                  
                                  
                                             <div class="form-group row">
-                                               <label class="col-5 col-form-label" for="peditcod">Код</label>
+                                               <label class="col-5 col-form-label" for="peditcode">Код</label>
                                                 <div class="7">
-                                                  <input readonly="readonly"   class="form-control"   zippy="peditcod"   >
+                                                  <input readonly="readonly"   class="form-control"   zippy="peditcode"   >
                                                </div>
                                            </div>      
                                             <div class="form-group row">
@@ -417,9 +426,9 @@
                                                </div>
                                            </div>      
                                            <div class="form-group row">
-                                               <label class="col-5 col-form-label" for="peditdate">Знижка,%</label>
+                                               <label class="col-5 col-form-label" for="peditdisc">Знижка,%</label>
                                                 <div class="7">
-                                               <input style="width:140px" class="form-control"  zippy="peditdate"   >
+                                               <input required="required"  pattern="[0-9\.]+" style="width:140px" class="form-control"  zippy="peditdisc"   >
                                                </div>
                                            </div>      
                                            <div class="form-group row">
@@ -430,9 +439,9 @@
                                            </div>      
                                               
                                            <div class="form-group row">
-                                               <label class="col-5 col-form-label" for="peditdate">Реферальний бонус,%</label>
+                                               <label class="col-5 col-form-label" for="peditref">Реферальний бонус,%</label>
                                                 <div class="7">
-                                               <input style="width:140px" class="form-control"  zippy="peditdate"   >
+                                               <input pattern="[0-9\.]+" style="width:140px" class="form-control"  zippy="peditref"   >
                                                </div>
                                            </div>      
                                            
