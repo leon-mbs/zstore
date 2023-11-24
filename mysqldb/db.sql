@@ -228,13 +228,11 @@ BEGIN
 
 END;;
 DELIMITER ;
-
 CREATE TABLE `equipments` (
   `eq_id` int(11) NOT NULL AUTO_INCREMENT,
   `eq_name` varchar(255) DEFAULT NULL,
   `detail` mediumtext,
   `disabled` tinyint(1) DEFAULT '0',
-  `branch_id` INT NULL ,
   `description` text,
   PRIMARY KEY (`eq_id`)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
@@ -512,16 +510,12 @@ CREATE TABLE `ppo_zformrep` (
 CREATE TABLE `ppo_zformstat` (
   `zf_id` int(11) NOT NULL AUTO_INCREMENT,
   `pos_id` int(11) NOT NULL,
-  `tag` int(11) NOT NULL,
   `checktype` int(11) NOT NULL,
   `createdon` datetime NOT NULL,
   `amount0` decimal(10, 2) NOT NULL,
   `amount1` decimal(10, 2) NOT NULL,
   `amount2` decimal(10, 2) NOT NULL,
   `amount3` decimal(10, 2) NOT NULL,
-  `amount4` decimal(10, 2) NOT NULL,
-  `amount5` decimal(10, 2) NOT NULL,
-
   `document_number` varchar(255) DEFAULT NULL,
   `fiscnumber` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`zf_id`)
@@ -824,7 +818,6 @@ SELECT
   `customers`.`city` AS `city`,
   `customers`.`leadsource` AS `leadsource`,
   `customers`.`leadstatus` AS `leadstatus`,
-  `customers`.`createdon` AS `createdon`,
   `customers`.`country` AS `country`,
   `customers`.`passw` AS `passw`,
   (SELECT
@@ -1373,19 +1366,7 @@ CREATE TABLE  taglist (
 )
 ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE promocodes (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  code varchar(16) NOT NULL,
-  type tinyint(4) NOT NULL,
-  state tinyint(4) NOT NULL,
-  enddate date DEFAULT NULL,
-  details text DEFAULT NULL,
-  PRIMARY KEY (id)
-)
-ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
-ALTER TABLE promocodes
-ADD UNIQUE INDEX code (code)   ;
 
 INSERT INTO `users` (`userlogin`, `userpass`, `createdon`, `email`, `acl`, `disabled`, `options`, `role_id`) VALUES( 'admin', '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.', '2017-01-01', 'admin@admin.admin', 'a:2:{s:9:"aclbranch";N;s:6:"onlymy";N;}', 0, 'a:6:{s:8:"defstore";s:2:"19";s:7:"deffirm";i:0;s:5:"defmf";s:1:"2";s:8:"pagesize";s:2:"15";s:11:"hidesidebar";i:0;s:8:"mainpage";s:15:"\\App\\Pages\\Main";}', 1);
 INSERT INTO `roles` (`rolename`, `acl`) VALUES( 'admins', 'a:9:{s:7:"aclview";N;s:7:"acledit";N;s:6:"aclexe";N;s:9:"aclcancel";N;s:8:"aclstate";N;s:9:"acldelete";N;s:7:"widgets";N;s:7:"modules";N;s:9:"smartmenu";s:1:"8";}');
@@ -1467,7 +1448,7 @@ INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `d
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 5, 'АРМ кухнi (бару)', 'ArmProdFood', 'Кафе', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Прибутки та видатки', 'IOState', '', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Замовленi товари', 'ItemOrder', 'Продажі', 0);
-INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 5, 'Програма лояльності', 'Discounts', '', 0);
+INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 5, 'Знижки та акції', 'Discounts', '', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 1, 'Нарахування зарплати', 'CalcSalary', 'Каса та платежі', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 4, 'Нарахування та утримання', 'SalaryTypeList', '', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Вир. процеси', 'ProdProcList', 'Виробництво', 0);
@@ -1502,5 +1483,4 @@ INSERT INTO `options` (`optname`, `optvalue`) VALUES('printer', 'a:15:{s:7:\"phe
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('salary', 'YTo1OntzOjEzOiJjb2RlYmFzZWluY29tIjtzOjM6IjEwNSI7czoxMDoiY29kZXJlc3VsdCI7czozOiI5MDAiO3M6NDoiY2FsYyI7czoyMTk6InYyMDAgPSB2MTA1DQovL9C');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('shop', 'YToyMDp7czo3OiJkZWZjdXN0IjtzOjE6IjEiO3M6MTE6ImRlZmN1c3RuYW1lIjtzOjI5OiLQm9C10L7QvdC40LQg0JzQsNGA0YLRi9C90Y7QuiI7czo5OiJkZWZicmFuY2giO047czo5OiJvcmRlcnR5cGUiO3M6MToiMCI7czoxMjoiZGVmcHJpY2V0eXBlIjtzOjY6InByaWNlMSI7czo1OiJlbWFpbCI7czowOiIiO3M6ODoic2hvcG5hbWUiO3M6MTc6ItCd0LDRiCDQvNCw0LPQsNC3IjtzOjEyOiJjdXJyZW5jeW5hbWUiO3M6Njoi0YDRg9CxIjtzOjg6InVzZWxvZ2luIjtpOjA7czo5OiJ1c2VmaWx0ZXIiO2k6MDtzOjEzOiJjcmVhdGVuZXdjdXN0IjtpOjA7czoxMToidXNlZmVlZGJhY2siO2k6MDtzOjExOiJ1c2VtYWlucGFnZSI7aTowO3M6NzoiYWJvdXR1cyI7czoxNjoiUEhBK1BHSnlQand2Y0Q0PSI7czo3OiJjb250YWN0IjtzOjA6IiI7czo4OiJkZWxpdmVyeSI7czowOiIiO3M6NDoibmV3cyI7czowOiIiO3M6NToicGFnZXMiO2E6Mjp7czo0OiJuZXdzIjtPOjEyOiJBcHBcRGF0YUl0ZW0iOjI6e3M6MjoiaWQiO047czo5OiIAKgBmaWVsZHMiO2E6NDp7czo0OiJsaW5rIjtzOjQ6Im5ld3MiO3M6NToidGl0bGUiO3M6MTE6Imtra3JycnJycnJyIjtzOjU6Im9yZGVyIjtzOjE6IjIiO3M6NDoidGV4dCI7czoyNDoiUEhBK1pXVmxaV1ZsWldWbFBDOXdQZz09Ijt9fXM6ODoiYWJvdXRfdXMiO086MTI6IkFwcFxEYXRhSXRlbSI6Mjp7czoyOiJpZCI7TjtzOjk6IgAqAGZpZWxkcyI7YTo0OntzOjQ6ImxpbmsiO3M6ODoiYWJvdXRfdXMiO3M6NToidGl0bGUiO3M6OToi0J4g0L3QsNGBIjtzOjU6Im9yZGVyIjtzOjE6IjMiO3M6NDoidGV4dCI7czozMjoiUEhBK1BHSSswSjRnMEwzUXNOR0JQQzlpUGp3dmNEND0iO319fXM6NToicGhvbmUiO3M6MDoiIjtzOjEwOiJzYWxlc291cmNlIjtzOjE6IjAiO30=');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('val', 'a:2:{s:7:\"vallist\";a:2:{i:1642675955;O:12:\"App\\DataItem\":2:{s:2:\"id\";i:1642675955;s:9:\"\0*\0fields\";a:3:{s:4:\"code\";s:3:\"USD\";s:4:\"name\";s:10:\"Долар\";s:4:\"rate\";s:2:\"28\";}}i:1642676126;O:12:\"App\\DataItem\":2:{s:2:\"id\";i:1642676126;s:9:\"\0*\0fields\";a:3:{s:4:\"code\";s:4:\"EURO\";s:4:\"name\";s:8:\"Євро\";s:4:\"rate\";s:2:\"33\";}}}s:8:\"valprice\";i:0;}');
-
-INSERT INTO `options` (`optname`, `optvalue`) values('version','6.9.0');  
+INSERT INTO `options` (`optname`, `optvalue`) values('version','6.8.0');  

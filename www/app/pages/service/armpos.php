@@ -1203,7 +1203,16 @@ class ARMPos extends \App\Pages\Base
                     }
                     if($this->_tvars['vkassa'] == true) {
                         $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
-          
+                        $ret = $cb->Check($this->_doc) ;
+
+                        if(is_array($ret)) {
+                            $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                        } else {
+                            $this->setError($ret);
+                            $conn->RollbackTrans();
+                            return;
+
+                        }         
                     }
                     if ($this->_tvars['ppo'] == true) {
 
