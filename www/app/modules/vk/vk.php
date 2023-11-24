@@ -1,7 +1,7 @@
 <?php
 
-namespace App\Modules\CB;
-
+namespace App\Modules\VK;
+use App\Helper as H;
 /**
 * Хелперный класс для  ВчасноКасса
 */
@@ -9,38 +9,39 @@ class VK
 {
     protected string $access_token;  //JRvbIyE8ri0CfbsHyUDx7RggQilRIWNz_8bSr1RL4_R1H33GkGWlQY9VhvgAoKNj
  
-    protected const API_URL = 'https://api.checkbox.ua/api/v1';   //https://wiki.checkbox.ua/uk/api/specification
+    protected const API_URL = 'https://kasa.vchasno.ua/api/v3/fiscal/execute';   //https://wiki.checkbox.ua/uk/api/specification
 
-    public function __construct($license_key, $pin_code) {
-        $this->license_key = $license_key;
-        $this->pin_code = $pin_code;
+    public function __construct($access_token ) {
+        $this->access_token = $access_token;
 
     }
 
-    public function PinCodeAuth() {
-        if(strlen($this->pin_code)==0 || strlen($this->license_key)==0) {
-            return "Не задано параметри  для  CheckBox ";
-        }
-        $body = [
-            'pin_code' => $this->pin_code
-        ];
+ 
+    public function OpenShift($open=true) {
 
+        
+        $req=array('fiscal'=>array('task'=>0,'cashier'=>self::getCashier())) ;
+        if($open==false) {
+           $req=array('fiscal'=>array('task'=>11)) ;
+        }
+        
+        $body=json_encode($req, JSON_UNESCAPED_UNICODE);
+   
         $curl = curl_init();
 
-
         curl_setopt_array($curl, [
-            CURLOPT_URL => self::API_URL."/cashier/signinPinCode",
+            CURLOPT_URL => self::API_URL ,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 30,
-            CURLOPT_SSL_VERIFYPEER =>false,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => json_encode($body),
+            CURLOPT_POSTFIELDS => $body ,           
+            CURLOPT_SSL_VERIFYPEER =>false,
+
             CURLOPT_HTTPHEADER => [
-                "Content-Type: application/json",
-                "X-License-Key: {$this->license_key}"
+                "Authorization: {$this->access_token}" 
             ],
         ]);
 
@@ -53,77 +54,26 @@ class VK
         }
 
         $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        if ($status_code !== 200) {
-
-            if($status_code == 403 || $status_code == 422) {
-                $response = json_decode($response, true);
-                return $response['message'] ;
-            }
-
-            return "HTTP Error #:" . $status_code. ' ' . $response;
+        
+        curl_close($curl);
+        
+        if($status_code != 200) {
+           return "HTTP Error #:" . $status_code. ' ' . $response;
         }
+
 
         $response = json_decode($response, true);
-        $this->access_token = $response['access_token'];
+        if($response['res_action']==0) {
+            return true;
+        } 
 
-
-        curl_close($curl);
-
-        return true;
-    }
-
-
-    public function OpenShift() {
-
-        $ret = $this->PinCodeAuth() ;
-        if($ret !== true) {
-            return $ret;
+        if(strlen($response['errortxt'])>0) {
+            return $response['errortxt'];
         }
-
-        $curl = curl_init();
-
-        curl_setopt_array($curl, [
-            CURLOPT_URL => self::API_URL."/shifts",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_SSL_VERIFYPEER =>false,
-            CURLOPT_POSTFIELDS => "",
-            CURLOPT_HTTPHEADER => [
-                "Authorization: Bearer {$this->access_token}",
-                "X-License-Key: {$this->license_key}"
-            ],
-        ]);
-
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-
-
-        if ($err) {
-            return "cURL Error #:" . $err;
+        if($response['res']>0) {
+            return "Помилка ".$response['res'];
         }
-
-        $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        if ($status_code !== 202) {
-
-            if($status_code == 422 || $status_code == 400) {
-                $response = json_decode($response, true);
-                return $response['message'] ;
-            }
-
-
-            return "HTTP Error #:" . $status_code. ' ' . $response;
-        }
-
-        $response = json_decode($response, true);
-        //  $this->shift_id = $response['id'];
-
-        curl_close($curl);
-    
-         
+  
         return true;
 
     }
@@ -131,55 +81,7 @@ class VK
 
     public function CloseShift() {
 
-        $ret = $this->PinCodeAuth() ;
-        if($ret !== true) {
-            return $ret;
-        }
-
-        $curl = curl_init();
-
-        curl_setopt_array($curl, [
-            CURLOPT_URL => self::API_URL."/shifts/close",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_SSL_VERIFYPEER =>false,
-            CURLOPT_POSTFIELDS => "",
-            CURLOPT_HTTPHEADER => [
-                "Authorization: Bearer {$this->access_token}",
-                "X-License-Key: {$this->license_key}"
-            ],
-        ]);
-
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-
-
-        if ($err) {
-            return "cURL Error #:" . $err;
-        }
-
-        $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        if ($status_code !== 202) {
-
-            if($status_code == 422 || $status_code == 400) {
-                $response = json_decode($response, true);
-                return $response['message'] ;
-            }
-
-
-            return "HTTP Error #:" . $status_code. ' ' . $response;
-        }
-
-        $response = json_decode($response, true);
-        //  $this->shift_id = $response['id'];
-
-        curl_close($curl);
-
-        return true;
+        return self::OpenShift(false); 
 
     }
 
@@ -507,69 +409,29 @@ class VK
     }
 
 
-    public function GetRawReceipt($receipt_id) {
-        $curl = curl_init();
-
-        curl_setopt_array($curl, [
-            CURLOPT_URL => self::API_URL . "/receipts/{$receipt_id}",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_SSL_VERIFYPEER =>false,
-            CURLOPT_CUSTOMREQUEST => "GET",
-            CURLOPT_POSTFIELDS => "",
-            CURLOPT_HTTPHEADER => [
-                "Authorization: Bearer {$this->access_token}",
-            ],
-        ]);
-
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-
-
-        if ($err) {
-            return "cURL Error #:" . $err;
-        }
-
-        $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-        if ($status_code !== 200) {
-
-            if($status_code == 422 || $status_code == 400) {
-                $response = json_decode($response, true);
-                return $response['message'] ;
-            }
-
-            return "HTTP Error #:" . $status_code . ' ' . $response;
-        }
-        return $response;
-    }
-
+    
 
    public function CheckShift() {
 
-        $ret = $this->PinCodeAuth() ;
-        if($ret !== true) {
-            return $ret;
-        }
-
+        $req=array('fiscal'=>array('task'=>18)) ;
+        
+        $body=json_encode($req, JSON_UNESCAPED_UNICODE);
+   
         $curl = curl_init();
 
         curl_setopt_array($curl, [
-            CURLOPT_URL => self::API_URL."/cashier/shift",
+            CURLOPT_URL => self::API_URL ,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 30,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => $body ,           
             CURLOPT_SSL_VERIFYPEER =>false,
-            CURLOPT_POSTFIELDS => "",
+
             CURLOPT_HTTPHEADER => [
-                "Authorization: Bearer {$this->access_token}",
-                "X-License-Key: {$this->license_key}"
+                "Authorization: {$this->access_token}" 
             ],
         ]);
 
@@ -582,23 +444,29 @@ class VK
         }
 
         $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        if ($status_code !== 202) {
-
-            if($status_code == 422 || $status_code == 400) {
-                $response = json_decode($response, true);
-                return $response['message'] ;
-            }
-
-
-            return "HTTP Error #:" . $status_code. ' ' . $response;
+        
+        curl_close($curl);
+        
+        if($status_code != 200) {
+           return "HTTP Error #:" . $status_code. ' ' . $response;
         }
 
+
         $response = json_decode($response, true);
-        //  $this->shift_id = $response['status'];
+        if($response['res_action']==0) {
+            return true;
+        } 
 
-        curl_close($curl);
+        if(strlen($response['errortxt'])>0) {
+            return $response['errortxt'];
+        }
+        if($response['res']>0) {
+            return "Помилка ".$response['res'];
+        }
+  
+        return true;
 
-        return $response['status']=='OPENED';
+        return $response['info']['shift_status']==1;
 
     }
 
@@ -617,13 +485,13 @@ class VK
         $firm = \App\Entity\Firm::load($pos->firm_id);
      
        
-        $cb = new CheckBox($pos->cbkey, $pos->cbpin) ;
+        $vk = new VK($pos->vktoken) ;
         
-        if($cb->CheckShift() != true) {
+        if($vk->CheckShift() != true) {
             return true;
         }
         
-        if(true !== $cb->CloseShift()  ){
+        if(true !== $vk->CloseShift()  ){
            return false;    
         }
         
@@ -631,6 +499,26 @@ class VK
 
        
    }    
+   
+   
+   
+    private static function getCashier($doc=null) {
+
+        $cname = \App\System::getUser()->username;
+        if($doc instanceof \App\Entity\Doc\Document) {
+            if(strlen($doc->headerdata['cashier']) >0) {
+                $cname = $doc->headerdata['cashier'];
+            } else {
+                $cname = $doc->username;
+            }
+            return $cname;            
+        }
+        $common = \App\System::getOptions("common");
+        if(strlen($common['cashier'])>0) {
+            $cname = $common['cashier'] ;
+        }       
+        return $cname;
+    }   
         
 }
 /*
@@ -646,4 +534,8 @@ curl --location 'https://kasa.vchasno.ua/api/v3/fiscal/execute' \
     TEST_t8Ue-3-BVOytQQ
     
     JRvbIyE8ri0CfbsHyUDx7RggQilRIWNz_8bSr1RL4_R1H33GkGWlQY9VhvgAoKNj
+    
+https://documenter.getpostman.com/view/26351974/2s93shy9To    
+https://kasa.vchasno.ua/app/shops/0f77aeb2-8790-52c6-ed35-ffd399b9a15b/registers    
+    
 */

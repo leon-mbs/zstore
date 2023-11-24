@@ -330,7 +330,11 @@ class ReturnIssue extends \App\Pages\Base
 
 
                 }
-
+                    if($pos->usefisc == 1 && $this->_tvars['vkassa'] == true) {
+                        $vk = new  \App\Modules\VK\VK($pos->vktoken) ;
+          
+                    }
+ 
 
 
                 if ($pos->usefisc == 1 && $this->_tvars['ppo'] == true) {

@@ -572,9 +572,14 @@ class Discounts extends \App\Pages\Base
         $row->add(new  Label("pcust", $p->customer_name));
         $row->add(new  Label("pdateto", $p->dateto > 0 ? H::fd($p->dateto) :''));
         $row->add(new  ClickLink('pdel'))->onClick($this, 'pdeleteOnClick');
+        
+        if($p->dateto > 0 && $p->dateto < time()) {
+           $p->disabled = 1;
+        }
         $row->setAttribute('style', $p->disabled == 1 ? 'color: #aaa' : null);
 
     }
+    
     public function pdeleteOnClick($sender) {
         $p = $sender->owner->getDataItem();
         $code = PromoCode::load($p->id);
@@ -625,7 +630,11 @@ class Discounts extends \App\Pages\Base
         }
         $pc->disc = $sender->peditdisc->getText();
         $pc->dateto = $sender->peditdate->getDate();
+        if($p->dateto >0 && $p->dateto < time()) {
+           $this->setError('Неправильна дата') ;
+           return; 
 
+        }
         $pc->ref = $sender->peditref->getText();
         if($pc->type ==4 && $pc->ref=='' ) {
            $this->setError('Не введено  реферальний  бонус') ;

@@ -1057,6 +1057,13 @@ class ARMFood extends \App\Pages\Base
                     }
 
                 }
+                if($this->_pos->usefisc == 1 && $this->_tvars['vkassa'] == true) {
+
+                    $vk = new  \App\Modules\VK\VK($this->_pos->vktoken) ;
+  
+                  
+
+                }
 
                 if($this->docpanel->payform->passfisc->isChecked()) {
                     $ret = \App\Modules\PPO\PPOHelper::check($this->_doc, true);
@@ -1403,7 +1410,35 @@ class ARMFood extends \App\Pages\Base
 
             return  ;
         }
+         if($this->_tvars['vkassa'] == true) {
 
+
+            $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
+            $ret = $vk->OpenShift() ;
+
+            if($ret === true) {
+                $this->setSuccess("Зміна відкрита");
+            } else {
+                $this->setError($ret);
+            }
+            if($this->pos->autoshift >0){
+                $task = new  \App\Entity\CronTask()  ;
+                $task->tasktype = \App\Entity\CronTask::TYPE_AUTOSHIFT;
+                $t =   strtotime(  date('Y-m-d ') .  $this->pos->autoshift.':00' );  
+                 
+                $task->starton=$t;
+                $task->taskdata= serialize(array(
+                       'pos_id'=>$this->pos->pos_id, 
+                       'type'=>'cb' 
+       
+                    ));         
+                $task->save();
+                    
+            }  
+
+
+            return;
+        }
 
         $ret = \App\Modules\PPO\PPOHelper::shift($this->_pos->pos_id, true);
         if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
@@ -1461,7 +1496,19 @@ class ARMFood extends \App\Pages\Base
 
             return;
         }
+        if($this->_tvars['vkassa'] == true) {
 
+            $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
+            $ret = $vk->CloseShift() ;
+
+            if($ret === true) {
+                $this->setSuccess("Зміна закрита");
+            } else {
+                $this->setError($ret);
+            }
+
+            return;
+        }
 
         $ret = $this->zform();
         if ($ret == true) {

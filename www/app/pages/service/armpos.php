@@ -1201,8 +1201,10 @@ class ARMPos extends \App\Pages\Base
 
 
                     }
-
-
+                    if($this->_tvars['vkassa'] == true) {
+                        $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
+          
+                    }
                     if ($this->_tvars['ppo'] == true) {
 
 
@@ -1313,7 +1315,35 @@ class ARMPos extends \App\Pages\Base
             return;
         }
 
+         if($this->_tvars['vkassa'] == true) {
 
+
+            $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
+            $ret = $vk->OpenShift() ;
+
+            if($ret === true) {
+                $this->setSuccess("Зміна відкрита");
+            } else {
+                $this->setError($ret);
+            }
+            if($this->pos->autoshift >0){
+                $task = new  \App\Entity\CronTask()  ;
+                $task->tasktype = \App\Entity\CronTask::TYPE_AUTOSHIFT;
+                $t =   strtotime(  date('Y-m-d ') .  $this->pos->autoshift.':00' );  
+                 
+                $task->starton=$t;
+                $task->taskdata= serialize(array(
+                       'pos_id'=>$this->pos->pos_id, 
+                       'type'=>'cb' 
+       
+                    ));         
+                $task->save();
+                    
+            }  
+
+
+            return;
+        }
         $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, true);
         if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
             //повторяем для  нового номера
@@ -1371,13 +1401,26 @@ class ARMPos extends \App\Pages\Base
 
             return;
         }
+        if($this->_tvars['vkassa'] == true) {
+
+            $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
+            $ret = $vk->CloseShift() ;
+
+            if($ret === true) {
+                $this->setSuccess("Зміна закрита");
+            } else {
+                $this->setError($ret);
+            }
+
+            return;
+        }
 
         $ret = $this->zform();
         if ($ret == true) {
             $this->closeshift();
         }
     }
-
+    //для ПРРО
     public function zform() {
 
         $stat = \App\Modules\PPO\PPOHelper::getStat($this->pos->pos_id);
@@ -1411,6 +1454,7 @@ class ARMPos extends \App\Pages\Base
         return true;
     }
 
+    //для ПРРО
     public function closeshift() {
         $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, false);
         if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
@@ -1534,6 +1578,10 @@ class ARMPos extends \App\Pages\Base
 
             }
 
+
+        }
+        if($this->_tvars['vkassa'] == true) {
+            $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
 
         }
 
