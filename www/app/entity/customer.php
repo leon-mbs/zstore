@@ -89,9 +89,7 @@ class Customer extends \ZCL\DB\Entity
         $this->lastname = (string)($xml->lastname[0]);
         $this->chat_id = (string)($xml->chat_id[0]);
 
-        $this->createdon = strtotime($this->createdon ?? '');
-        
-      
+//        $this->createdon = strtotime($this->createdon ?? '');
         
         parent::afterLoad();
     }

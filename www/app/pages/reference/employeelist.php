@@ -181,6 +181,7 @@ class EmployeeList extends \App\Pages\Base
         $this->employeedetail->setVisible(true);
         // Очищаем  форму
         $this->employeedetail->clean();
+        $this->employeedetail->edithiredate->setDate(time());
         $this->employeedetail->editlogin->setOptionList(Employee::getFreeLogins());
         $this->employeedetail->editlogin->setValue('0');
         $this->employeedetail->editztype->setValue('1');

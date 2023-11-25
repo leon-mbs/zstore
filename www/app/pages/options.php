@@ -331,11 +331,18 @@ class Options extends \App\Pages\Base
         $this->modules->add(new CheckBox('modnote', $modules['note']));
         $this->modules->add(new CheckBox('modissue', $modules['issue']));
         $this->modules->add(new CheckBox('modwoocomerce', $modules['woocomerce']));
-        $this->modules->add(new CheckBox('modppo', $modules['ppo']));
         $this->modules->add(new CheckBox('modnp', $modules['np']));
         $this->modules->add(new CheckBox('modpromua', $modules['promua']));
         $this->modules->add(new CheckBox('modpaperless', $modules['paperless']));
-        $this->modules->add(new CheckBox('modcheckbox', $modules['checkbox']));
+//        $this->modules->add(new CheckBox('modppo', $modules['ppo']));
+//        $this->modules->add(new CheckBox('modcheckbox', $modules['checkbox']));
+        
+        
+        $fisctype=0;
+        if($modules['ppo']==1) $fisctype=1;
+        if($modules['checkbox']==1) $fisctype=2;
+        if($modules['vkassa']==1) $fisctype=3;
+        $this->modules->add(new DropDownChoice('modfisctype',[], $fisctype));
 
 
 
@@ -673,19 +680,21 @@ class Options extends \App\Pages\Base
         $modules['ocstore'] = $sender->modocstore->isChecked() ? 1 : 0;
         $modules['shop'] = $sender->modshop->isChecked() ? 1 : 0;
         $modules['woocomerce'] = $sender->modwoocomerce->isChecked() ? 1 : 0;
-        $modules['ppo'] = $sender->modppo->isChecked() ? 1 : 0;
         $modules['np'] = $sender->modnp->isChecked() ? 1 : 0;
         $modules['promua'] = $sender->modpromua->isChecked() ? 1 : 0;
         $modules['paperless'] = $sender->modpaperless->isChecked() ? 1 : 0;
-        $modules['checkbox'] = $sender->modcheckbox->isChecked() ? 1 : 0;
         $modules['issue'] = $sender->modissue->isChecked() ? 1 : 0;
         $modules['note'] = $sender->modnote->isChecked() ? 1 : 0;
 
-        if($modules['checkbox']==1 && $modules['ppo'] ==1) {
-            $this->setError('CheckBox та  вбудований ППРО не  можуть працювати  одночасно') ;
-            return;
-        }
+//        $modules['ppo'] = $sender->modppo->isChecked() ? 1 : 0;
+ //       $modules['checkbox'] = $sender->modcheckbox->isChecked() ? 1 : 0;
 
+        $fisctype = (int)$sender->modfisctype->getValue();
+   //     $modules['usefisc']   = $fisctype > 0 ? 1:0;
+        $modules['ppo']   = $fisctype == 1 ? 1:0;
+        $modules['checkbox']   = $fisctype == 2 ? 1:0;
+        $modules['vkassa']   = $fisctype == 3 ? 1:0;
+ 
         System::setOptions("modules", $modules);
         $this->setSuccess('Збережено');
         App::Redirect("\\App\\Pages\\Options");

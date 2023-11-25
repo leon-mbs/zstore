@@ -349,34 +349,38 @@ class PayBayList extends \App\Pages\Base
 
         }
 
-        /*
-        if ($pos_id > 0) {
+       if ($pos_id > 0) {
             $pos = \App\Entity\Pos::load($pos_id);
+
 
             if($pos->usefisc == 1 && $this->_tvars['checkbox'] == true) {
 
-                    $cb = new  \App\Modules\CB\CheckBox($pos->cbkey,$pos->cbpin) ;
-                    $ret = $cb->Payment($this->_doc, $amount, $form->payment->getValue()) ;
+                $cb = new  \App\Modules\CB\CheckBox($pos->cbkey, $pos->cbpin) ;
+                $ret = $cb->Payment($this->_doc, $amount, $form->payment->getValue()) ;
 
-                    if(is_array($ret)) {
-                      $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
-                      $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
-                      $this->_doc->headerdata["checkbox"] = $ret['checkid'];
-                    } else {
-                        $this->setError($ret);
+                if(is_array($ret)) {
+                    $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                    $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
+                    $this->_doc->headerdata["checkbox"] = $ret['checkid'];
+                } else {
+                    $this->setError($ret);
 
-                        return;
-
-                    }
-
+                    return;
 
                 }
 
 
-
-
+            }
+            if($pos->usefisc == 1 && $pos->usefisc == 1 && $this->_tvars['vkassa'] == true) {
+               // $vk = new  \App\Modules\VK\VK($pos->vktoken) ;
+  
+            }
+ 
             if ($pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
-                 $this->_doc->headerdata["fiscalnumberpos"]  =  $pos->fiscalnumber;
+
+
+
+                $this->_doc->headerdata["fiscalnumberpos"]  =  $pos->fiscalnumber;
 
                 $ret = \App\Modules\PPO\PPOHelper::checkpay($this->_doc, $pos_id, $amount, $form->payment->getValue());
                 if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
@@ -399,10 +403,11 @@ class PayBayList extends \App\Pages\Base
                         return;
                     }
                 }
-           }
+            }
+            
+            
         }
-         */
-
+       
         $payed =   Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(), $form->pcomment->getText());
         \App\Entity\IOState::addIOState($this->_doc->document_id, $amount, $type);
 

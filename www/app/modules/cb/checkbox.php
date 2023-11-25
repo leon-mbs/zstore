@@ -8,7 +8,7 @@ namespace App\Modules\CB;
 class CheckBox
 {
     protected string $access_token;
-    protected string $license_key;    //test16741de6daf9c3ec07b18743
+    protected string $license_key;    //test16741de6daf9c3ec07b187430
     protected string $pin_code;      //2591384368
     protected const API_URL = 'https://api.checkbox.ua/api/v1';   //https://wiki.checkbox.ua/uk/api/specification
 

@@ -380,6 +380,7 @@ class ARMPos extends \App\Pages\Base
 
     }
 
+    //к  оплате
     public function topayOnClick($sender) {
         if (count($this->_itemlist) == 0 && count($this->_serlist) == 0) {
             $this->setError('Не введено позиції');
@@ -414,6 +415,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form3->setVisible(true);
 
         $this->docpanel->form3->exch2b->setText('');
+        $this->docpanel->form3->exchange->setText('');
 
         //к  оплате
 
@@ -1182,7 +1184,7 @@ class ARMPos extends \App\Pages\Base
                 if($this->docpanel->form3->passfisc->isChecked()) {
                     $this->_doc->headerdata["passfisc"]  = 1;
                 } else {
-
+                    $this->_doc->headerdata["passfisc"]  = 0;;
                     if($this->_tvars['checkbox'] == true) {
 
                         $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey, $this->pos->cbpin) ;
@@ -1201,8 +1203,19 @@ class ARMPos extends \App\Pages\Base
 
 
                     }
+                    if($this->_tvars['vkassa'] == true) {
+                        $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
+                        $ret = $vk->Check($this->_doc) ;
 
+                        if(is_array($ret)) {
+                            $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                        } else {
+                            $this->setError($ret);
+                            $conn->RollbackTrans();
+                            return;
 
+                        }         
+                    }
                     if ($this->_tvars['ppo'] == true) {
 
 
@@ -1313,7 +1326,35 @@ class ARMPos extends \App\Pages\Base
             return;
         }
 
+         if($this->_tvars['vkassa'] == true) {
 
+
+            $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
+            $ret = $vk->OpenShift() ;
+
+            if($ret === true) {
+                $this->setSuccess("Зміна відкрита");
+            } else {
+                $this->setError($ret);
+            }
+            if($this->pos->autoshift >0){
+                $task = new  \App\Entity\CronTask()  ;
+                $task->tasktype = \App\Entity\CronTask::TYPE_AUTOSHIFT;
+                $t =   strtotime(  date('Y-m-d ') .  $this->pos->autoshift.':00' );  
+                 
+                $task->starton=$t;
+                $task->taskdata= serialize(array(
+                       'pos_id'=>$this->pos->pos_id, 
+                       'type'=>'vk' 
+       
+                    ));         
+                $task->save();
+                    
+            }  
+
+
+            return;
+        }
         $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, true);
         if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
             //повторяем для  нового номера
@@ -1371,13 +1412,26 @@ class ARMPos extends \App\Pages\Base
 
             return;
         }
+        if($this->_tvars['vkassa'] == true) {
+
+            $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
+            $ret = $vk->CloseShift() ;
+
+            if($ret === true) {
+                $this->setSuccess("Зміна закрита");
+            } else {
+                $this->setError($ret);
+            }
+
+            return;
+        }
 
         $ret = $this->zform();
         if ($ret == true) {
             $this->closeshift();
         }
     }
-
+    //для ПРРО
     public function zform() {
 
         $stat = \App\Modules\PPO\PPOHelper::getStat($this->pos->pos_id);
@@ -1411,6 +1465,7 @@ class ARMPos extends \App\Pages\Base
         return true;
     }
 
+    //для ПРРО
     public function closeshift() {
         $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, false);
         if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
@@ -1445,7 +1500,6 @@ class ARMPos extends \App\Pages\Base
         $row->add(new Label('rownotes', $doc->notes));
         $row->add(new Label('rowauthor', $doc->username));
         $row->add(new ClickLink('checkedit'))->onClick($this, "onEdit");
-        $row->add(new ClickLink('checkfisc', $this, "onFisc"))->setVisible(($doc->headerdata['passfisc'] ?? "") == 1) ;
         $row->checkedit->setVisible($doc->state < 4);
 
         $row->add(new \Zippy\Html\Link\RedirectLink('checkreturn', "\\App\\Pages\\Doc\\ReturnIssue", array(0,$doc->document_id)));
@@ -1484,7 +1538,11 @@ class ARMPos extends \App\Pages\Base
         $t .="</table> " ;
 
         $row->rtlist->setText($t, true);
+        $row->add(new ClickLink('checkfisc', $this, "onFisc"))->setVisible(($doc->headerdata['passfisc'] ?? "") == 1) ;
 
+        if($doc->state <5) {
+           $row->checkfisc->setVisible(false);
+        }
 
 
     }
@@ -1535,6 +1593,22 @@ class ARMPos extends \App\Pages\Base
             }
 
 
+        }
+        if($this->_tvars['vkassa'] == true) {
+            $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
+            $ret = $vk->Check($doc) ;
+
+            if(is_array($ret)) {
+                $doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                $doc->headerdata["passfisc"] = 0;
+                $doc->save();
+              
+            } else {
+                $this->setError($ret);
+       
+                return;
+
+            }  
         }
 
 
@@ -1776,7 +1850,7 @@ class ARMPos extends \App\Pages\Base
             return;
         }
         $n = trim($this->docpanel->form2->addtovarsm->getText());
-        if (strlen(n) == 0) {
+        if (strlen($n) == 0) {
             $this->setError("Не вибрано товар");
             return;
         }
