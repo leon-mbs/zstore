@@ -142,11 +142,11 @@ class VK
         if($doc->headerdata['payment']??''  >0) {
 
 
-            $payed =  doubleval($doc->payed) ;
+             
             if ($doc->headerdata['payment'] == 0 && $payed > 0) {
                 $payment=array(
                 "type"=>1,
-                "sum"=>  self::fa($payed)   
+                "sum"=>  self::fa($doc->headerdata['payed'] )  
                 );
                 if($doc->headerdata['exchange'] > 0) {
                     $payment['change']  = self::fa($doc->headerdata['exchange'] );  
@@ -159,12 +159,12 @@ class VK
                 if ($mf->beznal == 1) {
                     $payment=array(
                     "type"=>2,
-                    "sum"=>self::fa($payed )
+                    "sum"=>self::fa($doc->headerdata['payed'] )
                     );
                 } else {
                    $payment=array(
                     "type"=>0,
-                    "sum"=>self::fa($payed )
+                    "sum"=>self::fa($doc->headerdata['payed']  )
                      );
                     if($doc->headerdata['exchange'] ?? 0 > 0) {
                         $payment['change']  = self::fa($doc->headerdata['exchange'] );  

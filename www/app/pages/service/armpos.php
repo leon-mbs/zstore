@@ -1345,7 +1345,7 @@ class ARMPos extends \App\Pages\Base
                 $task->starton=$t;
                 $task->taskdata= serialize(array(
                        'pos_id'=>$this->pos->pos_id, 
-                       'type'=>'cb' 
+                       'type'=>'vk' 
        
                     ));         
                 $task->save();
@@ -1596,7 +1596,7 @@ class ARMPos extends \App\Pages\Base
         }
         if($this->_tvars['vkassa'] == true) {
             $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
-            $ret = $vk->Check($this->_doc) ;
+            $ret = $vk->Check($doc) ;
 
             if(is_array($ret)) {
                 $doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];

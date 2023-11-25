@@ -402,7 +402,7 @@ class ARMFood extends \App\Pages\Base
 
     public function updateorderlist($sender) {
         $conn = \ZDB\DB::getConnect();
-        $where = " state not in(9 ) and date(document_date) >= " . $conn->DBDate(strtotime('-1 week'))    ;
+        $where = " (state not in(9) or content like '%<passfisc>1</passfisc>%' ) and date(document_date) >= " . $conn->DBDate(strtotime('-1 week'))    ;
         if ($sender instanceof Form) {
             $text = trim($sender->searchnumber->getText());
             $cust = $sender->searchcust->getKey();
@@ -883,6 +883,7 @@ class ARMFood extends \App\Pages\Base
 
         $this->onNewOrder();
     }
+
     private function toprod() {
 
 
@@ -916,9 +917,6 @@ class ARMFood extends \App\Pages\Base
         $this->setInfo('Відправлено у виробництво');
 
     }
-
-
-
 
 
     // сохранить
@@ -1441,7 +1439,7 @@ public function OnPrint($sender) {
          if($this->_tvars['vkassa'] == true) {
 
 
-            $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
+            $vk = new  \App\Modules\VK\VK($this->_pos->vktoken) ;
             $ret = $vk->OpenShift() ;
 
             if($ret === true) {
@@ -1449,15 +1447,15 @@ public function OnPrint($sender) {
             } else {
                 $this->setError($ret);
             }
-            if($this->pos->autoshift >0){
+            if($this->_pos->autoshift >0){
                 $task = new  \App\Entity\CronTask()  ;
                 $task->tasktype = \App\Entity\CronTask::TYPE_AUTOSHIFT;
-                $t =   strtotime(  date('Y-m-d ') .  $this->pos->autoshift.':00' );  
+                $t =   strtotime(  date('Y-m-d ') .  $this->_pos->autoshift.':00' );  
                  
                 $task->starton=$t;
                 $task->taskdata= serialize(array(
-                       'pos_id'=>$this->pos->pos_id, 
-                       'type'=>'cb' 
+                       'pos_id'=>$this->_pos->pos_id, 
+                       'type'=>'vk' 
        
                     ));         
                 $task->save();
@@ -1526,7 +1524,7 @@ public function OnPrint($sender) {
         }
         if($this->_tvars['vkassa'] == true) {
 
-            $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
+            $vk = new  \App\Modules\VK\VK($this->_pos->vktoken) ;
             $ret = $vk->CloseShift() ;
 
             if($ret === true) {
@@ -1607,7 +1605,7 @@ public function OnPrint($sender) {
 
         if($this->_tvars['checkbox'] == true) {
 
-            $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey, $this->pos->cbpin) ;
+            $cb = new  \App\Modules\CB\CheckBox($this->_pos->cbkey, $this->_pos->cbpin) ;
             $ret = $cb->Check($doc) ;
 
             if(is_array($ret)) {
@@ -1627,22 +1625,34 @@ public function OnPrint($sender) {
 
         }
         if($this->_tvars['vkassa'] == true) {
-            $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
+            $vk = new  \App\Modules\VK\VK($this->_pos->vktoken) ;
+            $ret = $vk->Check($doc) ;
 
+            if(is_array($ret)) {
+                $doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                $doc->headerdata["passfisc"] = 0;
+                $doc->save();
+              
+            } else {
+                $this->setError($ret);
+       
+                return;
+
+            }  
         }
 
 
         if ($this->_tvars['ppo'] == true) {
 
 
-            $doc->headerdata["fiscalnumberpos"]  = $this->pos->fiscalnumber;
+            $doc->headerdata["fiscalnumberpos"]  = $this->_pos->fiscalnumber;
 
 
             $ret = \App\Modules\PPO\PPOHelper::check($doc);
             if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
                 //повторяем для  нового номера
-                $this->pos->fiscdocnumber = $ret['doclocnumber'];
-                $this->pos->save();
+                $this->_pos->fiscdocnumber = $ret['doclocnumber'];
+                $this->_pos->save();
                 $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
             }
             if ($ret['success'] == false) {
@@ -1652,8 +1662,8 @@ public function OnPrint($sender) {
             } else {
                 //  $this->setSuccess("Выполнено") ;
                 if ($ret['docnumber'] > 0) {
-                    $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                    $this->pos->save();
+                    $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                    $this->_pos->save();
                     $doc->headerdata["fiscalnumber"] = $ret['docnumber'];
                     $doc->headerdata["passfisc"] = 0;
                     $doc->save();
@@ -1667,7 +1677,7 @@ public function OnPrint($sender) {
 
         }
 
-        $this->updatechecklist(null);
+        $this->updateorderlist(null);
     }
     
 
