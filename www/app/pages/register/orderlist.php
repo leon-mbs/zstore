@@ -106,6 +106,7 @@ class OrderList extends \App\Pages\Base
 
         $this->add(new Panel("editpanel"))->setVisible(false);
         $this->editpanel->add(new Label("editdn"));
+        $this->editpanel->add(new Label("editchat"));
         $this->editpanel->add(new Form("editform"));
         $this->editpanel->editform->add(new SubmitButton('editcancel'))->onClick($this, 'editOnSubmit');
         $this->editpanel->editform->add(new SubmitButton('editsave'))->onClick($this, 'editOnSubmit');
@@ -660,9 +661,12 @@ class OrderList extends \App\Pages\Base
         $this->listpanel->setVisible(false);
         $this->statuspan->setVisible(false);
         $this->payform->setVisible(false);
-
         $this->_doc = Document::load($this->_doc->document_id);
+        $this->editpanel->editchat->setAttribute('onclick', "opencchat({$this->_doc->document_id})");
 
+        $ch = $this->checkChat($this->_doc);
+        $this->editpanel->editchat->setVisible($ch);
+        
         $this->editpanel->editdn->setText($this->_doc->document_number);
         $this->_itemlist = [];
         foreach($this->_doc->unpackDetails('detaildata')  as $it) {

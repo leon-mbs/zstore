@@ -7,7 +7,7 @@ use App\Helper as H;
 */
 class VK
 {
-    protected string $access_token;  //JRvbIyE8ri0CfbsHyUDx7RggQilRIWNz_8bSr1RL4_R1H33GkGWlQY9VhvgAoKNj
+    protected string $access_token;  
  
     protected const API_URL = 'https://kasa.vchasno.ua/api/v3/fiscal/execute';   //https://wiki.checkbox.ua/uk/api/specification
 
@@ -539,177 +539,12 @@ curl --location 'https://kasa.vchasno.ua/api/v3/fiscal/execute' \
 9999992475406556
     TEST_t8Ue-3-BVOytQQ
     
-    JRvbIyE8ri0CfbsHyUDx7RggQilRIWNz_8bSr1RL4_R1H33GkGWlQY9VhvgAoKNj
+    JRvbIyE8ri0CfbsHyUDx7RggQilRIWNz_8bSr1RL4_R1H33GkGWlQY9VhvgAoKNj0
     
 https://documenter.getpostman.com/view/26351974/2s93shy9To    
 https://kasa.vchasno.ua/app/shops/0f77aeb2-8790-52c6-ed35-ffd399b9a15b/registers    
 
-
-
-
-{
-  "fiscal": {
-    "task": 1,
-    "cashier": "Сидоров",
-    "receipt": {
-      "rows": [
-        {
-          "name": "Роба",
-          "price": 1150.00,
-          "code": "12",
-          "cnt": 1 ,
-              "taxgrp": "4"
-        }
-      ],
-      "pays": [
-        {
-          "type": 0,
-          "sum": 1150.00
-        }
-      ],
-      "sum": 1150.00
-    }
-  }
-}
-
  
 
-{
-    
-    "fiscal": {
-        "task": 1,
-        "cashier": "Постман",
-        "receipt": {
-            "sum": 1445.29,
-            "round": 0.01,
-            "comment_up": "Зразок! Комментар шапки чеку",
-            "comment_down": "ДЯКУЄМО за покупку",
-            "rows": [
-                {
-                    "code": "Dm-123%1",
-                    "code1": "79545322",
-                    "code2": "45632",
-                    "name": "Dm-123%1 Продукт1тест тест тест назва на 2 рядки",
-                    "cnt": 2,
-                    "price": 20.10,
-                    "disc": -0.10,
-                    "taxgrp": "4"
-
-                },
-                {
-                    "code": "424311" ,
-                    
-                    "name": "Продукт 2",
-                    "cnt": 1,
-                    "price": 1410.04,
-                    "disc": 5.05,
-                    "taxgrp": 3
-                    
-                }
-            ],
-            "pays": [
-                {
-                    "type": 0,
-                    "sum": 1445.30 
-                   
-                } 
-            ]
-        }
-    }
-}
-
-{
-  "task": 1,
-  "type": 1,
-  "ver": 6,
-  "source": "POSTMAN",
-  "device": "99999999955555555",
-  "tag": "12d447fdb722ec2b044f95d7ef4ad44e",
-  "dt": "20230918143856",
-  "res": 0,
-  "res_action": 0,
-  "errortxt": "",
-  "warnings": [],
-  "info": {
-    "task": 1,
-    "fisid": "99999999955555555",
-    "dataid": 64,
-    "doccode": "TEST_NxD0959v08gYgg",
-    "dt": "20230918173855",
-    "cashier": "Постман",
-    "dtype": 0,
-    "isprint": 0,
-    "isoffline": false,
-    "safe": 4320.6,
-    "shift_link": 13,
-    "docno": 3,
-    "cancelid": "TEST_NxD0959v08gYgg",
-    "qr": "87b5b248c5cd9a8746c543fd3743961a5f38d158e23dc42a4a96179c52579114\n18.09.2023 17:38:55\n#TEST_NxD0959v08gYgg\n1445.29\n#99999999955555555"
-  }
-}    
-
-
-
-curl --location 'https://kasa.vchasno.ua/api/v3/fiscal/execute' \
---header 'Authorization: <token>' \
---data '{
-    "source": "POSTMAN",
-    "fiscal": {
-        "cashier": "Постман",
-        "task": 2,
-        "receipt": {
-            "sum": 729.94,
-            "round": -0.04,
-            "comment_up": "Коментар верху чеку ~:?*()_-+=",
-            "comment_down": "ДЯКУЄМО-ЗА-ПОКУПКУ",
-            "rows": [
-                {
-                    "code": "Dm-124%",
-                    "code1": "1111111",
-                    "code2": "",
-                    "name": "\"Повернення\" продукт 1",
-                    "cnt": 2,
-                    "price": 360.05,
-                    "disc": 20.00,
-                    "taxgrp": "1",
-                    "comment": "тестТест"
-                },
-                {
-                    "code": "4244",
-                    "code1": "",
-                    "code_a": "AA123325435",
-                    "code_aa": [
-                        "AA123325435"
-                    ],
-                    "code2": "45662",
-                    "name": "Пиво л",
-                    "cnt": 0.35,
-                    "price": 85.26,
-                    "disc": 0.00,
-                    "taxgrp": 2,
-                    "comment": "***КОРОНА***"
-                }
-            ],
-            "pays": [
-                {
-                    "type": 2,
-                    "sum": 729,
-                    "commission": 1,
-                    "paysys": "MasterCard",
-                    "rrn": "123",
-                    "oper_type": "Повернення",
-                    "cardmask": "122345******1111",
-                    "term_id": "",
-                    "bank_id": "",
-                    "auth_code": "",
-                    "show_additional_info": true
-                },
-                {
-                    "type": 0,
-                    "sum": 0.9
-                }
-            ]
-        }
-    }
-}'
+ 
 */
