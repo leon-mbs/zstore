@@ -435,7 +435,7 @@ class GoodsIssue extends \App\Pages\Base
         $code_ = Item::qstr($code);
         $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_})");
 
-        if ($item == null) {
+        if ($item == null) {      //ищес оп серийномк
 
             $st = Stock::find("store_id={$store_id} and  snumber=" . $code_);
             if(count($st)==1) {
