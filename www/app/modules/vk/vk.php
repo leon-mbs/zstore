@@ -86,29 +86,14 @@ class VK
     }
 
     public function Check($doc) {
-        $ret = $this->PinCodeAuth() ;
-        if($ret !== true) {
-            return $ret;
-        }
+   
 
         $check = [] ;
         $check["rows"] = [] ;
         $check["pays"] = [] ;
     
         $sum = 0;
-
-        if($doc->meta_name=="ReturnIssue") {
-
-            if($doc->parent_id >0) {
-                $p = \App\Entity\Doc\Document::load($doc->parent_id) ;
-                if(strlen($p->headerdata['checkbox']) > 0) {
-                    $check["related_receipt_id"] = $p->headerdata['checkbox'];
-                }
-
-            }
-
-
-        }
+ 
 
 
 
@@ -116,11 +101,13 @@ class VK
             $good=[];
    
             $good['name'] = $item->itemname;
-            $good['price'] =$item->price*100;
+            $good['price'] = self::fa($item->price); 
             $good['code'] = $item->item_id;
+            $good['disc'] = 0;
+            $good['taxgrp'] = 7;
 
          
-            $good["cnt"] = $item->quantity  ;
+            $good["cnt"] = self::fqty($item->quantity)  ;
 
             $sum +=   ($good['price'] * $item->quantity);
 
@@ -134,11 +121,13 @@ class VK
  
    
             $good['name'] = $item->service_name;
-            $good['price'] =$item->price*100;
+            $good['price'] =self::fa($item->price);
             $good['code'] = $item->service_id;
+            $good['disc'] = 0;
+            $good['taxgrp'] = 7;
 
          
-            $good["cnt"] = $item->quantity  ;
+            $good["cnt"] = self::fqty($item->quantity)  ;
 
             $sum +=   ($good['price'] * $item->quantity);
 
@@ -147,63 +136,95 @@ class VK
         }
 
 
-        $check['sum'] = $sum  ;
+        $check['sum'] =  self::fa($sum); 
 
   
-        if($this->headerdata['payment']  >0) {
+        if($doc->headerdata['payment']??''  >0) {
 
 
             $payed =  doubleval($doc->payed) ;
             if ($doc->headerdata['payment'] == 0 && $payed > 0) {
-                $payment=array("type"=>1,"sum"=>$payed );
+                $payment=array(
+                "type"=>1,
+                "sum"=>  self::fa($payed)   
+                );
                 if($doc->headerdata['exchange'] > 0) {
-                    $payment['change']  = $doc->headerdata['exchange'] ;
-                }
+                    $payment['change']  = self::fa($doc->headerdata['exchange'] );  
+                    $payment['sum']  = self::fa($payment['sum'] -$doc->headerdata['exchange'] );  
+               }
                 $check["pays"][] = $payment;
             }
             if ($doc->headerdata['payment'] > 0 && $doc->payed > 0) {
                 $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
                 if ($mf->beznal == 1) {
-                    $payment=array("type"=>2,"sum"=>$payed );
+                    $payment=array(
+                    "type"=>2,
+                    "sum"=>self::fa($payed )
+                    );
                 } else {
-                   $payment=array("type"=>0,"sum"=>$payed );
+                   $payment=array(
+                    "type"=>0,
+                    "sum"=>self::fa($payed )
+                     );
+                    if($doc->headerdata['exchange'] ?? 0 > 0) {
+                        $payment['change']  = self::fa($doc->headerdata['exchange'] );  
+                        $payment['sum']  = self::fa($payment['sum'] -$doc->headerdata['exchange'] );  
+                    }                     
                 }
-                $check["payments"][] = $payment;
+                $check["pays"][] = $payment;
 
             }
         } else {
             if($doc->headerdata['mfnal']  >0 && $doc->headerdata['payed'] > 0) {
-                $payment=array("type"=>0,"sum"=>$doc->headerdata['payed'] );
-                $check["payments"][] = $payment;
+                $payment=array(
+                "type"=>0,
+                "sum"=> self::fa($doc->headerdata['payed'] )
+                );
+                if($doc->headerdata['exchange'] > 0) {
+                    $payment['change']  = self::fa($doc->headerdata['exchange'] );  
+                    $payment['sum']  = self::fa($payment['sum'] -$doc->headerdata['exchange'] );  
+                }  
+
+                              
+                $check["pays"][] = $payment;
             }
             if($doc->headerdata['mfbeznal']  >0 && $doc->headerdata['payedcard'] > 0) {
-                $payment=array("type"=>2,"sum"=>$doc->headerdata['payedcard'] );
-                $check["payments"][] = $payment;
+                $payment=array(
+                "type"=>2,
+                "sum"=>self::fa($doc->headerdata['payedcard'] ) 
+                );
+                $check["pays"][] = $payment;
             }
 
         }
-        $payed  =    doubleval($doc->headerdata['payed']) + doubleval($doc->headerdata['payedcard']);
+        $payed  =    doubleval($doc->headerdata['payed'] ??0) + doubleval($doc->headerdata['payedcard']??0);
 
         if ($payed < $doc->payamount) {
-            $payment=array("type"=>4,"sum"=>($doc->payamount - $payed) );
-            $check["payments"][] = $payment;
+            $payment=array(
+            "type"=>4,
+            "sum"=> self::fa($doc->payamount - $payed ) 
+            );
+            $check["pays"][] = $payment;
 
         }
 
 
-        if($doc->headerdata["prepaid"] >0) {
-            $payment=array("type"=>3,"sum"=>$doc->headerdata["prepaid"] );
-            $check["payments"][] = $payment;
+        if($doc->headerdata["prepaid"]??0 >0) {
+            $payment=array(
+            "type"=>3,
+            "sum"=>self::fa( $doc->headerdata["prepaid"]  )  
+            );
+            $check["pays"][] = $payment;
         }
 
 
         $req=array('fiscal'=>array('task'=>$doc->meta_name=="ReturnIssue" ?2:1,
                  'cashier'=>self::getCashier($doc),
                  'receipt'=>$check));
-   
+        
         
         $receipt=json_encode($req, JSON_UNESCAPED_UNICODE);
-  
+        H::log($receipt);
         $curl = curl_init();
 
         curl_setopt_array($curl, [
@@ -260,10 +281,7 @@ class VK
     }
 
     public function Payment($doc, $payed, $mf) {
-        $ret = $this->PinCodeAuth() ;
-        if($ret !== true) {
-            return $ret;
-        }
+    
 
         $check = [] ;
         $check["goods"] = [] ;
@@ -296,7 +314,7 @@ class VK
 
         $check['total_sum'] = $sum  ;
 
-        $disc =  $sum - $doc->payamount*100;
+        $disc =  $sum - $doc->payamount;
         if($disc > 0) {
             if($doc->headerdata['bonus'] >0) {
                 $check["discounts"][] = array("type"=>"DISCOUNT","name"=> "Бонуси ". $doc->headerdata['bonus'] ." грн", "value"=> $doc->headerdata['bonus'],  "mode"=> "VALUE");
@@ -479,7 +497,15 @@ class VK
    }    
    
    
-   
+    //форматиование  сум
+    private static function fa($value) {
+       return   floatval( number_format($value, 2, '.', '') ) ;  ;
+    }
+    //форматиование количеств
+    private static function fqty($value) {
+       return   floatval( number_format($value, 3, '.', '') ) ;  ;
+    }
+    
     private static function getCashier($doc=null) {
 
         $cname = \App\System::getUser()->username;
@@ -497,6 +523,8 @@ class VK
         }       
         return $cname;
     }   
+    
+    
         
 }
 /*
@@ -516,14 +544,38 @@ curl --location 'https://kasa.vchasno.ua/api/v3/fiscal/execute' \
 https://documenter.getpostman.com/view/26351974/2s93shy9To    
 https://kasa.vchasno.ua/app/shops/0f77aeb2-8790-52c6-ed35-ffd399b9a15b/registers    
 
-curl --location 'https://kasa.vchasno.ua/api/v3/fiscal/execute' \
---header 'Authorization: <token>' \
---data-raw '{
-    "source": "POSTMAN",
-    "userinfo": {
-        "email": "test@vchasno.ua",
-        "phone": ""
-    },
+
+
+
+{
+  "fiscal": {
+    "task": 1,
+    "cashier": "Сидоров",
+    "receipt": {
+      "rows": [
+        {
+          "name": "Роба",
+          "price": 1150.00,
+          "code": "12",
+          "cnt": 1 ,
+              "taxgrp": "4"
+        }
+      ],
+      "pays": [
+        {
+          "type": 0,
+          "sum": 1150.00
+        }
+      ],
+      "sum": 1150.00
+    }
+  }
+}
+
+ 
+
+{
+    
     "fiscal": {
         "task": 1,
         "cashier": "Постман",
@@ -541,52 +593,30 @@ curl --location 'https://kasa.vchasno.ua/api/v3/fiscal/execute' \
                     "cnt": 2,
                     "price": 20.10,
                     "disc": -0.10,
-                    "taxgrp": "4",
-                    "comment": "?*()_-+=%"
+                    "taxgrp": "4"
+
                 },
                 {
-                    "code": "424311",
-                    "code1": "73463253",
-                    "code2": "45667",
-                    "code_a": "XX11111111",
-                    "code_aa": [
-                        "XX11111112",
-                        "XX11111113"
-                    ],
+                    "code": "424311" ,
+                    
                     "name": "Продукт 2",
                     "cnt": 1,
                     "price": 1410.04,
                     "disc": 5.05,
-                    "taxgrp": 3,
-                    "comment": "Тестовий коментар \"Have a good day\""
+                    "taxgrp": 3
+                    
                 }
             ],
             "pays": [
                 {
                     "type": 0,
-                    "sum": 1440.20,
-                    "change": 59.90,
-                    "comment": "ТЕСТ",
-                    "currency": "ГРН"
-                },
-                {
-                    "type": 2,
-                    "sum": 5.10,
-                    "commission": 1,
-                    "paysys": "VISA",
-                    "rrn": "123",
-                    "oper_type": "Оплата",
-                    "cardmask": "1223******1111",
-                    "term_id": "123456888",
-                    "bank_id": "BANK123",
-                    "auth_code": "AA12345678",
-                    "comment": "СЛАВА*УКРАЇНІ",
-                    "show_additional_info": true
-                }
+                    "sum": 1445.30 
+                   
+                } 
             ]
         }
     }
-}'
+}
 
 {
   "task": 1,

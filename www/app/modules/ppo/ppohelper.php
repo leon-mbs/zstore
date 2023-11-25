@@ -414,7 +414,7 @@ class PPOHelper
      * @param mixed $doc
      * @param mixed $delayfisc  отложить  фискализацию
      */
-    public static function check($doc, $delayfisc=false) {
+    public static function check($doc ) {
 
 
         $pos = \App\Entity\Pos::load($doc->headerdata['pos']);
@@ -611,18 +611,14 @@ class PPOHelper
         $xml = $report->generate($header);
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
         $firm = \App\Entity\Firm::load($pos->firm_id);
-        if($delayfisc) {
-            self::insertStat($pos->pos_id, 1, $amount0, $amount1, $amount2, $amount3, $doc->document_number, 1);
-            $ret['success'] = true ;
-        } else {
-            $ret = self::send($xml, 'doc', $firm);
-            if ($ret['success'] == true) {
+        $ret = self::send($xml, 'doc', $firm);
+        if ($ret['success'] == true) {
 
-                self::insertStat($pos->pos_id, 1, $amount0, $amount1, $amount2, $amount3, $doc->document_number, $ret['docnumber']);
-            }
-            $doc->headerdata["fiscdts"] = "&date=".date('Ymd')."&time={$header['time']}&sum={$header['amount']}";
-
+            self::insertStat($pos->pos_id, 1, $amount0, $amount1, $amount2, $amount3, $doc->document_number, $ret['docnumber']);
         }
+        $doc->headerdata["fiscdts"] = "&date=".date('Ymd')."&time={$header['time']}&sum={$header['amount']}";
+
+
 
         return $ret;
     }

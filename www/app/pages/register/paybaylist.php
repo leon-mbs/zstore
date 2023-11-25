@@ -372,7 +372,7 @@ class PayBayList extends \App\Pages\Base
 
             }
             if($pos->usefisc == 1 && $pos->usefisc == 1 && $this->_tvars['vkassa'] == true) {
-                $vk = new  \App\Modules\VK\VK($pos->vktoken) ;
+               // $vk = new  \App\Modules\VK\VK($pos->vktoken) ;
   
             }
  
@@ -404,6 +404,8 @@ class PayBayList extends \App\Pages\Base
                     }
                 }
             }
+            
+            
         }
        
         $payed =   Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(), $form->pcomment->getText());

@@ -393,6 +393,11 @@ class ARMFood extends \App\Pages\Base
             $row->bredit->setVisible(false);
         }
 
+        $row->add(new ClickLink('checkfisc', $this, "onFisc"))->setVisible(($doc->headerdata['passfisc'] ?? "") == 1) ;
+        if($doc->state <5) {
+           $row->checkfisc->setVisible(false);
+        }
+
     }
 
     public function updateorderlist($sender) {
@@ -1039,36 +1044,33 @@ class ARMFood extends \App\Pages\Base
 
 
             if ($this->_doc->payamount <= $this->_doc->payed) {
+              if( $this->docpanel->payform->passfisc->isChecked()) {
+                    $this->_doc->headerdata["passfisc"]  = 1;
+                } else {
+                    $this->_doc->headerdata["passfisc"]  = 0;
 
-                if($this->_pos->usefisc == 1 && $this->_tvars['checkbox'] == true) {
+                    if($this->_pos->usefisc == 1 && $this->_tvars['checkbox'] == true) {
 
-                    $cb = new  \App\Modules\CB\CheckBox($this->_pos->cbkey, $this->_pos->cbpin) ;
-                    $ret = $cb->Check($this->_doc) ;
+                        $cb = new  \App\Modules\CB\CheckBox($this->_pos->cbkey, $this->_pos->cbpin) ;
+                        $ret = $cb->Check($this->_doc) ;
 
-                    if(is_array($ret)) {
-                        $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
-                        $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
-                        $this->_doc->headerdata["checkbox"] = $ret['checkid'];
-                    } else {
-                        $this->setError($ret);
-                        $conn->RollbackTrans();
-                        return;
+                        if(is_array($ret)) {
+                            $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                            $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
+                            $this->_doc->headerdata["checkbox"] = $ret['checkid'];
+                        } else {
+                            $this->setError($ret);
+                            $conn->RollbackTrans();
+                            return;
+
+                        }
 
                     }
+                    if($this->_pos->usefisc == 1 && $this->_tvars['vkassa'] == true) {
 
-                }
-                if($this->_pos->usefisc == 1 && $this->_tvars['vkassa'] == true) {
+                        $vk = new  \App\Modules\VK\VK($this->_pos->vktoken) ;
 
-                    $vk = new  \App\Modules\VK\VK($this->_pos->vktoken) ;
-  
-                  
-
-                }
-
-                if($this->docpanel->payform->passfisc->isChecked()) {
-                    $ret = \App\Modules\PPO\PPOHelper::check($this->_doc, true);
-
-                } else {
+                    }
 
                     if ($this->_pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
                         $this->_doc->headerdata["fiscalnumberpos"]  =  $this->_pos->fiscalnumber;
@@ -1100,7 +1102,7 @@ class ARMFood extends \App\Pages\Base
                     }
 
                 }
-
+                $this->_doc->save();
 
             }
 
@@ -1377,7 +1379,33 @@ class ARMFood extends \App\Pages\Base
         return json_encode($itemlist, JSON_UNESCAPED_UNICODE);
     }
 
+public function OnPrint($sender) {
 
+
+        if(intval(\App\System::getUser()->prtype) == 0) {
+
+
+            $this->addAjaxResponse("  $('#checktext').printThis() ");
+
+            return;
+        }
+
+        try {
+            $doc = $this->_doc->cast();
+            $xml = $doc->generatePosReport(true);
+
+            $buf = \App\Printer::xml2comm($xml);
+            $b = json_encode($buf) ;
+
+            $this->addAjaxResponse("  sendPS('{$b}') ");
+        } catch(\Exception $e) {
+            $message = $e->getMessage()  ;
+            $message = str_replace(";", "`", $message)  ;
+            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
+
+        }
+
+    }
     //фискализация
     public function OnOpenShift($sender) {
  
@@ -1572,33 +1600,77 @@ class ARMFood extends \App\Pages\Base
 
         return true;
     }
+    
+  public function onFisc($sender) {
 
-    public function OnPrint($sender) {
+        $doc =  $sender->getOwner()->getDataItem();
+
+        if($this->_tvars['checkbox'] == true) {
+
+            $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey, $this->pos->cbpin) ;
+            $ret = $cb->Check($doc) ;
+
+            if(is_array($ret)) {
+                $doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                $doc->headerdata["tax_url"] = $ret['tax_url'];
+                $doc->headerdata["checkbox"] = $ret['checkid'];
+                $doc->headerdata["passfisc"] = 0;
+                $doc->save();
+                $this->setSuccess("Виконано");
+            } else {
+                $this->setError($ret);
+
+                return;
+
+            }
 
 
-        if(intval(\App\System::getUser()->prtype) == 0) {
+        }
+        if($this->_tvars['vkassa'] == true) {
+            $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
 
-
-            $this->addAjaxResponse("  $('#checktext').printThis() ");
-
-            return;
         }
 
-        try {
-            $doc = $this->_doc->cast();
-            $xml = $doc->generatePosReport(true);
 
-            $buf = \App\Printer::xml2comm($xml);
-            $b = json_encode($buf) ;
+        if ($this->_tvars['ppo'] == true) {
 
-            $this->addAjaxResponse("  sendPS('{$b}') ");
-        } catch(\Exception $e) {
-            $message = $e->getMessage()  ;
-            $message = str_replace(";", "`", $message)  ;
-            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
+
+            $doc->headerdata["fiscalnumberpos"]  = $this->pos->fiscalnumber;
+
+
+            $ret = \App\Modules\PPO\PPOHelper::check($doc);
+            if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
+                //повторяем для  нового номера
+                $this->pos->fiscdocnumber = $ret['doclocnumber'];
+                $this->pos->save();
+                $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
+            }
+            if ($ret['success'] == false) {
+                $this->setErrorTopPage($ret['data']);
+
+                return;
+            } else {
+                //  $this->setSuccess("Выполнено") ;
+                if ($ret['docnumber'] > 0) {
+                    $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                    $this->pos->save();
+                    $doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+                    $doc->headerdata["passfisc"] = 0;
+                    $doc->save();
+                    $this->setSuccess("Виконано");
+                } else {
+                    $this->setError("Не повернено фіскальний номер");
+
+                    return;
+                }
+            }
 
         }
 
+        $this->updatechecklist(null);
     }
+    
+
+    
 
 }

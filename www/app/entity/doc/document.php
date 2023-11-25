@@ -1096,7 +1096,7 @@ class Document extends \ZCL\DB\Entity
 
 
         $number = $this->document_number;
-        if(strlen($this->headerdata['outnumber']) > 0) {
+        if(strlen($this->headerdata['outnumber'] ?? '') > 0) {
             $number  =    $this->headerdata['outnumber']  ;
         }
 
