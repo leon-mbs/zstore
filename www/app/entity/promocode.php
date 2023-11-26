@@ -96,5 +96,40 @@ class PromoCode extends \ZCL\DB\Entity
            
            return "";
     }
+    /**
+    * применить  промокод
+    * 
+    * @param mixed $code
+    * @param mixed $doc
+    * @return mixed
+    */
+    public static function apply($code,$doc) {
+        $ch = PromoCode::check($code,$doc->customer_id);
+        if($ch !='') {
+            return;
+        }
+        
+        $code = PromoCode::getFirst( ' code='.PromoCode::qstr($code)) ;
+        $code->used= date('Y-m-d').' '.$doc->document_number;
+        $code->save() ;
+        
+        if($code->type==4) {
+            
+            $bonus = $doc->amount*$code->ref/100;
+            
+            $pay = new \App\Entity\Pay();
 
+            $pay->document_id = $doc->document_id;
+
+            $pay->amount = 0;
+            $pay->bonus = (int)$bonus;
+            $pay->paytype = self::PAY_BONUS;
+            $pay->paydate = time();
+            $pay->user_id = \App\System::getUser()->user_id;
+
+            $pay->save();          
+        }
+        
+      
+    }
 }

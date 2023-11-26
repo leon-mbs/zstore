@@ -96,7 +96,6 @@ class VK
  
 
 
-
         foreach($doc->unpackDetails('detaildata') as $item) {
             $good=[];
    
@@ -217,6 +216,15 @@ class VK
             $check["pays"][] = $payment;
         }
 
+       $paysum = 0;
+       foreach( $check["pays"] as $p) {
+           $paysum += self::fa($p['sum']) ;    
+       }
+       
+       if(floatval( $check['sum'] ) != floatval($paysum))  {
+           $check['round'] =  self::fa($paysum - $check['sum']  ) ;  
+       }
+        
 
         $req=array('fiscal'=>array('task'=>$doc->meta_name=="ReturnIssue" ?2:1,
                  'cashier'=>self::getCashier($doc),
@@ -545,6 +553,76 @@ https://documenter.getpostman.com/view/26351974/2s93shy9To
 https://kasa.vchasno.ua/app/shops/0f77aeb2-8790-52c6-ed35-ffd399b9a15b/registers    
 
  
-
+curl --location 'https://kasa.vchasno.ua/api/v3/fiscal/execute' \
+--header 'Authorization: <token>' \
+--data-raw '{
+    "source": "POSTMAN",
+    "userinfo": {
+        "email": "test@vchasno.ua",
+        "phone": ""
+    },
+    "fiscal": {
+        "task": 1,
+        "cashier": "Постман",
+        "receipt": {
+            "sum": 1445.29,
+            "round": 0.01,
+            "comment_up": "Зразок! Комментар шапки чеку",
+            "comment_down": "ДЯКУЄМО за покупку",
+            "rows": [
+                {
+                    "code": "Dm-123%1",
+                    "code1": "79545322",
+                    "code2": "45632",
+                    "name": "Dm-123%1 Продукт1тест тест тест назва на 2 рядки",
+                    "cnt": 2,
+                    "price": 20.10,
+                    "disc": -0.10,
+                    "taxgrp": "4",
+                    "comment": "?*()_-+=%"
+                },
+                {
+                    "code": "424311",
+                    "code1": "73463253",
+                    "code2": "45667",
+                    "code_a": "XX11111111",
+                    "code_aa": [
+                        "XX11111112",
+                        "XX11111113"
+                    ],
+                    "name": "Продукт 2",
+                    "cnt": 1,
+                    "price": 1410.04,
+                    "disc": 5.05,
+                    "taxgrp": 3,
+                    "comment": "Тестовий коментар \"Have a good day\""
+                }
+            ],
+            "pays": [
+                {
+                    "type": 0,
+                    "sum": 1440.20,
+                    "change": 59.90,
+                    "comment": "ТЕСТ",
+                    "currency": "ГРН"
+                },
+                {
+                    "type": 2,
+                    "sum": 5.10,
+                    "commission": 1,
+                    "paysys": "VISA",
+                    "rrn": "123",
+                    "oper_type": "Оплата",
+                    "cardmask": "1223******1111",
+                    "term_id": "123456888",
+                    "bank_id": "BANK123",
+                    "auth_code": "AA12345678",
+                    "comment": "СЛАВА*УКРАЇНІ",
+                    "show_additional_info": true
+                }
+            ]
+        }
+    }
+}'
  
 */
