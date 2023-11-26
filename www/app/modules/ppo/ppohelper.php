@@ -415,7 +415,8 @@ class PPOHelper
      * @param mixed $delayfisc  отложить  фискализацию
      */
     public static function check($doc ) {
-
+        $common = \App\System::getOptions('common');
+ 
 
         $pos = \App\Entity\Pos::load($doc->headerdata['pos']);
         $firm = \App\Helper::getFirmData($pos->firm_id);
@@ -440,42 +441,38 @@ class PPOHelper
         $header['guid'] = \App\Util::guid();
 
 
+        $header['comment'] = strlen($common["checkslogan"] ??'') >0 ? $common["checkslogan"]  :  false;
+
+
         $header['details'] = array();
         $n = 1;
-        $disc = 1;
+      
         $header['amount'] = $doc->payamount;
-        //общая  скидка
-        $discsum =  doubleval($doc->headerdata["bonus"]) + doubleval($doc->headerdata["totaldisc"])+ doubleval($doc->headerdata["paydisc"]);
-        $header['disc']   = false;
-        if ($discsum > 0) {
-            // $disc = 1 - ( $discsum / $doc->amount);
-            $header['disc'] = number_format($discsum, 2, '.', '');
-            //  $header['amount'] -= $header['disc'];
-        }
-        //     $header['amount'] = 0;
 
+
+      
         foreach ($doc->unpackDetails('detaildata') as $item) {
             $header['details'][] = array(
                 'num'   => "ROWNUM=\"{$n}\"",
                 'name'  => $item->itemname,
                 'qty'   => number_format($item->quantity, 3, '.', ''),
-                'price' => number_format($item->price * $disc, 2, '.', ''),
-                'cost'  => number_format($item->quantity * $item->price * $disc, 2, '.', '')
+                'price' => number_format($item->price  , 2, '.', ''),
+                'cost'  => number_format($item->quantity * $item->price  , 2, '.', '')
             );
             $n++;
 
-            //    $header['amount'] = $header['amount'] + $item->quantity * $item->price * $disc;
+
         }
         foreach ($doc->unpackDetails('services') as $item) {
             $header['details'][] = array(
                 'num'   => "ROWNUM=\"{$n}\"",
                 'name'  => $item->service_name,
                 'qty'   => number_format($item->quantity, 3, '.', ''),
-                'price' => number_format($item->price * $disc, 2, '.', ''),
-                'cost'  => number_format($item->quantity * $item->price * $disc, 2, '.', '')
+                'price' => number_format($item->price  , 2, '.', ''),
+                'cost'  => number_format($item->quantity * $item->price  , 2, '.', '')
             );
             $n++;
-            //  $header['amount'] = $header['amount'] + $item->quantity * $item->price * $disc;
+
         }
         $amount0 = 0;
         $amount1 = 0;
@@ -484,13 +481,15 @@ class PPOHelper
         $header['pays'] = array();
         $n = 1;
 
+         //общая  скидка
+        $discsum =  $sum - $doc->payamount  - doubleval($doc->headerdata["prepaid"])   ;
 
         // к  оплате
         $payamount  =    doubleval($doc->payamount) - doubleval($doc->headerdata['prepaid']);
         // оплачено
         $payed  =    doubleval($doc->headerdata['payed']) + doubleval($doc->headerdata['payedcard']);
 
-
+  //$doc->headerdata['payed']   += 0.03;
         if($doc->headerdata['payment']  >0) {
             if ($mf->beznal == 1) {
                 $pay = array(
@@ -498,6 +497,7 @@ class PPOHelper
                     'formcode' => 1,
                     'paysum'   => number_format($payed, 2, '.', ''),
                     'payed'    => number_format($payed, 2, '.', ''),
+                    'rest'     => false,                    
                     'num'      => "ROWNUM=\"{$n}\""
                 );
                 // в долг
@@ -520,7 +520,7 @@ class PPOHelper
                 );
                 //сдача
                 if ($doc->headerdata["exchange"] > 0) {
-                    $pay['rest'] = number_format($doc->headerdata["exchange"], 2, '.', '');
+                  //  $pay['rest'] = number_format($doc->headerdata["exchange"], 2, '.', '');
                     $pay['rest'] = number_format($payed- $doc->headerdata["exchange"], 2, '.', '');
                 }
                 // в долг
@@ -560,6 +560,7 @@ class PPOHelper
                     'formcode' => 1,
                     'paysum'   => number_format($doc->headerdata['payedcard'], 2, '.', ''),
                     'payed'    => number_format($doc->headerdata['payedcard'], 2, '.', ''),
+                    'rest'     => false,
                     'num'      => "ROWNUM=\"{$n}\""
                 );
 
@@ -602,13 +603,43 @@ class PPOHelper
             $header['amount'] += $doc->headerdata['prepaid'];
         }
 
+        
+      
+        
         $header['pay'] = count($header['pays']) > 0;
-
-        $header['amount'] = number_format($header['amount'], 2, '.', '');
-
+        
+ 
+        $sum=0;
+        foreach($header['details'] as $p ) {
+           $sum += $p['cost'] ;
+         
+        }
+        $sumpay=0;
+        foreach($header['pays'] as $p ) {
+           $sumpay += $p['paysum'] ;
+        }
+     
+        
+          
+        $header['disc']   = false;
+        if ($discsum > 0) {
+            $header['disc'] = number_format($discsum, 2, '.', '');
+          //  $sumpay  += $header['disc'];
+        }        
+        
+        $header['amount'] = number_format($sumpay, 2, '.', '');
+        $header['rnd']  =  false;
+        $header['nrnd']  =  false;
+        if(floatval($sum) !=floatval($sumpay) )  {
+           $header['rnd']  = number_format( $sum-$sumpay        , 2, '.', '');
+           $header['nrnd']  = number_format( $sum  , 2, '.', '');
+           
+        }
+        
         $report = new \App\Report('check.xml');
 
         $xml = $report->generate($header);
+        H::log($xml);
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
         $firm = \App\Entity\Firm::load($pos->firm_id);
         $ret = self::send($xml, 'doc', $firm);

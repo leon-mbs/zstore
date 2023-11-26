@@ -96,7 +96,6 @@ class VK
  
 
 
-
         foreach($doc->unpackDetails('detaildata') as $item) {
             $good=[];
    
@@ -217,6 +216,28 @@ class VK
             $check["pays"][] = $payment;
         }
 
+        $disc =  $sum - $doc->payamount  - doubleval($doc->headerdata["prepaid"])   ;
+        if($disc > 0) {
+       
+            $payment=array(
+            "type"=>11,
+            "sum"=> self::fa($disc ) 
+            );
+            $check["pays"][] = $payment;            
+            
+            
+        }        
+        
+        
+       $paysum = 0;
+       foreach( $check["pays"] as $p) {
+           $paysum += self::fa($p['sum']) ;    
+       }
+       
+       if(floatval( $check['sum'] ) != floatval($paysum))  {
+           $check['round'] =  self::fa($paysum - $check['sum']  ) ;  
+       }
+        
 
         $req=array('fiscal'=>array('task'=>$doc->meta_name=="ReturnIssue" ?2:1,
                  'cashier'=>self::getCashier($doc),
@@ -224,7 +245,7 @@ class VK
         
         
         $receipt=json_encode($req, JSON_UNESCAPED_UNICODE);
-        H::log($receipt);
+     //   H::log($receipt);
         $curl = curl_init();
 
         curl_setopt_array($curl, [
@@ -545,6 +566,6 @@ https://documenter.getpostman.com/view/26351974/2s93shy9To
 https://kasa.vchasno.ua/app/shops/0f77aeb2-8790-52c6-ed35-ffd399b9a15b/registers    
 
  
-
+ 
  
 */

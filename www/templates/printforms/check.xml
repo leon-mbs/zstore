@@ -14,6 +14,10 @@
         {{#inn}}
         <IPN>{{inn}}</IPN>
         {{/inn}}
+      
+        {{#comment}}
+        <COMMENT>{{comment}}</COMMENT>
+        {{/comment}}
 
         <ORGNM>{{firmname}}</ORGNM>
 
@@ -43,10 +47,19 @@
 
     <CHECKTOTAL>
         <SUM>{{amount}}</SUM>
+        {{#rnd}}
+        <RNDSUM>{{rnd}}</RNDSUM>
+        {{/rnd}}
+        {{#nrnd}}
+        <NORNDSUM>{{nrnd}}</NORNDSUM>
+        {{/nrnd}}
         {{#disc}}
         <DISCOUNTTYPE>0</DISCOUNTTYPE>
         <DISCOUNTSUM>{{disc}}</DISCOUNTSUM>
         {{/disc}}
+        
+ 
+        
     </CHECKTOTAL>
 
 
