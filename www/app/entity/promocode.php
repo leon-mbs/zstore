@@ -64,5 +64,37 @@ class PromoCode extends \ZCL\DB\Entity
         }
         
     }
+    
+    
+    /**
+    * Проверка  промокода
+    * 
+    * @param mixed $code
+    * @param mixed $customer_id
+    */
+    public static function check($code,$customer_id=0) {
+        
+           $code = PromoCode::getFirst('disabled=00 and code='.PromoCode::qstr($code)) ;
+           if($code==null) {
+               return "Недійсний код";
+           }
+           if($code->dateto >0  && $code->dateto < time() ) {
+               return "Просрочений код";
+           }
+           if(strlen( $code->used ?? '') > 0  ) {
+               if($code->type==1 || $code->type==3 ){
+                  return "Вже використаний";    
+               }
+           }
+           
+           if($code->type==3){
+               if( intval($code->customer_id) != intval($customer_id)) {
+                  return "Персональний код"; 
+               }
+           }
+           
+           
+           return "";
+    }
 
 }
