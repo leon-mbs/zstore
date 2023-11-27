@@ -740,7 +740,7 @@ class GoodsIssue extends \App\Pages\Base
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
 
-
+ 
             $conn->CommitTrans();
 
 

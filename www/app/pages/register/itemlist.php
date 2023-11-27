@@ -107,7 +107,18 @@ class ItemList extends \App\Pages\Base
 
         $qty = $item->getQuantity($store);
         $row->add(new Label('iqty', H::fqty($qty)));
-        $row->add(new Label('minqty', H::fqty($item->minqty)));
+      //  $row->add(new Label('minqty', H::fqty($item->minqty)));
+      
+        $inprice="";
+        if($this->_tvars['noshowpartion'] != true) {
+          $wh=  "item_id=".$item->item_id ;
+          if($store >0){   
+             $wh=$wh." and store_id=".$store;
+          }
+          $st=  Stock::getFirst($wh,"stock_id desc") ;
+          $inprice = $st->partion;
+        }
+        $row->add(new Label('inprice', H::fa($inprice)));
 
         $pt = $this->filter->searchprice->getValue();
         if($pt=='price') {
@@ -219,7 +230,7 @@ class ItemList extends \App\Pages\Base
 
         $row->add(new Label('price', implode(',', $plist)));
 
-        //документпосдеднего обновления
+        //документ посдеднего обновления
         $entry =  \App\Entity\Entry::getFirst("quantity > 0 and stock_id=".$stock->stock_id, "entry_id desc") ;
         $doc =  \App\Entity\Doc\Document::load($entry->document_id) ;
         $row->add(new \Zippy\Html\Link\RedirectLink("blameddoc", "\\App\\Pages\\Register\\DocList", array($doc == null ? 0 : $doc->document_id )))->setValue($doc == null ? '' : $doc->document_number);
