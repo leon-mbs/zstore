@@ -126,6 +126,7 @@ class PromoCode extends \ZCL\DB\Entity
             $pay->paytype = self::PAY_BONUS;
             $pay->paydate = time();
             $pay->user_id = \App\System::getUser()->user_id;
+            $pay->customer_id = $code->customer_id;
 
             $pay->save();          
         }

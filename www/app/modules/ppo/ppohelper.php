@@ -639,7 +639,7 @@ class PPOHelper
         $report = new \App\Report('check.xml');
 
         $xml = $report->generate($header);
-        H::log($xml);
+   //     H::log($xml);
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
         $firm = \App\Entity\Firm::load($pos->firm_id);
         $ret = self::send($xml, 'doc', $firm);
