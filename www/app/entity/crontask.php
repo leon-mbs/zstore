@@ -107,7 +107,7 @@ class CronTask extends \ZCL\DB\Entity
         global $logger;
      
         $ret="";
-        $conn=\Zdb\DB::getConnect() ;
+        $conn=\ZDB\DB::getConnect() ;
 
         $where =" starton <= NOW() "  ;
         if($task_id >0 ) {

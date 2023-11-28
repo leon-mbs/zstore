@@ -532,7 +532,7 @@ class Item extends \ZCL\DB\Entity
      * @param mixed $snumber партия проиводителя
      */
     public function getQuantity($store_id = 0, $snumber = "", $date=0) {
-        $cstr = \App\Acl::getStoreBranchConstraint();
+        $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "    store_id in ({$cstr})  and   ";
         }
@@ -565,7 +565,7 @@ class Item extends \ZCL\DB\Entity
      * @param mixed $store_id
      */
     public function getAmount($store_id = 0) {
-        $cstr = \App\Acl::getStoreBranchConstraint();
+        $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "    store_id in ({$cstr})  and   ";
         }

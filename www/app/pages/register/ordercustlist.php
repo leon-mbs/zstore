@@ -98,7 +98,7 @@ class OrderCustList extends \App\Pages\Base
     }
 
     public function statusOnSubmit($sender) {
-        if (\App\Acl::checkChangeStateDoc($this->_doc, true, true) == false) {
+        if (\App\ACL::checkChangeStateDoc($this->_doc, true, true) == false) {
             return;
         }
 

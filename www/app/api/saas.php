@@ -30,7 +30,7 @@ class saas extends JsonRPC
     public function state() {
         $ret = array();
 
-        $conn = \Zdb\DB::getConnect()  ;
+        $conn = \ZDB\DB::getConnect()  ;
 
         $ret['lastactive'] = $conn->GetOne("select max(lastactive) from users")  ; //последняя  активность
         $ret['docscount'] =  $conn->GetOne("select count(document_id) from document")  ; // кол. документов

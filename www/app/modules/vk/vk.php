@@ -412,15 +412,7 @@ class VK
         $ret =[];
 
         $ret["checkid"] = $response['id'];
-
-
-        $receipt = $this->GetRawReceipt($ret["checkid"]);
-        $response = json_decode($receipt, true);
-
-        $ret["fiscnumber"] = $response['fiscal_code']  ;
-        $ret["tax_url"] = $response['tax_url']  ;
-
-
+      
         return $ret;
 
     }

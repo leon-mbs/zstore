@@ -28,11 +28,11 @@ class docs extends JsonRPC
 
         return $list;
     }
-    public function list() {
+    public function list($args) {
 
         $list = [];
-        $num1 = Document::qstr("%<apinumber>{$num}</apinumber>%");
-        $num2 = Document::qstr("%<apinumber><![CDATA[{$num}]]></apinumber>%");
+        $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
+        $num2 = Document::qstr("%<apinumber><![CDATA[{$args['number']}]]></apinumber>%");
         foreach(Document::find("  content   like  {$num1} or content   like  {$num2}  ")  as $d) {
       //  foreach(Document::find(" ")  as $d) {
             $doc=[];

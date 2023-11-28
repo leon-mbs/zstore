@@ -630,7 +630,7 @@ class Discounts extends \App\Pages\Base
         }
         $pc->disc = $sender->peditdisc->getText();
         $pc->dateto = $sender->peditdate->getDate();
-        if($p->dateto >0 && $p->dateto < time()) {
+        if($pc->dateto >0 && $pc->dateto < time()) {
            $this->setError('Неправильна дата') ;
            return; 
 

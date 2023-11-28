@@ -474,6 +474,14 @@ class PPOHelper
             $n++;
 
         }
+        
+        $sum=0;
+        foreach($header['details'] as $p ) {
+           $sum += $p['cost'] ;
+         
+        }        
+        
+        
         $amount0 = 0;
         $amount1 = 0;
         $amount2 = 0;
@@ -609,11 +617,7 @@ class PPOHelper
         $header['pay'] = count($header['pays']) > 0;
         
  
-        $sum=0;
-        foreach($header['details'] as $p ) {
-           $sum += $p['cost'] ;
-         
-        }
+     
         $sumpay=0;
         foreach($header['pays'] as $p ) {
            $sumpay += $p['paysum'] ;
@@ -892,7 +896,7 @@ class PPOHelper
         $res = PPOHelper::send(json_encode(array('Command' => 'Shifts', 'NumFiscal' => $pos->fiscalnumber, 'From' => $from, 'To' => $to)), 'cmd', $company);
 
         if($res['success']==false) {
-            \App\system::setErrorMsg($res['data']);
+            \App\System::setErrorMsg($res['data']);
             return;
         }
         $res = json_decode($res['data']);
@@ -906,7 +910,7 @@ class PPOHelper
 
 
                     if($res['success']==false) {
-                        \App\system::setErrorMsg($res['data']);
+                        \App\System::setErrorMsg($res['data']);
                         return;
                     }
                     $res = json_decode($res['data']);

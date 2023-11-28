@@ -409,7 +409,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         $where = "   disabled <> 1 and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id ) <>0 ";
 
 
-        $cstr = \App\Acl::getStoreBranchConstraint();
+        $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "    store_id in ({$cstr})  and   ";
         }
@@ -500,7 +500,7 @@ class DetailDataSource implements \Zippy\Interfaces\DataSource
         $where = "item_id = {$this->page->_item->item_id} and   qty <> 0   ";
         
         
-        $cstr = \App\Acl::getStoreBranchConstraint();
+        $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "  and  store_id in ({$cstr})      ";
         }

@@ -433,12 +433,12 @@ class Base extends \Zippy\Html\WebPage
             $header['disc'] = false;
         }
         $header['last'] = false;
-        $doc = \App\Entity\doc\Document::getFirst(" customer_id={$c->customer_id}", "document_id desc") ;
+        $doc = \App\Entity\Doc\Document::getFirst(" customer_id={$c->customer_id}", "document_id desc") ;
         if($doc != null) {
             $header['last']= $doc->meta_desc .' '. $doc->document_number;
             $header['lastdate']=Helper::fd($doc->document_date);
             $header['lastsum']=Helper::fa($doc->amount);
-            $header['laststatus']   =  \App\Entity\doc\Document::getStateName($doc->state)  ;
+            $header['laststatus']   =  \App\Entity\Doc\Document::getStateName($doc->state)  ;
 
             $goods = [];
 

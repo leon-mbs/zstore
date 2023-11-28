@@ -350,7 +350,7 @@ class ProdProcList extends \App\Pages\Base
     public function OnStageDel($sender) {
         $stage = $sender->getOwner()->getDataItem();
 
-        $conn = \ZDb\DB::getConnect();
+        $conn = \ZDB\DB::getConnect();
 
         //проверка на  доки
 

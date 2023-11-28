@@ -187,7 +187,7 @@ class TaskList extends \App\Pages\Base
 
     public function statusOnSubmit($sender) {
 
-        if (\App\Acl::checkChangeStateDoc($this->_task, true, true) == false) {
+        if (\App\ACL::checkChangeStateDoc($this->_task, true, true) == false) {
             return;
         }
 
