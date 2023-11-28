@@ -24,7 +24,7 @@ class Prod extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-        $this->filter->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
+        $this->filter->add(new DropDownChoice('parea', \App\Entity\ProdArea::findArray("pa_name", ""), 0));
 
         $this->add(new Panel('detail'))->setVisible(false);
 
@@ -123,7 +123,7 @@ class Prod extends \App\Pages\Base
             $parts = \App\Entity\ItemSet::find("pitem_id=".$it->item_id) ;
 
             foreach($parts as $part) {
-                $pi = \App\Entity\item::load($part->item_id);
+                $pi = \App\Entity\Item::load($part->item_id);
                 if($pi==null) {
                     continue;
                 }

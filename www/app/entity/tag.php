@@ -19,7 +19,7 @@ class Tag extends \ZCL\DB\Entity
     
     public  static function updateTags(array $tags,int  $type,int $item_id)  {
     
-       $conn = \Zdb\db::getConnect()  ;
+       $conn = \ZDB\db::getConnect()  ;
        $conn->Execute("delete from taglist where tag_type={$type} and  item_id={$item_id}  ");
 
        foreach($tags as $tag) {
@@ -34,7 +34,7 @@ class Tag extends \ZCL\DB\Entity
     }
     
     public  static function getTags(int  $type,int $item_id=0)   {
-       $conn = \Zdb\db::getConnect()  ;
+       $conn = \ZDB\db::getConnect()  ;
        
        if($item_id >0){
           $ret = $conn->GetCol("select distinct tag_name from taglist where tag_type={$type} and  item_id={$item_id}  order  by tag_name ");
@@ -48,7 +48,7 @@ class Tag extends \ZCL\DB\Entity
     }
    
     public  static function getSuggestions(int  $type)   {
-       $conn = \Zdb\db::getConnect()  ;
+       $conn = \ZDB\db::getConnect()  ;
        
        $ret = $conn->GetCol("select distinct tag_name from taglist where tag_type={$type}   order  by tag_name ");
         

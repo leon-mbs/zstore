@@ -187,7 +187,7 @@ class TaskList extends \App\Pages\Base
 
     public function statusOnSubmit($sender) {
 
-        if (\App\Acl::checkChangeStateDoc($this->_task, true, true) == false) {
+        if (\App\ACL::checkChangeStateDoc($this->_task, true, true) == false) {
             return;
         }
 
@@ -286,7 +286,7 @@ class TaskList extends \App\Pages\Base
                 $item->headerdata['taskhours'] = 0;
             }
             $d = ($item->headerdata['taskhours']??0);
-            $end_date = $item->headerdata['start'] ??0 + round(3600 * $d);
+            $end_date = ($item->headerdata['start'] ??0) + round(3600 * $d);
 
             $tasks[] = new \ZCL\Calendar\CEvent($item->document_id, $item->document_number, $item->headerdata['start']??0, $end_date, $col);
         }

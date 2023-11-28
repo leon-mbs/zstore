@@ -278,7 +278,7 @@ class Order extends Base
             $order->firm_id = $shop["firm"];
 
             if($order->user_id==0) {
-                $user = \App\Entity\user::getByLogin('admin') ;
+                $user = \App\Entity\User::getByLogin('admin') ;
                 $order->user_id = $user->user_id;
             }
 

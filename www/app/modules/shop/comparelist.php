@@ -31,9 +31,9 @@ class CompareList  // implements \Zippy\Interfaces\DataSource
     }
 
     public function deleteProduct($item_id) {
-        $this->list_ = array_values($this->list);
+        $list_ = array_values($this->list);
         $this->list = array();
-        foreach ($this->list_ as $p) {
+        foreach ($list_ as $p) {
             if ($p->item_id == $item_id) {
                 continue;
             }

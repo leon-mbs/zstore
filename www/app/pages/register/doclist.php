@@ -600,7 +600,7 @@ class DocList extends \App\Pages\Base
             
             $this->_doc->headerdata['_state_before_approve_'] ='';
             
-        }  catch(\Exception $e){
+        }  catch(\Exception $ee){
             global $logger;
             $conn->RollbackTrans();
       

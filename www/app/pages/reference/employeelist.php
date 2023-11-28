@@ -267,7 +267,7 @@ class EmployeeList extends \App\Pages\Base
         $from =  $this->accp->filters->from->getDate();
         $to =  $this->accp->filters->to->getDate();
 
-        $conn = \Zdb\DB::getConnect();
+        $conn = \ZDB\DB::getConnect();
 
         $sql = "select coalesce(sum(amount),0) from empacc where optype < 100 and  emp_id = {$emp_id} and createdon < " . $conn->DBDate($from);
 

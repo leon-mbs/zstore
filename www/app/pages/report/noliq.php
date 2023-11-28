@@ -46,7 +46,7 @@ class NoLiq extends \App\Pages\Base
 
         $mqty = $this->filter->mqty->getValue();
 
-        $cstr = \App\Acl::getStoreBranchConstraint();
+        $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = " and st.store_id in ({$cstr})    ";
         }

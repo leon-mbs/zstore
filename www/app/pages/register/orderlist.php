@@ -81,7 +81,7 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
         $this->statuspan->add(new Form('moveform'));
-        $this->statuspan->moveform->add(new DropDownChoice('brmove', \App\Entity\Branch::getList(), \App\Acl::getCurrentBranch()))->onChange($this, "onBranch", true);
+        $this->statuspan->moveform->add(new DropDownChoice('brmove', \App\Entity\Branch::getList(), \App\ACL::getCurrentBranch()))->onChange($this, "onBranch", true);
         $this->statuspan->moveform->add(new DropDownChoice('usmove', array(), 0));
         $this->statuspan->moveform->add(new SubmitButton('bmove'))->onClick($this, 'MoveOnSubmit');
 
@@ -265,7 +265,7 @@ class OrderList extends \App\Pages\Base
 
 
     public function statusOnSubmit($sender) {
-        if (\App\Acl::checkChangeStateDoc($this->_doc, true, true) == false) {
+        if (\App\ACL::checkChangeStateDoc($this->_doc, true, true) == false) {
             return;
         }
 
@@ -545,7 +545,7 @@ class OrderList extends \App\Pages\Base
         $this->updateStatusButtons();
         $this->goAnkor('dankor');
         $this->_tvars['askclose'] = false;
-        $conn= \zdb\db::getConnect() ;
+        $conn= \ZDB\db::getConnect() ;
 
         $stl = array() ;
         foreach($conn->Execute("select store_id,storename from stores") as $row) {
@@ -846,7 +846,7 @@ class OrderList extends \App\Pages\Base
 
         $msg = new \App\Entity\Message() ;
         $msg->message=$message;
-        $msg->user_id= \app\System::getUser()->user_id;
+        $msg->user_id= \App\System::getUser()->user_id;
         $msg->item_id=$doc->document_id;
         $msg->item_type=\App\Entity\Message::TYPE_CUSTCHAT;
         $msg->save() ;
