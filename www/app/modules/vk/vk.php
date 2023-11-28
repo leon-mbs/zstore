@@ -165,7 +165,7 @@ class VK
                     "type"=>0,
                     "sum"=>self::fa($doc->headerdata['payed']  )
                      );
-                    if($doc->headerdata['exchange'] ?? 0 > 0) {
+                    if(($doc->headerdata['exchange'] ?? 0) > 0) {
                         $payment['change']  = self::fa($doc->headerdata['exchange'] );  
                         $payment['sum']  = self::fa($payment['sum'] -$doc->headerdata['exchange'] );  
                     }                     
@@ -208,7 +208,7 @@ class VK
         }
 
 
-        if($doc->headerdata["prepaid"]??0 >0) {
+        if(($doc->headerdata["prepaid"]??0) >0) {
             $payment=array(
             "type"=>3,
             "sum"=>self::fa( $doc->headerdata["prepaid"]  )  

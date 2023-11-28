@@ -154,6 +154,8 @@ class Pay extends \ZCL\DB\Entity
         if($customer_id ==0) {
             return;
         }
+        $conn->Execute(" delete from  paylist where paytype= ".self::PAY_BONUS." and  document_id=" . $document_id);
+
         $c = \App\Entity\Customer::load($customer_id);
         $doc = \App\Entity\Doc\Document::load($document_id);
         if($doc->headerdata['pricetype'] != 'price1') {
