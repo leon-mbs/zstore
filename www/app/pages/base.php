@@ -42,8 +42,8 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["showsidemenu"] = !(System::getUser()->hidemenu == true);
         $this->_tvars["twodigit"] = round($options['amdigits']) > 0;
 
-        $this->_tvars['qtydigits']  = intval($common['qtydigits'] ?? 0);
-        $this->_tvars['amdigits']  = intval($common['amdigits'] ?? 0);
+        $this->_tvars['qtydigits']  = intval($options['qtydigits'] ?? 0);
+        $this->_tvars['amdigits']  = intval($options['amdigits'] ?? 0);
 
         
         $this->_tvars["usesnumber"] = $options['usesnumber']  > 0;
