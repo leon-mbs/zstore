@@ -62,7 +62,7 @@
     return ret
   }
   
-  
+  //сокращенный  вызов callPageMethod
   function  callPM(method,params,postdata,callback =null   , callerror=null     )
   {
       try{
@@ -100,7 +100,7 @@
       }
   }     
      
-     
+        //проверка  ответа  на  ошибки
         function checkPMAnswer(ret){
             
             if(ret.error)  {
@@ -131,7 +131,7 @@
           return  _v        
       }
     
-     
+     //округление  цен
      function fa(v){
           var d = {{amdigits}}     
           var _v =  parseVal(v)
@@ -141,6 +141,7 @@
           return   _v.toFixed(0)          
           
      }
+     //округление  количеств
      function fqty(v){
           var d = {{qtydigits}}
           var _v =  parseVal(v)
