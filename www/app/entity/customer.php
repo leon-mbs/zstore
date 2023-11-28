@@ -333,6 +333,23 @@ class Customer extends \ZCL\DB\Entity
         return  doubleval($conn->GetOne($sql));
 
     }
+    /**
+    * список  ксли  холдинг
+    * 
+    */
+    public function getChillden() {
+        
+        if($this->isholding !=1){
+           return  [];
+        }
+        
+        
+        $conn = \ZDB\DB::getConnect() ;
+        $sql= "select customer_id from customers  where status=0 and detail like '%<holding>{$this->customer_id}</holding>%' ";
+        return  $conn->GetCol($sql);
+
+    }
+    
     public function getID() {
         return $this->customer_id;
     }

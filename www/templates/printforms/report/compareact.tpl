@@ -13,6 +13,7 @@
     </tr>
     <tr style="font-weight: bolder;">
         <th style="border: solid black 1px">Дата</th>
+        <th style="border: solid black 1px">Номер</th>
         <th style="border: solid black 1px">Документ</th>
 
         <th align="right" style="border: solid black 1px">Дебет</th>
@@ -25,7 +26,8 @@
 
         <td>{{document_date}}</td>
 
-        <td>{{meta_desc}} {{document_number}}</td>
+        <td> {{document_number}}</td>
+        <td>{{meta_desc}}</td>
 
         <td align="right">{{active}}</td>
         <td align="right">{{passive}}</td>
