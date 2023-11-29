@@ -518,7 +518,7 @@ class Base extends \Zippy\Html\WebPage
             $v= \App\Helper::checkVer()  ;
             
             if(strlen($v) >0){
-               $list[] = array('title' => " Доступна нова версiя {$v}  <a target=\"_blank\" href=\"https://zippy.com.ua/upsate\">Перейти...</a> ");                
+               $list[] = array('title' => " Доступна нова версiя {$v}  <a target=\"_blank\" href=\"https://zippy.com.ua/update\">Перейти...</a> ");                
             }
             
         }

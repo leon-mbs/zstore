@@ -447,16 +447,26 @@ class PPOHelper
         $header['details'] = array();
         $n = 1;
       
-        $header['amount'] = $doc->payamount;
+     //   $header['amount'] = $doc->payamount;
+        
+        
+        
+         //общая  скидка
+        $discsum =    $doc->amount  -  $doc->payamount  ;
 
-
-      
+         $disc=1;
+        if($discsum >0 ) {
+           $disc = 1 - ($discsum/$doc->amount);
+     
+        }
+          
         foreach ($doc->unpackDetails('detaildata') as $item) {
+            $item->price = $item->price * $disc ;
             $header['details'][] = array(
                 'num'   => "ROWNUM=\"{$n}\"",
                 'name'  => $item->itemname,
                 'qty'   => number_format($item->quantity, 3, '.', ''),
-                'price' => number_format($item->price  , 2, '.', ''),
+                'price' => number_format($item->price    , 2, '.', ''),
                 'cost'  => number_format($item->quantity * $item->price  , 2, '.', '')
             );
             $n++;
@@ -464,12 +474,13 @@ class PPOHelper
 
         }
         foreach ($doc->unpackDetails('services') as $item) {
+            $item->price = $item->price*$disc;
             $header['details'][] = array(
                 'num'   => "ROWNUM=\"{$n}\"",
                 'name'  => $item->service_name,
                 'qty'   => number_format($item->quantity, 3, '.', ''),
                 'price' => number_format($item->price  , 2, '.', ''),
-                'cost'  => number_format($item->quantity * $item->price  , 2, '.', '')
+                'cost'  => number_format($item->quantity * $item->price , 2, '.', '')
             );
             $n++;
 
@@ -481,7 +492,16 @@ class PPOHelper
          
         }        
         
+      foreach($header['services'] as $p ) {
+           $sum += $p['cost'] ;
+         
+        }        
         
+         // к  оплате
+        $payamount  =    doubleval($doc->payamount) - doubleval($doc->headerdata['prepaid']);
+        // оплачено
+        $payed  =    doubleval($doc->headerdata['payed']) + doubleval($doc->headerdata['payedcard']);
+       
         $amount0 = 0;
         $amount1 = 0;
         $amount2 = 0;
@@ -489,13 +509,7 @@ class PPOHelper
         $header['pays'] = array();
         $n = 1;
 
-         //общая  скидка
-        $discsum =  $sum - $doc->payamount  - doubleval($doc->headerdata["prepaid"])   ;
-
-        // к  оплате
-        $payamount  =    doubleval($doc->payamount) - doubleval($doc->headerdata['prepaid']);
-        // оплачено
-        $payed  =    doubleval($doc->headerdata['payed']) + doubleval($doc->headerdata['payedcard']);
+ 
 
   //$doc->headerdata['payed']   += 0.03;
         if($doc->headerdata['payment']  >0) {
@@ -627,10 +641,10 @@ class PPOHelper
           
         $header['disc']   = false;
         if ($discsum > 0) {
-            $header['disc'] = number_format($discsum, 2, '.', '');
+          //  $header['disc'] = number_format($discsum, 2, '.', '');
           //  $sumpay  += $header['disc'];
         }        
-        
+
         $header['amount'] = number_format($sumpay, 2, '.', '');
         $header['rnd']  =  false;
         $header['nrnd']  =  false;
