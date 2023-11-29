@@ -320,6 +320,7 @@ class GoodsIssue extends \App\Pages\Base
 
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
+                        $this->_doc->headerdata['prepaid']  = $basedoc->payed ;
 
                         // $this->docform->order->setText(  $basedoc->document_number);
 

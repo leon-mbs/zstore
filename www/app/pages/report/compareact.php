@@ -184,7 +184,8 @@ class CompareAct extends \App\Pages\Base
         $ret=[];
         $ret['active']  = 0;
         $ret['passive'] = 0;
-        
+         $doc->document_id;
+         $doc->document_number;
         //продажа
         if( in_array( $doc->meta_name,['GoodsIssue', 'TTN', 'POSCheck', 'OrderFood', 'ServiceAct','Invoice']) ) {
              $ret['passive']=$doc->payamount ?? 0;

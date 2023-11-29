@@ -631,7 +631,7 @@ class ARMFood extends \App\Pages\Base
         $row->add(new Label('qty', $qty));
 
 
-        $row->add(new Label('disc', '-'. H::fa1($item->disc)));
+        $row->add(new Label('disc',doubleval($item->disc)  ==0 ?"" : '-'. H::fa1($item->disc ??0)));
         $row->add(new Label('price', H::fa($item->price)));
         $row->add(new Label('amount', H::fa($item->price * $item->quantity)));
         $row->add(new ClickLink('myselfon', $this, 'onMyselfClick'))->setVisible($item->myself == 1);
@@ -670,6 +670,7 @@ class ARMFood extends \App\Pages\Base
             $row->qtyedit->setVisible(false);
 
         }
+
     }
 
     public function onQtyClick($sender) {
