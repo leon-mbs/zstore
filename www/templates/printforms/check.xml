@@ -15,9 +15,7 @@
         <IPN>{{inn}}</IPN>
         {{/inn}}
       
-        {{#comment}}
-        <COMMENT>{{comment}}</COMMENT>
-        {{/comment}}
+
 
         <ORGNM>{{firmname}}</ORGNM>
 
@@ -37,7 +35,9 @@
 
 
         <CASHIER>{{username}}</CASHIER>
-
+        {{#comment}}
+        <COMMENT>{{comment}}</COMMENT>
+        {{/comment}}
         <VER>1</VER>
         {{#testing}}
         <TESTING>1</TESTING>

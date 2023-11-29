@@ -2,7 +2,9 @@
 
 namespace App\Pages\Report;
 
+use App\Entity\Doc\Document;
 use App\Entity\Item;
+use App\Entity\Customer;
 use App\Helper as H;
 use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
@@ -24,8 +26,8 @@ class CompareAct extends \App\Pages\Base
 
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
-        $this->filter->add(new DropDownChoice('type', array( ), 0))->onChange($this, "OnType");
-        $this->filter->add(new DropDownChoice('cust', array(), 0));
+
+        $this->filter->add(new \Zippy\Html\Form\AutocompleteTextInput('cust'))->onText($this, 'OnAutoCustomer');;
         $this->filter->add(new Date('from', strtotime("-1 month", time())));
         $this->filter->add(new Date('to', time()));
 
@@ -35,28 +37,23 @@ class CompareAct extends \App\Pages\Base
         $this->detail->add(new Label('preview'));
     }
 
-
-    public function OnType($sender) {
-        $type = $this->filter->type->getValue();
-        $this->filter->cust->setValue(0);
-
-        $list = array();
-        $this->filter->cust->setValue(0);
-
-        if($type==1) {
-            $list = \App\Entity\Customer::findArray("customer_name", "status=0 and  customer_id  in (select coalesce(customer_id,0) as  id from documents_view  where  meta_name  in('Invoice','GoodsIssue','Order','POSCheck','ServiceAct', 'IncomeMoney' ))", "customer_name");
+    public function OnAutoCustomer($sender) {
+        
+        $conn = \ZDB\DB::getConnect();
+        $search=  trim($sender->getText());
+        if(strlen($search)==0) {
+            return [];
         }
-        if($type==2) {
-            $list = \App\Entity\Customer::findArray("customer_name", "status=0 and  customer_id  in (select coalesce(customer_id,0) as  id from documents_view  where  meta_name  in('InvoiceCust','GoodsReceipt','IncomeService', 'OutcomeMoney'))", "customer_name");
-        }
+        
+        $search = $conn->qstr('%'. $search.'%');
+        
+        $where = "status=0 and customer_name like {$search} ";
 
-
-        $this->filter->cust->setOptionList($list);
-
-
-        $this->detail->setVisible(false);
-
+        return Customer::findArray("customer_name", $where, "customer_name");
+ 
     }
+ 
+ 
 
     public function OnSubmit($sender) {
 
@@ -75,105 +72,95 @@ class CompareAct extends \App\Pages\Base
         $from = $conn->DBDate($this->filter->from->getDate());
         $to = $conn->DBDate($this->filter->to->getDate());
 
-        $type = $this->filter->type->getValue();
+      
+        $cust_id = $this->filter->cust->getKey();
 
-        $cust_id = $this->filter->cust->getValue();
+        if($cust_id ==0) {
+            $this->setError('Не вибраний  контрагент') ;
+            return;
+        }
 
-        $where_start =  " document_date <{$from}  and    customer_id= {$cust_id} and    state NOT IN (0, 1, 2, 3, 15, 8, 17) ";
+
+        $c = Customer::load($cust_id) ;
+        if($c->isholding==1) {
+           $list =  $c->getChillden();
+        }  else {
+           $list[] = $cust_id;    
+        }
         
-        $where =  " document_date >={$from} and document_date <={$to} and    customer_id= {$cust_id} and    state NOT IN (0, 1, 2, 3, 15, 8, 17) ";
-
+        
+        if(count($list) ==0) {
+            $this->setError('Не вибраний  контрагент') ;
+            return;
+        }
+        $clist = implode(',',$list) ;
         $detail = array();
-
-
-        if($type==1) {     //покупатели
-            
-
-            $bal=0;
-
-            foreach (\App\Entity\Doc\Document::findYield($where_start, "  document_id asc", -1, -1, "*, COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Invoice',  'PosCheck', 'Order', 'ServiceAct')) THEN payamount WHEN ((meta_name = 'OutcomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payed ELSE 0 END)), 0) AS b_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN payed WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payamount ELSE 0 END)), 0) AS b_active") as $id=>$d) {
-                if($d->b_active != $d->b_passive) {
-                    $diff = $d->b_passive - $d->b_active;
-
-                    $bal +=  $diff;         
-                }
-            }            
-
-            $detail[] = array('document_date'=>H::fd($this->filter->from->getDate()),'bal'=>H::fa($bal)); 
+        
+        $where_start =  " document_date <{$from}  and    customer_id  in({$clist})  and    state NOT IN (0, 1, 2, 3, 15, 8, 17) ";
+        $bal=0;
+        foreach (\App\Entity\Doc\Document::findYield($where_start, "document_id asc ", -1, -1) as $d) {
            
-            foreach (\App\Entity\Doc\Document::findYield($where, "  document_id asc", -1, -1, "*, COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Invoice',  'PosCheck', 'Order', 'ServiceAct')) THEN payamount WHEN ((meta_name = 'OutcomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payed ELSE 0 END)), 0) AS b_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN payed WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payamount ELSE 0 END)), 0) AS b_active") as $id=>$d) {
-                if($d->b_active != $d->b_passive) {
-
-                    $r  = array();
-
-                    $r['meta_desc'] = $d->meta_desc;
-                    $r['document_number'] = $d->document_number;
-                    $r['document_date'] = H::fd($d->document_date);
-                    $r['active'] = H::fa($d->b_active);
-                    $r['passive'] = H::fa($d->b_passive);
-
-                    $diff = $d->b_passive - $d->b_active;
-
-                    $bal +=  $diff;
-                    $r['bal'] = H::fa($bal);
-
-                    $detail[] = $r;
-                    if($bal==0) {
-                        // $detail = array();
-                    }
-                }
-
+            $ch = $this->check($d);
+         
+            if($ch===true) {
+                continue;
             }
+            
+            $diff = $ch['passive'] - $ch['active'];
 
+            $bal +=  $diff;
+           
+                
+        }        
+        
+        $r  = array();
+
+        $r['meta_desc'] = '';
+        $r['document_number'] = '';
+        $r['document_date'] = '';
+        $r['active'] = '';
+        $r['passive'] = '';
+
+        $r['bal'] = H::fa($bal);
+
+        $detail[] = $r;
+        
+        
+        
+        $where =  " document_date >={$from} and document_date <={$to} and   customer_id  in({$clist})  and    state NOT IN (0, 1, 2, 3, 15, 8, 17) ";
+ 
+    
+        foreach (\App\Entity\Doc\Document::findYield($where, "document_id asc ", -1, -1) as $d) {
+           
+                $ch = $this->check($d);
+            
+                if($ch===true) {
+                    continue;
+                }
+            
+            
+                $r  = array();
+
+                $r['meta_desc'] = $d->meta_desc;
+                $r['document_number'] = $d->document_number;
+                $r['document_date'] = H::fd($d->document_date);
+                $r['active'] = H::fa($ch['active']);
+                $r['passive'] = H::fa($ch['passive']);
+
+                $diff = $ch['passive'] - $ch['active'];
+
+                $bal +=  $diff;
+                $r['bal'] = H::fa($bal);
+
+                $detail[] = $r;
+                
         }
 
-        if($type==2) {  //поставщики
-            
-
-            $bal=0;
-            foreach (\App\Entity\Doc\Document::findYield($where_start, "document_id asc ", -1, -1, "*,  COALESCE( ((CASE WHEN (meta_name IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService')) THEN payed WHEN ((meta_name = 'OutcomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payamount ELSE 0 END)), 0) AS s_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsReceipt','IncomeService') ) THEN payamount WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payed ELSE 0 END)), 0) AS s_active ") as $id=>$d) {
-                if($d->s_active != $d->s_passive) {
-                    $diff = $d->b_passive - $d->b_active;
-
-                    $bal +=  $diff;         
-                }
-            } 
-            
-            $detail[] = array('document_date'=>H::fd($this->filter->from->getDate()),'bal'=>H::fa($bal)); 
-                    
-            foreach (\App\Entity\Doc\Document::findYield($where, "document_id asc ", -1, -1, "*,  COALESCE( ((CASE WHEN (meta_name IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService')) THEN payed WHEN ((meta_name = 'OutcomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payamount ELSE 0 END)), 0) AS s_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsReceipt','IncomeService') ) THEN payamount WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payed ELSE 0 END)), 0) AS s_active ") as $id=>$d) {
-                if($d->s_active != $d->s_passive) {
-
-                    $r  = array();
-
-                    $r['meta_desc'] = $d->meta_desc;
-                    $r['document_number'] = $d->document_number;
-                    $r['document_date'] = H::fd($d->document_date);
-                    $r['active'] = H::fa($d->s_active);
-                    $r['passive'] = H::fa($d->s_passive);
-
-                    $diff = $d->s_passive - $d->s_active;
-
-                    $bal +=  $diff;
-                    $r['bal'] = H::fa($bal);
-
-                    $detail[] = $r;
-                    if($bal==0) {
-                        // $detail = array();
-                    }
-                }
-
-            }
-
-        }
-
-
-
+ 
         $header = array(
-         'date' => H::fd(time()) ,
-         'cust' => $this->filter->cust->getValueName() ,
-         'firm' => 'Firma' ,
-         '_detail' =>   $detail
+           'date' => H::fd(time()) ,
+           'cust' => $this->filter->cust->getText() ,
+           '_detail' =>   $detail
 
         );
 
@@ -188,4 +175,76 @@ class CompareAct extends \App\Pages\Base
         return $html;
     }
 
+    
+    private function check(Document $doc) {
+        
+        if($doc->payamount==$doc->payed) {
+            return  true;
+        }
+        $ret=[];
+        $ret['active']  = 0;
+        $ret['passive'] = 0;
+         $doc->document_id;
+         $doc->document_number;
+        //продажа
+        if( in_array( $doc->meta_name,['GoodsIssue', 'TTN', 'POSCheck', 'OrderFood', 'ServiceAct','Invoice']) ) {
+             $ret['passive']=$doc->payamount ?? 0;
+        }
+        if( in_array( $doc->meta_name,['ReturnIssue']) ) {
+             $ret['passive']=$doc->payed ?? 0;
+        }
+        if( in_array( $doc->meta_name,['OutcomeMoney']) && strpos($doc->content,'<detail>1</detail>') > 0) {
+             $ret['passive']=$doc->payed ?? 0;
+        }
+
+        if( in_array( $doc->meta_name,['GoodsIssue', 'TTN', 'POSCheck', 'OrderFood', 'ServiceAct','Invoice']) ) {
+             $ret['active']=$doc->payed ?? 0;
+        }
+        if( in_array( $doc->meta_name,['ReturnIssue']) ) {
+             $ret['active']=$doc->payamount ?? 0;
+        }
+        if( in_array( $doc->meta_name,['IncomeMoney']) && strpos($doc->content,'<detail>1</detail>') > 0) {
+             $ret['active']=$doc->payed ?? 0;
+        }
+        
+        
+       //закупка
+        if( in_array( $doc->meta_name,['InvoiceCust', 'GoodsReceipt', 'IncomeService', 'OutcomeMoney']) ) {
+             $ret['passive']=$doc->payed ?? 0;
+        }
+        if( in_array( $doc->meta_name,['RetCustIssue']) ) {
+             $ret['passive']=$doc->payamount ?? 0;
+        }
+        if( in_array( $doc->meta_name,['OutcomeMoney']) && strpos($doc->content,'<detail>2</detail>') > 0) {
+             $ret['passive']=$doc->payed ?? 0;
+        }
+        if( in_array( $doc->meta_name,['InvoiceCust', 'GoodsReceipt', 'IncomeService', 'OutcomeMoney']) ) {
+             $ret['active']=$doc->payamount ?? 0;
+        }
+        if( in_array( $doc->meta_name,['RetCustIssue']) ) {
+             $ret['active']=$doc->payed ?? 0;
+        }
+        if( in_array( $doc->meta_name,['IncomeMoney']) && strpos($doc->content,'<detail>2</detail>') > 0) {
+             $ret['active']=$doc->payed ?? 0;
+        }
+        if($ret['active'] == $ret['passive']) {
+            return true;
+        }
+        return $ret;
+        
+       /*
+  COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService', 'OutcomeMoney')) THEN `d`.`payed` WHEN ((`d`.`meta_name` = 'OutcomeMoney') AND
+      (`d`.`content` LIKE '%<detail>2</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'RetCustIssue') THEN `d`.`payamount` ELSE 0 END)), 0) AS `s_passive`,
+  COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('IncomeService', 'GoodsReceipt')) THEN `d`.`payamount` WHEN ((`d`.`meta_name` = 'IncomeMoney') AND
+      (`d`.`content` LIKE '%<detail>2</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'RetCustIssue') THEN `d`.`payed` ELSE 0 END)), 0) AS `s_active`,
+
+  COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('GoodsIssue', 'TTN', 'PosCheck', 'OrderFood', 'ServiceAct')) THEN `d`.`payamount` WHEN ((`d`.`meta_name` = 'OutcomeMoney') AND
+      (`d`.`content` LIKE '%<detail>1</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'ReturnIssue') THEN `d`.`payed` ELSE 0 END)), 0) AS `b_passive`,
+  COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN `d`.`payed` WHEN ((`d`.`meta_name` = 'IncomeMoney') AND
+      (`d`.`content` LIKE '%<detail>1</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'ReturnIssue') THEN `d`.`payamount` ELSE 0 END)), 0) AS `b_active`,
+       
+       
+       */         
+    }
+            
 }

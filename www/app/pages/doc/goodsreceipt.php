@@ -225,7 +225,7 @@ class GoodsReceipt extends \App\Pages\Base
                         $this->docform->customer->setText($basedoc->customer_name);
                         $this->docform->val->setValue(0);
                         $this->docform->rate->setText(1);
-
+                        $this->_doc->headerdata['prepaid']  = $basedoc->payed ;
                         $this->docform->basedoc->setText($basedoc->document_number);
 
                     }
