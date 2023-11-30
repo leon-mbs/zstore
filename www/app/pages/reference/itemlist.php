@@ -365,6 +365,17 @@ class ItemList extends \App\Pages\Base
             return;
         }
 
+        $itemcode =trim($this->itemdetail->editcode->getText());
+        //проверка  на использование
+        if (strlen($this->_item->item_code) > 0 &&  $itemcode !== $this->_item->item_code ) {
+            $code = Item::qstr($this->_item->item_code);
+            $cnt =  \App\Entity\Entry::findCnt("item_id = {$this->_item->item_id}  ");
+            if ($cnt > 0) {
+                $this->setError('Не можна міняти  артикул вже використовуваного  ТМЦ');
+                return;
+            }
+        }        
+        
         $this->_item->shortname = $this->itemdetail->editshortname->getText();
         $this->_item->cat_id = $this->itemdetail->editcat->getValue();
         $this->_item->price1 = $this->itemdetail->editprice1->getText();
@@ -373,7 +384,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->price4 = $this->itemdetail->editprice4->getText();
         $this->_item->price5 = $this->itemdetail->editprice5->getText();
 
-        $this->_item->item_code = trim($this->itemdetail->editcode->getText());
+        $this->_item->item_code = $itemcode;
         $this->_item->manufacturer = trim($this->itemdetail->editmanufacturer->getText());
         $this->_item->country = trim($this->itemdetail->editcountry->getText());
 

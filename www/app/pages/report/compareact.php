@@ -147,10 +147,12 @@ class CompareAct extends \App\Pages\Base
                 $r['active'] = H::fa($ch['active']);
                 $r['passive'] = H::fa($ch['passive']);
 
-                $diff = $ch['passive'] - $ch['active'];
+                $diff = $ch['active'] - $ch['passive']  ;
 
                 $bal +=  $diff;
                 $r['bal'] = H::fa($bal);
+                $r['pays'] = $ch['pays'] ;
+                $r['notes'] = $d->notes;
 
                 $detail[] = $r;
                 
@@ -178,17 +180,20 @@ class CompareAct extends \App\Pages\Base
     
     private function check(Document $doc) {
         
-        if($doc->payamount==$doc->payed) {
-            return  true;
-        }
+      
         $ret=[];
+        $ret['pays']  = '';
         $ret['active']  = 0;
         $ret['passive'] = 0;
          $doc->document_id;
          $doc->document_number;
-        //продажа
+     
         if( in_array( $doc->meta_name,['GoodsIssue', 'TTN', 'POSCheck', 'OrderFood', 'ServiceAct','Invoice']) ) {
              $ret['passive']=$doc->payamount ?? 0;
+             if($doc->meta_name =='GoodsIssue' && ($doc->headerdata['prepaid'] ??0) >0) {
+                 $ret['passive'] -= $doc->headerdata['prepaid']; 
+             }
+             
         }
         if( in_array( $doc->meta_name,['ReturnIssue']) ) {
              $ret['passive']=$doc->payed ?? 0;
@@ -208,7 +213,7 @@ class CompareAct extends \App\Pages\Base
         }
         
         
-       //закупка
+     
         if( in_array( $doc->meta_name,['InvoiceCust', 'GoodsReceipt', 'IncomeService', 'OutcomeMoney']) ) {
              $ret['passive']=$doc->payed ?? 0;
         }
@@ -227,24 +232,10 @@ class CompareAct extends \App\Pages\Base
         if( in_array( $doc->meta_name,['IncomeMoney']) && strpos($doc->content,'<detail>2</detail>') > 0) {
              $ret['active']=$doc->payed ?? 0;
         }
-        if($ret['active'] == $ret['passive']) {
-            return true;
-        }
+     
         return $ret;
         
-       /*
-  COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService', 'OutcomeMoney')) THEN `d`.`payed` WHEN ((`d`.`meta_name` = 'OutcomeMoney') AND
-      (`d`.`content` LIKE '%<detail>2</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'RetCustIssue') THEN `d`.`payamount` ELSE 0 END)), 0) AS `s_passive`,
-  COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('IncomeService', 'GoodsReceipt')) THEN `d`.`payamount` WHEN ((`d`.`meta_name` = 'IncomeMoney') AND
-      (`d`.`content` LIKE '%<detail>2</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'RetCustIssue') THEN `d`.`payed` ELSE 0 END)), 0) AS `s_active`,
-
-  COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('GoodsIssue', 'TTN', 'PosCheck', 'OrderFood', 'ServiceAct')) THEN `d`.`payamount` WHEN ((`d`.`meta_name` = 'OutcomeMoney') AND
-      (`d`.`content` LIKE '%<detail>1</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'ReturnIssue') THEN `d`.`payed` ELSE 0 END)), 0) AS `b_passive`,
-  COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN `d`.`payed` WHEN ((`d`.`meta_name` = 'IncomeMoney') AND
-      (`d`.`content` LIKE '%<detail>1</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'ReturnIssue') THEN `d`.`payamount` ELSE 0 END)), 0) AS `b_active`,
-       
-       
-       */         
+                 
     }
             
 }
