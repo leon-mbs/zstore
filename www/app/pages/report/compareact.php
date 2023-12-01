@@ -53,8 +53,6 @@ class CompareAct extends \App\Pages\Base
  
     }
  
- 
-
     public function OnSubmit($sender) {
 
 
@@ -71,24 +69,21 @@ class CompareAct extends \App\Pages\Base
 
         $from = $conn->DBDate($this->filter->from->getDate());
         $to = $conn->DBDate($this->filter->to->getDate());
-
-      
+       
         $cust_id = $this->filter->cust->getKey();
 
         if($cust_id ==0) {
             $this->setError('Не вибраний  контрагент') ;
             return;
         }
-
-
+ 
         $c = Customer::load($cust_id) ;
         if($c->isholding==1) {
            $list =  $c->getChillden();
         }  else {
            $list[] = $cust_id;    
         }
-        
-        
+         
         if(count($list) ==0) {
             $this->setError('Не вибраний  контрагент') ;
             return;
@@ -100,7 +95,7 @@ class CompareAct extends \App\Pages\Base
         $bal=0;
         foreach (\App\Entity\Doc\Document::findYield($where_start, "document_id asc ", -1, -1) as $d) {
            
-            $ch = $this->check($d);
+            $ch = $this->check($d,true);
          
             if($ch===true) {
                 continue;
@@ -124,12 +119,9 @@ class CompareAct extends \App\Pages\Base
         $r['bal'] = H::fa($bal);
 
         $detail[] = $r;
-        
-        
-        
+         
         $where =  " document_date >={$from} and document_date <={$to} and   customer_id  in({$clist})  and    state NOT IN (0, 1, 2, 3, 15, 8, 17) ";
- 
-    
+     
         foreach (\App\Entity\Doc\Document::findYield($where, "document_id asc ", -1, -1) as $d) {
            
                 $ch = $this->check($d);
@@ -151,8 +143,8 @@ class CompareAct extends \App\Pages\Base
 
                 $bal +=  $diff;
                 $r['bal'] = H::fa($bal);
-                $r['pays'] = $ch['pays'] ;
-                $r['notes'] = $d->notes;
+                $r['pays'] = $this->getPayments($d) ;
+                $r['notes'] = $d->notes ?? '';
 
                 $detail[] = $r;
                 
@@ -165,9 +157,7 @@ class CompareAct extends \App\Pages\Base
            '_detail' =>   $detail
 
         );
-
-
-
+ 
         $conn = \ZDB\DB::getConnect();
 
         $report = new \App\Report('report/compareact.tpl');
@@ -177,65 +167,104 @@ class CompareAct extends \App\Pages\Base
         return $html;
     }
 
-    
-    private function check(Document $doc) {
+    /**
+    * баланс  по  документу
+    * актив  и пассив  с точки  зрения  окнтрагента
+    */
+    private function check(Document $doc ) {
+       
+       
+        if($doc->meta_name=='Order' && $doc->payamount==0 && $doc->payed ==0 ) {
+            return  true;
+        }
         
       
         $ret=[];
-        $ret['pays']  = '';
+     
         $ret['active']  = 0;
         $ret['passive'] = 0;
-         $doc->document_id;
-         $doc->document_number;
+ 
+
      
         if( in_array( $doc->meta_name,['GoodsIssue', 'TTN', 'POSCheck', 'OrderFood', 'ServiceAct','Invoice']) ) {
              $ret['passive']=$doc->payamount ?? 0;
              if($doc->meta_name =='GoodsIssue' && ($doc->headerdata['prepaid'] ??0) >0) {
                  $ret['passive'] -= $doc->headerdata['prepaid']; 
              }
+             $ret['active']=$doc->payed ?? 0;             
+        }
+
+        if( in_array( $doc->meta_name,['Order']) ) {
+             $ret['passive']=$doc->payed ?? 0;
+             $ret['active']=$doc->payamount ?? 0;
              
         }
         if( in_array( $doc->meta_name,['ReturnIssue']) ) {
              $ret['passive']=$doc->payed ?? 0;
-        }
-        if( in_array( $doc->meta_name,['OutcomeMoney']) && strpos($doc->content,'<detail>1</detail>') > 0) {
-             $ret['passive']=$doc->payed ?? 0;
-        }
-
-        if( in_array( $doc->meta_name,['GoodsIssue', 'TTN', 'POSCheck', 'OrderFood', 'ServiceAct','Invoice']) ) {
-             $ret['active']=$doc->payed ?? 0;
-        }
-        if( in_array( $doc->meta_name,['ReturnIssue']) ) {
              $ret['active']=$doc->payamount ?? 0;
+             
         }
-        if( in_array( $doc->meta_name,['IncomeMoney']) && strpos($doc->content,'<detail>1</detail>') > 0) {
-             $ret['active']=$doc->payed ?? 0;
-        }
-        
-        
-     
-        if( in_array( $doc->meta_name,['InvoiceCust', 'GoodsReceipt', 'IncomeService', 'OutcomeMoney']) ) {
+        if( in_array( $doc->meta_name,['InvoiceCust', 'GoodsReceipt', 'IncomeService' ]) ) {
+             $ret['active']=$doc->payamount ?? 0;
              $ret['passive']=$doc->payed ?? 0;
         }
+     
         if( in_array( $doc->meta_name,['RetCustIssue']) ) {
              $ret['passive']=$doc->payamount ?? 0;
+             $ret['active']=$doc->payed ?? 0;
+        }
+
+
+        if( in_array( $doc->meta_name,['OutcomeMoney']) && strpos($doc->content,'<detail>1</detail>') > 0) {
+             $ret['passive']=$doc->payed ?? 0;
         }
         if( in_array( $doc->meta_name,['OutcomeMoney']) && strpos($doc->content,'<detail>2</detail>') > 0) {
              $ret['passive']=$doc->payed ?? 0;
         }
-        if( in_array( $doc->meta_name,['InvoiceCust', 'GoodsReceipt', 'IncomeService', 'OutcomeMoney']) ) {
-             $ret['active']=$doc->payamount ?? 0;
-        }
-        if( in_array( $doc->meta_name,['RetCustIssue']) ) {
+
+        if( in_array( $doc->meta_name,['IncomeMoney']) && strpos($doc->content,'<detail>1</detail>') > 0) {
              $ret['active']=$doc->payed ?? 0;
         }
         if( in_array( $doc->meta_name,['IncomeMoney']) && strpos($doc->content,'<detail>2</detail>') > 0) {
              $ret['active']=$doc->payed ?? 0;
         }
+
+      
+        
+        
+     /*
+  COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService')) THEN `d`.`payed` WHEN ((`d`.`meta_name` = 'OutcomeMoney') AND      (`d`.`content` LIKE '%<detail>2</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'RetCustIssue') THEN `d`.`payamount` ELSE 0 END)), 0) AS `s_passive`,
+  COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('IncomeService', 'GoodsReceipt')) THEN `d`.`payamount` WHEN ((`d`.`meta_name` = 'IncomeMoney') AND      (`d`.`content` LIKE '%<detail>2</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'RetCustIssue') THEN `d`.`payed` ELSE 0 END)), 0) AS `s_active`,
+  COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('GoodsIssue', 'TTN', 'PosCheck', 'OrderFood', 'ServiceAct')) THEN `d`.`payamount` WHEN ((`d`.`meta_name` = 'OutcomeMoney') AND      (`d`.`content` LIKE '%<detail>1</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'ReturnIssue') THEN `d`.`payed` ELSE 0 END)), 0) AS `b_passive`,
+  COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN `d`.`payed` WHEN ((`d`.`meta_name` = 'IncomeMoney') AND      (`d`.`content` LIKE '%<detail>1</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'ReturnIssue') THEN `d`.`payamount` ELSE 0 END)), 0) AS `b_active`,
      
+     
+     
+     */ 
         return $ret;
         
                  
+    }
+    
+    private function getPayments(Document $doc){
+        $pays = [];
+        foreach(\App\Entity\Pay::find("document_id={$doc->document_id} and paytype < 1000","pl_id asc") as $pay){
+            $pays[]= H::fd($pay->paydate)." ".H::fa($pay->amount) ." ".$pay->mf_name ;
+        }
+        if(count($pays) >0) {
+           return implode('; ',$pays);                      
+        }
+        if($doc->parent_id >0) {   //предоплата
+            $d=  Document::load($doc->parent_id);
+            return $d->document_number;
+        }     
+        $ch = $doc->getChildren() ;
+        if(count($ch)>0) { //постоплата
+           foreach($ch as $d) {
+              $pays[]=   $d->document_number;
+           }
+           return implode('; ',$pays);      
+        }
     }
             
 }

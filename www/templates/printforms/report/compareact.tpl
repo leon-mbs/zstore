@@ -14,11 +14,11 @@
     <tr style="font-weight: bolder;">
         <th style="border: solid black 1px">Дата</th>
         <th style="border: solid black 1px">Номер</th>
-        <th style="border: solid black 1px">Документ</th>
 
         <th align="right" style="border: solid black 1px">Дебет</th>
         <th align="right" style="border: solid black 1px">Кредит</th>
         <th align="right" style="border: solid black 1px">Сальдо</th>
+        <th style="border: solid black 1px">Тип документу</th>
         <th  style="border: solid black 1px">Оплати</th>
         <th  style="border: solid black 1px">Примiтка</th>
 
@@ -29,13 +29,13 @@
         <td>{{document_date}}</td>
 
         <td> {{document_number}}</td>
-        <td>{{meta_desc}}</td>
 
         <td align="right">{{active}}</td>
         <td align="right">{{passive}}</td>
         <td align="right">{{bal}}</td>
-        <td >{{pays}}</td>
-        <td >{{notes}}</td>
+        <td style="font-size:smaller;">{{meta_desc}}</td>
+        <td style="font-size:smaller;" >{{pays}}</td>
+        <td style="font-size:smaller;">{{notes}}</td>
 
     </tr>
     {{/_detail}}
