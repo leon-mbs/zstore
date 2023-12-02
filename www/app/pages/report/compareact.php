@@ -95,13 +95,13 @@ class CompareAct extends \App\Pages\Base
         $bal=0;
         foreach (\App\Entity\Doc\Document::findYield($where_start, "document_date asc,document_id asc ", -1, -1) as $d) {
            
-            $ch = Customer::balans($d,true);
+            $ch = Customer::balans($d );
          
             if($ch===true) {
                 continue;
             }
             
-            $diff = $ch['passive'] - $ch['active'];
+            $diff = $ch['active'] - $ch['passive'];
 
             $bal +=  $diff;
            
@@ -143,7 +143,7 @@ class CompareAct extends \App\Pages\Base
                 $r['active'] = H::fa($ch['active']);
                 $r['passive'] = H::fa($ch['passive']);
 
-                $diff =    $ch['active'] - $ch['passive'];
+                $diff = $ch['active'] - $ch['passive'];
 
                 $bal +=  $diff;
                 $r['bal'] = H::fa($bal);

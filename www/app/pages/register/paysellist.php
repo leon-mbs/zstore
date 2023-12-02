@@ -103,14 +103,18 @@ class PaySelList extends \App\Pages\Base
             $hold = "  and   c.detail like '%<holding>{$holding}</holding>%'";
         }
 
-
-
-        $sql = "SELECT c.customer_name,c.phone, c.customer_id, COALESCE( SUM( a.s_passive),0) as  pas, coalesce(SUM( a.s_active ),0) AS act
-            FROM cust_acc_view a  join customers c  on a.customer_id = c.customer_id and c.status=0    
-             WHERE  a.s_active <> a.s_passive     {$hold}
-             group by c.customer_name,c.phone, c.customer_id
-             order by c.customer_name
-             ";
+        $cust_acc_view = \App\Entity\Customer::get_acc_view()  ;
+ 
+   
+   $sql = "SELECT  c.customer_name,  c.customer_id,c.phone,
+     COALESCE( sum(a.s_passive), 0) AS pas,
+     COALESCE( sum(a.s_active), 0) AS act
+FROM ({$cust_acc_view} ) a
+  JOIN customers c
+    ON a.customer_id = c.customer_id
+    AND c.status = 0 AND a.s_passive <> a.s_active  {$hold}
+GROUP BY c.customer_name,
+         c.customer_id,c.phone";
 
         $this->_custlist = array();
 
@@ -118,7 +122,20 @@ class PaySelList extends \App\Pages\Base
     
             $this->_custlist[$_c->customer_id]=$_c;
         }
+        $sql = "SELECT c.customer_name,c.phone, c.customer_id
+             FROM documents_view d  join customers c  on d.customer_id = c.customer_id and c.status=0    
+             WHERE  d.state = ". Document::STATE_WP  ." and d.meta_name in('InvoiceCust','RetCustIssue','GoodsReceipt')   {$hold}
+             group by c.customer_name,c.phone, c.customer_id
+             order by c.customer_name
+             ";
 
+        $ids = array_keys($this->_custlist)  ;
+        foreach(\App\DataItem::query($sql) as $_c) {
+            if(!in_array($_c->customer_id, $ids)) {
+                $this->_custlist[$_c->customer_id] = $_c;
+            }
+
+        }
  
 
 
@@ -201,6 +218,10 @@ class PaySelList extends \App\Pages\Base
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('pay'))->onClick($this, 'payOnClick');
         $row->pay->setVisible($doc->payamount > 0);
+        $row->add(new ClickLink('stpayed'))->onClick($this, 'stOnClick');
+        $row->add(new ClickLink('stdone'))->onClick($this, 'stOnClick');
+        $row->add(new ClickLink('stclosed'))->onClick($this, 'stOnClick');
+
 
     }
 
@@ -231,6 +252,25 @@ class PaySelList extends \App\Pages\Base
         $this->docview->setVisible(false);
         $this->paypan->setVisible(false);
         $this->updateCust();
+    }
+
+    public function stOnClick($sender) {
+       $item = $sender->getOwner()->getDataItem(); 
+       $doc = Document::load($item->document_id);
+       
+       
+       if(strpos($sender->id,'stpayed')===0) {
+           $doc->updateStatus(Document::STATE_PAYED,true);  
+       }      
+       if(strpos($sender->id,'stdone')===0) {
+           $doc->updateStatus(Document::STATE_FINISHED,true);  
+       }      
+       if(strpos($sender->id,'stclosed')===0) {
+           $doc->updateStatus(Document::STATE_CLOSED,true);  
+       }      
+        
+       $this->updateDocs() ;
+ ;
     }
 
     //оплаты

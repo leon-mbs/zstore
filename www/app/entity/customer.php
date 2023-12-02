@@ -267,28 +267,26 @@ class Customer extends \ZCL\DB\Entity
         $dolg = 0;
         $conn = \ZDB\DB::getConnect();
 
-        //   if($this->type == self::TYPE_SELLER)   {
-        $sql = "SELECT   COALESCE( SUM( a.s_passive),0) as  pas, coalesce(SUM( a.s_active ),0) AS act
-                FROM cust_acc_view a  WHERE  a.s_active <> a.s_passive  and  a.customer_id = ". $this->customer_id ;
+        $where  =  "     customer_id = {$this->customer_id}   and    state NOT IN (0, 1, 2, 3, 15, 8, 17) ";
+        $bal=0;
+        foreach (\App\Entity\Doc\Document::findYield($where, "document_date asc,document_id asc ", -1, -1) as $d) {
+           
+            $ch = Customer::balans($d );
+         
+            if($ch===true) {
+                continue;
+            }
+            
+            $diff = $ch['passive'] - $ch['active'];
 
-        $row=$conn->GetRow($sql)  ;
-
-        $dolg = $row['pas']  - $row['act'] ;
-
-        //   }
-        //   if($this->type == self::TYPE_BAYER)   {
-        $sql = "SELECT   COALESCE( SUM( a.b_passive),0) as  pas, coalesce(SUM( a.b_active ),0) AS act
-                FROM cust_acc_view a  WHERE  a.b_active <> a.b_passive  and  a.customer_id = ". $this->customer_id ;
-
-        $row=$conn->GetRow($sql)  ;
-
-        $dolg += $row['pas']  - $row['act'] ;
-
-        //   }
+            $bal +=  $diff;
+           
+                
+        } 
 
 
 
-        return $dolg;
+        return $bal;
 
     }
 
@@ -375,7 +373,15 @@ class Customer extends \ZCL\DB\Entity
   COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('GoodsIssue', 'TTN', 'PosCheck', 'OrderFood', 'ServiceAct')) THEN `d`.`payamount` WHEN ((`d`.`meta_name` = 'OutcomeMoney') AND      (`d`.`content` LIKE '%<detail>1</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'ReturnIssue') THEN `d`.`payed` ELSE 0 END)), 0) AS `b_passive`,
   COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN `d`.`payed` WHEN ((`d`.`meta_name` = 'IncomeMoney') AND      (`d`.`content` LIKE '%<detail>1</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'ReturnIssue') THEN `d`.`payamount` ELSE 0 END)), 0) AS `b_active`,
      
-     
+SELECT
+  COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService')) THEN `d`.`payed` WHEN ((`d`.`meta_name` = 'OutcomeMoney') AND      (`d`.`content` LIKE '%<detail>2</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'RetCustIssue') THEN `d`.`payamount` ELSE 0 END)), 0) AS `s_passive`,
+  COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('IncomeService', 'GoodsReceipt')) THEN `d`.`payamount` WHEN ((`d`.`meta_name` = 'IncomeMoney') AND      (`d`.`content` LIKE '%<detail>2</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'RetCustIssue') THEN `d`.`payed` ELSE 0 END)), 0) AS `s_active`,
+  COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('GoodsIssue', 'TTN', 'PosCheck', 'OrderFood', 'ServiceAct')) THEN `d`.`payamount` WHEN ((`d`.`meta_name` = 'OutcomeMoney') AND      (`d`.`content` LIKE '%<detail>1</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'ReturnIssue') THEN `d`.`payed` ELSE 0 END)), 0) AS `b_passive`,
+  COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN `d`.`payed` WHEN ((`d`.`meta_name` = 'IncomeMoney') AND      (`d`.`content` LIKE '%<detail>1</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'ReturnIssue') THEN `d`.`payamount` ELSE 0 END)), 0) AS `b_active`,
+  `d`.`customer_id` AS `customer_id`
+FROM `documents_view` `d`
+WHERE ((`d`.`state` NOT IN (0, 1, 2, 3, 15, 8, 17))
+AND (`d`.`customer_id` > 0))     
      
      */ 
         return $ret;
@@ -384,6 +390,26 @@ class Customer extends \ZCL\DB\Entity
     }
         
     
+    //вместо  промотра  в  бд
+    public  static function  get_acc_view(){
+       $cust_acc_view = "SELECT
+          COALESCE(SUM((CASE WHEN (d.meta_name IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService')) THEN d.payed WHEN ((d.meta_name = 'OutcomeMoney') AND
+              (d.content LIKE '%<detail>2</detail>%')) THEN d.payed WHEN (d.meta_name = 'RetCustIssue') THEN d.payamount ELSE 0 END)), 0) AS s_passive,
+          COALESCE(SUM((CASE WHEN (d.meta_name IN ('IncomeService', 'GoodsReceipt')) THEN d.payamount WHEN ((d.meta_name = 'IncomeMoney') AND
+              (d.content LIKE '%<detail>2</detail>%')) THEN d.payed WHEN (d.meta_name = 'RetCustIssue') THEN d.payed ELSE 0 END)), 0) AS s_active,
+          COALESCE(SUM((CASE WHEN (d.meta_name IN ('GoodsIssue', 'TTN', 'PosCheck', 'OrderFood', 'ServiceAct')) THEN d.payamount WHEN ((d.meta_name = 'OutcomeMoney') AND
+              (d.content LIKE '%<detail>1</detail>%')) THEN d.payed WHEN (d.meta_name = 'ReturnIssue') THEN d.payed ELSE 0 END)), 0) AS b_passive,
+          COALESCE(SUM((CASE WHEN (d.meta_name IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN d.payed WHEN ((d.meta_name = 'IncomeMoney') AND
+              (d.content LIKE '%<detail>1</detail>%')) THEN d.payed WHEN (d.meta_name = 'ReturnIssue') THEN d.payamount ELSE 0 END)), 0) AS b_active,
+          d.customer_id AS customer_id
+        FROM documents_view d
+        WHERE ((d.state NOT IN (0, 1, 2, 3, 15, 8, 17))
+        AND (d.customer_id > 0))
+        GROUP BY d.customer_id";      
+        
+        return $cust_acc_view;
+        
+    }
     
     public function getDiscount() {
         $d = $this->discount;
