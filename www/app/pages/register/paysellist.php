@@ -4,6 +4,7 @@ namespace App\Pages\Register;
 
 use App\Entity\Doc\Document;
 use App\Entity\Pay;
+use App\Entity\Customer;
 use App\Helper as H;
 use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\DataList\DataView;
@@ -399,19 +400,27 @@ class PaySelList extends \App\Pages\Base
 
         $bal=0;
 
-        foreach (\App\Entity\Doc\Document::findYield(" {$br} customer_id= {$this->_cust->customer_id} and    state NOT IN (0, 1, 2, 3, 15, 8, 17) ", "document_id asc ", -1, -1, "*,  COALESCE( ((CASE WHEN (meta_name IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService', 'OutcomeMoney')) THEN payed WHEN ((meta_name = 'OutcomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payamount ELSE 0 END)), 0) AS s_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsReceipt','IncomeService') ) THEN payamount WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>2</detail>%')) THEN payed WHEN (meta_name = 'RetCustIssue') THEN payed ELSE 0 END)), 0) AS s_active ") as $id=>$d) {
-            if($d->s_active != $d->s_passive) {
+        foreach (\App\Entity\Doc\Document::findYield(" {$br} customer_id= {$this->_cust->customer_id} and   state NOT IN (0, 1, 2, 3, 15, 8, 17) ", "document_date asc,document_id asc ", -1, -1) as $id=>$d) {
+          
+              $ch = Customer::balans($d,Customer::TYPE_SELLER);
+                
+              if($ch===true) {
+                   continue;
+              }          
+          
 
                 $r = new  \App\DataItem() ;
                 $r->document_id = $d->document_id;
                 $r->meta_desc = $d->meta_desc;
                 $r->document_number = $d->document_number;
                 $r->document_date = $d->document_date;
-                $r->s_active = $d->s_active;
-                $r->s_passive = $d->s_passive;
+                $r->s_active = $ch['active'];
+                $r->s_passive = $ch['passive'];
 
-                $diff = $d->s_passive - $d->s_active;
-
+                $diff = $ch['passive'] - $ch['active'];
+                if($diff==0) {
+                    continue;
+                }
                 $bal +=  $diff;
                 $r->bal =  $bal;
 
@@ -419,7 +428,7 @@ class PaySelList extends \App\Pages\Base
                 if($bal==0) {
                     $this->_blist = array();
                 }
-            }
+
 
         }
         //        $this->_blist = array_reverse($this->_doclist);

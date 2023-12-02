@@ -478,7 +478,7 @@ class ARMPos extends \App\Pages\Base
         $row->add(new Label('disc', H::fa($item->disc)));
         $row->add(new Label('price', H::fa($item->price)));
 
-        $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
+        $row->add(new Label('amount', H::fa(floatval($item->quantity) * floatval($item->price)  )));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
@@ -1821,7 +1821,7 @@ class ARMPos extends \App\Pages\Base
         
 
         $list = array();
-        foreach (Item::findYield($criteria)as $key => $value) {
+        foreach (Item::findYield($criteria,"itemname") as $key => $value) {
 
             if(intval($value->useserial) != 0) {
                 continue;

@@ -292,6 +292,101 @@ class Customer extends \ZCL\DB\Entity
 
     }
 
+    
+
+    /**
+    * баланс  по  документу
+    * актив  и пассив  с точки  зрения  окнтрагента
+    */
+    public static function balans( \App\Entity\Doc\Document $doc,$ctype=0 ) {
+       
+       
+        if($doc->meta_name=='Order' && $doc->payamount==0 && $doc->payed ==0 ) {
+            return  true;
+        }
+        
+      
+        $ret=[];
+     
+        $ret['active']  = 0;
+        $ret['passive'] = 0;
+ 
+        
+        if($ctype != self::TYPE_SELLER) {
+            if( in_array( $doc->meta_name,['GoodsIssue',  'POSCheck', 'OrderFood', 'ServiceAct' ]) ) {
+                 $ret['passive']=$doc->payamount ?? 0;
+                 if(($doc->headerdata['prepaid'] ?? 0) >0) {
+                   //    $ret['passive'] -= $doc->headerdata['prepaid']; 
+                 }
+                 $ret['active']=$doc->payed ?? 0;             
+            }
+
+            if( in_array( $doc->meta_name,['Order']) ) {
+                 $ret['active']=$doc->payed ?? 0;
+            }
+            if( in_array( $doc->meta_name,['Invoice']) ) {
+                 $ret['active']=$doc->payed ?? 0;
+            }
+            if( in_array( $doc->meta_name,['TTN']) ) {
+                 $ret['passive']=$doc->payamount ?? 0;
+            }
+            if( in_array( $doc->meta_name,['ReturnIssue']) ) {
+                 $ret['passive']=$doc->payed ?? 0;
+                 $ret['active']=$doc->payamount ?? 0;
+                 
+            }
+            if( in_array( $doc->meta_name,['OutcomeMoney']) && strpos($doc->content,'<detail>1</detail>') > 0) {
+                $ret['passive']=$doc->payed ?? 0;    //возврат покупателю
+            }
+            if( in_array( $doc->meta_name,['IncomeMoney']) && strpos($doc->content,'<detail>1</detail>') > 0) {
+                 $ret['active']=$doc->payed ?? 0;    //оплата от покупателя
+            }            
+        }
+        
+        if($ctype != self::TYPE_BAYER) {
+      
+            if( in_array( $doc->meta_name,[ 'GoodsReceipt', 'IncomeService' ]) ) {
+                 $ret['active']=$doc->payamount ?? 0;
+                 $ret['passive']=$doc->payed ?? 0;
+            }
+         
+            if( in_array( $doc->meta_name,['InvoiceCust']) ) {
+                 $ret['passive']=$doc->payed ?? 0;
+            }
+            if( in_array( $doc->meta_name,['RetCustIssue']) ) {
+                 $ret['passive']=$doc->payamount ?? 0;
+                 $ret['active']=$doc->payed ?? 0;
+            }
+
+
+            if( in_array( $doc->meta_name,['OutcomeMoney']) && strpos($doc->content,'<detail>2</detail>') > 0) {
+                 $ret['passive']=$doc->payed ?? 0;   //  оплата  поставщику
+            }
+
+
+            if( in_array( $doc->meta_name,['IncomeMoney']) && strpos($doc->content,'<detail>2</detail>') > 0) {
+                 $ret['active']=$doc->payed ?? 0;    //возврат от поставщика
+            }
+         }
+      
+        
+        
+     /*
+  COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService')) THEN `d`.`payed` WHEN ((`d`.`meta_name` = 'OutcomeMoney') AND      (`d`.`content` LIKE '%<detail>2</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'RetCustIssue') THEN `d`.`payamount` ELSE 0 END)), 0) AS `s_passive`,
+  COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('IncomeService', 'GoodsReceipt')) THEN `d`.`payamount` WHEN ((`d`.`meta_name` = 'IncomeMoney') AND      (`d`.`content` LIKE '%<detail>2</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'RetCustIssue') THEN `d`.`payed` ELSE 0 END)), 0) AS `s_active`,
+  COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('GoodsIssue', 'TTN', 'PosCheck', 'OrderFood', 'ServiceAct')) THEN `d`.`payamount` WHEN ((`d`.`meta_name` = 'OutcomeMoney') AND      (`d`.`content` LIKE '%<detail>1</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'ReturnIssue') THEN `d`.`payed` ELSE 0 END)), 0) AS `b_passive`,
+  COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN `d`.`payed` WHEN ((`d`.`meta_name` = 'IncomeMoney') AND      (`d`.`content` LIKE '%<detail>1</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'ReturnIssue') THEN `d`.`payamount` ELSE 0 END)), 0) AS `b_active`,
+     
+     
+     
+     */ 
+        return $ret;
+        
+                 
+    }
+        
+    
+    
     public function getDiscount() {
         $d = $this->discount;
         if($d > 0) {
