@@ -29,11 +29,18 @@ class Main extends Base
 
         $v= \App\Helper::checkVer()  ;
             
-            if(strlen($v) >0){
-               $this->_tvars['newversion']  = " Доступна нова версiя <b>{$v}</b>  <a target=\"_blank\" href=\"https://zippy.com.ua/update\">Перейти...</a> ";                
-            } else{
-               $this->_tvars['newversion']  = '';
-            }
+        if(strlen($v) >0){
+           $this->_tvars['newversion']  = " Доступна нова версiя <b>{$v}</b>  <a target=\"_blank\" href=\"https://zippy.com.ua/update\">Перейти...</a> ";                
+        } else{
+           $this->_tvars['newversion']  = '';
+        }
+        if($this->_tvars['curversionbd'] != System::REQUIRED_DB){
+           $this->_tvars['reqversion']  = " Версiя БД має  бути <b>".System::REQUIRED_DB."!</b>";                
+        } else{
+           $this->_tvars['reqversion']  = '';
+        }
+        
+        
         
         $user = System::getUser();
 

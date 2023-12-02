@@ -5,7 +5,7 @@
     </head>
   <body>
         <div class="row">
-            <div class="col-12   col-xl-108 " zippy="clist">
+            <div class="col-12   col-md-10 col-md-8 " zippy="clist">
                 <h3>Розрахунки з постачальниками </h3>
                 <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
@@ -31,7 +31,7 @@
                         <th class="text-right">Кред. борг</th>
 
 
-                        <th></th>
+                  
                         <th></th>
                         <th></th>
 
@@ -44,10 +44,10 @@
                         <td zippy="amountd" class="text-right"></td>
                         <td zippy="amountc" class="text-right"></td>
 
-                        <td><a zippy="createpay">Створити КО</a></td>
+                     
                         <td><a zippy="showdet">Деталiзацiя</a></td>
-
-                        <td><a zippy="showdocs">Документи до оплати</a></td>
+                     
+                        <td><a zippy="createpay">Оплата</a></td>
 
 
                     </tr>
@@ -71,7 +71,7 @@
             <div class="col-12 col-lg-8 col-xl-6 " zippy="plist">
                 <a zippy="back"><i class="fa fa-arrow-alt-circle-left"></i> до переліку</a>
                 <h3 zippy="cname"></h3>
-                <small><i class="fa fa-exclamation-circle"></i> Для оплати по договорам, а не окремим документам використовуються касовi ордери</small>
+                <span>До сплати </span><b zippy="allforpay"> </b> &nbsp;<span>Створити </span> <a zippy="payorder"></a> 
 
                 <table class="table table-sm  ">
                     <tr>
@@ -122,13 +122,13 @@
                         <select class="form-control mr-2" zippy="payment">
 
                         </select>
-                        {{#fiscal}}
+                        {{#hideblock}}
                         <label for="pos">POS</label>
                         <select class="form-control mr-2" zippy="pos">
                             <option value="0">Не обрано</option>
 
                         </select>
-                        {{/fiscal}}
+                        {{/hideblock}}
                         <label>дата</label>
                         <input zippy="pdate" style="width:100px;" class="form-control mr-2 ">
 

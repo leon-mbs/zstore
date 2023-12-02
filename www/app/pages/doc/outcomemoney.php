@@ -25,7 +25,7 @@ class OutcomeMoney extends \App\Pages\Base
 {
     private $_doc;
 
-    public function __construct($docid = 0, $pcustomer_id = 0, $pamount = 0) {
+    public function __construct($docid = 0, $pcustomer_id = 0, $pamount = 0,$det=2) {
         parent::__construct();
 
         $this->add(new Form('docform'));
@@ -70,7 +70,7 @@ class OutcomeMoney extends \App\Pages\Base
                 $this->docform->customer->setText($c->customer_name);
                 $this->docform->amount->setText(H::fa($pamount));
                 $this->docform->mtype->setValue(\App\Entity\IOState::TYPE_BASE_OUTCOME);
-                $this->docform->detail->setValue(2);
+                $this->docform->detail->setValue($det ==-1 ?2:$det );
             }
 
         }

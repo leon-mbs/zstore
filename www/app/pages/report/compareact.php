@@ -143,7 +143,7 @@ class CompareAct extends \App\Pages\Base
                 $r['active'] = H::fa($ch['active']);
                 $r['passive'] = H::fa($ch['passive']);
 
-                $diff = $ch['active'] - $ch['passive']  ;
+                $diff =    $ch['active'] - $ch['passive'];
 
                 $bal +=  $diff;
                 $r['bal'] = H::fa($bal);

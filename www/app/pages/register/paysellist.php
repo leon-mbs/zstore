@@ -49,6 +49,8 @@ class PaySelList extends \App\Pages\Base
 
         $this->add(new Panel("plist"))->setVisible(false);
         $this->plist->add(new Label("cname"));
+        $this->plist->add(new Label("allforpay"));
+        $this->plist->add(new RedirectLink("payorder"));
         $this->plist->add(new ClickLink("back", $this, "onBack"));
 
         $doclist = $this->plist->add(new DataView('doclist', new ArrayDataSource($this, '_doclist'), $this, 'doclistOnRow'));
@@ -113,26 +115,11 @@ class PaySelList extends \App\Pages\Base
         $this->_custlist = array();
 
         foreach(\App\DataItem::query($sql) as $_c) {
-            $_c->docs=0;
+    
             $this->_custlist[$_c->customer_id]=$_c;
         }
 
-        $sql = "SELECT c.customer_name,c.phone, c.customer_id, coalesce(count(*),0) as docs 
-             FROM documents_view d  join customers c  on d.customer_id = c.customer_id and c.status=0    
-             WHERE  d.state = ". Document::STATE_WP  ."   and   d.meta_name in('InvoiceCust','RetCustIssue','GoodsReceipt')   {$hold}
-             group by c.customer_name,c.phone, c.customer_id
-             order by c.customer_name
-             ";
-
-        $ids = array_keys($this->_custlist)  ;
-        foreach(\App\DataItem::query($sql) as $_c) {
-            if(in_array($_c->customer_id, $ids)) {
-                $this->_custlist[$_c->customer_id]->docs = $_c->docs;
-            } else {
-                $this->_custlist[$_c->customer_id] = $_c;
-            }
-
-        }
+ 
 
 
         $this->_totamountc = 0;
@@ -153,24 +140,29 @@ class PaySelList extends \App\Pages\Base
         $row->add(new Label('amountc', $diff >0 ? H::fa($diff) : ''));
         $row->add(new Label('amountd', $diff <0 ? H::fa(0-$diff) : ''));
 
-        $row->add(new RedirectLink('createpay'))->setVisible($diff>0);
-        if ($diff>0) {
-            $row->createpay->setLink("\\App\\Pages\\Doc\\OutcomeMoney", array(0, $cust->customer_id, $diff ));
-            $row->createpay->setVisible(true);
-        }
 
-        $row->add(new ClickLink('showdocs', $this, 'showdocsOnClick'))->setVisible($cust->docs>0);
-        $row->add(new ClickLink('showdet', $this, 'showdetOnClick'))->setVisible($diff != 0);
+        $row->add(new ClickLink('showdet', $this, 'showdetOnClick'));
+        $row->add(new ClickLink('createpay', $this, 'topayOnClick'));
 
         $this->_totamountd += ($diff<0 ? $diff : 0);
         $this->_totamountc += ($diff>0 ? $diff : 0);
     }
 
-    //список документов
-    public function showdocsOnClick($sender) {
+
+    public function topayOnClick($sender) {
 
         $this->_cust = $sender->owner->getDataItem();
         $this->plist->cname->setText($this->_cust->customer_name);
+        $this->plist->allforpay->setText( H::fa($this->_cust->act -  $this->_cust->pas));
+        if($this->_cust->act >  $this->_cust->pas) {
+          $this->plist->payorder->setValue( "Видатковий касовий  ордер");          
+          $this->plist->payorder->setLink("\\App\\Pages\\Doc\\OutcomeMoney", array(0, $this->_cust->customer_id,  H::fa($this->_cust->act -  $this->_cust->pas),2 ));
+        }   else {
+          $this->plist->payorder->setValue( "Прибутковий касовий  ордер");    
+          $this->plist->payorder->setLink("\\App\\Pages\\Doc\\IncomeMoney", array(0, $this->_cust->customer_id,  H::fa($this->_cust->pas -  $this->_cust->act),2 ));
+        }
+        
+        
         $this->updateDocs();
 
         $this->clist->setVisible(false);
@@ -414,10 +406,10 @@ class PaySelList extends \App\Pages\Base
                 $r->meta_desc = $d->meta_desc;
                 $r->document_number = $d->document_number;
                 $r->document_date = $d->document_date;
-                $r->s_active = $ch['active'];
-                $r->s_passive = $ch['passive'];
+                $r->s_active = $ch['passive'];
+                $r->s_passive = $ch['active'];
 
-                $diff = $ch['passive'] - $ch['active'];
+                $diff = $ch['active'] - $ch['passive'];
                 if($diff==0) {
                     continue;
                 }
