@@ -669,6 +669,9 @@ class ARMFood extends \App\Pages\Base
             $row->qtyplus->setVisible(false);
             $row->qtyedit->setVisible(false);
 
+        }    
+        if ($item->foodstate ==1 ) {
+            $row->removeitem->setVisible(true);
         }
 
     }
