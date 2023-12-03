@@ -47,7 +47,7 @@ class CompareAct extends \App\Pages\Base
         
         $search = $conn->qstr('%'. $search.'%');
         
-        $where = "status=0 and customer_name like {$search} ";
+        $where = "status=0 and customer_name like {$search}  AND detail not like '%<isholding>1</isholding>%'    ";
 
         return Customer::findArray("customer_name", $where, "customer_name");
  
@@ -77,21 +77,13 @@ class CompareAct extends \App\Pages\Base
             return;
         }
  
-        $c = Customer::load($cust_id) ;
-        if($c->isholding==1) {
-           $list =  $c->getChillden();
-        }  else {
-           $list[] = $cust_id;    
-        }
-         
-        if(count($list) ==0) {
-            $this->setError('Не вибраний  контрагент') ;
-            return;
-        }
+      
+  
+  
         $clist = implode(',',$list) ;
         $detail = array();
         
-        $where_start =  " document_date <{$from}  and    customer_id  in({$clist})  and    state NOT IN (0, 1, 2, 3, 15, 8, 17) ";
+        $where_start =  " document_date <{$from}  and    customer_id = {$cust_id}  and    state NOT IN (0, 1, 2, 3, 15, 8, 17) ";
         $bal=0;
         foreach (\App\Entity\Doc\Document::findYield($where_start, "document_date asc,document_id asc ", -1, -1) as $d) {
            
@@ -120,7 +112,7 @@ class CompareAct extends \App\Pages\Base
 
         $detail[] = $r;
          
-        $where =  " document_date >={$from} and document_date <={$to} and   customer_id  in({$clist})  and    state NOT IN (0, 1, 2, 3, 15, 8, 17) ";
+        $where =  " document_date >={$from} and document_date <={$to} and   customer_id = {$cust_id}   and    state NOT IN (0, 1, 2, 3, 15, 8, 17) ";
      
         foreach (\App\Entity\Doc\Document::findYield($where, "document_date asc ", -1, -1) as $d) {
            
