@@ -25,7 +25,7 @@ class IncomeMoney extends \App\Pages\Base
 {
     private $_doc;
 
-    public function __construct($docid = 0, $pcustomer_id = 0, $pamount = 0) {
+    public function __construct($docid = 0, $pcustomer_id = 0, $pamount = 0,$det=-1) {
         parent::__construct();
 
         $this->add(new Form('docform'));
@@ -71,7 +71,7 @@ class IncomeMoney extends \App\Pages\Base
                 $this->docform->customer->setText($c->customer_name);
                 $this->docform->amount->setText(H::fa($pamount));
                 $this->docform->mtype->setValue(\App\Entity\IOState::TYPE_BASE_INCOME);
-                $this->docform->detail->setValue(1);
+                $this->docform->detail->setValue($det ==-1 ?1:$det);
             }
         }
 

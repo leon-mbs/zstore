@@ -473,7 +473,7 @@ class Document extends \ZCL\DB\Entity
             return 75;
         }
         if($state == self::STATE_PAYED) {
-            return 5;
+            return 15;
         }
 
         return 0;

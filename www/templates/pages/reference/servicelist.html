@@ -32,22 +32,32 @@
                         <tr>
                             <th>Назва</th>
                             <th> </th>    
-                            <th style="text-align: right;">Вартість</th>
-                            <th style="text-align: right;">Розцiнки</th>
-                            <th style="text-align: right;">Нормо-години</th>
+                            <th class="text-right">Вартість</th>
+                            <th class="text-right">Розцiнки</th>
+                            <th class="text-right">Години</th>
 
+                            <th></th>
                             <th></th>
                         </tr>
                         <tr zippy="servicelist">
                             <td zippy="service_name"></td>
-                            <td  class="text-right"><i title="Акцiя" zippy="hasaction" class="fa fa-gift"></i></td>
-                            <td style="text-align: right;" zippy="price"></td>
-                            <td style="text-align: right;" zippy="cost"></td>
-                            <td style="text-align: right;" zippy="hours"></td>
+                            <td class="text-right"><i title="Акцiя" zippy="hasaction" class="fa fa-gift"></i></td>
+                            <td class="text-right" zippy="price"></td>
+                            <td class="text-right" zippy="cost"></td>
+                            <td class="text-right" zippy="hours"></td>
+                            <td    >
+                            {{#hideblock}}
+                               <a title="Тех. карта"> <i class="fa fa-wrench"></i><a>  
+                            {{/hideblock}}
+                            </td>
 
 
-                            <td style="width:75px"><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> <a
-                                    zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a></td>
+                            <td   class="text-nowrap" >
+                                {{#hideblock}}
+                                <a zippy="itemset" title="Матерiали та  комплектуючi"><i class="fa fa-cogs"></i></a> 
+                                {{/hideblock}}
+                              &nbsp;  <a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> 
+                              &nbsp;  <a  zippy="delete" title="Видалити"><i class="fa fa-trash"></i></a></td>
                         </tr>
                     </table>
                     <div zippy="pag"></div>
