@@ -143,7 +143,7 @@ GROUP BY c.customer_name,
         $this->_totamountd = 0;
 
         $this->clist->custlist->Reload();
-        $this->clist->totamountd->setText($this->_totamountd <0 ? H::fa(0-$this->_totamountd) : '');
+        $this->clist->totamountd->setText($this->_totamountd >0 ? H::fa($this->_totamountd) : '');
         $this->clist->totamountc->setText($this->_totamountc >0 ? H::fa($this->_totamountc) : '');
 
 
@@ -154,15 +154,15 @@ GROUP BY c.customer_name,
         $row->add(new RedirectLink('customer_name', "\\App\\Pages\\Reference\\CustomerList", array($cust->customer_id)))->setValue($cust->customer_name);
         $row->add(new Label('phone', $cust->phone));
         $diff = $cust->act - $cust->pas;   //плюс - наш долг
-        $row->add(new Label('amountc', $diff >0 ? H::fa($diff) : ''));
-        $row->add(new Label('amountd', $diff <0 ? H::fa(0-$diff) : ''));
+        $row->add(new Label('amountc', $diff <0 ? H::fa(0-$diff) : ''));
+        $row->add(new Label('amountd', $diff >0 ? H::fa($diff) : ''));
 
 
         $row->add(new ClickLink('showdet', $this, 'showdetOnClick'));
         $row->add(new ClickLink('createpay', $this, 'topayOnClick'));
 
-        $this->_totamountd += ($diff<0 ? $diff : 0);
-        $this->_totamountc += ($diff>0 ? $diff : 0);
+        $this->_totamountd += ($diff>0 ? $diff : 0);
+        $this->_totamountc += ($diff<0 ? 0-$diff : 0);
     }
 
 
@@ -171,12 +171,12 @@ GROUP BY c.customer_name,
         $this->_cust = $sender->owner->getDataItem();
         $this->plist->cname->setText($this->_cust->customer_name);
         $this->plist->allforpay->setText( H::fa($this->_cust->act -  $this->_cust->pas));
-        if($this->_cust->act >  $this->_cust->pas) {
+        if($this->_cust->act <  $this->_cust->pas) {
           $this->plist->payorder->setValue( "Видатковий касовий  ордер");          
-          $this->plist->payorder->setLink("\\App\\Pages\\Doc\\OutcomeMoney", array(0, $this->_cust->customer_id,  H::fa($this->_cust->act -  $this->_cust->pas),2 ));
+          $this->plist->payorder->setLink("\\App\\Pages\\Doc\\OutcomeMoney", array(0, $this->_cust->customer_id,  H::fa($this->_cust->pas -  $this->_cust->act),2 ));
         }   else {
           $this->plist->payorder->setValue( "Прибутковий касовий  ордер");    
-          $this->plist->payorder->setLink("\\App\\Pages\\Doc\\IncomeMoney", array(0, $this->_cust->customer_id,  H::fa($this->_cust->pas -  $this->_cust->act),2 ));
+          $this->plist->payorder->setLink("\\App\\Pages\\Doc\\IncomeMoney", array(0, $this->_cust->customer_id,  H::fa($this->_cust->act -  $this->_cust->pas),2 ));
         }
         
         

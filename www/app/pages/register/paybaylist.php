@@ -125,7 +125,7 @@ GROUP BY c.customer_name,
             $this->_custlist[$_c->customer_id]=$_c;
         }
  
-        $sql = "SELECT c.customer_name,c.phone, c.customer_id, coalesce(count(*),0) as docs 
+        $sql = "SELECT c.customer_name,c.phone, c.customer_id
              FROM documents_view d  join customers c  on d.customer_id = c.customer_id and c.status=0    
              WHERE  d.state = ". Document::STATE_WP  ." and d.meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct')   {$hold}
              group by c.customer_name,c.phone, c.customer_id
@@ -148,7 +148,7 @@ GROUP BY c.customer_name,
 
         $this->clist->custlist->Reload();
 
-        $this->clist->totamountd->setText($this->_totamountd <0 ? H::fa(0-$this->_totamountd) : '');
+        $this->clist->totamountd->setText($this->_totamountd >0 ? H::fa($this->_totamountd) : '');
         $this->clist->totamountc->setText($this->_totamountc >0 ? H::fa($this->_totamountc) : '');
 
 
@@ -159,31 +159,31 @@ GROUP BY c.customer_name,
 
         $row->add(new RedirectLink('customer_name', "\\App\\Pages\\Reference\\CustomerList", array($cust->customer_id)))->setValue($cust->customer_name);
         $row->add(new Label('phone', $cust->phone));
-        $diff = $cust->act - $cust->pas;   //плюс - наш долг
-        $row->add(new Label('amountc', $diff >0 ? H::fa($diff) : ''));
-        $row->add(new Label('amountd', $diff <0 ? H::fa(0-$diff) : ''));
+        $diff = $cust->act - $cust->pas;   
+        $row->add(new Label('amountd', $diff >0 ? H::fa($diff) : ''));
+        $row->add(new Label('amountc', $diff <0 ? H::fa(0-$diff) : ''));
 
  
         $row->add(new ClickLink('showdet', $this, 'showdetOnClick'));
         $row->add(new ClickLink('createpay', $this, 'topayOnClick'));
 
-        $this->_totamountd += ($diff<0 ? $diff : 0);
-        $this->_totamountc += ($diff>0 ? $diff : 0);
+        $this->_totamountd += ($diff>0 ? $diff : 0);
+        $this->_totamountc += ($diff<0 ? 0-$diff : 0);
 
     }
 
    
     public function topayOnClick($sender) {
 
-        $this->_cust = $sender->owner->getDataItem();
+        $this->_cust = $sender->getOwner()->getDataItem();
         $this->plist->cname->setText($this->_cust->customer_name);
         $this->plist->allforpay->setText( H::fa($this->_cust->act -  $this->_cust->pas));
-        if($this->_cust->pos >  $this->_cust->act) {
+        if($this->_cust->pas >  $this->_cust->act) {
           $this->plist->payorder->setValue( "Видатковий касовий  ордер");          
-          $this->plist->payorder->setLink("\\App\\Pages\\Doc\\OutcomeMoney", array(0, $this->_cust->customer_id,  H::fa($this->_cust->act -  $this->_cust->pas),1 ));
+          $this->plist->payorder->setLink("\\App\\Pages\\Doc\\OutcomeMoney", array(0, $this->_cust->customer_id,  H::fa($this->_cust->pas -  $this->_cust->act),1 ));
         }   else {
           $this->plist->payorder->setValue( "Прибутковий касовий  ордер");    
-          $this->plist->payorder->setLink("\\App\\Pages\\Doc\\IncomeMoney", array(0, $this->_cust->customer_id,  H::fa($this->_cust->pas -  $this->_cust->act),1 ));
+          $this->plist->payorder->setLink("\\App\\Pages\\Doc\\IncomeMoney", array(0, $this->_cust->customer_id,  H::fa($this->_cust->act -  $this->_cust->pas),1 ));
         }
         $this->updateDocs();
 
@@ -549,8 +549,8 @@ GROUP BY c.customer_name,
         $row->add(new Label('dnumber', $doc->document_number));
         $row->add(new Label('ddate', H::fd($doc->document_date)));
 
-        $row->add(new Label('out', $doc->b_passive > 0 ? H::fa($doc->b_passive) : ""));
-        $row->add(new Label('in', $doc->b_active>0 ? H::fa($doc->b_active) : ""));
+        $row->add(new Label('in', $doc->b_passive > 0 ? H::fa($doc->b_passive) : ""));
+        $row->add(new Label('out', $doc->b_active>0 ? H::fa($doc->b_active) : ""));
         $row->add(new Label('bc', $doc->bal > 0 ? H::fa($doc->bal) : ""));
         $row->add(new Label('bd', $doc->bal < 0 ? H::fa(0- $doc->bal) : ""));
 
