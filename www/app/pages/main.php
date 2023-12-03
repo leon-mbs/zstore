@@ -30,7 +30,7 @@ class Main extends Base
         $v= \App\Helper::checkVer()  ;
             
         if(strlen($v) >0){
-           $this->_tvars['newversion']  = " Доступна нова версiя <b>{$v}</b>  <a target=\"_blank\" href=\"https://zippy.com.ua/update\">Перейти...</a> ";                
+           $this->_tvars['newversion']  = " Доступна нова версiя <b>{$v}</b> <a href=\"/index.php?p=App/Pages/Update\">Перейти...</a> ";                
         } else{
            $this->_tvars['newversion']  = '';
         }

@@ -1,0 +1,28 @@
+<html>
+  <head>
+     <title>  Оновлення програми  </title>
+ 
+</head>
+<body>
+ <div class="row">
+    <div class="col-12 col-lg-10 ml-2"   >
+        <h3>Оновлення</h3>
+        <span>Нова  версія <b>{{newver}}</b></span>
+         <br>Повна  <a href="https://zippy.com.ua/update">історія  оновлень</a>
+        <br>
+        <br>
+         <h5>Перелік змін</h5>
+
+          <ul style=" line-height: 1.4em;" class="list-unstyled">
+            {{#list}}
+            <li >{{item}}</a>
+            {{/list}}
+         </ul>
+          {{notes}}
+          
+          <br><br>Для  оновлення завантажити <a href="{{archive}}" >архів</a>  або  перейти на  <a href="{{github}}">GitHib</a>
+  </div>        
+</div>        
+  
+</body>
+</html>
