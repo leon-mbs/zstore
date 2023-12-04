@@ -12,6 +12,7 @@ class Service extends \ZCL\DB\Entity
 {
     protected function init() {
         $this->service_id = 0;
+        $this->itemset = [];
     }
 
     protected function afterLoad() {
@@ -22,9 +23,18 @@ class Service extends \ZCL\DB\Entity
         $this->hours = (string)($xml->hours[0]);
         $this->price = (string)($xml->price[0]);
         $this->cost = (string)($xml->cost[0]);
+        $this->techcard = (string)($xml->techcard[0]);
         $this->actionprice = doubleval($xml->actionprice[0]);
         $this->todate = intval($xml->todate[0]);
         $this->fromdate = intval($xml->fromdate[0]);
+        
+        $itemset = (string)($xml->itemset[0]);
+        if(strlen($itemset)>0) {
+           $this->itemset = unserialize( base64_decode( $itemset) )  ;
+        }  else {
+           $this->itemset = [];
+        }
+
 
         parent::afterLoad();
     }
@@ -41,7 +51,14 @@ class Service extends \ZCL\DB\Entity
         }
         $this->detail .= "<todate>{$this->todate}</todate>";
         $this->detail .= "<fromdate>{$this->fromdate}</fromdate>";
-
+     
+        $this->detail .= "<techcard><![CDATA[{$this->techcard}]]></techcard>";
+        
+        $itemset = $this->itemset ?? [] ;
+        $itemset = base64_encode( serialize($itemset) ) ;
+        
+        $this->detail .= "<itemset><![CDATA[{$itemset}]]></itemset>";
+     
         $this->detail .= "</detail>";
 
         if (strlen($this->category) == 0) {

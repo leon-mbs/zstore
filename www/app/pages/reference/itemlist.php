@@ -635,7 +635,7 @@ class ItemList extends \App\Pages\Base
         $form=  $this->setpanel->setform;
         $id = $form->editsname->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError("Не обрано ТМЦ");
             return;
         }
 
