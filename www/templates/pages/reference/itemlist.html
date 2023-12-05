@@ -444,7 +444,9 @@
             <div class="col-12 col-md-8 col-xl-6" zippy="setpanel">
                 <a zippy="backtolist"><i class="fa fa-arrow-alt-circle-left"></i> До довідника</a>
                 <h4 zippy="stitle"></h4>
-                <small>Комплекти (складовi частини) для готової продукцiї та напiвфабрикатiв</small>
+               
+                {{#complin}}
+                <span>Комплекти (складовi частини) для готової продукцiї та напiвфабрикатiв</span>
                 <form zippy="setform" class="form-inline mt-2 mb-2">
                     <label for="editsname">ТМЦ</label>
                     <input placeholder="Почніть вводити.." class="form-control  mr-sm-2" zippy="editsname"/>
@@ -506,7 +508,18 @@
                 
                     <input class="btn btn-outline-success  " type="submit" value="Зберегти">
                  </form>
-                
+               {{/complin}}  
+               {{#complout}}  
+               <span>Є складовою комплектів для </span>
+                 <table class="ctanle">
+                  {{#conploutlist}}
+                   <tr><td>{{iname}}</td><td>{{icode}}</td><td></tr>
+                    {{/conploutlist}}
+                 </table>
+                 
+               {{/complout}}  
+               
+               
             </div>
         </div>
 

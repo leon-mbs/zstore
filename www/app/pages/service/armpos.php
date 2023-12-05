@@ -44,15 +44,21 @@ class ARMPos extends \App\Pages\Base
     private $_mfbeznal = 0;
     private $_mfnal = 0;
     private $_editrow =false;
+    private $_docid =0;
+    private $_basedocid =0;
 
     public $_doclist = array();
 
-    public function __construct() {
+    public function __construct($docid=0,$basedocid=0) {
         parent::__construct();
 
         if (false == \App\ACL::checkShowSer('ARMPos')) {
             return;
         }
+        
+        $this->_docid = $docid;
+        $this->_basedocid = $basedocid;
+        
         $filter = \App\Filter::getFilter("armpos");
         if ($filter->isEmpty()) {
             $filter->pos = 0;
@@ -377,10 +383,29 @@ class ARMPos extends \App\Pages\Base
 
         $this->_paytype=0;
 
+        
+        if($this->_docid >0) { //загрузка  чека
+            
+            $doc = Document::load($this->_docid);
+            $this->loadDoc($doc);
+           
+            $this->_docid = 0;
+        }
+        if($this->_basedocid >0) { //на основании
+            
+            $bdoc = Document::load($this->_basedocid);
+            
+            
+            
+            $this->loadDoc($doc);
+          
+            $this->_basedocid = 0;
+        }
+        
 
     }
 
-    //к  оплате
+    //к  оплате      ALTER TABLE Survey ADD TemplateId [int]   NULL
     public function topayOnClick($sender) {
         if (count($this->_itemlist) == 0 && count($this->_serlist) == 0) {
             $this->setError('Не введено позиції');

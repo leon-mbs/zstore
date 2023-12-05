@@ -378,6 +378,11 @@ class DocList extends \App\Pages\Base
         }
         $type = H::getMetaType($item->meta_id);
         $class = "\\App\\Pages\\Doc\\" . $type['meta_name'];
+        if($type['meta_name']=='POSCheck') {
+           $class = "\\App\\Pages\\Service\\ARMPos";
+        }
+        
+        
         //   $item = $class::load($item->document_id);
         //запоминаем страницу пагинатора
         $filter = Filter::getFilter("doclist");

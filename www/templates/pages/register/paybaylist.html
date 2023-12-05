@@ -115,28 +115,59 @@
 
 
                 <div class="navbar nav">
-                    <form zippy="payform" class="form-inline ">
-                        <label>До сплати</label>
-                        <input zippy="pamount" pattern="[0-9\.\-]+" style="width:100px;" placeholder="Сума..."
-                               class="form-control mr-2">
-                        <label for="payment">рахунок</label>
-                        <select class="form-control mr-2" zippy="payment">
+                    <form zippy="payform" class="row   g-2 align-items-center ">
+                     <div class="col-auto">
+                       <div class="  row no-gutters"> 
+                       
+                        <label class="col-auto mt-2">До сплати</label>
+                          <div class="col-auto">
+                      <input zippy="pamount" pattern="[0-9\.\-]+" style="width:100px;" placeholder="Сума..."                               class="form-control mr-2">
+                        </div>
+                       </div>
+                      </div>
+                 
+                 
+                     <div class="col-auto">
+                       <div class="  row no-gutters"> 
+
+                        <label class="col-auto mt-2" for="payment">рахунок</label>
+                           <div class="col-auto">
+                     <select class="form-control mr-2" zippy="payment">
 
                         </select>
-                        {{#hideblock}}
-                        <label for="pos">POS</label>
-                        <select class="form-control mr-2" zippy="pos">
+                          </div>
+                       </div>
+                      </div>
+                      {{#fiscal}}
+                      <div class="col-auto">
+                       <div class="  row no-gutters"> 
+                       <label class="col-auto mt-2" for="pos">POS (фіскалізація)</label>
+                            <div class="col-auto">
+                    <select class="form-control mr-2" zippy="pos">
                             <option value="0">Не обрано</option>
 
                         </select>
-                        {{/hideblock}}
-                        <label>дата</label>
-                        <input zippy="pdate" style="width:100px;" class="form-control mr-2 ">
+                           </div>
+                       </div>
+                      </div>
+                      {{/fiscal}}
+                        <div class="col-auto">
+                       <div class="  row no-gutters"> 
+                     <label class="col-auto mt-2">дата</label>
+                         <div class="col-auto">
+                       <input zippy="pdate" style="width:100px;" class="form-control mr-2 ">
+             </div>
+                       </div>
+                      </div>
+                        <div class="col-auto"> 
+                          <input zippy="pcomment" placeholder="Коментар..." class="form-control mr-2">
+                           </div>
+                       
 
-                        <input zippy="pcomment" placeholder="Коментар..." class="form-control mr-2">
-
+                          <div class="col-auto"> 
+                         
                         <button type="submit" class="  btn btn-info  mr-2 ">Сплатити</button>
-
+                        </div>
 
                     </form>
 

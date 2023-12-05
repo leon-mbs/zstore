@@ -144,6 +144,8 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
         $this->add(new Panel('setpanel'))->setVisible(false);
+        
+        
         $this->setpanel->add(new DataView('setlist', new ArrayDataSource($this, '_itemset'), $this, 'itemsetlistOnRow'));
         $this->setpanel->add(new Form('setform')) ;
         $this->setpanel->setform->add(new AutocompleteTextInput('editsname'))->onText($this, 'OnAutoSet');
@@ -217,7 +219,7 @@ class ItemList extends \App\Pages\Base
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
         $row->add(new ClickLink('set'))->onClick($this, 'setOnClick');
-        $row->set->setVisible($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD);
+        $row->set->setVisible($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD || $item->item_type == Item::TYPE_MAT);
 
         $row->add(new ClickLink('printqr'))->onClick($this, 'printQrOnClick', true);
         $row->printqr->setVisible(strlen($item->url) > 0);
@@ -585,6 +587,33 @@ class ItemList extends \App\Pages\Base
 
         $this->setpanel->cardform->editscard->setText($item->techcard)  ;
 
+        $this->_tvars['complin']  = $item->item_type== Item::TYPE_PROD  || $item->item_type== Item::TYPE_HALFPROD;
+        $this->_tvars['complout']  = $item->item_type== Item::TYPE_MAT  || $item->item_type== Item::TYPE_HALFPROD ;
+        $this->_tvars['conploutlist']  = [];
+        
+        foreach(Item::find("item_id in(select pitem_id from item_set  where  item_id=".$item->item_id.")") as $ii){
+           $this->_tvars['conploutlist'][]=array(
+              "iname"=>$ii->itemname,
+              "icode"=>$ii->item_code
+           );     
+        } ;
+        
+        foreach(\App\Entity\Service::find("") as $s){
+           if(is_array($s->itemset)) {
+               foreach($s->itemset as $is) {
+                   if($is->item_id==$item->item_id) {
+                       $this->_tvars['conploutlist'][]=array(
+                          "iname"=>$s->service_name,
+                          "icode"=>""
+                       );     
+                       
+                   }
+                   
+               }
+           }
+        }
+        
+        
     }
 
     private function setupdate() {
