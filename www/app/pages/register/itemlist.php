@@ -62,6 +62,7 @@ class ItemList extends \App\Pages\Base
             $storelist = Store::getListAll() ;
 
         }
+        $this->filter->add(new DropDownChoice('searchqty', [], 0));
         $this->filter->add(new DropDownChoice('searchstore', $storelist, 0));
         $this->filter->add(new TextInput('searchbrand'));
         $this->filter->searchbrand->setDataList(Item::getManufacturers());
@@ -209,6 +210,9 @@ class ItemList extends \App\Pages\Base
         }
         if ($stock->qty < 0) {
             $row->setAttribute('class', 'text-danger');
+        }
+        if ($stock->qty < 0) {
+            $row->setAttribute('class', 'text-warn');
         }
 
         $plist = array();
@@ -406,17 +410,29 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         $conn = $conn = \ZDB\DB::getConnect();
 
         $form = $this->page->filter;
-        $where = "   disabled <> 1 and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id ) <>0 ";
+        $sqty = $form->searchqty->getValue();
+        $where = "   disabled <> 1 ";
+        if($sqty==0) {
+           $where .= "  and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id ) >0 ";
+        }
+        if($sqty==1) {
+           $where .= "  and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id ) <0 ";
+        }
+
 
 
         $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
-            $cstr = "    store_id in ({$cstr})  and   ";
+            $cstr = "    store_id in ({$cstr})      ";
         }
         if(\App\System::getUser()->showotherstores) {
             $cstr ="";
 
         }
+        if(strlen(trim($cstr))==0) {
+            $cstr = "1=1 ";
+        }
+        
         $cat = $form->searchcat->getValue();
         $store = $form->searchstore->getValue();
 
@@ -435,9 +451,9 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
             }
         }
         if ($store > 0) {
-            $where = $where . " and item_id in (select item_id from store_stock where {$cstr}  qty <> 0 and store_id={$store}) ";
+            $where = $where . " and item_id in (select item_id from store_stock where {$cstr}   and store_id={$store}) ";
         } else {
-            $where = $where . " and item_id in (select item_id from store_stock where  {$cstr}  qty <> 0) ";
+            $where = $where . " and item_id in (select item_id from store_stock where  {$cstr}  ) ";
         }
         $text = trim($form->searchkey->getText());
         if (strlen($text) > 0) {
