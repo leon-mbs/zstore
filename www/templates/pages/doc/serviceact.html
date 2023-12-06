@@ -670,11 +670,12 @@
                        }
                      }          
                      
-                    $("#modalwait").modal("show") ;           
+                    document.getElementById('dialogwait').showModal()          
                     callPM('save',[ ], data,(data)=> 
                       {
                            
-                           
+                       document.getElementById('dialogwait').close()    
+                       
                            if(false==checkPMAnswer(data) )   {
                                if(data.newnumber)  this.document_number = data.newnumber
                                return
