@@ -24,15 +24,17 @@ class Update extends \App\Pages\Base
      public function __construct() {
         parent::__construct();
  
+        $this->_tvars['show']  = false   ; 
  
- 
-        $json = @file_get_contents("https://zippy.com.ua/version_test.json");
+        $json = @file_get_contents("https://zippy.com.ua/version.json");
         
         $data = @json_decode($json,true) ;
         if($data == null){
-            $this->setError('Посидка завантаження  json') ;
+            $this->setError('Помилка завантаження  json') ;
             return  ;
         }
+        $this->_tvars['show']  = true   ;
+        
         $this->_tvars['newver']  = $data['version']   ;
         $this->_tvars['notes']  = $data['notes']   ;
         $this->_tvars['archive']  = $data['archive']   ;
