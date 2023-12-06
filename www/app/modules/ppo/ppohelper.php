@@ -461,7 +461,7 @@ class PPOHelper
         }
           
         foreach ($doc->unpackDetails('detaildata') as $item) {
-            $item->price = $item->price * $disc ;
+            $item->price = round($item->price * $disc *100)/100 ;
             $header['details'][] = array(
                 'num'   => "ROWNUM=\"{$n}\"",
                 'name'  => $item->itemname,
@@ -474,7 +474,7 @@ class PPOHelper
 
         }
         foreach ($doc->unpackDetails('services') as $item) {
-            $item->price = $item->price*$disc;
+            $item->price = round($item->price * $disc *100)/100 ;
             $header['details'][] = array(
                 'num'   => "ROWNUM=\"{$n}\"",
                 'name'  => $item->service_name,
@@ -488,7 +488,7 @@ class PPOHelper
         
         $sum=0;
         foreach($header['details'] as $p ) {
-           $sum += $p['cost'] ;
+           $sum += ($p['price'] * $p['qty'] );
          
         }        
         
