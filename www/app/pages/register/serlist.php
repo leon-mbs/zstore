@@ -57,7 +57,7 @@ class SerList extends \App\Pages\Base
 
         $this->statuspan->add(new Form('statusform'));
 
-        $this->statuspan->statusform->add(new SubmitButton('binvoice'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bpos'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bwarranty'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bfin'))->onClick($this, 'statusOnSubmit');
 
@@ -140,7 +140,7 @@ class SerList extends \App\Pages\Base
 
         $state = $this->_doc->state;
 
-        $invoice = count($this->_doc->getChildren('Invoice')) > 0;
+
         $gi = count($this->_doc->getChildren('GoodsIssue')) > 0;
         $task = count($this->_doc->getChildren('Task')) > 0;
 
@@ -151,10 +151,7 @@ class SerList extends \App\Pages\Base
             }
             App::Redirect("\\App\\Pages\\Doc\\Task", 0, $this->_doc->document_id);
         }
-        if ($sender->id == "binvoice") {
-            if ($invoice) {
-                $this->setWarn('Вже існує документ РФ');
-            }
+        if ($sender->id == "bpos") {
             App::Redirect("\\App\\Pages\\Doc\\Invoice", 0, $this->_doc->document_id);
         }
         if ($sender->id == "bwarranty") {
@@ -203,7 +200,7 @@ class SerList extends \App\Pages\Base
             $this->statuspan->statusform->binproc->setVisible(true);
             $this->statuspan->statusform->bwarranty->setVisible(true);
 
-            $this->statuspan->statusform->binvoice->setVisible(false);
+            $this->statuspan->statusform->bpos->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bfin->setVisible(false);
@@ -216,7 +213,7 @@ class SerList extends \App\Pages\Base
             $this->statuspan->statusform->binproc->setVisible(false);
 
             $this->statuspan->statusform->bwarranty->setVisible(true);
-            $this->statuspan->statusform->binvoice->setVisible(true);
+            $this->statuspan->statusform->bpos->setVisible(true);
             $this->statuspan->statusform->bref->setVisible(true);
             $this->statuspan->statusform->btask->setVisible(true);
             $this->statuspan->statusform->bfin->setVisible(true);
@@ -228,7 +225,7 @@ class SerList extends \App\Pages\Base
             $this->statuspan->statusform->binproc->setVisible(false);
 
             $this->statuspan->statusform->bwarranty->setVisible(true);
-            $this->statuspan->statusform->binvoice->setVisible(false);
+            $this->statuspan->statusform->bpos->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bfin->setVisible(false);
@@ -239,7 +236,7 @@ class SerList extends \App\Pages\Base
             $this->statuspan->statusform->binproc->setVisible(false);
 
             $this->statuspan->statusform->bwarranty->setVisible(false);
-            $this->statuspan->statusform->binvoice->setVisible(false);
+            $this->statuspan->statusform->bpos->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bfin->setVisible(false);
@@ -259,7 +256,7 @@ class SerList extends \App\Pages\Base
             $this->statuspan->statusform->binproc->setVisible(false);
 
             $this->statuspan->statusform->bwarranty->setVisible(false);
-            $this->statuspan->statusform->binvoice->setVisible(false);
+            $this->statuspan->statusform->bpos->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bfin->setVisible(false);

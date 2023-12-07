@@ -24,23 +24,7 @@ class Main extends Base
     public function __construct() {
         parent::__construct();
 
-        $this->_tvars['curversion'] = System::CURR_VERSION;
-        $this->_tvars['curversionbd'] = System::getOptions('version', false);
 
-        $v= \App\Helper::checkVer()  ;
-            
-        if(strlen($v) >0){
-           $this->_tvars['newversion']  = " Доступна нова версiя <b>{$v}</b> <a href=\"/index.php?p=App/Pages/Update\">Перейти...</a> ";                
-        } else{
-           $this->_tvars['newversion']  = '';
-        }
-        if($this->_tvars['curversionbd'] != System::REQUIRED_DB){
-           $this->_tvars['reqversion']  = " Версiя БД має  бути <b>".System::REQUIRED_DB."!</b>";                
-        } else{
-           $this->_tvars['reqversion']  = '';
-        }
-        
-        
         
         $user = System::getUser();
 

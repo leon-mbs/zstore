@@ -6,14 +6,40 @@
 <body>
  <div class="row">
     <div class="col-12 col-lg-10 ml-2"   >
-        <h3>Оновлення</h3>
-        
+        <h2>Оновлення</h2>
+  
+           <div class="row  mb-4  ">
+            
+             <div class="col-12  "  >
+             <span>  Версiя програми <b>{{curversion}}</b>. </span>
+             {{#actual}}
+             &nbsp; <span>Версія   актуальна</span>
+             {{/actual}}       
+            </div>
+            <div class="col-12  "  >
+               Версiя БД <b>{{curversionbd}}</b> 
+               &nbsp;&nbsp; <span class="text-danger"> {{{reqversion}}} </span>
+            </div>
+          </div>
+           
+      <div class="row  ">
+  
+         {{#tooold}}
+       <div class="col-12  ">
+  
+          <span>Пропущено  кілька оновлень </span>
+           <br>Перейдіть на  <a href="https://zippy.com.ua/update">історію версій </a> 
+            і виконайте послідовне оновлення
+     </div>  
+         {{/tooold}}
+ 
+         
          {{#show}}
-        
-        <span>Нова  версія <b>{{newver}}</b></span>
-         <br>Повна  <a href="https://zippy.com.ua/update">історія  оновлень</a>
-        <br>
-        <br>
+    </div>  
+        <h5> <i class="fa fa-exclamation-circle"></i> Доступна  версія <b>{{newver}}</b></h5>
+         
+     </div>  
+   </div>  
          <h5>Перелік змін</h5>
            <p>
           <ul style=" line-height: 1.4em;"  >
@@ -25,10 +51,16 @@
          <p>
           {{notes}}
           </p>
+        <small>   Повна  <a href="https://zippy.com.ua/update">історія  оновлень</a>  </small>                  
+
+          
+          
           <br><br>Для  оновлення завантажити <a href="{{archive}}" >архів</a>  або  перейти на  <a href="{{github}}">GitHib</a>
-          
-           {{/show}}
-          
+   </div>          
+        {{/show}}
+        {{#showbd}}
+        {{/showbd}}
+    </div>         
   </div>        
 </div>        
   

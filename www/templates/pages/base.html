@@ -974,6 +974,14 @@
                                             <p>&nbsp;&nbsp;Системний лог</p>
                                         </a>
                                     </li>
+                                  {{#isadmin}}                                    
+                                   <li class="nav-item">
+                                        <a href="/index.php?p=App/Pages/Update" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>&nbsp;&nbsp;Оновлення</p>
+                                        </a>
+                                    </li>
+                                     {{/isadmin}} 
                                 </ul>
 
                             </li>
