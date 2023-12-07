@@ -167,7 +167,7 @@ class Discounts extends \App\Pages\Base
         $this->ptab->listpan->add(new DataView('plist', new PromoDataSource($this), $this, 'promolistOnRow'));
         $this->ptab->listpan->plist->setPageSize(H::getPG());
         $this->ptab->listpan->add(new \Zippy\Html\DataList\Pager('ppag', $this->ptab->listpan->plist));
-        $this->ptab->listpan->plist->Reload();
+     //   $this->ptab->listpan->plist->Reload();
         
         $this->ptab->add(new Panel('formpan'))->setVisible(false) ;
         $this->ptab->formpan->add(new Form('pform'))->onSubmit($this,"savePCode") ;
@@ -180,7 +180,7 @@ class Discounts extends \App\Pages\Base
         $this->ptab->formpan->pform->peditcust->setVisible(false);
         $this->ptab->formpan->pform->peditref->setVisible(false);
         $this->ptab->formpan->pform->add(new DropDownChoice('paddtype'))->onChange($this,"onPType") ;
-        $this->ptab->listpan->plist->Reload();
+    //    $this->ptab->listpan->plist->Reload();
 
       
     }
