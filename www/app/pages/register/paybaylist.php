@@ -69,7 +69,7 @@ class PayBayList extends \App\Pages\Base
         $this->paypan->add(new Label("pname"));
         $this->paypan->add(new Form('payform'))->onSubmit($this, 'payOnSubmit');
         $this->paypan->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
-        $this->paypan->payform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', "details like '%<usefisc>1</usefisc>%' "), 0));
+
         $this->paypan->payform->add(new TextInput('pamount'));
         $this->paypan->payform->add(new TextInput('pcomment'));
         $this->paypan->payform->add(new Date('pdate', time()));
@@ -332,7 +332,7 @@ GROUP BY c.customer_name,
 
     public function payOnSubmit($sender) {
         $form = $this->paypan->payform;
-        $pos_id = $form->pos->getValue();
+
         $amount = $form->pamount->getText();
         $pdate = $form->pdate->getDate();
         if ($amount == 0) {
@@ -376,65 +376,7 @@ GROUP BY c.customer_name,
 
         }
 
-       if ($pos_id > 0) {
-            $pos = \App\Entity\Pos::load($pos_id);
-
-
-            if($pos->usefisc == 1 && $this->_tvars['checkbox'] == true) {
-
-                $cb = new  \App\Modules\CB\CheckBox($pos->cbkey, $pos->cbpin) ;
-                $ret = $cb->Payment($this->_doc, $amount, $form->payment->getValue()) ;
-
-                if(is_array($ret)) {
-                    $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
-                    $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
-                    $this->_doc->headerdata["checkbox"] = $ret['checkid'];
-                } else {
-                    $this->setError($ret);
-
-                    return;
-
-                }
-
-
-            }
-            if($pos->usefisc == 1 && $pos->usefisc == 1 && $this->_tvars['vkassa'] == true) {
-               // $vk = new  \App\Modules\VK\VK($pos->vktoken) ;
-  
-            }
  
-            if ($pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
-
-
-
-                $this->_doc->headerdata["fiscalnumberpos"]  =  $pos->fiscalnumber;
-
-                $ret = \App\Modules\PPO\PPOHelper::checkpay($this->_doc, $pos_id, $amount, $form->payment->getValue());
-                if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
-                    //повторяем для  нового номера
-                    $pos->fiscdocnumber = $ret['doclocnumber'];
-                    $pos->save();
-                    $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
-                }
-                if ($ret['success'] == false) {
-                    $this->setErrorTopPage($ret['data']);
-                    return;
-                } else {
-
-                    if ($ret['docnumber'] > 0) {
-                        $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                        $pos->save();
-                        $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
-                    } else {
-                        $this->setError("Не повернено фіскальний номер");
-                        return;
-                    }
-                }
-            }
-            
-            
-        }
-       
         $payed =   Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(), $form->pcomment->getText());
         \App\Entity\IOState::addIOState($this->_doc->document_id, $amount, $type);
 

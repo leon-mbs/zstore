@@ -471,6 +471,7 @@ class DocList extends \App\Pages\Base
         $this->doclist->Reload(true);
 
     }
+   
     public function cancelOnClick($sender) {
         $this->docview->setVisible(false);
 
@@ -680,7 +681,8 @@ class DocList extends \App\Pages\Base
 
         }
     }
-  public function QrOnClick($sender) {
+ 
+    public function QrOnClick($sender) {
               
             $doc=$sender->owner->getDataItem();
             $url =_BASEURL . 'doclink/' . $doc->headerdata['hash'] ;

@@ -109,7 +109,7 @@ class SerList extends \App\Pages\Base
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
 
-        $row->add(new Label('number', $doc->document_number));
+        $row->add(new ClickLink('number', $this, 'showOnClick'))->setValue($doc->document_number);
 
         $row->add(new Label('date', H::fd($doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));
@@ -139,6 +139,8 @@ class SerList extends \App\Pages\Base
         }
 
         $state = $this->_doc->state;
+        $list = $this->_doc->getChildren('POSCheck');
+        $pos = count($list) > 0;
 
 
         $gi = count($this->_doc->getChildren('GoodsIssue')) > 0;
@@ -150,13 +152,20 @@ class SerList extends \App\Pages\Base
                 $this->setWarn('Вже існує документ Наряд');
             }
             App::Redirect("\\App\\Pages\\Doc\\Task", 0, $this->_doc->document_id);
+            return;
         }
         if ($sender->id == "bpos") {
-            App::Redirect("\\App\\Pages\\Doc\\Invoice", 0, $this->_doc->document_id);
+            if ($pos) {
+                $this->setWarn('Вже існує документ Чек');
+            }
+            App::Redirect("\\App\\Pages\\Service\\ARMPos", 0, $this->_doc->document_id);
+            return;
+
         }
         if ($sender->id == "bwarranty") {
  
             App::Redirect("\\App\\Pages\\Doc\\Warranty", 0, $this->_doc->document_id);
+            return;            
         }
         if ($sender->id == "bref") {
             if ($gi || $task) {
@@ -262,6 +271,11 @@ class SerList extends \App\Pages\Base
             $this->statuspan->statusform->bfin->setVisible(false);
             $this->statuspan->statusform->setVisible(false);
         }
+        
+        if ($this->_doc->hasPayments()) {
+            $this->statuspan->statusform->bpos->setVisible(false);
+        }
+        
     }
 
     //просмотр

@@ -367,6 +367,8 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->bonus->setText('0');
         $this->docpanel->form2->totaldisc->setText('0');
 
+ 
+        
         $this->docpanel->form3->payamount->setText('0');
         $this->docpanel->form3->payed->setText('0');
         $this->docpanel->form3->payedcard->setText('0');
@@ -393,11 +395,24 @@ class ARMPos extends \App\Pages\Base
         }
         if($this->_basedocid >0) { //на основании
             
-            $bdoc = Document::load($this->_basedocid);
-            
-            
-            
-            $this->loadDoc($doc);
+            $bd = Document::load($this->_basedocid) ;
+            $this->docpanel->form2->bonus->setText($bd->headerdata['bonus']);
+            $this->docpanel->form2->totaldisc->setText($bd->headerdata['totaldisc']);
+            $this->_doc->parent_id=$this->_basedocid;
+   
+            $this->docpanel->form2->customer->setKey($bd->customer_id);
+            $this->docpanel->form2->customer->setText($bd->customer_id);
+            if($bd->meta_name=='ServiceAct') {
+                $this->_itemlist = $bd->unpackDetails('detail2data');
+                $this->_serlist =  $bd->unpackDetails('detaildata');
+            }
+            if($bd->meta_name=='Order') {
+                $this->_itemlist = $bd->unpackDetails('detaildata');
+            }
+
+            $this->docpanel->form2->detail->Reload();
+            $this->docpanel->form2->detailser->Reload();
+            $this->calcTotal();          
           
             $this->_basedocid = 0;
         }
@@ -405,7 +420,7 @@ class ARMPos extends \App\Pages\Base
 
     }
 
-    //к  оплате      ALTER TABLE Survey ADD TemplateId [int]   NULL
+    //к  оплате      
     public function topayOnClick($sender) {
         if (count($this->_itemlist) == 0 && count($this->_serlist) == 0) {
             $this->setError('Не введено позиції');
@@ -1102,6 +1117,8 @@ class ARMPos extends \App\Pages\Base
         $this->newdoc(null)  ;
     }
 
+    
+    //оплатить
     public function savedocOnClick($sender) {
 
         $this->_doc->document_number = $this->docpanel->form3->document_number->getText();
@@ -1146,9 +1163,7 @@ class ARMPos extends \App\Pages\Base
             $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
             return;
         }
-
-
-
+ 
         if (doubleval($this->_doc->headerdata['bonus']) >0 && $this->_doc->customer_id == 0) {
             $this->setError("Якщо у борг    або нарахування бонусів має бути обраний контрагент");
             return;
@@ -1165,8 +1180,7 @@ class ARMPos extends \App\Pages\Base
             $this->setError("При оплаті карткою решта має бути 0");
             return;
         }
-
-
+ 
         $this->_doc->headerdata['pos'] = $this->pos->pos_id;
         $this->_doc->headerdata['pos_name'] = $this->pos->pos_name;
         $this->_doc->headerdata['store'] = $this->_store_id;
@@ -1190,6 +1204,18 @@ class ARMPos extends \App\Pages\Base
         $conn->BeginTrans();
         try {
 
+            
+            if($this->_doc->parent_id >0) {
+                $bd = Document::load($this->_doc->parent_id);
+                $bd->payamount = 0;
+                $bd->payed = 0;
+                $bd->save();
+                if($bd->status==Document::STATE_WP) {
+                   $bd->updateStatus(Document::STATE_PAYED);
+           
+                }
+            }
+            
             // проверка на минус  в  количестве
             $allowminus = System::getOption("common", "allowminus");
             if ($allowminus != 1) {
@@ -1313,9 +1339,7 @@ class ARMPos extends \App\Pages\Base
             $this->docpanel->formcheck->qrpaybtn->setVisible(true);
             $this->qrimg->setText($qr['qr'], true);
         }
-
-
-
+  
 
     }
 
