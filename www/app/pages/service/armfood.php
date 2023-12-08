@@ -734,6 +734,8 @@ class ARMFood extends \App\Pages\Base
             $this->orderlistpan->setVisible(false);
             $this->orderlistpan->statuspan->setVisible(false);
             $this->docpanel->setVisible(true);
+            $this->docpanel->navform->setVisible(true);
+            $this->docpanel->listsform->setVisible(true);
             $this->docpanel->listsform->clean();
 
             $this->docpanel->listsform->notes->setText($this->_doc->notes);
@@ -744,7 +746,8 @@ class ARMFood extends \App\Pages\Base
             $this->docpanel->listsform->cinfo->setVisible(true) ;
             $this->docpanel->listsform->forbar->setChecked($this->_doc->headerdata['forbar']);
             $this->docpanel->listsform->execuser->SetValue($this->_doc->user_id);
-
+            $this->docpanel->listsform->btopay->setVisible(true);
+  
             if ($this->_doc->customer_id > 0) {
                 $this->docpanel->listsform->customer->setKey($this->_doc->customer_id);
                 $this->docpanel->listsform->customer->setText($this->_doc->customer_name);
@@ -787,6 +790,9 @@ class ARMFood extends \App\Pages\Base
             $this->docpanel->navform->setVisible(false);
             $this->docpanel->payform->clean();
             $amount = $this->_doc->payamount;
+            $bonus = $this->_doc->headerdata["bonus"] ;
+            $totaldisc = $this->_doc->headerdata["totaldisc"] ;
+            $amount =  H::fa($amount - floatval($totaldisc)  - floatval($bonus)) ;
 
 
             $this->docpanel->payform->pfforpay->setText(H::fa($amount));
@@ -882,7 +888,8 @@ class ARMFood extends \App\Pages\Base
         if ($this->createdoc() == false) {
             return;
         }
-
+  
+       
         $this->toprod()  ;
 
         $this->onNewOrder();
@@ -909,7 +916,7 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->save();
 
 
-        if($this->_doc->state== Document::STATE_NEW) {
+        if($this->_doc->state== Document::STATE_NEW  || $this->_doc->state== Document::STATE_EDITED) {
             $this->_doc->updateStatus(Document::STATE_INPROCESS);
             $n->message = serialize(array('cmd' => 'new','document_id'=>$this->_doc->document_id));
 
@@ -923,6 +930,12 @@ class ARMFood extends \App\Pages\Base
     }
 
 
+   // проверка
+    public function checkdoc( ) {
+  
+        
+        return true;
+    }
     // сохранить
     public function tosaveOnClick($sender) {
 
@@ -931,7 +944,7 @@ class ARMFood extends \App\Pages\Base
             return;
         }
 
-
+   
 
         if($this->_doc->state != Document::STATE_NEW) {
             $this->_doc->updateStatus(Document::STATE_EDITED);
@@ -1219,6 +1232,11 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->headerdata["totaldisc"] = $this->docpanel->listsform->totaldisc->getText();
         $this->_doc->headerdata["bonus"] = $this->docpanel->listsform->bonus->getText();
 
+        if($this->_doc->customer_id==0  && ( $this->_doc->headerdata["bonus"] >0  || $this->_doc->headerdata["totaldisc"] >0  ) ) {
+            $this->setError('Якщо знижка  або  бонуси має бути вибраний  контрагент');
+            return false;
+        }
+        
         $this->_doc->packDetails('detaildata', $this->_itemlist);
         $this->_doc->amount = $this->docpanel->listsform->totalamount->getText();
         $this->_doc->payamount = $this->_doc->amount;
@@ -1381,7 +1399,7 @@ class ARMFood extends \App\Pages\Base
         return json_encode($itemlist, JSON_UNESCAPED_UNICODE);
     }
 
-public function OnPrint($sender) {
+    public function OnPrint($sender) {
 
 
         if(intval(\App\System::getUser()->prtype) == 0) {
