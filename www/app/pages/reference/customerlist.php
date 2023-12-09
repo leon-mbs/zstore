@@ -36,7 +36,7 @@ class CustomerList extends \App\Pages\Base
     public $_leadstatuseslist = array();
     public $_leadsourceslist = array();
     public $_bonuses = array(); // бонусы  по  контраоентам
-    public $_bonuslist = array(); //история бонусов  контрагента
+
     public $_tag = '' ; 
 
     public function __construct($id = 0) {
@@ -115,7 +115,7 @@ class CustomerList extends \App\Pages\Base
 
         $this->add(new Panel('contentview'))->setVisible(false);
         $this->contentview->add(new ClickLink('back'))->onClick($this, 'cancelOnClick');
-        $this->contentview->add(new Label('b_total'));
+
         $this->contentview->add(new Label('concname'));
         $this->contentview->add(new Label('concreated'));
         $this->contentview->add(new Label('conlastdoc'));
@@ -168,7 +168,7 @@ class CustomerList extends \App\Pages\Base
         $this->leadstatusesform->add(new DataView('leadstatuseslist', new ArrayDataSource(new Bind($this, '_leadstatuseslist')), $this, 'leadstatusListOnRow'));
 
         $this->contentview->add(new DataView('dw_contr', new ArrayDataSource(new Bind($this, '_contrlist')), $this, 'contrListOnRow'));
-        $this->contentview->add(new DataView('dw_bonus', new ArrayDataSource(new Bind($this, '_bonuslist')), $this, 'bonusListOnRow'));
+
 
         if ($id > 0) {
             $this->_customer = Customer::load($id);
@@ -494,7 +494,7 @@ class CustomerList extends \App\Pages\Base
             $lastdoc = "Останній документ {$doc->document_number} від ".Helper::fd($doc->document_date).". Всього " .$this->_customer->docs    ;
         }
 
-        $this->contentview->b_total->setText($this->_customer->getBonus());
+
         $this->contentview->concreated->setText($created);
         $this->contentview->conlastdoc->setText($lastdoc);
         $this->contentview->conphone->setText($this->_customer->phone);
@@ -507,7 +507,7 @@ class CustomerList extends \App\Pages\Base
         $this->updateMessages();
         $this->updateEvents();
         $this->updateContrs();
-        $this->updateBonus();
+
         
         $this->_tag='';
          
@@ -670,11 +670,7 @@ class CustomerList extends \App\Pages\Base
         $this->_contrlist = \App\Entity\Contract::find(' disabled<> 1 and  customer_id=' . $this->_customer->customer_id);
         $this->contentview->dw_contr->Reload();
     }
-    private function updateBonus() {
-        $this->_bonuslist = $this->_customer->getBonuses();
-        $this->contentview->dw_bonus->Reload();
-    }
-
+ 
     //вывод строки  коментария
     public function eventListOnRow(DataRow $row) {
         $event = $row->getDataItem();

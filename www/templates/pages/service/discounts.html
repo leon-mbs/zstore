@@ -26,12 +26,12 @@
                 <div zippy="otab" >
 
                     <div class="row">
-                        <div class="col-12 col-md-6 col-xl-4   ">
+                        <div class="col-12 col-md-6 col-xl-5   ">
                              <small>Бонуси не  нараховуються  якщо задана знижка</small>
                             <form zippy="commonform">
                                 <div class="form-group">
                                     <label for="firstbay">Бонуси від суми першої покупки, % від суми</label>
-                                    <input zippy="firstbay"  pattern="[0-9,\.]+" style="width:100px"  class="form-control qtyprice" type="text">
+                                    <input zippy="firstbay"  pattern="[0-9,\.]+" style="width:100px "  class="form-control qtyprice" type="text">
                                 </div>
                                 <div class="form-group">
                                     <label ><b>Бонуси від суми покупки</b></label>
@@ -81,12 +81,69 @@
                                     <button class="btn btn-success" type="submit">Зберегти</button>
                                 </div>
                             </form>
+                            
+                            <h5> Постiйнi бонуси</h5>
+                            <div class="navbar nav  ">
+                                <form zippy="pbfilter" class="form-inline ">
+
+                                    <label for="pbsearchkey">Контрагент</label>
+                                    <input placeholder="Почнiть вводити..." class="form-control mr-sm-2" type="text" zippy="pbsearchkey">
+                                    <label for="pbsearchbon">бонус</label>
+                                    <input class="form-control qtyprice mr-sm-2" type="text" zippy="pbsearchbon" pattern="[0-9]+" style="width:50px;">
+                                    <input class="btn btn-success " type="submit" value="Додати"  >
+
+                                </form> 
+                            </div>                            
+                                   <table class="table    table-sm mt-2">
+                                    <tr>
+                                        <th >Контрагент </th>
+                                        <th >Тел. </th>
+                                        <th  class="text-right" >Бонус</th>
+                                        <th > </th>
+                                    </tr>
+                                    <tr  zippy="pblist">
+                                        <td zippy="pbname"></td>
+                                        <td zippy="pbphone"></td>
+                                        <td  class="text-right" zippy="pbbonus"> </td>
+                                        <td  ><a zippy="pbdel"><i class="fa fa-trash"></i></a></td>
+                                    </tr>
+                                </table>
+                                <div zippy="pbpag"></div>                        
+                        </div>
+                        
+                        <div class="col-12 col-md-6 col-xl-6   ">
+                            <h5> Нарахованi бонуси</h5> 
+                           <div class="navbar nav  ">
+                                <form zippy="blfilter" class="form-inline ">
+                                    <input placeholder="Контрагент..." class="form-control " type="search"  zippy="blsearch">
+                                    <input class="btn btn-success " type="submit" value="OK"  >
+
+                                </form> 
+                            </div>  
+                               <table class="table    table-sm  ">
+                                    <tr  zippy="listbon">
+                                        <td zippy="lbname"></td>
+                                        <td zippy="lbphone"></td>
+                                        <td class="text-right" zippy="lbbonus"> </td>
+                                        <td  >   
+                                              <details>
+                                                <summary><b>Iсторiя</b></summary>
+                                                 <table class="ctable" style="font-size:smaller" zippy="lbdetail">
+                                                 </table>
+                                              </details>
+                                        </td>
+
+                                    </tr>
+                                </table>
+                                <div zippy="lbpag"></div>                             
+
+                                             
                         </div>
                     </div>
                 </div>
                 <div zippy="ctab">
                     <div class="row">
-                        <div class="col-12 col-md-8 col-xl-6   ">
+                        <div class="col-12 col-md-7 col-xl-5   ">
                             <small> <i class="fa fa-exclamation-triangle"></i> Якщо заданi знижки, бонуси не використовуються </small>
                             <h5> Накопичувальнi знижки (вiд суми всiх покупок )</h5>
                                <div class="row">
@@ -140,6 +197,8 @@
                             </form>
                              </div>
                              </div>
+                             </div>
+                         <div class="col-12 col-md-8 col-xl-6   ">    
                             <h5> Постiйнi знижки</h5>
                             <div class="navbar nav  ">
                                 <form zippy="cfilter" class="form-inline ">

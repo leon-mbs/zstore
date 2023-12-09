@@ -33,6 +33,9 @@ class Customer extends \ZCL\DB\Entity
         if (doubleval($this->discount) > 0) {
             $this->detail .= "<discount>{$this->discount}</discount>";
         }
+        if (doubleval($this->pbonus) > 0) {
+            $this->detail .= "<pbonus>{$this->pbonus}</pbonus>";
+        }
 
 
         $this->detail .= "<type>{$this->type}</type>";
@@ -68,6 +71,7 @@ class Customer extends \ZCL\DB\Entity
         $xml = simplexml_load_string($this->detail);
 
         $this->discount = doubleval($xml->discount[0]);
+        $this->pbonus = round($xml->pbonus[0]);
 
         $this->type = (int)($xml->type[0]);
         $this->jurid = (int)($xml->jurid[0]);
