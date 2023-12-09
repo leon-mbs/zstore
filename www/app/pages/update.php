@@ -22,14 +22,16 @@ class Update extends \App\Pages\Base
 {
     
      public function __construct() {
+        global $_config; 
         parent::__construct();
  
+        $this->add(new  ClickLink('updatesql',$this,'OnSqlUpdate')) ;
  
         $this->_tvars['curversion'] = System::CURR_VERSION;
-        $this->_tvars['curversionbd'] = System::getOptions('version', false);
+        $this->_tvars['curversiondb'] = System::getOptions('version', false);
 
  
-        if($this->_tvars['curversionbd'] != System::REQUIRED_DB){
+        if($this->_tvars['curversiondb'] != System::REQUIRED_DB){
            $this->_tvars['reqversion']  = " Версiя БД має  бути <b>".System::REQUIRED_DB."!</b>";                
         } else{
            $this->_tvars['reqversion']  = '';
@@ -37,10 +39,12 @@ class Update extends \App\Pages\Base
         
         
  
- 
+        $this->_tvars['showdb']  = false   ;
+
         $this->_tvars['show']  = false   ; 
  
         $json = @file_get_contents("https://zippy.com.ua/version.json");
+        $json = @file_get_contents("http://local.site/version.json");
         
         $data = @json_decode($json,true) ;
         if($data == null){
@@ -82,8 +86,71 @@ class Update extends \App\Pages\Base
         }
         
         
+        if (strlen($data['sqlm']) >0) {
+
+          $this->_tvars['showdb']  = true   ;
+          $sqlurl= $data['sqlm'] ;
+          if($_config['db']['driver'] == 'postgres'){
+            $sqlurl= $data['sqlp'] ;              
+          }             
+          $this->_tvars['sqlurl']  = $sqlurl  ;
+          $this->_tvars['sql']  =  file_get_contents($sqlurl)   ;
+             
+          
+        }          
 
     }   
-    
+ 
+    public function OnSqlUpdate($sender)   {
+       global $_config; 
+  
+       $sql= file_get_contents($this->_tvars['sqlurl'] )  ;
+       if(strlen($sql)==0) {
+           $this->setError('Не знайдено  файл оновлення')  ;
+           return;
+       }
+       
+       
+       $sql_array = explode(';',$sql) ;
+       
+    //   $db=\Zdb\db::getConnect()  ;
+       
+       try{
+         
+         $b= mysqli_connect($_config['db']['host'], $_config['db']['pass'], $_config['db']['user'], $_config['db']['name']) ; 
+         if($b ==false) {
+               $this->setErrorTopPage('Invalis connect')  ;
+               return;
+         } 
+         $error="";
+         foreach($sql_array as $s) {
+             $s = trim($s);
+             if(strlen($s)==0) {
+                 continue;
+             }
+             $r= mysqli_query($b,$s) ;
+             if($r ==false) {
+                   $msg=mysqli_error($b)  ;
+                   $this->setErrorTopPage($s.' '.$msg) ;
+                   return;
+             } 
+             // $db->Execute($sql) ; 
+             
+         }
+ 
+
+         $this->setSuccess('БД оновлена')  ;
+         App::Redirect("\\App\\Pages\\Update");
+         
+         
+       } catch(\Exception $e){
+            $msg = $e->getMessage()  ;
+     
+            $this->setErrorTopPage($msg)  ;
+   
+       }
+       
+ 
+    }
     
 }

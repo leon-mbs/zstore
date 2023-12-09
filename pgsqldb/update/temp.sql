@@ -3,7 +3,7 @@
 
  
 
- --  createdon
+
 DROP VIEW customers_view  ;
 
 

@@ -44,9 +44,9 @@ try {
 
 
 } catch (Throwable $e) {
-    if ($e instanceof ADODB_Exception) {
+    if ($e instanceof \ADODB_Exception) {
 
-        \ZDB\DB::getConnect()->CompleteTrans(false); // откат транзакции
+        \ZDB\DB::getConnect()->RollbackTrans(); // откат транзакции
     }
     $msg = $e->getMessage();
     $logger->error($e);

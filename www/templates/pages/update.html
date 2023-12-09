@@ -5,7 +5,7 @@
 </head>
 <body>
  <div class="row">
-    <div class="col-12 col-lg-10 ml-2"   >
+    <div class="col-12 col-lg-10 col-xl-6 ml-2"   >
         <h2>Оновлення</h2>
   
            <div class="row  mb-4  ">
@@ -17,7 +17,7 @@
              {{/actual}}       
             </div>
             <div class="col-12  "  >
-               Версiя БД <b>{{curversionbd}}</b> 
+               Версiя БД <b>{{curversiondb}}</b> 
                &nbsp;&nbsp; <span class="text-danger"> {{{reqversion}}} </span>
             </div>
           </div>
@@ -27,20 +27,23 @@
          {{#tooold}}
        <div class="col-12  ">
   
-          <span>Пропущено  кілька оновлень </span>
+        <i class="fa fa-exclamation-triangle"></i>  <b>Пропущено  кілька оновлень </b>
            <br>Перейдіть на  <a href="https://zippy.com.ua/update">історію версій </a> 
             і виконайте послідовне оновлення
      </div>  
          {{/tooold}}
  
          
-         {{#show}}
-    </div>  
-        <h5> <i class="fa fa-exclamation-circle"></i> Доступна  версія <b>{{newver}}</b></h5>
-         
-     </div>  
-   </div>  
-         <h5>Перелік змін</h5>
+       
+ 
+   
+    
+      {{#show}}
+      <div class="col-12  ">
+
+  
+     <i class="fa fa-exclamation-triangle"></i> <h5 style="display:inline">    Доступна  версія <b>{{newver}}</b></h5>
+         <br><b>Перелік змін</b>
            <p>
           <ul style=" line-height: 1.4em;"  >
             {{#list}}
@@ -52,17 +55,38 @@
           {{notes}}
           </p>
         <small>   Повна  <a href="https://zippy.com.ua/update">історія  оновлень</a>  </small>                  
+          
+         <br>Для  оновлення завантажити <a href="{{archive}}" >архів</a>  або  перейти на  <a href="{{github}}">GitHib</a>
+   </div>   
+   
+     
+        {{#showdb}}       
+  
+     <div class="col-12 mt-4 ">  
 
-          
-          
-          <br><br>Для  оновлення завантажити <a href="{{archive}}" >архів</a>  або  перейти на  <a href="{{github}}">GitHib</a>
-   </div>          
+           <b>Оновлення бази данних</b>
+           <br>Завантажити  <a href="{{sqlurl}}" >sql скрипт</a>  для ручного оновлення
+           <br><small><i class="fa fa-exclamation-triangle"></i>  
+           
+           </small>
+           <br><br><a zippy="updatesql">Оновити автоматично</a>
+   </div>  
+            {{/showdb}}
+            
+            
+            
         {{/show}}
-        {{#showbd}}
-        {{/showbd}}
+        
     </div>         
   </div>        
 </div>        
-  
+ <script>
+       function check_updatesql(ele){
+            
+           document.getElementById('dialogwait').showModal()
+            return true;
+       
+        } 
+ </script> 
 </body>
 </html>
