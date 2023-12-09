@@ -44,7 +44,7 @@ class Update extends \App\Pages\Base
         $this->_tvars['show']  = false   ; 
  
         $json = @file_get_contents("https://zippy.com.ua/version.json");
-     //   $json = @file_get_contents("http://local.site/version.json");
+   //     $json = @file_get_contents("http://local.site/version_next.json");
         
         $data = @json_decode($json,true) ;
         if($data == null){
@@ -65,13 +65,12 @@ class Update extends \App\Pages\Base
            $this->_tvars['show']  = false   ;
           
         }        
-       if ($na[0] > ($ca[0]+1) || $na[1] > ($ca[1]+1) || $na[2] > ($ca[2]+1)  ) {
+        if ($na[0] > ($ca[0]+1) || $na[1] > ($ca[1]+1) || $na[2] > ($ca[2]+1)  ) {
 
-           $this->_tvars['tooold']  = true   ;
+           $this->_tvars['tooold']  = true   ;//пропущено несколько
            $this->_tvars['show']  = false   ;
           
         }        
-        
            
         
         
@@ -85,19 +84,24 @@ class Update extends \App\Pages\Base
            $this->_tvars['list'][] = array('item'=>$item)  ;
         }
         
-        
+        //одновлшение  БД
         if (strlen($data['sqlm']) >0) {
 
           $this->_tvars['showdb']  = true   ;
           $sqlurl= $data['sqlm'] ;
           if($_config['db']['driver'] == 'postgres'){
-            $sqlurl= $data['sqlp'] ;              
+              $sqlurl= $data['sqlp'] ;              
           }             
           $this->_tvars['sqlurl']  = $sqlurl  ;
           $this->_tvars['sql']  =  file_get_contents($sqlurl)   ;
              
           
-        }          
+        }  
+        
+       if($this->_tvars['curversiondb'] == System::REQUIRED_DB){
+              $this->_tvars['showdb']  = false;
+       }         
+                
 
     }   
  
@@ -119,10 +123,10 @@ class Update extends \App\Pages\Base
          
          $b= mysqli_connect($_config['db']['host'], $_config['db']['pass'], $_config['db']['user'], $_config['db']['name']) ; 
          if($b ==false) {
-               $this->setErrorTopPage('Invalis connect')  ;
+               $this->setErrorTopPage('Invalid connect')  ;
                return;
          } 
-         $error="";
+       
          foreach($sql_array as $s) {
              $s = trim($s);
              if(strlen($s)==0) {
