@@ -44,7 +44,7 @@ class Update extends \App\Pages\Base
         $this->_tvars['show']  = false   ; 
  
         $json = @file_get_contents("https://zippy.com.ua/version.json");
-        $json = @file_get_contents("http://local.site/version.json");
+     //   $json = @file_get_contents("http://local.site/version.json");
         
         $data = @json_decode($json,true) ;
         if($data == null){
