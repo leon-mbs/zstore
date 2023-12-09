@@ -122,6 +122,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editlost'));
 
         $this->itemdetail->add(new TextInput('editcell'));
+        $this->itemdetail->add(new TextInput('edituktz'));
         $this->itemdetail->add(new TextInput('editmsr'));
 
         $this->itemdetail->add(new DropDownChoice('editcat', Category::findArray("cat_name", "cat_id not in (select coalesce(parent_id,0) from item_cat  )", "cat_name"), 0));
@@ -296,6 +297,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editurl->setText($this->_item->url);
         $this->itemdetail->editweight->setText($this->_item->weight);
         $this->itemdetail->editcell->setText($this->_item->cell);
+        $this->itemdetail->edituktz->setText($this->_item->uktz);
         $this->itemdetail->editminqty->setText(\App\Helper::fqty($this->_item->minqty));
         $this->itemdetail->editzarp->setText(\App\Helper::fqty($this->_item->zarp));
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
@@ -403,6 +405,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->printqty = $this->itemdetail->editprintqty->getValue();
 
         $this->_item->cell = $this->itemdetail->editcell->getText();
+        $this->_item->uktz = $this->itemdetail->edituktz->getText();
         $this->_item->minqty = $this->itemdetail->editminqty->getText();
         $this->_item->zarp = $this->itemdetail->editzarp->getText();
         $this->_item->description = $this->itemdetail->editdescription->getText();

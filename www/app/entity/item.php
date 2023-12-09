@@ -75,6 +75,7 @@ class Item extends \ZCL\DB\Entity
         }
 
 
+        $this->uktz = (string)$xml->uktz[0];
         $this->cell = (string)$xml->cell[0];
         //  $this->octoreoptions = (string) $xml->octoreoptions[0];
         $brprice = (string)$xml->brprice[0];
@@ -128,6 +129,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<autoincome>{$this->autoincome}</autoincome>";
         $this->detail .= "<useserial>{$this->useserial}</useserial>";
 
+        $this->detail .= "<uktz>{$this->uktz}</uktz>";
         $this->detail .= "<cell>{$this->cell}</cell>";
         //   $this->detail .= "<octoreoptions><![CDATA[{$this->octoreoptions}]]></octoreoptions>";
         $this->detail .= "<manufacturer><![CDATA[{$this->manufacturer}]]></manufacturer>";
