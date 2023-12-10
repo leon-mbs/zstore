@@ -2,7 +2,7 @@
 
 namespace App\Modules\Shop\Pages\Catalog;
 
-use App\Modules\Shop\Comparelist;
+use App\Modules\Shop\CompareList;
 use App\Modules\Shop\Helper;
 use App\Application as App;
 use Zippy\Html\Label;
@@ -38,7 +38,7 @@ class Compare extends Base
     }
 
     public function update() {
-        $this->_comparelist = Comparelist::getCompareList()->list;
+        $this->_comparelist = CompareList::getCompareList()->list;
 
         $this->plist->Reload() ;
 
@@ -96,7 +96,7 @@ class Compare extends Base
     public function onDel($sender) {
         $item = $sender->getOwner()->getDataItem();
 
-        $comparelist = Comparelist::getCompareList();
+        $comparelist = CompareList::getCompareList();
         $comparelist->deleteProduct($item->item_id);
         if ($comparelist->isEmpty()) {
             $filter = \App\Filter::getFilter("ProductCatalog");

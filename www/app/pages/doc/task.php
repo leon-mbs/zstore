@@ -6,7 +6,7 @@ use App\Application as App;
 use App\Entity\Doc\Document;
 use App\Entity\Employee;
 use App\Entity\Equipment;
-use App\Entity\Prodarea;
+use App\Entity\ProdArea;
 use App\Entity\Service;
 use App\Entity\Item;
 use Zippy\Html\DataList\DataView;
@@ -50,7 +50,7 @@ class Task extends \App\Pages\Base
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
 
-        $this->docform->add(new DropDownChoice('parea', Prodarea::findArray("pa_name", ""), 0));
+        $this->docform->add(new DropDownChoice('parea', ProdArea::findArray("pa_name", ""), 0));
 
         //   $this->docform->add(new SubmitLink('addservice'))->onClick($this, 'addserviceOnClick');
         // $this->docform->add(new SubmitLink('addprod'))->onClick($this, 'addprodOnClick');

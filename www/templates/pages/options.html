@@ -198,11 +198,6 @@
                             </div>
 
                             <div class="form-check">
-                                <input zippy="modppo" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="modppo"> Фіскалізація (ПРРО)</label>
-                                <a href="https://zippy.com.ua/ext#6" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
-                            </div>
-                            <div class="form-check">
                                 <input zippy="modnp" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="modnp"> Iнтеграція з Нова Пошта</label>
                                 <a href="https://zippy.com.ua/ext#8" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
@@ -213,12 +208,33 @@
                                 <label class="form-check-label" for="modpaperless"> Iнтеграція з paperless.com.ua</label>
                                 <a href="https://zippy.com.ua/ext#7" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
                             </div>
+                            <!--
                             <div class="form-check">
                                 <input zippy="modcheckbox" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="modcheckbox"> Iнтеграція з CheckBox  </label>
                                 <a href="https://zippy.com.ua/ext#12" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
                             </div>
-                           
+                            <div class="form-check">
+                                <input zippy="modppo" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="modppo"> Фіскалізація (ПРРО)</label>
+                                <a href="https://zippy.com.ua/ext#6" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
+                            </div>
+                            
+                            
+                            -->
+                             <div class="form-group mt-2 ">
+                                <label for="modfisctype">Тип фіскалізації (ПРРО) </label>
+                                <select class="form-control" zippy="modfisctype">
+                                   <option value="0">Не використовується</option>
+                                   <option value="1">Вбудований ПРРО</option>
+                                   <option value="2">Iнтеграція з CheckBox</option>
+                                   <option value="3">Iнтеграція з ВчасноКаса </option>
+                                </select>
+                                <small><a title="Опис" href="https://zippy.com.ua/ext#6" target="_blank"><i class="fa fa-info-circle  "  ></i> Вбудований ПРРО</a>
+                                <br><a title="Опис" href="https://zippy.com.ua/ext#12" target="_blank"><i class="fa fa-info-circle  "  ></i> CheckBox</a>
+                                <br><a title="Опис" href="https://zippy.com.ua/ext#14" target="_blank"><i class="fa fa-info-circle  "  ></i> ВчасноКаса</a>
+                                <small>
+                            </div>      
                           
                         
                             <div class="form-group">

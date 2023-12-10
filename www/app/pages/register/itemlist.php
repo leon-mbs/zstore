@@ -62,6 +62,7 @@ class ItemList extends \App\Pages\Base
             $storelist = Store::getListAll() ;
 
         }
+        $this->filter->add(new DropDownChoice('searchqty', [], 0));
         $this->filter->add(new DropDownChoice('searchstore', $storelist, 0));
         $this->filter->add(new TextInput('searchbrand'));
         $this->filter->searchbrand->setDataList(Item::getManufacturers());
@@ -107,7 +108,18 @@ class ItemList extends \App\Pages\Base
 
         $qty = $item->getQuantity($store);
         $row->add(new Label('iqty', H::fqty($qty)));
-        $row->add(new Label('minqty', H::fqty($item->minqty)));
+      //  $row->add(new Label('minqty', H::fqty($item->minqty)));
+      
+        $inprice="";
+        if($this->_tvars['noshowpartion'] != true) {
+          $wh=  "item_id=".$item->item_id ;
+          if($store >0){   
+             $wh=$wh." and store_id=".$store;
+          }
+          $st=  Stock::getFirst($wh,"stock_id desc") ;
+          $inprice = $st->partion;
+        }
+        $row->add(new Label('inprice', H::fa($inprice)));
 
         $pt = $this->filter->searchprice->getValue();
         if($pt=='price') {
@@ -199,6 +211,9 @@ class ItemList extends \App\Pages\Base
         if ($stock->qty < 0) {
             $row->setAttribute('class', 'text-danger');
         }
+        if ($stock->qty < 0) {
+            $row->setAttribute('class', 'text-warn');
+        }
 
         $plist = array();
         if ($item->price1 > 0) {
@@ -219,7 +234,7 @@ class ItemList extends \App\Pages\Base
 
         $row->add(new Label('price', implode(',', $plist)));
 
-        //документпосдеднего обновления
+        //документ посдеднего обновления
         $entry =  \App\Entity\Entry::getFirst("quantity > 0 and stock_id=".$stock->stock_id, "entry_id desc") ;
         $doc =  \App\Entity\Doc\Document::load($entry->document_id) ;
         $row->add(new \Zippy\Html\Link\RedirectLink("blameddoc", "\\App\\Pages\\Register\\DocList", array($doc == null ? 0 : $doc->document_id )))->setValue($doc == null ? '' : $doc->document_number);
@@ -395,17 +410,29 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         $conn = $conn = \ZDB\DB::getConnect();
 
         $form = $this->page->filter;
-        $where = "   disabled <> 1 and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id ) <>0 ";
+        $sqty = $form->searchqty->getValue();
+        $where = "   disabled <> 1 ";
+        if($sqty==0) {
+           $where .= "  and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id ) >0 ";
+        }
+        if($sqty==1) {
+           $where .= "  and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id ) <0 ";
+        }
 
 
-        $cstr = \App\Acl::getStoreBranchConstraint();
+
+        $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
-            $cstr = "    store_id in ({$cstr})  and   ";
+            $cstr = "    store_id in ({$cstr})      ";
         }
         if(\App\System::getUser()->showotherstores) {
             $cstr ="";
 
         }
+        if(strlen(trim($cstr))==0) {
+            $cstr = "1=1 ";
+        }
+        
         $cat = $form->searchcat->getValue();
         $store = $form->searchstore->getValue();
 
@@ -424,9 +451,9 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
             }
         }
         if ($store > 0) {
-            $where = $where . " and item_id in (select item_id from store_stock where {$cstr}  qty <> 0 and store_id={$store}) ";
+            $where = $where . " and item_id in (select item_id from store_stock where {$cstr}   and store_id={$store}) ";
         } else {
-            $where = $where . " and item_id in (select item_id from store_stock where  {$cstr}  qty <> 0) ";
+            $where = $where . " and item_id in (select item_id from store_stock where  {$cstr}  ) ";
         }
         $text = trim($form->searchkey->getText());
         if (strlen($text) > 0) {
@@ -489,7 +516,7 @@ class DetailDataSource implements \Zippy\Interfaces\DataSource
         $where = "item_id = {$this->page->_item->item_id} and   qty <> 0   ";
         
         
-        $cstr = \App\Acl::getStoreBranchConstraint();
+        $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "  and  store_id in ({$cstr})      ";
         }

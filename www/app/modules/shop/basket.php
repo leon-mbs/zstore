@@ -57,9 +57,9 @@ class Basket implements \Zippy\Interfaces\DataSource
 
     public function deleteProduct($product_id) {
 
-        $this->list_ = $this->list;
+        $list_ = $this->list;
         $this->list = array();
-        foreach ($this->list_ as $p) {
+        foreach ($list_ as $p) {
             if ($p->item_id == $product_id) {
                 continue;
             }

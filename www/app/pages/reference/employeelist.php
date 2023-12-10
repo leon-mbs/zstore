@@ -181,6 +181,7 @@ class EmployeeList extends \App\Pages\Base
         $this->employeedetail->setVisible(true);
         // Очищаем  форму
         $this->employeedetail->clean();
+        $this->employeedetail->edithiredate->setDate(time());
         $this->employeedetail->editlogin->setOptionList(Employee::getFreeLogins());
         $this->employeedetail->editlogin->setValue('0');
         $this->employeedetail->editztype->setValue('1');
@@ -266,7 +267,7 @@ class EmployeeList extends \App\Pages\Base
         $from =  $this->accp->filters->from->getDate();
         $to =  $this->accp->filters->to->getDate();
 
-        $conn = \Zdb\DB::getConnect();
+        $conn = \ZDB\DB::getConnect();
 
         $sql = "select coalesce(sum(amount),0) from empacc where optype < 100 and  emp_id = {$emp_id} and createdon < " . $conn->DBDate($from);
 

@@ -7,6 +7,7 @@ use App\Entity\Customer;
 use App\Entity\Category;
 use App\Entity\Item;
 use App\Entity\Service;
+use App\Entity\PromoCode;
 use App\Helper as H;
 use App\System;
 use Zippy\Html\DataList\DataView;
@@ -37,16 +38,18 @@ class Discounts extends \App\Pages\Base
         if (false == \App\ACL::checkShowSer('Discounts')) {
             return;
         }
+        //кнопки
         $this->add(new ClickLink('tabo', $this, 'onTab'));
         $this->add(new ClickLink('tabc', $this, 'onTab'));
         $this->add(new ClickLink('tabi', $this, 'onTab'));
-
         $this->add(new ClickLink('tabs', $this, 'onTab'));
+        $this->add(new ClickLink('tabp', $this, 'onTab'));
+        //панели
         $this->add(new Panel('otab'));
         $this->add(new Panel('ctab'));
         $this->add(new Panel('itab'));
-
         $this->add(new Panel('stab'));
+        $this->add(new Panel('ptab'));
 
         $this->onTab($this->tabo);
 
@@ -153,6 +156,33 @@ class Discounts extends \App\Pages\Base
         $this->itab->add(new \Zippy\Html\DataList\Paginator('iopag', $this->itab->iolist));
         $this->itab->iolist->Reload();
 
+      
+        $this->ptab->add(new Panel('listpan')) ;
+        
+        $this->ptab->listpan->add(new Form('pfilter'))->onSubmit($this,"onFilterPromo");
+        $this->ptab->listpan->pfilter->add(new TextInput('psearchkey'));
+
+        $this->ptab->listpan->add(new ClickLink('pcodeadd'))->onClick($this,"onAddPromo");
+
+        $this->ptab->listpan->add(new DataView('plist', new PromoDataSource($this), $this, 'promolistOnRow'));
+        $this->ptab->listpan->plist->setPageSize(H::getPG());
+        $this->ptab->listpan->add(new \Zippy\Html\DataList\Pager('ppag', $this->ptab->listpan->plist));
+     //   $this->ptab->listpan->plist->Reload();
+        
+        $this->ptab->add(new Panel('formpan'))->setVisible(false) ;
+        $this->ptab->formpan->add(new Form('pform'))->onSubmit($this,"savePCode") ;
+        $this->ptab->formpan->pform->add(new ClickLink('cancelpadd'))->onClick($this,"cancelPCode") ;
+        $this->ptab->formpan->pform->add(new TextInput('peditcode'));
+        $this->ptab->formpan->pform->add(new Date('peditdate'));
+        $this->ptab->formpan->pform->add(new TextInput('peditdisc'));
+        $this->ptab->formpan->pform->add(new TextInput('peditref'));
+        $this->ptab->formpan->pform->add(new AutocompleteTextInput('peditcust'))->onText($this, 'OnAutoCustomer');
+        $this->ptab->formpan->pform->peditcust->setVisible(false);
+        $this->ptab->formpan->pform->peditref->setVisible(false);
+        $this->ptab->formpan->pform->add(new DropDownChoice('paddtype'))->onChange($this,"onPType") ;
+    //    $this->ptab->listpan->plist->Reload();
+
+      
     }
 
 
@@ -201,12 +231,14 @@ class Discounts extends \App\Pages\Base
         $this->_tvars['tabibadge'] = $sender->id == 'tabi' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
 
         $this->_tvars['tabsbadge'] = $sender->id == 'tabs' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
+        $this->_tvars['tabpbadge'] = $sender->id == 'tabp' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
 
         $this->ctab->setVisible($sender->id == 'tabc');
         $this->otab->setVisible($sender->id == 'tabo');
         $this->itab->setVisible($sender->id == 'tabi');
 
         $this->stab->setVisible($sender->id == 'tabs');
+        $this->ptab->setVisible($sender->id == 'tabp');
 
     }
 
@@ -519,7 +551,109 @@ class Discounts extends \App\Pages\Base
     }
 
 
+    //промо 
+    public function onFilterPromo($rsender) {
+       $this->ptab->listpan->plist->Reload();
+    }
 
+    public function promolistOnRow($row) {
+        $p = $row->getDataItem();
+ 
+        $row->add(new  Label("pcode", $p->code));
+        $type="";
+        if($p->type==1) $type="Одноразовий";
+        if($p->type==2) $type="Багаторазовий";
+        if($p->type==3) $type="Персональний";
+        if($p->type==4) $type="Реферальний";
+        $row->add(new  Label("ptype", $type));
+        $row->add(new  Label("pdisc", $p->disc));
+        $row->add(new  Label("pref", $p->ref));
+        $row->add(new  Label("pused", $p->used));
+        $row->add(new  Label("pcust", $p->customer_name));
+        $row->add(new  Label("pdateto", $p->dateto > 0 ? H::fd($p->dateto) :''));
+        $row->add(new  ClickLink('pdel'))->onClick($this, 'pdeleteOnClick');
+        
+        if($p->dateto > 0 && $p->dateto < time()) {
+           $p->disabled = 1;
+        }
+        $row->setAttribute('style', $p->disabled == 1 ? 'color: #aaa' : null);
+
+    }
+    
+    public function pdeleteOnClick($sender) {
+        $p = $sender->owner->getDataItem();
+        $code = PromoCode::load($p->id);
+
+        if(strlen($code->used)==0){
+            PromoCode::delete($p->id);            
+        } else {
+           $code->disabled=1;
+           $code->save() ;   
+        }
+
+        $this->ptab->listpan->plist->Reload();
+
+    }
+   
+   
+    public function onAddPromo($sender) {
+        $code=PromoCode::generate() ;
+        $this->ptab->formpan->pform->clean();        
+        $this->ptab->formpan->pform->peditcode->setText($code);
+        $this->ptab->formpan->pform->peditcust->setText('');
+        $this->ptab->formpan->pform->peditcust->setKey(0);
+        $this->ptab->formpan->pform->paddtype->setValue(0);
+        
+        $this->ptab->formpan->setVisible(true);
+        $this->ptab->listpan->setVisible(false);
+ 
+    }
+    public function cancelPCode($sender) {
+        $this->ptab->formpan->setVisible(false);
+        $this->ptab->listpan->setVisible(true);
+ 
+    }
+    public function onPType($sender) {
+        $t=$sender->getValue();
+        $this->ptab->formpan->pform->peditcust->setVisible($t>2);
+        $this->ptab->formpan->pform->peditref->setVisible($t==4);
+ 
+    }
+    public function savePCode($sender) {
+        
+        $pc = new PromoCode() ;
+        $pc->code = $sender->peditcode->getText() ;
+        $pc->type = $sender->paddtype->getValue() ;
+        if($pc->type==0) {
+            $this->setError('Не вказано тип') ;
+            return;
+        }
+        $pc->disc = $sender->peditdisc->getText();
+        $pc->dateto = $sender->peditdate->getDate();
+        if($pc->dateto >0 && $pc->dateto < time()) {
+           $this->setError('Неправильна дата') ;
+           return; 
+
+        }
+        $pc->ref = $sender->peditref->getText();
+        if($pc->type ==4 && $pc->ref=='' ) {
+           $this->setError('Не введено  реферальний  бонус') ;
+           return; 
+        }
+        $pc->customer_id = (int)$sender->peditcust->getKey();
+        if($pc->type >2 && $pc->customer_id ==0 ) {
+           $this->setError('Не вибрано контрагента') ;
+           return; 
+        }
+        $pc->customer_name = $sender->peditcust->getText();
+        
+        $pc->save() ;
+        
+        $this->ptab->listpan->plist->Reload();
+        $this->ptab->formpan->setVisible(false);
+        $this->ptab->listpan->setVisible(true);
+ 
+    }
 
 
 }
@@ -648,6 +782,42 @@ class DiscItemODataSource implements \Zippy\Interfaces\DataSource
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
         return Item::find($this->getWhere(), "itemname ", $count, $start);
+    }
+
+    public function getItem($id) {
+
+    }
+
+}
+
+class PromoDataSource implements \Zippy\Interfaces\DataSource
+{
+    private $page;
+
+    public function __construct($page) {
+        $this->page = $page;
+    }
+
+    private function getWhere() {
+
+        $conn = \ZDB\DB::getConnect();
+
+        $where = "1=1 ";
+
+        $text = trim($this->page->ptab->listpan->pfilter->psearchkey->getText());
+        if(strlen($text)>0) {
+            $where = $where . " and code = ".$conn->qstr($text);
+        }
+        
+        return $where;
+    }
+
+    public function getItemCount() {
+        return PromoCode::findCnt($this->getWhere());
+    }
+
+    public function getItems($start, $count, $sortfield = null, $asc = null) {
+        return PromoCode::find($this->getWhere(), " disabled, id desc ", $count, $start);
     }
 
     public function getItem($id) {

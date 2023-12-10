@@ -414,8 +414,9 @@ class PPOHelper
      * @param mixed $doc
      * @param mixed $delayfisc  отложить  фискализацию
      */
-    public static function check($doc, $delayfisc=false) {
-
+    public static function check($doc ) {
+        $common = \App\System::getOptions('common');
+ 
 
         $pos = \App\Entity\Pos::load($doc->headerdata['pos']);
         $firm = \App\Helper::getFirmData($pos->firm_id);
@@ -440,43 +441,67 @@ class PPOHelper
         $header['guid'] = \App\Util::guid();
 
 
+        $header['comment'] = strlen($common["checkslogan"] ??'') >0 ? $common["checkslogan"]  :  false;
+
+
         $header['details'] = array();
         $n = 1;
-        $disc = 1;
-        $header['amount'] = $doc->payamount;
-        //общая  скидка
-        $discsum =  doubleval($doc->headerdata["bonus"]) + doubleval($doc->headerdata["totaldisc"])+ doubleval($doc->headerdata["paydisc"]);
-        $header['disc']   = false;
-        if ($discsum > 0) {
-            // $disc = 1 - ( $discsum / $doc->amount);
-            $header['disc'] = number_format($discsum, 2, '.', '');
-            //  $header['amount'] -= $header['disc'];
-        }
-        //     $header['amount'] = 0;
+      
+     //   $header['amount'] = $doc->payamount;
+        
+        
+        
+         //общая  скидка
+        $discsum =    $doc->amount  -  $doc->payamount  ;
 
+         $disc=1;
+        if($discsum >0 ) {
+           $disc = 1 - ($discsum/$doc->amount);
+     
+        }
+          
         foreach ($doc->unpackDetails('detaildata') as $item) {
+            $item->price = round($item->price * $disc *100)/100 ;
             $header['details'][] = array(
                 'num'   => "ROWNUM=\"{$n}\"",
                 'name'  => $item->itemname,
                 'qty'   => number_format($item->quantity, 3, '.', ''),
-                'price' => number_format($item->price * $disc, 2, '.', ''),
-                'cost'  => number_format($item->quantity * $item->price * $disc, 2, '.', '')
+                'price' => number_format($item->price    , 2, '.', ''),
+                'cost'  => number_format($item->quantity * $item->price  , 2, '.', '')
             );
             $n++;
 
-            //    $header['amount'] = $header['amount'] + $item->quantity * $item->price * $disc;
+
         }
         foreach ($doc->unpackDetails('services') as $item) {
+            $item->price = round($item->price * $disc *100)/100 ;
             $header['details'][] = array(
                 'num'   => "ROWNUM=\"{$n}\"",
                 'name'  => $item->service_name,
                 'qty'   => number_format($item->quantity, 3, '.', ''),
-                'price' => number_format($item->price * $disc, 2, '.', ''),
-                'cost'  => number_format($item->quantity * $item->price * $disc, 2, '.', '')
+                'price' => number_format($item->price  , 2, '.', ''),
+                'cost'  => number_format($item->quantity * $item->price , 2, '.', '')
             );
             $n++;
-            //  $header['amount'] = $header['amount'] + $item->quantity * $item->price * $disc;
+
         }
+        
+        $sum=0;
+        foreach($header['details'] as $p ) {
+           $sum += ($p['price'] * $p['qty'] );
+         
+        }        
+        
+      foreach($header['services'] as $p ) {
+           $sum += $p['cost'] ;
+         
+        }        
+        
+         // к  оплате
+        $payamount  =    doubleval($doc->payamount) - doubleval($doc->headerdata['prepaid']);
+        // оплачено
+        $payed  =    doubleval($doc->headerdata['payed']) + doubleval($doc->headerdata['payedcard']);
+       
         $amount0 = 0;
         $amount1 = 0;
         $amount2 = 0;
@@ -484,13 +509,9 @@ class PPOHelper
         $header['pays'] = array();
         $n = 1;
 
+ 
 
-        // к  оплате
-        $payamount  =    doubleval($doc->payamount) - doubleval($doc->headerdata['prepaid']);
-        // оплачено
-        $payed  =    doubleval($doc->headerdata['payed']) + doubleval($doc->headerdata['payedcard']);
-
-
+  //$doc->headerdata['payed']   += 0.03;
         if($doc->headerdata['payment']  >0) {
             if ($mf->beznal == 1) {
                 $pay = array(
@@ -498,6 +519,7 @@ class PPOHelper
                     'formcode' => 1,
                     'paysum'   => number_format($payed, 2, '.', ''),
                     'payed'    => number_format($payed, 2, '.', ''),
+                    'rest'     => false,                    
                     'num'      => "ROWNUM=\"{$n}\""
                 );
                 // в долг
@@ -520,7 +542,7 @@ class PPOHelper
                 );
                 //сдача
                 if ($doc->headerdata["exchange"] > 0) {
-                    $pay['rest'] = number_format($doc->headerdata["exchange"], 2, '.', '');
+                  //  $pay['rest'] = number_format($doc->headerdata["exchange"], 2, '.', '');
                     $pay['rest'] = number_format($payed- $doc->headerdata["exchange"], 2, '.', '');
                 }
                 // в долг
@@ -560,6 +582,7 @@ class PPOHelper
                     'formcode' => 1,
                     'paysum'   => number_format($doc->headerdata['payedcard'], 2, '.', ''),
                     'payed'    => number_format($doc->headerdata['payedcard'], 2, '.', ''),
+                    'rest'     => false,
                     'num'      => "ROWNUM=\"{$n}\""
                 );
 
@@ -602,27 +625,49 @@ class PPOHelper
             $header['amount'] += $doc->headerdata['prepaid'];
         }
 
+        
+      
+        
         $header['pay'] = count($header['pays']) > 0;
+        
+ 
+     
+        $sumpay=0;
+        foreach($header['pays'] as $p ) {
+           $sumpay += $p['paysum'] ;
+        }
+     
+        
+          
+        $header['disc']   = false;
+        if ($discsum > 0) {
+          //  $header['disc'] = number_format($discsum, 2, '.', '');
+          //  $sumpay  += $header['disc'];
+        }        
 
-        $header['amount'] = number_format($header['amount'], 2, '.', '');
-
+        $header['amount'] = number_format($sumpay, 2, '.', '');
+        $header['rnd']  =  false;
+        $header['nrnd']  =  false;
+        if(floatval($sum) !=floatval($sumpay) )  {
+           $header['rnd']  = number_format( $sum-$sumpay        , 2, '.', '');
+           $header['nrnd']  = number_format( $sum  , 2, '.', '');
+           
+        }
+        
         $report = new \App\Report('check.xml');
 
         $xml = $report->generate($header);
+   //     H::log($xml);
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
         $firm = \App\Entity\Firm::load($pos->firm_id);
-        if($delayfisc) {
-            self::insertStat($pos->pos_id, 1, $amount0, $amount1, $amount2, $amount3, $doc->document_number, 1);
-            $ret['success'] = true ;
-        } else {
-            $ret = self::send($xml, 'doc', $firm);
-            if ($ret['success'] == true) {
+        $ret = self::send($xml, 'doc', $firm);
+        if ($ret['success'] == true) {
 
-                self::insertStat($pos->pos_id, 1, $amount0, $amount1, $amount2, $amount3, $doc->document_number, $ret['docnumber']);
-            }
-            $doc->headerdata["fiscdts"] = "&date=".date('Ymd')."&time={$header['time']}&sum={$header['amount']}";
-
+            self::insertStat($pos->pos_id, 1, $amount0, $amount1, $amount2, $amount3, $doc->document_number, $ret['docnumber']);
         }
+        $doc->headerdata["fiscdts"] = "&date=".date('Ymd')."&time={$header['time']}&sum={$header['amount']}";
+
+
 
         return $ret;
     }
@@ -865,7 +910,7 @@ class PPOHelper
         $res = PPOHelper::send(json_encode(array('Command' => 'Shifts', 'NumFiscal' => $pos->fiscalnumber, 'From' => $from, 'To' => $to)), 'cmd', $company);
 
         if($res['success']==false) {
-            \App\system::setErrorMsg($res['data']);
+            \App\System::setErrorMsg($res['data']);
             return;
         }
         $res = json_decode($res['data']);
@@ -879,7 +924,7 @@ class PPOHelper
 
 
                     if($res['success']==false) {
-                        \App\system::setErrorMsg($res['data']);
+                        \App\System::setErrorMsg($res['data']);
                         return;
                     }
                     $res = json_decode($res['data']);

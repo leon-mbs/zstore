@@ -147,12 +147,12 @@ class Items extends \App\Pages\Base
             $this->setError('Не обрано товар');
             return;
         }
-       // $data = json_encode($elist, JSON_UNESCAPED_UNICODE);
+        $data = json_encode($elist, JSON_UNESCAPED_UNICODE);
 
 
 
         try {
-            $data = Helper::make_request("POST", "/api/v1/products/inport_tile", $data);
+            $data = Helper::make_request("POST", "/api/v1/products/import_file", $data);
         } catch(\Exception $ee) {
             System::setErrorMsg($ee->getMessage());
             return;

@@ -393,11 +393,16 @@ class ARMFood extends \App\Pages\Base
             $row->bredit->setVisible(false);
         }
 
+        $row->add(new ClickLink('checkfisc', $this, "onFisc"))->setVisible(($doc->headerdata['passfisc'] ?? "") == 1) ;
+        if($doc->state <5) {
+           $row->checkfisc->setVisible(false);
+        }
+
     }
 
     public function updateorderlist($sender) {
         $conn = \ZDB\DB::getConnect();
-        $where = " state not in(9 ) and date(document_date) >= " . $conn->DBDate(strtotime('-1 week'))    ;
+        $where = " (state not in(9) or content like '%<passfisc>1</passfisc>%' ) and date(document_date) >= " . $conn->DBDate(strtotime('-1 week'))    ;
         if ($sender instanceof Form) {
             $text = trim($sender->searchnumber->getText());
             $cust = $sender->searchcust->getKey();
@@ -626,7 +631,7 @@ class ARMFood extends \App\Pages\Base
         $row->add(new Label('qty', $qty));
 
 
-        $row->add(new Label('disc', '-'. H::fa1($item->disc)));
+        $row->add(new Label('disc',doubleval($item->disc)  ==0 ?"" : '-'. H::fa1($item->disc ??0)));
         $row->add(new Label('price', H::fa($item->price)));
         $row->add(new Label('amount', H::fa($item->price * $item->quantity)));
         $row->add(new ClickLink('myselfon', $this, 'onMyselfClick'))->setVisible($item->myself == 1);
@@ -664,7 +669,11 @@ class ARMFood extends \App\Pages\Base
             $row->qtyplus->setVisible(false);
             $row->qtyedit->setVisible(false);
 
+        }    
+        if ($item->foodstate ==1 ) {
+            $row->removeitem->setVisible(true);
         }
+
     }
 
     public function onQtyClick($sender) {
@@ -725,6 +734,8 @@ class ARMFood extends \App\Pages\Base
             $this->orderlistpan->setVisible(false);
             $this->orderlistpan->statuspan->setVisible(false);
             $this->docpanel->setVisible(true);
+            $this->docpanel->navform->setVisible(true);
+            $this->docpanel->listsform->setVisible(true);
             $this->docpanel->listsform->clean();
 
             $this->docpanel->listsform->notes->setText($this->_doc->notes);
@@ -735,7 +746,8 @@ class ARMFood extends \App\Pages\Base
             $this->docpanel->listsform->cinfo->setVisible(true) ;
             $this->docpanel->listsform->forbar->setChecked($this->_doc->headerdata['forbar']);
             $this->docpanel->listsform->execuser->SetValue($this->_doc->user_id);
-
+            $this->docpanel->listsform->btopay->setVisible(true);
+  
             if ($this->_doc->customer_id > 0) {
                 $this->docpanel->listsform->customer->setKey($this->_doc->customer_id);
                 $this->docpanel->listsform->customer->setText($this->_doc->customer_name);
@@ -778,6 +790,9 @@ class ARMFood extends \App\Pages\Base
             $this->docpanel->navform->setVisible(false);
             $this->docpanel->payform->clean();
             $amount = $this->_doc->payamount;
+            $bonus = $this->_doc->headerdata["bonus"] ;
+            $totaldisc = $this->_doc->headerdata["totaldisc"] ;
+            $amount =  H::fa($amount - floatval($totaldisc)  - floatval($bonus)) ;
 
 
             $this->docpanel->payform->pfforpay->setText(H::fa($amount));
@@ -873,11 +888,13 @@ class ARMFood extends \App\Pages\Base
         if ($this->createdoc() == false) {
             return;
         }
-
+  
+       
         $this->toprod()  ;
 
         $this->onNewOrder();
     }
+
     private function toprod() {
 
 
@@ -899,7 +916,7 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->save();
 
 
-        if($this->_doc->state== Document::STATE_NEW) {
+        if($this->_doc->state== Document::STATE_NEW  || $this->_doc->state== Document::STATE_EDITED) {
             $this->_doc->updateStatus(Document::STATE_INPROCESS);
             $n->message = serialize(array('cmd' => 'new','document_id'=>$this->_doc->document_id));
 
@@ -913,9 +930,12 @@ class ARMFood extends \App\Pages\Base
     }
 
 
-
-
-
+   // проверка
+    public function checkdoc( ) {
+  
+        
+        return true;
+    }
     // сохранить
     public function tosaveOnClick($sender) {
 
@@ -924,7 +944,7 @@ class ARMFood extends \App\Pages\Base
             return;
         }
 
-
+   
 
         if($this->_doc->state != Document::STATE_NEW) {
             $this->_doc->updateStatus(Document::STATE_EDITED);
@@ -1039,29 +1059,33 @@ class ARMFood extends \App\Pages\Base
 
 
             if ($this->_doc->payamount <= $this->_doc->payed) {
+              if( $this->docpanel->payform->passfisc->isChecked()) {
+                    $this->_doc->headerdata["passfisc"]  = 1;
+                } else {
+                    $this->_doc->headerdata["passfisc"]  = 0;
 
-                if($this->_pos->usefisc == 1 && $this->_tvars['checkbox'] == true) {
+                    if($this->_pos->usefisc == 1 && $this->_tvars['checkbox'] == true) {
 
-                    $cb = new  \App\Modules\CB\CheckBox($this->_pos->cbkey, $this->_pos->cbpin) ;
-                    $ret = $cb->Check($this->_doc) ;
+                        $cb = new  \App\Modules\CB\CheckBox($this->_pos->cbkey, $this->_pos->cbpin) ;
+                        $ret = $cb->Check($this->_doc) ;
 
-                    if(is_array($ret)) {
-                        $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
-                        $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
-                        $this->_doc->headerdata["checkbox"] = $ret['checkid'];
-                    } else {
-                        $this->setError($ret);
-                        $conn->RollbackTrans();
-                        return;
+                        if(is_array($ret)) {
+                            $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                            $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
+                            $this->_doc->headerdata["checkbox"] = $ret['checkid'];
+                        } else {
+                            $this->setError($ret);
+                            $conn->RollbackTrans();
+                            return;
+
+                        }
 
                     }
+                    if($this->_pos->usefisc == 1 && $this->_tvars['vkassa'] == true) {
 
-                }
+                        $vk = new  \App\Modules\VK\VK($this->_pos->vktoken) ;
 
-                if($this->docpanel->payform->passfisc->isChecked()) {
-                    $ret = \App\Modules\PPO\PPOHelper::check($this->_doc, true);
-
-                } else {
+                    }
 
                     if ($this->_pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
                         $this->_doc->headerdata["fiscalnumberpos"]  =  $this->_pos->fiscalnumber;
@@ -1093,7 +1117,7 @@ class ARMFood extends \App\Pages\Base
                     }
 
                 }
-
+                $this->_doc->save();
 
             }
 
@@ -1208,6 +1232,11 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->headerdata["totaldisc"] = $this->docpanel->listsform->totaldisc->getText();
         $this->_doc->headerdata["bonus"] = $this->docpanel->listsform->bonus->getText();
 
+        if($this->_doc->customer_id==0  && ( $this->_doc->headerdata["bonus"] >0  || $this->_doc->headerdata["totaldisc"] >0  ) ) {
+            $this->setError('Якщо знижка  або  бонуси має бути вибраний  контрагент');
+            return false;
+        }
+        
         $this->_doc->packDetails('detaildata', $this->_itemlist);
         $this->_doc->amount = $this->docpanel->listsform->totalamount->getText();
         $this->_doc->payamount = $this->_doc->amount;
@@ -1370,7 +1399,33 @@ class ARMFood extends \App\Pages\Base
         return json_encode($itemlist, JSON_UNESCAPED_UNICODE);
     }
 
+    public function OnPrint($sender) {
 
+
+        if(intval(\App\System::getUser()->prtype) == 0) {
+
+
+            $this->addAjaxResponse("  $('#checktext').printThis() ");
+
+            return;
+        }
+
+        try {
+            $doc = $this->_doc->cast();
+            $xml = $doc->generatePosReport(true);
+
+            $buf = \App\Printer::xml2comm($xml);
+            $b = json_encode($buf) ;
+
+            $this->addAjaxResponse("  sendPS('{$b}') ");
+        } catch(\Exception $e) {
+            $message = $e->getMessage()  ;
+            $message = str_replace(";", "`", $message)  ;
+            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
+
+        }
+
+    }
     //фискализация
     public function OnOpenShift($sender) {
  
@@ -1403,7 +1458,35 @@ class ARMFood extends \App\Pages\Base
 
             return  ;
         }
+         if($this->_tvars['vkassa'] == true) {
 
+
+            $vk = new  \App\Modules\VK\VK($this->_pos->vktoken) ;
+            $ret = $vk->OpenShift() ;
+
+            if($ret === true) {
+                $this->setSuccess("Зміна відкрита");
+            } else {
+                $this->setError($ret);
+            }
+            if($this->_pos->autoshift >0){
+                $task = new  \App\Entity\CronTask()  ;
+                $task->tasktype = \App\Entity\CronTask::TYPE_AUTOSHIFT;
+                $t =   strtotime(  date('Y-m-d ') .  $this->_pos->autoshift.':00' );  
+                 
+                $task->starton=$t;
+                $task->taskdata= serialize(array(
+                       'pos_id'=>$this->_pos->pos_id, 
+                       'type'=>'vk' 
+       
+                    ));         
+                $task->save();
+                    
+            }  
+
+
+            return;
+        }
 
         $ret = \App\Modules\PPO\PPOHelper::shift($this->_pos->pos_id, true);
         if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
@@ -1461,7 +1544,19 @@ class ARMFood extends \App\Pages\Base
 
             return;
         }
+        if($this->_tvars['vkassa'] == true) {
 
+            $vk = new  \App\Modules\VK\VK($this->_pos->vktoken) ;
+            $ret = $vk->CloseShift() ;
+
+            if($ret === true) {
+                $this->setSuccess("Зміна закрита");
+            } else {
+                $this->setError($ret);
+            }
+
+            return;
+        }
 
         $ret = $this->zform();
         if ($ret == true) {
@@ -1525,33 +1620,89 @@ class ARMFood extends \App\Pages\Base
 
         return true;
     }
+    
+  public function onFisc($sender) {
 
-    public function OnPrint($sender) {
+        $doc =  $sender->getOwner()->getDataItem();
+
+        if($this->_tvars['checkbox'] == true) {
+
+            $cb = new  \App\Modules\CB\CheckBox($this->_pos->cbkey, $this->_pos->cbpin) ;
+            $ret = $cb->Check($doc) ;
+
+            if(is_array($ret)) {
+                $doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                $doc->headerdata["tax_url"] = $ret['tax_url'];
+                $doc->headerdata["checkbox"] = $ret['checkid'];
+                $doc->headerdata["passfisc"] = 0;
+                $doc->save();
+                $this->setSuccess("Виконано");
+            } else {
+                $this->setError($ret);
+
+                return;
+
+            }
 
 
-        if(intval(\App\System::getUser()->prtype) == 0) {
+        }
+        if($this->_tvars['vkassa'] == true) {
+            $vk = new  \App\Modules\VK\VK($this->_pos->vktoken) ;
+            $ret = $vk->Check($doc) ;
 
+            if(is_array($ret)) {
+                $doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                $doc->headerdata["passfisc"] = 0;
+                $doc->save();
+              
+            } else {
+                $this->setError($ret);
+       
+                return;
 
-            $this->addAjaxResponse("  $('#checktext').printThis() ");
-
-            return;
+            }  
         }
 
-        try {
-            $doc = $this->_doc->cast();
-            $xml = $doc->generatePosReport(true);
 
-            $buf = \App\Printer::xml2comm($xml);
-            $b = json_encode($buf) ;
+        if ($this->_tvars['ppo'] == true) {
 
-            $this->addAjaxResponse("  sendPS('{$b}') ");
-        } catch(\Exception $e) {
-            $message = $e->getMessage()  ;
-            $message = str_replace(";", "`", $message)  ;
-            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
+
+            $doc->headerdata["fiscalnumberpos"]  = $this->_pos->fiscalnumber;
+
+
+            $ret = \App\Modules\PPO\PPOHelper::check($doc);
+            if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
+                //повторяем для  нового номера
+                $this->_pos->fiscdocnumber = $ret['doclocnumber'];
+                $this->_pos->save();
+                $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
+            }
+            if ($ret['success'] == false) {
+                $this->setErrorTopPage($ret['data']);
+
+                return;
+            } else {
+                //  $this->setSuccess("Выполнено") ;
+                if ($ret['docnumber'] > 0) {
+                    $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                    $this->_pos->save();
+                    $doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+                    $doc->headerdata["passfisc"] = 0;
+                    $doc->save();
+                    $this->setSuccess("Виконано");
+                } else {
+                    $this->setError("Не повернено фіскальний номер");
+
+                    return;
+                }
+            }
 
         }
 
+        $this->updateorderlist(null);
     }
+    
+
+    
 
 }

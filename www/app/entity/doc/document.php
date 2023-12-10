@@ -316,7 +316,7 @@ class Document extends \ZCL\DB\Entity
 
         $doc->branch_id = $branch_id;
         if ($branch_id == 0) {
-            $doc->branch_id = \App\Acl::checkCurrentBranch();
+            $doc->branch_id = \App\ACL::checkCurrentBranch();
         }
 
         $doc->headerdata['cashier'] = $user->username;
@@ -360,7 +360,7 @@ class Document extends \ZCL\DB\Entity
         }
 
         //если нет права  выполнять
-        if ($state >= self::STATE_EXECUTED && \App\Acl::checkExeDoc($this, false, false) == false) {
+        if ($state >= self::STATE_EXECUTED && \App\ACL::checkExeDoc($this, false, false) == false) {
 
             $this->headerdata['_state_before_approve_'] .= ( ','. $state);  //целевой статус
   
@@ -473,7 +473,7 @@ class Document extends \ZCL\DB\Entity
             return 75;
         }
         if($state == self::STATE_PAYED) {
-            return 5;
+            return 15;
         }
 
         return 0;
@@ -1096,7 +1096,7 @@ class Document extends \ZCL\DB\Entity
 
 
         $number = $this->document_number;
-        if(strlen($this->headerdata['outnumber']) > 0) {
+        if(strlen($this->headerdata['outnumber'] ?? '') > 0) {
             $number  =    $this->headerdata['outnumber']  ;
         }
 

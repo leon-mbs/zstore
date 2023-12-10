@@ -42,8 +42,8 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["showsidemenu"] = !(System::getUser()->hidemenu == true);
         $this->_tvars["twodigit"] = round($options['amdigits']) > 0;
 
-        $this->_tvars['qtydigits']  = intval($common['qtydigits'] ?? 0);
-        $this->_tvars['amdigits']  = intval($common['amdigits'] ?? 0);
+        $this->_tvars['qtydigits']  = intval($options['qtydigits'] ?? 0);
+        $this->_tvars['amdigits']  = intval($options['amdigits'] ?? 0);
 
         
         $this->_tvars["usesnumber"] = $options['usesnumber']  > 0;
@@ -128,6 +128,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["promua"] = $modules['promua'] == 1;
         $this->_tvars["paperless"] = $modules['paperless'] == 1;
         $this->_tvars["checkbox"] = $modules['checkbox'] == 1;
+        $this->_tvars["vkassa"] = $modules['vkassa'] == 1;
 
 
         //  $printer = System::getOptions('printer');
@@ -171,8 +172,11 @@ class Base extends \Zippy\Html\WebPage
         if (strpos(System::getUser()->modules ?? '', 'checkbox') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["checkbox"] = false;
         }
+        if (strpos(System::getUser()->modules ?? '', 'vkassa') === false && System::getUser()->rolename != 'admins') {
+            $this->_tvars["vkassa"] = false;
+        }
 
-        $this->_tvars["fiscal"] = $this->_tvars["checkbox"] || $this->_tvars["ppo"];
+        $this->_tvars["fiscal"] = $this->_tvars["checkbox"] || $this->_tvars["ppo"] || $this->_tvars["vkassa"];
 
         if ($this->_tvars["shop"] ||
             $this->_tvars["ocstore"] ||
@@ -182,6 +186,7 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["promua"] ||
             $this->_tvars["paperless"] ||
             $this->_tvars["ppo"] ||
+         
             $this->_tvars["np"]
         ) {
             $this->_tvars["showmodmenu"] = true;
@@ -428,12 +433,12 @@ class Base extends \Zippy\Html\WebPage
             $header['disc'] = false;
         }
         $header['last'] = false;
-        $doc = \App\Entity\doc\Document::getFirst(" customer_id={$c->customer_id}", "document_id desc") ;
+        $doc = \App\Entity\Doc\Document::getFirst(" customer_id={$c->customer_id}", "document_id desc") ;
         if($doc != null) {
             $header['last']= $doc->meta_desc .' '. $doc->document_number;
             $header['lastdate']=Helper::fd($doc->document_date);
             $header['lastsum']=Helper::fa($doc->amount);
-            $header['laststatus']   =  \App\Entity\doc\Document::getStateName($doc->state)  ;
+            $header['laststatus']   =  \App\Entity\Doc\Document::getStateName($doc->state)  ;
 
             $goods = [];
 
@@ -513,7 +518,8 @@ class Base extends \Zippy\Html\WebPage
             $v= \App\Helper::checkVer()  ;
             
             if(strlen($v) >0){
-               $list[] = array('title' => " Доступна нова версiя {$v}  <a target=\"_blank\" href=\"https://zippy.com.ua/upsate\">Перейти...</a> ");                
+              // $list[] = array('title' => " Доступна нова версiя {$v}  <a target=\"_blank\" href=\"https://zippy.com.ua/update\">Перейти...</a> ");                
+               $list[] = array('title' => " Доступна нова версiя {$v}  <a href=\"/index.php?p=App/Pages/Update\">Перейти...</a> ");                
             }
             
         }

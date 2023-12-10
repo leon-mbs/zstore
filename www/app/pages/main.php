@@ -29,11 +29,18 @@ class Main extends Base
 
         $v= \App\Helper::checkVer()  ;
             
-            if(strlen($v) >0){
-               $this->_tvars['newversion']  = " Доступна нова версiя <b>{$v}</b>  <a target=\"_blank\" href=\"https://zippy.com.ua/upsate\">Перейти...</a> ";                
-            } else{
-               $this->_tvars['newversion']  = '';
-            }
+        if(strlen($v) >0){
+           $this->_tvars['newversion']  = " Доступна нова версiя <b>{$v}</b> <a href=\"/index.php?p=App/Pages/Update\">Перейти...</a> ";                
+        } else{
+           $this->_tvars['newversion']  = '';
+        }
+        if($this->_tvars['curversionbd'] != System::REQUIRED_DB){
+           $this->_tvars['reqversion']  = " Версiя БД має  бути <b>".System::REQUIRED_DB."!</b>";                
+        } else{
+           $this->_tvars['reqversion']  = '';
+        }
+        
+        
         
         $user = System::getUser();
 
@@ -73,7 +80,7 @@ class Main extends Base
             $brf = " and branch_id in ({$brids}) ";
         }
 
-        $cstr = \App\Acl::getStoreBranchConstraint();
+        $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "    store_id in ({$cstr})  and   ";
         }
@@ -307,22 +314,24 @@ class Main extends Base
 
         $this->_tvars['biitemscnt'] = H::fa($conn->GetOne($sql));
 
-
+ 
+        
+        $cust_acc_view = \App\Entity\Customer::get_acc_view()  ;
+        
         //к оплате
-        $sql = "SELECT COALESCE( SUM(   s_active - s_passive    ) ,0) AS d   FROM cust_acc_view where  s_active > s_passive   ";
+        $sql = "SELECT COALESCE( SUM(   a.s_active - a.s_passive    ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.s_active > a.s_passive   ";
         $sum = doubleval($conn->GetOne($sql));
-        $sql = "SELECT COALESCE( SUM(   b_active - b_passive    ) ,0) AS d   FROM cust_acc_view where  b_active > b_passive   ";
+        $sql = "SELECT COALESCE( SUM(   a.b_active - a.b_passive    ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.b_active > a.b_passive   ";
         $sum += doubleval($conn->GetOne($sql));
-
-
-        $this->_tvars['bicredit'] = H::fa($sum);
-        //ожидается  оплата
-        $sql = "SELECT COALESCE( SUM( s_passive -  s_active      ) ,0) AS d   FROM cust_acc_view where  s_active < s_passive   ";
-        $sum = doubleval($conn->GetOne($sql));
-        $sql = "SELECT COALESCE( SUM(  b_passive -  b_active      ) ,0) AS d   FROM cust_acc_view where  b_active < b_passive   ";
-        $sum += doubleval($conn->GetOne($sql));
-
         $this->_tvars['bidebet'] = H::fa($sum);
+
+        //ожидается  оплата
+        $sql = "SELECT COALESCE( SUM( a.s_passive -  a.s_active      ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.s_active < a.s_passive   ";
+        $sum = doubleval($conn->GetOne($sql));
+        $sql = "SELECT COALESCE( SUM(  a.b_passive -  a.b_active      ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.b_active < a.b_passive   ";
+        $sum += doubleval($conn->GetOne($sql));
+        $this->_tvars['bicredit'] = H::fa($sum);
+
 
         $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail not like '%<beznal>1</beznal>%' {$brf})";
 
@@ -450,7 +459,7 @@ class Main extends Base
         //  if (strlen($brids) > 0) {
         //      $br = " and d.branch_id in ({$brids}) ";
         //  }
-        $cstr = \App\Acl::getStoreBranchConstraint();
+        $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "    store_id in ({$cstr})  and   ";
         }
@@ -481,7 +490,7 @@ class Main extends Base
         if (strlen($brids) > 0) {
             $br = " and branch_id in ({$brids}) ";
         }
-        $cstr = \App\Acl::getStoreBranchConstraint();
+        $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = " where store_id in ({$cstr})     ";
         }

@@ -320,6 +320,7 @@ class GoodsIssue extends \App\Pages\Base
 
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
+                        $this->_doc->headerdata['prepaid']  = $basedoc->payed ;
 
                         // $this->docform->order->setText(  $basedoc->document_number);
 
@@ -435,7 +436,7 @@ class GoodsIssue extends \App\Pages\Base
         $code_ = Item::qstr($code);
         $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_})");
 
-        if ($item == null) {
+        if ($item == null) {      //ищес оп серийномк
 
             $st = Stock::find("store_id={$store_id} and  snumber=" . $code_);
             if(count($st)==1) {
@@ -740,7 +741,7 @@ class GoodsIssue extends \App\Pages\Base
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
 
-
+ 
             $conn->CommitTrans();
 
 

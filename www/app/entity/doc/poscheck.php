@@ -308,15 +308,15 @@ class POSCheck extends Document
         if ($this->headerdata['exchange'] > 0) {
 
             $pp = $pp - $this->headerdata['exchange']; //без здачи
-        }
+        }          
         $payed = 0;
-        if($this->headerdata['payment']  >0) {
+        if(($this->headerdata['payment'] ??0)  >0) {
             $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $pp, $this->headerdata['payment']);
         } else {
-            if($this->headerdata['mfnal']  >0 && $pp >0) {
+            if(($this->headerdata['mfnal']??0)  >0 && $pp >0) {
                 $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $pp, $this->headerdata['mfnal']);
             }
-            if($this->headerdata['mfbeznal']  >0 && $this->headerdata['payedcard'] >0) {
+            if(($this->headerdata['mfbeznal']??0) >0 && ($this->headerdata['payedcard']??0) >0) {
                 $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['payedcard'], $this->headerdata['mfbeznal']);
             }
         }

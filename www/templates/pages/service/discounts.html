@@ -1,6 +1,6 @@
 <html>
     <head>
-      <title> Знижки та акції  </title>
+      <title> Програми лояльності  </title>
 
     </head>
     <body>
@@ -9,7 +9,7 @@
         <div class="row   "  >
 
             <div class="col-12    ">
-                <h3>  Знижки та акції</h3>
+                <h3>  Програми лояльності</h3>
 
                 <div class="mt-1" style="font-size: 1.5rem"  >
                     <a zippy="tabo"><span class="{{{tabobadge}}}"> Бонуси</span> </a> &nbsp;&nbsp;
@@ -17,6 +17,9 @@
                     
                     <a zippy="tabi"><span class="{{{tabibadge}}}">  Акції, товари   </span> </a>
                     <a zippy="tabs"><span class="{{{tabsbadge}}}">  Акції, послуги    </span> </a>
+                   {{#hideblock}}
+                    <a zippy="tabp"><span class="{{{tabpbadge}}}">  Промокоди    </span> </a>
+                   {{/hideblock}}                    
 
 
                 </div>   <br>
@@ -349,6 +352,111 @@
                             </table>  
                             <div zippy="spag"></div>   
 
+                        </div>
+                    </div>
+                </div>
+               <div zippy="ptab">
+                    <div class="row">
+                        <div class="col-12 col-md-10 col-xl-8   ">
+                             
+                           <div zippy="listpan">
+                             <div class="navbar nav  ">
+                                <form zippy="pfilter" class="form-inline ">
+                                    <label for="psearchkey">Код</label>
+                                    <input placeholder="Код для пошуку" class="form-control mr-2" type="search" zippy="psearchkey">
+                                    <input class="btn btn-success " type="submit" value="OK"  >
+                                </form> 
+                              </div>                                
+                     
+
+                                <a class="btn btn-success " zippy="pcodeadd">Додати</a>
+                                <table class="table table-sm">                      
+                                    <tr><th>Код</th><th>Тип</th><th>Знижка,%</th><th>Реф.,%</th><th>Контрагент</th><th> Срок дії</th><th>Використаний </th><th> </th></tr>
+                                    <tr zippy="plist">
+                                    <td zippy="pcode"></td>
+                                    <td zippy="ptype"> </td>
+                                    <td zippy="pdisc" class="text-right"> </td>
+                                    <td zippy="pref"  class="text-right"> </td>
+                                    <td zippy="pcust"> </td>
+                                    <td zippy="pdateto">  </td>
+                                    <td zippy="pused"> </td>
+                                    <td><a zippy="pdel"><i class="fa fa-trash"></i></a> </td>
+                                    </tr>
+                                    
+                                    
+                                </table>
+                                <div zippy="ppag"></div>
+                                    
+                                </div>
+                              </div>
+                              </div>
+                         <div class="col-12 col-md-6 col-xl-4  ">      
+                              
+                                <div zippy="formpan">
+                                     <h4>Новий  промо код</h4>
+                                     <small><b>Одноразовий</b> - для однократного використання 
+                                         <br>  <b>Багаторазовий</b> - для використання (однократного)  багатьма  покупцями 
+                                         <br><b>Персональний</b> - для конкретного контрагента
+                                         <br><b>Реферальний</b> - з нарахуванням бонусів вказанму контрагенту за нового  покупця  
+                                      </small>                                     
+                                    <form zippy="pform" >
+                                 
+                                 
+                                            <div class="form-group row">
+                                               <label class="col-5 col-form-label" for="peditcode">Код</label>
+                                                <div class="7">
+                                                  <input readonly="readonly"   class="form-control"   zippy="peditcode"   >
+                                               </div>
+                                           </div>      
+                                            <div class="form-group row">
+                                               <label class="col-5 col-form-label" for="paddtype">Тип</label>
+                                                <div class="7">
+                                                <select class="form-control  " zippy="paddtype">
+                                                  <option value="0">Не вибрано</option>
+                                                  <option value="1">Одноразовий</option>
+                                                  <option value="2">Багаторазовий</option>
+                                                  <option value="3">Персональний</option>
+                                                  <option value="4">Реферальний</option>
+                                                </select>   
+                                               </div>
+                                                
+                                           </div>                                              
+                                           <div class="form-group row">
+                                               <label class="col-5 col-form-label" for="peditdate">Срок до</label>
+                                                <div class="7">
+                                               <input style="width:140px" class="form-control"  zippy="peditdate"   >
+                                               </div>
+                                           </div>      
+                                           <div class="form-group row">
+                                               <label class="col-5 col-form-label" for="peditdisc">Знижка,%</label>
+                                                <div class="7">
+                                               <input required="required"  pattern="[0-9\.]+" style="width:140px" class="form-control"  zippy="peditdisc"   >
+                                               </div>
+                                           </div>      
+                                           <div class="form-group row">
+                                               <label class="col-5 col-form-label" for="peditcust">Контрагент</label>
+                                                <div class="7">
+                                               <input placeholder="Почніть вводити..." class="form-control"  zippy="peditcust"   >
+                                               </div>
+                                           </div>      
+                                              
+                                           <div class="form-group row">
+                                               <label class="col-5 col-form-label" for="peditref">Реферальний бонус,%</label>
+                                                <div class="7">
+                                               <input pattern="[0-9\.]+" style="width:140px" class="form-control"  zippy="peditref"   >
+                                               </div>
+                                           </div>      
+                                           
+                                       
+ 
+                                        <div class="form-group">
+                                            <a zippy="cancelpadd" class="btn btn-secondary" >Скасувати</a>
+                                         &nbsp;   <button class="btn btn-success" type="submit">Додати</button>
+                                        </div>
+                                    </form>                      
+                                
+                                </div>
+                              </div>
                         </div>
                     </div>
                 </div>

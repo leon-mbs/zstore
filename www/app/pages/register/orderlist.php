@@ -81,7 +81,7 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
         $this->statuspan->add(new Form('moveform'));
-        $this->statuspan->moveform->add(new DropDownChoice('brmove', \App\Entity\Branch::getList(), \App\Acl::getCurrentBranch()))->onChange($this, "onBranch", true);
+        $this->statuspan->moveform->add(new DropDownChoice('brmove', \App\Entity\Branch::getList(), \App\ACL::getCurrentBranch()))->onChange($this, "onBranch", true);
         $this->statuspan->moveform->add(new DropDownChoice('usmove', array(), 0));
         $this->statuspan->moveform->add(new SubmitButton('bmove'))->onClick($this, 'MoveOnSubmit');
 
@@ -106,6 +106,7 @@ class OrderList extends \App\Pages\Base
 
         $this->add(new Panel("editpanel"))->setVisible(false);
         $this->editpanel->add(new Label("editdn"));
+        $this->editpanel->add(new Label("editchat"));
         $this->editpanel->add(new Form("editform"));
         $this->editpanel->editform->add(new SubmitButton('editcancel'))->onClick($this, 'editOnSubmit');
         $this->editpanel->editform->add(new SubmitButton('editsave'))->onClick($this, 'editOnSubmit');
@@ -264,7 +265,7 @@ class OrderList extends \App\Pages\Base
 
 
     public function statusOnSubmit($sender) {
-        if (\App\Acl::checkChangeStateDoc($this->_doc, true, true) == false) {
+        if (\App\ACL::checkChangeStateDoc($this->_doc, true, true) == false) {
             return;
         }
 
@@ -544,7 +545,7 @@ class OrderList extends \App\Pages\Base
         $this->updateStatusButtons();
         $this->goAnkor('dankor');
         $this->_tvars['askclose'] = false;
-        $conn= \zdb\db::getConnect() ;
+        $conn= \ZDB\db::getConnect() ;
 
         $stl = array() ;
         foreach($conn->Execute("select store_id,storename from stores") as $row) {
@@ -660,9 +661,12 @@ class OrderList extends \App\Pages\Base
         $this->listpanel->setVisible(false);
         $this->statuspan->setVisible(false);
         $this->payform->setVisible(false);
-
         $this->_doc = Document::load($this->_doc->document_id);
+        $this->editpanel->editchat->setAttribute('onclick', "opencchat({$this->_doc->document_id})");
 
+        $ch = $this->checkChat($this->_doc);
+        $this->editpanel->editchat->setVisible($ch);
+        
         $this->editpanel->editdn->setText($this->_doc->document_number);
         $this->_itemlist = [];
         foreach($this->_doc->unpackDetails('detaildata')  as $it) {
@@ -842,7 +846,7 @@ class OrderList extends \App\Pages\Base
 
         $msg = new \App\Entity\Message() ;
         $msg->message=$message;
-        $msg->user_id= \app\System::getUser()->user_id;
+        $msg->user_id= \App\System::getUser()->user_id;
         $msg->item_id=$doc->document_id;
         $msg->item_type=\App\Entity\Message::TYPE_CUSTCHAT;
         $msg->save() ;

@@ -4,6 +4,7 @@ namespace App\Pages\Register;
 
 use App\Entity\Doc\Document;
 use App\Entity\Pay;
+use App\Entity\Customer;
 use App\Helper as H;
 use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\DataList\DataView;
@@ -48,6 +49,9 @@ class PayBayList extends \App\Pages\Base
 
         $this->add(new Panel("plist"))->setVisible(false);
         $this->plist->add(new Label("cname"));
+        $this->plist->add(new Label("allforpay"));
+        $this->plist->add(new RedirectLink("payorder"));
+        
         $this->plist->add(new ClickLink("back", $this, "onBack"));
 
         $doclist = $this->plist->add(new DataView('doclist', new ArrayDataSource($this, '_doclist'), $this, 'doclistOnRow'));
@@ -100,26 +104,28 @@ class PayBayList extends \App\Pages\Base
             $hold = "  and   c.detail like '%<holding>{$holding}</holding>%'";
         }
 
+        $cust_acc_view = \App\Entity\Customer::get_acc_view()  ;
+ 
 
-
-        $sql = "SELECT c.customer_name,c.phone, c.customer_id, COALESCE( SUM( a.b_passive),0) as  pas, coalesce(SUM( a.b_active ),0) AS act
-            FROM cust_acc_view a  join customers c  on a.customer_id = c.customer_id and c.status=0    
-             WHERE  a.b_active <> a.b_passive     {$hold}
-             group by c.customer_name,c.phone, c.customer_id
-             order by c.customer_name
-             ";
-
-
+   $sql = "SELECT  c.customer_name,  c.customer_id,c.phone,
+     COALESCE( sum(a.b_passive), 0) AS pas,
+     COALESCE( sum(a.b_active), 0) AS act
+FROM ({$cust_acc_view} ) a
+  JOIN customers c
+    ON a.customer_id = c.customer_id
+    AND c.status = 0 AND a.b_passive <> a.b_active  {$hold}
+GROUP BY c.customer_name,
+         c.customer_id,c.phone";
 
 
         $this->_custlist = array();
 
         foreach(\App\DataItem::query($sql) as $_c) {
-            $_c->docs=0;
+     
             $this->_custlist[$_c->customer_id]=$_c;
         }
-
-        $sql = "SELECT c.customer_name,c.phone, c.customer_id, coalesce(count(*),0) as docs 
+ 
+        $sql = "SELECT c.customer_name,c.phone, c.customer_id
              FROM documents_view d  join customers c  on d.customer_id = c.customer_id and c.status=0    
              WHERE  d.state = ". Document::STATE_WP  ." and d.meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct')   {$hold}
              group by c.customer_name,c.phone, c.customer_id
@@ -128,17 +134,12 @@ class PayBayList extends \App\Pages\Base
 
         $ids = array_keys($this->_custlist)  ;
         foreach(\App\DataItem::query($sql) as $_c) {
-            if(in_array($_c->customer_id, $ids)) {
-                $this->_custlist[$_c->customer_id]->docs = $_c->docs;
-            } else {
-                $this->_custlist[$_c->customer_id] = $_c;
-
+            if(!in_array($_c->customer_id, $ids)) {
+                $this->_custlist[$_c->customer_id]  = $_c  ;
+   
             }
 
         }
-
-
-
 
         $this->_totamountc = 0;
         $this->_totamountd = 0;
@@ -147,7 +148,7 @@ class PayBayList extends \App\Pages\Base
 
         $this->clist->custlist->Reload();
 
-        $this->clist->totamountd->setText($this->_totamountd <0 ? H::fa(0-$this->_totamountd) : '');
+        $this->clist->totamountd->setText($this->_totamountd >0 ? H::fa($this->_totamountd) : '');
         $this->clist->totamountc->setText($this->_totamountc >0 ? H::fa($this->_totamountc) : '');
 
 
@@ -158,28 +159,32 @@ class PayBayList extends \App\Pages\Base
 
         $row->add(new RedirectLink('customer_name', "\\App\\Pages\\Reference\\CustomerList", array($cust->customer_id)))->setValue($cust->customer_name);
         $row->add(new Label('phone', $cust->phone));
-        $diff = $cust->act - $cust->pas;   //плюс - наш долг
-        $row->add(new Label('amountc', $diff >0 ? H::fa($diff) : ''));
-        $row->add(new Label('amountd', $diff <0 ? H::fa(0-$diff) : ''));
+        $diff = $cust->act - $cust->pas;   
+        $row->add(new Label('amountd', $diff >0 ? H::fa($diff) : ''));
+        $row->add(new Label('amountc', $diff <0 ? H::fa(0-$diff) : ''));
 
-        $row->add(new RedirectLink('createpay'))->setVisible($diff<0);
-        if ($diff<0) {
-            $row->createpay->setLink("\\App\\Pages\\Doc\\IncomeMoney", array(0, $cust->customer_id, 0-$diff ));
-            $row->createpay->setVisible(true);
-        }
-        $row->add(new ClickLink('showdocs', $this, 'showdocsOnClick'))->setVisible($cust->docs>0);
-        $row->add(new ClickLink('showdet', $this, 'showdetOnClick'))->setVisible($diff != 0);
+ 
+        $row->add(new ClickLink('showdet', $this, 'showdetOnClick'));
+        $row->add(new ClickLink('createpay', $this, 'topayOnClick'));
 
-        $this->_totamountd += ($diff<0 ? $diff : 0);
-        $this->_totamountc += ($diff>0 ? $diff : 0);
+        $this->_totamountd += ($diff>0 ? $diff : 0);
+        $this->_totamountc += ($diff<0 ? 0-$diff : 0);
 
     }
 
-    //список документов
-    public function showdocsOnClick($sender) {
+   
+    public function topayOnClick($sender) {
 
-        $this->_cust = $sender->owner->getDataItem();
+        $this->_cust = $sender->getOwner()->getDataItem();
         $this->plist->cname->setText($this->_cust->customer_name);
+        $this->plist->allforpay->setText( H::fa($this->_cust->act -  $this->_cust->pas));
+        if($this->_cust->pas >  $this->_cust->act) {
+          $this->plist->payorder->setValue( "Видатковий касовий  ордер");          
+          $this->plist->payorder->setLink("\\App\\Pages\\Doc\\OutcomeMoney", array(0, $this->_cust->customer_id,  H::fa($this->_cust->pas -  $this->_cust->act),1 ));
+        }   else {
+          $this->plist->payorder->setValue( "Прибутковий касовий  ордер");    
+          $this->plist->payorder->setLink("\\App\\Pages\\Doc\\IncomeMoney", array(0, $this->_cust->customer_id,  H::fa($this->_cust->act -  $this->_cust->pas),1 ));
+        }
         $this->updateDocs();
 
         $this->clist->setVisible(false);
@@ -218,6 +223,9 @@ class PayBayList extends \App\Pages\Base
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('pay'))->onClick($this, 'payOnClick');
+        $row->add(new ClickLink('stpayed'))->onClick($this, 'stOnClick');
+        $row->add(new ClickLink('stdone'))->onClick($this, 'stOnClick');
+        $row->add(new ClickLink('stclosed'))->onClick($this, 'stOnClick');
 
     }
 
@@ -248,6 +256,25 @@ class PayBayList extends \App\Pages\Base
         $this->updateCust();
     }
 
+    public function stOnClick($sender) {
+        
+       $item = $sender->getOwner()->getDataItem(); 
+       $doc = Document::load($item->document_id);
+       if(strpos($sender->id,'stpayed')===0) {
+           $doc->updateStatus(Document::STATE_PAYED,true);  
+       }      
+       if(strpos($sender->id,'stdone')===0) {
+           $doc->updateStatus(Document::STATE_FINISHED,true);  
+       }      
+       if(strpos($sender->id,'stclosed')===0) {
+           $doc->updateStatus(Document::STATE_CLOSED,true);  
+       }      
+     
+        
+       $this->updateDocs() ;
+    }
+    
+    
     //оплаты
     public function payDoc($docid) {
 
@@ -349,34 +376,38 @@ class PayBayList extends \App\Pages\Base
 
         }
 
-        /*
-        if ($pos_id > 0) {
+       if ($pos_id > 0) {
             $pos = \App\Entity\Pos::load($pos_id);
+
 
             if($pos->usefisc == 1 && $this->_tvars['checkbox'] == true) {
 
-                    $cb = new  \App\Modules\CB\CheckBox($pos->cbkey,$pos->cbpin) ;
-                    $ret = $cb->Payment($this->_doc, $amount, $form->payment->getValue()) ;
+                $cb = new  \App\Modules\CB\CheckBox($pos->cbkey, $pos->cbpin) ;
+                $ret = $cb->Payment($this->_doc, $amount, $form->payment->getValue()) ;
 
-                    if(is_array($ret)) {
-                      $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
-                      $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
-                      $this->_doc->headerdata["checkbox"] = $ret['checkid'];
-                    } else {
-                        $this->setError($ret);
+                if(is_array($ret)) {
+                    $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                    $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
+                    $this->_doc->headerdata["checkbox"] = $ret['checkid'];
+                } else {
+                    $this->setError($ret);
 
-                        return;
-
-                    }
-
+                    return;
 
                 }
 
 
-
-
+            }
+            if($pos->usefisc == 1 && $pos->usefisc == 1 && $this->_tvars['vkassa'] == true) {
+               // $vk = new  \App\Modules\VK\VK($pos->vktoken) ;
+  
+            }
+ 
             if ($pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
-                 $this->_doc->headerdata["fiscalnumberpos"]  =  $pos->fiscalnumber;
+
+
+
+                $this->_doc->headerdata["fiscalnumberpos"]  =  $pos->fiscalnumber;
 
                 $ret = \App\Modules\PPO\PPOHelper::checkpay($this->_doc, $pos_id, $amount, $form->payment->getValue());
                 if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
@@ -399,10 +430,11 @@ class PayBayList extends \App\Pages\Base
                         return;
                     }
                 }
-           }
+            }
+            
+            
         }
-         */
-
+       
         $payed =   Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(), $form->pcomment->getText());
         \App\Entity\IOState::addIOState($this->_doc->document_id, $amount, $type);
 
@@ -470,18 +502,27 @@ class PayBayList extends \App\Pages\Base
 
         $bal=0;
 
-        foreach (\App\Entity\Doc\Document::findYield(" {$br} customer_id= {$this->_cust->customer_id} and    state NOT IN (0, 1, 2, 3, 15, 8, 17) ", "  document_id asc", -1, -1, "*, COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'TTN', 'PosCheck', 'OrderFood', 'ServiceAct')) THEN payamount WHEN ((meta_name = 'OutcomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payed ELSE 0 END)), 0) AS b_passive,  COALESCE( ((CASE WHEN (meta_name IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN payed WHEN ((meta_name = 'IncomeMoney') AND      (content LIKE '%<detail>1</detail>%')) THEN payed WHEN (meta_name = 'ReturnIssue') THEN payamount ELSE 0 END)), 0) AS b_active") as $id=>$d) {
-            if($d->b_active != $d->b_passive) {
+        foreach (\App\Entity\Doc\Document::findYield(" {$br} customer_id= {$this->_cust->customer_id} and    state NOT IN (0, 1, 2, 3, 15, 8, 17) ", "  document_date asc,document_id asc", -1, -1) as $id=>$d) {
+           
+              $ch = Customer::balans($d,Customer::TYPE_BAYER);
+                
+              if($ch===true) {
+                   continue;
+              }          
+          
+            
                 $r = new  \App\DataItem() ;
                 $r->document_id = $d->document_id;
                 $r->meta_desc = $d->meta_desc;
                 $r->document_number = $d->document_number;
                 $r->document_date = $d->document_date;
-                $r->b_active = $d->b_active;
-                $r->b_passive = $d->b_passive;
+                $r->b_active = $ch['active'];
+                $r->b_passive = $ch['passive'];
 
-                $diff = $d->b_passive - $d->b_active;
-
+                $diff = $ch['active'] - $ch['passive'];
+                if($diff==0) {
+                    continue;
+                }
                 $bal +=  $diff;
 
                 $r->bal =  $bal;
@@ -491,7 +532,7 @@ class PayBayList extends \App\Pages\Base
                     $this->_blist = array();
                 }
 
-            }
+           
 
 
         }
@@ -508,8 +549,8 @@ class PayBayList extends \App\Pages\Base
         $row->add(new Label('dnumber', $doc->document_number));
         $row->add(new Label('ddate', H::fd($doc->document_date)));
 
-        $row->add(new Label('out', $doc->b_passive > 0 ? H::fa($doc->b_passive) : ""));
-        $row->add(new Label('in', $doc->b_active>0 ? H::fa($doc->b_active) : ""));
+        $row->add(new Label('in', $doc->b_passive > 0 ? H::fa($doc->b_passive) : ""));
+        $row->add(new Label('out', $doc->b_active>0 ? H::fa($doc->b_active) : ""));
         $row->add(new Label('bc', $doc->bal > 0 ? H::fa($doc->bal) : ""));
         $row->add(new Label('bd', $doc->bal < 0 ? H::fa(0- $doc->bal) : ""));
 

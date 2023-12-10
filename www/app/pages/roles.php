@@ -68,6 +68,7 @@ class Roles extends \App\Pages\Base
         $this->editpan->editform->add(new CheckBox('editpu'));
         $this->editpan->editform->add(new CheckBox('editpl'));
         $this->editpan->editform->add(new CheckBox('editcb'));
+        $this->editpan->editform->add(new CheckBox('editvk'));
 
         $this->editpan->editform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
@@ -191,6 +192,9 @@ class Roles extends \App\Pages\Base
         }
         if (strpos($this->role->modules, 'checkbox') !== false) {
             $this->editpan->editform->editcb->setChecked(true);
+        }
+        if (strpos($this->role->modules, 'vkassa') !== false) {
+            $this->editpan->editform->editvk->setChecked(true);
         }
     }
 
@@ -322,6 +326,9 @@ class Roles extends \App\Pages\Base
         }
         if ($this->editpan->editform->editcb->isChecked()) {
             $modules = $modules . ',checkbox';
+        }
+        if ($this->editpan->editform->editvk->isChecked()) {
+            $modules = $modules . ',vkassa';
         }
 
         $this->role->modules = trim($modules, ',');

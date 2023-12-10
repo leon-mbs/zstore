@@ -66,6 +66,9 @@ class ProdReceipt extends Document
                         continue;
                     }
                     $itemp->quantity = $item->quantity * $part->qty;
+                    if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
+                        throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
+                    }                    
                     $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
 
                     foreach ($listst as $st) {

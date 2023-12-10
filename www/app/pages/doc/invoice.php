@@ -628,8 +628,8 @@ class Invoice extends \App\Pages\Base
     }
 
     public function OnAutoItem($sender) {
-        $text = Item::qstr('%' . $sender->getText() . '%');
-        return Item::findArray("itemname", "  (itemname like {$text} or item_code like {$text})  and disabled <> 1 ");
+        $text = trim($sender->getText());
+        return Item::findArrayAC($text);
     }
 
     //добавление нового контрагента

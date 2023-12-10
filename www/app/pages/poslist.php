@@ -51,6 +51,7 @@ class PosList extends \App\Pages\Base
         $this->posdetail->add(new TextInput('editpointname'));
         $this->posdetail->add(new TextInput('editcbpin'));
         $this->posdetail->add(new TextInput('editcbkey'));
+        $this->posdetail->add(new TextInput('editvktoken'));
         $this->posdetail->add(new DropDownChoice('editautoshift'));
         $this->posdetail->add(new TextArea('editcomment'));
 
@@ -91,6 +92,7 @@ class PosList extends \App\Pages\Base
         $this->posdetail->editcomp->setValue($this->_pos->firm_id);
         $this->posdetail->editaddress->setText($this->_pos->address);
         $this->posdetail->editpointname->setText($this->_pos->pointname);
+        $this->posdetail->editvktoken->setText($this->_pos->vktoken);
         $this->posdetail->editcbkey->setText($this->_pos->cbkey);
         $this->posdetail->editcbpin->setText($this->_pos->cbpin);
         $this->posdetail->editautoshift->setValue($this->_pos->autoshift);
@@ -126,6 +128,7 @@ class PosList extends \App\Pages\Base
 
         $this->_pos->address = $this->posdetail->editaddress->getText();
         $this->_pos->pointname = $this->posdetail->editpointname->getText();
+        $this->_pos->vktoken = $this->posdetail->editvktoken->getText();
         $this->_pos->cbkey = $this->posdetail->editcbkey->getText();
         $this->_pos->cbpin = $this->posdetail->editcbpin->getText();
         $this->_pos->autoshift = $this->posdetail->editautoshift->getValue();

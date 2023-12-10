@@ -61,6 +61,14 @@
                      </div>
                      </div>
                            <div class="col-auto">
+                       <select class="form-control mr-sm-2" zippy="searchqty">
+                            <option value="0">На  складі </option>
+                            <option value="1">В  мінусі </option>
+                            <option value="2">Всі </option>
+                        </select>
+
+                      </div>
+                          <div class="col-auto">
                       <input class="btn btn-outline-success  " type="submit" value="ОК">
                       </div>
                     
@@ -84,8 +92,8 @@
                         <th>Од.</th>
                     
 
-                        <th class="text-right  ">Мін. кіл.</th>
                         <th class="text-right  ">Кіл.</th>
+                        <th class="text-right  ">Обл. ціна.</th>
                    
                         {{#hp1}}<th class="text-right  ">{{hp1}}</th>{{/hp1}}
                         {{#hp2}}<th class="text-right  ">{{hp2}}</th>{{/hp2}}
@@ -121,8 +129,8 @@
                         <td zippy="msr"></td>
 
 
-                        <td zippy="minqty" class="text-right  "></td>
                         <td zippy="iqty" class="text-right  "></td>
+                        <td zippy="inprice" class="text-right  "></td>
                      
 
                         {{#hp1}}<td zippy="iprice1" class="text-right  "></td>{{/hp1}}

@@ -330,7 +330,22 @@ class ReturnIssue extends \App\Pages\Base
 
 
                 }
+ 
+                if($pos->usefisc == 1 && $this->_tvars['vkassa'] == true) {
+                    $vk = new  \App\Modules\VK\VK($pos->vktoken) ;
+                    $ret = $vk->Check($this->_doc) ;
 
+                    if(is_array($ret)) {
+                        $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                    } else {
+                        $this->setError($ret);
+                        $conn->RollbackTrans();
+                        return;
+
+                    }         
+ 
+                }
+ 
 
 
                 if ($pos->usefisc == 1 && $this->_tvars['ppo'] == true) {

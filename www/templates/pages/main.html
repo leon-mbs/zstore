@@ -286,8 +286,12 @@
            <div class="row justify-content-center mb-2">
             
              <div class="col-12 pl-4"  >
-               <small>  Версiя програми <b>{{curversion}}</b>. Версiя БД <b>{{curversionbd}}</b>  </small>
+               Версiя програми <b>{{curversion}}</b>.  </small>
                &nbsp;&nbsp; <small>{{{newversion}}}</small>
+            </div>
+            <div class="col-12 pl-4"  >
+               Версiя БД <b>{{curversionbd}}</b> 
+               &nbsp;&nbsp; <span class="text-danger"> {{{reqversion}}} </span>
             </div>
           </div>
            {{/isadmins}}

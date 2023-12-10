@@ -150,8 +150,8 @@
                     </div>
 
                     <div class="form-group">
-                        <input v-on:click.prevent="saveedit"  type="submit" value="Зберегти" class="btn btn-outline-primary"> 
                         <input v-on:click.prevent="canceledit" type="button"   value="Скасувати" class="btn btn-outline-secondary ">
+                        <input v-on:click.prevent="saveedit"  type="submit" value="Зберегти" class="btn btn-outline-primary"> 
                     </div>
                
         </form>
@@ -310,7 +310,7 @@
                   this.items[this.editedindex]  = {}  
                   this.items[this.editedindex].item_id  =  this.edititem  
               }
-              
+              console.log( fa(this.editprice) )
               this.items[this.editedindex].itemname = this.loadeditem.itemname 
               this.items[this.editedindex].price = fa(this.editprice) 
               this.items[this.editedindex].quantity = fqty(this.editquantity) 

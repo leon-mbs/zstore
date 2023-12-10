@@ -270,7 +270,7 @@ class ProductList extends \App\Pages\Base
 
     public function imglistOnRow($row) {
         $image = $row->getDataItem();
-        $row->add(new \Zippy\html\Image("imgitem"))->setUrl('/loadshopimage.php?id=' . $image->image_id . "&t=t");
+        $row->add(new \Zippy\Html\Image("imgitem"))->setUrl('/loadshopimage.php?id=' . $image->image_id . "&t=t");
         $row->add(new ClickLink("idel", $this, "idelOnClick"));
     }
 
@@ -458,7 +458,7 @@ class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\I
     }
 
     public function clean() {
-        $this->value = array();
+      //  $this->value = array();
     }
 
 }

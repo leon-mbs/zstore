@@ -52,7 +52,7 @@ class StoreList extends \App\Pages\Base
 
         $conn = $conn = \ZDB\DB::getConnect();
 
-        $cstr = \App\Acl::getStoreBranchConstraint();
+        $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "  store_id in ({$cstr})  and  ";
         }

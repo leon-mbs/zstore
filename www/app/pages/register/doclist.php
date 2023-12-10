@@ -523,7 +523,7 @@ class DocList extends \App\Pages\Base
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
             return;
         }
-        if(strlen($doc->headerdata["fiscalnumber"])>0) {
+        if(strlen($doc->headerdata["fiscalnumber"]??'')>0) {
             $this->setWarn('Відмінено фіскалізований документ') ;
 
         }
@@ -600,7 +600,7 @@ class DocList extends \App\Pages\Base
             
             $this->_doc->headerdata['_state_before_approve_'] ='';
             
-        }  catch(\Exception $e){
+        }  catch(\Exception $ee){
             global $logger;
             $conn->RollbackTrans();
       

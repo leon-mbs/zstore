@@ -34,7 +34,7 @@ class Users extends \App\Pages\Base
 
         $this->add(new Panel("listpan"));
         $this->listpan->add(new Form('filter'))->onSubmit($this, 'OnFilter');
-        $this->listpan->filter->add(new DropDownChoice('searchrole', \App\entity\UserRole::findArray('rolename', '', 'rolename'), 0));
+        $this->listpan->filter->add(new DropDownChoice('searchrole', \App\Entity\UserRole::findArray('rolename', '', 'rolename'), 0));
 
         $this->listpan->add(new ClickLink('addnew', $this, "onAdd"));
         $this->listpan->add(new DataView("userrow", new UserDataSource($this), $this, 'OnUserRow'))->Reload();

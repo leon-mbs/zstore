@@ -5,7 +5,7 @@
     </head>
  <body>
         <div class="row">
-            <div class="col-12  col-xl-10 " zippy="clist">
+            <div class="col-12  col-md-10 col-md-8 " zippy="clist">
                 <h3>Розрахунки з покупцями </h3>
                 <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
@@ -32,7 +32,7 @@
 
                         <th></th>
                         <th></th>
-                        <th></th>
+                   
 
 
                     </tr>
@@ -43,11 +43,9 @@
 
                          <td zippy="amountd" class="text-right"></td>
                         <td zippy="amountc" class="text-right"></td>
-                   <td><a zippy="createpay">Створити КО</a></td>
-
-
+               
                         <td><a zippy="showdet">Деталiзацiя</a></td>
-                        <td><a zippy="showdocs">Документи до оплати</a></td>
+                          <td><a zippy="createpay">До сплати</a></td>
 
 
                     </tr>
@@ -69,10 +67,10 @@
 
             </div>
 
-            <div class="col-12 col-lg-8 col-xl-6 " zippy="plist">
+            <div class="col-12 col-lg-10 col-xl-8 " zippy="plist">
                 <a zippy="back"><i class="fa fa-arrow-alt-circle-left"></i> до переліку</a>
                 <h3 zippy="cname"></h3>
-                <small><i class="fa fa-exclamation-circle"></i> Для оплати по договорам, а не окремим документам використовуються касовi ордери</small>
+                <span>До сплати </span><b zippy="allforpay"> </b> &nbsp;<span>Створити </span> <a zippy="payorder"></a> 
 
                 <table class="table table-sm    ">
                     <tr>
@@ -87,6 +85,7 @@
                        
 
                         <th></th>
+                        <th>Перевести в статус</th>
 
 
                     </tr>
@@ -105,7 +104,7 @@
 
 
                         </td>
-
+                         <td  class="text-nowrap"  > <a zippy="stpayed">Оплачений</a> <a  zippy="stdone">Виконаний</a> <a  zippy="stclosed">Закритий</a>  </td>
                     </tr>
 
                 </table>

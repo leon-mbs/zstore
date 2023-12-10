@@ -6,6 +6,7 @@ use App\Application as App;
 use App\Entity\Doc\Document;
 use App\Helper as H;
 use App\Entity\Firm;
+use App\Entity\Customer;
 use App\System;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\DataList\Paginator;
@@ -17,6 +18,7 @@ use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\AutocompleteTextInput;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
@@ -48,7 +50,8 @@ class GIList extends \App\Pages\Base
         $this->listpan->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
         $this->listpan->filter->add(new DropDownChoice('salesource', H::getSaleSources(), 0));
         $this->listpan->filter->add(new DropDownChoice('fstore', \App\Entity\Store::getList(), 0));
-
+        $this->listpan->filter->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');
+ 
         $doclist = $this->listpan->add(new DataView('doclist', new GoodsIssueDataSource($this), $this, 'doclistOnRow'));
 
         $this->listpan->add(new Paginator('pag', $doclist));
@@ -166,7 +169,7 @@ class GIList extends \App\Pages\Base
     }
 
     public function statusOnSubmit($sender) {
-        if (\App\Acl::checkChangeStateDoc($this->_doc, true, true) == false) {
+        if (\App\ACL::checkChangeStateDoc($this->_doc, true, true) == false) {
             return;
         }
 
@@ -527,6 +530,11 @@ class GIList extends \App\Pages\Base
         $this->nppan->setVisible(false);
     }
 
+    public function OnAutoCustomer($sender) {
+        return Customer::getList($sender->getText(), 1, true);
+    }
+    
+    
     public function npOnSubmit($sender) {
         $params = array();
 
@@ -702,7 +710,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
 
         $status = $this->page->listpan->filter->status->getValue();
         if ($status == 0) {
-            $where .= "  and    state >3 and  state  not in(14,5,9,22)        ";
+            $where .= "  and    state >3 and  state  not in(14,5,9 )        ";
         }
         if ($status == 1) {
             $where .= " and  state =  " . Document::STATE_NEW;
@@ -717,6 +725,10 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
         $comp = $this->page->listpan->filter->searchcomp->getValue();
         if ($comp > 0) {
             $where = $where . " and firm_id = " . $comp;
+        }
+        $cust = $this->page->listpan->filter->searchcust->getKey();
+        if ($cust > 0) {
+            $where = $where . " and customer_id = " . $cust;
         }
 
         $store_id = $this->page->listpan->filter->fstore->getValue();
