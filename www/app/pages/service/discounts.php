@@ -323,7 +323,7 @@ class Discounts extends \App\Pages\Base
         if ($c == null) {
             return;
         }
-        $d = round($sender->pbsearchbon->getText());
+        $d = $sender->pbsearchbon->getText();
         if ($d > 0) {
             $c->pbonus = $d;
             $c->save();
@@ -333,6 +333,7 @@ class Discounts extends \App\Pages\Base
         
 
         $this->setSuccess('Збережено');
+        $this->goAnkor('pbsearchkey') ;
 
     }   
    public function bcustomerlistOnRow($row) {

@@ -84,8 +84,8 @@ class Update extends \App\Pages\Base
            $this->_tvars['list'][] = array('item'=>$item)  ;
         }
         
-        //одновлшение  БД
-        if (strlen($data['sqlm']) >0) {
+        //обновление  БД
+        if (strlen($data['sqlm']) >0  && $this->_tvars['reqversion']!= '' ) {
 
           $this->_tvars['showdb']  = true   ;
           $sqlurl= $data['sqlm'] ;
