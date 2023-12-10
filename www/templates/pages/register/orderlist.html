@@ -197,7 +197,7 @@
                        <div class="col-12"> 
                         <span>Створити </span> 
                         <button zippy="bttn" class="btn btn-info  mr-2">  ТТН</button>
-                        <button zippy="bpos" class="btn btn-info  mr-2"> Чек                </button>
+                        <button zippy="bpos" class="btn btn-info  mr-2">  {{^fiscal}} Чек   {{/fiscal}}     {{#fiscal}}  Фіскальний чек    {{/fiscal}}                 </button>
                         <button zippy="bgi" class="btn btn-info  mr-2">  Видаткову накладну                </button>
                         <button zippy="bco" class="btn btn-info  mr-2">  Заявку постачальнику               </button>
                         <button zippy="btask" type="submit" class=" btn btn-info mr-2 ">  Наряд</button>

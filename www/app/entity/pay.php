@@ -286,6 +286,11 @@ class Pay extends \ZCL\DB\Entity
             }
         }
 
+        $cust =   \App\Entity\Customer::load($customer_id);
+        if(($cust->pbonus ??0) >0) {
+            $bonus =  $cust->pbonus; //постоянный  бонус
+        }
+        
         if ($bonus > 0) {
 
 

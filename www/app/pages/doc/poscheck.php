@@ -126,7 +126,7 @@ class POSCheck extends \App\Pages\Base
             $this->_doc = Document::load($docid)->cast();
             if($this->_doc->headerdata['arm']==1) {
                 $this->setWarn('Чек створено в АРМ касира')  ;
-                App::Redirect("\\App\\Pages\\Service\\ARMPos");
+                App::Redirect("\\App\\Pages\\Service\\ARMPos",$this->_doc);
 
                 return;
             }

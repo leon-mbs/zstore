@@ -46,16 +46,16 @@
                             <td class="text-right" zippy="cost"></td>
                             <td class="text-right" zippy="hours"></td>
                             <td    >
-                            {{#hideblock}}
-                               <a title="Тех. карта"> <i class="fa fa-wrench"></i><a>  
-                            {{/hideblock}}
+                          
+                              <a zippy="hascard" title="Тех. карта" >  <i class="fa fa-wrench"></i></a>
+                              
                             </td>
 
 
                             <td   class="text-nowrap" >
-                                {{#hideblock}}
+                            
                                 <a zippy="itemset" title="Матерiали та  комплектуючi"><i class="fa fa-cogs"></i></a> 
-                                {{/hideblock}}
+                                &nbsp; 
                               &nbsp;  <a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> 
                               &nbsp;  <a  zippy="delete" title="Видалити"><i class="fa fa-trash"></i></a></td>
                         </tr>
@@ -105,6 +105,66 @@
 
             </form>
         </div>
+        <div class="row">
 
+            <div class="col-12 col-md-7 col-xl-5" zippy="setpanel">
+                <a zippy="backtolist"><i class="fa fa-arrow-alt-circle-left"></i> До довідника</a>
+                <h4 zippy="stitle"></h4>
+                <small>Комплекти (складовi частини) для готової продукцiї та напiвфабрикатiв</small>
+                <form zippy="setform" class="form-inline mt-2 mb-2">
+                    <label for="editsname">ТМЦ</label>
+                    <input placeholder="Почніть вводити.." class="form-control  mr-sm-2" zippy="editsname"/>
+
+                    <label for="editsqty">Кіл.</label>
+                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsqty" required="required"
+                           pattern="[0-9,\.]+" style="width:60px">
+                    <input zippy="setformbtn" class="btn btn-outline-success  " type="submit" value="Додати">
+                </form>
+                <table class="table   table-sm  ">
+                    <tr>
+                        <th>Найменування</th>
+                        <th>Код</th>
+                        <th class="text-right">Кіл.</th>
+                        <th></th>
+                    </tr>
+                    <tr zippy="setlist">
+                        <td zippy="sname"></td>
+                        <td zippy="scode"></td>
+                        <td class="text-right" zippy="sqty"></td>
+                        <td><a zippy="sdel"><i class="fa fa-trash"></i></a></td>
+                    </tr>
+                </table>
+           
+    
+                 <br>
+                 <h5>Технологiчна карта</h5>
+                 <form zippy="cardform" >
+                    <textarea style="height:250px" class="form-control" zippy="editscard"></textarea> 
+                           
+                
+                    <input class="btn btn-outline-success  " type="submit" value="Зберегти">
+                 </form>
+                
+            </div>
+        </div>
+        
+       <div id="idesc" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog  ">
+                <div  class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Тех. карта</h5>
+                   
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div id="idesccontent" class="modal-body">
+                        
+
+                    </div>       
+                </div>
+            </div>
+        </div>        
     </body>
 </html>

@@ -308,6 +308,7 @@ class OrderList extends \App\Pages\Base
                     $this->setWarn('Вже існує документ Наряд');
                 }
                 App::Redirect("\\App\\Pages\\Doc\\Task", 0, $this->_doc->document_id);
+                return;
             }
             if ($sender->id == "bttn") {
                 if ($ttn) {
@@ -325,7 +326,7 @@ class OrderList extends \App\Pages\Base
                 if ($pos) {
                     $this->setWarn('Вже існує документ Чек');
                 }
-                App::Redirect("\\App\\Pages\\Doc\\POSCheck", 0, $this->_doc->document_id);
+                App::Redirect("\\App\\Pages\\Service\\ARMPos", 0, $this->_doc->document_id);
                 return;
             }
 
@@ -519,9 +520,8 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bgi->setVisible(false);
         }
 
-
-        $list = $this->_doc->getChildren('Invoice');
-        if (count($list) > 0) {
+    
+        if ($this->_doc->hasPayments()) {
             $this->statuspan->statusform->bpos->setVisible(false);
         }
     }

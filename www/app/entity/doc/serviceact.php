@@ -159,11 +159,50 @@ class ServiceAct extends Document
                 $sc->setStock($st->stock_id);
 
                 $sc->setOutPrice($item->price * $k);
-                $sc->tag = Entry::TAG_SELL;
+                $sc->tag = \App\Entity\Entry::TAG_SELL;
                 $sc->save();
 
             }
         }
+       
+       
+       if($this->headerdata['store'] >0) {
+       //списание  комплектов 
+           foreach ($this->unpackDetails('detaildata') as $s) {
+                $ser = \App\Entity\Service::load($s->service_id);
+                if(!is_array($ser->itemset)) {
+                    continue;
+                }
+       
+               
+                foreach ($ser->itemset as $part) {
+
+                    $itemp = \App\Entity\Item::load($part->item_id);
+                    if($itemp == null) {
+                        continue;
+                    }
+                    $itemp->quantity = $s->quantity * $part->qty;
+
+                    if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
+                        throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
+                    }
+
+                    $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
+
+                    foreach ($listst as $st) {
+                        $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
+                        $sc->setStock($st->stock_id);
+                        $sc->tag=\App\Entity\Entry::TAG_TOPROD;
+
+                        $sc->save();
+                    }
+                }           
+               
+     
+               
+                    
+           } 
+       } 
     }
 
     public function supportedExport() {
@@ -259,9 +298,10 @@ class ServiceAct extends Document
         $list = array();
         $list['Task'] = self::getDesc('Task');
         $list['ProdIssue'] = self::getDesc('ProdIssue');
-        $list['Invoice'] = self::getDesc('Invoice');
+//        $list['Invoice'] = self::getDesc('Invoice');
         $list['ServiceAct'] = self::getDesc('ServiceAct');
         $list['Warranty'] = self::getDesc('Warranty');
+        $list['POSCheck'] = self::getDesc('POSCheck');
 
         return $list;
     }

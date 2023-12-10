@@ -73,6 +73,29 @@ class Discounts extends \App\Pages\Base
         $form->add(new  TextInput("bonus4", $disc["bonus4"]));
         $form->add(new  TextInput("summa4", $disc["summa4"]));
 
+    //покупатели
+        $this->otab->add(new Form('pbfilter'))->onSubmit($this, 'OnPBAdd');
+        $this->otab->pbfilter->add(new AutocompleteTextInput('pbsearchkey'))->onText($this, 'OnAutoCustomer');
+        $this->otab->pbfilter->add(new TextInput('pbsearchbon'));
+
+ 
+        $this->otab->add(new DataView('pblist', new BonusCustomerDataSource($this), $this, 'bcustomerlistOnRow'));
+        $this->otab->pblist->setPageSize(H::getPG());
+        $this->otab->add(new \Zippy\Html\DataList\Paginator('pbpag', $this->otab->pblist));
+
+        $this->otab->pblist->Reload();
+        
+     //бонусы      
+        $this->otab->add(new Form('blfilter'))->onSubmit($this, 'OnPL');
+        $this->otab->blfilter->add(new TextInput('blsearch'));
+      
+        $this->otab->add(new DataView('listbon', new BonusListCustomerDataSource($this), $this, 'bcustomerlistBOnRow'));
+        $this->otab->listbon->setPageSize(25);
+        $this->otab->add(new \Zippy\Html\DataList\Paginator('lbpag', $this->otab->listbon));
+
+        $this->otab->listbon->Reload();
+        
+        
         $form = $this->ctab->add(new  Form("discform"));
         $form->onSubmit($this, "onDisc");
 
@@ -268,6 +291,7 @@ class Discounts extends \App\Pages\Base
 
     }
 
+
     public function OnCSave($sender) {
         $rows = $this->ctab->clistform->clist->getDataRows();
         foreach ($rows as $row) {
@@ -294,10 +318,74 @@ class Discounts extends \App\Pages\Base
 
     }
 
+     public function OnPBAdd($sender) {
+        $c = \App\Entity\Customer::load($sender->pbsearchkey->getKey());
+        if ($c == null) {
+            return;
+        }
+        $d = round($sender->pbsearchbon->getText());
+        if ($d > 0) {
+            $c->pbonus = $d;
+            $c->save();
+            $this->otab->pblist->Reload();
+        }
+        $sender->clean();
+        
+
+        $this->setSuccess('Збережено');
+
+    }   
+   public function bcustomerlistOnRow($row) {
+        $c = $row->getDataItem();
+        $row->add(new  Label("pbname", $c->customer_name));
+        $row->add(new  Label("pbphone", $c->phone));
+        $row->add(new  Label("pbbonus", $c->pbonus));
+        $row->add(new  ClickLink('pbdel'))->onClick($this, 'pbdeleteOnClick');
+
+    }
+    
+     public function pbdeleteOnClick($sender) {
+        $c = $sender->owner->getDataItem();
+        $c->pbonus = 0;
+        $c->save();
+        $this->otab->pblist->Reload();
+
+
+    }
+   
     public function OnAutoCustomer($sender) {
         return Customer::getList($sender->getText(), 1);
     }
 
+    
+     //список  бонусоы ц контрагентов
+     public function OnPL($sender) {
+      
+        $this->otab->listbon->Reload();
+ 
+
+    }   
+    public function bcustomerlistBOnRow($row) {
+        $c = $row->getDataItem();
+        $row->add(new  Label("lbname", $c->customer_name));
+        $row->add(new  Label("lbphone", $c->phone));
+        
+        $blist=$c->getBonuses();
+        
+        $sum=0;
+        $table="";
+        foreach($blist as $b){
+           $sum = $sum+ $b->bonus;   
+           $table = $table . "<tr><td>".  H::fd($b->paydate)."</td>";   
+           $table = $table . "<td>".  $b->document_number ."</td>";   
+           $table = $table . "<td class=\"text-right\">".  $b->bonus ."</td></tr>";   
+        }
+        
+        $row->add(new  Label("lbbonus", $sum));
+        $row->add(new  Label("lbdetail", $table,true));
+
+
+    }
 
     //услуги
     public function OnSAdd($sender) {
@@ -675,6 +763,79 @@ class DiscCustomerDataSource implements \Zippy\Interfaces\DataSource
 
         $where .= "   and detail   like  '%<discount>%' ";
 
+        return $where;
+    }
+
+    public function getItemCount() {
+        return Customer::findCnt($this->getWhere());
+    }
+
+    public function getItems($start, $count, $sortfield = null, $asc = null) {
+
+        return Customer::find($this->getWhere(), "customer_name ", $count, $start);
+    }
+
+    public function getItem($id) {
+
+    }
+
+}
+
+class BonusCustomerDataSource implements \Zippy\Interfaces\DataSource
+{
+    private $page;
+
+    public function __construct($page) {
+        $this->page = $page;
+    }
+
+    private function getWhere() {
+
+        $conn = \ZDB\DB::getConnect();
+
+
+        $where = "status = 0 and detail not like '%<type>2</type>%' and detail not like '%<isholding>1</isholding>%'     ";
+
+        $where .= "   and detail   like  '%<pbonus>%' ";
+
+        return $where;
+    }
+
+    public function getItemCount() {
+        return Customer::findCnt($this->getWhere());
+    }
+
+    public function getItems($start, $count, $sortfield = null, $asc = null) {
+
+        return Customer::find($this->getWhere(), "customer_name ", $count, $start);
+    }
+
+    public function getItem($id) {
+
+    }
+
+}
+
+class BonusListCustomerDataSource implements \Zippy\Interfaces\DataSource
+{
+    private $page;
+
+    public function __construct($page) {
+        $this->page = $page;
+    }
+
+    private function getWhere() {
+
+        $conn = \ZDB\DB::getConnect();
+
+        $t = trim($this->page->otab->blfilter->blsearch->getText());
+
+     //   $where = "status = 0 and detail not like '%<type>2</type>%' and detail not like '%<isholding>1</isholding>%'     ";
+
+        $where = " status = 0  and customer_id in ( select customer_id from paylist_view  where paytype=1001 ) ";
+        if(strlen($t) > 0)  {
+            $where .= " and customer_name like   " . Customer::qstr( '%'.$t.'%' );
+        }
         return $where;
     }
 

@@ -190,8 +190,9 @@
                         <input type="button" onclick="history.back()" value="Скасувати"   class="btn btn-outline-secondary  ">
                         <input v-on:click.prevent="onbtn('savedoc')"   type="submit" value="Зберегти" class="btn btn-outline-primary  ">
                         &nbsp;<input v-on:click.prevent="onbtn('execdoc')"   type="submit" value="На виконання" class="btn btn-outline-primary  ">
+                        &nbsp;<input v-on:click.prevent="onbtn('paydoc')"   type="submit" value="До сплати" class="btn btn-outline-primary  ">
 
-                        &nbsp;<a data-toggle="modal" data-target="#modalpayed"  href="javascript:void(0);"  class="btn btn-outline-info  ">Оплата</a>
+
          
                     </div>
                 </div>   
@@ -332,41 +333,7 @@
                 </div>
             </div>  
             
-         <div id="modalpayed" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered  modal-sm">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Оплата</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group  ">
-                                <label for="payment">Каса, рахунок</label>
-                                <select class="form-control" v-model="payment">
-                                    <option value="0">Не обрано</option>
-                                    <option v-for="mf in mflist"    v-bind:value="mf.key">{{mf.value}}</option>      
-                                </select>
                                
-                            </div>
-                        
-                            <div class="form-group  ">
-                                <label for="payment">Внесено  оплату</label>
-                                                         
-                                <input class="form-control qtyprice" type="text" v-model="payed" pattern="[0-9,\.]+">
-                                
-                            </div>
-                             <div class="input-group">
-                                <input type="submit" value="Оплатити" v-on:click.prevent="onbtn('paydoc')"   class="   btn btn-info  ">
-
-                            </div>
-                        
-                        </div>
-
-                    </div>
-                </div>
-            </div>                           
          </div> 
        
             
@@ -643,39 +610,19 @@
                           toastr.error("Не вибраний склад") 
                           return  
                     }
-                    if(bname == 'execdoc'  && data.doc.customer_id == 0 ) {
-                          toastr.error("Якщо післяплата, необхідно вибрати контрагента") 
+                    if( data.doc.customer_id == 0 ) {
+                          toastr.error("Не вибраний замовник") 
                           return  
                     }
-                    if(bname == 'paydoc'  ) {
-                       data.doc.payment = this.payment
-                       data.doc.payed = parseVal(this.payed )
-
-      
-                       if( data.doc.payment == 0 ) {
-                          toastr.error("Не вибрана каса") 
-                          return  
-                       }
-                       if( parseVal(this.payed ) == 0 ) {
-                          toastr.error("Не вкаана сума") 
-                          return  
-                       }
-                       if(parseVal(this.payamount) > parseVal(this.payed ) && data.doc.customer_id == 0) {
-                          toastr.error("Якщо кредит, необхідно вибрати контрагента") 
-                          return  
-                       }
-                       if(parseVal(this.payamount) < parseVal(this.payed ) ) {
-                          toastr.error("Внесена сума більше необхідної") 
-                          return  
-                       }
-                     }          
-                     
-                    $("#modalwait").modal("show") ;           
+                      
+                    document.getElementById('dialogwait').showModal()          
                     callPM('save',[ ], data,(data)=> 
                       {
                            
-                           
+                       
                            if(false==checkPMAnswer(data) )   {
+                               document.getElementById('dialogwait').close()    
+                               
                                if(data.newnumber)  this.document_number = data.newnumber
                                return
                            }

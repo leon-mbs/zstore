@@ -2,14 +2,19 @@
 
 namespace App\Pages\Reference;
 
+use App\Entity\Item;
 use App\Entity\Service;
 use App\Helper as H;
+use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\AutocompleteTextInput;
 use Zippy\Html\Form\Button;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\Form;
+use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\TextArea;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
@@ -17,6 +22,7 @@ use Zippy\Html\Panel;
 class ServiceList extends \App\Pages\Base
 {
     private $_service;
+    public $_itemset;
 
     public function __construct() {
         parent::__construct();
@@ -45,6 +51,24 @@ class ServiceList extends \App\Pages\Base
 
         $this->servicedetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->servicedetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
+        
+        
+        $this->add(new Panel('setpanel'))->setVisible(false);
+        $this->setpanel->add(new DataView('setlist', new ArrayDataSource($this, '_itemset'), $this, 'itemsetlistOnRow'));
+        $this->setpanel->add(new Form('setform')) ;
+        $this->setpanel->setform->add(new AutocompleteTextInput('editsname'))->onText($this, 'OnAutoSet');
+        $this->setpanel->setform->add(new TextInput('editsqty', 1));
+        $this->setpanel->setform->add(new SubmitButton('setformbtn'))->onClick($this, 'OnAddSet');
+
+
+        $this->setpanel->add(new Form('cardform'))->onSubmit($this, 'OnCardSet');
+        $this->setpanel->cardform->add(new TextArea('editscard'));
+
+        $this->setpanel->add(new Label('stitle'));
+
+        $this->setpanel->add(new ClickLink('backtolist', $this, "onback"));
+        
+        
     }
 
     public function servicelistOnRow(\Zippy\Html\DataList\DataRow $row) {
@@ -57,6 +81,13 @@ class ServiceList extends \App\Pages\Base
         $row->add(new Label('hours', $item->hours));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+
+        $row->add(new ClickLink('itemset'))->onClick($this, 'setOnClick');
+
+        $row->add(new ClickLink('hascard'))->onClick($this, 'showcardOnClick',true);
+        $row->hascard->setVisible(strlen($item->techcard ?? '') > 0);
+        
+        
     }
 
     public function deleteOnClick($sender) {
@@ -130,7 +161,118 @@ class ServiceList extends \App\Pages\Base
     public function OnFilter($sender) {
         $this->servicetable->servicelist->Reload();
     }
+    
+    
+    //комплекты
+    public function onback($sender) {
+        $this->setpanel->setVisible(false);
+        $this->servicetable->setVisible(true);
+    }    
+    public function setOnClick($sender) {
+        $this->_service = $sender->owner->getDataItem();
 
+        $this->setpanel->setVisible(true);
+        $this->servicetable->setVisible(false);
+
+        $this->setpanel->stitle->setText($this->_service->service_name);
+
+        $this->_itemset = $this->_service->itemset;
+        $this->setpanel->setlist->Reload();
+
+        $this->setpanel->cardform->editscard->setText($this->_service->techcard)  ;
+
+    }
+
+    private function setupdate() {
+        $this->setpanel->setform->clean();
+        $this->_service->itemset =  $this->_itemset ;
+        $this->_service->save() ;
+        $this->setpanel->setlist->Reload();
+        $this->servicetable->servicelist->Reload();
+    
+    }
+
+    public function itemsetlistOnRow(\Zippy\Html\DataList\DataRow $row) {
+        $item = $row->getDataItem();
+        $row->add(new Label('sname', $item->itemname));
+        $row->add(new Label('scode', $item->item_code));
+        $row->add(new Label('sqty', H::fqty($item->qty)));
+        $row->add(new ClickLink('sdel'))->onClick($this, 'ondelset');
+    }
+
+    public function OnAutoSet($sender) {
+        $text = Item::qstr('%' . $sender->getText() . '%');
+        $in = "(0" ;
+        foreach ($this->_itemset as $is) {
+            $in .= "," . $is->item_id;
+        }
+
+        $in .= ")";
+        return Item::findArray('itemname', " item_type    in (2,5) and  item_id not in {$in} and (itemname like {$text} or item_code like {$text}) and disabled <> 1", 'itemname');
+    }
+
+    public function OnAddSet($sender) {
+        $form=  $this->setpanel->setform;
+        $id = $form->editsname->getKey();
+        if ($id == 0) {
+            $this->setError("Не обрано ТМЦ");
+            return;
+        }
+
+        $item = Item::load($id);
+        
+        $qty = $form->editsqty->getText();
+
+        $set = new \App\DataItem() ;
+        $set->itemname = $item->itemname;
+        $set->item_code = $item->item_code;
+        $set->item_id = $id;
+        $set->qty = $qty;
+        $this->_itemset[]=$set;
+
+        $this->setupdate() ;
+        $form->clean();
+    }
+
+    public function ondelset($sender) {
+        $item = $sender->owner->getDataItem();
+
+        $tmp=[];
+
+        foreach($this->_itemset as $s) {
+            if($s->item_id!=$item->item_id) {
+               $tmp[]=$s;
+            }
+        }
+        $this->_itemset = $tmp;
+        $this->setupdate() ;
+    }
+
+ 
+    public function OnCardSet($sender) {
+
+
+        $this->_service->techcard = $sender->editscard->getText();
+        $this->_service->save() ;
+        $this->servicetable->servicelist->Reload();
+
+    }
+    
+    
+    
+    
+    public function  showcardOnClick($sender){
+        $item = $sender->getOwner()->getDataItem();
+        $desc = str_replace("'","`",$item->techcard);
+        $desc = str_replace("\"","`",$desc);
+      //  $desc = nl2br ($desc);        
+        $desc = str_replace ("\n","",$desc);
+        $desc = str_replace ("\r","",$desc);
+        
+        $this->updateAjax([],"$('#idesc').modal('show'); $('#idesccontent').html('{$desc}'); ")  ;
+        
+    }
+ 
 }
 
 class ServiceDataSource implements \Zippy\Interfaces\DataSource

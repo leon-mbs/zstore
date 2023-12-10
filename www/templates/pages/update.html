@@ -5,24 +5,93 @@
 </head>
 <body>
  <div class="row">
-    <div class="col-12 col-lg-10 ml-2"   >
-        <h3>Оновлення</h3>
-        <span>Нова  версія <b>{{newver}}</b></span>
-         <br>Повна  <a href="https://zippy.com.ua/update">історія  оновлень</a>
-        <br>
-        <br>
-         <h5>Перелік змін</h5>
+    <div class="col-12 col-lg-10 col-xl-6 ml-2"   >
+        <h2>Оновлення</h2>
+  
+           <div class="row  mb-4  ">
+            
+             <div class="col-12  "  >
+             <span>  Версiя програми <b>{{curversion}}</b>. </span>
+             {{#actual}}
+             &nbsp; <span>Версія   актуальна</span>
+             {{/actual}}       
+            </div>
+            <div class="col-12  "  >
+               Версiя БД <b>{{curversiondb}}</b> 
+               &nbsp;&nbsp; <span class="text-danger"> {{{reqversion}}} </span>
+            </div>
+          </div>
+           
+      <div class="row  ">
+  
+         {{#tooold}}
+       <div class="col-12  ">
+  
+        <i class="fa fa-exclamation-triangle"></i>  <b>Пропущено  кілька оновлень </b>
+           <br>Перейдіть на  <a href="https://zippy.com.ua/update">історію версій </a> 
+            і виконайте послідовне оновлення
+     </div>  
+         {{/tooold}}
+ 
+         
+       
+ 
+   
+    
+      {{#show}}
+      <div class="col-12  ">
 
-          <ul style=" line-height: 1.4em;" class="list-unstyled">
+  
+     <i class="fa fa-exclamation-triangle"></i> <h5 style="display:inline">    Доступна  версія <b>{{newver}}</b></h5>
+         <br><b>Перелік змін</b>
+           <p>
+          <ul style=" line-height: 1.4em;"  >
             {{#list}}
             <li >{{item}}</a>
             {{/list}}
          </ul>
+         </p>
+         <p>
           {{notes}}
+          </p>
+        <small>   Повна  <a href="https://zippy.com.ua/update">історія  оновлень</a>  </small>                  
           
-          <br><br>Для  оновлення завантажити <a href="{{archive}}" >архів</a>  або  перейти на  <a href="{{github}}">GitHib</a>
+         <br>Для  оновлення завантажити <a href="{{archive}}" >архів</a>  або  перейти на  <a href="{{github}}">GitHib</a>
+   </div>   
+   
+     
+        {{#showdb}}       
+  
+     <div class="col-12 mt-4 ">  
+
+           <b>Оновлення структури бази данних</b>
+           <br>Завантажити  <a href="{{sqlurl}}" >sql скрипт</a>  для ручного оновлення
+           <br><small><i class="fa fa-exclamation-triangle"></i>  
+               Перед оновленням рекомендується зробити бакап БД.
+                Користувачі "коробкових" версій можуть просто скопіювати або заархівувати папку із сервером
+                (Попередньо його потрібно зупинити).
+               
+           </small>
+           <br><br><a zippy="updatesql"><b>Оновити автоматично</b></a>
+           <br><small>Експериментальна функція</small>
+           <br><br>
+   </div>  
+            {{/showdb}}
+            
+            
+            
+        {{/show}}
+        
+    </div>         
   </div>        
 </div>        
-  
+ <script>
+       function check_updatesql(ele){
+            
+           document.getElementById('dialogwait').showModal()
+            return true;
+       
+        } 
+ </script> 
 </body>
 </html>

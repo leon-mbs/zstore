@@ -122,6 +122,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editlost'));
 
         $this->itemdetail->add(new TextInput('editcell'));
+        $this->itemdetail->add(new TextInput('edituktz'));
         $this->itemdetail->add(new TextInput('editmsr'));
 
         $this->itemdetail->add(new DropDownChoice('editcat', Category::findArray("cat_name", "cat_id not in (select coalesce(parent_id,0) from item_cat  )", "cat_name"), 0));
@@ -144,6 +145,8 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
         $this->add(new Panel('setpanel'))->setVisible(false);
+        
+        
         $this->setpanel->add(new DataView('setlist', new ArrayDataSource($this, '_itemset'), $this, 'itemsetlistOnRow'));
         $this->setpanel->add(new Form('setform')) ;
         $this->setpanel->setform->add(new AutocompleteTextInput('editsname'))->onText($this, 'OnAutoSet');
@@ -217,7 +220,7 @@ class ItemList extends \App\Pages\Base
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
         $row->add(new ClickLink('set'))->onClick($this, 'setOnClick');
-        $row->set->setVisible($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD);
+        $row->set->setVisible($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD || $item->item_type == Item::TYPE_MAT);
 
         $row->add(new ClickLink('printqr'))->onClick($this, 'printQrOnClick', true);
         $row->printqr->setVisible(strlen($item->url) > 0);
@@ -294,6 +297,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editurl->setText($this->_item->url);
         $this->itemdetail->editweight->setText($this->_item->weight);
         $this->itemdetail->editcell->setText($this->_item->cell);
+        $this->itemdetail->edituktz->setText($this->_item->uktz);
         $this->itemdetail->editminqty->setText(\App\Helper::fqty($this->_item->minqty));
         $this->itemdetail->editzarp->setText(\App\Helper::fqty($this->_item->zarp));
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
@@ -401,6 +405,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->printqty = $this->itemdetail->editprintqty->getValue();
 
         $this->_item->cell = $this->itemdetail->editcell->getText();
+        $this->_item->uktz = $this->itemdetail->edituktz->getText();
         $this->_item->minqty = $this->itemdetail->editminqty->getText();
         $this->_item->zarp = $this->itemdetail->editzarp->getText();
         $this->_item->description = $this->itemdetail->editdescription->getText();
@@ -585,6 +590,33 @@ class ItemList extends \App\Pages\Base
 
         $this->setpanel->cardform->editscard->setText($item->techcard)  ;
 
+        $this->_tvars['complin']  = $item->item_type== Item::TYPE_PROD  || $item->item_type== Item::TYPE_HALFPROD;
+        $this->_tvars['complout']  = $item->item_type== Item::TYPE_MAT  || $item->item_type== Item::TYPE_HALFPROD ;
+        $this->_tvars['conploutlist']  = [];
+        
+        foreach(Item::find("item_id in(select pitem_id from item_set  where  item_id=".$item->item_id.")") as $ii){
+           $this->_tvars['conploutlist'][]=array(
+              "iname"=>$ii->itemname,
+              "icode"=>$ii->item_code
+           );     
+        } ;
+        
+        foreach(\App\Entity\Service::find("") as $s){
+           if(is_array($s->itemset)) {
+               foreach($s->itemset as $is) {
+                   if($is->item_id==$item->item_id) {
+                       $this->_tvars['conploutlist'][]=array(
+                          "iname"=>$s->service_name,
+                          "icode"=>""
+                       );     
+                       
+                   }
+                   
+               }
+           }
+        }
+        
+        
     }
 
     private function setupdate() {
@@ -635,7 +667,7 @@ class ItemList extends \App\Pages\Base
         $form=  $this->setpanel->setform;
         $id = $form->editsname->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError("Не обрано ТМЦ");
             return;
         }
 
