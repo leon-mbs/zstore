@@ -71,7 +71,7 @@ class Customer extends \ZCL\DB\Entity
         $xml = simplexml_load_string($this->detail);
 
         $this->discount = doubleval($xml->discount[0]);
-        $this->pbonus = round($xml->pbonus[0]);
+        $this->pbonus = doubleval($xml->pbonus[0]);
 
         $this->type = (int)($xml->type[0]);
         $this->jurid = (int)($xml->jurid[0]);
