@@ -347,31 +347,35 @@ class Discounts extends \App\Pages\Base
 
     }
     
-     public function pbdeleteOnClick($sender) {
+    public function pbdeleteOnClick($sender) {
         $c = $sender->owner->getDataItem();
         $c->pbonus = 0;
         $c->save();
         $this->otab->pblist->Reload();
-
-
     }
    
     public function OnAutoCustomer($sender) {
         return Customer::getList($sender->getText(), 1);
     }
-
-    
+     
      //список  бонусоы ц контрагентов
-     public function OnPL($sender) {
+    public function OnPL($sender) {
       
         $this->otab->listbon->Reload();
         $conn= \ZDB\DB::getConnect()  ;
-        
-        $on = $conn->GetOne( 'select sum(bonus) from paylist  where  paytype=1001 and  bonus>0 ' );
-        $off = $conn->GetOne( 'select sum(bonus) from paylist  where  paytype=1001 and  bonus<0 ' );
+        $t = trim($this->otab->blfilter->blsearch->getText());
+
+
+        $where = ""  ;
+        if(strlen($t) > 0)  {
+            $where .= "   customer_name like   " . Customer::qstr( '%'.$t.'%' ) .' and ' ;
+        }        
+        $on = $conn->GetOne( "select sum(bonus) from paylist_view  where {$where} paytype=1001 and  bonus>0 " );
+        $off = $conn->GetOne( "select sum(bonus) from paylist_view  where {$where}  paytype=1001 and  bonus<0 " );
         $this->otab->sumbonuses->setText($on +$off ); 
 
     }   
+  
     public function bcustomerlistBOnRow($row) {
         $c = $row->getDataItem();
         $row->add(new  Label("lbname", $c->customer_name));

@@ -1241,10 +1241,10 @@ class Helper
         return $htmls;
     }
 
-
+    //"соль" для  шифрования
     public static function getSalt() {
         $salt= self::getKeyVal('salt');
-        if(strlen($salt)==0) {
+        if(strlen($salt ?? '')==0) {
             $salt = ''. rand(1000, 999999) ;
             self::setKeyVal('salt', $salt);
         }
