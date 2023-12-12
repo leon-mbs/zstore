@@ -10,10 +10,6 @@ $_config['db']['name'] = 'zstore'  ;
 $_config['db']['user'] = 'root'  ;
 $_config['db']['pass'] = 'root'  ;
 
-$_config['db']['host'] = 'hc522797.mysql.tools'  ;
-$_config['db']['name'] = 'hc522797_zstore'  ;
-$_config['db']['user'] = 'hc522797_zstore'  ;
-$_config['db']['pass'] = 'X78+mB;js5'  ;
 
 /*
 //приклад  для  PosgreSQl
