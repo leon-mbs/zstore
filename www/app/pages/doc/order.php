@@ -373,9 +373,17 @@ class Order extends \App\Pages\Base
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
+        $this->_doc->headerdata['ship_address'] = $this->docform->address->getText();
+
         if ($this->_doc->customer_id > 0) {
             $customer = Customer::load($this->_doc->customer_id);
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
+            if(strlen($this->_doc->headerdata['ship_address'])>0) {
+               $customer->addressdel =  $this->_doc->headerdata['ship_address'] ;  
+               $customer->save();               
+            }
+            
+            
         }
 
 
@@ -383,7 +391,6 @@ class Order extends \App\Pages\Base
 
         $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
         $this->_doc->headerdata['delivery_name'] = $this->docform->delivery->getValueName();
-        $this->_doc->headerdata['ship_address'] = $this->docform->address->getText();
         $this->_doc->headerdata['bayarea'] = $this->docform->bayarea->getValue();
         $this->_doc->headerdata['baycity'] = $this->docform->baycity->getValue();
         $this->_doc->headerdata['baypoint'] = $this->docform->baypoint->getValue();
@@ -590,7 +597,7 @@ class Order extends \App\Pages\Base
 
             $this->docform->phone->setText($customer->phone);
             $this->docform->email->setText($customer->email);
-            $this->docform->address->setText($customer->address);
+            $this->docform->address->setText( strlen($customer->address) >0 ? $customer->addressdel : $customer->address);
             $d= $customer->getDiscount();
 
             if (doubleval($d) > 0) {

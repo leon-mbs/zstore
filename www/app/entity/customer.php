@@ -57,6 +57,7 @@ class Customer extends \ZCL\DB\Entity
         $this->detail .= "<firstname><![CDATA[{$this->firstname}]]></firstname>";
         $this->detail .= "<lastname><![CDATA[{$this->lastname}]]></lastname>";
         $this->detail .= "<address><![CDATA[{$this->address}]]></address>";
+        $this->detail .= "<addressdel><![CDATA[{$this->addressdel}]]></addressdel>";
         $this->detail .= "<comment><![CDATA[{$this->comment}]]></comment>";
         $this->detail .= "</detail>";
 
@@ -86,6 +87,7 @@ class Customer extends \ZCL\DB\Entity
         $this->holding = (int)($xml->holding[0]);
         $this->holding_name = (string)($xml->holding_name[0]);
         $this->address = (string)($xml->address[0]);
+        $this->addressdel = (string)($xml->addressdel[0]);
         $this->comment = (string)($xml->comment[0]);
         $this->viber = (string)($xml->viber[0]);
         $this->edrpou = (string)($xml->edrpou[0]);
