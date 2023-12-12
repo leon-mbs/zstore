@@ -23,7 +23,7 @@ use App\Application as App;
 class ItemList extends \App\Pages\Base
 {
     public $_item;
-    private $_total;
+
 
     public function __construct() {
         parent::__construct();
@@ -112,18 +112,16 @@ class ItemList extends \App\Pages\Base
       
         $inprice="";
         if($this->_tvars['noshowpartion'] != true) {
-          $wh=  "item_id=".$item->item_id ;
-          if($store >0){   
-             $wh=$wh." and store_id=".$store;
-          }
-          $st=  Stock::getFirst($wh,"stock_id desc") ;
-          $inprice = $st->partion;
+          $inprice = $item->getLastPartion($store);  
+            
+          ;
         }
         $row->add(new Label('inprice', H::fa($inprice)));
 
         $pt = $this->filter->searchprice->getValue();
         if($pt=='price') {
             $am = $item->getAmount($store);
+             
         } else {
             $am = $qty * $item->getPrice($pt, $store) ;
         }
@@ -159,7 +157,7 @@ class ItemList extends \App\Pages\Base
     }
 
     public function OnFilter($sender) {
-        $this->_total = 0;
+   
         $this->itempanel->itemlist->Reload();
 
         $am = $this->getTotalAmount();
@@ -176,11 +174,17 @@ class ItemList extends \App\Pages\Base
         $items = $src->getItems(-1, -1) ;
         $total = 0;
         foreach($items as $item) {
-            $qty = $item->getQuantity($store);
+
             if($pt=='price') {
-                $total += $item->getAmount($store);
+                $am = $item->getAmount($store);
+                if($am>0){
+                   $total += $am;
+                }
             } else {
-                $total += $qty * $item->getPrice($pt, $store) ;
+                $qty = $item->getQuantity($store); 
+                if($qty >0) {
+                   $total += $qty * $item->getPrice($pt, $store) ;
+                }
             }
 
         }

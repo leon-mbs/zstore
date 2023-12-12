@@ -176,7 +176,53 @@ class items extends JsonRPC
         if (strlen($item->itemname) == 0) {
             throw new \Exception("Не вказано назву");
         }
+        if (strlen( $args['imageurl'] ) > 0) {
 
+                $file = file_get_contents($args['imageurl']) ;
+                if(strlen($file)>0) {
+                    $tmp = tempnam(sys_get_temp_dir(), "import") ;
+                    file_put_contents($tmp, $file) ;
+
+                    $imagedata = getimagesize($tmp);
+                    if (is_array($imagedata)) {
+                 
+                        $image = new \App\Entity\Image();
+                        $image->content = file_get_contents($tmp);
+                        $image->mime = $imagedata['mime'];
+
+                        if ($imagedata[0] != $imagedata[1]) {
+                            $thumb = new \App\Thumb($tmp);
+                            if ($imagedata[0] > $imagedata[1]) {
+                                $thumb->cropFromCenter($imagedata[1], $imagedata[1]);
+                            }
+                            if ($imagedata[0] < $imagedata[1]) {
+                                $thumb->cropFromCenter($imagedata[0], $imagedata[0]);
+                            }
+
+
+                            $image->content = $thumb->getImageAsString();
+                            $thumb->resize(512, 512);
+                            $image->thumb = $thumb->getImageAsString();
+                            $thumb->resize(128, 128);
+
+                            $item->thumb = "data:{$image->mime};base64," . base64_encode($thumb->getImageAsString());
+                        }
+                        $conn =   \ZDB\DB::getConnect();
+                        if($conn->dataProvider=='postgres') {
+                            $image->thumb = pg_escape_bytea($image->thumb);
+                            $image->content = pg_escape_bytea($image->content);
+
+                        }
+
+                        $image->save();
+                        $item->image_id = $image->image_id;
+                    
+                    }
+                }
+            
+        }
+
+        
         $item->save();
         return array('item_code' => $item->item_code);
     }

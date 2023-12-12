@@ -77,6 +77,7 @@ class Discounts extends \App\Pages\Base
         $this->otab->add(new Form('pbfilter'))->onSubmit($this, 'OnPBAdd');
         $this->otab->pbfilter->add(new AutocompleteTextInput('pbsearchkey'))->onText($this, 'OnAutoCustomer');
         $this->otab->pbfilter->add(new TextInput('pbsearchbon'));
+        
 
  
         $this->otab->add(new DataView('pblist', new BonusCustomerDataSource($this), $this, 'bcustomerlistOnRow'));
@@ -92,9 +93,10 @@ class Discounts extends \App\Pages\Base
         $this->otab->add(new DataView('listbon', new BonusListCustomerDataSource($this), $this, 'bcustomerlistBOnRow'));
         $this->otab->listbon->setPageSize(25);
         $this->otab->add(new \Zippy\Html\DataList\Paginator('lbpag', $this->otab->listbon));
-
-        $this->otab->listbon->Reload();
+        $this->otab->add(new Label('sumbonuses','0'));
         
+        $this->Onpl($this->otab->blfilter);
+
         
         $form = $this->ctab->add(new  Form("discform"));
         $form->onSubmit($this, "onDisc");
@@ -345,27 +347,35 @@ class Discounts extends \App\Pages\Base
 
     }
     
-     public function pbdeleteOnClick($sender) {
+    public function pbdeleteOnClick($sender) {
         $c = $sender->owner->getDataItem();
         $c->pbonus = 0;
         $c->save();
         $this->otab->pblist->Reload();
-
-
     }
    
     public function OnAutoCustomer($sender) {
         return Customer::getList($sender->getText(), 1);
     }
-
-    
+     
      //список  бонусоы ц контрагентов
-     public function OnPL($sender) {
+    public function OnPL($sender) {
       
         $this->otab->listbon->Reload();
- 
+        $conn= \ZDB\DB::getConnect()  ;
+        $t = trim($this->otab->blfilter->blsearch->getText());
+
+
+        $where = ""  ;
+        if(strlen($t) > 0)  {
+            $where .= "   customer_name like   " . Customer::qstr( '%'.$t.'%' ) .' and ' ;
+        }        
+        $on = $conn->GetOne( "select sum(bonus) from paylist_view  where {$where} paytype=1001 and  bonus>0 " );
+        $off = $conn->GetOne( "select sum(bonus) from paylist_view  where {$where}  paytype=1001 and  bonus<0 " );
+        $this->otab->sumbonuses->setText($on +$off ); 
 
     }   
+  
     public function bcustomerlistBOnRow($row) {
         $c = $row->getDataItem();
         $row->add(new  Label("lbname", $c->customer_name));
