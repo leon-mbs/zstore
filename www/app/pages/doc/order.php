@@ -106,6 +106,7 @@ class Order extends \App\Pages\Base
         $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
         $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
         $this->editdetail->add(new ClickLink('opencatpan', $this, 'onOpenCatPan'));
+        $this->editdetail->add(new Label('tocustorder','В закупку' ));
 
         $this->editdetail->add(new Label('qtystock'));
         $this->editdetail->add(new Label('pricestock'));
@@ -280,6 +281,10 @@ class Order extends \App\Pages\Base
         $this->editdetail->editquantity->setText("1");
         $this->editdetail->editprice->setText("0");
         $this->editdetail->editdesc->setText("");
+        $this->editdetail->qtystock->setText("");
+        $this->editdetail->pricestock->setText("");
+        $this->editdetail->tocustorder->setVisible(false);
+
         $this->docform->setVisible(false);
         $this->_rowid = -1;
     }
@@ -573,6 +578,8 @@ class Order extends \App\Pages\Base
         $this->editdetail->editprice->setText($price);
         $price = $item->getLastPartion();
         $this->editdetail->pricestock->setText(H::fa($price));
+        $this->editdetail->tocustorder->setAttribute("onclick","addItemToCO({$id})");
+        $this->editdetail->tocustorder->setVisible(true);
 
 
     }
