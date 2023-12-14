@@ -78,7 +78,7 @@ class OrderFood extends Document
         return $html;
     }
 
-    public function generatePosReport($ps=false) {
+    public function generatePosReport($ps=false,$bill=false) {
 
         $detail = array();
 
@@ -107,6 +107,7 @@ class OrderFood extends Document
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
+                        "ischeck"         => !$bill ,
                         "username"        => $this->headerdata['cashier'] ,
                         "firm_name"       => $firm["firm_name"],
                         "shopname"        => strlen($common["shopname"]) > 0 ? $common["shopname"] : false,

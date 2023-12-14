@@ -178,6 +178,11 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->checkpan->add(new Label('checktext'));
         $this->docpanel->checkpan->add(new Button('btoprint'))->onClick($this, "OnPrint", true);
 
+        $this->docpanel->add(new Panel('billpan'))->setVisible(false);
+        $this->docpanel->billpan->add(new ClickLink('bnewcheck2'))->onClick($this, 'onNewOrder');
+        $this->docpanel->billpan->add(new Label('billtext'));
+        $this->docpanel->billpan->add(new Button('btoprintbill'))->onClick($this, "OnPrintBill", true);
+
         //добавление нового контрагента
         $this->add(new Form('editcust'))->setVisible(false);
         $this->editcust->add(new TextInput('editcustname'));
@@ -347,11 +352,13 @@ class ARMFood extends \App\Pages\Base
 
 
         $row->add(new ClickLink('brpay', $this, 'OnStatus')) ;
+        $row->add(new ClickLink('brprint', $this, 'OnStatus')) ;
         $row->add(new ClickLink('bredit', $this, 'OnStatus')) ;
         $row->add(new ClickLink('brclose', $this, 'OnStatus')) ;
         $row->add(new ClickLink('brrefuse', $this, 'OnStatus')) ;
 
         $row->brpay->setVisible(false);
+        $row->brprint->setVisible(false);
         $row->brclose->setVisible(false);
         $row->brrefuse->setVisible(false);
         $row->bredit->setVisible(false);
@@ -371,10 +378,17 @@ class ARMFood extends \App\Pages\Base
         }
         if ($doc->payamount == $doc->payed && $hasstore) {
             $row->brclose->setVisible(true);
+            $row->brprint->setVisible(false);
         }
         if ($haspayment) {
             $row->bredit->setVisible(false);
+            $row->brprint->setVisible(false);
         }
+        if ($haspayment== false && $doc->state>4 ) {
+            $row->brprint->setVisible(true);
+        }
+        
+        
         if ($inprod) {
             $row->brclose->setVisible(false);
         }
@@ -391,6 +405,15 @@ class ARMFood extends \App\Pages\Base
             $row->brclose->setVisible(false);
             $row->brrefuse->setVisible(false);
             $row->bredit->setVisible(false);
+            $row->brprint->setVisible(false);
+        }
+     
+        if ($doc->state == Document::STATE_WP   ) {
+            $row->brpay->setVisible(true);
+            $row->brclose->setVisible(false);
+            $row->brrefuse->setVisible(false);
+            $row->bredit->setVisible(false);
+
         }
 
         $row->add(new ClickLink('checkfisc', $this, "onFisc"))->setVisible(($doc->headerdata['passfisc'] ?? "") == 1) ;
@@ -729,7 +752,8 @@ class ARMFood extends \App\Pages\Base
 
     public function onStatus($sender) {
         $this->_doc = Document::load($sender->getOwner()->getDataItem()->document_id);
-
+        $this->_doc = $this->_doc->cast();
+        
         if (strpos($sender->id, 'bredit') === 0) {
             $this->orderlistpan->setVisible(false);
             $this->orderlistpan->statuspan->setVisible(false);
@@ -776,6 +800,23 @@ class ARMFood extends \App\Pages\Base
         }
         if (strpos($sender->id, 'brrefuse') === 0) {
             $this->_doc->updateStatus(Document::STATE_FAIL);
+
+        }
+        if (strpos($sender->id, 'brprint') === 0) {
+            $this->_doc->updateStatus(Document::STATE_WP);
+            $this->docpanel->setVisible(true);
+
+            $this->orderlistpan->statuspan->setVisible(false);
+            $this->orderlistpan->setVisible(false);
+
+            $this->docpanel->billpan->setVisible(true);
+            $this->docpanel->listsform->setVisible(false);
+            $this->docpanel->navform->setVisible(false);
+            $check = $this->_doc->generatePosReport(false,true);
+
+            $this->docpanel->billpan->billtext->setText($check, true);
+              
+            
 
         }
         if (strpos($sender->id, 'brpay') === 0) {
@@ -1426,6 +1467,35 @@ class ARMFood extends \App\Pages\Base
         }
 
     }
+    
+    public function OnPrintBill($sender) {
+
+
+        if(intval(\App\System::getUser()->prtype) == 0) {
+
+
+            $this->addAjaxResponse("  $('#billtext').printThis() ");
+
+            return;
+        }
+
+        try {
+            $doc = $this->_doc->cast();
+            $xml = $doc->generatePosReport(true,true);
+
+            $buf = \App\Printer::xml2comm($xml);
+            $b = json_encode($buf) ;
+
+            $this->addAjaxResponse("  sendPS('{$b}') ");
+        } catch(\Exception $e) {
+            $message = $e->getMessage()  ;
+            $message = str_replace(";", "`", $message)  ;
+            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
+
+        }
+
+    }
+    
     //фискализация
     public function OnOpenShift($sender) {
  
