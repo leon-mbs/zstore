@@ -527,7 +527,66 @@ class Base extends \Zippy\Html\WebPage
         return json_encode($list, JSON_UNESCAPED_UNICODE);
     }
 
+    public function addItemToCO($args, $post=null) {
+        try{
+            $e = \App\Entity\Entry::getFirst("item_id={$args[0]} and quantity > 0 and document_id in (select document_id from documents_view where  meta_name='GoodsReceipt' ) ","entry_id desc")  ;
+            $d = \App\Entity\Doc\Document::load($e->document_id)  ;
 
+            if($d == null) {
+                return "По  даному  ТМЦ  закупок не  було";
+            }
+            $price = $e->partion;
+            $quantity = $e->quantity;
+            $customer_id = $d->customer_id;
+
+            $co = \App\Entity\Doc\Document::getFirst("meta_name='OrderCust' and customer_id={$d->customer_id} and state=1 ","document_id desc") ;
+            
+            if($co==null) {
+                $co = \App\Entity\Doc\Document::create('OrderCust');
+                $co->document_number = $co->nextNumber();        
+                $co->customer_id = $customer_id;        
+                $co->save();
+                $co->updateStatus(1);
+            }
+
+            $items=  $co->unpackDetails('detaildata');
+            $i=-1;
+            foreach($items as $k=>$v)  {
+                if($v->item_id == $args[0] ) {
+                    $i=  $k;
+                    $break;
+                }
+            }
+            if($i==-1)  {
+                $item = \App\Entity\Item::load($args[0]);
+     
+                $item->quantity = $quantity;
+                $item->price = $price;
+                $item->rowid = $item->item_id;        
+                $items[$item->rowid]=$item;
+            }   else {
+                $items[$i]->quantity += $quantity;  
+            }
+            $total = 0;
+
+
+            foreach ($items as $item) {
+                $item->amount = \App\Helper::fa($item->price * $item->quantity);
+
+                $total = $total + $item->amount;
+            }
+            $co->amount= \App\Helper::fa($total);
+            
+            
+            $co->packDetails('detaildata',$items);
+            $co->save();
+            
+            return "";
+        } catch(\Exception $e){
+            return $e->getMessage() ;
+        }
+
+    }
 
     //callPM
 

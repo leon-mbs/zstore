@@ -51,7 +51,7 @@
                     </tr>
                     <tr zippy="doclist">
 
-                        <td zippy="number"></td>
+                        <td  ><a zippy="number"></a></td>
                         <td class="text-nowrap" zippy="date"></td>
                         <td zippy="customer"></td>
                         <td zippy="customerphone"></td>
@@ -90,8 +90,9 @@
                         <button zippy="binproc" type="submit" class="  btn btn-success  mr-2 ">На виконання</button>
                         <button zippy="bfin" type="submit" class="  btn btn-success  mr-2 ">Виконано</button>
                         <a zippy="btopay" class="  btn btn-success  mr-2 ">Оплатити</a>
+                        <button zippy="bpos" class="btn btn-info  mr-2">   {{^fiscal}} Чек   {{/fiscal}}     {{#fiscal}}  Фіскальний чек    {{/fiscal}}    </button>
+ 
 
-                        <button zippy="binvoice" type="submit" class="  btn btn-info mr-2 "  >Рахунок-фактура  </button>
                         <button zippy="bwarranty" type="submit" class="  btn btn-info mr-2 "  >Гарантійний талон  </button>
                         
                         <button zippy="btask" type="submit" class=" btn btn-info mr-2 ">Створити наряд</button>

@@ -1,17 +1,17 @@
-<table class="ctable" border="0" cellspacing="0" cellpadding="2">
+<table class="ctable"  >
 
 
     <tr>
         <td></td>
         <td>Постачальник</td>
-        <td colspan="5">{{customer_name}}</td>
+        <td colspan="6">{{customer_name}}</td>
     </tr>
       <tr>
-        <td colspan="7">{{{notes}}}</td>
+        <td colspan="8">{{{notes}}}</td>
     </tr>
 
     <tr>
-        <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
+        <td style="font-weight: bolder;font-size: larger;" align="center" colspan="8" valign="middle">
             <br> Заявка № {{document_number}} від {{date}} <br><br>
         </td>
     </tr>
@@ -42,7 +42,7 @@
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
-        <td style="border-top:1px #000 solid;" colspan="6" align="right">Разом:</td>
+        <td style="border-top:1px #000 solid;" colspan="8" align="right">Разом:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
 

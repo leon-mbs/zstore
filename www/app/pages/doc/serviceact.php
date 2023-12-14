@@ -274,10 +274,9 @@ class ServiceAct extends \App\Pages\Base
 
                 if ($post->op == 'execdoc' || $post->op == 'paydoc') {
                     $this->_doc->updateStatus(Document::STATE_INPROCESS);
-
                 }
-                if($this->_doc->payamount > $this->_doc->payed &&   $post->op == 'paydoc') {
-                    $this->_doc->updateStatus(Document::STATE_WP);
+                if (  $post->op == 'paydoc') {
+                     $this->_doc->updateStatus(Document::STATE_WP);
                 }
 
 

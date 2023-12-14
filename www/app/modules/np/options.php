@@ -143,7 +143,7 @@ class Options extends \App\Pages\Base
 
         }
         foreach ($tmplist['data'] as $a) {
-            $areas[$a['Ref']] = $a['Description'];
+            $areas[$a['Ref']] = trim($a['Description']);
         }
 
         $d = serialize($areas);
@@ -156,7 +156,8 @@ class Options extends \App\Pages\Base
         $tmplist = $api->getCities(0);
 
         foreach ($tmplist['data'] as $a) {
-            $cities[] = array('Ref' => $a['Ref'], 'Area' => $a['Area'], 'Description' => $a['Description']);
+            $cities[] = array('Ref' => $a['Ref'], 'Area' => $a['Area'], 'Description' => trim($a['Description']).' ('.trim($a['DescriptionRu']) .')'  );
+
         }
 
         $d = serialize($cities);
@@ -171,7 +172,7 @@ class Options extends \App\Pages\Base
         $tmplist = $api->getWarehouses('');
 
         foreach ($tmplist['data'] as $a) {
-            $wlist[] = array('Ref' => $a['Ref'], 'City' => $a['CityRef'], 'Description' => $a['Description']);
+            $wlist[] = array('Ref' => $a['Ref'], 'City' => $a['CityRef'], 'Description' => trim($a['Description']) );
         }
         unset($tmplist) ;
         gc_collect_cycles() ;

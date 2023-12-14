@@ -21,7 +21,12 @@
                   <div class="form-group row">
                         <label class="col-5 col-form-label" for="customer">Постачальник</label>
                         <div class="col-7">
+                           <div class="input-group  ">
                              <typeahead  v-model="customer_id"   ref="cust"  :onquery="oncusttext"  placeholder="Почнiть вводити ..."></typeahead>   
+                          <div class="input-group-append">
+                                     <a v-on:click.prevent="onAddCustNew" title="Додати нового" class="btn btn-success"   >+</a>
+                                </div>
+                         </div>             
                         </div>
                   </div>
               </div> 
@@ -214,6 +219,45 @@
                 </div>
             </div>       
         
+  <div id="modalnewcust" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered   ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Новий контрагент</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                          <form id="newcustform" >
+                                <div class="form-group">
+                                    <label for="editcustname">Назва </label>
+                                    <input v-model="ncustname" class="form-control " name="editcustname" required="required"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editphone">Телефон</label>
+                                    <input v-model="nphone" pattern="[0-9]+" class="form-control" type="text" name="editphone"/>
+                                </div>
+                                 <div class="form-group">
+                                    <label for="editemail">E-mail</label>
+                                    <input v-model="nemail" class="form-control" type="email" name="editemail"/>
+                                 </div>
+
+                                  <div class="form-group">
+                                    <input  type="button" onclick="$('#modalnewcust').modal('hide')"   value="Скасувати" class="btn btn-outline-secondary ">
+                                    <input v-on:click.prevent="onSaveNewCust"   type="button" value="Зберегти" class="btn btn-outline-primary">
+                                    
+                                  </div>
+                               
+                        </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>  
+               
+        
       </div> 
        {|={{ }}=|}  
        
@@ -246,7 +290,10 @@
              editedindex:-1,
              edititem:0,
              items :[] ,
-             
+             ncustname:"",
+             nphone:"",
+             nemail:"",
+            
              nname :'' ,
              ncode :'' ,
              ncat :0 ,
@@ -390,6 +437,40 @@
                this.calctotal()
                
             },
+                onAddCustNew:function (){
+                    $('#modalnewcust').modal('show') 
+                    this.ncustname = ''  
+                    this.nphone = ''  
+                    this.nemail = ''  
+                },  
+                
+                
+                onSaveNewCust:function (){
+                   if(checkFormInput('newcustform')==false) return;
+                   
+                   let  data = {}
+                   data.name = this.ncustname
+                   data.email = this.nemail
+                   data.phone = this.nphone
+                   data.type = 1 //покупатель
+                   
+                   callPM('vSaveNewcust',[ ],  data,(data)=> 
+                   {
+                       
+                       if(false==checkPMAnswer(data) )   {
+                          return
+                       }   
+                       this.$refs.cust.query = this.ncustname;  
+                       this.customer_id = data.customer_id 
+                         
+//                       this.hitcust(data.customer_id) ;
+                       $('#modalnewcust').modal('hide') 
+                    
+                   });           
+                         
+                }, 
+                                
+                           
             onbtn:function (bname){
                
                 if(checkFormInput('docform')==false) return;

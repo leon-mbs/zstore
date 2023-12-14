@@ -482,6 +482,17 @@
 
                     </div>
                 </div> 
+                <div class="w-100"></div>  
+                <div class="col-12 col-md-8 col-xl-6  ">  
+                    <div zippy="billpan">
+
+                        <div zippy="billtext"></div> 
+                        <br>
+                        <a    zippy="btoprintbill"  class="btn  btn-info">Друк</a>&nbsp;&nbsp;&nbsp;
+                        <a zippy="bnewcheck2"  class="btn  btn-success">Нове замовлення</a> &nbsp;&nbsp;&nbsp;
+
+                    </div>
+                </div> 
 
 
         </div>
@@ -532,6 +543,7 @@
                         <th ></th>
                         <th ></th>
                         <th ></th>
+                        <th ></th>
                        
                         <th ></th>
                         <th > </th>
@@ -554,6 +566,7 @@
   
 
                         <td zippy="docnotes"></td>
+                        <td ><a zippy="brprint" class="btn btn-sm btn-info"><i class="fa fa-print"></i> Рахунок</a></td>
                         <td ><a zippy="brpay" class="btn btn-sm btn-primary"><i class="fa fa-credit-card"></i> Оплатити</a></td>
                         <td ><a zippy="bredit" class="btn btn-sm btn-info"><i class="fa fa-edit"></i> Редагувати</a></td>
                         <td ><a zippy="brclose" class="btn btn-sm btn-success"><i class="fa fa-stamp"></i> Закрити</a></td>
@@ -678,7 +691,8 @@
                    return false;
                }  
               
-             $("#modalwait").modal("show") ;
+             document.getElementById('dialogwait').showModal()
+  
              return true;
           }            
           

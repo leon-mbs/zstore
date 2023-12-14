@@ -36,7 +36,7 @@ class CustomerList extends \App\Pages\Base
     public $_leadstatuseslist = array();
     public $_leadsourceslist = array();
     public $_bonuses = array(); // бонусы  по  контраоентам
-    public $_bonuslist = array(); //история бонусов  контрагента
+
     public $_tag = '' ; 
 
     public function __construct($id = 0) {
@@ -85,6 +85,7 @@ class CustomerList extends \App\Pages\Base
 
         $this->add(new Form('customerdetail'))->setVisible(false);
         $this->customerdetail->add(new TextInput('editaddress'));
+        $this->customerdetail->add(new TextInput('editaddressdel'));
         $this->customerdetail->add(new TextInput('editcity'));
         $this->customerdetail->add(new TextInput('editcountry'));
         $this->customerdetail->add(new TextInput('editcustomername'));
@@ -115,7 +116,7 @@ class CustomerList extends \App\Pages\Base
 
         $this->add(new Panel('contentview'))->setVisible(false);
         $this->contentview->add(new ClickLink('back'))->onClick($this, 'cancelOnClick');
-        $this->contentview->add(new Label('b_total'));
+
         $this->contentview->add(new Label('concname'));
         $this->contentview->add(new Label('concreated'));
         $this->contentview->add(new Label('conlastdoc'));
@@ -168,7 +169,7 @@ class CustomerList extends \App\Pages\Base
         $this->leadstatusesform->add(new DataView('leadstatuseslist', new ArrayDataSource(new Bind($this, '_leadstatuseslist')), $this, 'leadstatusListOnRow'));
 
         $this->contentview->add(new DataView('dw_contr', new ArrayDataSource(new Bind($this, '_contrlist')), $this, 'contrListOnRow'));
-        $this->contentview->add(new DataView('dw_bonus', new ArrayDataSource(new Bind($this, '_bonuslist')), $this, 'bonusListOnRow'));
+
 
         if ($id > 0) {
             $this->_customer = Customer::load($id);
@@ -295,6 +296,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->editviber->setText($this->_customer->viber);
         $this->customerdetail->editemail->setText($this->_customer->email);
         $this->customerdetail->editaddress->setText($this->_customer->address);
+        $this->customerdetail->editaddressdel->setText($this->_customer->addressdel);
         $this->customerdetail->editcity->setText($this->_customer->city);
         $this->customerdetail->editedrpou->setText($this->_customer->edrpou);
         $this->customerdetail->editcountry->setText($this->_customer->country);
@@ -362,6 +364,7 @@ class CustomerList extends \App\Pages\Base
         $this->_customer->viber = $this->customerdetail->editviber->getText();
         $this->_customer->email = $this->customerdetail->editemail->getText();
         $this->_customer->address = $this->customerdetail->editaddress->getText();
+        $this->_customer->addressdel = $this->customerdetail->editaddressdel->getText();
         $this->_customer->city = $this->customerdetail->editcity->getText();
         $this->_customer->edrpou = $this->customerdetail->editedrpou->getText();
         $this->_customer->country = $this->customerdetail->editcountry->getText();
@@ -494,7 +497,7 @@ class CustomerList extends \App\Pages\Base
             $lastdoc = "Останній документ {$doc->document_number} від ".Helper::fd($doc->document_date).". Всього " .$this->_customer->docs    ;
         }
 
-        $this->contentview->b_total->setText($this->_customer->getBonus());
+
         $this->contentview->concreated->setText($created);
         $this->contentview->conlastdoc->setText($lastdoc);
         $this->contentview->conphone->setText($this->_customer->phone);
@@ -507,7 +510,7 @@ class CustomerList extends \App\Pages\Base
         $this->updateMessages();
         $this->updateEvents();
         $this->updateContrs();
-        $this->updateBonus();
+
         
         $this->_tag='';
          
@@ -670,11 +673,7 @@ class CustomerList extends \App\Pages\Base
         $this->_contrlist = \App\Entity\Contract::find(' disabled<> 1 and  customer_id=' . $this->_customer->customer_id);
         $this->contentview->dw_contr->Reload();
     }
-    private function updateBonus() {
-        $this->_bonuslist = $this->_customer->getBonuses();
-        $this->contentview->dw_bonus->Reload();
-    }
-
+ 
     //вывод строки  коментария
     public function eventListOnRow(DataRow $row) {
         $event = $row->getDataItem();

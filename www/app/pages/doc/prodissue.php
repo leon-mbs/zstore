@@ -104,6 +104,31 @@ class ProdIssue extends \App\Pages\Base
 
                             $this->_itemlist = array_values($this->_itemlist) ;
                         }
+                        //комплекты
+                        foreach($basedoc->unpackDetails('detaildata') as $s) {
+                            $ser = \App\Entity\Service::load($s->service_id);
+                            if(!is_array($ser->itemset)) {
+                                continue;
+                            }   
+                            foreach($ser->itemset as $m) {
+                                $itemp = \App\Entity\Item::load($m->item_id);
+                                if($itemp == null) {
+                                    continue;
+                                }
+                                $itemp->quantity = $s->quantity * $m->qty;
+                                
+                                if(!isset($this->_itemlist[$itemp->item_id])) {
+
+                                    $this->_itemlist[$itemp->item_id] = Item::load($itemp->item_id);
+                                    $this->_itemlist[$itemp->item_id]->quantity = $itemp->quantity;
+                                }
+                                $this->_itemlist[$itemp->item_id]->quantity +=  $itemp->quantity;
+
+
+                            }
+
+                            $this->_itemlist = array_values($this->_itemlist) ;
+                        }
 
 
 
@@ -178,6 +203,9 @@ class ProdIssue extends \App\Pages\Base
 
         $row->add(new Label('snumber', $item->snumber));
         $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd($item->sdate) : ''));
+        $qty = $item->getQuantity($this->docform->store->getValue());
+        $row->add(new Label('qtyon',H::fqty($qty) ));
+        $row->add(new Label('toorder','В закупку' ))->setAttribute('onclick',"addItemToCO({$item->item_id})");
 
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');

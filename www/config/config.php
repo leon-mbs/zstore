@@ -10,6 +10,7 @@ $_config['db']['name'] = 'zstore'  ;
 $_config['db']['user'] = 'root'  ;
 $_config['db']['pass'] = 'root'  ;
 
+
 /*
 //приклад  для  PosgreSQl
 $_config['db']['host'] = 'localhost'  ;

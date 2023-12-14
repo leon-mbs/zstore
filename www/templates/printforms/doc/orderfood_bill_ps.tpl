@@ -1,5 +1,11 @@
 <font bold="true">a</font>
+    {{#ischeck}}
 <text>Чек {{document_number}}</text>
+    {{/ischeck}}
+    {{^ischeck}}
+<text>Рахунок {{document_number}}</text>
+    {{/ischeck}}
+    
 <font >a</font>
 <text>вiд {{date}}</text>
 <align>left</align>
@@ -63,10 +69,16 @@
     {{/bonus}}
 
  <text>До сплати: {{payamount}}</text>
+ 
+    {{#ischeck}} 
+ 
  <text>Оплата: {{payed}}</text>
  {{#exchange}}
  <text>Решта: {{exchange}}</text>
  {{/exchange}} 
+ 
+    {{/ischeck}} 
+     
     {{/prepaid}}
     {{#addbonus}}
  <text>Нараховано бонусiв: {{addbonus}}</text>
@@ -78,15 +90,20 @@
  
     {{/allbonus}}
     
- 
+
 <font bold="true">a</font>
 <align>center</align>
 <newline ></newline>
 <text>  {{checkslogan}}</text>    
+
+    {{#ischeck}} 
+
 {{#docqrcodeurl}}
 <font >a</font>
 <newline ></newline>
 <qrcode type="code128"> {{docqrcodeurl}}</qrcode>
 {{/docqrcodeurl}}
+
+    {{/ischeck}} 
 <newline ></newline>
  
