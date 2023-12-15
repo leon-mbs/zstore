@@ -158,7 +158,7 @@ class Pay extends \ZCL\DB\Entity
 
         $c = \App\Entity\Customer::load($customer_id);
         $doc = \App\Entity\Doc\Document::load($document_id);
-        if($doc->headerdata['pricetype'] != 'price1') {
+        if(($doc->headerdata['pricetype']??'price1') != 'price1') {
             return;
         }
 
