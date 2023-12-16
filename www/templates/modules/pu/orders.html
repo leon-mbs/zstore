@@ -13,12 +13,12 @@
                         <select class="form-control mr-2" zippy="status">
                             
                         </select>
-                        <input onclick="$('#loader1').removeAttr('style')" type="submit" class=" mr-2 btn btn-outline-success  "
+                        <input onclick="document.getElementById('dialogwait').showModal()" type="submit" class=" mr-2 btn btn-outline-success  "
                                value="Завантажити">           
                                
                   
 
-                        <div id="loader1" style="display:none" class="spinner-border spinner-border-sm"></div>
+
                     </form>
                 </div>
 
@@ -100,9 +100,8 @@
                             
                         </select>
 
-                        <input onclick="$('#loader3').removeAttr('style')" type="submit" class="  btn btn-outline-success  "
+                        <input onclick="document.getElementById('dialogwait').showModal()" type="submit" class="  btn btn-outline-success  "
                                value="Відправити">
-                        <div id="loader3" style="display:none" class="spinner-border spinner-border-sm"></div>
 
                     </div>
                 </form>

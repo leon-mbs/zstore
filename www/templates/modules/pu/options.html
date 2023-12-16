@@ -49,7 +49,7 @@
                     <div class="form-group">
                         <input type="submit" value="Зберегти" zippy="save" class="btn   btn-primary mr-2"/>
                         
-                        <div id="loader" style="display:none" class="spinner-border spinner-border-sm"></div>
+
 
                     </div>
                 </form>
@@ -59,7 +59,7 @@
 
             function check_check() {
 
-                $('#loader').removeAttr('style');
+                  document.getElementById('dialogwait').showModal()
             }
 
         </script>

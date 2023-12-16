@@ -19,11 +19,9 @@
                         </select>
 
 
-                        <input onclick="$('#loader1').removeAttr('style')" type="submit" class=" mr-2 btn btn-outline-success  "
+                        <input onclick="document.getElementById('dialogwait').showModal()" type="submit" class=" mr-2 btn btn-outline-success  "
                                value="Завантажити">
-                         <div style="display:none" id="loader1" class="spinner-border spinner-border-sm " role="status">
-                                  <span class="sr-only">Завантаження...</span>
-                              </div>
+                      
 
 
                     </form>
@@ -63,11 +61,9 @@
                             <option value="0">Не обрано</option>
                         </select>
 
-                        &nbsp;<input onclick="$('#loader2').removeAttr('style')" type="submit"
+                        &nbsp;<input onclick="document.getElementById('dialogwait').showModal()" type="submit"
                                      class="  btn btn-outline-success btn-sm  " value="Відправити">
-                         <div style="display:none" id="loader2" class="spinner-border spinner-border-sm " role="status">
-                                  <span class="sr-only">Відправлення...</span>
-                              </div>
+                         
 
                     </div>
                 </form>
@@ -85,15 +81,10 @@
                             <option value="0">Всi</option>
                         </select>
                     <a zippy="updateqty" class="  btn btn-outline-success  ">Оновити кількість</a>
-                         <div style="display:none" id="loader3" class="spinner-border spinner-border-sm " role="status">
-                                  <span class="sr-only">Оновлення...</span>
-                              </div>
 
                     &nbsp;&nbsp;
                     <a zippy="updateprice" class="  btn btn-outline-success  ">Оновити ціни</a>
-                         <div style="display:none" id="loader4" class="spinner-border spinner-border-sm " role="status">
-                                  <span class="sr-only">Оновлення...</span>
-                              </div>
+                     
 
 
                      </form>
@@ -118,10 +109,7 @@
 
                         <input zippy="getitems" type="submit" class=" mr-2 btn btn-outline-success  "
                                value="Завантажити">
-                         <div style="display:none" id="loader6" class="spinner-border spinner-border-sm " role="status">
-                                  <span class="sr-only">Завантаження...</span>
-                              </div>
-                               
+                   
 
 
                     </form>
@@ -133,17 +121,17 @@
 
             function check_updateqty() {
 
-                $('#loader3').removeAttr('style');
+                 document.getElementById('dialogwait').showModal()
             }
 
             function check_updateprice() {
 
-                $('#loader4').removeAttr('style');
+               document.getElementById('dialogwait').showModal()
             }
 
             function check_getitems() {
 
-                $('#loader6').removeAttr('style');
+                document.getElementById('dialogwait').showModal()
             }
 
             function chclick() {
