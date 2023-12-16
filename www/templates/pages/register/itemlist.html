@@ -72,7 +72,7 @@
                       <input class="btn btn-outline-success  " type="submit" value="ОК">
                       </div>
                     
-                   </div>
+                   
                    </form>
                 </div>
                 <a zippy="csv">Експорт у Excel</a>
@@ -86,22 +86,16 @@
                         <th>Назва</th>
 
 
-                        <th>Артикул</th>
+                        <th>Код</th>
                         <th>Категорія</th>
                         <th>Бренд</th>
                         <th>Од.</th>
                     
 
                         <th class="text-right  ">Кіл.</th>
+   {{^noshowpartion}}                         
                         <th class="text-right  ">Обл. ціна.</th>
-                   
-                        {{#hp1}}<th class="text-right  ">{{hp1}}</th>{{/hp1}}
-                        {{#hp2}}<th class="text-right  ">{{hp2}}</th>{{/hp2}}
-                        {{#hp3}}<th class="text-right  ">{{hp3}}</th>{{/hp3}}
-                        {{#hp4}}<th class="text-right  ">{{hp4}}</th>{{/hp4}}
-                        {{#hp5}}<th class="text-right  ">{{hp5}}</th>{{/hp5}}
-                        
-                       
+   {{/noshowpartion}}            
                         <th class="text-right  ">На суму</th>
 
                                            
@@ -121,7 +115,7 @@
                         </td>
                         {{/useimages}}
 
-                        <td zippy="itemname"></td>
+                        <td ><a zippy="itemname"></a></td>
 
                         <td zippy="code" class=" text-nowrap"></td>
                         <td zippy="cat_name"></td>
@@ -130,26 +124,20 @@
 
 
                         <td zippy="iqty" class="text-right  "></td>
+                        
+                           {{^noshowpartion}} 
                         <td zippy="inprice" class="text-right  "></td>
-                     
-
-                        {{#hp1}}<td zippy="iprice1" class="text-right  "></td>{{/hp1}}
-                        {{#hp2}}<td zippy="iprice2" class="text-right  "></td>{{/hp2}}
-                        {{#hp3}}<td zippy="iprice3" class="text-right  "></td>{{/hp3}}
-                        {{#hp4}}<td zippy="iprice4" class="text-right  "></td>{{/hp4}}
-                        {{#hp5}}<td zippy="iprice5" class="text-right  "></td>{{/hp5}}
-                    
-                 
-
+                           {{/noshowpartion}} 
+         
 
                         <td zippy="iamount" class="text-right  "></td>
 
                             
 
                         <td>
-                          {{^noshowpartion}} 
+                       
                             <a zippy="show" title="Детальна інформація"><i class="fa fa-eye"></i></a>
-                          {{/noshowpartion}}
+                         
                         </td>
                         
 
@@ -159,7 +147,7 @@
                   
 
                        
-                        <td colspan="12" class="  font-weight-bolder"> Всього на суму: <span zippy="totamount"></span> </td>
+                        <td colspan="10" class="  font-weight:bolder"> Всього на суму: <span zippy="totamount"></span> </td>
 
 
                     </tr>
@@ -167,9 +155,14 @@
                 <div zippy="pag"></div>
 
             </div>
-            <div class="col-12   col-xl-10" zippy="detailpanel">
+            <div class="col-12 col-md-10 col-xl-8" zippy="detailpanel">
+             <div class="row">
+              <div class="col-12 mb-4">
                 <a zippy="back"> <i class="fa fa-arrow-circle-left"></i> До переліку</a>
-                <h4 zippy="itemdetname"></h4>
+                <h3 zippy="itemdetname"></h3>
+                
+            {{^noshowpartion}}                 
+                <h5> Партiї облiку  </h5>
                 <table class="table   table-responsive-sm   table-sm  table-hover ">
                     <tr>
                         <th>Склад</th>
@@ -179,13 +172,11 @@
                         <th class="text-right text-nowrap">Придатний до</th>
                         {{/usesnumber}}
                         <th class="text-right text-nowrap">Обл. ціна</th>
-                        {{#useval}}
-                        <th class="  text-nowrap">По курсу</th>
-                        {{/useval}}
+            
                         <th class="text-right text-nowrap">Кіл.</th>
                         <th class="text-right text-nowrap">На суму</th>
-                        <th class="text-right text-nowrap ">Прод. ціна</th>
-                        <th >Документ</th>
+                  
+                 
 
                           <th  > </th>
 
@@ -198,22 +189,58 @@
 
                         {{/usesnumber}}
                         <td zippy="partion" class="text-right  "></td>
-                        {{#useval}}
-                        <td zippy="rate"></td>
-                        {{/useval}}
+                
 
                         <td zippy="qty" class="text-right  "></td>
                         <td zippy="amount" class="text-right  "></td>
-                        <td zippy="price" class="text-right  "></td>
-                         <td  ><a zippy="blameddoc" ></a></td>
-                         <td  ><a zippy="createmove" >Створити перемiщення</a></td>
+
+
+                         <td  ><a zippy="createmove" >Перемiстити партiю</a></td>
 
 
                     </tr>
                 </table>
                 <small><i class="fa fa-exclamation-triangle"></i> Скоригувати партiї, наприклад, якщо утворився мiнус можна
                     документом Перемiщення партiй.</small>
+             {{/noshowpartion}} 
+              </div>
+              
+              
+                <div class="col-6  ">
+                     <b>Остання продажа</b> <br>
+                  {{i_lastsell}}  <br>
+                     {{i_avgout}} <br>                 
+                     <b>Вiдпускнi цiни</b> <br>
+                    <table class="ctable">
+                      {{#i_plist}}
+                      <tr><td>{{i_pricename}}</td><td class="text-right">{{i_price}}</td></tr>
+                      {{/i_plist}}
+                      
+                    </table> 
+                   
+               </div>
+               
+                {{^noshowpartion}} 
+                <div class="col-6">
+                     <b>Остання закупка</b><br>
+                      {{i_lastbay}}  <br>
+                     {{#useval}}
+                       Валюта  {{i_rate}} <br>
+                     {{/useval}}  
+                 
+                     <form zippy="iformbay" class="form-inline mt-4">
+                       <label>Кiл.</label> 
+                       <input required="required" style="width:120px;" zippy="iformbayqty"  pattern="[0-9\.]+" class="form-control priceqty" >
+                       <input title="Додати в заявку постачальнику"   type="submit" value="В закупку"  class="btn btn-info" >
+                     </form>
+                     
 
+                     
+               </div>
+               
+                {{/noshowpartion}} 
+               
+             </div>
             </div>
 
 

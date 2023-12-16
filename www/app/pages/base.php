@@ -538,7 +538,9 @@ class Base extends \Zippy\Html\WebPage
             $price = $e->partion;
             $quantity = $e->quantity;
             $customer_id = $d->customer_id;
-
+            if($args[1] > 0) {
+                $quantity = $args[1] ;
+            }
             $co = \App\Entity\Doc\Document::getFirst("meta_name='OrderCust' and customer_id={$d->customer_id} and state=1 ","document_id desc") ;
             
             if($co==null) {
