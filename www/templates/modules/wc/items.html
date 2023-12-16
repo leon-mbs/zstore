@@ -16,9 +16,9 @@
                         </select>
 
 
-                        <input onclick="$('#loader1').removeAttr('style')" type="submit" class=" mr-2 btn btn-outline-success  "
+                        <input onclick=" document.getElementById('dialogwait').showModal() " type="submit" class=" mr-2 btn btn-outline-success  "
                                value="Завантажити">
-                        <div id="loader1" style="display:none" class="spinner-border spinner-border-sm"></div>
+
 
 
                     </form>
@@ -54,9 +54,9 @@
                     <div class="ml-2 form-group row  ">
 
 
-                        &nbsp;<input onclick="$('#loader3').removeAttr('style')" type="submit"
+                        &nbsp;<input onclick="document.getElementById('dialogwait').showModal() " type="submit"
                                      class="  btn btn-outline-success   " value="Відправити">
-                        <div id="loader3" style="display:none" class="spinner-border spinner-border-sm"></div>
+
 
                     </div>
                 </form>
@@ -76,11 +76,11 @@
                 
       
                     <a zippy="updateqty" class="  btn btn-outline-success  ">Оновити кількість</a>
-                    <div id="loader" style="display:none" class="spinner-border spinner-border-sm"></div>
+
 
                     &nbsp;&nbsp;
                     <a zippy="updateprice" class="  btn btn-outline-success  ">Оновити ціни</a>
-                    <div id="loader7" style="display:none" class="spinner-border spinner-border-sm"></div>
+
                    </form>
 
                 </div>
@@ -92,7 +92,7 @@
 
                 <div class="navbar nav">
                     <a zippy="getitems" class="  btn btn-outline-success  ">Завантажити</a>
-                    <div id="loader6" style="display:none" class="spinner-border spinner-border-sm"></div>
+
 
 
                 </div>
@@ -102,17 +102,18 @@
 
             function check_updateqty() {
 
-                $('#loader3').removeAttr('style');
+            document.getElementById('dialogwait').showModal() 
             }
 
             function check_updateprice() {
 
-                $('#loader7').removeAttr('style');
+              document.getElementById('dialogwait').showModal() 
             }
 
             function check_getitems() {
 
-                $('#loader6').removeAttr('style');
+ document.getElementById('dialogwait').showModal() 
+                
             }
 
             function chclick() {
