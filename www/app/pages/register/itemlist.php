@@ -325,7 +325,7 @@ class ItemList extends \App\Pages\Base
           $r = $this->addItemToCO([$this->_item->item_id,$qty]);
           if($r==""){
              $sender->iformbayqty->setText('') ;                 
-             $this->setSuccess('Додано') ж
+             $this->setSuccess('Додано') ;
           } else {
               $this->setError($r) ;
           }

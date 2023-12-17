@@ -120,6 +120,10 @@ class Document extends \ZCL\DB\Entity
             throw new \Exception("Не можна змінювати документ старший " .date('Y-m-d', $da));
         }
 
+        $fn = mb_substr($this->document_number,0,1) ;
+        if($fn >0) {
+            throw new \Exception("Номер документу має починатись з букви ");
+        }
 
         if (false == $this->checkUniqueNumber()) {
             System::setWarnMsg('Не унікальний номер документа');
@@ -581,6 +585,7 @@ class Document extends \ZCL\DB\Entity
      */
     public function checkUniqueNumber() {
         $this->document_number = trim($this->document_number);
+        
         $branch = "";
         if ($this->branch_id > 0) {
             $branch = " and branch_id=" . $this->branch_id;
