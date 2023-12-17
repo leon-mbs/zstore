@@ -20,12 +20,9 @@
                         </select>
 
 
-                        <input onclick="$('#loader1').removeAttr('style')" type="submit" class=" mr-2 btn btn-outline-success  "
+                        <input onclick="document.getElementById('dialogwait').showModal()" type="submit" class=" mr-2 btn btn-outline-success  "
                                value="Завантажити">
 
-                              <div style="display:none" id="loader1" class="spinner-border spinner-border-sm " role="status">
-                                  <span class="sr-only">Завантаження...</span>
-                              </div>
                       
                     </form>
                 </div>
@@ -128,11 +125,8 @@
                         </select>
               
 
-                        <input onclick="$('#loader3').removeAttr('style')" type="submit" class="  btn btn-outline-success  "
+                        <input onclick="document.getElementById('dialogwait').showModal()" type="submit" class="  btn btn-outline-success  "
                                value="Відправити">
-                           <div style="display:none" id="loader3" class="spinner-border spinner-border-sm " role="status">
-                                  <span class="sr-only">Завантаження...</span>
-                              </div>
 
                     </div>
                 </form>

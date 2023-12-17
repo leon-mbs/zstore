@@ -34,6 +34,7 @@ class Orders extends \App\Pages\Base
         $modules = System::getOptions("modules");
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
+        $this->filter->add(new DropDownChoice('eistatus', array('pending' => 'В очікуванні', 'processing' => 'В обробці' ), 'pending'));
 
         $this->add(new DataView('neworderslist', new ArrayDataSource(new Prop($this, '_neworders')), $this, 'noOnRow'));
 
@@ -42,9 +43,9 @@ class Orders extends \App\Pages\Base
         $this->add(new ClickLink('refreshbtn'))->onClick($this, 'onRefresh');
         $this->add(new Form('updateform'))->onSubmit($this, 'exportOnSubmit');
         $this->updateform->add(new DataView('orderslist', new ArrayDataSource(new Prop($this, '_eorders')), $this, 'expRow'));
-        $this->updateform->add(new DropDownChoice('estatus', array('completed' => 'Выполнен', 'shipped' => 'Доставлен', 'canceled' => 'Отменен'), 'completed'));
+        $this->updateform->add(new DropDownChoice('estatus', array('completed' => 'Виконаний', 'shipped' => 'Доставлений', 'canceled' => 'Скасований'), 'completed'));
         $this->add(new ClickLink('checkconn'))->onClick($this, 'onCheck');
-
+          
     }
 
     public function onCheck($sender) {
@@ -57,14 +58,14 @@ class Orders extends \App\Pages\Base
         $modules = System::getOptions("modules");
 
         $client = \App\Modules\WC\Helper::getClient();
-
+        $st = $this->filter->eistatus->getValue();
         $this->_neworders = array();
         $page = 1;
         while(true) {
 
 
             $fields = array(
-                'status' => 'pending', 'per_page' => 100, 'page' => $page
+                'status' => $st, 'per_page' => 100, 'page' => $page
             );
 
             try {
@@ -258,3 +259,16 @@ class Orders extends \App\Pages\Base
     }
 
 }
+
+/*
+$order_statuses = array(
+    'wc-pending'    => _x( 'Pending payment', 'Order status', 'woocommerce' ),
+    'wc-processing' => _x( 'Processing', 'Order status', 'woocommerce' ),
+    'wc-on-hold'    => _x( 'On hold', 'Order status', 'woocommerce' ),
+    'wc-completed'  => _x( 'Completed', 'Order status', 'woocommerce' ),
+    'wc-cancelled'  => _x( 'Cancelled', 'Order status', 'woocommerce' ),
+    'wc-refunded'   => _x( 'Refunded', 'Order status', 'woocommerce' ),
+    'wc-failed'     => _x( 'Failed', 'Order status', 'woocommerce' ),
+);
+
+*/

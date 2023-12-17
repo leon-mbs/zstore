@@ -265,7 +265,7 @@ class Items extends \App\Pages\Base
             $skulist = array();
             $skuvarlist = array();
             try {
-                $data = $client->get('products', array('status' => 'publish'));
+                $data = $client->get('products', array('status' => 'publish', 'page' => $page, 'per_page' => 100));
             } catch(\Exception $ee) {
                 $this->setErrorTopPage($ee->getMessage());
                 return;
