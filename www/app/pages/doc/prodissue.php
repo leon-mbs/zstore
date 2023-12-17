@@ -203,6 +203,9 @@ class ProdIssue extends \App\Pages\Base
 
         $row->add(new Label('snumber', $item->snumber));
         $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd($item->sdate) : ''));
+        $qty = $item->getQuantity($this->docform->store->getValue());
+        $row->add(new Label('qtyon',H::fqty($qty) ));
+        $row->add(new Label('toorder','В закупку' ))->setAttribute('onclick',"addItemToCO({$item->item_id})");
 
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');

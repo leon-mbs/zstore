@@ -309,6 +309,7 @@ class Item extends \ZCL\DB\Entity
 
 
         //если  не  задана  наценка и цена  то  берем  закупочную
+        /*
         if (intval($common['defprice']) == 0 && $price == 0) {
 
             if ($partion == 0) {
@@ -319,7 +320,7 @@ class Item extends \ZCL\DB\Entity
 
 
         }
-
+         */
         //курсовая разница
         if($common['useval']==1) {
             $opv = \App\System::getOptions("val");
