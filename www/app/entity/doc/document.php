@@ -120,7 +120,7 @@ class Document extends \ZCL\DB\Entity
             throw new \Exception("Не можна змінювати документ старший " .date('Y-m-d', $da));
         }
 
-        $fn = mb_substr($this->document_number,0,1) ;
+        $fn = intval(mb_substr($this->document_number,0,1) );
         if($fn >0) {
             throw new \Exception("Номер документу має починатись з букви ");
         }
