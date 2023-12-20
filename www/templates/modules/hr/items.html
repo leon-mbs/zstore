@@ -1,15 +1,15 @@
 <html>
-   
     <body>
         <div class="row">
-
-            {{#hideblock}}
             <div class="col-12 col-xl-10">
-
-              <h3>Експорт   товарів в  магазин</h3>
+            
+            <h3>Експорт   товарів в  магазин</h3>
                 &nbsp;&nbsp;&nbsp;<small><i class="fa fa-exclamation-triangle text-danger"></i>Спецсимволи (типу <b> & ' " `</b>)
-                    в назвi або описi може викликати проблеми з вигрузкою</small>
-               <div class="navbar nav">
+                    в назвi або описi можуть викликати проблеми з вигрузкою</small>
+
+            <br><a zippy="checkconn"><i class="fa fa fa-sync"></i> Загрузити категорії</a>        
+                
+                <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
 
                         <label for="searchcat">Категорія</label>
@@ -21,13 +21,13 @@
 
                         <input onclick="document.getElementById('dialogwait').showModal()" type="submit" class=" mr-2 btn btn-outline-success  "
                                value="Завантажити">
+                      
 
 
                     </form>
                 </div>
 
                 <form zippy="exportform">
-
                     <table class="table   table-sm   ">
                         <tr>
 
@@ -55,21 +55,25 @@
                     </table>
                     <div zippy="pag"></div>
                     <div class="ml-2 form-group row  ">
-                    
+                        <label for="ecat">Категорія в магазині </label>
+ 
+                        <select class="   mr-2" zippy="ecat">
+                            <option value="0">Не обрано</option>
+                        </select>
 
                         &nbsp;<input onclick="document.getElementById('dialogwait').showModal()" type="submit"
                                      class="  btn btn-outline-success btn-sm  " value="Відправити">
+                         
 
                     </div>
                 </form>
             </div>
-            
-            {{/hideblock}}
             <div class="col-12 col-md-8  ">
 
                 <h3>Оновлення цін та кількості</h3>
 
                 <div class="navbar nav">
+                            
                   <form zippy="upd" class="form-inline ">
                       <label for="updcat">Категорiя</label>
 
@@ -77,12 +81,13 @@
                             <option value="0">Всi</option>
                         </select>
                     <a zippy="updateqty" class="  btn btn-outline-success  ">Оновити кількість</a>
-                    
+
                     &nbsp;&nbsp;
                     <a zippy="updateprice" class="  btn btn-outline-success  ">Оновити ціни</a>
+                     
 
-                    </form>
 
+                     </form>
                 </div>
             </div>
 
@@ -91,21 +96,18 @@
                 <h3>Iмпорт товарів з магазину </h3>
 
                 <div class="navbar nav">
-                     <form zippy="importform" class="form-inline ">
+                    
+                    <form zippy="importform" class="form-inline ">
 
-                         <div class="form-check">
+                   
 
-                            <input   class="form-check-input" type="checkbox" zippy="createcat">
-                            <label class="form-check-label mr-1" for="createcat">Створювати  категорiю як в  магазинi</label>
-                        </div> 
-                        
-
-                        <input onclick="document.getElementById('dialogwait').showModal()" zippy="getitems" type="submit" class=" mr-2 ml-2 btn btn-outline-success  "
+                        <input zippy="getitems" type="submit" class=" mr-2 btn btn-outline-success  "
                                value="Завантажити">
+                   
 
 
                     </form>
-                    
+
                 </div>
             </div>
         </div>
@@ -113,15 +115,22 @@
 
             function check_updateqty() {
 
-                document.getElementById('dialogwait').showModal()
+                 document.getElementById('dialogwait').showModal()
             }
 
             function check_updateprice() {
 
-                document.getElementById('dialogwait').showModal()
+               document.getElementById('dialogwait').showModal()
             }
 
-          
+            function check_getitems() {
+
+                document.getElementById('dialogwait').showModal()
+            }
+            function check_checkconn() {
+
+                document.getElementById('dialogwait').showModal()
+            }
 
             function chclick() {
                 var ch = $("#chall").prop('checked');
