@@ -9,6 +9,7 @@ use App\System;
 use Zippy\Binding\PropertyBinding as Prop;
 use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
@@ -56,8 +57,9 @@ class Items extends \App\Pages\Base
 
 
 
-        $this->add(new Form('importform'))->onSubmit($this, 'importOnSubmit');
-        
+        $this->add(new Form('importform')) ;
+        $this->importform->add(new SubmitButton('getitems'))->onClick($this, 'importOnSubmit');
+         
 
 
     }
@@ -254,7 +256,13 @@ class Items extends \App\Pages\Base
     public function onUpdateQty($sender) {
         $modules = System::getOptions("modules");
         $cat = $this->upd->updcat->getValue();
-
+        
+        
+        $articles = $this->getArticles();
+        
+        
+        $body=[];
+        $body['products']=[];
         $elist = array();
         
         foreach (Item::findYield("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : "")) as $item) {
@@ -262,32 +270,33 @@ class Items extends \App\Pages\Base
                 continue;
             }
 
+            if(in_array($item->item_code,$articles)===false) {
+                continue;
+            }
+            
             $qty = $item->getQuantity();
+            $qty = 33;
             $elist[$item->item_code] = round($qty);
+            $body['products'][]=array(
+                'article'=>$item->item_code,
+                'warehouse'=>"office",
+                'quantity'=>$qty,
+               );
+     
         }
 
-        $data = json_encode($elist);
-
-        $fields = array(
-            'data' => $data
-        );
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/updatequantity&' . System::getSession()->octoken;
-        if($modules['ocv4']==1) {
-            $url = $modules['ocsite'] . '/index.php?route=api/zstore.updatequantity&' . System::getSession()->octoken;
-        }
-        $json = Helper::do_curl_request($url, $fields);
-        if ($json === false) {
+       
+        $token=  \App\Modules\HR\Helper::connect();
+        if(strlen($token)==0) {
             return;
         }
-        $data = json_decode($json, true);
+         
+          $body['token'] =$token;
+       
 
-        if ($data['error'] != "") {
-            $data['error']  = str_replace("'", "`", $data['error']) ;
-
-            $this->setErrorTopPage($data['error']);
-            return;
-        }
-        $this->setSuccess('Оновлено');
+          $ret =   \App\Modules\HR\Helper::make_request("POST", "/api/catalog/importResidues", json_encode($body, JSON_UNESCAPED_UNICODE));
+  
+          $this->setSuccess('Оновлено');
     }
 
     public function onUpdatePrice($sender) {
@@ -377,9 +386,7 @@ class Items extends \App\Pages\Base
                 if (strlen($product['article']) == 0) {
                     continue;
                 }
-                if (intval($product['price']) == 0) {
-                    continue;  //категория
-                }
+ 
                 $cnt = Item::findCnt("item_code=" . Item::qstr($product['article']));
                 if ($cnt > 0) {
                     continue;
@@ -387,6 +394,9 @@ class Items extends \App\Pages\Base
 
                 $product->name = str_replace('&quot;', '"', $product['article']);
                 $item = new Item();
+                $item->item_type=Item::TYPE_TOVAR ;
+      
+                
                 $item->item_code = $product['article'] ;
                 $item->itemname = $product['title']['ua'] ?? '';
                 if($item->itemname =='') {
@@ -460,6 +470,60 @@ class Items extends \App\Pages\Base
         }
 
         $this->setSuccess("Завантажено {$i} товарів");
+    }
+    
+    private  function getArticles() {
+        $modules = System::getOptions("modules");
+        $common = System::getOptions("common");
+  
+ 
+        $token=  \App\Modules\HR\Helper::connect();
+        if(strlen($token)==0) {
+            return [];
+        }
+        $r=[];
+        $i = 0;
+
+        $page = 0;
+        while(true) {
+
+
+            try {
+                
+                $body=[];
+                $body['token'] =$token;
+                $body['expr'] =[];
+                $body['offset'] = $page * 100 ;
+                $body['limit'] = 100;
+                
+                $ret =   \App\Modules\HR\Helper::make_request("POST", "/api/catalog/export", json_encode($body, JSON_UNESCAPED_UNICODE));
+            
+            } catch(\Exception $ee) {
+                $this->setErrorTopPage($ee->getMessage());
+                return;
+            }
+            $page++;
+
+            $data= $ret['products'] ;
+            
+            $c = count($data);
+            if ($c == 0) {
+                break;
+            }
+            foreach ($data as $product) {
+
+                if (strlen($product['article']) == 0) {
+                    continue;
+                }
+                
+                $r[] = $product['article'] ;
+           
+           
+
+            }
+        }
+
+        return $r;
     }
 
 }
