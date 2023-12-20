@@ -6,19 +6,20 @@
             <div class="col-12  col-sm-10 col-md-6    col-xl-4  ">
                 <h4>Налаштування з'єднання</h4>
                 <form zippy="cform">
-                
                     <div class="form-group">
-                        <label for="apitoken">Ключ</label>
-                        <input  zippy="apitoken" class="form-control" required="required"/>
+                        <label for="site">Адреса сайту</label>
+                        <input type="text" zippy="site" class="form-control" required="required"/>
+                         <small>Потрiбно  вводити повну адресу</small>
+                    </div>               
+                    <div class="form-group">
+                        <label for="login">Логiн</label>
+                        <input  zippy="login" class="form-control" required="required"/>
                     </div>
-
-          
-                 <div class="form-group  ">
-                        <label for="salesource">Джерело продаж</label>
-                        <select class="form-control" zippy="salesource">
-                            <option value="0">Не обрано</option>
-                        </select>
-                    </div>                    
+                   <div class="form-group">
+                        <label for="password">Пароль</label>
+                        <input  zippy="password" class="form-control" required="required"/>
+                    </div>
+                   
                      
                     <div class="form-group   ">
                         <label for="defpricetype">Тип ціни </label>
@@ -29,12 +30,12 @@
                         </select>
 
                     </div>
-                    <div class="form-check">
-                        <input zippy="setpayamount" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="setpayamount">Ставити статус  До сплати  </label>
-                        
-                        <br>
-                    </div>
+                    <div class="form-group  ">
+                        <label for="salesource">Джерело продаж</label>
+                        <select class="form-control" zippy="salesource">
+                            <option value="0">Не обрано</option>
+                        </select>
+                    </div>   
                      <div class="form-check">
                         <input zippy="insertcust" type="checkbox" class="form-check-input">
                         <label class="form-check-label" for="insertcust">Iмпортувати контрангентiв </label>
