@@ -333,10 +333,9 @@ class Options extends \App\Pages\Base
         $this->modules->add(new CheckBox('modwoocomerce', $modules['woocomerce']));
         $this->modules->add(new CheckBox('modnp', $modules['np']));
         $this->modules->add(new CheckBox('modpromua', $modules['promua']));
+        $this->modules->add(new CheckBox('modhoroshop', $modules['horoshop']));
         $this->modules->add(new CheckBox('modpaperless', $modules['paperless']));
-//        $this->modules->add(new CheckBox('modppo', $modules['ppo']));
-//        $this->modules->add(new CheckBox('modcheckbox', $modules['checkbox']));
-        
+//    
         
         $fisctype=0;
         if($modules['ppo']==1) $fisctype=1;
@@ -682,6 +681,7 @@ class Options extends \App\Pages\Base
         $modules['woocomerce'] = $sender->modwoocomerce->isChecked() ? 1 : 0;
         $modules['np'] = $sender->modnp->isChecked() ? 1 : 0;
         $modules['promua'] = $sender->modpromua->isChecked() ? 1 : 0;
+        $modules['horoshop'] = $sender->modhoroshop->isChecked() ? 1 : 0;
         $modules['paperless'] = $sender->modpaperless->isChecked() ? 1 : 0;
         $modules['issue'] = $sender->modissue->isChecked() ? 1 : 0;
         $modules['note'] = $sender->modnote->isChecked() ? 1 : 0;
