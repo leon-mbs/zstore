@@ -75,7 +75,7 @@ class Helper
         curl_close($ch);
 
         $ret = json_decode($result, true)  ;
-        if (strlen($ret['status']=='error') ) {
+        if (strlen($ret['status']=='ERROR') ) {
             throw new  \Exception($ret['response']['message']);
         }
                 

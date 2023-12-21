@@ -44,7 +44,7 @@ class Items extends \App\Pages\Base
         $this->exportform->add(new DataView('newitemlist', new ArrayDataSource(new Prop($this, '_items')), $this, 'itemOnRow'));
         $this->exportform->newitemlist->setPageSize(H::getPG());
         $this->exportform->add(new \Zippy\Html\DataList\Paginator('pag', $this->exportform->newitemlist));
-        $this->exportform->add(new DropDownChoice('ecat', $cats, 0));
+        $this->exportform->add(new DropDownChoice('ecat', [], 0));
 
         $this->add(new Form('upd'));
         $this->upd->add(new DropDownChoice('updcat', \App\Entity\Category::getList(), 0));
@@ -133,6 +133,8 @@ class Items extends \App\Pages\Base
                     }
                 }
       
+      
+                $this->exportform->ecat->setOptionList($pages);      
             
             } catch(\Exception $ee) {
                 $this->setErrorTopPage($ee->getMessage());
@@ -144,22 +146,10 @@ class Items extends \App\Pages\Base
     public function filterOnSubmit($sender) {
         $this->_items = array();
         $modules = System::getOptions("modules");
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/articles&' . System::getSession()->octoken;
-        if($modules['ocv4']==1) {
-            $url = $modules['ocsite'] . '/index.php?route=api/zstore.articles&' . System::getSession()->octoken;
-        }
-        $json = Helper::do_curl_request($url);
-        if ($json === false) {
-            return;
-        }
-        $data = json_decode($json, true);
-        if (!isset($data)) {
-
-            $this->setError("Невірна відповідь");
-            \App\Helper::log($json);
-            return;
-        }
-        if ($data['error'] == "") {
+        
+        $articles=$this->getArticles();
+        
+        if (count($articles)>0) {
 
             $cat = $this->filter->searchcat->getValue();
             $where = "disabled <> 1   ";
@@ -171,7 +161,7 @@ class Items extends \App\Pages\Base
                 if (strlen($item->item_code) == 0) {
                     continue;
                 }
-                if (in_array($item->item_code, $data['articles'])) {
+                if (in_array($item->item_code, $articles)) {
                     continue;
                 } //уже  в  магазине
                 $item->qty = $item->getQuantity();
@@ -207,47 +197,56 @@ class Items extends \App\Pages\Base
         $modules = System::getOptions("modules");
         $cat = $this->exportform->ecat->getValue();
 
-        $elist = array();
+        if($cat==0) {
+            return;
+        }
+        
+        $body=[];
+        $body['products']=[];
+ 
         foreach ($this->_items as $item) {
             if ($item->ch == false) {
                 continue;
             }
-            $elist[] = array('name'     => $item->itemname,
-                             'sku'      => $item->item_code,
-                             'quantity' => \App\Helper::fqty($item->qty),
-                             'price'    => $item->getPrice($modules['ocpricetype'])
-            );
+            
+            $price = $item->getPrice($modules['hrpricetype']);
+      
+            $p=array(
+                'article'=>$item->item_code,
+                'title'=>$item->itemname,
+                'short_description'=>$item->description ?? '',
+                'brand'=>$item->manufacturer ?? '',
+
+                'price'=>number_format($price, 2, '.', ''),
+               );               
+            
+            $p['parent'] =array('id'=>intval($cat));
+            
+            $body['products'][] = $p;
+            
         }
-        if (count($elist) == 0) {
+        if (count($body['products']) == 0) {
 
             $this->setError('Не обрано товар');
             return;
         }
-        $data = json_encode($elist);
 
-        $fields = array(
-            'data' => $data,
-            'cat'  => $cat
-        );
+        try{
+        
+            $token=  \App\Modules\HR\Helper::connect();
+            if(strlen($token)==0) {
+                return;
+            }
+         
+            $body['token'] =$token;
 
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/addproducts&' . System::getSession()->octoken;
-        if($modules['ocv4']==1) {
-            $url = $modules['ocsite'] . '/index.php?route=api/zstore.addproducts&' . System::getSession()->octoken;
+            $ret =   \App\Modules\HR\Helper::make_request("POST", "/api/catalog/import/", json_encode($body, JSON_UNESCAPED_UNICODE));
+          
+        } catch(\Exception $ee) {
+                $this->setErrorTopPage($ee->getMessage());
+                return;
         }
-
-        $json = Helper::do_curl_request($url, $fields);
-        if ($json === false) {
-            return;
-        }
-        $data = json_decode($json, true);
-
-        if ($data['error'] != "") {
-            $data['error']  = str_replace("'", "`", $data['error']) ;
-
-            $this->setErrorTopPage($data['error']);
-            return;
-        }
-        $this->setSuccess("Експортовано ".count($elist)." товарів");
+        $this->setSuccess("Експортовано ".count( $body['products'])." товарів");
 
         //обновляем таблицу
         $this->filterOnSubmit(null);
@@ -263,7 +262,7 @@ class Items extends \App\Pages\Base
         
         $body=[];
         $body['products']=[];
-        $elist = array();
+        
         
         foreach (Item::findYield("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : "")) as $item) {
             if (strlen($item->item_code) == 0) {
@@ -274,9 +273,9 @@ class Items extends \App\Pages\Base
                 continue;
             }
             
-            $qty = $item->getQuantity();
-            $qty = 33;
-            $elist[$item->item_code] = round($qty);
+            $price = $item->getPrice($modules['hrpricetype']);
+       
+          
             $body['products'][]=array(
                 'article'=>$item->item_code,
                 'warehouse'=>"office",
@@ -302,39 +301,46 @@ class Items extends \App\Pages\Base
     public function onUpdatePrice($sender) {
         $modules = System::getOptions("modules");
         $cat = $this->upd->updcat->getValue();
-
-        $elist = array();
+        
+        
+        $articles = $this->getArticles();
+        
+        
+        $body=[];
+        $body['products']=[];
+       
         
         foreach (Item::findYield("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : "")) as $item) {
             if (strlen($item->item_code) == 0) {
                 continue;
             }
-            $elist[$item->item_code] = $item->getPrice($modules['ocpricetype']);
+
+            if(in_array($item->item_code,$articles)===false) {
+                continue;
+            }
+            
+            $price = $item->getPrice($modules['hrpricetype']);
+       
+            $body['products'][]=array(
+                'article'=>$item->item_code,
+                'price'=>number_format($price, 2, '.', ''),
+               );     
+          
+     
         }
 
-        $data = json_encode($elist);
-
-        $fields = array(
-            'data' => $data
-        );
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/updateprice&' . System::getSession()->octoken;
-        if($modules['ocv4']==1) {
-            $url = $modules['ocsite'] . '/index.php?route=api/zstore.updateprice&' . System::getSession()->octoken;
-        }
-
-        $json = Helper::do_curl_request($url, $fields);
-        if ($json === false) {
+       
+        $token=  \App\Modules\HR\Helper::connect();
+        if(strlen($token)==0) {
             return;
         }
-        $data = json_decode($json, true);
+         
+          $body['token'] =$token;
+       
 
-        if ($data['error'] != "") {
-            $data['error']  = str_replace("'", "`", $data['error']) ;
-
-            $this->setErrorTopPage($data['error']);
-            return;
-        }
-        $this->setSuccess('Оновлено');
+          $ret =   \App\Modules\HR\Helper::make_request("POST", "/api/catalog/import/", json_encode($body, JSON_UNESCAPED_UNICODE));
+  
+          $this->setSuccess('Оновлено');
     }
 
     public function importOnSubmit($sender) {
@@ -471,7 +477,7 @@ class Items extends \App\Pages\Base
 
         $this->setSuccess("Завантажено {$i} товарів");
     }
-    
+    //список  артикулов  в магазе
     private  function getArticles() {
         $modules = System::getOptions("modules");
         $common = System::getOptions("common");
