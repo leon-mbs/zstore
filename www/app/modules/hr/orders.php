@@ -21,7 +21,7 @@ class Orders extends \App\Pages\Base
 {
     public $_neworders = array();
     public $_eorders   = array();
-
+   
     public function __construct() {
         parent::__construct();
 
@@ -34,10 +34,9 @@ class Orders extends \App\Pages\Base
 
         $modules = System::getOptions("modules");
 
-        $statuses = Helper::connect() ;
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
-        $this->filter->add(new DropDownChoice('status', $statuses, 'pending'));
+        $this->filter->add(new DropDownChoice('status', [], 'pending'));
 
         $this->add(new DataView('neworderslist', new ArrayDataSource(new Prop($this, '_neworders')), $this, 'noOnRow'));
 
@@ -46,8 +45,9 @@ class Orders extends \App\Pages\Base
         $this->add(new ClickLink('refreshbtn'))->onClick($this, 'onRefresh');
         $this->add(new Form('updateform'))->onSubmit($this, 'exportOnSubmit');
         $this->updateform->add(new DataView('orderslist', new ArrayDataSource(new Prop($this, '_eorders')), $this, 'expRow'));
-        $this->updateform->add(new DropDownChoice('estatus', $statuses, 'delivered'));
+        $this->updateform->add(new DropDownChoice('estatus', [], 'delivered'));
 
+        $this->add(new ClickLink('checkconn'))->onClick($this, 'onCheck');
 
     }
 
@@ -55,14 +55,26 @@ class Orders extends \App\Pages\Base
     public function filterOnSubmit($sender) {
         $modules = System::getOptions("modules");
 
-        $client = \App\Modules\WC\Helper::getClient();
-
+        $st = $this->filter->status->getValue();
+         
         $this->_neworders = array();
 
-
+        $token=  \App\Modules\HR\Helper::connect();
+        if(strlen($token)==0) {
+            return;
+        } 
+        
+        
+        
         try {
-            $data = Helper::make_request("GET", "/api/v1/orders/list?status=". $this->filter->status->getValue(), null);
+           $body=[];
+           $body['token'] =$token;
+           $body['status'] =$st;
+   
 
+           $ret =   \App\Modules\HR\Helper::make_request("POST", "/api/orders/get/", json_encode($body, JSON_UNESCAPED_UNICODE));
+             
+   
         } catch(\Exception $ee) {
             $this->setErrorTopPage($ee->getMessage());
             return;
@@ -71,9 +83,9 @@ class Orders extends \App\Pages\Base
 
         $conn = \ZDB\DB::getConnect();
 
-        foreach ($data['orders'] as $puorder) {
+        foreach ($ret['orders'] as $hrorder) {
 
-            $cnt  = $conn->getOne("select count(*) from documents_view where meta_name='Order' and content like '%<puorder>{$puorder['id']}</puorder>%' ")  ;
+            $cnt  = $conn->getOne("select count(*) from documents_view where meta_name='Order' and content like '%<hrorder>{$hrorder['order_id']}</hrorder>%' ")  ;
 
 
             if (intval($cnt) > 0) { //уже импортирован
@@ -82,25 +94,26 @@ class Orders extends \App\Pages\Base
 
             $neworder = Document::create('Order');
 
-
+            $amount=0;
             //товары
             $j=0;
             $itlist = array();
-            foreach ($puorder['products'] as $product) {
+            foreach ($hrorder['products'] as $product) {
                 //ищем по артикулу
-                if (strlen($product['sku']) == 0) {
+                if (strlen($product['article']) == 0) {
                     continue;
                 }
-                $code = Item::qstr($product['sku']);
+                $code = Item::qstr($product['article']);
 
                 $tovar = Item::getFirst('item_code=' . $code);
                 if ($tovar == null) {
 
-                    $this->setWarn("Не знайдено артикул товара {$product['name']} в замовленні номер " . $puorder['order_id']);
+                    $this->setWarn("Не знайдено артикул товара {$product['article']} в замовленні номер " . $hrorder['order_id']);
                     continue;
                 }
                 $tovar->quantity = H::fqty($product['quantity']);
                 $tovar->price = H::fa($product['price']);
+                $amount += ($product['price']*$product['quantity']);
                 $j++;
                 $tovar->rowid = $j;
 
@@ -113,42 +126,45 @@ class Orders extends \App\Pages\Base
             $neworder->packDetails('detaildata', $itlist);
             $neworder->headerdata['pricetype'] = 'price1';
 
-            $neworder->headerdata['cemail'] = $puorder['email'];
-            $neworder->headerdata['cname'] = $puorder['client_first_name'] . ' ' . $puorder['client_last_name'];
-            $neworder->headerdata['cphone'] = $puorder['phone'] ;
-            $neworder->headerdata['puorder'] = $puorder['id'];
-            $neworder->headerdata['outnumber'] = $puorder['id'];
-            $neworder->headerdata['puorderback'] = 0;
-            $neworder->headerdata['salesource'] = $modules['pusalesource'];
+            $neworder->headerdata['cemail'] = $hrorder['delivery_email'];
+            $neworder->headerdata['cname'] = $hrorder['delivery_name'] ;
+            $neworder->headerdata['cphone'] = $hrorder['delivery_phone'] ;
+            $neworder->headerdata['hrorder'] = $hrorder['order_id'];
+            $neworder->headerdata['outnumber'] = $hrorder['order_id'];
+            $neworder->headerdata['hrorderback'] = 0;
+            $neworder->headerdata['salesource'] = $modules['salesource'];
 
-            $neworder->headerdata['puclient'] = $puorder['client_first_name'] . ' ' . $puorder['client_last_name'];
+            $neworder->headerdata['hrclient'] = $hrorder['delivery_name'] ;
 
-            $neworder->amount = H::fa($puorder['price']);
-            $neworder->payamount = H::fa($puorder['full_price']);
+            $neworder->amount = H::fa($amount);
+            $neworder->payamount = H::fa($amount);
 
 
-            $neworder->document_date = time();
-            $neworder->notes = "PU номер:{$puorder['id']};";
-            $neworder->notes .= " Клієнт:" .$puorder['client_first_name'] . ' ' . $puorder['client_last_name'].';';
-            if (strlen($puorder['email']) > 0) {
-                $neworder->notes .= " Email:" . $puorder['email'] . ";";
+            $neworder->document_date = strtotime($hrorder['stat_created']);
+            if($neworder->document_date==0) {
+                $neworder->document_date = time()   ;
+            }           
+            $neworder->notes = "HR номер:{$hrorder['order_id']};";
+            $neworder->notes .= " Клієнт:" .$hrorder['delivery_name'] ;
+            if (strlen($hrorder['delivery_email']) > 0) {
+                $neworder->notes .= " Email:" . $hrorder['delivery_email'] . ";";
             }
-            if (strlen($puorder['phone']) > 0) {
-                $neworder->notes .= " Тел:" . str_replace('+', '', $puorder['phone']). ";";
+            if (strlen($hrorder['delivery_phone']) > 0) {
+                $neworder->notes .= " Тел:" . str_replace('+', '', $hrorder['delivery_phone']). ";";
             }
-            if (strlen($puorder['delivery_option']['name']) > 0) {
-                $neworder->notes .= " Доставка:" . $puorder['delivery_option']['name'] . ";";
-            }
-
-            if (strlen($puorder['delivery_address']) > 0) {
-                $neworder->notes .= " Адреса:" . $puorder['delivery_address'] . ";";
-            }
-            if (strlen($puorder['client_notes']) > 0) {
-                $neworder->notes .= " Комментар:" . $puorder['client_notes'] . ";";
+            if (strlen($hrorder['delivery_option']['name']) > 0) {
+                $neworder->notes .= " Доставка:" . ($hrorder['delivery_type']['title']??'')  . ";";
             }
 
+            if (strlen($hrorder['delivery_address']) > 0) {
+                $neworder->notes .= " Адреса:" . $hrorder['delivery_city'] .' '. $hrorder['delivery_address']. ";";
+            }
+            if (strlen($hrorder['comment']) > 0) {
+                $neworder->notes .= " Комментар:" . $hrorder['comment'] . ";";
+            }
 
-            $this->_neworders[$puorder['id']] = $neworder;
+
+            $this->_neworders[$hrorder['order_id']] = $neworder;
         }
 
         $this->neworderslist->Reload();
@@ -157,11 +173,11 @@ class Orders extends \App\Pages\Base
     public function noOnRow($row) {
         $order = $row->getDataItem();
 
-        $row->add(new Label('number', $order->headerdata['puorder']));
-        $row->add(new Label('customer', $order->headerdata['puclient']));
+        $row->add(new Label('number', $order->headerdata['hrorder']));
+        $row->add(new Label('customer', $order->headerdata['hrclient']));
         $row->add(new Label('amount', round($order->amount)));
         $row->add(new Label('comment', $order->notes));
-        $row->add(new Label('date', \App\Helper::fdt(strtotime($order->document_date))));
+        $row->add(new Label('date', \App\Helper::fdt($order->document_date)));
     }
 
     public function onImport($sender) {
@@ -170,10 +186,10 @@ class Orders extends \App\Pages\Base
         foreach ($this->_neworders as $shoporder) {
             $shoporder->document_number = $shoporder->nextNumber();
             if (strlen($shoporder->document_number) == 0) {
-                $shoporder->document_number = 'PU00001';
+                $shoporder->document_number = 'HR-00001';
             }
 
-            if ( $modules['puinsertcust'] == 1) {
+            if ( $modules['hrinsertcust'] == 1) {
                 $phone = \App\Util::handlePhone($shoporder->headerdata['cphone'] )  ;
                 $cust = Customer::getByPhone($phone);
                 if ($cust == null) {
@@ -181,13 +197,13 @@ class Orders extends \App\Pages\Base
                 }   
                 if ($cust == null &&strlen($shoporder->headerdata['cname']) >0 && ( strlen($phone) >0 || strlen($shoporder->headerdata['cemail'])>0 ) ) {
                     $cust = new Customer();
-                    $cust->customer_name = $shoporder->headerdata['cname'];
+                    $cust->customer_name =  $shoporder->headerdata['cname'];
                     $cust->phone = $phone;
 
                     $cust->type = Customer::TYPE_BAYER;
 
                     $cust->email = $shoporder->headerdata['cemail'];
-                    $cust->comment = "Клiєнт Prom UA";
+                    $cust->comment = "Клiєнт Хорошоп";
                     $cust->save();
                 }        
                 if($cust != null) {         
@@ -214,7 +230,7 @@ class Orders extends \App\Pages\Base
 
     public function onRefresh($sender) {
 
-        $this->_eorders = Document::find("meta_name='Order' and content like '%<puorderback>0</puorderback>%' and state <> " . Document::STATE_NEW);
+        $this->_eorders = Document::find("meta_name='Order' and content like '%<hrorderback>0</hrorderback>%' and state <> " . Document::STATE_NEW);
         $this->updateform->orderslist->Reload();
     }
 
@@ -222,17 +238,19 @@ class Orders extends \App\Pages\Base
         $order = $row->getDataItem();
         $row->add(new CheckBox('ch', new Prop($order, 'ch')));
         $row->add(new Label('number2', $order->document_number));
-        $row->add(new Label('number3', $order->headerdata['puorder']));
+        $row->add(new Label('number3', $order->headerdata['hrorder']));
         $row->add(new Label('date2', \App\Helper::fdt($order->document_date)));
         $row->add(new Label('amount2', $order->amount));
-        $row->add(new Label('customer2', $order->headerdata['puclient']));
+        $row->add(new Label('customer2', $order->headerdata['hrclient']));
         $row->add(new Label('state', Document::getStateName($order->state)));
     }
 
     public function exportOnSubmit($sender) {
         $modules = System::getOptions("modules");
         $st = $this->updateform->estatus->getValue();
-
+        if($st==0){
+            return;
+        }
 
         $elist = array();
         foreach ($this->_eorders as $order) {
@@ -246,34 +264,85 @@ class Orders extends \App\Pages\Base
             return;
         }
 
-        $fields = array(
-            'status' => $st
-        );
 
-        foreach ($elist as $order) {
+        $token=  \App\Modules\HR\Helper::connect();
+        if(strlen($token)==0) {
+            return;
+        } 
+        
+         $body=[];
+         $body['token'] =$token;
+         $body['orders'] =[];
+        
+
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans(); 
+        try {
+            
+            foreach ($elist as $order) {
+
+                $body['orders'][]  = array('order_id'=>$order->headerdata['hrorder'],'status'=>$st);
 
 
-            try {
-                $json="{
-                \"status\":\"pending\",
-                \"ids\":[{$order->headerdata['ocorder']}]
-                }" ;
-                Helper::make_request("POST", "/api/v1/orders/set_status", $json);
-            } catch(\Exception $ee) {
-                $this->setErrorTopPage($ee->getMessage());
-                return;
-            }
+                $order->headerdata['hrorderback'] = 1;
+                $order->save();
+            }            
+            
+          $ret =   \App\Modules\HR\Helper::make_request("POST", "/api/orders/update/", json_encode($body, JSON_UNESCAPED_UNICODE));
+          $conn->CommitTrans();
 
-            $order->headerdata['puorderback'] = 1;
-            $order->save();
+        } catch(\Exception $ee) {
+            $conn->RollbackTrans();
+            
+            $this->setErrorTopPage($ee->getMessage());
+            return;
         }
+  
 
         $this->setSuccess("Оновлено ".count($elist)." замовлень");
 
 
 
-        $this->_eorders = Document::find("meta_name='Order' and content like '%<puorderback>0</puorderback>%' and state <> " . Document::STATE_NEW);
+        $this->_eorders = Document::find("meta_name='Order' and content like '%<hrorderback>0</hrorderback>%' and state <> " . Document::STATE_NEW);
         $this->updateform->orderslist->Reload();
+    }
+ 
+    public function onCheck($sender) {
+
+        $token=  \App\Modules\HR\Helper::connect();
+        if(strlen($token)==0) {
+            return;
+        }        
+        try {
+                $stlist=[];
+                
+                $body=[];
+                $body['token'] =$token;
+       
+
+                $ret =   \App\Modules\HR\Helper::make_request("POST", "/api/orders/get_available_statuses", json_encode($body, JSON_UNESCAPED_UNICODE));
+             
+      
+                foreach($ret['statuses'] as $st){
+                    $title = $st['title']['ua'] ?? '';
+                    if($title=='') {
+                        $title = $st['title']['ru'] ?? '';                        
+                    }
+                    
+                    if(strlen($title) >0){
+                         $stlist[$st['id']]=$title;
+                    }
+                    
+                }
+      
+      
+                $this->filter->status->setOptionList($stlist);      
+                $this->updateform->estatus->setOptionList($stlist);      
+            
+            } catch(\Exception $ee) {
+                $this->setErrorTopPage($ee->getMessage());
+                return;
+            }
     }
 
 }
