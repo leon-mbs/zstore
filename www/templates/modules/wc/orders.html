@@ -12,12 +12,16 @@
                 <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
 
-                        <input onclick="$('#loader1').removeAttr('style')" type="submit" class=" mr-2 btn btn-outline-success  "
+  <label for="eistatus">Статус в магазині </label>
+                        <select class="form-control  mr-2" zippy="eistatus">
+
+                        </select>
+
+                    
+                        <input onclick="       document.getElementById('dialogwait').showModal() " type="submit" class=" mr-2 btn btn-outline-success  "
                                value="Завантажити">
-                         <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Замовлення  мають  бути в  статусi Pending"></i>
-                  
-                        <div id="loader1" style="display:none" class="spinner-border spinner-border-sm"></div>
+                       
+                       
                     </form>
                 </div>
 
@@ -92,15 +96,20 @@
 
 
                     <div class="ml-2 form-group row  ">
-                        <label for="estatus">Статус в магазині </label>
+                         <div class="col-auto">
+                            <label for="estatus">Статус в магазині </label>
+                         </div>
+                         <div class="col-auto">
+                        <select class="form-control  mr-2" zippy="estatus">
 
-                        <select class="  mr-2" zippy="estatus">
-                            <option value="0">Не обрано</option>
                         </select>
+                         </div>
 
-                        <input onclick="$('#loader3').removeAttr('style')" type="submit" class="  btn btn-outline-success  "
+                         <div class="col-auto">
+                        <input onclick=" document.getElementById('dialogwait').showModal() " type="submit" class="  btn btn-outline-success  "
                                value="Відправити">
-                        <div id="loader3" style="display:none" class="spinner-border spinner-border-sm"></div>
+
+                         </div>
 
                     </div>
                 </form>

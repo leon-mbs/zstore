@@ -72,9 +72,6 @@
                         
                     <div class="form-group">
                         <input type="submit" value="Зберегти" zippy="save" class="btn   btn-primary mr-2"/>
-                            <div style="display:none" id="loader" class="spinner-border spinner-border-sm " role="status">
-                                  <span class="sr-only">Завантаження...</span>
-                              </div>
                             
 
                     </div>
@@ -85,7 +82,7 @@
 
             function check_check() {
 
-                $('#loader').removeAttr('style');
+                 document.getElementById('dialogwait').showModal()
             }
 
         </script>
