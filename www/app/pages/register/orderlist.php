@@ -477,7 +477,7 @@ class OrderList extends \App\Pages\Base
 
         }
 
-        if ($state == Document::STATE_INPROCESS) {
+        if ($state == Document::STATE_INPROCESS || $state == Document::STATE_FINISHED || $state == Document::STATE_READYTOSHIP) {
             $this->statuspan->resform->setVisible(true);
             $reserved = $this->_doc->hasStore();
             $this->statuspan->resform->bres->setVisible(!$reserved);
