@@ -5,13 +5,14 @@
 
                 <h3>Імпорт замовлень</h3>
 
-        
+          <br><a zippy="checkconn"><i class="fa fa fa-sync"></i> Загрузити статуси</a>        
+                 
                 <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
                         <label for="status">Статус в магазині </label>
 
                         <select class="form-control mr-2" zippy="status">
-                            
+                              <option value="0">Не вказаний</option>      
                         </select>
                         <input onclick="document.getElementById('dialogwait').showModal()" type="submit" class=" mr-2 btn btn-outline-success  "
                                value="Завантажити">           
@@ -43,9 +44,9 @@
                         <td zippy="number"></td>
                         <td class="text-nowrap" zippy="date"></td>
 
-                        <td zippy="customer"></td>
+                        <td class="text-nowrap" zippy="customer"></td>
                         <td zippy="amount" class="text-right"></td>
-                        <td zippy="comment"></td>
+                        <td ><small zippy="comment"></small></td>
 
 
                     </tr>
@@ -68,7 +69,7 @@
                         <tr>
                             <th style="width:30px"><input type="checkbox" id="chall" onchange="chclick()"></th>
                             <th>Номер</th>
-                            <th>PU Номер</th>
+                            <th>HR Номер</th>
                             <th>Дата</th>
 
                             <th>Клієнт</th>
@@ -94,21 +95,20 @@
 
 
                     <div class="ml-2 form-group row  ">
-                            <div class="col-auto">  
+                        <div class="col-auto">
                         <label for="estatus">Статус в магазині </label>
-                                              </div>
+                         </div>
                          <div class="col-auto">                         
-
                         <select class="form-control  mr-2" zippy="estatus">
-                            
+                           <option value="0">Не вказаний</option>
                         </select>
-                                              </div>
+                         </div>
                          <div class="col-auto">                         
 
                         <input onclick="document.getElementById('dialogwait').showModal()" type="submit" class="  btn btn-outline-success  "
                                value="Відправити">
-                                             </div>
-                                            
+                         </div>
+
 
                     </div>
                 </form>
@@ -121,7 +121,10 @@
                 var ch = $("#chall").prop('checked');
                 $('.chc').prop('checked', ch)
             }
+     function check_checkconn() {
 
+                document.getElementById('dialogwait').showModal()
+            }
 
         </script>
     </body>

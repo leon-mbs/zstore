@@ -129,6 +129,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["paperless"] = $modules['paperless'] == 1;
         $this->_tvars["checkbox"] = $modules['checkbox'] == 1;
         $this->_tvars["vkassa"] = $modules['vkassa'] == 1;
+        $this->_tvars["horoshop"] = $modules['horoshop'] == 1;
 
 
         //  $printer = System::getOptions('printer');
@@ -175,6 +176,9 @@ class Base extends \Zippy\Html\WebPage
         if (strpos(System::getUser()->modules ?? '', 'vkassa') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["vkassa"] = false;
         }
+        if (strpos(System::getUser()->modules ?? '', 'vkassa') === false && System::getUser()->rolename != 'admins') {
+            $this->_tvars["vkassa"] = false;
+        }
 
         $this->_tvars["fiscal"] = $this->_tvars["checkbox"] || $this->_tvars["ppo"] || $this->_tvars["vkassa"];
 
@@ -186,7 +190,7 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["promua"] ||
             $this->_tvars["paperless"] ||
             $this->_tvars["ppo"] ||
-         
+            $this->_tvars["horoshop"] ||
             $this->_tvars["np"]
         ) {
             $this->_tvars["showmodmenu"] = true;

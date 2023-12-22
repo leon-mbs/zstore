@@ -170,7 +170,7 @@ class Orders extends \App\Pages\Base
         foreach ($this->_neworders as $shoporder) {
             $shoporder->document_number = $shoporder->nextNumber();
             if (strlen($shoporder->document_number) == 0) {
-                $shoporder->document_number = 'PU00001';
+                $shoporder->document_number = 'PU-00001';
             }
 
             if ( $modules['puinsertcust'] == 1) {

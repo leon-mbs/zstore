@@ -169,6 +169,7 @@ class CategoryList extends \App\Pages\Base
         Category::delete($cat_id);
 
         $this->Reload();
+        $this->resetURL() ;
     }
 
     public function editOnClick($sender) {
