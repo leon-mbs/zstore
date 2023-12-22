@@ -163,13 +163,60 @@ class Order extends \App\Entity\Doc\Document
         $items = $this->unpackDetails('detaildata')  ;
 
         foreach ($items as $item) {
+            $onstore = H::fqty($item->getQuantity($this->headerdata['store'])) ;
+            $required = $item->quantity - $onstore;
+      
+            //оприходуем  с  производства
+            if ($required >0 && $item->autoincome == 1 && ($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD)) {
+
+                if ($item->autooutcome == 1) {    //комплекты
+                    $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
+                    foreach ($set as $part) {
+
+                        $itemp = \App\Entity\Item::load($part->item_id);
+                        if($itemp == null) {
+                            continue;
+                        }
+                        $itemp->quantity = $required * $part->qty;
+
+                        if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
+                            throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
+                        }
+
+                        $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
+
+                        foreach ($listst as $st) {
+                            $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
+                            $sc->setStock($st->stock_id);
+                            $sc->tag=Entry::TAG_TOPROD;
+
+                            $sc->save();
+                        }
+                    }
+                }
+
+
+                $price = $item->getProdprice();
+
+                if ($price == 0) {
+                    throw new \Exception('Не розраховано собівартість готової продукції '. $item->itemname);
+                }
+                $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
+
+                $sc = new Entry($this->document_id, $required * $price, $required);
+                $sc->setStock($stock->stock_id);
+                $sc->tag=Entry::TAG_FROMPROD;
+
+                $sc->save();
+            }
+       
+        
+        
             if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
                 throw new \Exception("На складі всього ".H::fqty($item->getQuantity($this->headerdata['store']))." ТМЦ {$item->itemname}. Списання у мінус заборонено");
 
             }
-
-        }
-        foreach ($items as $item) {
+ 
 
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
