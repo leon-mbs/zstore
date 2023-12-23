@@ -4,6 +4,8 @@ namespace App\Entity\Doc;
 
 use App\Helper as H;
 use App\System;
+use App\Entity\Item;
+use App\Entity\Entry;
 
 /**
  * Класс-сущность  документ расходная  накладая
