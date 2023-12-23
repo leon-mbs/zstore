@@ -183,9 +183,9 @@ class DocList extends \App\Pages\Base
 
         $doc = $doc->cast();
 
-        $row->add(new Label('name', $doc->meta_desc));
-        $row->add(new Label('number', $doc->document_number));
-
+        $row->add(new ClickLink('name',$this, 'showOnClick'))->setValue($doc->meta_desc);
+        $row->add(new ClickLink('number',$this, 'showOnClick'))->setValue($doc->document_number);
+   
         $row->add(new Label('cust', $doc->customer_name));
         $row->add(new Label('branch', $doc->branch_name));
         $row->add(new Label('date', H::fd($doc->document_date)));
