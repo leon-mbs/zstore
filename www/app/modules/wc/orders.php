@@ -105,10 +105,7 @@ class Orders extends \App\Pages\Base
                 }
 
                 $neworder = Document::create('Order');
-                $neworder->document_number = $neworder->nextNumber();
-                if (strlen($neworder->document_number) == 0) {
-                    $neworder->document_number = 'WC00001';
-                }
+           
 
 
                 //товары
@@ -182,6 +179,11 @@ class Orders extends \App\Pages\Base
 
         foreach ($this->_neworders as $shoporder) {
 
+            $shoporder->document_number = $shoporder->nextNumber();
+            if (strlen($shoporder->document_number) == 0) {
+                $shoporder->document_number = 'WC00001';
+            }            
+            
             $shoporder->save();
             $shoporder->updateStatus(Document::STATE_NEW);
             $shoporder->updateStatus(Document::STATE_INPROCESS);
