@@ -624,19 +624,14 @@ class PPOHelper
             $amount3 = $pay['paysum'];
             $header['amount'] += $doc->headerdata['prepaid'];
         }
-
-        
       
         
         $header['pay'] = count($header['pays']) > 0;
-        
- 
      
         $sumpay=0;
         foreach($header['pays'] as $p ) {
            $sumpay += $p['paysum'] ;
         }
-     
         
           
         $header['disc']   = false;
@@ -667,7 +662,9 @@ class PPOHelper
         }
         $doc->headerdata["fiscdts"] = "&date=".date('Ymd')."&time={$header['time']}&sum={$header['amount']}";
 
-
+        $ret['fiscalamount']=  $header['amount'];
+ 
+        $ret['fiscaltest']=  $pos->testing==1 ;
 
         return $ret;
     }
@@ -821,6 +818,9 @@ class PPOHelper
 
             self::insertStat($pos->pos_id, 3, $amount0, $amount1, $amount2, $amount3, $doc->document_number);
         }
+        $ret['fiscalamount']=  $header['amount'];
+ 
+        $ret['fiscaltest']=  $pos->testing==1 ;
 
         return $ret;
     }

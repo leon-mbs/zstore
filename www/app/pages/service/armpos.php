@@ -1290,6 +1290,8 @@ class ARMPos extends \App\Pages\Base
                                 $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                                 $this->pos->save();
                                 $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+                                $this->_doc->headerdata["fiscalamount"] = $ret['fiscalamount'];
+                                $this->_doc->headerdata["fiscaltest"] = $ret['fiscaltest'];
                             } else {
                                 $this->setError("Не повернено фіскальний номер");
                                 $conn->RollbackTrans();
@@ -1419,7 +1421,7 @@ class ARMPos extends \App\Pages\Base
             if ($ret['doclocnumber'] > 0) {
                 $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                 $this->pos->save();
-                //   $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+
             }
             \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id);
             

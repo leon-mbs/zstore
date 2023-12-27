@@ -38,10 +38,10 @@ class ZList extends \App\Pages\Base
         $this->filter->add(new TextInput('pos'));
         $this->filter->add(new TextInput('doc'));
 
-        $this->filter->add(new Label('tcnt', new Prop($this, '_tcnt')));
-        $this->filter->add(new Label('trcnt', new Prop($this, '_trcnt')));
-        $this->filter->add(new Label('tamount', new Prop($this, '_tamount')));
-        $this->filter->add(new Label('tramount', new Prop($this, '_tramount')));
+        $this->add(new Label('tcnt', new Prop($this, '_tcnt')));
+        $this->add(new Label('trcnt', new Prop($this, '_trcnt')));
+        $this->add(new Label('tamount', new Prop($this, '_tamount')));
+        $this->add(new Label('tramount', new Prop($this, '_tramount')));
 
         $this->add(new DataView('list', new ArrayDataSource(new Prop($this, '_list')), $this, 'OnRow'));
         $this->add(new ClickLink('csv', $this, 'oncsv'));

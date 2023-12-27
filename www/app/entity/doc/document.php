@@ -160,11 +160,7 @@ class Document extends \ZCL\DB\Entity
             $value= str_replace('<![CDATA[', '', $value) ;
             $value= str_replace(']]>', '', $value) ;
 
-            if (strpos($value, '[CDATA[') !== false) {
-                //  \App\System::setWarnMsg('CDATA в  поле  обьекта');
-                //   \App\Helper::log(' CDATA в  поле  обьекта');
-                continue;
-            }
+            $value = $value ?? '';
 
             if (is_numeric($value) || strlen($value) == 0) {
 
