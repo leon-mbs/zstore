@@ -5,7 +5,7 @@
     </head>
    <body>
         <div class="row">
-            <div class="col-12 col-xl-11">
+            <div class="col-12  ">
                 
                 <h3>Журнал документів
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
@@ -22,7 +22,7 @@
                         <label class="col-auto mt-2" for="searchnumber">№ </label>
                         <div class="col-auto">
                            <input placeholder="Пошук..." class="form-control  " type="search" zippy="searchnumber"
-                               autocomplete="off"    onkeydown="onSearch()" style="width:175px" title="Якщо пошук по номеру, iншi елементи фiльтру iгноруються">
+                               autocomplete="off"    onkeydown="onSearch()" style="width:125px" title="Якщо пошук по номеру, iншi елементи фiльтру iгноруються">
                          </div>
                        </div>
                       </div>
@@ -58,7 +58,7 @@
                         <label class="col-auto mt-2" for="doctype"> Тип </label>
                                    <div class="col-auto">
                     <select class="form-control    " zippy="doctype">
-                            <option value="0">Не встановлено</option>
+                            <option value="0">Не вказано</option>
                         </select>
                            </div>
                            </div>
@@ -72,16 +72,40 @@
                            </div>
                            </div>
                            </div>
+                        
                            <div class="col-auto"> 
                                <div class=" row no-gutters"> 
-                   <label class="col-auto mt-2" for="author"> Відповідальний </label>
-                                                <div class="col-auto">
-       <select class="form-control    " zippy="author">
+                               <label class="col-auto mt-2" for="author"> Автор </label>
+                                                            <div class="col-auto">
+                               <select class="form-control    " zippy="author">
+                                        <option value="0">Не обрано</option>
+                                    </select>
+                             </div>
+                           </div>
+                           </div>
+                           
+                       <div class="col-auto"> 
+                           <div class=" row no-gutters"> 
+                      <label class="col-auto mt-2" for="store">Склад</label>
+                               <div class="col-auto">
+                        <select class="form-control mr-sm-2" zippy="store">
                             <option value="0">Не обрано</option>
                         </select>
-                           </div>
-                           </div>
-                           </div>
+                         </div>
+                        </div>
+                        </div>                           
+                           
+                      <div class="col-auto"> 
+                           <div class=" row no-gutters"> 
+                      <label class="col-auto mt-2" for="mfund">Рахунок</label>
+                               <div class="col-auto">
+                        <select class="form-control mr-sm-2" zippy="mfund">
+                            <option value="0">Не обрано</option>
+                        </select>
+                         </div>
+                        </div>
+                        </div>                           
+                           
                            <div class="col-auto"> 
                         <input class="form-control ml-2  mr-2" type="search" zippy="searchtext" placeholder="Пошук по контенту"   >
 
@@ -129,8 +153,8 @@
                             <a  zippy="fromfav"><i title="Видалити з обраного" zippy="nottop" class="fas fa-star"  ></i></a>
                             </td>
                            
-                            <td zippy="name"></td>
-                            <td zippy="number"></td>
+                            <td ><a zippy="name"></a></td>
+                            <td ><a zippy="number"></a></td>
                             <td   class="text-nowrap" zippy="date"></td>
                             <td zippy="cust"></td>
                             <td zippy="amount" class="text-right  "></td>

@@ -774,6 +774,12 @@
                                                     <p>&nbsp;&nbsp;Журнал z-звiтiв</p>
                                                 </a>
                                             </li>
+                                            <li class="nav-item">
+                                                <a href="/index.php?p=App/Modules/PPO/DocList" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>
+                                                    <p>&nbsp;&nbsp;Список чекiв</p>
+                                                </a>
+                                            </li>
                                                                                            
                                             <li class="nav-item">
                                                 <a href="/index.php?p=App/Modules/PPO/ZForm" class="nav-link">
@@ -874,6 +880,41 @@
 
                                     </li>
                                     {{/promua}}
+                                  {{#horoshop}}
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Обмін з Хорошоп
+                                                <i class="right fas fa-angle-left"></i>
+                                            </p>
+
+                                        </a>
+                                        <ul class="nav nav-treeview">
+                                              {{#isadmins}}
+                                            <li class="nav-item">
+                                                <a href="/index.php?p=App/Modules/HR/Options" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>
+                                                    <p>&nbsp;&nbsp;Налаштування</p>
+                                                </a>
+                                            </li>
+                                              {{/isadmins}}
+                                            <li>
+                                                <a href="/index.php?p=App/Modules/HR/Orders" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>
+                                                    <p>&nbsp;&nbsp;Замовлення</p>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="/index.php?p=App/Modules/HR/Items" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>
+                                                    <p>&nbsp;&nbsp;Товари</p>
+                                                </a>
+                                            </li>
+                                        </ul>
+
+                                    </li>
+                                    {{/horoshop}}                                    
+                                    
                                 </ul>
 
                             </li>

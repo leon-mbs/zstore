@@ -1573,7 +1573,7 @@ class ARMFood extends \App\Pages\Base
             if ($ret['doclocnumber'] > 0) {
                 $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                 $this->_pos->save();
-                //   $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+
             }
             \App\Modules\PPO\PPOHelper::clearStat($this->_pos->pos_id);
             
@@ -1757,6 +1757,8 @@ class ARMFood extends \App\Pages\Base
                     $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                     $this->_pos->save();
                     $doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+                    $doc->headerdata["fiscalamount"] = $ret['fiscalamount'];
+                    $doc->headerdata["fiscaltest"] = $ret['fiscaltest'];
                     $doc->headerdata["passfisc"] = 0;
                     $doc->save();
                     $this->setSuccess("Виконано");

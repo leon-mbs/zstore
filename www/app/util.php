@@ -162,6 +162,9 @@ class Util
         if($phonel==12 && strlen($tel)==10) {
             $tel = '38'.$tel ;
         }
+        if($phonel==10 && strlen($tel)==12) {
+            $tel = substr($tel,2) ;
+        }
 
         return $tel;
     }
