@@ -1210,7 +1210,7 @@ class ARMPos extends \App\Pages\Base
                 $bd->payamount = 0;
                 $bd->payed = 0;
                 $bd->save();
-                if($bd->status==Document::STATE_WP) {
+                if($bd->state==Document::STATE_WP) {
                    $bd->updateStatus(Document::STATE_PAYED);
            
                 }

@@ -182,8 +182,9 @@ class SerList extends \App\Pages\Base
             $this->_doc->updateStatus(Document::STATE_FINISHED);
 
             if($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
-                $this->_doc->updateStatus(Document::STATE_WP);
-
+                if($pos==false){
+                  $this->_doc->updateStatus(Document::STATE_WP);
+                }
             }
 
 
@@ -245,7 +246,7 @@ class SerList extends \App\Pages\Base
             $this->statuspan->statusform->binproc->setVisible(false);
 
             $this->statuspan->statusform->bwarranty->setVisible(false);
-            $this->statuspan->statusform->bpos->setVisible(false);
+      //      $this->statuspan->statusform->bpos->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bfin->setVisible(false);
