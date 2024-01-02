@@ -401,7 +401,7 @@ class ARMPos extends \App\Pages\Base
             $this->_doc->parent_id=$this->_basedocid;
    
             $this->docpanel->form2->customer->setKey($bd->customer_id);
-            $this->docpanel->form2->customer->setText($bd->customer_id);
+            $this->docpanel->form2->customer->setText($bd->customer_name);
             if($bd->meta_name=='ServiceAct') {
                 $this->_itemlist = $bd->unpackDetails('detail2data');
                 $this->_serlist =  $bd->unpackDetails('detaildata');
