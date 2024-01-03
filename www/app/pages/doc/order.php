@@ -103,7 +103,7 @@ class Order extends \App\Pages\Base
         $this->editdetail->add(new TextInput('editdesc'));
 
         $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
-        $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
+        $this->editdetail->edittovar->onChange($this, 'OnChangeItem' );
         $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
         $this->editdetail->add(new ClickLink('opencatpan', $this, 'onOpenCatPan'));
         $this->editdetail->add(new Label('tocustorder','В закупку' ));
