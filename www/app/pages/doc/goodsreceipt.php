@@ -882,12 +882,9 @@ class GoodsReceipt extends \App\Pages\Base
         $val = $this->docform->val->getValue();
         if (strlen($val) > 1) {
             if($this->_doc->payamount  > $this->_doc->payed) {
-                $this->setError("Кредит із валютою не дозволено");
-
-
+                $this->setError("Не введена оплата");
                 return;
             }
-
 
         }
         return !$this->isError();

@@ -52,6 +52,7 @@ class OrderCust extends Document
         $list = array();
         $list['GoodsReceipt'] = self::getDesc('GoodsReceipt');
         $list['InvoiceCust'] = self::getDesc('InvoiceCust');
+        $list['OrderCust'] = self::getDesc('OrderCust');
 
         return $list;
     }
