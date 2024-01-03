@@ -84,10 +84,10 @@ class Order extends Base
 
         $dt = $sender->getValue();
         
-        if ($dt == Document::DEL_BOY || $dt == Document::DEL_SERVICE) {
-            $this->orderform->address->setVisible(true);
-        } else {
+        if ($dt == Document::DEL_SELF || $dt == Document::DEL_NP) {
             $this->orderform->address->setVisible(false);
+        } else {
+            $this->orderform->address->setVisible(true);
         }
         
         $this->orderform->bayarea->setVisible($dt  == Document::DEL_NP ) ;
