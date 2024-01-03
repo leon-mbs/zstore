@@ -12,8 +12,7 @@
     
     <tr>
 
-        <td  > Дата</td>
-        <td  > {{date}}</td>
+        <td colspan="2"  > Дата  {{date}}</td>
     </tr>
     <tr>
 

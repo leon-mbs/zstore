@@ -56,7 +56,7 @@ class ZList extends \App\Pages\Base
 
     public function onRow($row) {
         $item = $row->getDataItem();
-        $row->add(new Label("createdon", H::fd($item->createdon)));
+        $row->add(new Label("createdon", H::fdt($item->createdon)));
         $row->add(new Label("fnpos", $item->fnpos));
         $row->add(new Label("fndoc", $item->fndoc));
         $row->add(new Label("cnt", ($item->cnt)));
@@ -127,9 +127,13 @@ class ZList extends \App\Pages\Base
         if (strlen($printer['pwidth']) > 0) {
             $wp = 'style="width:' . $printer['pwidth'] . '"';
         }
-
+        
+        $d =  (string)$xml->ZREPHEAD->ORDERDATE[0] . (string)$xml->ZREPHEAD->ORDERTIME[0] ;
+        $dl = str_split($d,2) ;
+        $d= $dl[2]. $dl[3].'-'.$dl[1].'-'.$dl[0].' '. $dl[4].':'.$dl[5] ;
+        
         $header['printw']  = $wp;
-        $header['date']  = date('Y-m-d', $this->_doc->createdon) ;
+        $header['date']  = date('Y-m-d H:i', strtotime($d)) ;
         $header['fnpos']  =   $this->_doc->fnpos;
         $header['fndoc']  =   $this->_doc->fndoc;
         $header['cnt']  =   $this->_doc->cnt;
