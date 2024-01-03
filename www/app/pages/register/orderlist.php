@@ -69,7 +69,7 @@ class OrderList extends \App\Pages\Base
 
         $this->statuspan->statusform->add(new SubmitButton('bpos'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bgi'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bco'))->onClick($this, 'statusOnSubmit');
+//        $this->statuspan->statusform->add(new SubmitButton('bco'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bcopy'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
@@ -337,7 +337,7 @@ class OrderList extends \App\Pages\Base
             }
             if ($sender->id == "bco") {
 
-                App::Redirect("\\App\\Pages\\Doc\\OrderCust", 0, $this->_doc->document_id);
+              //  App::Redirect("\\App\\Pages\\Doc\\OrderCust", 0, $this->_doc->document_id);
                 return;
             }
 
@@ -401,7 +401,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bcopy->setVisible(false);
             $this->statuspan->statusform->bpos->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(false);
-            $this->statuspan->statusform->bco->setVisible(false);
+//            $this->statuspan->statusform->bco->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(true);
             $this->statuspan->statusform->brd->setVisible(false);
             $this->statuspan->statusform->bscan->setVisible(false);
@@ -410,7 +410,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bclose->setVisible(true);
             $this->statuspan->statusform->bref->setVisible(true);
             $this->statuspan->statusform->binp->setVisible(false);
-            $this->statuspan->statusform->bco->setVisible(true);
+//            $this->statuspan->statusform->bco->setVisible(true);
             $this->statuspan->statusform->btask->setVisible(true);
         }
 

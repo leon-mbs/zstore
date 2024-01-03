@@ -103,7 +103,7 @@ class Order extends \App\Pages\Base
         $this->editdetail->add(new TextInput('editdesc'));
 
         $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
-        $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
+        $this->editdetail->edittovar->onChange($this, 'OnChangeItem' );
         $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
         $this->editdetail->add(new ClickLink('opencatpan', $this, 'onOpenCatPan'));
         $this->editdetail->add(new Label('tocustorder','В закупку' ));
@@ -764,7 +764,7 @@ class Order extends \App\Pages\Base
     
     public function OnDelivery($sender) {
         $dt = $sender->getValue() ;
-        if ($dt == Document::DEL_NP || $dt== Document::DEL_BOY || $dt == Document::DEL_SERVICE) {
+        if ($dt > 1) {
             $this->docform->address->setVisible(true);
         } else {
             $this->docform->address->setVisible(false);
