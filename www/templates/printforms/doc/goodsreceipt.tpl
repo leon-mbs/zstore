@@ -63,7 +63,7 @@
     {{/isval}}    
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="6" valign="middle">
-            <br> Накладна № {{document_number}} від {{date}} <br><br>
+            <br> Прибуткова накладна № {{document_number}} від {{date}} <br><br>
         </td>
     </tr>
 

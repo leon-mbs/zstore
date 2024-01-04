@@ -107,7 +107,7 @@
 
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="8" valign="middle">
-            Накладна № {{document_number}} від {{date}} <br>
+            Видаткова накладна № {{document_number}} від {{date}} <br>
         </td>
     </tr>
 
