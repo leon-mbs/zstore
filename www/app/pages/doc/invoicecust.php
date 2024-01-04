@@ -44,8 +44,6 @@ class InvoiceCust extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);
 
         $this->docform->add(new TextInput('notes'));
-        $this->docform->add(new TextInput('rate', '1'))->setVisible(false);
-        $this->docform->add(new DropDownChoice('val', H::getValList(), '0'))->onChange($this, 'OnVal');
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
@@ -108,8 +106,6 @@ class InvoiceCust extends \App\Pages\Base
 
             $this->docform->nds->setText($this->_doc->headerdata['nds']);
             $this->docform->editnds->setText($this->_doc->headerdata['nds']);
-            $this->docform->val->setValue($this->_doc->headerdata['val']);
-            $this->docform->rate->setText($this->_doc->headerdata['rate']);
             $this->docform->disc->setText($this->_doc->headerdata['disc']);
             $this->docform->editdisc->setText($this->_doc->headerdata['disc']);
 
@@ -147,7 +143,7 @@ class InvoiceCust extends \App\Pages\Base
                 }
             }
         }
-        $this->OnVal($this->docform->val);
+
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
@@ -271,9 +267,6 @@ class InvoiceCust extends \App\Pages\Base
         $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
 
-        $this->_doc->headerdata['val'] = $this->docform->val->getValue();
-        $this->_doc->headerdata['valname'] = $this->docform->val->getValueName();
-        $this->_doc->headerdata['rate'] = $this->docform->rate->getText();
         $this->_doc->headerdata['nds'] = $this->docform->nds->getText();
         $this->_doc->headerdata['disc'] = $this->docform->disc->getText();
 
@@ -329,15 +322,7 @@ class InvoiceCust extends \App\Pages\Base
                 if ($this->_doc->payamount > $this->_doc->payed) {
                     $this->_doc->updateStatus(Document::STATE_WP);
                 }
-
-                //обновляем  курс
-                if (strlen($this->_doc->headerdata['val']) > 1) {
-                    $optval = \App\System::getOptions("val");
-                    if (strlen($optval[$this->_doc->headerdata['val']]) > 0) {
-                        $optval[$this->_doc->headerdata['val']] = $this->_doc->headerdata['rate'];
-                        \App\System::setOptions("val", $optval);
-                    }
-                }
+            
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
@@ -423,23 +408,7 @@ class InvoiceCust extends \App\Pages\Base
 
 
 
-    public function OnVal($sender) {
-        $val = $sender->getValue();
-        $this->docform->rate->setVisible(false);
-        $rate = 1;
-        if (strlen($val) > 1) {
-            $optval = \App\System::getOptions("val");
-            foreach($optval['vallist'] as $v) {
-                if($v->code == $val) {
-                    $rate=$v->rate;
-                }
-            }
-            $this->docform->rate->setVisible(true);
-        }
-        $this->docform->rate->setText($rate);
-
-    }
-
+ 
     /**
      * Валидация   формы
      *
@@ -466,18 +435,7 @@ class InvoiceCust extends \App\Pages\Base
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
             $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
         }
-        $val = $this->docform->val->getValue();
-        if (strlen($val) > 1) {
-            if($this->_doc->payamount  > $this->_doc->payed) {
-                $this->setError("Кредит із валютою не дозволено");
-
-
-                return;
-            }
-
-
-        }
-
+ 
 
         return !$this->isError();
     }

@@ -106,8 +106,18 @@ class OrderCust extends \App\Pages\Base
         } else {
             $this->_doc = Document::create('OrderCust');
             $this->docform->document_number->setText($this->_doc->nextNumber());
+           if ($basedocid > 0) {  //создание на  основании
+                $basedoc = Document::load($basedocid);
+                if ($basedoc instanceof Document) {
+                    $this->_basedocid = $basedocid;
+                    if ($basedoc->meta_name == 'Order') {
 
-     
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                        $this->calcTotal();
+
+                    }
+                }
+            }
         }
         $this->calcTotal();
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
