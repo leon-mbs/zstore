@@ -545,7 +545,7 @@ class Base extends \Zippy\Html\WebPage
             if($args[1] > 0) {
                 $quantity = $args[1] ;
             }
-            $co = \App\Entity\Doc\Document::getFirst("meta_name='OrderCust' and (customer_id=0 or customer_id={$d->customer_id} ) and state=1 ","document_id desc") ;
+            $co = \App\Entity\Doc\Document::getFirst("meta_name='OrderCust' and  customer_id={$d->customer_id}   and state=1 ","document_id desc") ;
             
             if($co==null) {
                 $co = \App\Entity\Doc\Document::create('OrderCust');

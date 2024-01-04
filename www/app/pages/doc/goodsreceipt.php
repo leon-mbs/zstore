@@ -882,7 +882,7 @@ class GoodsReceipt extends \App\Pages\Base
         $val = $this->docform->val->getValue();
         if (strlen($val) > 1) {
             if($this->_doc->payamount  > $this->_doc->payed) {
-                $this->setError("Не введена оплата");
+                $this->setError("Якщо валюта має бути вказана оплата");
                 return;
             }
 
