@@ -568,8 +568,12 @@ class DocList extends \App\Pages\Base
         
             if ($sender->id == "bap") {
                 $this->_doc->updateStatus(Document::STATE_APPROVED);    
-         
-                $states= explode(',',  trim($this->_doc->headerdata['_state_before_approve_'],',' ) );                
+          
+                $bs=trim($this->_doc->headerdata['_state_before_approve_']??'',',' ) ;
+                if($bs==''){
+                    $bs=''.Document::STATE_APPROVED;
+                } 
+                $states= explode(',', $bs );                
                 foreach( $states as $newstate){
                     $this->_doc->updateStatus($newstate);    
                 } 

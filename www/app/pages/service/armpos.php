@@ -1111,7 +1111,7 @@ class ARMPos extends \App\Pages\Base
        
         //отложеный
         if($sender->id=="topass") {
-           \App\Session::getSession()->armpass=$this->_doc->document_number; 
+           \App\Session::getSession()->armpass=$this->_doc->document_id; 
         }
 
         $this->newdoc(null)  ;
@@ -1708,19 +1708,19 @@ class ARMPos extends \App\Pages\Base
     }
 
     public function fromPass($sender) {
-        $pn= \App\Session::getSession()->armpass ??'';        
-        $doc = Document::getFirst('state<5 and document_number='.Document::qstr($pn))  ;
-        if($doc != null) {
+        $pn= intval( \App\Session::getSession()->armpass ?? 0 );        
+        $doc = Document::load($pn);
+        if($doc != null && $doc->state <5) {
            $this->loadDoc($doc);    
         }
-        \App\Session::getSession()->armpass = '';
+        \App\Session::getSession()->armpass = null;
         
     }
     
     public function loadDoc($doc) {
-        $pn= \App\Session::getSession()->armpass ??'';        
-        if($pn===$doc->document_number) {
-            \App\Session::getSession()->armpass = '';
+        $pn= intval( \App\Session::getSession()->armpass ?? 0 );        
+        if($pn==$doc->document_id) {
+            \App\Session::getSession()->armpass = null;
         }
         $this->_doc = $doc->cast();
 
@@ -1969,9 +1969,9 @@ class ARMPos extends \App\Pages\Base
 
     public function beforeRender() {
         
-        $pn= \App\Session::getSession()->armpass ??'';        
-        $this->docpanel->form2->topass->setVisible(strlen($pn)==0);
-        $this->docpanel->form2->frompass->setVisible(strlen($pn)>0);
+        $pn= intval( \App\Session::getSession()->armpass ?? 0 );        
+        $this->docpanel->form2->topass->setVisible($pn==0);
+        $this->docpanel->form2->frompass->setVisible($pn>0);
         
         parent::beforeRender()  ;
     }
