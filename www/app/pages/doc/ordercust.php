@@ -432,13 +432,9 @@ class OrderCust extends \App\Pages\Base
                 } else {
                     $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
                 }
-                
-                
-
+ 
             }
-
-  
-
+ 
 
             $conn->CommitTrans();
         } catch(\Throwable $ee) {
