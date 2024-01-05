@@ -421,6 +421,9 @@ class OrderCust extends \App\Pages\Base
             } else {
 
                if ($sender->id ==  'apprdoc') {
+                    $this->_doc->headerdata['_state_before_approve_'] = ''.Document::STATE_APPROVED; 
+                    $this->_doc->save();
+
                     if (!$isEdited) {
                         $this->_doc->updateStatus(Document::STATE_NEW);
                     }
