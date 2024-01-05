@@ -59,6 +59,8 @@ class DocList extends \App\Pages\Base
             $filter->customer = 0;
             $filter->author = 0;
             $filter->status = 0;
+            $filter->store = 0;
+            $filter->mfund = 0;
             $filter->customer_name = '';
 
             $filter->searchnumber = '';
@@ -70,6 +72,8 @@ class DocList extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('doctype', H::getDocTypes(), $filter->doctype));
         $this->filter->add(new DropDownChoice('author', \App\Entity\User::findArray('username', 'disabled<>1', 'username'), $filter->author));
         $this->filter->add(new DropDownChoice('status', Document::getStateList(), $filter->status));
+        $this->filter->add(new DropDownChoice('store', \App\Entity\Store::getList() , $filter->store));
+        $this->filter->add(new DropDownChoice('mfund', \App\Entity\MoneyFund::getList(), $filter->mfund));
 
         $this->filter->add(new ClickLink('erase', $this, "onErase"));
         $this->filter->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');
@@ -138,6 +142,8 @@ class DocList extends \App\Pages\Base
         $filter->doctype = 0;
         $filter->status = 0;
         $filter->author = 0;
+        $filter->store = 0;
+        $filter->mfund = 0;
         $filter->customer = 0;
         $filter->customer_name = '';
 
@@ -165,6 +171,8 @@ class DocList extends \App\Pages\Base
         $filter->doctype = $this->filter->doctype->getValue();
         $filter->author = $this->filter->author->getValue();
         $filter->status = $this->filter->status->getValue();
+        $filter->store = $this->filter->store->getValue();
+        $filter->mfund = $this->filter->mfund->getValue();
         $filter->customer = $this->filter->searchcust->getKey();
         $filter->customer_name = $this->filter->searchcust->getText();
 
@@ -560,8 +568,12 @@ class DocList extends \App\Pages\Base
         
             if ($sender->id == "bap") {
                 $this->_doc->updateStatus(Document::STATE_APPROVED);    
-         
-                $states= explode(',',  trim($this->_doc->headerdata['_state_before_approve_'],',' ) );                
+          
+                $bs=trim($this->_doc->headerdata['_state_before_approve_']??'',',' ) ;
+                if($bs==''){
+                    $bs=''.Document::STATE_APPROVED;
+                } 
+                $states= explode(',', $bs );                
                 foreach( $states as $newstate){
                     $this->_doc->updateStatus($newstate);    
                 } 
@@ -731,8 +743,11 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         if ($filter->author > 0) {
             $where .= " and user_id  ={$filter->author} ";
         }
-        if ($filter->status > 0) {
-            $where .= " and state  ={$filter->status} ";
+        if ($filter->mfund > 0) {
+            $where .= " and document_id in(select document_id from paylist where mf_id = {$filter->mfund}   )  ";
+        }
+        if ($filter->store > 0) {
+            $where .= " and document_id in(select document_id from entrylist where stock_id in ( select stock_id from store_stock  where   store_id= {$filter->store} )  )  ";
         }
         $st = $filter->searchtext;
         if (strlen($st) > 2) {

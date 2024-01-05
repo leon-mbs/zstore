@@ -69,10 +69,7 @@ class InvoiceCust extends Document
 
     public function Execute() {
         $payed = $this->payed;
-        $rate= doubleval($this->headerdata["rate"]);
-        if ($rate != 0 && $rate != 1) {
-            $payed = $payed * $rate;
-        }
+  
 
         $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment']);
         if ($payed > 0) {

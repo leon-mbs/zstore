@@ -379,6 +379,8 @@ class ReturnIssue extends \App\Pages\Base
                             $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                             $pos->save();
                             $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+                            $this->_doc->headerdata["fiscalamount"] = $ret['docnumber'];
+                            $this->_doc->headerdata["fiscaltest"] = $ret['fiscaltest'];
                         } else {
                             $this->setError("Не повернено фіскальний номер");
                             return;

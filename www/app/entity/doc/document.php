@@ -43,6 +43,8 @@ class Document extends \ZCL\DB\Entity
     public const DEL_BOY     = 2;    //  курьер
     public const DEL_SERVICE = 3;    //  служба доставки
     public const DEL_NP      = 4;    //  новая почта
+    public const DEL_UP      = 5;    //  укрпочта
+    public const DEL_MEEST   = 6;    //  мест
 
     /**
      * Ассоциативный массив   с атрибутами заголовка  документа
@@ -160,11 +162,7 @@ class Document extends \ZCL\DB\Entity
             $value= str_replace('<![CDATA[', '', $value) ;
             $value= str_replace(']]>', '', $value) ;
 
-            if (strpos($value, '[CDATA[') !== false) {
-                //  \App\System::setWarnMsg('CDATA в  поле  обьекта');
-                //   \App\Helper::log(' CDATA в  поле  обьекта');
-                continue;
-            }
+            $value = $value ?? '';
 
             if (is_numeric($value) || strlen($value) == 0) {
 
@@ -922,7 +920,9 @@ class Document extends \ZCL\DB\Entity
             $list[self::DEL_NP] = 'Нова пошта';
         }
 
-        $list[self::DEL_SERVICE] = 'Служба доставки';
+        $list[self::DEL_UP] = 'Укр. пошта';
+        $list[self::DEL_MEEST] = 'Meest';
+        $list[self::DEL_SERVICE] = 'Iнша служба доставки';
 
         return $list;
     }

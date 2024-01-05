@@ -401,7 +401,7 @@ class ARMPos extends \App\Pages\Base
             $this->_doc->parent_id=$this->_basedocid;
    
             $this->docpanel->form2->customer->setKey($bd->customer_id);
-            $this->docpanel->form2->customer->setText($bd->customer_id);
+            $this->docpanel->form2->customer->setText($bd->customer_name);
             if($bd->meta_name=='ServiceAct') {
                 $this->_itemlist = $bd->unpackDetails('detail2data');
                 $this->_serlist =  $bd->unpackDetails('detaildata');
@@ -1111,7 +1111,7 @@ class ARMPos extends \App\Pages\Base
        
         //отложеный
         if($sender->id=="topass") {
-           \App\Session::getSession()->armpass=$this->_doc->document_number; 
+           \App\Session::getSession()->armpass=$this->_doc->document_id; 
         }
 
         $this->newdoc(null)  ;
@@ -1210,7 +1210,7 @@ class ARMPos extends \App\Pages\Base
                 $bd->payamount = 0;
                 $bd->payed = 0;
                 $bd->save();
-                if($bd->status==Document::STATE_WP) {
+                if($bd->state==Document::STATE_WP) {
                    $bd->updateStatus(Document::STATE_PAYED);
            
                 }
@@ -1290,6 +1290,8 @@ class ARMPos extends \App\Pages\Base
                                 $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                                 $this->pos->save();
                                 $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+                                $this->_doc->headerdata["fiscalamount"] = $ret['fiscalamount'];
+                                $this->_doc->headerdata["fiscaltest"] = $ret['fiscaltest'];
                             } else {
                                 $this->setError("Не повернено фіскальний номер");
                                 $conn->RollbackTrans();
@@ -1419,7 +1421,7 @@ class ARMPos extends \App\Pages\Base
             if ($ret['doclocnumber'] > 0) {
                 $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                 $this->pos->save();
-                //   $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+
             }
             \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id);
             
@@ -1706,19 +1708,19 @@ class ARMPos extends \App\Pages\Base
     }
 
     public function fromPass($sender) {
-        $pn= \App\Session::getSession()->armpass ??'';        
-        $doc = Document::getFirst('state<5 and document_number='.Document::qstr($pn))  ;
-        if($doc != null) {
+        $pn= intval( \App\Session::getSession()->armpass ?? 0 );        
+        $doc = Document::load($pn);
+        if($doc != null && $doc->state <5) {
            $this->loadDoc($doc);    
         }
-        \App\Session::getSession()->armpass = '';
+        \App\Session::getSession()->armpass = null;
         
     }
     
     public function loadDoc($doc) {
-        $pn= \App\Session::getSession()->armpass ??'';        
-        if($pn===$doc->document_number) {
-            \App\Session::getSession()->armpass = '';
+        $pn= intval( \App\Session::getSession()->armpass ?? 0 );        
+        if($pn==$doc->document_id) {
+            \App\Session::getSession()->armpass = null;
         }
         $this->_doc = $doc->cast();
 
@@ -1967,9 +1969,9 @@ class ARMPos extends \App\Pages\Base
 
     public function beforeRender() {
         
-        $pn= \App\Session::getSession()->armpass ??'';        
-        $this->docpanel->form2->topass->setVisible(strlen($pn)==0);
-        $this->docpanel->form2->frompass->setVisible(strlen($pn)>0);
+        $pn= intval( \App\Session::getSession()->armpass ?? 0 );        
+        $this->docpanel->form2->topass->setVisible($pn==0);
+        $this->docpanel->form2->frompass->setVisible($pn>0);
         
         parent::beforeRender()  ;
     }
