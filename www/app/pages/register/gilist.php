@@ -279,7 +279,7 @@ class GIList extends \App\Pages\Base
         }
 
         if ($this->_doc->meta_name == 'GoodsIssue') {
-
+ 
             $this->statuspan->statusform->bdevivered->setVisible(false);
             $this->statuspan->statusform->ship_number->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(false);
