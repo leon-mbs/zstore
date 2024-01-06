@@ -245,7 +245,7 @@ class TTN extends \App\Pages\Base
 
                         $this->docform->total->setText($invoice->amount);
                         $this->docform->firm->setValue($basedoc->firm_id);
-                        $this->_doc->headerdata['prepaid']  = $basedoc->payamount ;
+
 
                         $this->OnChangeCustomer($this->docform->customer);
 
@@ -286,7 +286,7 @@ class TTN extends \App\Pages\Base
                         if ($basedoc->headerdata["paydisc"] > 0 && $basedoc->amount > 0) {
                             $k = ($basedoc->amount - $basedoc->headerdata["paydisc"]) / $basedoc->amount;
                         }
-                        $this->_doc->headerdata['prepaid']  = $basedoc->payamount ;
+
                         $this->docform->nostore->setChecked(true);
   
 
@@ -621,6 +621,10 @@ class TTN extends \App\Pages\Base
         $this->_doc->amount = $this->docform->total->getText();
         $this->_doc->payamount = $this->docform->total->getText();
 
+        if($this->_doc->headerdata['nostore']==1)  {
+            $this->_doc->payamount = 0;
+        }
+        
         $isEdited = $this->_doc->document_id > 0;
 
         if ($sender->id == 'senddoc' && $this->_doc->headerdata['delivery'] > 2 && strlen($this->_doc->headerdata['delivery']) == 0) {
