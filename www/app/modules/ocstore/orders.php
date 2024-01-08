@@ -94,7 +94,6 @@ class Orders extends \App\Pages\Base
 
                 $cnt  = $conn->getOne("select count(*) from documents_view where (meta_name='Order' or meta_name='TTN') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'")  ;
 
-                //   $isorder = Document::findCnt(" (meta_name='Order' or meta_name='TTN') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'");
                 if (intval($cnt) > 0) { //уже импортирован
                     continue;
                 }
@@ -192,24 +191,40 @@ class Orders extends \App\Pages\Base
 
             $neworder->headerdata['occlient'] = $shoporder->firstname . ' ' . $shoporder->lastname;
             $neworder->notes .= " Клiєнт: " . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
-
-            if ($shoporder->customer_id > 0 && $modules['ocinsertcust'] == 1) {
-                $cust = Customer::getFirst("detail like '%<shopcust_id>{$shoporder->customer_id}</shopcust_id>%'");
+            
+            if( $modules['ocinsertcust'] == 1) {
+                
+ 
+                $phone=\App\Util::handlePhone($shoporder->telephone);
+                
+                if ($shoporder->customer_id > 0 ) {
+                    $cust = Customer::getFirst("detail like '%<shopcust_id>{$shoporder->customer_id}</shopcust_id>%'");
+                }
+                if ($cust == null) {
+                    $cust = Customer::getByPhone($phone) ;
+                }   
+     
+                         
                 if ($cust == null) {
                     $cust = new Customer();
-                    $cust->shopcust_id = $shoporder->customer_id;
                     $cust->customer_name = trim($shoporder->lastname . ' ' . $shoporder->firstname);
                     $cust->address = $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1;
                     $cust->type = Customer::TYPE_BAYER;
-                    $cust->phone = \App\Util::handlePhone($shoporder->telephone);
+                    $cust->phone = $phone;
                     $cust->email = $shoporder->email;
                     $cust->comment = "Клiєнт OpenCart";
                     $cust->save();
                 }
-                $neworder->customer_id = $cust->customer_id;
+                
+                if ($cust != null) {
+                    if ($shoporder->customer_id > 0) {
+                       $cust->shopcust_id = $shoporder->customer_id;
+                       $cust->save();
+                    }
+                    
+                    $neworder->customer_id = $cust->customer_id;
+                }
             }
-
-
             if (strlen($shoporder->email) > 0) {
                 $neworder->notes .= " Email:" . $shoporder->email . ";";
             }
