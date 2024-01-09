@@ -42,14 +42,7 @@
                         </select>
 
                     </div>
-                   <div class="form-group  ">
-                        <label for="notes">Примiтка</label>
 
-                        <input class="form-control" type="text" zippy="notes">
-
-                    </div>
-
-                
 
                 </div>
                 <div class="col-6 col-md-4 col-lg-3">
@@ -70,7 +63,15 @@
                         <select class="form-control" zippy="mtype">
                             <option value="0">Не обрано</option>
                         </select>
-                    </div>           
+                    </div>   
+                   <div class="form-group  ">
+                        <label for="notes">Примiтка</label>
+
+                        <input class="form-control" type="text" zippy="notes">
+
+                    </div>
+
+                                            
                 </div>
 
             </div>
@@ -306,6 +307,7 @@
                         <th>Код</th>
                         <th class="text-right">Кіл.</th>
                         <th class="text-right">Ціна</th>
+                        <th class="text-right">Сума</th>
                         <th></th>
                     </tr>
                     <tr zippy="setlist">
@@ -313,8 +315,15 @@
                         <td zippy="scode"></td>
                         <td class="text-right" zippy="sqty"></td>
                         <td class="text-right" zippy="sprice"></td>
+                        <td class="text-right" zippy="samount"></td>
                         <td><a zippy="sdel"><i class="fa fa-trash"></i></a></td>
                     </tr>
+                      <tr> 
+                        <th class="text-right" colspan="4">Всього:</th>
+                        <th class="text-right" zippy="stotal"></th>
+
+                        <th></th>
+                    </tr>                    
                 </table>
            
                

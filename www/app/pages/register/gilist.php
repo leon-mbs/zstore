@@ -551,7 +551,16 @@ class GIList extends \App\Pages\Base
         if ($params['SeatsAmount'] > 1) {
             $params['Weight'] = number_format($params['Weight'] / $params['SeatsAmount'], 1, '.', '');
         }
-
+     
+     
+        $params['OptionsSeat'] =array(
+                            'volumetricWidth' => $width,
+                            'volumetricLength' => $length,
+                            'volumetricHeight' => $height,
+                            'Weight' => $params['Weight']
+                          );
+        
+       
         $moneyback = $this->nppan->npform->npback->getText();
 
         if ($moneyback > 0) {   //если  введена  обратная сумма

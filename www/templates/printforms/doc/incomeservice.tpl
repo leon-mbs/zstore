@@ -23,14 +23,7 @@
     </tr>
     {{/iscontract}}
 
-    {{#isdevice}}
-    <tr>
-        <td colspan="5">
-            Виріб, матеріали: {{device}} с/н: {{devsn}}
-        </td>
-
-    </tr>
-    {{/isdevice}}
+ 
    <tr>
         <td colspan="5">{{{notes}}}</td>
     </tr>
@@ -69,11 +62,13 @@
            <table style="font-size:smaller"  >
                <tr> <td >Найменування</td>
                 <td align="right">&nbsp;Кіл.&nbsp;</td>
-                <td align="right">Ціна</td></tr>
+                <td align="right">Ціна</td>
+                <td align="right">Сума</td></tr>
              {{#items}}
                <tr> <td  >{{itemname}}</td>
                 <td align="right">{{qty}}</td>
                 <td align="right">{{price}}</td>
+                <td align="right">{{amount}}</td>
                 </tr>
              {{/items}}
              </table>
@@ -100,7 +95,7 @@
      {{/payed}}  
     <tr>
         <td colspan="5"><br>
-            Гарантія: {{gar}}
+              {{notes}}
         </td>
     </tr>
 

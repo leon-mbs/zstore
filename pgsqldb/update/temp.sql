@@ -63,6 +63,7 @@ ON promocodes (
 
 ALTER TABLE "equipments" ADD branch_id INTEGER NULL ;
 update  "metadata" set  description ='Програми лояльності' where  meta_name='Discounts';
+update  "metadata" set  description ='Отримані послуги' where  meta_name='IncomeService';
 
 DELETE  FROM "options" WHERE  optname='version' ;
 INSERT INTO "options" (optname, optvalue) values('version','6.9.0');  

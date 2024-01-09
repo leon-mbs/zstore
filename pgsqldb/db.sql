@@ -1653,7 +1653,7 @@ INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 3, 'Журнал доставок', 'DeliveryList', 'Кафе', 0);
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 5, 'АРМ кухнi (бару)', 'ArmProdFood', 'Кафе', 0);
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 3, 'Прибутки та  видатки', 'IOState', '', 0);
-INSERT INTO "metadata" (  "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES(  2, 'Замовленi товари', 'ItemOrder', 'Продажі', 0);
+INSERT INTO "metadata" (  "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 2, 'Замовленi товари', 'ItemOrder', 'Продажі', 0);
 INSERT INTO "metadata" (  "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 5, 'Знижки та  акції', 'Discounts', '', 0);
 INSERT INTO "metadata" ("meta_type", "description", "meta_name", "menugroup", "disabled") VALUES(  1, 'Нарахування зарплати', 'CalcSalary', 'Зарплата', 0);
 INSERT INTO "metadata" ("meta_type", "description", "meta_name", "menugroup", "disabled") VALUES(  4, 'Нарахування та утримання', 'SalaryTypeList', '', 0);
@@ -1663,7 +1663,7 @@ INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 1, 'Перемiщення  партiй ТМЦ', 'MovePart', 'Склад', 0);
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 2, 'Повернення  покупцiв', 'Returnselled', 'Продажі', 0);
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 2, 'Повернення  постачальникам', 'Returnbayed', 'Закупки', 0);
-INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES(  1, 'Надані послуги', 'IncomeService', 'Послуги', 0);
+INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES(  1, 'Отримані послуги', 'IncomeService', 'Послуги', 0);
 INSERT INTO "metadata" ("meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 2, 'Стан  складiв', 'StoreItems', 'Склад', 0);
 INSERT INTO "metadata" (  "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES(  3, 'Товари у  постачальників', 'CustItems', '', 0);
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 2, 'Акт звірки', 'CompareAct', 'Контрагенти', 0);

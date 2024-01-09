@@ -27,7 +27,7 @@ class IncomeService extends Document
             if(@is_array($itemset[$r])) {
                 $hasitems = true;
                 foreach($itemset[$r] as $it) {
-                    $items[]=array('itemname'=>$it->itemname,'qty'=> H::fqty($it->qty),'price'=> H::fa($it->price) );
+                    $items[]=array('itemname'=>$it->itemname,'qty'=> H::fqty($it->qty),'price'=> H::fa($it->price),'amount'=> H::fa($it->price*$it->qty) );
                 }
             }
 
@@ -49,6 +49,7 @@ class IncomeService extends Document
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
                         "hasitems"        => $hasitems,
+                        "notes"           => $this->notes,
                         "customer_name"   => $this->customer_name,
                         "firm_name"       => $firm['firm_name'],
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
@@ -88,6 +89,7 @@ class IncomeService extends Document
             $sc->setOutPrice($ser->price);
             $sc->save();
 
+            /*
             if(@is_array($itemset[$r])) {
 
                 foreach($itemset[$r] as $it) {
@@ -98,7 +100,7 @@ class IncomeService extends Document
                     }
                 }
             }
-
+            */
         }
 
 

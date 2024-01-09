@@ -101,6 +101,7 @@ class IncomeService extends \App\Pages\Base
         $this->setpanel->setform->add(new TextInput('editsqty', 1));
         $this->setpanel->setform->add(new TextInput('editsprice', 0));
         $this->setpanel->add(new Label('stitle'));
+        $this->setpanel->add(new Label('stotal'));
         $this->setpanel->add(new ClickLink('backtolist2', $this, "onback"));
 
 
@@ -182,6 +183,8 @@ class IncomeService extends \App\Pages\Base
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
 
+        $this->_rowid =  array_search($service, $this->_servicelist, true);
+        
         $this->editdetail->editdesc->setText(($service->desc));
 
         $this->editdetail->editprice->setText($service->price);
@@ -189,7 +192,7 @@ class IncomeService extends \App\Pages\Base
 
         $this->editdetail->editservice->setValue($service->service_id);
 
-        $this->_rowid =  array_search($service, $this->_servicelist, true);
+        
 
     }
 
@@ -500,8 +503,8 @@ class IncomeService extends \App\Pages\Base
 
     public function isetOnClick($sender) {
         $ser = $sender->owner->getDataItem();
-        //$item = Item::load($item->item_id);
-        $this->_rowid = $ser->rowid;
+
+        $this->_rowid =  array_search($ser, $this->_servicelist, true);
 
 
         if(is_array($this->_itemset)==false) {
@@ -521,11 +524,21 @@ class IncomeService extends \App\Pages\Base
     private function setupdate() {
         // $this->_itemset = ItemSet::find("item_id > 0  and pitem_id=" . $this->_pitem_id, "itemname");
 
+        $total=0;
+        foreach($this->_itemlist as $item ) {
+           $total += ($item->qty * $item->price ) ;
+        }
+        $this->setpanel->stotal->setText($total);
+        
         $this->setpanel->setlist->Reload();
         $this->_itemset[$this->_rowid] = $this->_itemlist   ;
 
 
     }
+    
+    
+   
+    
     public function onback($sender) {
         $this->setpanel->setVisible(false);
         $this->docform->setVisible(true);
@@ -546,6 +559,8 @@ class IncomeService extends \App\Pages\Base
         $row->add(new Label('scode', $item->item_code));
         $row->add(new Label('sqty', H::fqty($item->qty)));
         $row->add(new Label('sprice', H::fa($item->price)));
+        $row->add(new Label('samount', H::fa($item->price * $item->qty)));
+        
         $row->add(new ClickLink('sdel'))->onClick($this, 'ondelset');
     }
 
