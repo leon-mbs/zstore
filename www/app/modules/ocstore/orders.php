@@ -192,7 +192,7 @@ class Orders extends \App\Pages\Base
             $neworder->headerdata['occlient'] = $shoporder->firstname . ' ' . $shoporder->lastname;
             $neworder->notes .= " Клiєнт: " . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
             
-            if( $modules['ocinsertcust'] == 1) {
+            if( $modules['ocinsertcust'] == 1  && strlen($shoporder->telephone ??'' )>0 ) {
                 
  
                 $phone=\App\Util::handlePhone($shoporder->telephone);

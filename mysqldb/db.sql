@@ -234,6 +234,7 @@ CREATE TABLE `equipments` (
   `detail` mediumtext,
   `disabled` tinyint(1) DEFAULT '0',
   `description` text,
+   branch_id INT NULL,  
   PRIMARY KEY (`eq_id`)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
@@ -516,6 +517,7 @@ CREATE TABLE `ppo_zformstat` (
   `amount1` decimal(10, 2) NOT NULL,
   `amount2` decimal(10, 2) NOT NULL,
   `amount3` decimal(10, 2) NOT NULL,
+  `amount4` decimal(10, 2) default 0,
   `document_number` varchar(255) DEFAULT NULL,
   `fiscnumber` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`zf_id`)
@@ -797,6 +799,7 @@ SELECT
   `customers`.`customer_name` AS `customer_name`,
   `customers`.`detail` AS `detail`,
   `customers`.`email` AS `email`,
+  `customers`.`createdon` AS `createdon`,
   `customers`.`phone` AS `phone`,
   `customers`.`status` AS `status`,
   `customers`.`city` AS `city`,

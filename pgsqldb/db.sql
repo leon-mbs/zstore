@@ -279,6 +279,7 @@ CREATE TABLE equipments (
   detail TEXT,
   disabled SMALLINT DEFAULT 0,
   description TEXT,
+  branch_id INTEGER NULL,   
   CONSTRAINT PK_equipments PRIMARY KEY (eq_id)
 );
 
@@ -641,6 +642,7 @@ CREATE TABLE ppo_zformstat (
   amount1 DECIMAL(10, 2) NOT NULL,
   amount2 DECIMAL(10, 2) NOT NULL,
   amount3 DECIMAL(10, 2) NOT NULL,
+  amount4 DECIMAL(10, 2) DEFAULT 0.00,
   fiscnumber CHARACTER VARYING(255),
   document_number CHARACTER VARYING(255) DEFAULT NULL,
   CONSTRAINT PK_ppo_zformstat PRIMARY KEY (zf_id)
@@ -943,6 +945,7 @@ SELECT
   customers.city AS city,
   customers.leadsource AS leadsource,
   customers.leadstatus AS leadstatus,
+  customers.createdon AS createdon,
   customers.country AS country,
   customers.passw AS passw,
   (SELECT
