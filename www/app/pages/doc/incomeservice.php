@@ -37,7 +37,7 @@ class IncomeService extends \App\Pages\Base
     public $_itemlist     = array();
     public $_itemset     = array();
 
-    public function __construct($docid = 0, $basedocid = 0) {
+    public function __construct($docid = 0, $basedocid = 0, $st_id = 0) {
         parent::__construct();
 
         $this->add(new Form('docform'));
@@ -155,6 +155,16 @@ class IncomeService extends \App\Pages\Base
             }
         }
 
+        
+        if ($st_id > 0) {
+            $st = \App\Entity\ProdStage::load($st_id);
+            $this->_doc->headerdata['st_id'] = $st->st_id;
+            $this->_doc->headerdata['pp_id'] = $st->pp_id;
+            $this->docform->notes->setText($st->stagename);
+
+
+        }        
+        
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_servicelist')), $this, 'detailOnRow'))->Reload();
         $this->calcTotal();
         if (false == \App\ACL::checkShowDoc($this->_doc)) {

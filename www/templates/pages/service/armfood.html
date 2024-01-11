@@ -153,11 +153,14 @@
                     <div class="navbar mt-4">        
                         <form zippy="navform" class="form-inline   ">                   
                             <input  zippy="baddnewpos"  type="submit" value="Додати позицiю  "   class="btn btn-info mr-4"> 
+
+                           <input placeholder="Швидкий пошук..." zippy="itemfast" class="form-control"   >                            
+                           <input  zippy="addfast"  type="submit" value="+"   class="btn btn-info mr-4">     
                             {{#usescanner}}
-                            Штрих код &nbsp;<input class="form-control"   style="width:150px;" autocomplete="off"    type="text" zippy="barcode"
-                                                   onkeydown="onBarCode()"> <a zippy="addcode"></a>
+                             <input placeholder="Штрих код" здфсу class="form-control"   style="width:150px;" autocomplete="off"    type="text" zippy="barcode"                                                    onkeydown="onBarCode()"> <a zippy="addcode"></a>
 
                             {{/usescanner}}
+
                            {{#fiscal}}
                           &nbsp;  &nbsp;
                             <a zippy="openshift"><i class="fa fa-bullhorn"></i> Вiдкрити змiну</a>

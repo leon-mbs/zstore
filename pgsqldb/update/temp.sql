@@ -4,10 +4,10 @@
  
 
 
-DROP VIEW customers_view  ;
+DROP VIEW IF EXISTS customers_view  ;
 
 
-CREATE VIEW customers_view
+CREATE VIEW  customers_view
 AS
 SELECT
   customers.customer_id AS customer_id,

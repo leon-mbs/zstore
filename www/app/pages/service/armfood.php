@@ -121,6 +121,9 @@ class ARMFood extends \App\Pages\Base
 
         $this->docpanel->navform->add(new SubmitButton('baddnewpos'))->onClick($this, 'addnewposOnClick');
 
+        $this->docpanel->navform->add(new AutocompleteTextInput('itemfast'))->onText($this, 'OnAutoItem');
+        $this->docpanel->navform->add(new SubmitButton('addfast'))->onClick($this, 'addfastOnClick');
+
         $this->docpanel->navform->add(new ClickLink('openshift', $this, 'OnOpenShift'));
         $this->docpanel->navform->add(new ClickLink('closeshift', $this, 'OnCloseShift'));
 
@@ -303,6 +306,32 @@ class ARMFood extends \App\Pages\Base
         $this->updateorderlist(null);
     }
 
+    public function addfastOnClick($sender) {
+         $key=$this->docpanel->navform->itemfast->getKey();  
+
+         if($key >0){
+             
+           $item = Item::load($key);
+           $item = $this->calcitem($item);
+     
+           $this->addItem($item);
+ 
+         }
+         
+         $this->docpanel->navform->itemfast->setKey(0);  
+         $this->docpanel->navform->itemfast->setText('');  
+         
+    }
+    public function OnAutoItem($sender) {
+        $text = trim($sender->getText());
+        $like = Item::qstr('%' . $text . '%');
+         
+        return Item::findArray('itemname',"disabled<>1  and  item_type in (1,4 )  and  (itemname like {$like} or item_code like {$like} ) and cat_id in (select cat_id from item_cat where detail  not  like '%<nofastfood>1</nofastfood>%') "  );        
+        
+
+    }
+    
+    
     public function addnewposOnClick($sender) {
         $this->docpanel->catpan->setVisible(true);
         $this->docpanel->prodpan->setVisible(false);
@@ -318,6 +347,9 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->catpan->catlist->Reload();
     }
 
+    
+    
+    
     //список  заказов
     public function onDocRow($row) {
         $doc = $row->getDataItem();
@@ -457,14 +489,10 @@ class ARMFood extends \App\Pages\Base
         $row->catbtn->add(new Image('catimage', "/loadimage.php?id=" . $cat->image_id));
     }
 
-    //товары
-    public function onProdRow($row) {
-        //  $store_id = $this->setupform->store->getValue();
-        $customer_id = $this->docpanel->listsform->customer->getKey()  ;
-
-        $prod = $row->getDataItem();
-
-        $prod->price = $prod->getPriceEx(
+    
+    private function calcitem($prod){
+         $customer_id = $this->docpanel->listsform->customer->getKey()  ;
+         $prod->price = $prod->getPriceEx(
             array(
               'pricetype'=>$this->_pricetype,
               'store'=>$this->_store,
@@ -488,7 +516,20 @@ class ARMFood extends \App\Pages\Base
                 $prod->disc = $d;
                 $prod->price = H::fa($prod->pureprice - ($prod->pureprice*$d/100)) ;
             }
-        }
+        }    
+        
+        
+        return $prod; 
+    }
+    
+    //товары
+    public function onProdRow($row) {
+        //  $store_id = $this->setupform->store->getValue();
+ 
+        $prod = $row->getDataItem();
+
+        $prod = $this->calcitem($prod);
+        
         $row->add(new Panel('prodbtn'))->onClick($this, 'onProdBtnClick');
         $row->prodbtn->add(new Label('prodname', $prod->itemname));
         $row->prodbtn->add(new Label('prodprice', H::fa($prod->price)));
@@ -512,8 +553,9 @@ class ARMFood extends \App\Pages\Base
     }
 
     // выбран  товар
-    public function onProdBtnClick($sender) {
-        $item = $sender->getOwner()->getDataItem();
+    private function addItem($item) {
+
+         
         $store_id = $this->setupform->store->getValue();
 
         $qty = $item->getQuantity($store_id);
@@ -542,6 +584,17 @@ class ARMFood extends \App\Pages\Base
             $this->_itemlist[] = $item;
         }
 
+       $this->setSuccess("Позиція додана");
+        $this->docpanel->listsform->itemlist->Reload();
+        $this->calcTotal(); 
+    }
+    
+    public function onProdBtnClick($sender) {
+        $item = $sender->getOwner()->getDataItem();
+        
+        $this->addItem($item);
+
+
         $this->_catlist = Category::find(" cat_id in(select cat_id from  items where  disabled <>1  ) and detail  not  like '%<nofastfood>1</nofastfood>%' ");
         usort($this->_catlist, function ($a, $b) {
             return $a->order > $b->order;
@@ -550,8 +603,7 @@ class ARMFood extends \App\Pages\Base
 
         $this->docpanel->catpan->setVisible(true);
         $this->docpanel->prodpan->setVisible(false);
-        $this->setSuccess("Позиція додана");
-
+   
     }
 
     //закончить  добавление  товаров

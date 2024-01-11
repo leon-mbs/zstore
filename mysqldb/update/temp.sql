@@ -1,11 +1,22 @@
  
-ALTER TABLE equipments ADD branch_id INT NULL ;
-ALTER TABLE ppo_zformstat ADD amount4 decimal(10, 2)  default 0;
-ALTER TABLE ppo_zformstat ADD amount5 decimal(10, 2)  default 0;
-ALTER TABLE ppo_zformstat ADD tag INT  NULL;
+
+CREATE TABLE promocodes (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  code varchar(16) NOT NULL,
+  type tinyint(4) NOT NULL,
+  disabled tinyint(1) NOT NULL default 0,
+  
+  details text DEFAULT NULL,
+  PRIMARY KEY (id)
+) ENGINE = INNODB DEFAULT CHARSET = utf8
+;
+
+ALTER TABLE promocodes
+ADD UNIQUE INDEX code (code)   ; 
+ 
 ALTER TABLE paylist ADD customer_id INT NULL ;
 
-DROP VIEW paylist_view;
+DROP VIEW IF EXISTS paylist_view;
 
 CREATE VIEW paylist_view
 AS
@@ -35,7 +46,13 @@ FROM ((((paylist pl
     ON ((pl.customer_id = c.customer_id))) ;
 
 
-DROP VIEW customers_view  ;
+
+
+
+
+
+
+DROP VIEW IF EXISTS customers_view  ;
 
 CREATE VIEW customers_view  
 AS
@@ -69,21 +86,14 @@ SELECT
     AND (e.eventdate >= NOW()))) AS ecnt
 FROM customers;
 
-CREATE TABLE promocodes (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  code varchar(16) NOT NULL,
-  type tinyint(4) NOT NULL,
-  disabled tinyint(1) NOT NULL default 0,
-  
-  details text DEFAULT NULL,
-  PRIMARY KEY (id)
-) ENGINE = INNODB DEFAULT CHARSET = utf8
-;
 
-ALTER TABLE promocodes
-ADD UNIQUE INDEX code (code)   ;
+ALTER TABLE equipments ADD branch_id INT NULL ;
+ALTER TABLE ppo_zformstat ADD amount4 decimal(10, 2)  default 0;
+
+
 
 update  metadata set  description ='Програма лояльності' where  meta_name='Discounts';
+update  "metadata" set  description ='Отримані послуги' where  meta_name='IncomeService';
 
 delete  from  options where  optname='version' ;
 insert  into options (optname,optvalue) values('version','6.9.0'); 

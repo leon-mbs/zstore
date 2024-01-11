@@ -38,8 +38,9 @@ class IOState extends \ZCL\DB\Entity
     public const TYPE_BILL_OUTCOME     = 64;    //расходы на  комуналку
 
     //потери ТМЦ
-    public const TYPE_LOST  = 80;     //потери при инвентаризации
-    public const TYPE_TRASH = 81;     //отходы
+    public const TYPE_LOST           = 80;     //потери при инвентаризации
+    public const TYPE_TRASH          = 81;     //отходы
+    public const TYPE_OUTSERVICE     = 82;    //внешняя  переработка
 
 
     protected function init() {
@@ -103,6 +104,7 @@ class IOState extends \ZCL\DB\Entity
             $list[self::TYPE_CANCEL] =  "Скасування платежу продажу";
             $list[self::TYPE_NAKL] =  "Накладні витрати";
             $list[self::TYPE_ADS] =  "Витрати на маркетинг та  рекламу";
+            $list[self::TYPE_OUTSERVICE] =  "На  переробку";
             $list[self::TYPE_OTHER_OUTCOME] = "Інші витрати";
         }
 
