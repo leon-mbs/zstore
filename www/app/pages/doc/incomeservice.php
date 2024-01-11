@@ -7,6 +7,7 @@ use App\Entity\Customer;
 use App\Entity\Doc\Document;
 use App\Entity\MoneyFund;
 use App\Entity\Service;
+use App\Entity\Store;
 use App\Entity\Item;
 use App\Helper as H;
 use Zippy\Html\DataList\DataView;
@@ -18,6 +19,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Panel;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
@@ -35,7 +37,7 @@ class IncomeService extends \App\Pages\Base
     private $_basedocid   = 0;
 
     public $_itemlist     = array();
-    public $_itemset     = array();
+
 
     public function __construct($docid = 0, $basedocid = 0, $st_id = 0) {
         parent::__construct();
@@ -48,10 +50,11 @@ class IncomeService extends \App\Pages\Base
 
         $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), H::getDefFirm()))->onChange($this, 'OnCustomerFirm');
         $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);
-        $this->docform->add(new DropDownChoice('mtype', \App\Entity\IOState::getTypeList(5)));
-
+  
+        $this->docform->add(new DropDownChoice('store', Store::getList(), 0));
+    
         $this->docform->add(new TextInput('notes'));
-
+ 
 
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), 0));
 
@@ -94,24 +97,24 @@ class IncomeService extends \App\Pages\Base
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
 
-        $this->add(new Panel('setpanel'))->setVisible(false);
+        $this->add(new Panel('setpanel')) ;
         $this->setpanel->add(new DataView('setlist', new ArrayDataSource($this, '_itemlist'), $this, 'itemlistOnRow'));
         $this->setpanel->add(new Form('setform'))->onSubmit($this, 'OnAddSet');
         $this->setpanel->setform->add(new AutocompleteTextInput('editsname'))->onText($this, 'OnAutoSet');
         $this->setpanel->setform->add(new TextInput('editsqty', 1));
         $this->setpanel->setform->add(new TextInput('editsprice', 0));
-        $this->setpanel->add(new Label('stitle'));
+
         $this->setpanel->add(new Label('stotal'));
-        $this->setpanel->add(new ClickLink('backtolist2', $this, "onback"));
-
-
-
+  
+  
+  
         if ($docid > 0) { //загружаем   содержимое   документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->notes->setText($this->_doc->notes);
 
-            $this->docform->mtype->setValue($this->_doc->headerdata['mtype']);
+
+            $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
@@ -137,7 +140,8 @@ class IncomeService extends \App\Pages\Base
             $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
 
             $this->_servicelist = $this->_doc->unpackDetails('detaildata');
-            $this->_itemset = $this->_doc->unpackDetails('setdata');
+            $this->_itemlist = $this->_doc->unpackDetails('detaildata2');
+
         } else {
             $this->_doc = Document::create('IncomeService');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -167,6 +171,10 @@ class IncomeService extends \App\Pages\Base
         
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_servicelist')), $this, 'detailOnRow'))->Reload();
         $this->calcTotal();
+        
+ 
+        $this->setupdate() ;      
+        
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
@@ -182,7 +190,7 @@ class IncomeService extends \App\Pages\Base
         $row->add(new Label('price', H::fa($service->price)));
         $row->add(new Label('amount', H::fa($service->price * $service->quantity)));
 
-        $row->add(new ClickLink('iset'))->onClick($this, 'isetOnClick');
+
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
@@ -216,7 +224,7 @@ class IncomeService extends \App\Pages\Base
 
 
         $this->_servicelist = array_diff_key($this->_servicelist, array($rowid => $this->_servicelist[$rowid]));
-        $this->_itemset = array_diff_key($this->_itemset, array($rowid => $this->_itemset[$rowid]));
+
 
         $this->docform->detail->Reload();
         $this->calcTotal();
@@ -288,7 +296,9 @@ class IncomeService extends \App\Pages\Base
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         }
 
-        $this->_doc->headerdata['mtype'] = $this->docform->mtype->getValue();
+
+        $this->_doc->headerdata['store'] = $this->docform->store->getValue()  ;
+        $this->_doc->headerdata['store_name'] = $this->docform->store->getValueName()  ;
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
         $this->_doc->firm_id = $this->docform->firm->getValue();
         if ($this->_doc->firm_id > 0) {
@@ -311,7 +321,7 @@ class IncomeService extends \App\Pages\Base
         }
 
         $this->_doc->packDetails('detaildata', $this->_servicelist);
-        $this->_doc->packDetails('setdata', $this->_itemset);
+        $this->_doc->packDetails('detaildata2', $this->_itemlist);
 
         $isEdited = $this->_doc->document_id > 0;
         $this->_doc->amount = $this->docform->total->getText();
@@ -511,65 +521,32 @@ class IncomeService extends \App\Pages\Base
         $this->goAnkor("tankor");
     }
 
-    public function isetOnClick($sender) {
-        $ser = $sender->owner->getDataItem();
-
-        $this->_rowid =  array_search($ser, $this->_servicelist, true);
+  
 
 
-        if(is_array($this->_itemset)==false) {
-            $this->_itemset  = array() ;
-        }
-        if(is_array($this->_itemset[$this->_rowid])==false) {
-            $this->_itemset[$this->_rowid]  = array() ;
-        }
-        $this->_itemlist = $this->_itemset[$this->_rowid] ;
-        $this->setpanel->setVisible(true);
-        $this->docform->setVisible(false);
-
-        $this->setpanel->stitle->setText($ser->service_name);
-
-        $this->setupdate() ;
-    }
     private function setupdate() {
-        // $this->_itemset = ItemSet::find("item_id > 0  and pitem_id=" . $this->_pitem_id, "itemname");
+
 
         $total=0;
         foreach($this->_itemlist as $item ) {
-           $total += ($item->qty * $item->price ) ;
+           $total += ($item->quantity * $item->price ) ;
         }
-        $this->setpanel->stotal->setText($total);
+        $this->setpanel->stotal->setText(H::fa($total) );
         
         $this->setpanel->setlist->Reload();
-        $this->_itemset[$this->_rowid] = $this->_itemlist   ;
-
+        
 
     }
     
-    
-   
-    
-    public function onback($sender) {
-        $this->setpanel->setVisible(false);
-        $this->docform->setVisible(true);
-
-        $ser = $this->_servicelist[$this->_rowid];
-        $a = 0;
-        foreach($this->_itemlist   as $it) {
-            $a  += doubleval($it->qty*$it->price) ;
-        }
-        if($ser->quantity*$ser->price  != $a) {
-            $this->setWarn("Сума по ТМЦ не співпадає із вартістю послуги ") ;
-        }
-    }
+ 
 
     public function itemlistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
         $row->add(new Label('sname', $item->itemname));
         $row->add(new Label('scode', $item->item_code));
-        $row->add(new Label('sqty', H::fqty($item->qty)));
+        $row->add(new Label('sqty', H::fqty($item->quantity)));
         $row->add(new Label('sprice', H::fa($item->price)));
-        $row->add(new Label('samount', H::fa($item->price * $item->qty)));
+        $row->add(new Label('samount', H::fa($item->price * $item->quantity)));
         
         $row->add(new ClickLink('sdel'))->onClick($this, 'ondelset');
     }
@@ -578,27 +555,20 @@ class IncomeService extends \App\Pages\Base
 
     public function OnAddSet($sender) {
         $id = $sender->editsname->getKey();
+        $this->goAnkor('setform') ;
+
         if ($id == 0) {
-            $this->setError("Не обрано товар");
             return;
         }
         $it = Item::load($id);
-        $qty = $sender->editsqty->getText();
-        $price = $sender->editsprice->getText();
-
-        $set = new \App\DataItem();
-
-        $set->item_id = $id;
-        $set->qty = $qty;
-        $set->price = $price;
-        $set->itemname = $it->itemname;
-        $set->item_code = $it->item_code;
-
-        $this->_itemlist[$id]  =  $set;
-        $this->setupdate() ;
-        $sender->clean();
-
-
+        $it->quantity =  $sender->editsqty->getText();
+        $it->price = $sender->editsprice->getText();
+        if($it->quantity >0  && $it->price >0 ) {
+           $this->_itemlist[$id ]  =  $it;
+           $this->setupdate() ;
+           $sender->clean();
+        }
+      
     }
 
     public function ondelset($sender) {
@@ -608,6 +578,7 @@ class IncomeService extends \App\Pages\Base
 
 
         $this->setupdate() ;
+        $this->goAnkor('setform') ;        
     }
 
     public function OnAutoSet($sender) {
@@ -622,3 +593,11 @@ class IncomeService extends \App\Pages\Base
     }
 
 }
+
+
+
+
+
+
+
+
