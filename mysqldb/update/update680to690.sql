@@ -40,7 +40,7 @@ ALTER TABLE ppo_zformstat ADD amount4 decimal(10, 2)  default 0;
 
 
 update  metadata set  description ='Програма лояльності' where  meta_name='Discounts';
-update  "metadata" set  description ='Отримані послуги' where  meta_name='IncomeService';
+update  metadata set  description ='Отримані послуги' where  meta_name='IncomeService';
 
 delete  from  options where  optname='version' ;
 insert  into options (optname,optvalue) values('version','6.9.0'); 

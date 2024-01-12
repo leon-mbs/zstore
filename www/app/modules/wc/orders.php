@@ -130,7 +130,7 @@ class Orders extends \App\Pages\Base
                 $neworder->headerdata['outnumber'] = $wcorder->id;
                 $neworder->headerdata['wcorderback'] = 0;
                 $neworder->headerdata['salesource'] = $modules['wcsalesource'];
-                $neworder->headerdata['phone'] = $wcorder->billing->phone;
+                $neworder->headerdata['phone'] = strlen($wcorder->billing->phone ??'') > 0 ? $wcorder->billing->phone :  ($wcorder->billing->phone ??'')   ;
                 $neworder->headerdata['wcclient'] = trim($wcorder->shipping->last_name . ' ' . $wcorder->shipping->first_name);
                 $neworder->amount = H::fa($wcorder->total);
                 $neworder->payamount = $neworder->amount;
