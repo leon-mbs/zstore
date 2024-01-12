@@ -626,8 +626,6 @@ class GIList extends \App\Pages\Base
             $sender['Sender'] = $result['data'][0]['Ref'];
             $sender['SendersPhone'] = $this->nppan->npform->seltel->getText();
             $sender['CitySender'] = $this->nppan->npform->selcity->getValue();
-            //  $sender['Region']= $this->nppan->npform->selarea->getValue();
-            //  $sender['Warehouse']= $this->nppan->npform->selpoint->getValue();
             $sender['SenderType'] = $result['data'][0]['CounterpartyType'];
             $sender['ContactSender'] = $resultc['data'][0]['Ref'];
             $sender['SenderAddress'] = $this->nppan->npform->selpoint->getValue();
@@ -653,8 +651,6 @@ class GIList extends \App\Pages\Base
             $recipient['ContactRecipient'] = $result['data'][0]['ContactPerson']['data'][0]['Ref'];
             $recipient['CityRecipient'] = $this->nppan->npform->baycity->getValue();
             $recipient['RecipientsPhone'] = $this->nppan->npform->baytel->getValue();
-            //     $recipient['Region'] = $this->nppan->npform->bayarea->getValue();
-            //    $recipient['Warehouse'] = $this->nppan->npform->baypoint->getValue();
             $recipient['RecipientType'] = $result['data'][0]['CounterpartyType'];
             $recipient['RecipientAddress'] = $this->nppan->npform->baypoint->getValue();
 

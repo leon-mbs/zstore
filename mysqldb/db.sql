@@ -234,7 +234,6 @@ CREATE TABLE `equipments` (
   `detail` mediumtext,
   `disabled` tinyint(1) DEFAULT '0',
   `description` text,
-   branch_id INT NULL,  
   PRIMARY KEY (`eq_id`)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
@@ -517,7 +516,6 @@ CREATE TABLE `ppo_zformstat` (
   `amount1` decimal(10, 2) NOT NULL,
   `amount2` decimal(10, 2) NOT NULL,
   `amount3` decimal(10, 2) NOT NULL,
-  `amount4` decimal(10, 2) default 0,
   `document_number` varchar(255) DEFAULT NULL,
   `fiscnumber` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`zf_id`)
@@ -799,7 +797,6 @@ SELECT
   `customers`.`customer_name` AS `customer_name`,
   `customers`.`detail` AS `detail`,
   `customers`.`email` AS `email`,
-  `customers`.`createdon` AS `createdon`,
   `customers`.`phone` AS `phone`,
   `customers`.`status` AS `status`,
   `customers`.`city` AS `city`,
@@ -1435,7 +1432,7 @@ INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `d
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 5, 'АРМ кухнi (бару)', 'ArmProdFood', 'Кафе', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Прибутки та видатки', 'IOState', '', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Замовленi товари', 'ItemOrder', 'Продажі', 0);
-INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 5, 'Програма лояльності', 'Discounts', '', 0);
+INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 5, 'Знижки та акції', 'Discounts', '', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 1, 'Нарахування зарплати', 'CalcSalary', 'Каса та платежі', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 4, 'Нарахування та утримання', 'SalaryTypeList', '', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Вир. процеси', 'ProdProcList', 'Виробництво', 0);
@@ -1443,7 +1440,7 @@ INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `d
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 1, 'Перемiщення партiй ТМЦ', 'MovePart', 'Склад', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Повернення покупцiв', 'Returnselled', 'Продажі', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Повернення постачальникам', 'Returnbayed', 'Закупівлі', 0);
-INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 1, 'Отримані послуги', 'IncomeService', 'Послуги', 0);
+INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 1, 'Надані послуги', 'IncomeService', 'Послуги', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Стан складiв', 'StoreItems', 'Склад', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Товари у постачальників', 'CustItems', '', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Акт звірки', 'CompareAct', 'Контрагенти', 0);

@@ -148,8 +148,8 @@ class GoodsReceipt extends Document
 
         $payed = $this->headerdata['payed'];
 
-        $payed = $payed * $rate;
-        $this->payamount = $this->headerdata['payamount'] * $rate;
+        $payed = H::fa( $payed * $rate);
+        $this->payamount = H::fa($this->headerdata['payamount'] * $rate);
 
 
         $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment']);
