@@ -25,14 +25,17 @@ class Update extends \App\Pages\Base
         global $_config; 
         parent::__construct();
  
+        $t = '?t='.time(); 
+ 
         $this->add(new  ClickLink('updatesql',$this,'OnSqlUpdate')) ;
  
         $this->_tvars['curversion'] = System::CURR_VERSION;
         $this->_tvars['curversiondb'] = System::getOptions('version', false);
 
+        $requireddb=  System::REQUIRED_DB ;
  
-        if($this->_tvars['curversiondb'] != System::REQUIRED_DB){
-           $this->_tvars['reqversion']  = " Версiя БД має  бути <b>".System::REQUIRED_DB."!</b>";                
+        if($this->_tvars['curversiondb'] != $requireddb){
+           $this->_tvars['reqversion']  = " Версiя БД має  бути <b>{$requireddb}!</b>";                
         } else{
            $this->_tvars['reqversion']  = '';
         }
@@ -43,8 +46,8 @@ class Update extends \App\Pages\Base
 
         $this->_tvars['show']  = false   ; 
  
-        $json = @file_get_contents("https://zippy.com.ua/version.json");
-   //     $json = @file_get_contents("http://local.site/version_next.json");
+        $json = @file_get_contents("https://zippy.com.ua/version.json".$t);
+
         
         $data = @json_decode($json,true) ;
         if($data == null){
@@ -76,31 +79,31 @@ class Update extends \App\Pages\Base
         
         $this->_tvars['newver']  = $data['version']   ;
         $this->_tvars['notes']  = $data['notes']   ;
-        $this->_tvars['archive']  = $data['archive']   ;
-        $this->_tvars['github']  = $data['github']   ;
-         ;
+        $this->_tvars['archive']  = $data['archive'] .$t   ;
+        $this->_tvars['github']  = $data['github']    ;
+     
         $this->_tvars['list']  = []   ;
         foreach($data['changelog'] as $item )  {
            $this->_tvars['list'][] = array('item'=>$item)  ;
         }
         
+         $this->_tvars['showdb']  = false;
+        
         //обновление  БД
-        if (strlen($data['sqlm']) >0  && $this->_tvars['reqversion']!= '' ) {
+        if ($data['fordb'] ===  $this->_tvars['curversiondb']   ) {
 
           $this->_tvars['showdb']  = true   ;
           $sqlurl= $data['sqlm'] ;
           if($_config['db']['driver'] == 'postgres'){
               $sqlurl= $data['sqlp'] ;              
           }             
-          $this->_tvars['sqlurl']  = $sqlurl  ;
-          $this->_tvars['sql']  =  file_get_contents($sqlurl)   ;
+          $this->_tvars['sqlurl']  = $sqlurl .$t ;
+          $this->_tvars['sql']  =  file_get_contents($this->_tvars['sqlurl'])   ;
              
-          
+          $this->_tvars['showdb']  = true; 
         }  
         
-       if($this->_tvars['curversiondb'] == System::REQUIRED_DB){
-              $this->_tvars['showdb']  = false;
-       }         
+             
                 
 
     }   

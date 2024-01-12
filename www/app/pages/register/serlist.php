@@ -331,25 +331,25 @@ class SerList extends \App\Pages\Base
 
     public function slistOnRow($row) {
         $ser = $row->getDataItem();
-        $row->add(new Label('sservice_name', $ser->service_name));
-        $row->add(new Label('sdesc', $ser->desc));
-        $row->add(new Label('squantity', H::fqty($ser->quantity)));
-        $row->add(new Label('sprice', H::fa($ser->price)));
-        $row->add(new Label('samount', H::fa($ser->price * $ser->quantity)));
-        $row->add(new Label('sdisc', floatval($ser->disc) != 0 ? "-".H::fa1($ser->disc) : ''));
-        $row->add(new ClickLink('sdel'))->onClick($this, 'sdelOnClick');
+        $row->add(new Label('rsservice_name', $ser->service_name));
+        $row->add(new Label('rsdesc', $ser->desc));
+        $row->add(new Label('rsquantity', H::fqty($ser->quantity)));
+        $row->add(new Label('rsprice', H::fa($ser->price)));
+        $row->add(new Label('rsamount', H::fa($ser->price * $ser->quantity)));
+        $row->add(new Label('rsdisc', floatval($ser->disc) != 0 ? "-".H::fa1($ser->disc) : ''));
+        $row->add(new ClickLink('rsdel'))->onClick($this, 'sdelOnClick');
 
     }
 
     public function ilistOnRow($row) {
         $item = $row->getDataItem();
-        $row->add(new Label('iname', $item->itemname));
-        $row->add(new Label('icode', $item->item_code . ( strlen($item->snumber) >0 ? ' с/н: '. $item->snumber :'')  ));
-        $row->add(new Label('iquantity', H::fqty($item->quantity)));
-        $row->add(new Label('iprice', H::fa($item->price)));
-        $row->add(new Label('iamount', H::fa($item->price * $item->quantity)));
-        $row->add(new Label('idisc', floatval($item->disc) != 0 ? "-".H::fa1($item->disc) : ''));
-        $row->add(new ClickLink('idel'))->onClick($this, 'idelOnClick');
+        $row->add(new Label('riname', $item->itemname));
+        $row->add(new Label('ricode', $item->item_code . ( strlen($item->snumber) >0 ? ' с/н: '. $item->snumber :'')  ));
+        $row->add(new Label('riquantity', H::fqty($item->quantity)));
+        $row->add(new Label('riprice', H::fa($item->price)));
+        $row->add(new Label('riamount', H::fa($item->price * $item->quantity)));
+        $row->add(new Label('ridisc', floatval($item->disc) != 0 ? "-".H::fa1($item->disc) : ''));
+        $row->add(new ClickLink('ridel'))->onClick($this, 'idelOnClick');
 
     }
 

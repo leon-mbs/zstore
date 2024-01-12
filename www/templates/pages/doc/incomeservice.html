@@ -42,14 +42,7 @@
                         </select>
 
                     </div>
-                   <div class="form-group  ">
-                        <label for="notes">Примiтка</label>
 
-                        <input class="form-control" type="text" zippy="notes">
-
-                    </div>
-
-                
 
                 </div>
                 <div class="col-6 col-md-4 col-lg-3">
@@ -65,17 +58,25 @@
                             <option value="0">Не обрано</option>
                         </select>
                     </div>
-                    <div class="form-group  ">
-                        <label for="mtype">Тип видатку</label>
-                        <select class="form-control" zippy="mtype">
-                            <option value="0">Не обрано</option>
+                     <div class="form-group  ">
+                        <label for="store">Склад для  оприходування  ТМЦ</label>
+                        <select class="form-control" zippy="store">
+                            <option value="0">Не оприходувати</option>
                         </select>
-                    </div>           
+                    </div>
+                   <div class="form-group  ">
+                        <label for="notes">Примiтка</label>
+
+                        <input class="form-control" type="text" zippy="notes">
+
+                    </div>
+
+                                            
                 </div>
 
             </div>
             <div class="row">
-                <div class="col-10 col-lg-8">
+                <div class="col-10  col-lg-8">
                     <a zippy="addrow" class="btn btn-info">Додати роботу</a> <br>
                     
                     <table class="table  table-sm">
@@ -89,8 +90,8 @@
                             <th class="text-right">Сума</th>
 
 
-                            <th  ></th>
-                            <th  ></th>
+                            <th  style="width:100px;"   ></th>
+                      
                         </tr>
                         <tr zippy="detail">
                             <td zippy="item"></td>
@@ -102,37 +103,37 @@
 
                             
 
-                            <td><a zippy="edit"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp; <a zippy="delete"><i                                        class="fa fa-trash"></i></a>
+                            <td>   
+                               <a zippy="edit"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp; <a zippy="delete"><i class="fa fa-trash"></i></a>
                             </td>
                             
-                            <td>   <a zippy="iset"><i class="fa fa-cogs" title="Комплекти"></i></a>   </td>
-                            
+                          
                         </tr>
                         <tr style="font-weight: bolder;">
                             <td colspan="4" class="text-right">На суму:</td>
                             <td zippy="total" class="text-right"></td>
-                            <td></td>
-                            <td></td>
+                            <td> </td>
+
                         </tr>
                         <tr style="font-weight: bolder;">
                             <td colspan="4" class="text-right"><span data-label="paydisc">Знижка:</span></td>
                             <td zippy="paydisc" class="text-right"></td>
                             <td><a data-label="paydisc" href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i                                         class="fa fa-edit"></i></a></td>
-                            <td></td>
+
                         </tr>
                         <tr style="font-weight: bolder;">
                             <td colspan="4" class="text-right"><span data-label="payamount">Всього:</span></td>
                             <td zippy="payamount" class="text-right"></td>
                             <td><a data-label="payamount" href="javascript:void(0);" data-toggle="modal"
                                    data-target="#modalpayamount"><i class="fa fa-edit"></i></a></td>
-                                   <td></td>
+                                 
                         </tr>
                         <tr style="font-weight: bolder;">
                             <td colspan="4" class="text-right"><span data-label="payed">Внесено оплату:</span></td>
                             <td zippy="payed" class="text-right"></td>
                             <td><a data-label="payed" href="javascript:void(0);" data-toggle="modal"
                                    data-target="#modalpayed"><i class="fa fa-edit"></i></a></td>
-                            <td></td>                                   
+                                                          
                         </tr>
 
 
@@ -284,21 +285,18 @@
         
       <div class="row">
 
-            <div class="col-12 col-md-8 col-xl-6" zippy="setpanel">
-                <a zippy="backtolist2"><i class="fa fa-arrow-alt-circle-left"></i> До переліку</a>
-                <h4 zippy="stitle"></h4>
-                <small>Готова продукцiя та  напiвфабрикати. При проведеннi документу буде  оновлена  вартiсть у  вiдповiдних  комплектах.</small>
+            <div class="col-10  col-lg-8 mb-4" zippy="setpanel">
+
+             
                 <form zippy="setform" class="form-inline mt-2 mb-2">
                     <label for="editsname">ТМЦ</label>
                     <input placeholder="Почніть вводити.." class="form-control  mr-sm-2" zippy="editsname"/>
 
                     <label for="editsqty">Кіл.</label>
-                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsqty" required="required"
-                           pattern="[0-9,\.]+" style="width:60px">
+                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsqty" required="required"                           pattern="[0-9,\.]+" style="width:75px">
                     <label for="editsprice">Ціна</label>
-                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsprice" required="required"
-                           pattern="[0-9,\.]+" style="width:60px">
-                    <input class="btn btn-outline-success  " type="submit" value="Додати">
+                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsprice" required="required"                           pattern="[0-9,\.]+" style="width:100px">
+                    <input class="btn btn-success  " type="submit" value="Додати">
                 </form>
                 <table class="table   table-sm  ">
                     <tr>
@@ -306,15 +304,23 @@
                         <th>Код</th>
                         <th class="text-right">Кіл.</th>
                         <th class="text-right">Ціна</th>
-                        <th></th>
+                        <th class="text-right">Сума</th>
+                        <th style="width:100px;"> </th>
                     </tr>
                     <tr zippy="setlist">
                         <td zippy="sname"></td>
                         <td zippy="scode"></td>
                         <td class="text-right" zippy="sqty"></td>
                         <td class="text-right" zippy="sprice"></td>
-                        <td><a zippy="sdel"><i class="fa fa-trash"></i></a></td>
+                        <td class="text-right" zippy="samount"></td>
+                        <td ><a zippy="sdel"><i class="fa fa-trash"></i></a></td>
                     </tr>
+                      <tr> 
+                        <th class="text-right" colspan="4">Всього:</th>
+                        <th class="text-right" zippy="stotal"></th>
+
+                        <th></th>
+                    </tr>                    
                 </table>
            
                

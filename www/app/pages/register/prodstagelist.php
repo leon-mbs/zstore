@@ -78,6 +78,7 @@ class ProdStageList extends \App\Pages\Base
         $this->statuspan->add(new ClickLink("backs", $this, "backOnClick"));
         $this->statuspan->add(new ClickLink("btntoprod", $this, "toprodOnClick"));
         $this->statuspan->add(new ClickLink("btnfromprod", $this, "fromprodOnClick"));
+        $this->statuspan->add(new ClickLink("btnservice", $this, "btnserviceOnClick"));
         $this->statuspan->add(new ClickLink("btnclose", $this, "closeOnClick"));
         $this->statuspan->add(new ClickLink("btnstop", $this, "stopOnClick"));
         $this->statuspan->add(new ClickLink("btnstart", $this, "startOnClick"));
@@ -422,6 +423,14 @@ class ProdStageList extends \App\Pages\Base
             $this->_stage->save();
         }
         Application::Redirect("\\App\\Pages\\Doc\\ProdReceipt", 0, 0, $this->_stage->st_id);
+
+    }
+  public function btnserviceOnClick($sender) {
+        if ($this->_stage->state == ProdStage::STATE_NEW) {
+            $this->_stage->state = ProdStage::STATE_INPROCESS;
+            $this->_stage->save();
+        }
+        Application::Redirect("\\App\\Pages\\Doc\\IncomeService", 0, 0, $this->_stage->st_id);
 
     }
 

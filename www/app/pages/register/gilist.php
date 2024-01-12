@@ -279,7 +279,7 @@ class GIList extends \App\Pages\Base
         }
 
         if ($this->_doc->meta_name == 'GoodsIssue') {
-
+ 
             $this->statuspan->statusform->bdevivered->setVisible(false);
             $this->statuspan->statusform->ship_number->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(false);
@@ -551,7 +551,16 @@ class GIList extends \App\Pages\Base
         if ($params['SeatsAmount'] > 1) {
             $params['Weight'] = number_format($params['Weight'] / $params['SeatsAmount'], 1, '.', '');
         }
-
+     
+     
+        $params['OptionsSeat'] =array(
+                            'volumetricWidth' => $width,
+                            'volumetricLength' => $length,
+                            'volumetricHeight' => $height,
+                            'Weight' => $params['Weight']
+                          );
+        
+       
         $moneyback = $this->nppan->npform->npback->getText();
 
         if ($moneyback > 0) {   //если  введена  обратная сумма
