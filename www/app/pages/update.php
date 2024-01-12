@@ -25,6 +25,8 @@ class Update extends \App\Pages\Base
         global $_config; 
         parent::__construct();
  
+        $t = '?t='.time(); 
+ 
         $this->add(new  ClickLink('updatesql',$this,'OnSqlUpdate')) ;
  
         $this->_tvars['curversion'] = System::CURR_VERSION;
@@ -44,7 +46,7 @@ class Update extends \App\Pages\Base
 
         $this->_tvars['show']  = false   ; 
  
-        $json = @file_get_contents("https://zippy.com.ua/version_test.json");
+        $json = @file_get_contents("https://zippy.com.ua/version.json".$t);
 
         
         $data = @json_decode($json,true) ;
@@ -77,9 +79,9 @@ class Update extends \App\Pages\Base
         
         $this->_tvars['newver']  = $data['version']   ;
         $this->_tvars['notes']  = $data['notes']   ;
-        $this->_tvars['archive']  = $data['archive']   ;
-        $this->_tvars['github']  = $data['github']   ;
-         ;
+        $this->_tvars['archive']  = $data['archive'] .$t   ;
+        $this->_tvars['github']  = $data['github']    ;
+     
         $this->_tvars['list']  = []   ;
         foreach($data['changelog'] as $item )  {
            $this->_tvars['list'][] = array('item'=>$item)  ;
@@ -95,8 +97,8 @@ class Update extends \App\Pages\Base
           if($_config['db']['driver'] == 'postgres'){
               $sqlurl= $data['sqlp'] ;              
           }             
-          $this->_tvars['sqlurl']  = $sqlurl  ;
-          $this->_tvars['sql']  =  file_get_contents($sqlurl)   ;
+          $this->_tvars['sqlurl']  = $sqlurl .$t ;
+          $this->_tvars['sql']  =  file_get_contents($this->_tvars['sqlurl'])   ;
              
           $this->_tvars['showdb']  = true; 
         }  
