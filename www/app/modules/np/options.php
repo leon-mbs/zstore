@@ -144,67 +144,26 @@ class Options extends \App\Pages\Base
 
     public function savecacheOnClick($sender) {
 
-        @unlink(_ROOT . "upload/arealist.dat");
-        @unlink(_ROOT . "upload/citylist.dat");
-        @unlink(_ROOT . "upload/pointlist.dat");
 
-        @mkdir(_ROOT . "upload") ;
+        try {
+            
+           $api = new Helper();
 
-        $api = new Helper();
-
-        $areas = array();
-        $tmplist = $api->getAreas();
-        if($tmplist['success']==false) {
-            if(count($tmplist['errors'] ??[])>0) {
-                $this->setError(array_pop($tmplist['errors'])) ;
-                return;
-            }
-            if(count($tmplist['warnings']??[])>0) {
-                $this->setWarn(array_pop($tmplist['warnings'])) ;
-
-            }
-
+           $ret = $api->updatetCache()  ;
+           
+           if(strlen($ret['error'] ??'')>0 ) {
+               $this->setError($ret['error']);                           
+               return;
+           }
+           if(strlen($ret['warn'] ??'')>0 ) {
+               $this->setWarn($ret['warn']);                           
+           }
+           
+        } catch(\Exception $ee) {
+            $msg = $ee->getMessage();
+            $this->setError($msg);            
         }
-        foreach ($tmplist['data'] as $a) {
-            $areas[$a['Ref']] = trim($a['Description']);
-        }
-
-        $d = serialize($areas);
-
-        file_put_contents(_ROOT . "upload/arealist.dat", $d);
-        unset($d);
-    
-        $cities = array();
-
-        $tmplist = $api->getCities(0);
-
-        foreach ($tmplist['data'] as $a) {
-            $cities[] = array('Ref' => $a['Ref'], 'Area' => $a['Area'], 'Description' => trim($a['Description']).' ('.trim($a['DescriptionRu']) .')'  );
-
-        }
-
-        $d = serialize($cities);
-
-        file_put_contents(_ROOT . "upload/citylist.dat", $d);
-        unset($tmplist);
-        unset($cities);
-        unset($d);
-        gc_collect_cycles() ;
-
-        $wlist = array();
-        $tmplist = $api->getWarehouses('');
-
-        foreach ($tmplist['data'] as $a) {
-            $wlist[] = array('Ref' => $a['Ref'], 'City' => $a['CityRef'], 'Description' => trim($a['Description']) );
-        }
-        unset($tmplist) ;
-        gc_collect_cycles() ;
-
-        $d = serialize($wlist);
-        file_put_contents(_ROOT . "upload/pointlist.dat", $d);
-        unset($wlist) ;
-        unset($d);
-
+        
         $this->updateData();
 
         $this->setSuccess('Збережено');

@@ -112,6 +112,10 @@ class GIList extends \App\Pages\Base
         $npform->add(new Label('npttnnotes'));
         $npform->add(new Label('printform'));
 
+        $npform->add(new DropDownChoice('npgab'))->onChange($this, 'onGab',true);
+        $npform->add(new TextInput('npgw'));
+        $npform->add(new TextInput('npgh'));
+        $npform->add(new TextInput('npgd'));
         
         $this->onDelType($npform->deltype);
         
@@ -403,8 +407,8 @@ class GIList extends \App\Pages\Base
         $this->nppan->npform->nppm->setValue('Cash');
         $bmlist = array();
         $bmlist['0'] = 'Без доставки';
-        $bmlist['Cash'] = 'Наличные';
-        $bmlist['NonCash'] = 'Безнал';
+        $bmlist['Cash'] = 'Готiвка';
+        $bmlist['NonCash'] = 'Безготiвка';
         $bmlist['Control'] = 'Контроль доставки';
         $this->nppan->npform->nppmback->setOptionList($bmlist);
         $this->nppan->npform->nppmback->setValue('Cash');
@@ -506,7 +510,7 @@ class GIList extends \App\Pages\Base
         foreach($tmp as $g){
            $gablist[$g->gabname]= $g->gabname;   
         }
-        
+        $this->nppan->npform->npgab->setOptionList($gablist);
     }
 
     public function onSelArea($sender) {
@@ -553,6 +557,21 @@ class GIList extends \App\Pages\Base
         return Customer::getList($sender->getText(), 1, true);
     }
     
+    public function onGab($sender) {
+       $g=$sender->getValue();  
+       $ga=[];
+       if($g=='0') {
+          $ga[0] = '';
+          $ga[1] = '';
+          $ga[2] = '';
+       }  else {
+          $ga = explode('x',$g) ;
+       }
+        
+       $this->nppan->npform->npgw->setText($ga[0]); 
+       $this->nppan->npform->npgh->setText($ga[1]); 
+       $this->nppan->npform->npgd->setText($ga[2]); 
+    }
     public function onDelType($sender) {
       
       $dt=$sender->getValue();  
@@ -564,9 +583,17 @@ class GIList extends \App\Pages\Base
       $this->nppan->npform->baycity->setOptionList([]) ;   
       $this->nppan->npform->bayarea->setValue(0) ;   
 
+      $this->nppan->npform->npgab->setVisible($dt ==1) ;   
+      $this->nppan->npform->npgw->setVisible($dt ==1) ;   
+      $this->nppan->npform->npgh->setVisible($dt ==1) ;   
+      $this->nppan->npform->npgd->setVisible($dt ==1) ;   
+      
+      
+      
     }   
     public function npOnSubmit($sender) {
         $params = array();
+        $dt = $this->nppan->npform->deltype->getValue();  //0-отделение 1-поштомат 2-по адресу
 
         $params['DateTime'] = date('d.m.Y', $this->nppan->npform->npdate->getDate());
         $params['ServiceType'] = 'WarehouseWarehouse';
@@ -582,15 +609,18 @@ class GIList extends \App\Pages\Base
             $params['Weight'] = number_format($params['Weight'] / $params['SeatsAmount'], 1, '.', '');
         }
      
-     
-        $params['OptionsSeat'] =array(
-                            'volumetricWidth' => $width,
-                            'volumetricLength' => $length,
-                            'volumetricHeight' => $height,
+        if($dt==1) {
+            
+            
+            $params['OptionsSeat'] =array(
+                            'volumetricWidth' =>intval( $this->nppan->npform->npgw->getText()),
+                            'volumetricLength' => intval( $this->nppan->npform->npgd->getText()),
+                            'volumetricHeight' => intval( $this->nppan->npform->npgh->getText()),
                             'Weight' => $params['Weight']
                           );
         
-       
+        }
+        
         $moneyback = $this->nppan->npform->npback->getText();
 
         if ($moneyback > 0) {   //если  введена  обратная сумма
