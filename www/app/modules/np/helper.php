@@ -120,7 +120,7 @@ class Helper extends \LisDev\Delivery\NovaPoshtaApi2
         return $ret;
     }
 
-    public function getPointListCache($cityref) {
+    public function getPointListCache($cityref,$pm=false) {
         $points = @file_get_contents(_ROOT . "upload/pointlist.dat");
         $points = @unserialize($points);
         if (is_array($points) == false) {
@@ -129,7 +129,13 @@ class Helper extends \LisDev\Delivery\NovaPoshtaApi2
         $ret = array();
         foreach ($points as $p) {
             if ($p['City'] == $cityref) {
-                $ret[$p['Ref']] = $p['Description'];
+                
+                $ispm = strpos($p['Description'],'Поштомат') !== false;
+                if($pm===$ispm) {
+                    $ret[$p['Ref']] = $p['Description'];                    
+                }
+                
+
             }
         }
         return $ret;

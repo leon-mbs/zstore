@@ -80,6 +80,9 @@ class GIList extends \App\Pages\Base
         //новая  почта
         $this->add(new Panel("nppan"))->setVisible(false);
         $npform = $this->nppan->add(new Form("npform"));
+
+        $npform->add(new DropDownChoice('deltype'),[],0)->onChange($this, 'onDelType');
+
         $npform->onSubmit($this, "npOnSubmit");
         $npform->add(new ClickLink("npcancel", $this, "npOnCancel"));
         $npform->add(new DropDownChoice('selarea'))->onChange($this, 'onSelArea');
@@ -109,6 +112,9 @@ class GIList extends \App\Pages\Base
         $npform->add(new Label('npttnnotes'));
         $npform->add(new Label('printform'));
 
+        
+        $this->onDelType($npform->deltype);
+        
         if ($doc > 0) {
             $this->_doc = Document::load($doc);
             $this->showOn();
@@ -490,6 +496,17 @@ class GIList extends \App\Pages\Base
         $this->nppan->npform->npttnnotes->setText($this->_doc->notes);
 
         $this->nppan->npform->printform->setText($this->_doc->cast()->generateReport(), true);
+        
+        $gablist=[];
+        $tmp=[];
+        
+        if(strlen( $modules['npgl'] ?? '') >0) {
+           $tmp = unserialize( $modules['npgl'] );    
+        }
+        foreach($tmp as $g){
+           $gablist[$g->gabname]= $g->gabname;   
+        }
+        
     }
 
     public function onSelArea($sender) {
@@ -501,9 +518,9 @@ class GIList extends \App\Pages\Base
     }
 
     public function onSelCity($sender) {
-
+ 
         $api = new \App\Modules\NP\Helper();
-        $list = $api->getPointListCache($sender->getValue());
+        $list = $api->getPointListCache($sender->getValue() );
 
         $this->nppan->npform->selpoint->setOptionList($list);
     }
@@ -516,10 +533,12 @@ class GIList extends \App\Pages\Base
         $this->nppan->npform->baycity->setOptionList($list);
     }
 
+
     public function onBayCity($sender) {
+        $dt = $this->nppan->npform->deltype->getValue(); 
 
         $api = new \App\Modules\NP\Helper();
-        $list = $api->getPointListCache($sender->getValue());
+        $list = $api->getPointListCache($sender->getValue(),$dt==1);
 
         $this->nppan->npform->baypoint->setOptionList($list);
     }
@@ -534,7 +553,18 @@ class GIList extends \App\Pages\Base
         return Customer::getList($sender->getText(), 1, true);
     }
     
-    
+    public function onDelType($sender) {
+      
+      $dt=$sender->getValue();  
+        
+      $this->nppan->npform->baypoint->setOptionList([]) ;   
+      $this->nppan->npform->baypoint->setValue(0) ;   
+      $this->nppan->npform->baypoint->setVisible($dt <2) ;   
+      $this->nppan->npform->baycity->setValue(0) ;   
+      $this->nppan->npform->baycity->setOptionList([]) ;   
+      $this->nppan->npform->bayarea->setValue(0) ;   
+
+    }   
     public function npOnSubmit($sender) {
         $params = array();
 

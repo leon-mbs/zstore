@@ -8,10 +8,17 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\TextInput;
+use Zippy\Binding\PropertyBinding as Bind;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Label;
 use App\Application as App;
 
 class Options extends \App\Pages\Base
 {
+    public $_gablist = array();    
+    
     public function __construct() {
         parent::__construct();
 
@@ -25,6 +32,7 @@ class Options extends \App\Pages\Base
         $modules = System::getOptions("modules");
 
         $form = $this->add(new Form("cform"));
+
         $form->add(new TextInput('apikey', $modules['npapikey']));
 
         $form->onSubmit($this, 'saveapiOnClick');
@@ -39,6 +47,21 @@ class Options extends \App\Pages\Base
         $form->add(new DropDownChoice('point'));
         $form->add(new TextInput('tel'))->setText($modules['nptel']);
 
+        if(strlen( $modules['npgl'] ?? '') >0) {
+           $this->_gablist = unserialize( $modules['npgl'] );    
+        }
+   
+   
+        $this->add(new Form("gabform"))->onSubmit($this,'addGab');   
+        $this->gabform->add(new TextInput('gw')) ;
+        $this->gabform->add(new TextInput('gh')) ;
+        $this->gabform->add(new TextInput('gd')) ;
+      
+        $this->add(new DataView('gablist', new ArrayDataSource(new Bind($this, '_gablist')), $this, 'gabListOnRow'));
+        $this->gablist->Reload();
+        
+        
+        
         $form->onSubmit($this, 'savedataOnClick');
 
         $this->updateData();
@@ -185,6 +208,51 @@ class Options extends \App\Pages\Base
         $this->updateData();
 
         $this->setSuccess('Збережено');
+    }
+   
+    public function gabListOnRow(  $row) {
+        $item = $row->getDataItem();
+        $row->add(new Label('gabname',$item->gabname ));
+        $row->add(new ClickLink('delgab', $this, 'onDelgab'));
+    }
+    public function onDelgab($sender) {
+        $item = $sender->getOwner()->getDataItem();
+        $tmp=[];
+        foreach($this->_gablist as $i=>$v){
+            if($i==$item->id) {
+                continue;
+            }
+            $tmp[$i] = $v;
+        }
+        $this->_gablist = $tmp;
+        $this->gablist->Reload();
+        
+        $modules = System::getOptions("modules");
+        $modules['npgl'] = serialize($this->_gablist);
+        System::setOptions("modules", $modules);
+        
+    }
+    public function addGab($sender) {
+        $ls = new \App\DataItem();
+        
+        $w=$sender->gw->getText();
+        $h=$sender->gh->getText();
+        $d=$sender->gd->getText();
+        $sender->clean();
+        
+        $ls->gabname = "{$w}x{$h}x{$d}";
+        $ls->id = time();
+        
+        
+        
+        $this->_gablist[$ls->id] = $ls;
+        $this->gablist->Reload();
+      
+        $modules = System::getOptions("modules");
+        $modules['npgl'] = serialize($this->_gablist);
+        System::setOptions("modules", $modules);
+
+        
     }
 
 }
