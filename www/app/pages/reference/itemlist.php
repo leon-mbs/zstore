@@ -141,7 +141,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new DropDownChoice('editprintqty', array(), 1));
 
 
-        $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'Save');
+        $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'save');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
         $this->add(new Panel('setpanel'))->setVisible(false);
@@ -220,7 +220,7 @@ class ItemList extends \App\Pages\Base
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
         $row->add(new ClickLink('set'))->onClick($this, 'setOnClick');
-        $row->set->setVisible($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD || $item->item_type == Item::TYPE_MAT);
+        $row->set->setVisible($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD );
 
         $row->add(new ClickLink('printqr'))->onClick($this, 'printQrOnClick', true);
         $row->printqr->setVisible(strlen($item->url) > 0);
@@ -356,7 +356,7 @@ class ItemList extends \App\Pages\Base
         $this->itemtable->listform->itemlist->Reload();
     }
 
-    public function Save($sender) {
+    public function save($sender) {
         if (false == \App\ACL::checkEditRef('ItemList')) {
             return;
         }

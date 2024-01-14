@@ -114,6 +114,7 @@ class DocList extends \App\Pages\Base
         $this->statusform->add(new CheckBox('print1'));
 
         $this->statusform->add(new SubmitButton('bprint'))->onClick($this, 'printlabels', true);
+        $this->statusform->add(new SubmitButton('bcopy'))->onClick($this, 'onCopy' );
         $this->add(new ClickLink('csv', $this, 'oncsv'));
 
 
@@ -618,6 +619,11 @@ class DocList extends \App\Pages\Base
             
             $this->_doc->headerdata['_state_before_approve_'] ='';
             
+            
+     
+
+            
+            $conn->CommitTrans();
         }  catch(\Exception $ee){
             global $logger;
             $conn->RollbackTrans();
@@ -630,7 +636,7 @@ class DocList extends \App\Pages\Base
           
         }
         
-        $conn->CommitTrans();
+        
         
         if ($sender->id == "buser") {
             $user_id = intval($this->statusform->musers->getValue());
@@ -649,6 +655,25 @@ class DocList extends \App\Pages\Base
         $this->doclist->Reload($sender->id != "bstatus");
     }
 
+    public function onCopy($sender) {
+        $doc =   $this->_doc->cast();
+        $doc->document_id=0;
+        $doc->parent_id=0;
+        $doc->user_id= System::getUser()->user_id;
+        $doc->document_number = $doc->nextNumber();
+        $doc->document_date = time();
+        $doc->state = 0; ;
+        $doc->headerdata['contract_id'] = 0;
+        $doc->headerdata['_state_before_approve_'] = '';
+        $doc->save();
+        $doc->updateStatus(Document::STATE_NEW);
+       
+        $this->filter->searchnumber->setText($doc->document_number);
+
+        $this->filterOnSubmit($this->filter); 
+        $this->statusform->setVisible(false) ;
+        $this->docview->setVisible(false) ;      
+    }
     public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
 

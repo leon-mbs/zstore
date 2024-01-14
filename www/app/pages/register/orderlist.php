@@ -356,14 +356,16 @@ class OrderList extends \App\Pages\Base
 
 
                 $this->_doc->updateStatus(Document::STATE_CLOSED);
-                $this->statuspan->setVisible(false);
+ 
             }
         } catch(\Exception $e) {
             $this->setError($e->getMessage());
 
         }
+        $this->statuspan->setVisible(false);    
+        $this->_doc = null;            
         $this->listpanel->doclist->Reload(false);
-        $this->updateStatusButtons();
+//        $this->updateStatusButtons();
     }
 
     public function updateStatusButtons() {

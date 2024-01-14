@@ -132,6 +132,7 @@ class Options extends \App\Pages\Base
         $this->business->add(new CheckBox('numberttn'));
         $this->business->add(new CheckBox('usecattree'));
         $this->business->add(new CheckBox('nocheckarticle'));
+        $this->business->add(new CheckBox('spreaddelivery'));
 
         $this->business->add(new TextInput('cashier'));
         $this->business->add(new TextArea('checkslogan'));
@@ -157,7 +158,7 @@ class Options extends \App\Pages\Base
         $this->business->useimages->setChecked($common['useimages']);
         $this->business->numberttn->setChecked($common['numberttn']);
         $this->business->usecattree->setChecked($common['usecattree']);
-        $this->business->nocheckarticle->setChecked($common['nocheckarticle']);
+        $this->business->spreaddelivery->setChecked($common['spreaddelivery']);
 
         $this->business->cashier->setText($common['cashier']);
         $this->business->checkslogan->setText($common['checkslogan']);
@@ -412,6 +413,7 @@ class Options extends \App\Pages\Base
         $common['usesnumber'] = $this->business->usesnumber->GetValue() ;
         $common['useimages'] = $this->business->useimages->isChecked() ? 1 : 0;
         $common['nocheckarticle'] = $this->business->nocheckarticle->isChecked() ? 1 : 0;
+        $common['spreaddelivery'] = $this->business->spreaddelivery->isChecked() ? 1 : 0;
 
         $common['numberttn'] = $this->business->numberttn->isChecked() ? 1 : 0;
         $common['usecattree'] = $this->business->usecattree->isChecked() ? 1 : 0;

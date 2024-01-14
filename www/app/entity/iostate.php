@@ -18,7 +18,8 @@ class IOState extends \ZCL\DB\Entity
     public const TYPE_CANCEL_CUST  = 5;    //отмена  платежа  покупки
 
     //доход ТМЦ
-    public const TYPE_OVER = 30;     //излишки при инвентаризации
+    public const TYPE_OVER      = 30;     //излишки при инвентаризации
+    public const TYPE_INSERVICE = 31;     //с внешних умлуг
 
     //расход платежи
     public const TYPE_BASE_OUTCOME     = 50;    //операционные расходы
@@ -36,10 +37,12 @@ class IOState extends \ZCL\DB\Entity
     public const TYPE_NAKL             = 62;    //накладные  расходы
     public const TYPE_ADS              = 63;    //   расходы на  маркетинг
     public const TYPE_BILL_OUTCOME     = 64;    //расходы на  комуналку
+    public const TYPE_OUTSERVICE       = 65;    //расходы на услуги
 
     //потери ТМЦ
-    public const TYPE_LOST  = 80;     //потери при инвентаризации
-    public const TYPE_TRASH = 81;     //отходы
+    public const TYPE_LOST           = 80;     //потери при инвентаризации
+    public const TYPE_TRASH          = 81;     //отходы
+
 
 
     protected function init() {
@@ -104,11 +107,13 @@ class IOState extends \ZCL\DB\Entity
             $list[self::TYPE_NAKL] =  "Накладні витрати";
             $list[self::TYPE_ADS] =  "Витрати на маркетинг та  рекламу";
             $list[self::TYPE_OTHER_OUTCOME] = "Інші витрати";
+            $list[self::TYPE_OUTSERVICE] = "Витрати на отримані послуги";
         }
 
         if ($type == 3 || $type == 0 || $type == 13) {
             $list[self::TYPE_OVER] = "Надлишки при інвентаризації";
             $list[self::TYPE_OTHER_INCOME] = "Інші доходи";
+            $list[self::TYPE_INSERVICE] = "Отримані послуги";
 
 
         }
@@ -120,6 +125,8 @@ class IOState extends \ZCL\DB\Entity
             $list[self::TYPE_COMMON_OUTCOME] = "Загальновиробничі витрати";
             $list[self::TYPE_ADMIN_OUTCOME] = "Адміністративні витрати";
             $list[self::TYPE_OTHER_OUTCOME] = "Інші витрати";
+            $list[self::TYPE_OTHER_OUTCOME] = "Інші витрати";
+
 
         }
         if ($type == 5 || $type == 0) {
@@ -128,7 +135,7 @@ class IOState extends \ZCL\DB\Entity
             $list[self::TYPE_ADMIN_OUTCOME] = "Адміністративні витрати";
             $list[self::TYPE_OTHER_OUTCOME] = "Інші витрати";
             $list[self::TYPE_SALE_OUTCOME] = "Витрати на збут";
-
+ 
         }
 
         return $list;

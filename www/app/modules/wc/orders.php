@@ -4,6 +4,7 @@ namespace App\Modules\WC;
 
 use App\Entity\Doc\Document;
 use App\Entity\Item;
+use App\Entity\Customer;
 use App\System;
 use App\Helper as H;
 use Zippy\Binding\PropertyBinding as Prop;
@@ -74,19 +75,7 @@ class Orders extends \App\Pages\Base
                 $this->setErrorTopPage($ee->getMessage());
                 return;
             }
-            $fields = array(
-                'status' => 'on-hold', 'per_page' => 100, 'page' => $page
-            );
-
-            try {
-                $data2 = $client->get('orders', $fields);
-            } catch(\Exception $ee) {
-                $this->setErrorTopPage($ee->getMessage());
-                return;
-            }
-            if (is_array($data) && is_array($data2)) {
-                $data = array_merge($data, $data2);
-            }
+        
             $page++;
 
             $c = count($data);
@@ -141,6 +130,7 @@ class Orders extends \App\Pages\Base
                 $neworder->headerdata['outnumber'] = $wcorder->id;
                 $neworder->headerdata['wcorderback'] = 0;
                 $neworder->headerdata['salesource'] = $modules['wcsalesource'];
+                $neworder->headerdata['phone'] = strlen($wcorder->billing->phone ??'') > 0 ? $wcorder->billing->phone :  ($wcorder->billing->phone ??'')   ;
                 $neworder->headerdata['wcclient'] = trim($wcorder->shipping->last_name . ' ' . $wcorder->shipping->first_name);
                 $neworder->amount = H::fa($wcorder->total);
                 $neworder->payamount = $neworder->amount;
@@ -183,6 +173,26 @@ class Orders extends \App\Pages\Base
             if (strlen($shoporder->document_number) == 0) {
                 $shoporder->document_number = 'WC00001';
             }            
+
+
+           if($modules['wcinsertcust']==1  && strlen($shoporder->headerdata['phone'] ?? '' )>0) {
+                  $phone=\App\Util::handlePhone($shoporder->headerdata['phone']);
+                  $cust = Customer::getByPhone($phone) ;
+                  if ($cust == null) {
+                        $cust = new Customer();
+                        $cust->customer_name = trim($shoporder->headerdata['wcclient']);
+                        $cust->type = Customer::TYPE_BAYER;
+                        $cust->phone = $phone;
+                        $cust->comment = "Клiєнт WC";
+                        $cust->save();
+                  }
+                
+                if ($cust != null) {
+                    $neworder->customer_id = $cust->customer_id;
+                }                
+                
+            }
+
             
             $shoporder->save();
             $shoporder->updateStatus(Document::STATE_NEW);
@@ -190,6 +200,7 @@ class Orders extends \App\Pages\Base
             if($modules['wcsetpayamount']==1) {
                 $shoporder->updateStatus(Document::STATE_WP);
             }
+ 
 
         }
 

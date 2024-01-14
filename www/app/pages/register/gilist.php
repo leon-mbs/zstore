@@ -80,6 +80,9 @@ class GIList extends \App\Pages\Base
         //новая  почта
         $this->add(new Panel("nppan"))->setVisible(false);
         $npform = $this->nppan->add(new Form("npform"));
+
+        $npform->add(new DropDownChoice('deltype'),[],0)->onChange($this, 'onDelType');
+
         $npform->onSubmit($this, "npOnSubmit");
         $npform->add(new ClickLink("npcancel", $this, "npOnCancel"));
         $npform->add(new DropDownChoice('selarea'))->onChange($this, 'onSelArea');
@@ -109,6 +112,16 @@ class GIList extends \App\Pages\Base
         $npform->add(new Label('npttnnotes'));
         $npform->add(new Label('printform'));
 
+        $npform->add(new DropDownChoice('npgab'))->onChange($this, 'onGab',true);
+        $npform->add(new TextInput('npgw'));
+        $npform->add(new TextInput('npgh'));
+        $npform->add(new TextInput('npgd'));
+        $npform->add(new TextInput('bayaddr'));
+        $npform->add(new TextInput('bayhouse'));
+        $npform->add(new TextInput('bayflat'));
+        
+        $this->onDelType($npform->deltype);
+        
         if ($doc > 0) {
             $this->_doc = Document::load($doc);
             $this->showOn();
@@ -263,16 +276,7 @@ class GIList extends \App\Pages\Base
             $this->statuspan->statusform->bsend->setVisible(false);
         }
 
-        //прячем лишнее
-        if ($this->_doc->meta_name == 'TTN') {
-            if ($this->_doc->headerdata['delivery'] < 3) { //не  служба  доставки
-                $this->statuspan->statusform->ship_number->setVisible(false);
-                $this->statuspan->statusform->bdecl->setVisible(false);
-            }
 
-            $this->statuspan->statusform->bttn->setVisible(false);
-            $this->statuspan->statusform->bgi->setVisible(false);
-        }
         if ($this->_doc->meta_name == 'TTN' && $this->_doc->state == Document::STATE_READYTOSHIP) {
             $this->statuspan->statusform->bnp->setVisible(true);
             $this->statuspan->statusform->bgi->setVisible(false);
@@ -312,6 +316,23 @@ class GIList extends \App\Pages\Base
             $this->statuspan->statusform->bdecl->setVisible(true);
             $this->statuspan->statusform->bgi->setVisible(false);
         }
+        
+        //прячем лишнее
+        if ($this->_doc->meta_name == 'TTN') {
+            if ($this->_doc->headerdata['delivery'] < 3) { //не  служба  доставки
+                $this->statuspan->statusform->ship_number->setVisible(false);
+                $this->statuspan->statusform->bdecl->setVisible(false);
+            }
+
+            if ( strlen($this->_doc->headerdata['ship_number'] ??'') >0)  { //не  служба  доставки
+                $this->statuspan->statusform->ship_number->setVisible(false);
+                $this->statuspan->statusform->bdecl->setVisible(false);
+                $this->statuspan->statusform->bnp->setVisible(false);
+            }
+
+            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->bgi->setVisible(false);
+        }        
     }
 
     //просмотр
@@ -397,8 +418,8 @@ class GIList extends \App\Pages\Base
         $this->nppan->npform->nppm->setValue('Cash');
         $bmlist = array();
         $bmlist['0'] = 'Без доставки';
-        $bmlist['Cash'] = 'Наличные';
-        $bmlist['NonCash'] = 'Безнал';
+        $bmlist['Cash'] = 'Готiвка';
+        $bmlist['NonCash'] = 'Безготiвка';
         $bmlist['Control'] = 'Контроль доставки';
         $this->nppan->npform->nppmback->setOptionList($bmlist);
         $this->nppan->npform->nppmback->setValue('Cash');
@@ -490,6 +511,17 @@ class GIList extends \App\Pages\Base
         $this->nppan->npform->npttnnotes->setText($this->_doc->notes);
 
         $this->nppan->npform->printform->setText($this->_doc->cast()->generateReport(), true);
+        
+        $gablist=[];
+        $tmp=[];
+        
+        if(strlen( $modules['npgl'] ?? '') >0) {
+           $tmp = unserialize( $modules['npgl'] );    
+        }
+        foreach($tmp as $g){
+           $gablist[$g->gabname]= $g->gabname;   
+        }
+        $this->nppan->npform->npgab->setOptionList($gablist);
     }
 
     public function onSelArea($sender) {
@@ -501,9 +533,9 @@ class GIList extends \App\Pages\Base
     }
 
     public function onSelCity($sender) {
-
+ 
         $api = new \App\Modules\NP\Helper();
-        $list = $api->getPointListCache($sender->getValue());
+        $list = $api->getPointListCache($sender->getValue() );
 
         $this->nppan->npform->selpoint->setOptionList($list);
     }
@@ -516,10 +548,12 @@ class GIList extends \App\Pages\Base
         $this->nppan->npform->baycity->setOptionList($list);
     }
 
+
     public function onBayCity($sender) {
+        $dt = $this->nppan->npform->deltype->getValue(); 
 
         $api = new \App\Modules\NP\Helper();
-        $list = $api->getPointListCache($sender->getValue());
+        $list = $api->getPointListCache($sender->getValue(),$dt==1);
 
         $this->nppan->npform->baypoint->setOptionList($list);
     }
@@ -534,9 +568,46 @@ class GIList extends \App\Pages\Base
         return Customer::getList($sender->getText(), 1, true);
     }
     
-    
+    public function onGab($sender) {
+       $g=$sender->getValue();  
+       $ga=[];
+       if($g=='0') {
+          $ga[0] = '';
+          $ga[1] = '';
+          $ga[2] = '';
+       }  else {
+          $ga = explode('x',$g) ;
+       }
+        
+       $this->nppan->npform->npgw->setText($ga[0]); 
+       $this->nppan->npform->npgh->setText($ga[1]); 
+       $this->nppan->npform->npgd->setText($ga[2]); 
+    }
+    public function onDelType($sender) {
+      
+      $dt=$sender->getValue();  
+        
+      $this->nppan->npform->baypoint->setOptionList([]) ;   
+      $this->nppan->npform->baypoint->setValue(0) ;   
+    //  $this->nppan->npform->baypoint->setVisible($dt <2) ;   
+      $this->nppan->npform->baycity->setValue(0) ;   
+      $this->nppan->npform->baycity->setOptionList([]) ;   
+      $this->nppan->npform->bayarea->setValue(0) ;   
+
+      $this->nppan->npform->npgab->setVisible($dt ==1) ;   
+      $this->nppan->npform->npgw->setVisible($dt ==1) ;   
+      $this->nppan->npform->npgh->setVisible($dt ==1) ;   
+      $this->nppan->npform->npgd->setVisible($dt ==1) ;   
+      $this->nppan->npform->bayaddr->setVisible($dt ==2) ;   
+      $this->nppan->npform->bayhouse->setVisible($dt ==2) ;   
+      $this->nppan->npform->bayflat->setVisible($dt ==2) ;   
+      
+      
+      
+    }   
     public function npOnSubmit($sender) {
         $params = array();
+        $dt = $this->nppan->npform->deltype->getValue();  //0-отделение 1-поштомат 2-по адресу
 
         $params['DateTime'] = date('d.m.Y', $this->nppan->npform->npdate->getDate());
         $params['ServiceType'] = 'WarehouseWarehouse';
@@ -551,7 +622,20 @@ class GIList extends \App\Pages\Base
         if ($params['SeatsAmount'] > 1) {
             $params['Weight'] = number_format($params['Weight'] / $params['SeatsAmount'], 1, '.', '');
         }
-
+     
+        if($dt==1) {
+            
+            $params['OptionsSeat'] =[] ;
+            $params['OptionsSeat'][] =array(
+                            'volumetricWidth' =>intval( $this->nppan->npform->npgw->getText()),
+                            'volumetricLength' => intval( $this->nppan->npform->npgd->getText()),
+                            'volumetricHeight' => intval( $this->nppan->npform->npgh->getText()),
+                            'weight' => $params['Weight']  
+                           
+                          );
+        
+        }
+        
         $moneyback = $this->nppan->npform->npback->getText();
 
         if ($moneyback > 0) {   //если  введена  обратная сумма
@@ -617,8 +701,6 @@ class GIList extends \App\Pages\Base
             $sender['Sender'] = $result['data'][0]['Ref'];
             $sender['SendersPhone'] = $this->nppan->npform->seltel->getText();
             $sender['CitySender'] = $this->nppan->npform->selcity->getValue();
-            //  $sender['Region']= $this->nppan->npform->selarea->getValue();
-            //  $sender['Warehouse']= $this->nppan->npform->selpoint->getValue();
             $sender['SenderType'] = $result['data'][0]['CounterpartyType'];
             $sender['ContactSender'] = $resultc['data'][0]['Ref'];
             $sender['SenderAddress'] = $this->nppan->npform->selpoint->getValue();
@@ -639,16 +721,24 @@ class GIList extends \App\Pages\Base
                 return;
             }
 
-
-            $recipient['Recipient'] = $result['data'][0]['Ref'];
-            $recipient['ContactRecipient'] = $result['data'][0]['ContactPerson']['data'][0]['Ref'];
-            $recipient['CityRecipient'] = $this->nppan->npform->baycity->getValue();
             $recipient['RecipientsPhone'] = $this->nppan->npform->baytel->getValue();
-            //     $recipient['Region'] = $this->nppan->npform->bayarea->getValue();
-            //    $recipient['Warehouse'] = $this->nppan->npform->baypoint->getValue();
             $recipient['RecipientType'] = $result['data'][0]['CounterpartyType'];
-            $recipient['RecipientAddress'] = $this->nppan->npform->baypoint->getValue();
-
+              $recipient['Recipient'] = $result['data'][0]['Ref'];
+              $recipient['ContactRecipient'] = $result['data'][0]['ContactPerson']['data'][0]['Ref'];
+              $recipient['CityRecipient'] = $this->nppan->npform->baycity->getValue();
+              $recipient['RecipientAddress'] = $this->nppan->npform->baypoint->getValue();
+    
+            if($dt==2) {
+              $recipient['RecipientCityName'] = $this->nppan->npform->baycity->getValueName();
+  //            $recipient['RecipientAreaRegions'] = $this->nppan->npform->bayarea->getValue();
+              $recipient['RecipientArea'] = $this->nppan->npform->bayarea->getValueName();
+              $recipient['RecipientAddressName'] = $this->nppan->npform->bayaddr->getText();
+              $recipient['RecipientHouse'] = $this->nppan->npform->bayhouse->getText();
+              $recipient['RecipientFlat'] = $this->nppan->npform->bayflat->getText();
+              $recipient['RecipientName'] = $recipient['LastName'] .' '.$recipient['FirstName'].' '.$recipient['MiddleName'];
+             
+          
+           }  
             $paramsInternetDocument = array_merge($sender, $recipient, $params);
 
             $result = $api->model('InternetDocument')->save($paramsInternetDocument);

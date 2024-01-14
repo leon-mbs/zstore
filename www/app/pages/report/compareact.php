@@ -77,10 +77,6 @@ class CompareAct extends \App\Pages\Base
             return;
         }
  
-      
-  
-  
-        $clist = implode(',',$list) ;
         $detail = array();
         
         $where_start =  " document_date <{$from}  and    customer_id = {$cust_id}  and    state NOT IN (0, 1, 2, 3, 15, 8, 17) ";

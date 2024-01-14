@@ -545,6 +545,8 @@ class OrderCust extends \App\Pages\Base
 
     }
 
- 
+     public function backtolistOnClick($sender) {
+        App::RedirectBack();
+    }
 
 }

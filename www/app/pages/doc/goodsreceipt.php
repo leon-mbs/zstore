@@ -63,7 +63,11 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new TextInput('outnumber'));
         $this->docform->add(new TextInput('basedoc'));
         $this->docform->add(new CheckBox('spreaddelivery'));
-
+        if($common['spreaddelivery'] ==1) {
+            $this->docform->spreaddelivery->setChecked(1)  ;
+        }
+        
+        
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
@@ -155,7 +159,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->docform->add(new ClickLink('opensn', $this, "onOpensn"));
 
-
+ 
         if ($docid > 0) {    //загружаем   содержимое  документа настраницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
@@ -303,6 +307,9 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->OnVal($this->docform->val);
 
+        if ($docid > 0) { 
+             $this->docform->rate->setText($this->_doc->headerdata['rate']);
+        }
 
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;

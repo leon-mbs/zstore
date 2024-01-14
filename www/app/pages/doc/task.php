@@ -116,7 +116,9 @@ class Task extends \App\Pages\Base
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
-                    $this->_doc->customer_id = $basedoc->customer_id;
+                 //   $this->_doc->customer_id = $basedoc->customer_id;
+                    $this->docform->customer->setKey($basedoc->customer_id);
+                    $this->docform->customer->setText($basedoc->customer_name);
 
                     if ($basedoc->meta_name == 'ServiceAct') {
                         $this->docform->notes->setText('Підстава '. $basedoc->document_number);
