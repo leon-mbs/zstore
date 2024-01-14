@@ -63,7 +63,11 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new TextInput('outnumber'));
         $this->docform->add(new TextInput('basedoc'));
         $this->docform->add(new CheckBox('spreaddelivery'));
-
+        if($common['spreaddelivery'] ==1) {
+            $this->docform->spreaddelivery->setChecked(1)  ;
+        }
+        
+        
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 

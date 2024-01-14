@@ -116,6 +116,9 @@ class GIList extends \App\Pages\Base
         $npform->add(new TextInput('npgw'));
         $npform->add(new TextInput('npgh'));
         $npform->add(new TextInput('npgd'));
+        $npform->add(new TextInput('bayaddr'));
+        $npform->add(new TextInput('bayhouse'));
+        $npform->add(new TextInput('bayflat'));
         
         $this->onDelType($npform->deltype);
         
@@ -586,7 +589,7 @@ class GIList extends \App\Pages\Base
         
       $this->nppan->npform->baypoint->setOptionList([]) ;   
       $this->nppan->npform->baypoint->setValue(0) ;   
-      $this->nppan->npform->baypoint->setVisible($dt <2) ;   
+    //  $this->nppan->npform->baypoint->setVisible($dt <2) ;   
       $this->nppan->npform->baycity->setValue(0) ;   
       $this->nppan->npform->baycity->setOptionList([]) ;   
       $this->nppan->npform->bayarea->setValue(0) ;   
@@ -595,6 +598,9 @@ class GIList extends \App\Pages\Base
       $this->nppan->npform->npgw->setVisible($dt ==1) ;   
       $this->nppan->npform->npgh->setVisible($dt ==1) ;   
       $this->nppan->npform->npgd->setVisible($dt ==1) ;   
+      $this->nppan->npform->bayaddr->setVisible($dt ==2) ;   
+      $this->nppan->npform->bayhouse->setVisible($dt ==2) ;   
+      $this->nppan->npform->bayflat->setVisible($dt ==2) ;   
       
       
       
@@ -715,14 +721,24 @@ class GIList extends \App\Pages\Base
                 return;
             }
 
-
-            $recipient['Recipient'] = $result['data'][0]['Ref'];
-            $recipient['ContactRecipient'] = $result['data'][0]['ContactPerson']['data'][0]['Ref'];
-            $recipient['CityRecipient'] = $this->nppan->npform->baycity->getValue();
             $recipient['RecipientsPhone'] = $this->nppan->npform->baytel->getValue();
             $recipient['RecipientType'] = $result['data'][0]['CounterpartyType'];
-            $recipient['RecipientAddress'] = $this->nppan->npform->baypoint->getValue();
-
+              $recipient['Recipient'] = $result['data'][0]['Ref'];
+              $recipient['ContactRecipient'] = $result['data'][0]['ContactPerson']['data'][0]['Ref'];
+              $recipient['CityRecipient'] = $this->nppan->npform->baycity->getValue();
+              $recipient['RecipientAddress'] = $this->nppan->npform->baypoint->getValue();
+    
+            if($dt==2) {
+              $recipient['RecipientCityName'] = $this->nppan->npform->baycity->getValueName();
+  //            $recipient['RecipientAreaRegions'] = $this->nppan->npform->bayarea->getValue();
+              $recipient['RecipientArea'] = $this->nppan->npform->bayarea->getValueName();
+              $recipient['RecipientAddressName'] = $this->nppan->npform->bayaddr->getText();
+              $recipient['RecipientHouse'] = $this->nppan->npform->bayhouse->getText();
+              $recipient['RecipientFlat'] = $this->nppan->npform->bayflat->getText();
+              $recipient['RecipientName'] = $recipient['LastName'] .' '.$recipient['FirstName'].' '.$recipient['MiddleName'];
+             
+          
+           }  
             $paramsInternetDocument = array_merge($sender, $recipient, $params);
 
             $result = $api->model('InternetDocument')->save($paramsInternetDocument);
