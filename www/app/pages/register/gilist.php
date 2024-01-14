@@ -273,16 +273,7 @@ class GIList extends \App\Pages\Base
             $this->statuspan->statusform->bsend->setVisible(false);
         }
 
-        //прячем лишнее
-        if ($this->_doc->meta_name == 'TTN') {
-            if ($this->_doc->headerdata['delivery'] < 3) { //не  служба  доставки
-                $this->statuspan->statusform->ship_number->setVisible(false);
-                $this->statuspan->statusform->bdecl->setVisible(false);
-            }
 
-            $this->statuspan->statusform->bttn->setVisible(false);
-            $this->statuspan->statusform->bgi->setVisible(false);
-        }
         if ($this->_doc->meta_name == 'TTN' && $this->_doc->state == Document::STATE_READYTOSHIP) {
             $this->statuspan->statusform->bnp->setVisible(true);
             $this->statuspan->statusform->bgi->setVisible(false);
@@ -322,6 +313,23 @@ class GIList extends \App\Pages\Base
             $this->statuspan->statusform->bdecl->setVisible(true);
             $this->statuspan->statusform->bgi->setVisible(false);
         }
+        
+        //прячем лишнее
+        if ($this->_doc->meta_name == 'TTN') {
+            if ($this->_doc->headerdata['delivery'] < 3) { //не  служба  доставки
+                $this->statuspan->statusform->ship_number->setVisible(false);
+                $this->statuspan->statusform->bdecl->setVisible(false);
+            }
+
+            if ( strlen($this->_doc->headerdata['ship_number'] ??'') >0)  { //не  служба  доставки
+                $this->statuspan->statusform->ship_number->setVisible(false);
+                $this->statuspan->statusform->bdecl->setVisible(false);
+                $this->statuspan->statusform->bnp->setVisible(false);
+            }
+
+            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->bgi->setVisible(false);
+        }        
     }
 
     //просмотр
@@ -611,12 +619,13 @@ class GIList extends \App\Pages\Base
      
         if($dt==1) {
             
-            
-            $params['OptionsSeat'] =array(
+            $params['OptionsSeat'] =[] ;
+            $params['OptionsSeat'][] =array(
                             'volumetricWidth' =>intval( $this->nppan->npform->npgw->getText()),
                             'volumetricLength' => intval( $this->nppan->npform->npgd->getText()),
                             'volumetricHeight' => intval( $this->nppan->npform->npgh->getText()),
-                            'Weight' => $params['Weight']
+                            'weight' => $params['Weight']  
+                           
                           );
         
         }
