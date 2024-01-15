@@ -76,16 +76,15 @@ class OrderCust extends \App\Pages\Base
         $this->editdetail->add(new Button('canceledit'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('saveedit'))->onClick($this, 'saverowOnClick');
         $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
+        $this->editdetail->add(new ClickLink('addnewitem', $this, 'onNewItem'));
     
         //добавление нового товара
         $this->add(new Form('editnewitem'))->setVisible(false);
         $this->editnewitem->add(new TextInput('editnewitemname'));
         $this->editnewitem->add(new TextInput('editnewitemcode'));
-        $this->editnewitem->add(new TextInput('editnewitembarcode'));
-        $this->editnewitem->add(new CheckBox('editnewitemsnumber'));
 
-        $this->editnewitem->add(new TextInput('editnewmanufacturer'));
-        $this->editnewitem->add(new TextInput('editnewmsr'));
+        $this->editnewitem->add(new TextInput('editnewitembrand'));
+        $this->editnewitem->add(new TextInput('editnewitemmsr'));
         $this->editnewitem->add(new DropDownChoice('editnewcat', \App\Entity\Category::getList(), 0));
         $this->editnewitem->add(new Button('cancelnewitem'))->onClick($this, 'cancelnewitemOnClick');
         $this->editnewitem->add(new SubmitButton('savenewitem'))->onClick($this, 'savenewitemOnClick');
@@ -146,7 +145,57 @@ class OrderCust extends \App\Pages\Base
     }    
     
     
-    //добавление нового контрагента
+    //добавление новый товар 
+    public function onNewItem($sender) {
+        $this->editnewitem->setVisible(true);
+        $this->editdetail->setVisible(false);
+
+        $this->editnewitem->clean();
+        $this->editnewitem->editnewitembrand->setDataList(Item::getManufacturers());
+       
+    }
+    
+   public function cancelnewitemOnClick($sender) {
+        $this->editdetail->setVisible(true);
+        $this->editnewitem->setVisible(false);
+
+      
+        
+    }
+    
+   public function savenewitemOnClick($sender) {
+        $itemname = trim($this->editnewitem->editnewitemname->getText());
+        if (strlen($itemname) == 0) {
+            $this->setError("Не введено назву");
+            return;
+        }
+        $item = new Item();
+        $item->itemname = $itemname;
+
+        $item->item_code = $this->editnewitem->editnewitemcode->getText();
+        $item->manufacturer = $this->editnewitem->editnewitembrand->getText();
+        $item->msr = $this->editnewitem->editnewitemmsr->getText();
+        $item->cat_id = $this->editnewitem->editnewcat->getValue();
+        if (strlen($item->item_code) > 0 && System::getOption("common", "nocheckarticle") != 1) {
+            $code = Item::qstr($item->item_code);
+            $cnt = Item::findCnt("  item_code={$code} ");
+            if ($cnt > 0) {
+                $this->setError('Такий артикул вже існує');
+                return;
+            }
+
+        }      
+ 
+        $item->save();
+        $this->editdetail->edititem->setText($item->itemname);
+        $this->editdetail->edititem->setKey($item->item_id);
+
+        $this->editnewitem->setVisible(false);
+        $this->editdetail->setVisible(true);
+    }
+    
+    
+  //добавление нового контрагента
     public function addcustOnClick($sender) {
         $this->editcust->setVisible(true);
         $this->docform->setVisible(false);
@@ -458,92 +507,7 @@ class OrderCust extends \App\Pages\Base
     }
     
     
-    /**************/
-    public function save($args, $post) {
-        $post = json_decode($post) ;
-        if (false == \App\ACL::checkEditDoc($this->_doc, false, false)) {
 
-            return json_encode(['error'=>'Нема прав редагування документу' ], JSON_UNESCAPED_UNICODE);
-        }
-
-        $this->_doc->document_number = $post->doc->document_number;
-        $this->_doc->document_date = strtotime($post->doc->document_date);
-        $this->_doc->notes = $post->doc->notes;
-        $this->_doc->customer_id = $post->doc->customer_id;
-        $this->_doc->amount = $post->doc->total;
-
-        if (false == $this->_doc->checkUniqueNumber()) {
-            return json_encode(['error'=>'Не унікальний номер документу. Створено новий.','newnumber'=>$this->_doc->nextNumber()], JSON_UNESCAPED_UNICODE);
-        }
-
-        $i=0;
-
-        $this->_itemlist=[];
-        foreach($post->doc->items as $it) {
-            $i++;
-            $item = Item::load($it->item_id);
-            $item->custcode = $it->custcode;
-            $item->desc = $it->desc;
-            $item->quantity = $it->quantity;
-            $item->price = $it->price;
-            $item->rowid = $i;
-
-
-            $this->_itemlist[$i]=$item;
-        }
-        $this->_doc->packDetails('detaildata', $this->_itemlist);
-
-
-        $isEdited = $this->_doc->document_id > 0;
-
-        $conn = \ZDB\DB::getConnect();
-        $conn->BeginTrans();
-        try {
-            if ($this->_basedocid > 0) {
-                $this->_doc->parent_id = $this->_basedocid;
-                $this->_basedocid = 0;
-            }
-            $this->_doc->save();
-
-            if ($post->op == 'execdoc') {
-                if (!$isEdited) {
-                    $this->_doc->updateStatus(Document::STATE_NEW);
-                }
-
-                $this->_doc->updateStatus(Document::STATE_INPROCESS);
-            } else {
-                if ($post->op == 'apprdoc') {
-                    if (!$isEdited) {
-                        $this->_doc->updateStatus(Document::STATE_NEW);
-                    }
-
-                    $this->_doc->updateStatus(Document::STATE_WA);
-                } else {
-                    $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
-                }
-            }
-
-
-            $conn->CommitTrans();
-
-
-        } catch(\Throwable $ee) {
-            global $logger;
-            $conn->RollbackTrans();
-            if ($isEdited == false) {
-                $this->_doc->document_id = 0;
-            }
-
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
-
-            return json_encode(['error'=>$ee->getMessage()], JSON_UNESCAPED_UNICODE);
-
-
-        }
-
-        return json_encode([], JSON_UNESCAPED_UNICODE);
-
-    }
 
      public function backtolistOnClick($sender) {
         App::RedirectBack();
