@@ -55,7 +55,7 @@ class ARMFood extends \App\Pages\Base
             $food = array();
             $this->setWarn('Не вказано параметри в загальних налаштуваннях');
         }
-        $this->_worktype = $food['worktype'];
+        $this->_worktype = intval( $food['worktype'] );
 
         $this->_tvars['delivery'] = $food['delivery'] ?? 0;
         $this->_tvars['tables'] = $food['tables'] ?? 0;
@@ -169,6 +169,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->payform->add(new TextInput('pfexch2b'));
 
         $this->docpanel->payform->add(new CheckBox('passfisc'));
+        $this->docpanel->payform->add(new CheckBox('passprod'));
 
         $bind = new  \Zippy\Binding\PropertyBinding($this, '_pt');
         $this->docpanel->payform->add(new \Zippy\Html\Form\RadioButton('pfnal', $bind, 1));
@@ -266,14 +267,14 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->listsform->dt->setVisible(false);
         $this->docpanel->listsform->time->setVisible(false);
         $this->docpanel->listsform->table->setVisible(false);
-        $this->docpanel->listsform->btopay->setVisible(false);
+    //    $this->docpanel->listsform->btopay->setVisible(false);
         $this->docpanel->listsform->btodel->setVisible(false);
         $this->docpanel->listsform->btoprod->setVisible(false);
 
         if ($sender->getValue() == 0) {
             $this->docpanel->listsform->table->setVisible(true);
             if ($this->_worktype == 0 || $this->_worktype == 1) {
-                $this->docpanel->listsform->btopay->setVisible(true);
+       //         $this->docpanel->listsform->btopay->setVisible(true);
             }
             if ($this->_worktype == 2) {
                 $this->docpanel->listsform->btoprod->setVisible(true);
@@ -322,6 +323,7 @@ class ARMFood extends \App\Pages\Base
          $this->docpanel->navform->itemfast->setText('');  
          
     }
+ 
     public function OnAutoItem($sender) {
         $text = trim($sender->getText());
         $like = Item::qstr('%' . $text . '%');
@@ -452,6 +454,9 @@ class ARMFood extends \App\Pages\Base
         if($doc->state <5) {
            $row->checkfisc->setVisible(false);
         }
+        
+ 
+        
 
     }
 
@@ -1060,6 +1065,7 @@ class ARMFood extends \App\Pages\Base
             return;
         }
         $this->docpanel->payform->passfisc->setChecked(false);
+        $this->docpanel->payform->passprod->setChecked(false);
 
         $this->docpanel->payform->setVisible(true);
         $this->docpanel->listsform->setVisible(false);
@@ -1076,6 +1082,9 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->payform->pfrest->setText(H::fa(0));
         $this->docpanel->payform->bbackitems->setVisible(true);
 
+        
+        $inprod = $this->_doc->checkStates([Document::STATE_INPROCESS]) ;//уже в  производстве
+        $this->docpanel->payform->passprod->setVisible($this->_worktype > 0 && $inprod == false);
 
     }
 
@@ -1217,10 +1226,14 @@ class ARMFood extends \App\Pages\Base
 
             // если оплачено
             if ($this->_doc->payamount <= $this->_doc->payed) {
-                if ($this->_worktype == 1) {  // в  производство
-                    $this->toprod()  ;
+                if ($this->_worktype >0  && $this->docpanel->payform->passprod->isChecked() == false)  {  
+                    $inprod = $this->_doc->checkStates([Document::STATE_INPROCESS]) ;//уже в  производстве
+                    if($inprod== false) {
+                       $this->toprod()  ;
+                    }
                 }
-                if ($this->_worktype == 0) {
+     
+                if ($this->_worktype == 0  ||  $this->docpanel->payform->passprod->isChecked() == true) {
                     if ($this->_doc->state < 4) {
                         $this->_doc->updateStatus(Document::STATE_EXECUTED);
                     }

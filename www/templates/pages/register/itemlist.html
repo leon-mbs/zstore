@@ -94,8 +94,12 @@
 
                         <th class="text-right  ">Кіл.</th>
    {{^noshowpartion}}                         
-                        <th class="text-right  ">Обл. ціна.</th>
-   {{/noshowpartion}}            
+                        <th class="text-right  ">Обл. ціна</th>
+   {{/noshowpartion}}         
+   
+   {{^nohowprodprice}}       
+                        <th class="text-right  ">Прод. ціна</th>
+   {{/nohowprodprice}}                               
                         <th class="text-right  ">На суму</th>
 
                                            
@@ -129,7 +133,9 @@
                         <td zippy="inprice" class="text-right  "></td>
                            {{/noshowpartion}} 
          
-
+                   {{^nohowprodprice}}       
+                        <td zippy="iprodprice" class="text-right  "></td>
+                   {{/nohowprodprice}}                               
                         <td zippy="iamount" class="text-right  "></td>
 
                             
@@ -144,11 +150,7 @@
 
                     </tr>
                     <tr>
-                  
-
-                       
                         <td colspan="10" class="  font-weight:bolder"> Всього на суму: <span zippy="totamount"></span> </td>
-
 
                     </tr>
                 </table>

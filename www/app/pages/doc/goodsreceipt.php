@@ -840,7 +840,7 @@ class GoodsReceipt extends \App\Pages\Base
         $delivery = doubleval($this->docform->delivery->getText());
         $nds = doubleval($this->docform->nds->getText()) ;
 
-        $total = $total + $nds - $disc  ;
+        $total = doubleval($total) + $nds - doubleval($disc)  ;
         $total +=  $delivery;
 
         $this->docform->editpayamount->setText(H::fa($total));

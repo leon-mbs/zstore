@@ -43,7 +43,7 @@ class ItemList extends \App\Pages\Base
 
         $this->filter->add(new DropDownChoice('searchcat', $catlist, 0));
 
-  
+
         $prices = [];
         if($this->_tvars["noshowpartion"] == false) {
             $prices['price'] = "Закупівельна ціна";
@@ -114,16 +114,19 @@ class ItemList extends \App\Pages\Base
           ;
         }
         $row->add(new Label('inprice', H::fa($inprice)));
-
         $pt = $this->filter->searchprice->getValue();
         if($pt=='price') {
             $am = $item->getAmount($store);
-             
+            $pr = ''; 
+           
         } else {
-            $am = $qty * $item->getPrice($pt, $store) ;
+            $pr= H::fa( $item->getPrice($pt, $store) );
+            
+            $am = $qty * $pr;
         }
 
 
+        $row->add(new Label('iprodprice',$pr ));
         $row->add(new Label('iamount', H::fa(abs($am))));
 
         $row->add(new Label('cat_name', $item->cat_name));
@@ -148,7 +151,11 @@ class ItemList extends \App\Pages\Base
 
     public function OnFilter($sender) {
    
-        $this->itempanel->itemlist->Reload();
+         $pt = $this->filter->searchprice->getValue();
+         $this->_tvars['nohowprodprice'] = $pt == 'price';  
+         
+         
+       $this->itempanel->itemlist->Reload();
 
         $am = $this->getTotalAmount();
         $this->itempanel->totamount->setText((H::fa($am)));

@@ -205,10 +205,7 @@ class Document extends \ZCL\DB\Entity
              */
             $this->headerdata[(string)$child->getName()] = $ch;
         }
-
-
   
-
     }
 
     /**
