@@ -167,6 +167,21 @@ class ArmProdFood extends \App\Pages\Base
             $doc->packDetails('detaildata', $items);
             $doc->save();
 
+            
+            $allsend=true;
+            foreach ($items as $it) {
+                if ($it->foodstate < 4) {
+                    $allsend = fa;se;
+                }
+            }
+            
+            
+            if($allsend==true) {  //все  выданы
+               if($doc->payamount <= $doc->payed ) {
+                  $doc->updateStatus(Document::STATE_CLOSED);
+               }   
+            }
+            
 
             $conn->CommitTrans();
 
