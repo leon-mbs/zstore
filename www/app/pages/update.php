@@ -120,30 +120,59 @@ class Update extends \App\Pages\Base
        
        $sql_array = explode(';',$sql) ;
        
-    //   $db=\Zdb\db::getConnect()  ;
-       
-       try{
-         
-         $b= mysqli_connect($_config['db']['host'], $_config['db']['pass'], $_config['db']['user'], $_config['db']['name']) ; 
-         if($b ==false) {
-               $this->setErrorTopPage('Invalid connect')  ;
-               return;
-         } 
-       
-         foreach($sql_array as $s) {
-             $s = trim($s);
-             if(strlen($s)==0) {
-                 continue;
-             }
-             $r= mysqli_query($b,$s) ;
-             if($r ==false) {
-                   $msg=mysqli_error($b)  ;
-                   $this->setErrorTopPage($s.' '.$msg) ;
+  
+       try{                 
+                  
+         if( ($_config['db']['driver'] ??'') == ''  ){
+
+             $b= mysqli_connect($_config['db']['host'], $_config['db']['pass'], $_config['db']['user'], $_config['db']['name']) ; 
+
+             if($b ==false) {
+                   $this->setErrorTopPage('Invalid connect')  ;
                    return;
              } 
-             // $db->Execute($sql) ; 
-             
+           
+             foreach($sql_array as $s) {
+                 $s = trim($s);
+                 if(strlen($s)==0) {
+                     continue;
+                 }
+                 $r= mysqli_query($b,$s) ;
+                 if($r ==false) {
+                       $msg=mysqli_error($b)  ;
+                       $this->setErrorTopPage($s.' '.$msg) ;
+                       return;
+                 } 
+            
+                 
+             }
          }
+  
+         if($_config['db']['driver'] == 'postgres'){
+              $b = pg_connect("host={$_config['db']['host']} port=5432 dbname={$_config['db']['name']} user={$_config['db']['user']} password={$_config['db']['pass']}");
+
+
+             if($b ==false) {
+                   $this->setErrorTopPage('Invalid connect')  ;
+                   return;
+             } 
+           
+             foreach($sql_array as $s) {
+                 $s = trim($s);
+                 if(strlen($s)==0) {
+                     continue;
+                 }
+                 $r= pg_query($b,$s) ;
+                 if($r ==false) {
+                       $msg= pg_execute()    ;
+                       $this->setErrorTopPage($s.' error') ;
+                       return;
+                 } 
+            
+                 
+             }       
+         }  
+
  
 
          $this->setSuccess('БД оновлена')  ;

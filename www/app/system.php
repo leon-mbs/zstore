@@ -10,8 +10,8 @@ use App\Entity\User;
  */
 class System
 {
-    public const CURR_VERSION= "6.8.12";
-    public const REQUIRED_DB= "6.8.0";
+    public const CURR_VERSION= "6.9.0";
+    public const REQUIRED_DB= "6.9.0";
 
     private static $_options = array();   //  для кеширования
     private static $_cache   = array();   //  для кеширования
