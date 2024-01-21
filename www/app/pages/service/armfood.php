@@ -810,7 +810,9 @@ class ARMFood extends \App\Pages\Base
     public function onStatus($sender) {
         $this->_doc = Document::load($sender->getOwner()->getDataItem()->document_id);
         $this->_doc = $this->_doc->cast();
-        
+    
+        $this->docpanel->billpan->setVisible(false);
+       
         if (strpos($sender->id, 'bredit') === 0) {
             $this->orderlistpan->setVisible(false);
             $this->orderlistpan->statuspan->setVisible(false);
@@ -897,6 +899,9 @@ class ARMFood extends \App\Pages\Base
 
             $this->docpanel->payform->pfrest->setText(H::fa(0));
             $this->docpanel->payform->bbackitems->setVisible(false);
+          
+            $inprod = $this->_doc->checkStates([Document::STATE_INPROCESS]) ;//уже в  производстве
+            $this->docpanel->payform->passprod->setVisible($this->_worktype > 0 && $inprod == false);
 
             return;
         }
