@@ -15,33 +15,34 @@
 
                                     <label for="firm"> Компанiя </label>
                                     <select class="form-control  mr-2" v-model="firmid" id="firm" name="firm" >
-                                       <option value="0">Не накладати  КЕП </option>
                                        <option v-for="f in firms" :value="f.key">
                                           {{ f.value }}
                                       </option>
                                     </select>
-
+                                   
                                     <label for="customer"> Контрагент </label>
                                     <select v-model="custid" class="form-control  mr-2" id="customer" name="customer" >
-                                       <option value="0">Всi </option>
+                                       <option value="0">Не вказано </option>
                                        
                                       <option v-for="c in clist" :value="c.key">
                                           {{ c.value }}
                                       </option>
-                                    </select>
-                                 
+                                    </select>                                   
+
+                        
                                     <label for="doctype"> Тип  документа </label>
                                     <select v-model="doctype" class="form-control mr-2" id="doctype"  name="doctype" >
                                        <option value="GoodsIssue"    >Видаткова  накладна </option>
                                        <option value="Invoice">Рахунок-фактура </option>
                                        <option value="ServiceAct">Акт виконаних робiт </option>
+
                                     </select>
 
                                     <button v-on:click.prevent="onFilter" class="  btn btn-success " >Вибрати</button>
 
 
                                 </form>
-                            
+                                <small>Вибираюься тiльки документи з контрагентами  у  яких задано ЄДРПОУ</small>
                   
                           </div>
             </div>
@@ -69,7 +70,12 @@
                 <a class="btn btn-sm btn-outline-success" v-on:click.prevent="onMark">Позначити  як вiдправленi</a>
                 <div v-show="showsp1" class="spinner-border spinner-border-sm"></div>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a class="btn btn-sm btn-success" v-on:click.prevent="onSend">Вiдправити  в  papeless</a>
+                <a class="btn btn-sm btn-success" v-on:click.prevent="onSend">Вiдправити  в Вчасно  </a>
+                
+
+                                    <input  v-model="kep" id="" name="kep" class="ml-3" type="checkbox"  >
+                                    <label class="form-check-label mr-sm-2" for="fref">Накласти КЕП</label>
+                                      
                 <div v-show="showsp2" class="spinner-border spinner-border-sm"></div>
                 <div v-html="log" class="mb-4"> </div>
                 
@@ -86,6 +92,7 @@
                   log:"",
                   showsp1:false,
                   showsp2:false,
+                  kep:false,
                   counter:0,
                   selall:0,
                   custid:0,
@@ -152,26 +159,22 @@
                } ,    
                onSend:function(){
                    if(this.selectedDocs.length ==0) return;
-                   if(confirm("Вiдправити  в  papeless?")==false)  return
+                   if(confirm("Вiдправити?")==false)  return
                    this.showsp2 = true
                    this.log = ""
                     
-                    
-                    
-                   callPageMethod('connect',[], null,(data)=> 
+                   callPageMethod('check',[this.firmid,this.kep ], null,(data)=> 
                    {
-                       if(data=="") {
-                          this.log = "Успішне  з'єднання...<br>" 
+                       
+                       if(data != "") {
+                           toastr.error(data)
+                           return
                        }
-                       else {
-                          this.log = data 
-                          this.showsp2 = false
-                          return
-                       }
+                       
                        this.counter = this.selectedDocs.length
                        
                        for(var d of this.selectedDocs) {
-                            callPageMethod('send',[d.id,this.firmid ], null,(data)=> 
+                            callPageMethod('send',[d.id,this.firmid,this.kep ], null,(data)=> 
                             {
                                     this.log= this.log + data +"<br>"
                            
@@ -181,7 +184,7 @@
                            });   
                        }   
                    
-                   });   
+                   });  
                    
                 
                } ,    
@@ -237,10 +240,12 @@
               
          }  ,       
             components: {   
-             //  'select2': httpVueLoader('/assets/js/vue/select2.vue')
+            //   'select2': httpVueLoader('/assets/js/vue/select2.vue')
                      
                }            
         })   
      </script>       
     </body>
 </html>
+
+ 

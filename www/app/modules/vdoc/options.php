@@ -26,9 +26,8 @@ class Options extends \App\Pages\Base
         $modules = System::getOptions("modules");
 
         $form = $this->add(new Form("cform"));
-        $form->add(new TextInput('clientid', $modules['plclientid']));
-        $form->add(new TextInput('secret', $modules['plsecret']));
-
+        $form->add(new TextInput('clientid', $modules['vdclientid']));
+       
         $form->onSubmit($this, 'saveapiOnClick');
 
         $this->add(new ClickLink("check", $this, "onCheck")) ;
@@ -39,9 +38,8 @@ class Options extends \App\Pages\Base
 
         $modules = System::getOptions("modules");
 
-        $modules['plclientid'] = trim($this->cform->clientid->getText());
-        $modules['plsecret'] =trim($this->cform->secret->getText());
-
+        $modules['vdclientid'] = trim($this->cform->clientid->getText());
+     
         System::setOptions("modules", $modules);
         $this->setSuccess('Збережено');
 
@@ -59,13 +57,7 @@ class Options extends \App\Pages\Base
             return;
         }
 
-        //  $docdata = file_get_contents("c:/Users/leonm/Downloads/Підписаний_api.pdf") ;
-
-
-        //  list($code,$result) =    Helper::send(System::getSession()->pltoken,$docdata,"Підписаний_api.pdf","softman@ukr.net") ;
-        //   if($code =='ok'){
-
-        //   }
+ 
 
     }
 

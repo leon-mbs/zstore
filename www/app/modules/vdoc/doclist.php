@@ -33,21 +33,20 @@ class DocList extends \App\Pages\Base
 
     public function init($arg, $post=null) {
         $user = \App\System::getUser() ;
-
-
-
-
+  
         $ret = [];
         $ret['clist']  =  [];
-        foreach(        \App\Entity\Customer::findYield("status = 0 and customer_id IN  ( select customer_id FROM documents_view WHERE  meta_name  IN ('Invoice','GoodsIssue','ServiceAct')  and content   not like '%<paperless>%')") as $c) {
+        foreach(        \App\Entity\Customer::findYield("status = 0 and customer_id IN  ( select customer_id FROM documents_view WHERE  meta_name  IN ('Invoice','GoodsIssue','ServiceAct')  and content   not like '%<vdoc>%')") as $c) {
+            if(($c->edrpou ?? '')=='' ) {
+                continue   ;
+            }
+            
             $ret['clist'][] = array('key'=>$c->customer_id,'value'=>$c->customer_name);
         }
         $ret['firmid']  =  0;
         $ret['firms']  =  [];
-        foreach(\App\Entity\Firm::find('') as $f) {
-            if(strlen($f->ppokeyid)==0) {
-                continue;
-            }
+        foreach(\App\Entity\Firm::find('disabled <> 1') as $f) {
+           
             $ret['firms'][] = array('key'=>$f->firm_id,'value'=>$f->firm_name);
             if($ret['firmid']==0) {
                 $ret['firmid']  = $f->firm_id;
@@ -62,9 +61,11 @@ class DocList extends \App\Pages\Base
     public function loaddocs($arg, $post=null) {
         //  $user = \App\System::getUser() ;
 
-        $sql = "meta_name='{$arg[1]}' and content  not  like '%paperless%' and customer_id  >0 ";
+        $sql = "meta_name='{$arg[1]}' and state >4 and content  not  like '%vdoc%' and customer_id  >0 ";
         if($arg[0] > 0) {
             $sql .= " and customer_id={$arg[0]} ";
+        } else {
+            return [];
         }
         
 
@@ -90,12 +91,24 @@ class DocList extends \App\Pages\Base
     public function mark($arg, $post=null) {
         $ids = $post;
         foreach(Document::findYield("document_id  in ({$ids})") as $doc) {
-            $doc->headerdata['paperless'] = 0;
+            $doc->headerdata['vdoc'] = 0;
             $doc->save();
         }
 
     }
 
+    public function check($arg, $post=null) {
+        $firm = \App\Entity\Firm::load($arg[0])  ;
+        if(strlen($firm->tin)==0) {
+            return "Компанiя повинна мати ЄДРПОУ";
+        }
+        if($arg[1]==true && strlen($firm->ppokeyid)==0 ) {
+            return "Не заданий ключ для КЕП";
+        }
+      
+             
+        return "";
+    }
     public function send($arg, $post=null) {
         $name ='';
         try {
@@ -113,10 +126,11 @@ class DocList extends \App\Pages\Base
             $dompdf->render();
             $pdf = $dompdf->output();
 
+            $firm = \App\Entity\Firm::load($arg[1])  ;
+            
             //sign
-            if($arg[1] > 0) {
-                $firm = \App\Entity\Firm::load($arg[1])  ;
-
+            if($arg[2] == true) {
+                 
                 $ret = \App\Modules\PPO\PPOHelper::send($pdf, "doc", $firm, true) ;
                 if($ret['success'] != true) {
                     return $name." ".$ret['data'];
@@ -127,15 +141,29 @@ class DocList extends \App\Pages\Base
             }
 
             //send
-            $token =  System::getSession()->pltoken;
+
             $c = \App\Entity\Customer::load($doc->customer_id) ;
 
-            list($ok, $data) = Helper::send($token, $pdf, $name, $c->email)  ;
-            $doc->headerdata['paperless'] = 0;
-            $doc->save();
-            if(strlen($c->email)==0) {
-                return $name." ok. Не вказано e-mail";
+           
+            $na=[];
+            $na[]= $firm->tin  ;
+            $na[]= $c->edrpou ;
+            $na[]=  date('Ymd', $doc->document_date) ;
+            $na[]=  str_replace(' ','', $doc->meta_desc) ;
+            $na[]=  str_replace(' ','', $doc->document_number) ;
+            
+            
+            $filename = implode('_',$na) .'.pdf'; ;
+        //    $filename= "2475406556_3235608644_20170213_Рахунок_РН-026.pdf";
+            
+            list($ok, $data) = Helper::senddoc( $pdf, $filename )  ;
+            if($ok != "ok") {
+                return $name ." ".$data;
             }
+            
+            $doc->headerdata['vdoc'] = 0;
+            $doc->save();
+      
 
             return $name." ok";
         } catch(\Exception $e) {
@@ -148,18 +176,5 @@ class DocList extends \App\Pages\Base
 
     }
 
-
-    public function connect($arg, $post=null) {
-        list($ok, $data) = Helper::connect()  ;
-        if($ok == "ok") {
-            System::getSession()->pltoken = $data;
-
-            return "";
-
-        }
-        return $data;
-
-
-
-    }
+   
 }
