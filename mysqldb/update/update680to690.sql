@@ -38,9 +38,10 @@ ALTER TABLE equipments ADD branch_id INT NULL ;
 ALTER TABLE ppo_zformstat ADD amount4 decimal(10, 2)  default 0;
 
 
-
+INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Управлiнський баланс', 'Balance', '', 0);  
 update  metadata set  description ='Програма лояльності' where  meta_name='Discounts';
 update  metadata set  description ='Отримані послуги' where  meta_name='IncomeService';
+update  metadata set  description ='Прибутки та видатки' where  meta_name='PayBalance';
 
 delete  from  options where  optname='version' ;
 insert  into options (optname,optvalue) values('version','6.9.0'); 

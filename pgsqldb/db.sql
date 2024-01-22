@@ -1626,7 +1626,7 @@ INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 2, 'Рух по грошовим рахунках', 'PayActivity', 'Каса та платежі', 0);
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 1, 'Прибутковий ордер', 'IncomeMoney', 'Каса та платежі', 0);
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 1, 'Видатковий ордер', 'OutcomeMoney', 'Каса та платежі', 0);
-INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 2, 'Фінансові  результати', 'PayBalance', '', 0);
+INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 2, 'Прибутки та видатки', 'PayBalance', '', 0);
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 1, 'Інвентаризація', 'Inventory', 'Склад', 0);
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 1, 'Рахунок, вхідний', 'InvoiceCust', 'Закупки', 0);
 INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 1, 'Рахунок-фактура', 'Invoice', 'Продажі', 0);
@@ -1676,7 +1676,7 @@ INSERT INTO "metadata" (meta_type, description, meta_name, menugroup, disabled) 
 INSERT INTO "metadata" (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Платіжний календар', 'PayTable', 'Каса та платежі', 0);
 INSERT INTO "metadata" (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Кафе', 'OutFood', 'Продажі', 0);
 INSERT INTO "metadata" (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Платіжний календар', 'PayTable', 'Каса та платежі', 0);
- 
+INSERT INTO "metadata" ( "meta_type", "description", "meta_name", "menugroup", "disabled") VALUES( 2, 'Управлiнський баланс', 'Balance', '', 0); 
     
   
 
