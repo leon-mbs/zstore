@@ -10,6 +10,7 @@ use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
 use App\Entity\Pay;
+use App\Entity\Item;
 
 /**
  * Управоенческий  баланс
@@ -22,16 +23,16 @@ class Balance extends \App\Pages\Base
             return;
         }
 
-
+    
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
 
-        $this->filter->add(new Date('from', time()));
-
+      
 
         $this->add(new Panel('detail'))->setVisible(false);
 
         $this->detail->add(new Label('preview'));
 
+        $this->OnSubmit($this->filter) ;
     }
 
     public function OnSubmit($sender) {
@@ -41,53 +42,144 @@ class Balance extends \App\Pages\Base
         $this->detail->preview->setText($html, true);
         \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
 
-
-
         $this->detail->setVisible(true);
-
 
     }
 
     private function generateReport() {
-
-
-        $from = $this->filter->from->getDate();
-      
+        
         $conn= \ZDB\DB::getConnect() ;
-  
 
         $brdoc = "";
+        $brf = "";
         $brst = "";
+        $bemp = "";
         $brids = \App\ACL::getBranchIDsConstraint();
         if (strlen($brids) > 0) {
-       //     $brst = " and   store_id in( select store_id from  stores where  branch_id in ({$brids})  ) ";
+            $brst = "   store_id in( select store_id from  stores where  branch_id in ({$brids})  )  and ";
 
+            $brf = " and branch_id in ({$brids}) ";
+            $bemp = " and branch_id in ({$brids}) ";
             $brdoc = " and  document_id in(select  document_id from  documents where branch_id in ({$brids}) )";
         }
 
-        $from = $conn->DBDate($from);
-
-        $amat=0;
-        $sql = " SELECT  SUM( quantity*partion)  FROM entrylist_view 
-                 where  quantity>0 ";
-   
-        $sql = " SELECT  SUM(( select coalesce(sum(st1.qty*st1.partion),0 ) from store_stock_view st1 where {$cstr}  st1.item_id= items.item_id )) AS ss  FROM items
-                 where     ( select coalesce(sum(st1.qty),0 ) from store_stock_view st1 where {$cstr}  st1.item_id= items.item_id ) >0   ";
+        
 
         $sql = " SELECT  SUM( qty * partion)  from store_stock_view
-                 where  1=1 ";
-   
-        
+                 where {$brst} item_type=   ".Item::TYPE_MAT;
         $amat = doubleval($conn->GetOne($sql)) ;
+        $sql = " SELECT  SUM( qty * partion)  from store_stock_view
+                 where {$brst}  (item_type=   ".Item::TYPE_PROD ."  or  item_type=   ".Item::TYPE_HALFPROD .")";
+        $aprod = doubleval($conn->GetOne($sql)) ;
+        $sql = " SELECT  SUM( qty * partion)  from store_stock_view
+                 where {$brst}  item_type=   ".Item::TYPE_MBP;
+        $ambp = doubleval($conn->GetOne($sql)) ;
+        $sql = " SELECT  SUM( qty * partion)  from store_stock_view
+                 where {$brst}  item_type=   ".Item::TYPE_TOVAR;
+        $aitem = doubleval($conn->GetOne($sql)) ;
+        $sql = " SELECT  SUM( qty * partion)  from store_stock_view
+                 where {$brst}  coalesce(item_type,0)=0  ";
+        $aother = doubleval($conn->GetOne($sql)) ;
  
-        $atotal = $amat;
-        $ptotal = 0;
+        $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail not like '%<beznal>1</beznal>%' {$brf})";
+        $anal = doubleval($conn->GetOne($sql)) ;
+
+        $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail like '%<beznal>1</beznal>%' {$brf})";
+        $abnal = doubleval($conn->GetOne($sql)) ;
+
+        $aemp=0;
+        $pbemp=0;
+        $sql = "select coalesce(sum(amount),0) as am  from empacc where 1=1  {$bemp} group by emp_id ";
+
+        foreach($conn->GetCol($sql) as $r ) {
+           if($r >0) {
+             $aemp += $r;      
+           } 
+           if($r < 0) {
+             $pemp += abs($r);      
+           } 
+            
+        }
+        
+        $cust_acc_view = \App\Entity\Customer::get_acc_view()  ;
+          
+        
+        $sql = "SELECT COALESCE( SUM(   a.b_passive ) ,0) AS d   FROM ({$cust_acc_view}) a   ";
+        $pb = doubleval($conn->GetOne($sql)) ;
+        $sql = "SELECT COALESCE( SUM(   a.s_passive ) ,0) AS d   FROM ({$cust_acc_view}) a    ";
+        $ps = doubleval($conn->GetOne($sql)) ;
+        $sql = "SELECT COALESCE( SUM(   a.b_active ) ,0) AS d   FROM ({$cust_acc_view}) a      ";
+        $ab = doubleval($conn->GetOne($sql)) ;
+        $sql = "SELECT COALESCE( SUM(   a.s_active ) ,0) AS d   FROM ({$cust_acc_view}) a      ";
+        $as = doubleval($conn->GetOne($sql)) ;
+        
+        if($pb== $ab) {
+          $pb=0;  
+          $ab=0;  
+        }
+        if($pb > $ab) {
+          $pb=$pb - $ab;  
+          $ab=0;  
+        }
+        if($pb < $ab) {
+          $ab=$ab - $pb;  
+          $pb=0;  
+        }
+        if($ps== $as) {
+          $ps=0;  
+          $as=0;  
+        }
+        if($ps > $as) {
+          $ps=$ps - $as;  
+          $as=0;  
+        }
+        if($ps < $as) {
+          $as=$as - $ps;  
+          $ps=0;  
+        }
+        
+        $aeq=0;
+        foreach(\App\Entity\Equipment::find(" 1=1  {$bemp} ") as $eq){
+            $aeq += doubleval($eq->balance);
+        } ;
+        
+ 
+        $amat = H::fa($amat);
+        $aprod = H::fa($aprod);
+        $ambp = H::fa($ambp);
+        $aitem = H::fa($aitem);
+        $aother = H::fa($aother);
+        $anal = H::fa($anal);
+        $abnal = H::fa($abnal);
+        $aemp = H::fa($aemp);
+        $pemp = H::fa($pemp);
+        $pb = H::fa($pb);
+        $ps = H::fa($ps);
+        $ab = H::fa($ab);
+        $as = H::fa($as);
+        $aeq = H::fa($aeq);
+        
+        $atotal = $amat + $aprod + $ambp + $aitem +$aother + $anal + $abnal + $aemp+ $ab + $as;
+        $ptotal = $pemp + $pb + $ps;
         $bal = $atotal - $ptotal ;
- 
+
 
         $header = array(
-            'datefrom' => \App\Helper::fd($from),
-            'amat'      => $amat >0 ? H::fa($amat) : false,
+            'datefrom' => \App\Helper::fd(time()),
+            'amat'      => $amat != 0 ? $amat : false,
+            'aprod'     => $aprod !=0 ? $aprod : false,
+            'ambp'      => $ambp !=0 ? $ambp : false,
+            'aitem'     => $aitem !=0 ? $aitem : false,
+            'aother'    => $aother !=0 ? $aother : false,
+            'anal'      => $anal !=0 ? $anal : false,
+            'abnal'     => $abnal !=0 ? $abnal : false,
+            'aemp'      => $aemp !=0 ? $aemp : false,
+            'pemp'      => $pemp !=0 ? $pemp : false,
+            'pb'      => $pb !=0 ? $pb : false,
+            'ps'      => $ps !=0 ? $ps : false,
+            'ab'      => $ab !=0 ? $ab : false,
+            'as'      => $as !=0 ? $as : false,
+            'aeq'      => $aeq !=0 ? $aeq : false,
 
             'atotal'    => H::fa($atotal) ,
             'ptotal'    => H::fa($ptotal) ,

@@ -295,12 +295,12 @@ class Main extends Base
         $this->_tvars['biorders'] = $conn->GetOne($sql);
 
 //        $sql = " select coalesce(sum(partion*qty),0) as cnt  from  store_stock_view  where {$cstr} qty >0  and item_id in (select item_id from items where disabled<>1 )                     ";
-        $sql = " SELECT  SUM(( select coalesce(sum(st1.qty*st1.partion),0 ) from store_stock_view st1 where {$cstr}  st1.item_id= items.item_id )) AS ss  FROM items
-                 where     ( select coalesce(sum(st1.qty),0 ) from store_stock_view st1 where {$cstr}  st1.item_id= items.item_id ) >0   ";
+ //       $sql = " SELECT  SUM(( select coalesce(sum(st1.qty*st1.partion),0 ) from store_stock_view st1 where {$cstr}  st1.item_id= items.item_id )) AS ss  FROM items
+   //              where     ( select coalesce(sum(st1.qty),0 ) from store_stock_view st1 where {$cstr}  st1.item_id= items.item_id ) >0   ";
 
+        $sql = " SELECT  SUM( qty * partion)  from store_stock  ";
+                 
         $this->_tvars['biitemscnt'] = H::fa($conn->GetOne($sql));
-        
- 
         
         $cust_acc_view = \App\Entity\Customer::get_acc_view()  ;
         

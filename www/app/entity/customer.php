@@ -380,6 +380,14 @@ class Customer extends \ZCL\DB\Entity
     
     //вместо  промотра  в  бд
     public  static function  get_acc_view(){
+        $brdoc = "";
+        $brids = \App\ACL::getBranchIDsConstraint();
+        if (strlen($brids) > 0) {
+            $brdoc = " and  d.document_id in(select  document_id from  documents dd where dd.branch_id in ({$brids}) )";
+        }
+        
+        
+        
        $cust_acc_view = "SELECT
           COALESCE(SUM((CASE WHEN (d.meta_name IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService')) THEN d.payed WHEN ((d.meta_name = 'OutcomeMoney') AND
               (d.content LIKE '%<detail>2</detail>%')) THEN d.payed WHEN (d.meta_name = 'RetCustIssue') THEN d.payamount ELSE 0 END)), 0) AS s_active,
@@ -392,7 +400,7 @@ class Customer extends \ZCL\DB\Entity
           d.customer_id AS customer_id
         FROM documents_view d
         WHERE d.state NOT IN (0, 1, 2, 3, 15, 8, 17)
-        AND d.customer_id > 0 
+        AND d.customer_id > 0 {$brdoc}
         and d.customer_id in(select c.customer_id from customers c  where  status=0) 
 
         GROUP BY d.customer_id";      

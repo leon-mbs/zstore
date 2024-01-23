@@ -24,8 +24,7 @@ use App\Application as App;
 class ItemList extends \App\Pages\Base
 {
     public $_item;
-    public $_tot=0;
-
+   
 
     public function __construct() {
         parent::__construct();
@@ -146,13 +145,9 @@ class ItemList extends \App\Pages\Base
         if ($item->image_id == 0) {
             $row->imagelistitem->setVisible(false);
         }
-        if($qty >0) {
-          $this->_tot +=  ($inprice*$qty) ;
-        }
         
-            $store = $this->filter->searchstore->getValue();
-      $am = $item->getAmount($store);
-      $am=0;       
+        $store = $this->filter->searchstore->getValue();
+           
 
     }
 
@@ -161,8 +156,8 @@ class ItemList extends \App\Pages\Base
          $pt = $this->filter->searchprice->getValue();
          $this->_tvars['nohowprodprice'] = $pt == 'price';  
          
-    $this->_tot=0;      
-       $this->itempanel->itemlist->Reload();
+
+        $this->itempanel->itemlist->Reload();
 
         $am = $this->getTotalAmount();
         $this->itempanel->totamount->setText((H::fa($am)));
@@ -174,20 +169,34 @@ class ItemList extends \App\Pages\Base
         $pt = $this->filter->searchprice->getValue();
 
         $src = new ItemDataSource($this) ;
-
+        $sqty = $this->filter->searchqty->getValue();
+ 
         $items = $src->getItems(-1, -1) ;
         $total = 0;
         foreach($items as $item) {
-
+            $qty = $item->getQuantity($store); 
+            
             if($pt=='price') {
                 $am = $item->getAmount($store);
-                if($am>0){
+                if( $sqty==0 && $qty >0) {
                    $total += $am;
                 }
+                if( $sqty==1 && $qty <0) {
+                   $total += $am ;
+                }
+                if( $sqty==2 ) {
+                   $total += $am ;
+                }
             } else {
-                $qty = $item->getQuantity($store); 
-                if($qty >0) {
-                   $total += $qty * $item->getPrice($pt, $store) ;
+                $am= $qty * $item->getPrice($pt, $store);
+                if( $sqty==0 && $qty >0) {
+                   $total += $am;
+                }
+                if( $sqty==1 && $qty <0) {
+                   $total += $am ;
+                }
+                if( $sqty==2 ) {
+                   $total += $am ;
                 }
             }
 
@@ -491,13 +500,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         $form = $this->page->filter;
         $sqty = $form->searchqty->getValue();
         $where = "   disabled <> 1 ";
-        if($sqty==0) {
-           $where .= "  and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id ) >0 ";
-        }
-        if($sqty==1) {
-           $where .= "  and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id ) <0 ";
-        }
-
+   
 
 
         $cstr = \App\ACL::getStoreBranchConstraint();
@@ -529,11 +532,22 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
                 $where = $where . " and cat_id in ({$cats}) " ;
             }
         }
+        $str="";
         if ($store > 0) {
             $where = $where . " and item_id in (select item_id from store_stock where {$cstr}   and store_id={$store}) ";
+            $str .= " and store_id={$store}";
         } else {
             $where = $where . " and item_id in (select item_id from store_stock where  {$cstr}  ) ";
         }
+        
+        if($sqty==0) {
+           $where .= "  and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id {$str} ) >0 ";
+        }
+        if($sqty==1) {
+           $where .= "  and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id {$str}) <0 ";
+        }
+      
+        
         $text = trim($form->searchkey->getText());
         if (strlen($text) > 0) {
 
