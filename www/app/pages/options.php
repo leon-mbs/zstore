@@ -94,11 +94,7 @@ class Options extends \App\Pages\Base
 
 
         $this->add(new Form('business'))->onSubmit($this, 'saveBusinessOnClick');
-        $pt = array(
-            "1" => "По останній закупівельній ціні",
-            "2" => "Окремо по кожній закупівельній ціні"
-        );
-        $this->business->add(new DropDownChoice('partiontype', $pt, "1"));
+
         $pt = array(
             "0" => "По факту",
             "1" => "Передплата",
@@ -139,7 +135,7 @@ class Options extends \App\Pages\Base
         $this->business->add(new \Zippy\Html\Form\Date('actualdate'));
 
  
-        $this->business->partiontype->setValue($common['partiontype']);
+
         $this->business->paytypein->setValue($common['paytypein']);
         $this->business->paytypeout->setValue($common['paytypeout']);
         $this->business->price1->setText($common['price1']);
@@ -391,7 +387,7 @@ class Options extends \App\Pages\Base
         if (!is_array($common)) {
             $common = array();
         }
-        $common['partiontype'] = $this->business->partiontype->getValue();
+
         $common['paytypein'] = $this->business->paytypein->getValue();
         $common['paytypeout'] = $this->business->paytypeout->getValue();
 

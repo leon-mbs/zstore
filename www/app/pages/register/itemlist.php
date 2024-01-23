@@ -24,6 +24,7 @@ use App\Application as App;
 class ItemList extends \App\Pages\Base
 {
     public $_item;
+    public $_tot=0;
 
 
     public function __construct() {
@@ -145,7 +146,13 @@ class ItemList extends \App\Pages\Base
         if ($item->image_id == 0) {
             $row->imagelistitem->setVisible(false);
         }
-
+        if($qty >0) {
+          $this->_tot +=  ($inprice*$qty) ;
+        }
+        
+            $store = $this->filter->searchstore->getValue();
+      $am = $item->getAmount($store);
+      $am=0;       
 
     }
 
@@ -154,7 +161,7 @@ class ItemList extends \App\Pages\Base
          $pt = $this->filter->searchprice->getValue();
          $this->_tvars['nohowprodprice'] = $pt == 'price';  
          
-         
+    $this->_tot=0;      
        $this->itempanel->itemlist->Reload();
 
         $am = $this->getTotalAmount();

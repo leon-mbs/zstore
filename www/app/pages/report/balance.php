@@ -53,33 +53,45 @@ class Balance extends \App\Pages\Base
 
         $from = $this->filter->from->getDate();
       
+        $conn= \ZDB\DB::getConnect() ;
+  
 
-
-        $detail = array();
-        $detail2 = array();
-
-    
-
-        $brpay = "";
+        $brdoc = "";
         $brst = "";
         $brids = \App\ACL::getBranchIDsConstraint();
         if (strlen($brids) > 0) {
        //     $brst = " and   store_id in( select store_id from  stores where  branch_id in ({$brids})  ) ";
 
-       //     $brpay = " and  document_id in(select  document_id from  documents where branch_id in ({$brids}) )";
+            $brdoc = " and  document_id in(select  document_id from  documents where branch_id in ({$brids}) )";
         }
 
+        $from = $conn->DBDate($from);
 
+        $amat=0;
+        $sql = " SELECT  SUM( quantity*partion)  FROM entrylist_view 
+                 where  quantity>0 ";
+   
+        $sql = " SELECT  SUM(( select coalesce(sum(st1.qty*st1.partion),0 ) from store_stock_view st1 where {$cstr}  st1.item_id= items.item_id )) AS ss  FROM items
+                 where     ( select coalesce(sum(st1.qty),0 ) from store_stock_view st1 where {$cstr}  st1.item_id= items.item_id ) >0   ";
+
+        $sql = " SELECT  SUM( qty * partion)  from store_stock_view
+                 where  1=1 ";
+   
+        
+        $amat = doubleval($conn->GetOne($sql)) ;
+ 
+        $atotal = $amat;
+        $ptotal = 0;
+        $bal = $atotal - $ptotal ;
  
 
         $header = array(
             'datefrom' => \App\Helper::fd($from),
-            'dateto'   => \App\Helper::fd($to),
-            "_detail"  => $detail,
-            "_detail2" => $detail2,
-            'tin'      => H::fa($tin),
-            'tout'     => H::fa($tout),
-            'total'    => H::fa($total)
+            'amat'      => $amat >0 ? H::fa($amat) : false,
+
+            'atotal'    => H::fa($atotal) ,
+            'ptotal'    => H::fa($ptotal) ,
+            'bal'       => H::fa($bal)
 
         );
 
