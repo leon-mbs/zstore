@@ -32,7 +32,9 @@
                 <table class="table table-bordered  table-sm  ">
                     <tr>
                         <th>Найменування</th>
-
+                        {{#usebranch}}
+                        <th>Філія</th>
+                        {{/usebranch}}
                         <th>Інв. номер</th>
                         <th>Сер. номер</th>
 
@@ -41,6 +43,10 @@
                     </tr>
                     <tr zippy="eqlist">
                         <td zippy="eq_name"></td>
+                        {{#usebranch}}
+                        <td zippy="branch"></td>
+                        {{/usebranch}}
+                        <td zippy="qty" class="text-right"></td>
 
                         <td zippy="code"></td>
                         <td zippy="serial"></td>
@@ -99,6 +105,14 @@
                         <input zippy="editeq" type="checkbox" class="form-check-input">
                         <label class="form-check-label" for="editeq">Обладнання</label>
                     </div>
+               {{#usebranch}}
+                <div class="form-group">
+                    <label for="editbranch">Філія</label>
+                    <select class="form-control" zippy="editbranch">
+                        <option value="0">Не обрано</option>
+                    </select>
+                </div>
+                {{/usebranch}}
                
                 <div class="form-group  ">
                     <label   for="editemp">Мат. відповідальний</label>
