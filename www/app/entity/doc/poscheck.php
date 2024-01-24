@@ -219,6 +219,57 @@ class POSCheck extends Document
             $k = ($this->amount - $dd) / $this->amount;
         }
 
+
+
+        // работы
+        foreach ($this->unpackDetails('services') as $ser) {
+
+            $sc = new Entry($this->document_id, 0 - ($ser->price * $k * $ser->quantity), 0);
+            $sc->setService($ser->service_id);
+            // $sc->setExtCode(0 - ($ser->price * $k)); //Для АВС
+            $sc->setOutPrice(0 - $ser->price * $k);
+
+            $sc->save();
+        }
+
+        //оплата
+
+        $pp = $this->headerdata['payed'];
+        if ($this->headerdata['exchange'] > 0) {
+
+            $pp = $pp - $this->headerdata['exchange']; //без здачи
+        }          
+        $payed = 0;
+        if(($this->headerdata['payment'] ??0)  >0) {
+            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $pp, $this->headerdata['payment']);
+        } else {
+            if(($this->headerdata['mfnal']??0)  >0 && $pp >0) {
+                $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $pp, $this->headerdata['mfnal']);
+            }
+            if(($this->headerdata['mfbeznal']??0) >0 && ($this->headerdata['payedcard']??0) >0) {
+                $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['payedcard'], $this->headerdata['mfbeznal']);
+            }
+        }
+
+
+        if ($payed > 0) {
+            $this->payed = $payed;
+        }
+        \App\Entity\IOState::addIOState($this->document_id, $payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+
+        
+        if ($this->parent_id > 0) {
+            $parent = Document::load($this->parent_id);
+            if ($parent->meta_name == 'ServiceAct' ) {
+                if($parent->state == Document::STATE_WP )  {
+                   $parent->updateStatus(Document::STATE_PAYED); 
+                }
+                
+                
+                return true; //проводки выполняются  в  сервисе
+            }
+        }        
+        
         // товары
         foreach ($this->unpackDetails('detaildata') as $item) {
 
@@ -290,43 +341,9 @@ class POSCheck extends Document
                 $sc->save();
             }
         }
-
-        // работы
-        foreach ($this->unpackDetails('services') as $ser) {
-
-            $sc = new Entry($this->document_id, 0 - ($ser->price * $k * $ser->quantity), 0);
-            $sc->setService($ser->service_id);
-            // $sc->setExtCode(0 - ($ser->price * $k)); //Для АВС
-            $sc->setOutPrice(0 - $ser->price * $k);
-
-            $sc->save();
-        }
-
-        //оплата
-
-        $pp = $this->headerdata['payed'];
-        if ($this->headerdata['exchange'] > 0) {
-
-            $pp = $pp - $this->headerdata['exchange']; //без здачи
-        }          
-        $payed = 0;
-        if(($this->headerdata['payment'] ??0)  >0) {
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $pp, $this->headerdata['payment']);
-        } else {
-            if(($this->headerdata['mfnal']??0)  >0 && $pp >0) {
-                $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $pp, $this->headerdata['mfnal']);
-            }
-            if(($this->headerdata['mfbeznal']??0) >0 && ($this->headerdata['payedcard']??0) >0) {
-                $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['payedcard'], $this->headerdata['mfbeznal']);
-            }
-        }
-
-
-        if ($payed > 0) {
-            $this->payed = $payed;
-        }
-        \App\Entity\IOState::addIOState($this->document_id, $payed, \App\Entity\IOState::TYPE_BASE_INCOME);
-
+        
+        
+        
         return true;
     }
 
