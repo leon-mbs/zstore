@@ -158,8 +158,24 @@ class GoodsReceipt extends Document
         }
 
         if($this->headerdata['delivery'] > 0) {
-            \App\Entity\IOState::addIOState($this->document_id, 0 - $payed + $this->headerdata["delivery"], \App\Entity\IOState::TYPE_BASE_OUTCOME);
-            \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata["delivery"], \App\Entity\IOState::TYPE_NAKL);
+           if($this->headerdata['spreaddelivery']== 0) { //если  не  распределяем на  цену
+               \App\Entity\IOState::addIOState($this->document_id, 0 - $payed + $this->headerdata["delivery"], \App\Entity\IOState::TYPE_BASE_OUTCOME);
+               \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata["delivery"], \App\Entity\IOState::TYPE_NAKL);
+           }
+           if($this->headerdata['baydelivery']== 1) { //если gkfnbn  gjregfntkm
+                $pay = new \App\Entity\Pay();
+                $pay->mf_id = $this->headerdata['payment'];
+                $pay->document_id = $this->document_id;
+                $pay->amount = 0-$this->headerdata['delivery'];
+                $pay->paytype = \App\Entity\Pay::PAY_DELIVERY;
+                $pay->paydate = time();
+                $pay->notes = 'Доставка';
+                $pay->user_id = \App\System::getUser()->user_id;
+                $pay->save();
+           }
+           
+            
+            
         } else {
             \App\Entity\IOState::addIOState($this->document_id, 0 - $payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
         }
@@ -184,4 +200,5 @@ class GoodsReceipt extends Document
         return $list;
     }
 
-}
+}     
+

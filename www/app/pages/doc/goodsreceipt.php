@@ -63,8 +63,12 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new TextInput('outnumber'));
         $this->docform->add(new TextInput('basedoc'));
         $this->docform->add(new CheckBox('spreaddelivery'));
+        $this->docform->add(new CheckBox('baydelivery'));
         if($common['spreaddelivery'] ==1) {
             $this->docform->spreaddelivery->setChecked(1)  ;
+        }
+        if($common['baydelivery'] ==1) {
+            $this->docform->baydelivery->setChecked(1)  ;
         }
         
         
@@ -166,6 +170,7 @@ class GoodsReceipt extends \App\Pages\Base
 
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->spreaddelivery->setChecked($this->_doc->headerdata['spreaddelivery']);
+            $this->docform->baydelivery->setChecked($this->_doc->headerdata['baydelivery']);
             $this->docform->basedoc->setText($this->_doc->basedoc);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->customer->setKey($this->_doc->customer_id);
@@ -560,12 +565,16 @@ class GoodsReceipt extends \App\Pages\Base
             if (strlen($item->snumber) == 0 && $item->useserial == 1  ) {
                 if($common['usesnumber'] != 3){
                    $this->setError("Потрібна партія виробника");
+                   return;
                 }
                 if($common['usesnumber'] == 3 && $item->quantity <> 1){
                    $this->setError("Cерійний номер має бути для одного виробу");    
+                   return;
                 }  
-                
+                $this->setError("Не введено серійний номер");    
                 return;
+                
+                
             }
         }
         if($common['usesnumber'] == 2) {
@@ -648,6 +657,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['spreaddelivery'] = $this->docform->spreaddelivery->isChecked() ? 1 : 0;
+        $this->_doc->headerdata['baydelivery'] = $this->docform->baydelivery->isChecked() ? 1 : 0;
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         $this->_doc->headerdata['val'] = $this->docform->val->getValue();
@@ -841,7 +851,12 @@ class GoodsReceipt extends \App\Pages\Base
         $nds = doubleval($this->docform->nds->getText()) ;
 
         $total = doubleval($total) + $nds - doubleval($disc)  ;
-        $total +=  $delivery;
+        
+        if($this->docform->baydelivery->isChecked() ==false) {
+           $total +=  $delivery;    //если патит  поставщик
+        }
+        
+        
 
         $this->docform->editpayamount->setText(H::fa($total));
         $this->docform->payamount->setText(H::fa($total));
