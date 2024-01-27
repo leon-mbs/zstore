@@ -366,6 +366,16 @@ class ARMFood extends \App\Pages\Base
         $row->add(new Label('docnotes', $doc->notes));
         $row->add(new Label('tablenumber', $doc->headerdata['table']));
         $row->add(new Label('rtlist'));
+        $time= H::ft($doc->headerdata['time']) ;
+        
+        if(date('Ymd') !=date('Ymd',$doc->headerdata['time'])) {
+           $time= H::fdt($doc->headerdata['time']) ;   //не  сегодня
+        }
+        
+        $row->add(new Label('doctime',$time));
+        
+        
+        
         $t ="<table   style=\"font-size:smaller\"> " ;
 
         $tlist=  $doc->unpackDetails('detaildata')  ;
@@ -1317,7 +1327,7 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->headerdata['forbar'] =  $this->docpanel->listsform->forbar->isChecked() ? 1 : 0;
         $this->_doc->headerdata['arm'] = 1;
         $this->_doc->document_date = time();
-        $this->_doc->headerdata['time'] = time();
+
         $this->_doc->headerdata['contact'] = $this->docpanel->listsform->contact->getText();
         $this->_doc->notes = $this->docpanel->listsform->notes->getText();
         $this->_doc->customer_id = $this->docpanel->listsform->customer->getKey();
