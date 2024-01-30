@@ -220,7 +220,7 @@ class ItemList extends \App\Pages\Base
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
         $row->add(new ClickLink('set'))->onClick($this, 'setOnClick');
-        $row->set->setVisible($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD );
+        $row->set->setVisible($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD || $item->item_type == Item::TYPE_MAT );
 
         $row->add(new ClickLink('printqr'))->onClick($this, 'printQrOnClick', true);
         $row->printqr->setVisible(strlen($item->url) > 0);
