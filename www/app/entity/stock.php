@@ -126,7 +126,7 @@ class Stock extends \ZCL\DB\Entity
         }
     }
 
-    // Поиск партий
+    // Подбор партий
     public static function pickup($store_id, $item) {
         $res = array();
         $where = "store_id = {$store_id} and item_id = {$item->item_id} and qty > 0   ";
@@ -134,10 +134,10 @@ class Stock extends \ZCL\DB\Entity
             $where .= " and snumber=" . Stock::qstr($item->snumber);
         }
 
-        $stlist = self::find($where, ' stock_id  ');
+        $stlist = self::find($where, ' stock_id desc ');
 
 
-        $qty = $item->quantity;
+        $qty = $item->quantity;//необходимое  количество
         $last = null;
         foreach ($stlist as $st) {
             $last = $st;
@@ -170,7 +170,7 @@ class Stock extends \ZCL\DB\Entity
                     }
                     $lastpartion = $conn->GetOne("select coalesce(partion,0) from  store_stock  where  qty > 0 and  item_id={$item->item_id} order  by  stock_id desc ".$limit);
                     if ($lastpartion == 0) {
-                        $lastpartion = $item->price;
+                        $lastpartion = $item->price/2;  //типа  учетная  цена
                     }
 
                     $last = new Stock();
@@ -179,10 +179,11 @@ class Stock extends \ZCL\DB\Entity
                     $last->partion = $lastpartion;
                     $last->snumber = $item->snumber;
                     $last->sdate = $item->sdate;
+                    $last->save();
                 } else {
                     // $last->partion = $item->price;
                 }
-                $last->save();
+                
                 $last->quantity = $qty;
                 return array($last);
             }

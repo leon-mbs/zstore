@@ -432,6 +432,8 @@ class GIList extends \App\Pages\Base
         $this->nppan->npform->nppt->setOptionList($stlist);
         $this->nppan->npform->nppt->setValue('Recipient');
 
+        
+        
         $this->nppan->npform->bayarea->setOptionList($areas);
         $this->nppan->npform->selarea->setOptionList($areas);
 
@@ -445,7 +447,17 @@ class GIList extends \App\Pages\Base
             $this->onSelCity($this->nppan->npform->selcity);
             $this->nppan->npform->selpoint->setValue($modules['nppointref']);
         }
-        
+        $order = Document::load($this->_doc->parent_id);
+     
+        if($order != null && $order->meta_name == 'Order'){
+           $this->nppan->npform->deltype->setValue($order->headerdata['deliverynp']);    
+           $this->onDelType($this->nppan->npform->deltype);    
+           $this->nppan->npform->bayhouse->setText($order->headerdata['bayhouse']);    
+           $this->nppan->npform->bayflat->setText($order->headerdata['bayflat']);    
+           $this->nppan->npform->bayaddr->setText($order->headerdata['ship_address']);    
+           
+        }
+     
         $this->nppan->npform->bayarea->setValue($this->_doc->headerdata['bayarea'] ?? 0);
         $this->onBayArea($this->nppan->npform->bayarea) ;
         $this->nppan->npform->baycity->setValue($this->_doc->headerdata['baycity'] ?? 0);
@@ -481,7 +493,6 @@ class GIList extends \App\Pages\Base
         $this->nppan->npform->npback->setText(round($p));
         $this->nppan->npform->npcost->setText(round($p));
 
-        $order = Document::load($this->_doc->parent_id);
         if ($order instanceof Document) {
             if ($order->payamount > 0) {
                 $this->nppan->npform->npback->setText(round($order->payamount));

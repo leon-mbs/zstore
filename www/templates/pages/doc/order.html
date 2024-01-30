@@ -83,6 +83,14 @@
                     </div>
                      {{#np}}
                         <div class="form-group">
+                            <label for="deliverynp">Тип доставки НП</label>
+                             <select zippy="deliverynp" class="form-control     ">
+                                <option value="0">Вiддiлення</option>
+                                <option value="1">Поштомат</option>
+                                <option value="2">За адресою</option>
+                            </select>
+                        </div>                     
+                        <div class="form-group">
                             <label for="bayarea">Область  </label>
                             <select zippy="bayarea" class="form-control     ">
                                 <option value="0">Не обрано</option>
@@ -103,11 +111,14 @@
                        {{/np}}
                     <div class="form-group  ">
                         <label data-label="address" for="address">Адреса</label>
-
                         <textarea zippy="address" class="form-control"></textarea>
-
-
                     </div>
+                     <div class="form-group row">
+                            <label for="bayhouse">Буд.</label>
+                            <input style="width:75px" type="text" zippy="bayhouse" class="form-control"/>
+                            <label for="bayflat">Кв. </label>
+                            <input style="width:75px" type="text" zippy="bayflat" class="form-control"/>
+                     </div>                    
                 </div>
             </div>
             <div class="row">
