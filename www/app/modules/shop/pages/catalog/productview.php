@@ -47,9 +47,12 @@ class ProductView extends Base
         $this->_title = $product->itemname;
         // $this->_description = $product->getDescription();
 
-        $this->add(new \Zippy\Html\Link\BookmarkableLink('product_image'))->setValue("/loadshopimage.php?id={$product->image_id}");
+        $this->add(new \Zippy\Html\Link\BookmarkableLink('product_image'));
+//        $this->add(new \Zippy\Html\Link\BookmarkableLink('product_image'))->setValue("/loadshopimage.php?id={$product->image_id}");
         $this->product_image->setAttribute('href', "/loadshopimage.php?id={$product->image_id}");
 
+        $this->product_image->add( new  \Zippy\Html\Image('product_imageimg'))->setUrl("/loadshopimage.php?id={$product->image_id}");
+        
         $this->add(new Label('productname', $product->itemname));
         $this->add(new Label('productcode', $product->item_code));
    
