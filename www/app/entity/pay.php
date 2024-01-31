@@ -71,7 +71,7 @@ class Pay extends \ZCL\DB\Entity
         }
 
 
-        $pay = new \App\Entity\Pay();
+        $pay = new Pay();
         $pay->mf_id = $mf_id;
         $pay->document_id = $document_id;
         $pay->amount = $amount;
@@ -89,7 +89,7 @@ class Pay extends \ZCL\DB\Entity
             if ($mf->beznal == 1 && $nobank==false) {
                 if (($mf->btran > 0 && $amount < 0) || ($mf->btranin > 0 && $amount > 0)) {
                     $amount = abs($amount);
-                    $payb = new \App\Entity\Pay();
+                    $payb = new Pay();
                     $payb->mf_id = $mf_id;
                     $payb->document_id = $document_id;
                     if ($mf->btran > 0) {
@@ -175,7 +175,7 @@ class Pay extends \ZCL\DB\Entity
                 return;
             }
             $parent = \App\Entity\Doc\Document::load($doc->parent_id);
-            $parentbonus = intval($parent->getBonus());
+            $parentbonus = intval($parent->getBonus(true)); //начислкно
 
             if($parentbonus==0) {
                 return;
@@ -188,11 +188,11 @@ class Pay extends \ZCL\DB\Entity
             $retbonus = intval($parentbonus * $k) ;// доля
 
             if($retbonus > 0) {
-                $pay = new \App\Entity\Pay();
+                $pay = new Pay();
 
                 $pay->document_id = $document_id;
                 $pay->bonus = 0 -  $retbonus;
-                $pay->paytype = self::PAY_BONUS;
+                $pay->paytype = Pay::PAY_BONUS;
                 $pay->paydate = time();
                 $pay->user_id = \App\System::getUser()->user_id;
 
@@ -212,11 +212,11 @@ class Pay extends \ZCL\DB\Entity
         if ($doc->headerdata['bonus'] > 0) { //списание
 
 
-            $pay = new \App\Entity\Pay();
+            $pay = new Pay();
 
             $pay->document_id = $document_id;
             $pay->bonus = 0 -  $doc->headerdata['bonus'];
-            $pay->paytype = self::PAY_BONUS;
+            $pay->paytype = Pay::PAY_BONUS;
             $pay->paydate = time();
             $pay->user_id = \App\System::getUser()->user_id;
 
@@ -234,7 +234,7 @@ class Pay extends \ZCL\DB\Entity
             }
 
 
-            $pay = new \App\Entity\Pay();
+            $pay = new Pay();
 
             $pay->document_id = $document_id;
 
@@ -243,7 +243,7 @@ class Pay extends \ZCL\DB\Entity
             if($doc->headerdata['exch2b'] > $doc->headerdata['exchange']) {
                 $pay->bonus = (int)$doc->headerdata['exchange'];
             }
-            $pay->paytype = \App\Entity\Pay::PAY_BONUS;
+            $pay->paytype = Pay::PAY_BONUS;
             $pay->paydate = time();
             $pay->user_id = \App\System::getUser()->user_id;
 
@@ -295,14 +295,14 @@ class Pay extends \ZCL\DB\Entity
         if ($bonus > 0) {
 
 
-            $pay = new \App\Entity\Pay();
+            $pay = new Pay();
 
             $pay->document_id = $document_id;
 
 
             $pay->amount = 0;
             $pay->bonus = (int)$bonus;
-            $pay->paytype = self::PAY_BONUS;
+            $pay->paytype = Pay::PAY_BONUS;
             $pay->paydate = time();
             $pay->user_id = \App\System::getUser()->user_id;
 

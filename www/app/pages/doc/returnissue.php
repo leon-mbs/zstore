@@ -59,6 +59,7 @@ class ReturnIssue extends \App\Pages\Base
 
         $this->docform->add(new Label('total'));
         $this->docform->add(new Label('discount'));
+        $this->docform->add(new Label('bonus'));
         $this->docform->add(new Label('payamount'));
         $this->docform->add(new TextInput('editpayed', "0"));
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
@@ -96,6 +97,7 @@ class ReturnIssue extends \App\Pages\Base
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
 
+            $this->_basedocid = $this->_doc->parent_id;
 
 
 
@@ -157,10 +159,10 @@ class ReturnIssue extends \App\Pages\Base
 
                     }
                 }
-                $this->calcTotal();
+                
             }
         }
-
+        $this->calcTotal();
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
@@ -295,6 +297,8 @@ class ReturnIssue extends \App\Pages\Base
 
         $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+        $this->_doc->headerdata['bonus'] = $this->docform->bonus->getText();
+        $this->_doc->headerdata['discount'] = $this->docform->discount->getText();
 
         $isEdited = $this->_doc->document_id > 0;
 
@@ -439,7 +443,26 @@ class ReturnIssue extends \App\Pages\Base
 
         $payamount= $total  ;
 
-
+        if($this->_basedocid >0) {
+            $parent = Document::load($this->_basedocid) ;
+            $k = 1 - ($parent->amount - $total) / $parent->amount;
+            $parentbonus = intval($parent->getBonus(false));   //списано
+            if($parentbonus >0) {
+               $retbonus = intval($parentbonus * $k) ;// доля
+               $this->docform->bonus->setText($retbonus);
+               $payamount -= $retbonus;
+            }
+            
+            if($parent->headerdata["totaldisc"] >0) {
+               $disc= H::fa($parent->headerdata["totaldisc"] * $k);
+               $this->docform->discount->setText($disc);
+               $payamount -= $disc;
+            }
+            
+            
+        }
+        
+        
         $this->docform->payamount->setText(H::fa($payamount));
         //  $this->docform->discount->setText(H::fa($discount));
         $this->docform->payed->setText(H::fa($payamount));
@@ -536,3 +559,4 @@ class ReturnIssue extends \App\Pages\Base
     }
 
 }
+
