@@ -1090,7 +1090,19 @@ class ARMFood extends \App\Pages\Base
         
         $inprod = $this->_doc->checkStates([Document::STATE_INPROCESS]) ;//уже в  производстве
         $this->docpanel->payform->passprod->setVisible($this->_worktype > 0 && $inprod == false);
+  
+        $bonus = intval($this->docpanel->listsform->bonus->getText());
+        $customer_id = $this->docpanel->listsform->customer->getKey();
+        
+        if ($bonus >0 && $customer_id > 0) {
+            $c = Customer::load($customer_id) ;
+            $b=$c->getBonus();
+            if($bonus> $b) {
+                $this->setWarn("У  контрагшента  вього {$b} бонусів на рахунку");                
+            }
 
+           
+        }
     }
 
     public function editqtyOnClick($sender) {

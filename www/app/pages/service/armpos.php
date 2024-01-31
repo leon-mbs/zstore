@@ -499,7 +499,19 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form3->exchange->setVisible(!$hidep);
         $this->docpanel->form3->exch2b->setVisible(!$hidep);
 
+        
+        $bonus = intval($this->docpanel->form2->bonus->getText());
+        $customer_id = $this->docpanel->form2->customer->getKey();
+        
+        if ($bonus >0 && $customer_id > 0) {
+            $c = Customer::load($customer_id) ;
+            $b=$c->getBonus();
+            if($bonus> $b) {
+                $this->setWarn("У  контрагшента  вього {$b} бонусів на рахунку");                
+            }
 
+           
+        }
 
 
     }
@@ -1168,6 +1180,7 @@ class ARMPos extends \App\Pages\Base
             $this->setError("Якщо у борг    або нарахування бонусів має бути обраний контрагент");
             return;
         }
+
         if (doubleval($this->_doc->headerdata['exch2b']) >0 && $this->_doc->customer_id == 0) {
             $this->setError("Для нарахування бонуса має бути обраний контрагент");
             return;
