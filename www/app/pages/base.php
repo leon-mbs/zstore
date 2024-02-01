@@ -454,7 +454,7 @@ class Base extends \Zippy\Html\WebPage
 
             $sql = "select items.item_id, items.itemname,items.item_code    from 
              entrylist_view  join items  on items.item_id = entrylist_view.item_id 
-             where customer_id={$c->customer_id}  
+             where entrylist_view.customer_id={$c->customer_id}  
              order  by  entry_id desc  limit 0,10 "    ;
 
             foreach($conn->Execute($sql) as $i) {

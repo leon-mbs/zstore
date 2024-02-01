@@ -472,8 +472,26 @@ class GIList extends \App\Pages\Base
 
         if(strlen($this->_doc->notes)==0) {
             $desc = "";
-            foreach ($list as $it) {
-                $desc .= $it->itemname.","   ;
+            if(count($list) < 2) {
+                foreach ($list as $it) {
+                    $name= strlen( $it->shortname ) > 0  ? $it->shortname : $it->itemname ;
+                    $desc .= ( $name  ."," )  ;
+                }
+            } else {
+                foreach ($list as $it) {
+                    $c =  \App\Entity\Category::load($it->cat_id) ;
+                    if(strlen($c->cat_name ?? '') >0) {
+                       $desc = $c->cat_name;
+                       break;    
+                    }
+                }
+                
+            }
+            if($desc =='') {
+                foreach ($list as $it) {
+                    $desc = $it->itemname." + " . (count($list)-1) . ' позицій'   ;
+                }
+                
             }
 
             $this->nppan->npform->npdesc->setText(trim($desc, ","));
