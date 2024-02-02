@@ -223,7 +223,7 @@ class ItemList extends \App\Pages\Base
         $row->set->setVisible($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD || $item->item_type == Item::TYPE_MAT );
 
         $row->add(new ClickLink('printqr'))->onClick($this, 'printQrOnClick', true);
-        $row->printqr->setVisible(strlen($item->url) > 0);
+        $row->printqr->setVisible(strlen($item->url ?? '') > 0);
 
 
         $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?t=t&id={$item->image_id}");

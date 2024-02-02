@@ -31,6 +31,7 @@ class Item extends \ZCL\DB\Entity
         $this->noshop = 0;
         $this->foodstate = 0;
         $this->reclist = array();
+        $this->printqty = 1;      
     }
 
     protected function afterLoad() {

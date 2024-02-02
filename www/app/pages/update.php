@@ -125,7 +125,7 @@ class Update extends \App\Pages\Base
                   
          if( ($_config['db']['driver'] ??'') == ''  ){
 
-             $b= mysqli_connect($_config['db']['host'], $_config['db']['pass'], $_config['db']['user'], $_config['db']['name']) ; 
+            $b= mysqli_connect($_config['db']['host'], $_config['db']['user'], $_config['db']['pass'], $_config['db']['name']) ; 
 
              if($b ==false) {
                    $this->setErrorTopPage('Invalid connect')  ;
