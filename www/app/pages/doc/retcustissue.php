@@ -202,15 +202,12 @@ class RetCustIssue extends \App\Pages\Base
             $this->_itemlist[$this->_rowid] = $item;
         }
 
-        //   $this->docform->setVisible(true);
-
-        //очищаем  форму
-        $this->editdetail->edittovar->setKey(0);
-        $this->editdetail->edittovar->setText('');
-
-        $this->editdetail->editquantity->setText("1");
-
-        $this->editdetail->editprice->setText("");
+        $this->docform->detail->Reload();
+        $this->calcTotal();
+        
+        
+         $this->docform->setVisible(true);
+         $this->editdetail->setVisible(false);
 
     }
 
@@ -224,9 +221,6 @@ class RetCustIssue extends \App\Pages\Base
         $this->editdetail->editquantity->setText("1");
 
         $this->editdetail->editprice->setText("");
-        $this->docform->detail->Reload();
-
-        $this->calcTotal();
     }
 
     public function savedocOnClick($sender) {
@@ -327,9 +321,24 @@ class RetCustIssue extends \App\Pages\Base
 
             $total = $total + $item->amount;
         }
+
+        $payed=  $total;
+        
+        if($this->_basedocid >0) {
+            $parent = Document::load($this->_basedocid) ;
+            
+            $payed = $parent->payamount;
+            
+            
+            $k = 1 - ($parent->amount - $total) / $parent->amount;
+ 
+            $payed  = $payed*$k;           
+        }        
+
+        
         $this->docform->total->setText(H::fa($total));
-        $this->docform->payed->setText(H::fa($total));
-        $this->docform->editpayed->setText(H::fa($total));
+        $this->docform->payed->setText(H::fa($payed));
+        $this->docform->editpayed->setText(H::fa($payed));
     }
 
     public function onPayed($sender) {

@@ -162,7 +162,7 @@ class GoodsReceipt extends Document
                \App\Entity\IOState::addIOState($this->document_id, 0 - $payed + $this->headerdata["delivery"], \App\Entity\IOState::TYPE_BASE_OUTCOME);
                \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata["delivery"], \App\Entity\IOState::TYPE_NAKL);
            }
-           if($this->headerdata['baydelivery']== 1) { //если gkfnbn  gjregfntkm
+           if($this->headerdata['baydelivery']== 1) { //если платит  покупатель
                 $pay = new \App\Entity\Pay();
                 $pay->mf_id = $this->headerdata['payment'];
                 $pay->document_id = $this->document_id;

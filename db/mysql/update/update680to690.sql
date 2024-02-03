@@ -1,3 +1,18 @@
+
+CREATE TABLE promocodes (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  code varchar(16) NOT NULL,
+  type tinyint(4) NOT NULL,
+  disabled tinyint(1) NOT NULL default 0,
+  
+  details text DEFAULT NULL,
+  PRIMARY KEY (id)
+) ENGINE = INNODB DEFAULT CHARSET = utf8
+;
+
+ALTER TABLE promocodes
+ADD UNIQUE INDEX code (code)   ; 
+
  
 DROP VIEW IF EXISTS customers_view  ;
 
