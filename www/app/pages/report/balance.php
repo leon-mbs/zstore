@@ -93,10 +93,10 @@ class Balance extends \App\Pages\Base
 
         foreach($conn->GetCol($sql) as $r ) {
            if($r >0) {
-             $aemp += $r;      
+             $pemp += $r;      
            } 
            if($r < 0) {
-             $pemp += abs($r);      
+             $aemp += abs($r);      
            } 
             
         }

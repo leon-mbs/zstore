@@ -113,10 +113,18 @@ class EmployeeList extends \App\Pages\Base
         $row->add(new Label('emp_name', $item->emp_name));
         $row->add(new Label('login', $item->login));
         $row->add(new Label('branch', $this->_blist[$item->branch_id] ??''));
-        //  $row->add(new Label('balance', $item->balance));
+
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
-        $row->add(new ClickLink('acc'))->onClick($this, 'accOnClick');
+
+        $conn = \ZDB\DB::getConnect();
+
+        $sql = "select coalesce(sum(amount),0) from empacc where optype < 100 and  emp_id = ".$item->employee_id ;
+
+        $b = $conn->GetOne($sql);
+
+
+        $row->add(new ClickLink('acc',$this, 'accOnClick'))->setValue(''. H::fa($b));
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
         
         $row->add(new ClickLink('contentlist'))->onClick($this, 'viewContentOnClick');
@@ -259,6 +267,7 @@ class EmployeeList extends \App\Pages\Base
         $this->contentview->setVisible(false);
         $this->accp->setVisible(true);
         $this->accp->accname->setText($this->_employee->emp_name)  ;
+        $this->OnSubmit(null);
     }
 
     public function OnSubmit($sender) {
@@ -269,7 +278,7 @@ class EmployeeList extends \App\Pages\Base
 
         $conn = \ZDB\DB::getConnect();
 
-        $sql = "select coalesce(sum(amount),0) from empacc where optype < 100 and  emp_id = {$emp_id} and createdon < " . $conn->DBDate($from);
+        $sql = "select coalesce(sum(amount),0) from empacc_view where optype < 100 and  emp_id = {$emp_id} and   createdon < " . $conn->DBDate($from);
 
         $b = $conn->GetOne($sql);
 
@@ -279,6 +288,8 @@ class EmployeeList extends \App\Pages\Base
 
         $detail = array();
 
+         
+        
         foreach ($rc as $row) {
             $in =   doubleval($row['amount']) > 0 ? $row['amount'] : 0;
             $out =   doubleval($row['amount']) < 0 ? 0-$row['amount'] : 0;
