@@ -1154,7 +1154,6 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->customer_id = $this->docpanel->form2->customer->getKey();
         $this->_doc->payamount = $this->docpanel->form3->payamount->getText();
 
-        $this->_doc->headerdata['time'] = time();
         $this->_doc->payed = doubleval($this->docpanel->form3->payed->getText()) + doubleval($this->docpanel->form3->payedcard->getText()) ;
         $this->_doc->headerdata['payed'] = $this->docpanel->form3->payed->getText();
         $this->_doc->headerdata['payedcard'] = $this->docpanel->form3->payedcard->getText();

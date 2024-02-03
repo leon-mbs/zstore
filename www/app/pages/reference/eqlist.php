@@ -25,18 +25,20 @@ class EqList extends \App\Pages\Base
 {
     private $_item;
     public $_uselist = array();
+    private $_blist;
 
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowRef('EqList')) {
             return;
         }
+        $this->_blist = \App\Entity\Branch::getList(\App\System::getUser()->user_id);
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new TextInput('searchkey'));
         $this->filter->add(new DropDownChoice('searchemp', Employee::findArray("emp_name", "", "emp_name"), 0));
-
         $this->filter->add(new CheckBox('showdis'));
+
 
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new DataView('eqlist', new EQDS($this), $this, 'eqlistOnRow'));
@@ -59,7 +61,7 @@ class EqList extends \App\Pages\Base
         $this->itemdetail->add(new TextArea('editdescription'));
         $this->itemdetail->add(new CheckBox('editdisabled'));
         $this->itemdetail->add(new CheckBox('editeq', true));
-
+        $this->itemdetail->add(new DropDownChoice('editbranch', $this->_blist, 0));
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
@@ -74,6 +76,7 @@ class EqList extends \App\Pages\Base
         $row->add(new Label('eq_name', $item->eq_name));
         $row->add(new Label('code', $item->code));
         $row->add(new Label('serial', $item->serial));
+        $row->add(new Label('branch', $this->_blist[$item->branch_id]));
 
         $row->add(new ClickLink('use'))->onClick($this, 'useOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -133,6 +136,7 @@ class EqList extends \App\Pages\Base
         $this->itemdetail->editpa->setValue($this->_item->pa_id);
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
         $this->itemdetail->editeq->setChecked($this->_item->eq);
+        $this->itemdetail->editbranch->setValue($this->_item->branch_id);
 
         $this->itemdetail->editdescription->setText($this->_item->description);
         $this->itemdetail->editcode->setText($this->_item->code);
@@ -146,6 +150,9 @@ class EqList extends \App\Pages\Base
         $this->itemdetail->setVisible(true);
         // Очищаем  форму
         $this->itemdetail->clean();
+        $b = \App\System::getBranch();
+        $this->itemdetail->editbranch->setValue($b > 0 ? $b : 0);
+        
         $this->itemdetail->editeq->setChecked(true);
         $this->_item = new Equipment();
     }
@@ -177,7 +184,11 @@ class EqList extends \App\Pages\Base
         $this->_item->code = $this->itemdetail->editcode->getText();
         $this->_item->balance = $this->itemdetail->editbalance->getText();
         $this->_item->enterdate = $this->itemdetail->editenterdate->getDate();
-
+        $this->_item->branch_id = $this->itemdetail->editbranch->getValue();
+        if ($this->_tvars['usebranch'] == true && $this->_item->branch_id == 0) {
+            $this->setError('Виберіть філію');
+            return;
+        }
         $this->_item->serial = $this->itemdetail->editserial->getText();
         $this->_item->description = $this->itemdetail->editdescription->getText();
         $this->_item->eq = $this->itemdetail->editeq->isChecked() ? 1 : 0;

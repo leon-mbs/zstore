@@ -846,6 +846,36 @@
 
                                     </li>
                                     {{/paperless}}
+                                    
+                                  {{#vdoc}}
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Вчасно Документооборот
+                                                <i class="right fas fa-angle-left"></i>
+                                            </p>
+
+                                        </a>
+                                        <ul class="nav nav-treeview">
+                                            <li class="nav-item">
+                                                <a href="/index.php?p=App/Modules/VDoc/DocList" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>
+                                                    <p>&nbsp;&nbsp;Документи</p>
+                                                </a>
+                                            </li>     {{#isadmins}}
+                                            <li class="nav-item">
+                                                <a href="/index.php?p=App/Modules/VDoc/Options" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>
+                                                    <p>&nbsp;&nbsp;Налаштування</p>
+                                                </a>
+                                            </li>      {{/isadmins}}
+
+                                        </ul>
+
+                                    </li>
+                                    {{/vdoc}}                                    
+                                    
+                                    
                                   {{#promua}}
                                     <li class="nav-item">
                                         <a href="#" class="nav-link">

@@ -94,11 +94,7 @@ class Options extends \App\Pages\Base
 
 
         $this->add(new Form('business'))->onSubmit($this, 'saveBusinessOnClick');
-        $pt = array(
-            "1" => "По останній закупівельній ціні",
-            "2" => "Окремо по кожній закупівельній ціні"
-        );
-        $this->business->add(new DropDownChoice('partiontype', $pt, "1"));
+
         $pt = array(
             "0" => "По факту",
             "1" => "Передплата",
@@ -133,13 +129,14 @@ class Options extends \App\Pages\Base
         $this->business->add(new CheckBox('usecattree'));
         $this->business->add(new CheckBox('nocheckarticle'));
         $this->business->add(new CheckBox('spreaddelivery'));
+        $this->business->add(new CheckBox('baydelivery'));
 
         $this->business->add(new TextInput('cashier'));
         $this->business->add(new TextArea('checkslogan'));
         $this->business->add(new \Zippy\Html\Form\Date('actualdate'));
 
  
-        $this->business->partiontype->setValue($common['partiontype']);
+
         $this->business->paytypein->setValue($common['paytypein']);
         $this->business->paytypeout->setValue($common['paytypeout']);
         $this->business->price1->setText($common['price1']);
@@ -159,6 +156,7 @@ class Options extends \App\Pages\Base
         $this->business->numberttn->setChecked($common['numberttn']);
         $this->business->usecattree->setChecked($common['usecattree']);
         $this->business->spreaddelivery->setChecked($common['spreaddelivery']);
+        $this->business->baydelivery->setChecked($common['baydelivery']);
 
         $this->business->cashier->setText($common['cashier']);
         $this->business->checkslogan->setText($common['checkslogan']);
@@ -336,6 +334,7 @@ class Options extends \App\Pages\Base
         $this->modules->add(new CheckBox('modpromua', $modules['promua']));
         $this->modules->add(new CheckBox('modhoroshop', $modules['horoshop']));
         $this->modules->add(new CheckBox('modpaperless', $modules['paperless']));
+        $this->modules->add(new CheckBox('modvdoc', $modules['vdoc']));
 //    
         
         $fisctype=0;
@@ -390,7 +389,7 @@ class Options extends \App\Pages\Base
         if (!is_array($common)) {
             $common = array();
         }
-        $common['partiontype'] = $this->business->partiontype->getValue();
+
         $common['paytypein'] = $this->business->paytypein->getValue();
         $common['paytypeout'] = $this->business->paytypeout->getValue();
 
@@ -414,6 +413,7 @@ class Options extends \App\Pages\Base
         $common['useimages'] = $this->business->useimages->isChecked() ? 1 : 0;
         $common['nocheckarticle'] = $this->business->nocheckarticle->isChecked() ? 1 : 0;
         $common['spreaddelivery'] = $this->business->spreaddelivery->isChecked() ? 1 : 0;
+        $common['baydelivery'] = $this->business->baydelivery->isChecked() ? 1 : 0;
 
         $common['numberttn'] = $this->business->numberttn->isChecked() ? 1 : 0;
         $common['usecattree'] = $this->business->usecattree->isChecked() ? 1 : 0;
@@ -685,6 +685,7 @@ class Options extends \App\Pages\Base
         $modules['promua'] = $sender->modpromua->isChecked() ? 1 : 0;
         $modules['horoshop'] = $sender->modhoroshop->isChecked() ? 1 : 0;
         $modules['paperless'] = $sender->modpaperless->isChecked() ? 1 : 0;
+        $modules['vdoc'] = $sender->modvdoc->isChecked() ? 1 : 0;
         $modules['issue'] = $sender->modissue->isChecked() ? 1 : 0;
         $modules['note'] = $sender->modnote->isChecked() ? 1 : 0;
 

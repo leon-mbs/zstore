@@ -93,6 +93,7 @@ class Document extends \ZCL\DB\Entity
         $this->headerdata = array();
         $this->detaildata = array();
         $this->headerdata['contract_id'] = 0;
+        $this->headerdata['time'] = time();
 
         $this->headerdata['_state_before_approve_'] = '';
     }

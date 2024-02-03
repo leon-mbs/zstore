@@ -211,6 +211,14 @@
                                 <a href="https://zippy.com.ua/ext#7" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
                             </div>
                               {{/hideblock}}
+                              
+                           <div class="form-check">
+                                <input zippy="modvdoc" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="modvdoc"> Iнтеграція з Вчасно Документооборот</label>
+                                <a href="https://zippy.com.ua/ext#16" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
+                            </div>
+                              
+                              
                              <div class="form-group mt-2 ">
                                 <label for="modfisctype">Тип фіскалізації (ПРРО) </label>
                                 <select class="form-control" zippy="modfisctype">
@@ -288,13 +296,7 @@
                    <h4>Налаштування бізнес-процесів</h4>
                      
                          <form zippy="business">
-                             <div class="form-group  ">
-                                <label for="partiontype">Тип партійного обліку</label>
-                                <select class="form-control" zippy="partiontype"> </select>
-                                <small>Облік окремо по кожній закупівельній ціні дозволяє точно враховувати
-                                    прибуток, але ускладнює списання партій.</small>
-
-                            </div>
+                
                              <div class="form-group  ">
                                 <label>Типи відпускних цін</label>
                                 <input class="form-control" type="text" zippy="price1" required="required">
@@ -346,13 +348,13 @@
                                 <input zippy="allowminus" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="allowminus">Дозволити списання ТМЦ в   мiнус </label>
                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title=" Дозвiл списувати таку кiлькiсть, що призводить до мiнусового залишку на складi "></i>
+                                   title=" Дозвiл списувати  кiлькiсть бiльшу наявної. Увага! Це прриводить до неточного  облiку ТМЦ.   "></i>
                             </div>
                             <div class="form-check">
                                 <input zippy="allowminusmf" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="allowminusmf">Дозволити списання коштiв в   мiнус </label>
                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title=" Дозвiл списувати таку суму, що призводить до мiнусового залишку на рахунку "></i>
+                                   title=" Дозвiл списувати суму  бiльшу нiж є на  рахунку.  "></i>
                             </div>
                             <div class="form-check">
                                 <input zippy="noallowfiz" type="checkbox" class="form-check-input">
@@ -412,11 +414,17 @@
                                    title="Використовується, наприклад, в обліку автозапчастин, де ідентифікація товару йде по артикулу виробника й імені виробника.
                                     Не слід вмикати без необхідності - невірно буде працювати підбір зі сканером штрих коду. "></i>
                             </div>
-                          <div class="form-check">
+                             <div class="form-check">
                                 <input zippy="spreaddelivery" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="spreaddelivery">Доставка на собiвартiсть</label>
                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                                    title="Розподiлити доставку на собiвартiсть в ПН за замовчанням"></i>
+                            </div>
+                             <div class="form-check">
+                                <input zippy="baydelivery" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="baydelivery">Оплата  доставки  покупцем</label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Оплата  доставки  покупцем в ПН за замовчанням"></i>
                             </div>
                        
                                                                                         

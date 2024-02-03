@@ -29,8 +29,8 @@ class Stock extends \ZCL\DB\Entity
      * @static
      */
     public static function findArrayAC($store, $partname = "") {
-        $partiontype = \App\System::getOption('common', 'partiontype');
-
+    //    $partiontype = \App\System::getOption('common', 'partiontype');
+         
         $criteria = "qty > 0 and itemdisabled <> 1 and store_id=" . $store;
         if (strlen($partname) > 0) {
             $like = self::qstr('%' . $partname . '%');
@@ -46,12 +46,14 @@ class Stock extends \ZCL\DB\Entity
             if (strlen($value->snumber) > 0) {
                 $value->itemname .= ' (' . $value->snumber . ',' . \App\Helper::fd($value->sdate) . ')';
             }
-
+  /*
             if ($partiontype == "1") { //отдельно  по входным  ценам
                 $list[$key] = $value->itemname . ', ' . \App\Helper::fqty($value->partion);
             } else {
                 $list[$key] = $value->itemname;
             }
+*/            
+            $list[$key] = $value->itemname;
         }
 
         return $list;
@@ -67,7 +69,7 @@ class Stock extends \ZCL\DB\Entity
      */
     public static function getStock($store_id, $item_id, $price, $snumber = "", $sdate = 0, $create = false) {
 
-        $partiontype = \App\System::getOption('common', 'partiontype');
+     //   $partiontype = \App\System::getOption('common', 'partiontype');
 
         $conn = \ZDB\DB::getConnect();
 
@@ -78,13 +80,9 @@ class Stock extends \ZCL\DB\Entity
             $where .= "  and  snumber =  " . $conn->qstr($snumber);
         }
 
-        //     if ($partiontype == '2') {    //учет  отдельно  по  каждой цене
-        //     $where .= " and partion = {$price}   ";
-        //     }
-
 
         $stock = self::getFirst($where . " and partion = {$price}   ", 'stock_id desc');
-        if ($partiontype == '1' && $stock == null) {  //если  не  нашли  такую  партию  то  берем  последнюю
+        if ( $stock == null) {  //если  не  нашли  такую  партию  то  берем  последнюю
             $stock = self::getFirst($where, 'stock_id desc');
         }
 
@@ -102,7 +100,7 @@ class Stock extends \ZCL\DB\Entity
         }
         if ($partiontype == '1' && $price > 0) {    //учет  по  последней цене
             $stock->partion = $price;
-            $stock->save();
+          //  $stock->save();
         }
         return $stock;
     }
@@ -128,7 +126,7 @@ class Stock extends \ZCL\DB\Entity
         }
     }
 
-    // Поиск партий
+    // Подбор партий
     public static function pickup($store_id, $item) {
         $res = array();
         $where = "store_id = {$store_id} and item_id = {$item->item_id} and qty > 0   ";
@@ -136,10 +134,10 @@ class Stock extends \ZCL\DB\Entity
             $where .= " and snumber=" . Stock::qstr($item->snumber);
         }
 
-        $stlist = self::find($where, ' stock_id  ');
+        $stlist = self::find($where, ' stock_id desc ');
 
 
-        $qty = $item->quantity;
+        $qty = $item->quantity;//необходимое  количество
         $last = null;
         foreach ($stlist as $st) {
             $last = $st;
@@ -172,7 +170,7 @@ class Stock extends \ZCL\DB\Entity
                     }
                     $lastpartion = $conn->GetOne("select coalesce(partion,0) from  store_stock  where  qty > 0 and  item_id={$item->item_id} order  by  stock_id desc ".$limit);
                     if ($lastpartion == 0) {
-                        $lastpartion = $item->price;
+                        $lastpartion = $item->price/2;  //типа  учетная  цена
                     }
 
                     $last = new Stock();
@@ -181,10 +179,11 @@ class Stock extends \ZCL\DB\Entity
                     $last->partion = $lastpartion;
                     $last->snumber = $item->snumber;
                     $last->sdate = $item->sdate;
+                    $last->save();
                 } else {
                     // $last->partion = $item->price;
                 }
-                $last->save();
+                
                 $last->quantity = $qty;
                 return array($last);
             }

@@ -432,6 +432,8 @@ class GIList extends \App\Pages\Base
         $this->nppan->npform->nppt->setOptionList($stlist);
         $this->nppan->npform->nppt->setValue('Recipient');
 
+        
+        
         $this->nppan->npform->bayarea->setOptionList($areas);
         $this->nppan->npform->selarea->setOptionList($areas);
 
@@ -445,7 +447,17 @@ class GIList extends \App\Pages\Base
             $this->onSelCity($this->nppan->npform->selcity);
             $this->nppan->npform->selpoint->setValue($modules['nppointref']);
         }
-        
+        $order = Document::load($this->_doc->parent_id);
+     
+        if($order != null && $order->meta_name == 'Order'){
+           $this->nppan->npform->deltype->setValue($order->headerdata['deliverynp']);    
+           $this->onDelType($this->nppan->npform->deltype);    
+           $this->nppan->npform->bayhouse->setText($order->headerdata['bayhouse']);    
+           $this->nppan->npform->bayflat->setText($order->headerdata['bayflat']);    
+           $this->nppan->npform->bayaddr->setText($order->headerdata['ship_address']);    
+           
+        }
+     
         $this->nppan->npform->bayarea->setValue($this->_doc->headerdata['bayarea'] ?? 0);
         $this->onBayArea($this->nppan->npform->bayarea) ;
         $this->nppan->npform->baycity->setValue($this->_doc->headerdata['baycity'] ?? 0);
@@ -460,8 +472,26 @@ class GIList extends \App\Pages\Base
 
         if(strlen($this->_doc->notes)==0) {
             $desc = "";
-            foreach ($list as $it) {
-                $desc .= $it->itemname.","   ;
+            if(count($list) < 2) {
+                foreach ($list as $it) {
+                    $name= strlen( $it->shortname ) > 0  ? $it->shortname : $it->itemname ;
+                    $desc .= ( $name  ."," )  ;
+                }
+            } else {
+                foreach ($list as $it) {
+                    $c =  \App\Entity\Category::load($it->cat_id) ;
+                    if(strlen($c->cat_name ?? '') >0) {
+                       $desc = $c->cat_name;
+                       break;    
+                    }
+                }
+                
+            }
+            if($desc =='') {
+                foreach ($list as $it) {
+                    $desc = $it->itemname." + " . (count($list)-1) . ' позицій'   ;
+                }
+                
             }
 
             $this->nppan->npform->npdesc->setText(trim($desc, ","));
@@ -481,7 +511,6 @@ class GIList extends \App\Pages\Base
         $this->nppan->npform->npback->setText(round($p));
         $this->nppan->npform->npcost->setText(round($p));
 
-        $order = Document::load($this->_doc->parent_id);
         if ($order instanceof Document) {
             if ($order->payamount > 0) {
                 $this->nppan->npform->npback->setText(round($order->payamount));
