@@ -63,6 +63,7 @@ class ItemList extends \App\Pages\Base
             $storelist = Store::getListAll() ;
 
         }
+        $this->filter->add(new DropDownChoice('searchtype', [], 0));
         $this->filter->add(new DropDownChoice('searchqty', [], 0));
         $this->filter->add(new DropDownChoice('searchstore', $storelist, 0));
         $this->filter->add(new TextInput('searchbrand'));
@@ -284,8 +285,9 @@ class ItemList extends \App\Pages\Base
         if($store >0) {
             $st = " and stock_id in (select stock_id from store_stock  where  store_id={$store}) " ;
         }
+    
      
-        $e = \App\Entity\Entry::getFirst("item_id={$this->_item->item_id} and quantity < 0 {$st} and document_id in (select document_id from documents_view where  meta_name in ('GoodsIssue','TTN','POSCheck','OrderFood','ServiceAct')  ) ","entry_id desc")  ;
+        $e = \App\Entity\Entry::getFirst("item_id={$this->_item->item_id} and quantity < 0 {$st} {$st2} and document_id in (select document_id from documents_view where  meta_name in ('GoodsIssue','TTN','POSCheck','OrderFood','ServiceAct')  ) ","entry_id desc")  ;
         if($e != null)  {
            $d = \App\Entity\Doc\Document::load($e->document_id)  ;    
            $this->_tvars["i_lastsell"] =  $d->document_number .' вiд '. H::fd($d->document_date) .'.'  ; 
@@ -546,7 +548,10 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         if($sqty==1) {
            $where .= "  and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id {$str}) <0 ";
         }
-      
+        $stype = $form->searchtype->getValue();
+        if ($stype > 0) {
+            $where = $where . " and   item_type={$stype}  ";
+        }     
         
         $text = trim($form->searchkey->getText());
         if (strlen($text) > 0) {
@@ -624,6 +629,7 @@ class DetailDataSource implements \Zippy\Interfaces\DataSource
         }
 
 
+ 
       
         
         return $where;
