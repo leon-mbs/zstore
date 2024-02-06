@@ -57,13 +57,25 @@
         <small>   Повна  <a href="https://zippy.com.ua/update">історія  оновлень</a>  </small>                  
           
          <br>Для  оновлення завантажити <a href="{{archive}}" >архів</a>  або  перейти на  <a href="{{github}}">GitHib</a>
-   </div>   
-   
+         
+          {{#hideblock}}
      
-
-            
+           <br><br><a zippy="updatefile"><b>Оновити файли автоматично</b></a>
+           <br><small>(Експериментальна функція)</small>
+           <br><small><i class="fa fa-exclamation-triangle"></i>  
+                У випадку помилки оновити вручну  з  архіву
+           </small>           
+           <br><br>         
+          {{/hideblock}}
+         
+         
+   </div>   
+               
             
         {{/show}}
+    
+    
+    
         {{#showdb}}       
   
      <div class="col-12 mt-4 ">  
@@ -78,7 +90,6 @@
            </small>
            <br>
            <br><br><a zippy="updatesql"><b>Оновити автоматично</b></a>
-           <br><small>(Експериментальна функція)</small>
            <br><small><i class="fa fa-exclamation-triangle"></i>  
                 У випадку помилки з`єднання оновіть спочтаку код, як  написано  вище  потім  спробуйте  ще  раз оновити БД
            </small>           

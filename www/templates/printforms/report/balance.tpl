@@ -119,7 +119,11 @@
         <td align="right">Всього:</td>
         <td align="right">{{ptotal}}</td>
     </tr>   
-     <tr style="font-weight: bolder;">
+     <tr >
+        <td ></td>
+        <td ></td>
+    </tr>   
+     <tr style=";font-weight: bolder;">
         <td align="right">Баланс:</td>
         <td align="right">{{bal}}</td>
     </tr>   
