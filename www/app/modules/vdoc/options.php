@@ -46,7 +46,7 @@ class Options extends \App\Pages\Base
     }
 
     public function onCheck($sender) {
-        list($code, $result) =        Helper::connect();
+        list($code, $result) =        Helper::connect(trim($this->cform->clientid->getText()));
         if($code=='ok') {
             System::getSession()->pltoken = $result;
             $this->setSuccess("Успішне з`єднання") ;

@@ -6,10 +6,8 @@ use App\System;
 
 class Helper
 {
-    public static function connect() {
-        $modules = System::getOptions("modules");
-                                                 
-        $token=$modules['vdclientid'];
+    public static function connect($token) {
+ 
         $url= "https://vchasno.ua/api/v2/documents";
 
 
@@ -63,10 +61,9 @@ class Helper
     * @param mixed $docname    имя  которое будет  показано в  сервиве (имя  файла, номер накладной  и т.д.)
     * @param mixed $email      если задано, файл будет расшарен на  соответствующего контрагента
     */
-    public static function senddoc(  $doc, $filename ) {
-        $modules = System::getOptions("modules");
-                                                 
-        $token=$modules['vdclientid'];
+    public static function senddoc(  $doc, $filename,$token ) {
+                                                
+
         $url= "https://vchasno.ua/api/v2/documents";
         
 

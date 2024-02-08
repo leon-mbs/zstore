@@ -172,7 +172,8 @@
                        }
                        
                        this.counter = this.selectedDocs.length
-                       
+
+             
                        for(var d of this.selectedDocs) {
                             callPageMethod('send',[d.id,this.firmid,this.kep ], null,(data)=> 
                             {
@@ -207,7 +208,7 @@
                   
                   this.counter=0
                      
-                  callPageMethod('loaddocs',[this.custid,this.doctype], null,(data)=> 
+                  callPageMethod('loaddocs',[this.custid,this.doctype,this.firmid], null,(data)=> 
                   {
                        let tmp =  JSON.parse(data)  
                        this.docs = tmp.docs 
@@ -228,7 +229,8 @@
                            this.loaddata() ;       
                
                            this.showsp2 = false
-                              
+
+        
                        }
                   
                 } 

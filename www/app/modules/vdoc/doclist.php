@@ -61,7 +61,7 @@ class DocList extends \App\Pages\Base
     public function loaddocs($arg, $post=null) {
         //  $user = \App\System::getUser() ;
 
-        $sql = "meta_name='{$arg[1]}' and state >4 and content  not  like '%vdoc%' and customer_id  >0 ";
+        $sql = " (firm_id={$arg[2]} or coalesce(firm_id,0)=0) and  meta_name='{$arg[1]}' and state >4 and content  not  like '%vdoc%' and customer_id  >0 ";
         if($arg[0] > 0) {
             $sql .= " and customer_id={$arg[0]} ";
         } else {
@@ -99,6 +99,9 @@ class DocList extends \App\Pages\Base
 
     public function check($arg, $post=null) {
         $firm = \App\Entity\Firm::load($arg[0])  ;
+        if(strlen($firm->vdoc)==0) {
+            return "Не задано токен Вчасно";
+        }
         if(strlen($firm->tin)==0) {
             return "Компанiя повинна мати ЄДРПОУ";
         }
@@ -156,7 +159,7 @@ class DocList extends \App\Pages\Base
             $filename = implode('_',$na) .'.pdf'; ;
         //    $filename= "2475406556_3235608644_20170213_Рахунок_РН-026.pdf";
             
-            list($ok, $data) = Helper::senddoc( $pdf, $filename )  ;
+            list($ok, $data) = Helper::senddoc( $pdf, $filename,$firm->vdoc  )  ;
             if($ok != "ok") {
                 return $name ." ".$data;
             }
