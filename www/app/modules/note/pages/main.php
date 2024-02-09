@@ -219,8 +219,8 @@ class Main extends \App\Pages\Base
 
         }
         if($args[0] =="delete") {
-            Node::delete($args[0]);
-            Topic::deleteByNode($args[0]);
+            Node::delete($args[1]);
+            Topic::deleteByNode($args[1]);
 
         }
         if($args[0] =="paste") {

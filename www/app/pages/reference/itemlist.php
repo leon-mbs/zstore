@@ -630,7 +630,7 @@ class ItemList extends \App\Pages\Base
         foreach($this->_itemset as $i) {
             $item = Item::load($i->item_id);
             if($item != null) {
-                $total += doubleval($i->qty  * $item->getLastPartion());
+                $total += doubleval($i->qty  * $item->getPartion());
             }
 
         }

@@ -504,6 +504,33 @@ class Item extends \ZCL\DB\Entity
         return doubleval($conn->GetOne($sql));
     }
 
+    //средняя  учетная  цена
+    public function getPartion($store = 0, $snumber = "") {
+        $conn = \ZDB\DB::getConnect();
+
+        $sql = "  select coalesce(sum(partion*qty),0) as p,coalesce(sum(qty),0) as q from  store_stock st  where     st.item_id = {$this->item_id}   ";
+
+        if ($store > 0) {
+            $sql = $sql . " and st.store_id=" . $store;
+        }
+        if (strlen($snumber) > 0) {
+            $sql .= "  and  st.snumber =  " . $conn->qstr($snumber);
+        }
+     
+        $price=0;
+
+        $r=$conn->GetRow($sql) ;
+        
+        if($r['q'] <> 0) {
+          $price  =  abs($r['p']/$r['q']); 
+        }
+        
+        $price = number_format($price, 2, '.', '') ;
+        
+        return doubleval($price);
+    }
+    
+    
     public static function getPriceTypeList() {
 
         $common = \App\System::getOptions("common");
@@ -769,7 +796,7 @@ class Item extends \ZCL\DB\Entity
 
                 if($iset->item_id > 0) {
                     $it = \App\Entity\Item::load($iset->item_id);
-                    $pr = $it->getLastPartion(0);
+                    $pr = $it->getPartion(0);
                     $price += ($iset->qty * $pr);
                 }
                 if($iset->service_id >0) {
@@ -778,8 +805,8 @@ class Item extends \ZCL\DB\Entity
                 }
             }
         }
-        if ($price == 0) {  //ищем  последнюю  партию
-            $price = $this->getLastPartion(0);
+        if ($price == 0) {   
+            $price = $this->getPartion(0);
         }
 
         return $price;

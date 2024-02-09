@@ -1029,7 +1029,7 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->save();
 
 
-        if($this->_doc->state== Document::STATE_NEW  || $this->_doc->state== Document::STATE_EDITED) {
+        if($this->_doc->state < 4) {
             $this->_doc->updateStatus(Document::STATE_INPROCESS);
             $n->message = serialize(array('cmd' => 'new','document_id'=>$this->_doc->document_id));
 
@@ -1282,9 +1282,19 @@ class ARMFood extends \App\Pages\Base
                     }
 
                 }
+                if ($this->_worktype == 1  ) {
+                    if ($this->_doc->state < 4) {
+                        $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                    }
+
+                    $this->_doc->updateStatus(Document::STATE_CLOSED);
+                }
+                
             }
 
-
+           if ($this->_doc->payamount > $this->_doc->payed ) {
+               $this->_doc->updateStatus(Document::STATE_WP);
+            }
 
             $conn->CommitTrans();
 

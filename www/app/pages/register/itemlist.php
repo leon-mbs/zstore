@@ -110,14 +110,15 @@ class ItemList extends \App\Pages\Base
       
         $inprice="";
         if($this->_tvars['noshowpartion'] != true) {
-          $inprice = $item->getLastPartion($store);  
+          $inprice = $item->getPartion($store);  
             
           ;
         }
         $row->add(new Label('inprice', H::fa($inprice)));
         $pt = $this->filter->searchprice->getValue();
         if($pt=='price') {
-            $am = $item->getAmount($store);
+            $am = H::fa( $inprice)* H::fqty( $item->getQuantity($store));
+            
             $pr = ''; 
            
         } else {
