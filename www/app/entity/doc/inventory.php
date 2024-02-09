@@ -96,7 +96,7 @@ class Inventory extends Document
                 );
             }
             if (round($item->qfact) < round($q)) {
-                $summinus += round(($q - $item->qfact) * $item->getLastPartion($this->headerdata['store']));
+                $summinus += round(($q - $item->qfact) * $item->getPartion($this->headerdata['store']));
                 $detaillost[] = array("no"        => $i++,
                                       "item_name" => $name,
                                       "qfact"     => $item->qfact,
@@ -105,7 +105,7 @@ class Inventory extends Document
                 );
             }
             if (round($item->qfact) > round($q)) {
-                $sumplus += round(($item->qfact - $q) * $item->getLastPartion($this->headerdata['store']));
+                $sumplus += round(($item->qfact - $q) * $item->getPartion($this->headerdata['store']));
 
                 $detailover[] = array("no"        => $i++,
                                       "item_name" => $name,
