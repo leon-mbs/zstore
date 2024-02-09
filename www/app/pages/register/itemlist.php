@@ -612,14 +612,14 @@ class DetailDataSource implements \Zippy\Interfaces\DataSource
 
     private function getWhere() {
 
-
+  
         $form = $this->page->filter;
-        $where = "item_id = {$this->page->_item->item_id} and   qty <> 0   ";
+        $where = "st.item_id = {$this->page->_item->item_id} and   st.qty <> 0   ";
         
         
         $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
-            $cstr = "  and  store_id in ({$cstr})      ";
+            $cstr = "  and  st.store_id in ({$cstr})      ";
         }
         if(\App\System::getUser()->showotherstores) {
             $cstr ="";
@@ -628,22 +628,26 @@ class DetailDataSource implements \Zippy\Interfaces\DataSource
         $where = $where . $cstr ;
         $store = $form->searchstore->getValue();
         if ($store > 0) {
-            $where = $where . " and   store_id={$store}  ";
+            $where = $where . " and   st.store_id={$store}  ";
         }
-
-
- 
-      
+        
         
         return $where;
     }
 
     public function getItemCount() {
-        return Stock::findCnt($this->getWhere());
+        $w = $this->getWhere();
+        $w = str_replace("st.","",$w) ;
+        return Stock::findCnt($w);
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
-        return Stock::find($this->getWhere(), "", $count, $start);
+        
+        
+        $sql = "  select DISTINCT st.*  from  store_stock_view st join entrylist e  on st.stock_id = e.stock_id where  " .$this->getWhere()    ;
+        $sql .=  " order  by e.entry_id asc  ";       
+               
+        return Stock::findBySql($sql);
     }
 
     public function getItem($id) {
