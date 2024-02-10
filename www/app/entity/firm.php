@@ -39,6 +39,7 @@ class Firm extends \ZCL\DB\Entity
         $this->ppokeyid = (string)($xml->ppokeyid[0]);
         $this->iban = (string)($xml->iban[0]);
         $this->payname = (string)($xml->payname[0]);
+        $this->vdoc = (string)($xml->vdoc[0]);
 
         parent::afterLoad();
     }
@@ -64,6 +65,7 @@ class Firm extends \ZCL\DB\Entity
         $this->details .= "<ppoisjks>{$this->ppoisjks}</ppoisjks>";
         $this->details .= "<inn>{$this->inn}</inn>";
         $this->details .= "<iban>{$this->iban}</iban>";
+        $this->details .= "<vdoc>{$this->vdoc}</vdoc>";
 
         $this->details .= "<phone>{$this->phone}</phone>";
         $this->details .= "<tin>{$this->tin}</tin>";

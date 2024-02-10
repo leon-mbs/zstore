@@ -50,6 +50,7 @@ class FirmList extends \App\Pages\Base
         $this->firmdetail->add(new TextInput('editsign'));
         $this->firmdetail->add(new TextInput('editiban'));
         $this->firmdetail->add(new TextInput('editpayname'));
+        $this->firmdetail->add(new TextInput('editvdoc'));
 
 
         $this->firmdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
@@ -117,6 +118,7 @@ class FirmList extends \App\Pages\Base
         $this->firmdetail->editsign->setText($this->_firm->sign);
         $this->firmdetail->editiban->setText($this->_firm->iban);
         $this->firmdetail->editpayname->setText($this->_firm->payname);
+        $this->firmdetail->editvdoc->setText($this->_firm->vdoc);
 
         $this->firmdetail->editdisabled->setChecked($this->_firm->disabled);
     }
@@ -139,6 +141,7 @@ class FirmList extends \App\Pages\Base
         $this->_firm->phone = $this->firmdetail->editphone->getText();
         $this->_firm->iban = $this->firmdetail->editiban->getText();
         $this->_firm->payname = $this->firmdetail->editpayname->getText();
+        $this->_firm->vdoc = $this->firmdetail->editvdoc->getText();
 
         $this->_firm->logo = $this->firmdetail->editlogo->getText();
         $this->_firm->stamp = $this->firmdetail->editstamp->getText();

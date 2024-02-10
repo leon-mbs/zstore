@@ -27,6 +27,7 @@ class Update extends \App\Pages\Base
  
         $t = '?t='.time(); 
  
+        $this->add(new  ClickLink('updatefile',$this,'OnFileUpdate')) ;
         $this->add(new  ClickLink('updatesql',$this,'OnSqlUpdate')) ;
  
         $this->_tvars['curversion'] = System::CURR_VERSION;
@@ -103,10 +104,51 @@ class Update extends \App\Pages\Base
           $this->_tvars['showdb']  = true; 
         }  
         
-             
-                
+               
+          
 
     }   
+
+
+    public function OnFileUpdate($sender)   {
+    
+        try {
+            if (!is_writeable( _ROOT .'app/')) {
+                $this->setError('Нема  права  запису');
+                return;        
+            }
+
+               
+            $zip = new \ZipArchive()  ;
+
+            $archive = _ROOT.'upload/update.zip' ;
+            @unlink($archive) ;
+            
+            if (file_put_contents($archive, file_get_contents($this->_tvars['archive'] )))
+         
+            if ($zip->open($archive) === TRUE) {
+           
+                $destination =_ROOT; 
+                
+                $zip->extractTo($destination);
+                $zip->close();
+
+           }  else {
+                $this->setError('Помилка  архіву');
+                return;        
+               
+           }
+           $this->setSuccess('БД оновлена')  ;
+           App::Redirect("\\App\\Pages\\Update");
+         
+      } catch(\Exception $e){
+            $msg = $e->getMessage()  ;
+     
+            $this->setErrorTopPage($msg)  ;
+   
+       } 
+         
+    }
  
     public function OnSqlUpdate($sender)   {
        global $_config; 
@@ -190,3 +232,4 @@ class Update extends \App\Pages\Base
     }
     
 }
+ 

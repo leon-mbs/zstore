@@ -88,13 +88,13 @@
                     {{/usescanner}}
                     &nbsp; <a zippy="addrow" class="btn  btn-info">Додати ТМЦ</a>
 
-                    <table class="table table-sm">
+                    <table class="table table-sm mt-2">
                         <tr>
                             <th> <i onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
                                 style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"
                                     class="fa fa-check-double "></i></th>
-                            <th>Назва</th>
-                            <th>Артикул</th>
+                            <th> <a zippy="sortname">Назва</a> </th>
+                            <th><a zippy="sortcode">Артикул</a></th>
 
                             {{#usesnumber}}
                             <th>Серія</th>
@@ -120,7 +120,7 @@
                             <!--    <td zippy="quantity"  class="text-right" ></td>-->
 
                             <td class="text-center">
-                                <input class="form-control qtyprice" type="input" pattern="[0-9,\.]+" style="width:75px;" zippy="qfact">
+                                <input class="form-control qtyprice" type="input" pattern="[0-9,\.]+" style="width:100px;" zippy="qfact">
 
                             </td>
 

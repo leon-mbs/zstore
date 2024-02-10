@@ -217,7 +217,19 @@ class Subscribe extends \ZCL\DB\Entity
                 $n->message = $ret;
 
                 $n->save();
+                return;
             }
+            
+            if ($sub->msg_type != self::MSG_NOTIFY) {
+                
+                $text="Event: Документ ".$doc->meta_desc . "({$doc->document_number}) "; 
+                
+                $text .= (' Стан ' .\App\Entity\Doc\Document::getStateName($doc->state) ); 
+                
+                self::sendNotify(\App\Entity\Notify::SYSTEM, $text);
+            }
+            
+            
 
         }
     }

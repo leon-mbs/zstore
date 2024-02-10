@@ -499,7 +499,7 @@ class Item extends \ZCL\DB\Entity
         if($conn->dataProvider=="postgres") {
             $limit =" limit 1";
         }
-        $sql = $sql . " order  by  e.document_id desc  ".$limit;
+        $sql = $sql . " order  by  e.entry_id desc  ".$limit;
 
         return doubleval($conn->GetOne($sql));
     }

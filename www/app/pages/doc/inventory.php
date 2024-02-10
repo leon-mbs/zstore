@@ -29,10 +29,15 @@ class Inventory extends \App\Pages\Base
     public $_itemlist = array();
     private $_doc;
     private $_rowid    = 0;
+    private $_qint     = false;
 
     public function __construct($docid = 0) {
         parent::__construct();
 
+        $qtydigits = \App\System::getOption("common",'qtydigits');
+        
+        $this->_qint = intval($qtydigits)==0;
+        
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
@@ -56,6 +61,8 @@ class Inventory extends \App\Pages\Base
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new SubmitLink('delall'))->onClick($this, 'OnDelAll');
+        $this->docform->add(new SubmitLink('sortname'))->onClick($this, 'OnSortName');
+        $this->docform->add(new SubmitLink('sortcode'))->onClick($this, 'OnSortCode');
 
         $this->add(new Form('editdetail'))->setVisible(false);
 
@@ -106,6 +113,9 @@ class Inventory extends \App\Pages\Base
         //  $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new TextInput('qfact', new \Zippy\Binding\PropertyBinding($item, 'qfact')))->onChange($this, "onText", true);
 
+        if($this->_qint) {
+           $row->qfact->setAttribute('type', 'number');            
+        }
 
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
 
@@ -117,6 +127,7 @@ class Inventory extends \App\Pages\Base
     public function onText($sender) {
 
     }
+
 
 
     public function OnDelAll($sender) {
@@ -462,4 +473,20 @@ class Inventory extends \App\Pages\Base
         $this->docform->detail->Reload();
     }
 
+    public function OnSortName($sender) {
+         usort($this->_itemlist, function ($a, $b) {
+            return $a->itemname > $b->itemname;
+        });
+        $this->docform->detail->Reload();
+        
+    }
+        
+    public function OnSortCode($sender) {
+         usort($this->_itemlist, function ($a, $b) {
+            return $a->item_code > $b->item_code;
+        });
+        $this->docform->detail->Reload();
+
+    }
+    
 }

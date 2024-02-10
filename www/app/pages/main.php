@@ -298,7 +298,7 @@ class Main extends Base
  //       $sql = " SELECT  SUM(( select coalesce(sum(st1.qty*st1.partion),0 ) from store_stock_view st1 where {$cstr}  st1.item_id= items.item_id )) AS ss  FROM items
    //              where     ( select coalesce(sum(st1.qty),0 ) from store_stock_view st1 where {$cstr}  st1.item_id= items.item_id ) >0   ";
 
-        $sql = " SELECT  SUM( qty * partion)  from store_stock  ";
+        $sql = " SELECT  SUM( qty * partion)  from store_stock where  item_id in (select item_id from items where  disabled<>1) ";
                  
         $this->_tvars['biitemscnt'] = H::fa($conn->GetOne($sql));
         
