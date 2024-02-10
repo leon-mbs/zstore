@@ -83,7 +83,7 @@ class Stock extends \ZCL\DB\Entity
 
         $stock = self::getFirst($where . " and partion = {$price}   ", 'stock_id desc');
         if ( $stock == null) {  //если  не  нашли  такую  партию  то  берем  последнюю
-            $stock = self::getFirst($where, 'stock_id desc');
+          //  $stock = self::getFirst($where, 'stock_id desc');
         }
 
 
@@ -134,7 +134,7 @@ class Stock extends \ZCL\DB\Entity
             $where .= " and snumber=" . Stock::qstr($item->snumber);
         }
 
-        $stlist = self::find($where, ' stock_id desc ');
+        $stlist = self::find($where, ' stock_id   ');
 
 
         $qty = $item->quantity;//необходимое  количество
