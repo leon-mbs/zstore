@@ -200,10 +200,10 @@ class Discounts extends \App\Pages\Base
         $this->ptab->formpan->pform->add(new TextInput('peditcode'));
         $this->ptab->formpan->pform->add(new Date('peditdate'));
         $this->ptab->formpan->pform->add(new TextInput('peditdisc'));
-        $this->ptab->formpan->pform->add(new TextInput('peditref'));
+
         $this->ptab->formpan->pform->add(new AutocompleteTextInput('peditcust'))->onText($this, 'OnAutoCustomer');
         $this->ptab->formpan->pform->peditcust->setVisible(false);
-        $this->ptab->formpan->pform->peditref->setVisible(false);
+
         $this->ptab->formpan->pform->add(new DropDownChoice('paddtype'))->onChange($this,"onPType") ;
     //    $this->ptab->listpan->plist->Reload();
 
@@ -666,7 +666,7 @@ class Discounts extends \App\Pages\Base
         if($p->type==4) $type="Реферальний";
         $row->add(new  Label("ptype", $type));
         $row->add(new  Label("pdisc", $p->disc));
-        $row->add(new  Label("pref", $p->ref));
+
         $row->add(new  Label("pused", $p->used));
         $row->add(new  Label("pcust", $p->customer_name));
         $row->add(new  Label("pdateto", $p->dateto > 0 ? H::fd($p->dateto) :''));
@@ -715,7 +715,7 @@ class Discounts extends \App\Pages\Base
     public function onPType($sender) {
         $t=$sender->getValue();
         $this->ptab->formpan->pform->peditcust->setVisible($t>2);
-        $this->ptab->formpan->pform->peditref->setVisible($t==4);
+
  
     }
     public function savePCode($sender) {
@@ -734,11 +734,8 @@ class Discounts extends \App\Pages\Base
            return; 
 
         }
-        $pc->ref = $sender->peditref->getText();
-        if($pc->type ==4 && $pc->ref=='' ) {
-           $this->setError('Не введено  реферальний  бонус') ;
-           return; 
-        }
+
+  
         $pc->customer_id = (int)$sender->peditcust->getKey();
         if($pc->type >2 && $pc->customer_id ==0 ) {
            $this->setError('Не вибрано контрагента') ;
