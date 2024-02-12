@@ -342,7 +342,10 @@ class POSCheck extends Document
             }
         }
         
-        
+        if(strlen($this->headerdata['promocode']) > 0){
+            \App\Entity\PromoCode::apply($this->headerdata['promocode'],$this);
+        };
+       
         
         return true;
     }

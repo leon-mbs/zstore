@@ -56,6 +56,9 @@ class Order extends \App\Pages\Base
         $this->docform->add(new Label('bonus', 0));
 
         $this->docform->add(new TextInput('promocode'));
+        $this->docform->promocode->setVisible(\App\Entity\PromoCode::findCnt('') > 0);
+        
+        
         $this->docform->add(new TextInput('editpromo', ''));
         $this->docform->add(new SubmitButton('savepromo'))->onClick($this, 'onSavePromo');
        
@@ -731,8 +734,7 @@ class Order extends \App\Pages\Base
         $this->docform->setVisible(true);
     }
 
-    
-   public function addcodeOnClick($sender) {
+    public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
         $code0 = $code;
@@ -789,8 +791,6 @@ class Order extends \App\Pages\Base
         $this->_rowid = -1;
     }
     
-    
-    
     public function OnDelivery($sender) {
         $dt = $sender->getValue() ;
         if ($dt > 1) {
@@ -811,6 +811,7 @@ class Order extends \App\Pages\Base
         }
 
     }
+
     public function OnDeliverynp($sender) {
       $dt = $sender->getValue() ;        
       $this->docform->baypoint->setOptionList([]) ;   
@@ -837,7 +838,6 @@ class Order extends \App\Pages\Base
         $this->calcTotal();
     }
 
-
     public function onBonus() {
         $this->docform->bonus->setText($this->docform->editbonus->getText());
         $this->calcPay();
@@ -856,6 +856,20 @@ class Order extends \App\Pages\Base
     private function calcPay() {
         $total = $this->docform->total->getText();
 
+        $code= trim($this->docform->promocode->getText());
+        if($code != '') {
+            $r = \App\Entity\PromoCode::check($code,$this->docform->customer->getKey())  ;
+            if($r == ''){
+                $p = \App\Entity\PromoCode::findByCode($code);
+                $disc = doubleval($p->disc );
+                if($disc >0)  {
+                    $td = H::fa( $total * ($p->disc/100) );
+                    $this->docform->totaldisc->setText($td);
+                }        
+            }
+        }
+        
+        
         $bonus = $this->docform->bonus->getText();
         $totaldisc = $this->docform->totaldisc->getText();
 
@@ -874,7 +888,6 @@ class Order extends \App\Pages\Base
 
 
     }
-
 
     public function onSelectItem($item_id, $itemname) {
         $this->editdetail->edittovar->setKey($item_id);
