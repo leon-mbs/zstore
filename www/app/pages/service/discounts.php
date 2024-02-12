@@ -294,7 +294,6 @@ class Discounts extends \App\Pages\Base
 
     }
 
-
     public function OnCSave($sender) {
         $rows = $this->ctab->clistform->clist->getDataRows();
         foreach ($rows as $row) {
@@ -321,7 +320,7 @@ class Discounts extends \App\Pages\Base
 
     }
 
-     public function OnPBAdd($sender) {
+    public function OnPBAdd($sender) {
         $c = \App\Entity\Customer::load($sender->pbsearchkey->getKey());
         if ($c == null) {
             return;
@@ -339,7 +338,8 @@ class Discounts extends \App\Pages\Base
         $this->goAnkor('pbsearchkey') ;
 
     }   
-   public function bcustomerlistOnRow($row) {
+   
+    public function bcustomerlistOnRow($row) {
         $c = $row->getDataItem();
         $row->add(new  Label("pbname", $c->customer_name));
         $row->add(new  Label("pbphone", $c->phone));
@@ -677,6 +677,7 @@ class Discounts extends \App\Pages\Base
            $p->disabled = 1;
         }
         $row->setAttribute('style', $p->disabled == 1 ? 'color: #aaa' : null);
+        $row->pdel->setVisible($p->disabled == 0) ;
 
     }
     
