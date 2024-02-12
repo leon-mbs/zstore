@@ -21,11 +21,21 @@ class MovePart extends Document
         $sc = new Entry($this->document_id, 0 - $qty * $st->partion, 0 - $qty);
         $sc->setStock($st->stock_id);
         $sc->save();
-
+        $from = $qty * $st->partion;
         $st = Stock::load($this->headerdata['tostock']);
         $sc = new Entry($this->document_id, $qty * $st->partion, $qty);
         $sc->setStock($st->stock_id);
         $sc->save();
+        $to = $qty * $st->partion;
+
+        $diff = $to-$from;
+        
+        if($diff <0) {
+           \App\Entity\IOState::addIOState($this->document_id, $diff, \App\Entity\IOState::TYPE_OTHER_INCOME);
+        }
+        if($diff >0) {
+           \App\Entity\IOState::addIOState($this->document_id, $diff, \App\Entity\IOState::TYPE_OTHER_OUTCOME);
+        }
 
 
         return true;
