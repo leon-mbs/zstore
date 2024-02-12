@@ -181,7 +181,7 @@ class Discounts extends \App\Pages\Base
         $this->itab->add(new \Zippy\Html\DataList\Paginator('iopag', $this->itab->iolist));
         $this->itab->iolist->Reload();
 
-      
+      //проимокоды
         $this->ptab->add(new Panel('listpan')) ;
         
         $this->ptab->listpan->add(new Form('pfilter'))->onSubmit($this,"onFilterPromo");
@@ -205,7 +205,8 @@ class Discounts extends \App\Pages\Base
         $this->ptab->formpan->pform->peditcust->setVisible(false);
 
         $this->ptab->formpan->pform->add(new DropDownChoice('paddtype'))->onChange($this,"onPType") ;
-    //    $this->ptab->listpan->plist->Reload();
+        $this->ptab->listpan->plist->Reload();
+
 
       
     }

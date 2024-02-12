@@ -55,6 +55,11 @@ class Order extends \App\Pages\Base
         $this->docform->add(new SubmitButton('bbonus'))->onClick($this, 'onBonus');
         $this->docform->add(new Label('bonus', 0));
 
+        $this->docform->add(new TextInput('promocode'));
+        $this->docform->add(new TextInput('editpromo', ''));
+        $this->docform->add(new SubmitButton('savepromo'))->onClick($this, 'onSavePromo');
+       
+        
         $this->docform->add(new TextInput('edittotaldisc'));
         $this->docform->add(new SubmitButton('btotaldisc'))->onClick($this, 'onTotaldisc');
         $this->docform->add(new Label('totaldisc', 0));
@@ -147,6 +152,7 @@ class Order extends \App\Pages\Base
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
             $this->docform->totaldisc->setText($this->_doc->headerdata['totaldisc']);
+            $this->docform->promocode->setText($this->_doc->headerdata['promocode']);
 
 
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
@@ -400,6 +406,7 @@ class Order extends \App\Pages\Base
         }
 
 
+        $this->_doc->headerdata['promocode'] = $this->docform->promocode->getText();
         $this->_doc->headerdata['totaldisc'] = $this->docform->totaldisc->getText();
 
         $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
@@ -964,4 +971,29 @@ class Order extends \App\Pages\Base
         $this->docform->baypoint->setOptionList($list);
     }
 
+    public function onSavePromo($sender) {
+        $code= trim($this->docform->editpromo->getText());
+        $this->docform->promocode->setText($code);
+        if($code=='') {
+            return;
+        }
+        $r = \App\Entity\PromoCode::check($code,$this->docform->customer->getKey())  ;
+        if($r != ''){
+            $this->setError($r) ;
+            
+            $this->docform->editpromo->setText('');
+            $this->docform->promocode->setText('');
+            return;
+        }
+      
+        $p = \App\Entity\PromoCode::findByCode($code);
+        $disc = doubleval($p->disc );
+        if($disc >0)  {
+            $this->docform->edittotaldisc->setText($disc);
+            $this->docform->totaldisc->setText($disc);
+            $this->calcPay();
+        
+        }
+    }
+    
 }
