@@ -89,7 +89,7 @@ class Balance extends \App\Pages\Base
 
         $aemp=0;
         $pbemp=0;
-        $sql = "select coalesce(sum(amount),0) as am  from empacc where 1=1  {$bemp} group by emp_id ";
+        $sql = "select coalesce(sum(amount),0) as am  from empacc where optype <100  {$bemp} group by emp_id ";
 
         foreach($conn->GetCol($sql) as $r ) {
            if($r >0) {
