@@ -18,7 +18,7 @@ class EmpAcc extends \ZCL\DB\Entity
     public const  SALARY_PAY     = 4; //  выплата  зарплаты
     public const  ADVANCE_ACC    = 5; // авансовый отчет
 
-    //движения  для  начислений и удержаний в  балансе  не  отражаются
+    //В   начислениях и удержаниях не  отражаются
     public const  ADVANCE = 101; // аванс
     public const  BONUS   = 102; // бонусы
     public const  FINE    = 103; // штрафы
