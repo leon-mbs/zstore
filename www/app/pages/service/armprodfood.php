@@ -171,7 +171,7 @@ class ArmProdFood extends \App\Pages\Base
             $allsend=true;
             foreach ($items as $it) {
                 if ($it->foodstate < 4) {
-                    $allsend = fa;se;
+                    $allsend = false;
                 }
             }
             
