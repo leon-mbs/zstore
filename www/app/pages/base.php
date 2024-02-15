@@ -660,7 +660,7 @@ class Base extends \Zippy\Html\WebPage
 
 
 
-            $ret['lastpartion'] = $item->getLastPartion(); //последняя  закупка
+       //     $ret['lastpartion'] = $item->getLastPartion(0, "", true); //последняя  закупка
             $ret['qtystock'] = $item->getQuantity(); // на  складе
             $ret['item_code'] = $item->item_code;
             $ret['useserial'] = $item->useserial;

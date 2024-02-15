@@ -23,7 +23,7 @@ class PromoCode extends \ZCL\DB\Entity
         $this->details .= "<customer_name><![CDATA[{$this->customer_name}]]></customer_name>";
         $this->details .= "<dateto>{$this->dateto}</dateto>";
         $this->details .= "<disc>{$this->disc}</disc>";
-        $this->details .= "<ref>{$this->ref}</ref>";
+
         $this->details .= "<used>{$this->used}</used>";
 
         $this->details .= "</details>";
@@ -38,7 +38,7 @@ class PromoCode extends \ZCL\DB\Entity
         $this->customer_name = (string)($xml->customer_name[0]);
         $this->dateto = (string)($xml->dateto[0]);
         $this->disc = (string)($xml->disc[0]);
-        $this->ref = (string)($xml->ref[0]);
+
         $this->used = (string)($xml->used[0]);
    
         parent::afterLoad();
@@ -113,24 +113,7 @@ class PromoCode extends \ZCL\DB\Entity
         $code->used= date('Y-m-d').' '.$doc->document_number;
         $code->save() ;
         
-        if($code->type==4) {
-            
-            $bonus = $doc->amount*$code->ref/100;
-            
-            $pay = new \App\Entity\Pay();
-
-            $pay->document_id = $doc->document_id;
-
-            $pay->amount = 0;
-            $pay->bonus = (int)$bonus;
-            $pay->paytype =  \App\Entity\Pay::PAY_BONUS;
-            $pay->paydate = time();
-            $pay->user_id = \App\System::getUser()->user_id;
-            $pay->customer_id = $code->customer_id;
-
-            $pay->save();          
-        }
-        
+          
       
     }
 }

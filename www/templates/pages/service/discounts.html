@@ -17,9 +17,10 @@
                     
                     <a zippy="tabi"><span class="{{{tabibadge}}}">  Акції, товари   </span> </a>
                     <a zippy="tabs"><span class="{{{tabsbadge}}}">  Акції, послуги    </span> </a>
-                   {{#hideblock}}
+                  {{#hideblock}}
                     <a zippy="tabp"><span class="{{{tabpbadge}}}">  Промокоди    </span> </a>
-                   {{/hideblock}}                    
+                  {{/hideblock}}
+                          
 
 
                 </div>   <br>
@@ -419,6 +420,7 @@
                         <div class="col-12 col-md-10 col-xl-8   ">
                              
                            <div zippy="listpan">
+                           <span>Використовується в замовленнях та чеках</span>
                              <div class="navbar nav  ">
                                 <form zippy="pfilter" class="form-inline ">
                                     <label for="psearchkey">Код</label>
@@ -430,12 +432,12 @@
 
                                 <a class="btn btn-success " zippy="pcodeadd">Додати</a>
                                 <table class="table table-sm">                      
-                                    <tr><th>Код</th><th>Тип</th><th>Знижка,%</th><th>Реф.,%</th><th>Контрагент</th><th> Срок дії</th><th>Використаний </th><th> </th></tr>
+                                    <tr><th>Код</th><th>Тип</th><th>Знижка,%</th><th>Контрагент</th><th> Срок дії</th><th>Використаний </th><th> </th></tr>
                                     <tr zippy="plist">
                                     <td zippy="pcode"></td>
                                     <td zippy="ptype"> </td>
                                     <td zippy="pdisc" class="text-right"> </td>
-                                    <td zippy="pref"  class="text-right"> </td>
+
                                     <td zippy="pcust"> </td>
                                     <td zippy="pdateto">  </td>
                                     <td zippy="pused"> </td>
@@ -456,7 +458,7 @@
                                      <small><b>Одноразовий</b> - для однократного використання 
                                          <br>  <b>Багаторазовий</b> - для використання (однократного)  багатьма  покупцями 
                                          <br><b>Персональний</b> - для конкретного контрагента
-                                         <br><b>Реферальний</b> - з нарахуванням бонусів вказанму контрагенту за нового  покупця  
+
                                       </small>                                     
                                     <form zippy="pform" >
                                  
@@ -475,7 +477,7 @@
                                                   <option value="1">Одноразовий</option>
                                                   <option value="2">Багаторазовий</option>
                                                   <option value="3">Персональний</option>
-                                                  <option value="4">Реферальний</option>
+
                                                 </select>   
                                                </div>
                                                 
@@ -498,14 +500,7 @@
                                                <input placeholder="Почніть вводити..." class="form-control"  zippy="peditcust"   >
                                                </div>
                                            </div>      
-                                              
-                                           <div class="form-group row">
-                                               <label class="col-5 col-form-label" for="peditref">Реферальний бонус,%</label>
-                                                <div class="7">
-                                               <input pattern="[0-9\.]+" style="width:140px" class="form-control"  zippy="peditref"   >
-                                               </div>
-                                           </div>      
-                                           
+                         
                                        
  
                                         <div class="form-group">
@@ -525,3 +520,11 @@
         </div>                
     </body>
 </html>
+
+  
+
+
+
+
+
+

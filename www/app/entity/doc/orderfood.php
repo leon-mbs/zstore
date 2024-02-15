@@ -174,6 +174,12 @@ class OrderFood extends Document
 
 
     public function DoPayment() {
+        
+        $conn = \ZDB\DB::getConnect();
+        $conn->Execute("delete from paylist where document_id =" . $this->document_id);
+        $conn->Execute("delete from iostate where iotype = 50 AND document_id=" . $this->document_id);
+        
+        
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
 
 
@@ -200,7 +206,7 @@ class OrderFood extends Document
 
         $conn = \ZDB\DB::getConnect();
         $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
-        $conn->Execute("delete from iostate where document_id=" . $this->document_id);
+        $conn->Execute("delete from iostate where iotype = 81 AND document_id=" . $this->document_id);
 
 
         foreach ($this->unpackDetails('detaildata') as $item) {

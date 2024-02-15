@@ -118,7 +118,22 @@
                           <div class="col-auto">
                             <span zippy="custinfo"  ></span>
 
-                       </div>     
+                       </div>  
+
+                       {{#hideblock}}
+                       <div data-label="promocode" class="col-auto">
+                            Промо-код 
+                            </div>    
+                       {{/hideblock}}
+                            
+                            
+                            <div class="col-auto">
+                                <div class="form-group  ">
+
+                                     <input  style="width:150px"  zippy="promocode" class="form-control">
+                               
+                                </div>  
+                            </div>     
 
 
                        </div>
@@ -777,6 +792,27 @@
                     $('#addcode').click()
                 }
             }
+            
+            
+                $("#promocode").blur(function () {
+                     var promodode = $("#promocode").val();  
+                     
+                   
+                     
+                      callPM('chechPromo',[promodode], null,(data)=> 
+                      {
+                         if(checkPMAnswer(data))   {
+
+                           $('#totaldisc').val(data.disc)                             
+                         }  else {
+                            $('#totaldisc').val('0')                                                          
+                            $('#promocode').val('')                                                          
+                         }
+                          
+                      });             
+                });             
+            
+            
             function check_save(ele) {
                if(false == checkFormInput('form3') ){
                    return false;

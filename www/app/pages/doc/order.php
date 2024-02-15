@@ -55,6 +55,14 @@ class Order extends \App\Pages\Base
         $this->docform->add(new SubmitButton('bbonus'))->onClick($this, 'onBonus');
         $this->docform->add(new Label('bonus', 0));
 
+        $this->docform->add(new TextInput('promocode'));
+        $this->docform->promocode->setVisible(\App\Entity\PromoCode::findCnt('') > 0);
+        
+        
+        $this->docform->add(new TextInput('editpromo', ''));
+        $this->docform->add(new SubmitButton('savepromo'))->onClick($this, 'onSavePromo');
+       
+        
         $this->docform->add(new TextInput('edittotaldisc'));
         $this->docform->add(new SubmitButton('btotaldisc'))->onClick($this, 'onTotaldisc');
         $this->docform->add(new Label('totaldisc', 0));
@@ -147,6 +155,7 @@ class Order extends \App\Pages\Base
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
             $this->docform->totaldisc->setText($this->_doc->headerdata['totaldisc']);
+            $this->docform->promocode->setText($this->_doc->headerdata['promocode']);
 
 
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
@@ -400,6 +409,7 @@ class Order extends \App\Pages\Base
         }
 
 
+        $this->_doc->headerdata['promocode'] = $this->docform->promocode->getText();
         $this->_doc->headerdata['totaldisc'] = $this->docform->totaldisc->getText();
 
         $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
@@ -597,7 +607,7 @@ class Order extends \App\Pages\Base
 
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity()));
         $this->editdetail->editprice->setText($price);
-        $price = $item->getLastPartion();
+        $price = $item->getLastPartion(0, "", false);
         $this->editdetail->pricestock->setText(H::fa($price));
         $this->editdetail->tocustorder->setAttribute("onclick","addItemToCO({$id})");
         $this->editdetail->tocustorder->setVisible(true);
@@ -724,8 +734,7 @@ class Order extends \App\Pages\Base
         $this->docform->setVisible(true);
     }
 
-    
-   public function addcodeOnClick($sender) {
+    public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
         $code0 = $code;
@@ -782,8 +791,6 @@ class Order extends \App\Pages\Base
         $this->_rowid = -1;
     }
     
-    
-    
     public function OnDelivery($sender) {
         $dt = $sender->getValue() ;
         if ($dt > 1) {
@@ -804,6 +811,7 @@ class Order extends \App\Pages\Base
         }
 
     }
+
     public function OnDeliverynp($sender) {
       $dt = $sender->getValue() ;        
       $this->docform->baypoint->setOptionList([]) ;   
@@ -830,7 +838,6 @@ class Order extends \App\Pages\Base
         $this->calcTotal();
     }
 
-
     public function onBonus() {
         $this->docform->bonus->setText($this->docform->editbonus->getText());
         $this->calcPay();
@@ -849,6 +856,20 @@ class Order extends \App\Pages\Base
     private function calcPay() {
         $total = $this->docform->total->getText();
 
+        $code= trim($this->docform->promocode->getText());
+        if($code != '') {
+            $r = \App\Entity\PromoCode::check($code,$this->docform->customer->getKey())  ;
+            if($r == ''){
+                $p = \App\Entity\PromoCode::findByCode($code);
+                $disc = doubleval($p->disc );
+                if($disc >0)  {
+                    $td = H::fa( $total * ($p->disc/100) );
+                    $this->docform->totaldisc->setText($td);
+                }        
+            }
+        }
+        
+        
         $bonus = $this->docform->bonus->getText();
         $totaldisc = $this->docform->totaldisc->getText();
 
@@ -867,7 +888,6 @@ class Order extends \App\Pages\Base
 
 
     }
-
 
     public function onSelectItem($item_id, $itemname) {
         $this->editdetail->edittovar->setKey($item_id);
@@ -964,4 +984,29 @@ class Order extends \App\Pages\Base
         $this->docform->baypoint->setOptionList($list);
     }
 
+    public function onSavePromo($sender) {
+        $code= trim($this->docform->editpromo->getText());
+        $this->docform->promocode->setText($code);
+        if($code=='') {
+            return;
+        }
+        $r = \App\Entity\PromoCode::check($code,$this->docform->customer->getKey())  ;
+        if($r != ''){
+            $this->setError($r) ;
+            
+            $this->docform->editpromo->setText('');
+            $this->docform->promocode->setText('');
+            return;
+        }
+      
+        $p = \App\Entity\PromoCode::findByCode($code);
+        $disc = doubleval($p->disc );
+        if($disc >0)  {
+            $this->docform->edittotaldisc->setText($disc);
+            $this->docform->totaldisc->setText($disc);
+            $this->calcPay();
+        
+        }
+    }
+    
 }

@@ -411,7 +411,7 @@ class GoodsReceipt extends \App\Pages\Base
             $this->editdetail->edititem->setKey($item->item_id);
             $this->editdetail->edititem->setText($item->itemname);
             
-            $price = $item->getLastPartion($this->docform->store->getValue(), null, false);
+            $price = $item->getLastPartion($this->docform->store->getValue(), "", true);
             
             $this->editdetail->editprice->setText(H::fa($price));
             $this->editdetail->editsellprice->setText(H::fa($item->price1));
@@ -1077,7 +1077,7 @@ class GoodsReceipt extends \App\Pages\Base
         $item = Item::load($item_id);
 
         if($price==null) {
-            $price = $item->getLastPartion($this->docform->store->getValue(), null, false);
+            $price = $item->getLastPartion($this->docform->store->getValue(), "", true);
 
         }
         $this->editsnitem->editsnprice->setText(H::fa($price));
@@ -1105,7 +1105,7 @@ class GoodsReceipt extends \App\Pages\Base
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $item = Item::load($id);
-        $price = $item->getLastPartion($this->docform->store->getValue(), null, false);
+        $price = $item->getLastPartion($this->docform->store->getValue(), "", true);
         $this->editdetail->editprice->setText(H::fa($price));
         $this->editdetail->editsellprice->setText($item->price1);
         $this->editdetail->editsellprice2->setText($item->price2);

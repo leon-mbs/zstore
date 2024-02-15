@@ -67,7 +67,20 @@
                         <select class="form-control" zippy="pricetype">
                         </select>
                     </div>
-                
+                  {{#hideblock}}
+                    
+                     <div class="form-group  ">
+                        <label  data-label="promocode" for="promocode">Промо-код</label>
+
+
+                         <div style="width:150px" class="input-group  ">
+                             <input  readonly="readonly" zippy="promocode" class="form-control">
+                             <div class="input-group-append">
+                                 <a data-toggle="modal" data-label="promocode" data-target="#modalpromo" href="javascript:void(0);" title="Ввести промо" class="btn btn-success"   >+</a>
+                            </div>                    
+                        </div> 
+                    </div>               
+                  {{/hideblock}}
  
 
 
@@ -289,6 +302,34 @@
                     </div>
                 </div>
             </div>
+            
+            
+            <div id="modalpromo" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"                  aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered  modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Промо-код</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+ 
+                        
+                            <div class="form-group  ">
+                                <input class="form-control " type="text" zippy="editpromo"  >
+                                
+                            </div>
+                                <div class="input-group">
+                                    <input type="submit" value="OK" zippy="savepromo" class="   btn btn-info  ">
+
+                                </div>
+                            
+                        </div>
+
+                    </div>
+                </div>
+            </div>            
         </form>
 
         <div class="row">

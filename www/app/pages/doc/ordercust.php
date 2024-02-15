@@ -406,7 +406,7 @@ class OrderCust extends \App\Pages\Base
     
         $this->editdetail->qtystock->setText(H::fqty($qty));
 
-        $price = $item->getLastPartion();
+        $price = $item->getLastPartion(0, "", true);
         $this->editdetail->editprice->setText(H::fa($price));
 
 

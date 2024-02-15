@@ -252,6 +252,9 @@ class Order extends \App\Entity\Doc\Document
         }
         if ($state == self::STATE_INPROCESS) {
 
+            if(strlen($this->headerdata['promocode']) > 0){
+                \App\Entity\PromoCode::apply($this->headerdata['promocode'],$this);
+            };
 
 
             $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment']);

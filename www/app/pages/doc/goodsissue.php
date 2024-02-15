@@ -908,7 +908,7 @@ class GoodsIssue extends \App\Pages\Base
             $this->editdetail->editserial->setText($serial);
         }
 
-        $price = $item->getLastPartion();
+        $price = $item->getLastPartion(0, "", false);
         $this->editdetail->pricestock->setText(H::fa($price));
 
 
