@@ -561,7 +561,7 @@ class Invoice extends \App\Pages\Base
         $item = Item::load($id);
 
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
-        $price = $item->getLastPartion();
+        $price = $item->getLastPartion(0, "", false);
         $this->editdetail->pricestock->setText(H::fa($price));
 
         $store_id = $this->docform->store->getValue();

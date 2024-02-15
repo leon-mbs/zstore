@@ -94,7 +94,7 @@ class ProdReceipt extends \App\Pages\Base
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'Order') {
                         foreach ($basedoc->unpackDetails('detaildata') as $item) {
-                            $item->price = $item->getLastPartion();
+                            $item->price = $item->getLastPartion($this->_doc->headerdata['store'],"",true);
                             $this->_itemlist[] = $item;
                         }
 
