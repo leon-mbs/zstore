@@ -95,6 +95,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total'));
+        $this->docform->add(new DropDownChoice('store', \App\Entity\Store::getList(), H::getDefStore()));
 
         $api = new \App\Modules\NP\Helper();
       
@@ -170,6 +171,7 @@ class Order extends \App\Pages\Base
             $this->docform->baypoint->setValue($this->_doc->headerdata['baypoint'] ?? 0);
             $this->docform->bayhouse->setText($this->_doc->headerdata['bayhouse'] );
             $this->docform->bayflat->setText($this->_doc->headerdata['bayflat'] );
+            $this->docform->store->setValue($this->_doc->headerdata['store'] );
             
             
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
@@ -478,6 +480,8 @@ class Order extends \App\Pages\Base
             $this->_doc->payed = 0;
             $this->_doc->headerdata['payed'] = 0;
             $this->_doc->headerdata['payment'] = 0;
+            $this->_doc->headerdata['store'] = $this->docform->store->getValue() ;
+            $this->_doc->headerdata['storename'] = $this->docform->store->getValueName() ;
 
             if ($sender->id == 'paydoc') {
                 $this->_doc->payed = $this->docform->payed->getText();
@@ -511,6 +515,9 @@ class Order extends \App\Pages\Base
             }
             if ($sender->id == 'topaydoc') {
                 $this->_doc->updateStatus(Document::STATE_WP);
+            }
+            if ($this->_doc->headerdata['store'] > 0) {
+                $this->_doc->reserve($this->_doc->headerdata['store']); 
             }
 
 

@@ -67,7 +67,12 @@
                         <select class="form-control" zippy="pricetype">
                         </select>
                     </div>
-                  
+                        <div class="form-group">
+                            <label for="store">Резервувати товари на  </label>
+                            <select zippy="store" class="form-control     ">
+                                <option value="0">Не резервувати</option>
+                            </select>
+                        </div>                  
                     
                      <div class="form-group  ">
                         <label  data-label="promocode" for="promocode">Промо-код</label>
@@ -209,13 +214,13 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-6">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-outline-secondary  ">
-                    &nbsp; <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-outline-primary  ">
-                    &nbsp;<input zippy="execdoc" type="submit"   value="На виконання" class="btn btn-outline-primary  ">
-                    &nbsp;<input zippy="topaydoc" type="submit" title="Перевод в  статус Очікує оплату" value="До сплати" class="btn btn-outline-info  ">
-                    &nbsp;<a data-toggle="modal" data-target="#modalpayed"  href="javascript:void(0);"  class="btn btn-outline-info  ">Оплатити</a>
-               
+                <div class="col-8">
+                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-secondary  ">
+                    &nbsp; <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-primary  ">
+                    &nbsp;<input zippy="execdoc" type="submit"   value="На виконання" class="btn btn-primary  ">
+                    &nbsp;<input zippy="topaydoc" type="submit" title="Перевод в  статус Очікує оплату" value="До сплати" class="btn btn-info  ">
+                    &nbsp;<a data-toggle="modal" data-target="#modalpayed"  href="javascript:void(0);"  class="btn btn-info  ">Оплатити</a>
+
 
                 </div>
             </div>
