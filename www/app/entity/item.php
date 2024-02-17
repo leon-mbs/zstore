@@ -496,7 +496,7 @@ class Item extends \ZCL\DB\Entity
             $sql .= "  and  st.snumber =  " . $conn->qstr($snumber);
         }
      
-        $sql = $sql . " order  by  e.entry_id desc  ".$limit;
+        $sql = $sql . " order  by  e.entry_id desc  "  ;
 
         foreach($conn->Execute($sql) as $r) {
            return doubleval($r['p']);            
@@ -809,7 +809,9 @@ class Item extends \ZCL\DB\Entity
         if ($price == 0) {   
             $price = $this->getPartion(0);
         }
-
+        if($price==0) {
+            \App\System::setWarnMsg("Для {$item->itemname} не  вирахувано собївартїсть") ;
+        }
         return $price;
     }
 

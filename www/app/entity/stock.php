@@ -29,7 +29,7 @@ class Stock extends \ZCL\DB\Entity
      * @static
      */
     public static function findArrayAC($store, $partname = "") {
-    //    $partiontype = \App\System::getOption('common', 'partiontype');
+
          
         $criteria = "qty > 0 and itemdisabled <> 1 and store_id=" . $store;
         if (strlen($partname) > 0) {
@@ -46,13 +46,7 @@ class Stock extends \ZCL\DB\Entity
             if (strlen($value->snumber) > 0) {
                 $value->itemname .= ' (' . $value->snumber . ',' . \App\Helper::fd($value->sdate) . ')';
             }
-  /*
-            if ($partiontype == "1") { //отдельно  по входным  ценам
-                $list[$key] = $value->itemname . ', ' . \App\Helper::fqty($value->partion);
-            } else {
-                $list[$key] = $value->itemname;
-            }
-*/            
+             
             $list[$key] = $value->itemname;
         }
 
@@ -69,8 +63,7 @@ class Stock extends \ZCL\DB\Entity
      */
     public static function getStock($store_id, $item_id, $price, $snumber = "", $sdate = 0, $create = false) {
 
-     //   $partiontype = \App\System::getOption('common', 'partiontype');
-
+    
         $conn = \ZDB\DB::getConnect();
 
         $where = "store_id = {$store_id} and item_id = {$item_id}   ";
@@ -98,7 +91,7 @@ class Stock extends \ZCL\DB\Entity
 
             $stock->save();
         }
-        if ($partiontype == '1' && $price > 0) {    //учет  по  последней цене
+        if ( $price > 0) {    //учет  по  последней цене
             $stock->partion = $price;
           //  $stock->save();
         }
