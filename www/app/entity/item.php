@@ -809,7 +809,9 @@ class Item extends \ZCL\DB\Entity
         if ($price == 0) {   
             $price = $this->getPartion(0);
         }
-
+        if($price==0) {
+            \App\System::setWarnMsg("Для {$item->itemname} не  вирахувано собївартїсть") ;
+        }
         return $price;
     }
 

@@ -103,6 +103,7 @@ class Order extends \App\Entity\Doc\Document
         $list['Task'] = self::getDesc('Task');
         $list['TTN'] = self::getDesc('TTN');
         $list['Order'] = self::getDesc('Order');
+        $list['ProdReceipt'] = self::getDesc('ProdReceipt');
 
 
         return $list;

@@ -110,6 +110,15 @@ class ProdReceipt extends \App\Pages\Base
                         $this->_itemlist[] = $item;
                     }
                 }
+                if ($basedoc->meta_name == 'Order') {
+
+                    $this->docform->notes->setText('замовлення ' . $basedoc->document_number);
+
+                    foreach ($basedoc->unpackDetails('detaildata') as $item) {
+                        $item->price = $item->getProdprice();
+                        $this->_itemlist[] = $item;
+                    }
+                }
             }
 
             if ($st_id > 0) {
