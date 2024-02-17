@@ -124,8 +124,13 @@ class Update extends \App\Pages\Base
             $archive = _ROOT.'upload/update.zip' ;
             @unlink($archive) ;
             
-            if (file_put_contents($archive, file_get_contents($this->_tvars['archive'] )))
+            @file_put_contents($archive, file_get_contents($this->_tvars['archive'] )) ;
          
+            if(filesize($archive)==0) {
+                $this->setError('Помилка завантаження файду');
+                return;        
+            }
+
             if ($zip->open($archive) === TRUE) {
            
                 $destination =_ROOT; 
@@ -138,7 +143,7 @@ class Update extends \App\Pages\Base
                 return;        
                
            }
-           $this->setSuccess('БД оновлена')  ;
+               $this->setSuccess('Файли оновлені')  ;
            App::Redirect("\\App\\Pages\\Update");
          
       } catch(\Exception $e){
