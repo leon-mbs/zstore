@@ -231,7 +231,10 @@ class Task extends \App\Pages\Base
         $item->quantity = $this->editdetailprod->editqtyprod->getText();
         $item->desc = $this->editdetailprod->editdescprod->getText();
 
-
+        if ( doubleval($item->quantity) == 0) {
+            $this->setError("Не вказано кількість");
+            return;
+        }
 
         $this->_prodlist[ ] = $item;
 

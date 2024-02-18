@@ -88,7 +88,7 @@ class ProdIssue extends \App\Pages\Base
 
                         $this->docform->notes->setText('Підстава ' . $basedoc->document_number);
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
-
+                       //комплекты
                         foreach($basedoc->unpackDetails('prodlist') as $prod) {
                             $set =  \App\Entity\ItemSet::find("item_id > 0  and pitem_id=" . $prod->item_id);
                             foreach($set as $m) {
@@ -102,9 +102,9 @@ class ProdIssue extends \App\Pages\Base
 
                             }
 
-                            $this->_itemlist = array_values($this->_itemlist) ;
+                           // $this->_itemlist = array_values($this->_itemlist) ;
                         }
-                        //комплекты
+                        //работы
                         foreach($basedoc->unpackDetails('detaildata') as $s) {
                             $ser = \App\Entity\Service::load($s->service_id);
                             if(!is_array($ser->itemset)) {
@@ -127,7 +127,7 @@ class ProdIssue extends \App\Pages\Base
 
                             }
 
-                            $this->_itemlist = array_values($this->_itemlist) ;
+                          //  $this->_itemlist = array_values($this->_itemlist) ;
                         }
 
 
