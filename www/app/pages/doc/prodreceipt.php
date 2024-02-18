@@ -89,35 +89,27 @@ class ProdReceipt extends \App\Pages\Base
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                     }
-                }
-                if ($basedoc instanceof Document) {
-                    $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'Order') {
+                        $this->docform->notes->setText('Замовлення ' . $basedoc->document_number);
+                        
                         foreach ($basedoc->unpackDetails('detaildata') as $item) {
-                            $item->price = $item->getLastPartion($this->_doc->headerdata['store'],"",true);
+                            $item->price = $item->getProdprice($this->_doc->headerdata['store'],"",true);
                             $this->_itemlist[] = $item;
                         }
 
                     }
-                }
-                if ($basedoc->meta_name == 'Task') {
+                    if ($basedoc->meta_name == 'Task') {
 
-                    $this->docform->notes->setText('Наряд ' . $basedoc->document_number);
-                    $this->docform->parea->setValue($basedoc->headerdata['parea']);
+                        $this->docform->notes->setText('Наряд ' . $basedoc->document_number);
+                        $this->docform->parea->setValue($basedoc->headerdata['parea']);
 
-                    foreach ($basedoc->unpackDetails('prodlist') as $item) {
-                        $item->price = $item->getProdprice();
-                        $this->_itemlist[] = $item;
+                        foreach ($basedoc->unpackDetails('prodlist') as $item) {
+                            $item->price = $item->getProdprice();
+                            $this->_itemlist[] = $item;
+                        }
                     }
-                }
-                if ($basedoc->meta_name == 'Order') {
-
-                    $this->docform->notes->setText('замовлення ' . $basedoc->document_number);
-
-                    foreach ($basedoc->unpackDetails('detaildata') as $item) {
-                        $item->price = $item->getProdprice();
-                        $this->_itemlist[] = $item;
-                    }
+              
+                    
                 }
             }
 
