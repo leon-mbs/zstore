@@ -159,7 +159,7 @@ class EmpAcc extends \App\Pages\Base
 
         $conn = \ZDB\DB::getConnect();
 
-        $sql = "select coalesce(sum(amount),0) from empacc where optype < 100 and  emp_id = {$emp_id} and createdon < " . $conn->DBDate($from);
+        $sql = "select coalesce(sum(amount),0) from empacc where    emp_id = {$emp_id} and createdon < " . $conn->DBDate($from);
 
         $b = $conn->GetOne($sql);
 
