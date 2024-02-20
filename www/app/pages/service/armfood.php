@@ -124,6 +124,10 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->navform->add(new AutocompleteTextInput('itemfast'))->onText($this, 'OnAutoItem');
         $this->docpanel->navform->add(new SubmitButton('addfast'))->onClick($this, 'addfastOnClick');
 
+        $this->docpanel->navform->add(new TextInput('promocode'));
+        $this->docpanel->navform->promocode->setVisible(\App\Entity\PromoCode::findCnt('') > 0);
+        
+        
         $this->docpanel->navform->add(new ClickLink('openshift', $this, 'OnOpenShift'));
         $this->docpanel->navform->add(new ClickLink('closeshift', $this, 'OnCloseShift'));
 
@@ -833,6 +837,7 @@ class ARMFood extends \App\Pages\Base
 
             $this->docpanel->listsform->notes->setText($this->_doc->notes);
             $this->docpanel->listsform->table->setText($this->_doc->headerdata['table']);
+            $this->docpanel->navform->promocode->setText($this->_doc->headerdata['promocode']);
             $this->docpanel->listsform->bonus->setText($this->_doc->headerdata['bonus']);
             $this->docpanel->listsform->totaldisc->setText($this->_doc->headerdata['totaldisc']);
             $this->docpanel->listsform->addcust->setVisible(false) ;
@@ -928,6 +933,20 @@ class ARMFood extends \App\Pages\Base
         foreach ($this->_itemlist as $item) {
             $amount += H::fa($item->quantity * $item->price);
         }
+        
+        $code= trim($this->docpanel->navform->promocode->getText());
+        if($code != '') {
+            $r = \App\Entity\PromoCode::check($code,$this->docpanel->listsform->customer->getKey())  ;
+            if($r == ''){
+                $p = \App\Entity\PromoCode::findByCode($code);
+                $disc = doubleval($p->disc );
+                if($disc >0)  {
+                    $td = H::fa( $amount * ($p->disc/100) );
+                    $this->docpanel->listsform->totaldisc->setText($td);
+                }        
+            }
+        }         
+        
         $this->docpanel->listsform->totalamount->setText(H::fa($amount));
 
 
@@ -1372,6 +1391,7 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->headerdata["inn"] = $firm['inn'];
         $this->_doc->headerdata["address"] = $firm['address'];
         $this->_doc->headerdata["phone"] = $firm['phone'];
+        $this->_doc->headerdata["promocode"] = $this->docpanel->navform->promocode->getText();
         $this->_doc->headerdata["totaldisc"] = $this->docpanel->listsform->totaldisc->getText();
         $this->_doc->headerdata["bonus"] = $this->docpanel->listsform->bonus->getText();
 
@@ -1877,6 +1897,33 @@ class ARMFood extends \App\Pages\Base
     }
     
 
-    
+     public function chechPromo($args, $post=null) {
+        $code = trim($args[0]) ;
+        if($code=='')  {
+            return json_encode([], JSON_UNESCAPED_UNICODE);             
+        }
+        $r = \App\Entity\PromoCode::check($code,$this->docpanel->listsform->customer->getKey())  ;
+        if($r != ''){
+            return json_encode(array('error'=>$r), JSON_UNESCAPED_UNICODE);                
+        }
+        $total = 0;
+
+        foreach ($this->_itemlist as $item) {
+            $total += H::fa($item->quantity * $item->price);
+        }        
+
+        $p = \App\Entity\PromoCode::findByCode($code);
+        $disc = doubleval($p->disc );
+        if($disc >0)  {
+            $td = H::fa( $total * ($p->disc/100) );
+            $ret=array('disc'=>$td) ;
+            return json_encode($ret, JSON_UNESCAPED_UNICODE);
+             
+        }        
+        
+        return json_encode([], JSON_UNESCAPED_UNICODE);             
+       
+
+    }   
 
 }

@@ -161,6 +161,8 @@
 
                             {{/usescanner}}
 
+                            <input placeholder="Промокод"  style="width:150px"  zippy="promocode" class="form-control">
+                            
                            {{#fiscal}}
                           &nbsp;  &nbsp;
                             <a zippy="openshift"><i class="fa fa-bullhorn"></i> Вiдкрити змiну</a>
@@ -704,7 +706,23 @@
              return true;
           }            
           
-    
+                 $("#promocode").blur(function () {
+                     var promodode = $("#promocode").val();  
+                     
+                   
+                     
+                      callPM('chechPromo',[promodode], null,(data)=> 
+                      {
+                         if(checkPMAnswer(data))   {
+
+                           $('#totaldisc').val(data.disc)                             
+                         }  else {
+                            $('#totaldisc').val('0')                                                          
+                            $('#promocode').val('')                                                          
+                         }
+                          
+                      });             
+                });     
           var vapp = new Vue({
               el: '#vapp',
            
