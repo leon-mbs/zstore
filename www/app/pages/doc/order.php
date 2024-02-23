@@ -95,7 +95,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total'));
-        $this->docform->add(new DropDownChoice('store', \App\Entity\Store::getList(), H::getDefStore()));
+        $this->docform->add(new DropDownChoice('store', \App\Entity\Store::getList(), 0));
 
         $api = new \App\Modules\NP\Helper();
       

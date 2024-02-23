@@ -256,6 +256,9 @@ class CalcSalary extends \App\Pages\Base
 
 
         foreach ($this->_list as $emp) {
+            if(intval($emp->employee_id)==0) {
+                continue;
+            }
             $e = array('emp_name'=>$emp->emp_name,'id'=>$emp->employee_id);
             $e['sellvalue'] = 0;
             $u = \App\Entity\User::getByLogin($emp->login) ;
