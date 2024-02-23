@@ -512,12 +512,12 @@ class Order extends \App\Pages\Base
 
             if ($sender->id == 'execdoc' || $sender->id == 'paydoc' || $sender->id == 'topaydoc') {
                 $this->_doc->updateStatus(Document::STATE_INPROCESS);
+                if ($this->_doc->headerdata['store'] > 0) {
+                    $this->_doc->reserve($this->_doc->headerdata['store']); 
+                }
             }
             if ($sender->id == 'topaydoc') {
                 $this->_doc->updateStatus(Document::STATE_WP);
-            }
-            if ($this->_doc->headerdata['store'] > 0) {
-                $this->_doc->reserve($this->_doc->headerdata['store']); 
             }
 
 
