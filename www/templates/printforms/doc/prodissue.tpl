@@ -2,22 +2,22 @@
 
 
     <tr>
-        <td style="font-weight: bolder;font-size: larger;" align="center" colspan="8" valign="middle">
+        <td style="font-weight: bolder;font-size: larger;" align="center" colspan="9" valign="middle">
             Списання на виробництво № {{document_number}} від {{date}} <br>
         </td>
     </tr>
     <tr>
-        <td colspan="8" valign="middle">
+        <td colspan="9" valign="middle">
             Виробнича ділянка <b>{{pareaname}}</b><br>
         </td>
     </tr>
    <tr>
-        <td colspan="8" valign="middle">
+        <td colspan="9" valign="middle">
             Зi складу <b>{{storename}}</b><br>
         </td>
     </tr>
     <tr>
-        <td colspan="8" valign="middle">
+        <td colspan="9" valign="middle">
             {{{notes}}}<br>
         </td>
     </tr>
@@ -28,6 +28,7 @@
         </th>
         <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Код</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Од.</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Ком.</th>
 
         <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Кіл.</th>
     </tr>
@@ -37,6 +38,7 @@
         <td colspan="2">{{tovar_name}}</td>
         <td colspan="2">{{tovar_code}}</td>
         <td>{{msr}}</td>
+        <td>{{cell}}</td>
 
         <td align="right">{{quantity}}</td>
 
