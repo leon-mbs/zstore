@@ -32,6 +32,7 @@ class ProdIssue extends Document
                                   "tovar_name" => $name,
                                   "tovar_code" => $item->item_code,
                                   "msr"        => $item->msr,
+                                  "cell"       => $item->cell,
                                   "quantity"   => H::fqty($item->quantity)
                 );
             }

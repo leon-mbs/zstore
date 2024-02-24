@@ -450,7 +450,7 @@ class Base extends \Zippy\Html\WebPage
             $header['lastsum']=Helper::fa($doc->amount);
             $header['laststatus']   =  \App\Entity\Doc\Document::getStateName($doc->state)  ;
 
-            $goods = [];
+            $header['goods'] = [];
 
             $sql = "select items.item_id, items.itemname,items.item_code    from 
              entrylist_view  join items  on items.item_id = entrylist_view.item_id 
@@ -569,7 +569,7 @@ class Base extends \Zippy\Html\WebPage
             foreach($items as $k=>$v)  {
                 if($v->item_id == $args[0] ) {
                     $i=  $k;
-                    $break;
+                    break;
                 }
             }
             if($i==-1)  {

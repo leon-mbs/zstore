@@ -95,7 +95,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total'));
-        $this->docform->add(new DropDownChoice('store', \App\Entity\Store::getList(), H::getDefStore()));
+        $this->docform->add(new DropDownChoice('store', \App\Entity\Store::getList(), 0));
 
         $api = new \App\Modules\NP\Helper();
       
@@ -512,12 +512,12 @@ class Order extends \App\Pages\Base
 
             if ($sender->id == 'execdoc' || $sender->id == 'paydoc' || $sender->id == 'topaydoc') {
                 $this->_doc->updateStatus(Document::STATE_INPROCESS);
+                if ($this->_doc->headerdata['store'] > 0) {
+                    $this->_doc->reserve($this->_doc->headerdata['store']); 
+                }
             }
             if ($sender->id == 'topaydoc') {
                 $this->_doc->updateStatus(Document::STATE_WP);
-            }
-            if ($this->_doc->headerdata['store'] > 0) {
-                $this->_doc->reserve($this->_doc->headerdata['store']); 
             }
 
 

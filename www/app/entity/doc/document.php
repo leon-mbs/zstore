@@ -619,6 +619,7 @@ class Document extends \ZCL\DB\Entity
             //           $prevnumber = $d->document_number;
         }
         $letter = preg_replace('/[0-9]/', '', $prevnumber);
+        $letter = str_replace('-','',$letter) ;
         $letter = $conn->qstr($letter.'%');
 
         $sql = "select document_number from  documents  where   document_number like {$letter}     {$branch}  order  by document_id desc ".$limit;
