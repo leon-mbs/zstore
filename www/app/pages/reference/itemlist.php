@@ -201,6 +201,7 @@ class ItemList extends \App\Pages\Base
 
         $row->add(new Label('cell', $item->cell));
         $row->add(new Label('inseria'))->setVisible($item->useserial);
+        $row->add(new Label('inprice'))->setVisible($item->noprice!=1);
         $row->add(new Label('hasaction'))->setVisible($item->hasAction());
         if($item->hasAction()) {
             $title="";
