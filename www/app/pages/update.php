@@ -143,8 +143,9 @@ class Update extends \App\Pages\Base
                 return;        
                
            }
-               $this->setSuccess('Файли оновлені')  ;
-           App::Redirect("\\App\\Pages\\Update");
+           $this->setSuccess('Файли оновлені')  ;
+           App::RedirectURI("/index.php?p=/App/Pages/Update");
+
          
       } catch(\Exception $e){
             $msg = $e->getMessage()  ;
@@ -223,7 +224,7 @@ class Update extends \App\Pages\Base
  
 
          $this->setSuccess('БД оновлена')  ;
-         App::Redirect("\\App\\Pages\\Update");
+         App::RedirectURI("/index.php?p=/App/Pages/Update");
          
          
        } catch(\Exception $e){
