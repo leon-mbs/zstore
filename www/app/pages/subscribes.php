@@ -42,6 +42,7 @@ class Subscribes extends \App\Pages\Base
         $this->editform->add(new CheckBox('edithtml'));
         $this->editform->add(new TextArea('editmsgtext'));
         $this->editform->add(new TextInput('editmsgsubject'));
+        $this->editform->add(new TextInput('editurl'));
 
         $this->editform->add(new DropDownChoice('editeventtype', Subscribe::getEventList(), Subscribe::EVENT_DOCSTATE))->onChange($this, 'update');
         $this->editform->add(new DropDownChoice('editdoctype', H::getDocTypes(), 0));
@@ -68,6 +69,15 @@ class Subscribes extends \App\Pages\Base
         $this->editform->editmsgsubject->setVisible($mt == Subscribe::MSG_EMAIL);
         $this->editform->editattach->setVisible( $mt == Subscribe::MSG_BOT);
         $this->editform->edithtml->setVisible($mt == Subscribe::MSG_EMAIL || $mt == Subscribe::MSG_BOT);
+
+        $this->editform->editurl->setVisible(false);
+        if($rt == Subscribe::RSV_WH) {
+            $this->editform->editmsgtype->setVisible(false);
+            $this->editform->editurl->setVisible(true);
+            
+        }
+        
+        
     }
 
     public function sublistOnRow($row) {
@@ -116,6 +126,7 @@ class Subscribes extends \App\Pages\Base
 
         $this->editform->editmsgtext->setText($this->_sub->msgtext);
         $this->editform->editmsgsubject->setText($this->_sub->msgsubject);
+        $this->editform->editurl->setText($this->_sub->url);
         $this->editform->editdisabled->setCheCked($this->_sub->disabled);
         $this->editform->editattach->setCheCked($this->_sub->attach);
         $this->editform->edithtml->setCheCked($this->_sub->html);
@@ -143,22 +154,34 @@ class Subscribes extends \App\Pages\Base
 
         $this->_sub->msgtext = trim($this->editform->editmsgtext->getText());
         $this->_sub->msgsubject = trim($this->editform->editmsgsubject->getText());
+        $this->_sub->url = trim($this->editform->editurl->getText());
         $this->_sub->disabled = $this->editform->editdisabled->isCheCked() ? 1 : 0;
         $this->_sub->html = $this->editform->edithtml->isCheCked() ? 1 : 0;
 
-        if ($this->_sub->msg_type == 0) {
-            $this->setError("Не вказано тип повідомлення");
-            return;
-        }
         if ($this->_sub->reciever_type == Subscribe::RSV_USER && $this->_sub->user_id == 0) {
             $this->setError("Не вказано користувача");
             return;
         }
 
-        if (strlen($this->_sub->msgtext) == 0) {
-            $this->setError("Не вказано текст повідомлення");
+        if ($this->_sub->reciever_type != Subscribe::RSV_WH ) {
+            $this->_sub->msg_type =0;           
+            $this->_sub->msg_typename ='';           
+            if (strlen($this->_sub->msgtext) == 0) {
+                $this->setError("Не вказано текст повідомлення");
+                return;
+            }
+            if ($this->_sub->msg_type == 0) {
+                $this->setError("Не вказано тип повідомлення");
+                return;
+            }
+        }
+        
+        if ($this->_sub->reciever_type == Subscribe::RSV_WH && strlen($this->_sub->url) == 0) {
+            $this->setError("Не вказано URL");
             return;
         }
+        
+        
         $this->_sub->save();
         $this->Reload();
         $this->plist->setVisible(true);

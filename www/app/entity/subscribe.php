@@ -20,11 +20,13 @@ class Subscribe extends \ZCL\DB\Entity
     public const MSG_EMAIL  = 2;
     public const MSG_SMS    = 3;
     public const MSG_VIBER  = 4;
-    public const MSG_BOT  = 5;
+    public const MSG_BOT    = 5;
+
     //типы  получателей
     public const RSV_CUSTOMER  = 1;
     public const RSV_DOCAUTHOR = 2;
     public const RSV_USER      = 3;
+    public const RSV_WH        = 4;
 
     protected function init() {
         $this->sub_id = 0;
@@ -40,6 +42,7 @@ class Subscribe extends \ZCL\DB\Entity
         $this->statename = (string)($xml->statename[0]);
         $this->doctypename = (string)($xml->doctypename[0]);
         $this->msgsubject = (string)($xml->msgsubject[0]);
+        $this->url = (string)($xml->url[0]);
         $this->username = (string)($xml->username[0]);
         $this->user_id = (int)($xml->user_id[0]);
         $this->state = (int)($xml->state[0]);
@@ -67,6 +70,7 @@ class Subscribe extends \ZCL\DB\Entity
         $this->detail .= "<statename>{$this->statename}</statename>";
         $this->detail .= "<username>{$this->username}</username>";
         $this->detail .= "<msgsubject>{$this->msgsubject}</msgsubject>";
+        $this->detail .= "<url>{$this->url}</url>";
 
         $this->detail .= "</detail>";
 
@@ -111,6 +115,7 @@ class Subscribe extends \ZCL\DB\Entity
         $list[self::RSV_CUSTOMER] = "Контрагент документа";
         $list[self::RSV_DOCAUTHOR] = "Автор документа";
         $list[self::RSV_USER] = "Користувач системи";
+        $list[self::RSV_WH] = "Web Hook";
 
         return $list;
     }
@@ -207,6 +212,9 @@ class Subscribe extends \ZCL\DB\Entity
             }
             if(strlen($chat_id)>0 && $sub->msg_type == self::MSG_BOT) {
                 $ret =   self::sendBot($chat_id, $text, $sub->attach==1 ? $doc : null,$sub->html==1) ;
+            }
+            if($sub->reciever_type == self::RSV_WH) {
+                $ret =   self::sendHook($sub->url, $text) ;
             }
 
             if(strlen($ret)>0) {
@@ -671,4 +679,39 @@ class Subscribe extends \ZCL\DB\Entity
         }
     }
 
+    
+    public static function sendHook($url, $text) {
+
+        try {
+            
+   
+                $curl = curl_init($url);
+                curl_setopt($curl, CURLOPT_POST, true);
+                curl_setopt($curl, CURLOPT_POSTFIELDS, $text);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+     //           $output = curl_exec($curl);
+                if (curl_errno($curl) > 0) {
+
+                    return 'Curl error: ' . curl_error($curl);
+                }
+                $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+                if ($status_code >= 300 ) {
+                    return 'http code: ' . $status_code;
+                }
+                if ($status_code == 0 ) {
+                    return 'http code:0 ' ;
+                }
+                 
+                
+                curl_close($curl);
+                return '';
+
+        } catch(\Exception $e) {
+
+            return $e->getMessage();
+        }
+    }
+    
 }
