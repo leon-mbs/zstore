@@ -11,17 +11,19 @@ namespace App\Entity;
  */
 class EmpAcc extends \ZCL\DB\Entity
 {
-    //реальные движения  по  счету изменяют  баланс
+    // движения  с  кассой
     public const  INCOME_FROM_MF = 1; // перечисление  со  счета
     public const  OUTCOME_TO_MF  = 2; //  перечисление на  счет
     public const  SALARY         = 3; //  начисления  зарплаты
     public const  SALARY_PAY     = 4; //  выплата  зарплаты
     public const  ADVANCE_ACC    = 5; // авансовый отчет
 
-    //В   начислениях и удержаниях не  отражаются
+    // движения  без кассы
+    public const  BONUS          = 51; // бонусы
+    public const  FINE           = 52; // штрафы
+
+    //Вне начислений  и удержаний  
     public const  ADVANCE = 101; // аванс
-    public const  BONUS   = 102; // бонусы
-    public const  FINE    = 103; // штрафы
 
 
     protected function init() {

@@ -44,12 +44,14 @@ class Discounts extends \App\Pages\Base
         $this->add(new ClickLink('tabi', $this, 'onTab'));
         $this->add(new ClickLink('tabs', $this, 'onTab'));
         $this->add(new ClickLink('tabp', $this, 'onTab'));
+        $this->add(new ClickLink('tabe', $this, 'onTab'));
         //панели
         $this->add(new Panel('otab'));
         $this->add(new Panel('ctab'));
         $this->add(new Panel('itab'));
         $this->add(new Panel('stab'));
         $this->add(new Panel('ptab'));
+        $this->add(new Panel('etab'));
 
         $this->onTab($this->tabo);
 
@@ -258,6 +260,8 @@ class Discounts extends \App\Pages\Base
 
         $this->_tvars['tabsbadge'] = $sender->id == 'tabs' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
         $this->_tvars['tabpbadge'] = $sender->id == 'tabp' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
+        $this->_tvars['tabebadge'] = $sender->id == 'tabe' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
+
 
         $this->ctab->setVisible($sender->id == 'tabc');
         $this->otab->setVisible($sender->id == 'tabo');
@@ -265,6 +269,7 @@ class Discounts extends \App\Pages\Base
 
         $this->stab->setVisible($sender->id == 'tabs');
         $this->ptab->setVisible($sender->id == 'tabp');
+        $this->etab->setVisible($sender->id == 'tabe');
 
     }
 

@@ -37,6 +37,9 @@ class Price extends \App\Pages\Base
 
         $catlist = array();
         foreach (Category::getList() as $k => $v) {
+            if($v->noprice==1) {
+                continue;
+            }
             $catlist[$k] = $v;
         }
         $this->filter->add(new DropDownChoice('searchcat', $catlist, 0));
@@ -91,9 +94,22 @@ class Price extends \App\Pages\Base
         if(strlen($brand) > 0){
             $sql = $sql . " and manufacturer=". Item::qstr($brand) ;
         }
-        
+
+        $cats = Category::find('') ;                   
+           
         foreach (Item::findYield($sql, "cat_name,itemname") as $item) {
 
+
+            if($item->cat_id >0) {
+                $c= $cats[$item->cat_id]?? null;
+                if($c instanceof Category) {
+                    if($c->noprice) {
+                        contiue;
+                    }
+                }
+                
+            }
+            
             $qty = $item->getQuantity();
 
             if ($onstore && ($qty > 0) == false) {
