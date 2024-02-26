@@ -209,7 +209,13 @@ class Discounts extends \App\Pages\Base
         $this->ptab->formpan->pform->add(new DropDownChoice('paddtype'))->onChange($this,"onPType") ;
         $this->ptab->listpan->plist->Reload();
 
+        // сотрулники
+        $form = $this->etab->add(new Form('empform'));
+        $form->onSubmit($this, "onEmp");
 
+        $form->add(new  TextInput("ebonussell", $disc["bonussell"]));
+        $form->add(new  TextInput("efineret", $disc["fineret"]));
+ 
       
     }
 
@@ -758,6 +764,16 @@ class Discounts extends \App\Pages\Base
  
     }
 
+    public function onEmp($sender) {
+        $disc = System::getOptions("discount");
+   
+
+        $disc["fineret"] = $sender->efineret->getText();
+        $disc["bonussell"] = $sender->ebonussell->getText();
+
+        System::setOptions("discount", $disc);
+        $this->setSuccess('Збережено');
+    }
 
 }
 

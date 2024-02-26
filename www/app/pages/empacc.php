@@ -164,16 +164,19 @@ class EmpAcc extends \App\Pages\Base
         $b = $conn->GetOne($sql);
 
 
-        $sql =    $sql = "select * from empacc_view where optype < 100 and  emp_id = {$emp_id} and createdon <= " . $conn->DBDate($to) . " and createdon >= " . $conn->DBDate($from) ." order  by  ea_id ";
+        $sql =    $sql = "select * from empacc_view where    emp_id = {$emp_id} and createdon <= " . $conn->DBDate($to) . " and createdon >= " . $conn->DBDate($from) ." order  by  ea_id ";
         $rc = $conn->Execute($sql);
 
-        $detail = array();
+        $en=\App\Entity\EmpAcc::getNames();
 
+        $detail = array();
+        
         foreach ($rc as $row) {
             $in =   doubleval($row['amount']) > 0 ? $row['amount'] : 0;
             $out =   doubleval($row['amount']) < 0 ? 0-$row['amount'] : 0;
             $detail[] = array(
                 'notes'    => $row['notes'],
+                'opname'    => $en[$row['optype']],
                 'dt'    => H::fd(strtotime($row['createdon'])),
                 'doc'   => $row['document_number'],
                 'begin' => H::fa($b),
@@ -183,7 +186,7 @@ class EmpAcc extends \App\Pages\Base
             );
 
 
-            $b = $b + $in - $out;
+            $b = H::fa($b + $in - $out);
         }
 
         $this->_tvars['mempacc']  =  $detail;

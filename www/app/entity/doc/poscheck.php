@@ -346,6 +346,21 @@ class POSCheck extends Document
             \App\Entity\PromoCode::apply($this->headerdata['promocode'],$this);
         };
        
+        //бонус  сотруднику
+
+        $disc = \App\System::getOptions("discount");
+        $emp_id = \App\System::getUser()->employee_id ;
+        if($emp_id >0 && $disc["bonussell"] >0) {
+            $b =  $this->amount * $disc["bonussell"] / 100;
+            $ua = new \App\Entity\EmpAcc();
+            $ua->optype = \App\Entity\EmpAcc::BONUS;
+            $ua->document_id = $this->document_id;
+            $ua->emp_id = $emp_id;
+            $ua->amount = $b;
+            $ua->save();
+
+        }
+      
         
         return true;
     }
