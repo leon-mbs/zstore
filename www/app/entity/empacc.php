@@ -41,17 +41,26 @@ class EmpAcc extends \ZCL\DB\Entity
         return $conn->Execute($sql);
     }
 
-    public static function getAmountByType($y, $m, $t) {
-
-        $dt = new \App\DateTime(strtotime($y . '-' . $m . '-01'));
-
-        $from = $dt->startOfMonth()->getTimestamp();
-        $to = $dt->endOfMonth()->getTimestamp();
+    public static function getAmountByType( $t, $y='', $m='') {
 
         $conn = \ZDB\DB::getConnect();
-        $sql = "select coalesce(sum(amount),0) as am,emp_id from  empacc_view  where  optype = {$t} and createdon >=" . $conn->DBDate($from) . " and createdon <=" . $conn->DBDate($to) . "  group by  emp_id   ";
+        $ret=[];
+        if($y=='') {
+            $sql = "select coalesce(  ( sum(amount)),0) as am,emp_id from  empacc_view  where  optype = {$t}   group by  emp_id   ";
+            
+        }
+        else {
+            $dt = new \App\DateTime(strtotime($y . '-' . $m . '-01'));
 
-        return $conn->Execute($sql);
+            $from = $dt->startOfMonth()->getTimestamp();
+            $to = $dt->endOfMonth()->getTimestamp();
+            $sql = "select coalesce(abs( sum(amount)),0) as am,emp_id from  empacc_view  where  optype = {$t} and createdon >=" . $conn->DBDate($from) . " and createdon <=" . $conn->DBDate($to) . "  group by  emp_id   ";
+        }
+        
+        foreach($conn->Execute($sql) as $r) {
+           $ret[]= $r;
+        }
+        return  $ret ;
     }
 
     

@@ -54,31 +54,26 @@ class EmpAcc extends \App\Pages\Base
         $yto = $this->filterz->yto->getValue();
         $mto = $this->filterz->mto->getValue();
         $mtoname = $this->filterz->mto->getValueName();
-
-        $dt = new \App\DateTime(strtotime($yfrom . '-' . $mfrom . '-01'));
-        $from = $dt->startOfMonth()->getTimestamp();
-
-        $dt = new \App\DateTime(strtotime($yto . '-' . $mto . '-01'));
-        $to = $dt->endOfMonth()->getTimestamp();
-
+ 
 
         $conn = \ZDB\DB::getConnect();
-
-        
-
+   
         $detail = array();
 
         $from = strtotime($yfrom . '-' . $mfrom . '-01');
-        $to = strtotime($yto . '-' . $mto . '-01 23:59:59');
+        $to = strtotime($yto . '-' . $mto . '-01');
+        $to = strtotime('+ 1 month',$to) -1;
+        
         $total = 0;
         foreach (\App\Entity\Doc\Document::findYield("meta_name = 'OutSalary' and state >= 5 ") as $doc) {
 
             $date = strtotime($doc->headerdata['year'] . '-' . $doc->headerdata['month'] . '-01');
 
-            $d1 = \App\Helper::fdt($from);
-            $d2 = \App\Helper::fdt($to);
-            $d3 = \App\Helper::fdt($date);
-
+//            $d1 = \App\Helper::fdt($from);
+//            $d2 = \App\Helper::fdt($to);
+//            $d3 = \App\Helper::fdt($date);
+          
+      
             if ($date < $from || $date > $to) {
                 continue;
             }

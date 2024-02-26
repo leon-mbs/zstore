@@ -6,7 +6,7 @@
     <body>
         <div class="row">
                    
-            <div class="col-12  col-lg-6  col-xl-5 ">
+            <div class="col-12  col-lg-6  col-xl-4 ">
                 <h4>Звіт по заробітній платі</h4>   
                 <div class="navbar nav">
                     <form zippy="filterz" class="form-inline">
@@ -31,6 +31,27 @@
  
  
 
+    
+     <tr >
+
+        <td style="font-weight: bolder;" colspan="2">
+           Нарахування та утримання
+        </td>
+    </tr>
+    {{#mempst}}
+    <tr>
+        <td>{{name}}</td>
+
+        <td class="text-right">{{am}}</td>
+    
+    </tr>
+    {{/mempst}}    
+     <tr >
+
+        <td style="font-weight: bolder;" colspan="2">
+         <br>   Виплати
+        </td>
+    </tr>    
     {{#memsal}}
     <tr>
 
@@ -48,28 +69,13 @@
         <td class="text-right">{{memtotal}}</td>
       
     </tr>
-     <tr >
-
-        <td style="font-weight: bolder;" colspan="2">
-         <br>   Нарахування та утримання
-        </td>
-    </tr>
-    {{#mempst}}
-    <tr>
-        <td>{{name}}</td>
-
-        <td class="text-right">{{am}}</td>
-    
-    </tr>
-    {{/mempst}}    
-    
     
 </table>
          
        
                 
             </div>
-             <div class="col-12  col-lg-6 col-xl-4">
+             <div class="col-12  col-lg-8 col-xl-6">
                 <h4>Рух по особовому рахунку</h4>   
                    <div class="navbar nav">
                     <form zippy="filters" class="form-inline">

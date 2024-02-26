@@ -59,9 +59,27 @@ class CalcSalary extends \App\Pages\Base
 
             if (($opt['codeadvance'] ??0) > 0) { //аванс
 
-                $rows = EmpAcc::getAmountByType($this->_doc->headerdata['year'], $this->_doc->headerdata['month'], EmpAcc::ADVANCE);
+                $rows = EmpAcc::getAmountByType(EmpAcc::ADVANCE,  $this->_doc->headerdata['year'], $this->_doc->headerdata['month'] );
                 foreach ($rows as $row) {
                     $c = '_c' . $opt['codeadvance'];
+                    $this->_list[$row['emp_id']]->{$c} = 0 - H::fa($row['am']);
+                }
+            }
+
+            if (($opt['codebonus'] ??0) > 0) { 
+
+                $rows = EmpAcc::getAmountByType(EmpAcc::BONUS );
+                foreach ($rows as $row) {
+                    $c = '_c' . $opt['codebonus'];
+                    $this->_list[$row['emp_id']]->{$c} =  H::fa($row['am']);
+                }
+            }
+
+            if (($opt['codefine'] ??0) > 0) { 
+
+                $rows = EmpAcc::getAmountByType(EmpAcc::FINE );
+                foreach ($rows as $row) {
+                    $c = '_c' . $opt['codefine'];
                     $this->_list[$row['emp_id']]->{$c} = 0 - H::fa($row['am']);
                 }
             }
