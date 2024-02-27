@@ -664,12 +664,21 @@ class Discounts extends \App\Pages\Base
         if($p->type==1) $type="Одноразовий";
         if($p->type==2) $type="Багаторазовий";
         if($p->type==3) $type="Персональний";
-        if($p->type==4) $type="Реферальний";
+
         $row->add(new  Label("ptype", $type));
         $row->add(new  Label("pdisc", $p->disc));
 
         $row->add(new  Label("pused", $p->used));
         $row->add(new  Label("pcust", $p->customer_name));
+        if($p->type==2){                                                                            
+                                                                                       
+           $q = Customer::findCnt("customer_id in (select customer_id from documents where content like '%<promocode><![CDATA[{$p->code}]]></promocode>%') ") ;
+           if($q > 0) {
+              $row->pcust->setText("Використали {$q}  ");    
+           }
+           
+        }    
+        
         $row->add(new  Label("pdateto", $p->dateto > 0 ? H::fd($p->dateto) :''));
         $row->add(new  ClickLink('pdel'))->onClick($this, 'pdeleteOnClick');
         

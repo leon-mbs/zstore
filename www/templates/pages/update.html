@@ -61,7 +61,7 @@
          
      
            <br><br><a zippy="updatefile"><b>Оновити файли автоматично</b></a>
-           <br><small>(Експериментальна функція)</small>
+
            <br><small><i class="fa fa-exclamation-triangle"></i>  
                 У випадку помилки оновити вручну  з  архіву
            </small>           
@@ -101,12 +101,21 @@
   </div>        
 </div>        
  <script>
+       
+       function check_updatefile(ele){
+            
+           document.getElementById('dialogwait').showModal()
+            return true;
+       
+        } 
+        
        function check_updatesql(ele){
             
            document.getElementById('dialogwait').showModal()
             return true;
        
         } 
+        
  </script> 
 </body>
 </html>
