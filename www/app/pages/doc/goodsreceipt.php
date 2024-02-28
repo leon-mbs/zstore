@@ -63,7 +63,15 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new TextInput('outnumber'));
         $this->docform->add(new TextInput('basedoc'));
         $this->docform->add(new CheckBox('spreaddelivery'));
-
+        $this->docform->add(new CheckBox('baydelivery'));
+        if($common['spreaddelivery'] ==1) {
+            $this->docform->spreaddelivery->setChecked(1)  ;
+        }
+        if($common['baydelivery'] ==1) {
+            $this->docform->baydelivery->setChecked(1)  ;
+        }
+        
+        
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
@@ -155,13 +163,14 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->docform->add(new ClickLink('opensn', $this, "onOpensn"));
 
-
+ 
         if ($docid > 0) {    //загружаем   содержимое  документа настраницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
 
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->spreaddelivery->setChecked($this->_doc->headerdata['spreaddelivery']);
+            $this->docform->baydelivery->setChecked($this->_doc->headerdata['baydelivery']);
             $this->docform->basedoc->setText($this->_doc->basedoc);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->customer->setKey($this->_doc->customer_id);
@@ -303,6 +312,9 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->OnVal($this->docform->val);
 
+        if ($docid > 0) { 
+             $this->docform->rate->setText($this->_doc->headerdata['rate']);
+        }
 
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
@@ -399,7 +411,7 @@ class GoodsReceipt extends \App\Pages\Base
             $this->editdetail->edititem->setKey($item->item_id);
             $this->editdetail->edititem->setText($item->itemname);
             
-            $price = $item->getLastPartion($this->docform->store->getValue(), null, false);
+            $price = $item->getLastPartion($this->docform->store->getValue(), "", true);
             
             $this->editdetail->editprice->setText(H::fa($price));
             $this->editdetail->editsellprice->setText(H::fa($item->price1));
@@ -553,12 +565,16 @@ class GoodsReceipt extends \App\Pages\Base
             if (strlen($item->snumber) == 0 && $item->useserial == 1  ) {
                 if($common['usesnumber'] != 3){
                    $this->setError("Потрібна партія виробника");
+                   return;
                 }
                 if($common['usesnumber'] == 3 && $item->quantity <> 1){
                    $this->setError("Cерійний номер має бути для одного виробу");    
+                   return;
                 }  
-                
+                $this->setError("Не введено серійний номер");    
                 return;
+                
+                
             }
         }
         if($common['usesnumber'] == 2) {
@@ -641,6 +657,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['spreaddelivery'] = $this->docform->spreaddelivery->isChecked() ? 1 : 0;
+        $this->_doc->headerdata['baydelivery'] = $this->docform->baydelivery->isChecked() ? 1 : 0;
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         $this->_doc->headerdata['val'] = $this->docform->val->getValue();
@@ -833,8 +850,13 @@ class GoodsReceipt extends \App\Pages\Base
         $delivery = doubleval($this->docform->delivery->getText());
         $nds = doubleval($this->docform->nds->getText()) ;
 
-        $total = $total + $nds - $disc  ;
-        $total +=  $delivery;
+        $total = doubleval($total) + $nds - doubleval($disc)  ;
+        
+        if($this->docform->baydelivery->isChecked() ==false) {
+           $total +=  $delivery;    //если патит  поставщик
+        }
+        
+        
 
         $this->docform->editpayamount->setText(H::fa($total));
         $this->docform->payamount->setText(H::fa($total));
@@ -1055,7 +1077,7 @@ class GoodsReceipt extends \App\Pages\Base
         $item = Item::load($item_id);
 
         if($price==null) {
-            $price = $item->getLastPartion($this->docform->store->getValue(), null, false);
+            $price = $item->getLastPartion($this->docform->store->getValue(), "", true);
 
         }
         $this->editsnitem->editsnprice->setText(H::fa($price));
@@ -1083,7 +1105,7 @@ class GoodsReceipt extends \App\Pages\Base
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $item = Item::load($id);
-        $price = $item->getLastPartion($this->docform->store->getValue(), null, false);
+        $price = $item->getLastPartion($this->docform->store->getValue(), "", true);
         $this->editdetail->editprice->setText(H::fa($price));
         $this->editdetail->editsellprice->setText($item->price1);
         $this->editdetail->editsellprice2->setText($item->price2);

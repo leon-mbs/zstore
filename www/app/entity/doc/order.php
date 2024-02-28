@@ -47,8 +47,12 @@ class Order extends \App\Entity\Doc\Document
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
 
-        $da=  trim($this->headerdata["ship_address"].' ' .$this->headerdata["npaddress"]  );
-
+        $da=  trim($this->headerdata["npaddressfull"] ) ;
+        
+        if(strlen($da)==0) {
+           $da=  trim($this->headerdata["ship_address"] ) ;
+        }
+        
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
                         "customer_name"   => $this->customer_name,
@@ -99,6 +103,7 @@ class Order extends \App\Entity\Doc\Document
         $list['Task'] = self::getDesc('Task');
         $list['TTN'] = self::getDesc('TTN');
         $list['Order'] = self::getDesc('Order');
+        $list['ProdReceipt'] = self::getDesc('ProdReceipt');
 
 
         return $list;
@@ -248,14 +253,17 @@ class Order extends \App\Entity\Doc\Document
         }
         if ($state == self::STATE_INPROCESS) {
 
+            if(strlen($this->headerdata['promocode']) > 0){
+                \App\Entity\PromoCode::apply($this->headerdata['promocode'],$this);
+            };
 
-
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment']);
-            if ($payed > 0) {
-                $this->payed = $payed;
+            if($this->payed >0) {
+                $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment']);
+                if ($payed > 0) {
+                    $this->payed = $payed;
+                }
+                \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
             }
-            \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
-
 
         }
     }

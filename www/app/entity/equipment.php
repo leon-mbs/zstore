@@ -12,6 +12,7 @@ class Equipment extends \ZCL\DB\Entity
 {
     protected function init() {
         $this->eq_id = 0;
+        $this->branch_id = 0;
     }
 
     protected function beforeSave() {
@@ -61,5 +62,11 @@ class Equipment extends \ZCL\DB\Entity
         }
         return $list;
     }
-
+     public static function getConstraint() {
+        $br = \App\ACL::getBranchConstraint();
+        if (strlen($br) > 0) {
+            $br = " (" . $br . " or coalesce(branch_id,0)=0)  ";
+        }  //склады не  привязаные к  филиалу
+        return $br;
+    }
 }

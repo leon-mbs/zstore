@@ -8,10 +8,17 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\TextInput;
+use Zippy\Binding\PropertyBinding as Bind;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Label;
 use App\Application as App;
 
 class Options extends \App\Pages\Base
 {
+    public $_gablist = array();    
+    
     public function __construct() {
         parent::__construct();
 
@@ -25,6 +32,7 @@ class Options extends \App\Pages\Base
         $modules = System::getOptions("modules");
 
         $form = $this->add(new Form("cform"));
+
         $form->add(new TextInput('apikey', $modules['npapikey']));
 
         $form->onSubmit($this, 'saveapiOnClick');
@@ -39,6 +47,21 @@ class Options extends \App\Pages\Base
         $form->add(new DropDownChoice('point'));
         $form->add(new TextInput('tel'))->setText($modules['nptel']);
 
+        if(strlen( $modules['npgl'] ?? '') >0) {
+           $this->_gablist = unserialize( $modules['npgl'] );    
+        }
+   
+   
+        $this->add(new Form("gabform"))->onSubmit($this,'addGab');   
+        $this->gabform->add(new TextInput('gw')) ;
+        $this->gabform->add(new TextInput('gh')) ;
+        $this->gabform->add(new TextInput('gd')) ;
+      
+        $this->add(new DataView('gablist', new ArrayDataSource(new Bind($this, '_gablist')), $this, 'gabListOnRow'));
+        $this->gablist->Reload();
+        
+        
+        
         $form->onSubmit($this, 'savedataOnClick');
 
         $this->updateData();
@@ -121,70 +144,74 @@ class Options extends \App\Pages\Base
 
     public function savecacheOnClick($sender) {
 
-        @unlink(_ROOT . "upload/arealist.dat");
-        @unlink(_ROOT . "upload/citylist.dat");
-        @unlink(_ROOT . "upload/pointlist.dat");
 
-        @mkdir(_ROOT . "upload") ;
+        try {
+            
+           $api = new Helper();
 
-        $api = new Helper();
-
-        $areas = array();
-        $tmplist = $api->getAreas();
-        if($tmplist['success']==false) {
-            if(count($tmplist['errors'] ??[])>0) {
-                $this->setError(array_pop($tmplist['errors'])) ;
-                return;
-            }
-            if(count($tmplist['warnings']??[])>0) {
-                $this->setWarn(array_pop($tmplist['warnings'])) ;
-
-            }
-
+           $ret = $api->updatetCache()  ;
+           
+           if(strlen($ret['error'] ??'')>0 ) {
+               $this->setError($ret['error']);                           
+               return;
+           }
+           if(strlen($ret['warn'] ??'')>0 ) {
+               $this->setWarn($ret['warn']);                           
+           }
+           
+        } catch(\Exception $ee) {
+            $msg = $ee->getMessage();
+            $this->setError($msg);            
         }
-        foreach ($tmplist['data'] as $a) {
-            $areas[$a['Ref']] = trim($a['Description']);
-        }
-
-        $d = serialize($areas);
-
-        file_put_contents(_ROOT . "upload/arealist.dat", $d);
-        unset($d);
-    
-        $cities = array();
-
-        $tmplist = $api->getCities(0);
-
-        foreach ($tmplist['data'] as $a) {
-            $cities[] = array('Ref' => $a['Ref'], 'Area' => $a['Area'], 'Description' => trim($a['Description']).' ('.trim($a['DescriptionRu']) .')'  );
-
-        }
-
-        $d = serialize($cities);
-
-        file_put_contents(_ROOT . "upload/citylist.dat", $d);
-        unset($tmplist);
-        unset($cities);
-        unset($d);
-        gc_collect_cycles() ;
-
-        $wlist = array();
-        $tmplist = $api->getWarehouses('');
-
-        foreach ($tmplist['data'] as $a) {
-            $wlist[] = array('Ref' => $a['Ref'], 'City' => $a['CityRef'], 'Description' => trim($a['Description']) );
-        }
-        unset($tmplist) ;
-        gc_collect_cycles() ;
-
-        $d = serialize($wlist);
-        file_put_contents(_ROOT . "upload/pointlist.dat", $d);
-        unset($wlist) ;
-        unset($d);
-
+        
         $this->updateData();
 
         $this->setSuccess('Збережено');
+    }
+   
+    public function gabListOnRow(  $row) {
+        $item = $row->getDataItem();
+        $row->add(new Label('gabname',$item->gabname ));
+        $row->add(new ClickLink('delgab', $this, 'onDelgab'));
+    }
+    public function onDelgab($sender) {
+        $item = $sender->getOwner()->getDataItem();
+        $tmp=[];
+        foreach($this->_gablist as $i=>$v){
+            if($i==$item->id) {
+                continue;
+            }
+            $tmp[$i] = $v;
+        }
+        $this->_gablist = $tmp;
+        $this->gablist->Reload();
+        
+        $modules = System::getOptions("modules");
+        $modules['npgl'] = serialize($this->_gablist);
+        System::setOptions("modules", $modules);
+        
+    }
+    public function addGab($sender) {
+        $ls = new \App\DataItem();
+        
+        $w=$sender->gw->getText();
+        $h=$sender->gh->getText();
+        $d=$sender->gd->getText();
+        $sender->clean();
+        
+        $ls->gabname = "{$w}x{$h}x{$d}";
+        $ls->id = time();
+        
+        
+        
+        $this->_gablist[$ls->id] = $ls;
+        $this->gablist->Reload();
+      
+        $modules = System::getOptions("modules");
+        $modules['npgl'] = serialize($this->_gablist);
+        System::setOptions("modules", $modules);
+
+        
     }
 
 }

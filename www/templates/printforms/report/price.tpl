@@ -35,7 +35,7 @@
 {{#price3name}}          <th align="right">{{price3name}}</th>  {{/price3name}} 
 {{#price4name}}          <th align="right">{{price4name}}</th>  {{/price4name}} 
 {{#price5name}}          <th align="right">{{price5name}}</th>  {{/price5name}} 
-
+{{#showdesc}}      <th align="right">Опис</th>{{/showdesc}}
     </tr>
     {{#_detail}}
     <tr>
@@ -51,6 +51,7 @@
 {{#price3name}}         <td align="right">{{price3}}</td> {{/price3name}} 
 {{#price4name}}         <td align="right">{{price4}}</td> {{/price4name}} 
 {{#price5name}}         <td align="right">{{price5}}</td> {{/price5name}} 
+{{#showdesc}}           <td>{{desc}}</td>{{/showdesc}}
 
     </tr>
     {{/_detail}}

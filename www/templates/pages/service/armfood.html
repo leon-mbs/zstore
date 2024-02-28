@@ -161,6 +161,8 @@
 
                             {{/usescanner}}
 
+                            <input placeholder="Промокод"  style="width:150px"  zippy="promocode" class="form-control">
+                            
                            {{#fiscal}}
                           &nbsp;  &nbsp;
                             <a zippy="openshift"><i class="fa fa-bullhorn"></i> Вiдкрити змiну</a>
@@ -349,12 +351,12 @@
 
                         <div class="  w-100 ">
                             <input zippy="btosave" type="submit" value="Зберегти"   class="btn btn-success mr-4">
-                            
-                            <input zippy="btopay" type="submit" value="До сплати"   class="btn btn-success mr-4">
+
+                            <input zippy="btoprod" type="submit" value="У виробництво"   class="btn btn-success mr-4">
 
                             <input zippy="btodel" type="submit" value="В доставку"   class="btn btn-success mr-4">
 
-                            <input zippy="btoprod" type="submit" value="У виробництво"   class="btn btn-success mr-4">
+                            <input zippy="btopay" type="submit" value="До сплати"   class="btn btn-success mr-4">
    
                         </div>
                         
@@ -467,7 +469,10 @@
                                     Чек може бути фіскалізований зі списку чеків "></i>
                                               
                             {{/fiscal}}                            
-                            
+                            &nbsp;&nbsp;<input zippy="passprod" type="checkbox"> <span  data-label="passprod"> Не відправляти в виробництво </span>
+                           <i class="fa fa-info-circle  " data-label="passprod" data-toggle="tooltip" data-placement="top"
+                                   title="Якщо товар не потребує приготування "></i>
+          
                                                        
                             </div>
                         </div>
@@ -531,6 +536,7 @@
                     <tr>
 
                         <th>Номер</th>
+                        <th class="text-center">Час</th>
                         {{#tables}}
                         <th>Стiл</th>
                         {{/tables}}
@@ -557,6 +563,7 @@
                        
 
                         <td ><a zippy="docnumber"></a></td>
+                        <td class="text-right" zippy="doctime"></td>
                         {{#tables}} <td zippy="tablenumber" class="text-center"></td>  {{/tables}}
                         <td ><i zippy="delivery" title="Доставка" class="fa fa-bicycle"></i></td>
 
@@ -699,7 +706,23 @@
              return true;
           }            
           
-    
+                 $("#promocode").blur(function () {
+                     var promodode = $("#promocode").val();  
+                     
+                   
+                     
+                      callPM('chechPromo',[promodode], null,(data)=> 
+                      {
+                         if(checkPMAnswer(data))   {
+
+                           $('#totaldisc').val(data.disc)                             
+                         }  else {
+                            $('#totaldisc').val('0')                                                          
+                            $('#promocode').val('')                                                          
+                         }
+                          
+                      });             
+                });     
           var vapp = new Vue({
               el: '#vapp',
            

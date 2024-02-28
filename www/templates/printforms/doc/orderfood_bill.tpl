@@ -140,10 +140,19 @@
     </tr>
     {{/allbonus}}
     
+   
+   {{#checkslogan}}   
     <tr style="font-weight: bolder;">
         <td colspan="3"><br>{{checkslogan}}</td>
 
     </tr>
+   {{/checkslogan}}   
+   {{#promo}}   
+    <tr style="font-weight: bolder;">
+        <td colspan="3">{{promo}}</td>
+
+    </tr>
+   {{/promo}} 
     {{#ischeck}}
        <tr>                    
                         <td colspan="3" > 

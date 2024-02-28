@@ -86,7 +86,8 @@
                                 <th >Тел.</th>
                                 <th >E-Mail</th>
                                 {{^leadmode}}        <th  ><a zippy="sortdoc">Док.</a> </th>    {{/leadmode}}
-                                {{#leadmode}}     <th><a zippy="sortleadstatus">стан ліда</a> </th>     {{/leadmode}} 
+                                {{#leadmode}}     <th><a zippy="sortleadstatus">Cтан ліда</a> </th>     {{/leadmode}} 
+                                {{#leadmode}}     <th><a zippy="sortleaddate">Дата</a> </th>     {{/leadmode}} 
                                 <th> </th>
                                 <th> </th>
                                 <th> </th>
@@ -106,6 +107,9 @@
                                 {{^leadmode}}    <td class="text-right" > <span zippy="docs" class="badge badge-secondary badge-pill"></span> </td>  {{/leadmode}}
                                 {{#leadmode}}  
                                 <td zippy="leadstatus">  </td>  
+                                {{/leadmode}}    
+                                {{#leadmode}}  
+                                <td zippy="createddate">  </td>  
                                 {{/leadmode}}    
                                 <td   ><i    zippy="hasaction" class="fa fa-gift"></i></td>
 
@@ -199,7 +203,7 @@
                 </div>
                 {{#shop}}        
                 <div class="form-group">
-                    <label for="editpassword">Пароль логiна для каталогу</label>
+                    <label for="editpassword">Пароль логiна для онлайн-каталогу</label>
                     <input class="form-control" zippy="editpassword"  type="password"/>
                     <small>Залиште порожнiм, якщо пароль не змiнюється</small>
                 </div>

@@ -17,9 +17,10 @@
                     
                     <a zippy="tabi"><span class="{{{tabibadge}}}">  Акції, товари   </span> </a>
                     <a zippy="tabs"><span class="{{{tabsbadge}}}">  Акції, послуги    </span> </a>
-                   {{#hideblock}}
+            
                     <a zippy="tabp"><span class="{{{tabpbadge}}}">  Промокоди    </span> </a>
-                   {{/hideblock}}                    
+                    <a zippy="tabe"><span class="{{{tabebadge}}}">  Співробітники    </span> </a>
+              
 
 
                 </div>   <br>
@@ -414,11 +415,12 @@
                         </div>
                     </div>
                 </div>
-               <div zippy="ptab">
+                <div zippy="ptab">
                     <div class="row">
                         <div class="col-12 col-md-10 col-xl-8   ">
                              
                            <div zippy="listpan">
+                           <span>Використовується в замовленнях та чеках</span>
                              <div class="navbar nav  ">
                                 <form zippy="pfilter" class="form-inline ">
                                     <label for="psearchkey">Код</label>
@@ -430,12 +432,12 @@
 
                                 <a class="btn btn-success " zippy="pcodeadd">Додати</a>
                                 <table class="table table-sm">                      
-                                    <tr><th>Код</th><th>Тип</th><th>Знижка,%</th><th>Реф.,%</th><th>Контрагент</th><th> Срок дії</th><th>Використаний </th><th> </th></tr>
+                                    <tr><th>Код</th><th>Тип</th><th>Знижка,%</th><th>Контрагент</th><th> Срок дії</th><th>Використаний </th><th> </th></tr>
                                     <tr zippy="plist">
                                     <td zippy="pcode"></td>
                                     <td zippy="ptype"> </td>
                                     <td zippy="pdisc" class="text-right"> </td>
-                                    <td zippy="pref"  class="text-right"> </td>
+
                                     <td zippy="pcust"> </td>
                                     <td zippy="pdateto">  </td>
                                     <td zippy="pused"> </td>
@@ -456,58 +458,54 @@
                                      <small><b>Одноразовий</b> - для однократного використання 
                                          <br>  <b>Багаторазовий</b> - для використання (однократного)  багатьма  покупцями 
                                          <br><b>Персональний</b> - для конкретного контрагента
-                                         <br><b>Реферальний</b> - з нарахуванням бонусів вказанму контрагенту за нового  покупця  
+
                                       </small>                                     
                                     <form zippy="pform" >
                                  
                                  
                                             <div class="form-group row">
                                                <label class="col-5 col-form-label" for="peditcode">Код</label>
-                                                <div class="7">
+                                                <div class="col-7">
                                                   <input readonly="readonly"   class="form-control"   zippy="peditcode"   >
                                                </div>
                                            </div>      
                                             <div class="form-group row">
                                                <label class="col-5 col-form-label" for="paddtype">Тип</label>
-                                                <div class="7">
+                                                <div class="col-7">
                                                 <select class="form-control  " zippy="paddtype">
                                                   <option value="0">Не вибрано</option>
                                                   <option value="1">Одноразовий</option>
                                                   <option value="2">Багаторазовий</option>
                                                   <option value="3">Персональний</option>
-                                                  <option value="4">Реферальний</option>
+
                                                 </select>   
                                                </div>
                                                 
                                            </div>                                              
                                            <div class="form-group row">
                                                <label class="col-5 col-form-label" for="peditdate">Срок до</label>
-                                                <div class="7">
+                                                <div class="col-7">
                                                <input style="width:140px" class="form-control"  zippy="peditdate"   >
                                                </div>
                                            </div>      
                                            <div class="form-group row">
                                                <label class="col-5 col-form-label" for="peditdisc">Знижка,%</label>
-                                                <div class="7">
+                                                <div class="col-7">
                                                <input required="required"  pattern="[0-9\.]+" style="width:140px" class="form-control"  zippy="peditdisc"   >
                                                </div>
                                            </div>      
                                            <div class="form-group row">
                                                <label class="col-5 col-form-label" for="peditcust">Контрагент</label>
-                                                <div class="7">
+                                                <div class="col-7">
                                                <input placeholder="Почніть вводити..." class="form-control"  zippy="peditcust"   >
                                                </div>
                                            </div>      
-                                              
-                                           <div class="form-group row">
-                                               <label class="col-5 col-form-label" for="peditref">Реферальний бонус,%</label>
-                                                <div class="7">
-                                               <input pattern="[0-9\.]+" style="width:140px" class="form-control"  zippy="peditref"   >
-                                               </div>
-                                           </div>      
-                                           
-                                       
- 
+                                     <div class="form-group row">
+                                            <div class="form-check">
+                                                <input zippy="peditcheck" type="checkbox" class="form-check-input">
+                                                <label class="form-check-label" for="peditcheck"> Додавати в кiнцi чеку </label>
+                                            </div>                 
+                                      </div> 
                                         <div class="form-group">
                                             <a zippy="cancelpadd" class="btn btn-secondary" >Скасувати</a>
                                          &nbsp;   <button class="btn btn-success" type="submit">Додати</button>
@@ -517,7 +515,34 @@
                                 </div>
                               </div>
                         </div>
-                    </div>
+                        
+                        
+               <div zippy="etab">
+                      <h5> Бонуси та штрафи  </h5>
+                     <form zippy="empform" >
+                            <div class="row">
+                               <div class="col-12 col-md-4 col-xl-3">
+                                   <div class="form-group row">
+                                       <label  class="col-8 col-form-label"   for="ebonussell">Чек, % від суми</label>
+                                       <div class="col-4"> 
+                                         <input   pattern="[0-9,\.]+" class="form-control"  zippy="ebonussell"   >
+                                      </div> 
+                                       <small>Нараховується авторові чека</small>
+                                   </div> 
+                                    <div class="form-group row">
+                                       <label  class="col-8 col-form-label"   for="efineret">Повернення, % від суми</label>
+                                       <div class="col-4">
+                                         <input   pattern="[0-9,\.]+" class="form-control"  zippy="efineret"   >
+                                      </div>                                                             
+                                       <small>Вираховується з автора  чека на  який  повернення</small>
+                                 </div>                                                             
+                               </div>                          
+                               <div class="col-12 ">
+                                    <button class="btn btn-success" type="submit">Зберегти</button>
+                               </div>
+                             
+                          </div>
+                    </form>
                 </div>
 
             </div>
@@ -525,3 +550,11 @@
         </div>                
     </body>
 </html>
+
+  
+
+
+
+
+
+

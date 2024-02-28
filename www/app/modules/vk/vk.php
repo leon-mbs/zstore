@@ -473,7 +473,7 @@ class VK
             return "Помилка ".$response['res'];
         }
   
-        return true;
+
 
         return $response['info']['shift_status']==1;
 
@@ -512,11 +512,11 @@ class VK
    
     //форматиование  сум
     private static function fa($value) {
-       return   floatval( number_format($value, 2, '.', '') ) ;  ;
+       return   floatval( number_format($value, 2, '.', '') ) ;
     }
     //форматиование количеств
     private static function fqty($value) {
-       return   floatval( number_format($value, 3, '.', '') ) ;  ;
+       return   floatval( number_format($value, 3, '.', '') ) ;
     }
     
     private static function getCashier($doc=null) {

@@ -67,7 +67,25 @@
                         <select class="form-control" zippy="pricetype">
                         </select>
                     </div>
-                
+                        <div class="form-group">
+                            <label for="store">Резервувати товари на  </label>
+                            <select zippy="store" class="form-control     ">
+                                <option value="0">Не резервувати</option>
+                            </select>
+                        </div>                  
+                    
+                     <div class="form-group  ">
+                        <label  data-label="promocode" for="promocode">Промо-код</label>
+
+
+                         <div style="width:150px" class="input-group  ">
+                             <input  readonly="readonly" zippy="promocode" class="form-control">
+                             <div class="input-group-append">
+                                 <a data-toggle="modal" data-label="promocode" data-target="#modalpromo" href="javascript:void(0);" title="Ввести промо" class="btn btn-success"   >+</a>
+                            </div>                    
+                        </div> 
+                    </div>               
+            
  
 
 
@@ -82,6 +100,14 @@
 
                     </div>
                      {{#np}}
+                        <div class="form-group">
+                            <label for="deliverynp">Тип доставки НП</label>
+                             <select zippy="deliverynp" class="form-control     ">
+                                <option value="0">Вiддiлення</option>
+                                <option value="1">Поштомат</option>
+                                <option value="2">За адресою</option>
+                            </select>
+                        </div>                     
                         <div class="form-group">
                             <label for="bayarea">Область  </label>
                             <select zippy="bayarea" class="form-control     ">
@@ -103,11 +129,14 @@
                        {{/np}}
                     <div class="form-group  ">
                         <label data-label="address" for="address">Адреса</label>
-
                         <textarea zippy="address" class="form-control"></textarea>
-
-
                     </div>
+                     <div class="form-group row">
+                            <label for="bayhouse">Буд.</label>
+                            <input style="width:75px" type="text" zippy="bayhouse" class="form-control"/>
+                            <label for="bayflat">Кв. </label>
+                            <input style="width:75px" type="text" zippy="bayflat" class="form-control"/>
+                     </div>                    
                 </div>
             </div>
             <div class="row">
@@ -185,13 +214,13 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-6">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-outline-secondary  ">
-                    &nbsp; <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-outline-primary  ">
-                    &nbsp;<input zippy="execdoc" type="submit"   value="На виконання" class="btn btn-outline-primary  ">
-                    &nbsp;<input zippy="topaydoc" type="submit" title="Перевод в  статус Очікує оплату" value="До сплати" class="btn btn-outline-info  ">
-                    &nbsp;<a data-toggle="modal" data-target="#modalpayed"  href="javascript:void(0);"  class="btn btn-outline-info  ">Оплатити</a>
-               
+                <div class="col-8">
+                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-secondary  ">
+                    &nbsp; <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-primary  ">
+                    &nbsp;<input zippy="execdoc" type="submit"   value="На виконання" class="btn btn-primary  ">
+                    &nbsp;<input zippy="topaydoc" type="submit" title="Перевод в  статус Очікує оплату" value="До сплати" class="btn btn-info  ">
+                    &nbsp;<a data-toggle="modal" data-target="#modalpayed"  href="javascript:void(0);"  class="btn btn-info  ">Оплатити</a>
+
 
                 </div>
             </div>
@@ -278,6 +307,34 @@
                     </div>
                 </div>
             </div>
+            
+            
+            <div id="modalpromo" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"                  aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered  modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Промо-код</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+ 
+                        
+                            <div class="form-group  ">
+                                <input class="form-control " type="text" zippy="editpromo"  >
+                                
+                            </div>
+                                <div class="input-group">
+                                    <input type="submit" value="OK" zippy="savepromo" class="   btn btn-info  ">
+
+                                </div>
+                            
+                        </div>
+
+                    </div>
+                </div>
+            </div>            
         </form>
 
         <div class="row">

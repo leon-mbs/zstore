@@ -82,8 +82,37 @@ class ReturnIssue extends Document
         }
         \App\Entity\IOState::addIOState($this->document_id, 0 - $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
 
+        if($this->headerdata["bonus"] > 0) {
+                $pay = new \App\Entity\Pay();
 
+                $pay->document_id = $this->document_id;
+                $pay->bonus = $this->headerdata["bonus"];
+                $pay->paytype = \App\Entity\Pay::PAY_BONUS;
+                $pay->paydate = time();
+                $pay->user_id = \App\System::getUser()->user_id;
 
+                $pay->save();       
+        }
+
+        //штраф  сотруднику
+       if ($this->parent_id > 0) {
+            $parent = Document::load($this->parent_id);
+            $user = \App\Entity\User::load($parent->user_id);        
+            $disc = \App\System::getOptions("discount");
+            $emp_id = \App\System::getUser()->employee_id ;
+            if($emp_id >0 && $disc["fineret"] >0  && $parent->meta_name=='POSCheck') {
+                $b =  $this->amount * $disc["fineret"] / 100;
+                $ua = new \App\Entity\EmpAcc();
+                $ua->optype = \App\Entity\EmpAcc::FINE;
+                $ua->document_id = $this->document_id;
+                $ua->emp_id = $emp_id;
+                $ua->amount = 0-$b;
+                $ua->save();
+
+            }
+            
+        }     
+        
         return true;
     }
 

@@ -103,7 +103,15 @@
 <font bold="true">a</font>
 <align>center</align>
 <newline ></newline>
-<text>  {{checkslogan}}</text>    
+
+{{#checkslogan}}
+<text>  {{checkslogan}}</text>
+{{/checkslogan}}
+
+{{#promo}}
+<text>  {{promo}}</text>  
+{{/promo}}  
+
 {{#isdocqrcode}}
 <font >a</font>
 <newline ></newline>

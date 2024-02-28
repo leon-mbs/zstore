@@ -141,7 +141,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new DropDownChoice('editprintqty', array(), 1));
 
 
-        $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'Save');
+        $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'save');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
         $this->add(new Panel('setpanel'))->setVisible(false);
@@ -201,6 +201,7 @@ class ItemList extends \App\Pages\Base
 
         $row->add(new Label('cell', $item->cell));
         $row->add(new Label('inseria'))->setVisible($item->useserial);
+        $row->add(new Label('inprice'))->setVisible($item->noprice!=1);
         $row->add(new Label('hasaction'))->setVisible($item->hasAction());
         if($item->hasAction()) {
             $title="";
@@ -220,10 +221,10 @@ class ItemList extends \App\Pages\Base
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
         $row->add(new ClickLink('set'))->onClick($this, 'setOnClick');
-        $row->set->setVisible($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD || $item->item_type == Item::TYPE_MAT);
+        $row->set->setVisible($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD || $item->item_type == Item::TYPE_MAT );
 
         $row->add(new ClickLink('printqr'))->onClick($this, 'printQrOnClick', true);
-        $row->printqr->setVisible(strlen($item->url) > 0);
+        $row->printqr->setVisible(strlen($item->url ?? '') > 0);
 
 
         $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?t=t&id={$item->image_id}");
@@ -356,7 +357,7 @@ class ItemList extends \App\Pages\Base
         $this->itemtable->listform->itemlist->Reload();
     }
 
-    public function Save($sender) {
+    public function save($sender) {
         if (false == \App\ACL::checkEditRef('ItemList')) {
             return;
         }
@@ -630,7 +631,7 @@ class ItemList extends \App\Pages\Base
         foreach($this->_itemset as $i) {
             $item = Item::load($i->item_id);
             if($item != null) {
-                $total += doubleval($i->qty  * $item->getLastPartion());
+                $total += doubleval($i->qty  * $item->getPartion());
             }
 
         }

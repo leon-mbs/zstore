@@ -44,12 +44,14 @@ class Discounts extends \App\Pages\Base
         $this->add(new ClickLink('tabi', $this, 'onTab'));
         $this->add(new ClickLink('tabs', $this, 'onTab'));
         $this->add(new ClickLink('tabp', $this, 'onTab'));
+        $this->add(new ClickLink('tabe', $this, 'onTab'));
         //панели
         $this->add(new Panel('otab'));
         $this->add(new Panel('ctab'));
         $this->add(new Panel('itab'));
         $this->add(new Panel('stab'));
         $this->add(new Panel('ptab'));
+        $this->add(new Panel('etab'));
 
         $this->onTab($this->tabo);
 
@@ -181,7 +183,7 @@ class Discounts extends \App\Pages\Base
         $this->itab->add(new \Zippy\Html\DataList\Paginator('iopag', $this->itab->iolist));
         $this->itab->iolist->Reload();
 
-      
+      //проимокоды
         $this->ptab->add(new Panel('listpan')) ;
         
         $this->ptab->listpan->add(new Form('pfilter'))->onSubmit($this,"onFilterPromo");
@@ -200,13 +202,22 @@ class Discounts extends \App\Pages\Base
         $this->ptab->formpan->pform->add(new TextInput('peditcode'));
         $this->ptab->formpan->pform->add(new Date('peditdate'));
         $this->ptab->formpan->pform->add(new TextInput('peditdisc'));
-        $this->ptab->formpan->pform->add(new TextInput('peditref'));
+
         $this->ptab->formpan->pform->add(new AutocompleteTextInput('peditcust'))->onText($this, 'OnAutoCustomer');
         $this->ptab->formpan->pform->peditcust->setVisible(false);
-        $this->ptab->formpan->pform->peditref->setVisible(false);
-        $this->ptab->formpan->pform->add(new DropDownChoice('paddtype'))->onChange($this,"onPType") ;
-    //    $this->ptab->listpan->plist->Reload();
+        $this->ptab->formpan->pform->add(new CheckBox('peditcheck'));
+        $this->ptab->formpan->pform->peditcheck->setVisible(false);
 
+        $this->ptab->formpan->pform->add(new DropDownChoice('paddtype'))->onChange($this,"onPType") ;
+        $this->ptab->listpan->plist->Reload();
+
+        // сотрулники
+        $form = $this->etab->add(new Form('empform'));
+        $form->onSubmit($this, "onEmp");
+
+        $form->add(new  TextInput("ebonussell", $disc["bonussell"]));
+        $form->add(new  TextInput("efineret", $disc["fineret"]));
+ 
       
     }
 
@@ -257,6 +268,8 @@ class Discounts extends \App\Pages\Base
 
         $this->_tvars['tabsbadge'] = $sender->id == 'tabs' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
         $this->_tvars['tabpbadge'] = $sender->id == 'tabp' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
+        $this->_tvars['tabebadge'] = $sender->id == 'tabe' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
+
 
         $this->ctab->setVisible($sender->id == 'tabc');
         $this->otab->setVisible($sender->id == 'tabo');
@@ -264,6 +277,7 @@ class Discounts extends \App\Pages\Base
 
         $this->stab->setVisible($sender->id == 'tabs');
         $this->ptab->setVisible($sender->id == 'tabp');
+        $this->etab->setVisible($sender->id == 'tabe');
 
     }
 
@@ -293,7 +307,6 @@ class Discounts extends \App\Pages\Base
 
     }
 
-
     public function OnCSave($sender) {
         $rows = $this->ctab->clistform->clist->getDataRows();
         foreach ($rows as $row) {
@@ -320,7 +333,7 @@ class Discounts extends \App\Pages\Base
 
     }
 
-     public function OnPBAdd($sender) {
+    public function OnPBAdd($sender) {
         $c = \App\Entity\Customer::load($sender->pbsearchkey->getKey());
         if ($c == null) {
             return;
@@ -338,7 +351,8 @@ class Discounts extends \App\Pages\Base
         $this->goAnkor('pbsearchkey') ;
 
     }   
-   public function bcustomerlistOnRow($row) {
+   
+    public function bcustomerlistOnRow($row) {
         $c = $row->getDataItem();
         $row->add(new  Label("pbname", $c->customer_name));
         $row->add(new  Label("pbphone", $c->phone));
@@ -663,12 +677,21 @@ class Discounts extends \App\Pages\Base
         if($p->type==1) $type="Одноразовий";
         if($p->type==2) $type="Багаторазовий";
         if($p->type==3) $type="Персональний";
-        if($p->type==4) $type="Реферальний";
+
         $row->add(new  Label("ptype", $type));
         $row->add(new  Label("pdisc", $p->disc));
-        $row->add(new  Label("pref", $p->ref));
+
         $row->add(new  Label("pused", $p->used));
         $row->add(new  Label("pcust", $p->customer_name));
+        if($p->type==2){                                                                            
+                                                                                       
+           $q = Customer::findCnt("customer_id in (select customer_id from documents where content like '%<promocode><![CDATA[{$p->code}]]></promocode>%') ") ;
+           if($q > 0) {
+              $row->pcust->setText("Використали {$q}  ");    
+           }
+           
+        }    
+        
         $row->add(new  Label("pdateto", $p->dateto > 0 ? H::fd($p->dateto) :''));
         $row->add(new  ClickLink('pdel'))->onClick($this, 'pdeleteOnClick');
         
@@ -676,6 +699,7 @@ class Discounts extends \App\Pages\Base
            $p->disabled = 1;
         }
         $row->setAttribute('style', $p->disabled == 1 ? 'color: #aaa' : null);
+        $row->pdel->setVisible($p->disabled == 0) ;
 
     }
     
@@ -701,6 +725,7 @@ class Discounts extends \App\Pages\Base
         $this->ptab->formpan->pform->peditcode->setText($code);
         $this->ptab->formpan->pform->peditcust->setText('');
         $this->ptab->formpan->pform->peditcust->setKey(0);
+        $this->ptab->formpan->pform->peditcheck->setChecked(false);
         $this->ptab->formpan->pform->paddtype->setValue(0);
         
         $this->ptab->formpan->setVisible(true);
@@ -714,8 +739,9 @@ class Discounts extends \App\Pages\Base
     }
     public function onPType($sender) {
         $t=$sender->getValue();
-        $this->ptab->formpan->pform->peditcust->setVisible($t>2);
-        $this->ptab->formpan->pform->peditref->setVisible($t==4);
+        $this->ptab->formpan->pform->peditcust->setVisible($t==3);
+        $this->ptab->formpan->pform->peditcheck->setVisible($t==2);
+
  
     }
     public function savePCode($sender) {
@@ -734,17 +760,15 @@ class Discounts extends \App\Pages\Base
            return; 
 
         }
-        $pc->ref = $sender->peditref->getText();
-        if($pc->type ==4 && $pc->ref=='' ) {
-           $this->setError('Не введено  реферальний  бонус') ;
-           return; 
-        }
+
+  
         $pc->customer_id = (int)$sender->peditcust->getKey();
         if($pc->type >2 && $pc->customer_id ==0 ) {
            $this->setError('Не вибрано контрагента') ;
            return; 
         }
         $pc->customer_name = $sender->peditcust->getText();
+        $pc->showcheck = $sender->peditcheck->isChecked() ? 1:0  ;
         
         $pc->save() ;
         
@@ -754,6 +778,16 @@ class Discounts extends \App\Pages\Base
  
     }
 
+    public function onEmp($sender) {
+        $disc = System::getOptions("discount");
+   
+
+        $disc["fineret"] = $sender->efineret->getText();
+        $disc["bonussell"] = $sender->ebonussell->getText();
+
+        System::setOptions("discount", $disc);
+        $this->setSuccess('Збережено');
+    }
 
 }
 

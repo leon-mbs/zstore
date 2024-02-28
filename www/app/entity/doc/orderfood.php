@@ -145,7 +145,26 @@ class OrderFood extends Document
             $i=  rand(0, count($frases) -1)  ;
             $header['checkslogan']   =   $frases[$i];
         }
-
+        if(strlen($header['checkslogan'] ??'') ==0) {
+            $header['checkslogan']  = false;
+        }
+        //промокод
+        $pc = \App\Entity\PromoCode::find('type=2 and disabled <> 1','id desc') ;
+        foreach($pc as $p) {
+           
+           if($p->dateto >0 && $p->dateto < time() ) {
+               continue;               
+           }
+           if($p->showcheck==1) {
+               $header['promo']  = 'Промокод '. $p->code . " на {$p->disc}% знижку";
+               breack; 
+           }
+        }  
+           
+           
+        if(strlen($header['promo']  ??'') ==0) {
+            $header['promo']  = false;
+        }
 
         if($ps) {
             $report = new \App\Report('doc/orderfood_bill_ps.tpl');
@@ -174,6 +193,13 @@ class OrderFood extends Document
 
 
     public function DoPayment() {
+        
+        $conn = \ZDB\DB::getConnect();
+        $conn->Execute("delete from paylist where document_id =" . $this->document_id);
+        $conn->Execute("delete from iostate where iotype = 50 AND document_id=" . $this->document_id);
+        $conn->Execute("delete from empacc  where  document_id=" . $this->document_id);
+        
+        
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
 
 
@@ -191,8 +217,19 @@ class OrderFood extends Document
             }
 
             \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+          //бонус  сотруднику
 
-
+            $disc = \App\System::getOptions("discount");
+            $emp_id = \App\System::getUser()->employee_id ;
+            if($emp_id >0 && $disc["bonussell"] >0) {
+                $b =  $this->amount * $disc["bonussell"] / 100;
+                $ua = new \App\Entity\EmpAcc();
+                $ua->optype = \App\Entity\EmpAcc::BONUS;
+                $ua->document_id = $this->document_id;
+                $ua->emp_id = $emp_id;
+                $ua->amount = $b;
+                $ua->save();
+            }
         }
     }
 
@@ -200,7 +237,7 @@ class OrderFood extends Document
 
         $conn = \ZDB\DB::getConnect();
         $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
-        $conn->Execute("delete from iostate where document_id=" . $this->document_id);
+        $conn->Execute("delete from iostate where iotype = 81 AND document_id=" . $this->document_id);
 
 
         foreach ($this->unpackDetails('detaildata') as $item) {

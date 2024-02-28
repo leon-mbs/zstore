@@ -185,64 +185,7 @@ class PayBalance extends \App\Pages\Base
             'total'    => H::fa($total)
         );
 
-        $sql = " 
-         SELECT   coalesce(sum(abs(amount)),0)  as am   FROM iostate_view 
-             WHERE   
-              iotype  = " . \App\Entity\IOState::TYPE_BASE_OUTCOME . "   {$brpay}
-              AND document_date  >= " . $conn->DBDate($from) . "
-              AND  document_date  <= " . $conn->DBDate($to) . "
-             
-                         
-        ";
-
-        $OPOUT = $conn->GetOne($sql); // переменные расходы
-
-        $sql = " 
-         SELECT   coalesce(  sum(abs(amount)),0)  as am   FROM iostate_view 
-             WHERE   
-              iotype  = " . \App\Entity\IOState::TYPE_BASE_INCOME . "   {$brpay}
-              AND document_date  >= " . $conn->DBDate($from) . "
-              AND  document_date  <= " . $conn->DBDate($to) . "
-             
-                         
-        ";
-
-        $OPIN = $conn->GetOne($sql); // операционный доход
-
-        $header['tu'] = H::fa($OPIN - $OPOUT);    //проход
-        $header['tvc'] = H::fa($OPOUT);   //переменные затраты
-        $header['OP'] = H::fa($tout - $OPOUT);  //операционные расходы
-        $header['PR'] = H::fa($header['tu'] - $header['OP']);  // прибыль
-
-        $inv = 0;
-
-        foreach (\App\Entity\Equipment::find('disabled<>1') as $oc) {
-            if ($oc->balance > 0) {
-                $inv += $oc->balance;
-            }
-        }
-        $sql = " 
-         SELECT   coalesce(  sum(partion*qty),0)     FROM store_stock_view 
-             WHERE qty <> 0    {$brst}  and item_id in (select item_id from items where disabled<>1 ) 
-              
-                         
-        ";
-
-        $amount = $conn->GetOne($sql); //ТМЦ  на складах
-
-        if ($amount > 0) {
-            $inv += $amount;
-        }
-
-        $header['isinv'] = false;
-        if ($inv > 0) {
-            $header['isinv'] = true;
-            $header['inv'] = H::fa($inv);
-            $header['ROI'] = round((($header['tu'] - $header['OP']) / $inv) * 100);
-        }
-
-        $header['isinv'] = $header['PR'] > 0;
-
+ 
         $report = new \App\Report('report/paybalance.tpl');
 
         $html = $report->generate($header);

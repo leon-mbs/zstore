@@ -75,6 +75,7 @@ class CustomerList extends \App\Pages\Base
         $this->customertable->listform->add(new SortLink("sortdoc", "docs", $this, "onSort"));
         $this->customertable->listform->add(new SortLink("sortname", "customer_name", $this, "onSort"));
         $this->customertable->listform->add(new SortLink("sortleadstatus", "leadstatus", $this, "onSort"));
+        $this->customertable->listform->add(new SortLink("sortleaddate", "createdon", $this, "onSort"));
 
         $this->customertable->listform->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->customertable->listform->add(new ClickLink('showstat'))->onClick($this, 'showStat');
@@ -226,6 +227,7 @@ class CustomerList extends \App\Pages\Base
         $row->add(new Label('customerphone', $item->phone));
         $row->add(new Label('customeremail', $item->email));
         $row->add(new Label('leadstatus', $item->leadstatus));
+        $row->add(new Label('createddate', Helper::fd($item->createdon)));
         $row->add(new Label('docs', $item->docs))->setVisible($item->docs > 0);
 
         $row->add(new Label('customercomment'))->setVisible(strlen($item->comment) > 0 && $item->comment == strip_tags($item->comment));

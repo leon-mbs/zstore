@@ -93,6 +93,7 @@ class Document extends \ZCL\DB\Entity
         $this->headerdata = array();
         $this->detaildata = array();
         $this->headerdata['contract_id'] = 0;
+        $this->headerdata['time'] = time();
 
         $this->headerdata['_state_before_approve_'] = '';
     }
@@ -205,10 +206,7 @@ class Document extends \ZCL\DB\Entity
              */
             $this->headerdata[(string)$child->getName()] = $ch;
         }
-
-
   
-
     }
 
     /**
@@ -621,6 +619,7 @@ class Document extends \ZCL\DB\Entity
             //           $prevnumber = $d->document_number;
         }
         $letter = preg_replace('/[0-9]/', '', $prevnumber);
+        $letter = str_replace('-','',$letter) ;
         $letter = $conn->qstr($letter.'%');
 
         $sql = "select document_number from  documents  where   document_number like {$letter}     {$branch}  order  by document_id desc ".$limit;

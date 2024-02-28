@@ -71,6 +71,10 @@
                             <option value="0">Не обрано</option>        
                         </select>
                     </div>           
+                     <div class="form-check">
+                        <input zippy="editdisabled" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="editdisabled">Деактивовано</label>
+                    </div>               
 
                 </div>  
                 <div class="col-12 col-md-6 col-xl-4">
@@ -86,6 +90,12 @@
                         <label data-label="editmsgsubject" for="editmsgsubject">Тема повiдомлення</label>
                         <input    class="form-control" zippy="editmsgsubject">
 
+
+                    </div>
+                    <div class="form-group">
+                        <label data-label="editurl" for="editurl">URL</label>
+                        <input type="url"   class="form-control" zippy="editurl">
+                         <small data-label="editurl">Запит вiдправляється методом POST</small>
 
                     </div>
                     <div class="form-group">
@@ -105,10 +115,6 @@
                     <div class="form-check">
                         <input data-label="edithtml" zippy="edithtml" type="checkbox" class="form-check-input">
                         <label class="form-check-label" for="edithtml">HTML формат</label>
-                    </div>               
-                    <div class="form-check">
-                        <input zippy="editdisabled" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="editdisabled">Деактивовано</label>
                     </div>               
                 </div> 
                 <div class="col-12  ">    
@@ -157,7 +163,7 @@
                             <tr><td><small><b>{taxurl} </b></small></td><td><small>Посилання на фiскальний чек</small></td></tr>
                             <tr><td><small><b>{author} </b></small></td><td><small>Автор документа</small></td></tr>
                             <tr><td><small><b>{notes} </b></small></td><td><small>Примiтка до документа</small></td></tr>
-                            <tr><td><small><b>{ttnnp} </b></small></td><td><small>Декларацiя НП</small></td></tr>
+                            <tr><td><small><b>{ttnnp} </b></small></td><td><small>Декларацiя НП та iнших служб доставок </small></td></tr>
                             <tr><td><small><b>{docurl} </b></small></td><td><small>Зовнiшнє посилання (URL) на документ</small></td></tr>
                             <tr><td><small><b>{docview} </b></small></td><td><small>Зовнiшнє посилання (URL) на журнал документiв (якщо сесiя з автологiном)</small></td></tr>
                             <tr><td><small><b>{payurl} </b></small></td><td><small>Посилання на оплату по реквiзитах </small></td></tr>

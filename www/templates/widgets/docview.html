@@ -402,6 +402,11 @@
                ,
                sendmail:function(){
 
+                  if(confirm("Вiдправити?")==false) {
+                      return;
+                  }
+                   
+                   
                   callPageMethod(this.path +'::onMail',[this.docid], null,(data)=> 
                   {    
                       var ret = JSON.parse(data) ;

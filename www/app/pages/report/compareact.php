@@ -169,12 +169,41 @@ class CompareAct extends \App\Pages\Base
         }
         if($doc->parent_id >0) {   //предоплата
             $d=  Document::load($doc->parent_id);
-            return $d->document_number;
+            
+            $ret=$d->document_number;
+            if(strlen($d->customer_name) >0) {
+               $ret = $ret .' '.$d->customer_name;    
+            }
+            $p = [];
+            foreach(\App\Entity\Pay::find("document_id={$d->document_id} and paytype < 1000","pl_id asc") as $pay){
+                 $p[]= H::fd($pay->paydate)." ".H::fa($pay->amount) ." ".$pay->mf_name ;
+            }
+            if(count($p) >0) {
+               $ret = $ret .'. ('.implode('; ',$p).')';    
+
+            }
+            
+            return $ret;
         }     
         $ch = $doc->getChildren() ;
         if(count($ch)>0) { //постоплата
            foreach($ch as $d) {
-              $pays[]=   $d->document_number;
+               
+                $ret=$d->document_number;
+                if(strlen($d->customer_name) >0) {
+                   $ret = $ret .' '.$d->customer_name;    
+                }
+                $p = [];
+                foreach(\App\Entity\Pay::find("document_id={$d->document_id} and paytype < 1000","pl_id asc") as $pay){
+                     $p[]= H::fd($pay->paydate)." ".H::fa($pay->amount) ." ".$pay->mf_name ;
+                }
+                if(count($p) >0) {
+                   $ret = $ret .'. ('.implode('; ',$p).')';    
+
+                }               
+               
+                 
+              $pays[]= $ret;
            }
            return implode('; ',$pays);      
         }

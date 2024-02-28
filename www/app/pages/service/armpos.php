@@ -133,6 +133,11 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->add(new DataView('detailser', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_serlist')), $this, 'serOnRow'));
         $this->docpanel->form2->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docpanel->form2->customer->onChange($this, 'OnChangeCustomer');
+
+        $this->docpanel->form2->add(new TextInput('promocode'));
+        $this->docpanel->form2->promocode->setVisible(\App\Entity\PromoCode::findCnt('') > 0);
+
+
         $bind = new  \Zippy\Binding\PropertyBinding($this, '_paytype');
  
         $this->docpanel->form2->add(new RadioButton('pt1',$bind,1));
@@ -366,6 +371,7 @@ class ARMPos extends \App\Pages\Base
 
         $this->docpanel->form2->bonus->setText('0');
         $this->docpanel->form2->totaldisc->setText('0');
+        $this->docpanel->form2->promocode->setText('');
 
  
         
@@ -499,7 +505,19 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form3->exchange->setVisible(!$hidep);
         $this->docpanel->form3->exch2b->setVisible(!$hidep);
 
+        
+        $bonus = intval($this->docpanel->form2->bonus->getText());
+        $customer_id = $this->docpanel->form2->customer->getKey();
+        
+        if ($bonus >0 && $customer_id > 0) {
+            $c = Customer::load($customer_id) ;
+            $b=$c->getBonus();
+            if($bonus> $b) {
+                $this->setWarn("У  контрагшента  вього {$b} бонусів на рахунку");                
+            }
 
+           
+        }
 
 
     }
@@ -871,7 +889,7 @@ class ARMPos extends \App\Pages\Base
         $this->OnChangeItem($this->docpanel->editdetail->edittovar);
     }
 
-    private function calcTotal() {
+    private function _calcTotal() {
 
         $total = 0;
         $disc = 0;
@@ -892,10 +910,29 @@ class ARMPos extends \App\Pages\Base
 
             $total = $total + $item->amount;
         }
+    
+
+        return $total;
+
+    }
+    private function calcTotal() {
+
+        $total = $this->_calcTotal();
+        
+        $code= trim($this->docpanel->form2->promocode->getText());
+        if($code != '') {
+            $r = \App\Entity\PromoCode::check($code,$this->docpanel->form2->customer->getKey())  ;
+            if($r == ''){
+                $p = \App\Entity\PromoCode::findByCode($code);
+                $disc = doubleval($p->disc );
+                if($disc >0)  {
+                    $td = H::fa( $total * ($p->disc/100) );
+                    $this->docpanel->form2->totaldisc->setText($td);
+                }        
+            }
+        }        
+        
         $this->docpanel->form2->total->setText(H::fa($total));
-
-
-
 
     }
 
@@ -1097,6 +1134,7 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['store'] = $this->_store_id;
         $this->_doc->headerdata['salesource'] = $this->_salesource;
         $this->_doc->headerdata['totaldisc'] = $this->docpanel->form2->totaldisc->getText();
+        $this->_doc->headerdata['promocode'] = $this->docpanel->form2->promocode->getText();
         $this->_doc->headerdata['bonus'] = $this->docpanel->form2->bonus->getText();
         $this->_doc->headerdata['prepaid'] = $this->docpanel->form2->prepaid->getText();
         $this->_doc->headerdata['pricetype'] = $this->getPriceType();
@@ -1142,7 +1180,7 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->customer_id = $this->docpanel->form2->customer->getKey();
         $this->_doc->payamount = $this->docpanel->form3->payamount->getText();
 
-        $this->_doc->headerdata['time'] = time();
+        $this->_doc->headerdata['promocode'] = $this->docpanel->form2->promocode->getText();
         $this->_doc->payed = doubleval($this->docpanel->form3->payed->getText()) + doubleval($this->docpanel->form3->payedcard->getText()) ;
         $this->_doc->headerdata['payed'] = $this->docpanel->form3->payed->getText();
         $this->_doc->headerdata['payedcard'] = $this->docpanel->form3->payedcard->getText();
@@ -1168,6 +1206,7 @@ class ARMPos extends \App\Pages\Base
             $this->setError("Якщо у борг    або нарахування бонусів має бути обраний контрагент");
             return;
         }
+
         if (doubleval($this->_doc->headerdata['exch2b']) >0 && $this->_doc->customer_id == 0) {
             $this->setError("Для нарахування бонуса має бути обраний контрагент");
             return;
@@ -1750,6 +1789,7 @@ class ARMPos extends \App\Pages\Base
         }
 
 
+        $this->docpanel->form2->promocode->setText($this->_doc->headerdata['promocode']);
         $this->docpanel->form2->bonus->setText($this->_doc->headerdata['bonus']);
         $this->docpanel->form2->totaldisc->setText($this->_doc->headerdata['totaldisc']);
         $this->docpanel->form2->prepaid->setText($this->_doc->headerdata['prepaid']);
@@ -1799,6 +1839,30 @@ class ARMPos extends \App\Pages\Base
         $price = $item->getActionPriceByQuantity($args[1]);
 
         return  $price;
+
+    }
+
+    public function chechPromo($args, $post=null) {
+        $code = trim($args[0]) ;
+        if($code=='')  {
+            return json_encode([], JSON_UNESCAPED_UNICODE);             
+        }
+        $r = \App\Entity\PromoCode::check($code,$this->docpanel->form2->customer->getKey())  ;
+        if($r != ''){
+            return json_encode(array('error'=>$r), JSON_UNESCAPED_UNICODE);                
+        }
+        $total=$this->_calcTotal();
+        $p = \App\Entity\PromoCode::findByCode($code);
+        $disc = doubleval($p->disc );
+        if($disc >0)  {
+            $td = H::fa( $total * ($p->disc/100) );
+            $ret=array('disc'=>$td) ;
+            return json_encode($ret, JSON_UNESCAPED_UNICODE);
+             
+        }        
+        
+        return json_encode([], JSON_UNESCAPED_UNICODE);             
+       
 
     }
 

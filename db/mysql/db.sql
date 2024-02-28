@@ -1354,6 +1354,21 @@ CREATE TABLE  taglist (
 ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
 
+CREATE TABLE promocodes (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  code varchar(16) NOT NULL,
+  type tinyint(4) NOT NULL,
+  disabled tinyint(1) NOT NULL default 0,
+  
+  details text DEFAULT NULL,
+  PRIMARY KEY (id)
+) ENGINE = INNODB DEFAULT CHARSET = utf8
+;
+
+ALTER TABLE promocodes
+ADD UNIQUE INDEX code (code)   ; 
+
+
 
 INSERT INTO `users` (`userlogin`, `userpass`, `createdon`, `email`, `acl`, `disabled`, `options`, `role_id`) VALUES( 'admin', '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.', '2017-01-01', 'admin@admin.admin', 'a:2:{s:9:"aclbranch";N;s:6:"onlymy";N;}', 0, 'a:6:{s:8:"defstore";s:2:"19";s:7:"deffirm";i:0;s:5:"defmf";s:1:"2";s:8:"pagesize";s:2:"15";s:11:"hidesidebar";i:0;s:8:"mainpage";s:15:"\\App\\Pages\\Main";}', 1);
 INSERT INTO `roles` (`rolename`, `acl`) VALUES( 'admins', 'a:9:{s:7:"aclview";N;s:7:"acledit";N;s:6:"aclexe";N;s:9:"aclcancel";N;s:8:"aclstate";N;s:9:"acldelete";N;s:7:"widgets";N;s:7:"modules";N;s:9:"smartmenu";s:1:"8";}');
@@ -1405,7 +1420,7 @@ INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `d
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Рух по грошовим рахункам', 'PayActivity', 'Каса та платежі', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 1, 'Прибутковий ордер', 'IncomeMoney', 'Каса та платежі', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 1, 'Видатковий ордер', 'OutcomeMoney', 'Каса та платежі', 0);
-INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Фінансові результати', 'PayBalance', '', 0);
+INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Прибутки та видатки', 'PayBalance', '', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 1, 'Інвентаризація', 'Inventory', 'Склад', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 1, 'Рахунок, вхідний', 'InvoiceCust', 'Закупівлі', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 1, 'Рахунок-фактура', 'Invoice', 'Продажі', 0);
@@ -1449,7 +1464,7 @@ INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `d
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Акт звірки', 'CompareAct', 'Контрагенти', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Зарезервовані товари', 'Reserved', 'Склад', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'OLAP аналіз', 'OLAP', 'Аналітика', 0);
-  
+INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Управлiнський баланс', 'Balance', '', 0);  
 
 
 INSERT INTO `saltypes` (`st_id`, `salcode`, `salname`, `salshortname`, `disabled`) VALUES(2, 105, 'Основна зарплата', 'осн', 0);

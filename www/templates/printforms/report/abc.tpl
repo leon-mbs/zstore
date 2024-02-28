@@ -48,7 +48,7 @@
     <tr>
 
         <td   align="right"><b>Всього:</b></td>
-        <td   align="right"><b>{{total}}</b> &nbsp;</td>
+        <td   align="right"><b>{{total}}</b> </td>
         <td   align="right"> &nbsp;</td>
         <td  ></td>
 

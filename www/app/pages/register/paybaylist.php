@@ -369,11 +369,7 @@ GROUP BY c.customer_name,
             }
             $amount = 0 - $amount;
             $type = \App\Entity\IOState::TYPE_BASE_OUTCOME;
-
-
-
-
-
+  
         }
 
  

@@ -118,6 +118,19 @@
 
                             <td zippy="discount" class="text-right"></td>
                             <td></td>
+                        </tr>                            
+                        <tr style="font-weight: bolder;">
+
+                            {{^usesnumber}}
+                            <td colspan="4" class="text-right">Бонус:</td>
+                            {{/usesnumber}}
+                            {{#usesnumber}}
+                            <td colspan="6" class="text-right">Бонус:</td>
+                            {{/usesnumber}}
+
+                            <td zippy="bonus" class="text-right"></td>
+                            <td></td>
+                        </tr>                            
                        <tr style="font-weight: bolder;">
 
                             {{^usesnumber}}
@@ -228,3 +241,14 @@
     </script>
     </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+

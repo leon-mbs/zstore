@@ -56,6 +56,8 @@ class SalaryTypeList extends \App\Pages\Base
         $this->optform->add(new DropDownChoice('optbaseincom', SalType::getList(), $opt['codebaseincom']));
         $this->optform->add(new DropDownChoice('optadvance', SalType::getList(), $opt['codeadvance']));
         $this->optform->add(new DropDownChoice('optresult', SalType::getList(), $opt['coderesult']));
+        $this->optform->add(new DropDownChoice('optfine', SalType::getList(), $opt['codefine']));
+        $this->optform->add(new DropDownChoice('optbonus', SalType::getList(), $opt['codebonus']));
         $this->optform->add(new SubmitLink('saveopt'))->onClick($this, "onSaveOpt", true);
 
 
@@ -160,6 +162,8 @@ class SalaryTypeList extends \App\Pages\Base
         $opt['codebaseincom'] = $this->optform->optbaseincom->getValue();
         $opt['coderesult'] = $this->optform->optresult->getValue();
         $opt['codeadvance'] = $this->optform->optadvance->getValue();
+        $opt['codefine'] = $this->optform->optfine->getValue();
+        $opt['codebonus'] = $this->optform->optbonus->getValue();
 
         System::setOptions('salary', $opt);
 

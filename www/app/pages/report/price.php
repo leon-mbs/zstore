@@ -33,9 +33,13 @@ class Price extends \App\Pages\Base
         $this->filter->add(new CheckBox('price5'))->setVisible(strlen($option['price5']) > 0);
         $this->filter->add(new CheckBox('onstore'));
         $this->filter->add(new CheckBox('showqty'));
+        $this->filter->add(new CheckBox('showdesc'));
 
         $catlist = array();
         foreach (Category::getList() as $k => $v) {
+            if($v->noprice==1) {
+                continue;
+            }
             $catlist[$k] = $v;
         }
         $this->filter->add(new DropDownChoice('searchcat', $catlist, 0));
@@ -75,6 +79,7 @@ class Price extends \App\Pages\Base
         $isp4 = $this->filter->price4->isChecked();
         $isp5 = $this->filter->price5->isChecked();
         $onstore = $this->filter->onstore->isChecked();
+        $showdesc = $this->filter->showdesc->isChecked();
         $showqty = $this->filter->showqty->isChecked();
         $cat = $this->filter->searchcat->getValue();
         $brand = $this->filter->searchbrand->getText();
@@ -89,9 +94,22 @@ class Price extends \App\Pages\Base
         if(strlen($brand) > 0){
             $sql = $sql . " and manufacturer=". Item::qstr($brand) ;
         }
-        
+
+        $cats = Category::find('') ;                   
+           
         foreach (Item::findYield($sql, "cat_name,itemname") as $item) {
 
+
+            if($item->cat_id >0) {
+                $c= $cats[$item->cat_id]?? null;
+                if($c instanceof Category) {
+                    if($c->noprice) {
+                        contiue;
+                    }
+                }
+                
+            }
+            
             $qty = $item->getQuantity();
 
             if ($onstore && ($qty > 0) == false) {
@@ -101,6 +119,7 @@ class Price extends \App\Pages\Base
             $detail[] = array(
                 "code"   => $item->item_code,
                 "name"   => $item->itemname,
+                "desc"   => $item->description,
                 "cat"    => $item->cat_name,
                 "brand"  => $item->manufacturer,
                 "msr"    => $item->msr,
@@ -125,6 +144,7 @@ class Price extends \App\Pages\Base
             "catname" => $this->filter->searchcat->getValueName(),
             "brandname" => $brand,
             "showqty" => $showqty == 1,
+            "showdesc" => $showdesc == 1,
             'date'       => \App\Helper::fd(time())
         );
         $report = new \App\Report('report/price.tpl');

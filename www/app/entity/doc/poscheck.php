@@ -175,7 +175,29 @@ class POSCheck extends Document
             $i=  rand(0, count($frases) -1)  ;
             $header['checkslogan']   =   $frases[$i];
         }
+        if(strlen($header['checkslogan'] ??'') ==0) {
+            $header['checkslogan']  = false;
+        }
 
+        //промокод        
+        $pc = \App\Entity\PromoCode::find('type=2 and disabled <> 1','id desc') ;
+        foreach($pc as $p) {
+           
+           if($p->dateto >0 && $p->dateto < time() ) {
+               continue;               
+           }
+           if($p->showcheck==1) {
+               $header['promo']  = 'Промокод '. $p->code . " на {$p->disc}% знижку";
+               breack; 
+           }
+        }  
+           
+           
+        if(strlen($header['promo']  ??'') ==0) {
+            $header['promo']  = false;
+        }
+        
+        
         $header['form1']  = false;
         $header['form2']  = false;
         $header['form3']  = false;
@@ -219,6 +241,57 @@ class POSCheck extends Document
             $k = ($this->amount - $dd) / $this->amount;
         }
 
+
+
+        // работы
+        foreach ($this->unpackDetails('services') as $ser) {
+
+            $sc = new Entry($this->document_id, 0 - ($ser->price * $k * $ser->quantity), 0);
+            $sc->setService($ser->service_id);
+            // $sc->setExtCode(0 - ($ser->price * $k)); //Для АВС
+            $sc->setOutPrice(0 - $ser->price * $k);
+
+            $sc->save();
+        }
+
+        //оплата
+
+        $pp = $this->headerdata['payed'];
+        if ($this->headerdata['exchange'] > 0) {
+
+            $pp = $pp - $this->headerdata['exchange']; //без здачи
+        }          
+        $payed = 0;
+        if(($this->headerdata['payment'] ??0)  >0) {
+            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $pp, $this->headerdata['payment']);
+        } else {
+            if(($this->headerdata['mfnal']??0)  >0 && $pp >0) {
+                $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $pp, $this->headerdata['mfnal']);
+            }
+            if(($this->headerdata['mfbeznal']??0) >0 && ($this->headerdata['payedcard']??0) >0) {
+                $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['payedcard'], $this->headerdata['mfbeznal']);
+            }
+        }
+
+
+        if ($payed > 0) {
+            $this->payed = $payed;
+        }
+        \App\Entity\IOState::addIOState($this->document_id, $payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+
+        
+        if ($this->parent_id > 0) {
+            $parent = Document::load($this->parent_id);
+            if ($parent->meta_name == 'ServiceAct' ) {
+                if($parent->state == Document::STATE_WP )  {
+                   $parent->updateStatus(Document::STATE_PAYED); 
+                }
+                
+                
+                return true; //проводки выполняются  в  сервисе
+            }
+        }        
+        
         // товары
         foreach ($this->unpackDetails('detaildata') as $item) {
 
@@ -290,43 +363,27 @@ class POSCheck extends Document
                 $sc->save();
             }
         }
+        
+        if(strlen($this->headerdata['promocode']) > 0){
+            \App\Entity\PromoCode::apply($this->headerdata['promocode'],$this);
+        };
+       
+        //бонус  сотруднику
 
-        // работы
-        foreach ($this->unpackDetails('services') as $ser) {
+        $disc = \App\System::getOptions("discount");
+        $emp_id = \App\System::getUser()->employee_id ;
+        if($emp_id >0 && $disc["bonussell"] >0) {
+            $b =  $this->amount * $disc["bonussell"] / 100;
+            $ua = new \App\Entity\EmpAcc();
+            $ua->optype = \App\Entity\EmpAcc::BONUS;
+            $ua->document_id = $this->document_id;
+            $ua->emp_id = $emp_id;
+            $ua->amount = $b;
+            $ua->save();
 
-            $sc = new Entry($this->document_id, 0 - ($ser->price * $k * $ser->quantity), 0);
-            $sc->setService($ser->service_id);
-            // $sc->setExtCode(0 - ($ser->price * $k)); //Для АВС
-            $sc->setOutPrice(0 - $ser->price * $k);
-
-            $sc->save();
         }
-
-        //оплата
-
-        $pp = $this->headerdata['payed'];
-        if ($this->headerdata['exchange'] > 0) {
-
-            $pp = $pp - $this->headerdata['exchange']; //без здачи
-        }          
-        $payed = 0;
-        if(($this->headerdata['payment'] ??0)  >0) {
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $pp, $this->headerdata['payment']);
-        } else {
-            if(($this->headerdata['mfnal']??0)  >0 && $pp >0) {
-                $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $pp, $this->headerdata['mfnal']);
-            }
-            if(($this->headerdata['mfbeznal']??0) >0 && ($this->headerdata['payedcard']??0) >0) {
-                $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['payedcard'], $this->headerdata['mfbeznal']);
-            }
-        }
-
-
-        if ($payed > 0) {
-            $this->payed = $payed;
-        }
-        \App\Entity\IOState::addIOState($this->document_id, $payed, \App\Entity\IOState::TYPE_BASE_INCOME);
-
+      
+        
         return true;
     }
 

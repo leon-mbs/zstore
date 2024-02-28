@@ -27,6 +27,7 @@ class Update extends \App\Pages\Base
  
         $t = '?t='.time(); 
  
+        $this->add(new  ClickLink('updatefile',$this,'OnFileUpdate')) ;
         $this->add(new  ClickLink('updatesql',$this,'OnSqlUpdate')) ;
  
         $this->_tvars['curversion'] = System::CURR_VERSION;
@@ -103,10 +104,57 @@ class Update extends \App\Pages\Base
           $this->_tvars['showdb']  = true; 
         }  
         
-             
-                
+               
+          
 
     }   
+
+
+    public function OnFileUpdate($sender)   {
+    
+        try {
+            if (!is_writeable( _ROOT .'app/')) {
+                $this->setError('Нема  права  запису');
+                return;        
+            }
+
+               
+            $zip = new \ZipArchive()  ;
+
+            $archive = _ROOT.'upload/update.zip' ;
+            @unlink($archive) ;
+            
+            @file_put_contents($archive, file_get_contents($this->_tvars['archive'] )) ;
+         
+            if(filesize($archive)==0) {
+                $this->setError('Помилка завантаження файду');
+                return;        
+            }
+
+            if ($zip->open($archive) === TRUE) {
+           
+                $destination =_ROOT; 
+                
+                $zip->extractTo($destination);
+                $zip->close();
+
+           }  else {
+                $this->setError('Помилка  архіву');
+                return;        
+               
+           }
+           $this->setSuccess('Файли оновлені')  ;
+           App::RedirectURI("/index.php?p=/App/Pages/Update");
+
+         
+      } catch(\Exception $e){
+            $msg = $e->getMessage()  ;
+     
+            $this->setErrorTopPage($msg)  ;
+   
+       } 
+         
+    }
  
     public function OnSqlUpdate($sender)   {
        global $_config; 
@@ -120,34 +168,63 @@ class Update extends \App\Pages\Base
        
        $sql_array = explode(';',$sql) ;
        
-    //   $db=\Zdb\db::getConnect()  ;
-       
-       try{
-         
-         $b= mysqli_connect($_config['db']['host'], $_config['db']['pass'], $_config['db']['user'], $_config['db']['name']) ; 
-         if($b ==false) {
-               $this->setErrorTopPage('Invalid connect')  ;
-               return;
-         } 
-       
-         foreach($sql_array as $s) {
-             $s = trim($s);
-             if(strlen($s)==0) {
-                 continue;
-             }
-             $r= mysqli_query($b,$s) ;
-             if($r ==false) {
-                   $msg=mysqli_error($b)  ;
-                   $this->setErrorTopPage($s.' '.$msg) ;
+  
+       try{                 
+                  
+         if( ($_config['db']['driver'] ??'') == ''  ){
+
+            $b= mysqli_connect($_config['db']['host'], $_config['db']['user'], $_config['db']['pass'], $_config['db']['name']) ; 
+
+             if($b ==false) {
+                   $this->setErrorTopPage('Invalid connect')  ;
                    return;
              } 
-             // $db->Execute($sql) ; 
-             
+           
+             foreach($sql_array as $s) {
+                 $s = trim($s);
+                 if(strlen($s)==0) {
+                     continue;
+                 }
+                 $r= mysqli_query($b,$s) ;
+                 if($r ==false) {
+                       $msg=mysqli_error($b)  ;
+                       $this->setErrorTopPage($s.' '.$msg) ;
+                       return;
+                 } 
+            
+                 
+             }
          }
+  
+         if($_config['db']['driver'] == 'postgres'){
+              $b = pg_connect("host={$_config['db']['host']} port=5432 dbname={$_config['db']['name']} user={$_config['db']['user']} password={$_config['db']['pass']}");
+
+
+             if($b ==false) {
+                   $this->setErrorTopPage('Invalid connect')  ;
+                   return;
+             } 
+           
+             foreach($sql_array as $s) {
+                 $s = trim($s);
+                 if(strlen($s)==0) {
+                     continue;
+                 }
+                 $r= pg_query($b,$s) ;
+                 if($r ==false) {
+                       $msg= pg_execute()    ;
+                       $this->setErrorTopPage($s.' error') ;
+                       return;
+                 } 
+            
+                 
+             }       
+         }  
+
  
 
          $this->setSuccess('БД оновлена')  ;
-         App::Redirect("\\App\\Pages\\Update");
+         App::RedirectURI("/index.php?p=/App/Pages/Update");
          
          
        } catch(\Exception $e){
@@ -161,3 +238,4 @@ class Update extends \App\Pages\Base
     }
     
 }
+ 

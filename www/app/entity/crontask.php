@@ -46,16 +46,21 @@ class CronTask extends \ZCL\DB\Entity
             return;
         }
 
+        $options = System::getOptions('common');
+        $modules = System::getOptions('modules');
+       
+        
         $last = intval( \App\Helper::getKeyVal('lastcron') );
         if((time()-$last) < self::MIN_INTERVAL) { //не  чаще  раза в пять минут
             return;
         }
-        $stop = \App\Helper::getKeyVal('stopcron')  ?? false;
-        if($stop== false) { //уже  запущен
+        $start = \App\Helper::getKeyVal('lastcron')  ?? 0 ;
+        $stop = \App\Helper::getKeyVal('stopcron')  ?? '' ;
+        if($start >0 &&  $stop=== 'false') { //уже  запущен
             return;
         }
         \App\Helper::setKeyVal('lastcron', time()) ;
-        \App\Helper::setKeyVal('stopcron', false) ;
+        \App\Helper::setKeyVal('stopcron', 'false') ;
 
         try {
             $conn = \ZDB\DB::getConnect()  ;
@@ -80,6 +85,20 @@ class CronTask extends \ZCL\DB\Entity
                 $dt = $conn->DBDate(strtotime('-1 month', time())) ;
                 $conn->Execute("delete  from notifies  where  dateshow < ". $dt) ;
 
+                //обновление  НП
+                if($modules['np'] == 1) {
+                    $api = new  \App\Modules\NP\Helper();
+
+                    $ret = $api->updatetCache()  ;
+                   
+                    if(strlen($ret['error'] ??'')>0 ) {
+                       $logger->error($ret['error']);  
+                    }
+                    if(strlen($ret['warn'] ??'')>0 ) {
+                       $logger->warn($ret['warn']);                           
+                       
+                    }           
+                }    
             }
 
         } catch(\Exception $ee) {
@@ -98,7 +117,7 @@ class CronTask extends \ZCL\DB\Entity
             }
 
         }
-        \App\Helper::setKeyVal('stopcron', true) ;
+        \App\Helper::setKeyVal('stopcron', 'true') ;
 
 
     }

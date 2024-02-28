@@ -130,6 +130,8 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["checkbox"] = $modules['checkbox'] == 1;
         $this->_tvars["vkassa"] = $modules['vkassa'] == 1;
         $this->_tvars["horoshop"] = $modules['horoshop'] == 1;
+        $this->_tvars["vdoc"] = $modules['vdoc'] == 1;
+
 
 
         //  $printer = System::getOptions('printer');
@@ -176,8 +178,11 @@ class Base extends \Zippy\Html\WebPage
         if (strpos(System::getUser()->modules ?? '', 'vkassa') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["vkassa"] = false;
         }
-        if (strpos(System::getUser()->modules ?? '', 'vkassa') === false && System::getUser()->rolename != 'admins') {
-            $this->_tvars["vkassa"] = false;
+        if (strpos(System::getUser()->modules ?? '', 'horoshop') === false && System::getUser()->rolename != 'admins') {
+            $this->_tvars["horoshop"] = false;
+        }
+        if (strpos(System::getUser()->modules ?? '', 'vdoc') === false && System::getUser()->rolename != 'admins') {
+            $this->_tvars["vdoc"] = false;
         }
 
         $this->_tvars["fiscal"] = $this->_tvars["checkbox"] || $this->_tvars["ppo"] || $this->_tvars["vkassa"];
@@ -188,9 +193,10 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["note"] ||
             $this->_tvars["issue"] ||
             $this->_tvars["promua"] ||
-            $this->_tvars["paperless"] ||
+//            $this->_tvars["paperless"] ||
             $this->_tvars["ppo"] ||
             $this->_tvars["horoshop"] ||
+            $this->_tvars["vdoc"] ||
             $this->_tvars["np"]
         ) {
             $this->_tvars["showmodmenu"] = true;
@@ -444,11 +450,11 @@ class Base extends \Zippy\Html\WebPage
             $header['lastsum']=Helper::fa($doc->amount);
             $header['laststatus']   =  \App\Entity\Doc\Document::getStateName($doc->state)  ;
 
-            $goods = [];
+            $header['goods'] = [];
 
             $sql = "select items.item_id, items.itemname,items.item_code    from 
              entrylist_view  join items  on items.item_id = entrylist_view.item_id 
-             where customer_id={$c->customer_id}  
+             where entrylist_view.customer_id={$c->customer_id}  
              order  by  entry_id desc  limit 0,10 "    ;
 
             foreach($conn->Execute($sql) as $i) {
@@ -563,7 +569,7 @@ class Base extends \Zippy\Html\WebPage
             foreach($items as $k=>$v)  {
                 if($v->item_id == $args[0] ) {
                     $i=  $k;
-                    $break;
+                    break;
                 }
             }
             if($i==-1)  {
@@ -654,7 +660,7 @@ class Base extends \Zippy\Html\WebPage
 
 
 
-            $ret['lastpartion'] = $item->getLastPartion(); //последняя  закупка
+       //     $ret['lastpartion'] = $item->getLastPartion(0, "", true); //последняя  закупка
             $ret['qtystock'] = $item->getQuantity(); // на  складе
             $ret['item_code'] = $item->item_code;
             $ret['useserial'] = $item->useserial;
