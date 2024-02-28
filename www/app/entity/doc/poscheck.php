@@ -175,7 +175,29 @@ class POSCheck extends Document
             $i=  rand(0, count($frases) -1)  ;
             $header['checkslogan']   =   $frases[$i];
         }
+        if(strlen($header['checkslogan'] ??'') ==0) {
+            $header['checkslogan']  = false;
+        }
 
+        //промокод        
+        $pc = \App\Entity\PromoCode::find('type=2 and disabled <> 1','id desc') ;
+        foreach($pc as $p) {
+           
+           if($p->dateto >0 && $p->dateto < time() ) {
+               continue;               
+           }
+           if($p->showcheck==1) {
+               $header['promo']  = 'Промокод '. $p->code . " на {$p->disc}% знижку";
+               breack; 
+           }
+        }  
+           
+           
+        if(strlen($header['promo']  ??'') ==0) {
+            $header['promo']  = false;
+        }
+        
+        
         $header['form1']  = false;
         $header['form2']  = false;
         $header['form3']  = false;

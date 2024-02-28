@@ -205,6 +205,8 @@ class Discounts extends \App\Pages\Base
 
         $this->ptab->formpan->pform->add(new AutocompleteTextInput('peditcust'))->onText($this, 'OnAutoCustomer');
         $this->ptab->formpan->pform->peditcust->setVisible(false);
+        $this->ptab->formpan->pform->add(new CheckBox('peditcheck'));
+        $this->ptab->formpan->pform->peditcheck->setVisible(false);
 
         $this->ptab->formpan->pform->add(new DropDownChoice('paddtype'))->onChange($this,"onPType") ;
         $this->ptab->listpan->plist->Reload();
@@ -723,6 +725,7 @@ class Discounts extends \App\Pages\Base
         $this->ptab->formpan->pform->peditcode->setText($code);
         $this->ptab->formpan->pform->peditcust->setText('');
         $this->ptab->formpan->pform->peditcust->setKey(0);
+        $this->ptab->formpan->pform->peditcheck->setChecked(false);
         $this->ptab->formpan->pform->paddtype->setValue(0);
         
         $this->ptab->formpan->setVisible(true);
@@ -736,7 +739,8 @@ class Discounts extends \App\Pages\Base
     }
     public function onPType($sender) {
         $t=$sender->getValue();
-        $this->ptab->formpan->pform->peditcust->setVisible($t>2);
+        $this->ptab->formpan->pform->peditcust->setVisible($t==3);
+        $this->ptab->formpan->pform->peditcheck->setVisible($t==2);
 
  
     }
@@ -764,6 +768,7 @@ class Discounts extends \App\Pages\Base
            return; 
         }
         $pc->customer_name = $sender->peditcust->getText();
+        $pc->showcheck = $sender->peditcheck->isChecked() ? 1:0  ;
         
         $pc->save() ;
         
