@@ -441,8 +441,8 @@ class PPOHelper
         $header['guid'] = \App\Util::guid();
 
 
-        $header['comment'] = strlen($common["checkslogan"] ??'') >0 ? $common["checkslogan"]  :  false;
-
+     //   $header['comment'] = strlen($common["checkslogan"] ??'') >0 ? $common["checkslogan"]  :  false;
+        $header['comment'] = false;
 
         $header['details'] = array();
         $n = 1;
