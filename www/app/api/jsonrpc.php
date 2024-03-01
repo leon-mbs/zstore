@@ -32,6 +32,7 @@ abstract class JsonRPC
 
 
             if ($response != null) {
+                header("Content-type: application/json");
                 echo json_encode($response, JSON_UNESCAPED_UNICODE);
             } else {
                 http_response_code(200);

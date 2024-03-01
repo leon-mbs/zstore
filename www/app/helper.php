@@ -1306,9 +1306,15 @@ class Helper
     * 
     */
     public static function checkVer(){
-            $v = @file_get_contents("https://zippy.com.ua/version.json?t=" . time());
+            $nocache= "?t=" . time()."&s=". self::getSalt() ;
+       
+            $v = @file_get_contents("https://zippy.com.ua/checkver.php".$nocache);
             $v = @json_decode($v, true);
-
+            if(!is_array($v)) {
+                $v = @file_get_contents("https://zippy.com.ua/version.json".$nocache);
+                $v = @json_decode($v, true);
+                
+            }
             if (strlen($v['version']) > 0) {
                 $c = str_replace("v", "", \App\System::CURR_VERSION);
                 $n = str_replace("v", "", $v['version']);
