@@ -48,7 +48,7 @@ class Update extends \App\Pages\Base
         $this->_tvars['show']  = false   ; 
  
 
-        $nocache= "?t=" . time()."&s=". H::getSalt() ;
+        $nocache= "?t=" . time()."&s=". H::getSalt() .'&phpv='. phpversion() ;
     
         $v = @file_get_contents("https://zippy.com.ua/checkver.php".$nocache);
         $data = @json_decode($v, true);
