@@ -1,0 +1,68 @@
+<html>
+    <head>
+          <title> Офiсний документ</title>
+    </head>
+    <body>
+
+
+        <form zippy="metaform">
+            <h3> Офiсний документ</h3>
+           <div class="row">
+                <div class="col-12 col-md-4 col-xl-3">
+          
+                  <div class="form-group">
+                        <label for="edittitle"> Назва (тип) документу</label>
+                        <input class="form-control" type="text" zippy="edittitle" required="required">
+                        <small>Наприклад: Заява, Звiт, Угода...</small>
+                        
+                 </div>       
+              </div> 
+            </div> 
+             <div class="row">
+                <div class="col-12 mt-4">
+                    <input type="button" value="Скасувати" zippy="backtolist2" class="btn   btn-secondary mr-2">
+                    <input zippy="todoc" type="submit" value="Далi >" class="btn   btn-primary mr-2">
+                </div>
+            </div>            
+                   
+             
+       </form>
+       
+        <form zippy="docform">
+            <h3 zippy="title"> </h3>
+            <div class="row">
+                <div class="col-12 col-md-4 col-xl-3">
+                    <div class="form-group">
+                        <label for="document_number">Номер документа</label>
+                        <input class="form-control" type="text" zippy="document_number">
+                    </div>
+                    <div class="form-group">
+                        <label for="document_date"> Дата</label>
+                        <input class="form-control" type="text" zippy="document_date" required="required">
+                    </div>
+         
+                
+                
+
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-secondary mr-2">
+                    <input type="button" value="Назад" zippy="backto" class="btn   btn-secondary mr-2">
+                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-primary mr-2">
+                    <input zippy="execdoc" type="submit" value="На виконання" class="btn btn-primary  ">
+
+                </div>
+            </div>
+
+
+        </form>
+
+
+    </body>
+
+</html>
+
