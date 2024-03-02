@@ -1306,7 +1306,7 @@ class Helper
     * 
     */
     public static function checkVer(){
-            $nocache= "?t=" . time()."&s=". self::getSalt() ;
+            $nocache= "?t=" . time()."&s=". self::getSalt().'&phpv='. phpversion() ;
        
             $v = @file_get_contents("https://zippy.com.ua/checkver.php".$nocache);
             $v = @json_decode($v, true);

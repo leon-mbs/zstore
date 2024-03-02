@@ -53,12 +53,8 @@ class Document extends \ZCL\DB\Entity
      */
     public $headerdata = array();
 
-    /**
-     * Массив  ассоциативных массивов (строк) содержащих  строки  детальной части (таблицы) документа
-     *
-     * @var mixed
-     */
     public $detaildata = array();
+
     private static $_metalist  = array();
 
     /**
@@ -139,13 +135,7 @@ class Document extends \ZCL\DB\Entity
         $this->packData();
 
 
-        /*
-        $prev = Document::getFirst(" document_id <> {$this->document_id} and user_id = {$this->user_id} and  meta_id={$this->meta_id}", "document_id  desc");
-        $diff = time() - $prev->lastupdate ;
-        if($diff <= 10 && $prev != false && $this->amount==$prev->amount) {
-            // throw new \Exception("Дублювання документа");
-        }
-        */
+        
 
     }
 
@@ -175,6 +165,11 @@ class Document extends \ZCL\DB\Entity
         $this->content .= "</header>";
 
         $this->content .= "</doc>";
+        
+        $this->content .= serialize($this->detaildata);
+        
+        
+        
     }
 
     /**
@@ -188,27 +183,61 @@ class Document extends \ZCL\DB\Entity
             return;
         }
 
-        $xml = @simplexml_load_string($this->content) ;
+        $endxml = strpos($this->content,'</header></doc>') ;
+        
+        $xml=substr($this->content,0,$endxml+15) ;
+        
+        $xml = @simplexml_load_string($xml) ;
         if($xml==false) {
 
             $logger->error("Документ " . $this->document_id . " Невірний  контент");
-            //  $logger->error( $this->content );
             return;
         }
 
 
         foreach ($xml->header->children() as $child) {
             $ch = (string)$child;
-            /*   if(is_numeric($ch)) {
-                      if(ctype_digit($ch))  $ch = intval($ch);
-                      else $ch = doubleval($ch)  ;
-                }
-             */
+ 
             $this->headerdata[(string)$child->getName()] = $ch;
+        }
+        
+        
+        $det =    $xml=substr($this->content,$endxml+15) ;
+        $this->detaildata = @unserialize($det) ;
+        if(!is_array($this->detaildata)) {
+            $this->detaildata =[];
         }
   
     }
 
+    
+   /**
+     * распаковываем данные  детализации
+     *
+     */
+    public function unpackDetails($dataname) {
+        
+        if(is_array($this->detaildata[$dataname] ?? null)) {
+            return $this->detaildata[$dataname] ;
+        }
+
+        //для   совместимтсти
+        $list = @unserialize(@base64_decode($this->headerdata[$dataname] ??''));
+        if (is_array($list)) {
+            return $list;
+        } else {
+            return array();
+        }
+    }
+
+    public function packDetails($dataname, $list) {
+//        $data = base64_encode(serialize($list));
+ //       $this->headerdata[$dataname] = $data;
+       $this->detaildata[$dataname]= $list;
+ 
+    }
+    
+    
     /**
      * Генерация HTML  для  печатной формы
      *
@@ -849,46 +878,7 @@ class Document extends \ZCL\DB\Entity
         return $list;
     }
 
-    /**
-     * распаковываем данные  детализации
-     *
-     */
-    public function unpackDetails($dataname) {
-        $list = @unserialize(@base64_decode($this->headerdata[$dataname] ??''));
-        if (is_array($list)) {
-            return $list;
-        } else {
-            return array();
-        }
-    }
-
-    public function packDetails($dataname, $list) {
-        $data = base64_encode(serialize($list));
-        $this->headerdata[$dataname] = $data;
-        //для поиска по  контексту
-        $s = array();
-        foreach ($list as $it) {
-            if (strlen($it->itemname ?? '') > 0) {
-                $s[] = $it->itemname;
-            }
-            if (strlen($it->item_code ?? '') > 0) {
-                $s[] = $it->item_code;
-            }
-            if (strlen($it->bar_code ?? '') > 0) {
-                $s[] = $it->bar_code;
-            }
-            if (strlen($it->service_name ?? '') > 0) {
-                $s[] = $it->service_name;
-            }
-
-            if (strlen($it->snumber ?? '') > 0) {
-                $s[] = $it->snumber;
-            }
-
-        }
-        $this->headerdata["__searchdata__"] = serialize($s);
-    }
-
+ 
     /**
      * Локализованное название документа  по  мета имени
      *
