@@ -595,19 +595,27 @@ class ItemList extends \App\Pages\Base
         $this->_tvars['complout']  = $item->item_type== Item::TYPE_MAT  || $item->item_type== Item::TYPE_HALFPROD ;
         $this->_tvars['conploutlist']  = [];
         
-        foreach(Item::find("item_id in(select pitem_id from item_set  where  item_id=".$item->item_id.")") as $ii){
+        $conn = \ZDB\db::getConnect()  ;
+        
+        $sql="SELECT s.qty,i.item_code,i.itemname  FROM 
+            items i JOIN item_set s ON i.item_id=s.pitem_id 
+            WHERE s.item_id = ".$item->item_id ;
+
+        foreach($conn->Execute($sql) as $ii){
            $this->_tvars['conploutlist'][]=array(
-              "iname"=>$ii->itemname,
-              "icode"=>$ii->item_code
+              "iname"=>$ii['itemname'],
+              "iqty"=> H::fqty( $ii['qty'] ),
+              "icode"=>$ii['item_code']
            );     
         } ;
-        
-        foreach(\App\Entity\Service::find("") as $s){
+   
+      foreach(\App\Entity\Service::find("") as $s){
            if(is_array($s->itemset)) {
                foreach($s->itemset as $is) {
                    if($is->item_id==$item->item_id) {
                        $this->_tvars['conploutlist'][]=array(
                           "iname"=>$s->service_name,
+                          "iqty"=>$is->qty,
                           "icode"=>""
                        );     
                        
@@ -615,7 +623,7 @@ class ItemList extends \App\Pages\Base
                    
                }
            }
-        }
+        } 
         
         
     }

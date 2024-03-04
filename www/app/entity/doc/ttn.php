@@ -242,8 +242,9 @@ class TTN extends Document
     public function onState($state, $oldstate) {
 
         if ($state == Document::STATE_INSHIPMENT) {
+       
             //расходы на  доставку
-            if ($this->headerdata['ship_amount'] > 0) {
+            if ($this->headerdata['ship_amount'] > 0 && $this->headerdata['payseller'] == 1) {
                 $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->headerdata['ship_amount'], H::getDefMF());
                 if ($payed > 0) {
                     $this->payed = $payed;

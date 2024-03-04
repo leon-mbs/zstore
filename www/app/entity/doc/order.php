@@ -251,6 +251,12 @@ class Order extends \App\Entity\Doc\Document
             $this->unreserve()  ;
 
         }
+        if ( $state == self::STATE_READYTOSHIP) {
+
+            $this->unreserve()  ;
+            $this->reserve()  ;
+
+        }
         if ($state == self::STATE_INPROCESS) {
 
             if(strlen($this->headerdata['promocode']) > 0){

@@ -51,6 +51,7 @@ class TTN extends \App\Pages\Base
         $this->docform->add(new Date('sent_date',time()));
         $this->docform->add(new Date('delivery_date',time()+24*3600));
         $this->docform->add(new CheckBox('nostore'));
+        $this->docform->add(new CheckBox('payseller'));
 
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -135,6 +136,7 @@ class TTN extends \App\Pages\Base
             $this->docform->email->setText($this->_doc->headerdata['email']);
             $this->docform->phone->setText($this->_doc->headerdata['phone']);
             $this->docform->nostore->setChecked($this->_doc->headerdata['nostore']);
+            $this->docform->payseller->setChecked($this->_doc->headerdata['payseller']);
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->salesource->setValue($this->_doc->headerdata['salesource']);
@@ -288,7 +290,7 @@ class TTN extends \App\Pages\Base
                         }
 
                         $this->docform->nostore->setChecked(true);
-  
+                    
 
                         foreach ($basedoc->unpackDetails('detaildata') as $item) {
                             // $item->price = $item->getPrice($basedoc->headerdata['pricetype']);
@@ -611,6 +613,7 @@ class TTN extends \App\Pages\Base
         $this->_doc->headerdata['phone'] = $this->docform->phone->getText();
         $this->_doc->headerdata['email'] = $this->docform->email->getText();
         $this->_doc->headerdata['nostore'] = $this->docform->nostore->isChecked() ? 1 : 0;
+        $this->_doc->headerdata['payseller'] = $this->docform->payseller->isChecked() ? 1 : 0;
 
         if ($this->checkForm() == false) {
             return;
@@ -896,6 +899,7 @@ class TTN extends \App\Pages\Base
             $this->docform->senddoc->setVisible(true);
             $this->docform->sendnp->setVisible(true);
 
+            $this->docform->payseller->setVisible(true);
             $this->docform->ship_address->setVisible(true);
             $this->docform->ship_number->setVisible($sender->getValue() == Document::DEL_NP);
             $this->docform->ship_amount->setVisible(true);
@@ -905,6 +909,7 @@ class TTN extends \App\Pages\Base
         } else {
             $this->docform->senddoc->setVisible(false);
 
+            $this->docform->payseller->setVisible(false);
             $this->docform->ship_address->setVisible(false);
             $this->docform->ship_number->setVisible(false);
             $this->docform->ship_amount->setVisible(false);
