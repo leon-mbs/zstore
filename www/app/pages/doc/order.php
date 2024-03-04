@@ -510,8 +510,10 @@ class Order extends \App\Pages\Base
             }
 
 
-            if ( $sender->id == 'paydoc' || $sender->id == 'topaydoc') {
+            if ($sender->id == 'execdoc' || $sender->id == 'paydoc' || $sender->id == 'topaydoc') {
                 $this->_doc->updateStatus(Document::STATE_INPROCESS);
+            }
+            if ( $sender->id == 'paydoc' || $sender->id == 'topaydoc') {
                 if ($this->_doc->headerdata['store'] > 0) {
                     $this->_doc->reserve($this->_doc->headerdata['store']); 
                 }

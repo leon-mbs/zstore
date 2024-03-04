@@ -430,8 +430,13 @@ class GIList extends \App\Pages\Base
         }
 
         $this->nppan->npform->nppt->setOptionList($stlist);
-        $this->nppan->npform->nppt->setValue('Recipient');
-
+        if($this->_doc->$this->headerdata['payseller'] == 1 ) {
+           $this->nppan->npform->nppt->setValue('Sender');    
+        } else {
+           $this->nppan->npform->nppt->setValue('Recipient');    
+        }
+        
+     
         
         
         $this->nppan->npform->bayarea->setOptionList($areas);

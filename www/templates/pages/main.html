@@ -101,75 +101,11 @@
 
         <div class="row">  
 
-
-            {{#wsdate}}
-            <div   class="col-12 col-lg-6 ">
-
-                <div   class="card ">
-                    <div   class="card-body">
-                        <h4>Простроченi товари</h4>
-                        <small>Товари для котрих закiнчився термін придатностi</small>
-                        <br><a zippy="sdcsv">Експорт у Excel</a>
-                        <table class="table   table-sm">
-                            <tr>
-
-                                <th>Склад</th>
-                                <th>Товар</th>
-                                <th>Серiя</th>
-                                <th>Придатний до</th>
-                                <th class="text-right">Кiл.</th>
-                            </tr>
-                            <tr zippy="sdlist" >
-                                <td zippy="wsd_storename"></td>
-                                <td zippy="wsd_itemname"></td>
-                                <td zippy="wsd_snumber"></td>
-                                <td><span zippy="wsd_edate"></span></td>
-                                <td zippy="wsd_qty" class="text-right"></td>
-                            </tr>
-                        </table>
-                        <div zippy="sdpag" ></div>               
-
-                    </div>
-                </div>
-            </div>
-            {{/wsdate}}
-            {{#wminqty}}
-            <div   class="col-12 col-lg-6 ">
-
-                <div   class="card ">
-                    <div   class="card-body">
-                        <h4>Критична кiлькiсть </h4>
-                        <small>Товари для яких задана мiнiмальна кiлькiсть на складi та актуальна кiлькiсть менше заданої</small>
-                        <br><a zippy="mqcsv">Експорт у Excel</a>
-                        <table class="table   table-sm">
-                            <tr>
-                              
-                           
-                                <th>Товар</th>
-                                <th>Код</th>
-                                <th>Поставив</th>
-
-                                <th class="text-right">Факт</th>
-                                <th class="text-right">Мiн.</th>
-                            </tr>
-                            <tr zippy="mqlist">
-                               
-                                <td zippy="wmq_itemname"></td>
-                                <td zippy="wmq_item_code"></td>
-                                <td zippy="wmq_cust"></td>
-                                <td zippy="wmq_qty" class="text-right"></td>
-                                <td zippy="wmq_minqty" class="text-right"></td>
-                            </tr>
-                        </table>             
-                        <div zippy="mqpag"></div>        
-                    </div>
-                </div>
-            </div>      
-            {{/wminqty}}
-
+           <div   class="col-12 col-lg-6 ">
+ 
 
             {{#wrdoc}}
-            <div   class="col-12 col-lg-6 ">
+
 
                 <div   class="card ">
                     <div   class="card-body">
@@ -200,11 +136,11 @@
                         <div zippy="wrpag"></div>    
                     </div>
                 </div>
-            </div>      
+      
             {{/wrdoc}}
-               {{#wmdoc}}
-            <div   class="col-12 col-lg-6 ">
 
+            {{#wmdoc}}
+           
                 <div   class="card ">
                     <div   class="card-body">
                         <h4>Мої документи</h4>
@@ -228,15 +164,78 @@
                         <div zippy="wmpag"></div>    
                     </div>
                 </div>
-            </div>      
-            {{/wmdoc}}
 
+            {{/wmdoc}}
+            </div>      
+             <div   class="col-12 col-lg-6 ">
+                    
+            {{#wsdate}}
+                   <div   class="card ">
+                    <div   class="card-body">
+                        <h4>Простроченi товари</h4>
+                        <small>Товари для котрих закiнчився термін придатностi</small>
+                        <br><a zippy="sdcsv">Експорт у Excel</a>
+                        <table class="table   table-sm">
+                            <tr>
+
+                                <th>Склад</th>
+                                <th>Товар</th>
+                                <th>Серiя</th>
+                                <th>Придатний до</th>
+                                <th class="text-right">Кiл.</th>
+                            </tr>
+                            <tr zippy="sdlist" >
+                                <td zippy="wsd_storename"></td>
+                                <td zippy="wsd_itemname"></td>
+                                <td zippy="wsd_snumber"></td>
+                                <td><span zippy="wsd_edate"></span></td>
+                                <td zippy="wsd_qty" class="text-right"></td>
+                            </tr>
+                        </table>
+                        <div zippy="sdpag" ></div>               
+
+                    </div>
+                </div>
+         
+            {{/wsdate}}
+            
+            {{#wminqty}}
+         
+                <div   class="card ">
+                    <div   class="card-body">
+                        <h4>Критична кiлькiсть </h4>
+                        <small>Товари для яких задана мiнiмальна кiлькiсть на складi та актуальна кiлькiсть менше заданої</small>
+                        <br><a zippy="mqcsv">Експорт у Excel</a>
+                        <table class="table   table-sm">
+                            <tr>
+                              
+                           
+                                <th>Товар</th>
+                                <th>Код</th>
+                                <th>Поставив</th>
+
+                                <th class="text-right">Факт</th>
+                                <th class="text-right">Мiн.</th>
+                            </tr>
+                            <tr zippy="mqlist">
+                               
+                                <td zippy="wmq_itemname"></td>
+                                <td zippy="wmq_item_code"></td>
+                                <td zippy="wmq_cust"></td>
+                                <td zippy="wmq_qty" class="text-right"></td>
+                                <td zippy="wmq_minqty" class="text-right"></td>
+                            </tr>
+                        </table>             
+                        <div zippy="mqpag"></div>        
+                    </div>
+                </div>
+               
+            {{/wminqty}}
+             
       
         </div>
-
-    
-
- 
+      </div>
+   
  
  
      <script type="text/javascript">
