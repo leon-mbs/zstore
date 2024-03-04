@@ -278,13 +278,14 @@ class EmployeeList extends \App\Pages\Base
 
         $conn = \ZDB\DB::getConnect();
 
-        $sql = "select coalesce(sum(amount),0) from empacc_view where optype < 100 and  emp_id = {$emp_id} and   createdon < " . $conn->DBDate($from);
+        $sql = "select coalesce(sum(amount),0) from empacc_view where    emp_id = {$emp_id} and   createdon < " . $conn->DBDate($from);
 
         $b = $conn->GetOne($sql);
 
 
-        $sql =    $sql = "select * from empacc_view where optype < 100 and  emp_id = {$emp_id} and createdon <= " . $conn->DBDate($to) . " and createdon >= " . $conn->DBDate($from) ." order  by  ea_id ";
+        $sql =    $sql = "select * from empacc_view where   emp_id = {$emp_id} and createdon <= " . $conn->DBDate($to) . " and createdon >= " . $conn->DBDate($from) ." order  by  ea_id ";
         $rc = $conn->Execute($sql);
+        $en=\App\Entity\EmpAcc::getNames();
 
         $detail = array();
 
@@ -295,6 +296,7 @@ class EmployeeList extends \App\Pages\Base
             $out =   doubleval($row['amount']) < 0 ? 0-$row['amount'] : 0;
             $detail[] = array(
                 'notes'    => $row['notes'],
+                'opname'    => $en[$row['optype']],
                 'dt'    => H::fd(strtotime($row['createdon'])),
                 'doc'   => $row['document_number'],
                 'begin' => H::fa($b),
@@ -304,7 +306,7 @@ class EmployeeList extends \App\Pages\Base
             );
 
 
-            $b = $b + $in - $out;
+            $b = H::fa($b + $in - $out);
         }
 
         $this->_tvars['mempacc']  =  $detail;

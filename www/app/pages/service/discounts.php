@@ -44,12 +44,14 @@ class Discounts extends \App\Pages\Base
         $this->add(new ClickLink('tabi', $this, 'onTab'));
         $this->add(new ClickLink('tabs', $this, 'onTab'));
         $this->add(new ClickLink('tabp', $this, 'onTab'));
+        $this->add(new ClickLink('tabe', $this, 'onTab'));
         //панели
         $this->add(new Panel('otab'));
         $this->add(new Panel('ctab'));
         $this->add(new Panel('itab'));
         $this->add(new Panel('stab'));
         $this->add(new Panel('ptab'));
+        $this->add(new Panel('etab'));
 
         $this->onTab($this->tabo);
 
@@ -203,11 +205,19 @@ class Discounts extends \App\Pages\Base
 
         $this->ptab->formpan->pform->add(new AutocompleteTextInput('peditcust'))->onText($this, 'OnAutoCustomer');
         $this->ptab->formpan->pform->peditcust->setVisible(false);
+        $this->ptab->formpan->pform->add(new CheckBox('peditcheck'));
+        $this->ptab->formpan->pform->peditcheck->setVisible(false);
 
         $this->ptab->formpan->pform->add(new DropDownChoice('paddtype'))->onChange($this,"onPType") ;
         $this->ptab->listpan->plist->Reload();
 
+        // сотрулники
+        $form = $this->etab->add(new Form('empform'));
+        $form->onSubmit($this, "onEmp");
 
+        $form->add(new  TextInput("ebonussell", $disc["bonussell"]));
+        $form->add(new  TextInput("efineret", $disc["fineret"]));
+ 
       
     }
 
@@ -258,6 +268,8 @@ class Discounts extends \App\Pages\Base
 
         $this->_tvars['tabsbadge'] = $sender->id == 'tabs' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
         $this->_tvars['tabpbadge'] = $sender->id == 'tabp' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
+        $this->_tvars['tabebadge'] = $sender->id == 'tabe' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
+
 
         $this->ctab->setVisible($sender->id == 'tabc');
         $this->otab->setVisible($sender->id == 'tabo');
@@ -265,6 +277,7 @@ class Discounts extends \App\Pages\Base
 
         $this->stab->setVisible($sender->id == 'tabs');
         $this->ptab->setVisible($sender->id == 'tabp');
+        $this->etab->setVisible($sender->id == 'tabe');
 
     }
 
@@ -712,6 +725,7 @@ class Discounts extends \App\Pages\Base
         $this->ptab->formpan->pform->peditcode->setText($code);
         $this->ptab->formpan->pform->peditcust->setText('');
         $this->ptab->formpan->pform->peditcust->setKey(0);
+        $this->ptab->formpan->pform->peditcheck->setChecked(false);
         $this->ptab->formpan->pform->paddtype->setValue(0);
         
         $this->ptab->formpan->setVisible(true);
@@ -725,7 +739,8 @@ class Discounts extends \App\Pages\Base
     }
     public function onPType($sender) {
         $t=$sender->getValue();
-        $this->ptab->formpan->pform->peditcust->setVisible($t>2);
+        $this->ptab->formpan->pform->peditcust->setVisible($t==3);
+        $this->ptab->formpan->pform->peditcheck->setVisible($t==2);
 
  
     }
@@ -753,6 +768,7 @@ class Discounts extends \App\Pages\Base
            return; 
         }
         $pc->customer_name = $sender->peditcust->getText();
+        $pc->showcheck = $sender->peditcheck->isChecked() ? 1:0  ;
         
         $pc->save() ;
         
@@ -762,6 +778,16 @@ class Discounts extends \App\Pages\Base
  
     }
 
+    public function onEmp($sender) {
+        $disc = System::getOptions("discount");
+   
+
+        $disc["fineret"] = $sender->efineret->getText();
+        $disc["bonussell"] = $sender->ebonussell->getText();
+
+        System::setOptions("discount", $disc);
+        $this->setSuccess('Збережено');
+    }
 
 }
 

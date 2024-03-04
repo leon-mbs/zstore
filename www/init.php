@@ -64,7 +64,7 @@ if(!file_exists(_ROOT . "upload")) {
 }
 
 
-//  phpQuery::$debug = true;
+ 
 //Параметры   соединения  с  БД
 if(($_config['db']['driver'] ?? '') =='postgres') {
 

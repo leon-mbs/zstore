@@ -48,7 +48,7 @@
                               <label class="col-auto mt-2"  for="searchtype">Тип</label>
                           <div class="col-auto">
                             <select zippy="searchtype" class="form-control mr-sm-2">
-                                <option value="0">Всі активні</option>
+                                <option value="0">Всі </option>
                                 <option value="1">Товари</option>
                                 <option value="2">Матеріали та комплектуючі</option>
                                 <option value="3">МШП</option>
@@ -519,7 +519,7 @@
                <span>Є складовою комплектів для: </span>
                  <table class="ctanle">
                   {{#conploutlist}}
-                   <tr><td>{{iname}}</td><td>{{icode}}</td><td></tr>
+                   <tr><td>{{iname}}</td><td>{{icode}}</td><td align="right">{{iqty}}</td></tr>
                     {{/conploutlist}}
                  </table>
                  

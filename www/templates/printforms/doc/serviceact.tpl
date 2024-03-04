@@ -102,7 +102,43 @@
     <tr>
         <td colspan="5"><small>{{{notes}}}</small></td>
     </tr>
+       {{#payamount}}
+   
+   {{#totalstr}}
+    <tr>
+        <td colspan="5">До сплати <b>{{totalstr}}</b></td>
+   </tr>
+   {{/totalstr}}                    
 
+              {{/payamount}} 
+                    <tr>
+                        <td colspan="3" > 
+                            Виконавець ___________
+                        </td>
+                        <td colspan="2"> 
+                            Замовник ___________
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td> </td>
+                        <td colspan="4">
+                            {{#isstamp}}
+                            <img style="height:100px;" src='{{stamp}}'/>
+                            {{/isstamp}}
+
+                            {{^isstamp}}
+                        
+                            <br><br>
+                            &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;    &nbsp; М.П.
+                            <br><br>
+                            {{/isstamp}}
+                        </td>
+
+
+                    </tr>
+          
+              
 </table>
 
 

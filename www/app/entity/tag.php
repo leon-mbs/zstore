@@ -11,6 +11,7 @@ namespace App\Entity;
 class Tag extends \ZCL\DB\Entity
 {
     public  const  TYPE_CUSTOMER=1;
+    public  const  TYPE_OFFICEDCO=2;
     
     protected function init() {
         $this->id = 0;
@@ -25,7 +26,7 @@ class Tag extends \ZCL\DB\Entity
        foreach($tags as $tag) {
            $t = new  Tag();
            $t->tag_name = $tag;
-           $t->tag_type = self::TYPE_CUSTOMER ;
+           $t->tag_type = $type;
            $t->item_id = $item_id;
            $t->save();
        }

@@ -47,11 +47,19 @@ class Update extends \App\Pages\Base
 
         $this->_tvars['show']  = false   ; 
  
-        $json = @file_get_contents("https://zippy.com.ua/version.json".$t);
 
+        $nocache= "?t=" . time()."&s=". H::getSalt() .'&phpv='. phpversion() ;
+    
+        $v = @file_get_contents("https://zippy.com.ua/checkver.php".$nocache);
+        $data = @json_decode($v, true);
+        if(!is_array($data)) {
+            $v = @file_get_contents("https://zippy.com.ua/version.json".$nocache);
+            $data = @json_decode($v, true);
+            
+        }        
+    
         
-        $data = @json_decode($json,true) ;
-        if($data == null){
+        if(!is_array($data)){
             $this->setError('Помилка завантаження  json') ;
             return  ;
         }

@@ -17,7 +17,9 @@ class CalcSalary extends Document
     public function Execute() {
         $opt = System::getOptions("salary");
 
-        $code = "_c" . $opt['coderesult'];
+        $code  = "_c" . $opt['coderesult'];
+        $bonus = "_c" . $opt['codebonus'];
+        $fine  = "_c" . $opt['codefine'];
 
 
         foreach ($this->unpackDetails('detaildata') as $emp) {
@@ -29,6 +31,29 @@ class CalcSalary extends Document
             $eacc->optype = EmpAcc::SALARY;
             $eacc->amount = $am;
             $eacc->save();
+            
+            $am = $emp->{$bonus};
+            if($am > 0) {
+                $eacc = new  EmpAcc();
+                $eacc->emp_id = $emp->employee_id;
+                $eacc->document_id = $this->document_id;
+                $eacc->optype = EmpAcc::BONUS;
+                $eacc->amount = 0-$am;
+                $eacc->save();
+         
+            }
+            
+            $am = $emp->{$fine};
+            if($am > 0) {
+                $eacc = new  EmpAcc();
+                $eacc->emp_id = $emp->employee_id;
+                $eacc->document_id = $this->document_id;
+                $eacc->optype = EmpAcc::FINE;
+                $eacc->amount = $am;
+                $eacc->save();
+          
+            }
+            
         }
 
         return true;

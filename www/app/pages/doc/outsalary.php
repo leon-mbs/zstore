@@ -202,7 +202,7 @@ class OutSalary extends \App\Pages\Base
             } else {
 
 
-                $rows = EmpAcc::getBalance();
+                $rows = EmpAcc::getForPay();
                 foreach ($rows as $row) {
                     if($this->_list[$row['emp_id']] instanceof  Employee) {
                         $this->_list[$row['emp_id']]->amount = H::fa($row['am']);
@@ -262,7 +262,7 @@ class OutSalary extends \App\Pages\Base
                 $this->_list[$id]->amount = $this->_list[$id]->advance;
             } else {
 
-                $rows = EmpAcc::getBalance();
+                $rows = EmpAcc::getForPay();
                 foreach ($rows as $row) {
                     if ($id == $row['emp_id']) {
                         $this->_list[$row['emp_id']]->amount = H::fa($row['am']);

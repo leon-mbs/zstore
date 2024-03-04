@@ -188,7 +188,7 @@ class CustomerList extends \App\Pages\Base
           
        
           $this->customertable->taglist->Clear();
-          $tags = \App\Entity\Tag::getTags(1 ) ;
+          $tags = \App\Entity\Tag::getTags(\App\Entity\Tag::TYPE_CUSTOMER ) ;
           foreach ($tags as $tag) {
              $this->customertable->taglist->addClickLink($tag, '#'.$tag);
           }           
@@ -315,8 +315,8 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->editjurid->setChecked($this->_customer->jurid);
         $this->customerdetail->editisholding->setChecked($this->_customer->isholding);
         
-        $this->customerdetail->edittags->setTags(\App\Entity\Tag::getTags(1,(int)$this->_customer->customer_id));
-        $this->customerdetail->edittags->setSuggestions(\App\Entity\Tag::getSuggestions(1));
+        $this->customerdetail->edittags->setTags(\App\Entity\Tag::getTags(\App\Entity\Tag::TYPE_CUSTOMER,(int)$this->_customer->customer_id));
+        $this->customerdetail->edittags->setSuggestions(\App\Entity\Tag::getSuggestions(\App\Entity\Tag::TYPE_CUSTOMER));
         
     }
 
@@ -332,7 +332,7 @@ class CustomerList extends \App\Pages\Base
             return;
         }
 
-        \App\Entity\Tag::updateTags([],1,$id) ;
+        \App\Entity\Tag::updateTags([],   \App\Entity\Tag::TYPE_CUSTOMER,$id) ;
         $this->Reload();
 
     }
@@ -343,7 +343,7 @@ class CustomerList extends \App\Pages\Base
         // Очищаем  форму
         $this->customerdetail->clean();
         $this->customerdetail->edittags->setTags(array());
-        $this->customerdetail->edittags->setSuggestions(\App\Entity\Tag::getSuggestions(1) );
+        $this->customerdetail->edittags->setSuggestions(\App\Entity\Tag::getSuggestions( \App\Entity\Tag::TYPE_CUSTOMER) );
  
         $this->contentview->setVisible(false);
 
@@ -456,7 +456,7 @@ class CustomerList extends \App\Pages\Base
          
         $tags = $this->customerdetail->edittags->getTags() ;
         
-        \App\Entity\Tag::updateTags($tags,1,(int)$this->_customer->customer_id) ;
+        \App\Entity\Tag::updateTags($tags,\App\Entity\Tag::TYPE_CUSTOMER,(int)$this->_customer->customer_id) ;
 
         
         $this->customerdetail->setVisible(false);

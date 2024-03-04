@@ -54,31 +54,26 @@ class EmpAcc extends \App\Pages\Base
         $yto = $this->filterz->yto->getValue();
         $mto = $this->filterz->mto->getValue();
         $mtoname = $this->filterz->mto->getValueName();
-
-        $dt = new \App\DateTime(strtotime($yfrom . '-' . $mfrom . '-01'));
-        $from = $dt->startOfMonth()->getTimestamp();
-
-        $dt = new \App\DateTime(strtotime($yto . '-' . $mto . '-01'));
-        $to = $dt->endOfMonth()->getTimestamp();
-
+ 
 
         $conn = \ZDB\DB::getConnect();
-
-        
-
+   
         $detail = array();
 
         $from = strtotime($yfrom . '-' . $mfrom . '-01');
-        $to = strtotime($yto . '-' . $mto . '-01 23:59:59');
+        $to = strtotime($yto . '-' . $mto . '-01');
+        $to = strtotime('+ 1 month',$to) -1;
+        
         $total = 0;
         foreach (\App\Entity\Doc\Document::findYield("meta_name = 'OutSalary' and state >= 5 ") as $doc) {
 
             $date = strtotime($doc->headerdata['year'] . '-' . $doc->headerdata['month'] . '-01');
 
-            $d1 = \App\Helper::fdt($from);
-            $d2 = \App\Helper::fdt($to);
-            $d3 = \App\Helper::fdt($date);
-
+//            $d1 = \App\Helper::fdt($from);
+//            $d2 = \App\Helper::fdt($to);
+//            $d3 = \App\Helper::fdt($date);
+          
+      
             if ($date < $from || $date > $to) {
                 continue;
             }
@@ -164,16 +159,19 @@ class EmpAcc extends \App\Pages\Base
         $b = $conn->GetOne($sql);
 
 
-        $sql =    $sql = "select * from empacc_view where optype < 100 and  emp_id = {$emp_id} and createdon <= " . $conn->DBDate($to) . " and createdon >= " . $conn->DBDate($from) ." order  by  ea_id ";
+        $sql =    $sql = "select * from empacc_view where    emp_id = {$emp_id} and createdon <= " . $conn->DBDate($to) . " and createdon >= " . $conn->DBDate($from) ." order  by  ea_id ";
         $rc = $conn->Execute($sql);
 
-        $detail = array();
+        $en=\App\Entity\EmpAcc::getNames();
 
+        $detail = array();
+        
         foreach ($rc as $row) {
             $in =   doubleval($row['amount']) > 0 ? $row['amount'] : 0;
             $out =   doubleval($row['amount']) < 0 ? 0-$row['amount'] : 0;
             $detail[] = array(
                 'notes'    => $row['notes'],
+                'opname'    => $en[$row['optype']],
                 'dt'    => H::fd(strtotime($row['createdon'])),
                 'doc'   => $row['document_number'],
                 'begin' => H::fa($b),
@@ -183,7 +181,7 @@ class EmpAcc extends \App\Pages\Base
             );
 
 
-            $b = $b + $in - $out;
+            $b = H::fa($b + $in - $out);
         }
 
         $this->_tvars['mempacc']  =  $detail;

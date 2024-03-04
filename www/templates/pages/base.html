@@ -1273,7 +1273,7 @@
             }
             
              function  _getValue(id){
-                  var v = parseFloat($('#'+id).val()); 
+                  var v = Number.parseFloat($('#'+id).val()); 
                 
                   if(Number.isNaN(v)==false) {
                       return v;  

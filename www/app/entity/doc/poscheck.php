@@ -175,7 +175,29 @@ class POSCheck extends Document
             $i=  rand(0, count($frases) -1)  ;
             $header['checkslogan']   =   $frases[$i];
         }
+        if(strlen($header['checkslogan'] ??'') ==0) {
+            $header['checkslogan']  = false;
+        }
 
+        //промокод        
+        $pc = \App\Entity\PromoCode::find('type=2 and disabled <> 1','id desc') ;
+        foreach($pc as $p) {
+           
+           if($p->dateto >0 && $p->dateto < time() ) {
+               continue;               
+           }
+           if($p->showcheck==1) {
+               $header['promo']  = 'Промокод '. $p->code . " на {$p->disc}% знижку";
+               breack; 
+           }
+        }  
+           
+           
+        if(strlen($header['promo']  ??'') ==0) {
+            $header['promo']  = false;
+        }
+        
+        
         $header['form1']  = false;
         $header['form2']  = false;
         $header['form3']  = false;
@@ -346,6 +368,21 @@ class POSCheck extends Document
             \App\Entity\PromoCode::apply($this->headerdata['promocode'],$this);
         };
        
+        //бонус  сотруднику
+
+        $disc = \App\System::getOptions("discount");
+        $emp_id = \App\System::getUser()->employee_id ;
+        if($emp_id >0 && $disc["bonussell"] >0) {
+            $b =  $this->amount * $disc["bonussell"] / 100;
+            $ua = new \App\Entity\EmpAcc();
+            $ua->optype = \App\Entity\EmpAcc::BONUS;
+            $ua->document_id = $this->document_id;
+            $ua->emp_id = $emp_id;
+            $ua->amount = $b;
+            $ua->save();
+
+        }
+      
         
         return true;
     }
