@@ -1036,6 +1036,7 @@ class Helper
     public static function printItems(array $items, $pqty=0,array $tags=[]) {
         $printer = \App\System::getOptions('printer');
   
+        $prturn = \App\System::getUser()->prturn;
 
         $htmls = "";
 
@@ -1045,7 +1046,15 @@ class Helper
             }
             $report = new \App\Report('item_tag.tpl');
             $header = [];
-
+            $header['turn'] = '';
+            if($prturn==1) {
+                $header['turn'] = 'transform: rotate(90deg);';
+            }
+            if($prturn==2) {
+                $header['turn'] = 'transform: rotate(-90deg);';
+            }
+            
+            
             if (strlen($item->shortname) > 0) {
                 $header['name'] = $item->shortname;
             } else {
