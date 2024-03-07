@@ -513,7 +513,7 @@ class ARMPos extends \App\Pages\Base
             $c = Customer::load($customer_id) ;
             $b=$c->getBonus();
             if($bonus> $b) {
-                $this->setWarn("У  контрагшента  вього {$b} бонусів на рахунку");                
+                $this->setWarn("У  контрагента  вього {$b} бонусів на рахунку");                
             }
 
            
