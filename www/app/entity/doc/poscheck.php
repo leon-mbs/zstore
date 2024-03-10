@@ -243,17 +243,6 @@ class POSCheck extends Document
 
 
 
-        // работы
-        foreach ($this->unpackDetails('services') as $ser) {
-
-            $sc = new Entry($this->document_id, 0 - ($ser->price * $k * $ser->quantity), 0);
-            $sc->setService($ser->service_id);
-            // $sc->setExtCode(0 - ($ser->price * $k)); //Для АВС
-            $sc->setOutPrice(0 - $ser->price * $k);
-
-            $sc->save();
-        }
-
         //оплата
 
         $pp = $this->headerdata['payed'];
@@ -291,6 +280,19 @@ class POSCheck extends Document
                 return true; //проводки выполняются  в  сервисе
             }
         }        
+ 
+
+        // работы
+        foreach ($this->unpackDetails('services') as $ser) {
+
+            $sc = new Entry($this->document_id, 0 - ($ser->price * $k * $ser->quantity), 0);
+            $sc->setService($ser->service_id);
+            // $sc->setExtCode(0 - ($ser->price * $k)); //Для АВС
+            $sc->setOutPrice(0 - $ser->price * $k);
+
+            $sc->save();
+        }
+ 
         
         // товары
         foreach ($this->unpackDetails('detaildata') as $item) {

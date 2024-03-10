@@ -513,7 +513,7 @@ class ARMPos extends \App\Pages\Base
             $c = Customer::load($customer_id) ;
             $b=$c->getBonus();
             if($bonus> $b) {
-                $this->setWarn("У  контрагшента  вього {$b} бонусів на рахунку");                
+                $this->setWarn("У  контрагента  вього {$b} бонусів на рахунку");                
             }
 
            
@@ -1243,7 +1243,7 @@ class ARMPos extends \App\Pages\Base
         $conn->BeginTrans();
         try {
 
-            
+            $exeparent=false;  //списано в  редительском
             if($this->_doc->parent_id >0) {
                 $bd = Document::load($this->_doc->parent_id);
                 $bd->payamount = 0;
@@ -1253,11 +1253,15 @@ class ARMPos extends \App\Pages\Base
                    $bd->updateStatus(Document::STATE_PAYED);
            
                 }
+                if ($bd->meta_name == 'ServiceAct' ) {
+                    $exeparent=true;
+           
+                }
             }
             
             // проверка на минус  в  количестве
             $allowminus = System::getOption("common", "allowminus");
-            if ($allowminus != 1) {
+            if ($allowminus != 1  && $exeparent==false) {
 
                 foreach ($this->_itemlist as $item) {
                     $qty = $item->getQuantity($this->_doc->headerdata['store']);

@@ -47,7 +47,7 @@
         <td></td>
      
         <td></td>
-        <td align="right"><b><div>Всього</div></b></td>
+        <td align="right"><b>Всього</b></td>
 
         <td align="right"> </td>
         <td align="right"><b>{{bqin}}</b></td>

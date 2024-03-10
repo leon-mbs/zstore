@@ -310,6 +310,7 @@ try {
             $neworder->headerdata['ocorder'] = $shoporder->order_id;
             $neworder->headerdata['ocorderback'] = 0;
             $neworder->headerdata['pricetype'] = 'price1';
+            $neworder->headerdata['store'] = \App\Helper::getDefStore();
 
             $neworder->notes = "OC номер:{$shoporder->order_id};";
 

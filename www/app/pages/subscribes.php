@@ -164,8 +164,6 @@ class Subscribes extends \App\Pages\Base
         }
 
         if ($this->_sub->reciever_type != Subscribe::RSV_WH ) {
-            $this->_sub->msg_type =0;           
-            $this->_sub->msg_typename ='';           
             if (strlen($this->_sub->msgtext) == 0) {
                 $this->setError("Не вказано текст повідомлення");
                 return;
@@ -174,6 +172,9 @@ class Subscribes extends \App\Pages\Base
                 $this->setError("Не вказано тип повідомлення");
                 return;
             }
+        }  else {
+            $this->_sub->msg_type =0;           
+            $this->_sub->msg_typename ='';           
         }
         
         if ($this->_sub->reciever_type == Subscribe::RSV_WH && strlen($this->_sub->url) == 0) {
