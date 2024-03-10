@@ -13,6 +13,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\AutocompleteTextInput;
 use App\Entity\Customer;
 use App\Entity\Employee;
@@ -23,18 +24,15 @@ use App\Entity\Employee;
 class OfficeDoc extends \App\Pages\Base
 {
     private $_doc;
-
-    public function __construct($docid = 0,$copyid=0) {
+    
+    public function __construct($docid = 0,$copyid=0){
         parent::__construct();
 
-        $this->add(new Form('metaform'));
-        $this->metaform->add(new TextInput('edittitle'));
-        $this->metaform->add(new SubmitButton('todoc'))->onClick($this, 'todocOnClick');
-         $this->v->add(new Button('backtolist2'))->onClick($this, 'backtolistOnClick');
-          
-        
+  
         $this->add(new Form('docform'));
-        $this->docform->add(new Label('title'));
+        $this->docform->add(new TextInput('edittitle'));
+
+        $this->docform->add(new TextArea('doccontent'));
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
  
@@ -42,25 +40,30 @@ class OfficeDoc extends \App\Pages\Base
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
-        $this->docform->add(new Button('backto'))->onClick($this, 'backtoOnClick');
+
 
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
-            $this->docform->title->setText($this->_doc->notes);
+            $this->docform->edittitle->setText($this->_doc->notes);
 
-            $this->metaform->edittitle->setText($this->_doc->notes);
-            $this->metaform->setVisible(false);
+            $d = $this->_doc->unpackDetails('detaildata')  ;
+            $this->docform->doccontent->setText($d['data']??''); 
+            
          } else if($copyid>0){
             $cdoc = Document::load($copyid)->cast();
+            $this->docform->edittitle->setText($cdoc->notes); 
+            $d= $cdoc->unpackDetails('detaildata')  ;
+            $this->docform->doccontent->setText($d['data']??''); 
              
-            $this->metaform->setVisible(false);             
+         
          } else {
             $this->_doc = Document::create('OfficeDoc');
             $this->docform->document_number->setText($this->_doc->nextNumber());
-            $this->docform->setVisible(false);
+         
         }
+
 
 
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
@@ -76,7 +79,13 @@ class OfficeDoc extends \App\Pages\Base
   
         $this->_doc->document_number = trim($this->docform->document_number->getText());
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
-
+        $data=$this->docform->doccontent->getText();
+        if(strlen($data)==0) {
+            $this->setError($data);
+            return;            
+        }
+        $this->_doc->packDetails('detaildata', array('data'=> $data));
+                                                                      
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -94,7 +103,7 @@ class OfficeDoc extends \App\Pages\Base
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
             $conn->CommitTrans();
-            App::Redirect("\\App\\Pages\\Register\\PayList");
+            App::Redirect("\\App\\Pages\\Register\\OfficeList");
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
@@ -108,15 +117,7 @@ class OfficeDoc extends \App\Pages\Base
         }
     }
 
-    public function todocOnClick($sender) {
-       $this->metaform->setVisible(true);
-       $this->docform->setVisible(false);
-    }
-  
-    public function backtoOnClick($sender) {
-       $this->metaform->setVisible(false);
-       $this->docform->setVisible(true);
-    }
+ 
     public function backtolistOnClick($sender) {
         App::RedirectBack();
     }

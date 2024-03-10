@@ -4,37 +4,22 @@
     </head>
     <body>
 
-
-        <form zippy="metaform">
-            <h3> Офiсний документ</h3>
-           <div class="row">
+ 
+       
+        <form zippy="docform">
+            <div class="row">
+         
+ 
                 <div class="col-12 col-md-4 col-xl-3">
-          
                   <div class="form-group">
                         <label for="edittitle"> Назва (тип) документу</label>
                         <input class="form-control" type="text" zippy="edittitle" required="required">
                         <small>Наприклад: Заява, Звiт, Угода...</small>
                         
-                 </div>       
-              </div> 
-            </div> 
-             <div class="row">
-                <div class="col-12 mt-4">
-                    <input type="button" value="Скасувати" zippy="backtolist2" class="btn   btn-secondary mr-2">
-                    <input zippy="todoc" type="submit" value="Далi >" class="btn   btn-primary mr-2">
-                </div>
-            </div>            
-                   
-             
-       </form>
-       
-        <form zippy="docform">
-            <h3 zippy="title"> </h3>
-            <div class="row">
-                <div class="col-12 col-md-4 col-xl-3">
+                 </div>                 
                     <div class="form-group">
-                        <label for="document_number">Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number">
+                        <label for="document_number">Номер документу</label>
+                        <input style="width:150px" class="form-control" type="text" zippy="document_number" required="required">
                     </div>
                     <div class="form-group">
                         <label for="document_date"> Дата</label>
@@ -45,13 +30,18 @@
                 
 
                 </div>
-
+                <div class="col-12 col-md-8 col-xl-6">
+                    <div class="form-group">
+                        <label for="doccontent">Змiст</label>
+                        <textarea style="height:400px;" class="form-control" zippy="doccontent"></textarea>
+                    </div>
+                
+               </div>
             </div>
 
             <div class="row">
                 <div class="col-12 col-md-6">
                     <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-secondary mr-2">
-                    <input type="button" value="Назад" zippy="backto" class="btn   btn-secondary mr-2">
                     <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-primary mr-2">
                     <input zippy="execdoc" type="submit" value="На виконання" class="btn btn-primary  ">
 
@@ -61,6 +51,9 @@
 
         </form>
 
+           
+               
+             
 
     </body>
 

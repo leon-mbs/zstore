@@ -16,13 +16,12 @@ class OfficeDoc extends Document
     }
 
     public function generateReport() {
-
+        $d = $this->unpackDetails('detaildata')  ;
 
         $header = array(
   
-     //       'date'            => H::fd($this->document_date),
-//            "notes"           => nl2br($this->notes),
-            "data" => @base64_decode( $this->headerdata['detail'] );
+            "content"     => $d['data']??'' 
+
         );
         $report = new \App\Report('doc/officedoc.tpl');
 
@@ -33,6 +32,9 @@ class OfficeDoc extends Document
 
     protected function getNumberTemplate() {
         return 'ОФ-000000';
+    }
+   public function supportedExport() {
+        return array(self::EX_EXCEL, self::EX_POS, self::EX_PDF);
     }
 
 }
