@@ -1127,10 +1127,14 @@ class ARMFood extends \App\Pages\Base
             $c = Customer::load($customer_id) ;
             $b=$c->getBonus();
             if($bonus> $b) {
-                $this->setWarn("У  контрагшента  вього {$b} бонусів на рахунку");                
+                $this->setWarn("У  контрагента  вього {$b} бонусів на рахунку");                
             }
-
            
+        }
+        if($amount == 0) {
+            $this->setWarn("0 до сплати");  
+            $this->docpanel->payform->passfisc->setChecked(true);
+                          
         }
     }
 
@@ -1160,7 +1164,7 @@ class ARMFood extends \App\Pages\Base
             $this->_doc = $this->_doc->cast();
 
             $this->_doc->payamount = $this->docpanel->payform->pfforpay->getText();
-            $this->_doc->payed = $this->docpanel->payform->pfpayed->getText();
+            $this->_doc->payed = doubleval($this->docpanel->payform->pfpayed->getText());
             $this->_doc->headerdata['exchange'] = $this->docpanel->payform->pfrest->getText();
             $this->_doc->headerdata['payed'] = $this->_doc->payed;
             $this->_doc->headerdata['exch2b'] = $this->docpanel->payform->pfexch2b->getText();
@@ -1179,12 +1183,12 @@ class ARMFood extends \App\Pages\Base
             }
 
             if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $this->_doc->customer_id == 0) {
-                $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
+                $this->setError("Якщо у борг або передоплата  має бути обраний контрагент");
                 return;
             }
 
             if (doubleval($this->_doc->headerdata['bonus']) >0 && $this->_doc->customer_id == 0) {
-                $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
+                $this->setError("Якщо   нарахування бонусів має бути обраний контрагент");
                 return;
             }
             if (doubleval($this->_doc->headerdata['bonus']) >0) {
@@ -1197,7 +1201,7 @@ class ARMFood extends \App\Pages\Base
 
             }
             if (doubleval($this->_doc->headerdata['exch2b']) >0 && $this->_doc->customer_id == 0) {
-                $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
+                $this->setError("Якщо оплата бонусами має бути обраний контрагент");
                 return;
             }
 
@@ -1395,8 +1399,8 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->headerdata["totaldisc"] = $this->docpanel->listsform->totaldisc->getText();
         $this->_doc->headerdata["bonus"] = $this->docpanel->listsform->bonus->getText();
 
-        if($this->_doc->customer_id==0  && ( $this->_doc->headerdata["bonus"] >0  || $this->_doc->headerdata["totaldisc"] >0  ) ) {
-            $this->setError('Якщо знижка  або  бонуси має бути вибраний  контрагент');
+        if($this->_doc->customer_id==0  && $this->_doc->headerdata["bonus"] >0   ) {
+            $this->setError('Якщо  бонуси має бути вибраний  контрагент');
             return false;
         }
         

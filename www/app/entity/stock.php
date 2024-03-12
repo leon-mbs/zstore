@@ -61,7 +61,7 @@ class Stock extends \ZCL\DB\Entity
      * @param mixed $price Цена
      * @param mixed $create Создать  если  не   существует
      */
-    public static function getStock($store_id, $item_id, $price, $snumber = "", $sdate = 0, $create = false) {
+    public static function getStock($store_id, $item_id, $price, $snumber = "", $sdate = 0, $create = true) {
 
     
         $conn = \ZDB\DB::getConnect();
@@ -75,10 +75,7 @@ class Stock extends \ZCL\DB\Entity
 
 
         $stock = self::getFirst($where . " and partion = {$price}   ", 'stock_id desc');
-        if ( $stock == null) {  //если  не  нашли  такую  партию  то  берем  последнюю
-          //  $stock = self::getFirst($where, 'stock_id desc');
-        }
-
+  
 
         if ($stock == null && $create == true) {
             $stock = new Stock();
@@ -91,10 +88,7 @@ class Stock extends \ZCL\DB\Entity
 
             $stock->save();
         }
-        if ( $price > 0) {    //учет  по  последней цене
-            $stock->partion = $price;
-          //  $stock->save();
-        }
+      
         return $stock;
     }
 
