@@ -34,7 +34,7 @@ class OfficeDoc extends Document
         return 'ОФ-000000';
     }
    public function supportedExport() {
-        return array(self::EX_EXCEL, self::EX_POS, self::EX_PDF);
+        return array(self::EX_EXCEL,  self::EX_PDF);
     }
 
 }

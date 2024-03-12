@@ -28,10 +28,14 @@ class OfficeDoc extends \App\Pages\Base
     public function __construct($docid = 0,$copyid=0){
         parent::__construct();
 
+        $conn = \ZDB\DB::getConnect();
+        $names = $conn->GetCol("select distinct notes from documents_view where  meta_name='OfficeDoc' order  by notes");
+
   
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('edittitle'));
-
+        
+        $this->docform->edittitle->setDataList($names);
         $this->docform->add(new TextArea('doccontent'));
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
@@ -81,7 +85,7 @@ class OfficeDoc extends \App\Pages\Base
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $data=$this->docform->doccontent->getText();
         if(strlen($data)==0) {
-            $this->setError($data);
+            $this->setError('Не введено текст');
             return;            
         }
         $this->_doc->packDetails('detaildata', array('data'=> $data));

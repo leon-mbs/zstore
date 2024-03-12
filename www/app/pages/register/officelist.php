@@ -13,6 +13,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
@@ -34,11 +35,20 @@ class OfficeList extends \App\Pages\Base
         if (false == \App\ACL::checkShowReg('SalaryList')) {
             \App\Application::RedirectHome() ;
         }
+        $conn = \ZDB\DB::getConnect();
+        $names = $conn->GetCol("select distinct notes from documents_view where  meta_name='OfficeDoc' order  by notes");
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
 
+        $this->filter->add(new CheckBox('archive'));
+        $this->filter->add(new TextInput('searchcontext'));
+        $this->filter->add(new Date('from'));
+        $this->filter->add(new Date('to'));
         $this->filter->add(new TextInput('searchnumber'));
-
+        $this->filter->add(new TextInput('searchtype'));
+        $this->filter->searchtype->setDataList($names);
+        $this->filter->add(new ClickLink('erase', $this, "onErase"));
+ 
         $doclist = $this->add(new DataView('doclist', new OfficeListDataSource($this), $this, 'doclistOnRow'));
 
         $this->add(new Paginator('pag', $doclist));
@@ -66,14 +76,16 @@ class OfficeList extends \App\Pages\Base
         $row->add(new Label('number', $doc->document_number));
 
         $row->add(new Label('date', H::fd($doc->document_date)));
-        $row->add(new Label('onotes', $doc->notes));
-        $row->add(new Label('title', ''));
+        $row->add(new Label('notes', ''));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
 
-        $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
+        $row->add(new ClickLink('title'))->onClick($this, 'showOnClick');
+        $row->title->setValue($doc->notes) ;
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
-        if ($doc->state < Document::STATE_EXECUTED) {
+        $row->add(new ClickLink('copy'))->onClick($this, 'copyOnClick');
+
+        if ($doc->state != Document::STATE_CLOSED) {
             $row->edit->setVisible(true);
         } else {
             $row->edit->setVisible(false);
@@ -106,14 +118,23 @@ class OfficeList extends \App\Pages\Base
         if (false == \App\ACL::checkEditDoc($doc, true)) {
             return;
         }
-        $type = H::getMetaType($doc->meta_id);
-        $class = "\\App\\Pages\\Doc\\" . $type['meta_name'];
+        $class = "\\App\\Pages\\Doc\\OfficeDoc";
 
         App::Redirect($class, $doc->document_id);
-
-
     }
 
+    public function copyOnClick($sender) {
+        $doc = $sender->getOwner()->getDataItem();
+        $class = "\\App\\Pages\\Doc\\OfficeDoc";
+
+        App::Redirect($class,0, $doc->document_id);
+    }
+
+    public function onErase($sender) {
+       $form=$sender->getOwner();
+       $form->clean() ;
+       $this->filterOnSubmit($form);
+    }
    
 }
 
@@ -133,13 +154,14 @@ class OfficeListDataSource implements \Zippy\Interfaces\DataSource
 
         $conn = \ZDB\DB::getConnect();
 
-        $where = "   meta_name  in( 'OfficeDoc'  ) ";
+        $where = "   meta_name = 'OfficeDoc'   ";
 
+        $filterform = $this->page->filter;
 
-        $sn = trim($this->page->filter->searchnumber->getText());
+        $sn = trim($filterform->searchnumber->getText());
         if (strlen($sn) > 1) { // игнорируем другие поля
             $sn = $conn->qstr('%' . $sn . '%');
-            $where = " meta_name  in( 'Office')  and document_number like  {$sn} ";
+            $where = " meta_name = 'OfficeDoc'   and document_number like  {$sn} ";
         }
 
         return $where;

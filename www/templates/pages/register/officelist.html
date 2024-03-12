@@ -13,10 +13,27 @@
                     <form zippy="filter" class="form-inline ">
 
                         <label for="searchnumber"> № </label>
-                        <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
+                        <input placeholder="Номер..." class="form-control mr-2" type="search" zippy="searchnumber" style="width:100px">
+                        
+                        <label for="from"> З </label>
+                        <input type="text" class="form-control    " zippy="from" style="width:110px">
+                        <label for="to"> По </label>
+                        <input type="text" class="form-control    " zippy="to" style="width:110px">
+                                               
+                        <label for="searchtype"> Тип </label>                          
+                        <input type="text" class="form-control" zippy="searchtype">
+                        
+
+                        <div class="form-check">
+                            <input   class="form-check-input" type="checkbox" zippy="archive">
+                            <label class="form-check-label mr-2" for="archive">Архiвнi</label>
+                        </div>                         
+                         
+                        <input placeholder="Пошук по контексту..." class="form-control mr-2" type="search" zippy="searchcontext" >
 
                         <input type="submit" class="  btn btn-outline-success  " value="ОК">
-
+                       <a zippy="erase" title="Скинути фільтр"><i class="fa fa-eraser"></i></a>
+                     
                     </form>
                 </div>
                        <details class="mb-2 ml-2">
@@ -28,10 +45,10 @@
                
                 <table class="table   table-sm   ">
                     <tr>
+                        <th>Назва</th>
 
                         <th>Номер</th>
                         <th>Дата</th>
-                        <th>Назва</th>
 
                         <th>Статус</th>
 
@@ -42,19 +59,22 @@
 
                     </tr>
                     <tr zippy="doclist">
+                        <td >
+                          <a zippy="title" ></a>
+                        </td>
 
                         <td zippy="number"></td>
                         <td class="text-nowrap" zippy="date"></td>
-                        <td zippy="title"></td>
                   
 
                         <td class="text-nowrap" zippy="state"></td>
-                        <td zippy="onotes"></td>
+                        <td zippy="notes"></td>
 
-                        <td class="text-nowrap">
-                            <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
+                        <td >
 
-                             &nbsp; &nbsp; &nbsp; &nbsp; <a zippy="edit" title="Редагування"><i class="fa fa-edit"></i></a>
+                            <a zippy="copy" title="Копiя"><i class="fa fa-copy"></i></a>
+                            &nbsp; &nbsp;
+                            <a zippy="edit" title="Редагування"><i class="fa fa-edit"></i></a>
 
                         </td>
 
@@ -74,8 +94,13 @@
         <div class="row" zippy="statuspan">
             <div class="col-12">
 
-                
-
+                  <div class="navbar nav">
+                    <form zippy="statusform" class="form-inline ">
+                         <label data-label="mstates" for="mstates"> Статус </label>
+            
+                         <button zippy="bcopy" class="btn btn-info  ml-2"><i class="fas fa-copy"></i> Копія</button>                         
+                    </form>
+                 </div>
 
                 <div zippy="docview"></div>
 
@@ -85,3 +110,4 @@
 
     </body>
 </html>
+
