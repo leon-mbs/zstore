@@ -112,12 +112,7 @@
                     lang: 'uk-UA',
 
                     callbacks: {
-                        onEnter: function (e) {
-                            if (e.keyCode === key.code.ENTER) {
-                                e.shiftKey = true;
-                                context.triggerEvent('enter', e);
-                            }
-                        },
+                   
                         onPaste: function (e) {
 
                             var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
