@@ -1693,12 +1693,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "ffc6049913b622f0b1ac83d354f8c470652a3862"
+                "reference": "0483c0973a9b7cba2119e98f2df6adc5ea87f3e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/ffc6049913b622f0b1ac83d354f8c470652a3862",
-                "reference": "ffc6049913b622f0b1ac83d354f8c470652a3862",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/0483c0973a9b7cba2119e98f2df6adc5ea87f3e2",
+                "reference": "0483c0973a9b7cba2119e98f2df6adc5ea87f3e2",
                 "shasum": ""
             },
             "conflict": {
@@ -1850,7 +1850,7 @@
                 "ezsystems/ezplatform-solr-search-engine": ">=1.7,<1.7.12|>=2,<2.0.2|>=3.3,<3.3.15",
                 "ezsystems/ezplatform-user": ">=1,<1.0.1",
                 "ezsystems/ezpublish-kernel": "<6.13.8.2-dev|>=7,<7.5.31",
-                "ezsystems/ezpublish-legacy": "<=2017.12.7.3|>=2018.06,<=2019.03.5.1",
+                "ezsystems/ezpublish-legacy": "<=2017.12.7.3|>=2018.6,<=2019.03.5.1",
                 "ezsystems/platform-ui-assets-bundle": ">=4.2,<4.2.3",
                 "ezsystems/repository-forms": ">=2.3,<2.3.2.1-dev|>=2.5,<2.5.15",
                 "ezyang/htmlpurifier": "<4.1.1",
@@ -2424,7 +2424,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-03-12T19:04:10+00:00"
+            "time": "2024-03-13T10:04:34+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",
@@ -2607,20 +2607,20 @@
         },
         {
             "name": "symfony/css-selector",
-            "version": "v6.0.19",
+            "version": "v7.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
-                "reference": "f1d00bddb83a4cb2138564b2150001cb6ce272b1"
+                "reference": "ec60a4edf94e63b0556b6a0888548bb400a3a3be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/css-selector/zipball/f1d00bddb83a4cb2138564b2150001cb6ce272b1",
-                "reference": "f1d00bddb83a4cb2138564b2150001cb6ce272b1",
+                "url": "https://api.github.com/repos/symfony/css-selector/zipball/ec60a4edf94e63b0556b6a0888548bb400a3a3be",
+                "reference": "ec60a4edf94e63b0556b6a0888548bb400a3a3be",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.0.2"
+                "php": ">=8.2"
             },
             "type": "library",
             "autoload": {
@@ -2652,7 +2652,7 @@
             "description": "Converts CSS selectors to XPath expressions",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/css-selector/tree/v6.0.19"
+                "source": "https://github.com/symfony/css-selector/tree/v7.0.3"
             },
             "funding": [
                 {
@@ -2668,7 +2668,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-01-01T08:36:10+00:00"
+            "time": "2024-01-23T15:02:46+00:00"
         },
         {
             "name": "symfony/polyfill-iconv",
