@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "545c3c0b867da75cff62f48044070961",
+    "content-hash": "c1cfc2547750a74bd04ac69fa05eb73c",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -423,21 +423,21 @@
         },
         {
             "name": "leon-mbs/ppolib",
-            "version": "1.3.14",
+            "version": "1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/ppolib.git",
-                "reference": "f94785cc3621be835d4e815fa40509d5b1410d0a"
+                "reference": "79a50db50f8c1c76c75bf2351f39b03b37e3c03a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/ppolib/zipball/f94785cc3621be835d4e815fa40509d5b1410d0a",
-                "reference": "f94785cc3621be835d4e815fa40509d5b1410d0a",
+                "url": "https://api.github.com/repos/leon-mbs/ppolib/zipball/79a50db50f8c1c76c75bf2351f39b03b37e3c03a",
+                "reference": "79a50db50f8c1c76c75bf2351f39b03b37e3c03a",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2",
-                "sop/asn1": "4.1.0"
+                "php": ">=7.4",
+                "sop/asn1": "4.1.1"
             },
             "type": "library",
             "autoload": {
@@ -458,9 +458,9 @@
             "homepage": "https://github.com/leon-mbs/ppolib",
             "support": {
                 "issues": "https://github.com/leon-mbs/ppolib/issues",
-                "source": "https://github.com/leon-mbs/ppolib/tree/1.3.14"
+                "source": "https://github.com/leon-mbs/ppolib/tree/1.4.1"
             },
-            "time": "2023-11-21T09:10:33+00:00"
+            "time": "2024-03-14T09:54:18+00:00"
         },
         {
             "name": "leon-mbs/zdb",
@@ -1109,16 +1109,16 @@
         },
         {
             "name": "phenx/php-svg-lib",
-            "version": "0.5.2",
+            "version": "0.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dompdf/php-svg-lib.git",
-                "reference": "732faa9fb4309221e2bd9b2fda5de44f947133aa"
+                "reference": "0e46722c154726a5f9ac218197ccc28adba16fcf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dompdf/php-svg-lib/zipball/732faa9fb4309221e2bd9b2fda5de44f947133aa",
-                "reference": "732faa9fb4309221e2bd9b2fda5de44f947133aa",
+                "url": "https://api.github.com/repos/dompdf/php-svg-lib/zipball/0e46722c154726a5f9ac218197ccc28adba16fcf",
+                "reference": "0e46722c154726a5f9ac218197ccc28adba16fcf",
                 "shasum": ""
             },
             "require": {
@@ -1137,7 +1137,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "LGPL-3.0"
+                "LGPL-3.0-or-later"
             ],
             "authors": [
                 {
@@ -1149,9 +1149,9 @@
             "homepage": "https://github.com/PhenX/php-svg-lib",
             "support": {
                 "issues": "https://github.com/dompdf/php-svg-lib/issues",
-                "source": "https://github.com/dompdf/php-svg-lib/tree/0.5.2"
+                "source": "https://github.com/dompdf/php-svg-lib/tree/0.5.3"
             },
-            "time": "2024-02-07T12:49:40+00:00"
+            "time": "2024-02-23T20:39:24+00:00"
         },
         {
             "name": "phpmailer/phpmailer",
@@ -1693,12 +1693,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "0483c0973a9b7cba2119e98f2df6adc5ea87f3e2"
+                "reference": "eedc674d89085b0199bd96bfad410404fb2f5dbf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/0483c0973a9b7cba2119e98f2df6adc5ea87f3e2",
-                "reference": "0483c0973a9b7cba2119e98f2df6adc5ea87f3e2",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/eedc674d89085b0199bd96bfad410404fb2f5dbf",
+                "reference": "eedc674d89085b0199bd96bfad410404fb2f5dbf",
                 "shasum": ""
             },
             "conflict": {
@@ -2424,7 +2424,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-03-13T10:04:34+00:00"
+            "time": "2024-03-13T21:04:41+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",
@@ -2553,16 +2553,16 @@
         },
         {
             "name": "sop/asn1",
-            "version": "4.1.0",
+            "version": "4.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sop/asn1.git",
-                "reference": "660fd4e1e9adeb013f995a1d69ed2fe3569af2b2"
+                "reference": "074efe8f7c353c54edc809ac3d74efda83edd776"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sop/asn1/zipball/660fd4e1e9adeb013f995a1d69ed2fe3569af2b2",
-                "reference": "660fd4e1e9adeb013f995a1d69ed2fe3569af2b2",
+                "url": "https://api.github.com/repos/sop/asn1/zipball/074efe8f7c353c54edc809ac3d74efda83edd776",
+                "reference": "074efe8f7c353c54edc809ac3d74efda83edd776",
                 "shasum": ""
             },
             "require": {
@@ -2601,9 +2601,9 @@
             ],
             "support": {
                 "issues": "https://github.com/sop/asn1/issues",
-                "source": "https://github.com/sop/asn1/tree/master"
+                "source": "https://github.com/sop/asn1/tree/4.1.1"
             },
-            "time": "2019-06-26T06:52:06+00:00"
+            "time": "2022-02-17T07:08:51+00:00"
         },
         {
             "name": "symfony/css-selector",
