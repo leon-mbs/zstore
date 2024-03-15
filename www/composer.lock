@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cc07fc29ba0b7e23425d4ed2d92684d0",
+    "content-hash": "c1cfc2547750a74bd04ac69fa05eb73c",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -423,21 +423,21 @@
         },
         {
             "name": "leon-mbs/ppolib",
-            "version": "1.3.14",
+            "version": "1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/ppolib.git",
-                "reference": "f94785cc3621be835d4e815fa40509d5b1410d0a"
+                "reference": "79a50db50f8c1c76c75bf2351f39b03b37e3c03a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/ppolib/zipball/f94785cc3621be835d4e815fa40509d5b1410d0a",
-                "reference": "f94785cc3621be835d4e815fa40509d5b1410d0a",
+                "url": "https://api.github.com/repos/leon-mbs/ppolib/zipball/79a50db50f8c1c76c75bf2351f39b03b37e3c03a",
+                "reference": "79a50db50f8c1c76c75bf2351f39b03b37e3c03a",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2",
-                "sop/asn1": "4.1.0"
+                "php": ">=7.4",
+                "sop/asn1": "4.1.1"
             },
             "type": "library",
             "autoload": {
@@ -458,9 +458,9 @@
             "homepage": "https://github.com/leon-mbs/ppolib",
             "support": {
                 "issues": "https://github.com/leon-mbs/ppolib/issues",
-                "source": "https://github.com/leon-mbs/ppolib/tree/1.3.14"
+                "source": "https://github.com/leon-mbs/ppolib/tree/1.4.1"
             },
-            "time": "2023-11-21T09:10:33+00:00"
+            "time": "2024-03-14T09:54:18+00:00"
         },
         {
             "name": "leon-mbs/zdb",
@@ -505,22 +505,22 @@
         },
         {
             "name": "leon-mbs/zippy",
-            "version": "2.7.0",
+            "version": "2.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/zippy.git",
-                "reference": "f9a1a015326e333b67fc1c7419c51a4a9d4bba66"
+                "reference": "773b6a57b365590c75f98b687da3be942a99205c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/f9a1a015326e333b67fc1c7419c51a4a9d4bba66",
-                "reference": "f9a1a015326e333b67fc1c7419c51a4a9d4bba66",
+                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/773b6a57b365590c75f98b687da3be942a99205c",
+                "reference": "773b6a57b365590c75f98b687da3be942a99205c",
                 "shasum": ""
             },
             "require": {
                 "leon-mbs/zdb": "1.5.13",
                 "mustache/mustache": "v2.14.2",
-                "php": ">=7.4.0",
+                "php": ">=8.0.0",
                 "scotteh/php-dom-wrapper": "3.0.0"
             },
             "type": "library",
@@ -541,9 +541,9 @@
             ],
             "support": {
                 "issues": "https://github.com/leon-mbs/zippy/issues",
-                "source": "https://github.com/leon-mbs/zippy/tree/2.7.0"
+                "source": "https://github.com/leon-mbs/zippy/tree/2.7.2"
             },
-            "time": "2024-03-06T09:18:18+00:00"
+            "time": "2024-03-12T19:24:06+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
@@ -1109,16 +1109,16 @@
         },
         {
             "name": "phenx/php-svg-lib",
-            "version": "0.5.2",
+            "version": "0.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dompdf/php-svg-lib.git",
-                "reference": "732faa9fb4309221e2bd9b2fda5de44f947133aa"
+                "reference": "0e46722c154726a5f9ac218197ccc28adba16fcf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dompdf/php-svg-lib/zipball/732faa9fb4309221e2bd9b2fda5de44f947133aa",
-                "reference": "732faa9fb4309221e2bd9b2fda5de44f947133aa",
+                "url": "https://api.github.com/repos/dompdf/php-svg-lib/zipball/0e46722c154726a5f9ac218197ccc28adba16fcf",
+                "reference": "0e46722c154726a5f9ac218197ccc28adba16fcf",
                 "shasum": ""
             },
             "require": {
@@ -1137,7 +1137,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "LGPL-3.0"
+                "LGPL-3.0-or-later"
             ],
             "authors": [
                 {
@@ -1149,9 +1149,9 @@
             "homepage": "https://github.com/PhenX/php-svg-lib",
             "support": {
                 "issues": "https://github.com/dompdf/php-svg-lib/issues",
-                "source": "https://github.com/dompdf/php-svg-lib/tree/0.5.2"
+                "source": "https://github.com/dompdf/php-svg-lib/tree/0.5.3"
             },
-            "time": "2024-02-07T12:49:40+00:00"
+            "time": "2024-02-23T20:39:24+00:00"
         },
         {
             "name": "phpmailer/phpmailer",
@@ -1693,12 +1693,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "99e839ca6de37f798b58d9830e6d21d642d27dcd"
+                "reference": "eedc674d89085b0199bd96bfad410404fb2f5dbf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/99e839ca6de37f798b58d9830e6d21d642d27dcd",
-                "reference": "99e839ca6de37f798b58d9830e6d21d642d27dcd",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/eedc674d89085b0199bd96bfad410404fb2f5dbf",
+                "reference": "eedc674d89085b0199bd96bfad410404fb2f5dbf",
                 "shasum": ""
             },
             "conflict": {
@@ -1781,7 +1781,7 @@
                 "codeigniter4/shield": "<1.0.0.0-beta8",
                 "codiad/codiad": "<=2.8.4",
                 "composer/composer": "<1.10.27|>=2,<2.2.23|>=2.3,<2.7",
-                "concrete5/concrete5": "<9.2.5",
+                "concrete5/concrete5": "<9.2.7",
                 "concrete5/core": "<8.5.8|>=9,<9.1",
                 "contao-components/mediaelement": ">=2.14.2,<2.21.1",
                 "contao/contao": ">=4,<4.4.56|>=4.5,<4.9.40|>=4.10,<4.11.7|>=4.13,<4.13.21|>=5.1,<5.1.4",
@@ -2110,7 +2110,7 @@
                 "pixelfed/pixelfed": "<0.11.11",
                 "plotly/plotly.js": "<2.25.2",
                 "pocketmine/bedrock-protocol": "<8.0.2",
-                "pocketmine/pocketmine-mp": "<=4.23|>=5,<5.3.1",
+                "pocketmine/pocketmine-mp": "<5.11.2",
                 "pocketmine/raklib": ">=0.14,<0.14.6|>=0.15,<0.15.1",
                 "pressbooks/pressbooks": "<5.18",
                 "prestashop/autoupgrade": ">=4,<4.10.1",
@@ -2142,7 +2142,7 @@
                 "react/http": ">=0.7,<1.9",
                 "really-simple-plugins/complianz-gdpr": "<6.4.2",
                 "redaxo/source": "<=5.15.1",
-                "remdex/livehelperchat": "<3.99",
+                "remdex/livehelperchat": "<4.29",
                 "reportico-web/reportico": "<=7.1.21",
                 "rhukster/dom-sanitizer": "<1.0.7",
                 "rmccue/requests": ">=1.6,<1.8",
@@ -2159,10 +2159,10 @@
                 "sfroemken/url_redirect": "<=1.2.1",
                 "sheng/yiicms": "<=1.2",
                 "shopware/core": "<=6.5.7.3",
-                "shopware/platform": "<=6.5.7.3",
+                "shopware/platform": "<=6.5.7.3|>=6.5.8,<6.5.8.7-dev",
                 "shopware/production": "<=6.3.5.2",
                 "shopware/shopware": "<=5.7.17",
-                "shopware/storefront": "<=6.4.8.1",
+                "shopware/storefront": "<=6.4.8.1|>=6.5.8,<6.5.8.7-dev",
                 "shopxo/shopxo": "<2.2.6",
                 "showdoc/showdoc": "<2.10.4",
                 "silverstripe-australia/advancedreports": ">=1,<=2",
@@ -2231,7 +2231,7 @@
                 "symfony/dependency-injection": ">=2,<2.0.17|>=2.7,<2.7.51|>=2.8,<2.8.50|>=3,<3.4.26|>=4,<4.1.12|>=4.2,<4.2.7",
                 "symfony/error-handler": ">=4.4,<4.4.4|>=5,<5.0.4",
                 "symfony/form": ">=2.3,<2.3.35|>=2.4,<2.6.12|>=2.7,<2.7.50|>=2.8,<2.8.49|>=3,<3.4.20|>=4,<4.0.15|>=4.1,<4.1.9|>=4.2,<4.2.1",
-                "symfony/framework-bundle": ">=2,<2.3.18|>=2.4,<2.4.8|>=2.5,<2.5.2|>=2.7,<2.7.51|>=2.8,<2.8.50|>=3,<3.4.26|>=4,<4.1.12|>=4.2,<4.2.7|>=5.3.14,<=5.3.14|>=5.4.3,<=5.4.3|>=6.0.3,<=6.0.3",
+                "symfony/framework-bundle": ">=2,<2.3.18|>=2.4,<2.4.8|>=2.5,<2.5.2|>=2.7,<2.7.51|>=2.8,<2.8.50|>=3,<3.4.26|>=4,<4.1.12|>=4.2,<4.2.7|>=5.3.14,<5.3.15|>=5.4.3,<5.4.4|>=6.0.3,<6.0.4",
                 "symfony/http-foundation": ">=2,<2.8.52|>=3,<3.4.35|>=4,<4.2.12|>=4.3,<4.3.8|>=4.4,<4.4.7|>=5,<5.0.7",
                 "symfony/http-kernel": ">=2,<4.4.50|>=5,<5.4.20|>=6,<6.0.20|>=6.1,<6.1.12|>=6.2,<6.2.6",
                 "symfony/intl": ">=2.7,<2.7.38|>=2.8,<2.8.31|>=3,<3.2.14|>=3.3,<3.3.13",
@@ -2424,7 +2424,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-03-06T11:04:30+00:00"
+            "time": "2024-03-13T21:04:41+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",
@@ -2553,16 +2553,16 @@
         },
         {
             "name": "sop/asn1",
-            "version": "4.1.0",
+            "version": "4.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sop/asn1.git",
-                "reference": "660fd4e1e9adeb013f995a1d69ed2fe3569af2b2"
+                "reference": "074efe8f7c353c54edc809ac3d74efda83edd776"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sop/asn1/zipball/660fd4e1e9adeb013f995a1d69ed2fe3569af2b2",
-                "reference": "660fd4e1e9adeb013f995a1d69ed2fe3569af2b2",
+                "url": "https://api.github.com/repos/sop/asn1/zipball/074efe8f7c353c54edc809ac3d74efda83edd776",
+                "reference": "074efe8f7c353c54edc809ac3d74efda83edd776",
                 "shasum": ""
             },
             "require": {
@@ -2601,9 +2601,9 @@
             ],
             "support": {
                 "issues": "https://github.com/sop/asn1/issues",
-                "source": "https://github.com/sop/asn1/tree/master"
+                "source": "https://github.com/sop/asn1/tree/4.1.1"
             },
-            "time": "2019-06-26T06:52:06+00:00"
+            "time": "2022-02-17T07:08:51+00:00"
         },
         {
             "name": "symfony/css-selector",

@@ -47,7 +47,7 @@ class ReturnIssue extends \App\Pages\Base
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
 
         $this->docform->add(new TextInput('notes'));
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), 0));
 
         $this->docform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', "details like '%<usefisc>1</usefisc>%' "), 0));
 
@@ -279,9 +279,6 @@ class ReturnIssue extends \App\Pages\Base
             $customer = Customer::load($this->_doc->customer_id);
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         }
-        if ($this->checkForm() == false) {
-            return;
-        }
 
 
         $firm = H::getFirmData($this->_doc->firm_id, $this->branch_id);
@@ -300,6 +297,11 @@ class ReturnIssue extends \App\Pages\Base
         $this->_doc->headerdata['bonus'] = $this->docform->bonus->getText();
         $this->_doc->headerdata['discount'] = $this->docform->discount->getText();
 
+        if ($this->checkForm() == false) {
+            return;
+        }
+        
+        
         $isEdited = $this->_doc->document_id > 0;
 
         $pos_id = $this->docform->pos->getValue();
@@ -502,7 +504,9 @@ class ReturnIssue extends \App\Pages\Base
         if (($this->docform->store->getValue() > 0) == false) {
             $this->setError("Не обрано склад");
         }
-
+        if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
+            $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
+        }
         $c = $this->docform->customer->getKey();
         if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $c == 0) {
             $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");

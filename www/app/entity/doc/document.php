@@ -342,6 +342,7 @@ class Document extends \ZCL\DB\Entity
         $user = \App\System::getUser();
 
         $doc->user_id = $user->user_id;
+        $doc->headerdata['author'] = $user->user_id;
 
         $doc->branch_id = $branch_id;
         if ($branch_id == 0) {
@@ -815,15 +816,14 @@ class Document extends \ZCL\DB\Entity
     public static function getConstraint() {
         $c = \App\ACL::getBranchConstraint();
         $user = System::getUser();
+       
         if ($user->rolename != 'admins') {
             if (strlen($c) == 0) {
                 $c = "1=1 ";
             }
             if ($user->onlymy == 1) {
-
-                $c .= " and user_id  = " . $user->user_id;
+                $c .= " and (user_id  = {$user->user_id}  or  content like '%<author>{$user->user_id}</author>%'   ) " ;
             }
-
             if (strlen($user->aclview) > 0) {
                 $c .= " and meta_id in({$user->aclview}) ";
             } else {

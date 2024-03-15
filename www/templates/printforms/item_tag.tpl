@@ -1,4 +1,4 @@
-    <div style="{{turn}}border: 1px solid   #ccc;;">
+    <div style="{{turn}}border: 1px solid   #ccc;width:100%;;">
     <table class="ctable" border="0" cellpadding="1" cellspacing="0" style="width:100%"  > 
        <td>
            <table>

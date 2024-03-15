@@ -40,6 +40,7 @@ class MFList extends \App\Pages\Base
         $this->mfdetail->add(new DropDownChoice('editbranch', $this->_blist, 0));
 
         $this->mfdetail->add(new CheckBox('editbeznal'))->onChange($this, 'onBeznal');
+        $this->mfdetail->add(new CheckBox('editback'));
         $this->mfdetail->add(new TextInput('editbtran'));
         $this->mfdetail->add(new TextInput('editbtranin'));
         $this->mfdetail->add(new TextArea('editmf_description'));
@@ -97,6 +98,7 @@ class MFList extends \App\Pages\Base
         $this->mfdetail->editbank->setText($this->_mf->bank);
         $this->mfdetail->editbankacc->setText($this->_mf->bankacc);
         $this->mfdetail->editdisabled->setChecked($this->_mf->disabled);
+        $this->mfdetail->editback->setChecked($this->_mf->back);
     }
 
     public function addOnClick($sender) {
@@ -126,6 +128,7 @@ class MFList extends \App\Pages\Base
         $this->_mf->bank = $this->mfdetail->editbank->getText();
         $this->_mf->bankacc = $this->mfdetail->editbankacc->getText();
         $this->_mf->disabled = $this->mfdetail->editdisabled->isChecked() ? 1 : 0;
+        $this->_mf->back = $this->mfdetail->editback->isChecked() ? 1 : 0;
 
         $this->_mf->description = $this->mfdetail->editmf_description->getText();
         if ($this->_mf->mf_name == '') {
