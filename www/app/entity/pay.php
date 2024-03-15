@@ -48,8 +48,9 @@ class Pay extends \ZCL\DB\Entity
      * @param mixed $comment коментарий
      */
     public static function addPayment($document_id, $paydate, $amount, $mf_id, $comment = '', $nobank=false) {
-
-        self::addBonus($document_id, $amount);
+        $doc = \App\Entity\Doc\Document::load($document_id);
+ 
+        self::addBonus($doc, $amount);
 
         if (0 == (float)$amount || 0 == (int)$document_id || 0 == $mf_id) {
             return 0;
@@ -88,23 +89,33 @@ class Pay extends \ZCL\DB\Entity
 
             if ($mf->beznal == 1 && $nobank==false) {
                 if (($mf->btran > 0 && $amount < 0) || ($mf->btranin > 0 && $amount > 0)) {
-                    $amount = abs($amount);
+
                     $payb = new Pay();
                     $payb->mf_id = $mf_id;
                     $payb->document_id = $document_id;
-                    if ($mf->btran > 0) {
-                        $payb->amount = 0 - ($amount * $mf->btran / 100);
-                    }
-                    if ($mf->btranin > 0) {
-                        $payb->amount = 0 - ($amount * $mf->btranin / 100);
-                    }
                     $payb->paytype = Pay::PAY_BANK;
                     $payb->paydate = $paydate;
                     $payb->notes = 'Банківський процент за транзакцію';
                     $payb->user_id = \App\System::getUser()->user_id;
-                    $payb->save();
 
-                    \App\Entity\IOState::addIOState($document_id, 0-$payb->amount, \App\Entity\IOState::TYPE_BANK);
+                    if ( $doc->meta_name=='ReturnIssue' && $mf->back == 1 ) {    //возврат
+                        if (  $mf->btran > 0  && $amount < 0) {    //возврат
+                            $payb->amount = 0- ($amount * $mf->btran / 100);
+                            \App\Entity\IOState::addIOState($document_id, $payb->amount, \App\Entity\IOState::TYPE_OTHER_INCOME);                        
+                        }
+                    } else {
+                        
+                        if ($mf->btran > 0  && $amount > 0) {    //на  счет
+                            $payb->amount = 0- ($amount * $mf->btran / 100);
+                        }
+                        if ($mf->btranin > 0 && $amount < 0) {  //со  счета
+                            $payb->amount =  ($amount * $mf->btranin / 100);
+                        }
+                        \App\Entity\IOState::addIOState($document_id, $payb->amount, \App\Entity\IOState::TYPE_BANK);                        
+                    }
+                    if($payb->amount != 0) {
+                        $payb->save();          
+                    }                                
 
 
                 }
@@ -147,18 +158,18 @@ class Pay extends \ZCL\DB\Entity
     }
 
     //начисление  (списание)  бонусов
-    public static function addBonus($document_id, $amount =0) {
+    public static function addBonus($doc, $amount =0) {
 
         $conn = \ZDB\DB::getConnect();
 
-        $customer_id = (int)$conn->GetOne("select  customer_id  from  documents where  document_id=" . $document_id);
+        $customer_id = (int)$conn->GetOne("select  customer_id  from  documents where  document_id=" . $doc->document_id);
         if($customer_id ==0) {
             return;
         }
-        $conn->Execute(" delete from  paylist where paytype= ".self::PAY_BONUS." and  document_id=" . $document_id);
+        $conn->Execute(" delete from  paylist where paytype= ".self::PAY_BONUS." and  document_id=" . $doc->document_id);
 
         $c = \App\Entity\Customer::load($customer_id);
-        $doc = \App\Entity\Doc\Document::load($document_id);
+
         if(($doc->headerdata['pricetype']??'price1') != 'price1') {
             return;
         }

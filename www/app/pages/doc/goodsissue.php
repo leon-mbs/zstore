@@ -843,7 +843,7 @@ class GoodsIssue extends \App\Pages\Base
 
             $this->setError('Введіть номер документа');
         }
-
+ 
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
@@ -866,7 +866,9 @@ class GoodsIssue extends \App\Pages\Base
         if ($noallowfiz == 1 && $c == 0) {
             $this->setError("Не задано контрагента");
         }
-
+        if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
+            $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
+        }
 
         if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $c == 0) {
             $this->setError("Якщо у борг або передоплата або списання бонусів має бути обраний контрагент");
