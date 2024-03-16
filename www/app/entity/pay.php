@@ -201,7 +201,7 @@ class Pay extends \ZCL\DB\Entity
             if($retbonus > 0) {
                 $pay = new Pay();
 
-                $pay->document_id = $document_id;
+                $pay->document_id = $doc->document_id;
                 $pay->bonus = 0 -  $retbonus;
                 $pay->paytype = Pay::PAY_BONUS;
                 $pay->paydate = time();
@@ -225,7 +225,7 @@ class Pay extends \ZCL\DB\Entity
 
             $pay = new Pay();
 
-            $pay->document_id = $document_id;
+            $pay->document_id = $doc->document_id;
             $pay->bonus = 0 -  $doc->headerdata['bonus'];
             $pay->paytype = Pay::PAY_BONUS;
             $pay->paydate = time();
@@ -247,7 +247,7 @@ class Pay extends \ZCL\DB\Entity
 
             $pay = new Pay();
 
-            $pay->document_id = $document_id;
+            $pay->document_id = $doc->document_id;
 
             $pay->amount = 0;
             $pay->bonus = (int)$doc->headerdata['exch2b'];
@@ -308,9 +308,9 @@ class Pay extends \ZCL\DB\Entity
 
             $pay = new Pay();
 
-            $pay->document_id = $document_id;
+            $pay->document_id = $doc->document_id;
 
-
+       
             $pay->amount = 0;
             $pay->bonus = (int)$bonus;
             $pay->paytype = Pay::PAY_BONUS;
