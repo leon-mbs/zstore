@@ -318,9 +318,12 @@ class ARMPos extends \App\Pages\Base
             return;
         }
 
+
         if($this->pos->usefisc != 1) {
             $this->_tvars['fiscal']  = false;
         }
+ 
+        $this->_tvars['fiscaltestmode']  = $this->pos->testing==1;
 
         $filter = \App\Filter::getFilter("armpos");
 

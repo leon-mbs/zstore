@@ -89,15 +89,27 @@
         
         <div class="row"  zippy="docpanel">
             <div class="col-12"> 
-
+               <h4>Оформлення замовлення</h4>
+              <div zippy="navbar" class="navbar nav justify-content-start">
+               
                <h5><strong><a zippy="toorderlist"><i class="fa fa-list"></i> До переліку замовлень</a></strong> </h5>
-               <h3>Оформлення замовлення</h3>
+                   {{#fiscal}}
+                          &nbsp;  &nbsp;
+                            <a zippy="openshift"><i class="fa fa-bullhorn"></i> Вiдкрити змiну</a>
+                        &nbsp;  &nbsp; <a zippy="closeshift"><i class="fa fa-gavel"></i> Закрити змiну</a>
+                        {{#fiscaltestmode}}
+                        &nbsp; <small><i class="fa fa-exclamation-triangle"></i> Тестовий режим</small>
+                        {{/fiscaltestmode}}
+                        
+             
+                           {{/fiscal}}              
 
+             </div> 
             </div> 
 
-                <div class="col-12  col-xl-10"> 
+                <div class="col-12  col-xl-10 "> 
 
-                    <div   zippy="catpan" class="row">
+                    <div   zippy="catpan" class="row mt-4">
                         <div    class="col-12 mb-2">
                             <i class="fa fa-arrow-alt-circle-left"></i><a  zippy="stopcat">До замовлення</a>  
                         </div>
@@ -121,7 +133,7 @@
 
                         </div >        
                     </div >        
-                    <div   zippy="prodpan" class="row">
+                    <div   zippy="prodpan" class="row  mt-4">
                         <div    class="col-12 mb-2">
                             <i class="fa fa-arrow-alt-circle-left"></i><a  zippy="stopprod">До замовлення</a>  
                         </div>       
@@ -150,7 +162,7 @@
 
                 <div class="col-12 col-md-10 col-xl-8  ">         
 
-                    <div class="navbar mt-4">        
+                    <div class="navbar ">        
                         <form zippy="navform" class="form-inline   ">                   
                             <input  zippy="baddnewpos"  type="submit" value="Додати позицiю  "   class="btn btn-info mr-4"> 
 
@@ -163,13 +175,7 @@
 
                             <input placeholder="Промокод"  style="width:150px"  zippy="promocode" class="form-control">
                             
-                           {{#fiscal}}
-                          &nbsp;  &nbsp;
-                            <a zippy="openshift"><i class="fa fa-bullhorn"></i> Вiдкрити змiну</a>
-                        &nbsp;  &nbsp; <a zippy="closeshift"><i class="fa fa-gavel"></i> Закрити змiну</a>
-                        
-             
-                           {{/fiscal}}
+         
                         </form> 
 
                     </div>           
@@ -510,7 +516,7 @@
         <div class="row" zippy="orderlistpan">
 
             <div class="col-12  " >
-                <h3>Перелік замовлень</h3>
+                <h4>Перелік замовлень</h4>
                 <a  class="btn btn-success" zippy="neworder">Нове замовлення</a>  &nbsp;&nbsp;&nbsp;
             </div>
 

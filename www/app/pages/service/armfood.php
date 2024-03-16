@@ -104,7 +104,6 @@ class ARMFood extends \App\Pages\Base
         //оформление заказа
 
         $this->add(new Panel('docpanel'))->setVisible(false);
-        $this->docpanel->add(new ClickLink('toorderlist', $this, 'onOrderList'));
 
         $this->docpanel->add(new Panel('catpan'))->setVisible(false);
         $this->docpanel->catpan->add(new DataView('catlist', new ArrayDataSource($this, '_catlist'), $this, 'onCatRow'));
@@ -114,6 +113,11 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->prodpan->add(new DataView('prodlist', new ArrayDataSource($this, '_prodlist'), $this, 'onProdRow'));
         $this->docpanel->prodpan->add(new ClickLink('stopprod', $this, 'onStopCat'));
 
+        $this->docpanel->add(new Form('navbar'));
+        $this->docpanel->navbar->add(new ClickLink('toorderlist', $this, 'onOrderList'));
+        $this->docpanel->navbar->add(new ClickLink('openshift', $this, 'OnOpenShift'));
+        $this->docpanel->navbar->add(new ClickLink('closeshift', $this, 'OnCloseShift'));
+      
         $this->docpanel->add(new Form('navform'));
 
         $this->docpanel->navform->add(new TextInput('barcode'));
@@ -128,8 +132,6 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->navform->promocode->setVisible(\App\Entity\PromoCode::findCnt('') > 0);
         
         
-        $this->docpanel->navform->add(new ClickLink('openshift', $this, 'OnOpenShift'));
-        $this->docpanel->navform->add(new ClickLink('closeshift', $this, 'OnCloseShift'));
 
 
         $this->docpanel->add(new Form('listsform'))->setVisible(false);
@@ -223,6 +225,12 @@ class ARMFood extends \App\Pages\Base
         $filter->beznal = $beznal;
         $this->_store = $store;
         $this->_pricetype = $filter->pricetype;
+
+        if($this->_pos->usefisc != 1) {
+            $this->_tvars['fiscal']  = false;
+        }
+ 
+        $this->_tvars['fiscaltestmode']  = $this->_pos->testing==1;
 
 
         $this->setupform->setVisible(false);
