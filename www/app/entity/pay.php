@@ -308,9 +308,9 @@ class Pay extends \ZCL\DB\Entity
 
             $pay = new Pay();
 
-            $pay->document_id = $document_id;
+            $pay->document_id = $doc->document_id;
 
-
+       
             $pay->amount = 0;
             $pay->bonus = (int)$bonus;
             $pay->paytype = Pay::PAY_BONUS;
