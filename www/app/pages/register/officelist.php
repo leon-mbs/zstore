@@ -24,7 +24,8 @@ use Zippy\Html\Panel;
 class OfficeList extends \App\Pages\Base
 {
     private $_doc = null;
-
+    public $_tag = '' ; 
+    
     /**
      *
      * @param mixed $docid Документ  должен  быть  показан  в  просмотре
@@ -35,6 +36,10 @@ class OfficeList extends \App\Pages\Base
         if (false == \App\ACL::checkShowReg('SalaryList')) {
             \App\Application::RedirectHome() ;
         }
+        
+        $this->add(new \Zippy\Html\Link\LinkList("taglist"))->onClick($this, 'OnTagList');        
+         
+        
         $conn = \ZDB\DB::getConnect();
         $names = $conn->GetCol("select distinct notes from documents_view where  meta_name='OfficeDoc' order  by notes");
 
@@ -48,7 +53,7 @@ class OfficeList extends \App\Pages\Base
         $this->filter->add(new TextInput('searchtype'));
         $this->filter->searchtype->setDataList($names);
         $this->filter->add(new ClickLink('erase', $this, "onErase"));
- 
+
         $doclist = $this->add(new DataView('doclist', new OfficeListDataSource($this), $this, 'doclistOnRow'));
 
         $this->add(new Paginator('pag', $doclist));
@@ -58,7 +63,7 @@ class OfficeList extends \App\Pages\Base
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
-        $this->doclist->Reload();
+        $this->Reload();
 
     }
 
@@ -67,7 +72,7 @@ class OfficeList extends \App\Pages\Base
 
         $this->statuspan->setVisible(false);
 
-        $this->doclist->Reload();
+        $this->Reload();
     }
 
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
@@ -108,7 +113,7 @@ class OfficeList extends \App\Pages\Base
         $this->statuspan->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
 
-        $this->doclist->Reload(false);
+        $this->Reload(false);
 
         $this->goAnkor('dankor');
     }
@@ -131,11 +136,37 @@ class OfficeList extends \App\Pages\Base
     }
 
     public function onErase($sender) {
+       $this->_tag ='';
        $form=$sender->getOwner();
        $form->clean() ;
        $this->filterOnSubmit($form);
+
+        
     }
-   
+    
+    
+    public function Reload($flag=true) {
+          $this->doclist->Reload($flag);
+         
+       
+          $this->taglist->Clear();
+          $tags = \App\Entity\Tag::getTags(\App\Entity\Tag::TYPE_OFFICEDCO ) ;
+          foreach ($tags as $tag) {
+             $this->taglist->addClickLink($tag, '#'.$tag);
+          }           
+          
+          $this->statuspan->setVisible(false);
+         
+    }    
+    
+     public function OnTagList($sender) {
+        $this->_tag  = $sender->getSelectedValue();
+
+        $this->statuspan->setVisible(false);
+ 
+        $this->Reload() ;
+         
+    }  
 }
 
 /**
@@ -163,7 +194,11 @@ class OfficeListDataSource implements \Zippy\Interfaces\DataSource
             $sn = $conn->qstr('%' . $sn . '%');
             $where = " meta_name = 'OfficeDoc'   and document_number like  {$sn} ";
         }
-
+        if(strlen($this->page->_tag)>0) {
+                
+               $tag   = Document::qstr($this->page->_tag) ;
+               $where = " document_id in (select item_id from taglist where  tag_type=2 and tag_name={$tag} )"; 
+        }
         return $where;
     }
 

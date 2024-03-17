@@ -30,7 +30,7 @@ class OfficeDoc extends \App\Pages\Base
 
         $conn = \ZDB\DB::getConnect();
         $names = $conn->GetCol("select distinct notes from documents_view where  meta_name='OfficeDoc' order  by notes");
-
+       
   
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('edittitle'));
@@ -39,7 +39,7 @@ class OfficeDoc extends \App\Pages\Base
         $this->docform->add(new TextArea('doccontent'));
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
- 
+        $this->docform->add(new \ZCL\BT\Tags("doctags"));
 
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
@@ -67,7 +67,11 @@ class OfficeDoc extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->nextNumber());
          
         }
-
+        if($this->_doc->document_id >0) {
+           $this->docform->doctags->setTags(\App\Entity\Tag::getTags(\App\Entity\Tag::TYPE_OFFICEDCO,(int)$this->_doc->document_id));
+        }
+        $this->docform->doctags->setSuggestions(\App\Entity\Tag::getSuggestions(\App\Entity\Tag::TYPE_OFFICEDCO));
+   
 
 
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
@@ -80,6 +84,10 @@ class OfficeDoc extends \App\Pages\Base
             return;
         }
         $this->_doc->notes = $this->docform->edittitle->getText();
+        if(strlen($this->_doc->notes)==0) {
+            $this->setError('Не введено назву');
+            return;            
+        }
   
         $this->_doc->document_number = trim($this->docform->document_number->getText());
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
@@ -106,6 +114,12 @@ class OfficeDoc extends \App\Pages\Base
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
+            
+            $tags = $this->docform->doctags->getTags() ;
+        
+            \App\Entity\Tag::updateTags($tags,\App\Entity\Tag::TYPE_OFFICEDCO,(int)$this->_doc->document_id) ;
+            
+            
             $conn->CommitTrans();
             App::Redirect("\\App\\Pages\\Register\\OfficeList");
         } catch(\Throwable $ee) {

@@ -6,7 +6,7 @@
 
  
        
-        <form zippy="docform">
+        <form zippy="docform" enctype="multipart/form-data">
             <div class="row">
          
  
@@ -41,11 +41,12 @@
                 <div class="col-12 col-md-8 col-xl-6">
                     <div class="form-group">
                         <label for="doccontent">Змiст</label>
-                        <textarea style="height:400px;" class="form-control" zippy="doccontent"></textarea>
+                        <textarea    class="form-control" zippy="doccontent"></textarea>
                     </div>
                      <div class="form-group">
-                        <label for="tags">Теги</label>
-                        <input  class="form-control" type="text" zippy="tags" >
+                        <label for="doctags">Теги</label>
+                        <div    zippy="doctags" >  </div>
+                        <small>Вводяться по  Enter</small>
                     </div>               
                </div>
             </div>
@@ -58,10 +59,12 @@
 
                 </div>
             </div>
+           
 
+        </form>     
+ 
 
-        </form>
-
+        
       <script>         
             $(function () {
                 // Summernote
@@ -86,7 +89,10 @@
                     }
                 });
             })
-             
+     
+
+     
+       
    </script>              
 
     </body>
