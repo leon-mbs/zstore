@@ -1276,6 +1276,19 @@ class ARMPos extends \App\Pages\Base
                 }
             }
 
+            $isnew  = $this->_doc->document_id ==0;
+            $this->_doc->save();
+            if($isnew) {
+                $this->_doc->updateStatus(Document::STATE_NEW);
+            }
+
+
+            $this->_doc->updateStatus(Document::STATE_EXECUTED);
+
+            if (H::fa($this->_doc->payamount) > H::fa($this->_doc->payed)) {
+                $this->_doc->updateStatus(Document::STATE_WP);
+            }            
+            
 
             if($this->pos->usefisc == 1) {
                 if($this->docpanel->form3->passfisc->isChecked()) {
@@ -1346,20 +1359,13 @@ class ARMPos extends \App\Pages\Base
                         }
 
                     }
+                    $this->_doc->save();                    
                 }
+                
+                
             }
-            $isnew  = $this->_doc->document_id ==0;
-            $this->_doc->save();
-            if($isnew) {
-                $this->_doc->updateStatus(Document::STATE_NEW);
-            }
+                        
 
-
-            $this->_doc->updateStatus(Document::STATE_EXECUTED);
-
-            if (H::fa($this->_doc->payamount) > H::fa($this->_doc->payed)) {
-                $this->_doc->updateStatus(Document::STATE_WP);
-            }
 
 
             $conn->CommitTrans();
