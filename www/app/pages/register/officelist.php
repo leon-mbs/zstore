@@ -85,8 +85,11 @@ class OfficeList extends \App\Pages\Base
         $notes= ($doc->headerdata['customer_name'] ??'').' '.($doc->headerdata['employee_name'] ??'');
 
         $row->add(new Label('notes', trim( $notes)));
-
-        $row->add(new Label('state', Document::getStateName($doc->state)));
+        $stname =Document::getStateName($doc->state) ;
+        if($doc->state==Document::STATE_EXECUTED ) {
+            $stname = "Виконаний";    
+        }
+        $row->add(new Label('state', $stname));
         $row->add(new Label('user',$doc->username ));
 
         $row->add(new ClickLink('title'))->onClick($this, 'showOnClick');

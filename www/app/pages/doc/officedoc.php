@@ -40,6 +40,8 @@ class OfficeDoc extends \App\Pages\Base
         $this->docform->edittitle->setDataList($names);
         $this->docform->add(new TextArea('doccontent'));
         $this->docform->add(new TextInput('document_number'));
+        $this->docform->add(new TextInput('bonus'))->setVisible(false);
+        $this->docform->add(new TextInput('fine'))->setVisible(false);
         $this->docform->add(new Date('document_date', time()));
         $this->docform->add(new \ZCL\BT\Tags("doctags"));
         
@@ -60,6 +62,7 @@ class OfficeDoc extends \App\Pages\Base
         
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
+        $this->docform->add(new SubmitButton('inprocdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         //добавление нового контрагента
@@ -78,6 +81,9 @@ class OfficeDoc extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->edittitle->setText($this->_doc->notes);
+            $this->docform->bonus->setText($this->_doc->headerdata['bonus']);
+            $this->docform->fine->setText($this->_doc->headerdata['fine']);
+            
             $customer_id= $this->_doc->headerdata['customer']??0 ;
             if($customer_id >0) {
                 $this->docform->customer->setKey($this->_doc->headerdata['customer']??0);
@@ -139,6 +145,8 @@ class OfficeDoc extends \App\Pages\Base
             return;            
         }
         $this->_doc->packDetails('detaildata', array('data'=> $data));
+        $this->_doc->headerdata['bonus'] = $this->docform->bonus->getText();
+        $this->_doc->headerdata['fine'] = $this->docform->fine->getText();
                          
         $customer_id = $this->docform->customer->getKey();
         if($customer_id >0) {
@@ -165,11 +173,16 @@ class OfficeDoc extends \App\Pages\Base
 
             $this->_doc->save();
 
-            if ($sender->id == 'execdoc') {
+            if ($sender->id == 'execdoc' || $sender->id == 'inprocdoc') {
                 if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
-                $this->_doc->updateStatus(Document::STATE_INPROCESS);
+                if($sender->id == 'inprocdoc') {
+                    $this->_doc->updateStatus(Document::STATE_INPROCESS);
+                }
+                if($sender->id == 'execdoc') {
+                    $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                }
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
@@ -266,6 +279,8 @@ class OfficeDoc extends \App\Pages\Base
     }
     public function onEmp($sender) {
         $emp=$sender->getValue();
+        $this->docform->bonus->setVisible($emp>0)  ;
+        $this->docform->fine->setVisible($emp>0)  ;
     }
     
     

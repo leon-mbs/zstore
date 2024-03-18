@@ -53,6 +53,13 @@
                         </select>
                         <small>Якщо документ зв'язаний зi спiвробiтником</small>         
                     </div>               
+                   <div class="form-group row">
+                         <div class="col-auto"><label for="bonus">Премiя:</label></div>
+                         <div class="col-auto"> <input style="width:75px" pattern="[0-9\.]+" class="form-control"  zippy="bonus" ></div>
+                         <div class="col-auto"><label for="fine">&nbsp;&nbsp;Штраф:</label></div>
+                         <div class="col-auto"> <input style="width:75px" pattern="[0-9\.]+" class="form-control"  zippy="fine" ></div>
+                        <small data-label="bonus">Додаются  на  особовий  рахунок</small>         
+                    </div>               
                    <div class="form-group">
                         <label for="user">Вiдповiдальний</label>
                         <select class="form-control"  zippy="user" >  
@@ -80,7 +87,8 @@
                 <div class="col-12 col-md-6">
                     <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-secondary mr-2">
                     <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-primary mr-2">
-                    <input zippy="execdoc" type="submit" value="На виконання" class="btn btn-primary  ">
+                    <input zippy="inprocdoc" type="submit" value="На виконання" class="btn btn-primary  ">
+                    <input zippy="execdoc" type="submit" value="Виконано" class="btn btn-primary  ">
 
                 </div>
             </div>

@@ -12,7 +12,29 @@ use App\Helper as H;
 class OfficeDoc extends Document
 {
     public function Execute() {
-     
+        $emp= intval($this->headerdata['employee'] ??0);
+        if($emp==0) {
+            return;
+        }
+        $bonus= $this->headerdata['bonus'];
+        $fine= $this->headerdata['fine'];
+        
+        if($bonus  >0) {
+            $ua = new \App\Entity\EmpAcc();
+            $ua->optype = \App\Entity\EmpAcc::BONUS;
+            $ua->document_id = $this->document_id;
+            $ua->emp_id = $emp;
+            $ua->amount = $bonus;
+            $ua->save();
+        }
+        if($fine  >0) {
+            $ua = new \App\Entity\EmpAcc();
+            $ua->optype = \App\Entity\EmpAcc::FINE;
+            $ua->document_id = $this->document_id;
+            $ua->emp_id = $emp;
+            $ua->amount = 0-$fine;
+            $ua->save();
+        }
     }
 
     public function generateReport() {
