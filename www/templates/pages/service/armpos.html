@@ -5,10 +5,10 @@
 
     </head>
     <body>
-        <h3>  АРМ касира</h3>
+        
 
         <form zippy="form1">
-
+           <h3>  АРМ касира</h3>
             <div class="row">
                 <div class="col-12 col-md-6 col-xl-4">
                     <div class="form-group  row">
@@ -88,7 +88,9 @@
                 
                         <a zippy="openshift"><i class="fa fa-bullhorn"></i> Вiдкрити змiну</a>
                         &nbsp;  &nbsp; <a zippy="closeshift"><i class="fa fa-gavel"></i> Закрити змiну</a>
-                        
+                        {{#fiscaltestmode}}
+                        &nbsp; <small><i class="fa fa-exclamation-triangle"></i> Тестовий режим</small>
+                        {{/fiscaltestmode}}
              
                 {{/fiscal}}
              </div>
