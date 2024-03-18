@@ -13,7 +13,7 @@
                 <div class="col-12 col-md-4 col-xl-3">
                   <div class="form-group">
                         <label for="edittitle"> Назва (тип) документу</label>
-                        <input class="form-control" type="text" zippy="edittitle" required="required">
+                        <input class="form-control" type="text" zippy="edittitle"  >
                         <small>Наприклад: Заява, Звiт, Угода...</small>
                         
                  </div>                 
@@ -33,7 +33,32 @@
                            <input class="form-control" type="text" zippy="document_date" required="required">
                         </div>                        
                     </div>
-         
+                    <div class="form-group  ">
+                      <label for="document_date"> Контрагент</label>
+                      <div class="input-group  ">
+                         <input class="form-control"  placeholder="Почніть вводити..."   zippy="customer"/>
+                         <div class="input-group-append">
+                           <a class="btn btn-success btn-sm mr-2" title="Додати нового" zippy="addcust">+</a>
+                        </div>
+                        <div class="input-group-append"  >
+                            <a href="return false; void(0)" zippy="cinfo" class="btn btn-success"><i class="fa fa-info-circle"></i></a>
+                        </div>                                                      
+                    </div> 
+                    <small>Якщо документ зв'язаний з контрагентом</small>         
+                  </div>          
+                    <div class="form-group">
+                        <label for="emp">Спiвробiтник</label>
+                        <select class="form-control"  zippy="emp" >  
+                           <option value="0">Не вказаний</option>
+                        </select>
+                        <small>Якщо документ зв'язаний зi спiвробiтником</small>         
+                    </div>               
+                   <div class="form-group">
+                        <label for="user">Вiдповiдальний</label>
+                        <select class="form-control"  zippy="user" >  
+
+                        </select>
+                    </div>               
                 
                 
 
@@ -63,7 +88,43 @@
 
         </form>     
  
+         <form zippy="editcust">
+            <h3>&nbsp;Новий конрагент </h3>
+            <div class="row">
+                <div class="col-12 col-md-4 col-xl-3">
 
+                    <div class="form-group">
+                        <label for="editcustname">Назва </label>
+                        <input class="form-control " zippy="editcustname" required="required"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="editphone">Телефон</label>
+                        <input pattern="[0-9]+" class="form-control" type="text" zippy="editphone"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="editemail">E-mail</label>
+                        <input class="form-control" type="email" zippy="editemail"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editemail">Тип</label>
+                        <select class="form-control" type="email" zippy="edittype">
+                           <option value="0">Не вказано</option>
+                           <option value="1">Покупець</option>
+                           <option value="2">Постачальник</option>
+                           <option value="3">Лiд</option>
+                        </select>                        
+                    </div>
+
+
+                    <div class="form-group">
+                        <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-outline-secondary  mr-2">
+                        <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-outline-primary">
+                        
+                    </div>
+                </div>
+            </div>
+        </form>
         
       <script>         
             $(function () {

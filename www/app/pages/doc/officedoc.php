@@ -3,6 +3,7 @@
 namespace App\Pages\Doc;
 
 use App\Application as App;
+use App\System;
 use App\Entity\Doc\Document;
 use App\Helper as H;
 use Zippy\Html\Label;
@@ -17,6 +18,7 @@ use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\AutocompleteTextInput;
 use App\Entity\Customer;
 use App\Entity\Employee;
+use Zippy\Html\Link\SubmitLink;
 
 /**
  * Страница   офисный документ
@@ -40,31 +42,71 @@ class OfficeDoc extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
         $this->docform->add(new \ZCL\BT\Tags("doctags"));
+        
+        $userlist = \App\Entity\User::findArray("username", "disabled<>1", "username") ;
+        $this->docform->add(new DropDownChoice("user",$userlist,0));
 
+
+        $emplist = \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name") ;
+        $this->docform->add(new DropDownChoice("emp",$emplist,0))->onChange($this,'onEmp');
+
+        $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
+        $this->docform->customer->onChange($this, 'OnChangeCustomer');
+        
+        $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
+
+        $this->docform->add(new \Zippy\Html\Link\BookmarkableLink('cinfo'))->setVisible(false);
+        
+        
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
+        //добавление нового контрагента
+        $this->add(new Form('editcust'))->setVisible(false);
+        $this->editcust->add(new TextInput('editcustname'));
+        $this->editcust->add(new TextInput('editphone'));
+        $this->editcust->add(new TextInput('editemail'));
+        $this->editcust->add(new DropDownChoice('edittype'));
+        $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
+        $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
+        
+        $user = System::getUser()->user_id;
 
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->edittitle->setText($this->_doc->notes);
+            $customer_id= $this->_doc->headerdata['customer']??0 ;
+            if($customer_id >0) {
+                $this->docform->customer->setKey($this->_doc->headerdata['customer']??0);
+                $this->docform->customer->setText($this->_doc->headerdata['customer_name']??'');
+                $this->OnChangeCustomer($this->docform->customer);
+                
+            }
+            $emp = $this->_doc->headerdata['employee']??0;
+            if($emp>0) {
+               $this->docform->emp->setValue($emp);
+               $this->onEmp($this->docform->emp)  ;
+            }
 
             $d = $this->_doc->unpackDetails('detaildata')  ;
             $this->docform->doccontent->setText($d['data']??''); 
+            $this->docform->user->setValue($this->_doc->user_id); 
             
          } else if($copyid>0){
             $cdoc = Document::load($copyid)->cast();
             $this->docform->edittitle->setText($cdoc->notes); 
             $d= $cdoc->unpackDetails('detaildata')  ;
             $this->docform->doccontent->setText($d['data']??''); 
+            $this->docform->user->setValue($user);
              
          
          } else {
             $this->_doc = Document::create('OfficeDoc');
             $this->docform->document_number->setText($this->_doc->nextNumber());
+            $this->docform->user->setValue($user);
          
         }
         if($this->_doc->document_id >0) {
@@ -97,9 +139,26 @@ class OfficeDoc extends \App\Pages\Base
             return;            
         }
         $this->_doc->packDetails('detaildata', array('data'=> $data));
+                         
+        $customer_id = $this->docform->customer->getKey();
+        if($customer_id >0) {
+            $this->_doc->headerdata['customer'] = $customer_id;  
+            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();  
+        }                 
+                         
+                         
+        $emp_id = $this->docform->emp->getValue();
+        if($emp_id >0) {
+            $this->_doc->headerdata['employee'] = $emp_id;  
+            $this->_doc->headerdata['employee_name'] = $this->docform->emp->getValueName();  
+        }                 
+                         
+                         
                                                                       
         $isEdited = $this->_doc->document_id > 0;
-
+        if(!$isEdited) {
+           $this->_doc->headerdata['author']= System::getUser()->user_id;   
+        }
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
@@ -140,4 +199,74 @@ class OfficeDoc extends \App\Pages\Base
         App::RedirectBack();
     }
 
+    public function OnAutoCustomer($sender) {
+        return \App\Entity\Customer::getList($sender->getText());
+    }
+
+    public function OnChangeCustomer($sender) {
+   
+        $customer_id = $this->docform->customer->getKey();
+ 
+        $this->docform->addcust->setVisible(false) ;
+        $this->docform->cinfo->setVisible(true) ;
+        $this->docform->cinfo->setAttribute('onclick', "customerInfo({$customer_id});") ;
+
+
+    }
+
+    //добавление нового контрагента
+    public function addcustOnClick($sender) {
+        $this->editcust->setVisible(true);
+        $this->docform->setVisible(false);
+        $this->editcust->clean();
+    }
+
+    public function savecustOnClick($sender) {
+        $custname = trim($this->editcust->editcustname->getText());
+        if (strlen($custname) == 0) {
+            $this->setError("Не введено назву");
+            return;
+        }
+        $cust = new \App\Entity\Customer() ;
+        $cust->customer_name = $custname;
+        $cust->email = $this->editcust->editemail->getText();
+        $cust->phone = $this->editcust->editphone->getText();
+        $cust->phone = \App\Util::handlePhone($cust->phone);
+
+        if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
+            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
+            return;
+        }
+
+        $c = \App\Entity\Customer::getByPhone($cust->phone);
+        if ($c != null) {
+            if ($c->customer_id != $cust->customer_id) {
+
+                $this->setError("Вже існує контрагент з таким телефоном");
+                return;
+            }
+        }
+        $cust->type = $this->editcust->edittype->getValue();
+        if($cust->type==3) {
+            $cust->type=0;
+            $cust->status=2;
+        }
+        $cust->save();
+        $this->docform->customer->setText($cust->customer_name);
+        $this->docform->customer->setKey($cust->customer_id);
+
+        $this->editcust->setVisible(false);
+        $this->docform->setVisible(true);
+
+    }
+
+    public function cancelcustOnClick($sender) {
+        $this->editcust->setVisible(false);
+        $this->docform->setVisible(true);
+    }
+    public function onEmp($sender) {
+        $emp=$sender->getValue();
+    }
+    
+    
 }

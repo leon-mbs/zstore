@@ -51,6 +51,7 @@
                         <th>Дата</th>
 
                         <th>Статус</th>
+                        <th>Вiдповiдальний</th>
 
 
                         <th>Примiтка</th>
@@ -68,6 +69,7 @@
                   
 
                         <td class="text-nowrap" zippy="state"></td>
+                        <td  zippy="user"></td>
                         <td zippy="notes"></td>
 
                         <td >
@@ -94,13 +96,29 @@
         <div class="row" zippy="statuspan">
             <div class="col-12">
 
-                  <div class="navbar nav">
-                    <form zippy="statusform" class="form-inline ">
-                         <label data-label="mstates" for="mstates"> Статус </label>
+                  <div class="card">
+                  <div class="card-body">
+                    <form zippy="buttons" class="form-inline ">
             
-                         <button zippy="bcopy" class="btn btn-info  ml-2"><i class="fas fa-copy"></i> Копія</button>                         
+                         <button zippy="bdone" class="btn btn-info  ml-2"><i class="fa fa-gavel"></i> Виконано</button>                         
+                         <button zippy="bclose" class="btn btn-secondary  ml-2"><i class="fa  fa-box"></i> В архiв</button>                         
+                         <button zippy="bedit" class="btn btn-success  ml-2"><i class="fa  fa-edit"></i> Редагувати</button>                         
+                         <button zippy="bapprove" class="btn btn-success  ml-2"><i class="fas fa-thumbs-up"></i> Затверлити</button>                         
+                         <button zippy="brefuse" class="btn btn-info  ml-2"><i class="fas fa-thumbs-down"></i> Вiдхилити</button>                         
+                         <button zippy="bshift" class="btn btn-warning  ml-2"><i class="fa  fa-exchange"></i> Вiдкласти</button>                         
+                         <button zippy="bcansel" class="btn btn-info  ml-2"><i class="fa  fa-undo"></i> Скасувати</button>                         
+                         <button zippy="bdelete" class="btn btn-danger  ml-2"><i class="fa  fa-trash"></i> Видалити</button>                         
+                    </form>
+                    <form zippy="maint" class="form-inline ">
+                      <label data-label="musers" for="mstates"> Виконавець </label>
+                         <select zippy="musers" class="form-control mr-2">
+                         <option value="0">Не обрано</option>
+                         </select>
+                         <button zippy="buser" class="btn btn-success  mr-2"> Перевести</button>
+
                     </form>
                  </div>
+                </div>
 
                 <div zippy="docview"></div>
 

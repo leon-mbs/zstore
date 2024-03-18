@@ -81,9 +81,13 @@ class OfficeList extends \App\Pages\Base
         $row->add(new Label('number', $doc->document_number));
 
         $row->add(new Label('date', H::fd($doc->document_date)));
-        $row->add(new Label('notes', ''));
+        
+        $notes= ($doc->headerdata['customer_name'] ??'').' '.($doc->headerdata['employee_name'] ??'');
+
+        $row->add(new Label('notes', trim( $notes)));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
+        $row->add(new Label('user',$doc->username ));
 
         $row->add(new ClickLink('title'))->onClick($this, 'showOnClick');
         $row->title->setValue($doc->notes) ;
@@ -155,15 +159,13 @@ class OfficeList extends \App\Pages\Base
              $this->taglist->addClickLink($tag, '#'.$tag);
           }           
           
-          $this->statuspan->setVisible(false);
-         
+           
     }    
     
      public function OnTagList($sender) {
         $this->_tag  = $sender->getSelectedValue();
 
-        $this->statuspan->setVisible(false);
- 
+    
         $this->Reload() ;
          
     }  
