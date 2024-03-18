@@ -314,89 +314,6 @@ class ReturnIssue extends \App\Pages\Base
                 $this->_basedocid = 0;
             }
 
-            if ($pos_id > 0 && $sender->id == 'execdoc') {
-                $pos = \App\Entity\Pos::load($pos_id);
-
-
-                if($pos->usefisc == 1 && $this->_tvars['checkbox'] == true) {
-
-                    $cb = new  \App\Modules\CB\CheckBox($pos->cbkey, $pos->cbpin) ;
-                    $ret = $cb->Check($this->_doc) ;
-
-                    if(is_array($ret)) {
-                        $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
-                        $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
-                        $this->_doc->headerdata["checkbox"] = $ret['checkid'];
-                    } else {
-                        $this->setError($ret);
-                        $conn->RollbackTrans();
-                        return;
-
-                    }
-
-
-                }
- 
-                if($pos->usefisc == 1 && $this->_tvars['vkassa'] == true) {
-                    $vk = new  \App\Modules\VK\VK($pos->vktoken) ;
-                    $ret = $vk->Check($this->_doc) ;
-
-                    if(is_array($ret)) {
-                        $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
-                    } else {
-                        $this->setError($ret);
-                        $conn->RollbackTrans();
-                        return;
-
-                    }         
- 
-                }
- 
-
-
-                if ($pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
-                    $this->_doc->headerdata["fiscalnumberpos"]  =  $pos->fiscalnumber;
-
-                    if ($this->_doc->parent_id > 0) {
-                        $basedoc = Document::load($this->_doc->parent_id);
-                        $this->_doc->headerdata["docnumberback"] = $basedoc->headerdata["fiscalnumber"];
-                    }
-
-                    if (strlen($this->_doc->headerdata["docnumberback"]) == 0) {
-                        $this->setError("Для фіскалізації створіть повернення на основі фіскального чека");
-                        return;
-                    }
-
-                    $this->_doc->headerdata["pos"] = $pos->pos_id;
-
-                    $ret = \App\Modules\PPO\PPOHelper::checkback($this->_doc);
-                    if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
-                        //повторяем для  нового номера
-                        $pos->fiscdocnumber = $ret['doclocnumber'];
-                        $pos->save();
-                        $ret = \App\Modules\PPO\PPOHelper::checkback($this->_doc);
-                    }
-                    if ($ret['success'] == false) {
-                        $this->setErrorTopPage($ret['data']);
-                        return;
-                    } else {
-
-                        if ($ret['docnumber'] > 0) {
-                            $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                            $pos->save();
-                            $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
-                            $this->_doc->headerdata["fiscalamount"] = $ret['fiscalamount'];
-                            $this->_doc->headerdata["fiscaltest"] = $ret['fiscaltest'];
-                        } else {
-                            $this->setError("Не повернено фіскальний номер");
-                            return;
-                        }
-                    }
-                }
-            }
-
-
-
             $this->_doc->save();
             if ($sender->id == 'execdoc') {
                 if (!$isEdited) {
@@ -410,7 +327,94 @@ class ReturnIssue extends \App\Pages\Base
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
+  
+            
+            
+            if ($pos_id > 0 && $sender->id == 'execdoc') {
+                $pos = \App\Entity\Pos::load($pos_id);
 
+                if($pos->usefisc == 1)  {
+                     
+                    if( $this->_tvars['checkbox'] == true) {
+
+                        $cb = new  \App\Modules\CB\CheckBox($pos->cbkey, $pos->cbpin) ;
+                        $ret = $cb->Check($this->_doc) ;
+
+                        if(is_array($ret)) {
+                            $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                            $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
+                            $this->_doc->headerdata["checkbox"] = $ret['checkid'];
+                        } else {
+                            $this->setError($ret);
+                            $conn->RollbackTrans();
+                            return;
+
+                        }
+
+
+                    }
+                    if( $this->_tvars['vkassa'] == true) {
+                        $vk = new  \App\Modules\VK\VK($pos->vktoken) ;
+                        $ret = $vk->Check($this->_doc) ;
+
+                        if(is_array($ret)) {
+                            $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                        } else {
+                            $this->setError($ret);
+                            $conn->RollbackTrans();
+                            return;
+
+                        }         
+     
+                    }
+                    if ( $this->_tvars['ppo'] == true) {
+                        $this->_doc->headerdata["fiscalnumberpos"]  =  $pos->fiscalnumber;
+
+                        if ($this->_doc->parent_id > 0) {
+                            $basedoc = Document::load($this->_doc->parent_id);
+                            $this->_doc->headerdata["docnumberback"] = $basedoc->headerdata["fiscalnumber"];
+                        }
+
+                        if (strlen($this->_doc->headerdata["docnumberback"]) == 0) {
+                            $this->setError("Для фіскалізації створіть повернення на основі фіскального чека");
+                             $conn->RollbackTrans();
+                           return;
+                        }
+
+                        $this->_doc->headerdata["pos"] = $pos->pos_id;
+
+                        $ret = \App\Modules\PPO\PPOHelper::checkback($this->_doc);
+                        if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
+                            //повторяем для  нового номера
+                            $pos->fiscdocnumber = $ret['doclocnumber'];
+                            $pos->save();
+                            $ret = \App\Modules\PPO\PPOHelper::checkback($this->_doc);
+                        }
+                        if ($ret['success'] == false) {
+                            $this->setErrorTopPage($ret['data']);
+                             $conn->RollbackTrans();
+                           return;
+                        } else {
+
+                            if ($ret['docnumber'] > 0) {
+                                $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                                $pos->save();
+                                $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+                                $this->_doc->headerdata["fiscalamount"] = $ret['fiscalamount'];
+                                $this->_doc->headerdata["fiscaltest"] = $ret['fiscaltest'];
+                            } else {
+                                $this->setError("Не повернено фіскальний номер");
+                               $conn->RollbackTrans();
+                               return;
+                            }
+                        }
+                    }
+                
+                    $this->_doc->save();    
+                }
+                
+            }
+   
 
             $conn->CommitTrans();
             App::Redirect("\\App\\Pages\\Register\\GIList");
