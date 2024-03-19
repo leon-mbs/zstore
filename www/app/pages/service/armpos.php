@@ -1307,8 +1307,7 @@ class ARMPos extends \App\Pages\Base
                             $this->_doc->headerdata["checkbox"] = $ret['checkid'];
                         } else {
                             $this->setError($ret);
-                            $conn->RollbackTrans();
-                            return;
+                            throw new \Exception($ret);
 
                         }
 
@@ -1322,8 +1321,7 @@ class ARMPos extends \App\Pages\Base
                             $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
                         } else {
                             $this->setError($ret);
-                            $conn->RollbackTrans();
-                            return;
+                            throw new \Exception($ret);
 
                         }         
                     }
@@ -1342,8 +1340,7 @@ class ARMPos extends \App\Pages\Base
                         }
                         if ($ret['success'] == false) {
                             $this->setErrorTopPage($ret['data']);
-                            $conn->RollbackTrans();
-                            return;
+                            throw new \Exception($ret['data']);
                         } else {
                             //  $this->setSuccess("Выполнено") ;
                             if ($ret['docnumber'] > 0) {
@@ -1354,8 +1351,7 @@ class ARMPos extends \App\Pages\Base
                                 $this->_doc->headerdata["fiscaltest"] = $ret['fiscaltest'];
                             } else {
                                 $this->setError("Не повернено фіскальний номер");
-                                $conn->RollbackTrans();
-                                return;
+                                throw new \Exception("Не повернено фіскальний номер");
                             }
                         }
 
