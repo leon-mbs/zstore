@@ -1242,6 +1242,8 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->packDetails('services', $this->_serlist);
 
         $this->_doc->amount = $this->docpanel->form2->total->getText();
+        $isnew  = $this->_doc->document_id ==0;
+        
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
@@ -1276,7 +1278,6 @@ class ARMPos extends \App\Pages\Base
                 }
             }
 
-            $isnew  = $this->_doc->document_id ==0;
             $this->_doc->save();
             if($isnew) {
                 $this->_doc->updateStatus(Document::STATE_NEW);
@@ -1375,6 +1376,10 @@ class ARMPos extends \App\Pages\Base
             $this->setErrorTopPage($ee->getMessage());
 
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            if($isnew) {
+               $this->_doc->document_id =0;                
+            }
+            
             return;
         }
         $this->docpanel->form2->customer->setKey(0);
