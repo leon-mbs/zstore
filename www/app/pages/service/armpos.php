@@ -1271,9 +1271,7 @@ class ARMPos extends \App\Pages\Base
                 foreach ($this->_itemlist as $item) {
                     $qty = $item->getQuantity($this->_doc->headerdata['store']);
                     if ($qty < $item->quantity) {
-                        $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
-                        $conn->RollbackTrans();
-                        return;
+                        throw new \Exception("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
                     }
                 }
             }
@@ -1306,7 +1304,6 @@ class ARMPos extends \App\Pages\Base
                             $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
                             $this->_doc->headerdata["checkbox"] = $ret['checkid'];
                         } else {
-                            $this->setError($ret);
                             throw new \Exception($ret);
 
                         }
@@ -1320,7 +1317,6 @@ class ARMPos extends \App\Pages\Base
                         if(is_array($ret)) {
                             $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
                         } else {
-                            $this->setError($ret);
                             throw new \Exception($ret);
 
                         }         
@@ -1350,7 +1346,6 @@ class ARMPos extends \App\Pages\Base
                                 $this->_doc->headerdata["fiscalamount"] = $ret['fiscalamount'];
                                 $this->_doc->headerdata["fiscaltest"] = $ret['fiscaltest'];
                             } else {
-                                $this->setError("Не повернено фіскальний номер");
                                 throw new \Exception("Не повернено фіскальний номер");
                             }
                         }
