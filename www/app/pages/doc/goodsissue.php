@@ -220,7 +220,9 @@ class GoodsIssue extends \App\Pages\Base
                             $this->_doc->headerdata['prepaid']  = abs($basedoc->payamount);
                         }
 
-
+                        if($order->state == Document::STATE_INPROCESS) {
+                            $order->updateStatus(Document::STATE_READYTOSHIP);
+                        }
                         if($order->headerdata['store']>0) {
                             $this->docform->store->setValue($order->headerdata['store']);
                             $order->unreserve();
@@ -237,9 +239,7 @@ class GoodsIssue extends \App\Pages\Base
                         //  $this->docform->editpayed->setText($this->docform->editpayamount->getText());
                         //   $this->docform->payed->setText($this->docform->payamount->getText());
 
-                        if($order->state == Document::STATE_INPROCESS) {
-                            $order->updateStatus(Document::STATE_READYTOSHIP);
-                        }
+
 
 
                     }
