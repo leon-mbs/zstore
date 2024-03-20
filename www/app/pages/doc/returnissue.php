@@ -345,7 +345,7 @@ class ReturnIssue extends \App\Pages\Base
                             $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
                             $this->_doc->headerdata["checkbox"] = $ret['checkid'];
                         } else {
-                            $this->setError($ret);
+
                             throw new \Exception($ret);
 
                         }
@@ -359,7 +359,7 @@ class ReturnIssue extends \App\Pages\Base
                         if(is_array($ret)) {
                             $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
                         } else {
-                            $this->setError($ret);
+
                             throw new \Exception($ret);
 
                         }         
@@ -374,7 +374,7 @@ class ReturnIssue extends \App\Pages\Base
                         }
 
                         if (strlen($this->_doc->headerdata["docnumberback"]) == 0) {
-                            $this->setError("Для фіскалізації створіть повернення на основі фіскального чека");
+
                             throw new \Exception("Для фіскалізації створіть повернення на основі фіскального чека");
                         }
 
@@ -388,7 +388,7 @@ class ReturnIssue extends \App\Pages\Base
                             $ret = \App\Modules\PPO\PPOHelper::checkback($this->_doc);
                         }
                         if ($ret['success'] == false) {
-                            $this->setErrorTopPage($ret['data']);
+
                             throw new \Exception($ret['data']);
 
                         } else {
@@ -400,7 +400,7 @@ class ReturnIssue extends \App\Pages\Base
                                 $this->_doc->headerdata["fiscalamount"] = $ret['fiscalamount'];
                                 $this->_doc->headerdata["fiscaltest"] = $ret['fiscaltest'];
                             } else {
-                                $this->setError("Не повернено фіскальний номер");
+
                                 throw new \Exception("Не повернено фіскальний номер");
                             }
                         }
