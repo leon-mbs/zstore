@@ -1242,6 +1242,8 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->packDetails('services', $this->_serlist);
 
         $this->_doc->amount = $this->docpanel->form2->total->getText();
+        $isnew  = $this->_doc->document_id ==0;
+        
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
@@ -1269,14 +1271,11 @@ class ARMPos extends \App\Pages\Base
                 foreach ($this->_itemlist as $item) {
                     $qty = $item->getQuantity($this->_doc->headerdata['store']);
                     if ($qty < $item->quantity) {
-                        $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
-                        $conn->RollbackTrans();
-                        return;
+                        throw new \Exception("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
                     }
                 }
             }
 
-            $isnew  = $this->_doc->document_id ==0;
             $this->_doc->save();
             if($isnew) {
                 $this->_doc->updateStatus(Document::STATE_NEW);
@@ -1305,9 +1304,7 @@ class ARMPos extends \App\Pages\Base
                             $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
                             $this->_doc->headerdata["checkbox"] = $ret['checkid'];
                         } else {
-                            $this->setError($ret);
-                            $conn->RollbackTrans();
-                            return;
+                            throw new \Exception($ret);
 
                         }
 
@@ -1320,9 +1317,7 @@ class ARMPos extends \App\Pages\Base
                         if(is_array($ret)) {
                             $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
                         } else {
-                            $this->setError($ret);
-                            $conn->RollbackTrans();
-                            return;
+                            throw new \Exception($ret);
 
                         }         
                     }
@@ -1341,8 +1336,7 @@ class ARMPos extends \App\Pages\Base
                         }
                         if ($ret['success'] == false) {
                             $this->setErrorTopPage($ret['data']);
-                            $conn->RollbackTrans();
-                            return;
+                            throw new \Exception($ret['data']);
                         } else {
                             //  $this->setSuccess("Выполнено") ;
                             if ($ret['docnumber'] > 0) {
@@ -1352,9 +1346,7 @@ class ARMPos extends \App\Pages\Base
                                 $this->_doc->headerdata["fiscalamount"] = $ret['fiscalamount'];
                                 $this->_doc->headerdata["fiscaltest"] = $ret['fiscaltest'];
                             } else {
-                                $this->setError("Не повернено фіскальний номер");
-                                $conn->RollbackTrans();
-                                return;
+                                throw new \Exception("Не повернено фіскальний номер");
                             }
                         }
 
@@ -1375,6 +1367,10 @@ class ARMPos extends \App\Pages\Base
             $this->setErrorTopPage($ee->getMessage());
 
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            if($isnew) {
+               $this->_doc->document_id =0;                
+            }
+            
             return;
         }
         $this->docpanel->form2->customer->setKey(0);

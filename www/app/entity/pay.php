@@ -99,17 +99,17 @@ class Pay extends \ZCL\DB\Entity
                     $payb->user_id = \App\System::getUser()->user_id;
 
                     if ( $doc->meta_name=='ReturnIssue' && $mf->back == 1 ) {    //возврат
-                        if (  $mf->btran > 0  && $amount < 0) {    //возврат
-                            $payb->amount = 0- ($amount * $mf->btran / 100);
+                        if (  $mf->btranin > 0  && $amount < 0) {    //возврат
+                            $payb->amount =  (abs($amount) * $mf->btranin / 100);
                             \App\Entity\IOState::addIOState($document_id, $payb->amount, \App\Entity\IOState::TYPE_OTHER_INCOME);                        
                         }
                     } else {
                         
-                        if ($mf->btran > 0  && $amount > 0) {    //на  счет
-                            $payb->amount = 0- ($amount * $mf->btran / 100);
+                        if ($mf->btran > 0  && $amount < 0) {    //со  счета
+                            $payb->amount = 0- (abs($amount) * $mf->btran / 100);
                         }
-                        if ($mf->btranin > 0 && $amount < 0) {  //со  счета
-                            $payb->amount =  ($amount * $mf->btranin / 100);
+                        if ($mf->btranin > 0 && $amount > 0) {  //на  счет
+                            $payb->amount = 0- (abs($amount) * $mf->btranin / 100);
                         }
                         \App\Entity\IOState::addIOState($document_id, $payb->amount, \App\Entity\IOState::TYPE_BANK);                        
                     }
