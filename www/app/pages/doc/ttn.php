@@ -209,7 +209,7 @@ class TTN extends \App\Pages\Base
 
                         if($order->headerdata['store']>0) {
                             $this->docform->store->setValue($order->headerdata['store']);
-                            $order->unreserve();
+                            
                         }
 
 
@@ -643,12 +643,42 @@ class TTN extends \App\Pages\Base
                 $this->_basedocid = 0;
             }
             $this->_doc->save();
-            if ($sender->id == 'execdoc') {
+            
+            if ($sender->id == 'execdoc' ||$sender->id == 'senddoc' || $sender->id == 'sendnp') {
+             
+          
+             
+  
                 if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
+  
+             
+             
+                if ($this->_doc->parent_id > 0) {
+                    $basedoc = Document::load($this->_doc->parent_id)->cast();
 
+                    if($this->_changedpos) {
+                        if($this->_changedpos) {
+                            $msg=  "У документа {$this->_doc->document_number}, створеного на підставі {$basedoc->document_number}, користувачем ".\App\System::getUser()->username." змінено перелік ТМЦ "  ;
+                            \App\Entity\Notify::toSystemLog($msg) ;
+                        }
 
+                    }
+                    
+                    if( $basedoc->meta_name =='Order') {
+                        
+
+                        if($basedoc->state == Document::STATE_INPROCESS || $basedoc->state == Document::STATE_READYTOSHIP) {
+                            $basedoc->updateStatus(Document::STATE_INSHIPMENT);
+                        }                            
+                    
+                        
+                        $basedoc->unreserve();
+                    }                    
+                    
+                }  
+ 
                 // проверка на минус  в  количестве
                 $allowminus = System::getOption("common", "allowminus");
                 if ($allowminus != 1) {
@@ -660,55 +690,23 @@ class TTN extends \App\Pages\Base
                             return;
                         }
                     }
-                }
-
-                if ($this->_doc->parent_id > 0) {
-                    $basedoc = Document::load($this->_doc->parent_id);
-
-                    if($this->_changedpos) {
-                        if($this->_changedpos) {
-                            $msg=  "У документа {$this->_doc->document_number}, створеного на підставі {$basedoc->document_number}, користувачем ".\App\System::getUser()->username." был изменен список ТМЦ "  ;
-                            \App\Entity\Notify::toSystemLog($msg) ;
-                        }
-
-                    }
-                }
-
+                }                  
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                
+                           
+             }            
+            
+            
+            if ($sender->id == 'execdoc') {
                 $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
-            } else {
-                if ($sender->id == 'senddoc' || $sender->id == 'sendnp') {
-
-
-                    if (!$isEdited) {
-                        $this->_doc->updateStatus(Document::STATE_NEW);
-                    }
-
-
-                    if ($this->_doc->parent_id > 0) {
-                        $basedoc = Document::load($this->_doc->parent_id);
-
-                        if($this->_changedpos) {
-                            $msg=  "У документа {$this->_doc->document_number}, створеного на підставі {$basedoc->document_number}, користувачем ".\App\System::getUser()->username." был изменен список ТМЦ "  ;
-
-                            \App\Entity\Notify::toSystemLog($msg) ;
-
-                        }
-                    }
-
-
-                    $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                    if ($sender->id == 'senddoc') {
-                        $this->_doc->updateStatus(Document::STATE_INSHIPMENT);
-                    }
-                    if ($sender->id == 'sendnp') {
-                        $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
-                    }
-                    //   $this->_doc->headerdata['sent_date'] = time();
-                    // $this->_doc->save();
-                } else {
-                    $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
-                }
+            } else  if ($sender->id == 'senddoc') {
+                 $this->_doc->updateStatus(Document::STATE_INSHIPMENT);
+            }
+            else  if ($sender->id == 'sendnp') {
+                 $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
+            }
+            else {
+                $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
 
 
