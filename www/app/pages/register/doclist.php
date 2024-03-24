@@ -372,9 +372,11 @@ class DocList extends \App\Pages\Base
             }
         }
         $this->statusform->musers->setOptionList($u);
-        $user = System::getUser();
-        if(in_array($user->user_id, array_keys($u))) {
-            $this->statusform->musers->setValue($user->user_id);
+//        $user = System::getUser();
+        if(in_array($this->_doc->user_id, array_keys($u))) {
+            $this->statusform->musers->setValue($this->_doc->user_id);
+        } else {
+            $this->statusform->musers->setValue(0);            
         }
 
     }
@@ -604,6 +606,7 @@ class DocList extends \App\Pages\Base
                 $n->message .= "<br> " . $text;
                 $n->save();
 
+                
                 $this->statusform->refcomment->setText('');
             }
 
@@ -643,10 +646,14 @@ class DocList extends \App\Pages\Base
             if($user_id==0) {
                 return;
             }
+            if($user_id==$this->_doc->user_id) {
+                return;
+            }
 
             $this->_doc->user_id = $user_id;
             $this->_doc->save();
 
+            $this->_doc->insertLog($this->_doc->state,$this->_doc->user_id);
 
         }
 
