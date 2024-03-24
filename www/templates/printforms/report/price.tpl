@@ -36,6 +36,7 @@
 {{#price4name}}          <th align="right">{{price4name}}</th>  {{/price4name}} 
 {{#price5name}}          <th align="right">{{price5name}}</th>  {{/price5name}} 
 {{#showdesc}}      <th align="right">Опис</th>{{/showdesc}}
+ <th>Примітка</th>
     </tr>
     {{#_detail}}
     <tr>
@@ -43,6 +44,7 @@
         <td>{{name}}</td>
         <td>{{code}}</td>
         <td>{{msr}}</td>
+
   {{#iscat}}        <td>{{cat}}</td>     {{/iscat}}  
   {{#isbrand}}      <td>{{brand}}</td>   {{/isbrand}}  
 {{#showqty}}        <td align="right">{{qty}}</td> {{/showqty}}
@@ -52,7 +54,7 @@
 {{#price4name}}         <td align="right">{{price4}}</td> {{/price4name}} 
 {{#price5name}}         <td align="right">{{price5}}</td> {{/price5name}} 
 {{#showdesc}}           <td>{{desc}}</td>{{/showdesc}}
-
+        <td>{{notes}}</td>
     </tr>
     {{/_detail}}
 </table>

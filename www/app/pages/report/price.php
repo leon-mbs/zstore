@@ -123,6 +123,7 @@ class Price extends \App\Pages\Base
                 "cat"    => $item->cat_name,
                 "brand"  => $item->manufacturer,
                 "msr"    => $item->msr,
+                "notes"  => $item->notes,
                 "qty"    => \App\Helper::fqty($qty),
                 "price1" => $isp1 ? $item->getPrice('price1') : "",
                 "price2" => $isp2 ? $item->getPrice('price2') : "",
