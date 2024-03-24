@@ -124,6 +124,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editcell'));
         $this->itemdetail->add(new TextInput('edituktz'));
         $this->itemdetail->add(new TextInput('editmsr'));
+        $this->itemdetail->add(new TextInput('editnotes'));
 
         $this->itemdetail->add(new DropDownChoice('editcat', Category::findArray("cat_name", "cat_id not in (select coalesce(parent_id,0) from item_cat  )", "cat_name"), 0));
         $this->itemdetail->add(new TextInput('editcode'));
@@ -287,6 +288,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editcode->setText($this->_item->item_code);
         $this->itemdetail->editbarcode->setText($this->_item->bar_code);
         $this->itemdetail->editmsr->setText($this->_item->msr);
+        $this->itemdetail->editnotes->setText($this->_item->notes);
         $this->itemdetail->editmaxsize->setText($this->_item->maxsize);
         $this->itemdetail->editvolume->setText($this->_item->volume);
         $this->itemdetail->editlost->setText($this->_item->lost);
@@ -333,6 +335,7 @@ class ItemList extends \App\Pages\Base
         // Очищаем  форму
         $this->itemdetail->clean();
         $this->itemdetail->editmsr->setText('шт');
+        $this->itemdetail->editnotes->setText('');
         $this->itemdetail->editimage->setVisible(false);
         $this->itemdetail->editdelimage->setVisible(false);
         $this->itemdetail->editnoprice->setChecked(false);
@@ -396,6 +399,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->bar_code = trim($this->itemdetail->editbarcode->getText());
         $this->_item->url = trim($this->itemdetail->editurl->getText());
         $this->_item->msr = $this->itemdetail->editmsr->getText();
+        $this->_item->notes = $this->itemdetail->editnotes->getText();
         $this->_item->weight = $this->itemdetail->editweight->getText();
         $this->_item->maxsize = $this->itemdetail->editmaxsize->getText();
         $this->_item->volume = $this->itemdetail->editvolume->getText();

@@ -756,19 +756,31 @@ class Document extends \ZCL\DB\Entity
      *  запись состояния в  лог документа
      * @param mixed $state
      */
-    public function insertLog($state) {
+    public function insertLog($state,$user_id=0) {
         $conn = \ZDB\DB::getConnect();
         $host = $_SERVER["REMOTE_ADDR"];
         if($host==null) {
             $host = "";
         }
         $host = $conn->qstr($host);
-        $user = \App\System::getUser();
-        if($user == null) {
-            $user = \App\Entity\User::getByLogin('admin') ;
-        }
+        if($user_id==0){
+            $user = \App\System::getUser();
+            if($user == null) {
+                $user = \App\Entity\User::getByLogin('admin') ;
+            }
+            $user_id= $user->user_id;
+        }  else {
 
-        $sql = "insert into docstatelog (document_id,user_id,createdon,docstate,hostname) values({$this->document_id},{$user->user_id},now(),{$state},{$host})";
+                $n = new \App\Entity\Notify();
+                $n->user_id = $user_id;
+                $n->sender_id = \App\Entity\Notify::SYSTEM;
+                $n->dateshow = time();
+                $n->message = "Ви призначені виконавцем документу {$this->document_number} " ;
+         
+                $n->save();            
+        }
+        
+        $sql = "insert into docstatelog (document_id,user_id,createdon,docstate,hostname) values({$this->document_id},{$user_id},now(),{$state},{$host})";
         $conn->Execute($sql);
     }
 

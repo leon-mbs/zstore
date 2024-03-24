@@ -1250,7 +1250,7 @@ class ARMPos extends \App\Pages\Base
 
             $exeparent=false;  //списано в  редительском
             if($this->_doc->parent_id >0) {
-                $bd = Document::load($this->_doc->parent_id);
+                $bd = Document::load($this->_doc->parent_id)->cast();
                 $bd->payamount = 0;
                 $bd->payed = 0;
                 $bd->save();
@@ -1262,6 +1262,14 @@ class ARMPos extends \App\Pages\Base
                     $exeparent=true;
            
                 }
+                
+                if ($bd->meta_name == 'Order' ) {
+                    if($bd->state == Document::STATE_INPROCESS || $bd->state == Document::STATE_READYTOSHIP) {
+                        $bd->updateStatus(Document::STATE_INSHIPMENT);
+                    }                       
+                    $bd->unreserve();
+                }
+                
             }
             
             // проверка на минус  в  количестве

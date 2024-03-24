@@ -24,6 +24,7 @@ class Item extends \ZCL\DB\Entity
         $this->cat_id = 0;
         $this->item_type = self::TYPE_TOVAR;
         $this->msr = "шт";
+        $this->notes = "";
 
         $this->price = 0;
         $this->image_id = 0;
@@ -69,6 +70,7 @@ class Item extends \ZCL\DB\Entity
         $this->sef = (string)$xml->sef[0];
         $this->url = (string)$xml->url[0];
         $this->country = (string)$xml->country[0];
+        $this->notes = (string)$xml->notes[0];
         $reclist = (string)$xml->reclist[0];
 
         if(strlen($reclist) >0) {
@@ -138,6 +140,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<warranty><![CDATA[{$this->warranty}]]></warranty>";
         $this->detail .= "<extdata><![CDATA[{$this->extdata}]]></extdata>";
         $this->detail .= "<country><![CDATA[{$this->country}]]></country>";
+        $this->detail .= "<notes><![CDATA[{$this->notes}]]></notes>";
         $this->detail .= "<techcard><![CDATA[{$this->techcard}]]></techcard>";
 
         $this->detail .= "<price1>{$this->price1}</price1>";

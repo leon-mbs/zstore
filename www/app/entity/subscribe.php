@@ -133,10 +133,7 @@ class Subscribe extends \ZCL\DB\Entity
                 continue;
             }
 
-            $cnt = $doc->checkStates(array($state));
-            if ($cnt > 1) {
-                // continue;
-            }
+      
 
             $ret = '';
             $phone = '';

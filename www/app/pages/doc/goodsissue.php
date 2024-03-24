@@ -220,10 +220,11 @@ class GoodsIssue extends \App\Pages\Base
                             $this->_doc->headerdata['prepaid']  = abs($basedoc->payamount);
                         }
 
-
+                    
+                        
                         if($order->headerdata['store']>0) {
                             $this->docform->store->setValue($order->headerdata['store']);
-                            $order->unreserve();
+                            
                         }
 
 
@@ -237,9 +238,7 @@ class GoodsIssue extends \App\Pages\Base
                         //  $this->docform->editpayed->setText($this->docform->editpayamount->getText());
                         //   $this->docform->payed->setText($this->docform->payamount->getText());
 
-                        if($order->state == Document::STATE_INPROCESS) {
-                            $order->updateStatus(Document::STATE_READYTOSHIP);
-                        }
+
 
 
                     }
@@ -723,17 +722,29 @@ class GoodsIssue extends \App\Pages\Base
                     $this->_doc->updateStatus(Document::STATE_WP);
                 }
                 if ($this->_doc->parent_id > 0) {   //закрываем заказ
-                    $order = Document::load($this->_doc->parent_id);
+                    $order = Document::load($this->_doc->parent_id)->cast();
 
                     if($this->_changedpos) {
                         $msg= "В документі {$this->_doc->document_number}, створеному на підставі {$order->document_number}, користувачем ".\App\System::getUser()->username." змінено перелік ТМЦ " ;
                         \App\Entity\Notify::toSystemLog($msg) ;
                     }
 
-                    if($this->_doc->payamount >0 && $order->meta_name =='Order') {
-                        if ($order->state == Document::STATE_READYTOSHIP) {
-                            $order->updateStatus(Document::STATE_CLOSED);
+                    if( $order->meta_name =='Order') {
+                        
+
+                        if($order->state == Document::STATE_INPROCESS || $order->state == Document::STATE_READYTOSHIP) {
+                            $order->updateStatus(Document::STATE_INSHIPMENT);
+                        }                            
+                        
+                        if($this->_doc->payamount >0 ) {  //если  платим  в  накладной
+                            if ($order->state == Document::STATE_INSHIPMENT) {
+                                $order->updateStatus(Document::STATE_CLOSED);
+                            }
                         }
+                        
+                        
+                        
+                        $order->unreserve();
                     }
                 }
             } else {
