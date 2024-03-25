@@ -476,6 +476,9 @@ class ARMFood extends \App\Pages\Base
         if($doc->state <5) {
            $row->checkfisc->setVisible(false);
         }
+        if($this->_pos->usefisc != 1) {
+           $row->checkfisc->setVisible(false);
+        }
         
  
         
@@ -1836,6 +1839,9 @@ class ARMFood extends \App\Pages\Base
   public function onFisc($sender) {
 
         $doc =  $sender->getOwner()->getDataItem();
+           $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
+        try {
 
         if($this->_tvars['checkbox'] == true) {
 
@@ -1850,10 +1856,8 @@ class ARMFood extends \App\Pages\Base
                 $doc->save();
                 $this->setSuccess("Виконано");
             } else {
-                $this->setError($ret);
-
-                return;
-
+               throw new \Exception($ret);
+ 
             }
 
 
@@ -1868,10 +1872,8 @@ class ARMFood extends \App\Pages\Base
                 $doc->save();
               
             } else {
-                $this->setError($ret);
-       
-                return;
-
+                throw new \Exception($ret);
+ 
             }  
         }
 
@@ -1890,9 +1892,8 @@ class ARMFood extends \App\Pages\Base
                 $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
             }
             if ($ret['success'] == false) {
-                $this->setErrorTopPage($ret['data']);
+                  throw new \Exception($ret['data']);
 
-                return;
             } else {
                 //  $this->setSuccess("Выполнено") ;
                 if ($ret['docnumber'] > 0) {
@@ -1905,14 +1906,24 @@ class ARMFood extends \App\Pages\Base
                     $doc->save();
                     $this->setSuccess("Виконано");
                 } else {
-                    $this->setError("Не повернено фіскальний номер");
 
-                    return;
+                     throw new \Exception("Не повернено фіскальний номер");
+
                 }
             }
 
         }
+            $conn->CommitTrans();
+        } catch(\Throwable $ee) {
+            global $logger;
+            $conn->RollbackTrans();
+            $this->setErrorTopPage($ee->getMessage());
 
+            $logger->error($ee->getMessage() . " Документ " . $doc->meta_desc);
+           
+            
+            return;
+        } 
         $this->updateorderlist(null);
     }
     

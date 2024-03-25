@@ -755,6 +755,7 @@ class Document extends \ZCL\DB\Entity
      *
      *  запись состояния в  лог документа
      * @param mixed $state
+     * @param mixed $user_id  если переназначен  юзер документа
      */
     public function insertLog($state,$user_id=0) {
         $conn = \ZDB\DB::getConnect();
