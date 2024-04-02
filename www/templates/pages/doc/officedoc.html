@@ -66,6 +66,12 @@
 
                         </select>
                     </div>               
+                   <div class="form-group">
+                        <label for="editcomment">Коментар, примiтка</label>
+                        <textarea class="form-control"  zippy="editcomment" >  
+                        </textarea>
+
+                    </div>               
                 
                 
 
@@ -79,7 +85,13 @@
                         <label for="doctags">Теги</label>
                         <div    zippy="doctags" >  </div>
                         <small>Вводяться по  Enter</small>
-                    </div>               
+                    </div>   
+                     <div class="form-group">
+                        <label for="editfile"> Оригiнал (файл, скан) документу</label>
+                        <input class="form-control" type="file" zippy="editfile"  >
+                    
+                        
+                 </div>                                    
                </div>
             </div>
 
@@ -89,7 +101,9 @@
                     <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-primary mr-2">
                     <input zippy="inprocdoc" type="submit" value="На виконання" class="btn btn-primary  ">
                     <input zippy="execdoc" type="submit" value="Виконано" class="btn btn-primary  ">
-
+                     &nbsp;
+                    <input zippy="editaccess" type="checkbox" >
+                    <label class="form-check-label" for="editaccess"> Задати права  доступу</label>
                 </div>
             </div>
            

@@ -55,8 +55,13 @@ class OfficeDoc extends Document
     protected function getNumberTemplate() {
         return 'ОФ-000000';
     }
-   public function supportedExport() {
+
+    public function supportedExport() {
         return array(self::EX_EXCEL,  self::EX_PDF);
+    }
+
+    public function checkShow() {
+        return true;
     }
 
 }

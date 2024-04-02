@@ -190,7 +190,6 @@ class DocList extends \App\Pages\Base
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
 
-        $doc = $doc->cast();
 
         $row->add(new ClickLink('name',$this, 'showOnClick'))->setValue($doc->meta_desc);
         $row->add(new ClickLink('number',$this, 'showOnClick'))->setValue($doc->document_number);
@@ -262,6 +261,16 @@ class DocList extends \App\Pages\Base
         $row->qr->setVisible( (strlen($doc->headerdata['hash']??'') > 0 ) || strlen(  $doc->getFiscUrl()) > 0   ) ;
         if( !in_array($doc->meta_name,['POSCheck']) ){
            $row->qr->setVisible(false);    
+        }  
+        if( $doc->meta_name == 'OfficeDoc' ){
+            $doc = $doc->cast();
+            
+            $row->edit->setVisible(false);
+            $row->delete->setVisible(false);
+            $row->cancel->setVisible(false);
+            $row->hasscan->setVisible(false);
+            $row->hasnotes->setVisible(false);
+            $row->name->setValue($doc->notes);
         }  
         
 
@@ -379,6 +388,17 @@ class DocList extends \App\Pages\Base
             $this->statusform->musers->setValue(0);            
         }
 
+        if( $this->_doc->meta_name == 'OfficeDoc' ){
+              
+            if (false == $this->_doc->checkShow()) {
+                return;
+            }
+            $this->statusform->setVisible(false);
+            
+
+        }          
+        
+        
     }
 
     //редактирование
@@ -681,6 +701,7 @@ class DocList extends \App\Pages\Base
         $this->statusform->setVisible(false) ;
         $this->docview->setVisible(false) ;      
     }
+
     public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
 

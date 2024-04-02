@@ -14,7 +14,9 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\File;
 use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\AutocompleteTextInput;
 use App\Entity\Customer;
 use App\Entity\Employee;
@@ -39,15 +41,41 @@ class OfficeDoc extends \App\Pages\Base
         
         $this->docform->edittitle->setDataList($names);
         $this->docform->add(new TextArea('doccontent'));
+        $this->docform->add(new TextArea('editcomment'));
         $this->docform->add(new TextInput('document_number'));
+        $this->docform->add(new File('editfile'));
         $this->docform->add(new TextInput('bonus'))->setVisible(false);
         $this->docform->add(new TextInput('fine'))->setVisible(false);
+        $this->docform->add(new CheckBox('editaccess'));
         $this->docform->add(new Date('document_date', time()));
         $this->docform->add(new \ZCL\BT\Tags("doctags"));
-        
-        $userlist = \App\Entity\User::findArray("username", "disabled<>1", "username") ;
-        $this->docform->add(new DropDownChoice("user",$userlist,0));
+         
+        $this->docform->add(new DropDownChoice("user",[],0));
+        $u = array() ;
+        $mn = (int)$conn->GetOne("select meta_id from metadata where  meta_name='OfficeDoc' ");
+  
+        foreach(\App\Entity\User::find("disabled <> 1", "username asc") as $_u) {
+            if($_u->rolename == 'admins') {
+                $u[$_u->user_id]=$_u->username;
+            } else {
+                $aclexe = explode(',', $_u->aclexe);
 
+                if (in_array($mn, $aclexe)) {
+                    $u[$_u->user_id] = $_u->username;
+
+                }
+                $aclstate = explode(',', $_u->aclstate);
+
+                if (in_array($this->_doc->meta_id, $aclstate)) {
+                    $u[$_u->user_id] = $_u->username;
+
+                }
+
+            }
+        }
+        $this->docform->user->setOptionList($u);
+//         
+        
 
         $emplist = \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name") ;
         $this->docform->add(new DropDownChoice("emp",$emplist,0))->onChange($this,'onEmp');
@@ -121,6 +149,9 @@ class OfficeDoc extends \App\Pages\Base
         $this->docform->doctags->setSuggestions(\App\Entity\Tag::getSuggestions(\App\Entity\Tag::TYPE_OFFICEDCO));
    
 
+        $this->docform->editcomment->setVisible($this->_doc->document_id ==0);
+        $this->docform->editfile->setVisible($this->_doc->document_id ==0);
+        
 
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
@@ -161,12 +192,18 @@ class OfficeDoc extends \App\Pages\Base
             $this->_doc->headerdata['employee_name'] = $this->docform->emp->getValueName();  
         }                 
                          
-                         
+        $file = $this->docform->editfile->getFile();
+        if ($file['size'] > 10000000) {
+            $this->setError("Файл більше 10 МБ!");
+            return;
+        }                        
                                                                       
         $isEdited = $this->_doc->document_id > 0;
         if(!$isEdited) {
            $this->_doc->headerdata['author']= System::getUser()->user_id;   
         }
+        $this->_doc->user_id = $this->docform->user->getValue();   
+        
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
@@ -192,8 +229,46 @@ class OfficeDoc extends \App\Pages\Base
             \App\Entity\Tag::updateTags($tags,\App\Entity\Tag::TYPE_OFFICEDCO,(int)$this->_doc->document_id) ;
             
             
+            if(!$isEdited) {   //новый
+               $comment=trim($this->docform->editcomment->getText());   
+               if($comment != '') {
+                    $user = System::getUser();
+
+                    $msg = new \App\Entity\Message();
+                    $msg->message = $comment;
+                    $msg->created = time();
+                    $msg->user_id = $user->user_id;
+                    $msg->item_id = $this->_doc->document_id;
+                    $msg->item_type = \App\Entity\Message::TYPE_DOC;
+
+                    $msg->save(); 
+               }
+             
+                if ($file['size'] > 0) {
+                    $id = H::addFile($file, $this->_doc->document_id, 'Оригiнал', \App\Entity\Message::TYPE_DOC);
+                 
+                }              
+               
+                if($this->_doc->user_id != $this->_doc->headerdata['author'])  //не  себе
+                {
+                    $this->_doc->insertLog($this->_doc->state,$this->_doc->user_id);    
+                }
+               
+            }            
+            
+            
+            
+         
             $conn->CommitTrans();
-            App::Redirect("\\App\\Pages\\Register\\OfficeList");
+            
+            if($this->docform->editaccess->isChecked()) {
+                App::Redirect("\\App\\Pages\\Register\\OfficeList",$this->_doc->document_id,true);
+            }   else {
+                App::Redirect("\\App\\Pages\\Register\\OfficeList");
+            }
+            
+            
+            
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();

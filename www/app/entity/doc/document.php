@@ -373,6 +373,9 @@ class Document extends \ZCL\DB\Entity
         $class = "\\App\\Entity\\Doc\\" . $this->meta_name;
         $doc = new $class($this->getData());
         $doc->unpackData();
+       // $doc->document_number=$this->document_number;
+        $doc->document_date=$this->document_date;
+        $doc->lastupdate=$this->lastupdate;
         return $doc;
     }
 

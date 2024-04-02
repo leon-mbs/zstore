@@ -31,11 +31,14 @@ class OfficeList extends \App\Pages\Base
      * @param mixed $docid Документ  должен  быть  показан  в  просмотре
      * @return DocList
      */
-    public function __construct() {
+    public function __construct($docid=0,$showaccess=false) {
         parent::__construct();
-        if (false == \App\ACL::checkShowReg('SalaryList')) {
+        if (false == \App\ACL::checkShowReg('OfficeList')) {
             \App\Application::RedirectHome() ;
         }
+        
+
+        
         
         $this->add(new \Zippy\Html\Link\LinkList("taglist"))->onClick($this, 'OnTagList');        
          
@@ -62,8 +65,35 @@ class OfficeList extends \App\Pages\Base
         $this->add(new Panel("statuspan"))->setVisible(false);
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
+        $this->statuspan->add(new Form('buttons'));
+        $this->statuspan->buttons->add(new SubmitButton('bdone'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->buttons->add(new SubmitButton('bclose'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->buttons->add(new SubmitButton('bedit'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->buttons->add(new SubmitButton('bapprove'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->buttons->add(new SubmitButton('brefuse'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->buttons->add(new SubmitButton('bshift'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->buttons->add(new SubmitButton('bcansel'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->buttons->add(new SubmitButton('bdelete'))->onClick($this, 'statusOnSubmit');
+
+
+        $this->statuspan->add(new Form('maint'));
+        $this->statuspan->maint->add(new DropDownChoice('musers', array()));
+        $this->statuspan->maint->add(new SubmitButton('buser'))->onClick($this, 'maintOnSubmit');
 
         $this->Reload();
+        
+        if($docid >0) {
+            $doc = Document::load($docid);
+            $this->_doc = $doc->cast();               
+            
+            if($showaccess) {
+                
+            }   else {
+                $this->show( );    
+            }
+            
+        }        
+        
 
     }
 
@@ -77,7 +107,7 @@ class OfficeList extends \App\Pages\Base
 
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
-
+      //  $doc = $doc->cast();
         $row->add(new Label('number', $doc->document_number));
 
         $row->add(new Label('date', H::fd($doc->document_date)));
@@ -96,6 +126,7 @@ class OfficeList extends \App\Pages\Base
         $row->title->setValue($doc->notes) ;
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('copy'))->onClick($this, 'copyOnClick');
+        $row->add(new ClickLink('access'))->onClick($this, 'accessOnClick');
 
         if ($doc->state != Document::STATE_CLOSED) {
             $row->edit->setVisible(true);
@@ -111,22 +142,14 @@ class OfficeList extends \App\Pages\Base
 
     //просмотр
     public function showOnClick($sender) {
-
-        $this->_doc = $sender->owner->getDataItem();
-        if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
-            return;
-        }
-
-        $this->statuspan->setVisible(true);
-        $this->statuspan->docview->setDoc($this->_doc);
-
-        $this->Reload(false);
-
-        $this->goAnkor('dankor');
+        $doc = $sender->getOwner()->getDataItem();
+        $doc = Document::load($doc->document_id);
+        $this->_doc = $doc->cast();
+        $this->show( );       
     }
 
     public function editOnClick($sender) {
-        $doc = $sender->getOwner()->getDataItem();
+        $doc = $sender->getOwner()->getDataItem()->cast();
         if (false == \App\ACL::checkEditDoc($doc, true)) {
             return;
         }
@@ -140,6 +163,9 @@ class OfficeList extends \App\Pages\Base
         $class = "\\App\\Pages\\Doc\\OfficeDoc";
 
         App::Redirect($class,0, $doc->document_id);
+    }
+    public function accessOnClick($sender) {
+        $doc = $sender->getOwner()->getDataItem();
     }
 
     public function onErase($sender) {
@@ -172,6 +198,150 @@ class OfficeList extends \App\Pages\Base
         $this->Reload() ;
          
     }  
+    
+    public function   show( ) {  
+          
+
+        if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
+            return;
+        }
+
+        $this->statuspan->setVisible(true);
+        $this->statuspan->docview->setDoc($this->_doc);
+        $ch = \App\ACL::checkExeDoc($this->_doc, true, false) ;
+
+        $this->Reload(false);
+
+        $this->goAnkor('dankor');
+        $this->statuspan->buttons->setVisible($this->_doc->state > 3);
+        $this->statuspan->maint->setVisible($this->_doc->state > 3);
+        
+        
+        
+     
+        $u = array() ;
+
+        foreach(\App\Entity\User::find("disabled <> 1", "username asc") as $_u) {
+            if($_u->rolename == 'admins') {
+                $u[$_u->user_id]=$_u->username;
+            } else {
+                $aclexe = explode(',', $_u->aclexe);
+
+                if (in_array($this->_doc->meta_id, $aclexe)) {
+                    $u[$_u->user_id] = $_u->username;
+
+                }
+                $aclstate = explode(',', $_u->aclstate);
+
+                if (in_array($this->_doc->meta_id, $aclstate)) {
+                    $u[$_u->user_id] = $_u->username;
+
+                }
+
+            }
+        }
+        $this->statuspan->maint->musers->setOptionList($u);
+//      
+        if(in_array($this->_doc->user_id, array_keys($u))) {
+            $this->statuspan->maint->musers->setValue($this->_doc->user_id);
+        } else {
+            $this->statuspan->maint->musers->setValue(0);            
+        }
+        
+        
+        $buttons=$this->statuspan->buttons;
+        $buttons->bdone->setVisible(false);
+        $buttons->bclose->setVisible(false);
+        $buttons->bedit->setVisible(false);
+        $buttons->bapprove->setVisible(false);
+        $buttons->brefuse->setVisible(false);
+        $buttons->bshift->setVisible(false);
+        $buttons->bcansel->setVisible(false);
+        $buttons->bdelete->setVisible(false);
+        
+        $user=System::getUser() ;
+        
+        if($this->_doc->state > 3) {
+           $buttons->bcansel->setVisible(true);   
+        }
+        if($user->rolename != 'admins' && $this->_doc->state == Document::STATE_CLOSED) {
+           $buttons->bcansel->setVisible(false);   
+        }
+        
+        
+    }
+    
+    public function statusOnSubmit($sender) {
+        if (\App\ACL::checkExeDoc($this->_doc, true, false) == false) {
+            $this->setError('Немає права виконувати документ');
+            return;
+        }
+
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
+
+        try{
+    
+            $conn->CommitTrans();
+        }  catch(\Exception $ee){
+            global $logger;
+            $conn->RollbackTrans();
+      
+            $this->setError($ee->getMessage());
+
+            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            return;
+         
+          
+        }    
+        $this->Reload(false) ;
+        $this->statuspan->setVisible(false) ;       
+   }
+   
+    public function maintOnSubmit($sender) {
+        if (\App\ACL::checkExeDoc($this->_doc, true, false) == false) {
+            $this->setError('Немає права на дану операцiю');
+            return;
+        }
+
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
+
+        try{
+  
+            if ($sender->id == "buser") {
+                $user_id = intval($this->statuspan->maint->musers->getValue());
+                if($user_id==0) {
+                    return;
+                }
+                if($user_id == $this->_doc->user_id) {
+                    return;
+                }
+
+                $this->_doc->user_id = $user_id;
+                $this->_doc->save();
+
+                $this->_doc->insertLog($this->_doc->state,$this->_doc->user_id);
+
+
+            }  
+            $conn->CommitTrans();
+        }  catch(\Exception $ee){
+            global $logger;
+            $conn->RollbackTrans();
+      
+            $this->setError($ee->getMessage());
+
+            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            return;
+         
+          
+        }    
+        $this->Reload(false) ;
+        $this->statuspan->setVisible(false) ;       
+       
+   }
+        
 }
 
 /**
