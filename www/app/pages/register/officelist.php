@@ -66,13 +66,14 @@ class OfficeList extends \App\Pages\Base
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
         $this->statuspan->add(new Form('buttons'));
+        $this->statuspan->buttons->add(new SubmitButton('binproсess'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->buttons->add(new SubmitButton('bdone'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->buttons->add(new SubmitButton('bclose'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->buttons->add(new SubmitButton('bedit'))->onClick($this, 'statusOnSubmit');
+
         $this->statuspan->buttons->add(new SubmitButton('bapprove'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->buttons->add(new SubmitButton('brefuse'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->buttons->add(new SubmitButton('bshift'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->buttons->add(new SubmitButton('bcansel'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->buttons->add(new SubmitButton('bcancel'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->buttons->add(new SubmitButton('bdelete'))->onClick($this, 'statusOnSubmit');
 
 
@@ -116,9 +117,7 @@ class OfficeList extends \App\Pages\Base
 
         $row->add(new Label('notes', trim( $notes)));
         $stname =Document::getStateName($doc->state) ;
-        if($doc->state==Document::STATE_EXECUTED ) {
-            $stname = "Виконаний";    
-        }
+ 
         $row->add(new Label('state', $stname));
         $row->add(new Label('user',$doc->username ));
 
@@ -128,11 +127,14 @@ class OfficeList extends \App\Pages\Base
         $row->add(new ClickLink('copy'))->onClick($this, 'copyOnClick');
         $row->add(new ClickLink('access'))->onClick($this, 'accessOnClick');
 
-        if ($doc->state != Document::STATE_CLOSED) {
+        if( in_array($doc->state,[1,2,3,7] ) ) {
             $row->edit->setVisible(true);
         } else {
             $row->edit->setVisible(false);
         }
+        
+        
+        
         if ($doc->document_id == @$this->_doc->document_id) {
             $row->setAttribute('class', 'table-success');
         }
@@ -160,6 +162,10 @@ class OfficeList extends \App\Pages\Base
 
     public function copyOnClick($sender) {
         $doc = $sender->getOwner()->getDataItem();
+  
+        if (false == \App\ACL::checkShowDoc($doc, true)) {
+            return;
+        }  
         $class = "\\App\\Pages\\Doc\\OfficeDoc";
 
         App::Redirect($class,0, $doc->document_id);
@@ -191,7 +197,7 @@ class OfficeList extends \App\Pages\Base
            
     }    
     
-     public function OnTagList($sender) {
+    public function OnTagList($sender) {
         $this->_tag  = $sender->getSelectedValue();
 
     
@@ -248,40 +254,79 @@ class OfficeList extends \App\Pages\Base
             $this->statuspan->maint->musers->setValue(0);            
         }
         
-        
+        $state = $this->_doc->state;
         $buttons=$this->statuspan->buttons;
+     
+        $buttons->binproсess->setVisible(false);
         $buttons->bdone->setVisible(false);
         $buttons->bclose->setVisible(false);
-        $buttons->bedit->setVisible(false);
+
+        $buttons->bshift->setVisible(false);
+        $buttons->bcancel->setVisible(false);
+        $buttons->bdelete->setVisible(false);
+
         $buttons->bapprove->setVisible(false);
         $buttons->brefuse->setVisible(false);
-        $buttons->bshift->setVisible(false);
-        $buttons->bcansel->setVisible(false);
-        $buttons->bdelete->setVisible(false);
         
         $user=System::getUser() ;
-        
-        if($this->_doc->state > 3) {
-           $buttons->bcansel->setVisible(true);   
+               
+        if($ch &&  in_array($state,[18,19] ) ) {
+            $buttons->bclose->setVisible(true);
         }
-        if($user->rolename != 'admins' && $this->_doc->state == Document::STATE_CLOSED) {
-           $buttons->bcansel->setVisible(false);   
+        if($ch &&  in_array($state,[7,16,19] ) ) {
+            $buttons->bdone->setVisible(true);
         }
-        
+
+        if($ch &&  in_array($state,[1,2,3,16] ) ) {
+            $buttons->binprocess->setVisible(true);
+        }
+        if($ch &&  in_array($state,[7] ) ) {
+            $buttons->bshift->setVisible(true);
+           // $buttons->bapprove->setVisible(true);
+           // $buttons->brefuse->setVisible(true);
+        }
+
+   
+       
+        if($user->rolename == 'admins' || $user->user_id == $this->_doc->headerdata['author'] ) {
+            if( in_array($state,[7,17] ) ) {
+                $buttons->bcancel->setVisible(true);
+            }
+        }
+        if($user->rolename == 'admins' || $user->user_id == $this->_doc->headerdata['author'] ) {
+            if( in_array($state,[1,2,3,17] ) ) {
+                $buttons->bdelete->setVisible(true);
+            }
+        }
         
     }
     
     public function statusOnSubmit($sender) {
-        if (\App\ACL::checkExeDoc($this->_doc, true, false) == false) {
-            $this->setError('Немає права виконувати документ');
-            return;
-        }
+       
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
 
         try{
     
+            if($sender->id == 'binproсess') {
+                $this->_doc->updateStatus(Document::STATE_INPROCESS);
+            }
+            if($sender->id == 'bdone') {
+                $this->_doc->updateStatus(Document::STATE_FINISHED);
+            }
+            if($sender->id == 'bclose') {
+                $this->_doc->updateStatus(Document::STATE_CLOSED);
+            }
+            if($sender->id == 'bshift') {
+                $this->_doc->updateStatus(Document::STATE_SHIFTED);
+            }
+            if($sender->id == 'bcancel') {
+                $this->_doc->updateStatus(Document::STATE_CANCELED);
+            }
+            
+            
+            
             $conn->CommitTrans();
         }  catch(\Exception $ee){
             global $logger;

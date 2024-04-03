@@ -63,5 +63,17 @@ class OfficeDoc extends Document
     public function checkShow() {
         return true;
     }
+    public function checkExe() {
+        return true;
+    }
+    public function checkApprove() {
+        return true;
+    }
+    protected function onState($state, $oldstate) {
 
+        if($state == Document::STATE_FINISHED) {
+            $this->Execute();
+        }
+        
+    }
 }

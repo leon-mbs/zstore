@@ -265,6 +265,7 @@ class DocList extends \App\Pages\Base
         if( $doc->meta_name == 'OfficeDoc' ){
             $doc = $doc->cast();
             
+
             $row->edit->setVisible(false);
             $row->delete->setVisible(false);
             $row->cancel->setVisible(false);
