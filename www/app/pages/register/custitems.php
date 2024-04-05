@@ -81,7 +81,7 @@ class CustItems extends \App\Pages\Base
         $this->importform->add(new CheckBox("passfirst"));
         $this->importform->add(new DropDownChoice("icust", Customer::findArray("customer_name", "status=0 and  (detail like '%<type>2</type>%'  or detail like '%<type>0</type>%' )", "customer_name"), 0));
 
-
+        $this->itemtable->listform->itemlist->Reload();
     }
 
     public function itemlistOnRow(\Zippy\Html\DataList\DataRow $row) {
