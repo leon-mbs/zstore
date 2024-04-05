@@ -38,13 +38,18 @@ class Tag extends \ZCL\DB\Entity
        $conn = \ZDB\db::getConnect()  ;
        
        if($item_id >0){
-          $ret = $conn->GetCol("select distinct tag_name from taglist where tag_type={$type} and  item_id={$item_id}  order  by tag_name ");
+          $r = $conn->GetCol("select distinct tag_name from taglist where tag_type={$type} and  item_id={$item_id}  order  by tag_name ");
        } else {
-          $ret = $conn->GetCol("select distinct tag_name from taglist where tag_type={$type}  order  by tag_name ");
+          $r = $conn->GetCol("select distinct tag_name from taglist where tag_type={$type}  order  by tag_name ");
            
        }
-        
-        
+       
+       $ret=[]; 
+       foreach($r as $t)  {
+           if(strlen($t) >0) {
+               $ret[]=$t;
+           }
+       }
        return $ret; 
     }
    
