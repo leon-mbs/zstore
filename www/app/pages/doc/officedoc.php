@@ -218,7 +218,7 @@ class OfficeDoc extends \App\Pages\Base
                     $this->_doc->updateStatus(Document::STATE_INPROCESS);
                 }
                 if($sender->id == 'execdoc') {
-                    $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                    $this->_doc->updateStatus(Document::STATE_FINISHED);
                 }
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);

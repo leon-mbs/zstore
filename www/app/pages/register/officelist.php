@@ -132,7 +132,10 @@ class OfficeList extends \App\Pages\Base
         } else {
             $row->edit->setVisible(false);
         }
-        
+        if( in_array($doc->state,[9] ) ) {
+            $row->access->setVisible(false);
+        }   
+       
         
         
         if ($doc->document_id == @$this->_doc->document_id) {
@@ -278,7 +281,7 @@ class OfficeList extends \App\Pages\Base
         }
 
         if($ch &&  in_array($state,[1,2,3,16] ) ) {
-            $buttons->binprocess->setVisible(true);
+            $buttons->binproсess->setVisible(true);
         }
         if($ch &&  in_array($state,[7] ) ) {
             $buttons->bshift->setVisible(true);
@@ -289,7 +292,7 @@ class OfficeList extends \App\Pages\Base
    
        
         if($user->rolename == 'admins' || $user->user_id == $this->_doc->headerdata['author'] ) {
-            if( in_array($state,[7,17] ) ) {
+            if($state  > 3 )   {
                 $buttons->bcancel->setVisible(true);
             }
         }
@@ -409,6 +412,33 @@ class OfficeListDataSource implements \Zippy\Interfaces\DataSource
 
         $filterform = $this->page->filter;
 
+        $from = $filterform->from->getDate();
+        $to = $filterform->to->getDate();
+        
+        if($from > 0) {
+            $where .= " and date(document_date) >= " . $conn->DBDate($from) ;
+        }
+        if($to > 0) {
+            $where .= " and date(document_date) <= " . $conn->DBDate($to) ;
+        }
+        
+        
+        if (!$filterform->archive->isChecked()) { 
+            $where .= " and  state <> ". Document::STATE_CLOSED;
+        }
+        
+        
+        $st = trim($filterform->searchtype->getValue());
+        if (strlen($st) > 9) { 
+            $st = $conn->qstr($st );
+            $where = " notes  =  {$st} ";
+        }
+        $st = $filterform->searchcontext->getText();
+        if (strlen($st) > 2) {
+            $st = $conn->qstr('%' . $st . '%');
+
+            $where .= "  and(   content like  {$st}    ) ";
+        }        
         $sn = trim($filterform->searchnumber->getText());
         if (strlen($sn) > 1) { // игнорируем другие поля
             $sn = $conn->qstr('%' . $sn . '%');
