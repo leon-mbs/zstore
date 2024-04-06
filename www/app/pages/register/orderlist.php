@@ -559,6 +559,7 @@ class OrderList extends \App\Pages\Base
             $ait=array('itemname'=>$it->itemname,'itemcode'=>$it->item_code,'itemqty'=>$it->quantity);
 
             $ait['citemsstore']  =  array();
+            $ait['toco']  =  "addItemToCO({$it->item_id})";
 
             foreach($stl as $k=>$v) {
                 $qty = $it->getQuantity($k);
