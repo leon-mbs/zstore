@@ -616,7 +616,7 @@ class Order extends \App\Pages\Base
 
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity()));
         $this->editdetail->editprice->setText($price);
-        $price = $item->getLastPartion(0, "", false);
+        $price = $item->getPartion();
         $this->editdetail->pricestock->setText(H::fa($price));
         $this->editdetail->tocustorder->setAttribute("onclick","addItemToCO({$id})");
         $this->editdetail->tocustorder->setVisible(true);

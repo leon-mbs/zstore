@@ -23,6 +23,7 @@ class MoneyFund extends \ZCL\DB\Entity
         $this->detail .= "<beznal>{$this->beznal}</beznal>";
         $this->detail .= "<btran>{$this->btran}</btran>";
         $this->detail .= "<btranin>{$this->btranin}</btranin>";
+        $this->detail .= "<com>{$this->com}</com>";
         $this->detail .= "<back>{$this->back}</back>";
 
         $this->detail .= "<bank><![CDATA[{$this->bank}]]></bank>";
@@ -44,6 +45,7 @@ class MoneyFund extends \ZCL\DB\Entity
         $this->back = intval($xml->back[0]);
         $this->btran = floatval($xml->btran[0]);
         $this->btranin = floatval($xml->btranin[0]);
+        $this->com = floatval($xml->com[0]);
 
         $this->bank = (string)($xml->bank[0]);
         $this->bankacc = (string)($xml->bankacc[0]);
