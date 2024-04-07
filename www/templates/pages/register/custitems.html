@@ -30,7 +30,8 @@
                         </select>
                  
    
-                        <input class="btn btn-outline-success  " type="submit" value="ОК">
+                        <input class="btn btn-success mr-4 " type="submit" value="ОК">
+                        <a data-toggle="modal" data-target="#modaloption" href="javascript:void(0);" title="Налаштування" style="font-size:larger"><i  class="fa fa-cog" ></i></a>
 
                     </form>
                 </div>
@@ -214,7 +215,32 @@
             
         </div>
 
-    
+            <div id="modaloption" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered   ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Налаштування</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                        <form zippy="options">
+                            <div class="form-group">
+                                <label for="colitemcode">Артикул</label>
+                         
+                                <input class="form-control qtyprice" type="text" zippy="editpayed" pattern="[0-9,\.]+">
+                            </div>    
+                            <input type="submit" value="Зберегти" class="btn btn-info  ">
+
+                            
+                        </form>    
+                        </div>
+
+                    </div>
+                </div>
+            </div>  
 
 
         <script>

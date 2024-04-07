@@ -23,6 +23,9 @@ use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
 use Zippy\Html\Link\SubmitLink;
 
+/**
+* Журнал товары   у поставщика
+*/
 class CustItems extends \App\Pages\Base
 {
     private $_item;
@@ -81,6 +84,11 @@ class CustItems extends \App\Pages\Base
         $this->importform->add(new CheckBox("passfirst"));
         $this->importform->add(new DropDownChoice("icust", Customer::findArray("customer_name", "status=0 and  (detail like '%<type>2</type>%'  or detail like '%<type>0</type>%' )", "customer_name"), 0));
 
+        
+        $this->add(new Form('options'))->onSubmit($this, 'OnOption');
+        
+        
+        
         $this->itemtable->listform->itemlist->Reload();
     }
 
@@ -333,6 +341,10 @@ class CustItems extends \App\Pages\Base
 
     }
 
+    public function OnOption($sender) {
+        
+    }
+    
     public function oncsv($sender) {
         $list = $this->itemtable->listform->itemlist->getDataSource()->getItems(-1, -1);
         $header = array();
