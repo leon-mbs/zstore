@@ -270,6 +270,9 @@ class Order extends Base
             $order->headerdata['contact'] = trim($firstname.' '.$lastname) . ', ' . $phone;
             $order->headerdata['salesource'] = $shop['salesource'];
             $order->headerdata['shoporder'] = 1;
+            if($modules['defmf']>0) {
+              $neworder->headerdata['payment'] = $modules['defmf'];
+            }
 
             $order->notes = trim($this->orderform->notes->getText());
             $order->amount = $amount;

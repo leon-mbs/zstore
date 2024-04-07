@@ -132,8 +132,10 @@ class Orders extends \App\Pages\Base
             $neworder->headerdata['hrorder'] = $hrorder['order_id'];
             $neworder->headerdata['outnumber'] = $hrorder['order_id'];
             $neworder->headerdata['hrorderback'] = 0;
-            $neworder->headerdata['salesource'] = $modules['salesource'];
-
+            $neworder->headerdata['salesource'] = $modules['hrsalesource'];
+            if($modules['hrmf']>0) {
+              $neworder->headerdata['payment'] = $modules['hrmf'];
+            }
             $neworder->headerdata['hrclient'] = $hrorder['delivery_name'] ;
 
             $neworder->amount = H::fa($amount);

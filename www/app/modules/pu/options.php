@@ -31,6 +31,8 @@ class Options extends \App\Pages\Base
 
 
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['pupricetype']));
+        $form->add(new DropDownChoice('defmf',\App\Entity\MoneyFund::getList(), $modules['pumf']??0));
+
 
         $form->add(new CheckBox('setpayamount', $modules['pusetpayamount']));
         $form->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), $modules['pusalesource']));
@@ -48,6 +50,7 @@ class Options extends \App\Pages\Base
         $setpayamount = $this->cform->setpayamount->isChecked() ? 1 : 0;
 
         $pricetype = $this->cform->defpricetype->getValue();
+        $defmf = $this->cform->defmf->getValue();
         $salesource = $this->cform->salesource->getValue();
         $insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
 
@@ -64,6 +67,7 @@ class Options extends \App\Pages\Base
         $modules['puapitoken'] = $apitoken;
 
         $modules['pupricetype'] = $pricetype;
+        $modules['pumf'] = $defmf;
         $modules['pusalesource'] = $salesource;
         $modules['pusetpayamount'] = $setpayamount;
         $modules['puinsertcust'] = $insertcust;

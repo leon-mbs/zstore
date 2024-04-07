@@ -15,6 +15,7 @@ class Pay extends \ZCL\DB\Entity
     public const PAY_BANK       = 1000;   //эквайринг
     public const PAY_BONUS      = 1001;   //бонусы
     public const PAY_DELIVERY   = 1002;   //доставка
+    public const PAY_COMISSION  = 1003;   //комиссия
 
 
     protected function init() {
@@ -121,6 +122,21 @@ class Pay extends \ZCL\DB\Entity
                 }
             }
 
+            //комиссия
+            if ($mf->com > 0  && $amount >0){
+                    $payc = new Pay();
+                    $payc->mf_id = $mf_id;
+                    $payc->document_id = $document_id;
+                    $payc->paytype = Pay::PAY_COMISSION;
+                    $payc->paydate = $paydate;
+                    $payc->notes = 'Комісія';
+                    $payc->user_id = \App\System::getUser()->user_id;
+                    $payc->amount = 0- ($amount * $mf->com / 100);                    
+                    $payc->save(); 
+ 
+                    \App\Entity\IOState::addIOState($document_id, $payc->amount, \App\Entity\IOState::TYPE_SALE_OUTCOME);                        
+                    
+            }
 
         }
 
