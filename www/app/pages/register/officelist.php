@@ -222,7 +222,7 @@ class OfficeList extends \App\Pages\Base
         $this->Reload(false);
 
         $this->goAnkor('dankor');
-        $this->statuspan->buttons->setVisible($this->_doc->state > 3);
+    //    $this->statuspan->buttons->setVisible($this->_doc->state > 3);
         $this->statuspan->maint->setVisible($this->_doc->state > 3);
         
         
@@ -295,6 +295,7 @@ class OfficeList extends \App\Pages\Base
             if($state  > 3 )   {
                 $buttons->bcancel->setVisible(true);
             }
+           
         }
         if($user->rolename == 'admins' || $user->user_id == $this->_doc->headerdata['author'] ) {
             if( in_array($state,[1,2,3,17] ) ) {
@@ -326,6 +327,9 @@ class OfficeList extends \App\Pages\Base
             }
             if($sender->id == 'bcancel') {
                 $this->_doc->updateStatus(Document::STATE_CANCELED);
+            }
+            if($sender->id == 'bdelete') {
+                 $this->deldoc();
             }
             
             
@@ -389,6 +393,52 @@ class OfficeList extends \App\Pages\Base
         $this->statuspan->setVisible(false) ;       
        
    }
+   
+   
+   public function deldoc() {
+        global $logger;
+     
+        if (false == \App\ACL::checkDelDoc($this->_doc, true)) {
+           // return;
+        }
+ 
+        $list = $this->_doc->getChildren();
+        if (count($list) > 0) {
+            $this->setError("У документа є дочірні документи");
+
+            return;
+        }
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
+
+        try {
+
+            $del = Document::delete($this->_doc->document_id);
+            if (strlen($del) > 0) {
+                $this->setError($del);
+                $conn->RollbackTrans();
+
+                return;
+            }
+
+            $conn->CommitTrans();
+
+
+        } catch(\Throwable $ee) {
+            global $logger;
+            $conn->RollbackTrans();
+
+            $this->setError($ee->getMessage());
+
+            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            return;
+        }
+
+
+        $this->doclist->Reload(true);
+        $this->resetURL();
+    }
+   
         
 }
 
