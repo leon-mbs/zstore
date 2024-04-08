@@ -86,7 +86,7 @@ class DocList extends \App\Pages\Base
 
         $this->add(new SortLink("sortdoc", "meta_desc", $this, "onSort"));
         $this->add(new SortLink("sortnum", "document_number", $this, "onSort"));
-        $this->add(new SortLink("sortdate", "document_id", $this, "onSort"));
+        $this->add(new SortLink("sortdate", "document_date", $this, "onSort"));
         $this->add(new SortLink("sortcust", "customer_name", $this, "onSort"));
         $this->add(new SortLink("sortamount", "amount", $this, "onSort"));
 

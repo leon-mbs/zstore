@@ -55,6 +55,8 @@ class Options extends \App\Pages\Base
 
         $this->shop->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), "0"));
         $this->shop->add(new DropDownChoice('firm', \App\Entity\Firm::findArray("firm_name", "disabled <>1"), "0"));
+        $this->shop->add(new DropDownChoice('defmf',\App\Entity\MoneyFund::getList(), $modules['ocmf']??0));
+
 
 
         $this->add(new Form('pay'))->onSubmit($this, 'savePayOnClick');
@@ -80,6 +82,7 @@ class Options extends \App\Pages\Base
 
         $this->shop->shopdefbranch->setValue($shop['defbranch']);
         $this->shop->shopordertype->setValue($shop['ordertype']);
+        $this->shop->defmf->setValue($shop['defmf']);
         $this->shop->shopdefpricetype->setValue($shop['defpricetype']);
         $this->shop->salesource->setValue($shop['salesource']);
         $this->shop->firm->setValue($shop['firm']);
@@ -158,6 +161,7 @@ class Options extends \App\Pages\Base
         $shop['defbranch'] = $this->shop->shopdefbranch->getValue();
         $shop['ordertype'] = $this->shop->shopordertype->getValue();
         $shop['defpricetype'] = $this->shop->shopdefpricetype->getValue();
+        $shop['defmf'] = $this->shop->defmf->getValue();
         $shop['salesource'] = $this->shop->salesource->getValue();
         $shop['firm'] = $this->shop->firm->getValue();
         $shop['email'] = $this->shop->email->getText();

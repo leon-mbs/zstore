@@ -37,6 +37,7 @@ class Options extends \App\Pages\Base
 
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['ocpricetype']));
         $form->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), $modules['ocsalesource']));
+        $form->add(new DropDownChoice('defmf',\App\Entity\MoneyFund::getList(), $modules['ocmf']??0));
 
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
     }
@@ -49,6 +50,7 @@ class Options extends \App\Pages\Base
 
         $pricetype = $this->cform->defpricetype->getValue();
         $salesource = $this->cform->salesource->getValue();
+        $mf = $this->cform->defmf->getValue();
         $outcome = $this->cform->outcome->isChecked() ? 1 : 0;
         $ssl = $this->cform->ssl->isChecked() ? 1 : 0;
         $v4 = $this->cform->v4->isChecked() ? 1 : 0;
@@ -71,11 +73,13 @@ class Options extends \App\Pages\Base
 
         $modules['ocpricetype'] = $pricetype;
         $modules['ocsalesource'] = $salesource;
+        $modules['ocsalesource'] = $salesource;
         $modules['ocssl'] = $ssl;
         $modules['ocv4'] = $v4;
         $modules['ocinsertcust'] = $insertcust;
         $modules['ocoutcome'] = $outcome;
         $modules['ocsetpayamount'] = $setpayamount;
+        $modules['ocmf'] = $mf;
 
         System::setOptions("modules", $modules);
 

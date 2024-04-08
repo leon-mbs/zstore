@@ -34,6 +34,8 @@ class Options extends \App\Pages\Base
         $form->add(new CheckBox('ssl', $modules['wcssl']));
         $form->add(new CheckBox('setpayamount', $modules['wcsetpayamount']));
         $form->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), $modules['wcsalesource']));
+        $form->add(new DropDownChoice('defmf',\App\Entity\MoneyFund::getList(), $modules['wcmf']??0));
+
 
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
 
@@ -50,6 +52,7 @@ class Options extends \App\Pages\Base
         $insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
 
         $pricetype = $this->cform->defpricetype->getValue();
+        $defmf = $this->cform->defmf->getValue();
         $salesource = $this->cform->salesource->getValue();
 
         if (strlen($pricetype) < 2) {
@@ -68,6 +71,7 @@ class Options extends \App\Pages\Base
         $modules['wcinsertcust'] = $insertcust;
 
         $modules['wcpricetype'] = $pricetype;
+        $modules['wcmf'] = $defmf;
         $modules['wcsalesource'] = $salesource;
         $modules['wcssl'] = $ssl;
         $modules['wcsetpayamount'] = $setpayamount;

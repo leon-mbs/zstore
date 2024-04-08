@@ -95,7 +95,7 @@ class Orders extends \App\Pages\Base
                 $cnt  = $conn->getOne("select count(*) from documents_view where (meta_name='Order' or meta_name='TTN') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'")  ;
 
                 if (intval($cnt) > 0) { //уже импортирован
-                    continue;
+             //       continue;
                 }
                 foreach ($ocorder['_products_'] as $product) {
                     $code = trim($product['sku']);
@@ -234,6 +234,11 @@ class Orders extends \App\Pages\Base
             $neworder->notes .= " Адреса:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
             $neworder->notes .= " Оплата:" . $shoporder->payment_method . ";";
             $neworder->notes .= " Коментар:" . $shoporder->comment . ";";
+            if($modules['ocmf'] >0) {
+               $neworder->headerdata['payment'] = $modules['ocmf'];
+        
+            }
+        
             $neworder->save();
             $neworder->updateStatus(Document::STATE_NEW);
             if($modules['ocsetpayamount']==1) {

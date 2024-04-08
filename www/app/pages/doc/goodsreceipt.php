@@ -1077,7 +1077,7 @@ class GoodsReceipt extends \App\Pages\Base
         $item = Item::load($item_id);
 
         if($price==null) {
-            $price = $item->getLastPartion($this->docform->store->getValue(), "", true);
+        //    $price = $item->getLastPartion($this->docform->store->getValue(), "", true);
 
         }
         $this->editsnitem->editsnprice->setText(H::fa($price));

@@ -33,6 +33,8 @@ class Options extends \App\Pages\Base
 
 
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['hrpricetype']));
+        $form->add(new DropDownChoice('defmf',\App\Entity\MoneyFund::getList(), $modules['hrmf']??0));
+
 
 
         $form->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), $modules['hrsalesource']));
@@ -51,6 +53,7 @@ class Options extends \App\Pages\Base
         $password = $this->cform->password->getText();
       
         $pricetype = $this->cform->defpricetype->getValue();
+        $defmf = $this->cform->defmf->getValue();
         $salesource = $this->cform->salesource->getValue();
         $insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
 
@@ -67,6 +70,7 @@ class Options extends \App\Pages\Base
         $modules['hrlogin'] = $login;
         $modules['hrpassword'] = $password;
 
+        $modules['hrmf'] = $defmf;
         $modules['hrpricetype'] = $pricetype;
         $modules['hrsalesource'] = $salesource;
         $modules['hrinsertcust'] = $insertcust;
