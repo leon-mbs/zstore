@@ -180,6 +180,26 @@ class GoodsReceipt extends Document
             \App\Entity\IOState::addIOState($this->document_id, 0 - $payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
         }
 
+        
+        if(H::getKeyValBool('CI_optupdate')==true) {
+             foreach ($this->unpackDetails('detaildata') as $item) {
+                 
+                 $ci = \App\Entity\CustItem::getFirst("item_id={$item->item_id} and customer_id={$this->customer_id}") ;
+                 if($ci == null){
+                    $ci = new \App\Entity\CustItem() ;    
+                 }
+                 $ci->item_id = $item->item_id;
+                 $ci->customer_id = $this->customer_id;
+                 $ci->price = $item->price;
+                 $ci->quantity = 0;
+                 $ci->cust_code = $item->custcode;
+                 $ci->comment = $this->document_number;
+                 $ci->updatedon = time();
+                 
+                 $ci->save();
+                 
+             }
+        }
 
         return true;
     }

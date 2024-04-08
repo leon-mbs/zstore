@@ -86,9 +86,10 @@ class CustItems extends \App\Pages\Base
 
         
         $this->add(new Form('options'))->onSubmit($this, 'OnOption');
-        
-        
-        
+        $this->options->add(new CheckBox("optupdate"))->setChecked(H::getKeyValBool('CI_optupdate'));
+        $this->options->add(new TextInput('optclean',H::getKeyVal('CI_optclean')));
+                                            
+                                   
         $this->itemtable->listform->itemlist->Reload();
     }
 
@@ -100,7 +101,7 @@ class CustItems extends \App\Pages\Base
         $row->add(new Label('item_code', $item->item_code));
         $row->add(new Label('cust_code', $item->cust_code));
         $row->add(new Label('customer_name', $item->customer_name));
-        $row->add(new Label('qty', $item->quantity));
+        $row->add(new Label('qty', $item->quantity == 0 ? '-- ' : $item->quantity ));
 
         $row->add(new Label('price', $item->price));
 
@@ -342,7 +343,8 @@ class CustItems extends \App\Pages\Base
     }
 
     public function OnOption($sender) {
-        
+       H::setKeyVal('CI_optupdate',$sender->optupdate->isChecked()) ;
+       H::setKeyVal('CI_optclean',$sender->optclean->getText()) ;
     }
     
     public function oncsv($sender) {

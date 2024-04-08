@@ -45,7 +45,8 @@ class CronTask extends \ZCL\DB\Entity
         if(!System::useCron()) {
             return;
         }
-
+        
+ 
         $options = System::getOptions('common');
         $modules = System::getOptions('modules');
        
@@ -99,6 +100,15 @@ class CronTask extends \ZCL\DB\Entity
                        
                     }           
                 }    
+                
+                
+                //очистка товаров у поставзика
+                $days = H::getKeyValint('CI_optclean') ;
+                if($days >0) {
+                    $conn->Execute("delete from custitems where  updatedon <  ". $conn->DBDate( strtotime("-{$days} day"))  ) ;
+                }
+
+                
             }
 
         } catch(\Exception $ee) {

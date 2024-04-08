@@ -228,10 +228,20 @@
                         <div class="modal-body">
                         <form zippy="options">
                             <div class="form-group">
-                                <label for="colitemcode">Артикул</label>
-                         
-                                <input class="form-control qtyprice" type="text" zippy="editpayed" pattern="[0-9,\.]+">
-                            </div>    
+                                <label for="optclean">Очищати неактуальне за</label>
+                                <div style="width:100px;" class="input-group  ">
+                                    <input  class="form-control"  zippy="optclean" pattern="[0-9]+">
+                                 <div  class="input-group-append">                                
+                                   &nbsp; днiв
+                                </div> 
+                               </div>   
+                               <small>Має бути активований планувальник</small>  
+                            </div>   
+                            <div class="form-check mb-2">
+                                <input zippy="optupdate" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="optupdate">Оновлювати з Прибуткої накладної</label>
+                                <br><small>Цiни оноавлюватимуться  при  проведеннi документу</small>                                  
+                            </div>                             
                             <input type="submit" value="Зберегти" class="btn btn-info  ">
 
                             

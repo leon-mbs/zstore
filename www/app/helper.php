@@ -956,7 +956,7 @@ class Helper
     * @param mixed $key
     * @return mixed
     */
-    public static function getKeyVal($key) {
+    public static function getKeyVal($key,$det="") {
         if(strlen($key)==0) {
             return;
         }
@@ -965,15 +965,25 @@ class Helper
         $ret = $conn->GetOne("select vald from  keyval  where  keyd=" . $conn->qstr($key));
 
         if(strlen($ret)==0) {
-            return "";
+            $ret= "";
         }
+        
+        if($ret==''  && $def != '') {
+            $ret = $def;
+        }
+        
         return $ret;
     }
 
-    public static function getKeyValInt($key) :int{
+    public static function getKeyValInt($key,$def=0) :int{
        
-        return intval(self::getKeyVal($key));
+        $ret = intval(self::getKeyVal($key));
+        if($ret==0  && $def != 0) {
+            $ret = $def;
+        }
+        return  $ret;
     }
+
     public static function getKeyValBool($key) : bool  {
        
         $ret = self::getKeyVal($key);
