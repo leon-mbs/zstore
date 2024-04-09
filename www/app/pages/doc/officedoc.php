@@ -29,7 +29,7 @@ class OfficeDoc extends \App\Pages\Base
 {
     private $_doc;
     
-    public function __construct($docid = 0,$copyid=0){
+    public function __construct($docid = 0,$copyid=0,$access=false){
         parent::__construct();
 
         $conn = \ZDB\DB::getConnect();
@@ -101,6 +101,11 @@ class OfficeDoc extends \App\Pages\Base
         $this->editcust->add(new DropDownChoice('edittype'));
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
+    
+        $this->add(new Form('accessform'))->setVisible(false);
+        $this->accessform->add(new Button('cancelaccess'))->onClick($this, 'cancelaccessOnClick');
+        $this->accessform->add(new SubmitButton('saveaccess'))->onClick($this, 'saveaccessOnClick');
+    
         
         $user = System::getUser()->user_id;
 
@@ -156,6 +161,12 @@ class OfficeDoc extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
+        
+        if($docid >0 && $access ) {
+            $this->access()  ;
+        }
+        
+        
     }
 
     public function savedocOnClick($sender) {
@@ -262,7 +273,7 @@ class OfficeDoc extends \App\Pages\Base
             $conn->CommitTrans();
             
             if($this->docform->editaccess->isChecked()) {
-                App::Redirect("\\App\\Pages\\Register\\OfficeList",$this->_doc->document_id,true);
+                $this->access()  ;
             }   else {
                 App::Redirect("\\App\\Pages\\Register\\OfficeList");
             }
@@ -356,6 +367,25 @@ class OfficeDoc extends \App\Pages\Base
         $emp=$sender->getValue();
         $this->docform->bonus->setVisible($emp>0)  ;
         $this->docform->fine->setVisible($emp>0)  ;
+    }
+    
+    //права  доступа
+    public function access() {
+       $this->docform->setVisible(false);
+       $this->accessform->setVisible(true);
+ 
+    }
+    public function saveaccessOnClick($sender) {
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
+            return;
+        }
+         
+        
+        
+         App::Redirect("\\App\\Pages\\Register\\OfficeList");
+    }
+    public function cancelaccessOnClick($sender) {
+         App::Redirect("\\App\\Pages\\Register\\OfficeList");
     }
     
     

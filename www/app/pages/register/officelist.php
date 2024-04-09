@@ -31,7 +31,7 @@ class OfficeList extends \App\Pages\Base
      * @param mixed $docid Документ  должен  быть  показан  в  просмотре
      * @return DocList
      */
-    public function __construct($docid=0,$showaccess=false) {
+    public function __construct($docid=0 ) {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('OfficeList')) {
             \App\Application::RedirectHome() ;
@@ -86,13 +86,8 @@ class OfficeList extends \App\Pages\Base
         if($docid >0) {
             $doc = Document::load($docid);
             $this->_doc = $doc->cast();               
-            
-            if($showaccess) {
-                
-            }   else {
-                $this->show( );    
-            }
-            
+            $this->show( );   
+ 
         }        
         
 
@@ -132,7 +127,7 @@ class OfficeList extends \App\Pages\Base
         } else {
             $row->edit->setVisible(false);
         }
-        if( in_array($doc->state,[9] ) ) {
+        if( in_array($doc->state,[1,2,3,9] ) ) {
             $row->access->setVisible(false);
         }   
        
@@ -173,8 +168,16 @@ class OfficeList extends \App\Pages\Base
 
         App::Redirect($class,0, $doc->document_id);
     }
+   
     public function accessOnClick($sender) {
         $doc = $sender->getOwner()->getDataItem();
+  
+        if (false == \App\ACL::checkEditDoc($doc, true)) {
+            return;
+        }  
+        $class = "\\App\\Pages\\Doc\\OfficeDoc";
+
+        App::Redirect($class,$doc->document_id,0,true);        
     }
 
     public function onErase($sender) {
