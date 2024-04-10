@@ -717,7 +717,7 @@ class GoodsReceipt extends \App\Pages\Base
 
 
 
-                if(($this->_doc->headerdata['payamount'] - doubleval($this->_doc->headerdata['prepaid']))> $this->_doc->headerdata['payed']) {
+                if(( H::fa( $this->_doc->headerdata['payamount']) - H::fa(doubleval($this->_doc->headerdata['prepaid']))  )> H::fa( $this->_doc->headerdata['payed'] ) ) {
                     $this->_doc->updateStatus(Document::STATE_WP);
                 }
 
@@ -757,8 +757,8 @@ class GoodsReceipt extends \App\Pages\Base
                 }
             }
 
-            //если  выполнен и оплачен
-            if ($this->_doc->state == Document::STATE_EXECUTED && $this->_doc->payment > 0 && $this->_doc->payed == $this->_doc->payment) {
+            //если  накладная  выполнена  и оплачена
+            if ($this->_doc->state == Document::STATE_EXECUTED ) {
                 $orders = $this->_doc->getChildren('OrderCust');
                 foreach ($orders as $order) {
                     if ($order->state == Document::STATE_INPROCESS) {

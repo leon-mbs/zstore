@@ -186,7 +186,8 @@ class DocList extends \App\Pages\Base
 
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
-
+        $doc = $doc->cast();
+ 
 
         $row->add(new ClickLink('name',$this, 'showOnClick'))->setValue($doc->meta_desc);
         $row->add(new ClickLink('number',$this, 'showOnClick'))->setValue($doc->document_number);
@@ -260,7 +261,6 @@ class DocList extends \App\Pages\Base
            $row->qr->setVisible(false);    
         }  
         if( $doc->meta_name == 'OfficeDoc' ){
-            $doc = $doc->cast();
             
 
             $row->edit->setVisible(false);
