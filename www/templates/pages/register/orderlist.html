@@ -146,6 +146,12 @@
                      <th class="text-right">Замовлено</th>
                      <th>На складi</th>
                      <th>У постачальникiв</th>
+                      {{#isciprod}}
+                  
+                     <th>Гот. до вир.</th>
+                     {{/isciprod}}
+                    
+                  
                      <th> </th>
                      </tr>
                      {{#citems}}
@@ -154,7 +160,7 @@
                         <td>{{itemcode}}</td>
                         <td class="text-right">{{itemqty}}</td>
                         <td>     
-                          <table class="ctable">
+                          <table style="font-size:smaller"  class="ctable">
                               {{#citemsstore}}
                               <tr>
                                  <td>{{itstore}}</td>
@@ -164,7 +170,7 @@
                           </table>
                         </td>
                         <td>
-                          <table class="ctable"> 
+                          <table style="font-size:smaller"  class="ctable"> 
                               {{#citemscust}}
                               <tr>
                                  <td>{{itcust}}</td>
@@ -172,18 +178,31 @@
                                  <td class="text-right">{{itcustprice}}</td>
                                  <td class="text-right">{{itcustqty}}</td>
                                  <td >{{itcustupdated}}</td>
-                                 <td >{{itcustcomment}}</td>
+                              
                               </tr>
                              {{/citemscust}} 
                           </table>
                         </td>
+                      {{#isciprod}}
+                        
+                       <td>
+                          <table    class="ctable"> 
+                              {{#ciprod}}
+                              <tr>
+                                 <td style="width:100px;" class="text-right">{{prqty}}</td>
+                              </tr>
+                             {{/ciprod}} 
+                          </table>
+                        </td>
+                      {{/isciprod}}
+                        
                         <td> <a href="javascript:void(0)" onclick="{{toco}}" > В закупку</a>  </td>                        
                      </tr>
                      {{/citems}} 
                   </table>
                 </details>
             </div>
-             <div class="col-12 col-xl-10">      
+             <div class="col-12 col-xl-10 mt-2">      
                 <div class="navbar nav">
                     <form zippy="statusform" class="form-inline row">
                        <div class="col-12 mb-2">      

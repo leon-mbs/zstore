@@ -514,13 +514,13 @@ class Base extends \Zippy\Html\WebPage
         }
         if ($user->userlogin == "admin") {
             if ($user->userpass == "admin" || $user->userpass == '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.') {
-                $list[] = array('title' => "Змініть у профілі пароль за замовчуванням");
+                $list[] = array( 'type'=>'w', 'title' => "Змініть у профілі пароль за замовчуванням");
 
             }
         }
         if ($user->rolename == "admins") {
             if (\App\Entity\Notify::isNotify(\App\Entity\Notify::SYSTEM)) {
-                $list[] = array('title' => "Наявні непрочитані системні повідомлення");
+                $list[] = array('type'=>'i','title' => "Наявні непрочитані системні повідомлення");
 
             }
             //проверка  новой версии
@@ -529,7 +529,7 @@ class Base extends \Zippy\Html\WebPage
             
             if(strlen($v) >0){
               // $list[] = array('title' => " Доступна нова версiя {$v}  <a target=\"_blank\" href=\"https://zippy.com.ua/update\">Перейти...</a> ");                
-               $list[] = array('title' => " Доступна нова версiя {$v}  <a href=\"/index.php?p=App/Pages/Update\">Перейти...</a> ");                
+               $list[] = array('type'=>'i','title' => " Доступна нова версiя {$v}  <a href=\"/index.php?p=App/Pages/Update\">Перейти...</a> ");                
             }
             
         }
