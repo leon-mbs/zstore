@@ -612,8 +612,8 @@ class OrderList extends \App\Pages\Base
             }         
          
   
-             $ait['ciprod'][]=$prod;
-             $this->_tvars['isciprod']=count($ait['ciprod'])>0;
+            $ait['ciprod'][]=$prod;
+            $this->_tvars['isciprod']=count($ait['ciprod'])>0;
 
             $this->_tvars['citems'][]=$ait;
 
