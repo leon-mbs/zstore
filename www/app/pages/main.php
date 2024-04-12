@@ -118,9 +118,9 @@ class Main extends Base
         if ($this->_tvars['wrdoc'] == true) {
             $data = array();
 
-            $sql = "SELECT u.username,d.document_number,d.document_id,d.amount,d.meta_desc,d.state,l.md  FROM (SELECT     document_id,user_id,MAX(createdon) AS md from docstatelog where     createdon >  " . $conn->DBDate(strtotime("-1 week", time())) . " GROUP BY document_id,user_id      ) l 
-                      join documents_view d  on l.document_id= d.document_id  
-                      join users_view u  on l.user_id= u.user_id where  1=1 {$br} ORDER  BY  md desc";
+            $sql = "SELECT u.username,d.document_number,d.document_id,d.amount,d.meta_desc,d.state ,d.lastupdate 
+                      from documents_view d    
+                      join users_view u  on d.user_id= u.user_id where  d.lastupdate >  " . $conn->DBDate(strtotime("-1 week", time())) . "  {$br} ORDER  BY  d.lastupdate desc,document_id desc";
 
 
             $rc = $conn->Execute($sql);
@@ -360,7 +360,7 @@ class Main extends Base
     public function rdoclistOnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new Label('wrd_date', \App\Helper::fd(strtotime($item->md))));
+        $row->add(new Label('wrd_date', \App\Helper::fd(strtotime($item->lastupdate))));
         $row->add(new Label('wrd_type', $item->meta_desc));
         $row->add(new Label('wrd_state', $this->_docstatelist[$item->state]));
         $row->add(new Label('wrd_user', $item->username));
@@ -388,9 +388,10 @@ class Main extends Base
         $data = array();
         $conn = $conn = \ZDB\DB::getConnect();
 
-        $sql = "SELECT u.username,d.document_number,d.amount,d.meta_desc,d.state,l.md  FROM (SELECT     document_id,user_id,MAX(createdon) AS md from docstatelog where  1=1 {$br} and createdon >  " . $conn->DBDate(strtotime("-1 week", time())) . " GROUP BY document_id,user_id      ) l 
-                      join documents_view d  on l.document_id= d.document_id  
-                      join users_view u  on l.user_id= u.user_id  ORDER  BY  md desc";
+            $sql = "SELECT u.username,d.document_number,d.document_id,d.amount,d.meta_desc,d.state ,d.lastupdate 
+                      from documents_view d    
+                      join users_view u  on d.user_id= u.user_id where  d.lastupdate >  " . $conn->DBDate(strtotime("-1 week", time())) . "  {$br} ORDER  BY  d.lastupdate desc,document_id desc";
+
 
         $rc = $conn->Execute($sql);
 
@@ -405,7 +406,7 @@ class Main extends Base
             $data['C' . $i] = $this->_docstatelist[$row['state']];
             $data['D' . $i] = array('value' => H::fa($row['amount']), 'format' => 'number');
             $data['E' . $i] = $row['username'];
-            $data['F' . $i] = \App\Helper::fd(strtotime($row['md']));
+            $data['F' . $i] = \App\Helper::fd(strtotime($row['lastupdate']));
         }
 
         H::exportExcel($data, $header, 'recentlydoc.xlsx');

@@ -1196,13 +1196,22 @@
          callPM('gettoasts',[],null,function(data){
           
              for(var t of data) {
-              
-                $(document).Toasts('create', {
-                icon: 'fa fa-exclamation-triangle text-warning',
-                        position:'bottomRight',
-                        title:t.title
+                if(t.type=="w")  {
+                    $(document).Toasts('create', {
+                    icon: 'fa fa-exclamation-triangle text-warning',
+                            position:'bottomRight',
+                            title:t.title
 
-                })           
+                    })           
+                }
+                if(t.type=="i")  {
+                    $(document).Toasts('create', {
+                    icon: 'fa fa-info-circle text-info',
+                            position:'bottomRight',
+                            title:t.title
+
+                    })           
+                }
                  
              }
              
