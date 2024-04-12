@@ -1325,7 +1325,16 @@ class Helper
     * 
     */
     public static function checkVer(){
-            $nocache= "?t=" . time()."&s=". self::getSalt().'&phpv='. phpversion() ;
+      
+            $phpv =   phpversion()  ;
+            $conn = \ZDB\DB::getConnect();
+      
+            if($conn->dataProvider=="postgres") {
+                $phpv = $phpv. '_pg';
+            }
+            
+      
+            $nocache= "?t=" . time()."&s=". self::getSalt().'&phpv='.$phpv;
        
             $v = @file_get_contents("https://zippy.com.ua/checkver.php".$nocache);
             $v = @json_decode($v, true);

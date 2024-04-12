@@ -25,6 +25,9 @@ class Update extends \App\Pages\Base
         global $_config; 
         parent::__construct();
  
+ 
+  
+ 
         $t = '?t='.time(); 
  
         $this->add(new  ClickLink('updatefile',$this,'OnFileUpdate')) ;
@@ -47,8 +50,14 @@ class Update extends \App\Pages\Base
 
         $this->_tvars['show']  = false   ; 
  
+        $phpv =   phpversion()  ;
+        $conn = \ZDB\DB::getConnect();
+  
+        if($conn->dataProvider=="postgres") {
+            $phpv = $phpv. '_pg';
+        }
 
-        $nocache= "?t=" . time()."&s=". H::getSalt() .'&phpv='. phpversion() ;
+        $nocache= "?t=" . time()."&s=". H::getSalt() .'&phpv='.$phpv ;
     
         $v = @file_get_contents("https://zippy.com.ua/checkver.php".$nocache);
         $data = @json_decode($v, true);
