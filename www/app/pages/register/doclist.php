@@ -49,11 +49,8 @@ class DocList extends \App\Pages\Base
 
         $filter = Filter::getFilter("doclist");
         if ($filter->isEmpty()) {
-            $filter->to = time();
-            //     $d = new \App\DateTime() ;
-            //            $d = $d->startOfMonth()->subMonth(1) ;
-            //            $filter->from = $d->getTimestamp();
-            $filter->from = time() - (7 * 24 * 3600);
+            $filter->to = 0;
+            $filter->from = 0;
             $filter->page = 1;
             $filter->doctype = 0;
             $filter->customer = 0;
@@ -89,7 +86,7 @@ class DocList extends \App\Pages\Base
 
         $this->add(new SortLink("sortdoc", "meta_desc", $this, "onSort"));
         $this->add(new SortLink("sortnum", "document_number", $this, "onSort"));
-        $this->add(new SortLink("sortdate", "document_id", $this, "onSort"));
+        $this->add(new SortLink("sortdate", "document_date", $this, "onSort"));
         $this->add(new SortLink("sortcust", "customer_name", $this, "onSort"));
         $this->add(new SortLink("sortamount", "amount", $this, "onSort"));
 
@@ -137,8 +134,8 @@ class DocList extends \App\Pages\Base
 
     public function onErase($sender) {
         $filter = Filter::getFilter("doclist");
-        $filter->to = time();
-        $filter->from = time() - (7 * 24 * 3600);
+        $filter->to = 0;
+        $filter->from = 0;
         $filter->page = 1;
         $filter->doctype = 0;
         $filter->status = 0;
@@ -152,8 +149,8 @@ class DocList extends \App\Pages\Base
         $filter->searchtext = '';
 
         $this->filter->clean();
-        $this->filter->to->setDate(time());
-        $this->filter->from->setDate(time() - (7 * 24 * 3600));
+        $this->filter->to->setDate(0);
+        $this->filter->from->setDate(0);
         $this->filter->doctype->setValue(0);
         $this->filter->status->setValue(0);
         $this->filter->author->setValue(0);
@@ -168,7 +165,7 @@ class DocList extends \App\Pages\Base
         //запоминаем  форму   фильтра
         $filter = Filter::getFilter("doclist");
         $filter->from = $this->filter->from->getDate();
-        $filter->to = $this->filter->to->getDate(true);
+        $filter->to = $this->filter->to->getDate();
         $filter->doctype = $this->filter->doctype->getValue();
         $filter->author = $this->filter->author->getValue();
         $filter->status = $this->filter->status->getValue();
@@ -189,8 +186,8 @@ class DocList extends \App\Pages\Base
 
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
-
         $doc = $doc->cast();
+ 
 
         $row->add(new ClickLink('name',$this, 'showOnClick'))->setValue($doc->meta_desc);
         $row->add(new ClickLink('number',$this, 'showOnClick'))->setValue($doc->document_number);
@@ -262,6 +259,16 @@ class DocList extends \App\Pages\Base
         $row->qr->setVisible( (strlen($doc->headerdata['hash']??'') > 0 ) || strlen(  $doc->getFiscUrl()) > 0   ) ;
         if( !in_array($doc->meta_name,['POSCheck']) ){
            $row->qr->setVisible(false);    
+        }  
+        if( $doc->meta_name == 'OfficeDoc' ){
+            
+
+            $row->edit->setVisible(false);
+            $row->delete->setVisible(false);
+            $row->cancel->setVisible(false);
+            $row->hasscan->setVisible(false);
+            $row->hasnotes->setVisible(false);
+            $row->name->setValue($doc->notes);
         }  
         
 
@@ -379,6 +386,17 @@ class DocList extends \App\Pages\Base
             $this->statusform->musers->setValue(0);            
         }
 
+        if( $this->_doc->meta_name == 'OfficeDoc' ){
+              
+            if (false == $this->_doc->checkShow()) {
+                return;
+            }
+            $this->statusform->setVisible(false);
+            
+
+        }          
+        
+        
     }
 
     //редактирование
@@ -681,6 +699,7 @@ class DocList extends \App\Pages\Base
         $this->statusform->setVisible(false) ;
         $this->docview->setVisible(false) ;      
     }
+
     public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
 
@@ -759,12 +778,19 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         //$user = System::getUser();
 
         $conn = \ZDB\DB::getConnect();
+        
+        $where = " 1=1 ";
+        
         $filter = Filter::getFilter("doclist");
-        if($usedate == true && $filter->status == 0 ) {
-            $where = " date(document_date) >= " . $conn->DBDate($filter->from) . " and  date(document_date) <= " . $conn->DBDate($filter->to);
-        } else {
-            $where = " 1=1 ";
-        }
+        if($usedate == true   ) {
+            if($filter->from > 0) {
+                $where .= " and date(document_date) >= " . $conn->DBDate($filter->from) ;
+            }
+            if($filter->to > 0) {
+                $where .= " and date(document_date) <= " . $conn->DBDate($filter->to) ;
+            }
+        }    
+            
         if ($filter->doctype > 0) {
             $where .= " and meta_id  ={$filter->doctype} ";
         }

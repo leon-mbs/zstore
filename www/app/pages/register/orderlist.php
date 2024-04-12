@@ -559,6 +559,7 @@ class OrderList extends \App\Pages\Base
             $ait=array('itemname'=>$it->itemname,'itemcode'=>$it->item_code,'itemqty'=>$it->quantity);
 
             $ait['citemsstore']  =  array();
+            $ait['toco']  =  "addItemToCO({$it->item_id})";
 
             foreach($stl as $k=>$v) {
                 $qty = $it->getQuantity($k);
@@ -568,7 +569,7 @@ class OrderList extends \App\Pages\Base
             }
             $ait['citemscust']  =  array();
             foreach(\App\Entity\CustItem::find("item_id={$it->item_id} ") as $ci) {
-                $cer = array('itcust'=>$ci->customer_name,'itcustcode'=>$ci->cust_code,'itcustcomment'=>$ci->comment);
+                $cer = array('itcust'=>$ci->customer_name,'itcustcode'=>$ci->cust_code);
                 $cer['itcustprice']  = H::fa($ci->price);
                 $cer['itcustupdated']  = H::fd($ci->updatedon);
 
@@ -577,8 +578,42 @@ class OrderList extends \App\Pages\Base
 
                 $ait['citemscust'][]=$cer;
             }
+         
+            $ait['ciprod']  =  array();
+         
 
+            $itpr=\App\Entity\Item::getFirst("disabled<> 1 and  item_id = {$it->item_id} and  item_id in(select pitem_id from item_set)") ;
+            if($itpr instanceof \App\Entity\Item)  {
+                $max = 1000000;
+                $parts = \App\Entity\ItemSet::find("pitem_id=".$itpr->item_id) ;
 
+                foreach($parts as $part) {
+                    $pi = \App\Entity\Item::load($part->item_id);
+                    if($pi==null) {
+                        continue;
+                    }
+                    $pqty = $pi->getQuantity();
+                    if($pqty==0) {
+                        $max=0;
+                        break;
+                    }
+                    $t = $pqty/$part->qty;
+                    if($t<$max) {
+                        $max = $t;
+                    }
+
+                }
+                if($max>0 && $max < 1000000) {
+                      $prod  =  array('prqty'=>H::fqty($max) );
+                }
+
+           
+
+            }         
+         
+  
+            $ait['ciprod'][]=$prod;
+            $this->_tvars['isciprod']=count($ait['ciprod'])>0;
 
             $this->_tvars['citems'][]=$ait;
 

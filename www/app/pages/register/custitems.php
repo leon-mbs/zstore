@@ -23,6 +23,9 @@ use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
 use Zippy\Html\Link\SubmitLink;
 
+/**
+* Журнал товары   у поставщика
+*/
 class CustItems extends \App\Pages\Base
 {
     private $_item;
@@ -81,7 +84,13 @@ class CustItems extends \App\Pages\Base
         $this->importform->add(new CheckBox("passfirst"));
         $this->importform->add(new DropDownChoice("icust", Customer::findArray("customer_name", "status=0 and  (detail like '%<type>2</type>%'  or detail like '%<type>0</type>%' )", "customer_name"), 0));
 
-
+        
+        $this->add(new Form('options'))->onSubmit($this, 'OnOption');
+        $this->options->add(new CheckBox("optupdate"))->setChecked(H::getKeyValBool('CI_optupdate'));
+        $this->options->add(new TextInput('optclean',H::getKeyVal('CI_optclean')));
+                                            
+                                   
+        $this->itemtable->listform->itemlist->Reload();
     }
 
     public function itemlistOnRow(\Zippy\Html\DataList\DataRow $row) {
@@ -92,7 +101,7 @@ class CustItems extends \App\Pages\Base
         $row->add(new Label('item_code', $item->item_code));
         $row->add(new Label('cust_code', $item->cust_code));
         $row->add(new Label('customer_name', $item->customer_name));
-        $row->add(new Label('qty', $item->quantity));
+        $row->add(new Label('qty', $item->quantity == 0 ? '-- ' : $item->quantity ));
 
         $row->add(new Label('price', $item->price));
 
@@ -333,6 +342,11 @@ class CustItems extends \App\Pages\Base
 
     }
 
+    public function OnOption($sender) {
+       H::setKeyVal('CI_optupdate',$sender->optupdate->isChecked()) ;
+       H::setKeyVal('CI_optclean',$sender->optclean->getText()) ;
+    }
+    
     public function oncsv($sender) {
         $list = $this->itemtable->listform->itemlist->getDataSource()->getItems(-1, -1);
         $header = array();

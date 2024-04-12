@@ -224,8 +224,11 @@ class GoodsIssue extends \App\Pages\Base
                         
                         if($order->headerdata['store']>0) {
                             $this->docform->store->setValue($order->headerdata['store']);
-                            
                         }
+                        if($order->headerdata['payment']>0) {
+                            $this->docform->payment->setValue($order->headerdata['payment']);
+                        }
+
 
 
                         // $this->calcTotal();
@@ -921,7 +924,7 @@ class GoodsIssue extends \App\Pages\Base
             $this->editdetail->editserial->setText($serial);
         }
 
-        $price = $item->getLastPartion(0, "", false);
+        $price = $item->getPartion($store_id);
         $this->editdetail->pricestock->setText(H::fa($price));
 
 
