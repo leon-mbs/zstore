@@ -49,8 +49,8 @@ class DocList extends \App\Pages\Base
 
         $filter = Filter::getFilter("doclist");
         if ($filter->isEmpty()) {
-            $filter->to = 0;
-            $filter->from = 0;
+            $filter->to =   0;
+            $filter->from = time() - (30 * 24 * 3600);
             $filter->page = 1;
             $filter->doctype = 0;
             $filter->customer = 0;
@@ -135,7 +135,7 @@ class DocList extends \App\Pages\Base
     public function onErase($sender) {
         $filter = Filter::getFilter("doclist");
         $filter->to = 0;
-        $filter->from = 0;
+        $filter->from = time() - (30 * 24 * 3600);
         $filter->page = 1;
         $filter->doctype = 0;
         $filter->status = 0;
@@ -150,7 +150,7 @@ class DocList extends \App\Pages\Base
 
         $this->filter->clean();
         $this->filter->to->setDate(0);
-        $this->filter->from->setDate(0);
+        $this->filter->from->setDate($filter->from);
         $this->filter->doctype->setValue(0);
         $this->filter->status->setValue(0);
         $this->filter->author->setValue(0);

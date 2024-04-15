@@ -38,9 +38,8 @@
                         <td   ><b zippy="title" ></b> </td>
                         <td >  <a zippy="customer" title="Вiдкрити карточку"></a>  </td>
                         <td > <small zippy="description"></small>   </td>
-                        <td class="text-center"> <a zippy="toon"><i class="fa fa-toggle-on text-success"></i></a> 
-                            <a zippy="tooff"><i class="fa fa-toggle-off"></i></a> 
-                        </td>
+                
+                        <td><a title="Виконано" zippy="done"><i class="fa fa-gavel"></i></a></td>
                         <td><a zippy="edit"><i class="fa fa-edit"></i></a></td>
 
                     </tr>
@@ -131,8 +130,16 @@
               </div>
            
              
+        <script>
 
-
+            function check_delete() {
+                return confirm("Видалити?")
+            }
+            
+            function check_done() {
+                return confirm("Виконано?")
+            }
+    </script>        
 
     </body>
 </html>
