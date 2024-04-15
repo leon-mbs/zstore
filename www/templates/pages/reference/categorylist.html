@@ -8,12 +8,12 @@
 
     <body>
         <div class="row">
-            {{#usecattree}}
-            <div class="col-12 col-md-11 col-xl-10">
+                {{#usecattree}}
+               <div class="col-12 col-md-11 col-xl-10">
                 {{/usecattree}}
                 {{^usecattree}}        
                 <div class="col-12 col-md-10 col-xl-8">
-                    {{/usecattree}}    
+                {{/usecattree}}    
                     <div zippy="categorytable">
                         <h3>Категорії товарів
                             <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
@@ -40,6 +40,7 @@
                                 <th class="text-right"> ТМЦ </th>
 
                                 <th></th>
+                                <th></th>
                             </tr>
                             <tr zippy="categorylist">
                                 {{#useimages}}
@@ -60,7 +61,7 @@
                                   <a zippy="up"><i class="fa fa-arrow-up"></i></a> &nbsp;    
                                  </td> 
                                 <td class="text-right"><span  zippy="qty" class="badge badge-success badge-pill"></span></td>
-
+                                <td> <a zippy="prices" title="Змiнити цiни">-<i class="fa fa-coins"></i>+ </a>   </td>
                                 <td style="width:75px"><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> 
                                     &nbsp;&nbsp;&nbsp;<a zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a></td>
                             </tr>
@@ -70,10 +71,12 @@
                     </div>
 
 
-                </div>
+              
             </div>
-            <div class="row">
-                <div class="col-6 col-md-4">
+         
+        </div>
+    <div class="row">
+                <div class="col-6 col-md-4  col-xl-3">
 
                     <form zippy="categorydetail" enctype="multipart/form-data">
                         <div class="form-group">
@@ -134,10 +137,39 @@
                             <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">
                             
                         </div>
-                    </form>
+                </form>   
                 </div>
-            </div>
+            </div>       
+        
+        <div class="row">
+            <div class="col-12  col-md-4  col-xl-3">
+                  
+                 <form  zippy="categoryprice">
+                    <h5 zippy="catprname"></h5>   
+                    <div class="form-group  ">
+                         <label   for="editprice">Змiнити на  суму або процент</label>
+                      <div   > 
+                            <input style="width: 100px"   class="form-control" zippy="chprice1"/>
+                            <input style="width: 100px"   class="form-control" zippy="chprice2"/>
+                            <input style="width: 100px"   class="form-control" zippy="chprice3"/>
+                            <input style="width: 100px"   class="form-control" zippy="chprice4"/>
+                            <input style="width: 100px"   class="form-control" zippy="chprice5"/>
+                            <br>
+                             <small class="form-text text-muted">Наприклад  5, -2, 3%, -0.5%. </small>
+                            <br>
+                           <input type="checkbox"  zippy="rnd">  <label   for="rnd">Закруглити до **9 </label>
+                           </div>
+                    </div>              
+                    <a zippy="backprice" class="btn btn-sucondary  ">Скасувати</a>
+                    &nbsp;&nbsp;<input  type="submit" value="Змiнити" class="btn btn-primary  ">
+                    
+ 
+                 </form>
+           </div>
         </div>
+
+         
+        
         <script>
 $(document).ready(function () {
 
