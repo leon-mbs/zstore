@@ -24,10 +24,7 @@ class Update extends \App\Pages\Base
      public function __construct() {
         global $_config; 
         parent::__construct();
- 
- 
-  
- 
+   
         $t = '?t='.time(); 
  
         $this->add(new  ClickLink('updatefile',$this,'OnFileUpdate')) ;
@@ -110,9 +107,9 @@ class Update extends \App\Pages\Base
         if ($data['fordb'] ===  $this->_tvars['curversiondb']   ) {
 
           $this->_tvars['showdb']  = true   ;
-          $sqlurl= $data['sqlm'] ;
+          $sqlurl= $data['sql'] ;
           if($_config['db']['driver'] == 'postgres'){
-             $sqlurl= $data['sqlp'] ;              
+           //  $sqlurl= $data['sqlp'] ;              
           }             
           $this->_tvars['sqlurl']  = $sqlurl .$t ;
           $this->_tvars['sql']  =  file_get_contents($this->_tvars['sqlurl'])   ;
@@ -212,7 +209,9 @@ class Update extends \App\Pages\Base
   
          if($_config['db']['driver'] == 'postgres'){
    
-
+              $this->setWarn('PostgreSql має бути оновлена  вручну') ;  
+              return;
+              
               $b = pg_connect("host={$_config['db']['host']} port=5432 dbname={$_config['db']['name']} user={$_config['db']['user']} password={$_config['db']['pass']}");
 
 
