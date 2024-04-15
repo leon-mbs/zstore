@@ -12,7 +12,7 @@ $_config['db']['pass'] = 'root'  ;
 
 
 /*
-//приклад  для  PosgreSQl
+//ксли  PosgreSQl
 $_config['db']['host'] = 'localhost'  ;
 $_config['db']['name'] = 'test1'  ;
 $_config['db']['user'] = 'postgres'  ;
