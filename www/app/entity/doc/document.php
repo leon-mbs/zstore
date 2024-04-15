@@ -165,8 +165,15 @@ class Document extends \ZCL\DB\Entity
         $this->content .= "</header>";
 
         $this->content .= "</doc>";
+  
+        $conn =   \ZDB\DB::getConnect();
+        if($conn->dataProvider=='postgres') {
+            $this->content .= base64_encode(serialize($this->detaildata) );    
+    
+        }    else {
+            $this->content .= serialize($this->detaildata);    
+        }    
         
-        $this->content .= serialize($this->detaildata);
         
         
         
@@ -203,7 +210,16 @@ class Document extends \ZCL\DB\Entity
         
         
         $det =    $xml=substr($this->content,$endxml+15) ;
-        $this->detaildata = @unserialize($det) ;
+      
+        $conn =   \ZDB\DB::getConnect();
+        if($conn->dataProvider=='postgres') {
+            $this->detaildata = @unserialize( @base64_decode($det) );
+    
+        }    else {
+            $this->detaildata = @unserialize($det) ;
+        }    
+      
+      
         if(!is_array($this->detaildata)) {
             $this->detaildata =[];
         }

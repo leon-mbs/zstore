@@ -77,9 +77,8 @@ class Jobs extends \App\Pages\Base
         $row->add(new Label("description"))->setText($event->description);
         $row->add(new Label("title"))->setText($event->title);
         $row->add(new Label("date", \App\Helper::fdt($event->eventdate)));
-        $row->add(new ClickLink('toon', $this, 'onDoneClick'))->setVisible($event->isdone != 1);
-        $row->add(new ClickLink('tooff', $this, 'onDoneClick'))->setVisible($event->isdone == 1);
         $row->add(new ClickLink('edit', $this, 'onEditClick'));
+        $row->add(new ClickLink('done', $this, 'onDoneClick'));
         $row->add(new Label("stwait"))->setVisible(false);
         $row->add(new Label("sttoday"))->setVisible(false);
         $row->add(new Label("stpast"))->setVisible(false);
@@ -112,7 +111,7 @@ class Jobs extends \App\Pages\Base
     public function onDoneClick($sender) {
         $item = $sender->getOwner()->getDataItem();
 
-        $item->isdone = strpos($sender->id, "toon") === 0 ? 1 : 0;
+        $item->isdone = 1;
         $item->save();
         $this->listpan->nlist->Reload();
 
@@ -168,6 +167,7 @@ class Jobs extends \App\Pages\Base
 
     public function onEditClick($sender) {
         $this->_event = $sender->getOwner()->getDataItem();
+        $this->_event->isdone = 0 ;       
         $this->editeventform->editeventtitle->setText($this->_event->title);
         $this->editeventform->editeventdesc->setText($this->_event->description);
         $this->editeventform->editeventdate->setDate($this->_event->eventdate);
