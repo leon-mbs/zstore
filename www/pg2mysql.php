@@ -5,10 +5,10 @@ require_once _ROOT . 'vendor/autoload.php';
 
 
 $connfrom = \ADONewConnection("postgres");
-$connfrom->Connect('localhost','postgres', 'root', 'test1');
+$connfrom->Connect('localhost','postgres', 'root', 'zstore');
 
 $connto = \ADONewConnection("mysqli");
-$connto->Connect('localhost','root', 'root', 'zstore2');
+$connto->Connect('localhost','root', 'root', 'zstore');
 $connto->Execute("SET NAMES 'utf8'");
 $connto->Execute("SET SQL_BIG_SELECTS=1");
 
@@ -38,7 +38,7 @@ function   movedata($table,$dates=[]){
        }
         
         
-      $b= $connto->AutoExecute($table, $row, "INSERT");
+       $connto->AutoExecute($table, $row, "INSERT");
         
     }     
 }    
