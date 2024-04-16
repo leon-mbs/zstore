@@ -13,12 +13,6 @@ $connto->Execute("SET NAMES 'utf8'");
 $connto->Execute("SET SQL_BIG_SELECTS=1");
 
 
-
-
-        
-// http://local.zstoretmp/pg2mysql.php
- 
-
  
 
 function   movedata($table,$dates=[]){
