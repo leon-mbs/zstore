@@ -2,7 +2,10 @@
 define('_ROOT', __DIR__ . '/');  
 require_once _ROOT . 'vendor/autoload.php';
 
+echo "Старт<br><br>";
+flush()  ;
 
+ 
 
 $connfrom = \ADONewConnection("postgres");
 $connfrom->Connect('localhost','postgres', 'root', 'zstore');
@@ -108,4 +111,4 @@ function   movedata($table,$dates=[]){
    
  
     
-echo "OK";
+echo "Данные перенесены";
