@@ -160,7 +160,7 @@ class Balance extends \App\Pages\Base
         $aeq = H::fa($aeq);
         
         $atotal = $amat + $aprod + $ambp + $aitem +$aother + $anal + $abnal + $aemp+ $ab + $as;
-        $ptotal = $pemp + $pb + $ps;
+        $ptotal = H::fa( doubleval($pemp) + doubleval($pb) + doubleval($ps) );
         $bal = $atotal - $ptotal ;
 
 

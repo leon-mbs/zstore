@@ -207,7 +207,7 @@ class TimeSheet extends \App\Pages\Base
         }
 
         $time->description = $post->desc;
-        $time->emp_id = $post->empid;
+        $time->emp_id = intval( $post->empid);
         if ($time->emp_id == 0) {
 
             return json_encode("Не обрано співробітника", JSON_UNESCAPED_UNICODE);
