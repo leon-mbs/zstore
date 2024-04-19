@@ -57,7 +57,7 @@ class FirmList extends \App\Pages\Base
         $this->firmdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
         $this->add(new Form('keyform'))->setVisible(false);
-        $this->keyform->add(new SubmitButton('send'))->onClick($this, 'onSend', true)  ;
+        $this->keyform->add(new SubmitButton('send'))->onClick($this, 'onSend')  ;
         $this->keyform->add(new Button('cancelppo'))->onClick($this, 'cancelOnClick');
         $this->keyform->add(new Button('delppo'))->onClick($this, 'delOnClick');
         $this->keyform->add(new TextInput('password'));
@@ -247,12 +247,11 @@ class FirmList extends \App\Pages\Base
             $certdata =  !empty($certfile['tmp_name']) ? @file_get_contents($certfile['tmp_name']) : '';
 
             if(strlen($password)==0  || strlen($keydata)==0) {
-                $this->addAjaxResponse("   $('#progress').text('Не вказано необхідні дані');   $('#send').attr('disabled',null);            ");
-
+                $this->setError('Не вказано необхідні дані') ;
                 return;
             }
             if(strlen($certdata)==0 && $isjks == false) {
-                $this->addAjaxResponse("   $('#progress').text('Не вказано необхідні дані');   $('#send').attr('disabled',null);            ");
+                $this->setError('Не вказано необхідні дані') ;
                 return;
             }
 
@@ -297,8 +296,7 @@ class FirmList extends \App\Pages\Base
                     $res = json_decode($result) ;
 
                     if(strlen($res->error) > 0) {
-
-                        $this->addAjaxResponse("   $('#progress').text({$res->error});   $('#send').attr('disabled',null);       ");
+                        $this->setErrorTopPage($res->error) ;
 
                         return;
 
@@ -319,7 +317,8 @@ class FirmList extends \App\Pages\Base
 
                     if($key==null) {
 
-                        $this->addAjaxResponse("   $('#progress').text('Invalid  key');   $('#send').attr('disabled',null);       ");
+
+                       $this->setErrorTopPage('Invalid  key') ;
 
                         return;
 
@@ -335,8 +334,8 @@ class FirmList extends \App\Pages\Base
 
             } catch(\Exception $ee) {
                 $msg = $ee->getMessage() ;
-                $msg = str_replace("'", "`", $msg) ;
-                $this->addAjaxResponse("   $('#progress').text('{$msg}');   $('#send').attr('disabled',null);   ");
+                $this->setErrorTopPage($msg) ;
+                H::logerror($msg) ;
                 return;
 
             }
@@ -435,10 +434,14 @@ class FirmList extends \App\Pages\Base
         $this->_firm->ppoisjks =  $isjks ? 1 : 0   ;
         $this->_firm->save();
 
-        $kl = "Ключ завантажений";
+        $this->setSuccess("Ключ завантажений") ;
 
-        $this->addAjaxResponse("   $('#progress').text('{$kl}')");
-
+        
+        $this->firmtable->setVisible(true);
+        $this->firmdetail->setVisible(false);
+        $this->keyform->setVisible(false);
+        $this->firmtable->firmlist->Reload();
+        
 
     }
 }

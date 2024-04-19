@@ -15,6 +15,7 @@ class Subscribe extends \ZCL\DB\Entity
 {
     //типы  событий
     public const EVENT_DOCSTATE = 1;
+    public const EVENT_NEWCUST  = 2;
     //типы сообщений
     public const MSG_NOTIFY = 1;
     public const MSG_EMAIL  = 2;
@@ -27,6 +28,7 @@ class Subscribe extends \ZCL\DB\Entity
     public const RSV_DOCAUTHOR = 2;
     public const RSV_USER      = 3;
     public const RSV_WH        = 4;
+    public const RSV_SYSTEM    = 5;
 
     protected function init() {
         $this->sub_id = 0;
@@ -80,16 +82,18 @@ class Subscribe extends \ZCL\DB\Entity
     public static function getEventList() {
         $list = array();
         $list[self::EVENT_DOCSTATE] = "Зміна статусу документа";
+    //    $list[self::EVENT_NEWCUST] = "Новий контрвгент";
 
         return $list;
     }
 
-    public static function getMsgTypeList() {
+    public static function getMsgTypeList($rt=0) {
 
         $sms = \App\System::getOptions('sms')  ;
 
         $list = array();
-        $list[self::MSG_NOTIFY] = "Системне повідомлення";
+        $list[self::MSG_NOTIFY] = "Текст";
+      
         if(\App\System::useEmail()) {
             $list[self::MSG_EMAIL] = "E-mail";
         }
@@ -106,16 +110,35 @@ class Subscribe extends \ZCL\DB\Entity
 
         }
 
+        
+        if($rt==self::RSV_CUSTOMER) {
+           unset($list[self::MSG_BOT])  ;
+           unset($list[self::MSG_NOTIFY])  ;
+        }
+        
+        if($rt==self::RSV_WH || $rt==self::RSV_SYSTEM) {
+           unset($list[self::MSG_EMAIL])  ;
+           unset($list[self::MSG_VIBER])  ;
+           unset($list[self::MSG_BOT])  ;
+           unset($list[self::MSG_SMS])  ;
+        }
+    
 
         return $list;
     }
 
-    public static function getRecieverList() {
+    public static function getRecieverList($et=0) {
         $list = array();
-        $list[self::RSV_CUSTOMER] = "Контрагент документа";
-        $list[self::RSV_DOCAUTHOR] = "Автор документа";
+        if($et==self::EVENT_DOCSTATE) {
+           $list[self::RSV_DOCAUTHOR] = "Автор документу";
+           $list[self::RSV_CUSTOMER] = "Контрагент документу";
+        }
+        if($et==self::EVENT_NEWCUST) {
+           $list[self::RSV_CUSTOMER] = "Контрагент";
+        }
         $list[self::RSV_USER] = "Користувач системи";
         $list[self::RSV_WH] = "Web Hook";
+        $list[self::RSV_SYSTEM] = "Системний лог";
 
         return $list;
     }
@@ -171,11 +194,11 @@ class Subscribe extends \ZCL\DB\Entity
                     $notify = $sub->user_id;
                 }
             }
-            $text = $sub->getText($doc);
+            $text = $sub->getTextDoc($doc);
             if ($notify > 0 && $sub->msg_type == self::MSG_NOTIFY) {
                 self::sendNotify($notify, $text);
             }
-            if ($notify == 0 && $sub->msg_type == self::MSG_NOTIFY) {
+            if (  $sub->reciever_type== self::RSV_SYSTEM) {
                 self::sendNotify(\App\Entity\Notify::SYSTEM, $text);
             }
 
@@ -225,13 +248,13 @@ class Subscribe extends \ZCL\DB\Entity
                 return;
             }
             
-            if ($sub->msg_type != self::MSG_NOTIFY) {
+            if ($sub->reciever_type != self::RSV_SYSTEM ){
                 
-                $text="Event: Документ ".$doc->meta_desc . "({$doc->document_number}) "; 
+            //    $text="Event: Документ ".$doc->meta_desc . "({$doc->document_number}) "; 
                 
-                $text .= (' Стан ' .\App\Entity\Doc\Document::getStateName($doc->state) ); 
+             //   $text .= (' Стан ' .\App\Entity\Doc\Document::getStateName($doc->state) ); 
                 
-                self::sendNotify(\App\Entity\Notify::SYSTEM, $text);
+             //   self::sendNotify(\App\Entity\Notify::SYSTEM, $text);
             }
             
             
@@ -244,7 +267,7 @@ class Subscribe extends \ZCL\DB\Entity
      *
      * @param mixed $doc
      */
-    public function getText($doc) {
+    private function getTextDoc($doc) {
         //в  разметке  одинарные
         $this->msgtext = str_replace('{', '{{', $this->msgtext);
         $this->msgtext = str_replace('}', '}}', $this->msgtext);
@@ -253,6 +276,8 @@ class Subscribe extends \ZCL\DB\Entity
         $header = array();
 
 
+        $header['document_id'] = $doc->document_id;
+        $header['customer_id'] = $doc->customer_id;
         $header['document_number'] = $doc->document_number;
         $header['doc_dn'] = intval(preg_replace('/[^0-9]/', '', $doc->document_number));
         $header['document_date'] = \App\Helper::fd($doc->document_date);
