@@ -56,26 +56,59 @@ class Subscribes extends \App\Pages\Base
         $this->editform->add(new ClickLink('delete'))->onClick($this, 'OnDelete');
 
         $this->Reload();
+
     }
 
     public function update($sender) {
+
+
+   
+
         $et = $this->editform->editeventtype->getValue();
+        if($sender->id=='editeventtype') {
+            $l=Subscribe::getRecieverList($et) ;
+            $this->editform->editrecievertype->setOptionList($l);
+            $this->editform->editrecievertype->setValue(array_shift($l));            
 
-        $this->editform->editdoctype->setVisible($et == Subscribe::EVENT_DOCSTATE);
-        $this->editform->editstate->setVisible($et == Subscribe::EVENT_DOCSTATE);
-        $rt = $this->editform->editrecievertype->getValue();
-        $this->editform->edituser->setVisible($rt == Subscribe::RSV_USER);
-        $mt = $this->editform->editmsgtype->getValue();
-        $this->editform->editmsgsubject->setVisible($mt == Subscribe::MSG_EMAIL);
-        $this->editform->editattach->setVisible( $mt == Subscribe::MSG_BOT);
-        $this->editform->edithtml->setVisible($mt == Subscribe::MSG_EMAIL || $mt == Subscribe::MSG_BOT);
-
-        $this->editform->editurl->setVisible(false);
-        if($rt == Subscribe::RSV_WH) {
-            $this->editform->editmsgtype->setVisible(false);
-            $this->editform->editurl->setVisible(true);
-            
+            if($et == Subscribe::EVENT_DOCSTATE) {
+                $this->editform->editdoctype->setVisible(true);
+                $this->editform->editstate->setVisible(true);
+            }
+            if($et == Subscribe::EVENT_NEWCUST) {
+                $this->editform->editdoctype->setVisible(false);
+                $this->editform->editstate->setVisible(false);
+            }
+            $this->update($this->editform->editrecievertype) ;    
+            return;       
         }
+        $rt = $this->editform->editrecievertype->getValue();
+
+        if($sender->id=='editrecievertype') {
+            $l=Subscribe::getMsgTypeList($rt) ;
+            $this->editform->editmsgtype->setOptionList($l);
+            $this->editform->editmsgtype->setValue(array_shift($l));            
+            $this->update($this->editform->editmsgtype) ;    
+            return;       
+          
+        }        
+        $mt = $this->editform->editmsgtype->getValue();
+        
+        if($sender->id=='editmsgtype') {
+            $this->editform->editmsgsubject->setVisible(false);
+            $this->editform->editattach->setVisible( false);
+            $this->editform->edithtml->setVisible(false);
+            $this->editform->edituser->setVisible(false);
+            $this->editform->editmsgtype->setVisible(true);
+            
+            $this->editform->editurl->setVisible($mt == Subscribe::RSV_WH);
+            
+            if($mt == Subscribe::MSG_EMAIL) {
+                $this->editform->editmsgsubject->setVisible(true);
+            }            
+            return;       
+          
+        }        
+
         
         
     }
@@ -111,6 +144,8 @@ class Subscribes extends \App\Pages\Base
         $this->editform->editeventtype->setValue(Subscribe::EVENT_DOCSTATE);
         $this->editform->editrecievertype->setValue(Subscribe::EVENT_DOCSTATE);
         $this->update($this->editform->editeventtype);
+        
+        $this->update( $this->editform->editeventtype) ;        
     }
 
     public function OnEdit($sender) {
@@ -134,6 +169,8 @@ class Subscribes extends \App\Pages\Base
         $this->update($this->editform->editeventtype);
         $this->plist->setVisible(false);
         $this->editform->setVisible(true);
+        
+        $this->update( $this->editform->editeventtype) ;
     }
 
     public function OnSave($sender) {
