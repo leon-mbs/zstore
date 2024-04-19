@@ -121,13 +121,12 @@
                         <label for="editdate">Дата</label>
                         <input v-model="editdate" required="required" class="form-control"  type="date" />
                     </div>
-                    <div class="form-group">
-                        <label for="editfrom">З</label>
-                        <input v-model="editfrom" required="required"  class="form-control"  type="time" />
-                    </div>
-                    <div class="form-group">
-                        <label for="editto">По</label>
-                        <input  v-model="editto" required="required" type="time" class="form-control" />
+                    <div class="form-group row">
+                         
+                       <div class="col-auto pt-1"> <label for="editfrom">З</label> </div>
+                       <div class="col-auto"> <input v-model="editfrom" required="required"  class="form-control"  type="time" /></div>
+                       <div class="col-auto pt-1"> <label for="editto">По</label></div>
+                       <div class="col-auto"> <input  v-model="editto" required="required" type="time" class="form-control" /></div>
                     </div>
                     <div class="form-group">
                         <label for="edittype">Тип</label>

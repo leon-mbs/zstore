@@ -13,16 +13,17 @@
                     <table class="table  table-sm">
                         <tr>
                             <th>Тип події</th>
-                            <th>Тип повiдомлення</th>
                             <th>Отримувач</th>
+                            <th>Тип повiдомлення</th>
+                     
                             <th> </th>
                             <th> </th>
 
                         </tr>
                         <tr zippy="subslist">
                             <td zippy="sub_typename"> </td>
-                            <td zippy="msg_typename"> </td>
                             <td zippy="reciever_typename"> </td>
+                            <td zippy="msg_typename"> </td>
                             <td zippy="desc"> </td>
                             <td> <a zippy="edit"><i class="fa fa-edit"></i> </a> </td>
 
@@ -83,7 +84,7 @@
                     <div class="form-group">
                         <label for="editmsgtype">Тип повiдомлення</label>
                         <select   class="form-control" zippy="editmsgtype">
-                            <option value="0">Не обрано</option>  
+
                         </select>
                     </div>  
                     <div class="form-group">
@@ -146,8 +147,8 @@
                         Допускаються наступні теги:
                         <table  >
                             <tr><td><small><b>{customer_name}</b></small> </td><td><small>Ім'я контрагента</small></td></tr>
-                            <tr><td><small><b>{document_number}</b></small>< /td><td><small>Номер документа</small></td></tr>
-                            <tr><td><small><b>{doc_dn}</b></small>< /td><td><small>Номер документа (тiльки цифри)</small></td></tr>
+                            <tr><td><small><b>{document_number}</b></small></td><td><small>Номер документа</small></td></tr>
+                            <tr><td><small><b>{doc_dn}</b></small></td><td><small>Номер документа (тiльки цифри)</small></td></tr>
                             <tr><td><small><b>{document_date}</b></small> </td><td><small>Дата документа</small></td></tr>
                             <tr><td><small><b>{document_type}</b></small> </td><td><small>Тип документа</small></td></tr>
                             <tr><td><small><b>{amount}</b></small> </td><td><small>Сума по документу</small></td></tr>
@@ -168,7 +169,7 @@
                             <tr><td><small><b>{docview} </b></small></td><td><small>Зовнiшнє посилання (URL) на журнал документiв (якщо сесiя з автологiном)</small></td></tr>
                             <tr><td><small><b>{payurl} </b></small></td><td><small>Посилання на оплату по реквiзитах </small></td></tr>
                             <tr><td><small><b>{botname} </b></small></td><td><small>Телеграм-бот </small></td></tr>
-
+                          
                         </table>
                                Якщо потрібно вивести текст в залежності від наявності значення, наприклад,
                         <br>
@@ -183,7 +184,7 @@
 
                         <table  >
                             <tr><td><small><b>{item_name}</b></small> </td><td><small>Найменування товару</small></td></tr>
-                            <tr><td><small><b>{item_code}</b></small>< /td><td><small>Артикул</small></td></tr>
+                            <tr><td><small><b>{item_code}</b></small></td><td><small>Артикул</small></td></tr>
                             <tr><td><small><b>{item_barcode}</b></small> </td><td><small>Штрих код</small></td></tr>
                             <tr><td><small><b>{msr}</b></small> </td><td><small>Од. вимiру</small></td></tr>
                             <tr><td><small><b>{qty} </b></small></td><td><small>Кiлькiсть</small></td></tr>

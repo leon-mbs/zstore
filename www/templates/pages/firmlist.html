@@ -187,10 +187,10 @@
                 <div class="form-check">
                    <input zippy="outher" type="checkbox" class="form-check-input">
                    <label class="form-check-label" for="outher">Використати зовнiшнiй сервер</label>
-                  <br> <small>Якщо помилка з таймаутом</small>
+                  <br> <small>Якщо помилка з таймаутом (завантаження  може  зайняти кілька хвилин)</small>
                </div>                              
                  
-                <span style="display:block" id="progress"></span>
+
                 <input zippy="cancelppo" type="button" value="До переліку" class="btn btn-outline-primary mr-1 ">
                 <input zippy="send" type="button" value="Завантажити" class="btn btn-primary  mr-2 ">
                 
@@ -208,9 +208,9 @@
             }
                
             function check_send(){
-                $('#progress').text('Завантаження...');
-                $('#send').attr('disabled','disabled');
-               
+            
+              document.getElementById('dialogwait').showModal()
+
                 return  true;
             }
             

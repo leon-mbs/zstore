@@ -122,17 +122,17 @@ class GoodsReceipt extends Document
 
             if ($total > 0) {
 
-                $item->price = H::fa($item->price * $k); //пересчитываем  учетную цену
+                $iprice = H::fa($item->price * $k); //пересчитываем  учетную цену
             } else {
-                $item->price = 0;
+                $iprice = 0;
             }
-            $item->amount = $item->price * $item->quantity;
-            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $item->price, $item->snumber, $item->sdate, true);
+       //     $item->amount = $iprice * $item->quantity;
+            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $iprice, $item->snumber, $item->sdate, true);
 
-            $sc = new Entry($this->document_id, $item->price * $item->quantity, $item->quantity);
+            $sc = new Entry($this->document_id, $iprice * $item->quantity, $item->quantity);
             $sc->setStock($stock->stock_id);
-            // $sc->setExtCode($item->price); //Для АВС
-            $sc->setOutPrice($item->price);
+            // $sc->setExtCode($iprice); //Для АВС
+            $sc->setOutPrice($iprice);
             $sc->tag=Entry::TAG_BAY;
 
             $sc->save();
