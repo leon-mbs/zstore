@@ -188,10 +188,7 @@ class IOStateListDataSource implements \Zippy\Interfaces\DataSource
         $sql = "select  i.*,d.username,d.meta_id,d.document_number,d.document_date  from documents_view  d join iostate_view i on d.document_id = i.document_id where " . $this->getWhere() . " order  by  id desc   ";
         if ($count > 0) {
             $limit =" limit {$start},{$count}";
-            if($conn->dataProvider=="postgres") {
-                $limit =" limit {$count} offset {$start}";
-            }
-
+         
 
             $sql .= $limit;
         }

@@ -147,9 +147,7 @@ class StockListDataSource implements \Zippy\Interfaces\DataSource
         if ($count > 0) {
 
             $limit =" limit {$start},{$count}";
-            if($conn->dataProvider=="postgres") {
-                $limit =" limit {$count} offset {$start}";
-            }
+        
 
 
             $sql .= $limit;

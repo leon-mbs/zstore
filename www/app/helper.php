@@ -1326,10 +1326,7 @@ class Helper
             $phpv =   phpversion()  ;
             $conn = \ZDB\DB::getConnect();
       
-            if($conn->dataProvider=="postgres") {
-                $phpv = $phpv. '_pg';
-            }
-            
+          
       
             $nocache= "?t=" . time()."&s=". self::getSalt().'&phpv='.$phpv;
        

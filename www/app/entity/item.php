@@ -671,9 +671,7 @@ class Item extends \ZCL\DB\Entity
         }
 
         $limit =" limit 0,1";
-        if($conn->dataProvider=="postgres") {
-            $limit =" limit 1";
-        }
+  
         $sql .= " order  by  sdate  desc ". $limit;
 
 
