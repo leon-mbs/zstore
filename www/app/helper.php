@@ -367,10 +367,7 @@ class Helper
         $data = file_get_contents($file['tmp_name']);
 
 
-        if($conn->dataProvider=='postgres') {
-            $data = pg_escape_bytea($data);
-
-        }
+      
         $data = $conn->qstr($data);
         $sql = "insert  into filesdata (file_id,filedata) values ({$id},{$data}) ";
         $conn->Execute($sql);

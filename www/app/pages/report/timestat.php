@@ -64,9 +64,7 @@ class TimeStat extends \App\Pages\Base
         $detail = array();
         $total = 0;
         $sql = "select emp_name,sum(tm) as tm  from (select  emp_name,  (UNIX_TIMESTAMP(t_end)-UNIX_TIMESTAMP(t_start)  - t_break*60)   as  tm from timesheet_view where  t_type = {$type} and  t_start>={$_from} and   t_start<={$_to}  and  disabled <> 1) t  group by emp_name order by emp_name ";
-        if($conn->dataProvider=="postgres") {
-            $sql = "select emp_name,sum(tm) as tm  from (select  emp_name,  ( extract(EPOCH from (t_end -  t_start) ) - t_break*60)   as  tm from timesheet_view where  t_type = {$type} and  t_start>={$_from} and   t_start<={$_to}  and  disabled <> 1) t  group by emp_name order by emp_name ";
-        }
+    
         $stat = $conn->Execute($sql);
         foreach ($stat as $row) {
 

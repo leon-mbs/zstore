@@ -345,9 +345,7 @@ class OLAP extends \App\Pages\Base
 
         $concat=" concat(year(dv.document_date),'-',( case when month(dv.document_date)< 10 then concat('0',month(dv.document_date) )  else concat('',month(dv.document_date) ) end  ) )  ";
 
-        if($conn->dataProvider=='postgres') {
-            $concat=" concat(DATE_PART( 'year',dv.document_date),'-',DATE_PART('month',dv.document_date))  ";
-        }
+ 
 
         $where = "  dv.document_date >= " . $conn->DBDate($this->startform->stfrom->getDate()) . " 
                     AND dv.document_date <= " . $conn->DBDate($this->startform->stto->getDate()) ;
@@ -429,9 +427,6 @@ class OLAP extends \App\Pages\Base
 
             $concat=" concat(year(pv.paydate),'-',( case when month(pv.paydate)< 10 then concat('0',month(pv.paydate) )  else concat('',month(pv.paydate) ) end  ) )  ";
 
-            if($conn->dataProvider=='postgres') {
-                $concat=" concat(DATE_PART( 'year',pv.paydate),'-',DATE_PART('month',pv.paydate)) ";
-            }
 
             $where = " pv.amount <> 0  and  pv.paydate >= " . $conn->DBDate($this->startform->stfrom->getDate()) . " 
                         AND pv.paydate <= " . $conn->DBDate($this->startform->stto->getDate()) ;
