@@ -61,6 +61,8 @@ class Customer extends \ZCL\DB\Entity
         $this->detail .= "<comment><![CDATA[{$this->comment}]]></comment>";
         $this->detail .= "</detail>";
 
+  
+        
         return true;
     }
 
@@ -100,6 +102,11 @@ class Customer extends \ZCL\DB\Entity
         parent::afterLoad();
     }
 
+    public function afterSave($update) {
+        if($update==false) {
+            \App\Entity\Subscribe::onNewCustomer($this->customer_id) ;
+        }       
+    }
     public function beforeDelete() {
 
         $conn = \ZDB\DB::getConnect();
