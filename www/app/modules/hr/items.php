@@ -116,11 +116,7 @@ class Items extends \App\Pages\Base
                                     $image->content = $im;
                                     $image->mime = $imagedata['mime'];
                               
-                                    if($conn->dataProvider=='postgres') {
-                                        $image->thumb = pg_escape_bytea($image->thumb);
-                                        $image->content = pg_escape_bytea($image->content);
-
-                                    }
+                    
                                     $image->save();
                                     $c->image_id = $image->image_id;
                                     $c->save();
@@ -456,11 +452,7 @@ class Items extends \App\Pages\Base
                             $image->content = $im;
                             $image->mime = $imagedata['mime'];
 
-                            if($conn->dataProvider=='postgres') {
-                                $image->thumb = pg_escape_bytea($image->thumb);
-                                $image->content = pg_escape_bytea($image->content);
-
-                            }
+                          
                             $image->save();
                             $item->image_id = $image->image_id;
                             break;

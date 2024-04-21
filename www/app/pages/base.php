@@ -26,6 +26,9 @@ class Base extends \Zippy\Html\WebPage
             return;
         }
 
+ 
+         
+        
         $this->_tvars['curversion'] = System::CURR_VERSION ;
 
         $options = System::getOptions('common');
@@ -236,9 +239,7 @@ class Base extends \Zippy\Html\WebPage
 
 
             $w = "     TIME_TO_SEC(timediff(now(),lastactive)) <300  ";
-            if($conn->dataProvider=="postgres") {
-                $w = "     EXTRACT(EPOCH FROM now() - lastactive) <300  ";
-            }
+          
 
             if ($this->branch_id > 0) {
                 $w .= "  and  employee_id  in (select employee_id from employees where branch_id ={$this->branch_id}) ";
@@ -282,7 +283,10 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars['cron']  = true;
         }
 
-
+        
+        if($_config['db']['driver'] == 'postgres'){
+            $this->setError('Поддержка Postgres прекращена!') ;
+        }
     }
 
     public function LogoutClick($sender) {

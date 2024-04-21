@@ -252,12 +252,7 @@ class ProductList extends \App\Pages\Base
 
             $thumb->resize(512, 512);
             $image->thumb = $thumb->getImageAsString();
-            $conn =   \ZDB\DB::getConnect();
-            if($conn->dataProvider=='postgres') {
-                $image->thumb = pg_escape_bytea($image->thumb);
-                $image->content = pg_escape_bytea($image->content);
-
-            }
+         
 
             $image->save();
             $this->_item->productdata->images[] = $image->image_id;

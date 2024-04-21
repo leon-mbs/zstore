@@ -152,9 +152,7 @@ class Stock extends \ZCL\DB\Entity
                 if ($last == null) {
                     $conn = \ZDB\DB::getConnect();
                     $limit =" limit 0,1";
-                    if($conn->dataProvider=="postgres") {
-                        $limit =" limit 1";
-                    }
+                
                     $lastpartion = $conn->GetOne("select coalesce(partion,0) from  store_stock  where  qty > 0 and  item_id={$item->item_id} order  by  stock_id desc ".$limit);
                     if ($lastpartion == 0) {
                         $lastpartion = $item->price/2;  //типа  учетная  цена

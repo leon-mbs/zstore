@@ -367,10 +367,7 @@ class Helper
         $data = file_get_contents($file['tmp_name']);
 
 
-        if($conn->dataProvider=='postgres') {
-            $data = pg_escape_bytea($data);
-
-        }
+      
         $data = $conn->qstr($data);
         $sql = "insert  into filesdata (file_id,filedata) values ({$id},{$data}) ";
         $conn->Execute($sql);
@@ -1329,10 +1326,7 @@ class Helper
             $phpv =   phpversion()  ;
             $conn = \ZDB\DB::getConnect();
       
-            if($conn->dataProvider=="postgres") {
-                $phpv = $phpv. '_pg';
-            }
-            
+          
       
             $nocache= "?t=" . time()."&s=". self::getSalt().'&phpv='.$phpv;
        
