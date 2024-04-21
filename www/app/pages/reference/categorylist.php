@@ -411,6 +411,8 @@ class CategoryList extends \App\Pages\Base
        
         foreach($this->_cplist as $it ) {
             
+            if(round($it->newp)==0) continue;
+            
             $item= \App\Entity\Item::load($it->item_id);
             $item->{'price'.$pt}   = round($it->newp);
             $item->save();
@@ -430,12 +432,12 @@ class CategoryList extends \App\Pages\Base
         if($pt < 1)  return;
         
         $v =trim($this->categoryprice->chprice->getText());
+        $isper = strpos($v,'%') > 0;
+        $v = doubleval(str_replace('%','',$v) );
        
         $rnd= $this->categoryprice->rnd->isChecked();
         
         foreach( \App\Entity\Item::find("disabled <> 1 and  cat_id=". $this->_category->cat_id,'itemname') as $item ) {
-            $isper = strpos($v,'%') > 0;
-            $v = doubleval(str_replace('%','',$v) );
         
             $ip=$item->{'price'.$pt} ;
             if(strpos($ip,'%') > 0) continue;
@@ -465,10 +467,7 @@ class CategoryList extends \App\Pages\Base
                 
             }
             
-           // $item->{'price'.$pt} = $ip; 
-        
-           // $item->save();                     
-           
+ 
            
            $di = new \App\DataItem() ;
            $di->item_id=$item->item_id;
