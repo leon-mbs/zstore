@@ -207,13 +207,7 @@ class items extends JsonRPC
 
                             $item->thumb = "data:{$image->mime};base64," . base64_encode($thumb->getImageAsString());
                         }
-                        $conn =   \ZDB\DB::getConnect();
-                        if($conn->dataProvider=='postgres') {
-                            $image->thumb = pg_escape_bytea($image->thumb);
-                            $image->content = pg_escape_bytea($image->content);
-
-                        }
-
+                  
                         $image->save();
                         $item->image_id = $image->image_id;
                     

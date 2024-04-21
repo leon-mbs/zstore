@@ -49,11 +49,7 @@ class Update extends \App\Pages\Base
  
         $phpv =   phpversion()  ;
         $conn = \ZDB\DB::getConnect();
-  
-        if($conn->dataProvider=="postgres") {
-            $phpv = $phpv. '_pg';
-        }
-
+     
         $nocache= "?t=" . time()."&s=". H::getSalt() .'&phpv='.$phpv ;
     
         $v = @file_get_contents("https://zippy.com.ua/checkver.php".$nocache);
@@ -108,9 +104,6 @@ class Update extends \App\Pages\Base
 
           $this->_tvars['showdb']  = true   ;
           $sqlurl= $data['sql'] ;
-          if($_config['db']['driver'] == 'postgres'){
-           //  $sqlurl= $data['sqlp'] ;              
-          }             
           $this->_tvars['sqlurl']  = $sqlurl .$t ;
           $this->_tvars['sql']  =  file_get_contents($this->_tvars['sqlurl'])   ;
              
@@ -182,9 +175,8 @@ class Update extends \App\Pages\Base
   
        try{                 
                   
-         if( ($_config['db']['driver'] ??'') == ''  ){
-
-            $b= mysqli_connect($_config['db']['host'], $_config['db']['user'], $_config['db']['pass'], $_config['db']['name']) ; 
+  
+             $b= mysqli_connect($_config['db']['host'], $_config['db']['user'], $_config['db']['pass'], $_config['db']['name']) ; 
 
              if($b ==false) {
                    $this->setErrorTopPage('Invalid connect')  ;
@@ -205,37 +197,7 @@ class Update extends \App\Pages\Base
             
                  
              }
-         }
   
-         if($_config['db']['driver'] == 'postgres'){
-   
-              $this->setWarn('PostgreSql має бути оновлена  вручну') ;  
-              return;
-              
-              $b = pg_connect("host={$_config['db']['host']} port=5432 dbname={$_config['db']['name']} user={$_config['db']['user']} password={$_config['db']['pass']}");
-
-
-             if($b ==false) {
-                   $this->setErrorTopPage('Invalid connect')  ;
-                   return;
-             } 
-           
-             foreach($sql_array as $s) {
-                 $s = trim($s);
-                 if(strlen($s)==0) {
-                     continue;
-                 }
-                 $r= pg_query($b,$s) ;
-                 if($r ==false) {
-                       $msg= pg_execute()    ;
-                       $this->setErrorTopPage($s.' error') ;
-                       return;
-                 } 
-            
-                 
-             }       
-         }  
-
  
 
          $this->setSuccess('БД оновлена')  ;

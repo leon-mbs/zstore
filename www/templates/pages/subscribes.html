@@ -144,9 +144,10 @@
                         Для системних повідомлень та e-mail в розмітці можна використовувати HTML.
                         <a href="https://core.telegram.org/bots/api#html-style">Доступні теги</a> для відправки через Телеграм.
                         <br>
-                        Допускаються наступні теги:
+                        Допускаються наступні теги для документу :
                         <table  >
                             <tr><td><small><b>{customer_name}</b></small> </td><td><small>Ім'я контрагента</small></td></tr>
+                            <tr><td><small><b>{document_id}</b></small></td><td><small>ID документа</small></td></tr>
                             <tr><td><small><b>{document_number}</b></small></td><td><small>Номер документа</small></td></tr>
                             <tr><td><small><b>{doc_dn}</b></small></td><td><small>Номер документа (тiльки цифри)</small></td></tr>
                             <tr><td><small><b>{document_date}</b></small> </td><td><small>Дата документа</small></td></tr>
@@ -171,6 +172,14 @@
                             <tr><td><small><b>{botname} </b></small></td><td><small>Телеграм-бот </small></td></tr>
                           
                         </table>
+                        Допускаються наступні теги для контрагента :
+                        <table  >
+                            <tr><td><small><b>{customer_name}</b></small> </td><td><small>Ім'я контрагента</small></td></tr>
+                            <tr><td><small><b>{customer_id}</b></small></td><td><small>ID контрагента</small></td></tr>
+                        
+                        </table>
+                        
+                        
                                Якщо потрібно вивести текст в залежності від наявності значення, наприклад,
                         <br>
                              {#credit}

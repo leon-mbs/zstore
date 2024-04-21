@@ -80,9 +80,6 @@ class TimeSheet extends \App\Pages\Base
 
         $tn = TimeItem::getTypeTime();
         $sql="select t_type,sum(tm) as tm, count(distinct dd) as dd   from (select t_type, date(t_start) as dd, (UNIX_TIMESTAMP(t_end)-UNIX_TIMESTAMP(t_start)  - t_break*60)   as  tm from timesheet where  emp_id = {$emp_id} and  date(t_start)>=date({$t_start}) and  date( t_start)<= date( {$t_end} ) ) t  group by t_type order by t_type ";
-        if($conn->dataProvider=="postgres") {
-            $sql="select t_type,sum(tm) as tm, count(distinct dd) as dd   from (select t_type, date(t_start) as dd, (extract(epoch from t_end) - extract(epoch from t_start)  - t_break*60)   as  tm from timesheet where  emp_id = {$emp_id} and  date(t_start)>=date({$t_start}) and  date( t_start)<= date( {$t_end} ) ) t  group by t_type order by t_type ";
-        }
 
         $stat = $conn->Execute($sql);
         foreach ($stat as $row) {

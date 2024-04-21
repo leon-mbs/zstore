@@ -88,6 +88,11 @@ class Subscribes extends \App\Pages\Base
             $this->editform->editmsgtype->setOptionList($l);
             $this->editform->editmsgtype->setValue(array_shift($l));            
             $this->update($this->editform->editmsgtype) ;    
+            
+            $this->editform->edituser->setVisible($rt==Subscribe::RSV_USER);
+
+            
+            
             return;       
           
         }        
@@ -97,8 +102,6 @@ class Subscribes extends \App\Pages\Base
             $this->editform->editmsgsubject->setVisible(false);
             $this->editform->editattach->setVisible( false);
             $this->editform->edithtml->setVisible(false);
-            $this->editform->edituser->setVisible(false);
-            $this->editform->editmsgtype->setVisible(true);
             
             $this->editform->editurl->setVisible($mt == Subscribe::RSV_WH);
             

@@ -645,9 +645,6 @@ class Document extends \ZCL\DB\Entity
             $branch = " and branch_id=" . $branch_id;
         }
         $limit =" limit 0,1";
-        if($conn->dataProvider=="postgres") {
-            $limit =" limit 1";
-        }
         $sql = "select document_number from  documents  where   meta_id='{$this->meta_id}'   {$branch}  order  by document_id desc ".$limit;
         $prevnumber = $conn->GetOne($sql);
         if (strlen($prevnumber) == 0) {

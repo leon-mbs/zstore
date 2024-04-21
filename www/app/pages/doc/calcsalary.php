@@ -289,9 +289,7 @@ class CalcSalary extends \App\Pages\Base
 
 
             $sql="select sum(tm) as tm, count(distinct dd) as dd   from (select  date(t_start) as dd, (UNIX_TIMESTAMP(t_end)-UNIX_TIMESTAMP(t_start)  - t_break*60)   as  tm from timesheet where t_type=1  and  emp_id = {$emp->employee_id} and  date(t_start)>=date({$from}) and  date( t_start)<= date( {$to} ) ) t   ";
-            if($conn->dataProvider=="postgres") {
-                $sql="select sum(tm) as tm, count(distinct dd) as dd   from (select  date(t_start) as dd, (extract(epoch from t_end) - extract(epoch from t_start)  - t_break*60)   as  tm from timesheet where t_type=1  and  emp_id = {$emp->employee_id} and  date(t_start)>=date({$from}) and  date( t_start)<= date( {$to} ) ) t   ";
-            }
+          
 
             $t = $conn->GetRow($sql);
             $e['hours']  = intval($t['tm']/3600);
