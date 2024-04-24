@@ -857,6 +857,8 @@ class ItemList extends \App\Pages\Base
             }
         }
         if (count($items) == 0) {
+           $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");
+          
             return;
         }
         if(intval(\App\System::getUser()->prtypelabel) == 0) {
@@ -877,6 +879,10 @@ class ItemList extends \App\Pages\Base
         try {
 
             $xml = H::printItemsEP($items);
+            if(strlen($xml)==0) {
+               $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");
+               return; 
+            }
             $buf = \App\Printer::xml2comm($xml);
             $b = json_encode($buf) ;
 

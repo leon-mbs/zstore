@@ -583,6 +583,8 @@ class Printer
 
 
             $val =  (string)$tag;
+            $tag = str_replace("'","`",$tag) ;
+            $tag = str_replace("\"","`",$tag) ;
             $pr->handletag($name, $val, $tag) ;
 
         }
