@@ -274,8 +274,7 @@ class UserProfile extends \App\Pages\Base
             if($prtype==2) {
               $pr->labelrow("CLS");
 //              $pr->text("CODEPAGE 866");
-              $pr->labelrow("TEXT 10,10,\"3\",0,1,1,\"тест\"");
-//              $pr->text("TEXT 100,100,\"3\",0,1,1,\"Тест принтера\"");
+              $pr->labelrow("TEXT 10,10,\"3\",0,1,1,\"Test\"");
               $pr->labelrow("FEED 50");
               $pr->labelrow("PRINT 1,1");
             }

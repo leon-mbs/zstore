@@ -1258,7 +1258,10 @@ class Helper
 
 
            if($user->prtypelabel==2) {
-
+               $header['name'] = str_replace("\"","`",$header['name']) ;
+               $header['description'] = str_replace("\"","`",$header['description']) ;
+               $header['brand'] = str_replace("\"","`",$header['brand']) ;
+               
                $text =  $report->generate($header);
   
                $rows[]="CLS";

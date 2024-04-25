@@ -391,7 +391,7 @@ class Printer
         }
 
         $text = str_replace("'","`",$text) ;
-        $text = str_replace("\"","`",$text) ;
+    //    $text = str_replace("\"","`",$text) ;
         
         
         if($this->cp==866) {
@@ -627,8 +627,8 @@ class Printer
 
 
             $val =  (string)$tag;
-            $val = str_replace("'","`",$val) ;
-            $val = str_replace("\"","`",$val) ;
+    //        $val = str_replace("'","`",$val) ;
+    //        $val = str_replace("\"","`",$val) ;
             $pr->handletag($name, $val, $tag) ;
 
         }
