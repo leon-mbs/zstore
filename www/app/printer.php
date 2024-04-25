@@ -384,10 +384,16 @@ class Printer
             $this->newline()  ;
         }
     }
-  public function labelrow($text ) {
+
+    public function labelrow($text ) {
         if(strlen($text)==0) {
             return;
         }
+
+        $text = str_replace("'","`",$text) ;
+        $text = str_replace("\"","`",$text) ;
+        
+        
         if($this->cp==866) {
             $text = iconv('UTF-8','cp866',$text)  ;
         } else {
@@ -830,4 +836,18 @@ class Printer
     }
 
 
+    public static function arr2comm($arr) {
+
+        $pr = new \App\Printer(true) ;
+
+        foreach($arr as $row)  {
+            $pr->labelrow($row);
+        }
+
+
+        $buf = $pr->getBuffer() ;
+
+        return $buf;
+    }
+     
 }

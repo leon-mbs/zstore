@@ -1042,7 +1042,7 @@ class Helper
      */
     public static function printItems(array $items, $pqty=0,array $tags=[]) {
         $printer = \App\System::getOptions('printer');
-  
+                  
         $prturn = \App\System::getUser()->prturn;
 
         $htmls = "";
@@ -1171,12 +1171,19 @@ class Helper
      * @param array $items
      */
     public static function printItemsEP(array $items, $pqty=0,array $tags=[]) {
+        $user = \App\System::getUser() ;
+        
+       
         $printer = \App\System::getOptions('printer');
 
         $htmls = "";
+        $rows = [];
 
         $report = new \App\Report('item_tag_ps.tpl');
-
+        if($user->prtypelabel==2) {
+          $report = new \App\Report('item_tag_ts.tpl');
+        }
+        
         foreach ($items as $item) {
             $header = [];
             if (strlen($item->shortname) > 0) {
@@ -1249,13 +1256,28 @@ class Helper
                 $qty = $pqty;
             }
 
-            for($i=0;$i< intval($qty) ;$i++) {
-                $htmls = $htmls . $report->generate($header);
-            }
 
+           if($user->prtypelabel==2) {
+
+               $text =  $report->generate($header);
+  
+               $rows[]="CLS";
+               $rows[]="TEXT 10,10,\"3\",0,1,1,\"{$item->item_code}\"";
+               $rows[]="PEINT 1,".$qty;
+               
+           } else {
+                for($i=0;$i< intval($qty) ;$i++) {
+                    $htmls = $htmls . $report->generate($header);
+                }
+           }
+            
            
-        }
-
+       }
+       
+       if($user->prtypelabel==2) {
+          return $rows;
+       }
+        
         return $htmls;
     }
 
