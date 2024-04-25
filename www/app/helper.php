@@ -1047,11 +1047,12 @@ class Helper
 
         $htmls = "";
 
+        $report = new \App\Report('item_tag.tpl');
+
         foreach ($items as $item) {
             if(intval($item->item_id)==0) {
                 continue;
             }
-            $report = new \App\Report('item_tag.tpl');
             $header = [];
             $header['turn'] = '';
             if($prturn==1) {
@@ -1069,6 +1070,7 @@ class Helper
             }
 
             $header['name'] = str_replace("'", "`", $header['name'])  ;
+            $header['description'] = str_replace("'", "`", $item->description)  ;
 
             $header['docnumber']  =  $tags['docnumber'] ?? "";
             
@@ -1173,8 +1175,9 @@ class Helper
 
         $htmls = "";
 
+        $report = new \App\Report('item_tag_ps.tpl');
+
         foreach ($items as $item) {
-            $report = new \App\Report('item_tag_ps.tpl');
             $header = [];
             if (strlen($item->shortname) > 0) {
                 $header['name'] = $item->shortname;
@@ -1182,6 +1185,7 @@ class Helper
                 $header['name'] = $item->itemname;
             }
             $header['name'] = str_replace("'", "`", $header['name'])  ;
+            $header['description'] = str_replace("'", "`", $item->description)  ;
 
             $header['docnumber']  =  $tags['docnumber'] ?? "";
 
@@ -1249,9 +1253,7 @@ class Helper
                 $htmls = $htmls . $report->generate($header);
             }
 
-            for($i=0;$i<$qty;$i++) {
-                $htmls = $htmls .   $report->generate($header) ;
-            }
+           
         }
 
         return $htmls;

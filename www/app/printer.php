@@ -242,8 +242,9 @@ class Printer
 
     private $buffer=[];
     private $wc=32;
-
-    public function __construct() {
+    private $cp=866;
+  
+    public function __construct($labelmode=false) {
 
         // $options = \App\System::getOptions('printer')  ;
         $user = \App\System::getUser() ;
@@ -252,7 +253,22 @@ class Printer
         if($this->wc==0) {
             $this->wc=32;
         }
+        $this->cp = intval($user->pcp) ;
+        if($this->cp==0) {
+            $this->cp=866;
+        }
+        if($labelmode) {
+            $this->wc = intval($user->pwsymlabel) ;
+            if($this->wc==0) {
+                $this->wc=32;
+            }
+            $this->cp = intval($user->pcplabel) ;
+            if($this->cp==0) {
+                $this->cp=866;
+            }
+        }
 
+ 
         $this->buffer[] = self::ESC;
         $this->buffer[] = ord('@');
 
@@ -267,8 +283,13 @@ class Printer
         //украинское i на  ангглийсккое  хз  почему
         $text = str_replace("і", "i", $text);
         $text = str_replace("І", "I", $text);
-        $text = mb_convert_encoding($text, "cp866", "utf-8");
-        //        $text = iconv('UTF-8','cp866',$text)  ;
+   //     $text = mb_convert_encoding($text, "cp866", "utf-8");
+   
+        if($this->cp==1251) {
+            $text = iconv('UTF-8','windows-1251',$text)  ;
+        } else {
+            $text = iconv('UTF-8','cp866',$text)  ;
+        }
 
         return $text;
     }
@@ -363,7 +384,24 @@ class Printer
             $this->newline()  ;
         }
     }
+  public function labelrow($text ) {
+        if(strlen($text)==0) {
+            return;
+        }
+        if($this->cp==866) {
+            $text = iconv('UTF-8','cp866',$text)  ;
+        } else {
+            $text = iconv('UTF-8','windows-1251',$text)  ;
+        }      
+        $t = str_split($text) ;
 
+        foreach($t as $b) {
+            $this->buffer[]= ord($b);
+        }
+        $this->newline()  ;
+
+    }
+ 
     /**
     * разделительЮ строка  симолов по  всей  ширине
     *
@@ -583,8 +621,8 @@ class Printer
 
 
             $val =  (string)$tag;
-            $tag = str_replace("'","`",$tag) ;
-            $tag = str_replace("\"","`",$tag) ;
+            $val = str_replace("'","`",$val) ;
+            $val = str_replace("\"","`",$val) ;
             $pr->handletag($name, $val, $tag) ;
 
         }
