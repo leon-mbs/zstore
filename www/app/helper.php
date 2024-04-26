@@ -1260,28 +1260,44 @@ class Helper
            if($user->prtypelabel==2) {
                $header['name'] = str_replace("\"","`",$header['name']) ;
                $header['description'] = str_replace("\"","`",$header['description']) ;
+               $header['qrcode'] = str_replace("\"","`",$header['qrcode']) ;
                $header['brand'] = str_replace("\"","`",$header['brand']) ;
+
+               if($user->pwsymlabel >0) {
+                   $header['name'] = mb_substr($header['name'],0,$user->pwsymlabel) ;
+               }
                
-               $text =  $report->generate($header);
+               
+               $text =  $report->generate($header,false);
   
-               $rows[]="CLS";
-               $rows[]="TEXT 10,10,\"3\",0,1,1,\"{$item->item_code}\"";
-               $rows[]="PEINT 1,".$qty;
+               $r = explode("\n",$text) ;
+               
+               for($i=0;$i< intval($qty) ;$i++) {
+
+                   foreach($r as $row) {
+                       $row = str_replace("\n", "", $row);
+                       $row = str_replace("\r", "", $row);
+                       $row = trim($row);
+                       $rows[]=$row;
+                   }
+              }               
                
            } else {
                 for($i=0;$i< intval($qty) ;$i++) {
                     $htmls = $htmls . $report->generate($header);
                 }
+                
            }
             
            
        }
-       
        if($user->prtypelabel==2) {
-          return $rows;
-       }
+         return $rows;              
+       } else {
+         return $htmls;                    
+       } 
+       
         
-        return $htmls;
     }
 
     //"соль" для  шифрования

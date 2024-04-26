@@ -256,7 +256,7 @@ class UserProfile extends \App\Pages\Base
         $this->printerlabel->pserverlabel->setVisible($prtype!=0) ;
         $this->printerlabel->pstestlabel->setVisible($prtype!=0) ;
         $this->printerlabel->pcplabel->setVisible($prtype!=0) ;
-        $this->printerlabel->pwsymlabel->setVisible($prtype==1) ;
+        $this->printerlabel->pwsymlabel->setVisible($prtype>0) ;
         $this->printerlabel->prturn->setVisible($prtype==0) ;
 
 
@@ -274,7 +274,8 @@ class UserProfile extends \App\Pages\Base
             if($prtype==2) {
               $pr->labelrow("CLS");
 //              $pr->text("CODEPAGE 866");
-              $pr->labelrow("TEXT 10,10,\"3\",0,1,1,\"Test\"");
+              $pr->text("DIRECTION 0");
+              $pr->labelrow("TEXT 10,10,\"3\",0,1,1,\"Printer test\"");
               $pr->labelrow("FEED 50");
               $pr->labelrow("PRINT 1,1");
             }

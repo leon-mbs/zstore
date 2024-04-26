@@ -398,7 +398,9 @@ class Printer
             $text = iconv('UTF-8','cp866',$text)  ;
         } else {
             $text = iconv('UTF-8','windows-1251',$text)  ;
-        }      
+        }  
+        
+            
         $t = str_split($text) ;
 
         foreach($t as $b) {
